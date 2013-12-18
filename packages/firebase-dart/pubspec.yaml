@@ -1,0 +1,4 @@
+name: firebase
+description: A Dart wrapper for Firebase
+dependencies:
+  browser: any
