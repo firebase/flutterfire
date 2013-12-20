@@ -23,12 +23,33 @@ Future updateTest(Firebase f) {
 }
 
 Future updateStringTest(Firebase f) {
-  var supdateF = f.child('foo').update('foobar');
-  return supdateF.then((foo){print('UPDATED STRING EM!');})
-                 .catchError((foo){print(foo);});
+  try {
+    var supdateF = f.child('foo').update('foobar');
+  } catch(e) {
+    var c = new Completer();
+    Timer.run(() {
+      print('TESTED UPDATE STRING!');
+      c.complete(null);
+    });
+    return c.future;
+  }
 }
 
-testChild(Firebase f) {
+Future testPush(Firebase f) {
+  var pushRef = f.push();
+  print('TESTING PUSH!');
+  return pushRef.set('HAHA');
+}
+
+Future testPriorities(Firebase f) {
+  var testRef = f.child("ZZZ");
+  print('TESTING PRIORITIES');
+  return testRef.setWithPriority("YYY", 1).then((foo) {
+    testRef.setPriority(100);
+  });
+}
+
+void testChild(Firebase f) {
   var child = f.child('trad');
   print('CHILD NAME: ' + child.name());
 
@@ -49,20 +70,9 @@ main() {
   authTest(f).then((Future) => setTest(f))
              .then((Future) => setStringTest(f))
              .then((Future) => updateTest(f))
-             .then((Future) => updateStringTest(f));
+             .then((Future) => updateStringTest(f))
+             .then((Future) => testPush(f))
+             .then((Future) => testPriorities(f));
 
-  /*
-  var childSetF = child.set('foobar');
-  childSetF.then((foo){
-    print('SET CHILD!');
-    var removeF = child.remove();
-    removeF.then((foo) {
-      print('REMOVED CHILD!');
-    });
-   });
-
-  var pushRef = child.push();
-  pushRef.set('HAHA');
-  */
   print('HELLO!!!!');
 }

@@ -187,5 +187,26 @@ class Firebase {
      this._fb.callMethod('setWithPriority', [value, priority, (err, res) {
        this._resolveFuture(c, err, res);
      }]);
+     return c.future;
+   }
+
+   /**
+    * Set a priority for the data at this Firebase location. A priority can
+    * be either a number or a string and is used to provide a custom ordering
+    * for the children at a location. If no priorities are specified, the
+    * children are ordered by name. This ordering affects the enumeration
+    * order of DataSnapshot.forEach(), as well as the prevChildName parameter
+    * passed to the onChildAdded and onChildMoved event handlers.
+    *
+    * You cannot set a priority on an empty location. For this reason,
+    * setWithPriority() should be used when setting initial data with a
+    * specific priority, and this function should be used when updating the
+    * priority of existing data.
+    */
+   Future setPriority(var priority) {
+     var c = new Completer();
+     this._fb.callMethod('setPriority', [priority, (err, res) {
+       this._resolveFuture(c, err, res);
+     }]);
    }
 }
