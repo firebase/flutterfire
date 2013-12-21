@@ -4,9 +4,207 @@ import 'dart:js';
 import 'dart:async';
 import 'dart:convert';
 
-class Firebase {
+/**
+ * A Query filters the data at a Firebase location so only a subset of the
+ * child data is visible to you. This can be used for example to restrict a
+ * large list of items down to a number suitable for synchronizing to the
+ * client.
+ *
+ * Queries are created by chaining together one or two of the following filter
+ * functions: startAt(), endAt() and limit().
+ *
+ * Once a Query is constructed, you can receive data for it using on(). You
+ * will receive
+ */
+class Query {
+  /**
+   * Holds a reference to the JavaScript 'Firebase' object.
+   */
   JsObject _fb;
 
+  /**
+   * Construct a new default Query for a given URL.
+   */
+  Query (String url) {
+    this._fb = new JsObject(context['Firebase'], [url]);
+  }
+
+  /**
+   * Construct a new Query from a JsObject.
+   */
+  Query.fromJsObject(JsObject obj) {
+    this._fb = obj;
+  }
+
+  /**
+   * Generate a Query object limited to the number of specified children. If
+   * combined with startAt, the query will include the specified number of
+   * children after the starting point. If combined with endAt, the query will
+   * include the specified number of children before the ending point. If not
+   * combined with startAt() or endAt(), the query will include the last
+   * specified number of children.
+   */
+  Query limit(num limit) {
+    return new Query.fromJsObject(this._fb.callMethod('limit', [limit]));
+  }
+
+  /**
+   * Create a Query with the specified starting point. The starting point is
+   * specified using a priority and an optinal child name. If no arguments
+   * are provided, the starting point will be the beginning of the data.
+   *
+   * The starting point is inclusive, so children with exactly the specified
+   * priority will be included. Though if the optional name is specified, then
+   * the children that have exactly the specified priority must also have a
+   * name greater than or equal to the specified name.
+   *
+   * startAt() can be combined with endAt() or limit() to create further
+   * restrictive queries.
+   */
+  Query startAt({var priority, var name}) {
+    return new Query.fromJsObject(this._fb.callMethod('startAt',
+                                                      [priority, name]));
+  }
+
+  /**
+   * Create a Query with the specified ending point. The ending point is
+   * specified using a priority and an optional child name. If no arguments
+   * are provided, the ending point will be the end of the data.
+   *
+   * The ending point is inclusive, so children with exactly the specified
+   * priority will be included. Though if the optional name is specified, then
+   * children that have exactly the specified priority must also have a name
+   * less than or equal to the specified name.
+   *
+   * endAt() can be combined with startAt() or limit() to create further
+   * restrictive queries.
+   */
+  Query endAt({var priority, var name}) {
+    return new Query.fromJsObject(this._fb.callMethod('endAt',
+                                                      [priority, name]));
+  }
+
+  /**
+   * Queries are attached to a location in your Firebase. This method will
+   * return a Firebase reference to that location.
+   */
+  Firebase ref() {
+    return new Firebase.fromJsObject(this._fb.callMethod('ref'));
+  }
+}
+
+/**
+ * A DataSnapshot contains data from a Firebase location. Any time you read
+ * Firebase data, you receive data as a DataSnapshot.
+ *
+ * DataSnapshots are passed to event handlers such as onValue or onceValue.
+ * You can extract the contents of the snapshot by calling val(), or you
+ * can traverse into the snapshot by calling child() to return child
+ * snapshots (which you could in turn call val() on).
+ */
+class DataSnapshot {
+  /**
+   * Holds a reference to the JavaScript 'DataSnapshot' object.
+   */
+  JsObject _ds;
+
+  /**
+   * Construct a new DataSnapshot from a JsObject.
+   */
+  DataSnapshot.fromJsObject(JsObject obj) {
+    this._ds = obj;
+  }
+
+  /**
+   * Get the Dart Primitive, Map or List representation of the DataSnapshot.
+   * The value may be null, indicating that the snapshot is empty and contains
+   * no data.
+   */
+  val() {
+    var obj = this._ds.callMethod('val');
+    var json = context['JSON'].callMethod('stringify', [obj]);
+    return JSON.decode(json);
+  }
+
+  /**
+   * Get a DataSnapshot for the location at the specified relative path. The
+   * relative path can either bve a simple child name or a deeper slash
+   * seperated path.
+   */
+  DataSnapshot child(String path) {
+    return new DataSnapshot.fromJsObject(this._ds.callMethod('child', [path]));
+  }
+
+  /**
+   * Enumerate through the DataSnapshot's children (in priority order). The
+   * provided callback will be called synchronously with a DataSnapshot for
+   * each child.
+   */
+  forEach(cb(DataSnapshot snapshot)) {
+    this._ds.callMethod('forEach', [(obj) {
+      cb(new DataSnapshot.fromJsObject(obj));
+    }]);
+  }
+
+  /**
+   * Returns true if the specified child exists.
+   */
+  bool hasChild(String path) {
+    return this._ds.callMethod('hasChild', [path]);
+  }
+
+  /**
+   * Returns true if the DataSnapshot has any children. If it does, you can
+   * enumerate them with forEach. If it does not, then the snapshot either
+   * contains a primitive value or it is empty.
+   */
+  bool hasChildren() {
+    return this._ds.callMethod('hasChildren');
+  }
+
+  /**
+   * Get the name of the location that generated this DataSnapshot.
+   */
+  String name() {
+    return this._ds.callMethod('name');
+  }
+
+  /**
+   * Get the number of children for this DataSnapshot. If it has children,
+   * you can enumerate them with forEach().
+   */
+  num numChildren() {
+    return this._ds.callMethod('numChildren');
+  }
+
+  /**
+   * Get the Firebsae reference for the location that generated this
+   * DataSnapshot.
+   */
+  Firebase ref() {
+    return new Firebase.fromJsObject(this._ds.callMethod('ref'));
+  }
+
+  /**
+   * Get the priority of the data in this DataSnapshot.
+   */
+  getPriority() {
+    return this._ds.callMethod('getPriority');
+  }
+
+  /**
+   * Exports the entire contents of the DataSnapshot as a Dart Map. This is
+   * similar to val(), except priority information is included, making it
+   * suitable for backing up your data.
+   */
+  exportVal() {
+    var obj = this._ds.callMethod('exportVal');
+    var json = context['JSON'].callMethod('stringify', [obj]);
+    return JSON.decode(json);
+  }
+}
+
+class Firebase extends Query {
   /**
    * Resolve a future, given an error and result.
    */
@@ -21,16 +219,12 @@ class Firebase {
   /**
    * Construct a new Firebase reference from a full Firebase URL.
    */
-  Firebase(String url) {
-    this._fb = new JsObject(context['Firebase'], [url]);
-  }
+  Firebase(String url) : super(url);
 
   /**
    * Construct a new Firebase reference from a JsObject.
    */
-  Firebase.fromJsObject(JsObject obj) {
-    this._fb = obj;
-  }
+  Firebase.fromJsObject(JsObject obj) : super.fromJsObject(obj);
 
   /**
    * Authenticates a Firebase client using a provided Authentication token.
@@ -244,113 +438,4 @@ class Firebase {
      }]);
      return c.future;
    }
-}
-
-
-/**
- * A DataSnapshot contains data from a Firebase location. Any time you read
- * Firebase data, you receive data as a DataSnapshot.
- *
- * DataSnapshots are passed to event handlers such as onValue or onceValue.
- * You can extract the contents of the snapshot by calling val(), or you
- * can traverse into the snapshot by calling child() to return child
- * snapshots (which you could in turn call val() on).
- */
-class DataSnapshot {
-  JsObject _ds;
-
-  /**
-   * Construct a new DataSnapshot from a JsObject.
-   */
-  DataSnapshot.fromJsObject(JsObject obj) {
-    this._ds = obj;
-  }
-
-  /**
-   * Get the Dart Primitive, Map or List representation of the DataSnapshot.
-   * The value may be null, indicating that the snapshot is empty and contains
-   * no data.
-   */
-  val() {
-    var obj = this._ds.callMethod('val');
-    var json = context['JSON'].callMethod('stringify', [obj]);
-    return JSON.decode(json);
-  }
-
-  /**
-   * Get a DataSnapshot for the location at the specified relative path. The
-   * relative path can either bve a simple child name or a deeper slash
-   * seperated path.
-   */
-  DataSnapshot child(String path) {
-    return new DataSnapshot.fromJsObject(this._ds.callMethod('child', [path]));
-  }
-
-  /**
-   * Enumerate through the DataSnapshot's children (in priority order). The
-   * provided callback will be called synchronously with a DataSnapshot for
-   * each child.
-   */
-  forEach(cb(DataSnapshot snapshot)) {
-    this._ds.callMethod('forEach', [(obj) {
-      cb(new DataSnapshot.fromJsObject(obj));
-    }]);
-  }
-
-  /**
-   * Returns true if the specified child exists.
-   */
-  bool hasChild(String path) {
-    return this._ds.callMethod('hasChild', [path]);
-  }
-
-  /**
-   * Returns true if the DataSnapshot has any children. If it does, you can
-   * enumerate them with forEach. If it does not, then the snapshot either
-   * contains a primitive value or it is empty.
-   */
-  bool hasChildren() {
-    return this._ds.callMethod('hasChildren');
-  }
-
-  /**
-   * Get the name of the location that generated this DataSnapshot.
-   */
-  String name() {
-    return this._ds.callMethod('name');
-  }
-
-  /**
-   * Get the number of children for this DataSnapshot. If it has children,
-   * you can enumerate them with forEach().
-   */
-  num numChildren() {
-    return this._ds.callMethod('numChildren');
-  }
-
-  /**
-   * Get the Firebsae reference for the location that generated this
-   * DataSnapshot.
-   */
-  Firebase ref() {
-    return new Firebase.fromJsObject(this._ds.callMethod('ref'));
-  }
-
-  /**
-   * Get the priority of the data in this DataSnapshot.
-   */
-  getPriority() {
-    return this._ds.callMethod('getPriority');
-  }
-
-  /**
-   * Exports the entire contents of the DataSnapshot as a Dart Map. This is
-   * similar to val(), except priority information is included, making it
-   * suitable for backing up your data.
-   */
-  exportVal() {
-    var obj = this._ds.callMethod('exportVal');
-    var json = context['JSON'].callMethod('stringify', [obj]);
-    return JSON.decode(json);
-  }
 }
