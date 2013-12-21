@@ -529,9 +529,7 @@ class Firebase extends Query {
    */
   Future update(var value) {
     var c = new Completer();
-    if ((value is Map) || (value is Iterable)) {
-      value = new JsObject.jsify(value);
-    }
+    value = new JsObject.jsify(value);
     this._fb.callMethod('update', [value, (err, res) {
       this._resolveFuture(c, err, res);
     }]);
@@ -581,6 +579,9 @@ class Firebase extends Query {
     */
    Future setWithPriority(var value, var priority) {
      var c = new Completer();
+     if ((value is Map) || (value is Iterable)) {
+       value = new JsObject.jsify(value);
+     }
      this._fb.callMethod('setWithPriority', [value, priority, (err, res) {
        this._resolveFuture(c, err, res);
      }]);
