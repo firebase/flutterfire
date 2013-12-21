@@ -44,8 +44,22 @@ Future testPush(Firebase f) {
 Future testPriorities(Firebase f) {
   var testRef = f.child("ZZZ");
   print('TESTING PRIORITIES');
-  return testRef.setWithPriority("YYY", 1).then((foo) {
+  return testRef.setWithPriority(1, 1).then((foo) {
     testRef.setPriority(100);
+  });
+}
+
+Future testTransaction(Firebase f) {
+  var testRef = f.child("ZZZ");
+  return testRef.transaction((curVal) {
+    if (curVal == null) {
+      return 0;
+    } else {
+      return curVal + 1;
+    }
+  }).then((var status) {
+    print('TESTED TRANSACTIONS! GOT');
+    print(status['snapshot'].val());
   });
 }
 
@@ -72,7 +86,8 @@ main() {
              .then((Future) => updateTest(f))
              .then((Future) => updateStringTest(f))
              .then((Future) => testPush(f))
-             .then((Future) => testPriorities(f));
+             .then((Future) => testPriorities(f))
+             .then((Future) => testTransaction(f));
 
   print('HELLO!!!!');
 }
