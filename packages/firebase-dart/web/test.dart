@@ -42,7 +42,7 @@ Future testPush(Firebase f) {
 }
 
 Future testPriorities(Firebase f) {
-  var testRef = f.child("ZZZ");
+  var testRef = f.child('ZZZ');
   print('TESTING PRIORITIES');
   return testRef.setWithPriority(1, 1).then((foo) {
     testRef.setPriority(100);
@@ -50,7 +50,7 @@ Future testPriorities(Firebase f) {
 }
 
 Future testTransaction(Firebase f) {
-  var testRef = f.child("ZZZ");
+  var testRef = f.child('ZZZ');
   return testRef.transaction((curVal) {
     if (curVal == null) {
       return 0;
@@ -61,6 +61,16 @@ Future testTransaction(Firebase f) {
     print('TESTED TRANSACTIONS! GOT');
     print(status['snapshot'].val());
   });
+}
+
+Future testValue(Firebase f) {
+  var c = new Completer();
+  f.onValue.listen((Event e) {
+    print('GOT VALUE!');
+    print(e.snapshot.val());
+    c.complete(null);
+  });
+  return c.future;
 }
 
 void testChild(Firebase f) {
@@ -87,7 +97,8 @@ main() {
              .then((Future) => updateStringTest(f))
              .then((Future) => testPush(f))
              .then((Future) => testPriorities(f))
-             .then((Future) => testTransaction(f));
+             .then((Future) => testTransaction(f))
+             .then((Future) => testValue(f));
 
   print('HELLO!!!!');
 }
