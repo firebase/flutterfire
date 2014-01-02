@@ -88,7 +88,7 @@ void testChild(Firebase f) {
 }
 
 main() {
-  var f = new Firebase('https://anant.firebaseio.com/dart');
+  var f = new Firebase('https://dart-test.firebaseio-demo.com/test/');
 
   testChild(f);
   authTest(f).then((Future) => setTest(f))
