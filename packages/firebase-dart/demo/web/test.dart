@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'firebase.dart';
+import 'package:firebase/firebase.dart';
 
 Future authTest(Firebase f) {
   var authF = f.auth('foobar');

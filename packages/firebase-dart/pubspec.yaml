@@ -1,4 +1,8 @@
 name: firebase
-description: A Dart wrapper for Firebase
+version: 0.1.0
+authors:
+- Anant Narayanan <anant@kix.in>
+description: A Dart wrapper for Firebase.
+homepage: https://github.com/firebase/firebase-dart/
 dependencies:
   browser: any

@@ -1,0 +1,5 @@
+name: firebase-dart-test
+version: 0.0.1
+depedencies:
+  firebase:
+    path: ..
