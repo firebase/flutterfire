@@ -3,7 +3,7 @@ import 'package:firebase/firebase.dart';
 
 Future authTest(Firebase f) {
   var authF = f.auth('foobar');
-  return authF.then((foo){print('AUTH EM! ' + foo); f.unauth();})
+  return authF.then((foo){print('AUTH EM! $foo'); f.unauth();})
               .catchError((foo){print(foo);});
 }
 
@@ -75,10 +75,10 @@ Future testValue(Firebase f) {
 
 void testChild(Firebase f) {
   var child = f.child('trad');
-  print('CHILD NAME: ' + child.name());
+  print('CHILD NAME: ${child.name()}');
 
   var parent = child.parent();
-  print('PARENT NAME: ' + parent.name());
+  print('PARENT NAME: ${parent.name()}');
 
   var root = child.root();
   print('ROOT: ');

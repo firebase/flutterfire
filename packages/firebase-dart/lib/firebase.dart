@@ -9,6 +9,20 @@ part 'snapshot.dart';
 part 'disconnect.dart';
 
 /**
+ * A successful authentication response.
+ */
+class AuthResponse {
+  final int expires;
+  final String auth;
+
+  AuthResponse(JsObject response)
+      : expires = response['expires'],
+        auth = response['auth'];
+
+  String toString() => 'expires: $expires, auth: $auth';
+}
+
+/**
  * A firebase represents a particular location in your Firebase and can be used
  * for reading or writing data to that Firebase location.
  */
@@ -41,13 +55,18 @@ class Firebase extends Query {
    * Takes a single token as an argument and returns a Future that will be
    * resolved when the authentication succeeds (or fails).
    */
-  Future auth(String token) {
+  Future<AuthResponse> auth(String token) {
     var c = new Completer();
-    this._fb.callMethod('auth', [token, (err) {
+    // On failure, the first argument will be an Error object indicating the
+    // failure. On success, the first argument will be null and the second
+    // will be an object containing { auth: <auth payload>, expires:
+    // <expiration time in seconds since the unix epoch> }.
+    this._fb.callMethod('auth', [token, (err, result) {
       if (err != null) {
         c.completeError(err);
       } else {
-        // FIXME: Get optional second argument 'user'.
+        // TODO why are result['expires'] and result['auth'] null?
+        c.complete(new AuthResponse(result));
       }
     }, (err) {
       c.completeError(err);
