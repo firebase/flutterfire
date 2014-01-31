@@ -1,9 +1,15 @@
 import 'dart:async';
 import 'package:firebase/firebase.dart';
 
-Future authTest(Firebase f) {
+Future authFailTest(Firebase f) {
   var authF = f.auth('foobar');
   return authF.then((foo){print('AUTH EM! $foo'); f.unauth();})
+              .catchError((foo){print(foo);});
+}
+
+Future authPassTest(Firebase f) {
+  var authF = f.auth('');
+  return authF.then((foo){print('AUTH SUCCEEDED! $foo'); f.unauth();})
               .catchError((foo){print(foo);});
 }
 
@@ -88,17 +94,19 @@ void testChild(Firebase f) {
 }
 
 main() {
+  // NOTE: auth() doesn't work on demo Firebases.
   var f = new Firebase('https://dart-test.firebaseio-demo.com/test/');
 
   testChild(f);
-  authTest(f).then((Future) => setTest(f))
-             .then((Future) => setStringTest(f))
-             .then((Future) => updateTest(f))
-             .then((Future) => updateStringTest(f))
-             .then((Future) => testPush(f))
-             .then((Future) => testPriorities(f))
-             .then((Future) => testTransaction(f))
-             .then((Future) => testValue(f));
+  authFailTest(f).then((_) => authPassTest(f))
+             .then((_) => setTest(f))
+             .then((_) => setStringTest(f))
+             .then((_) => updateTest(f))
+             .then((_) => updateStringTest(f))
+             .then((_) => testPush(f))
+             .then((_) => testPriorities(f))
+             .then((_) => testTransaction(f))
+             .then((_) => testValue(f));
 
   print('HELLO!!!!');
 }

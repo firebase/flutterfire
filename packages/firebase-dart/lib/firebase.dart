@@ -61,11 +61,10 @@ class Firebase extends Query {
     // failure. On success, the first argument will be null and the second
     // will be an object containing { auth: <auth payload>, expires:
     // <expiration time in seconds since the unix epoch> }.
-    this._fb.callMethod('auth', [token, (err, result) {
+    this._fb.callMethod('auth', [token, (err, [result]) {
       if (err != null) {
         c.completeError(err);
       } else {
-        // TODO why are result['expires'] and result['auth'] null?
         c.complete(new AuthResponse(result));
       }
     }, (err) {
