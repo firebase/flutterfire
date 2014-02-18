@@ -17,7 +17,8 @@ part of Firebase;
  * re-establish the operations each time.
  */
 class Disconnect {
-  JsObject _od;
+  final JsObject _od;
+
   Disconnect(this._od);
 
   /**
@@ -25,13 +26,11 @@ class Disconnect {
    * client is disconnected (due to closing the browser, navigating to a new
    * page, or network issues).
    */
-  Future set(var value) {
+  Future set(value) {
     var c = new Completer();
-    if ((value is Map) || (value is Iterable)) {
-      value = new JsObject.jsify(value);
-    }
-    this._od.callMethod('set', [value, (err, res) {
-      this._resolveFuture(c, err, res);
+    if (value is Map || value is Iterable) value = new JsObject.jsify(value);
+    _od.callMethod('set', [value, (err, res) {
+      _resolveFuture(c, err, res);
     }]);
     return c.future;
   }
@@ -41,13 +40,11 @@ class Disconnect {
    * priority when the client is disconnected (due to closing the browser,
    * navigating to a new page, or network issues).
    */
-  Future setWithPriority(var value, var priority) {
+  Future setWithPriority(value, priority) {
     var c = new Completer();
-    if ((value is Map) || (value is Iterable)) {
-      value = new JsObject.jsify(value);
-    }
-    this._od.callMethod('setWithPriority', [value, priority, (err, res) {
-      this._resolveFuture(c, err, res);
+    if (value is Map || value is Iterable) value = new JsObject.jsify(value);
+    _od.callMethod('setWithPriority', [value, priority, (err, res) {
+      _resolveFuture(c, err, res);
     }]);
     return c.future;
   }
@@ -63,11 +60,11 @@ class Disconnect {
    * null as a value for a child is equivalent to calling remove() on that
    * child.
    */
-  Future update(var value) {
+  Future update(value) {
     var c = new Completer();
     value = new JsObject.jsify(value);
-    this._od.callMethod('update', [value, (err, res) {
-      this._resolveFuture(c, err, res);
+    _od.callMethod('update', [value, (err, res) {
+      _resolveFuture(c, err, res);
     }]);
     return c.future;
   }
@@ -81,8 +78,8 @@ class Disconnect {
    */
   Future remove() {
     var c = new Completer();
-    this._od.callMethod('remove', [(err,res) {
-       this._resolveFuture(c, err, res);
+    _od.callMethod('remove', [(err,res) {
+       _resolveFuture(c, err, res);
     }]);
     return c.future;
   }
@@ -97,8 +94,8 @@ class Disconnect {
    */
   Future cancel() {
     var c = new Completer();
-    this._od.callMethod('cancel', [(err,res) {
-       this._resolveFuture(c, err, res);
+    _od.callMethod('cancel', [(err,res) {
+       _resolveFuture(c, err, res);
     }]);
     return c.future;
   }

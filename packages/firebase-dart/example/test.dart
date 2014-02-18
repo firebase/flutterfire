@@ -58,11 +58,7 @@ Future testPriorities(Firebase f) {
 Future testTransaction(Firebase f) {
   var testRef = f.child('ZZZ');
   return testRef.transaction((curVal) {
-    if (curVal == null) {
-      return 0;
-    } else {
-      return curVal + 1;
-    }
+    return curVal == null ? 0 : curVal + 1;
   }).then((var status) {
     print('TESTED TRANSACTIONS! GOT');
     print(status['snapshot'].val());
@@ -99,14 +95,14 @@ main() {
 
   testChild(f);
   authFailTest(f).then((_) => authPassTest(f))
-             .then((_) => setTest(f))
-             .then((_) => setStringTest(f))
-             .then((_) => updateTest(f))
-             .then((_) => updateStringTest(f))
-             .then((_) => testPush(f))
-             .then((_) => testPriorities(f))
-             .then((_) => testTransaction(f))
-             .then((_) => testValue(f));
+      .then((_) => setTest(f))
+      .then((_) => setStringTest(f))
+      .then((_) => updateTest(f))
+      .then((_) => updateStringTest(f))
+      .then((_) => testPush(f))
+      .then((_) => testPriorities(f))
+      .then((_) => testTransaction(f))
+      .then((_) => testValue(f));
 
   print('HELLO!!!!');
 }

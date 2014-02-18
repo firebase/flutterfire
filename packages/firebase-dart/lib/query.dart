@@ -8,8 +8,8 @@ part of Firebase;
  * event in priority order.
  */
 class Event {
-  DataSnapshot snapshot;
-  String prevChild;
+  final DataSnapshot snapshot;
+  final String prevChild;
   Event(this.snapshot, this.prevChild);
 }
 
@@ -30,25 +30,21 @@ class Query {
    * Holds a reference to the JavaScript 'Firebase' object.
    */
   JsObject _fb;
-  Stream<Event> _onValue = null;
-  Stream<Event> _onChildAdded = null;
-  Stream<Event> _onChildMoved = null;
-  Stream<Event> _onChildChanged = null;
-  Stream<Event> _onChildRemoved = null;
+  Stream<Event> _onValue;
+  Stream<Event> _onChildAdded;
+  Stream<Event> _onChildMoved;
+  Stream<Event> _onChildChanged;
+  Stream<Event> _onChildRemoved;
 
   /**
    * Construct a new default Query for a given URL.
    */
-  Query (String url) {
-    this._fb = new JsObject(context['Firebase'], [url]);
-  }
+  Query(String url): _fb = new JsObject(context['Firebase'], [url]);
 
   /**
    * Construct a new Query from a JsObject.
    */
-  Query.fromJsObject(JsObject obj) {
-    this._fb = obj;
-  }
+  Query.fromJsObject(JsObject obj): _fb = obj;
 
   /**
    * Helper function to create a new stream for a particular event type.
@@ -56,13 +52,13 @@ class Query {
   Stream<Event> _createStream(String type) {
     StreamController<Event> controller;
     void startListen() {
-      this._fb.callMethod('on', [type, (snapshot, prevChild) {
+      _fb.callMethod('on', [type, (snapshot, prevChild) {
         controller.add(
             new Event(new DataSnapshot.fromJsObject(snapshot), prevChild));
       }]);
     }
     void stopListen() {
-      this._fb.callMethod('off', [type]);
+      _fb.callMethod('off', [type]);
     }
     controller = new StreamController<Event>.broadcast(
         onListen: startListen,
@@ -74,43 +70,38 @@ class Query {
    * Streams for various data events.
    */
   Stream<Event> get onValue {
-    if (this._onValue != null) {
-      return this._onValue;
+    if (_onValue == null) {
+      _onValue = this._createStream('value');
     }
-    this._onValue = this._createStream('value');
-    return this._onValue;
+    return _onValue;
   }
 
   Stream<Event> get onChildAdded {
-    if (this._onChildAdded != null) {
-      return this._onChildAdded;
+    if (_onChildAdded == null) {
+      _onChildAdded = this._createStream('child_added');
     }
-    this._onChildAdded = this._createStream('child_added');
-    return this._onChildAdded;
+    return _onChildAdded;
   }
 
   Stream<Event> get onChildMoved {
-    if (this._onChildMoved != null) {
-      return this._onChildMoved;
+    if (_onChildMoved == null) {
+      _onChildMoved = this._createStream('child_moved');
     }
-    this._onChildMoved = this._createStream('child_moved');
-    return this._onChildMoved;
+    return _onChildMoved;
   }
 
   Stream<Event> get onChildChanged {
-    if (this._onChildChanged != null) {
-      return this._onChildChanged;
+    if (_onChildChanged == null) {
+      _onChildChanged = this._createStream('child_changed');
     }
-    this._onChildChanged = this._createStream('child_changed');
-    return this._onChildChanged;
+    return _onChildChanged;
   }
 
   Stream<Event> get onChildRemoved {
-    if (this._onChildRemoved != null) {
-      return this._onChildRemoved;
+    if (_onChildRemoved == null) {
+      _onChildRemoved = this._createStream('child_removed');
     }
-    this._onChildRemoved = this._createStream('child_removed');
-    return this._onChildRemoved;
+    return _onChildRemoved;
   }
 
   /**
@@ -121,9 +112,8 @@ class Query {
    * combined with startAt() or endAt(), the query will include the last
    * specified number of children.
    */
-  Query limit(num limit) {
-    return new Query.fromJsObject(this._fb.callMethod('limit', [limit]));
-  }
+  Query limit(int limit) =>
+      Query.fromJsObject(_fb.callMethod('limit', [limit]));
 
   /**
    * Create a Query with the specified starting point. The starting point is
@@ -138,10 +128,8 @@ class Query {
    * startAt() can be combined with endAt() or limit() to create further
    * restrictive queries.
    */
-  Query startAt({var priority, var name}) {
-    return new Query.fromJsObject(this._fb.callMethod('startAt',
-                                                      [priority, name]));
-  }
+  Query startAt({priority, name}) =>
+        new Query.fromJsObject(_fb.callMethod('startAt', [priority, name]));
 
   /**
    * Create a Query with the specified ending point. The ending point is
@@ -156,16 +144,12 @@ class Query {
    * endAt() can be combined with startAt() or limit() to create further
    * restrictive queries.
    */
-  Query endAt({var priority, var name}) {
-    return new Query.fromJsObject(this._fb.callMethod('endAt',
-                                                      [priority, name]));
-  }
+  Query endAt({priority, name}) =>
+      new Query.fromJsObject(_fb.callMethod('endAt', [priority, name]));
 
   /**
    * Queries are attached to a location in your Firebase. This method will
    * return a Firebase reference to that location.
    */
-  Firebase ref() {
-    return new Firebase.fromJsObject(this._fb.callMethod('ref'));
-  }
+  Firebase ref() => new Firebase.fromJsObject(_fb.callMethod('ref'));
 }
