@@ -5,4 +5,4 @@ authors:
 description: A Dart wrapper for Firebase.
 homepage: https://github.com/firebase/firebase-dart/
 dependencies:
-  browser: ">=0.8.7 <0.10.0"
+  browser: ">=0.10.0 <0.11.0"
