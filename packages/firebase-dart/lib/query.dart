@@ -113,7 +113,7 @@ class Query {
    * specified number of children.
    */
   Query limit(int limit) =>
-      Query.fromJsObject(_fb.callMethod('limit', [limit]));
+      new Query.fromJsObject(_fb.callMethod('limit', [limit]));
 
   /**
    * Create a Query with the specified starting point. The starting point is
@@ -128,8 +128,7 @@ class Query {
    * startAt() can be combined with endAt() or limit() to create further
    * restrictive queries.
    */
-  Query startAt({priority, name}) =>
-        new Query.fromJsObject(_fb.callMethod('startAt', [priority, name]));
+  Query startAt({int priority, String name}) => new Query.fromJsObject(_fb.callMethod('startAt', _removeNulls([priority, name])));
 
   /**
    * Create a Query with the specified ending point. The ending point is
@@ -144,8 +143,7 @@ class Query {
    * endAt() can be combined with startAt() or limit() to create further
    * restrictive queries.
    */
-  Query endAt({priority, name}) =>
-      new Query.fromJsObject(_fb.callMethod('endAt', [priority, name]));
+  Query endAt({int priority, String name}) => new Query.fromJsObject(_fb.callMethod('endAt', _removeNulls([priority, name])));
 
   /**
    * Queries are attached to a location in your Firebase. This method will
