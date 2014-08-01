@@ -29,7 +29,7 @@ class Query {
   /**
    * Holds a reference to the JavaScript 'Firebase' object.
    */
-  JsObject _fb;
+  final JsObject _fb;
   Stream<Event> _onValue;
   Stream<Event> _onChildAdded;
   Stream<Event> _onChildMoved;

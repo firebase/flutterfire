@@ -30,7 +30,7 @@ Future updateTest(Firebase f) {
 
 Future updateStringTest(Firebase f) {
   try {
-    var supdateF = f.child('foo').update('foobar');
+    return f.child('foo').update('foobar');
   } catch(e) {
     var c = new Completer();
     Timer.run(() {

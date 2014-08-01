@@ -53,7 +53,7 @@ class DataSnapshot {
   /**
    * Returns true if the specified child exists.
    */
-  bool hasChild(String path) => ds.callMethod('hasChild', [path]);
+  bool hasChild(String path) => _ds.callMethod('hasChild', [path]);
 
   /**
    * Returns true if the DataSnapshot has any children. If it does, you can
