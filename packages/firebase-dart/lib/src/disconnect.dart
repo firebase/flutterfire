@@ -1,4 +1,7 @@
-part of Firebase;
+library firebase.disconnect;
+
+import 'dart:async';
+import 'dart:js';
 
 /**
  * The Disconnect class encapsulates all operations to be performed on a

@@ -1,4 +1,9 @@
-part of Firebase;
+library firebase.snapshot;
+
+import 'dart:convert';
+import 'dart:js';
+
+import 'firebase.dart';
 
 /**
  * A DataSnapshot contains data from a Firebase location. Any time you read
@@ -13,7 +18,7 @@ class DataSnapshot {
   /**
    * Holds a reference to the JavaScript 'DataSnapshot' object.
    */
-  JsObject _ds;
+  final JsObject _ds;
 
   /**
    * Construct a new DataSnapshot from a JsObject.
@@ -44,7 +49,7 @@ class DataSnapshot {
    * provided callback will be called synchronously with a DataSnapshot for
    * each child.
    */
-  forEach(cb(DataSnapshot snapshot)) {
+  void forEach(cb(DataSnapshot snapshot)) {
     _ds.callMethod('forEach', [(obj) {
       cb(new DataSnapshot.fromJsObject(obj));
     }]);

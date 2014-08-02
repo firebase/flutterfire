@@ -1,16 +1,11 @@
-Firebase-Dart
-=============
+# Firebase-Dart
 
 A Dart wrapper for [Firebase](https://www.firebase.com).
 
 This package uses `dart:js` to wrap functionality provided by `firebase.js`
 in Dart classes.
 
-See the included [example](https://github.com/firebase/firebase-dart/blob/master/example/test.dart)
-for sample usage of the API.
-
-Installing
-==========
+# Installing
 
 Follow the instructions on the [pub page](http://pub.dartlang.org/packages/firebase#installing).
 
@@ -19,7 +14,3 @@ Follow the instructions on the [pub page](http://pub.dartlang.org/packages/fireb
 ```html
 <script src="https://cdn.firebase.com/js/client/1.0.18/firebase.js"></script>
 ```
-
-License
--------
-[MIT](http://firebase.mit-license.org).

@@ -88,7 +88,7 @@ void main() {
       var child = f.child('update_string');
       expect(() => child.update('not found'), throwsA((error) {
         expect(error, 'Error: Firebase.update failed: First argument  must be '
-            'an object containing the children to replace.');
+            'an Object containing the children to replace.');
         return true;
       }));
     });
