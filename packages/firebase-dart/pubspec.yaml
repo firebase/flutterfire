@@ -1,10 +1,13 @@
 name: firebase
-version: 0.1.1+3
+version: 0.2.0-dev
 authors:
 - Anant Narayanan <anant@kix.in>
 - Seth Ladd <sethladd@gmail.com>
 description: A Dart wrapper for Firebase.
 homepage: https://github.com/firebase/firebase-dart/
+environment:
+  sdk: '>=1.0.0 <2.0.0'
 dev_dependencies:
   browser: '>=0.10.0 <0.11.0'
+  scheduled_test: '>=0.11.1 <0.12.0'
   unittest: '>=0.11.0 <0.12.0'

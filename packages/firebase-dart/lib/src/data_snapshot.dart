@@ -61,22 +61,23 @@ class DataSnapshot {
   bool hasChild(String path) => _ds.callMethod('hasChild', [path]);
 
   /**
-   * Returns true if the DataSnapshot has any children. If it does, you can
-   * enumerate them with forEach. If it does not, then the snapshot either
-   * contains a primitive value or it is empty.
+   * `true` if the DataSnapshot has any children.
+   *
+   * If it does, you can enumerate them with forEach. If not, then the
+   * snapshot either contains a primitive value or it is empty.
    */
-  bool hasChildren() => _ds.callMethod('hasChildren');
+  bool get hasChildren => _ds.callMethod('hasChildren');
 
   /**
-   * Get the name of the location that generated this DataSnapshot.
+   * The name of the location that generated this DataSnapshot.
    */
-  String name() => _ds.callMethod('name');
+  String get name => _ds.callMethod('name');
 
   /**
-   * Get the number of children for this DataSnapshot. If it has children,
+   * The number of children for this DataSnapshot. If it has children,
    * you can enumerate them with forEach().
    */
-  int numChildren() => _ds.callMethod('numChildren');
+  int get numChildren => _ds.callMethod('numChildren');
 
   /**
    * Get the Firebsae reference for the location that generated this

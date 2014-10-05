@@ -7,6 +7,8 @@ import 'auth_response.dart';
 import 'data_snapshot.dart';
 import 'disconnect.dart';
 import 'event.dart';
+import 'transaction_result.dart';
+import 'util.dart';
 
 /**
  * A firebase represents a particular location in your Firebase and can be used
@@ -89,11 +91,11 @@ class Firebase extends Query {
   Firebase root() => new Firebase.fromJsObject(_fb.callMethod('root'));
 
   /**
-   * The last token in a Firebase location is considered its name. Calling
-   * name() on any Firebase reference will return this name. Calling name()
-   * on the root of a Firebase will return null.
+   * The last token in a Firebase location is considered its name.
+   *
+   * [name] on the root of a Firebase is `null`.
    */
-  String name() => _fb.callMethod('name');
+  String get name => _fb.callMethod('name');
 
   /**
    * Write data to this Firebase location. This will overwrite any data at
@@ -112,7 +114,7 @@ class Firebase extends Query {
    */
   Future set(value) {
     var c = new Completer();
-    if (value is Map || value is Iterable) value = new JsObject.jsify(value);
+    value = jsify(value);
     _fb.callMethod('set', [value, (err, res) {
       _resolveFuture(c, err, res);
     }]);
@@ -127,12 +129,10 @@ class Firebase extends Query {
    * The returned Future will be complete when the synchronization has
    * completed with the Firebase servers.
    */
-  Future update(value) {
+  Future update(Map<String, dynamic> value) {
     var c = new Completer();
-    if (value is Iterable || value is Map) {
-      value = new JsObject.jsify(value);
-    }
-    _fb.callMethod('update', [value, (err, res) {
+    var jsValue = jsify(value);
+    _fb.callMethod('update', [jsValue, (err, res) {
       _resolveFuture(c, err, res);
     }]);
     return c.future;
@@ -179,7 +179,7 @@ class Firebase extends Query {
     */
    Future setWithPriority(value, int priority) {
      var c = new Completer();
-     if (value is Map || value is Iterable) value = new JsObject.jsify(value);
+     value = jsify(value);
      _fb.callMethod('setWithPriority', [value, priority, (err, res) {
        _resolveFuture(c, err, res);
      }]);
@@ -214,7 +214,7 @@ class Firebase extends Query {
     * no conflicts with other clients writing to the same location at the same
     * time.
     *
-    * To accomplish this, you pass transaction() an update function which is
+    * To accomplish this, you pass [transaction] an update function which is
     * used to transform the current value into a new value. If another client
     * writes to the location before your new value is successfully written,
     * your update function will be called again with the new current value, and
@@ -222,20 +222,21 @@ class Firebase extends Query {
     * succeeds without conflict or you abort the transaction by not returning
     * a value from your update function.
     *
-    * The returned Future will be completed after the transaction has finished.
+    * The returned [Future] will be completed after the transaction has
+    * finished.
     */
-   Future transaction(update(currentVal), {bool applyLocally}) {
+   Future<TransactionResult> transaction(update(currentVal),
+       {bool applyLocally}) {
      var c = new Completer();
-     _fb.callMethod('transaction', [(var val) {
-       return update(val);
+     _fb.callMethod('transaction', [(val) {
+       var retValue = update(val);
+       return jsify(retValue);
      }, (err, committed, snapshot) {
        if (err != null) {
          c.completeError(err);
        } else {
-         c.complete({
-           'committed': committed,
-           'snapshot': new DataSnapshot.fromJsObject(snapshot)
-         });
+         snapshot = new DataSnapshot.fromJsObject(snapshot);
+         c.complete(new TransactionResult(err, committed, snapshot));
        }
      }]);
      return c.future;
@@ -368,7 +369,8 @@ class Query {
    * startAt() can be combined with endAt() or limit() to create further
    * restrictive queries.
    */
-  Query startAt({int priority, String name}) => new Query.fromJsObject(_fb.callMethod('startAt', _removeNulls([priority, name])));
+  Query startAt({int priority, String name}) =>
+      new Query.fromJsObject(_fb.callMethod('startAt', _removeNulls([priority, name])));
 
   /**
    * Create a Query with the specified ending point. The ending point is
@@ -383,13 +385,30 @@ class Query {
    * endAt() can be combined with startAt() or limit() to create further
    * restrictive queries.
    */
-  Query endAt({int priority, String name}) => new Query.fromJsObject(_fb.callMethod('endAt', _removeNulls([priority, name])));
+  Query endAt({int priority, String name}) =>
+      new Query.fromJsObject(_fb.callMethod('endAt', _removeNulls([priority, name])));
 
   /**
    * Queries are attached to a location in your Firebase. This method will
    * return a Firebase reference to that location.
    */
   Firebase ref() => new Firebase.fromJsObject(_fb.callMethod('ref'));
+
+  /**
+   * Listens for exactly one event of the specified event type, and then stops
+   * listening.
+   */
+  Future<DataSnapshot> once(String eventType) {
+    var completer = new Completer<DataSnapshot>();
+
+    _fb.callMethod('once', [eventType, (jsSnapshot) {
+      var snapshot = new DataSnapshot.fromJsObject(jsSnapshot);
+      completer.complete(snapshot);
+    }, (error) {
+      completer.completeError(error);
+    }]);
+    return completer.future;
+  }
 }
 
 List _removeNulls(List args) {

@@ -3,6 +3,8 @@ library firebase.disconnect;
 import 'dart:async';
 import 'dart:js';
 
+import 'util.dart';
+
 /**
  * The Disconnect class encapsulates all operations to be performed on a
  * Firebase when the client is disconnected. This allows you to write or
@@ -31,7 +33,7 @@ class Disconnect {
    */
   Future set(value) {
     var c = new Completer();
-    if (value is Map || value is Iterable) value = new JsObject.jsify(value);
+    value = jsify(value);
     _od.callMethod('set', [value, (err, res) {
       _resolveFuture(c, err, res);
     }]);
@@ -45,7 +47,7 @@ class Disconnect {
    */
   Future setWithPriority(value, priority) {
     var c = new Completer();
-    if (value is Map || value is Iterable) value = new JsObject.jsify(value);
+    value = jsify(value);
     _od.callMethod('setWithPriority', [value, priority, (err, res) {
       _resolveFuture(c, err, res);
     }]);
@@ -65,7 +67,7 @@ class Disconnect {
    */
   Future update(value) {
     var c = new Completer();
-    value = new JsObject.jsify(value);
+    value = jsify(value);
     _od.callMethod('update', [value, (err, res) {
       _resolveFuture(c, err, res);
     }]);
