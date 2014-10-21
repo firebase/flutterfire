@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase/firebase.dart';
 import 'package:scheduled_test/scheduled_test.dart';
 import 'package:unittest/html_config.dart';
@@ -189,13 +191,12 @@ void main() {
       });
     });
 
-    // TODO: transactions seem to be broken - does not send existing value
-    skip_test('simple value, existing value', () {
+    test('simple value, existing value', () {
       var testRef = f.child('tx3');
       return testRef.set(42).then((_) {
         return testRef.transaction((curVal) {
-          expect(curVal, 42);
-          return 42;
+          expect(curVal == null || curVal == 42, isTrue);
+          return 43;
         });
       }).then((result) {
         expect(result.committed, isTrue);
@@ -204,7 +205,7 @@ void main() {
         var snapshot = result.snapshot;
         expect(snapshot.hasChildren, false);
         expect(snapshot.numChildren, 0);
-        expect(snapshot.val(), null);
+        expect(snapshot.val(), 43);
       });
     });
   });
