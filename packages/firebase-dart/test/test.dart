@@ -111,7 +111,7 @@ void main() {
         var count = 0;
         return Future.doWhile(() {
           count++;
-          return child.push().setWithPriority(count, 10 - count).then((_) {
+          return child.push().set(count).then((_) {
             return count < 10;
           });
         });
@@ -127,20 +127,29 @@ void main() {
       schedule(() {
         return child.startAt().limit(5).once('value').then((snapshot) {
           var val = snapshot.val() as Map;
-          expect(val.values, [10, 9, 8, 7, 6]);
-
-          return child.startAt(priority: 5).once('value');
-        }).then((snapshot) {
-          var val = snapshot.val() as Map;
-          expect(val.values, [5, 4, 3, 2, 1]);
+          expect(val.values, [1, 2, 3, 4, 5]);
 
           var lastKey = val.keys.last;
-          expect(val[lastKey], 1);
 
-          return child.endAt(name: lastKey).once('value');
+          return child.startAt(name: lastKey).limit(2).once('value');
         }).then((snapshot) {
-          var val = snapshot.val();
-          expect(val, isNull);
+          var val = snapshot.val() as Map;
+          expect(val.values, [5, 6]);
+
+          var lastKey = val.keys.last;
+
+          return child.startAt(name: lastKey).once('value');
+        }).then((snapshot) {
+          var val = snapshot.val() as Map;
+          expect(val.values, [6, 7, 8, 9, 10]);
+
+          var lastKey = val.keys.last;
+          expect(val[lastKey], 10);
+
+          return child.startAt(name: lastKey).once('value');
+        }).then((snapshot) {
+          var val = snapshot.val() as Map;
+          expect(val.values, [10]);
         });
       });
     });
