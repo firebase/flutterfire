@@ -226,7 +226,7 @@ class Firebase extends Query {
     * finished.
     */
    Future<TransactionResult> transaction(update(currentVal),
-       {bool applyLocally}) {
+       {bool applyLocally: true}) {
      var c = new Completer();
      _fb.callMethod('transaction', [(val) {
        var retValue = update(val);
@@ -238,7 +238,7 @@ class Firebase extends Query {
          snapshot = new DataSnapshot.fromJsObject(snapshot);
          c.complete(new TransactionResult(err, committed, snapshot));
        }
-     }]);
+     }, applyLocally]);
      return c.future;
    }
 
