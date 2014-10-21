@@ -103,6 +103,49 @@ void main() {
     });
   });
 
+  group('query', () {
+    test('startAt', () {
+      var child = f.child('query');
+
+      schedule(() {
+        var count = 0;
+        return Future.doWhile(() {
+          count++;
+          return child.push().setWithPriority(count, 10 - count).then((_) {
+            return count < 10;
+          });
+        });
+      });
+
+      schedule(() {
+        return child.startAt().once('value').then((snapshot) {
+          var val = snapshot.val();
+          expect(val, hasLength(10));
+        });
+      });
+
+      schedule(() {
+        return child.startAt().limit(5).once('value').then((snapshot) {
+          var val = snapshot.val() as Map;
+          expect(val.values, [10, 9, 8, 7, 6]);
+
+          return child.startAt(priority: 5).once('value');
+        }).then((snapshot) {
+          var val = snapshot.val() as Map;
+          expect(val.values, [5, 4, 3, 2, 1]);
+
+          var lastKey = val.keys.last;
+          expect(val[lastKey], 1);
+
+          return child.endAt(name: lastKey).once('value');
+        }).then((snapshot) {
+          var val = snapshot.val();
+          expect(val, isNull);
+        });
+      });
+    });
+  });
+
   group('on', () {
     test('onChildChanged', () {
       Firebase testRef;
