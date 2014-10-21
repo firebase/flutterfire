@@ -153,7 +153,6 @@ void main() {
 
       return testRef.set({'a': 'b'});
     });
-
   });
 
   group('transaction', () {
