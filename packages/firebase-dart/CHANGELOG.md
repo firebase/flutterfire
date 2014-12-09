@@ -1,3 +1,8 @@
+## 0.2.1
+
+* Added new `authWithCustomToken` method (thanks to rayk)
+* Deprecate `auth`
+
 ## 0.2.0+1
 
 * Updated README to include latest `firebase.js` link.
