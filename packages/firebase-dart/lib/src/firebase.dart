@@ -41,7 +41,11 @@ class Firebase extends Query {
    * Authenticates a Firebase client using a provided Authentication token.
    * Takes a single token as an argument and returns a Future that will be
    * resolved when the authentication succeeds (or fails).
+   *
+   * auth in the Firebase JS library has been deprecated. The same behaviour is
+   * now achieved by using authWithCustomToken
    */
+  @deprecated
   Future<AuthResponse> auth(String token) {
     var c = new Completer();
     // On failure, the first argument will be an Error object indicating the
@@ -49,6 +53,25 @@ class Firebase extends Query {
     // will be an object containing { auth: <auth payload>, expires:
     // <expiration time in seconds since the unix epoch> }.
     _fb.callMethod('auth', [token, (err, [result]) {
+      if (err != null) {
+        c.completeError(err);
+      } else {
+        c.complete(new AuthResponse(result));
+      }
+    }, (err) {
+      c.completeError(err);
+    }]);
+    return c.future;
+  }
+
+  /**
+   * Authenticates a Firebase client using an authentication token or Firebase Secret.
+   * Takes a single token as an argument and returns a Future that will be
+   * resolved when the authentication succeeds (or fails).
+   */
+  Future<AuthResponse> authWithCustomToken(String token) {
+    var c = new Completer();
+    _fb.callMethod('authWithCustomToken', [token, (err, [result]) {
       if (err != null) {
         c.completeError(err);
       } else {

@@ -35,16 +35,16 @@ void main() {
   });
 
   if (AUTH_KEY != null) {
-    group('auth', () {
-      test('bad auth should fail', () {
-        expect(f.auth(INVALID_TOKEN), throwsA((error) {
+    group('authWithCustomToken', () {
+      test('bad auth token should fail', () {
+        expect(f.authWithCustomToken(INVALID_TOKEN), throwsA((error) {
           expect(error['code'], 'INVALID_TOKEN');
           return true;
         }));
       });
 
-      test('good auth key', () {
-        return f.auth(AUTH_KEY);
+      test('good auth token', () {
+        return f.authWithCustomToken(AUTH_KEY);
       });
     });
   }
