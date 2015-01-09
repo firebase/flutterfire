@@ -84,6 +84,27 @@ class Firebase extends Query {
   }
 
   /**
+   * Authenticates a Firebase client using an email / password combination.
+   */
+  Future<AuthResponse> authWithPassword(credentials) {
+    var c = new Completer();
+    // On failure, the first argument will be an Error object indicating the
+    // failure. On success, the first argument will be null and the second
+    // will be an object containing { auth: <auth payload>, expires:
+    // <expiration time in seconds since the unix epoch> }.
+    _fb.callMethod('authWithPassword', [credentials, (err, [result]) {
+      if (err != null) {
+        c.completeError(err);
+      } else {
+        c.complete(new AuthResponse(result));
+      }
+    }, (err) {
+      c.completeError(err);
+    }]);
+    return c.future;
+  }
+
+  /**
    * Unauthenticates a Firebase client (i.e. logs out).
    */
   void unauth() {
@@ -264,6 +285,28 @@ class Firebase extends Query {
          c.complete(new TransactionResult(err, committed, snapshot));
        }
      }, applyLocally]);
+     return c.future;
+   }
+
+   /**
+    * Creates a new user account using an email / password combination.
+    */
+   Future createUser(credentials) {
+     var c = new Completer();
+     _fb.callMethod('createUser', [credentials, (err) {
+       _resolveFuture(c, err, null);
+     }]);
+     return c.future;
+   }
+
+   /**
+    * Removes an existing user account using an email / password combination.
+    */
+   Future removeUser(credentials) {
+     var c = new Completer();
+     _fb.callMethod('removeUser', [credentials, (err) {
+       _resolveFuture(c, err, null);
+     }]);
      return c.future;
    }
 

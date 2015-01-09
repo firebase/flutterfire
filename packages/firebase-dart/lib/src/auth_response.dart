@@ -7,7 +7,7 @@ import 'dart:js';
  */
 class AuthResponse {
   final int expires;
-  final String auth;
+  final JsObject auth;
 
   AuthResponse(JsObject response)
       : expires = response['expires'],
