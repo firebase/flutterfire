@@ -1,3 +1,9 @@
+## 0.3.0
+
+* Add createUser(), removeUser() and authWithPassword()
+  (thanks to wilsynet)
+* AuthResponse.auth was changed to type JsObject
+
 ## 0.2.1
 
 * Added new `authWithCustomToken` method (thanks to rayk)
