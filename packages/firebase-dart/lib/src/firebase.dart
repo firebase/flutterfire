@@ -371,7 +371,8 @@ class Query {
     }
     controller = new StreamController<Event>.broadcast(
         onListen: startListen,
-        onCancel: stopListen);
+        onCancel: stopListen,
+        sync: true);
     return controller.stream;
   }
 

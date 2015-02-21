@@ -7,12 +7,12 @@ import 'package:unittest/html_config.dart';
 
 const TEST_URL = 'https://dart-test.firebaseio-demo.com/test/';
 
-// Update TEST_URL to a valid URL and update AUTH_KEY to a corresponding
-// key to test authentication.
-const AUTH_KEY = null;
-const INVALID_TOKEN = 'xbKOOdkZDBExtKM3sZw6gWtFpGgqMkMidXCiAFjm';
+// Update TEST_URL to a valid URL and update AUTH_TOKEN to a corresponding
+// authentication token to test authentication.
+const AUTH_TOKEN = null;
+const INVALID_AUTH_TOKEN = 'xbKOOdkZDBExtKM3sZw6gWtFpGgqMkMidXCiAFjm';
 
-// Update CREDENTAILS_EMAIL to an email address to test
+// Update CREDENTIALS_EMAIL to an email address to test
 // auth using email/password credentials.
 // Unfortunately, createUser does not work with the firebaseio demo test URL,
 // if you want to enable this, you will likely need to change TEST_URL to your own.
@@ -42,17 +42,17 @@ void main() {
     });
   });
 
-  if (AUTH_KEY != null) {
+  if (AUTH_TOKEN != null) {
     group('authWithCustomToken', () {
       test('bad auth token should fail', () {
-        expect(f.authWithCustomToken(INVALID_TOKEN), throwsA((error) {
+        expect(f.authWithCustomToken(INVALID_AUTH_TOKEN), throwsA((error) {
           expect(error['code'], 'INVALID_TOKEN');
           return true;
         }));
       });
 
       test('good auth token', () {
-        return f.authWithCustomToken(AUTH_KEY);
+        return f.authWithCustomToken(AUTH_TOKEN);
       });
     });
   }
@@ -63,15 +63,15 @@ void main() {
         'password':CREDENTIALS_PASSWORD});
       var badCredentials = new JsObject.jsify({'email':CREDENTIALS_EMAIL, 
         'password':CREDENTIALS_WRONG_PASSWORD});
-      
+
       test('auth-credentials', () {
-        f.createUser(credentials).then((err) { 
+        f.createUser(credentials).then((err) {
           expect(err, null);
-          f.authWithPassword(credentials).then((authResponse) { 
+          f.authWithPassword(credentials).then((authResponse) {
             expect(authResponse.auth, isNotNull);
             expect(f.authWithPassword(badCredentials), throwsA((error) {
               expect(error['code'], 'INVALID_PASSWORD');
-              f.removeUser(credentials).then((err) { expect(err, null); }); 
+              f.removeUser(credentials).then((err) { expect(err, null); });
               return true;
             }));
           });
@@ -186,20 +186,52 @@ void main() {
     });
   });
 
-  group('on', () {
+  group('on & off', () {
+
+    List<String> addedKeys = [];
+    test('onChildAdded', () {
+      Firebase testRef;
+      StreamSubscription<Event> subscription;
+      var eventCount = 0;
+
+      schedule(() {
+        testRef = f.child('onChildAdded');
+        subscription = testRef.onChildAdded.listen((event) {
+          var ss = event.snapshot;
+          addedKeys.add(ss.name);
+          expect(++eventCount, lessThan(3));
+          expect(ss.val(), eventCount);
+        });
+
+        return testRef.push(value: 1);
+      });
+
+      schedule(() {
+        return testRef.push(value: 2);
+      });
+
+      schedule(() {
+        Future waitFuture = subscription.cancel();
+        if (waitFuture == null) {
+          return testRef.push(value: 3);
+        }
+        else waitFuture.then((_) {
+          return testRef.push(value: 3);
+        });
+      });
+    });
+
     test('onChildChanged', () {
       Firebase testRef;
+      StreamSubscription<Event> subscription;
       var eventCount = 0;
-      bool isDone = false;
 
       schedule(() {
         testRef = f.child('onChildChanged');
-        testRef.onChildChanged.listen((event) {
+        subscription = testRef.onChildChanged.listen((event) {
           var ss = event.snapshot;
           expect(ss.name, 'key');
-
           eventCount++;
-
           expect(ss.val(), eventCount);
         });
 
@@ -215,13 +247,95 @@ void main() {
       });
 
       schedule(() {
-        return testRef.set({'key': 3});
+        Future waitFuture = subscription.cancel();
+        if (waitFuture == null) {
+          return testRef.set({'key': 3});
+        }
+        else waitFuture.then((_) {
+          return testRef.set({'key': 3});
+        });
       });
 
       schedule(() {
-        expect(eventCount, 3);
+        expect(eventCount, 2);
       });
     });
+
+    test('onChildRemoved', () {
+      Firebase testRef;
+      StreamSubscription<Event> onChildRemovedSubscription;
+      int childRemovedCount = 0;
+
+      schedule(() {
+        testRef = f.child('onChildAdded');
+        onChildRemovedSubscription = testRef.onChildRemoved.listen((event) {
+          var ss = event.snapshot;
+          expect(++childRemovedCount, 1);
+          expect(ss.name, addedKeys[0]);
+        });
+
+        return testRef.child(addedKeys[0]).remove();
+      });
+
+      schedule(() {
+        Future waitFuture = onChildRemovedSubscription.cancel();
+        if (waitFuture == null) {
+          return testRef.child(addedKeys[1]).remove();
+        }
+        else waitFuture.then((_) {
+          return testRef.child(addedKeys[1]).remove();
+        });
+      });
+    });
+
+    test('onValue', () {
+      Firebase testRef;
+      StreamSubscription<Event> onValueSubscription;
+      int valueCount = 0;
+
+      schedule(() {
+        testRef = f.child('onValue');
+        onValueSubscription = testRef.onValue.listen((event) {
+          var ss = event.snapshot;
+          expect(ss.name, 'onValue');
+          expect(ss.val(), {'key': ++valueCount});
+          expect(valueCount, lessThan(3));
+        });
+        return testRef.set({'key': 1});
+      });
+
+      schedule(() {
+        return testRef.update({'key': 2});
+      });
+
+      schedule(() {
+        Future waitFuture = onValueSubscription.cancel();
+        if (waitFuture == null) {
+          return testRef.update({'key': 3});
+        }
+        else waitFuture.then((_) {
+          return testRef.update({'key': 3});
+        });
+
+    test('value events triggered last', () {
+      schedule(() {
+        int numAdded = 0;
+        var value = {
+            'a':'b', 'c':'d', 'e':'f'
+        };
+        Firebase testRef = f.child("things");
+        testRef.onValue.listen((Event event) {
+          var ss = event.snapshot;
+          expect(numAdded, 3);
+          expect(ss.val(), value);
+        });
+        testRef.onChildAdded.listen((Event event) {
+          numAdded++;
+        });
+        testRef.set(value);
+      });
+    });
+
   });
 
   group('once', () {
@@ -292,4 +406,42 @@ void main() {
       });
     });
   });
+
+  group('onDisconnect', () {
+
+    test('set', () {
+      var value = {'onDisconnect set': 1};
+      return f.onDisconnect.set(value).then((v) {
+        // Unable to check value (value set upon disconnect.)
+      });
+    });
+
+    test('setWithPriority', () {
+      var priority = 1;
+      var value = {'onDisconnect setWithPriority': 2};
+      return f.onDisconnect.setWithPriority(value, priority).then((v) {
+        // Unable to check value (value set upon disconnect.)
+      });
+    });
+
+    test('update', () {
+      var value = {'onDisconnect update': 3};
+      return f.onDisconnect.update(value).then((v) {
+        // Unable to check value (value updated upon disconnect.)
+      });
+    });
+
+    test('remove', () {
+      return f.onDisconnect.remove().then((v) {
+        // Unable to check value (value removed upon disconnect.)
+      });
+    });
+
+    test('cancel', () {
+      return f.onDisconnect.cancel().then((v) {
+        // TODO: confirm that queued set/update events are cancelled.
+      });
+    });
+  });
+
 }
