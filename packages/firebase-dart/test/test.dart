@@ -316,6 +316,8 @@ void main() {
         else waitFuture.then((_) {
           return testRef.update({'key': 3});
         });
+      });
+    });
 
     test('value events triggered last', () {
       schedule(() {
