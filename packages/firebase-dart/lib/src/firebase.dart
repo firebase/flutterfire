@@ -105,6 +105,14 @@ class Firebase extends Query {
   }
 
   /**
+   * Synchronously retrieves the current authentication state of the client.
+   */
+  AuthResponse getAuth() {
+    var authResponse = _fb.callMethod('getAuth');
+    return authResponse == null ? null : new AuthResponse(authResponse);
+  }
+
+  /**
    * Unauthenticates a Firebase client (i.e. logs out).
    */
   void unauth() {

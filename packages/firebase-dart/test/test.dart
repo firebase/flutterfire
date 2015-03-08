@@ -78,6 +78,23 @@ void main() {
         });
       });
     });
+
+    group('getAuth', () {
+      var credentials = new JsObject.jsify({'email':CREDENTIALS_EMAIL,
+          'password':CREDENTIALS_PASSWORD});
+
+      test('getAuth when not authenticated', () {
+        var response = f.getAuth();
+        expect(response, isNull);
+      });
+
+      test('getAuth when authenticated', () {
+        f.authWithPassword(credentials).then((_) {
+          var response = f.getAuth();
+          expect(response.auth, isNotNull);
+        });
+      });
+    });
   }
 
   group('non-auth', () {
