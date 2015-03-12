@@ -56,6 +56,20 @@ void main() {
       });
     });
   }
+
+  group('authAnonymously', () {
+    test('good auth', () {
+      return f.authAnonymously().then((response) {
+        expect(response.auth, isNotNull);
+      });
+    });
+
+    test('good auth with custom remember', () {
+      return f.authAnonymously(remember: "sessionOnly").then((response) {
+        expect(response.auth, isNotNull);
+      });
+    });
+  });
   
   if (CREDENTIALS_EMAIL != null) {
     group('auth-credentials', () {

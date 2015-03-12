@@ -85,6 +85,21 @@ class Firebase extends Query {
   }
 
   /**
+   * Authenticates a Firebase client using a new, temporary guest account.
+   */
+  Future<AuthResponse> authAnonymously({remember: 'default'}) {
+    var c = new Completer();
+    _fb.callMethod('authAnonymously', [(err, [result]) {
+      if (err != null) {
+        c.completeError(err);
+      } else {
+        c.complete(new AuthResponse(result));
+      }
+    }, jsify({'remember': remember})]);
+    return c.future;
+  }
+
+  /**
    * Authenticates a Firebase client using an email / password combination.
    */
   Future<AuthResponse> authWithPassword(Map credentials) {
