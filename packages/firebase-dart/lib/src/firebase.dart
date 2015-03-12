@@ -15,6 +15,7 @@ import 'util.dart';
  * for reading or writing data to that Firebase location.
  */
 class Firebase extends Query {
+  Stream<Event> _onAuth;
   Disconnect _onDisconnect;
 
   /**
@@ -110,6 +111,41 @@ class Firebase extends Query {
   AuthResponse getAuth() {
     var authResponse = _fb.callMethod('getAuth');
     return authResponse == null ? null : new AuthResponse(authResponse);
+  }
+
+  /**
+   * Listens for changes to the client's authentication state..
+   */
+  Stream<Event> onAuth([context]) {
+    if (_onAuth == null) {
+      StreamController<AuthResponse> controller;
+
+      if (context == null) {
+        context = {};
+      }
+
+      void _handleOnAuth(authData) {
+        if(authData != null) {
+          controller.add(new AuthResponse(authData));
+        }
+        else {
+          controller.add(null);
+        }
+      }
+
+      void startListen() {
+        _fb.callMethod('onAuth', [_handleOnAuth, jsify(context)]);
+      }
+      void stopListen() {
+        _fb.callMethod('offAuth', [_handleOnAuth, jsify(context)]);
+      }
+      controller = new StreamController<Event>.broadcast(
+          onListen: startListen,
+          onCancel: stopListen,
+          sync: true);
+      return controller.stream;
+    }
+    return _onAuth;
   }
 
   /**
