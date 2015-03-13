@@ -121,6 +121,38 @@ class Firebase extends Query {
   }
 
   /**
+   * Authenticates a Firebase client using a third party provider (github, twitter,
+   * google, facebook). This method presents login form with a popup.
+   */
+  Future<AuthResponse> authWithOAuthPopup(provider, {remember: 'default', scope: ''}) {
+    var c = new Completer();
+    _fb.callMethod('authWithOAuthPopup', [provider, (err, [result]) {
+      if (err != null) {
+        c.completeError(err);
+      } else {
+        c.complete(new AuthResponse(result));
+      }
+    }, jsify({'remember': remember, 'scope': scope})]);
+    return c.future;
+  }
+
+  /**
+   * Authenticates a Firebase client using a third party provider (github, twitter,
+   * google, facebook). This method redirects to a login form, then back to your app.
+   */
+  Future<AuthResponse> authWithOAuthRedirect(provider, {remember: 'default', scope: ''}) {
+    var c = new Completer();
+    _fb.callMethod('authWithOAuthRedirect', [provider, (err, [result]) {
+      if (err != null) {
+        c.completeError(err);
+      } else {
+        c.complete(new AuthResponse(result));
+      }
+    }, jsify({'remember': remember, 'scope': scope})]);
+    return c.future;
+  }
+
+  /**
    * Synchronously retrieves the current authentication state of the client.
    */
   AuthResponse getAuth() {
