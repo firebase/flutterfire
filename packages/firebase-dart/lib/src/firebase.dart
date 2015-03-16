@@ -11,7 +11,7 @@ import 'transaction_result.dart';
 import 'util.dart';
 
 /**
- * A firebase represents a particular location in your Firebase and can be used
+ * A Firebase represents a particular location in your Firebase and can be used
  * for reading or writing data to that Firebase location.
  */
 class Firebase extends Query {
@@ -206,7 +206,7 @@ class Firebase extends Query {
    * Get a Firebase reference for a location at the specified relative path.
    *
    * The relative path can either be a simple child name, (e.g. 'fred') or a
-   * deeper slash seperated path (e.g. 'fred/name/first').
+   * deeper slash separated path (e.g. 'fred/name/first').
    */
   Firebase child(String path) =>
       new Firebase.fromJsObject(_fb.callMethod('child', [path]));
@@ -227,11 +227,25 @@ class Firebase extends Query {
   Firebase root() => new Firebase.fromJsObject(_fb.callMethod('root'));
 
   /**
+   * Returns the last token in a Firebase location.
+   * [key] on the root of a Firebase is `null`.
+   */
+  String get key => _fb.callMethod('key');
+
+  /**
    * The last token in a Firebase location is considered its name.
    *
    * [name] on the root of a Firebase is `null`.
    */
+  @deprecated
   String get name => _fb.callMethod('name');
+
+  /**
+   * Gets the absolute URL corresponding to this Firebase reference's location.
+   */
+  String toString() {
+    return _fb.toString();
+  }
 
   /**
    * Write data to this Firebase location. This will overwrite any data at
@@ -251,8 +265,8 @@ class Firebase extends Query {
   Future set(value) {
     var c = new Completer();
     value = jsify(value);
-    _fb.callMethod('set', [value, (err, res) {
-      _resolveFuture(c, err, res);
+    _fb.callMethod('set', [value, (err) {
+      _resolveFuture(c, err, null);
     }]);
     return c.future;
   }
@@ -268,8 +282,8 @@ class Firebase extends Query {
   Future update(Map<String, dynamic> value) {
     var c = new Completer();
     var jsValue = jsify(value);
-    _fb.callMethod('update', [jsValue, (err, res) {
-      _resolveFuture(c, err, res);
+    _fb.callMethod('update', [jsValue, (err) {
+      _resolveFuture(c, err, null);
     }]);
     return c.future;
   }
@@ -280,21 +294,21 @@ class Firebase extends Query {
    *
    * The effect of this delete will be visible immediately and the
    * corresponding events (onValue, onChildAdded, etc.) will be triggered.
-   * Synchronization of the delete to the Firebsae servers will also be
+   * Synchronization of the delete to the Firebase servers will also be
    * started, and the Future returned by this method will complete after the
    * synchronization has finished.
    */
   Future remove() {
     var c = new Completer();
-    _fb.callMethod('remove', [(err, res) {
-      _resolveFuture(c, err, res);
+    _fb.callMethod('remove', [(err) {
+      _resolveFuture(c, err, null);
     }]);
     return c.future;
   }
 
   /**
    * Push generates a new child location using a unique name and returns a
-   * Frebase reference to it. This is useful when the children of a Firebase
+   * Firebase reference to it. This is useful when the children of a Firebase
    * location represent a list of items.
    *
    * FIXME: How to implement optional argument to push(value)?
@@ -317,8 +331,8 @@ class Firebase extends Query {
   Future setWithPriority(value, int priority) {
     var c = new Completer();
     value = jsify(value);
-    _fb.callMethod('setWithPriority', [value, priority, (err, res) {
-      _resolveFuture(c, err, res);
+    _fb.callMethod('setWithPriority', [value, priority, (err) {
+      _resolveFuture(c, err, null);
     }]);
     return c.future;
   }
@@ -338,8 +352,8 @@ class Firebase extends Query {
    */
   Future setPriority(int priority) {
     var c = new Completer();
-    _fb.callMethod('setPriority', [priority, (err, res) {
-      _resolveFuture(c, err, res);
+    _fb.callMethod('setPriority', [priority, (err) {
+      _resolveFuture(c, err, null);
     }]);
     return c.future;
   }
@@ -385,6 +399,17 @@ class Firebase extends Query {
   Future createUser(Map credentials) {
     var c = new Completer();
     _fb.callMethod('createUser', [jsify(credentials), (err, [userData]) {
+      _resolveFuture(c, err, userData);
+    }]);
+    return c.future;
+  }
+
+  /**
+   * Updates the email associated with an email / password user account.
+   */
+  Future changeEmail(Map credentials) {
+    var c = new Completer();
+    _fb.callMethod('changeEmail', [jsify(credentials), (err) {
       _resolveFuture(c, err, null);
     }]);
     return c.future;
@@ -475,7 +500,7 @@ class Query {
   Stream<Event> _createStream(String type) {
     StreamController<Event> controller;
     void startListen() {
-      _fb.callMethod('on', [type, (snapshot, prevChild) {
+      _fb.callMethod('on', [type, (snapshot, [prevChild]) {
         controller.add(
             new Event(new DataSnapshot.fromJsObject(snapshot), prevChild));
       }]);
@@ -529,19 +554,48 @@ class Query {
   }
 
   /**
-   * Generate a Query object limited to the number of specified children. If
-   * combined with startAt, the query will include the specified number of
-   * children after the starting point. If combined with endAt, the query will
-   * include the specified number of children before the ending point. If not
-   * combined with startAt() or endAt(), the query will include the last
-   * specified number of children.
+   * Listens for exactly one event of the specified event type, and then stops
+   * listening.
    */
-  Query limit(int limit) =>
-      new Query.fromJsObject(_fb.callMethod('limit', [limit]));
+  Future<DataSnapshot> once(String eventType) {
+    var completer = new Completer<DataSnapshot>();
+
+    _fb.callMethod('once', [eventType, (jsSnapshot) {
+      var snapshot = new DataSnapshot.fromJsObject(jsSnapshot);
+      completer.complete(snapshot);
+    }, (error) {
+      completer.completeError(error);
+    }]);
+    return completer.future;
+  }
+
+  /**
+   * Generates a new Query object ordered by the specified child key.
+   */
+  Query orderByChild(String key) =>
+    new Query.fromJsObject(_fb.callMethod('orderByChild', [key]));
+
+  /**
+   * Generates a new Query object ordered by key.
+   */
+  Query orderByKey() =>
+    new Query.fromJsObject(_fb.callMethod('orderByKey'));
+
+  /**
+   * Generates a new Query object ordered by child values.
+   */
+  Query orderByValue() =>
+    new Query.fromJsObject(_fb.callMethod('orderByValue'));
+
+  /**
+   * Generates a new Query object ordered by priority.
+   */
+  Query orderByPriority() =>
+    new Query.fromJsObject(_fb.callMethod('orderByPriority'));
 
   /**
    * Create a Query with the specified starting point. The starting point is
-   * specified using a priority and an optinal child name. If no arguments
+   * specified using a priority and an optional child name. If no arguments
    * are provided, the starting point will be the beginning of the data.
    *
    * The starting point is inclusive, so children with exactly the specified
@@ -553,7 +607,7 @@ class Query {
    * restrictive queries.
    */
   Query startAt({int priority, String name}) =>
-      new Query.fromJsObject(_fb.callMethod('startAt', _removeTrailingNulls([priority, name])));
+    new Query.fromJsObject(_fb.callMethod('startAt', _removeTrailingNulls([priority, name])));
 
   /**
    * Create a Query with the specified ending point. The ending point is
@@ -569,29 +623,45 @@ class Query {
    * restrictive queries.
    */
   Query endAt({int priority, String name}) =>
-      new Query.fromJsObject(_fb.callMethod('endAt', _removeTrailingNulls([priority, name])));
+    new Query.fromJsObject(_fb.callMethod('endAt', _removeTrailingNulls([priority, name])));
+
+  /**
+   * Creates a Query which includes children which match the specified value.
+   */
+  Query equalTo(value, [key]) {
+    var args = key == null ? [value] : [value, key];
+    return new Query.fromJsObject(_fb.callMethod('equalTo', args));
+  }
+
+  /**
+   * Generates a new Query object limited to the first certain number of children.
+   */
+  Query limitToFirst(int limit) =>
+    new Query.fromJsObject(_fb.callMethod('limitToFirst', [limit]));
+
+  /**
+   * Generates a new Query object limited to the last certain number of children.
+   */
+  Query limitToLast(int limit) =>
+    new Query.fromJsObject(_fb.callMethod('limitToLast', [limit]));
+
+  /**
+   * Generate a Query object limited to the number of specified children. If
+   * combined with startAt, the query will include the specified number of
+   * children after the starting point. If combined with endAt, the query will
+   * include the specified number of children before the ending point. If not
+   * combined with startAt() or endAt(), the query will include the last
+   * specified number of children.
+   */
+  @deprecated
+  Query limit(int limit) =>
+      new Query.fromJsObject(_fb.callMethod('limit', [limit]));
 
   /**
    * Queries are attached to a location in your Firebase. This method will
    * return a Firebase reference to that location.
    */
   Firebase ref() => new Firebase.fromJsObject(_fb.callMethod('ref'));
-
-  /**
-   * Listens for exactly one event of the specified event type, and then stops
-   * listening.
-   */
-  Future<DataSnapshot> once(String eventType) {
-    var completer = new Completer<DataSnapshot>();
-
-    _fb.callMethod('once', [eventType, (jsSnapshot) {
-      var snapshot = new DataSnapshot.fromJsObject(jsSnapshot);
-      completer.complete(snapshot);
-    }, (error) {
-      completer.completeError(error);
-    }]);
-    return completer.future;
-  }
 }
 
 List _removeTrailingNulls(List args) {

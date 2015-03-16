@@ -9,8 +9,8 @@ import 'util.dart';
  * The Disconnect class encapsulates all operations to be performed on a
  * Firebase when the client is disconnected. This allows you to write or
  * clear data when your client disconnects from the Firebase servers. These
- * updates occur whether your client disconnectes cleanly or not, so you can
- * rely on them to clean up data efven if a connection is dropped or a client
+ * updates occur whether your client disconnects cleanly or not, so you can
+ * rely on them to clean up data even if a connection is dropped or a client
  * crashes.
  *
  * Note that these functions should be called before any data is written to
@@ -34,8 +34,8 @@ class Disconnect {
   Future set(value) {
     var c = new Completer();
     value = jsify(value);
-    _od.callMethod('set', [value, (err, res) {
-      _resolveFuture(c, err, res);
+    _od.callMethod('set', [value, (err) {
+      _resolveFuture(c, err, null);
     }]);
     return c.future;
   }
@@ -48,8 +48,8 @@ class Disconnect {
   Future setWithPriority(value, priority) {
     var c = new Completer();
     value = jsify(value);
-    _od.callMethod('setWithPriority', [value, priority, (err, res) {
-      _resolveFuture(c, err, res);
+    _od.callMethod('setWithPriority', [value, priority, (err) {
+      _resolveFuture(c, err, null);
     }]);
     return c.future;
   }
@@ -68,8 +68,8 @@ class Disconnect {
   Future update(value) {
     var c = new Completer();
     value = jsify(value);
-    _od.callMethod('update', [value, (err, res) {
-      _resolveFuture(c, err, res);
+    _od.callMethod('update', [value, (err) {
+      _resolveFuture(c, err, null);
     }]);
     return c.future;
   }
@@ -83,8 +83,8 @@ class Disconnect {
    */
   Future remove() {
     var c = new Completer();
-    _od.callMethod('remove', [(err,res) {
-       _resolveFuture(c, err, res);
+    _od.callMethod('remove', [(err) {
+       _resolveFuture(c, err, null);
     }]);
     return c.future;
   }
@@ -99,8 +99,8 @@ class Disconnect {
    */
   Future cancel() {
     var c = new Completer();
-    _od.callMethod('cancel', [(err,res) {
-       _resolveFuture(c, err, res);
+    _od.callMethod('cancel', [(err) {
+       _resolveFuture(c, err, null);
     }]);
     return c.future;
   }

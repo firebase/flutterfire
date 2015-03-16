@@ -80,8 +80,8 @@ void main() {
 
       test('auth-credentials', () {
         schedule(() {
-          return f.createUser(credentials).then((err) {
-            expect(err, null);
+          return f.createUser(credentials).then((res) {
+            expect(res, isNotNull);
             f.authWithPassword(credentials).then((authResponse) {
               expect(authResponse.auth, isNotNull);
               expect(f.authWithPassword(badCredentials), throwsA((error) {
@@ -96,12 +96,12 @@ void main() {
     });
 
     group('createUser', () {
-      test('createUser returns null on success', () {
+      test('createUser returns user data on success', () {
         schedule(() {
           var credentials = {'email': 'createUserTest@example.com',
               'password': 'pswd'};
           return f.createUser(credentials).then((result) {
-            expect(result, null);
+            expect(result['uid'], isNotNull);
             f.removeUser(credentials);
           });
         });
@@ -118,6 +118,47 @@ void main() {
         });
       });
 
+    });
+
+    group('changeEmail', () {
+      var password = 'pswd';
+
+      test('changeEmail returns null on success', () {
+        var email = 'changeEmailTest@example.com';
+        var newEmail = 'updatedEmailTest@example.com';
+        var changeCredentials = {
+            'oldEmail': email,
+            'newEmail': newEmail,
+            'password': password,
+        };
+        schedule(() {
+          return f.createUser({'email': email, 'password': password}).then((result) {
+            f.changeEmail(changeCredentials).then((result) {
+              expect(result, null);
+              f.removeUser({'email': newEmail, 'password': password});
+            });
+          });
+        });
+      });
+
+      test('changeEmail throws error', () {
+        var email = 'changePasswordErrorTests@example.com';
+        var badCredentials = {
+            'oldEmail': email,
+            'newEmail': 'invalid_email',
+            'password': password,
+        };
+
+        schedule(() {
+          return f.createUser({'email': email, 'password': password}).then((result) {
+            expect(f.changeEmail(badCredentials), throwsA((error) {
+              expect(error['code'], "INVALID_EMAIL");
+              f.removeUser({'email': email, 'password': password});
+              return true;
+            }));
+          });
+        });
+      });
     });
 
     group('changePassword', () {
@@ -243,13 +284,33 @@ void main() {
   group('non-auth', () {
     test('child', () {
       var child = f.child('trad');
-      expect(child.name, 'trad');
+      expect(child.key, 'trad');
 
       var parent = child.parent();
-      expect(parent.name, _testKey);
+      expect(parent.key, _testKey);
 
       var root = child.root();
-      expect(root.name, isNull);
+      expect(root.key, isNull);
+    });
+
+    test('key returns last item name', () {
+      expect(f.key, _testKey);
+    });
+
+    test('key returns null on root location', () {
+      expect(f.root().key, isNull);
+    });
+
+    test('name returns last item name', () {
+      expect(f.name, _testKey);
+    });
+
+    test('name returns null on root location', () {
+      expect(f.root().name, isNull);
+    });
+
+    test('toString returns the absolute url to ref location', () {
+      expect(f.toString(), TEST_URL + Uri.encodeComponent(_testKey));
     });
 
     test('set', () {
@@ -294,7 +355,246 @@ void main() {
     });
   });
 
+  group('data-snapshot', () {
+
+    test('exists returns true when data exists', () {
+      schedule(() {
+        f.child('ds-exists').set({'thing': 'one'});
+        return f.child('ds-exists').once('value').then((snapshot) {
+          expect(snapshot.exists, true);
+        });
+      });
+    });
+
+    test('exists returns false when data doesnt exist', () {
+      return f.child('ds-no-exists').once("value").then((snapshot) {
+        expect(snapshot.exists, false);
+      });
+    });
+
+    test('val() returns dart representation', () {
+      var expected = {'test_data': 'good'};
+      schedule(() {
+        f.child('ds-val').set(expected);
+        return f.child('ds-val').once("value").then((snapshot) {
+          expect(snapshot.val(), expected);
+        });
+      });
+    });
+
+    test('snapshot returns child', () {
+      var expected = {'test_data': 'good'};
+      schedule(() {
+        f.child('ds-child/my-child').set(expected);
+        return f.child('ds-child').once("value").then((snapshot) {
+          expect(snapshot.child('my-child').val(), expected);
+        });
+      });
+    });
+
+    test('snapshot forEach on children', () {
+      schedule(() {
+        f.child('ds-forEach/thing-one').setWithPriority({'thing': 'one'}, 1);
+        f.child('ds-forEach/thing-two').setWithPriority({'thing': 'two'}, 2);
+        f.child('ds-forEach/cat-hat').setWithPriority({'cat': 'hat'}, 3);
+        return f.child('ds-forEach').once("value").then((snapshot) {
+          var items = [];
+          snapshot.forEach((snapshot) {
+            items.add(snapshot.key);
+          });
+          expect(items, ['thing-one', 'thing-two', 'cat-hat']);
+        });
+      });
+    });
+
+    test('hasChild returns true when child exists', () {
+      schedule(() {
+        f.child('ds-hasChild/thing-one').set({'thing': 'one'});
+        return f.child('ds-hasChild').once("value").then((snapshot) {
+          expect(snapshot.hasChild("thing-one"), true);
+        });
+      });
+    });
+
+    test('hasChild returns false when child doesnt exists', () {
+      schedule(() {
+        return f.child('ds-no-hasChild').once("value").then((snapshot) {
+          expect(snapshot.hasChild("thing-one"), false);
+        });
+      });
+    });
+
+    test('hasChildren returns true when has any children', () {
+      schedule(() {
+        f.child('ds-hasChildren/thing-one').set({'thing': 'one'});
+        return f.child('ds-hasChildren').once("value").then((snapshot) {
+          expect(snapshot.hasChildren, true);
+        });
+      });
+    });
+
+    test('hasChildren returns false when has no children', () {
+      schedule(() {
+        return f.child('ds-no-hasChildren').once("value").then((snapshot) {
+          expect(snapshot.hasChildren, false);
+        });
+      });
+    });
+
+    test('key returns the key location', () {
+      schedule(() {
+        return f.child('ds-key').once("value").then((snapshot) {
+          expect(snapshot.key, 'ds-key');
+        });
+      });
+    });
+
+    test('name returns the key location', () {
+      schedule(() {
+        return f.child('ds-name').once("value").then((snapshot) {
+          expect(snapshot.name, 'ds-name');
+        });
+      });
+    });
+
+    test('numChildren returns the number of children', () {
+      schedule(() {
+        f.child('ds-numChildren/one').set("one");
+        f.child('ds-numChildren/two').set("two");
+        f.child('ds-numChildren/three').set("three");
+        return f.child('ds-numChildren').once("value").then((snapshot) {
+          expect(snapshot.numChildren, 3);
+        });
+      });
+    });
+
+    test('ref returns firebase reference for this snapshot', () {
+      Firebase expected = f.child('ds-ref');
+
+      schedule(() {
+        return expected.once('value').then((snapshot) {
+          var ref = snapshot.ref();
+          expect(ref.key, expected.key);
+          expect(ref, new isInstanceOf(Firebase));
+        });
+      });
+    });
+
+    test('getPriority returns priority', () {
+      schedule(() {
+        f.child('ds-priority').setWithPriority("thing", 4);
+        return f.child('ds-priority').once('value').then((snapshot) {
+          expect(snapshot.getPriority(), 4);
+        });
+      });
+    });
+
+    test('exportVal returns full data with priority', () {
+      f.child('ds-exportVal').setWithPriority("thing2", 500);
+      return f.child('ds-exportVal').once('value').then((snapshot) {
+        expect(snapshot.exportVal(), {'.value': 'thing2', '.priority': 500});
+      });
+    });
+  });
+
   group('query', () {
+
+    test('orderByChild', () {
+      schedule(() {
+        f.child('order-by-child/one/animal').set('aligator');
+        f.child('order-by-child/two/animal').set('zebra');
+        f.child('order-by-child/three/animal').set('monkey');
+
+        return f.child('order-by-child').orderByChild('animal').once('value').then((snapshot) {
+          var items = [];
+          snapshot.forEach((snapshot) {
+            items.add(snapshot.val());
+          });
+          expect(items, [
+            {'animal': 'aligator'},
+            {'animal': 'monkey'},
+            {'animal': 'zebra'},
+          ]);
+        });
+      });
+    });
+
+    test('orderByKey', () {
+      schedule(() {
+        f.child('order-by-key/zebra').set('three');
+        f.child('order-by-key/elephant').set('one');
+        f.child('order-by-key/monkey').set('two');
+
+        return f.child('order-by-key').orderByKey().once('value').then((snapshot) {
+          var items = [];
+          snapshot.forEach((snapshot) {
+            items.add(snapshot.val());
+          });
+          expect(items, ['one', 'two', 'three']);
+        });
+      });
+    });
+
+    test('orderByValue', () {
+      schedule(() {
+        f.child('order-by-value/football').set(20);
+        f.child('order-by-value/basketball').set(10);
+        f.child('order-by-value/baseball').set(15);
+
+        return f.child('order-by-value').orderByValue().once('value').then((snapshot) {
+          var items = [];
+          snapshot.forEach((snapshot) {
+            items.add(snapshot.val());
+          });
+          expect(items, [10, 15, 20]);
+        });
+      });
+    });
+
+    test('orderByPriority', () {
+      schedule(() {
+        f.child('order-by-priority/football').setWithPriority('twenty', 20);
+        f.child('order-by-priority/basketball').setWithPriority('ten', 10);
+        f.child('order-by-priority/baseball').setWithPriority('fifteen', 15);
+
+        return f.child('order-by-priority').orderByPriority().once('value').then((snapshot) {
+          var items = [];
+          snapshot.forEach((snapshot) {
+            items.add(snapshot.val());
+          });
+          expect(items, ['ten', 'fifteen', 'twenty']);
+        });
+      });
+    });
+
+    test('equalTo', () {
+      schedule(() {
+        f.child('equalTo/football').set(20);
+        f.child('equalTo/basketball').set(10);
+        f.child('equalTo/soccer').set(15);
+        f.child('equalTo/baseball').set(15);
+
+        return f.child('equalTo').orderByValue().equalTo(15).once('value').then((snapshot) {
+          var val = snapshot.val();
+          expect(val, {'soccer': 15, 'baseball': 15});
+        });
+      });
+    });
+
+    test('equalTo with Key', () {
+      schedule(() {
+        f.child('equalTo/football').set(20);
+        f.child('equalTo/basketball').set(10);
+        f.child('equalTo/soccer').set(15);
+        f.child('equalTo/baseball').set(15);
+
+        return f.child('equalTo').orderByValue().equalTo(15, 'soccer').once('value').then((snapshot) {
+          var val = snapshot.val();
+          expect(val, {'soccer': 15});
+        });
+      });
+    });
+
     test('startAt', () {
       var child = f.child('query');
 
@@ -316,13 +616,13 @@ void main() {
       });
 
       schedule(() {
-        return child.startAt().limit(5).once('value').then((snapshot) {
+        return child.startAt().limitToFirst(5).once('value').then((snapshot) {
           var val = snapshot.val() as Map;
           expect(val.values, [1, 2, 3, 4, 5]);
 
           var lastKey = val.keys.last;
 
-          return child.startAt(name: lastKey).limit(2).once('value');
+          return child.startAt(name: lastKey).limitToFirst(2).once('value');
         }).then((snapshot) {
           var val = snapshot.val() as Map;
           expect(val.values, [5, 6]);
@@ -344,6 +644,45 @@ void main() {
         });
       });
     });
+
+    test('limitToFirst', () {
+      schedule(() {
+        f.child('limitToFirst-test/one').setWithPriority('one', 1);
+        f.child('limitToFirst-test/two').setWithPriority('two', 2);
+        f.child('limitToFirst-test/three').setWithPriority('three', 3);
+
+        return f.child('limitToFirst-test').limitToFirst(2).once('value').then((snapshot) {
+          var val = snapshot.val() as Map;
+          expect(val.values, ['one', 'two']);
+        });
+      });
+    });
+
+    test('limitToLast', () {
+      schedule(() {
+        f.child('limitToLast-test/one').setWithPriority('one', 1);
+        f.child('limitToLast-test/two').setWithPriority('two', 2);
+        f.child('limitToLast-test/three').setWithPriority('three', 3);
+
+        return f.child('limitToLast-test').limitToLast(2).once('value').then((snapshot) {
+          var val = snapshot.val() as Map;
+          expect(val.values, ['two', 'three']);
+        });
+      });
+    });
+
+    test('limit (deprecated)', () {
+      schedule(() {
+        f.child('limit-test/one').setWithPriority('one', 1);
+        f.child('limit-test/two').setWithPriority('two', 2);
+        f.child('limit-test/three').setWithPriority('three', 3);
+
+        return f.child('limit-test').limit(1).once('value').then((snapshot) {
+          var val = snapshot.val() as Map;
+          expect(val.values, ['three']);
+        });
+      });
+    });
   });
 
   group('on & off', () {
@@ -358,7 +697,7 @@ void main() {
         testRef = f.child('onChildAdded');
         subscription = testRef.onChildAdded.listen((event) {
           var ss = event.snapshot;
-          addedKeys.add(ss.name);
+          addedKeys.add(ss.key);
           expect(++eventCount, lessThan(3));
           expect(ss.val(), eventCount);
         });
@@ -390,7 +729,7 @@ void main() {
         testRef = f.child('onChildChanged');
         subscription = testRef.onChildChanged.listen((event) {
           var ss = event.snapshot;
-          expect(ss.name, 'key');
+          expect(ss.key, 'key');
           eventCount++;
           expect(ss.val(), eventCount);
         });
@@ -431,7 +770,7 @@ void main() {
         onChildRemovedSubscription = testRef.onChildRemoved.listen((event) {
           var ss = event.snapshot;
           expect(++childRemovedCount, 1);
-          expect(ss.name, addedKeys[0]);
+          expect(ss.key, addedKeys[0]);
         });
 
         return testRef.child(addedKeys[0]).remove();
@@ -457,7 +796,7 @@ void main() {
         testRef = f.child('onValue');
         onValueSubscription = testRef.onValue.listen((event) {
           var ss = event.snapshot;
-          expect(ss.name, 'onValue');
+          expect(ss.key, 'onValue');
           expect(ss.val(), {'key': ++valueCount});
           expect(valueCount, lessThan(3));
         });
@@ -508,7 +847,7 @@ void main() {
         var ds = value as DataSnapshot;
         expect(ds.hasChildren, false);
         expect(ds.numChildren, 0);
-        expect(ds.name, 'a');
+        expect(ds.key, 'a');
         expect(ds.val(), 'b');
       }));
 

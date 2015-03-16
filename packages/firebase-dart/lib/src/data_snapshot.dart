@@ -26,6 +26,12 @@ class DataSnapshot {
   DataSnapshot.fromJsObject(JsObject obj): _ds = obj;
 
   /**
+   * Returns true if this DataSnapshot contains any data.
+   * It is slightly more efficient than using snapshot.val() !== null.
+   */
+  bool get exists => _ds.callMethod('exists');
+
+  /**
    * Get the Dart Primitive, Map or List representation of the DataSnapshot.
    * The value may be null, indicating that the snapshot is empty and contains
    * no data.
@@ -38,8 +44,8 @@ class DataSnapshot {
 
   /**
    * Get a DataSnapshot for the location at the specified relative path. The
-   * relative path can either bve a simple child name or a deeper slash
-   * seperated path.
+   * relative path can either be a simple child name or a deeper slash
+   * separated path.
    */
   DataSnapshot child(String path) =>
       new DataSnapshot.fromJsObject(_ds.callMethod('child', [path]));
@@ -69,8 +75,14 @@ class DataSnapshot {
   bool get hasChildren => _ds.callMethod('hasChildren');
 
   /**
+   * The key of the location that generated this DataSnapshot.
+   */
+  String get key => _ds.callMethod('key');
+
+  /**
    * The name of the location that generated this DataSnapshot.
    */
+  @deprecated
   String get name => _ds.callMethod('name');
 
   /**
@@ -80,7 +92,7 @@ class DataSnapshot {
   int get numChildren => _ds.callMethod('numChildren');
 
   /**
-   * Get the Firebsae reference for the location that generated this
+   * Get the Firebase reference for the location that generated this
    * DataSnapshot.
    */
   Firebase ref() => new Firebase.fromJsObject(_ds.callMethod('ref'));
