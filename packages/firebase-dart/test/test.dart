@@ -20,6 +20,9 @@ const CREDENTIALS_EMAIL = null;
 const CREDENTIALS_PASSWORD = 'right';
 const CREDENTIALS_WRONG_PASSWORD = 'wrong';
 
+const OAUTH_PROVIDER = null;
+const OAUTH_TOKEN = null;
+
 final _dateKey = new DateTime.now().toUtc().toIso8601String();
 final _testKey = '$_dateKey'.replaceAll(new RegExp(r'[\.]'), '_');
 
@@ -52,7 +55,14 @@ void main() {
       });
 
       test('good auth token', () {
-        return f.authWithCustomToken(AUTH_TOKEN);
+        return f.authWithCustomToken(AUTH_TOKEN).then((response) {
+          expect(response['uid'], isNotNull);
+          expect(response['expires'], isNotNull);
+          expect(response['auth']['uid'], isNotNull);
+          expect(response['auth']['provider'], 'custom');
+          expect(response['token'], isNotNull);
+          expect(response['provider'], 'custom');
+        });
       });
     });
   }
@@ -60,36 +70,67 @@ void main() {
   group('authAnonymously', () {
     test('good auth', () {
       return f.authAnonymously().then((response) {
-        expect(response.auth, isNotNull);
+        expect(response['uid'], isNotNull);
+        expect(response['expires'], isNotNull);
+        expect(response['auth']['uid'], isNotNull);
+        expect(response['auth']['provider'], 'anonymous');
+        expect(response['token'], isNotNull);
+        expect(response['provider'], 'anonymous');
+        expect(response['anonymous'], {});
       });
     });
 
     test('good auth with custom remember', () {
       return f.authAnonymously(remember: "sessionOnly").then((response) {
-        expect(response.auth, isNotNull);
+        expect(response['uid'], isNotNull);
+        expect(response['expires'], isNotNull);
+        expect(response['auth']['uid'], isNotNull);
+        expect(response['auth']['provider'], 'anonymous');
+        expect(response['token'], isNotNull);
+        expect(response['provider'], 'anonymous');
+        expect(response['anonymous'], {});
       });
     });
   });
   
   if (CREDENTIALS_EMAIL != null) {
     group('auth-credentials', () {
-      var credentials = {'email':CREDENTIALS_EMAIL,
-        'password':CREDENTIALS_PASSWORD};
-      var badCredentials = {'email':CREDENTIALS_EMAIL,
-        'password':CREDENTIALS_WRONG_PASSWORD};
-
-      test('auth-credentials', () {
+      test('auth-credentials - good password', () {
+        var credentials = {'email':CREDENTIALS_EMAIL,
+            'password':CREDENTIALS_PASSWORD};
         schedule(() {
           return f.createUser(credentials).then((res) {
             expect(res, isNotNull);
-            f.authWithPassword(credentials).then((authResponse) {
-              expect(authResponse.auth, isNotNull);
-              expect(f.authWithPassword(badCredentials), throwsA((error) {
-                expect(error['code'], 'INVALID_PASSWORD');
-                f.removeUser(credentials).then((err) { expect(err, null); });
-                return true;
-              }));
+            return f.authWithPassword(credentials).then((authResponse) {
+              expect(authResponse['uid'], isNotNull);
+              expect(authResponse['expires'], isNotNull);
+              expect(authResponse['auth']['uid'], isNotNull);
+              expect(authResponse['auth']['provider'], 'password');
+              expect(authResponse['token'], isNotNull);
+              expect(authResponse['provider'], 'password');
+              expect(authResponse['password']['email'], CREDENTIALS_EMAIL);
+              expect(authResponse['password']['isTemporaryPassword'], false);
+
+              f.removeUser(credentials).then((err) { expect(err, null); });
             });
+          });
+        });
+      });
+
+      test('auth-credentials - bad password', () {
+        var credentials = {'email': 'badCredentialTest@example.com',
+            'password': 'RIGHT'};
+        var badCredentials = {'email': 'badCredentialTest@example.com',
+            'password': 'WRONG'};
+        schedule(() {
+          return f.createUser(credentials).then((res) {
+            expect(res, isNotNull);
+
+            expect(f.authWithPassword(badCredentials), throwsA((error) {
+              expect(error['code'], 'INVALID_PASSWORD');
+              f.removeUser(credentials).then((err) { expect(err, null); });
+              return true;
+            }));
           });
         });
       });
@@ -253,33 +294,57 @@ void main() {
         });
       });
     });
+  }
 
-    group('getAuth', () {
-      var credentials = {'email':CREDENTIALS_EMAIL,
-          'password':CREDENTIALS_PASSWORD};
+  if (OAUTH_PROVIDER != null && OAUTH_TOKEN != null) {
 
-      test('getAuth when not authenticated', () {
-        var response = f.getAuth();
-        expect(response, isNull);
+    group('authWithOAuthToken', () {
+      test('good OAuth token', () {
+        schedule(() {
+          return f.authWithOAuthToken(OAUTH_PROVIDER, OAUTH_TOKEN).then((authResponse) {
+            expect(authResponse['uid'], isNotNull);
+            expect(authResponse['expires'], isNotNull);
+            expect(authResponse['auth']['uid'], isNotNull);
+            expect(authResponse['auth']['provider'], OAUTH_PROVIDER);
+            expect(authResponse['token'], isNotNull);
+            expect(authResponse['provider'], OAUTH_PROVIDER);
+            expect(authResponse[OAUTH_PROVIDER], isNotNull);
+          });
+        });
       });
 
-      test('getAuth when authenticated', () {
+      test('bad OAuth token', () {
         schedule(() {
-          var credentials = {
-              'email': 'getAuthUserTest@example.com',
-              'password': 'pswd'
-          };
-          return f.createUser(credentials).then((_) {
-            f.authWithPassword(credentials).then((_) {
-              var response = f.getAuth();
-              expect(response.auth, isNotNull);
-              f.removeUser(credentials);
-            });
-          });
+          expect(f.authWithOAuthToken(OAUTH_PROVIDER, 'bad-auth-token'), throwsA((error) {
+            expect(error['code'], 'INVALID_CREDENTIALS');
+            return true;
+          }));
         });
       });
     });
   }
+
+  group('getAuth', () {
+    test('getAuth when not authenticated', () {
+      var response = f.getAuth();
+      expect(response, isNull);
+    });
+
+    test('getAuth when authenticated', () {
+      schedule(() {
+        return f.authAnonymously().then((_) {
+          var response = f.getAuth();
+          expect(response['uid'], isNotNull);
+          expect(response['expires'], isNotNull);
+          expect(response['auth']['uid'], isNotNull);
+          expect(response['auth']['provider'], 'anonymous');
+          expect(response['token'], isNotNull);
+          expect(response['provider'], 'anonymous');
+          expect(response['anonymous'], {});
+        });
+      });
+    });
+  });
 
   group('non-auth', () {
     test('child', () {

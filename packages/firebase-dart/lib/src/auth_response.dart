@@ -1,17 +1,13 @@
 library firebase.auth_response;
 
 import 'dart:js';
+import 'dart:convert' show JSON;
+
 
 /**
- * A successful authentication response.
+ * Converts authData response from JsObject to native Dart object.
  */
-class AuthResponse {
-  final int expires;
-  final JsObject auth;
-
-  AuthResponse(JsObject response)
-      : expires = response['expires'],
-        auth = response['auth'];
-
-  String toString() => 'expires: $expires, auth: $auth';
+dynamic decodeAuthData(JsObject authData) {
+  var json = context['JSON'].callMethod('stringify', [authData]);
+  return JSON.decode(json);
 }

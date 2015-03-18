@@ -47,7 +47,7 @@ class Firebase extends Query {
    * now achieved by using authWithCustomToken
    */
   @deprecated
-  Future<AuthResponse> auth(String token) {
+  Future auth(String token) {
     var c = new Completer();
     // On failure, the first argument will be an Error object indicating the
     // failure. On success, the first argument will be null and the second
@@ -57,7 +57,7 @@ class Firebase extends Query {
       if (err != null) {
         c.completeError(err);
       } else {
-        c.complete(new AuthResponse(result));
+        c.complete(decodeAuthData(result));
       }
     }, (err) {
       c.completeError(err);
@@ -70,13 +70,13 @@ class Firebase extends Query {
    * Takes a single token as an argument and returns a Future that will be
    * resolved when the authentication succeeds (or fails).
    */
-  Future<AuthResponse> authWithCustomToken(String token) {
+  Future authWithCustomToken(String token) {
     var c = new Completer();
     _fb.callMethod('authWithCustomToken', [token, (err, [result]) {
       if (err != null) {
         c.completeError(err);
       } else {
-        c.complete(new AuthResponse(result));
+        c.complete(decodeAuthData(result));
       }
     }, (err) {
       c.completeError(err);
@@ -87,13 +87,13 @@ class Firebase extends Query {
   /**
    * Authenticates a Firebase client using a new, temporary guest account.
    */
-  Future<AuthResponse> authAnonymously({remember: 'default'}) {
+  Future authAnonymously({remember: 'default'}) {
     var c = new Completer();
     _fb.callMethod('authAnonymously', [(err, [result]) {
       if (err != null) {
         c.completeError(err);
       } else {
-        c.complete(new AuthResponse(result));
+        c.complete(decodeAuthData(result));
       }
     }, jsify({'remember': remember})]);
     return c.future;
@@ -102,7 +102,7 @@ class Firebase extends Query {
   /**
    * Authenticates a Firebase client using an email / password combination.
    */
-  Future<AuthResponse> authWithPassword(Map credentials) {
+  Future authWithPassword(Map credentials) {
     var c = new Completer();
     // On failure, the first argument will be an Error object indicating the
     // failure. On success, the first argument will be null and the second
@@ -112,7 +112,7 @@ class Firebase extends Query {
       if (err != null) {
         c.completeError(err);
       } else {
-        c.complete(new AuthResponse(result));
+        c.complete(decodeAuthData(result));
       }
     }, (err) {
       c.completeError(err);
@@ -124,13 +124,13 @@ class Firebase extends Query {
    * Authenticates a Firebase client using a third party provider (github, twitter,
    * google, facebook). This method presents login form with a popup.
    */
-  Future<AuthResponse> authWithOAuthPopup(provider, {remember: 'default', scope: ''}) {
+  Future authWithOAuthPopup(provider, {remember: 'default', scope: ''}) {
     var c = new Completer();
     _fb.callMethod('authWithOAuthPopup', [provider, (err, [result]) {
       if (err != null) {
         c.completeError(err);
       } else {
-        c.complete(new AuthResponse(result));
+        c.complete(decodeAuthData(result));
       }
     }, jsify({'remember': remember, 'scope': scope})]);
     return c.future;
@@ -140,13 +140,13 @@ class Firebase extends Query {
    * Authenticates a Firebase client using a third party provider (github, twitter,
    * google, facebook). This method redirects to a login form, then back to your app.
    */
-  Future<AuthResponse> authWithOAuthRedirect(provider, {remember: 'default', scope: ''}) {
+  Future authWithOAuthRedirect(provider, {remember: 'default', scope: ''}) {
     var c = new Completer();
     _fb.callMethod('authWithOAuthRedirect', [provider, (err, [result]) {
       if (err != null) {
         c.completeError(err);
       } else {
-        c.complete(new AuthResponse(result));
+        c.complete(decodeAuthData(result));
       }
     }, jsify({'remember': remember, 'scope': scope})]);
     return c.future;
@@ -155,13 +155,13 @@ class Firebase extends Query {
   /**
    * Authenticates a Firebase client using OAuth access tokens or credentials.
    */
-  Future<AuthResponse> authWithOAuthToken(provider, credentials, {remember: 'default', scope: ''}) {
+  Future authWithOAuthToken(provider, credentials, {remember: 'default', scope: ''}) {
     var c = new Completer();
     _fb.callMethod('authWithOAuthToken', [provider, jsify(credentials), (err, [result]) {
       if (err != null) {
         c.completeError(err);
       } else {
-        c.complete(new AuthResponse(result));
+        c.complete(decodeAuthData(result));
       }
     }, jsify({'remember': remember, 'scope': scope})]);
     return c.future;
@@ -170,9 +170,9 @@ class Firebase extends Query {
   /**
    * Synchronously retrieves the current authentication state of the client.
    */
-  AuthResponse getAuth() {
+  dynamic getAuth() {
     var authResponse = _fb.callMethod('getAuth');
-    return authResponse == null ? null : new AuthResponse(authResponse);
+    return authResponse == null ? null : decodeAuthData(authResponse);
   }
 
   /**
@@ -180,7 +180,7 @@ class Firebase extends Query {
    */
   Stream<Event> onAuth([context]) {
     if (_onAuth == null) {
-      StreamController<AuthResponse> controller;
+      StreamController controller;
 
       if (context == null) {
         context = {};
@@ -188,7 +188,7 @@ class Firebase extends Query {
 
       void _handleOnAuth(authData) {
         if(authData != null) {
-          controller.add(new AuthResponse(authData));
+          controller.add(decodeAuthData(authData));
         }
         else {
           controller.add(null);

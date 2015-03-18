@@ -1,3 +1,9 @@
+## 0.5.0
+
+* Added authWithOAuthToken()
+
+* Changed return value of auth methods to return a native dart Map object containing all authData. This is a breaking change.
+
 ## 0.4.0
 
 * Updated for Firebase api v2.2.2
