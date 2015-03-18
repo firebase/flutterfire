@@ -153,6 +153,21 @@ class Firebase extends Query {
   }
 
   /**
+   * Authenticates a Firebase client using OAuth access tokens or credentials.
+   */
+  Future<AuthResponse> authWithOAuthToken(provider, credentials, {remember: 'default', scope: ''}) {
+    var c = new Completer();
+    _fb.callMethod('authWithOAuthToken', [provider, jsify(credentials), (err, [result]) {
+      if (err != null) {
+        c.completeError(err);
+      } else {
+        c.complete(new AuthResponse(result));
+      }
+    }, jsify({'remember': remember, 'scope': scope})]);
+    return c.future;
+  }
+
+  /**
    * Synchronously retrieves the current authentication state of the client.
    */
   AuthResponse getAuth() {
