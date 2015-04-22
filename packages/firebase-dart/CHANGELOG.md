@@ -1,3 +1,7 @@
+## 0.5.1
+
+* Updated startAt() and endAt() methods. They don't take a priority anymore and are meant to be used in conjunction with orderBy*
+
 ## 0.5.0
 
 * Added authWithOAuthToken()
