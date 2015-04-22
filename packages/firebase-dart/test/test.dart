@@ -92,7 +92,7 @@ void main() {
       });
     });
   });
-  
+
   if (CREDENTIALS_EMAIL != null) {
     group('auth-credentials', () {
       test('auth-credentials - good password', () {
@@ -660,52 +660,168 @@ void main() {
       });
     });
 
-    test('startAt', () {
-      var child = f.child('query');
+    group('startAt', () {
 
-      schedule(() {
-        var count = 0;
-        return Future.doWhile(() {
-          count++;
-          return child.push().set(count).then((_) {
-            return count < 10;
+      test('startAt starts at beginning when not specified', () {
+        var child = f.child('startAt 1');
+
+        schedule(() {
+          var count = 0;
+          return Future.doWhile(() {
+            count++;
+            return child.push().set(count).then((_) {
+              return count < 10;
+            });
+          });
+        });
+
+        schedule(() {
+          return child.startAt().once('value').then((snapshot) {
+            var val = snapshot.val();
+            expect(val, hasLength(10));
           });
         });
       });
 
-      schedule(() {
-        return child.startAt().once('value').then((snapshot) {
-          var val = snapshot.val();
-          expect(val, hasLength(10));
+      test('startAt returns items from starting point when ordering by value', () {
+        var child = f.child('startAt 2');
+        child.push().set(1);
+        child.push().set(2);
+        child.push().set(3);
+        child.push().set(4);
+
+        schedule(() {
+          return child.startAt(value: 2).orderByValue().limitToFirst(2).once('value').then((snapshot) {
+            var val = snapshot.val() as Map;
+            expect(val.values, [2, 3]);
+          });
         });
       });
 
-      schedule(() {
-        return child.startAt().limitToFirst(5).once('value').then((snapshot) {
-          var val = snapshot.val() as Map;
-          expect(val.values, [1, 2, 3, 4, 5]);
+      test('startAt returns items when ordering by child', () {
+        f.child('startAt/A/thing').set('1');
+        f.child('startAt/B/thing').set('2');
+        f.child('startAt/C/thing').set('3');
+        f.child('startAt/D/thing').set('4');
 
-          var lastKey = val.keys.last;
+        schedule(() {
+          return f.child('startAt').startAt(value: '3').orderByChild('thing').once('value').then((snapshot) {
+            var val = snapshot.val() as Map;
+            expect(val.values, [{'thing': '3'}, {'thing': '4'}]);
+          });
+        });
+      });
 
-          return child.startAt(name: lastKey).limitToFirst(2).once('value');
-        }).then((snapshot) {
-          var val = snapshot.val() as Map;
-          expect(val.values, [5, 6]);
+      test('startAt returns items when ordering by key', () {
+        f.child('startAt/key/A').set('1');
+        f.child('startAt/key/B').set('2');
+        f.child('startAt/key/C').set('3');
+        f.child('startAt/key/D').set('4');
+        f.child('startAt/key/E').set('5');
 
-          var lastKey = val.keys.last;
+        schedule(() {
+          return f.child('startAt/key').startAt(value: 'C').orderByKey().limitToFirst(3).once('value').then((snapshot) {
+            var val = snapshot.val() as Map;
+            expect(val.values, ['3', '4', '5']);
+          });
+        });
+      });
 
-          return child.startAt(name: lastKey).once('value');
-        }).then((snapshot) {
-          var val = snapshot.val() as Map;
-          expect(val.values, [6, 7, 8, 9, 10]);
+      test('startAt returns items from key when ordering by priority', () {
+        f.child('startAt/priority/A').setWithPriority('one', 100);
+        f.child('startAt/priority/B').setWithPriority('two', 100);
+        f.child('startAt/priority/C').setWithPriority('three', 100);
+        f.child('startAt/priority/D').setWithPriority('four', 100);
+        f.child('startAt/priority/E').setWithPriority('one - A', 90);
 
-          var lastKey = val.keys.last;
-          expect(val[lastKey], 10);
+        schedule(() {
+          return f.child('startAt/priority').startAt(value: 100, key: 'C').orderByPriority().limitToFirst(3).once('value').then((snapshot) {
+            var val = snapshot.val() as Map;
+            expect(val.values, ['three', 'four']);
+          });
+        });
+      });
+    });
 
-          return child.startAt(name: lastKey).once('value');
-        }).then((snapshot) {
-          var val = snapshot.val() as Map;
-          expect(val.values, [10]);
+    group('endAt', () {
+
+      test('endAt ends at end when not specified', () {
+        var child = f.child('endAt 1');
+
+        schedule(() {
+          var count = 0;
+          return Future.doWhile(() {
+            count++;
+            return child.push().set(count).then((_) {
+              return count < 10;
+            });
+          });
+        });
+
+        schedule(() {
+          return child.endAt().once('value').then((snapshot) {
+            var val = snapshot.val();
+            expect(val, hasLength(10));
+          });
+        });
+      });
+
+      test('endAt returns items from end point when ordering by value', () {
+        var child = f.child('endAt 2');
+        child.push().set(1);
+        child.push().set(2);
+        child.push().set(3);
+        child.push().set(4);
+
+        schedule(() {
+          return child.endAt(value: 2).orderByValue().limitToFirst(2).once('value').then((snapshot) {
+            var val = snapshot.val() as Map;
+            expect(val.values, [1, 2]);
+          });
+        });
+      });
+
+      test('endAt returns items when ordering by child', () {
+        f.child('endAt/A/thing').set('1');
+        f.child('endAt/B/thing').set('2');
+        f.child('endAt/C/thing').set('3');
+        f.child('endAt/D/thing').set('4');
+
+        schedule(() {
+          return f.child('endAt').endAt(value: '3').orderByChild('thing').once('value').then((snapshot) {
+            var val = snapshot.val() as Map;
+            expect(val.values, [{'thing': '1'}, {'thing': '2'}, {'thing': '3'}]);
+          });
+        });
+      });
+
+      test('endAt returns items when ordering by key', () {
+        f.child('endAt/key/A').set('1');
+        f.child('endAt/key/B').set('2');
+        f.child('endAt/key/C').set('3');
+        f.child('endAt/key/D').set('4');
+        f.child('endAt/key/E').set('5');
+
+        schedule(() {
+          return f.child('endAt/key').endAt(value: 'C').orderByKey().limitToFirst(3).once('value').then((snapshot) {
+            var val = snapshot.val() as Map;
+            expect(val.values, ['1', '2', '3']);
+          });
+        });
+      });
+
+      test('endAt returns items from key when ordering by priority', () {
+        f.child('endAt/priority/A').setWithPriority('one', 100);
+        f.child('endAt/priority/B').setWithPriority('two', 100);
+        f.child('endAt/priority/C').setWithPriority('three', 100);
+        f.child('endAt/priority/D').setWithPriority('four', 100);
+        f.child('endAt/priority/E').setWithPriority('one - A', 120);
+
+        schedule(() {
+          return f.child('endAt/priority').endAt(value: 100, key: 'C').orderByPriority().once('value').then((snapshot) {
+            var val = snapshot.val() as Map;
+            expect(val.values, ['one', 'two', 'three']);
+          });
         });
       });
     });
