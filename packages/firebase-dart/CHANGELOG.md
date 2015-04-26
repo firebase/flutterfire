@@ -1,12 +1,14 @@
 ## 0.5.1
 
-* Updated startAt() and endAt() methods. They don't take a priority anymore and are meant to be used in conjunction with orderBy*
+* Updated startAt() and endAt() methods. They don't take a
+  priority anymore and are meant to be used in conjunction with orderBy*
 
 ## 0.5.0
 
 * Added authWithOAuthToken()
 
-* Changed return value of auth methods to return a native dart Map object containing all authData. This is a breaking change.
+* Changed return value of auth methods to return a native dart Map
+  object containing all authData. This is a breaking change.
 
 ## 0.4.0
 
