@@ -1,5 +1,5 @@
 name: firebase
-version: 0.5.1
+version: 0.6.0
 authors:
 - Anant Narayanan <anant@kix.in>
 - Seth Ladd <sethladd@gmail.com>
@@ -9,6 +9,4 @@ homepage: https://github.com/firebase/firebase-dart/
 environment:
   sdk: '>=1.0.0 <2.0.0'
 dev_dependencies:
-  browser: '>=0.10.0 <0.11.0'
-  scheduled_test: '>=0.11.7+1 <0.12.0'
-  unittest: '>=0.11.0 <0.12.0'
+  test: '>=0.12.0 <0.13.0'

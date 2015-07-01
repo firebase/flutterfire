@@ -3,7 +3,6 @@ library firebase.auth_response;
 import 'dart:js';
 import 'dart:convert' show JSON;
 
-
 /**
  * Converts authData response from JsObject to native Dart object.
  */

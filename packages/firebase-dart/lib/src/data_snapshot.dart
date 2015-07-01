@@ -23,7 +23,7 @@ class DataSnapshot {
   /**
    * Construct a new DataSnapshot from a JsObject.
    */
-  DataSnapshot.fromJsObject(JsObject obj): _ds = obj;
+  DataSnapshot.fromJsObject(JsObject obj) : _ds = obj;
 
   /**
    * Returns true if this DataSnapshot contains any data.
@@ -56,9 +56,11 @@ class DataSnapshot {
    * each child.
    */
   void forEach(cb(DataSnapshot snapshot)) {
-    _ds.callMethod('forEach', [(obj) {
-      cb(new DataSnapshot.fromJsObject(obj));
-    }]);
+    _ds.callMethod('forEach', [
+      (obj) {
+        cb(new DataSnapshot.fromJsObject(obj));
+      }
+    ]);
   }
 
   /**
@@ -78,12 +80,6 @@ class DataSnapshot {
    * The key of the location that generated this DataSnapshot.
    */
   String get key => _ds.callMethod('key');
-
-  /**
-   * The name of the location that generated this DataSnapshot.
-   */
-  @deprecated
-  String get name => _ds.callMethod('name');
 
   /**
    * The number of children for this DataSnapshot. If it has children,

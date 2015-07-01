@@ -34,9 +34,12 @@ class Disconnect {
   Future set(value) {
     var c = new Completer();
     value = jsify(value);
-    _od.callMethod('set', [value, (err) {
-      _resolveFuture(c, err, null);
-    }]);
+    _od.callMethod('set', [
+      value,
+      (err) {
+        _resolveFuture(c, err, null);
+      }
+    ]);
     return c.future;
   }
 
@@ -48,9 +51,13 @@ class Disconnect {
   Future setWithPriority(value, priority) {
     var c = new Completer();
     value = jsify(value);
-    _od.callMethod('setWithPriority', [value, priority, (err) {
-      _resolveFuture(c, err, null);
-    }]);
+    _od.callMethod('setWithPriority', [
+      value,
+      priority,
+      (err) {
+        _resolveFuture(c, err, null);
+      }
+    ]);
     return c.future;
   }
 
@@ -68,9 +75,12 @@ class Disconnect {
   Future update(value) {
     var c = new Completer();
     value = jsify(value);
-    _od.callMethod('update', [value, (err) {
-      _resolveFuture(c, err, null);
-    }]);
+    _od.callMethod('update', [
+      value,
+      (err) {
+        _resolveFuture(c, err, null);
+      }
+    ]);
     return c.future;
   }
 
@@ -83,9 +93,11 @@ class Disconnect {
    */
   Future remove() {
     var c = new Completer();
-    _od.callMethod('remove', [(err) {
-       _resolveFuture(c, err, null);
-    }]);
+    _od.callMethod('remove', [
+      (err) {
+        _resolveFuture(c, err, null);
+      }
+    ]);
     return c.future;
   }
 
@@ -99,9 +111,11 @@ class Disconnect {
    */
   Future cancel() {
     var c = new Completer();
-    _od.callMethod('cancel', [(err) {
-       _resolveFuture(c, err, null);
-    }]);
+    _od.callMethod('cancel', [
+      (err) {
+        _resolveFuture(c, err, null);
+      }
+    ]);
     return c.future;
   }
 

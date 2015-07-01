@@ -1,3 +1,11 @@
+## 0.6.0
+
+* Removed deprecated `name` property on `Firebase` and `Snapshot`.
+  Use `key` instead`.
+
+* Removed deprecated `limit` method on `Firebase`.
+  Use `limitToFirst` and `limitToLast` instead.
+
 ## 0.5.1
 
 * Updated startAt() and endAt() methods. They don't take a
