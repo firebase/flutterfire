@@ -6,12 +6,7 @@ import 'dart:async';
 import 'package:firebase/firebase.dart';
 import 'package:test/test.dart';
 
-const TEST_URL = 'https://boiling-fire-3310.firebaseio.com/test/';
-
-// Update TEST_URL to a valid URL and update AUTH_TOKEN to a corresponding
-// authentication token to test authentication.
-const AUTH_TOKEN = '5KxwqxGbNU0Mrje2NGnSFJZsd3KaTVeUtcVhorMl';
-const INVALID_AUTH_TOKEN = 'xbKOOdkZDBExtKM3sZw6gWtFpGgqMkMidXCiAFjm';
+import 'test_shared.dart';
 
 // Update CREDENTIALS_EMAIL to an email address to test
 // auth using email/password credentials.
@@ -24,37 +19,32 @@ const CREDENTIALS_WRONG_PASSWORD = 'wrong';
 const OAUTH_PROVIDER = null;
 const OAUTH_TOKEN = null;
 
-final _dateKey = new DateTime.now().toUtc().toIso8601String();
-final _testKey = '$_dateKey'.replaceAll(new RegExp(r'[\.\:]'), '_');
-
-String getTestUrl(int count) => new Uri(
-    scheme: 'https',
-    host: 'boiling-fire-3310.firebaseio.com',
-    pathSegments: ['test', _testKey, count.toString()]).toString();
-
 int _count = 0;
 
+String getTestUrl(int count) =>
+    getTestUrlBase(<String>['test', testKey(), count.toString()]).toString();
+
 void main() {
-  Firebase f;
+  Firebase fbClient;
   String testUrl;
 
   setUp(() {
     _count++;
     testUrl = getTestUrl(_count);
-    f = new Firebase(testUrl);
+    fbClient = new Firebase(testUrl);
   });
 
   tearDown(() {
-    if (f != null) {
-      f.unauth();
-      f = null;
+    if (fbClient != null) {
+      fbClient.unauth();
+      fbClient = null;
     }
   });
 
   if (AUTH_TOKEN != null) {
     group('authWithCustomToken', () {
       test('bad auth token should fail', () {
-        expect(f.authWithCustomToken(INVALID_AUTH_TOKEN), throwsA((error) {
+        expect(fbClient.authWithCustomToken(INVALID_AUTH_TOKEN), throwsA((error) {
           expect(error['code'], 'INVALID_TOKEN');
           return true;
         }));
@@ -63,14 +53,14 @@ void main() {
       test('good auth token', () async {
         // per https://www.firebase.com/docs/web/api/firebase/authwithcustomtoken.html
         // should just succeed – nothing of interest in the return value
-        await f.authWithCustomToken(AUTH_TOKEN);
+        await fbClient.authWithCustomToken(AUTH_TOKEN);
       });
     });
   }
 
   group('authAnonymously', () {
     test('good auth', () {
-      return f.authAnonymously().then((response) {
+      return fbClient.authAnonymously().then((response) {
         expect(response['uid'], isNotNull);
         expect(response['expires'], isNotNull);
         expect(response['auth']['uid'], isNotNull);
@@ -82,7 +72,7 @@ void main() {
     });
 
     test('good auth with custom remember', () {
-      return f.authAnonymously(remember: "sessionOnly").then((response) {
+      return fbClient.authAnonymously(remember: "sessionOnly").then((response) {
         expect(response['uid'], isNotNull);
         expect(response['expires'], isNotNull);
         expect(response['auth']['uid'], isNotNull);
@@ -101,9 +91,9 @@ void main() {
           'email': CREDENTIALS_EMAIL,
           'password': CREDENTIALS_PASSWORD
         };
-        return f.createUser(credentials).then((res) {
+        return fbClient.createUser(credentials).then((res) {
           expect(res, isNotNull);
-          return f.authWithPassword(credentials).then((authResponse) {
+          return fbClient.authWithPassword(credentials).then((authResponse) {
             expect(authResponse['uid'], isNotNull);
             expect(authResponse['expires'], isNotNull);
             expect(authResponse['auth']['uid'], isNotNull);
@@ -113,7 +103,7 @@ void main() {
             expect(authResponse['password']['email'], CREDENTIALS_EMAIL);
             expect(authResponse['password']['isTemporaryPassword'], false);
 
-            f.removeUser(credentials).then((err) {
+            fbClient.removeUser(credentials).then((err) {
               expect(err, null);
             });
           });
@@ -129,12 +119,12 @@ void main() {
           'email': 'badCredentialTest@example.com',
           'password': 'WRONG'
         };
-        return f.createUser(credentials).then((res) {
+        return fbClient.createUser(credentials).then((res) {
           expect(res, isNotNull);
 
-          expect(f.authWithPassword(badCredentials), throwsA((error) {
+          expect(fbClient.authWithPassword(badCredentials), throwsA((error) {
             expect(error['code'], 'INVALID_PASSWORD');
-            f.removeUser(credentials).then((err) {
+            fbClient.removeUser(credentials).then((err) {
               expect(err, null);
             });
             return true;
@@ -149,15 +139,15 @@ void main() {
           'email': 'createUserTest@example.com',
           'password': 'pswd'
         };
-        return f.createUser(credentials).then((result) {
+        return fbClient.createUser(credentials).then((result) {
           expect(result['uid'], isNotNull);
-          f.removeUser(credentials);
+          fbClient.removeUser(credentials);
         });
       });
 
       test('createUser throws error', () {
         var credentials = {'email': 'badEmailAddress', 'password': 'pswd'};
-        expect(f.createUser(credentials), throwsA((error) {
+        expect(fbClient.createUser(credentials), throwsA((error) {
           expect(error['code'], 'INVALID_EMAIL');
           return true;
         }));
@@ -175,12 +165,12 @@ void main() {
           'newEmail': newEmail,
           'password': password,
         };
-        return f
+        return fbClient
             .createUser({'email': email, 'password': password})
             .then((result) {
-          f.changeEmail(changeCredentials).then((result) {
+          fbClient.changeEmail(changeCredentials).then((result) {
             expect(result, null);
-            f.removeUser({'email': newEmail, 'password': password});
+            fbClient.removeUser({'email': newEmail, 'password': password});
           });
         });
       });
@@ -193,12 +183,12 @@ void main() {
           'password': password,
         };
 
-        return f
+        return fbClient
             .createUser({'email': email, 'password': password})
             .then((result) {
-          expect(f.changeEmail(badCredentials), throwsA((error) {
+          expect(fbClient.changeEmail(badCredentials), throwsA((error) {
             expect(error['code'], "INVALID_EMAIL");
-            f.removeUser({'email': email, 'password': password});
+            fbClient.removeUser({'email': email, 'password': password});
             return true;
           }));
         });
@@ -216,12 +206,12 @@ void main() {
           'oldPassword': oldPassword,
           'newPassword': newPassword
         };
-        return f
+        return fbClient
             .createUser({'email': email, 'password': oldPassword})
             .then((result) {
-          f.changePassword(changeCredentials).then((result) {
+          fbClient.changePassword(changeCredentials).then((result) {
             expect(result, null);
-            f.removeUser({'email': email, 'password': newPassword});
+            fbClient.removeUser({'email': email, 'password': newPassword});
           });
         });
       });
@@ -234,12 +224,12 @@ void main() {
           'newPassword': 'updated_password'
         };
 
-        return f
+        return fbClient
             .createUser({'email': email, 'password': oldPassword})
             .then((result) {
-          expect(f.changePassword(badCredentials), throwsA((error) {
+          expect(fbClient.changePassword(badCredentials), throwsA((error) {
             expect(error['code'], "INVALID_PASSWORD");
-            f.removeUser({'email': email, 'password': oldPassword});
+            fbClient.removeUser({'email': email, 'password': oldPassword});
             return true;
           }));
         });
@@ -252,8 +242,8 @@ void main() {
           'email': 'removeUserTest@example.com',
           'password': 'pswd'
         };
-        return f.createUser(credentials).then((result) {
-          f.removeUser(credentials).then((result) {
+        return fbClient.createUser(credentials).then((result) {
+          fbClient.removeUser(credentials).then((result) {
             expect(result, null);
           });
         });
@@ -264,7 +254,7 @@ void main() {
           'email': 'removeUserNotExistsTest@example.com',
           'password': 'pswd'
         };
-        expect(f.removeUser(credentials), throwsA((error) {
+        expect(fbClient.removeUser(credentials), throwsA((error) {
           expect(error['code'], 'INVALID_USER');
           return true;
         }));
@@ -277,17 +267,17 @@ void main() {
         var email = 'resetPasswordTest@example.com';
 
         var credentials = {'email': email, 'password': password};
-        return f.createUser(credentials).then((result) {
-          f.resetPassword({'email': email}).then((result) {
+        return fbClient.createUser(credentials).then((result) {
+          fbClient.resetPassword({'email': email}).then((result) {
             expect(result, null);
-            f.removeUser(credentials);
+            fbClient.removeUser(credentials);
           });
         });
       });
 
       test('resetPassword throws error', () {
         var email = 'resetEmailNotFound@example.com';
-        expect(f.resetPassword({'email': email}), throwsA((error) {
+        expect(fbClient.resetPassword({'email': email}), throwsA((error) {
           expect(error['code'], "INVALID_USER");
           return true;
         }));
@@ -298,7 +288,7 @@ void main() {
   if (OAUTH_PROVIDER != null && OAUTH_TOKEN != null) {
     group('authWithOAuthToken', () {
       test('good OAuth token', () {
-        return f
+        return fbClient
             .authWithOAuthToken(OAUTH_PROVIDER, OAUTH_TOKEN)
             .then((authResponse) {
           expect(authResponse['uid'], isNotNull);
@@ -312,7 +302,7 @@ void main() {
       });
 
       test('bad OAuth token', () {
-        expect(f.authWithOAuthToken(OAUTH_PROVIDER, 'bad-auth-token'),
+        expect(fbClient.authWithOAuthToken(OAUTH_PROVIDER, 'bad-auth-token'),
             throwsA((error) {
           expect(error['code'], 'INVALID_CREDENTIALS');
           return true;
@@ -323,13 +313,13 @@ void main() {
 
   group('getAuth', () {
     test('getAuth when not authenticated', () {
-      var response = f.getAuth();
+      var response = fbClient.getAuth();
       expect(response, isNull);
     });
 
     test('getAuth when authenticated', () {
-      return f.authAnonymously().then((_) {
-        var response = f.getAuth();
+      return fbClient.authAnonymously().then((_) {
+        var response = fbClient.getAuth();
         expect(response['uid'], isNotNull);
         expect(response['expires'], isNotNull);
         expect(response['auth']['uid'], isNotNull);
@@ -343,7 +333,7 @@ void main() {
 
   group('non-auth', () {
     test('child', () {
-      var child = f.child('trad');
+      var child = fbClient.child('trad');
       expect(child.key, 'trad');
 
       var parent = child.parent();
@@ -354,26 +344,27 @@ void main() {
     });
 
     test('key returns last item name', () {
-      expect(f.key, _count.toString());
+      expect(fbClient.key, _count.toString());
     });
 
     test('key returns null on root location', () {
-      expect(f.root().key, isNull);
+      expect(fbClient.root().key, isNull);
     });
 
     test('toString returns the absolute url to ref location', () {
-      expect(f.toString(), testUrl);
+      // the firebase URI has '@' escaped – so reverse that
+      expect(fbClient.toString().replaceAll('%40', '@'), testUrl);
     });
 
     test('set', () {
       var value = {'number value': 42};
-      return f.set(value).then((v) {
+      return fbClient.set(value).then((v) {
         // TODO: check the value?
       });
     });
 
     test('set string', () {
-      var child = f.child('bar');
+      var child = fbClient.child('bar');
       return child.set('foo').then((foo) {
         // TODO: actually test result
       });
@@ -381,27 +372,27 @@ void main() {
 
     test('update', () {
       // TODO: not sure why this works and the string case does not
-      return f.update({'update_works': 'oof'}).then((foo) {
+      return fbClient.update({'update_works': 'oof'}).then((foo) {
         // TODO: actually test the result
       });
     });
 
     test('push', () {
       // TODO: actually validate the result
-      var pushRef = f.push();
+      var pushRef = fbClient.push();
       return pushRef.set('HAHA');
     });
 
     test('priorities', () {
       // TODO: actually validate the result
-      var testRef = f.child('ZZZ');
+      var testRef = fbClient.child('ZZZ');
       return testRef.setWithPriority(1, 1).then((foo) {
         return testRef.setPriority(100);
       });
     });
 
     test('value', () {
-      return f.onValue.first.then((Event e) {
+      return fbClient.onValue.first.then((Event e) {
         //TODO actually test the result
       });
     });
@@ -409,39 +400,39 @@ void main() {
 
   group('data-snapshot', () {
     test('exists returns true when data exists', () {
-      f.child('ds-exists').set({'thing': 'one'});
-      return f.child('ds-exists').once('value').then((snapshot) {
+      fbClient.child('ds-exists').set({'thing': 'one'});
+      return fbClient.child('ds-exists').once('value').then((snapshot) {
         expect(snapshot.exists, true);
       });
     });
 
     test('exists returns false when data doesnt exist', () {
-      return f.child('ds-no-exists').once("value").then((snapshot) {
+      return fbClient.child('ds-no-exists').once("value").then((snapshot) {
         expect(snapshot.exists, false);
       });
     });
 
     test('val() returns dart representation', () {
       var expected = {'test_data': 'good'};
-      f.child('ds-val').set(expected);
-      return f.child('ds-val').once("value").then((snapshot) {
+      fbClient.child('ds-val').set(expected);
+      return fbClient.child('ds-val').once("value").then((snapshot) {
         expect(snapshot.val(), expected);
       });
     });
 
     test('snapshot returns child', () {
       var expected = {'test_data': 'good'};
-      f.child('ds-child/my-child').set(expected);
-      return f.child('ds-child').once("value").then((snapshot) {
+      fbClient.child('ds-child/my-child').set(expected);
+      return fbClient.child('ds-child').once("value").then((snapshot) {
         expect(snapshot.child('my-child').val(), expected);
       });
     });
 
     test('snapshot forEach on children', () {
-      f.child('ds-forEach/thing-one').setWithPriority({'thing': 'one'}, 1);
-      f.child('ds-forEach/thing-two').setWithPriority({'thing': 'two'}, 2);
-      f.child('ds-forEach/cat-hat').setWithPriority({'cat': 'hat'}, 3);
-      return f.child('ds-forEach').once("value").then((snapshot) {
+      fbClient.child('ds-forEach/thing-one').setWithPriority({'thing': 'one'}, 1);
+      fbClient.child('ds-forEach/thing-two').setWithPriority({'thing': 'two'}, 2);
+      fbClient.child('ds-forEach/cat-hat').setWithPriority({'cat': 'hat'}, 3);
+      return fbClient.child('ds-forEach').once("value").then((snapshot) {
         var items = [];
         snapshot.forEach((snapshot) {
           items.add(snapshot.key);
@@ -451,48 +442,48 @@ void main() {
     });
 
     test('hasChild returns true when child exists', () {
-      f.child('ds-hasChild/thing-one').set({'thing': 'one'});
-      return f.child('ds-hasChild').once("value").then((snapshot) {
+      fbClient.child('ds-hasChild/thing-one').set({'thing': 'one'});
+      return fbClient.child('ds-hasChild').once("value").then((snapshot) {
         expect(snapshot.hasChild("thing-one"), true);
       });
     });
 
     test('hasChild returns false when child doesnt exists', () {
-      return f.child('ds-no-hasChild').once("value").then((snapshot) {
+      return fbClient.child('ds-no-hasChild').once("value").then((snapshot) {
         expect(snapshot.hasChild("thing-one"), false);
       });
     });
 
     test('hasChildren returns true when has any children', () {
-      f.child('ds-hasChildren/thing-one').set({'thing': 'one'});
-      return f.child('ds-hasChildren').once("value").then((snapshot) {
+      fbClient.child('ds-hasChildren/thing-one').set({'thing': 'one'});
+      return fbClient.child('ds-hasChildren').once("value").then((snapshot) {
         expect(snapshot.hasChildren, true);
       });
     });
 
     test('hasChildren returns false when has no children', () {
-      return f.child('ds-no-hasChildren').once("value").then((snapshot) {
+      return fbClient.child('ds-no-hasChildren').once("value").then((snapshot) {
         expect(snapshot.hasChildren, false);
       });
     });
 
     test('key returns the key location', () {
-      return f.child('ds-key').once("value").then((snapshot) {
+      return fbClient.child('ds-key').once("value").then((snapshot) {
         expect(snapshot.key, 'ds-key');
       });
     });
 
     test('numChildren returns the number of children', () {
-      f.child('ds-numChildren/one').set("one");
-      f.child('ds-numChildren/two').set("two");
-      f.child('ds-numChildren/three').set("three");
-      return f.child('ds-numChildren').once("value").then((snapshot) {
+      fbClient.child('ds-numChildren/one').set("one");
+      fbClient.child('ds-numChildren/two').set("two");
+      fbClient.child('ds-numChildren/three').set("three");
+      return fbClient.child('ds-numChildren').once("value").then((snapshot) {
         expect(snapshot.numChildren, 3);
       });
     });
 
     test('ref returns firebase reference for this snapshot', () {
-      Firebase expected = f.child('ds-ref');
+      Firebase expected = fbClient.child('ds-ref');
 
       return expected.once('value').then((snapshot) {
         var ref = snapshot.ref();
@@ -502,15 +493,15 @@ void main() {
     });
 
     test('getPriority returns priority', () {
-      f.child('ds-priority').setWithPriority("thing", 4);
-      return f.child('ds-priority').once('value').then((snapshot) {
+      fbClient.child('ds-priority').setWithPriority("thing", 4);
+      return fbClient.child('ds-priority').once('value').then((snapshot) {
         expect(snapshot.getPriority(), 4);
       });
     });
 
     test('exportVal returns full data with priority', () {
-      f.child('ds-exportVal').setWithPriority("thing2", 500);
-      return f.child('ds-exportVal').once('value').then((snapshot) {
+      fbClient.child('ds-exportVal').setWithPriority("thing2", 500);
+      return fbClient.child('ds-exportVal').once('value').then((snapshot) {
         expect(snapshot.exportVal(), {'.value': 'thing2', '.priority': 500});
       });
     });
@@ -518,11 +509,11 @@ void main() {
 
   group('query', () {
     test('orderByChild', () {
-      f.child('order-by-child/one/animal').set('aligator');
-      f.child('order-by-child/two/animal').set('zebra');
-      f.child('order-by-child/three/animal').set('monkey');
+      fbClient.child('order-by-child/one/animal').set('aligator');
+      fbClient.child('order-by-child/two/animal').set('zebra');
+      fbClient.child('order-by-child/three/animal').set('monkey');
 
-      return f
+      return fbClient
           .child('order-by-child')
           .orderByChild('animal')
           .once('value')
@@ -540,11 +531,11 @@ void main() {
     });
 
     test('orderByKey', () {
-      f.child('order-by-key/zebra').set('three');
-      f.child('order-by-key/elephant').set('one');
-      f.child('order-by-key/monkey').set('two');
+      fbClient.child('order-by-key/zebra').set('three');
+      fbClient.child('order-by-key/elephant').set('one');
+      fbClient.child('order-by-key/monkey').set('two');
 
-      return f
+      return fbClient
           .child('order-by-key')
           .orderByKey()
           .once('value')
@@ -558,11 +549,11 @@ void main() {
     });
 
     test('orderByValue', () {
-      f.child('order-by-value/football').set(20);
-      f.child('order-by-value/basketball').set(10);
-      f.child('order-by-value/baseball').set(15);
+      fbClient.child('order-by-value/football').set(20);
+      fbClient.child('order-by-value/basketball').set(10);
+      fbClient.child('order-by-value/baseball').set(15);
 
-      return f
+      return fbClient
           .child('order-by-value')
           .orderByValue()
           .once('value')
@@ -576,11 +567,11 @@ void main() {
     });
 
     test('orderByPriority', () {
-      f.child('order-by-priority/football').setWithPriority('twenty', 20);
-      f.child('order-by-priority/basketball').setWithPriority('ten', 10);
-      f.child('order-by-priority/baseball').setWithPriority('fifteen', 15);
+      fbClient.child('order-by-priority/football').setWithPriority('twenty', 20);
+      fbClient.child('order-by-priority/basketball').setWithPriority('ten', 10);
+      fbClient.child('order-by-priority/baseball').setWithPriority('fifteen', 15);
 
-      return f
+      return fbClient
           .child('order-by-priority')
           .orderByPriority()
           .once('value')
@@ -594,12 +585,12 @@ void main() {
     });
 
     test('equalTo', () {
-      f.child('equalTo/football').set(20);
-      f.child('equalTo/basketball').set(10);
-      f.child('equalTo/soccer').set(15);
-      f.child('equalTo/baseball').set(15);
+      fbClient.child('equalTo/football').set(20);
+      fbClient.child('equalTo/basketball').set(10);
+      fbClient.child('equalTo/soccer').set(15);
+      fbClient.child('equalTo/baseball').set(15);
 
-      return f
+      return fbClient
           .child('equalTo')
           .orderByValue()
           .equalTo(15)
@@ -611,12 +602,12 @@ void main() {
     });
 
     test('equalTo with Key', () {
-      f.child('equalTo/football').set(20);
-      f.child('equalTo/basketball').set(10);
-      f.child('equalTo/soccer').set(15);
-      f.child('equalTo/baseball').set(15);
+      fbClient.child('equalTo/football').set(20);
+      fbClient.child('equalTo/basketball').set(10);
+      fbClient.child('equalTo/soccer').set(15);
+      fbClient.child('equalTo/baseball').set(15);
 
-      return f
+      return fbClient
           .child('equalTo')
           .orderByValue()
           .equalTo(15, 'soccer')
@@ -629,7 +620,7 @@ void main() {
 
     group('startAt', () {
       test('startAt starts at beginning when not specified', () async {
-        var child = f.child('startAt 1');
+        var child = fbClient.child('startAt 1');
 
         var count = 0;
         await Future.doWhile(() {
@@ -647,7 +638,7 @@ void main() {
 
       test('startAt returns items from starting point when ordering by value',
           () {
-        var child = f.child('startAt 2');
+        var child = fbClient.child('startAt 2');
         child.push().set(1);
         child.push().set(2);
         child.push().set(3);
@@ -665,12 +656,12 @@ void main() {
       });
 
       test('startAt returns items when ordering by child', () {
-        f.child('startAt/A/thing').set('1');
-        f.child('startAt/B/thing').set('2');
-        f.child('startAt/C/thing').set('3');
-        f.child('startAt/D/thing').set('4');
+        fbClient.child('startAt/A/thing').set('1');
+        fbClient.child('startAt/B/thing').set('2');
+        fbClient.child('startAt/C/thing').set('3');
+        fbClient.child('startAt/D/thing').set('4');
 
-        return f
+        return fbClient
             .child('startAt')
             .startAt(value: '3')
             .orderByChild('thing')
@@ -682,13 +673,13 @@ void main() {
       });
 
       test('startAt returns items when ordering by key', () {
-        f.child('startAt/key/A').set('1');
-        f.child('startAt/key/B').set('2');
-        f.child('startAt/key/C').set('3');
-        f.child('startAt/key/D').set('4');
-        f.child('startAt/key/E').set('5');
+        fbClient.child('startAt/key/A').set('1');
+        fbClient.child('startAt/key/B').set('2');
+        fbClient.child('startAt/key/C').set('3');
+        fbClient.child('startAt/key/D').set('4');
+        fbClient.child('startAt/key/E').set('5');
 
-        return f
+        return fbClient
             .child('startAt/key')
             .startAt(value: 'C')
             .orderByKey()
@@ -701,13 +692,13 @@ void main() {
       });
 
       test('startAt returns items from key when ordering by priority', () {
-        f.child('startAt/priority/A').setWithPriority('one', 100);
-        f.child('startAt/priority/B').setWithPriority('two', 100);
-        f.child('startAt/priority/C').setWithPriority('three', 100);
-        f.child('startAt/priority/D').setWithPriority('four', 100);
-        f.child('startAt/priority/E').setWithPriority('one - A', 90);
+        fbClient.child('startAt/priority/A').setWithPriority('one', 100);
+        fbClient.child('startAt/priority/B').setWithPriority('two', 100);
+        fbClient.child('startAt/priority/C').setWithPriority('three', 100);
+        fbClient.child('startAt/priority/D').setWithPriority('four', 100);
+        fbClient.child('startAt/priority/E').setWithPriority('one - A', 90);
 
-        return f
+        return fbClient
             .child('startAt/priority')
             .startAt(value: 100, key: 'C')
             .orderByPriority()
@@ -722,7 +713,7 @@ void main() {
 
     group('endAt', () {
       test('endAt ends at end when not specified', () async {
-        var child = f.child('endAt 1');
+        var child = fbClient.child('endAt 1');
 
         var count = 0;
         await Future.doWhile(() {
@@ -738,7 +729,7 @@ void main() {
       });
 
       test('endAt returns items from end point when ordering by value', () {
-        var child = f.child('endAt 2');
+        var child = fbClient.child('endAt 2');
         child.push().set(1);
         child.push().set(2);
         child.push().set(3);
@@ -756,12 +747,12 @@ void main() {
       });
 
       test('endAt returns items when ordering by child', () {
-        f.child('endAt/A/thing').set('1');
-        f.child('endAt/B/thing').set('2');
-        f.child('endAt/C/thing').set('3');
-        f.child('endAt/D/thing').set('4');
+        fbClient.child('endAt/A/thing').set('1');
+        fbClient.child('endAt/B/thing').set('2');
+        fbClient.child('endAt/C/thing').set('3');
+        fbClient.child('endAt/D/thing').set('4');
 
-        return f
+        return fbClient
             .child('endAt')
             .endAt(value: '3')
             .orderByChild('thing')
@@ -773,13 +764,13 @@ void main() {
       });
 
       test('endAt returns items when ordering by key', () {
-        f.child('endAt/key/A').set('1');
-        f.child('endAt/key/B').set('2');
-        f.child('endAt/key/C').set('3');
-        f.child('endAt/key/D').set('4');
-        f.child('endAt/key/E').set('5');
+        fbClient.child('endAt/key/A').set('1');
+        fbClient.child('endAt/key/B').set('2');
+        fbClient.child('endAt/key/C').set('3');
+        fbClient.child('endAt/key/D').set('4');
+        fbClient.child('endAt/key/E').set('5');
 
-        return f
+        return fbClient
             .child('endAt/key')
             .endAt(value: 'C')
             .orderByKey()
@@ -792,13 +783,13 @@ void main() {
       });
 
       test('endAt returns items from key when ordering by priority', () {
-        f.child('endAt/priority/A').setWithPriority('one', 100);
-        f.child('endAt/priority/B').setWithPriority('two', 100);
-        f.child('endAt/priority/C').setWithPriority('three', 100);
-        f.child('endAt/priority/D').setWithPriority('four', 100);
-        f.child('endAt/priority/E').setWithPriority('one - A', 120);
+        fbClient.child('endAt/priority/A').setWithPriority('one', 100);
+        fbClient.child('endAt/priority/B').setWithPriority('two', 100);
+        fbClient.child('endAt/priority/C').setWithPriority('three', 100);
+        fbClient.child('endAt/priority/D').setWithPriority('four', 100);
+        fbClient.child('endAt/priority/E').setWithPriority('one - A', 120);
 
-        return f
+        return fbClient
             .child('endAt/priority')
             .endAt(value: 100, key: 'C')
             .orderByPriority()
@@ -811,11 +802,11 @@ void main() {
     });
 
     test('limitToFirst', () {
-      f.child('limitToFirst-test/one').setWithPriority('one', 1);
-      f.child('limitToFirst-test/two').setWithPriority('two', 2);
-      f.child('limitToFirst-test/three').setWithPriority('three', 3);
+      fbClient.child('limitToFirst-test/one').setWithPriority('one', 1);
+      fbClient.child('limitToFirst-test/two').setWithPriority('two', 2);
+      fbClient.child('limitToFirst-test/three').setWithPriority('three', 3);
 
-      return f
+      return fbClient
           .child('limitToFirst-test')
           .limitToFirst(2)
           .once('value')
@@ -826,11 +817,11 @@ void main() {
     });
 
     test('limitToLast', () {
-      f.child('limitToLast-test/one').setWithPriority('one', 1);
-      f.child('limitToLast-test/two').setWithPriority('two', 2);
-      f.child('limitToLast-test/three').setWithPriority('three', 3);
+      fbClient.child('limitToLast-test/one').setWithPriority('one', 1);
+      fbClient.child('limitToLast-test/two').setWithPriority('two', 2);
+      fbClient.child('limitToLast-test/three').setWithPriority('three', 3);
 
-      return f
+      return fbClient
           .child('limitToLast-test')
           .limitToLast(2)
           .once('value')
@@ -848,7 +839,7 @@ void main() {
       StreamSubscription<Event> subscription;
       var eventCount = 0;
 
-      testRef = f.child('onChildAdded');
+      testRef = fbClient.child('onChildAdded');
       subscription = testRef.onChildAdded.listen((event) {
         var ss = event.snapshot;
         addedKeys.add(ss.key);
@@ -869,7 +860,7 @@ void main() {
       StreamSubscription<Event> subscription;
       var eventCount = 0;
 
-      testRef = f.child('onChildChanged');
+      testRef = fbClient.child('onChildChanged');
       subscription = testRef.onChildChanged.listen((event) {
         var ss = event.snapshot;
         expect(ss.key, 'key');
@@ -894,7 +885,7 @@ void main() {
       StreamSubscription<Event> onChildRemovedSubscription;
       int childRemovedCount = 0;
 
-      testRef = f.child('onChildAdded');
+      testRef = fbClient.child('onChildAdded');
       onChildRemovedSubscription = testRef.onChildRemoved.listen((event) {
         var ss = event.snapshot;
         expect(++childRemovedCount, 1);
@@ -912,7 +903,7 @@ void main() {
       StreamSubscription<Event> onValueSubscription;
       int valueCount = 0;
 
-      testRef = f.child('onValue');
+      testRef = fbClient.child('onValue');
       onValueSubscription = testRef.onValue.listen((event) {
         var ss = event.snapshot;
         expect(ss.key, 'onValue');
@@ -930,7 +921,7 @@ void main() {
     test('value events triggered last', () {
       int numAdded = 0;
       var value = {'a': 'b', 'c': 'd', 'e': 'f'};
-      Firebase testRef = f.child("things");
+      Firebase testRef = fbClient.child("things");
       testRef.onValue.listen((Event event) {
         var ss = event.snapshot;
         expect(numAdded, 3);
@@ -945,7 +936,7 @@ void main() {
 
   group('once', () {
     test('set a value and get', () {
-      var testRef = f.child('once');
+      var testRef = fbClient.child('once');
 
       testRef.once('child_added').then(expectAsync((value) {
         var ds = value as DataSnapshot;
@@ -961,7 +952,7 @@ void main() {
 
   group('transaction', () {
     test('simple value, nothing exists', () {
-      var testRef = f.child('tx1');
+      var testRef = fbClient.child('tx1');
       return testRef.transaction((curVal) {
         expect(curVal, isNull);
         return 42;
@@ -978,7 +969,7 @@ void main() {
 
     test('complex value, nothing exists', () {
       var value = const {'int': 42, 'bool': true, 'str': 'string'};
-      var testRef = f.child('tx2');
+      var testRef = fbClient.child('tx2');
       return testRef.transaction((curVal) {
         expect(curVal, isNull);
         return value;
@@ -994,7 +985,7 @@ void main() {
     });
 
     test('simple value, existing value', () async {
-      var testRef = f.child('tx3');
+      var testRef = fbClient.child('tx3');
       await testRef.set(42);
 
       var retryCount = 0;
@@ -1025,7 +1016,7 @@ void main() {
   group('onDisconnect', () {
     test('set', () {
       var value = {'onDisconnect set': 1};
-      return f.onDisconnect.set(value).then((v) {
+      return fbClient.onDisconnect.set(value).then((v) {
         // Unable to check value (value set upon disconnect.)
       });
     });
@@ -1033,26 +1024,26 @@ void main() {
     test('setWithPriority', () {
       var priority = 1;
       var value = {'onDisconnect setWithPriority': 2};
-      return f.onDisconnect.setWithPriority(value, priority).then((v) {
+      return fbClient.onDisconnect.setWithPriority(value, priority).then((v) {
         // Unable to check value (value set upon disconnect.)
       });
     });
 
     test('update', () {
       var value = {'onDisconnect update': 3};
-      return f.onDisconnect.update(value).then((v) {
+      return fbClient.onDisconnect.update(value).then((v) {
         // Unable to check value (value updated upon disconnect.)
       });
     });
 
     test('remove', () {
-      return f.onDisconnect.remove().then((v) {
+      return fbClient.onDisconnect.remove().then((v) {
         // Unable to check value (value removed upon disconnect.)
       });
     });
 
     test('cancel', () {
-      return f.onDisconnect.cancel().then((v) {
+      return fbClient.onDisconnect.cancel().then((v) {
         // TODO: confirm that queued set/update events are cancelled.
       });
     });

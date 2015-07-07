@@ -1,3 +1,9 @@
+## 0.6.1
+
+* Added `firebase_io.dart` library.
+  * `createFirebaseJwtToken` can be used for authentication.
+  * The `FirebaseClient` class is a simple wrapper for the Firebase `REST` API.
+
 ## 0.6.0
 
 * Removed deprecated `name` property on `Firebase` and `Snapshot`.
