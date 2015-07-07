@@ -1018,7 +1018,8 @@ void main() {
       expect(snapshot.hasChildren, false);
       expect(snapshot.numChildren, 0);
       expect(snapshot.val(), 43);
-    });
+    }, skip: 'The transaction does not complete when compiled to JS. '
+        'https://github.com/firebase/firebase-dart/issues/52');
   });
 
   group('onDisconnect', () {
