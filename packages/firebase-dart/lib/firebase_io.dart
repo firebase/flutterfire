@@ -3,12 +3,15 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 
+export 'src/encode.dart';
 export 'src/jwt.dart' show createFirebaseJwtToken;
 
 class FirebaseClient {
   final String credential;
 
   FirebaseClient(this.credential);
+
+  const FirebaseClient.anonymous() : credential = null;
 
   Future<dynamic> get(Uri uri) => send('GET', uri);
 
@@ -19,7 +22,9 @@ class FirebaseClient {
   Future<dynamic> send(String method, Uri uri, {json}) async {
     var params = new Map.from(uri.queryParameters);
 
-    params['auth'] = credential;
+    if (credential != null) {
+      params['auth'] = credential;
+    }
 
     uri = uri.replace(queryParameters: params);
 
@@ -53,6 +58,13 @@ class FirebaseClient {
     }
 
     if (response.statusCode != 200) {
+      if (bodyJson is Map) {
+        var error = bodyJson['error'];
+        if (error != null) {
+          // TODO: wrap this in something helpful?
+          throw error;
+        }
+      }
       throw bodyJson;
     }
 

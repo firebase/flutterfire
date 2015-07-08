@@ -1,53 +1,78 @@
 @TestOn('vm')
 import 'package:firebase/firebase_io.dart';
+import 'package:firebase/src/consts.dart';
 import 'package:test/test.dart';
 
 import 'test_shared.dart';
 
-Uri getTestUrl(int count, {DateTime timeKey}) =>
-    getTestUrlBase(<String>['test', testKey(timeKey), count.toString() + '.json']);
+Uri getTestUrl(int count, {DateTime timeKey}) => getTestUrlBase(
+    <String>['test', testKey(timeKey), count.toString() + '.json']);
 
+//TODO: add tests that validate security by having secured and insecure sections
 void main() {
-  test('get andp put with a secret', () async {
-    var baseUri = getTestUrl(0);
+  int count = 0;
+  group('get and put', () {
+    test('without security', () async {
+      var baseUri = getTestUrl(count++);
 
-    var fbClient = new FirebaseClient(AUTH_TOKEN);
+      var fbClient = new FirebaseClient.anonymous();
 
-    var rootValue = await fbClient.get(baseUri);
+      var rootValue = await fbClient.get(baseUri);
 
-    expect(rootValue, isNull);
+      expect(rootValue, isNull);
 
-    var putContent = {"name": "Alan Turing", "birthday": "June 23, 1912"};
+      var putContent = {"name": "Alan Turing", "birthday": "June 23, 1912"};
 
-    rootValue = await fbClient.put(baseUri, putContent);
+      rootValue = await fbClient.put(baseUri, putContent);
 
-    expect(rootValue, putContent);
+      expect(rootValue, putContent);
 
-    rootValue = await fbClient.get(baseUri);
+      rootValue = await fbClient.get(baseUri);
 
-    expect(rootValue, putContent);
-  });
+      expect(rootValue, putContent);
+    });
 
-  test('get and put with a token', () async {
-    var baseUri = getTestUrl(1);
+    test('with an admin secret', () async {
+      var baseUri = getTestUrl(count++);
 
-    var firebaseToken = createFirebaseJwtToken(AUTH_TOKEN, admin: true);
+      var fbClient = new FirebaseClient(AUTH_TOKEN);
 
-    var fbClient = new FirebaseClient(firebaseToken);
+      var rootValue = await fbClient.get(baseUri);
 
-    var rootValue = await fbClient.get(baseUri);
+      expect(rootValue, isNull);
 
-    expect(rootValue, isNull);
+      var putContent = {"name": "Alan Turing", "birthday": "June 23, 1912"};
 
-    var putContent = {"name": "Alan Turing", "birthday": "June 23, 1912"};
+      rootValue = await fbClient.put(baseUri, putContent);
 
-    rootValue = await fbClient.put(baseUri, putContent);
+      expect(rootValue, putContent);
 
-    expect(rootValue, putContent);
+      rootValue = await fbClient.get(baseUri);
 
-    rootValue = await fbClient.get(baseUri);
+      expect(rootValue, putContent);
+    });
 
-    expect(rootValue, putContent);
+    test('with a token', () async {
+      var baseUri = getTestUrl(count++);
+
+      var firebaseToken = createFirebaseJwtToken(AUTH_TOKEN, admin: true);
+
+      var fbClient = new FirebaseClient(firebaseToken);
+
+      var rootValue = await fbClient.get(baseUri);
+
+      expect(rootValue, isNull);
+
+      var putContent = {"name": "Alan Turing", "birthday": "June 23, 1912"};
+
+      rootValue = await fbClient.put(baseUri, putContent);
+
+      expect(rootValue, putContent);
+
+      rootValue = await fbClient.get(baseUri);
+
+      expect(rootValue, putContent);
+    });
   });
 
   test('delete', () async {
@@ -58,7 +83,7 @@ void main() {
 
     var outdatedUri = getTestUrl(2, timeKey: reallyOldDate);
 
-    await fbClient.put(outdatedUri, {'a':'a'});
+    await fbClient.put(outdatedUri, {'a': 'a'});
 
     var allTestOutput =
         await fbClient.get(getTestUrlBase(['test.json'])) as Map;
@@ -77,5 +102,63 @@ void main() {
     }
 
     expect(deleteCount, greaterThanOrEqualTo(1));
+  });
+
+  group('invalid key chars', () {
+    for (var char in invalidFirebaseKeyCharsAndStar) {
+      test('validate encoding for invalid key char "$char"', () async {
+        var baseUri = getTestUrl(count++);
+
+        var fbClient = new FirebaseClient(AUTH_TOKEN);
+
+        var rootValue = await fbClient.get(baseUri);
+
+        expect(rootValue, isNull);
+
+        var unencodedKey = 'key with $char';
+
+        var putContent = {unencodedKey: "Alan Turing"};
+
+        try {
+          await fbClient.put(baseUri, putContent);
+          fail('key with invalid char shoul fail');
+        } catch (e) {
+          // TODO: some verification
+        }
+
+        var encoded = encodeKey(unencodedKey);
+        putContent = {encoded: "Alan Turing"};
+
+        rootValue = await fbClient.put(baseUri, putContent);
+
+        expect(rootValue, putContent);
+      });
+    }
+
+    test('all invalid chars', () async {
+      var baseUri = getTestUrl(count++);
+
+      var encoded = encodeKey(invalidKeyString);
+
+      var fbClient = new FirebaseClient(AUTH_TOKEN);
+
+      var rootValue = await fbClient.get(baseUri);
+
+      expect(rootValue, isNull);
+
+      var putContent = {encoded: "Alan Turing"};
+
+      rootValue = await fbClient.put(baseUri, putContent);
+
+      expect(rootValue, putContent);
+
+      rootValue = await fbClient.get(baseUri);
+
+      expect(rootValue, putContent);
+
+      var decoded = decodeKey(encoded);
+
+      expect(decoded, invalidKeyString);
+    });
   });
 }

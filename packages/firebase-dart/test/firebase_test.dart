@@ -44,7 +44,8 @@ void main() {
   if (AUTH_TOKEN != null) {
     group('authWithCustomToken', () {
       test('bad auth token should fail', () {
-        expect(fbClient.authWithCustomToken(INVALID_AUTH_TOKEN), throwsA((error) {
+        expect(fbClient.authWithCustomToken(INVALID_AUTH_TOKEN),
+            throwsA((error) {
           expect(error['code'], 'INVALID_TOKEN');
           return true;
         }));
@@ -352,8 +353,8 @@ void main() {
     });
 
     test('toString returns the absolute url to ref location', () {
-      // the firebase URI has '@' escaped – so reverse that
-      expect(fbClient.toString().replaceAll('%40', '@'), testUrl);
+      // the firebase URI has ':' escaped – so reverse that
+      expect(fbClient.toString().replaceAll('%3A', ':'), testUrl);
     });
 
     test('set', () {
@@ -429,8 +430,10 @@ void main() {
     });
 
     test('snapshot forEach on children', () {
-      fbClient.child('ds-forEach/thing-one').setWithPriority({'thing': 'one'}, 1);
-      fbClient.child('ds-forEach/thing-two').setWithPriority({'thing': 'two'}, 2);
+      fbClient.child('ds-forEach/thing-one').setWithPriority(
+          {'thing': 'one'}, 1);
+      fbClient.child('ds-forEach/thing-two').setWithPriority(
+          {'thing': 'two'}, 2);
       fbClient.child('ds-forEach/cat-hat').setWithPriority({'cat': 'hat'}, 3);
       return fbClient.child('ds-forEach').once("value").then((snapshot) {
         var items = [];
@@ -567,9 +570,11 @@ void main() {
     });
 
     test('orderByPriority', () {
-      fbClient.child('order-by-priority/football').setWithPriority('twenty', 20);
+      fbClient.child('order-by-priority/football').setWithPriority(
+          'twenty', 20);
       fbClient.child('order-by-priority/basketball').setWithPriority('ten', 10);
-      fbClient.child('order-by-priority/baseball').setWithPriority('fifteen', 15);
+      fbClient.child('order-by-priority/baseball').setWithPriority(
+          'fifteen', 15);
 
       return fbClient
           .child('order-by-priority')
