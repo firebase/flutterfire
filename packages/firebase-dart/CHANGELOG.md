@@ -5,8 +5,8 @@
 * Added `firebase_io.dart` library.
   * `createFirebaseJwtToken` can be used for authentication.
   * The `FirebaseClient` class is a simple wrapper for the Firebase `REST` API.
-  
-* Added `percentEncodeKey` and `percentDecodeKey` methods to `firebase.dart`
+
+* Added `encodeKey` and `decodeKey` methods to `firebase.dart`
   and `firebas_io.dart`. Convenience methods for dealing with key values with
   disallowed characters.
 
