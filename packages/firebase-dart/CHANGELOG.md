@@ -1,3 +1,7 @@
+## 0.6.2
+
+* Fix an issue calling `push` with a `Map`.
+
 ## 0.6.1
 
 * Added `anonymous` constructor to `FirebaseClient`.

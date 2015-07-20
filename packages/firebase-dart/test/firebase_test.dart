@@ -384,6 +384,17 @@ void main() {
       return pushRef.set('HAHA');
     });
 
+    test('push map', () async {
+      var childAddedFuture = fbClient.onValue.first;
+
+      var pushRef = fbClient.push(value: {'key': 'value'});
+
+      await childAddedFuture;
+
+      var snapshot = await pushRef.once('value');
+      expect(snapshot.val()['key'], 'value');
+    });
+
     test('priorities', () {
       // TODO: actually validate the result
       var testRef = fbClient.child('ZZZ');
