@@ -1,3 +1,7 @@
+## 0.6.3
+
+* Added `onComplete` argument to `Firebase.push`.
+
 ## 0.6.2
 
 * Fix an issue calling `push` with a `Map`.
