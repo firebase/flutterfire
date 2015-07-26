@@ -2,6 +2,9 @@
 
 * Fix an issue calling `push` with a `Map`.
 
+* Fixed the return type of `Firebase.onAuth`. Also made the returned `Stream`
+  asynchronous.
+
 ## 0.6.1
 
 * Added `anonymous` constructor to `FirebaseClient`.

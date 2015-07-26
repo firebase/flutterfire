@@ -77,6 +77,7 @@ class Firebase extends Query {
   /**
    * Authenticates a Firebase client using a new, temporary guest account.
    */
+  // https://www.firebase.com/docs/web/guide/login/anonymous.html#section-logging-in
   Future authAnonymously({remember: 'default'}) {
     var c = new Completer();
     _fb.callMethod('authAnonymously', [
@@ -162,9 +163,9 @@ class Firebase extends Query {
   }
 
   /**
-   * Listens for changes to the client's authentication state..
+   * Listens for changes to the client's authentication state.
    */
-  Stream<Event> onAuth([context]) {
+  Stream onAuth([context]) {
     if (_onAuth == null) {
       StreamController controller;
 
@@ -186,8 +187,8 @@ class Firebase extends Query {
       void stopListen() {
         _fb.callMethod('offAuth', [_handleOnAuth, jsify(context)]);
       }
-      controller = new StreamController<Event>.broadcast(
-          onListen: startListen, onCancel: stopListen, sync: true);
+      controller = new StreamController.broadcast(
+          onListen: startListen, onCancel: stopListen, sync: false);
       return controller.stream;
     }
     return _onAuth;

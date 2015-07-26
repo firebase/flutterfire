@@ -60,28 +60,36 @@ void main() {
   }
 
   group('authAnonymously', () {
-    test('good auth', () {
-      return fbClient.authAnonymously().then((response) {
-        expect(response['uid'], isNotNull);
-        expect(response['expires'], isNotNull);
-        expect(response['auth']['uid'], isNotNull);
-        expect(response['auth']['provider'], 'anonymous');
-        expect(response['token'], isNotNull);
-        expect(response['provider'], 'anonymous');
-        expect(response['anonymous'], {});
-      });
+    void validateAuthResponse(Map response) {
+      expect(response['uid'], isNotNull);
+      expect(response['expires'], isNotNull);
+      expect(response['auth']['uid'], isNotNull);
+      expect(response['auth']['provider'], 'anonymous');
+      expect(response['token'], isNotNull);
+      expect(response['provider'], 'anonymous');
+      expect(response['anonymous'], {});
+    }
+
+    test('good auth', () async {
+      var response = await fbClient.authAnonymously();
+
+      validateAuthResponse(response);
     });
 
-    test('good auth with custom remember', () {
-      return fbClient.authAnonymously(remember: "sessionOnly").then((response) {
-        expect(response['uid'], isNotNull);
-        expect(response['expires'], isNotNull);
-        expect(response['auth']['uid'], isNotNull);
-        expect(response['auth']['provider'], 'anonymous');
-        expect(response['token'], isNotNull);
-        expect(response['provider'], 'anonymous');
-        expect(response['anonymous'], {});
-      });
+    test('onAuth stream', () async {
+      var onAuthStream = fbClient.onAuth();
+
+      await fbClient.authAnonymously();
+
+      var value = await onAuthStream.first;
+
+      validateAuthResponse(value);
+    });
+
+    test('good auth with custom remember', () async {
+      var response = await fbClient.authAnonymously(remember: 'sessionOnly');
+
+      validateAuthResponse(response);
     });
   });
 
