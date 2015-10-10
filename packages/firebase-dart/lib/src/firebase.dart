@@ -489,6 +489,12 @@ class Firebase extends Query {
       c.complete(res);
     }
   }
+
+  static final ServerValue = new _ServerValue();
+}
+
+class _ServerValue {
+  final TIMESTAMP = context['Firebase']['ServerValue']['TIMESTAMP'];
 }
 
 /**

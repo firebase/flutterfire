@@ -1,3 +1,7 @@
+## 0.6.4
+
+* Added `Firebase.ServerValue.TIMESTAMP` constant
+
 ## 0.6.3
 
 * Added `onComplete` argument to `Firebase.push`.

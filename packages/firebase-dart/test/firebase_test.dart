@@ -1044,6 +1044,12 @@ void main() {
         'https://github.com/firebase/firebase-dart/issues/52');
   });
 
+  group('ServerValue', () {
+    test('TIMESTAMP', () {
+      expect(Firebase.ServerValue.TIMESTAMP['.sv'], 'timestamp');
+    });
+  });
+
   group('onDisconnect', () {
     test('set', () {
       var value = {'onDisconnect set': 1};
