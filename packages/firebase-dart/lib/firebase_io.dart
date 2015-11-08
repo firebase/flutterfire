@@ -1,3 +1,5 @@
+library firebase_io;
+
 import 'dart:async';
 import 'dart:convert';
 
