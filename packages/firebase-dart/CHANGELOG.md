@@ -1,3 +1,7 @@
+## 0.6.5
+
+* Added `FirebaseClient.post` to `firebase_io.dart`.
+
 ## 0.6.4
 
 * Added `Firebase.ServerValue.TIMESTAMP` constant
