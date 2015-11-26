@@ -17,14 +17,16 @@ String decodeKey(String input) {
 }
 
 final _invalidKeyMap = new Map.unmodifiable(new Map.fromIterable(
-    invalidFirebaseKeyCharsAndStar, value: (i) => _getEncodedLiteral(i)));
+    invalidFirebaseKeyCharsAndStar,
+    value: (i) => _getEncodedLiteral(i)));
 
 final _decodeMap = new Map.unmodifiable(new Map.fromIterable(
-    invalidFirebaseKeyCharsAndStar, key: (i) => _getEncodedLiteral(i)));
+    invalidFirebaseKeyCharsAndStar,
+    key: (i) => _getEncodedLiteral(i)));
 
 /// A [RegExp] that matches whitespace characters that should be escaped.
-final _escapeRegExp = new RegExp(
-    "[${invalidFirebaseKeyCharsAndStar.map((i) => '\\$i').join()}]");
+final _escapeRegExp =
+    new RegExp("[${invalidFirebaseKeyCharsAndStar.map((i) => '\\$i').join()}]");
 
 final _decodeRegExp = new RegExp('\\${encodeChar}[0-9A-F]{2}');
 

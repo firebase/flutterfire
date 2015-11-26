@@ -174,8 +174,7 @@ void main() {
           'newEmail': newEmail,
           'password': password,
         };
-        return fbClient
-            .createUser({'email': email, 'password': password})
+        return fbClient.createUser({'email': email, 'password': password})
             .then((result) {
           fbClient.changeEmail(changeCredentials).then((result) {
             expect(result, null);
@@ -192,8 +191,7 @@ void main() {
           'password': password,
         };
 
-        return fbClient
-            .createUser({'email': email, 'password': password})
+        return fbClient.createUser({'email': email, 'password': password})
             .then((result) {
           expect(fbClient.changeEmail(badCredentials), throwsA((error) {
             expect(error['code'], "INVALID_EMAIL");
@@ -215,8 +213,7 @@ void main() {
           'oldPassword': oldPassword,
           'newPassword': newPassword
         };
-        return fbClient
-            .createUser({'email': email, 'password': oldPassword})
+        return fbClient.createUser({'email': email, 'password': oldPassword})
             .then((result) {
           fbClient.changePassword(changeCredentials).then((result) {
             expect(result, null);
@@ -233,8 +230,7 @@ void main() {
           'newPassword': 'updated_password'
         };
 
-        return fbClient
-            .createUser({'email': email, 'password': oldPassword})
+        return fbClient.createUser({'email': email, 'password': oldPassword})
             .then((result) {
           expect(fbClient.changePassword(badCredentials), throwsA((error) {
             expect(error['code'], "INVALID_PASSWORD");
@@ -456,10 +452,12 @@ void main() {
     });
 
     test('snapshot forEach on children', () {
-      fbClient.child('ds-forEach/thing-one').setWithPriority(
-          {'thing': 'one'}, 1);
-      fbClient.child('ds-forEach/thing-two').setWithPriority(
-          {'thing': 'two'}, 2);
+      fbClient
+          .child('ds-forEach/thing-one')
+          .setWithPriority({'thing': 'one'}, 1);
+      fbClient
+          .child('ds-forEach/thing-two')
+          .setWithPriority({'thing': 'two'}, 2);
       fbClient.child('ds-forEach/cat-hat').setWithPriority({'cat': 'hat'}, 3);
       return fbClient.child('ds-forEach').once("value").then((snapshot) {
         var items = [];
@@ -596,11 +594,13 @@ void main() {
     });
 
     test('orderByPriority', () {
-      fbClient.child('order-by-priority/football').setWithPriority(
-          'twenty', 20);
+      fbClient
+          .child('order-by-priority/football')
+          .setWithPriority('twenty', 20);
       fbClient.child('order-by-priority/basketball').setWithPriority('ten', 10);
-      fbClient.child('order-by-priority/baseball').setWithPriority(
-          'fifteen', 15);
+      fbClient
+          .child('order-by-priority/baseball')
+          .setWithPriority('fifteen', 15);
 
       return fbClient
           .child('order-by-priority')
@@ -699,7 +699,10 @@ void main() {
             .once('value')
             .then((snapshot) {
           var val = snapshot.val() as Map;
-          expect(val.values, [{'thing': '3'}, {'thing': '4'}]);
+          expect(val.values, [
+            {'thing': '3'},
+            {'thing': '4'}
+          ]);
         });
       });
 
@@ -790,7 +793,11 @@ void main() {
             .once('value')
             .then((snapshot) {
           var val = snapshot.val() as Map;
-          expect(val.values, [{'thing': '1'}, {'thing': '2'}, {'thing': '3'}]);
+          expect(val.values, [
+            {'thing': '1'},
+            {'thing': '2'},
+            {'thing': '3'}
+          ]);
         });
       });
 
@@ -1040,8 +1047,9 @@ void main() {
       expect(snapshot.hasChildren, false);
       expect(snapshot.numChildren, 0);
       expect(snapshot.val(), 43);
-    }, skip: 'The transaction does not complete when compiled to JS. '
-        'https://github.com/firebase/firebase-dart/issues/52');
+    },
+        skip: 'The transaction does not complete when compiled to JS. '
+            'https://github.com/firebase/firebase-dart/issues/52');
   });
 
   group('ServerValue', () {

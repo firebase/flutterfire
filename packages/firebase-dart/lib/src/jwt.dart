@@ -15,8 +15,11 @@ const _MAX_EXPECTED_TIMEDIFF_IN_SECONDS = 20;
 /// If provided, [issuedAtTime] is used to set the `iat` claims header. This may
 /// be useful for testing. The default value is `new DateTime.now()` shifted 20
 /// seconds into the past to account for possible clock skew.
-String createFirebaseJwtToken(String secret, {Map<String, dynamic> data,
-    bool admin, bool debug, DateTime issuedAtTime}) {
+String createFirebaseJwtToken(String secret,
+    {Map<String, dynamic> data,
+    bool admin,
+    bool debug,
+    DateTime issuedAtTime}) {
   if (data == null) data = const {};
 
   if (issuedAtTime == null) {

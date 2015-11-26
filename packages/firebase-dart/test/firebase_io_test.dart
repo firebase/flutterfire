@@ -31,7 +31,6 @@ void main() {
 
       expect(rootValue, putContent);
 
-
       // TODO: Consider improving how we construct this new path.
       var postUri = Uri
           .parse('${baseUri.toString().split('.json').first}/interests.json');
@@ -41,7 +40,7 @@ void main() {
         {'name': 'Computer Science', 'love-level': 7}
       ];
 
-      for (var interest in interests){
+      for (var interest in interests) {
         rootValue = await fbClient.post(postUri, interest);
 
         expect(rootValue, isMap);
@@ -78,7 +77,7 @@ void main() {
         {'name': 'Computer Science', 'love-level': 7}
       ];
 
-      for (var interest in interests){
+      for (var interest in interests) {
         rootValue = await fbClient.post(postUri, interest);
 
         expect(rootValue, isMap);
@@ -117,7 +116,7 @@ void main() {
         {'name': 'Computer Science', 'love-level': 7}
       ];
 
-      for (var interest in interests){
+      for (var interest in interests) {
         rootValue = await fbClient.post(postUri, interest);
 
         expect(rootValue, isMap);
