@@ -19,7 +19,7 @@ class FirebaseClient {
 
   Future<dynamic> put(Uri uri, json) => send('PUT', uri, json: json);
 
-  Future<dynamic> post(Uri uri, json) => send('PUT', uri, json: json);
+  Future<dynamic> post(Uri uri, json) => send('POST', uri, json: json);
 
   Future<dynamic> delete(Uri uri) => send('DELETE', uri);
 
