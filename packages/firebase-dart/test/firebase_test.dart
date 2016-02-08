@@ -174,8 +174,8 @@ void main() {
           'newEmail': newEmail,
           'password': password,
         };
-        return fbClient.createUser({'email': email, 'password': password})
-            .then((result) {
+        return fbClient
+            .createUser({'email': email, 'password': password}).then((result) {
           fbClient.changeEmail(changeCredentials).then((result) {
             expect(result, null);
             fbClient.removeUser({'email': newEmail, 'password': password});
@@ -191,8 +191,8 @@ void main() {
           'password': password,
         };
 
-        return fbClient.createUser({'email': email, 'password': password})
-            .then((result) {
+        return fbClient
+            .createUser({'email': email, 'password': password}).then((result) {
           expect(fbClient.changeEmail(badCredentials), throwsA((error) {
             expect(error['code'], "INVALID_EMAIL");
             fbClient.removeUser({'email': email, 'password': password});
@@ -213,8 +213,8 @@ void main() {
           'oldPassword': oldPassword,
           'newPassword': newPassword
         };
-        return fbClient.createUser({'email': email, 'password': oldPassword})
-            .then((result) {
+        return fbClient.createUser(
+            {'email': email, 'password': oldPassword}).then((result) {
           fbClient.changePassword(changeCredentials).then((result) {
             expect(result, null);
             fbClient.removeUser({'email': email, 'password': newPassword});
@@ -230,8 +230,8 @@ void main() {
           'newPassword': 'updated_password'
         };
 
-        return fbClient.createUser({'email': email, 'password': oldPassword})
-            .then((result) {
+        return fbClient.createUser(
+            {'email': email, 'password': oldPassword}).then((result) {
           expect(fbClient.changePassword(badCredentials), throwsA((error) {
             expect(error['code'], "INVALID_PASSWORD");
             fbClient.removeUser({'email': email, 'password': oldPassword});
