@@ -9,8 +9,8 @@ in Dart classes.
 
 Follow the instructions on the [pub page](http://pub.dartlang.org/packages/firebase#installing).
 
-**The firebase.js library MUST be included for the wrapper to work**:
+**The `firebase.js` library MUST be included for the wrapper to work**:
 
 ```html
-<script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
+<script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
 ```
