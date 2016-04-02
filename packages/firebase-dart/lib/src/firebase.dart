@@ -56,7 +56,7 @@ class Firebase extends Query {
     _fb.callMethod('auth', [
       token,
       _getAuthCallback(c),
-      (err) {
+      (err, _) {
         c.completeError(err);
       }
     ]);
@@ -258,7 +258,7 @@ class Firebase extends Query {
     value = jsify(value);
     _fb.callMethod('set', [
       value,
-      (err) {
+      (err, _) {
         _resolveFuture(c, err, null);
       }
     ]);
@@ -278,7 +278,7 @@ class Firebase extends Query {
     var jsValue = jsify(value);
     _fb.callMethod('update', [
       jsValue,
-      (err) {
+      (err, _) {
         _resolveFuture(c, err, null);
       }
     ]);
@@ -298,7 +298,7 @@ class Firebase extends Query {
   Future remove() {
     var c = new Completer();
     _fb.callMethod('remove', [
-      (err) {
+      (err, _) {
         _resolveFuture(c, err, null);
       }
     ]);
@@ -316,9 +316,9 @@ class Firebase extends Query {
   Firebase push({value, onComplete}) =>
       new Firebase.fromJsObject(_fb.callMethod('push', [
         value == null ? null : jsify(value),
-        (error) {
+        (err, _) {
           if (onComplete != null) {
-            onComplete(error);
+            onComplete(err);
           }
         }
       ]));
@@ -338,7 +338,7 @@ class Firebase extends Query {
     _fb.callMethod('setWithPriority', [
       value,
       priority,
-      (err) {
+      (err, _) {
         _resolveFuture(c, err, null);
       }
     ]);
@@ -362,7 +362,7 @@ class Firebase extends Query {
     var c = new Completer();
     _fb.callMethod('setPriority', [
       priority,
-      (err) {
+      (err, _) {
         _resolveFuture(c, err, null);
       }
     ]);
@@ -429,7 +429,7 @@ class Firebase extends Query {
     var c = new Completer();
     _fb.callMethod('changeEmail', [
       jsify(credentials),
-      (err) {
+      (err, _) {
         _resolveFuture(c, err, null);
       }
     ]);
@@ -443,7 +443,7 @@ class Firebase extends Query {
     var c = new Completer();
     _fb.callMethod('changePassword', [
       jsify(credentials),
-      (err) {
+      (err, _) {
         _resolveFuture(c, err, null);
       }
     ]);
@@ -457,7 +457,7 @@ class Firebase extends Query {
     var c = new Completer();
     _fb.callMethod('removeUser', [
       jsify(credentials),
-      (err) {
+      (err, _) {
         _resolveFuture(c, err, null);
       }
     ]);
@@ -472,7 +472,7 @@ class Firebase extends Query {
     var c = new Completer();
     _fb.callMethod('resetPassword', [
       jsify(credentials),
-      (err) {
+      (err, _) {
         _resolveFuture(c, err, null);
       }
     ]);
