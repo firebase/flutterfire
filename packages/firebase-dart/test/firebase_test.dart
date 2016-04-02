@@ -526,6 +526,20 @@ void main() {
       });
     });
 
+    test('getPriority returns non-integer priority', () {
+      fbClient.child('ds-priority').setWithPriority("thing", 4.1);
+      return fbClient.child('ds-priority').once('value').then((snapshot) {
+        expect(snapshot.getPriority(), 4.1);
+      });
+    });
+
+    test('getPriority returns string priority', () {
+      fbClient.child('ds-priority').setWithPriority("thing", "alpha");
+      return fbClient.child('ds-priority').once('value').then((snapshot) {
+        expect(snapshot.getPriority(), 'alpha');
+      });
+    });
+
     test('exportVal returns full data with priority', () {
       fbClient.child('ds-exportVal').setWithPriority("thing2", 500);
       return fbClient.child('ds-exportVal').once('value').then((snapshot) {

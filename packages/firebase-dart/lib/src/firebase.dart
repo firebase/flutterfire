@@ -332,7 +332,7 @@ class Firebase extends Query {
    * Returns a Future which will complete when the data has been synchronized
    * with Firebase.
    */
-  Future setWithPriority(value, int priority) {
+  Future setWithPriority(value, priority) {
     var c = new Completer();
     value = jsify(value);
     _fb.callMethod('setWithPriority', [
@@ -358,7 +358,7 @@ class Firebase extends Query {
    * specific priority, and this function should be used when updating the
    * priority of existing data.
    */
-  Future setPriority(int priority) {
+  Future setPriority(priority) {
     var c = new Completer();
     _fb.callMethod('setPriority', [
       priority,
