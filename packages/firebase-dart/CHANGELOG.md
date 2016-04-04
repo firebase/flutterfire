@@ -1,3 +1,9 @@
+## 0.6.6
+
+* Support latest version of `pkg/crypto`
+
+* Support latest version of `firebase.js` - 2.4.2
+
 ## 0.6.5+1
 
 * Fixed `FirebaseClient.post` to use `POST`.
