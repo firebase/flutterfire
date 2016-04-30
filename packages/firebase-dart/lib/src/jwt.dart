@@ -2,7 +2,7 @@ library firebase.jwt;
 
 import 'dart:convert';
 
-import 'package:crypto/crypto.dart' hide BASE64;
+import 'package:crypto/crypto.dart';
 
 /// Header used by Firebase
 /// See https://www.firebase.com/docs/rest/guide/user-auth.html#section-tokens-without-helpers

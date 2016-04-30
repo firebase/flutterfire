@@ -24,7 +24,7 @@ class FirebaseClient {
   Future<dynamic> delete(Uri uri) => send('DELETE', uri);
 
   Future<dynamic> send(String method, Uri uri, {json}) async {
-    var params = new Map.from(uri.queryParameters);
+    var params = new Map<String, String>.from(uri.queryParameters);
 
     if (credential != null) {
       params['auth'] = credential;

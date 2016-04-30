@@ -1,7 +1,7 @@
 library firebase.firebase;
 
-import 'dart:js';
 import 'dart:async';
+import 'dart:js';
 
 import 'auth_response.dart';
 import 'data_snapshot.dart';
@@ -389,7 +389,7 @@ class Firebase extends Query {
    */
   Future<TransactionResult> transaction(update(currentVal),
       {bool applyLocally: true}) {
-    var c = new Completer();
+    var c = new Completer<TransactionResult>();
     _fb.callMethod('transaction', [
       Zone.current.bindUnaryCallback((val) {
         var retValue = update(val);

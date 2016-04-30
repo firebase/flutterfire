@@ -21,6 +21,8 @@ const OAUTH_TOKEN = null;
 
 int _count = 0;
 
+typedef dynamic _TakesDataSnapshot(DataSnapshot snapshot);
+
 String getTestUrl(int count) =>
     getTestUrlBase(<String>['test', testKey(), count.toString()]).toString();
 
@@ -996,7 +998,7 @@ void main() {
         expect(ds.numChildren, 0);
         expect(ds.key, 'a');
         expect(ds.val(), 'b');
-      }));
+      }) as _TakesDataSnapshot);
 
       return testRef.set({'a': 'b'});
     });
