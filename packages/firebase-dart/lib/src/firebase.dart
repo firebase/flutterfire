@@ -507,7 +507,8 @@ class _ServerValue {
  * functions: startAt(), endAt() and limit().
  *
  * Once a Query is constructed, you can receive data for it using on(). You
- * will receive
+ * will only receive events and DataSnapshots for the subset of the data that
+ * matches your query.
  */
 class Query {
   /**
