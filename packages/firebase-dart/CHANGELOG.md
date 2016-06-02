@@ -1,3 +1,9 @@
+## 0.6.6+2
+
+* Strong-mode clean.
+
+* Doc fixes.
+
 ## 0.6.6+1
 
 * Support non-integer values for `priority` in set operations.

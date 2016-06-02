@@ -30,7 +30,7 @@ String createFirebaseJwtToken(String secret,
   }
   int timestamp = issuedAtTime.millisecondsSinceEpoch ~/ 1000;
 
-  // createOptionsClaimns
+  // createOptionsClaims
   var claims = <String, dynamic>{'v': 0, 'iat': timestamp, 'd': data};
 
   if (admin == true) {
