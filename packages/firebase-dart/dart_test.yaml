@@ -1,0 +1,5 @@
+# This is a browser-only package.
+# Default to running in Dartium instead of the Dart VM.
+# NOTE: It's good to verify JS targets work by using
+#       `pub run test -p dartium,firefox,chrome` etc before committing
+platforms: [vm, dartium]

@@ -3,9 +3,13 @@
 # Fast fail the script on failures.
 set -e
 
-dartanalyzer --fatal-warnings \
-  lib/firebase.dart \
-  lib/firebase_io.dart \
-  test/firebase_test.dart
-
-pub run test -p vm,firefox
+if [ -n "$API_KEY" ]; then
+  dart tool/create_config.dart
+  THE_COMMAND="pub run test -p $TEST_PLATFORM"
+  echo $THE_COMMAND
+  exec $THE_COMMAND
+else
+  echo 'Missing firebase ENV variables.'
+  echo 'See too/create_config.dart'
+  exit 64
+fi

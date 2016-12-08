@@ -1,53 +1,79 @@
-library firebase_io;
-
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart';
 
-export 'src/encode.dart';
-export 'src/jwt.dart' show createFirebaseJwtToken;
-
+/// FirebaseClient wraps a REST client for a Firebase realtime database.
+///
+/// The client supports authentication and GET, PUT, POST, DELETE
+/// and PATCH methods.
 class FirebaseClient {
+  /// Auth credential.
   final String credential;
+  final BaseClient _client;
 
-  FirebaseClient(this.credential);
+  /// Creates a new FirebaseClient with [credential] and optional [client].
+  ///
+  /// For credential you can either use Firebase app's secret or
+  /// an authentication token.
+  /// See: <https://firebase.google.com/docs/reference/rest/database/user-auth>.
+  FirebaseClient(this.credential, {BaseClient client})
+      : _client = client ?? new IOClient();
 
-  const FirebaseClient.anonymous() : credential = null;
+  /// Creates a new anonymous FirebaseClient with optional [client].
+  FirebaseClient.anonymous({BaseClient client})
+      : credential = null,
+        _client = client ?? new IOClient();
 
-  Future<dynamic> get(Uri uri) => send('GET', uri);
+  /// Reads data from database using a HTTP GET request.
+  /// The response from a successful request contains a data being retrieved.
+  ///
+  /// See: <https://firebase.google.com/docs/reference/rest/database/#section-get>.
+  Future<dynamic> get(uri) => send('GET', uri);
 
-  Future<dynamic> put(Uri uri, json) => send('PUT', uri, json: json);
+  /// Writes or replaces data in database using a HTTP PUT request.
+  /// The response from a successful request contains a data being written.
+  ///
+  /// See: <https://firebase.google.com/docs/reference/rest/database/#section-put>.
+  Future<dynamic> put(uri, json) => send('PUT', uri, json: json);
 
-  Future<dynamic> post(Uri uri, json) => send('POST', uri, json: json);
+  /// Pushes data to database using a HTTP POST request.
+  /// The response from a successful request contains a key of the new data
+  /// being added.
+  ///
+  /// See: <https://firebase.google.com/docs/reference/rest/database/#section-post>.
+  Future<dynamic> post(uri, json) => send('POST', uri, json: json);
 
-  Future<dynamic> delete(Uri uri) => send('DELETE', uri);
+  /// Updates specific children at a location without overwriting existing data
+  /// using a HTTP PATCH request.
+  /// The response from a successful request contains a data being written.
+  ///
+  /// See: <https://firebase.google.com/docs/reference/rest/database/#section-patch>.
+  Future<dynamic> patch(uri, json) => send('PATCH', uri, json: json);
 
-  Future<dynamic> send(String method, Uri uri, {json}) async {
-    var params = new Map<String, String>.from(uri.queryParameters);
+  /// Deletes data from database using a HTTP DELETE request.
+  /// The response from a successful request contains a JSON with [:null:].
+  ///
+  /// See: <https://firebase.google.com/docs/reference/rest/database/#section-delete>.
+  Future<dynamic> delete(uri) => send('DELETE', uri);
 
-    if (credential != null) {
-      params['auth'] = credential;
-    }
-
-    uri = uri.replace(queryParameters: params);
+  /// Creates a request with a HTTP [method], [url] and optional data.
+  /// The [url] can be either a `String` or `Uri`.
+  Future<dynamic> send(String method, url, {json}) async {
+    Uri uri = url is String ? Uri.parse(url) : url;
 
     var request = new Request(method, uri);
+    if (credential != null) {
+      request.headers['Authorization'] = "Bearer $credential";
+    }
 
     if (json != null) {
       request.headers['Content-Type'] = 'application/json';
       request.body = JSON.encode(json);
     }
 
-    var client = new IOClient();
-
-    Response response;
-    try {
-      var streamedResponse = await client.send(request);
-      response = await Response.fromStream(streamedResponse);
-    } finally {
-      client.close();
-    }
+    var streamedResponse = await _client.send(request);
+    var response = await Response.fromStream(streamedResponse);
 
     var bodyJson;
     try {
@@ -55,8 +81,8 @@ class FirebaseClient {
     } on FormatException {
       var contentType = response.headers['content-type'];
       if (contentType != null && !contentType.contains('application/json')) {
-        // TODO: throw a real error here
-        throw 'Returned value was not JSON. Did the uri end with ".json"?';
+        throw new Exception(
+            'Returned value was not JSON. Did the uri end with ".json"?');
       }
       rethrow;
     }
@@ -74,4 +100,7 @@ class FirebaseClient {
 
     return bodyJson;
   }
+
+  /// Closes the client and cleans up any associated resources.
+  void close() => _client.close();
 }

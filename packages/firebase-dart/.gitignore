@@ -1,4 +1,25 @@
+# Files and directories created by pub
+.packages
+.pub/
+build/
 packages
 pubspec.lock
-.packages
-.pub
+
+# Files created by dart2js
+*.dart.js
+*.part.js
+*.js.deps
+*.js.map
+*.info.json
+
+# Directory created by dartdoc
+doc/api/
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+lib/src/assets/config.json
+lib/src/assets/service_account.json

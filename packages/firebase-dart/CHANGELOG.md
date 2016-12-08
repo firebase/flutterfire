@@ -1,3 +1,7 @@
+## 3.0.0
+
+* Completely rewritten for Firebase v3.
+
 ## 0.6.6+3
 
 * Support `crypto` 2.0.0.
@@ -123,3 +127,4 @@
 * Fixed up tests.
 
 * Cleaned up library structure.
+

@@ -1,0 +1,8 @@
+{
+  "_FYI": "https://firebase.google.com/docs/web/setup",
+  "_COPY_TO": "config.json",
+  "API_KEY": "TODO",
+  "AUTH_DOMAIN" : "TODO",
+  "DATABASE_URL": "TODO",
+  "STORAGE_BUCKET": "TODO"
+}
