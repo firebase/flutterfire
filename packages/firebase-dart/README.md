@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/firebase/firebase-dart.svg?branch=master)](https://travis-ci.org/firebase/firebase-dart)
 
-This is an unofficial Dart wrapper library for the new
+This is a Dart wrapper library for the new 
 [Firebase](https://firebase.google.com). 
 
 You can find more information on how to use Firebase on the
