@@ -31,7 +31,7 @@ You must include the original Firebase JavaScript source into your `.html` file
 to be able to use the library.
 
 ```html
-<script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.6.4/firebase.js"></script>
 ```
 
 ### Use it
