@@ -196,12 +196,14 @@ void main() {
         childRef.push("Cooking").setPriority(10);
         childRef.push("Walking with dog").setPriority(15);
 
-        var subscription =
-            childRef.orderByPriority().onChildMoved.listen(expectAsync1((event) {
-                  var val = event.snapshot.val();
-                  expect(val, "Programming");
-                  expect(val, isNot("Cooking"));
-                }, count: 1));
+        var subscription = childRef
+            .orderByPriority()
+            .onChildMoved
+            .listen(expectAsync1((event) {
+              var val = event.snapshot.val();
+              expect(val, "Programming");
+              expect(val, isNot("Cooking"));
+            }, count: 1));
 
         childPushRef.setPriority(100);
         await subscription.cancel();

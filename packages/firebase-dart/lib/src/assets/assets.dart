@@ -25,8 +25,7 @@ Future config() async {
   var client = new http.BrowserClient();
 
   try {
-    var response =
-        await client.get('packages/firebase/src/assets/config.json');
+    var response = await client.get('packages/firebase/src/assets/config.json');
     if (response.statusCode > 399) {
       throw new StateError(
           "Problem with server: ${response.statusCode} ${response.body}");
