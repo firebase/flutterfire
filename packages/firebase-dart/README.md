@@ -25,7 +25,7 @@ in this document.
 
 Install the library from the pub or Github:
 
-```
+```yaml
 dependencies:
   firebase: '^3.0.0'
 ```
@@ -58,8 +58,6 @@ void main() {
     DataSnapshot datasnapshot = e.snapshot;
     // Do something with datasnapshot
   });
-  
-  ...
 }
 ```
 
