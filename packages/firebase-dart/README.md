@@ -23,7 +23,12 @@ in this document.
 
 ### Installation
 
-Install the library from the pub or Github.
+Install the library from the pub or Github:
+
+```
+dependencies:
+  firebase: '^3.0.0'
+```
 
 ### Include Firebase source
 
