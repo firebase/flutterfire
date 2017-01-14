@@ -36,26 +36,26 @@ You must include the original Firebase JavaScript source into your `.html` file
 to be able to use the library.
 
 ```html
-<script src="https://www.gstatic.com/firebasejs/3.6.4/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.6.5/firebase.js"></script>
 ```
 
 ### Use it
 
 ```dart
-import 'package:firebase/firebase.dart' as firebase;
+import 'package:firebase/firebase.dart' as fb;
 
 void main() {
-  firebase.initializeApp(
+  fb.initializeApp(
     apiKey: "YourApiKey",
     authDomain: "YourAuthDomain",
     databaseURL: "YourDatabaseUrl",
     storageBucket: "YourStorageBucket");
-    
-  Database database = firebase.database();
-  DatabaseReference ref = database.ref("messages");  
+
+  fb.Database database = fb.database();
+  fb.DatabaseReference ref = database.ref("messages");
 
   ref.onValue.listen((e) {
-    DataSnapshot datasnapshot = e.snapshot;
+    fb.DataSnapshot datasnapshot = e.snapshot;
     // Do something with datasnapshot
   });
 }
