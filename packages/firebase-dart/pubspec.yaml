@@ -10,9 +10,9 @@ environment:
 dependencies:
   browser: '>=0.10.0 <0.11.0'
   func: ">=0.1.0 <0.2.0"
+  http: '^0.11.3'
   js: ">=0.6.0 <0.7.0"
 dev_dependencies:
   googleapis_auth: '^0.2.3+5'
-  http: '^0.11.3'
   path: '^1.3.9'
   test: '>=0.12.17 <0.13.0'
