@@ -1,3 +1,9 @@
+## 3.0.1
+
+* Updated documentation and tests to reference the latest JS release: `3.7.2`
+
+* Improvements to `README.md`
+
 ## 3.0.0
 
 * Completely rewritten for Firebase v3.

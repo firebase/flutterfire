@@ -10,6 +10,6 @@ if [ -n "$API_KEY" ]; then
   exec $THE_COMMAND
 else
   echo 'Missing firebase ENV variables.'
-  echo 'See too/create_config.dart'
+  echo 'See tool/create_config.dart'
   exit 64
 fi
