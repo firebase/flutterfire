@@ -1,3 +1,8 @@
+## 3.0.2
+
+* Throw `FirebaseClientException` if there are request failures in
+  `firebase_io.dart`.
+
 ## 3.0.1
 
 * Updated documentation and tests to reference the latest JS release: `3.7.2`

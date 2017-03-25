@@ -91,11 +91,13 @@ class FirebaseClient {
       if (bodyJson is Map) {
         var error = bodyJson['error'];
         if (error != null) {
-          // TODO: wrap this in something helpful?
-          throw error;
+          throw new FirebaseClientException(
+              response.statusCode, error.toString());
         }
       }
-      throw bodyJson;
+
+      throw new FirebaseClientException(
+          response.statusCode, bodyJson.toString());
     }
 
     return bodyJson;
@@ -103,4 +105,14 @@ class FirebaseClient {
 
   /// Closes the client and cleans up any associated resources.
   void close() => _client.close();
+}
+
+class FirebaseClientException implements Exception {
+  final int statusCode;
+  final String message;
+
+  FirebaseClientException(this.statusCode, this.message);
+
+  @override
+  String toString() => '$message ($statusCode)';
 }
