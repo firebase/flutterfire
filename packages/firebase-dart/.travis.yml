@@ -2,16 +2,14 @@ language: dart
 sudo: false
 dart:
   - stable
+addons:
+  firefox: latest
+before_script: ./tool/travis_before_script.sh
+dart_task:
+  - test: --platform vm
+  - test: --platform firefox
+  - dartanalyzer
+  - dartfmt
 cache:
   directories:
     - $HOME/.pub-cache
-env:
-  - TEST_PLATFORM=vm
-  - TEST_PLATFORM=firefox
-addons:
-  firefox: latest
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - 't=0; until (xdpyinfo -display :99 &> /dev/null || test $t -gt 10); do sleep 1; let t=$t+1; done'
-script: ./tool/travis.sh
