@@ -64,8 +64,9 @@ class EmailAuthProviderJsImpl extends AuthProviderJsImpl {
 class FacebookAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory FacebookAuthProviderJsImpl();
   external static String get PROVIDER_ID;
-  external void addScope(String scope);
-  external void setCustomParameters(customOAuthParameters);
+  external FacebookAuthProviderJsImpl addScope(String scope);
+  external FacebookAuthProviderJsImpl setCustomParameters(
+      customOAuthParameters);
   external static AuthCredential credential(String token);
 }
 
@@ -73,8 +74,8 @@ class FacebookAuthProviderJsImpl extends AuthProviderJsImpl {
 class GithubAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory GithubAuthProviderJsImpl();
   external static String get PROVIDER_ID;
-  external void addScope(String scope);
-  external void setCustomParameters(customOAuthParameters);
+  external GithubAuthProviderJsImpl addScope(String scope);
+  external GithubAuthProviderJsImpl setCustomParameters(customOAuthParameters);
   external static AuthCredential credential(String token);
 }
 
@@ -82,8 +83,8 @@ class GithubAuthProviderJsImpl extends AuthProviderJsImpl {
 class GoogleAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory GoogleAuthProviderJsImpl();
   external static String get PROVIDER_ID;
-  external void addScope(String scope);
-  external void setCustomParameters(customOAuthParameters);
+  external GoogleAuthProviderJsImpl addScope(String scope);
+  external GoogleAuthProviderJsImpl setCustomParameters(customOAuthParameters);
   external static AuthCredential credential(
       [String idToken, String accessToken]);
 }
@@ -92,7 +93,7 @@ class GoogleAuthProviderJsImpl extends AuthProviderJsImpl {
 class TwitterAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory TwitterAuthProviderJsImpl();
   external static String get PROVIDER_ID;
-  external void setCustomParameters(customOAuthParameters);
+  external TwitterAuthProviderJsImpl setCustomParameters(customOAuthParameters);
   external static AuthCredential credential(String token, String secret);
 }
 

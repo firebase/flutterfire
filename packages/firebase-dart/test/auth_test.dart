@@ -53,6 +53,17 @@ void main() {
         var cred = FacebookAuthProvider.credential('token');
         expect(cred.provider, equals(FacebookAuthProvider.PROVIDER_ID));
       });
+      test('scope', () {
+        var provider = new FacebookAuthProvider();
+        var providerWithScope = provider.addScope('user_birthday');
+        expect(provider.providerId, equals(providerWithScope.providerId));
+      });
+      test('custom parameters', () {
+        var provider = new FacebookAuthProvider();
+        var providerWithParameters =
+            provider.setCustomParameters({'display': 'popup'});
+        expect(provider.providerId, equals(providerWithParameters.providerId));
+      });
     });
 
     group('GitHub', () {
@@ -66,6 +77,17 @@ void main() {
       test('credential', () {
         var cred = GithubAuthProvider.credential('token');
         expect(cred.provider, equals(GithubAuthProvider.PROVIDER_ID));
+      });
+      test('scope', () {
+        var provider = new GithubAuthProvider();
+        var providerWithScope = provider.addScope('repo');
+        expect(provider.providerId, equals(providerWithScope.providerId));
+      });
+      test('custom parameters', () {
+        var provider = new GithubAuthProvider();
+        var providerWithParameters =
+            provider.setCustomParameters({'allow_signup': 'false'});
+        expect(provider.providerId, equals(providerWithParameters.providerId));
       });
     });
 
@@ -81,6 +103,18 @@ void main() {
         var cred = GoogleAuthProvider.credential('idToken', 'accessToken');
         expect(cred.provider, equals(GoogleAuthProvider.PROVIDER_ID));
       });
+      test('scope', () {
+        var provider = new GoogleAuthProvider();
+        var providerWithScope =
+            provider.addScope('https://www.googleapis.com/auth/plus.login');
+        expect(provider.providerId, equals(providerWithScope.providerId));
+      });
+      test('custom parameters', () {
+        var provider = new GoogleAuthProvider();
+        var providerWithParameters = provider
+            .setCustomParameters({'login_hint': 'some_email@example.com'});
+        expect(provider.providerId, equals(providerWithParameters.providerId));
+      });
     });
 
     group('Twitter', () {
@@ -94,6 +128,12 @@ void main() {
       test('credential', () {
         var cred = TwitterAuthProvider.credential('token', 'secret');
         expect(cred.provider, equals(TwitterAuthProvider.PROVIDER_ID));
+      });
+      test('custom parameters', () {
+        var provider = new TwitterAuthProvider();
+        var providerWithParameters =
+            provider.setCustomParameters({'lang': 'es'});
+        expect(provider.providerId, equals(providerWithParameters.providerId));
       });
     });
   });

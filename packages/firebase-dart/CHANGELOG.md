@@ -1,3 +1,7 @@
+## 3.0.3
+
+* Fix provider's `addScope` and `setCustomParameters` methods return types.
+  
 ## 3.0.2
 
 * Throw `FirebaseClientException` if there are request failures in

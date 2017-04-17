@@ -334,7 +334,10 @@ class FacebookAuthProvider extends AuthProvider<FacebookAuthProviderJsImpl> {
   FacebookAuthProvider.fromJsObject(FacebookAuthProviderJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  void addScope(String scope) => jsObject.addScope(scope);
+  /// Adds additional OAuth 2.0 scopes that you want to request from the
+  /// authentication provider.
+  FacebookAuthProvider addScope(String scope) =>
+      new FacebookAuthProvider.fromJsObject(jsObject.addScope(scope));
 
   /// Sets the OAuth custom parameters to pass in a Facebook OAuth request
   /// for popup and redirect sign-in operations.
@@ -343,8 +346,10 @@ class FacebookAuthProvider extends AuthProvider<FacebookAuthProviderJsImpl> {
   /// Reserved required OAuth 2.0 parameters such as 'client_id',
   /// 'redirect_uri', 'scope', 'response_type' and 'state' are not allowed
   /// and ignored.
-  void setCustomParameters(Map<String, dynamic> customOAuthParameters) =>
-      jsObject.setCustomParameters(jsify(customOAuthParameters));
+  FacebookAuthProvider setCustomParameters(
+          Map<String, dynamic> customOAuthParameters) =>
+      new FacebookAuthProvider.fromJsObject(
+          jsObject.setCustomParameters(jsify(customOAuthParameters)));
 
   /// Creates a credential for Facebook.
   static AuthCredential credential(String token) =>
@@ -365,7 +370,10 @@ class GithubAuthProvider extends AuthProvider<GithubAuthProviderJsImpl> {
   GithubAuthProvider.fromJsObject(GithubAuthProviderJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  void addScope(String scope) => jsObject.addScope(scope);
+  /// Adds additional OAuth 2.0 scopes that you want to request from the
+  /// authentication provider.
+  GithubAuthProvider addScope(String scope) =>
+      new GithubAuthProvider.fromJsObject(jsObject.addScope(scope));
 
   /// Sets the OAuth custom parameters to pass in a GitHub OAuth request
   /// for popup and redirect sign-in operations.
@@ -374,8 +382,10 @@ class GithubAuthProvider extends AuthProvider<GithubAuthProviderJsImpl> {
   /// Reserved required OAuth 2.0 parameters such as 'client_id',
   /// 'redirect_uri', 'scope', 'response_type' and 'state'
   /// are not allowed and ignored.
-  void setCustomParameters(Map<String, dynamic> customOAuthParameters) =>
-      jsObject.setCustomParameters(jsify(customOAuthParameters));
+  GithubAuthProvider setCustomParameters(
+          Map<String, dynamic> customOAuthParameters) =>
+      new GithubAuthProvider.fromJsObject(
+          jsObject.setCustomParameters(jsify(customOAuthParameters)));
 
   /// Creates a credential for Github.
   static AuthCredential credential(String token) =>
@@ -396,7 +406,10 @@ class GoogleAuthProvider extends AuthProvider<GoogleAuthProviderJsImpl> {
   GoogleAuthProvider.fromJsObject(GoogleAuthProviderJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  void addScope(String scope) => jsObject.addScope(scope);
+  /// Adds additional OAuth 2.0 scopes that you want to request from the
+  /// authentication provider.
+  GoogleAuthProvider addScope(String scope) =>
+      new GoogleAuthProvider.fromJsObject(jsObject.addScope(scope));
 
   /// Sets the OAuth custom parameters to pass in a Google OAuth request
   /// for popup and redirect sign-in operations.
@@ -406,8 +419,10 @@ class GoogleAuthProvider extends AuthProvider<GoogleAuthProviderJsImpl> {
   /// Reserved required OAuth 2.0 parameters such as 'client_id',
   /// 'redirect_uri', 'scope', 'response_type' and 'state'
   /// are not allowed and ignored.
-  void setCustomParameters(Map<String, dynamic> customOAuthParameters) =>
-      jsObject.setCustomParameters(jsify(customOAuthParameters));
+  GoogleAuthProvider setCustomParameters(
+          Map<String, dynamic> customOAuthParameters) =>
+      new GoogleAuthProvider.fromJsObject(
+          jsObject.setCustomParameters(jsify(customOAuthParameters)));
 
   /// Creates a credential for Google.
   /// At least one of [idToken] and [accessToken] is required.
@@ -434,8 +449,10 @@ class TwitterAuthProvider extends AuthProvider<TwitterAuthProviderJsImpl> {
   /// Valid parameters include 'lang'. Reserved required OAuth 1.0 parameters
   /// such as 'oauth_consumer_key', 'oauth_token', 'oauth_signature', etc
   /// are not allowed and will be ignored.
-  void setCustomParameters(Map<String, dynamic> customOAuthParameters) =>
-      jsObject.setCustomParameters(jsify(customOAuthParameters));
+  TwitterAuthProvider setCustomParameters(
+          Map<String, dynamic> customOAuthParameters) =>
+      new TwitterAuthProvider.fromJsObject(
+          jsObject.setCustomParameters(jsify(customOAuthParameters)));
 
   /// Creates a credential for Twitter.
   static AuthCredential credential(String token, String secret) =>
