@@ -9,7 +9,7 @@ environment:
   sdk: '>=1.18.0 <2.0.0'
 dependencies:
   browser: '>=0.10.0 <0.11.0'
-  func: ">=0.1.0 <0.2.0"
+  func: ">=0.1.0 <2.0.0"
   http: '^0.11.3'
   js: ">=0.6.0 <0.7.0"
 dev_dependencies:
