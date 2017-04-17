@@ -1,11 +1,9 @@
-## 3.0.3
-
-* Fix provider's `addScope` and `setCustomParameters` methods return types.
-  
 ## 3.0.2
 
 * Throw `FirebaseClientException` if there are request failures in
   `firebase_io.dart`.
+* Fix provider's `addScope` and `setCustomParameters` methods return types.
+* Support the latest release of `pkg/func`.
 
 ## 3.0.1
 
