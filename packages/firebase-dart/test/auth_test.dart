@@ -37,7 +37,7 @@ void main() {
       });
       test('credential', () {
         var cred = EmailAuthProvider.credential('un', 'pw');
-        expect(cred.provider, equals(EmailAuthProvider.PROVIDER_ID));
+        expect(cred.providerId, equals(EmailAuthProvider.PROVIDER_ID));
       });
     });
 
@@ -51,7 +51,7 @@ void main() {
       });
       test('credential', () {
         var cred = FacebookAuthProvider.credential('token');
-        expect(cred.provider, equals(FacebookAuthProvider.PROVIDER_ID));
+        expect(cred.providerId, equals(FacebookAuthProvider.PROVIDER_ID));
       });
       test('scope', () {
         var provider = new FacebookAuthProvider();
@@ -76,7 +76,7 @@ void main() {
       });
       test('credential', () {
         var cred = GithubAuthProvider.credential('token');
-        expect(cred.provider, equals(GithubAuthProvider.PROVIDER_ID));
+        expect(cred.providerId, equals(GithubAuthProvider.PROVIDER_ID));
       });
       test('scope', () {
         var provider = new GithubAuthProvider();
@@ -101,7 +101,7 @@ void main() {
       });
       test('credential', () {
         var cred = GoogleAuthProvider.credential('idToken', 'accessToken');
-        expect(cred.provider, equals(GoogleAuthProvider.PROVIDER_ID));
+        expect(cred.providerId, equals(GoogleAuthProvider.PROVIDER_ID));
       });
       test('scope', () {
         var provider = new GoogleAuthProvider();
@@ -127,7 +127,7 @@ void main() {
       });
       test('credential', () {
         var cred = TwitterAuthProvider.credential('token', 'secret');
-        expect(cred.provider, equals(TwitterAuthProvider.PROVIDER_ID));
+        expect(cred.providerId, equals(TwitterAuthProvider.PROVIDER_ID));
       });
       test('custom parameters', () {
         var provider = new TwitterAuthProvider();
@@ -209,6 +209,48 @@ void main() {
         printException(e);
         rethrow;
       }
+    });
+
+    test('link anonymous user with credential', () async {
+      try {
+        user = await authValue.signInAnonymously();
+        expect(user.isAnonymous, isTrue);
+
+        var credential =
+            EmailAuthProvider.credential("some_user@example.com", "janicka");
+        user = await user.linkWithCredential(credential);
+        expect(user.isAnonymous, isFalse);
+        expect(user.email, "some_user@example.com");
+      } on FirebaseError catch (e) {
+        printException(e);
+        rethrow;
+      }
+    });
+
+    test('reauthenticate with credential', () async {
+      try {
+        user = await authValue.createUserWithEmailAndPassword(
+            "some_user@example.com", "janicka");
+
+        var credential =
+            EmailAuthProvider.credential("some_user@example.com", "janicka");
+        await user.reauthenticateWithCredential(credential);
+
+        expect(authValue.currentUser, isNotNull);
+        expect(authValue.currentUser.email, "some_user@example.com");
+      } on FirebaseError catch (e) {
+        printException(e);
+        rethrow;
+      }
+    });
+
+    test('reauthenticate with bad credential fails', () async {
+      user = await authValue.createUserWithEmailAndPassword(
+          "some_user@example.com", "janicka");
+      var credential =
+          EmailAuthProvider.credential("some_user@example.com", "something");
+
+      expect(user.reauthenticateWithCredential(credential), throws);
     });
   });
 

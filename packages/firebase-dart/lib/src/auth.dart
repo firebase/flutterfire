@@ -83,9 +83,15 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   Future<String> getToken([bool forceRefresh = false]) =>
       handleThenable(jsObject.getToken(forceRefresh));
 
-  /// Links the user account with the given [credential] and returns the user.
+  /// _Deprecated: Use [linkWithCredential] instead._
+  @deprecated
   Future<User> link(AuthCredential credential) => handleThenableWithMapper(
       jsObject.link(credential), (u) => new User.fromJsObject(u));
+
+  /// Links the user account with the given [credential] and returns the user.
+  Future<User> linkWithCredential(AuthCredential credential) =>
+      handleThenableWithMapper(jsObject.linkWithCredential(credential),
+          (u) => new User.fromJsObject(u));
 
   /// Links the authenticated [provider] to the user account using
   /// a pop-up based OAuth flow.
@@ -99,11 +105,29 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   Future linkWithRedirect(AuthProvider provider) =>
       handleThenable(jsObject.linkWithRedirect(provider.jsObject));
 
+  /// _Deprecated: Use [reauthenticateWithCredential] instead._
+  @deprecated
+  Future reauthenticate(AuthCredential credential) =>
+      handleThenable(jsObject.reauthenticate(credential));
+
   /// Re-authenticates a user using a fresh [credential]. Should be used
   /// before operations such as [updatePassword()] that require tokens
   /// from recent sign in attempts.
-  Future reauthenticate(AuthCredential credential) =>
-      handleThenable(jsObject.reauthenticate(credential));
+  Future reauthenticateWithCredential(AuthCredential credential) =>
+      handleThenable(jsObject.reauthenticateWithCredential(credential));
+
+  /// Reauthenticates a user with the specified provider using
+  /// a pop-up based OAuth flow.
+  /// It returns the [UserCredential] information if reauthentication is successful.
+  Future<UserCredential> reauthenticateWithPopup(AuthProvider provider) =>
+      handleThenableWithMapper(
+          jsObject.reauthenticateWithPopup(provider.jsObject),
+          (u) => new UserCredential.fromJsObject(u));
+
+  /// Reauthenticates a user with the specified OAuth [provider] using
+  /// a full-page redirect flow.
+  Future reauthenticateWithRedirect(AuthProvider provider) =>
+      handleThenable(jsObject.reauthenticateWithRedirect(provider.jsObject));
 
   /// If signed in, it refreshes the current user.
   Future reload() => handleThenable(jsObject.reload());
@@ -468,7 +492,9 @@ class AuthEvent {
   AuthEvent(this.user);
 }
 
-/// A structure containing [User] and [AuthCredential].
+/// A structure containing a [User], an [AuthCredential] and [operationType].
+/// operationType could be 'signIn' for a sign-in operation, 'link' for a
+/// linking operation and 'reauthenticate' for a reauthentication operation.
 class UserCredential extends JsObjectWrapper<UserCredentialJsImpl> {
   User _user;
 
@@ -500,10 +526,22 @@ class UserCredential extends JsObjectWrapper<UserCredentialJsImpl> {
     jsObject.credential = c;
   }
 
-  /// Creates a new UserCredential with optional [user] and [credential].
-  factory UserCredential({User user, AuthCredential credential}) =>
+  /// Returns the operation type.
+  String get operationType => jsObject.operationType;
+
+  /// Sets the operation type to [t].
+  void set operationType(String t) {
+    jsObject.operationType = t;
+  }
+
+  /// Creates a new UserCredential with optional [user], [credential]
+  /// and [operationType].
+  factory UserCredential(
+          {User user, AuthCredential credential, String operationType}) =>
       new UserCredential.fromJsObject(new UserCredentialJsImpl(
-          user: user.jsObject, credential: credential));
+          user: user.jsObject,
+          credential: credential,
+          operationType: operationType));
 
   /// Creates a new UserCredential from a [jsObject].
   UserCredential.fromJsObject(UserCredentialJsImpl jsObject)

@@ -49,6 +49,10 @@ void main() {
       test("Get storage", () {
         expect(app.storage(), isNotNull);
       });
+
+      test("Get storage with a bucket", () {
+        expect(app.storage("gs://$storageBucket"), isNotNull);
+      });
     });
 
     test("Can be created with name", () {

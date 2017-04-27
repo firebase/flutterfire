@@ -35,10 +35,18 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external PromiseJsImpl delete();
   external PromiseJsImpl<String> getToken([bool opt_forceRefresh]);
   external PromiseJsImpl<UserJsImpl> link(AuthCredential credential);
+  external PromiseJsImpl<UserJsImpl> linkWithCredential(
+      AuthCredential credential);
   external PromiseJsImpl<UserCredentialJsImpl> linkWithPopup(
       AuthProviderJsImpl provider);
   external PromiseJsImpl linkWithRedirect(AuthProviderJsImpl provider);
   external PromiseJsImpl reauthenticate(AuthCredential credential);
+  external PromiseJsImpl reauthenticateWithCredential(
+      AuthCredential credential);
+  external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithPopup(
+      AuthProviderJsImpl provider);
+  external PromiseJsImpl reauthenticateWithRedirect(
+      AuthProviderJsImpl provider);
   external PromiseJsImpl reload();
   external PromiseJsImpl sendEmailVerification();
   external PromiseJsImpl<UserJsImpl> unlink(String providerId);

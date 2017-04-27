@@ -43,7 +43,12 @@ abstract class AuthJsImpl {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.AuthCredential>.
 @JS()
 abstract class AuthCredential {
+  /// _Deprecated: Use [providerId] instead._
+  @deprecated
   external String get provider;
+
+  /// The authentication provider ID for the credential.
+  external String get providerId;
   external String get accessToken;
   external String get secret;
 }
@@ -129,7 +134,9 @@ class UserCredentialJsImpl {
   external void set user(UserJsImpl u);
   external AuthCredential get credential;
   external void set credential(AuthCredential c);
+  external String get operationType;
+  external void set operationType(String t);
 
   external factory UserCredentialJsImpl(
-      {UserJsImpl user, AuthCredential credential});
+      {UserJsImpl user, AuthCredential credential, String operationType});
 }

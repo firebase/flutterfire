@@ -1,3 +1,16 @@
+## 3.1.0
+
+* Updates from the Firebase `3.8.0` and `3.9.0` in `auth` library:
+    * `User`
+        * Deprecated `link` method in favor of `linkWithCredential`.
+        * Deprecated `reauthenticate` method in favor of `reauthenticateWithCredential`.
+        * Added new `reauthenticateWithPopup` and `reauthenticateWithRedirect` methods.
+    * `UserCredential`
+        * Added new `operationType` property.
+    * `AuthCredential`
+        * Deprecated `provider` property in favor of `providerId`.
+* The `app.storage()` has now an optional storage bucket parameter.
+
 ## 3.0.2
 
 * Throw `FirebaseClientException` if there are request failures in
