@@ -36,11 +36,8 @@ App initializeApp(
             databaseURL: databaseURL,
             storageBucket: storageBucket),
         name));
-  } on NoSuchMethodError {
-    throw new FirebaseJsNotLoadedException('firebase.js must be loaded.');
   } catch (e) {
-    if (js.hasProperty(e, 'message') &&
-        js.getProperty(e, 'message') == 'firebase is not defined') {
+    if (_firebaseNotLoaded(e)) {
       throw new FirebaseJsNotLoadedException('firebase.js must be loaded.');
     }
 
@@ -133,4 +130,18 @@ class FirebaseJsNotLoadedException implements Exception {
 
   @override
   String toString() => 'FirebaseJsNotLoadedException: $message';
+}
+
+bool _firebaseNotLoaded(error) {
+  if (error is NoSuchMethodError) {
+    return true;
+  }
+
+  if (js.hasProperty(error, 'message')) {
+    var message = js.getProperty(error, 'message');
+    return message == 'firebase is not defined' ||
+        message == "Can't find variable: firebase";
+  }
+
+  return false;
 }
