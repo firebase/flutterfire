@@ -1,3 +1,6 @@
+## 3.2.0
+* The `FirebaseJsNotLoadedException` is thrown when the firebase.js script is not included in the html file.
+
 ## 3.1.0
 
 * Updates from the Firebase `3.8.0` and `3.9.0` in `auth` library:

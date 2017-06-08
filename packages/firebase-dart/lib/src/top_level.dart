@@ -26,13 +26,17 @@ App initializeApp(
     String name}) {
   name ??= _defaultAppName;
 
-  return new App.fromJsObject(firebase.initializeApp(
-      new firebase.FirebaseOptions(
-          apiKey: apiKey,
-          authDomain: authDomain,
-          databaseURL: databaseURL,
-          storageBucket: storageBucket),
-      name));
+  try {
+    return new App.fromJsObject(firebase.initializeApp(
+        new firebase.FirebaseOptions(
+            apiKey: apiKey,
+            authDomain: authDomain,
+            databaseURL: databaseURL,
+            storageBucket: storageBucket),
+        name));
+  } on NoSuchMethodError {
+    throw new FirebaseJsNotLoadedException('firebase.js must be loaded.');
+  }
 }
 
 App _app;
@@ -111,4 +115,13 @@ Storage storage([App app]) {
     _storage = new Storage.fromJsObject(jsObject);
   }
   return _storage;
+}
+
+/// Exception thrown when the firebase.js is not loaded.
+class FirebaseJsNotLoadedException implements Exception {
+  final String message;
+  FirebaseJsNotLoadedException(this.message);
+
+  @override
+  String toString() => 'FirebaseJsNotLoadedException: $message';
 }

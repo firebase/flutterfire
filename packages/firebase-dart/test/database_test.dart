@@ -2,19 +2,18 @@
 import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase/src/assets/assets.dart';
 import 'package:test/test.dart';
-import 'package:firebase/firebase.dart';
 
 import 'test_util.dart';
 
 void main() {
-  App app;
+  fb.App app;
 
   setUpAll(() async {
     await config();
   });
 
   setUp(() async {
-    app = initializeApp(
+    app = fb.initializeApp(
         apiKey: apiKey,
         authDomain: authDomain,
         databaseURL: databaseUrl,
@@ -29,7 +28,7 @@ void main() {
   });
 
   group("Database", () {
-    Database database;
+    fb.Database database;
 
     setUp(() {
       database = fb.database();
@@ -44,7 +43,7 @@ void main() {
     });
 
     group("DatabaseReference", () {
-      DatabaseReference ref;
+      fb.DatabaseReference ref;
       String key;
 
       setUp(() {

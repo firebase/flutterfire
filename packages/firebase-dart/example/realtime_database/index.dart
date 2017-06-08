@@ -7,13 +7,17 @@ main() async {
   //Use for firebase package development only
   await config();
 
-  fb.initializeApp(
-      apiKey: apiKey,
-      authDomain: authDomain,
-      databaseURL: databaseUrl,
-      storageBucket: storageBucket);
+  try {
+    fb.initializeApp(
+        apiKey: apiKey,
+        authDomain: authDomain,
+        databaseURL: databaseUrl,
+        storageBucket: storageBucket);
 
-  new MessagesApp().showMessages();
+    new MessagesApp().showMessages();
+  } on fb.FirebaseJsNotLoadedException catch (e) {
+    print(e);
+  }
 }
 
 class MessagesApp {
