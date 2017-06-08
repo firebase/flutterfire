@@ -186,13 +186,18 @@ void main() {
   group('user', () {
     Auth authValue;
     User user;
+    String userEmail;
 
     setUp(() {
       authValue = auth();
       expect(authValue.currentUser, isNull);
+
+      expect(userEmail, isNull);
+      userEmail = getTestEmail();
     });
 
     tearDown(() async {
+      userEmail = null;
       if (user != null) {
         await user.delete();
         user = null;
@@ -202,9 +207,9 @@ void main() {
     test('create user with email and password', () async {
       try {
         user = await authValue.createUserWithEmailAndPassword(
-            "some_user@example.com", "janicka");
+            userEmail, "janicka");
         expect(user, isNotNull);
-        expect(user.email, "some_user@example.com");
+        expect(user.email, userEmail);
       } on FirebaseError catch (e) {
         printException(e);
         rethrow;
@@ -216,11 +221,10 @@ void main() {
         user = await authValue.signInAnonymously();
         expect(user.isAnonymous, isTrue);
 
-        var credential =
-            EmailAuthProvider.credential("some_user@example.com", "janicka");
+        var credential = EmailAuthProvider.credential(userEmail, "janicka");
         user = await user.linkWithCredential(credential);
         expect(user.isAnonymous, isFalse);
-        expect(user.email, "some_user@example.com");
+        expect(user.email, userEmail);
       } on FirebaseError catch (e) {
         printException(e);
         rethrow;
@@ -230,14 +234,13 @@ void main() {
     test('reauthenticate with credential', () async {
       try {
         user = await authValue.createUserWithEmailAndPassword(
-            "some_user@example.com", "janicka");
+            userEmail, "janicka");
 
-        var credential =
-            EmailAuthProvider.credential("some_user@example.com", "janicka");
+        var credential = EmailAuthProvider.credential(userEmail, "janicka");
         await user.reauthenticateWithCredential(credential);
 
         expect(authValue.currentUser, isNotNull);
-        expect(authValue.currentUser.email, "some_user@example.com");
+        expect(authValue.currentUser.email, userEmail);
       } on FirebaseError catch (e) {
         printException(e);
         rethrow;
@@ -245,10 +248,9 @@ void main() {
     });
 
     test('reauthenticate with bad credential fails', () async {
-      user = await authValue.createUserWithEmailAndPassword(
-          "some_user@example.com", "janicka");
-      var credential =
-          EmailAuthProvider.credential("some_user@example.com", "something");
+      user =
+          await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
+      var credential = EmailAuthProvider.credential(userEmail, "something");
 
       expect(user.reauthenticateWithCredential(credential), throws);
     });
@@ -263,7 +265,7 @@ void main() {
 
       try {
         user = await authValue.createUserWithEmailAndPassword(
-            "other_user@example.com", "hesloheslo");
+            getTestEmail(), "hesloheslo");
         expect(authValue.currentUser, isNotNull);
       } on FirebaseError catch (e) {
         printException(e);

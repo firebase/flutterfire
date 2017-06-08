@@ -5,3 +5,6 @@ String validDatePath() => p.join('pkg_firebase_test',
 
 printException(e) => print(
     [e.name, e.code, e.message, e.stack].where((s) => s != null).join('\n'));
+
+String getTestEmail() =>
+    '${new DateTime.now().millisecondsSinceEpoch}@example.com';
