@@ -1,3 +1,5 @@
+import 'package:js/js_util.dart' as js;
+
 import 'app.dart';
 import 'auth.dart';
 import 'database.dart';
@@ -36,6 +38,13 @@ App initializeApp(
         name));
   } on NoSuchMethodError {
     throw new FirebaseJsNotLoadedException('firebase.js must be loaded.');
+  } catch (e) {
+    if (js.hasProperty(e, 'message') &&
+        js.getProperty(e, 'message') == 'firebase is not defined') {
+      throw new FirebaseJsNotLoadedException('firebase.js must be loaded.');
+    }
+
+    rethrow;
   }
 }
 
