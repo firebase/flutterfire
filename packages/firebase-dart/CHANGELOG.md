@@ -1,5 +1,9 @@
 ## 3.2.0
-* The `FirebaseJsNotLoadedException` is thrown when the firebase.js script is not included in the html file.
+
+* The `FirebaseJsNotLoadedException` is thrown when the firebase.js script is 
+  not included in the html file.
+  
+* Fix to support `dartdevc`.
 
 ## 3.1.0
 
