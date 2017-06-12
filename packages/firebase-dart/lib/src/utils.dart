@@ -56,9 +56,9 @@ Future/*<T>*/ handleThenable/*<T>*/(ThenableJsImpl thenable) {
 }
 
 /// Handles the [thenable] object with provided [mapper] function.
-Future/*<T>*/ handleThenableWithMapper/*<T>*/(
-    ThenableJsImpl thenable, Func1/*<dynamic,T>*/ mapper) {
-  var completer = new Completer/*<T>*/();
+Future<S> handleThenableWithMapper<T, S>(
+    ThenableJsImpl<T> thenable, Func1<T, S> mapper) {
+  var completer = new Completer<S>();
 
   thenable.then(allowInterop((val) {
     var mappedValue = mapper(val);

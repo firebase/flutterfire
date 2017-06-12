@@ -101,7 +101,7 @@ abstract class OnDisconnectJsImpl {
 
 @JS('ThenableReference')
 abstract class ThenableReferenceJsImpl extends ReferenceJsImpl
-    implements ThenableJsImpl {
+    implements ThenableJsImpl<ReferenceJsImpl> {
   @override
   external ThenableJsImpl JS$catch([Func1 onReject]);
   @override
