@@ -9,17 +9,24 @@ import 'auth_interop.dart';
 import 'database_interop.dart';
 import 'storage_interop.dart';
 
+@JS()
 external List<AppJsImpl> get apps;
 
 /// The current SDK version.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase#.SDK_VERSION>.
+@JS()
 external String get SDK_VERSION;
 
+@JS()
 external AppJsImpl initializeApp(FirebaseOptions options, [String name]);
+@JS()
 external AppJsImpl app([String name]);
+@JS()
 external AuthJsImpl auth([AppJsImpl app]);
+@JS()
 external DatabaseJsImpl database([AppJsImpl app]);
+@JS()
 external StorageJsImpl storage([AppJsImpl app]);
 
 @JS('User')
