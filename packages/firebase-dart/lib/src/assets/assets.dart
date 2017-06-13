@@ -3,14 +3,14 @@ import 'dart:convert';
 
 import 'package:http/browser_client.dart' as http;
 
-Map<String, String> _configVal;
+Map<String, dynamic> _configVal;
 
 String get apiKey => _config['API_KEY'];
 String get authDomain => _config['AUTH_DOMAIN'];
 String get databaseUrl => _config['DATABASE_URL'];
 String get storageBucket => _config['STORAGE_BUCKET'];
 
-Map<String, String> get _config {
+Map<String, dynamic> get _config {
   if (_configVal != null) {
     return _configVal;
   }
@@ -32,7 +32,7 @@ Future config() async {
     }
 
     var jsonString = response.body;
-    _configVal = JSON.decode(jsonString) as Map<String, String>;
+    _configVal = JSON.decode(jsonString) as Map<String, dynamic>;
   } catch (e) {
     print("Error getting `config.json`. Make sure it exists.");
     rethrow;
