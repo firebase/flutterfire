@@ -252,7 +252,10 @@ void main() {
           await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
       var credential = EmailAuthProvider.credential(userEmail, "something");
 
-      expect(user.reauthenticateWithCredential(credential), throws);
+      expect(
+          user.reauthenticateWithCredential(credential),
+          throwsToString(contains(
+              'The password is invalid or the user does not have a password')));
     });
   });
 

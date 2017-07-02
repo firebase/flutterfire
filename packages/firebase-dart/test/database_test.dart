@@ -5,6 +5,12 @@ import 'package:test/test.dart';
 
 import 'test_util.dart';
 
+/// Dartium ends up with `cannot be an object`
+/// dart2js ends up with `contains an invalid key`
+/// handle both...
+final _invalidKey = throwsToString(anyOf(
+    contains('contains an invalid key'), contains('cannot be an object')));
+
 void main() {
   fb.App app;
 
@@ -230,7 +236,8 @@ void main() {
         var childRef = ref.child("flowers");
         childRef.push({"name": "rose"});
 
-        expect(() => childRef.orderByValue().endAt({"name": "rose"}), throws);
+        expect(
+            () => childRef.orderByValue().endAt({"name": "rose"}), _invalidKey);
       });
 
       test("startAt", () async {
@@ -255,8 +262,8 @@ void main() {
         var childRef = ref.child("flowers");
         childRef.push({"name": "chicory"});
 
-        expect(
-            () => childRef.orderByValue().startAt({"name": "chicory"}), throws);
+        expect(() => childRef.orderByValue().startAt({"name": "chicory"}),
+            _invalidKey);
       });
 
       test("equalTo", () async {
@@ -280,7 +287,7 @@ void main() {
         childRef.push({"name": "sunflower"});
 
         expect(() => childRef.orderByValue().equalTo({"name": "sunflower"}),
-            throws);
+            _invalidKey);
       });
 
       test("isEqual", () async {
@@ -439,12 +446,14 @@ void main() {
             () => childRef
                 .child("one")
                 .setWithPriority({"name": "Alex", "age": 27}, {"priority": 10}),
-            throws);
+            throwsToString(
+                contains('Second argument must be a valid Firebase priority')));
         expect(
             () => childRef
                 .child("two")
                 .setWithPriority({"name": "Andrew", "age": 43}, true),
-            throws);
+            throwsToString(
+                contains('Second argument must be a valid Firebase priority')));
       });
     });
   });
