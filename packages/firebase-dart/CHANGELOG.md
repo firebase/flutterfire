@@ -1,3 +1,7 @@
+## 3.2.1
+
+* Update minimum Dart SDK to `1.21.0` – required to use generic method syntax. 
+
 ## 3.2.0
 
 * The `FirebaseJsNotLoadedException` is thrown when the firebase.js script is 

@@ -46,8 +46,8 @@ _noCustomEncodable(value) =>
     throw new UnsupportedError("Object with toJson shouldn't work either");
 
 /// Handles the [thenable] object.
-Future/*<T>*/ handleThenable/*<T>*/(ThenableJsImpl thenable) {
-  var completer = new Completer/*<T>*/();
+Future<T> handleThenable<T>(ThenableJsImpl<T> thenable) {
+  var completer = new Completer<T>();
 
   thenable.then(allowInterop(([value]) {
     completer.complete(value);
