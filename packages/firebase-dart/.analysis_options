@@ -16,6 +16,7 @@ linter:
     #- comment_references
     #- constant_identifier_names
     - control_flow_in_finally
+    - directives_ordering
     - empty_catches
     - empty_constructor_bodies
     - empty_statements
@@ -43,7 +44,7 @@ linter:
     #- type_annotate_public_apis
     - type_init_formals
     #- unawaited_futures
-    - unnecessary_brace_in_string_interp
+    - unnecessary_brace_in_string_interps
     - unnecessary_getters_setters
     - unrelated_type_equality_checks
     - valid_regexps
