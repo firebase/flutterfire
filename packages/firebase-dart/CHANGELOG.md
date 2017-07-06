@@ -1,3 +1,23 @@
+## 4.0.0
+
+* Upgraded to Firebase JS API `4.1.3`.
+
+* Breaking changes
+  * The value in `Auth.onAuthStateChanged` is now `User`. `AuthEvent` has been 
+    removed.
+
+* Removed deprecated APIs: 
+    * `User`
+        * `link` method in favor of `linkWithCredential`.
+        * `reauthenticate` method in favor of `reauthenticateWithCredential`.
+    * `AuthCredential`
+        * `provider` property in favor of `providerId`.
+
+* `User`: added `getIdToken`, `reauthenticateAndRetrieveDataWithCredential`,
+  `linkAndRetrieveDataWithCredential`, and `toJson()`.
+
+* `Auth`: added `signInAndRetrieveDataWithCredential` and `onIdTokenChanged`.
+
 ## 3.2.1
 
 * Update minimum Dart SDK to `1.21.0` – required to use generic method syntax. 

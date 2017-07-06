@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:func/func.dart';
 import 'package:js/js.dart';
 
 import 'app.dart';
@@ -19,33 +20,18 @@ class UserInfo<T extends firebase_interop.UserInfoJsImpl>
     extends JsObjectWrapper<T> {
   /// User's display name.
   String get displayName => jsObject.displayName;
-  void set displayName(String s) {
-    jsObject.displayName = s;
-  }
 
   /// User's e-mail address.
   String get email => jsObject.email;
-  void set email(String s) {
-    jsObject.email = s;
-  }
 
   /// User's profile picture URL.
   String get photoURL => jsObject.photoURL;
-  void set photoURL(String s) {
-    jsObject.photoURL = s;
-  }
 
   /// User's authentication provider ID.
   String get providerId => jsObject.providerId;
-  void set providerId(String s) {
-    jsObject.providerId = s;
-  }
 
   /// User's unique ID.
   String get uid => jsObject.uid;
-  void set uid(String s) {
-    jsObject.uid = s;
-  }
 
   /// Creates a new UserInfo from a [jsObject].
   UserInfo.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
@@ -78,15 +64,29 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   Future delete() => handleThenable(jsObject.delete());
 
   /// Returns a JWT token used to identify the user to a Firebase service.
+  ///
   /// It forces refresh regardless of token expiration if [forceRefresh]
   /// parameter is [true].
+  ///
+  /// This method is **DEPRECATED**. Use [getIdToken] instead.
+  @Deprecated('Use `getIdToken` instead.')
   Future<String> getToken([bool forceRefresh = false]) =>
       handleThenable(jsObject.getToken(forceRefresh));
 
-  /// _Deprecated: Use [linkWithCredential] instead._
-  @deprecated
-  Future<User> link(AuthCredential credential) => handleThenableWithMapper(
-      jsObject.link(credential), (u) => new User.fromJsObject(u));
+  /// Returns a JWT token used to identify the user to a Firebase service.
+  ///
+  /// Returns the current token if it has not expired, otherwise this will
+  /// refresh the token and return a new one.
+  Future<String> getIdToken([bool forceRefresh = false]) =>
+      handleThenable(jsObject.getIdToken(forceRefresh));
+
+  /// Links the user account with the given credentials, and returns any
+  /// available additional user information, such as user name.
+  Future<UserCredential> linkAndRetrieveDataWithCredential(
+          AuthCredential credential) =>
+      handleThenableWithMapper(
+          jsObject.linkAndRetrieveDataWithCredential(credential),
+          (u) => new UserCredential.fromJsObject(u));
 
   /// Links the user account with the given [credential] and returns the user.
   Future<User> linkWithCredential(AuthCredential credential) =>
@@ -105,10 +105,15 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   Future linkWithRedirect(AuthProvider provider) =>
       handleThenable(jsObject.linkWithRedirect(provider.jsObject));
 
-  /// _Deprecated: Use [reauthenticateWithCredential] instead._
-  @deprecated
-  Future reauthenticate(AuthCredential credential) =>
-      handleThenable(jsObject.reauthenticate(credential));
+  // FYI: as of 2017-07-03 – the return type of this guy is documented as
+  // Promise (Future)<nothing> - Filed a bug internally.
+  /// Re-authenticates a user using a fresh credential, and returns any
+  /// available additional user information, such as user name.
+  Future<UserCredential> reauthenticateAndRetrieveDataWithCredential(
+          AuthCredential credential) =>
+      handleThenableWithMapper(
+          jsObject.reauthenticateAndRetrieveDataWithCredential(credential),
+          (o) => new UserCredential.fromJsObject(o));
 
   /// Re-authenticates a user using a fresh [credential]. Should be used
   /// before operations such as [updatePassword()] that require tokens
@@ -158,6 +163,11 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   ///     await user.updateProfile(profile);
   Future updateProfile(firebase_interop.UserProfile profile) =>
       handleThenable(jsObject.updateProfile(profile));
+
+  Map<String, dynamic> toJson() => dartify(jsObject.toJSON());
+
+  @override
+  String toString() => 'User: $uid';
 }
 
 /// The Firebase Auth service class.
@@ -192,32 +202,68 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
     return _currentUser;
   }
 
-  var _onAuthUnsubscribe;
-  StreamController<AuthEvent> _changeController;
+  Func0 _onAuthUnsubscribe;
+  StreamController<User> _changeController;
 
-  /// Stream for an auth state changed event.
-  Stream<AuthEvent> get onAuthStateChanged {
+  /// Sends events when the users sign-in state changes.
+  ///
+  /// If the value is `null`, there is no signed-in user.
+  Stream<User> get onAuthStateChanged {
     if (_changeController == null) {
       var nextWrapper = allowInterop((firebase_interop.UserJsImpl user) {
-        _changeController.add(
-            new AuthEvent((user != null) ? new User.fromJsObject(user) : null));
+        _changeController
+            .add(user != null ? new User.fromJsObject(user) : null);
       });
 
       var errorWrapper = allowInterop((e) => _changeController.addError(e));
 
       void startListen() {
+        assert(_onAuthUnsubscribe == null);
         _onAuthUnsubscribe =
             jsObject.onAuthStateChanged(nextWrapper, errorWrapper);
       }
 
       void stopListen() {
         _onAuthUnsubscribe();
+        _onAuthUnsubscribe = null;
       }
 
-      _changeController = new StreamController<AuthEvent>.broadcast(
+      _changeController = new StreamController<User>.broadcast(
           onListen: startListen, onCancel: stopListen, sync: true);
     }
     return _changeController.stream;
+  }
+
+  Func0 _onIdTokenChangedUnsubscribe;
+  StreamController<User> _idTokenChangedController;
+
+  /// Sends events when the signed-in user's ID token, which includes sign-in,
+  /// sign-out, and token refresh events.
+  Stream<User> get onIdTokenChanged {
+    if (_idTokenChangedController == null) {
+      var nextWrapper = allowInterop((firebase_interop.UserJsImpl user) {
+        _idTokenChangedController
+            .add(user != null ? new User.fromJsObject(user) : null);
+      });
+
+      var errorWrapper =
+          allowInterop((e) => _idTokenChangedController.addError(e));
+
+      void startListen() {
+        assert(_onIdTokenChangedUnsubscribe == null);
+        _onIdTokenChangedUnsubscribe =
+            jsObject.onIdTokenChanged(nextWrapper, errorWrapper);
+      }
+
+      void stopListen() {
+        _onIdTokenChangedUnsubscribe();
+        _onIdTokenChangedUnsubscribe = null;
+      }
+
+      _idTokenChangedController = new StreamController<User>.broadcast(
+          onListen: startListen, onCancel: stopListen, sync: true);
+    }
+    return _idTokenChangedController.stream;
   }
 
   /// Creates a new Auth from a [jsObject].
@@ -266,6 +312,14 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   /// To confirm password reset, use the [Auth.confirmPasswordReset].
   Future sendPasswordResetEmail(String email) =>
       handleThenable(jsObject.sendPasswordResetEmail(email));
+
+  /// Asynchronously signs in with the given credentials, and returns any
+  /// available additional user information, such as user name.
+  Future<UserCredential> signInAndRetrieveDataWithCredential(
+          AuthCredential credential) =>
+      handleThenableWithMapper(
+          jsObject.signInAndRetrieveDataWithCredential(credential),
+          (uc) => new UserCredential.fromJsObject(uc));
 
   /// Signs in as an anonymous user. If an anonymous user is already
   /// signed in, that user will be returned. In other case, new anonymous
@@ -411,7 +465,7 @@ class GithubAuthProvider extends AuthProvider<GithubAuthProviderJsImpl> {
       new GithubAuthProvider.fromJsObject(
           jsObject.setCustomParameters(jsify(customOAuthParameters)));
 
-  /// Creates a credential for Github.
+  /// Creates a credential for GitHub.
   static AuthCredential credential(String token) =>
       GithubAuthProviderJsImpl.credential(token);
 }
@@ -483,13 +537,25 @@ class TwitterAuthProvider extends AuthProvider<TwitterAuthProviderJsImpl> {
       TwitterAuthProviderJsImpl.credential(token, secret);
 }
 
-/// Event propagated in Stream controllers when an auth state changes.
-class AuthEvent {
-  /// The user.
-  final User user;
+/// Phone auth provider.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.auth.PhoneAuthProvider>.
+class PhoneAuthProvider extends AuthProvider<PhoneAuthProviderJsImpl> {
+  static String get PROVIDER_ID => PhoneAuthProviderJsImpl.PROVIDER_ID;
 
-  /// Creates a new AuthEvent with user.
-  AuthEvent(this.user);
+  factory PhoneAuthProvider() =>
+      new PhoneAuthProvider.fromJsObject(new PhoneAuthProviderJsImpl());
+
+  PhoneAuthProvider.fromJsObject(PhoneAuthProviderJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  //(TODO)
+  // https://firebase.google.com/docs/reference/js/firebase.auth.PhoneAuthProvider#verifyPhoneNumber
+  // verifyPhoneNumber
+
+  //(TODO)
+  // https://firebase.google.com/docs/reference/js/firebase.auth.PhoneAuthProvider#.credential
+  // credential
 }
 
 /// A structure containing a [User], an [AuthCredential] and [operationType].
@@ -512,36 +578,11 @@ class UserCredential extends JsObjectWrapper<UserCredentialJsImpl> {
     return _user;
   }
 
-  /// Sets the user to [u].
-  void set user(User u) {
-    _user = u;
-    jsObject.user = u.jsObject;
-  }
-
   /// Returns the auth credential.
   AuthCredential get credential => jsObject.credential;
 
-  /// Sets the auth credential to [c].
-  void set credential(AuthCredential c) {
-    jsObject.credential = c;
-  }
-
   /// Returns the operation type.
   String get operationType => jsObject.operationType;
-
-  /// Sets the operation type to [t].
-  void set operationType(String t) {
-    jsObject.operationType = t;
-  }
-
-  /// Creates a new UserCredential with optional [user], [credential]
-  /// and [operationType].
-  factory UserCredential(
-          {User user, AuthCredential credential, String operationType}) =>
-      new UserCredential.fromJsObject(new UserCredentialJsImpl(
-          user: user.jsObject,
-          credential: credential,
-          operationType: operationType));
 
   /// Creates a new UserCredential from a [jsObject].
   UserCredential.fromJsObject(UserCredentialJsImpl jsObject)

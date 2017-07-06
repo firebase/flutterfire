@@ -324,6 +324,8 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     });
 
     void startListen() {
+      // TODO(kevmoo) – should probably implement cancel callback
+      // See https://firebase.google.com/docs/reference/js/firebase.database.Query#on
       jsObject.on(eventType, callbackWrap);
     }
 

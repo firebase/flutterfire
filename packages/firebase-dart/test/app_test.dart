@@ -89,7 +89,7 @@ void main() {
 
   group("Firebase", () {
     test("SDK version", () {
-      expect(fb.SDK_VERSION, startsWith("3."));
+      expect(fb.SDK_VERSION, startsWith("4."));
     });
 
     group('ServerValue', () {

@@ -93,7 +93,7 @@ abstract class UploadTaskJsImpl implements ThenableJsImpl {
   external UploadTaskSnapshotJsImpl get snapshot;
   external void set snapshot(UploadTaskSnapshotJsImpl t);
   external bool cancel();
-  external Function on(String event,
+  external Func0 on(String event,
       [nextOrObserver, Func1 error, Func0 complete]);
   external bool pause();
   external bool resume();

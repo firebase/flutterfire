@@ -7,6 +7,13 @@
     #register_form p {
       color: red;
     }
+    #auth_info td {
+      padding: 1px;
+    }
+    #auth_info td.header {
+      font-weight: bold;
+      text-align: right;
+    }
   </style>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -21,11 +28,12 @@
     <input type="password" placeholder="Your Password" id="password">
     <input type="submit" value="Register me">
   </form>
-  <h2 id="auth_info" style="display: none">
-  </h2>
+  <table id="auth_info" style="display: none">
+  </table>
+  <button id="verify_email" style="display: none">Verify email</button>
   <a href="#" id="logout_btn" style="display: none">Log out</a>
 </div>
-<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
 <script src="index.dart" type="application/dart"></script>
 <script src="packages/browser/dart.js"></script>
 </body>

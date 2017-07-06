@@ -1,8 +1,26 @@
 @TestOn('browser')
+
+import 'dart:async';
+import 'dart:convert';
+import 'dart:core' hide print;
+import 'dart:core' as core show print;
+import 'dart:html';
+
 import 'package:firebase/firebase.dart';
 import 'package:firebase/src/assets/assets.dart';
 import 'package:test/test.dart';
 import 'test_util.dart';
+
+/// A nice util to include timing with print calls
+void print(obj) => core.print(
+    [(window.performance.now() * 100).toInt() / (100 * 1000), obj].join('\t'));
+
+/// Wait for 500ms
+Future _wait() async {
+  //print("waiting...");
+  await new Future.delayed(const Duration(milliseconds: 500));
+  //print("waited...");
+}
 
 void main() {
   App app;
@@ -136,6 +154,22 @@ void main() {
         expect(provider.providerId, equals(providerWithParameters.providerId));
       });
     });
+
+    group('Phone', () {
+      test('PROVIDER_ID', () {
+        expect(PhoneAuthProvider.PROVIDER_ID, 'phone');
+      });
+      test('instance', () {
+        var provider = new PhoneAuthProvider();
+        expect(provider.providerId, PhoneAuthProvider.PROVIDER_ID);
+      });
+
+      /*
+      test('credential', () {
+        var cred = PhoneAuthProvider.credential('token', 'secret');
+        expect(cred.providerId, equals(TwitterAuthProvider.PROVIDER_ID));
+      });*/
+    });
   });
 
   group('anonymous user', () {
@@ -187,6 +221,11 @@ void main() {
     Auth authValue;
     User user;
     String userEmail;
+    User lastAuthEventUser;
+    User lastIdTokenChangedUser;
+
+    StreamSubscription authStateChangeSubscription;
+    StreamSubscription idTokenChangedSubscription;
 
     setUp(() {
       authValue = auth();
@@ -194,6 +233,30 @@ void main() {
 
       expect(userEmail, isNull);
       userEmail = getTestEmail();
+
+      expect(lastAuthEventUser, isNull);
+      expect(authStateChangeSubscription, isNull);
+
+      expect(lastIdTokenChangedUser, isNull);
+      expect(idTokenChangedSubscription, isNull);
+
+      authStateChangeSubscription =
+          authValue.onAuthStateChanged.listen((event) {
+        lastAuthEventUser = event;
+        //print('authstate - $event');
+      }, onError: (e, stack) {
+        print("AuthStateError! $e $stack");
+      }, onDone: () {
+        //print("done!");
+      });
+
+      idTokenChangedSubscription = authValue.onIdTokenChanged.listen((event) {
+        lastIdTokenChangedUser = event;
+      }, onError: (e, stack) {
+        print("IdToken error! $e $stack");
+      }, onDone: () {
+        //print("done!");
+      });
     });
 
     tearDown(() async {
@@ -201,6 +264,49 @@ void main() {
       if (user != null) {
         await user.delete();
         user = null;
+      }
+
+      if (authStateChangeSubscription != null) {
+        await authStateChangeSubscription.cancel();
+        authStateChangeSubscription = null;
+        lastAuthEventUser = null;
+      }
+
+      if (idTokenChangedSubscription != null) {
+        await idTokenChangedSubscription.cancel();
+        idTokenChangedSubscription = null;
+        lastIdTokenChangedUser = null;
+      }
+    });
+
+    test('getIdToken', () async {
+      try {
+        user = await authValue.createUserWithEmailAndPassword(
+            userEmail, "janicka");
+
+        var token = await user.getIdToken();
+
+        // The following is a basic verification of a JWT token
+        // See https://en.wikipedia.org/wiki/JSON_Web_Token
+        var split = token.split('.').map((t) {
+          // If `t.length` is not a multiple of 4, pad it to the right w/ `=`.
+          var remainder = (4 - t.length % 4);
+          t = "$t${'='* remainder}";
+          return BASE64URL.decode(t);
+        }).toList();
+
+        expect(split, hasLength(3));
+
+        var header = JSON.decode(UTF8.decode(split.first));
+        expect(header, isMap);
+        expect(header, containsPair('alg', isNotEmpty));
+
+        var payload = JSON.decode(UTF8.decode(split[1]));
+        expect(payload, isMap);
+        expect(payload, containsPair('email', userEmail));
+      } on FirebaseError catch (e) {
+        printException(e);
+        rethrow;
       }
     });
 
@@ -231,6 +337,22 @@ void main() {
       }
     });
 
+    test('linkAndRetrieveDataWithCredential anonymous user', () async {
+      try {
+        user = await authValue.signInAnonymously();
+        expect(user.isAnonymous, isTrue);
+
+        var credential = EmailAuthProvider.credential(userEmail, "janicka");
+        var userCred = await user.linkAndRetrieveDataWithCredential(credential);
+
+        expect(userCred.operationType, 'link');
+        expect(userCred.user.uid, user.uid);
+      } on FirebaseError catch (e) {
+        printException(e);
+        rethrow;
+      }
+    });
+
     test('reauthenticate with credential', () async {
       try {
         user = await authValue.createUserWithEmailAndPassword(
@@ -238,6 +360,30 @@ void main() {
 
         var credential = EmailAuthProvider.credential(userEmail, "janicka");
         await user.reauthenticateWithCredential(credential);
+
+        expect(authValue.currentUser, isNotNull);
+        expect(authValue.currentUser.email, userEmail);
+      } on FirebaseError catch (e) {
+        printException(e);
+        rethrow;
+      }
+    });
+
+    test('reauthenticateAndRetrieveDataWithCredential', () async {
+      try {
+        user = await authValue.createUserWithEmailAndPassword(
+            userEmail, "janicka");
+
+        var credential = EmailAuthProvider.credential(userEmail, "janicka");
+        var userCred =
+            await user.reauthenticateAndRetrieveDataWithCredential(credential);
+
+        expect(userCred.operationType, 'reauthenticate');
+        expect(userCred.user.uid, user.uid);
+
+        expect(lastAuthEventUser, isNotNull);
+        expect(lastAuthEventUser.email, userEmail);
+        expect(lastIdTokenChangedUser.email, userEmail);
 
         expect(authValue.currentUser, isNotNull);
         expect(authValue.currentUser.email, userEmail);
@@ -256,6 +402,38 @@ void main() {
           user.reauthenticateWithCredential(credential),
           throwsToString(contains(
               'The password is invalid or the user does not have a password')));
+    });
+
+    test("signInAndRetrieveDataWithCredential", () async {
+      user =
+          await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
+
+      // Firefox takes a second to get the event values that are checked below
+      await _wait();
+
+      // at this point, we should have the same refresh tokens for "everything"
+      expect(lastAuthEventUser, isNotNull);
+      expect(lastIdTokenChangedUser, isNotNull);
+
+      lastAuthEventUser = null;
+      lastIdTokenChangedUser = null;
+
+      var credential = EmailAuthProvider.credential(userEmail, "janicka");
+
+      var userCred =
+          await authValue.signInAndRetrieveDataWithCredential(credential);
+
+      // Firefox takes a second to get the event values that are checked below
+      await _wait();
+
+      expect(userCred.operationType, 'signIn');
+
+      // at this point, the `lastIdTokenChangedUser` should be different
+      // it's newer!
+      expect(lastAuthEventUser, isNull,
+          reason: 'Not updated with signInAndRetrieveDataWithCredential');
+      expect(lastIdTokenChangedUser, isNotNull,
+          reason: 'Is updated with signInAndRetrieveDataWithCredential');
     });
   });
 
