@@ -28,7 +28,7 @@ Install the library from the pub or Github:
 
 ```yaml
 dependencies:
-  firebase: '^3.0.0'
+  firebase: '^4.0.0'
 ```
 
 ### Include Firebase source
