@@ -41,6 +41,8 @@ class UserInfo<T extends firebase_interop.UserInfoJsImpl>
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.User>.
 class User extends UserInfo<firebase_interop.UserJsImpl> {
+  static final _expando = new Expando<User>();
+
   /// If the user's email address has been already verified.
   bool get emailVerified => jsObject.emailVerified;
 
@@ -57,7 +59,19 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   String get refreshToken => jsObject.refreshToken;
 
   /// Creates a new User from a [jsObject].
-  User.fromJsObject(firebase_interop.UserJsImpl jsObject)
+  ///
+  /// If an instance of [User] is already associated with [jsObject], it is
+  /// returned instead of creating a new instance.
+  ///
+  /// If [jsObject] is `null`, `null` is returned.
+  static User get(firebase_interop.UserJsImpl jsObject) {
+    if (jsObject == null) {
+      return null;
+    }
+    return _expando[jsObject] ??= new User._fromJsObject(jsObject);
+  }
+
+  User._fromJsObject(firebase_interop.UserJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
   /// Deletes and signs out the user.
@@ -90,8 +104,8 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
 
   /// Links the user account with the given [credential] and returns the user.
   Future<User> linkWithCredential(AuthCredential credential) =>
-      handleThenableWithMapper(jsObject.linkWithCredential(credential),
-          (u) => new User.fromJsObject(u));
+      handleThenableWithMapper(
+          jsObject.linkWithCredential(credential), User.get);
 
   /// Links the authenticated [provider] to the user account using
   /// a pop-up based OAuth flow.
@@ -142,9 +156,8 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
       handleThenable(jsObject.sendEmailVerification());
 
   /// Unlinks a provider with [providerId] from a user account.
-  Future<User> unlink(String providerId) => handleThenableWithMapper(
-      jsObject.unlink(providerId),
-      (firebase_interop.UserJsImpl u) => new User.fromJsObject(u));
+  Future<User> unlink(String providerId) =>
+      handleThenableWithMapper(jsObject.unlink(providerId), User.get);
 
   /// Updates the user's e-mail address to [newEmail].
   Future updateEmail(String newEmail) =>
@@ -174,33 +187,13 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Auth>.
 class Auth extends JsObjectWrapper<AuthJsImpl> {
-  App _app;
+  static final _expando = new Expando<Auth>();
 
   /// App for this instance of auth service.
-  App get app {
-    if (_app != null) {
-      _app.jsObject = jsObject.app;
-    } else {
-      _app = new App.fromJsObject(jsObject.app);
-    }
-    return _app;
-  }
+  App get app => App.get(jsObject.app);
 
-  User _currentUser;
-
-  /// Currently signed-in user.
-  User get currentUser {
-    if (jsObject.currentUser != null) {
-      if (_currentUser != null) {
-        _currentUser.jsObject = jsObject.currentUser;
-      } else {
-        _currentUser = new User.fromJsObject(jsObject.currentUser);
-      }
-    } else {
-      _currentUser = null;
-    }
-    return _currentUser;
-  }
+  /// Currently signed-in [User].
+  User get currentUser => User.get(jsObject.currentUser);
 
   Func0 _onAuthUnsubscribe;
   StreamController<User> _changeController;
@@ -211,8 +204,7 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   Stream<User> get onAuthStateChanged {
     if (_changeController == null) {
       var nextWrapper = allowInterop((firebase_interop.UserJsImpl user) {
-        _changeController
-            .add(user != null ? new User.fromJsObject(user) : null);
+        _changeController.add(User.get(user));
       });
 
       var errorWrapper = allowInterop((e) => _changeController.addError(e));
@@ -242,8 +234,7 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   Stream<User> get onIdTokenChanged {
     if (_idTokenChangedController == null) {
       var nextWrapper = allowInterop((firebase_interop.UserJsImpl user) {
-        _idTokenChangedController
-            .add(user != null ? new User.fromJsObject(user) : null);
+        _idTokenChangedController.add(User.get(user));
       });
 
       var errorWrapper =
@@ -267,7 +258,14 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   }
 
   /// Creates a new Auth from a [jsObject].
-  Auth.fromJsObject(AuthJsImpl jsObject) : super.fromJsObject(jsObject);
+  static Auth get(AuthJsImpl jsObject) {
+    if (jsObject == null) {
+      return null;
+    }
+    return _expando[jsObject] ??= new Auth._fromJsObject(jsObject);
+  }
+
+  Auth._fromJsObject(AuthJsImpl jsObject) : super.fromJsObject(jsObject);
 
   /// Applies a verification [code] sent to the user by e-mail or by other
   /// out-of-band mechanism.
@@ -292,8 +290,7 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   /// or the password is not valid.
   Future<User> createUserWithEmailAndPassword(String email, String password) =>
       handleThenableWithMapper(
-          jsObject.createUserWithEmailAndPassword(email, password),
-          (u) => new User.fromJsObject(u));
+          jsObject.createUserWithEmailAndPassword(email, password), User.get);
 
   /// Returns the list of provider IDs for the given [email] address,
   /// that can be used to sign in.
@@ -324,27 +321,26 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   /// Signs in as an anonymous user. If an anonymous user is already
   /// signed in, that user will be returned. In other case, new anonymous
   /// [User] identity is created and returned.
-  Future<User> signInAnonymously() => handleThenableWithMapper(
-      jsObject.signInAnonymously(), (u) => new User.fromJsObject(u));
+  Future<User> signInAnonymously() =>
+      handleThenableWithMapper(jsObject.signInAnonymously(), User.get);
 
   /// Signs in with the given [credential] and returns the [User].
   Future<User> signInWithCredential(AuthCredential credential) =>
-      handleThenableWithMapper(jsObject.signInWithCredential(credential),
-          (u) => new User.fromJsObject(u));
+      handleThenableWithMapper(
+          jsObject.signInWithCredential(credential), User.get);
 
   /// Signs in with the custom [token] and returns the [User].
   /// Custom token must be generated by an auth backend.
   /// Fails with an error if the token is invalid, expired or not accepted
   /// by Firebase Auth service.
-  Future<User> signInWithCustomToken(String token) => handleThenableWithMapper(
-      jsObject.signInWithCustomToken(token), (u) => new User.fromJsObject(u));
+  Future<User> signInWithCustomToken(String token) =>
+      handleThenableWithMapper(jsObject.signInWithCustomToken(token), User.get);
 
   /// Signs in with [email] and [password] and returns the [User].
   /// Fails with an error if the sign in is not successful.
   Future<User> signInWithEmailAndPassword(String email, String password) =>
       handleThenableWithMapper(
-          jsObject.signInWithEmailAndPassword(email, password),
-          (u) => new User.fromJsObject(u));
+          jsObject.signInWithEmailAndPassword(email, password), User.get);
 
   /// Signs in using a popup-based OAuth authentication flow with the
   /// given [provider].
@@ -562,21 +558,8 @@ class PhoneAuthProvider extends AuthProvider<PhoneAuthProviderJsImpl> {
 /// operationType could be 'signIn' for a sign-in operation, 'link' for a
 /// linking operation and 'reauthenticate' for a reauthentication operation.
 class UserCredential extends JsObjectWrapper<UserCredentialJsImpl> {
-  User _user;
-
   /// Returns the user.
-  User get user {
-    if (jsObject.user != null) {
-      if (_user != null) {
-        _user.jsObject = jsObject.user;
-      } else {
-        _user = new User.fromJsObject(jsObject.user);
-      }
-    } else {
-      _user = null;
-    }
-    return _user;
-  }
+  User get user => User.get(jsObject.user);
 
   /// Returns the auth credential.
   AuthCredential get credential => jsObject.credential;

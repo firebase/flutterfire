@@ -15,6 +15,8 @@ export 'interop/firebase_interop.dart' show FirebaseError, FirebaseOptions;
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.app>.
 class App extends JsObjectWrapper<AppJsImpl> {
+  static final _expando = new Expando<App>();
+
   /// Name of the app.
   String get name => jsObject.name;
 
@@ -22,13 +24,20 @@ class App extends JsObjectWrapper<AppJsImpl> {
   FirebaseOptions get options => jsObject.options;
 
   /// Creates a new App from a [jsObject].
-  App.fromJsObject(AppJsImpl jsObject) : super.fromJsObject(jsObject);
+  static App get(AppJsImpl jsObject) {
+    if (jsObject == null) {
+      return null;
+    }
+    return _expando[jsObject] ??= new App._fromJsObject(jsObject);
+  }
+
+  App._fromJsObject(AppJsImpl jsObject) : super.fromJsObject(jsObject);
 
   /// Returns [Auth] service.
-  Auth auth() => new Auth.fromJsObject(jsObject.auth());
+  Auth auth() => Auth.get(jsObject.auth());
 
   /// Returns [Database] service.
-  Database database() => new Database.fromJsObject(jsObject.database());
+  Database database() => Database.get(jsObject.database());
 
   /// Deletes the app and frees resources of all App's services.
   Future delete() => handleThenable(jsObject.delete());
@@ -37,6 +46,6 @@ class App extends JsObjectWrapper<AppJsImpl> {
   Storage storage([String url]) {
     var jsObjectStorage =
         (url != null) ? jsObject.storage(url) : jsObject.storage();
-    return new Storage.fromJsObject(jsObjectStorage);
+    return Storage.get(jsObjectStorage);
   }
 }

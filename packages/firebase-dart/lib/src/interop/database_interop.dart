@@ -112,9 +112,7 @@ abstract class ThenableReferenceJsImpl extends ReferenceJsImpl
 @anonymous
 class TransactionJsImpl {
   external bool get committed;
-  external void set committed(bool c);
   external DataSnapshotJsImpl get snapshot;
-  external void set snapshot(DataSnapshotJsImpl s);
 
   external factory TransactionJsImpl(
       {bool committed, DataSnapshotJsImpl snapshot});

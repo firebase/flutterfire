@@ -63,6 +63,7 @@ void main() {
       expect(md.downloadURLs.single.pathSegments.last, contains(fileName));
       expect(md.customMetadata, isNotNull);
       expect(md.customMetadata['the answer'], '42');
+      expect(md.md5Hash, '8eRvMo5t7NVsZN1edh3Ctw==');
     });
 
     tearDown(() async {

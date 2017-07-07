@@ -19,17 +19,10 @@ enum TaskState { RUNNING, PAUSED, SUCCESS, CANCELED, ERROR }
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.Storage>
 class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
-  App _app;
+  static final _expando = new Expando<Storage>();
 
   /// App for this instance of storage service.
-  App get app {
-    if (_app != null) {
-      _app.jsObject = jsObject.app;
-    } else {
-      _app = new App.fromJsObject(jsObject.app);
-    }
-    return _app;
-  }
+  App get app => App.get(jsObject.app);
 
   /// Returns the maximum time to retry operations other than uploads
   /// or downloads (in milliseconds).
@@ -39,16 +32,23 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
   int get maxUploadRetryTime => jsObject.maxUploadRetryTime;
 
   /// Creates a new Storage from a [jsObject].
-  Storage.fromJsObject(storage_interop.StorageJsImpl jsObject)
+  static Storage get(storage_interop.StorageJsImpl jsObject) {
+    if (jsObject == null) {
+      return null;
+    }
+    return _expando[jsObject] ??= new Storage._fromJsObject(jsObject);
+  }
+
+  Storage._fromJsObject(storage_interop.StorageJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
   /// Returns a [StorageReference] for the given [path] in the default bucket.
   StorageReference ref([String path]) =>
-      new StorageReference.fromJsObject(jsObject.ref(path));
+      StorageReference.get(jsObject.ref(path));
 
   /// Returns a [StorageReference] for the given absolute [url].
   StorageReference refFromURL(String url) =>
-      new StorageReference.fromJsObject(jsObject.refFromURL(url));
+      StorageReference.get(jsObject.refFromURL(url));
 
   /// Sets the maximum operation retry time to a value of [time].
   void setMaxOperationRetryTime(int time) =>
@@ -65,6 +65,8 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.Reference>
 class StorageReference
     extends JsObjectWrapper<storage_interop.ReferenceJsImpl> {
+  static final _expando = new Expando<StorageReference>();
+
   /// The name of the bucket.
   String get bucket => jsObject.bucket;
 
@@ -74,55 +76,31 @@ class StorageReference
   /// The short name. Which is the last component of the full path.
   String get name => jsObject.name;
 
-  StorageReference _parent;
-
   /// The reference to the parent location of this reference.
   /// It is [null] in case of root StorageReference.
-  StorageReference get parent {
-    if (jsObject.parent != null) {
-      if (_parent != null) {
-        _parent.jsObject = jsObject.parent;
-      } else {
-        _parent = new StorageReference.fromJsObject(jsObject.parent);
-      }
-    } else {
-      _parent = null;
-    }
-    return _parent;
-  }
-
-  StorageReference _root;
+  StorageReference get parent => StorageReference.get(jsObject.parent);
 
   /// The reference to the root of this storage reference's bucket.
-  StorageReference get root {
-    if (_root != null) {
-      _root.jsObject = jsObject.root;
-    } else {
-      _root = new StorageReference.fromJsObject(jsObject.root);
-    }
-    return _root;
-  }
-
-  Storage _storage;
+  StorageReference get root => StorageReference.get(jsObject.root);
 
   /// The [Storage] service associated with this reference.
-  Storage get storage {
-    if (_storage != null) {
-      _storage.jsObject = jsObject.storage;
-    } else {
-      _storage = new Storage.fromJsObject(jsObject.storage);
-    }
-    return _storage;
-  }
+  Storage get storage => Storage.get(jsObject.storage);
 
   /// Creates a new StorageReference from a [jsObject].
-  StorageReference.fromJsObject(storage_interop.ReferenceJsImpl jsObject)
+  static StorageReference get(storage_interop.ReferenceJsImpl jsObject) {
+    if (jsObject == null) {
+      return null;
+    }
+    return _expando[jsObject] ??= new StorageReference._fromJsObject(jsObject);
+  }
+
+  StorageReference._fromJsObject(storage_interop.ReferenceJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
   /// Returns a child StorageReference to a relative [path]
   /// from the actual reference.
   StorageReference child(String path) =>
-      new StorageReference.fromJsObject(jsObject.child(path));
+      StorageReference.get(jsObject.child(path));
 
   /// Deletes the object at the actual location.
   Future delete() => handleThenable(jsObject.delete());
@@ -134,8 +112,8 @@ class StorageReference
   }
 
   /// Returns a [FullMetadata] from this reference at actual location.
-  Future<FullMetadata> getMetadata() => handleThenableWithMapper(
-      jsObject.getMetadata(), (m) => new FullMetadata.fromJsObject(m));
+  Future<FullMetadata> getMetadata() =>
+      handleThenableWithMapper(jsObject.getMetadata(), FullMetadata.get);
 
   /// Uploads data [blob] to the actual location with optional [metadata].
   /// Returns the [UploadTask] which can be used to monitor and manage
@@ -147,7 +125,7 @@ class StorageReference
     } else {
       taskImpl = jsObject.put(blob);
     }
-    return new UploadTask.fromJsObject(taskImpl);
+    return UploadTask.get(taskImpl);
   }
 
   /// Uploads String [data] to the actual location with optional String [format]
@@ -163,7 +141,7 @@ class StorageReference
     } else {
       taskImpl = jsObject.putString(data);
     }
-    return new UploadTask.fromJsObject(taskImpl);
+    return UploadTask.get(taskImpl);
   }
 
   /// Returns the String representation of the current storage reference.
@@ -173,8 +151,8 @@ class StorageReference
   /// Updates metadata from this reference at actual location with
   /// the new [metadata].
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) =>
-      handleThenableWithMapper(jsObject.updateMetadata(metadata.jsObject),
-          (m) => new FullMetadata.fromJsObject(m));
+      handleThenableWithMapper(
+          jsObject.updateMetadata(metadata.jsObject), FullMetadata.get);
 }
 
 /// The full set of object metadata, including read-only properties.
@@ -182,6 +160,8 @@ class StorageReference
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.FullMetadata>
 class FullMetadata
     extends _UploadMetadataBase<storage_interop.FullMetadataJsImpl> {
+  static final _expando = new Expando<FullMetadata>();
+
   /// The bucket the actual object is contained in.
   String get bucket => jsObject.bucket;
 
@@ -209,36 +189,15 @@ class FullMetadata
   /// Returns the time it was last updated as a [DateTime].
   DateTime get updated => DateTime.parse(jsObject.updated);
 
-  /// Creates a new FullMetadata with optional metadata parameters.
-  factory FullMetadata(
-          {String bucket,
-          List<String> downloadURLs,
-          String fullPath,
-          String generation,
-          String metageneration,
-          String name,
-          int size,
-          String timeCreated,
-          String updated,
-          String md5Hash,
-          String cacheControl,
-          String contentDisposition,
-          String contentEncoding,
-          String contentLanguage,
-          String contentType,
-          Map customMetadata}) =>
-      new FullMetadata.fromJsObject(new storage_interop.FullMetadataJsImpl(
-          md5Hash: md5Hash,
-          cacheControl: cacheControl,
-          contentDisposition: contentDisposition,
-          contentEncoding: contentEncoding,
-          contentLanguage: contentLanguage,
-          contentType: contentType,
-          customMetadata:
-              (customMetadata != null) ? jsify(customMetadata) : null));
-
   /// Creates a new FullMetadata from a [jsObject].
-  FullMetadata.fromJsObject(jsObject) : super.fromJsObject(jsObject);
+  static FullMetadata get(jsObject) {
+    if (jsObject == null) {
+      return null;
+    }
+    return _expando[jsObject] ??= new FullMetadata._fromJsObject(jsObject);
+  }
+
+  FullMetadata._fromJsObject(jsObject) : super.fromJsObject(jsObject);
 }
 
 /// Object metadata that can be set at upload.
@@ -270,6 +229,8 @@ class UploadMetadata
       : super.fromJsObject(jsObject);
 }
 
+// TODO(kevmoo) - figure out if a settable md5Hash makes any sense
+// See https://stackoverflow.com/q/44959703/39827
 abstract class _UploadMetadataBase<
         T extends storage_interop.UploadMetadataJsImpl>
     extends _SettableMetadataBase<T> {
@@ -287,31 +248,30 @@ abstract class _UploadMetadataBase<
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.UploadTask>.
 class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
+  static final _expando = new Expando<UploadTask>();
+
   Future<UploadTaskSnapshot> _future;
 
   /// Returns the UploadTaskSnapshot when the upload successfully completes.
   Future<UploadTaskSnapshot> get future {
     if (_future == null) {
-      _future = handleThenableWithMapper(
-          jsObject, (val) => new UploadTaskSnapshot.fromJsObject(val));
+      _future = handleThenableWithMapper(jsObject, UploadTaskSnapshot.get);
     }
     return _future;
   }
 
-  UploadTaskSnapshot _snapshot;
-
   /// Returns the upload task snapshot of the current task state.
-  UploadTaskSnapshot get snapshot {
-    if (_snapshot != null) {
-      _snapshot.jsObject = jsObject.snapshot;
-    } else {
-      _snapshot = new UploadTaskSnapshot.fromJsObject(jsObject.snapshot);
-    }
-    return _snapshot;
-  }
+  UploadTaskSnapshot get snapshot => UploadTaskSnapshot.get(jsObject.snapshot);
 
   /// Creates a new UploadTask from a [jsObject].
-  UploadTask.fromJsObject(storage_interop.UploadTaskJsImpl jsObject)
+  static UploadTask get(storage_interop.UploadTaskJsImpl jsObject) {
+    if (jsObject == null) {
+      return null;
+    }
+    return _expando[jsObject] ??= new UploadTask._fromJsObject(jsObject);
+  }
+
+  UploadTask._fromJsObject(storage_interop.UploadTaskJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
   /// Cancels a running task. Has no effect on a complete or failed task.
@@ -326,7 +286,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
     if (_changeController == null) {
       var nextWrapper =
           allowInterop((storage_interop.UploadTaskSnapshotJsImpl data) {
-        _changeController.add(new UploadTaskSnapshot.fromJsObject(data));
+        _changeController.add(UploadTaskSnapshot.get(data));
       });
 
       var errorWrapper = allowInterop((e) => _changeController.addError(e));
@@ -364,6 +324,8 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.UploadTaskSnapshot>.
 class UploadTaskSnapshot
     extends JsObjectWrapper<storage_interop.UploadTaskSnapshotJsImpl> {
+  static final _expando = new Expando<UploadTaskSnapshot>();
+
   /// The number of bytes that have been successfully transferred.
   int get bytesTransferred => jsObject.bytesTransferred;
 
@@ -371,35 +333,13 @@ class UploadTaskSnapshot
   /// completes. It is also accessible from [metadata].
   Uri get downloadURL => Uri.parse(jsObject.downloadURL);
 
-  FullMetadata _metadata;
-
   /// The metadata. Before the upload completes, it contains the metadata sent
   /// to the server. After the upload completes, it contains the metadata sent
   /// back from the server.
-  FullMetadata get metadata {
-    if (jsObject.metadata != null) {
-      if (_metadata != null) {
-        _metadata.jsObject = jsObject.metadata;
-      } else {
-        _metadata = new FullMetadata.fromJsObject(jsObject.metadata);
-      }
-    } else {
-      _metadata = null;
-    }
-    return _metadata;
-  }
-
-  StorageReference _ref;
+  FullMetadata get metadata => FullMetadata.get(jsObject.metadata);
 
   /// The StorageReference that spawned the current snapshot's upload task.
-  StorageReference get ref {
-    if (_ref != null) {
-      _ref.jsObject = jsObject.ref;
-    } else {
-      _ref = new StorageReference.fromJsObject(jsObject.ref);
-    }
-    return _ref;
-  }
+  StorageReference get ref => StorageReference.get(jsObject.ref);
 
   /// The actual task state.
   TaskState get state {
@@ -420,23 +360,23 @@ class UploadTaskSnapshot
     }
   }
 
-  UploadTask _task;
-
   /// The UploadTask for this snapshot.
-  UploadTask get task {
-    if (_task != null) {
-      _task.jsObject = jsObject.task;
-    } else {
-      _task = new UploadTask.fromJsObject(jsObject.task);
-    }
-    return _task;
-  }
+  UploadTask get task => UploadTask.get(jsObject.task);
 
   /// The total number of bytes to be uploaded.
   int get totalBytes => jsObject.totalBytes;
 
   /// Creates a new UploadTaskSnapshot from a [jsObject].
-  UploadTaskSnapshot.fromJsObject(
+  static UploadTaskSnapshot get(
+      storage_interop.UploadTaskSnapshotJsImpl jsObject) {
+    if (jsObject == null) {
+      return null;
+    }
+    return _expando[jsObject] ??=
+        new UploadTaskSnapshot._fromJsObject(jsObject);
+  }
+
+  UploadTaskSnapshot._fromJsObject(
       storage_interop.UploadTaskSnapshotJsImpl jsObject)
       : super.fromJsObject(jsObject);
 }

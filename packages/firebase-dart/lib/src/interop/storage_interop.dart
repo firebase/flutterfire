@@ -89,7 +89,8 @@ class UploadMetadataJsImpl extends SettableMetadataJsImpl {
 }
 
 @JS('UploadTask')
-abstract class UploadTaskJsImpl implements ThenableJsImpl {
+abstract class UploadTaskJsImpl
+    implements ThenableJsImpl<UploadTaskSnapshotJsImpl> {
   external UploadTaskSnapshotJsImpl get snapshot;
   external void set snapshot(UploadTaskSnapshotJsImpl t);
   external bool cancel();

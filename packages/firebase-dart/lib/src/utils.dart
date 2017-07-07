@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:js';
 
 import 'package:func/func.dart';
 import 'package:js/js.dart';

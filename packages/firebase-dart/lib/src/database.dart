@@ -21,20 +21,20 @@ void enableLogging([logger, bool persistent = false]) =>
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database>.
 class Database extends JsObjectWrapper<database_interop.DatabaseJsImpl> {
-  App _app;
+  static final _expando = new Expando<Database>();
 
   /// App for this instance of database service.
-  App get app {
-    if (_app != null) {
-      _app.jsObject = jsObject.app;
-    } else {
-      _app = new App.fromJsObject(jsObject.app);
-    }
-    return _app;
-  }
+  App get app => App.get(jsObject.app);
 
   /// Creates a new Database from a [jsObject].
-  Database.fromJsObject(database_interop.DatabaseJsImpl jsObject)
+  static Database get(database_interop.DatabaseJsImpl jsObject) {
+    if (jsObject == null) {
+      return null;
+    }
+    return _expando[jsObject] ??= new Database._fromJsObject(jsObject);
+  }
+
+  Database._fromJsObject(database_interop.DatabaseJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
   /// Disconnects from the server, all database operations will be
@@ -47,12 +47,12 @@ class Database extends JsObjectWrapper<database_interop.DatabaseJsImpl> {
 
   /// Returns a [DatabaseReference] to the root or provided [path].
   DatabaseReference ref([String path]) =>
-      new DatabaseReference.fromJsObject(jsObject.ref(path));
+      DatabaseReference.get(jsObject.ref(path));
 
   /// Returns a [DatabaseReference] from provided [url].
   /// Url must be in the same domain as the current database.
   DatabaseReference refFromURL(String url) =>
-      new DatabaseReference.fromJsObject(jsObject.refFromURL(url));
+      DatabaseReference.get(jsObject.refFromURL(url));
 }
 
 /// A DatabaseReference represents a specific location in database and
@@ -61,44 +61,31 @@ class Database extends JsObjectWrapper<database_interop.DatabaseJsImpl> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database.Reference>.
 class DatabaseReference<T extends database_interop.ReferenceJsImpl>
     extends Query<T> {
+  static final _expando = new Expando<DatabaseReference>();
+
   /// The last part of the current path.
   /// It is [null] in case of root DatabaseReference.
   String get key => jsObject.key;
 
-  DatabaseReference _parent;
-
   /// The parent location of a DatabaseReference.
-  DatabaseReference get parent {
-    if (jsObject.parent != null) {
-      if (_parent != null) {
-        _parent.jsObject = jsObject.parent;
-      } else {
-        _parent = new DatabaseReference.fromJsObject(jsObject.parent);
-      }
-    } else {
-      _parent = null;
-    }
-    return _parent;
-  }
-
-  DatabaseReference _root;
+  DatabaseReference get parent => DatabaseReference.get(jsObject.parent);
 
   /// The root location of a DatabaseReference.
-  DatabaseReference get root {
-    if (_root != null) {
-      _root.jsObject = jsObject.root;
-    } else {
-      _root = new DatabaseReference.fromJsObject(jsObject.root);
-    }
-    return _root;
-  }
+  DatabaseReference get root => DatabaseReference.get(jsObject.root);
 
   /// Creates a new DatabaseReference from a [jsObject].
-  DatabaseReference.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  static DatabaseReference get(database_interop.ReferenceJsImpl jsObject) {
+    if (jsObject == null) {
+      return null;
+    }
+    return _expando[jsObject] ??= new DatabaseReference._fromJsObject(jsObject);
+  }
+
+  DatabaseReference._fromJsObject(T jsObject) : super.fromJsObject(jsObject);
 
   /// Returns child DatabaseReference from provided relative [path].
   DatabaseReference child(String path) =>
-      new DatabaseReference.fromJsObject(jsObject.child(path));
+      DatabaseReference.get(jsObject.child(path));
 
   /// Returns [OnDisconnect] object.
   OnDisconnect onDisconnect() =>
@@ -176,13 +163,11 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
 
     var onCompleteWrap = allowInterop(
         (error, bool committed, database_interop.DataSnapshotJsImpl snapshot) {
-      var dataSnapshot =
-          (snapshot != null) ? new DataSnapshot.fromJsObject(snapshot) : null;
       if (error != null) {
         c.completeError(error);
       } else {
-        c.complete(
-            new Transaction(committed: committed, snapshot: dataSnapshot));
+        c.complete(new Transaction(
+            committed: committed, snapshot: DataSnapshot.get(snapshot)));
       }
     });
 
@@ -227,17 +212,8 @@ class QueryEvent {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database.Query>.
 class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
-  DatabaseReference _ref;
-
   /// DatabaseReference to the Query's location.
-  DatabaseReference get ref {
-    if (_ref != null) {
-      _ref.jsObject = jsObject.ref;
-    } else {
-      _ref = new DatabaseReference.fromJsObject(jsObject.ref);
-    }
-    return _ref;
-  }
+  DatabaseReference get ref => DatabaseReference.get(jsObject.ref);
 
   Stream<QueryEvent> _onValue;
 
@@ -319,8 +295,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
     var callbackWrap = allowInterop((database_interop.DataSnapshotJsImpl data,
         [String string]) {
-      streamController
-          .add(new QueryEvent(new DataSnapshot.fromJsObject(data), string));
+      streamController.add(new QueryEvent(DataSnapshot.get(data), string));
     });
 
     void startListen() {
@@ -344,8 +319,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
     jsObject.once(eventType, allowInterop(
         (database_interop.DataSnapshotJsImpl snapshot, [String string]) {
-      c.complete(
-          new QueryEvent(new DataSnapshot.fromJsObject(snapshot), string));
+      c.complete(new QueryEvent(DataSnapshot.get(snapshot), string));
     }), resolveError(c));
 
     return c.future;
@@ -383,28 +357,27 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database.DataSnapshot>.
 class DataSnapshot
     extends JsObjectWrapper<database_interop.DataSnapshotJsImpl> {
+  static final _expando = new Expando<DataSnapshot>();
+
   /// The last part of the path at location for this DataSnapshot.
   String get key => jsObject.key;
 
-  DatabaseReference _ref;
-
   /// The DatabaseReference for the location that generated this DataSnapshot.
-  DatabaseReference get ref {
-    if (_ref != null) {
-      _ref.jsObject = jsObject.ref;
-    } else {
-      _ref = new DatabaseReference.fromJsObject(jsObject.ref);
-    }
-    return _ref;
-  }
+  DatabaseReference get ref => DatabaseReference.get(jsObject.ref);
 
   /// Creates a new DataSnapshot from a [jsObject].
-  DataSnapshot.fromJsObject(database_interop.DataSnapshotJsImpl jsObject)
+  static DataSnapshot get(database_interop.DataSnapshotJsImpl jsObject) {
+    if (jsObject == null) {
+      return null;
+    }
+    return _expando[jsObject] ??= new DataSnapshot._fromJsObject(jsObject);
+  }
+
+  DataSnapshot._fromJsObject(database_interop.DataSnapshotJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
   /// Returns DataSnapshot for the location at the specified relative [path].
-  DataSnapshot child(String path) =>
-      new DataSnapshot.fromJsObject(jsObject.child(path));
+  DataSnapshot child(String path) => DataSnapshot.get(jsObject.child(path));
 
   /// Returns [true] if this DataSnapshot contains any data.
   bool exists() => jsObject.exists();
@@ -414,10 +387,8 @@ class DataSnapshot
 
   /// Enumerates the top-level children of the DataSnapshot in their query-order.
   /// [action] is called for each child DataSnapshot.
-  bool forEach(Func1<DataSnapshot, dynamic> action) {
-    var actionWrap = allowInterop((database_interop.DataSnapshotJsImpl data) {
-      action(new DataSnapshot.fromJsObject(data));
-    });
+  bool forEach(action(DataSnapshot snapshot)) {
+    var actionWrap = allowInterop((d) => action(DataSnapshot.get(d)));
     return jsObject.forEach(actionWrap);
   }
 
@@ -485,13 +456,11 @@ class ThenableReference
   /// Creates a new ThenableReference from a [jsObject].
   ThenableReference.fromJsObject(
       database_interop.ThenableReferenceJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+      : super._fromJsObject(jsObject);
 
   /// A Future property.
-  Future<DatabaseReference> get future => _future ??= handleThenableWithMapper(
-      jsObject,
-      (database_interop.ReferenceJsImpl val) =>
-          new DatabaseReference.fromJsObject(val));
+  Future<DatabaseReference> get future =>
+      _future ??= handleThenableWithMapper(jsObject, DatabaseReference.get);
 }
 
 /// A structure used in [DatabaseReference.transaction].
@@ -499,32 +468,8 @@ class Transaction extends JsObjectWrapper<database_interop.TransactionJsImpl> {
   /// If transaction was committed.
   bool get committed => jsObject.committed;
 
-  /// Sets committed to [c].
-  void set committed(bool c) {
-    jsObject.committed = c;
-  }
-
-  DataSnapshot _snapshot;
-
   /// Returns the DataSnapshot.
-  DataSnapshot get snapshot {
-    if (jsObject.snapshot != null) {
-      if (_snapshot != null) {
-        _snapshot.jsObject = jsObject.snapshot;
-      } else {
-        _snapshot = new DataSnapshot.fromJsObject(jsObject.snapshot);
-      }
-    } else {
-      _snapshot = null;
-    }
-    return _snapshot;
-  }
-
-  /// Sets the DataSnapshot to [s].
-  void set snapshot(DataSnapshot s) {
-    _snapshot = s;
-    jsObject.snapshot = s.jsObject;
-  }
+  DataSnapshot get snapshot => DataSnapshot.get(jsObject.snapshot);
 
   /// Creates a new Transaction with optional [committed] and [snapshot]
   /// properties.

@@ -2,7 +2,7 @@
 /// wrappers extend from it.
 abstract class JsObjectWrapper<T> {
   /// JS object.
-  T jsObject;
+  final T jsObject;
 
   /// Creates a new JsObjectWrapper type from a [jsObject].
   JsObjectWrapper.fromJsObject(this.jsObject);
