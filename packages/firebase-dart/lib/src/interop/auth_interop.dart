@@ -31,9 +31,8 @@ abstract class AuthJsImpl {
   external PromiseJsImpl<UserJsImpl> signInWithCustomToken(String token);
   external PromiseJsImpl<UserJsImpl> signInWithEmailAndPassword(
       String email, String password);
-  @Deprecated('not impld')
-  external PromiseJsImpl signInWithPhoneNumber(
-      String phoneNumber, /* ApplicationVerifier */ applicationVerifier);
+  external PromiseJsImpl<ConfirmationResultJsImpl> signInWithPhoneNumber(
+      String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
   external PromiseJsImpl<UserCredentialJsImpl> signInWithPopup(
       AuthProviderJsImpl provider);
   external PromiseJsImpl signInWithRedirect(AuthProviderJsImpl provider);
@@ -103,15 +102,33 @@ class TwitterAuthProviderJsImpl extends AuthProviderJsImpl {
 
 @JS('PhoneAuthProvider')
 class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
-  external factory PhoneAuthProviderJsImpl();
+  external factory PhoneAuthProviderJsImpl([AuthJsImpl auth]);
   external static String get PROVIDER_ID;
-
-  /// The user's [phoneNumber] in E.164 format (e.g. +16505550101).
-  external verifyPhoneNumber(String phoneNumber, applicationVerifier);
-
-  // https://firebase.google.com/docs/reference/js/firebase.auth.PhoneAuthProvider#.credential
-  external static PromiseJsImpl<AuthCredential> credential(
+  external PromiseJsImpl<String> verifyPhoneNumber(
+      String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
+  // TODO official documentation says PromiseJsImpl<AuthCredential> return type
+  external static AuthCredential credential(
       String verificationId, String verificationCode);
+}
+
+@JS('ApplicationVerifier')
+abstract class ApplicationVerifierJsImpl {
+  external String get type;
+  external PromiseJsImpl<String> verify();
+}
+
+@JS('RecaptchaVerifier')
+class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
+  external factory RecaptchaVerifierJsImpl(container,
+      [Object parameters, AppJsImpl app]);
+  external clear();
+  external PromiseJsImpl<num> render();
+}
+
+@JS('ConfirmationResult')
+abstract class ConfirmationResultJsImpl {
+  external String get verificationId;
+  external PromiseJsImpl<UserCredentialJsImpl> confirm(String verificationCode);
 }
 
 /// A response from [Auth.checkActionCode].
@@ -143,10 +160,10 @@ class ActionCodeEmail {
 @JS()
 @anonymous
 class UserCredentialJsImpl {
-  external AdditionalUserInfoJsImpl get additionalUserInfo;
   external UserJsImpl get user;
   external AuthCredential get credential;
   external String get operationType;
+  external AdditionalUserInfoJsImpl get additionalUserInfo;
 }
 
 /// https://firebase.google.com/docs/reference/js/firebase.auth#.AdditionalUserInfo

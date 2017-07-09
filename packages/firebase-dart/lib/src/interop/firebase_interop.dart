@@ -44,6 +44,8 @@ abstract class UserJsImpl extends UserInfoJsImpl {
       linkAndRetrieveDataWithCredential(AuthCredential credential);
   external PromiseJsImpl<UserJsImpl> linkWithCredential(
       AuthCredential credential);
+  external PromiseJsImpl<ConfirmationResultJsImpl> linkWithPhoneNumber(
+      String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
   external PromiseJsImpl<UserCredentialJsImpl> linkWithPopup(
       AuthProviderJsImpl provider);
   external PromiseJsImpl linkWithRedirect(AuthProviderJsImpl provider);
@@ -51,6 +53,9 @@ abstract class UserJsImpl extends UserInfoJsImpl {
       AuthCredential credential);
   external PromiseJsImpl reauthenticateAndRetrieveDataWithCredential(
       AuthCredential credential);
+  external PromiseJsImpl<ConfirmationResultJsImpl>
+      reauthenticateWithPhoneNumber(
+          String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
   external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithPopup(
       AuthProviderJsImpl provider);
   external PromiseJsImpl reauthenticateWithRedirect(
@@ -60,6 +65,7 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external PromiseJsImpl<UserJsImpl> unlink(String providerId);
   external PromiseJsImpl updateEmail(String newEmail);
   external PromiseJsImpl updatePassword(String newPassword);
+  external PromiseJsImpl updatePhoneNumber(AuthCredential phoneCredential);
   external PromiseJsImpl updateProfile(UserProfile profile);
   external Object toJSON();
 }
@@ -68,6 +74,7 @@ abstract class UserJsImpl extends UserInfoJsImpl {
 abstract class UserInfoJsImpl {
   external String get displayName;
   external String get email;
+  external String get phoneNumber;
   external String get photoURL;
   external String get providerId;
   external String get uid;

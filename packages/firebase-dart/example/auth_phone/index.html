@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Auth demo</title>
+  <title>Phone auth demo</title>
   <style type="text/css">
-    #register_form p {
+    .error {
       color: red;
     }
     #auth_info td {
@@ -20,17 +20,23 @@
 </head>
 <body>
 <div class="container">
-  <h1>Auth demo</h1>
+  <h1>Phone auth demo</h1>
+  <p class="error"></p>
+  <h2>Register with phone number</h2>
   <form id="register_form" style="display: none">
-    <h2>Register</h2>
+    <label for="phone">Your phone number in E.164 format (e.g. +16505550101).</label><br>
+    <input type="text" placeholder="Your phone number" id="phone">
+    <div id="recaptcha-container"></div>
+    <input type="submit" value="Register me" id="register">
+  </form>
+  <form id="verification_form" style="display: none">
+    <h3>Verification code</h3>
     <p></p>
-    <input type="email" placeholder="Your E-mail" id="email">
-    <input type="password" placeholder="Your Password" id="password">
-    <input type="submit" value="Register me">
+    <input type="text" placeholder="Your verification code" id="code">
+    <input type="submit" value="Verify me">
   </form>
   <table id="auth_info" style="display: none">
   </table>
-  <button id="verify_email" style="display: none">Verify email</button>
   <a href="#" id="logout_btn" style="display: none">Log out</a>
 </div>
 <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>

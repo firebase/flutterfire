@@ -69,9 +69,9 @@ abstract class QueryJsImpl {
   external QueryJsImpl orderByPriority();
   external QueryJsImpl orderByValue();
   external QueryJsImpl startAt(value, [String key]);
+  external Object toJSON();
   @override
   external String toString();
-  external Object toJSON();
 }
 
 @JS('DataSnapshot')

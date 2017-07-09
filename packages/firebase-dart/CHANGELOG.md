@@ -1,6 +1,14 @@
 ## 4.1.0
 
+* Upgraded to Firebase JS API `4.2.0`.
 * Added `toJson` to `DataSnapshot` and `Query`. 
+* Added more tests for V4 API.
+* `Auth`:
+    * Implemented `PhoneAuthProvider` and `RecaptchaVerifier`.
+* `User`:
+    * Added `phoneNumber` property to the `UserInfo`.
+    * Added `linkWithPhoneNumber`, `updatePhoneNumber` and `reauthenticateWithPhoneNumber` methods.
+* New example demonstrating `PhoneAuthProvider` functionality in `example/auth_phone`.
 
 ## 4.0.0
 
