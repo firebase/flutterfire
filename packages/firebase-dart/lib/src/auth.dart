@@ -177,6 +177,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   Future updateProfile(firebase_interop.UserProfile profile) =>
       handleThenable(jsObject.updateProfile(profile));
 
+  /// Returns a JSON-serializable representation of this object.
   Map<String, dynamic> toJson() => dartify(jsObject.toJSON());
 
   @override

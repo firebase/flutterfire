@@ -64,6 +64,14 @@ void main() {
         key = null;
       });
 
+      test("has toJson", () {
+        var toJsonString = ref.toJson() as String;
+        expect(toJsonString, startsWith(databaseUrl));
+
+        var uri = Uri.parse(ref.toJson() as String);
+        expect(uri.pathSegments, hasLength(1));
+      });
+
       test("remove", () async {
         var eventFuture = ref.onValue.first;
 
@@ -71,18 +79,22 @@ void main() {
         var event = await eventFuture;
 
         expect(event.snapshot.val(), isNull);
+        expect(event.snapshot.toJson(), isNull);
       });
 
       test("child and once on value", () async {
         var childRef = ref.child(key);
+
         var event = await childRef.once("value");
         expect(event.snapshot.key, key);
         expect(event.snapshot.val()["text"], "hello");
+        expect(event.snapshot.toJson(), {'text': 'hello'});
 
         childRef = childRef.child("text");
         event = await childRef.once("value");
         expect(event.snapshot.key, "text");
         expect(event.snapshot.val(), "hello");
+        expect(event.snapshot.toJson(), 'hello');
       });
 
       test("key", () {

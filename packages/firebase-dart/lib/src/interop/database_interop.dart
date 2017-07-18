@@ -71,6 +71,7 @@ abstract class QueryJsImpl {
   external QueryJsImpl startAt(value, [String key]);
   @override
   external String toString();
+  external Object toJSON();
 }
 
 @JS('DataSnapshot')
@@ -88,6 +89,7 @@ abstract class DataSnapshotJsImpl {
   external bool hasChildren();
   external int numChildren();
   external dynamic val();
+  external Object toJSON();
 }
 
 @JS('OnDisconnect')

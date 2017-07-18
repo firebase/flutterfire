@@ -1,3 +1,7 @@
+## 4.1.0
+
+* Added `toJson` to `DataSnapshot` and `Query`. 
+
 ## 4.0.0
 
 * Upgraded to Firebase JS API `4.1.3`.

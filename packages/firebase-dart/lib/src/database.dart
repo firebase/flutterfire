@@ -350,6 +350,9 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// Returns a String representation of Query object.
   @override
   String toString() => jsObject.toString();
+
+  /// Returns a JSON-serializable representation of this object.
+  dynamic toJson() => dartify(jsObject.toJSON());
 }
 
 /// A DataSnapshot contains data from a database location.
@@ -406,6 +409,9 @@ class DataSnapshot
 
   /// Returns Dart value from a DataSnapshot.
   dynamic val() => dartify(jsObject.val());
+
+  /// Returns a JSON-serializable representation of this object.
+  dynamic toJson() => dartify(jsObject.toJSON());
 }
 
 /// The OnDisconnect class allows you to write or clear data when your client
