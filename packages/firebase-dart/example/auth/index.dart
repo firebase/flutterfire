@@ -69,10 +69,23 @@ class AuthApp {
 
   _registerUser(String email, String password) async {
     if (email.isNotEmpty && password.isNotEmpty) {
+      var trySignin = false;
       try {
         await auth.createUserWithEmailAndPassword(email, password);
+      } on fb.FirebaseError catch (e) {
+        if (e.code == "auth/email-already-in-use") {
+          trySignin = true;
+        }
       } catch (e) {
         error.text = e.toString();
+      }
+
+      if (trySignin) {
+        try {
+          await auth.signInWithEmailAndPassword(email, password);
+        } catch (e) {
+          error.text = e.toString();
+        }
       }
     } else {
       error.text = "Please fill correct e-mail and password.";
