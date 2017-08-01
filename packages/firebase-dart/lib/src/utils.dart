@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:func/func.dart';
 import 'package:js/js.dart';
+import 'package:js/js_util.dart' as util;
 
 import 'interop/firebase_interop.dart';
 import 'interop/js_interop.dart' as js;
@@ -11,6 +12,10 @@ import 'interop/js_interop.dart' as js;
 dynamic dartify(Object jsObject) {
   if (_isBasicType(jsObject)) {
     return jsObject;
+  }
+
+  if (jsObject is List) {
+    return jsObject.map(dartify).toList();
   }
 
   var json = js.stringify(jsObject);
@@ -23,13 +28,7 @@ dynamic jsify(Object dartObject) {
     return dartObject;
   }
 
-  Object json;
-  try {
-    json = JSON.encode(dartObject, toEncodable: _noCustomEncodable);
-  } on JsonUnsupportedObjectError {
-    throw new ArgumentError("Only basic JS types are supported");
-  }
-  return js.parse(json);
+  return util.jsify(dartObject);
 }
 
 /// Returns [:true:] if the [value] is a very basic built-in type - e.g.
@@ -40,9 +39,6 @@ bool _isBasicType(value) {
   }
   return false;
 }
-
-_noCustomEncodable(value) =>
-    throw new UnsupportedError("Object with toJson shouldn't work either");
 
 /// Handles the [thenable] object.
 Future<T> handleThenable<T>(ThenableJsImpl<T> thenable) {
