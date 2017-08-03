@@ -24,7 +24,10 @@ main() async {
 class PhoneAuthApp {
   final fb.Auth auth;
   final FormElement registerForm, verificationForm;
-  final InputElement phone, code;
+  final InputElement _phoneElement,
+      _codeElement,
+      _registerSubmit,
+      _verifySubmit;
   final AnchorElement logout;
   final TableElement authInfo;
   final ParagraphElement error;
@@ -37,10 +40,12 @@ class PhoneAuthApp {
         this.logout = querySelector("#logout_btn"),
         this.error = querySelector(".error"),
         this.authInfo = querySelector("#auth_info"),
-        this.phone = querySelector("#phone"),
-        this.code = querySelector("#code"),
+        this._phoneElement = querySelector("#phone"),
+        this._codeElement = querySelector("#code"),
         this.registerForm = querySelector("#register_form"),
-        this.verificationForm = querySelector("#verification_form") {
+        this.verificationForm = querySelector("#verification_form"),
+        this._registerSubmit = querySelector('#register'),
+        this._verifySubmit = querySelector('#verify') {
     logout.onClick.listen((e) {
       e.preventDefault();
       auth.signOut();
@@ -49,13 +54,13 @@ class PhoneAuthApp {
 
     this.registerForm.onSubmit.listen((e) {
       e.preventDefault();
-      var phoneValue = phone.value.trim();
+      var phoneValue = _phoneElement.value.trim();
       _registerUser(phoneValue);
     });
 
     this.verificationForm.onSubmit.listen((e) {
       e.preventDefault();
-      var codeValue = code.value.trim();
+      var codeValue = _codeElement.value.trim();
       _verifyUser(codeValue);
     });
 
@@ -94,11 +99,18 @@ class PhoneAuthApp {
   _registerUser(String phone) async {
     if (phone.isNotEmpty) {
       try {
+        _registerSubmit.disabled = _phoneElement.disabled = true;
+        error.text = 'Signing in...';
         confirmationResult = await auth.signInWithPhoneNumber(phone, verifier);
+        error.text = '';
         verificationForm.style.display = "block";
         registerForm.style.display = "none";
-      } catch (e) {
+      } catch (e, stack) {
+        window.console.error(e);
+        window.console.error(stack);
         error.text = e.toString();
+      } finally {
+        _registerSubmit.disabled = _phoneElement.disabled = false;
       }
     } else {
       error.text = "Please fill correct phone number.";
@@ -108,9 +120,16 @@ class PhoneAuthApp {
   _verifyUser(String code) async {
     if (code.isNotEmpty && confirmationResult != null) {
       try {
+        _verifySubmit.disabled = _codeElement.disabled = true;
+        error.text = 'Verifying...';
         await confirmationResult.confirm(code);
-      } catch (e) {
+        error.text = '';
+      } catch (e, stack) {
+        window.console.error(e);
+        window.console.error(stack);
         error.text = e.toString();
+      } finally {
+        _verifySubmit.disabled = _codeElement.disabled = false;
       }
     } else {
       error.text = "Please fill correct verification code.";
@@ -122,8 +141,8 @@ class PhoneAuthApp {
       registerForm.style.display = "none";
       verificationForm.style.display = "none";
       logout.style.display = "block";
-      phone.value = "";
-      code.value = "";
+      _phoneElement.value = "";
+      _codeElement.value = "";
       error.text = "";
       authInfo.style.display = "block";
 
