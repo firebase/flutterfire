@@ -2,13 +2,15 @@
 
 * Upgraded to Firebase JS API `4.2.0`.
 * Added `toJson` to `DataSnapshot` and `Query`. 
-* Added more tests for V4 API.
 * `Auth`:
     * Implemented `PhoneAuthProvider` and `RecaptchaVerifier`.
 * `User`:
     * Added `phoneNumber` property to the `UserInfo`.
-    * Added `linkWithPhoneNumber`, `updatePhoneNumber` and `reauthenticateWithPhoneNumber` methods.
-* New example demonstrating `PhoneAuthProvider` functionality in `example/auth_phone`.
+    * Added `linkWithPhoneNumber`, `updatePhoneNumber` and 
+      `reauthenticateWithPhoneNumber` methods.
+* New example demonstrating `PhoneAuthProvider` functionality in 
+  `example/auth_phone`.
+* Added more tests for V4 API.
 
 ## 4.0.0
 
@@ -46,8 +48,10 @@
 * Updates from the Firebase `3.8.0` and `3.9.0` in `auth` library:
     * `User`
         * Deprecated `link` method in favor of `linkWithCredential`.
-        * Deprecated `reauthenticate` method in favor of `reauthenticateWithCredential`.
-        * Added new `reauthenticateWithPopup` and `reauthenticateWithRedirect` methods.
+        * Deprecated `reauthenticate` method in favor of
+          `reauthenticateWithCredential`.
+        * Added new `reauthenticateWithPopup` and `reauthenticateWithRedirect`
+          methods.
     * `UserCredential`
         * Added new `operationType` property.
     * `AuthCredential`
