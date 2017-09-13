@@ -46,7 +46,8 @@ abstract class ReferenceJsImpl extends QueryJsImpl {
   external PromiseJsImpl setWithPriority(newVal, newPriority,
       [Func1 onComplete]);
   external PromiseJsImpl<TransactionJsImpl> transaction(Func1 transactionUpdate,
-      [Func3 onComplete, bool applyLocally]);
+      [Func3<Object, bool, DataSnapshotJsImpl, Null> onComplete,
+      bool applyLocally]);
   external PromiseJsImpl update(values, [Func1 onComplete]);
 }
 
@@ -60,10 +61,13 @@ abstract class QueryJsImpl {
   external QueryJsImpl limitToFirst(int limit);
   external QueryJsImpl limitToLast(int limit);
   external void off([String eventType, Func2Opt1 callback, context]);
-  external Func0 on(String eventType, Func2Opt1 callback,
+  external Func0 on(
+      String eventType, Func2Opt1<DataSnapshotJsImpl, String, Null> callback,
       [cancelCallbackOrContext, context]);
   external PromiseJsImpl<dynamic> once(String eventType,
-      [Func2Opt1 successCallback, failureCallbackOrContext, context]);
+      [Func2Opt1<DataSnapshotJsImpl, String, Null> successCallback,
+      failureCallbackOrContext,
+      context]);
   external QueryJsImpl orderByChild(String path);
   external QueryJsImpl orderByKey();
   external QueryJsImpl orderByPriority();

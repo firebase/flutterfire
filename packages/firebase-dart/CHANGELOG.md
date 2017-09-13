@@ -1,3 +1,7 @@
+## 4.1.1
+
+* Improve the generic types in the interop library.
+
 ## 4.1.0
 
 * Upgraded to Firebase JS API `4.2.0`.
