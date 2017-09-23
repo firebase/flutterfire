@@ -1,5 +1,5 @@
 analyzer:
- strong-mode: true
+  strong-mode: true
 linter:
   rules:
     #- always_declare_return_types
