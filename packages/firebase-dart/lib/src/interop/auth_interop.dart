@@ -18,11 +18,15 @@ abstract class AuthJsImpl {
   external UserJsImpl get currentUser;
   external PromiseJsImpl<List<String>> fetchProvidersForEmail(String email);
   external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult();
+  external String get languageCode;
+  external void set languageCode(String s);
   external Func0 onAuthStateChanged(nextOrObserver,
       [Func1 opt_error, Func0 opt_completed]);
   external Func0 onIdTokenChanged(nextOrObserver,
       [Func1 opt_error, Func0 opt_completed]);
-  external PromiseJsImpl sendPasswordResetEmail(String email);
+  external PromiseJsImpl sendPasswordResetEmail(String email,
+      [ActionCodeSettings actionCodeSettings]);
+  external PromiseJsImpl setPersistence(String persistence);
   external PromiseJsImpl<UserCredentialJsImpl>
       signInAndRetrieveDataWithCredential(AuthCredential credential);
   external PromiseJsImpl<UserJsImpl> signInAnonymously();
@@ -37,7 +41,26 @@ abstract class AuthJsImpl {
       AuthProviderJsImpl provider);
   external PromiseJsImpl signInWithRedirect(AuthProviderJsImpl provider);
   external PromiseJsImpl signOut();
+  external void useDeviceLanguage();
   external PromiseJsImpl<String> verifyPasswordResetCode(String code);
+}
+
+/// An enumeration of the possible persistence mechanism types.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Auth#.Persistence>
+@JS('Auth.Persistence')
+class Persistence {
+  /// Indicates that the state will be persisted even when the browser window
+  /// is closed.
+  external static String get LOCAL;
+
+  /// Indicates that the state will only be stored in memory and will be cleared
+  /// when the window.
+  external static String get NONE;
+
+  /// Indicates that the state will only persist in current session/tab,
+  /// relevant to web only, and will be cleared when the tab is closed.
+  external static String get SESSION;
 }
 
 /// Represents the credentials returned by an auth provider.
@@ -154,6 +177,85 @@ abstract class AuthError {
 @anonymous
 class ActionCodeEmail {
   external String get email;
+}
+
+/// This is the interface that defines the required continue/state URL with
+/// optional Android and iOS bundle identifiers.
+///
+/// The fields are:
+///
+/// [url] Sets the link continue/state URL, which has different meanings
+/// in different contexts:
+/// * When the link is handled in the web action widgets, this is the deep link
+/// in the continueUrl query parameter.
+/// * When the link is handled in the app directly, this is the continueUrl
+/// query parameter in the deep link of the Dynamic Link.
+///
+/// [iOS] Sets the [IosSettings] object.
+///
+/// [android] Sets the [AndroidSettings] object.
+///
+/// [handleCodeInApp] The default is [:false:]. When set to [:true:],
+/// the action code link will be be sent as a Universal Link or Android App Link
+/// and will be opened by the app if installed. In the [:false:] case,
+/// the code will be sent to the web widget first and then on continue will
+/// redirect to the app if installed.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.auth#.ActionCodeSettings>
+@JS()
+@anonymous
+class ActionCodeSettings {
+  external String get url;
+  external void set url(String s);
+  external IosSettings get iOS;
+  external void set iOS(IosSettings i);
+  external AndroidSettings get android;
+  external void set android(AndroidSettings a);
+  external bool get handleCodeInApp;
+  external void set handleCodeInApp(bool b);
+  external factory ActionCodeSettings(
+      {String url,
+      IosSettings iOS,
+      AndroidSettings android,
+      bool handleCodeInApp});
+}
+
+/// The iOS settings.
+///
+/// Sets the iOS [bundleId].
+/// This will try to open the link in an iOS app if it is installed.
+@JS()
+@anonymous
+class IosSettings {
+  external String get bundleId;
+  external void set bundleId(String s);
+  external factory IosSettings({String bundleId});
+}
+
+/// The Android settings.
+///
+/// Sets the Android [packageName]. This will try to open the link
+/// in an android app if it is installed.
+///
+/// If [installApp] is passed, it specifies whether to install the Android app
+/// if the device supports it and the app is not already installed.
+/// If this field is provided without a [packageName], an error is thrown
+/// explaining that the [packageName] must be provided in conjunction with
+/// this field.
+///
+/// If [minimumVersion] is specified, and an older version of the app
+/// is installed, the user is taken to the Play Store to upgrade the app.
+@JS()
+@anonymous
+class AndroidSettings {
+  external String get packageName;
+  external void set packageName(String s);
+  external String get minimumVersion;
+  external void set minimumVersion(String s);
+  external bool get installApp;
+  external void set installApp(bool b);
+  external factory AndroidSettings(
+      {String packageName, String minimumVersion, bool installApp});
 }
 
 /// https://firebase.google.com/docs/reference/js/firebase.auth#.UserCredential

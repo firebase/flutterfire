@@ -10,7 +10,14 @@ import 'js.dart';
 import 'utils.dart';
 
 export 'interop/auth_interop.dart'
-    show ActionCodeInfo, ActionCodeEmail, AuthCredential;
+    show
+        ActionCodeInfo,
+        ActionCodeEmail,
+        AuthCredential,
+        ActionCodeSettings,
+        IosSettings,
+        AndroidSettings,
+        Persistence;
 export 'interop/firebase_interop.dart' show UserProfile;
 
 /// User profile information, visible only to the Firebase project's apps.
@@ -179,8 +186,25 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   Future reload() => handleThenable(jsObject.reload());
 
   /// Sends an e-mail verification to a user.
-  Future sendEmailVerification() =>
-      handleThenable(jsObject.sendEmailVerification());
+  ///
+  /// The optional parameter [actionCodeSettings] is the action code settings.
+  /// If specified, the state/continue URL will be set as the "continueUrl"
+  /// parameter in the email verification link.
+  /// The default email verification landing page will use this to display
+  /// a link to go back to the app if it is installed.
+  ///
+  /// If the [actionCodeSettings] is not specified, no URL is appended to the
+  /// action URL. The state URL provided must belong to a domain that is
+  /// whitelisted by the developer in the console. Otherwise an error will be
+  /// thrown.
+  ///
+  /// Mobile app redirects will only be applicable if the developer configures
+  /// and accepts the Firebase Dynamic Links terms of condition.
+  ///
+  /// The Android package name and iOS bundle ID will be respected only if
+  /// they are configured in the same Firebase Auth project used.
+  Future sendEmailVerification([ActionCodeSettings actionCodeSettings]) =>
+      handleThenable(jsObject.sendEmailVerification(actionCodeSettings));
 
   /// Unlinks a provider with [providerId] from a user account.
   Future<User> unlink(String providerId) =>
@@ -226,6 +250,19 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
 
   /// Currently signed-in [User].
   User get currentUser => User.get(jsObject.currentUser);
+
+  /// The current Auth instance's language code.
+  /// When set to [:null:], the default Firebase Console language setting
+  /// is applied.
+  /// The language code will propagate to email action templates
+  /// (password reset, email verification and email change revocation),
+  /// SMS templates for phone authentication, reCAPTCHA verifier and OAuth
+  /// popup/redirect operations provided the specified providers support
+  /// localization with the language code specified.
+  String get languageCode => jsObject.languageCode;
+  void set languageCode(String s) {
+    jsObject.languageCode = s;
+  }
 
   Func0 _onAuthUnsubscribe;
   StreamController<User> _changeController;
@@ -346,8 +383,47 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
 
   /// Sends a password reset e-mail to the given [email].
   /// To confirm password reset, use the [Auth.confirmPasswordReset].
-  Future sendPasswordResetEmail(String email) =>
-      handleThenable(jsObject.sendPasswordResetEmail(email));
+  ///
+  /// The optional parameter [actionCodeSettings] is the action code settings.
+  /// If specified, the state/continue URL will be set as the "continueUrl"
+  /// parameter in the password reset link.
+  /// The default password reset landing page will use this to display
+  /// a link to go back to the app if it is installed.
+  ///
+  /// If the [actionCodeSettings] is not specified, no URL is appended to the
+  /// action URL. The state URL provided must belong to a domain that is
+  /// whitelisted by the developer in the console. Otherwise an error will be
+  /// thrown.
+  ///
+  /// Mobile app redirects will only be applicable if the developer configures
+  /// and accepts the Firebase Dynamic Links terms of condition.
+  ///
+  /// The Android package name and iOS bundle ID will be respected only if
+  /// they are configured in the same Firebase Auth project used.
+  Future sendPasswordResetEmail(String email,
+          [ActionCodeSettings actionCodeSettings]) =>
+      handleThenable(
+          jsObject.sendPasswordResetEmail(email, actionCodeSettings));
+
+  /// Changes the current type of persistence on the current Auth instance for
+  /// the currently saved Auth session and applies this type of persistence
+  /// for future sign-in requests, including sign-in with redirect requests.
+  /// This will return a Future that will resolve once the state finishes
+  /// copying from one type of storage to the other.
+  /// Calling a sign-in method after changing persistence will wait for that
+  /// persistence change to complete before applying it on the new Auth state.
+  ///
+  /// This makes it easy for a user signing in to specify whether their session
+  /// should be remembered or not. It also makes it easier to never persist
+  /// the Auth state for applications that are shared by other users or have
+  /// sensitive data.
+  ///
+  /// The default is [:'local':] (provided the browser supports this mechanism).
+  ///
+  /// The [persistence] string is the auth state persistence mechanism.
+  /// See allowed [persistence] values in [Persistence] class.
+  Future setPersistence(String persistence) =>
+      handleThenable(jsObject.setPersistence(persistence));
 
   /// Asynchronously signs in with the given credentials, and returns any
   /// available additional user information, such as user name.
@@ -411,6 +487,9 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
 
   /// Signs out the current user.
   Future signOut() => handleThenable(jsObject.signOut());
+
+  /// Sets the current language to the default device/browser preference.
+  void useDeviceLanguage() => jsObject.useDeviceLanguage();
 
   /// Verifies a password reset [code] sent to the user by email
   /// or other out-of-band mechanism.

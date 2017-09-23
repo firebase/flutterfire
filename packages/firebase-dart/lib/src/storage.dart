@@ -130,6 +130,9 @@ class StorageReference
 
   /// Uploads String [data] to the actual location with optional String [format]
   /// and [metadata].
+  ///
+  /// See allowed [format] values in [storage_interop.StringFormat] class.
+  ///
   /// Returns the [UploadTask] which can be used to monitor and manage
   /// the upload.
   UploadTask putString(String data, [String format, UploadMetadata metadata]) {

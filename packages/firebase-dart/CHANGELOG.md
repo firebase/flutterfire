@@ -1,6 +1,14 @@
-## 4.1.1
+## 4.2.0
 
 * Improve the generic types in the interop library.
+* Upgraded to Firebase JS API `4.4.0`.
+* Added client side localization for email actions, phone authentication SMS messages, OAuth flows and reCAPTCHA verification:
+    * Added readable/writable `languageCode` property to `Auth`.
+    * Added `useDeviceLanguage` method.
+* Added the ability to pass a continue URL/state when triggering a password reset/email verification which gives a user the ability to go back to the app after completion. In addition, added support for the ability to open these links directly from a mobile app instead of a web flow using Firebase Dynamic Links:
+    * `sendEmailVerification` and `sendPasswordResetEmail` have optional `ActionCodeSettings` parameter.
+* Added `Persistence` state via `setPersistence` method on `Auth` class.
+* Updated auth example with the latest features.
 
 ## 4.1.0
 

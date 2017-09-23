@@ -61,7 +61,8 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external PromiseJsImpl reauthenticateWithRedirect(
       AuthProviderJsImpl provider);
   external PromiseJsImpl reload();
-  external PromiseJsImpl sendEmailVerification();
+  external PromiseJsImpl sendEmailVerification(
+      [ActionCodeSettings actionCodeSettings]);
   external PromiseJsImpl<UserJsImpl> unlink(String providerId);
   external PromiseJsImpl updateEmail(String newEmail);
   external PromiseJsImpl updatePassword(String newPassword);

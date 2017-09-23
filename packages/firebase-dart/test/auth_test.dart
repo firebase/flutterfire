@@ -477,6 +477,17 @@ void main() {
       expect(lastIdTokenChangedUser, isNotNull,
           reason: 'Is updated with signInAndRetrieveDataWithCredential');
     });
+
+    test('language', () {
+      expect(authValue.languageCode, isNull);
+
+      authValue.languageCode = 'cs';
+      expect(authValue.languageCode, 'cs');
+
+      authValue.useDeviceLanguage();
+      // the default device's lang is used and not null
+      expect(authValue.languageCode, isNotNull);
+    });
   });
 
   group('registered user', () {

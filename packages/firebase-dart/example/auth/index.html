@@ -24,6 +24,13 @@
   <form id="register_form" style="display: none">
     <h2>Register</h2>
     <p></p>
+    <label for="persistent_state">State persistence type</label>
+    <select id="persistent_state">
+      <option value="local">LOCAL</option>
+      <option value="session">SESSION</option>
+      <option value="none">NONE</option>
+    </select>
+    <br>
     <input type="email" placeholder="Your E-mail" id="email">
     <input type="password" placeholder="Your Password" id="password">
     <input type="submit" value="Register me">
@@ -33,7 +40,7 @@
   <button id="verify_email" style="display: none">Verify email</button>
   <a href="#" id="logout_btn" style="display: none">Log out</a>
 </div>
-<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
 <script src="index.dart" type="application/dart"></script>
 <script src="packages/browser/dart.js"></script>
 </body>
