@@ -35,10 +35,22 @@
     <input type="password" placeholder="Your Password" id="password">
     <input type="submit" value="Register me">
   </form>
-  <table id="auth_info" style="display: none">
-  </table>
-  <button id="verify_email" style="display: none">Verify email</button>
-  <a href="#" id="logout_btn" style="display: none">Log out</a>
+  <div id="registered_user" style="display: none">
+    <table id="auth_info">
+    </table>
+    <div id="verify_email_container">
+      <h2>Send verify email</h2>
+      <label for="verify_email_language">Email language</label>
+      <select id="verify_email_language">
+        <option value="en">English</option>
+        <option value="cs">Czech</option>
+        <option value="de">German</option>
+        <option value="fr">French</option>
+      </select>
+      <button id="verify_email">Verify email</button>
+    </div>
+    <a href="#" id="logout_btn">Log out</a>
+  </div>
 </div>
 <script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
 <script src="index.dart" type="application/dart"></script>
