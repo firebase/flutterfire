@@ -1,10 +1,15 @@
-# Dart wrapper library for the new Firebase
+# Firebase APIs for Dart VM (server), Fuchsia, and Browser
 
 [![Build Status](https://travis-ci.org/firebase/firebase-dart.svg?branch=master)](https://travis-ci.org/firebase/firebase-dart)
 
-This is a Dart wrapper library for the new [Firebase](https://firebase.google.com). 
-If you are using Dart to write Flutter apps, consider using the 
-[FlutterFire plugins](https://github.com/flutter/plugins/blob/master/FlutterFire.md) instead.
+Use [Firebase](https://firebase.google.com)
+REST APIs for dart:io apps
+(for example: server-side Dart or Fuchsia),
+and a Dart wrapper for Firebase's JavaScript API for the browser.
+
+If you are writing Flutter apps for iOS and Android, you should use 
+[FlutterFire plugins](https://github.com/flutter/plugins/blob/master/FlutterFire.md)
+instead.
 
 You can find more information on how to use Firebase on the
 [Getting started](https://firebase.google.com/docs/web/setup) page.
@@ -20,18 +25,18 @@ For more info, see the
 [next section](https://github.com/firebase/firebase-dart#before-tests-and-examples-are-run)
 in this document.
 
-## Usage
+## Installation
 
-### Installation
-
-Install the library from the pub or Github:
+Install the library from pub:
 
 ```yaml
 dependencies:
   firebase: '^4.0.0'
 ```
 
-### Include Firebase source
+## Using this package with dart:html
+
+### Include Firebase JavaScript source
 
 You must include the original Firebase JavaScript source into your `.html` file
 to be able to use the library.
@@ -40,35 +45,37 @@ to be able to use the library.
 <script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
 ```
 
-### Use it
+### Example
 
 ```dart
-import 'package:firebase/firebase.dart' as fb;
+import 'package:firebase/firebase.dart';
 
 void main() {
-  fb.initializeApp(
+  initializeApp(
     apiKey: "YourApiKey",
     authDomain: "YourAuthDomain",
     databaseURL: "YourDatabaseUrl",
     storageBucket: "YourStorageBucket");
 
-  fb.Database database = fb.database();
-  fb.DatabaseReference ref = database.ref("messages");
+  Database database = database();
+  DatabaseReference ref = database.ref("messages");
 
   ref.onValue.listen((e) {
-    fb.DataSnapshot datasnapshot = e.snapshot;
+    DataSnapshot datasnapshot = e.snapshot;
     // Do something with datasnapshot
   });
 }
 ```
 
-### IO Client
+## Using this package with dart:io
 
-This library also contains an IO client. Create an instance of `FirebaseClient` and then use the appropriate
+This library also contains a dart:io client.
+
+Create an instance of `FirebaseClient` and then use the appropriate
 method (`GET`, `PUT`, `POST`, `DELETE` or `PATCH`).
 More info in the [official documentation](https://firebase.google.com/docs/reference/rest/database/).
 
-The IO client also supports authentication. See the documentation on how to get
+The dart:io client also supports authentication. See the documentation on how to get
 [auth credentials](https://firebase.google.com/docs/reference/rest/database/user-auth).
 
 ```dart
