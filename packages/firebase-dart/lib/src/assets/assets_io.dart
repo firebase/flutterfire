@@ -1,3 +1,10 @@
+// NOTE: this fil SHOULD NOT be imported outside of this package. It exists to
+// share logic between tests and examples.
+
+// Adding these ignores since `googleapis_auth` is not a "regular" dependency
+// See https://github.com/dart-lang/pana/issues/167
+// ignore_for_file: uri_does_not_exist, non_type_as_type_argument, undefined_class, undefined_function
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
