@@ -1,6 +1,6 @@
 name: firebase
 description: Dart libraries for Firebase
-version: 4.2.0-dev
+version: 4.2.0
 authors:
 - Jana Moudra <jana.moudra@gmail.com>
 - Kevin Moore <kevmoo@google.com>
@@ -8,11 +8,11 @@ homepage: https://github.com/firebase/firebase-dart
 environment:
   sdk: '>=1.21.0 <2.0.0'
 dependencies:
-  browser: '>=0.10.0 <0.11.0'
+  browser: '^0.10.0'
   func: ">=0.1.0 <2.0.0"
   http: '^0.11.3'
-  js: ">=0.6.0 <0.7.0"
+  js: "^0.6.0"
 dev_dependencies:
   googleapis_auth: '^0.2.3+5'
   path: '^1.3.9'
-  test: '>=0.12.17 <0.13.0'
+  test: '^0.12.17'
