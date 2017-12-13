@@ -1,4 +1,4 @@
-// NOTE: this fil SHOULD NOT be imported outside of this package. It exists to
+// NOTE: this file SHOULD NOT be imported outside of this package. It exists to
 // share logic between tests and examples.
 
 // Adding these ignores since `googleapis_auth` is not a "regular" dependency

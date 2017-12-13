@@ -150,7 +150,9 @@ class PhoneAuthApp {
         "email": user.email,
         "emailVerified": user.emailVerified,
         "isAnonymous": user.isAnonymous,
-        "phoneNumber": user.phoneNumber
+        "phoneNumber": user.phoneNumber,
+        "metadata.creationTime": user.metadata.creationTime,
+        "metadata.lastSignInTime": user.metadata.lastSignInTime
       };
 
       data.forEach((k, v) {

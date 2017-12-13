@@ -239,6 +239,9 @@ void main() {
       expect(user.emailVerified, isFalse);
       expect(user.providerData, isEmpty);
       expect(user.providerId, 'firebase');
+      expect(user.metadata, isNotNull);
+      expect(user.metadata.lastSignInTime, isNotNull);
+      expect(user.metadata.creationTime, isNotNull);
     });
 
     test('delete', () async {
@@ -364,6 +367,34 @@ void main() {
       }
     });
 
+    test('createUserAndRetrieveDataWithEmailAndPassword', () async {
+      try {
+        var credential =
+            await authValue.createUserAndRetrieveDataWithEmailAndPassword(
+                userEmail, "janicka");
+        user = credential.user;
+        expect(user, isNotNull);
+        expect(user.email, userEmail);
+        expect(user.phoneNumber, isNull);
+        expect(credential.additionalUserInfo.isNewUser, isTrue);
+      } on FirebaseError catch (e) {
+        printException(e);
+        rethrow;
+      }
+    });
+
+    test('signInAnonymouslyAndRetrieveData', () async {
+      try {
+        var credential = await authValue.signInAnonymouslyAndRetrieveData();
+        user = credential.user;
+
+        expect(user.isAnonymous, isTrue);
+      } on FirebaseError catch (e) {
+        printException(e);
+        rethrow;
+      }
+    });
+
     test('link anonymous user with credential', () async {
       try {
         user = await authValue.signInAnonymously();
@@ -389,6 +420,8 @@ void main() {
 
         expect(userCred.operationType, 'link');
         expect(userCred.user.uid, user.uid);
+        expect(userCred.additionalUserInfo, isNotNull);
+        expect(userCred.additionalUserInfo.isNewUser, isFalse);
       } on FirebaseError catch (e) {
         printException(e);
         rethrow;
@@ -476,6 +509,24 @@ void main() {
           reason: 'Not updated with signInAndRetrieveDataWithCredential');
       expect(lastIdTokenChangedUser, isNotNull,
           reason: 'Is updated with signInAndRetrieveDataWithCredential');
+    });
+
+    test("signInAndRetrieveDataWithEmailAndPassword", () async {
+      var credential = await authValue
+          .createUserAndRetrieveDataWithEmailAndPassword(userEmail, "janicka");
+
+      expect(credential.user.email, userEmail);
+      expect(credential.additionalUserInfo.isNewUser, isTrue);
+
+      await authValue.signOut();
+
+      await _wait();
+
+      var credential2 = await authValue
+          .signInAndRetrieveDataWithEmailAndPassword(userEmail, "janicka");
+
+      expect(credential.user.email, credential2.user.email);
+      expect(credential2.additionalUserInfo.isNewUser, isFalse);
     });
 
     test('language', () {

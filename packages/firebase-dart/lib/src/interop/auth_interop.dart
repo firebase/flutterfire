@@ -15,6 +15,9 @@ abstract class AuthJsImpl {
   external PromiseJsImpl confirmPasswordReset(String code, String newPassword);
   external PromiseJsImpl<UserJsImpl> createUserWithEmailAndPassword(
       String email, String password);
+  external PromiseJsImpl<UserCredentialJsImpl>
+      createUserAndRetrieveDataWithEmailAndPassword(
+          String email, String password);
   external UserJsImpl get currentUser;
   external PromiseJsImpl<List<String>> fetchProvidersForEmail(String email);
   external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult();
@@ -30,11 +33,17 @@ abstract class AuthJsImpl {
   external PromiseJsImpl<UserCredentialJsImpl>
       signInAndRetrieveDataWithCredential(AuthCredential credential);
   external PromiseJsImpl<UserJsImpl> signInAnonymously();
+  external PromiseJsImpl<UserCredentialJsImpl>
+      signInAnonymouslyAndRetrieveData();
   external PromiseJsImpl<UserJsImpl> signInWithCredential(
       AuthCredential credential);
   external PromiseJsImpl<UserJsImpl> signInWithCustomToken(String token);
+  external PromiseJsImpl<UserCredentialJsImpl>
+      signInAndRetrieveDataWithCustomToken(String token);
   external PromiseJsImpl<UserJsImpl> signInWithEmailAndPassword(
       String email, String password);
+  external PromiseJsImpl<UserCredentialJsImpl>
+      signInAndRetrieveDataWithEmailAndPassword(String email, String password);
   external PromiseJsImpl<ConfirmationResultJsImpl> signInWithPhoneNumber(
       String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
   external PromiseJsImpl<UserCredentialJsImpl> signInWithPopup(
@@ -162,6 +171,20 @@ abstract class ActionCodeInfo {
   external ActionCodeEmail get data;
 }
 
+/// Interface representing a user's metadata.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.auth.UserMetadata>.
+@JS()
+abstract class UserMetadata {
+  /// The date the user was created, formatted as a UTC string.
+  /// For example, 'Fri, 22 Sep 2017 01:49:58 GMT'.
+  external String get creationTime;
+
+  /// The date the user last signed in, formatted as a UTC string.
+  /// For example, 'Fri, 22 Sep 2017 01:49:58 GMT'.
+  external String get lastSignInTime;
+}
+
 /// An authentication error.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Error>.
@@ -275,4 +298,5 @@ class AdditionalUserInfoJsImpl {
   external String get providerId;
   external Object get profile;
   external String get username;
+  external bool get isNewUser;
 }

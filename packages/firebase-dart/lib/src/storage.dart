@@ -22,7 +22,7 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
   static final _expando = new Expando<Storage>();
 
   /// App for this instance of storage service.
-  App get app => App.get(jsObject.app);
+  App get app => App.getInstance(jsObject.app);
 
   /// Returns the maximum time to retry operations other than uploads
   /// or downloads (in milliseconds).
@@ -32,7 +32,7 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
   int get maxUploadRetryTime => jsObject.maxUploadRetryTime;
 
   /// Creates a new Storage from a [jsObject].
-  static Storage get(storage_interop.StorageJsImpl jsObject) {
+  static Storage getInstance(storage_interop.StorageJsImpl jsObject) {
     if (jsObject == null) {
       return null;
     }
@@ -44,11 +44,11 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
 
   /// Returns a [StorageReference] for the given [path] in the default bucket.
   StorageReference ref([String path]) =>
-      StorageReference.get(jsObject.ref(path));
+      StorageReference.getInstance(jsObject.ref(path));
 
   /// Returns a [StorageReference] for the given absolute [url].
   StorageReference refFromURL(String url) =>
-      StorageReference.get(jsObject.refFromURL(url));
+      StorageReference.getInstance(jsObject.refFromURL(url));
 
   /// Sets the maximum operation retry time to a value of [time].
   void setMaxOperationRetryTime(int time) =>
@@ -78,16 +78,17 @@ class StorageReference
 
   /// The reference to the parent location of this reference.
   /// It is [null] in case of root StorageReference.
-  StorageReference get parent => StorageReference.get(jsObject.parent);
+  StorageReference get parent => StorageReference.getInstance(jsObject.parent);
 
   /// The reference to the root of this storage reference's bucket.
-  StorageReference get root => StorageReference.get(jsObject.root);
+  StorageReference get root => StorageReference.getInstance(jsObject.root);
 
   /// The [Storage] service associated with this reference.
-  Storage get storage => Storage.get(jsObject.storage);
+  Storage get storage => Storage.getInstance(jsObject.storage);
 
   /// Creates a new StorageReference from a [jsObject].
-  static StorageReference get(storage_interop.ReferenceJsImpl jsObject) {
+  static StorageReference getInstance(
+      storage_interop.ReferenceJsImpl jsObject) {
     if (jsObject == null) {
       return null;
     }
@@ -100,7 +101,7 @@ class StorageReference
   /// Returns a child StorageReference to a relative [path]
   /// from the actual reference.
   StorageReference child(String path) =>
-      StorageReference.get(jsObject.child(path));
+      StorageReference.getInstance(jsObject.child(path));
 
   /// Deletes the object at the actual location.
   Future delete() => handleThenable(jsObject.delete());
@@ -112,8 +113,8 @@ class StorageReference
   }
 
   /// Returns a [FullMetadata] from this reference at actual location.
-  Future<FullMetadata> getMetadata() =>
-      handleThenableWithMapper(jsObject.getMetadata(), FullMetadata.get);
+  Future<FullMetadata> getMetadata() => handleThenableWithMapper(
+      jsObject.getMetadata(), FullMetadata.getInstance);
 
   /// Uploads data [blob] to the actual location with optional [metadata].
   /// Returns the [UploadTask] which can be used to monitor and manage
@@ -125,7 +126,7 @@ class StorageReference
     } else {
       taskImpl = jsObject.put(blob);
     }
-    return UploadTask.get(taskImpl);
+    return UploadTask.getInstance(taskImpl);
   }
 
   /// Uploads String [data] to the actual location with optional String [format]
@@ -144,7 +145,7 @@ class StorageReference
     } else {
       taskImpl = jsObject.putString(data);
     }
-    return UploadTask.get(taskImpl);
+    return UploadTask.getInstance(taskImpl);
   }
 
   /// Returns the String representation of the current storage reference.
@@ -155,7 +156,7 @@ class StorageReference
   /// the new [metadata].
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) =>
       handleThenableWithMapper(
-          jsObject.updateMetadata(metadata.jsObject), FullMetadata.get);
+          jsObject.updateMetadata(metadata.jsObject), FullMetadata.getInstance);
 }
 
 /// The full set of object metadata, including read-only properties.
@@ -193,7 +194,7 @@ class FullMetadata
   DateTime get updated => DateTime.parse(jsObject.updated);
 
   /// Creates a new FullMetadata from a [jsObject].
-  static FullMetadata get(jsObject) {
+  static FullMetadata getInstance(jsObject) {
     if (jsObject == null) {
       return null;
     }
@@ -258,16 +259,18 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
   /// Returns the UploadTaskSnapshot when the upload successfully completes.
   Future<UploadTaskSnapshot> get future {
     if (_future == null) {
-      _future = handleThenableWithMapper(jsObject, UploadTaskSnapshot.get);
+      _future =
+          handleThenableWithMapper(jsObject, UploadTaskSnapshot.getInstance);
     }
     return _future;
   }
 
   /// Returns the upload task snapshot of the current task state.
-  UploadTaskSnapshot get snapshot => UploadTaskSnapshot.get(jsObject.snapshot);
+  UploadTaskSnapshot get snapshot =>
+      UploadTaskSnapshot.getInstance(jsObject.snapshot);
 
   /// Creates a new UploadTask from a [jsObject].
-  static UploadTask get(storage_interop.UploadTaskJsImpl jsObject) {
+  static UploadTask getInstance(storage_interop.UploadTaskJsImpl jsObject) {
     if (jsObject == null) {
       return null;
     }
@@ -289,7 +292,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
     if (_changeController == null) {
       var nextWrapper =
           allowInterop((storage_interop.UploadTaskSnapshotJsImpl data) {
-        _changeController.add(UploadTaskSnapshot.get(data));
+        _changeController.add(UploadTaskSnapshot.getInstance(data));
       });
 
       var errorWrapper = allowInterop((e) => _changeController.addError(e));
@@ -339,10 +342,10 @@ class UploadTaskSnapshot
   /// The metadata. Before the upload completes, it contains the metadata sent
   /// to the server. After the upload completes, it contains the metadata sent
   /// back from the server.
-  FullMetadata get metadata => FullMetadata.get(jsObject.metadata);
+  FullMetadata get metadata => FullMetadata.getInstance(jsObject.metadata);
 
   /// The StorageReference that spawned the current snapshot's upload task.
-  StorageReference get ref => StorageReference.get(jsObject.ref);
+  StorageReference get ref => StorageReference.getInstance(jsObject.ref);
 
   /// The actual task state.
   TaskState get state {
@@ -364,13 +367,13 @@ class UploadTaskSnapshot
   }
 
   /// The UploadTask for this snapshot.
-  UploadTask get task => UploadTask.get(jsObject.task);
+  UploadTask get task => UploadTask.getInstance(jsObject.task);
 
   /// The total number of bytes to be uploaded.
   int get totalBytes => jsObject.totalBytes;
 
   /// Creates a new UploadTaskSnapshot from a [jsObject].
-  static UploadTaskSnapshot get(
+  static UploadTaskSnapshot getInstance(
       storage_interop.UploadTaskSnapshotJsImpl jsObject) {
     if (jsObject == null) {
       return null;

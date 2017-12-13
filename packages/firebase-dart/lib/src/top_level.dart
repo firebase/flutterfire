@@ -3,6 +3,7 @@ import 'package:js/js_util.dart' as js;
 import 'app.dart';
 import 'auth.dart';
 import 'database.dart';
+import 'firestore.dart';
 import 'interop/firebase_interop.dart' as firebase;
 import 'storage.dart';
 
@@ -11,7 +12,7 @@ export 'interop/firebase_interop.dart' show SDK_VERSION;
 /// A (read-only) array of all the initialized Apps.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase#.apps>.
-List<App> get apps => firebase.apps.map(App.get).toList();
+List<App> get apps => firebase.apps.map(App.getInstance).toList();
 
 const String _defaultAppName = "[DEFAULT]";
 
@@ -23,16 +24,18 @@ App initializeApp(
     {String apiKey,
     String authDomain,
     String databaseURL,
+    String projectId,
     String storageBucket,
     String name}) {
   name ??= _defaultAppName;
 
   try {
-    return App.get(firebase.initializeApp(
+    return App.getInstance(firebase.initializeApp(
         new firebase.FirebaseOptions(
             apiKey: apiKey,
             authDomain: authDomain,
             databaseURL: databaseURL,
+            projectId: projectId,
             storageBucket: storageBucket),
         name));
   } catch (e) {
@@ -56,7 +59,7 @@ App initializeApp(
 App app([String name]) {
   var jsObject = (name != null) ? firebase.app(name) : firebase.app();
 
-  return App.get(jsObject);
+  return App.getInstance(jsObject);
 }
 
 /// Gets the [Auth] object for the default App or a given App.
@@ -65,7 +68,7 @@ App app([String name]) {
 Auth auth([App app]) {
   var jsObject = (app != null) ? firebase.auth(app.jsObject) : firebase.auth();
 
-  return Auth.get(jsObject);
+  return Auth.getInstance(jsObject);
 }
 
 /// Accesses the [Database] service for the default App or a given app.
@@ -78,7 +81,7 @@ Database database([App app]) {
   var jsObject =
       (app != null) ? firebase.database(app.jsObject) : firebase.database();
 
-  return Database.get(jsObject);
+  return Database.getInstance(jsObject);
 }
 
 /// The namespace for all the [Storage] functionality.
@@ -91,7 +94,17 @@ Storage storage([App app]) {
   var jsObject =
       (app != null) ? firebase.storage(app.jsObject) : firebase.storage();
 
-  return Storage.get(jsObject);
+  return Storage.getInstance(jsObject);
+}
+
+/// Accesses the [Firestore] service for the default App or a given app.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.firestore>.
+Firestore firestore([App app]) {
+  var jsObject =
+      (app != null) ? firebase.firestore(app.jsObject) : firebase.firestore();
+
+  return Firestore.getInstance(jsObject);
 }
 
 /// Exception thrown when the firebase.js is not loaded.

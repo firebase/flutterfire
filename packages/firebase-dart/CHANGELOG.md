@@ -1,3 +1,17 @@
+## 4.3.0
+* Upgraded to Firebase JS API `4.8.0`.
+* Added `metadata` property to `User`.
+* Added `isNewUser` property to `AdditionalUserInfo`.
+* Updated auth examples and tests with the latest features.
+* Added new Firestore library - see [README](README.md) and [example/firestore](example/firestore) on how to use it.
+* Added new APIs for the `Auth` library which function the same as their counterparts but return a `Future` that 
+resolves with a `UserCredential` instead of a `User`. These methods will be eventually renamed to replace the older 
+methods.
+    * `createUserAndRetrieveDataWithEmailAndPassword`
+    * `signInAndRetrieveDataWithCustomToken`
+    * `signInAndRetrieveDataWithEmailAndPassword`
+    * `signInAnonymouslyAndRetrieveData`
+    
 ## 4.2.0+1
 
 * Updates to `lib/src/` files that are not meant for consumptions outside this

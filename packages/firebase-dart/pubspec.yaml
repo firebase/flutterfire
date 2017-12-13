@@ -1,6 +1,6 @@
 name: firebase
 description: Dart libraries for Firebase
-version: 4.2.0+1
+version: 4.3.0-dev
 authors:
 - Jana Moudra <jana.moudra@gmail.com>
 - Kevin Moore <kevmoo@google.com>

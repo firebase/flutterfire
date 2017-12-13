@@ -23,7 +23,13 @@ main() {
     throw new StateError("Config exists. It should not. '$configPath'");
   }
 
-  var vars = ["API_KEY", "AUTH_DOMAIN", "DATABASE_URL", "STORAGE_BUCKET"];
+  var vars = [
+    "API_KEY",
+    "AUTH_DOMAIN",
+    "DATABASE_URL",
+    "STORAGE_BUCKET",
+    "PROJECT_ID"
+  ];
 
   var config = <String, String>{};
   for (var envVar in vars) {

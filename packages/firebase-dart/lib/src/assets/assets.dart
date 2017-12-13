@@ -9,6 +9,7 @@ String get apiKey => _config['API_KEY'];
 String get authDomain => _config['AUTH_DOMAIN'];
 String get databaseUrl => _config['DATABASE_URL'];
 String get storageBucket => _config['STORAGE_BUCKET'];
+String get projectId => _config['PROJECT_ID'];
 
 Map<String, dynamic> get _config {
   if (_configVal != null) {

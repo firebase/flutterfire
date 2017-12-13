@@ -17,7 +17,8 @@ export 'interop/auth_interop.dart'
         ActionCodeSettings,
         IosSettings,
         AndroidSettings,
-        Persistence;
+        Persistence,
+        UserMetadata;
 export 'interop/firebase_interop.dart' show UserProfile;
 
 /// User profile information, visible only to the Firebase project's apps.
@@ -59,6 +60,9 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   /// If the user is anonymous.
   bool get isAnonymous => jsObject.isAnonymous;
 
+  /// Non-null additional metadata about the user.
+  UserMetadata get metadata => jsObject.metadata;
+
   /// List of additional provider-specific information about the user.
   List<UserInfo> get providerData => jsObject.providerData
       .map((data) =>
@@ -74,7 +78,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   /// returned instead of creating a new instance.
   ///
   /// If [jsObject] is `null`, `null` is returned.
-  static User get(firebase_interop.UserJsImpl jsObject) {
+  static User getInstance(firebase_interop.UserJsImpl jsObject) {
     if (jsObject == null) {
       return null;
     }
@@ -118,7 +122,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   /// Links the user account with the given [credential] and returns the user.
   Future<User> linkWithCredential(AuthCredential credential) =>
       handleThenableWithMapper(
-          jsObject.linkWithCredential(credential), User.get);
+          jsObject.linkWithCredential(credential), User.getInstance);
 
   /// Links the user account with the given [phoneNumber] in E.164 format
   /// (e.g. +16505550101) and [applicationVerifier].
@@ -208,7 +212,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
 
   /// Unlinks a provider with [providerId] from a user account.
   Future<User> unlink(String providerId) =>
-      handleThenableWithMapper(jsObject.unlink(providerId), User.get);
+      handleThenableWithMapper(jsObject.unlink(providerId), User.getInstance);
 
   /// Updates the user's e-mail address to [newEmail].
   Future updateEmail(String newEmail) =>
@@ -246,10 +250,10 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   static final _expando = new Expando<Auth>();
 
   /// App for this instance of auth service.
-  App get app => App.get(jsObject.app);
+  App get app => App.getInstance(jsObject.app);
 
   /// Currently signed-in [User].
-  User get currentUser => User.get(jsObject.currentUser);
+  User get currentUser => User.getInstance(jsObject.currentUser);
 
   /// The current Auth instance's language code.
   /// When set to [:null:], the default Firebase Console language setting
@@ -276,7 +280,7 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   Stream<User> get onAuthStateChanged {
     if (_changeController == null) {
       var nextWrapper = allowInterop((firebase_interop.UserJsImpl user) {
-        _changeController.add(User.get(user));
+        _changeController.add(User.getInstance(user));
       });
 
       var errorWrapper = allowInterop((e) => _changeController.addError(e));
@@ -310,7 +314,7 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   Stream<User> get onIdTokenChanged {
     if (_idTokenChangedController == null) {
       var nextWrapper = allowInterop((firebase_interop.UserJsImpl user) {
-        _idTokenChangedController.add(User.get(user));
+        _idTokenChangedController.add(User.getInstance(user));
       });
 
       var errorWrapper =
@@ -334,7 +338,7 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   }
 
   /// Creates a new Auth from a [jsObject].
-  static Auth get(AuthJsImpl jsObject) {
+  static Auth getInstance(AuthJsImpl jsObject) {
     if (jsObject == null) {
       return null;
     }
@@ -362,11 +366,39 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   /// After a successful creation, the user will be signed into application
   /// and the [User] object is returned.
   ///
+  /// This method will be deprecated and will be updated to resolve with
+  /// a [UserCredential] as is returned
+  /// in [createUserAndRetrieveDataWithEmailAndPassword()].
+  ///
   /// The creation can fail, if the user with given [email] already exists
   /// or the password is not valid.
   Future<User> createUserWithEmailAndPassword(String email, String password) =>
       handleThenableWithMapper(
-          jsObject.createUserWithEmailAndPassword(email, password), User.get);
+          jsObject.createUserWithEmailAndPassword(email, password),
+          User.getInstance);
+
+  /// Creates a new user account associated with the specified [email] address
+  /// and [password] and returns any additional user info data or credentials.
+  ///
+  /// This method will be renamed to [createUserWithEmailAndPassword()]
+  /// replacing the existing method with the same name in the next major
+  /// version change.
+  ///
+  /// On successful creation of the user account, this user will also be signed
+  /// in to your application.
+  ///
+  /// User account creation can fail if the account already exists or the
+  /// password is invalid.
+  ///
+  /// Note: The email address acts as a unique identifier for the user and
+  /// enables an email-based password reset. This function will create a
+  /// new user account and set the initial user password.
+  Future<UserCredential> createUserAndRetrieveDataWithEmailAndPassword(
+          String email, String password) =>
+      handleThenableWithMapper(
+          jsObject.createUserAndRetrieveDataWithEmailAndPassword(
+              email, password),
+          (u) => new UserCredential.fromJsObject(u));
 
   /// Returns the list of provider IDs for the given [email] address,
   /// that can be used to sign in.
@@ -431,31 +463,89 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
           AuthCredential credential) =>
       handleThenableWithMapper(
           jsObject.signInAndRetrieveDataWithCredential(credential),
-          (uc) => new UserCredential.fromJsObject(uc));
+          (u) => new UserCredential.fromJsObject(u));
 
   /// Signs in as an anonymous user. If an anonymous user is already
   /// signed in, that user will be returned. In other case, new anonymous
   /// [User] identity is created and returned.
+  ///
+  /// This method will be deprecated and will be updated to resolve with a
+  /// [UserCredential] as is returned in [signInAnonymouslyAndRetrieveData()].
   Future<User> signInAnonymously() =>
-      handleThenableWithMapper(jsObject.signInAnonymously(), User.get);
+      handleThenableWithMapper(jsObject.signInAnonymously(), User.getInstance);
+
+  /// Signs in a user anonymously and returns any additional user info data
+  /// or credentials.
+  ///
+  /// This method will be renamed to [signInAnonymously()] replacing the
+  /// existing method with the same name in the next major version change.
+  ///
+  /// If there is already an anonymous user signed in, that user with additional
+  /// date will be returned; otherwise, a new anonymous user identity will be
+  /// created and returned.
+  Future<UserCredential> signInAnonymouslyAndRetrieveData() =>
+      handleThenableWithMapper(jsObject.signInAnonymouslyAndRetrieveData(),
+          (u) => new UserCredential.fromJsObject(u));
 
   /// Signs in with the given [credential] and returns the [User].
   Future<User> signInWithCredential(AuthCredential credential) =>
       handleThenableWithMapper(
-          jsObject.signInWithCredential(credential), User.get);
+          jsObject.signInWithCredential(credential), User.getInstance);
 
   /// Signs in with the custom [token] and returns the [User].
   /// Custom token must be generated by an auth backend.
   /// Fails with an error if the token is invalid, expired or not accepted
   /// by Firebase Auth service.
-  Future<User> signInWithCustomToken(String token) =>
-      handleThenableWithMapper(jsObject.signInWithCustomToken(token), User.get);
+  ///
+  /// This method will be deprecated and will be updated to resolve with a
+  /// [UserCredential] as is returned in [signInAndRetrieveDataWithCustomToken()].
+  Future<User> signInWithCustomToken(String token) => handleThenableWithMapper(
+      jsObject.signInWithCustomToken(token), User.getInstance);
+
+  /// Signs in a user asynchronously using a custom [token] and returns any
+  /// additional user info data or credentials.
+  ///
+  /// This method will be renamed to [signInWithCustomToken()] replacing
+  /// the existing method with the same name in the next major version change.
+  ///
+  /// Custom tokens are used to integrate Firebase Auth with existing auth
+  /// systems, and must be generated by the auth backend.
+  ///
+  /// Fails with an error if the token is invalid, expired, or not accepted by
+  /// the Firebase Auth service.
+  Future<UserCredential> signInAndRetrieveDataWithCustomToken(String token) =>
+      handleThenableWithMapper(
+          jsObject.signInAndRetrieveDataWithCustomToken(token),
+          (u) => new UserCredential.fromJsObject(u));
 
   /// Signs in with [email] and [password] and returns the [User].
   /// Fails with an error if the sign in is not successful.
+  ///
+  /// This method will be deprecated and will be updated to resolve with a
+  /// [UserCredential] as is returned in
+  /// [signInAndRetrieveDataWithEmailAndPassword()].
   Future<User> signInWithEmailAndPassword(String email, String password) =>
       handleThenableWithMapper(
-          jsObject.signInWithEmailAndPassword(email, password), User.get);
+          jsObject.signInWithEmailAndPassword(email, password),
+          User.getInstance);
+
+  /// Asynchronously signs in using an [email] and [password] and returns any
+  /// additional user info data or credentials.
+  ///
+  /// This method will be renamed to [signInWithEmailAndPassword()] replacing
+  /// the existing method with the same name in the next major version change.
+  ///
+  /// Fails with an error if the email address and password do not match.
+  ///
+  /// Note: The user's password is NOT the password used to access the user's
+  /// email account. The email address serves as a unique identifier for the
+  /// user, and the password is used to access the user's account in your
+  /// Firebase project.
+  Future<UserCredential> signInAndRetrieveDataWithEmailAndPassword(
+          String email, String password) =>
+      handleThenableWithMapper(
+          jsObject.signInAndRetrieveDataWithEmailAndPassword(email, password),
+          (u) => new UserCredential.fromJsObject(u));
 
   /// Asynchronously signs in using a phone number in E.164 format
   /// (e.g. +16505550101).
@@ -803,7 +893,7 @@ class ConfirmationResult extends JsObjectWrapper<ConfirmationResultJsImpl> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth#.UserCredential>
 class UserCredential extends JsObjectWrapper<UserCredentialJsImpl> {
   /// Returns the user.
-  User get user => User.get(jsObject.user);
+  User get user => User.getInstance(jsObject.user);
 
   /// Returns the auth credential.
   AuthCredential get credential => jsObject.credential;
@@ -833,6 +923,9 @@ class AdditionalUserInfo extends JsObjectWrapper<AdditionalUserInfoJsImpl> {
 
   /// Returns the user name.
   String get username => jsObject.username;
+
+  /// Returns whether a user is a new or returning user.
+  bool get isNewUser => jsObject.isNewUser;
 
   /// Creates a new AdditionalUserInfo from a [jsObject].
   AdditionalUserInfo.fromJsObject(AdditionalUserInfoJsImpl jsObject)

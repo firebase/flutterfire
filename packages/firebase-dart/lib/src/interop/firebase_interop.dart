@@ -7,6 +7,7 @@ import 'package:js/js.dart';
 import 'app_interop.dart';
 import 'auth_interop.dart';
 import 'database_interop.dart';
+import 'firestore_interop.dart';
 import 'storage_interop.dart';
 
 @JS()
@@ -28,6 +29,8 @@ external AuthJsImpl auth([AppJsImpl app]);
 external DatabaseJsImpl database([AppJsImpl app]);
 @JS()
 external StorageJsImpl storage([AppJsImpl app]);
+@JS()
+external FirestoreJsImpl firestore([AppJsImpl app]);
 
 /// https://firebase.google.com/docs/reference/js/firebase.User
 @JS('User')
@@ -36,6 +39,7 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external bool get isAnonymous;
   external List<UserInfoJsImpl> get providerData;
   external String get refreshToken;
+  external UserMetadata get metadata;
   external PromiseJsImpl delete();
   @Deprecated('Use `getIdToken` instead.')
   external PromiseJsImpl<String> getToken([bool opt_forceRefresh]);
@@ -133,6 +137,8 @@ class FirebaseOptions {
   external void set authDomain(String s);
   external String get databaseURL;
   external void set databaseURL(String s);
+  external String get projectId;
+  external void set projectId(String s);
   external String get storageBucket;
   external void set storageBucket(String s);
 
@@ -140,5 +146,6 @@ class FirebaseOptions {
       {String apiKey,
       String authDomain,
       String databaseURL,
+      String projectId,
       String storageBucket});
 }

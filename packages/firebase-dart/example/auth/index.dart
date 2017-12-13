@@ -127,7 +127,9 @@ class AuthApp {
       var data = <String, dynamic>{
         'email': user.email,
         'emailVerified': user.emailVerified,
-        'isAnonymous': user.isAnonymous
+        'isAnonymous': user.isAnonymous,
+        'metadata.creationTime': user.metadata.creationTime,
+        'metadata.lastSignInTime': user.metadata.lastSignInTime
       };
 
       data.forEach((k, v) {
