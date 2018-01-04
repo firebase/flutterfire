@@ -7,8 +7,8 @@ addons:
 before_script: ./tool/travis_before_script.sh
 dart_task:
   - test: --platform vm
-  - test: --platform firefox
-  - test: --platform dartium
+  - test: --platform firefox --concurrency=1
+  - test: --platform dartium --concurrency=1
     install_dartium: true
   - dartanalyzer
   - dartfmt
