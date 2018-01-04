@@ -72,7 +72,7 @@ class PhoneAuthApp {
     }
 
     // When auth state changes
-    auth.onAuthStateChanged.listen((e) => _setLayout(e));
+    auth.onAuthStateChanged.listen(_setLayout);
   }
 
   _initVerifier() {

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names
+
 @JS('firebase.database')
 library firebase.database_interop;
 
@@ -22,7 +24,7 @@ abstract class ServerValue {
 @JS('Database')
 abstract class DatabaseJsImpl {
   external AppJsImpl get app;
-  external void set app(AppJsImpl a);
+  external set app(AppJsImpl a);
   external void goOffline();
   external void goOnline();
   external ReferenceJsImpl ref([String path]);
@@ -32,11 +34,11 @@ abstract class DatabaseJsImpl {
 @JS('Reference')
 abstract class ReferenceJsImpl extends QueryJsImpl {
   external String get key;
-  external void set key(String s);
+  external set key(String s);
   external ReferenceJsImpl get parent;
-  external void set parent(ReferenceJsImpl r);
+  external set parent(ReferenceJsImpl r);
   external ReferenceJsImpl get root;
-  external void set root(ReferenceJsImpl r);
+  external set root(ReferenceJsImpl r);
   external ReferenceJsImpl child(String path);
   external OnDisconnectJsImpl onDisconnect();
   external ThenableReferenceJsImpl push([value, Func1 onComplete]);
@@ -54,7 +56,7 @@ abstract class ReferenceJsImpl extends QueryJsImpl {
 @JS('Query')
 abstract class QueryJsImpl {
   external ReferenceJsImpl get ref;
-  external void set ref(ReferenceJsImpl r);
+  external set ref(ReferenceJsImpl r);
   external QueryJsImpl endAt(value, [String key]);
   external QueryJsImpl equalTo(value, [String key]);
   external bool isEqual(QueryJsImpl other);
@@ -81,9 +83,9 @@ abstract class QueryJsImpl {
 @JS('DataSnapshot')
 abstract class DataSnapshotJsImpl {
   external String get key;
-  external void set key(String s);
+  external set key(String s);
   external ReferenceJsImpl get ref;
-  external void set ref(ReferenceJsImpl r);
+  external set ref(ReferenceJsImpl r);
   external DataSnapshotJsImpl child(String path);
   external bool exists();
   external dynamic exportVal();

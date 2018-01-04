@@ -64,7 +64,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   static final _expando = new Expando<DatabaseReference>();
 
   /// The last part of the current path.
-  /// It is [null] in case of root DatabaseReference.
+  /// It is `null` in case of root DatabaseReference.
   String get key => jsObject.key;
 
   /// The parent location of a DatabaseReference.
@@ -121,7 +121,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
 
   /// Sets a priority for data at actual database location.
   ///
-  /// The [priority] must be a [String], [num] or [null], or the error is thrown.
+  /// The [priority] must be a [String], [num] or `null`, or the error is thrown.
   Future setPriority(priority) =>
       handleThenable(jsObject.setPriority(priority));
 
@@ -131,7 +131,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// Like [set()] but also specifies the priority.
   ///
   /// The [newVal] must be a Dart basic type or the error is thrown.
-  /// The [newPriority] must be a [String], [num] or [null], or the error
+  /// The [newPriority] must be a [String], [num] or `null`, or the error
   /// is thrown.
   Future setWithPriority(newVal, newPriority) =>
       handleThenable(jsObject.setWithPriority(jsify(newVal), newPriority));
@@ -155,7 +155,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// The returned value from [transactionUpdate] function must be a Dart basic
   /// type or the error is thrown.
   ///
-  /// Set [applyLocally] to [false] to not see intermediate states.
+  /// Set [applyLocally] to `false` to not see intermediate states.
   Future<Transaction> transaction(Func1 transactionUpdate,
       [bool applyLocally = true]) {
     Completer<Transaction> c = new Completer<Transaction>();
@@ -259,7 +259,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// Returns a Query with the ending point [value]. The ending point
   /// is inclusive.
   ///
-  /// The [value] must be a [num], [String], [bool], or [null], or the error
+  /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
   Query endAt(value, [String key]) => new Query.fromJsObject(
@@ -267,13 +267,13 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Returns a Query which includes children which match the specified [value].
   ///
-  /// The [value] must be a [num], [String], [bool], or [null], or the error
+  /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
   Query equalTo(value, [String key]) => new Query.fromJsObject(
       key == null ? jsObject.equalTo(value) : jsObject.equalTo(value, key));
 
-  /// Returns [true] if the current and [other] queries are equal - they
+  /// Returns `true` if the current and [other] queries are equal - they
   /// represent the exactly same location, have the same query parameters,
   /// and are from the same instance of [App].
   /// Equivalent queries share the same sort order, limits, starting
@@ -345,7 +345,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// Returns a Query with the starting point [value]. The starting point
   /// is inclusive.
   ///
-  /// The [value] must be a [num], [String], [bool], or [null], or the error
+  /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
   Query startAt(value, [String key]) => new Query.fromJsObject(
@@ -388,7 +388,7 @@ class DataSnapshot
   DataSnapshot child(String path) =>
       DataSnapshot.getInstance(jsObject.child(path));
 
-  /// Returns [true] if this DataSnapshot contains any data.
+  /// Returns `true` if this DataSnapshot contains any data.
   bool exists() => jsObject.exists();
 
   /// Exports the contents of the DataSnapshot as a Dart object.
@@ -404,10 +404,10 @@ class DataSnapshot
   /// Returns priority for data in this DataSnapshot.
   dynamic getPriority() => jsObject.getPriority();
 
-  /// Returns [true] if the specified child [path] has data.
+  /// Returns `true` if the specified child [path] has data.
   bool hasChild(String path) => jsObject.hasChild(path);
 
-  /// Returns [true] if this DataSnapshot has any children.
+  /// Returns `true` if this DataSnapshot has any children.
   bool hasChildren() => jsObject.hasChildren();
 
   /// Returns the number of child properties for this DataSnapshot.
@@ -447,7 +447,7 @@ class OnDisconnect
   /// and [priority] when the client is disconnected.
   ///
   /// The [value] must be a Dart basic type or the error is thrown.
-  /// The [priority] must be a [String], [num] or [null], or the error is thrown.
+  /// The [priority] must be a [String], [num] or `null`, or the error is thrown.
   Future setWithPriority(value, priority) =>
       handleThenable(jsObject.setWithPriority(jsify(value), priority));
 

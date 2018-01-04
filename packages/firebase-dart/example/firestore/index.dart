@@ -61,7 +61,7 @@ class MessagesApp {
 
   showMessages() {
     this.ref.orderBy("createdAt").onSnapshot.listen((querySnapshot) {
-      querySnapshot.docChanges.forEach((change) {
+      for (var change in querySnapshot.docChanges) {
         var docSnapshot = change.doc;
         switch (change.type) {
           case "added":
@@ -74,7 +74,7 @@ class MessagesApp {
             _modifyItemView(docSnapshot);
             break;
         }
-      });
+      }
     });
   }
 

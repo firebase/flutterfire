@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, comment_references
+
 @JS('firebase')
 library firebase.firebase_interop;
 
@@ -106,13 +108,13 @@ abstract class ThenableJsImpl<T> {
 @JS()
 abstract class FirebaseError {
   external String get code;
-  external void set code(String s);
+  external set code(String s);
   external String get message;
-  external void set message(String s);
+  external set message(String s);
   external String get name;
-  external void set name(String s);
+  external set name(String s);
   external String get stack;
-  external void set stack(String s);
+  external set stack(String s);
 }
 
 /// A structure for [User]'s user profile.
@@ -120,9 +122,9 @@ abstract class FirebaseError {
 @anonymous
 class UserProfile {
   external String get displayName;
-  external void set displayName(String s);
+  external set displayName(String s);
   external String get photoURL;
-  external void set photoURL(String s);
+  external set photoURL(String s);
 
   external factory UserProfile({String displayName, String photoURL});
 }
@@ -132,15 +134,15 @@ class UserProfile {
 @anonymous
 class FirebaseOptions {
   external String get apiKey;
-  external void set apiKey(String s);
+  external set apiKey(String s);
   external String get authDomain;
-  external void set authDomain(String s);
+  external set authDomain(String s);
   external String get databaseURL;
-  external void set databaseURL(String s);
+  external set databaseURL(String s);
   external String get projectId;
-  external void set projectId(String s);
+  external set projectId(String s);
   external String get storageBucket;
-  external void set storageBucket(String s);
+  external set storageBucket(String s);
 
   external factory FirebaseOptions(
       {String apiKey,

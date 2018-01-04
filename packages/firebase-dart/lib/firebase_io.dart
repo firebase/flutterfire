@@ -75,7 +75,7 @@ class FirebaseClient {
     var streamedResponse = await _client.send(request);
     var response = await Response.fromStream(streamedResponse);
 
-    var bodyJson;
+    Object bodyJson;
     try {
       bodyJson = JSON.decode(response.body);
     } on FormatException {

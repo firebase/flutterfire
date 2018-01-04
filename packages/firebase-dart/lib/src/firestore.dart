@@ -93,11 +93,10 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   Future runTransaction(updateFunction(Transaction transaction)) {
     var updateFunctionWrap = allowInterop((transaction) =>
         handleFutureWithMapper(
-            updateFunction(Transaction.getInstance(transaction)),
-            (v) => jsify(v)));
+            updateFunction(Transaction.getInstance(transaction)), jsify));
 
     return handleThenableWithMapper(
-        jsObject.runTransaction(updateFunctionWrap), (d) => dartify(d));
+        jsObject.runTransaction(updateFunctionWrap), dartify);
   }
 
   /// Sets the verbosity of Cloud Firestore logs.
@@ -325,7 +324,7 @@ class DocumentReference
 
       var errorWrapper = allowInterop((e) => controller.addError(e));
 
-      var onSnapshotUnsubscribe;
+      ZoneCallback onSnapshotUnsubscribe;
 
       void startListen() {
         onSnapshotUnsubscribe = (options != null)
@@ -480,7 +479,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
       var errorWrapper = allowInterop((e) => controller.addError(e));
 
-      var onSnapshotUnsubscribe;
+      ZoneCallback onSnapshotUnsubscribe;
 
       void startListen() {
         onSnapshotUnsubscribe = (options != null)
@@ -581,7 +580,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
     List<dynamic> args = (snapshot != null)
         ? [snapshot.jsObject]
-        : fieldValues.map((f) => jsify(f)).toList();
+        : fieldValues.map(jsify).toList();
     return callMethod(jsObject, method, args);
   }
 }
@@ -767,7 +766,8 @@ class QuerySnapshot
   /// has local modifications.
   firestore_interop.SnapshotMetadata get metadata => jsObject.metadata;
 
-  /// The [Query] you called get or [onSnapshot].
+  /// The [Query] you called [Query.get] or [Query.onSnapshot] on to get the
+  /// [QuerySnapshot].
   Query get query => new Query.fromJsObject(jsObject.query);
 
   /// The number of documents.

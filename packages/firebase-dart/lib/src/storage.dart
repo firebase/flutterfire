@@ -77,7 +77,7 @@ class StorageReference
   String get name => jsObject.name;
 
   /// The reference to the parent location of this reference.
-  /// It is [null] in case of root StorageReference.
+  /// It is `null` in case of root StorageReference.
   StorageReference get parent => StorageReference.getInstance(jsObject.parent);
 
   /// The reference to the root of this storage reference's bucket.
@@ -240,7 +240,7 @@ abstract class _UploadMetadataBase<
     extends _SettableMetadataBase<T> {
   /// The Base64-encoded MD5 hash for the object being uploaded.
   String get md5Hash => jsObject.md5Hash;
-  void set md5Hash(String s) {
+  set md5Hash(String s) {
     jsObject.md5Hash = s;
   }
 
@@ -258,10 +258,8 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
 
   /// Returns the UploadTaskSnapshot when the upload successfully completes.
   Future<UploadTaskSnapshot> get future {
-    if (_future == null) {
-      _future =
-          handleThenableWithMapper(jsObject, UploadTaskSnapshot.getInstance);
-    }
+    _future ??=
+        handleThenableWithMapper(jsObject, UploadTaskSnapshot.getInstance);
     return _future;
   }
 
@@ -284,7 +282,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
   /// Returns [:true:] if it had an effect.
   bool cancel() => jsObject.cancel();
 
-  var _onStateChangedUnsubscribe;
+  ZoneCallback _onStateChangedUnsubscribe;
   StreamController<UploadTaskSnapshot> _changeController;
 
   /// Stream for upload task state changed event.
@@ -420,38 +418,38 @@ abstract class _SettableMetadataBase<
     extends JsObjectWrapper<T> {
   /// Served as the 'Cache-Control' header on object download.
   String get cacheControl => jsObject.cacheControl;
-  void set cacheControl(String s) {
+  set cacheControl(String s) {
     jsObject.cacheControl = s;
   }
 
   /// Served as the 'Content-Disposition' header on object download.
   String get contentDisposition => jsObject.contentDisposition;
-  void set contentDisposition(String s) {
+  set contentDisposition(String s) {
     jsObject.contentDisposition = s;
   }
 
   /// Served as the 'Content-Encoding' header on object download.
   String get contentEncoding => jsObject.contentEncoding;
-  void set contentEncoding(String s) {
+  set contentEncoding(String s) {
     jsObject.contentEncoding = s;
   }
 
   /// Served as the 'Content-Language' header on object download.
   String get contentLanguage => jsObject.contentLanguage;
-  void set contentLanguage(String s) {
+  set contentLanguage(String s) {
     jsObject.contentLanguage = s;
   }
 
   /// Served as the 'Content-Type' header on object download.
   String get contentType => jsObject.contentType;
-  void set contentType(String s) {
+  set contentType(String s) {
     jsObject.contentType = s;
   }
 
   /// Additional user-defined custom metadata.
   Map<String, String> get customMetadata =>
       dartify(jsObject.customMetadata) as Map<String, String>;
-  void set customMetadata(Map<String, String> m) {
+  set customMetadata(Map<String, String> m) {
     jsObject.customMetadata = jsify(m);
   }
 

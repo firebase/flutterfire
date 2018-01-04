@@ -628,7 +628,7 @@ void main() {
       });
 
       test("onSnapshot", () async {
-        var subscription;
+        StreamSubscription subscription;
 
         subscription = ref.onSnapshot.listen((snapshot) {
           expect(snapshot, isNotNull);
@@ -646,12 +646,12 @@ void main() {
 
       test("onSnapshot view changes", () async {
         ref.onSnapshot.listen((snapshot) {
-          snapshot.docChanges.forEach((change) {
+          for (var change in snapshot.docChanges) {
             if (change.type == "added") {
               expect(change.doc.id,
                   anyOf("message1", "message2", "message3", "message4"));
             }
-          });
+          }
         });
       });
 

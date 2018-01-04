@@ -115,7 +115,7 @@ void main() {
       test("empty push and set", () async {
         var childRef = ref.push();
         expect(childRef.key, isNotNull);
-        childRef.set({"text": "ahoj"});
+        await childRef.set({"text": "ahoj"});
 
         var event = await childRef.once("value");
         expect(event.snapshot.val()["text"], "ahoj");
@@ -127,7 +127,7 @@ void main() {
 
       test("transaction", () async {
         var childRef = ref.child("todos");
-        childRef.set("Cooking");
+        await childRef.set("Cooking");
 
         await childRef
             .transaction((currentValue) => "$currentValue delicious dinner!");
@@ -140,6 +140,7 @@ void main() {
 
       test("onValue", () async {
         var childRef = ref.child("todos");
+        // ignore: unawaited_futures
         childRef.set(["Programming", "Cooking", "Walking with dog"]);
 
         var subscription = childRef.onValue.listen(expectAsync1((event) {
@@ -185,7 +186,7 @@ void main() {
           expect(val, isNot("Cooking"));
         }, count: 1));
 
-        childRef.child(childKey).remove();
+        await childRef.child(childKey).remove();
         await subscription.cancel();
       });
 
@@ -202,15 +203,18 @@ void main() {
           expect(val, isNot("Cooking"));
         }, count: 1));
 
-        childRef.child(childKey).set("Programming a Firebase lib");
+        await childRef.child(childKey).set("Programming a Firebase lib");
         await subscription.cancel();
       });
 
       test("onChildMoved", () async {
         var childRef = ref.child("todos");
         var childPushRef = childRef.push("Programming");
+        // ignore: unawaited_futures
         childPushRef.setPriority(5);
+        // ignore: unawaited_futures
         childRef.push("Cooking").setPriority(10);
+        // ignore: unawaited_futures
         childRef.push("Walking with dog").setPriority(15);
 
         var subscription = childRef
@@ -222,6 +226,7 @@ void main() {
               expect(val, isNot("Cooking"));
             }, count: 1));
 
+        // ignore: unawaited_futures
         childPushRef.setPriority(100);
         await subscription.cancel();
       });
@@ -359,10 +364,10 @@ void main() {
 
       test("orderByKey", () async {
         var childRef = ref.child("flowers");
-        childRef.child("one").set("rose");
-        childRef.child("two").set("tulip");
-        childRef.child("three").set("chicory");
-        childRef.child("four").set("sunflower");
+        await childRef.child("one").set("rose");
+        await childRef.child("two").set("tulip");
+        await childRef.child("three").set("chicory");
+        await childRef.child("four").set("sunflower");
 
         var event = await childRef.orderByKey().once("value");
         var flowers = [];
@@ -412,9 +417,13 @@ void main() {
 
       test("orderByPriority", () async {
         var childRef = ref.child("people");
-        childRef.child("one").setWithPriority({"name": "Alex", "age": 27}, 10);
-        childRef.child("two").setWithPriority({"name": "Andrew", "age": 43}, 5);
-        childRef
+        await childRef
+            .child("one")
+            .setWithPriority({"name": "Alex", "age": 27}, 10);
+        await childRef
+            .child("two")
+            .setWithPriority({"name": "Andrew", "age": 43}, 5);
+        await childRef
             .child("three")
             .setWithPriority({"name": "James", "age": 12}, 700);
 
@@ -431,11 +440,13 @@ void main() {
 
       test("set with priority", () async {
         var childRef = ref.child("people");
-        childRef.child("one").setWithPriority({"name": "Alex", "age": 27}, 1.0);
-        childRef
+        await childRef
+            .child("one")
+            .setWithPriority({"name": "Alex", "age": 27}, 1.0);
+        await childRef
             .child("two")
             .setWithPriority({"name": "Andrew", "age": 43}, "A");
-        childRef
+        await childRef
             .child("three")
             .setWithPriority({"name": "James", "age": 12}, null);
 

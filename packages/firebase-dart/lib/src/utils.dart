@@ -35,8 +35,8 @@ dynamic jsify(Object dartObject) {
 dynamic callMethod(Object jsObject, String method, List<dynamic> args) =>
     util.callMethod(jsObject, method, args);
 
-/// Returns [:true:] if the [value] is a very basic built-in type - e.g.
-/// [null], [num], [bool] or [String]. It returns [:false:] in the other case.
+/// Returns `true` if the [value] is a very basic built-in type - e.g.
+/// `null`, [num], [bool] or [String]. It returns `false` in the other case.
 bool _isBasicType(value) {
   if (value == null || value is num || value is bool || value is String) {
     return true;
@@ -44,7 +44,7 @@ bool _isBasicType(value) {
   return false;
 }
 
-/// Handles the [Thenable] object.
+/// Handles the [ThenableJsImpl] object.
 Future<T> handleThenable<T>(ThenableJsImpl<T> thenable) {
   var completer = new Completer<T>();
 
@@ -54,7 +54,7 @@ Future<T> handleThenable<T>(ThenableJsImpl<T> thenable) {
   return completer.future;
 }
 
-/// Handles the [Thenable] object with the provided [mapper] function.
+/// Handles the [ThenableJsImpl] object with the provided [mapper] function.
 Future<S> handleThenableWithMapper<T, S>(
     ThenableJsImpl<T> thenable, Func1<T, S> mapper) {
   var completer = new Completer<S>();

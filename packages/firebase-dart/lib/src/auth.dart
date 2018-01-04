@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:async';
 
 import 'package:func/func.dart';
@@ -94,7 +96,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   /// Returns a JWT token used to identify the user to a Firebase service.
   ///
   /// It forces refresh regardless of token expiration if [forceRefresh]
-  /// parameter is [true].
+  /// parameter is `true`.
   ///
   /// This method is **DEPRECATED**. Use [getIdToken] instead.
   @Deprecated('Use `getIdToken` instead.')
@@ -107,7 +109,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   /// refresh the token and return a new one.
   ///
   /// It forces refresh regardless of token expiration if [forceRefresh]
-  /// parameter is [true].
+  /// parameter is `true`.
   Future<String> getIdToken([bool forceRefresh = false]) =>
       handleThenable(jsObject.getIdToken(forceRefresh));
 
@@ -264,7 +266,7 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   /// popup/redirect operations provided the specified providers support
   /// localization with the language code specified.
   String get languageCode => jsObject.languageCode;
-  void set languageCode(String s) {
+  set languageCode(String s) {
     jsObject.languageCode = s;
   }
 

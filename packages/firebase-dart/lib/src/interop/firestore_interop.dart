@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, comment_references
+
 @JS('firebase.firestore')
 library firebase.firestore_interop;
 
@@ -12,7 +14,7 @@ import 'firebase_interop.dart';
 @JS("Firestore")
 abstract class FirestoreJsImpl {
   external AppJsImpl get app;
-  external void set app(AppJsImpl a);
+  external set app(AppJsImpl a);
   external WriteBatchJsImpl batch();
   external CollectionReferenceJsImpl collection(String collectionPath);
   external DocumentReferenceJsImpl doc(String documentPath);

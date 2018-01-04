@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, comment_references
+
 @JS('firebase.auth')
 library firebase.auth_interop;
 
@@ -22,7 +24,7 @@ abstract class AuthJsImpl {
   external PromiseJsImpl<List<String>> fetchProvidersForEmail(String email);
   external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult();
   external String get languageCode;
-  external void set languageCode(String s);
+  external set languageCode(String s);
   external Func0 onAuthStateChanged(nextOrObserver,
       [Func1 opt_error, Func0 opt_completed]);
   external Func0 onIdTokenChanged(nextOrObserver,
@@ -191,9 +193,9 @@ abstract class UserMetadata {
 @JS('Error')
 abstract class AuthError {
   external String get code;
-  external void set code(String s);
+  external set code(String s);
   external String get message;
-  external void set message(String s);
+  external set message(String s);
 }
 
 @JS()
@@ -229,13 +231,13 @@ class ActionCodeEmail {
 @anonymous
 class ActionCodeSettings {
   external String get url;
-  external void set url(String s);
+  external set url(String s);
   external IosSettings get iOS;
-  external void set iOS(IosSettings i);
+  external set iOS(IosSettings i);
   external AndroidSettings get android;
-  external void set android(AndroidSettings a);
+  external set android(AndroidSettings a);
   external bool get handleCodeInApp;
-  external void set handleCodeInApp(bool b);
+  external set handleCodeInApp(bool b);
   external factory ActionCodeSettings(
       {String url,
       IosSettings iOS,
@@ -251,7 +253,7 @@ class ActionCodeSettings {
 @anonymous
 class IosSettings {
   external String get bundleId;
-  external void set bundleId(String s);
+  external set bundleId(String s);
   external factory IosSettings({String bundleId});
 }
 
@@ -272,11 +274,11 @@ class IosSettings {
 @anonymous
 class AndroidSettings {
   external String get packageName;
-  external void set packageName(String s);
+  external set packageName(String s);
   external String get minimumVersion;
-  external void set minimumVersion(String s);
+  external set minimumVersion(String s);
   external bool get installApp;
-  external void set installApp(bool b);
+  external set installApp(bool b);
   external factory AndroidSettings(
       {String packageName, String minimumVersion, bool installApp});
 }
