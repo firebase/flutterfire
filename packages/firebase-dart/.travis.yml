@@ -1,10 +1,10 @@
 language: dart
-sudo: false
+
 dart:
   - stable
-addons:
-  firefox: latest
+
 before_script: ./tool/travis_before_script.sh
+
 dart_task:
   - test: --platform vm
   - test: --platform firefox --concurrency=1
@@ -12,6 +12,7 @@ dart_task:
     install_dartium: true
   - dartanalyzer
   - dartfmt
+
 cache:
   directories:
     - $HOME/.pub-cache
