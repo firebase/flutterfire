@@ -1,7 +1,7 @@
 @TestOn('browser')
 import 'dart:async';
 import 'package:firebase/firebase.dart' as fb;
-import 'package:firebase/firebase_firestore.dart' as fs;
+import 'package:firebase/firestore.dart' as fs;
 import 'package:firebase/src/assets/assets.dart';
 import 'package:test/test.dart';
 import 'test_util.dart' show throwsToString, validDatePathComponent;

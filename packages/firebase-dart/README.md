@@ -33,7 +33,7 @@ Install the library from pub:
 
 ```yaml
 dependencies:
-  firebase: '^4.0.0'
+  firebase: '^4.3.0'
 ```
 
 ## Using this package with dart:html
@@ -56,10 +56,10 @@ Include the `firebase-firestore.js` script also:
 <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-firestore.js"></script>
 ```
 
-Firestore library is available in the `firebase_firestore.dart` and you can find an example
+Firestore library is available in the `firestore.dart` and you can find an example
 how to use this library in the [example/firestore](example/firestore).
 
-### Example
+### Real-time Database Example 
 
 ```dart
 import 'package:firebase/firebase.dart';
@@ -82,11 +82,11 @@ void main() {
 }
 ```
 
-### Example Firestore
+### Firestore Example
 
 ```dart
 import 'package:firebase/firebase.dart';
-import 'package:firebase/firebase_firestore.dart' as fs;
+import 'package:firebase/firestore.dart' as fs;
 
 void main() {
   initializeApp(

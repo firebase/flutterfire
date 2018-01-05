@@ -1,7 +1,7 @@
 import 'dart:html';
 
 import 'package:firebase/firebase.dart' as fb;
-import 'package:firebase/firebase_firestore.dart';
+import 'package:firebase/firestore.dart';
 import 'package:firebase/src/assets/assets.dart';
 
 main() async {
