@@ -323,9 +323,9 @@ void main() {
       await docRef.update(data: {"timestamp": fs.FieldValue.serverTimestamp()});
 
       var snapshot = await docRef.get();
-      var snapshotData = snapshot.data();
+      var timeStamp = snapshot.data()['timestamp'];
 
-      expect(snapshotData["timestamp"], isNotNull);
+      expect(timeStamp, new isInstanceOf<DateTime>());
     });
 
     test("update nested with dot notation", () async {
