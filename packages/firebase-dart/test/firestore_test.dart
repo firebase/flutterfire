@@ -4,7 +4,7 @@ import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase/firebase_firestore.dart' as fs;
 import 'package:firebase/src/assets/assets.dart';
 import 'package:test/test.dart';
-import 'test_util.dart';
+import 'test_util.dart' show throwsToString, validDatePathComponent;
 
 // Delete entire collection
 // <https://firebase.google.com/docs/firestore/manage-data/delete-data#collections>
@@ -52,6 +52,8 @@ Future _deleteQueryBatch(
 }
 
 void main() {
+  final testPath = 'pkg_firebase_test_${validDatePathComponent()}';
+
   fb.App app;
   fs.Firestore firestore;
 
@@ -89,7 +91,7 @@ void main() {
     fs.CollectionReference ref;
 
     setUp(() {
-      ref = firestore.collection("messages");
+      ref = firestore.collection(testPath);
     });
 
     tearDown(() async {
@@ -101,8 +103,8 @@ void main() {
 
     test("collection exists", () {
       expect(ref, isNotNull);
-      expect(ref.id, "messages");
-      expect(ref.path, "messages");
+      expect(ref.id, ref.path);
+      expect(ref.path, ref.path);
     });
 
     test("create document with auto generated ID", () {
@@ -117,7 +119,7 @@ void main() {
 
       expect(docRef, isNotNull);
       expect(docRef.id, "message1");
-      expect(docRef.path, "messages/message1");
+      expect(docRef.path, "${ref.path}/message1");
       expect(docRef.parent.id, ref.id);
     });
 
@@ -135,10 +137,10 @@ void main() {
     });
 
     test("collection path", () {
-      ref = firestore.collection("messages/message4/words");
-      expect(ref, isNotNull);
-      expect(ref.id, "words");
-      expect(ref.parent.id, "message4");
+      var childRef = firestore.collection("${ref.path}/message4/words");
+      expect(childRef, isNotNull);
+      expect(childRef.id, "words");
+      expect(childRef.parent.id, "message4");
     });
   });
 
@@ -146,7 +148,7 @@ void main() {
     fs.CollectionReference ref;
 
     setUp(() {
-      ref = firestore.collection("messages");
+      ref = firestore.collection(testPath);
     });
 
     tearDown(() async {
@@ -157,7 +159,6 @@ void main() {
     });
 
     test("delete collection", () async {
-      ref = firestore.collection("cities");
       var nycRef = ref.doc("NYC");
       await nycRef.set({"name": "NYC"});
       var sfRef = ref.doc("SF");
@@ -173,7 +174,6 @@ void main() {
     });
 
     test("delete", () async {
-      ref = firestore.collection("cities");
       var nycRef = ref.doc("NYC");
       await nycRef.set({"name": "NYC"});
 
@@ -185,7 +185,6 @@ void main() {
     });
 
     test("delete fields", () async {
-      ref = firestore.collection("cities");
       var nycRef = ref.doc("NYC");
       await nycRef.set({"name": "New York", "population": 1000});
 
@@ -478,7 +477,6 @@ void main() {
     });
 
     test("WriteBatch operations", () async {
-      ref = firestore.collection("cities");
       var nycRef = ref.doc("NYC");
       await nycRef.set({"name": "NYC"});
       var sfRef = ref.doc("SF");
@@ -508,7 +506,6 @@ void main() {
     });
 
     test("WriteBatch operations with FieldPath", () async {
-      ref = firestore.collection("cities");
       var sfRef = ref.doc("SF");
       await sfRef.set({
         "name": {"short": "SF"},
@@ -532,7 +529,6 @@ void main() {
     });
 
     test("WriteBatch with alternating fields as Strings and values", () async {
-      ref = firestore.collection("cities");
       var sfRef = ref.doc("SF");
       await sfRef.set({
         "name": {"short": "SF"},
@@ -560,7 +556,7 @@ void main() {
     fs.CollectionReference ref;
 
     setUp(() async {
-      ref = firestore.collection("messages");
+      ref = firestore.collection('$testPath/with/index');
 
       await _deleteCollection(firestore, ref, 4);
 
@@ -699,7 +695,7 @@ void main() {
       expect(snapshot.size, 1);
     });
 
-    // !!!IMPORTANT: You need to build index for lang and text under messages
+    // !!!IMPORTANT: You need to build index for lang and text under `index`
     // collection to be able to run these tests.
     // (You can do this in Firebase console)
     test("startAt", () async {
