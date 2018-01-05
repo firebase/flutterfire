@@ -1,10 +1,10 @@
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
-String validDatePath() => p.join('pkg_firebase_test',
-    validDatePathComponent());
+String validDatePath() => p.join('pkg_firebase_test', validDatePathComponent());
 
-String validDatePathComponent() => new DateTime.now().toUtc().toIso8601String().replaceAll('.', '_');
+String validDatePathComponent() =>
+    new DateTime.now().toUtc().toIso8601String().replaceAll('.', '_');
 
 printException(e) => print(
     [e.name, e.code, e.message, e.stack].where((s) => s != null).join('\n'));

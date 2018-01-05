@@ -36,7 +36,7 @@ DateTime dartifyDate(Object jsObject) {
 Object jsifyDate(Object dartObject) {
   if (dartObject is DateTime) {
     try {
-      return new JsDate(dartObject.toIso8601String());
+      return new JsDate(dartObject.millisecondsSinceEpoch);
     } on TypeError {
       // Likely running on Dartium – which converts JSDate to Datetime which
       // throws when using this interop feature.

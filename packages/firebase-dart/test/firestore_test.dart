@@ -244,9 +244,7 @@ void main() {
       expect(snapshotData["title"], "Ahoj");
     });
 
-    test("set various types", () async {
-      var docRef = ref.doc("message4");
-
+    group('validate types', () {
       var map = <String, Object>{
         "string": "Hello world!",
         "bool": true,
@@ -262,24 +260,36 @@ void main() {
             new DateTime.fromMillisecondsSinceEpoch(123456789, isUtc: true),
       };
 
-      await docRef.set(map);
-      var snapshot = await docRef.get();
-      var snapshotData = snapshot.data();
+      void expectSammeMoment(DateTime value, DateTime expected) {
+        expect(value.isAtSameMomentAs(expected), isTrue,
+            reason: [
+              value.toUtc(),
+              'should be the same moment as',
+              expected.toUtc(),
+              '– ignoring timezone.'
+            ].join(' '));
+      }
 
-      expect(snapshotData.keys, map.keys.toList()..sort(),
-          reason: 'Document keys are sorted.');
+      for (var key in map.keys) {
+        final value = map[key];
+        test(key, () async {
+          var ref = firestore.collection(testPath);
+          var docRef = ref.doc("types");
+          await docRef.set({'value': map[key]});
+          var snapshot = await docRef.get();
 
-      map.forEach((key, value) {
-        if (value is DateTime && value.isUtc) {
-          expect(value.isAtSameMomentAs(snapshotData[key]), isTrue,
-              reason: 'DateTime values are always local.');
-          expect(value.isAtSameMomentAs(snapshot.get(key)), isTrue,
-              reason: 'DateTime values are always local.');
-        } else {
-          expect(snapshotData[key], value);
-          expect(snapshot.get(key), value);
-        }
-      });
+          var snapshotDataValue = snapshot.data()['value'];
+          var snapshotGetValue = snapshot.get('value');
+
+          if (value is DateTime) {
+            expectSammeMoment(snapshotDataValue, value);
+            expectSammeMoment(snapshotGetValue, value);
+          } else {
+            expect(snapshotDataValue, value);
+            expect(snapshotGetValue, value);
+          }
+        });
+      }
     });
 
     test("get field", () async {
