@@ -8,25 +8,19 @@ import 'test_util.dart' show throwsToString, validDatePathComponent;
 
 // Delete entire collection
 // <https://firebase.google.com/docs/firestore/manage-data/delete-data#collections>
-Future _deleteCollection(
-    fs.Firestore db, fs.CollectionReference collectionRef, int batchSize) {
-  Completer completer = new Completer();
-
+Future _deleteCollection(fs.Firestore db, fs.CollectionReference collectionRef,
+    {int batchSize}) async {
+  batchSize ??= 4;
   var query = collectionRef.orderBy('__name__').limit(batchSize);
-  _deleteQueryBatch(db, query, batchSize, completer);
 
-  return completer.future;
-}
-
-Future _deleteQueryBatch(
-    fs.Firestore db, fs.Query query, int batchSize, Completer completer) async {
-  try {
+  int snapshotSize;
+  do {
     var snapshot = await query.get();
+    snapshotSize = snapshot.size;
 
     // When there are no documents left, we are done
-    if (snapshot.size == 0) {
-      completer.complete();
-      return;
+    if (snapshotSize == 0) {
+      break;
     }
 
     // Delete documents in a batch
@@ -34,21 +28,9 @@ Future _deleteQueryBatch(
     for (var doc in snapshot.docs) {
       batch.delete(doc.ref);
     }
+
     await batch.commit();
-
-    var numDeleted = snapshot.size;
-    if (numDeleted <= batchSize) {
-      completer.complete();
-      return;
-    }
-
-    // Recurse with delay, to avoid exploding the stack.
-    new Future.delayed(const Duration(milliseconds: 10),
-        () => _deleteQueryBatch(db, query, batchSize, completer));
-  } catch (e) {
-    print(e);
-    completer.completeError(e);
-  }
+  } while (snapshotSize > batchSize);
 }
 
 void main() {
@@ -96,7 +78,7 @@ void main() {
 
     tearDown(() async {
       if (ref != null) {
-        await _deleteCollection(firestore, ref, 4);
+        await _deleteCollection(firestore, ref);
         ref = null;
       }
     });
@@ -153,7 +135,7 @@ void main() {
 
     tearDown(() async {
       if (ref != null) {
-        await _deleteCollection(firestore, ref, 4);
+        await _deleteCollection(firestore, ref);
         ref = null;
       }
     });
@@ -166,7 +148,7 @@ void main() {
       var laRef = ref.doc("LA");
       await laRef.set({"name": "LA"});
 
-      await _deleteCollection(firestore, ref, 4);
+      await _deleteCollection(firestore, ref);
 
       var snapshot = await ref.get();
       expect(snapshot.empty, isTrue);
@@ -568,7 +550,7 @@ void main() {
     setUp(() async {
       ref = firestore.collection('$testPath/with/index');
 
-      await _deleteCollection(firestore, ref, 4);
+      await _deleteCollection(firestore, ref);
 
       await ref
           .doc("message1")
@@ -586,7 +568,7 @@ void main() {
 
     tearDown(() async {
       if (ref != null) {
-        await _deleteCollection(firestore, ref, 4);
+        await _deleteCollection(firestore, ref);
         ref = null;
       }
     });
