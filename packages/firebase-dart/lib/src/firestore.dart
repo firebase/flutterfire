@@ -736,7 +736,8 @@ class DocumentSnapshot
   ///
   /// The [fieldPath] is the String or [FieldPath] - the path
   /// (e.g. 'foo' or 'foo.bar') to a specific field.
-  dynamic get(/*String|FieldPath*/ fieldPath) => jsObject.get(fieldPath);
+  dynamic get(/*String|FieldPath*/ fieldPath) =>
+      dartify(jsObject.get(fieldPath));
 }
 
 /// A [QuerySnapshot] contains zero or more [DocumentSnapshot] objects

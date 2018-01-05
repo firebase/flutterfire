@@ -248,28 +248,39 @@ void main() {
     test("set various types", () async {
       var docRef = ref.doc("message4");
 
-      var map = {
-        "stringExample": "Hello world!",
-        "booleanExample": true,
-        "numberExample": 3.14159265,
-        "arrayExample": [5, true, "hello"],
-        "nullExample": null,
-        "mapExample": {
+      var map = <String, Object>{
+        "string": "Hello world!",
+        "bool": true,
+        "numm": 3.14159265,
+        "array": [5, true, "hello"],
+        "null": null,
+        "map": {
           "a": 5,
           "b": {"nested": "foo"}
-        }
+        },
+        "dateTime": new DateTime.fromMillisecondsSinceEpoch(123456789),
+        "dateTimeUtc":
+            new DateTime.fromMillisecondsSinceEpoch(123456789, isUtc: true),
       };
 
       await docRef.set(map);
       var snapshot = await docRef.get();
       var snapshotData = snapshot.data();
 
-      expect(snapshotData["stringExample"], map["stringExample"]);
-      expect(snapshotData["booleanExample"], map["booleanExample"]);
-      expect(snapshotData["numberExample"], map["numberExample"]);
-      expect(snapshotData["arrayExample"], map["arrayExample"]);
-      expect(snapshotData["nullExample"], map["nullExample"]);
-      expect(snapshotData["mapExample"], map["mapExample"]);
+      expect(snapshotData.keys, map.keys.toList()..sort(),
+          reason: 'Document keys are sorted.');
+
+      map.forEach((key, value) {
+        if (value is DateTime && value.isUtc) {
+          expect(value.isAtSameMomentAs(snapshotData[key]), isTrue,
+              reason: 'DateTime values are always local.');
+          expect(value.isAtSameMomentAs(snapshot.get(key)), isTrue,
+              reason: 'DateTime values are always local.');
+        } else {
+          expect(snapshotData[key], value);
+          expect(snapshot.get(key), value);
+        }
+      });
     });
 
     test("get field", () async {

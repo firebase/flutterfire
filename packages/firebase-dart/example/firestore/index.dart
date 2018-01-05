@@ -44,10 +44,7 @@ class MessagesApp {
 
       if (newMessage.value.trim().isNotEmpty) {
         // store also created at for purposes of ordering
-        var map = {
-          "text": newMessage.value,
-          "createdAt": new DateTime.now().toIso8601String()
-        };
+        var map = {"text": newMessage.value, "createdAt": new DateTime.now()};
 
         try {
           newMessage.value = "";
