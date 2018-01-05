@@ -14,11 +14,6 @@ dynamic dartify(Object jsObject) {
     return jsObject;
   }
 
-  // if already a date time good
-  if (jsObject is DateTime) {
-    return jsObject;
-  }
-
   // Handle list
   if (jsObject is Iterable) {
     return jsObject.map(dartify).toList();

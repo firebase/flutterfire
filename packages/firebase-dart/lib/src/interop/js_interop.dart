@@ -19,6 +19,13 @@ class JsDate {
 }
 
 DateTime dartifyDate(Object jsObject) {
+  // if already a date time good
+  if (jsObject is DateTime) {
+    // Likely running on Dartium – which converts JSDate - Datetime
+    // Work-around until Dartium support is dropped
+    return jsObject;
+  }
+
   if (util.hasProperty(jsObject, "toDateString")) {
     var date = jsObject as JsDate;
     return new DateTime.fromMillisecondsSinceEpoch(date.getTime());
@@ -31,8 +38,9 @@ Object jsifyDate(Object dartObject) {
     try {
       return new JsDate(dartObject.toIso8601String());
     } on TypeError {
-// Likely running on Dartium.
-// Work-around until Dartium support is dropped
+      // Likely running on Dartium – which converts JSDate to Datetime which
+      // throws when using this interop feature.
+      // Work-around until Dartium support is dropped
       return dartObject;
     }
   }
