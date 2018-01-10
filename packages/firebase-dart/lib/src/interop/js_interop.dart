@@ -27,8 +27,20 @@ DateTime dartifyDate(Object jsObject) {
   }
 
   if (util.hasProperty(jsObject, "toDateString")) {
-    var date = jsObject as JsDate;
-    return new DateTime.fromMillisecondsSinceEpoch(date.getTime());
+    try {
+      var date = jsObject as JsDate;
+      return new DateTime.fromMillisecondsSinceEpoch(date.getTime());
+    } on NoSuchMethodError {
+      // so it's not a JsDate!
+      return null;
+    } on String catch (e) {
+      if (e == 'property is not a function') {
+        // Handling Dartium behavior – which throws this String - weird
+        // Work-around until Dartium support is dropped
+        return null;
+      }
+      rethrow;
+    }
   }
   return null;
 }

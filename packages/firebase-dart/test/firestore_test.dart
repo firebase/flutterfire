@@ -235,7 +235,8 @@ void main() {
         "null": null,
         "map": {
           "a": 5,
-          "b": {"nested": "foo"}
+          "b": {"nested": "foo"},
+          'toDateString': 'Regression for Date type detection'
         },
         "dateTime": new DateTime.fromMillisecondsSinceEpoch(123456789),
         "dateTimeUtc":
