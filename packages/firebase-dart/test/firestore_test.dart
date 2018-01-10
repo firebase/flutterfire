@@ -261,7 +261,13 @@ void main() {
         "dateTime": new DateTime.fromMillisecondsSinceEpoch(123456789),
         "dateTimeUtc":
             new DateTime.fromMillisecondsSinceEpoch(123456789, isUtc: true),
+        'geoPoint': new fs.GeoPoint(43.3247, -95.1500)
       };
+
+      void expectSameGeo(fs.GeoPoint value, fs.GeoPoint expected) {
+        expect(value.latitude, expected.latitude);
+        expect(value.longitude, expected.longitude);
+      }
 
       void expectSameMoment(DateTime value, DateTime expected) {
         expect(value.isAtSameMomentAs(expected), isTrue,
@@ -287,6 +293,11 @@ void main() {
           if (value is DateTime) {
             expectSameMoment(snapshotDataValue, value);
             expectSameMoment(snapshotGetValue, value);
+          } else if (key == 'geoPoint') {
+            // NOTE: `is` checks on interop objects always return true
+            // TODO(kevmoo): consider using a Dart wrapper around GeoPoint?
+            expectSameGeo(snapshotDataValue, value);
+            expectSameGeo(snapshotGetValue, value);
           } else {
             expect(snapshotDataValue, value);
             expect(snapshotGetValue, value);

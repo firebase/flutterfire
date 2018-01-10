@@ -91,11 +91,9 @@ class GeoPoint {
 
   /// The latitude of this GeoPoint instance.
   external num get latitude;
-  external set latitude(num l);
 
   /// The longitude of this GeoPoint instance.
   external num get longitude;
-  external set longitude(num l);
 }
 
 @JS("Blob")

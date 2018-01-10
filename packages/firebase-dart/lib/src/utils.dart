@@ -34,6 +34,13 @@ dynamic dartify(Object jsObject) {
     return DocumentReference.getInstance(jsObject);
   }
 
+  if (util.hasProperty(jsObject, 'latitude') &&
+      util.hasProperty(jsObject, 'longitude')) {
+    // This is likely a GeoPoint – return it as-is
+    // TODO(kevmoo): figure out if there is a more robust way to detect
+    return jsObject as GeoPoint;
+  }
+
   // Assume a map then...
   var keys = js.objectKeys(jsObject);
   var map = <String, dynamic>{};
