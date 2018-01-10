@@ -1,3 +1,7 @@
+## 4.3.1
+
+* Support `DocumentReference` as a field value in a document.
+
 ## 4.3.0
 * Upgraded to Firebase JS API `4.8.1`.
 * Added `metadata` property to `User`.

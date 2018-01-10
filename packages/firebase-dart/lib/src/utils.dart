@@ -4,6 +4,8 @@ import 'package:func/func.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
 
+import 'firestore.dart';
+
 import 'interop/firebase_interop.dart' show ThenableJsImpl, PromiseJsImpl;
 import 'interop/firestore_interop.dart' show FieldValue;
 import 'interop/js_interop.dart' as js;
@@ -22,6 +24,14 @@ dynamic dartify(Object jsObject) {
   var jsDate = js.dartifyDate(jsObject);
   if (jsDate != null) {
     return jsDate;
+  }
+
+  if (util.hasProperty(jsObject, 'firestore') &&
+      util.hasProperty(jsObject, 'id') &&
+      util.hasProperty(jsObject, 'parent')) {
+    // This is likely a document reference – at least we hope
+    // TODO(kevmoo): figure out if there is a more robust way to detect
+    return DocumentReference.getInstance(jsObject);
   }
 
   // Assume a map then...
@@ -58,6 +68,10 @@ dynamic jsify(Object dartObject) {
 
   if (dartObject is FieldValue) {
     return dartObject;
+  }
+
+  if (dartObject is DocumentReference) {
+    return dartObject.jsObject;
   }
 
   return util.jsify(dartObject);

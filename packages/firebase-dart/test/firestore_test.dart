@@ -226,7 +226,27 @@ void main() {
       expect(snapshotData["title"], "Ahoj");
     });
 
-    group('validate types', () {
+    test('reference values', () async {
+      var ref = firestore.collection(testPath);
+      var mapValue = new DateTime.now().toIso8601String();
+      var documentToReference = ref.doc("reference_target");
+      await documentToReference.set({'value': mapValue});
+
+      var docWithReference = ref.doc('doc');
+      await docWithReference.set({'ref': documentToReference});
+
+      var snapshot = await docWithReference.get();
+
+      Future validateValue(fs.DocumentReference ref) async {
+        var mySnap = await ref.get();
+        expect(mySnap.get('value'), mapValue);
+      }
+
+      await validateValue(snapshot.data()['ref'] as fs.DocumentReference);
+      await validateValue(snapshot.get('ref') as fs.DocumentReference);
+    });
+
+    group('validate simple types', () {
       var map = <String, Object>{
         "string": "Hello world!",
         "bool": true,
