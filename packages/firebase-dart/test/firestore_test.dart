@@ -230,7 +230,7 @@ void main() {
       var map = <String, Object>{
         "string": "Hello world!",
         "bool": true,
-        "numm": 3.14159265,
+        "num": 3.14159265,
         "array": [5, true, "hello"],
         "null": null,
         "map": {
@@ -243,7 +243,7 @@ void main() {
             new DateTime.fromMillisecondsSinceEpoch(123456789, isUtc: true),
       };
 
-      void expectSammeMoment(DateTime value, DateTime expected) {
+      void expectSameMoment(DateTime value, DateTime expected) {
         expect(value.isAtSameMomentAs(expected), isTrue,
             reason: [
               value.toUtc(),
@@ -265,8 +265,8 @@ void main() {
           var snapshotGetValue = snapshot.get('value');
 
           if (value is DateTime) {
-            expectSammeMoment(snapshotDataValue, value);
-            expectSammeMoment(snapshotGetValue, value);
+            expectSameMoment(snapshotDataValue, value);
+            expectSameMoment(snapshotGetValue, value);
           } else {
             expect(snapshotDataValue, value);
             expect(snapshotGetValue, value);
