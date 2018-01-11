@@ -1,6 +1,6 @@
 ## 4.3.1
 
-* Support `DocumentReference` as a field value in a document.
+* Support `DocumentReference` and `GeoPoint` as a field values in a document.
 
 ## 4.3.0
 * Upgraded to Firebase JS API `4.8.1`.
