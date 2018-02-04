@@ -16,11 +16,13 @@ You can find more information on how to use Firebase on the
 
 Don't forget to setup correct **rules** for your
 [realtime database](https://firebase.google.com/docs/database/security/),
-[storage](https://firebase.google.com/docs/storage/security/) and/or [firestore](https://firebase.google.com/docs/firestore/security/get-started)
+[storage](https://firebase.google.com/docs/storage/security/) and/or 
+[firestore](https://firebase.google.com/docs/firestore/security/get-started)
 in the Firebase console. 
 
 If you want to use [Firestore](https://firebase.google.com/docs/firestore/quickstart), 
-you need to enable it in the Firebase console and include the [additional js script](#do-you-need-to-use-firestore).
+you need to enable it in the Firebase console and include the
+[additional js script](#do-you-need-to-use-firestore).
 
 Authentication also has to be enabled in the Firebase console.
 For more info, see the
@@ -115,7 +117,8 @@ This library also contains a dart:io client.
 
 Create an instance of `FirebaseClient` and then use the appropriate
 method (`GET`, `PUT`, `POST`, `DELETE` or `PATCH`).
-More info in the [official documentation](https://firebase.google.com/docs/reference/rest/database/).
+More info in the
+[official documentation](https://firebase.google.com/docs/reference/rest/database/).
 
 The dart:io client also supports authentication. See the documentation on how to get
 [auth credentials](https://firebase.google.com/docs/reference/rest/database/user-auth).
@@ -141,8 +144,9 @@ void main() {
 
 ## Examples
 
-You can find more examples on realtime database, auth, storage and firestore in the
-[example](https://github.com/firebase/firebase-dart/tree/master/example) folder.
+You can find more examples on realtime database, auth, storage and firestore in
+the [example](https://github.com/firebase/firebase-dart/tree/master/example)
+folder.
 
 ## Dart Dev Summit 2016 demo app
 
@@ -187,8 +191,8 @@ The following providers need to be enabled in Firebase console,
 ### Database tests and example
 
 Database tests and example need to have **public rules** to be able to read and
-write to database. Update your rules in Firebase console, `Database/Realtime Database/Rules`
-section to:
+write to database. Update your rules in Firebase console,
+`Database/Realtime Database/Rules` section to:
 
 ```json
 {
@@ -207,11 +211,12 @@ official
 
 ### Firestore tests and example
 
-To be able to run tests and example, Firestore needs to be enabled in the `Database/Cloud Firestore` section. 
+To be able to run tests and example, Firestore needs to be enabled in the 
+`Database/Cloud Firestore` section. 
 
 Firestore tests and example need to have **public rules** to be able to read and
-write to Firestore. Update your rules in Firebase console, `Database/Cloud Firestore/Rules`
-section to:
+write to Firestore. Update your rules in Firebase console,
+`Database/Cloud Firestore/Rules` section to:
 
 ```
 service cloud.firestore {
@@ -229,7 +234,8 @@ You can find more information on how to setup correct Firestore rules in the
 official
 [Firebase documentation](https://firebase.google.com/docs/firestore/security/get-started). 
 
-You also need to include the additional `firebase-firestore.js` script. See [more info](#do-you-need-to-use-firestore).
+You also need to include the additional `firebase-firestore.js` script.
+See [more info](#do-you-need-to-use-firestore).
 
 ### Storage tests and example
 
