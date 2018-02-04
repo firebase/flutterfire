@@ -74,6 +74,9 @@ class FieldPath {
   /// Returns a special sentinel FieldPath to refer to the ID of a document.
   /// It can be used in queries to sort or filter by the document ID.
   external static FieldPath documentId();
+
+  /// Returns `true` if this [FieldPath] is equal to the [other].
+  external bool isEqual(Object other);
 }
 
 /// An immutable object representing a geo point in Cloud Firestore.
@@ -94,6 +97,9 @@ class GeoPoint {
 
   /// The longitude of this GeoPoint instance.
   external num get longitude;
+
+  /// Returns `true` if this [GeoPoint] is equal to the provided [other].
+  external bool isEqual(Object other);
 }
 
 @JS("Blob")
@@ -163,6 +169,9 @@ abstract class FieldValue {
   /// Returns a sentinel used with [set()] or [update()] to include a
   /// server-generated timestamp in the written data.
   external static FieldValue serverTimestamp();
+
+  /// Returns `true` if this [FieldValue] is equal to the provided [other].
+  external bool isEqual(Object other);
 }
 
 @JS("Query")
@@ -281,7 +290,6 @@ abstract class Settings {
 /// Metadata about a snapshot, describing the state of the snapshot.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.SnapshotMetadata>.
-@anonymous
 @JS()
 abstract class SnapshotMetadata {
   /// [:true:] if the snapshot includes local writes (set() or update() calls)
@@ -300,7 +308,6 @@ abstract class SnapshotMetadata {
   /// the client has received up-to-date data from the backend.
   external bool get fromCache;
   external set fromCache(bool v);
-  external factory SnapshotMetadata({bool hasPendingWrites, bool fromCache});
 }
 
 /// Options for use with [DocumentReference.onMetadataChangesSnapshot()] to

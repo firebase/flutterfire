@@ -69,6 +69,38 @@ void main() {
     });
   });
 
+  group('equality', () {
+    test("GeoPoint", () {
+      var a = new fs.GeoPoint(1, 2);
+      var b = new fs.GeoPoint(1, 2);
+      expect(a.isEqual(b), isTrue);
+      expect(a.isEqual(a), isTrue);
+      expect(b.isEqual(a), isTrue);
+    });
+
+    test("FieldValue", () {
+      var a = fs.FieldValue.delete();
+      var b = fs.FieldValue.delete();
+      expect(a.isEqual(b), isTrue);
+      expect(a.isEqual(a), isTrue);
+      expect(b.isEqual(a), isTrue);
+
+      a = fs.FieldValue.serverTimestamp();
+      b = fs.FieldValue.serverTimestamp();
+      expect(a.isEqual(b), isTrue);
+      expect(a.isEqual(a), isTrue);
+      expect(b.isEqual(a), isTrue);
+    });
+
+    test("FieldPath", () {
+      var a = new fs.FieldPath('bob');
+      var b = new fs.FieldPath('bob');
+      expect(a.isEqual(b), isTrue);
+      expect(a.isEqual(a), isTrue);
+      expect(b.isEqual(a), isTrue);
+    });
+  });
+
   group("Collections and documents", () {
     fs.CollectionReference ref;
 
