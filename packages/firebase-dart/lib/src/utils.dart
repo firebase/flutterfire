@@ -41,6 +41,15 @@ dynamic dartify(Object jsObject) {
     return jsObject as GeoPoint;
   }
 
+  var proto = util.getProperty(jsObject, '__proto__');
+
+  if (util.hasProperty(proto, 'isEqual') &&
+      util.hasProperty(proto, 'toBase64')) {
+    // This is likely a GeoPoint – return it as-is
+    // TODO(kevmoo): figure out if there is a more robust way to detect
+    return jsObject as Blob;
+  }
+
   // Assume a map then...
   var keys = js.objectKeys(jsObject);
   var map = <String, dynamic>{};

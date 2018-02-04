@@ -1,6 +1,16 @@
-## 4.3.2
+## 4.4.0
 
 * Upgraded to Firebase JS API `4.9.1`.
+
+* **BREAKING** Firestore `Blob` is no longer wrapped. It is now just the raw
+  interop object.
+  
+  * The only practical change is the `fromUint8List` static function is now
+    `fromUint8Array` – since it maps to the source JS function.
+  * Usage of `Blob` for value storage was broken until this change, so a we're
+    not doing a major version update.
+
+* Added `isEqual` API to `Blob`, `GeoPoint`, `FieldValue`, and `FieldPath`. 
 
 ## 4.3.1
 

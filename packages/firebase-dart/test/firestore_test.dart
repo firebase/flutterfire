@@ -1,5 +1,7 @@
 @TestOn('browser')
 import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase/firestore.dart' as fs;
 import 'package:firebase/src/assets/assets.dart';
@@ -98,6 +100,18 @@ void main() {
       expect(a.isEqual(b), isTrue);
       expect(a.isEqual(a), isTrue);
       expect(b.isEqual(a), isTrue);
+    });
+
+    test("Blob", () {
+      var a = fs.Blob.fromBase64String('AQIDBA==');
+      var b = fs.Blob.fromBase64String('AQIDBA==');
+      expect(a.isEqual(b), isTrue);
+      expect(a.isEqual(a), isTrue);
+      expect(b.isEqual(a), isTrue);
+
+      var c = fs.Blob.fromUint8Array(new Uint8List.fromList([1, 2, 3, 4]));
+      expect(a.isEqual(c), isTrue);
+      expect(c.isEqual(a), isTrue);
     });
   });
 
@@ -293,7 +307,10 @@ void main() {
         "dateTime": new DateTime.fromMillisecondsSinceEpoch(123456789),
         "dateTimeUtc":
             new DateTime.fromMillisecondsSinceEpoch(123456789, isUtc: true),
-        'geoPoint': new fs.GeoPoint(43.3247, -95.1500)
+        'geoPoint': new fs.GeoPoint(43.3247, -95.1500),
+        'blob - base64': fs.Blob.fromBase64String('AQIDBA=='),
+        'blob - bytes':
+            fs.Blob.fromUint8Array(new Uint8List.fromList([1, 2, 3, 4])),
       };
 
       void expectSameGeo(fs.GeoPoint value, fs.GeoPoint expected) {
@@ -327,9 +344,12 @@ void main() {
             expectSameMoment(snapshotGetValue, value);
           } else if (key == 'geoPoint') {
             // NOTE: `is` checks on interop objects always return true
-            // TODO(kevmoo): consider using a Dart wrapper around GeoPoint?
             expectSameGeo(snapshotDataValue, value);
             expectSameGeo(snapshotGetValue, value);
+          } else if (key.startsWith('blob - ')) {
+            // NOTE: `is` checks on interop objects always return true
+            expect((snapshotDataValue as fs.Blob).isEqual(value), isTrue);
+            expect((snapshotGetValue as fs.Blob).isEqual(value), isTrue);
           } else {
             expect(snapshotDataValue, value);
             expect(snapshotGetValue, value);

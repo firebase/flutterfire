@@ -103,11 +103,14 @@ class GeoPoint {
 }
 
 @JS("Blob")
-abstract class BlobJsImpl {
-  external static BlobJsImpl fromBase64String(String base64);
-  external static BlobJsImpl fromUint8Array(Uint8List list);
+abstract class Blob {
+  external static Blob fromBase64String(String base64);
+  external static Blob fromUint8Array(Uint8List list);
   external String toBase64();
   external Uint8List toUint8Array();
+
+  /// Returns `true` if this [Blob] is equal to the provided [other].
+  external bool isEqual(Object other);
 }
 
 @JS("DocumentChange")

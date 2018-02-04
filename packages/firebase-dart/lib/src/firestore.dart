@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data' show Uint8List;
 
 import 'package:js/js.dart';
 
@@ -10,6 +9,7 @@ import 'utils.dart';
 
 export 'interop/firestore_interop.dart'
     show
+        Blob,
         FieldPath,
         FieldValue,
         GeoPoint,
@@ -116,29 +116,6 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   /// Value must not be null.
   void settings(firestore_interop.Settings settings) =>
       jsObject.settings(settings);
-}
-
-/// An immutable object representing a List of bytes.
-///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.Blob>.
-class Blob extends JsObjectWrapper<firestore_interop.BlobJsImpl> {
-  Blob.fromJsObject(firestore_interop.BlobJsImpl jsObject)
-      : super.fromJsObject(jsObject);
-
-  /// Creates a new Blob from the given [base64] string, converting it to bytes.
-  static Blob fromBase64String(String base64) => new Blob.fromJsObject(
-      firestore_interop.BlobJsImpl.fromBase64String(base64));
-
-  /// Creates a new Blob from the given Uint8List.
-  /// The [list] parameter must not be null.
-  static Blob fromUint8List(Uint8List list) =>
-      new Blob.fromJsObject(firestore_interop.BlobJsImpl.fromUint8Array(list));
-
-  /// Returns the bytes of this Blob as a Base64-encoded string.
-  String toBase64() => jsObject.toBase64();
-
-  /// Returns the bytes of this Blob in a new Uint8List.
-  Uint8List toUint8List() => jsObject.toUint8Array();
 }
 
 /// A write batch, used to perform multiple writes as a single atomic unit.
