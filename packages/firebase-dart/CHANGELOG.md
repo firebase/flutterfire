@@ -1,8 +1,13 @@
+## 4.3.2
+
+* Upgraded to Firebase JS API `4.9.1`.
+
 ## 4.3.1
 
 * Support `DocumentReference` and `GeoPoint` as a field values in a document.
 
 ## 4.3.0
+
 * Upgraded to Firebase JS API `4.8.1`.
 * Added `metadata` property to `User`.
 * Added `isNewUser` property to `AdditionalUserInfo`.
