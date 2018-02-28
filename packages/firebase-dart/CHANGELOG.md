@@ -1,6 +1,6 @@
 ## 4.4.0
 
-* Upgraded to Firebase JS API `4.9.1`.
+* Updated tested/documented Firebase JS API `4.10.1`.
 
 * **BREAKING** Firestore `Blob` is no longer wrapped. It is now just the raw
   interop object.
