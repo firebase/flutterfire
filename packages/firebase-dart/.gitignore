@@ -1,25 +1,13 @@
 # Files and directories created by pub
+.dart_tool/
 .packages
 .pub/
 build/
-packages
 pubspec.lock
-
-# Files created by dart2js
-*.dart.js
-*.part.js
-*.js.deps
-*.js.map
-*.info.json
 
 # Directory created by dartdoc
 doc/api/
 
-# JetBrains IDEs
-.idea/
-*.iml
-*.ipr
-*.iws
-
+# Files with private data. Used for development and testing
 lib/src/assets/config.json
 lib/src/assets/service_account.json
