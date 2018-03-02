@@ -5,17 +5,24 @@ import 'package:http/browser_client.dart' as http;
 
 Map<String, dynamic> _configVal;
 
-String get apiKey => _config['API_KEY'];
-String get authDomain => _config['AUTH_DOMAIN'];
-String get databaseUrl => _config['DATABASE_URL'];
-String get storageBucket => _config['STORAGE_BUCKET'];
-String get projectId => _config['PROJECT_ID'];
+String get apiKey => _getConfig('API_KEY');
+String get authDomain => _getConfig('AUTH_DOMAIN');
+String get databaseUrl => _getConfig('DATABASE_URL');
+String get storageBucket => _getConfig('STORAGE_BUCKET');
+String get projectId => _getConfig('PROJECT_ID');
 
-Map<String, dynamic> get _config {
-  if (_configVal != null) {
-    return _configVal;
+String _getConfig(String key) {
+  if (_configVal == null) {
+    throw new StateError('You must call config() first');
   }
-  throw new StateError('You must call config() first');
+
+  var value = _configVal[key];
+
+  if (value == null) {
+    throw new ArgumentError('`$key` is not configured in `config.json`.');
+  }
+
+  return value;
 }
 
 Future config() async {
