@@ -5,6 +5,7 @@ import 'auth.dart';
 import 'database.dart';
 import 'firestore.dart';
 import 'interop/firebase_interop.dart' as firebase;
+import 'messaging.dart';
 import 'storage.dart';
 
 export 'interop/firebase_interop.dart' show SDK_VERSION;
@@ -26,6 +27,7 @@ App initializeApp(
     String databaseURL,
     String projectId,
     String storageBucket,
+    String messagingSenderId,
     String name}) {
   name ??= _defaultAppName;
 
@@ -36,7 +38,8 @@ App initializeApp(
             authDomain: authDomain,
             databaseURL: databaseURL,
             projectId: projectId,
-            storageBucket: storageBucket),
+            storageBucket: storageBucket,
+            messagingSenderId: messagingSenderId),
         name));
   } catch (e) {
     if (_firebaseNotLoaded(e)) {
@@ -105,6 +108,13 @@ Firestore firestore([App app]) {
       (app != null) ? firebase.firestore(app.jsObject) : firebase.firestore();
 
   return Firestore.getInstance(jsObject);
+}
+
+Messaging messaging([App app]) {
+  var jsObject =
+      (app != null) ? firebase.messaging(app.jsObject) : firebase.messaging();
+
+  return Messaging.getInstance(jsObject);
 }
 
 /// Exception thrown when the firebase.js is not loaded.

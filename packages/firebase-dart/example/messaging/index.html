@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Messaging demo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style type="text/css">
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            margin: 0;
+            padding: 4px 2px;
+            border-bottom: 1px solid silver;
+            overflow: auto;
+        }
+        label {
+            width: 100%;
+        }
+        input {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Messaging demo</h1>
+    <ul>
+        <li>
+            <!-- This is autofill the token come from the firebase sdk -->
+            <label>
+                Token
+                <input disabled id="token" />
+            </label>
+        </li>
+        <li>
+            <label>
+                Notification permission
+                <input disabled id="permission" />
+            </label>
+        </li>
+    </ul>
+    <div>
+        <button id="new_notification" disabled>Send notification</button>
+    </div>
+    <div>
+        <label>Payload</label>
+        <p id="payload_data"></p>
+    </div>
+</div>
+<script defer src="https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/4.10.1/firebase-messaging.js"></script>
+<script defer src="index.dart" type="application/dart"></script>
+<script defer src="packages/browser/dart.js"></script>
+</body>
+</html>

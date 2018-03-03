@@ -10,6 +10,7 @@ import 'app_interop.dart';
 import 'auth_interop.dart';
 import 'database_interop.dart';
 import 'firestore_interop.dart';
+import 'messaging_interop.dart';
 import 'storage_interop.dart';
 
 @JS()
@@ -33,6 +34,8 @@ external DatabaseJsImpl database([AppJsImpl app]);
 external StorageJsImpl storage([AppJsImpl app]);
 @JS()
 external FirestoreJsImpl firestore([AppJsImpl app]);
+@JS()
+external MessagingJsImpl messaging([AppJsImpl app]);
 
 /// https://firebase.google.com/docs/reference/js/firebase.User
 @JS('User')
@@ -143,11 +146,14 @@ class FirebaseOptions {
   external set projectId(String s);
   external String get storageBucket;
   external set storageBucket(String s);
+  external String get messagingSenderId;
+  external set messagingSenderId(String s);
 
   external factory FirebaseOptions(
       {String apiKey,
       String authDomain,
       String databaseURL,
       String projectId,
-      String storageBucket});
+      String storageBucket,
+      String messagingSenderId});
 }
