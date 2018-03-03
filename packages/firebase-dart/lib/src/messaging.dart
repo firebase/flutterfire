@@ -31,6 +31,12 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
     jsObject.useServiceWorker(registration);
   }
 
+  /// To forceably stop a registration token from being used, delete it by calling this method.
+  /// Calling this method will stop the periodic data transmission to the FCM backend.
+  void deleteToken(String token) {
+    jsObject.deleteToken(token);
+  }
+
   /// Notification permissions are required to send a user push messages.
   /// Calling this method displays the permission dialog to the user and resolves if the permission is granted.
   Future requestPermission() async {

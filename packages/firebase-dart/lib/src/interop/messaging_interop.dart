@@ -17,6 +17,7 @@ abstract class MessagingJsImpl {
       optionsOrObserverOrOnNext, observerOrOnNextOrOnError);
   external void setBackgroundMessageHandler(Func1 f);
   external void useServiceWorker(registration);
+  external void deleteToken(String token);
 }
 
 @JS()
