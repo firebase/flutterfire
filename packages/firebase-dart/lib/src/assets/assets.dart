@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/browser_client.dart' as http;
-import 'package:http/http.dart' as http;
 
 Map<String, dynamic> _configVal;
 
@@ -37,8 +36,7 @@ Future config() async {
   var client = new http.BrowserClient();
 
   try {
-    var response =
-        await client.get('/packages/firebase/src/assets/config.json');
+    var response = await client.get('packages/firebase/src/assets/config.json');
     if (response.statusCode > 399) {
       throw new StateError(
           "Problem with server: ${response.statusCode} ${response.body}");
