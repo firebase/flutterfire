@@ -1,5 +1,8 @@
 ## 4.4.0
 
+* Added support for
+  [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/).
+
 * Updated tested/documented Firebase JS API `4.10.1`.
 
 * **BREAKING** Firestore `Blob` is no longer wrapped. It is now just the raw
