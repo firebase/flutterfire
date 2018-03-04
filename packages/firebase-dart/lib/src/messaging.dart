@@ -65,7 +65,7 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
   /// has invalidated your existing token and you need to call [getToken] to get a new token.
   Stream<Null> get onTokenRefresh => _createNullStream(_onTokenRefresh);
 
-  Stream<Payload> _createOnMessageStream(StreamController controller) {
+  Stream<Payload> _createOnMessageStream(StreamController<Payload> controller) {
     if (controller == null) {
       controller = new StreamController.broadcast(sync: true);
       final nextWrapper = allowInterop((payload) {
@@ -79,7 +79,8 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
     return controller.stream;
   }
 
-  Stream<Payload> _createBackgroundMessagedStream(StreamController controller) {
+  Stream<Payload> _createBackgroundMessagedStream(
+      StreamController<Payload> controller) {
     if (controller == null) {
       controller = new StreamController.broadcast(sync: true);
       final nextWrapper = allowInterop((payload) {
@@ -134,5 +135,5 @@ class Payload extends JsObjectWrapper<messaging_interop.PayloadJsImpl> {
       new Notification._fromJsObject(jsObject.notification);
   String get collapseKey => jsObject.collapse_key;
   String get from => jsObject.from;
-  Map<String, String> get data => dartify(jsObject.data);
+  Map<String, dynamic> get data => dartify(jsObject.data);
 }
