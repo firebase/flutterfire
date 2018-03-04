@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:http/browser_client.dart' as http;
+import 'package:service_worker/worker.dart' as sw;
 
 Map<String, dynamic> _configVal;
 
@@ -33,21 +33,16 @@ Future config() async {
     return;
   }
 
-  var client = new http.BrowserClient();
-
   try {
-    var response = await client.get('packages/firebase/src/assets/config.json');
-    if (response.statusCode > 399) {
+    var response = await sw.fetch('packages/firebase/src/assets/config.json');
+    if (response.status > 399) {
       throw new StateError(
-          "Problem with server: ${response.statusCode} ${response.body}");
+          "Problem with server: ${response.status} ${response.body}");
     }
 
-    var jsonString = response.body;
-    _configVal = JSON.decode(jsonString) as Map<String, dynamic>;
+    _configVal = JSON.decode(await response.text());
   } catch (e) {
     print("Error getting `config.json`. Make sure it exists.");
     rethrow;
-  } finally {
-    client.close();
   }
 }
