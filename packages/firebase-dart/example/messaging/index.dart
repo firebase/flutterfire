@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
 
@@ -18,7 +19,7 @@ main() async {
         storageBucket: storageBucket,
         messagingSenderId: messagingSenderId);
 
-    new MessagesApp().showMessages();
+    await new MessagesApp().showMessages();
   } on fb.FirebaseJsNotLoadedException catch (e) {
     print(e);
   }
@@ -36,7 +37,7 @@ class MessagesApp {
         payloadData = document.querySelector("#payload_data"),
         permissionInput = document.querySelector("#permission");
 
-  showMessages() async {
+  Future showMessages() async {
     await sw.register('sw.dart.js');
     final registration = await sw.ready;
     final messaging = fb.messaging()
@@ -67,7 +68,7 @@ class MessagesApp {
                 "title": "New demo message!",
                 "body": "There is a new message in Messaging Demo",
               },
-              "data": {"toto": "titi"},
+              "data": {"Current time": new DateTime.now().toIso8601String()},
               "to": token
             }));
       });
