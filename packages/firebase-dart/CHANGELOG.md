@@ -1,3 +1,8 @@
+## 4.5.0
+
+* Added `isEqual` to `CollectionReference`, `DocumentSnapshot`,
+  `SnapshotMetadata`and `QuerySnapshot`.
+
 ## 4.4.0
 
 * Added support for
