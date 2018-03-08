@@ -626,6 +626,8 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
         (documentPath != null) ? jsObject.doc(documentPath) : jsObject.doc();
     return DocumentReference.getInstance(jsObjectDoc);
   }
+
+  bool isEqual(CollectionReference other) => jsObject.isEqual(other.jsObject);
 }
 
 /// A [DocumentChange] represents a change to the documents matching a query.
@@ -715,6 +717,9 @@ class DocumentSnapshot
   /// (e.g. 'foo' or 'foo.bar') to a specific field.
   dynamic get(/*String|FieldPath*/ fieldPath) =>
       dartify(jsObject.get(fieldPath));
+
+  /// Returns [true] if this [DocumentSnapshot] is equal to the provided one.
+  bool isEqual(DocumentSnapshot other) => jsObject.isEqual(other.jsObject);
 }
 
 /// A [QuerySnapshot] contains zero or more [DocumentSnapshot] objects
@@ -769,6 +774,9 @@ class QuerySnapshot
         allowInterop((s) => callback(DocumentSnapshot.getInstance(s)));
     return jsObject.forEach(callbackWrap);
   }
+
+  /// Returns [true] if this [QuerySnapshot] is equal to the provided one.
+  bool isEqual(QuerySnapshot other) => jsObject.isEqual(other.jsObject);
 }
 
 /// A reference to a transaction.

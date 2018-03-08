@@ -47,6 +47,7 @@ class CollectionReferenceJsImpl extends QueryJsImpl {
   external factory CollectionReferenceJsImpl();
   external PromiseJsImpl<DocumentReferenceJsImpl> add(data);
   external DocumentReferenceJsImpl doc([String documentPath]);
+  external bool isEqual(CollectionReferenceJsImpl other);
 }
 
 /// A [FieldPath] refers to a field in a document.
@@ -158,6 +159,9 @@ abstract class DocumentSnapshotJsImpl {
   external set ref(DocumentReferenceJsImpl v);
   external dynamic data();
   external dynamic get(/*String|FieldPath*/ fieldPath);
+
+  /// Returns [true] if this [DocumentSnapshotJsImpl] is equal to the provided one.
+  external bool isEqual(DocumentSnapshotJsImpl other);
 }
 
 /// Sentinel values that can be used when writing document fields with
@@ -215,6 +219,7 @@ abstract class QuerySnapshotJsImpl {
   external num get size;
   external set size(num v);
   external void forEach(VoidFunc1<DocumentSnapshotJsImpl> callback, [thisArg]);
+  external bool isEqual(QuerySnapshotJsImpl other);
 }
 
 @JS("Transaction")
@@ -311,6 +316,9 @@ abstract class SnapshotMetadata {
   /// the client has received up-to-date data from the backend.
   external bool get fromCache;
   external set fromCache(bool v);
+
+  /// Returns [true] if this [SnapshotMetadata] is equal to the provided one.
+  external bool isEqual(SnapshotMetadata other);
 }
 
 /// Options for use with [DocumentReference.onMetadataChangesSnapshot()] to
