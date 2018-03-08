@@ -1,23 +1,32 @@
 language: dart
 
-dart:
-  - stable
-  - dev
+stages:
+  - analyze_and_format
+  - name: test
+    if: type != pull_request
 
-before_script: ./tool/travis_before_script.sh
-
-dart_task:
-  - test: --platform vm
-  - test: --platform firefox
-  - dartanalyzer
-  - dartfmt
-
-matrix:
+jobs:
   include:
+    - stage: analyze_and_format
+      dart: stable
+      dart_task: dartanalyzer
+    - dart: dev
+      dart_task: dartanalyzer
+    - dart_task: dartfmt
+      dart: stable
+    - dart_task: dartfmt
+      dart: dev
+
+    - stage: test
+      dart: dev
+      dart_task: test # default to vm and chrome
     - dart: stable
-      dart_task: test
-      test: --platform dartium
-      install_dartium: true
+      dart_task:
+        - test: -p vm,chrome,dartium # keep testing Dartium on stable
+
+# Only building master means that we don't run two builds for each pull request.
+branches:
+  only: [master]
 
 cache:
   directories:
