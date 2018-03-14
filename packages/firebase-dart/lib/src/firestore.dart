@@ -13,10 +13,10 @@ export 'interop/firestore_interop.dart'
         FieldPath,
         FieldValue,
         GeoPoint,
+        setLogLevel,
         SetOptions,
         Settings,
-        SnapshotMetadata,
-setLogLevel;
+        SnapshotMetadata;
 
 /// The Cloud Firestore service interface.
 ///
