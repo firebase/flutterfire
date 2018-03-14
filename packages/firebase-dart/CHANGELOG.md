@@ -9,6 +9,8 @@
 * Added `isEqual` to `CollectionReference`, `DocumentSnapshot`,
   `SnapshotMetadata`and `QuerySnapshot`.
 
+* Added `disableNetwork` and `enableNetwork` to `Firestore`
+
 ## 4.4.0
 
 * Added support for

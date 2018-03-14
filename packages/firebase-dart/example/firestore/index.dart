@@ -28,16 +28,32 @@ class MessagesApp {
   final InputElement newMessage;
   final InputElement submit;
   final FormElement newMessageForm;
+  final ButtonElement enableNetwork;
+  final ButtonElement disableNetwork;
 
   MessagesApp()
       : ref = fb.firestore().collection("pkg_firestore"),
         messages = querySelector("#messages"),
         newMessage = querySelector("#new_message"),
         submit = querySelector('#submit'),
-        newMessageForm = querySelector("#new_message_form") {
+        newMessageForm = querySelector("#new_message_form"),
+        disableNetwork = querySelector("#disable"),
+        enableNetwork = querySelector("#enable") {
     newMessage.disabled = false;
 
     submit.disabled = false;
+
+    disableNetwork.onClick.listen((_) {
+      fb.firestore().disableNetwork();
+      disableNetwork.hidden = true;
+      enableNetwork.hidden = false;
+    });
+
+    enableNetwork.onClick.listen((_) {
+      fb.firestore().enableNetwork();
+      disableNetwork.hidden = false;
+      enableNetwork.hidden = true;
+    });
 
     this.newMessageForm.onSubmit.listen((e) async {
       e.preventDefault();

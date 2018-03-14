@@ -107,6 +107,14 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   /// Value must not be null.
   void settings(firestore_interop.Settings settings) =>
       jsObject.settings(settings);
+
+  /// Re-enables use of the network for this Firestore instance after a prior call to [disableNetwork].
+  Future enableNetwork() => handleThenable(jsObject.enableNetwork());
+
+  /// Disables network usage for this instance. It can be re-enabled via [enableNetwork].
+  /// While the network is disabled, any snapshot listeners or get() calls will return results from cache,
+  /// and any write operations will be queued until the network is restored.
+  Future disableNetwork() => handleThenable(jsObject.disableNetwork());
 }
 
 /// A write batch, used to perform multiple writes as a single atomic unit.

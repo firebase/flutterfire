@@ -9,6 +9,7 @@ import 'package:test/test.dart';
 import 'test_util.dart' show throwsToString, validDatePathComponent;
 
 //  TODO add MetadataSnapshot test
+//  TODO add enable/disable Network test
 
 // Delete entire collection
 // <https://firebase.google.com/docs/firestore/manage-data/delete-data#collections>

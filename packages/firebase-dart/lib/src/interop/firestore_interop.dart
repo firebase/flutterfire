@@ -34,6 +34,8 @@ abstract class FirestoreJsImpl {
   external PromiseJsImpl runTransaction(
       Func1<TransactionJsImpl, PromiseJsImpl> updateFunction);
   external void settings(Settings settings);
+  external ThenableJsImpl<Null> disableNetwork();
+  external ThenableJsImpl<Null> enableNetwork();
 }
 
 @JS("WriteBatch")
