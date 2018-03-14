@@ -1,5 +1,7 @@
 ## 4.5.0
 
+* Updated tested JS API version to `4.11.0`.
+
 ### Firestore
 
 * Moved `setLogLevel` to a top-level method from `Firestore`.

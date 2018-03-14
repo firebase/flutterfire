@@ -3,7 +3,7 @@ language: dart
 stages:
   - analyze_and_format
   - name: test
-    if: type != pull_request
+    if: (type != pull_request) OR (sender = kevmoo)
 
 jobs:
   include:
