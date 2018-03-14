@@ -25,6 +25,7 @@ abstract class MessagingJsImpl {
 abstract class NotificationJsImpl {
   external String get title;
   external String get body;
+  // ignore: non_constant_identifier_names
   external String get click_action;
   external String get icon;
 }
@@ -32,6 +33,7 @@ abstract class NotificationJsImpl {
 @JS()
 @anonymous
 abstract class PayloadJsImpl {
+  // ignore: non_constant_identifier_names
   external String get collapse_key;
   external String get from;
   external NotificationJsImpl get notification;
