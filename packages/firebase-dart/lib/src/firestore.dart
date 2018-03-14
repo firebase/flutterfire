@@ -15,7 +15,8 @@ export 'interop/firestore_interop.dart'
         GeoPoint,
         SetOptions,
         Settings,
-        SnapshotMetadata;
+        SnapshotMetadata,
+setLogLevel;
 
 /// The Cloud Firestore service interface.
 ///
@@ -98,16 +99,6 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     return handleThenableWithMapper(
         jsObject.runTransaction(updateFunctionWrap), dartify);
   }
-
-  /// Sets the verbosity of Cloud Firestore logs.
-  ///
-  /// Parameter [logLevel] is the verbosity you set for activity and
-  /// error logging.
-  /// Can be any of the following values:
-  /// * [:debug:] for the most verbose logging level, primarily for debugging.
-  /// * [:error:] to log errors only.
-  /// * [:silent:] to turn off logging.
-  void setLogLevel(String logLevel) => jsObject.setLogLevel(logLevel);
 
   /// Specifies custom [Settings] to be used to configure the Firestore
   /// instance. Must be set before invoking any other methods.

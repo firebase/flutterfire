@@ -11,6 +11,18 @@ import 'package:func/func.dart';
 import 'app_interop.dart';
 import 'firebase_interop.dart';
 
+/// Sets the verbosity of Cloud Firestore logs.
+///
+/// Parameter [logLevel] is the verbosity you set for activity and error
+/// logging.
+///
+/// Can be any of the following values:
+/// * "debug" for the most verbose logging level, primarily for debugging.
+/// * "error" to log errors only.
+/// * "silent" to turn off logging.
+@JS()
+external void setLogLevel(String logLevel);
+
 @JS("Firestore")
 abstract class FirestoreJsImpl {
   external AppJsImpl get app;
@@ -21,7 +33,6 @@ abstract class FirestoreJsImpl {
   external PromiseJsImpl<Null> enablePersistence();
   external PromiseJsImpl runTransaction(
       Func1<TransactionJsImpl, PromiseJsImpl> updateFunction);
-  external void setLogLevel(String logLevel);
   external void settings(Settings settings);
 }
 

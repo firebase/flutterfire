@@ -1,5 +1,11 @@
 ## 4.5.0
 
+### Firestore
+
+* Moved `setLogLevel` to a top-level method from `Firestore`.
+  *Not considering this a breaking change since the method never worked as
+  previously exposed.*
+
 * Added `isEqual` to `CollectionReference`, `DocumentSnapshot`,
   `SnapshotMetadata`and `QuerySnapshot`.
 
