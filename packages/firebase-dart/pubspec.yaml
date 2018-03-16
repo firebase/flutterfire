@@ -10,11 +10,11 @@ environment:
   sdk: '>=1.21.0 <2.0.0'
 
 dependencies:
-  browser: '^0.10.0'
   http: '^0.11.3'
   js: "^0.6.0"
 
 dev_dependencies:
+  browser: '^0.10.0'
   googleapis_auth: '^0.2.3+5'
   path: '^1.3.9'
   test: '^0.12.17'
