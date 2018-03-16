@@ -2,10 +2,10 @@
 
 import 'dart:async';
 
-import 'package:func/func.dart';
 import 'package:js/js.dart';
 
 import 'app.dart';
+import 'func.dart';
 import 'interop/auth_interop.dart';
 import 'interop/firebase_interop.dart' as firebase_interop;
 import 'js.dart';

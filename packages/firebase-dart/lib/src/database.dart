@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:func/func.dart';
 import 'package:js/js.dart';
 
 import 'app.dart';
+import 'func.dart';
 import 'interop/database_interop.dart' as database_interop;
 import 'js.dart';
 import 'utils.dart';

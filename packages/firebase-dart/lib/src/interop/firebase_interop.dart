@@ -3,9 +3,9 @@
 @JS('firebase')
 library firebase.firebase_interop;
 
-import 'package:func/func.dart';
 import 'package:js/js.dart';
 
+import '../func.dart';
 import 'app_interop.dart';
 import 'auth_interop.dart';
 import 'database_interop.dart';

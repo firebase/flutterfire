@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:func/func.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
 
 import 'firestore.dart';
+import 'func.dart';
 
 import 'interop/firebase_interop.dart' show ThenableJsImpl, PromiseJsImpl;
 import 'interop/firestore_interop.dart' show FieldValue;

@@ -11,7 +11,6 @@ environment:
 
 dependencies:
   browser: '^0.10.0'
-  func: ">=0.1.0 <2.0.0"
   http: '^0.11.3'
   js: "^0.6.0"
 
