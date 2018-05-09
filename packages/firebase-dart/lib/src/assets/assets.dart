@@ -40,7 +40,7 @@ Future config() async {
           "Problem with server: ${response.status} ${response.body}");
     }
 
-    _configVal = JSON.decode(await response.text());
+    _configVal = jsonDecode(await response.text());
   } catch (e) {
     print("Error getting `config.json`. Make sure it exists.");
     rethrow;

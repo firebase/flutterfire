@@ -63,7 +63,7 @@ class MessagesApp {
               'Content-Type': 'application/json',
               'Authorization': 'key=$serverKey',
             },
-            body: JSON.encode({
+            body: jsonEncode({
               "notification": {
                 "title": "New demo message!",
                 "body": "There is a new message in Messaging Demo",

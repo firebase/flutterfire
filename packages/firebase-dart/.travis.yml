@@ -7,13 +7,8 @@ stages:
 
 jobs:
   include:
-    - stage: analyze_and_format
-      dart: stable
-      dart_task: dartanalyzer
     - dart: dev
       dart_task: dartanalyzer
-    - dart_task: dartfmt
-      dart: stable
     - dart_task: dartfmt
       dart: dev
 
@@ -21,11 +16,6 @@ jobs:
       dart: dev
       before_script: ./tool/travis_before_script.sh
       dart_task: test # default to vm and chrome
-    - dart: stable
-      before_script: ./tool/travis_before_script.sh
-      dart_task:
-        test: -p vm,chrome,dartium # keep testing Dartium on stable
-        install_dartium: true
 
 # Only building master means that we don't run two builds for each pull request.
 branches:

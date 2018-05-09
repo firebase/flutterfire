@@ -41,7 +41,7 @@ Future<String> getDatabaseUri() async {
 
   var jsonString = new File(serviceAccountJsonPath).readAsStringSync();
 
-  var json = JSON.decode(jsonString) as Map;
+  var json = jsonDecode(jsonString) as Map;
 
   return json['DATABASE_URL'];
 }

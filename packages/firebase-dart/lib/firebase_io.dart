@@ -69,7 +69,7 @@ class FirebaseClient {
 
     if (json != null) {
       request.headers['Content-Type'] = 'application/json';
-      request.body = JSON.encode(json);
+      request.body = jsonEncode(json);
     }
 
     var streamedResponse = await _client.send(request);
@@ -77,7 +77,7 @@ class FirebaseClient {
 
     Object bodyJson;
     try {
-      bodyJson = JSON.decode(response.body);
+      bodyJson = jsonDecode(response.body);
     } on FormatException {
       var contentType = response.headers['content-type'];
       if (contentType != null && !contentType.contains('application/json')) {

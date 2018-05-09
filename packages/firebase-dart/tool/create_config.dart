@@ -49,7 +49,7 @@ main() {
   }
 
   var serviceAccountJson =
-      UTF8.decode(BASE64.decode(Platform.environment['SERVICE_ACCOUNT_JSON']));
+      utf8.decode(base64.decode(Platform.environment['SERVICE_ACCOUNT_JSON']));
 
   var serviceAccountPath = p.join(_assetPath, 'service_account.json');
   new File(serviceAccountPath).writeAsStringSync(serviceAccountJson);

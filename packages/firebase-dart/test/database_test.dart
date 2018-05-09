@@ -5,11 +5,7 @@ import 'package:test/test.dart';
 
 import 'test_util.dart';
 
-/// Dartium ends up with `cannot be an object`
-/// dart2js ends up with `contains an invalid key`
-/// handle both...
-final _invalidKey = throwsToString(anyOf(
-    contains('contains an invalid key'), contains('cannot be an object')));
+final _invalidKey = throwsToString(contains('contains an invalid key'));
 
 void main() {
   fb.App app;

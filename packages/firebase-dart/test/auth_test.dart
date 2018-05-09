@@ -336,16 +336,16 @@ void main() {
           var originalLength = t.length;
           var remainder = (originalLength / 4).ceil() * 4 - originalLength;
           t = "$t${'='* remainder}";
-          return BASE64URL.decode(t);
+          return base64Url.decode(t);
         }).toList();
 
         expect(split, hasLength(3));
 
-        var header = JSON.decode(UTF8.decode(split.first));
+        var header = jsonDecode(utf8.decode(split.first));
         expect(header, isMap);
         expect(header, containsPair('alg', isNotEmpty));
 
-        var payload = JSON.decode(UTF8.decode(split[1]));
+        var payload = jsonDecode(utf8.decode(split[1]));
         expect(payload, isMap);
         expect(payload, containsPair('email', userEmail));
       } on FirebaseError catch (e) {

@@ -19,13 +19,6 @@ class JsDate {
 }
 
 DateTime dartifyDate(Object jsObject) {
-  // if already a date time good
-  if (jsObject is DateTime) {
-    // Likely running on Dartium – which converts JSDate - Datetime
-    // Work-around until Dartium support is dropped
-    return jsObject;
-  }
-
   if (util.hasProperty(jsObject, "toDateString")) {
     try {
       var date = jsObject as JsDate;
@@ -33,13 +26,6 @@ DateTime dartifyDate(Object jsObject) {
     } on NoSuchMethodError {
       // so it's not a JsDate!
       return null;
-    } on String catch (e) {
-      if (e == 'property is not a function') {
-        // Handling Dartium behavior – which throws this String - weird
-        // Work-around until Dartium support is dropped
-        return null;
-      }
-      rethrow;
     }
   }
   return null;
@@ -47,14 +33,7 @@ DateTime dartifyDate(Object jsObject) {
 
 Object jsifyDate(Object dartObject) {
   if (dartObject is DateTime) {
-    try {
-      return new JsDate(dartObject.millisecondsSinceEpoch);
-    } on TypeError {
-      // Likely running on Dartium – which converts JSDate to Datetime which
-      // throws when using this interop feature.
-      // Work-around until Dartium support is dropped
-      return dartObject;
-    }
+    return new JsDate(dartObject.millisecondsSinceEpoch);
   }
   return null;
 }
