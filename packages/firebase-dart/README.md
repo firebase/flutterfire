@@ -8,7 +8,7 @@
   A wrapper over the [Firebase JS API](https://firebase.google.com/docs/reference/js/).
 
 * Dart VM and Fuchsia:
-  [`package:firebase/firebase_io.dart`](https://github.com/firebase/firebase-dart/tree/docs#using-this-package-with-the-dart-vm-and-fuchsia)
+  [`package:firebase/firebase_io.dart`](#using-this-package-with-the-dart-vm-and-fuchsia)
   
   A lightly maintained wrapper over the
   [Firebase Database REST API](https://firebase.google.com/docs/reference/rest/database/).
