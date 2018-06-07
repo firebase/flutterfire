@@ -359,7 +359,7 @@ void main() {
         test(key, () async {
           var ref = firestore.collection(testPath);
           var docRef = ref.doc("types");
-          await docRef.set({'value': map[key]});
+          await docRef.set({'value': value});
           var snapshot = await docRef.get();
 
           var snapshotDataValue = snapshot.data()['value'];
