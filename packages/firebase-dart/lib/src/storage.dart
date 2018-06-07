@@ -448,7 +448,7 @@ abstract class _SettableMetadataBase<
 
   /// Additional user-defined custom metadata.
   Map<String, String> get customMetadata =>
-      dartify(jsObject.customMetadata) as Map<String, String>;
+      (dartify(jsObject.customMetadata) as Map)?.cast<String, String>();
   set customMetadata(Map<String, String> m) {
     jsObject.customMetadata = jsify(m);
   }

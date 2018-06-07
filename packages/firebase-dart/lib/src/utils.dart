@@ -82,15 +82,17 @@ dynamic jsify(Object dartObject) {
     return jsMap;
   }
 
-  if (dartObject is FieldValue) {
-    return dartObject;
-  }
-
   if (dartObject is DocumentReference) {
     return dartObject.jsObject;
   }
 
-  return util.jsify(dartObject);
+  if (dartObject is FieldValue ||
+      dartObject is Blob ||
+      dartObject is GeoPoint) {
+    return dartObject;
+  }
+
+  throw new ArgumentError.value(dartObject, 'dartObject', 'Could not convert');
 }
 
 /// Calls [method] on JavaScript object [jsObject].

@@ -5,7 +5,8 @@ import 'package:test/test.dart';
 
 import 'test_util.dart';
 
-final _invalidKey = throwsToString(contains('contains an invalid key'));
+final _throwsInvalidKey = throwsToString(anyOf(
+    contains('contains an invalid key'), contains('cannot be an object')));
 
 void main() {
   fb.App app;
@@ -249,8 +250,8 @@ void main() {
         var childRef = ref.child("flowers");
         childRef.push({"name": "rose"});
 
-        expect(
-            () => childRef.orderByValue().endAt({"name": "rose"}), _invalidKey);
+        expect(() => childRef.orderByValue().endAt({"name": "rose"}),
+            _throwsInvalidKey);
       });
 
       test("startAt", () async {
@@ -276,7 +277,7 @@ void main() {
         childRef.push({"name": "chicory"});
 
         expect(() => childRef.orderByValue().startAt({"name": "chicory"}),
-            _invalidKey);
+            _throwsInvalidKey);
       });
 
       test("equalTo", () async {
@@ -300,7 +301,7 @@ void main() {
         childRef.push({"name": "sunflower"});
 
         expect(() => childRef.orderByValue().equalTo({"name": "sunflower"}),
-            _invalidKey);
+            _throwsInvalidKey);
       });
 
       test("isEqual", () async {

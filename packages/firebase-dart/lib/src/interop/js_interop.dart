@@ -21,7 +21,7 @@ class JsDate {
 DateTime dartifyDate(Object jsObject) {
   if (util.hasProperty(jsObject, "toDateString")) {
     try {
-      var date = jsObject as JsDate;
+      var date = jsObject as dynamic;
       return new DateTime.fromMillisecondsSinceEpoch(date.getTime());
     } on NoSuchMethodError {
       // so it's not a JsDate!

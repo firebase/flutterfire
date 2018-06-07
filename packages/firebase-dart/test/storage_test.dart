@@ -62,7 +62,8 @@ void main() {
       expect(md.timeCreated, md.updated);
       expect(md.downloadURLs.single.pathSegments.last, contains(fileName));
       expect(md.customMetadata, isNotNull);
-      expect(md.customMetadata['the answer'], '42');
+      expect(md.customMetadata, hasLength(1));
+      expect(md.customMetadata, containsPair('the answer', '42'));
       expect(md.md5Hash, '8eRvMo5t7NVsZN1edh3Ctw==');
     });
 
