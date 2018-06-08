@@ -50,7 +50,6 @@ void main() {
       var snapShot = await upload.future;
 
       expect(snapShot.bytesTransferred, 7);
-      expect(snapShot.downloadURL.pathSegments.last, contains(fileName));
       expect(snapShot.state, TaskState.SUCCESS);
 
       var md = snapShot.metadata;
@@ -60,7 +59,6 @@ void main() {
       expect(md.size, 7);
       expect(md.contentType, 'application/json');
       expect(md.timeCreated, md.updated);
-      expect(md.downloadURLs.single.pathSegments.last, contains(fileName));
       expect(md.customMetadata, isNotNull);
       expect(md.customMetadata, hasLength(1));
       expect(md.customMetadata, containsPair('the answer', '42'));
@@ -88,7 +86,6 @@ void main() {
       expect(md.size, 7);
       expect(md.contentType, 'application/json');
       expect(md.timeCreated, md.updated);
-      expect(md.downloadURLs.single.pathSegments.last, contains(fileName));
       expect(md.customMetadata, isNotNull);
       expect(md.customMetadata['the answer'], '42');
     });
@@ -104,7 +101,6 @@ void main() {
       expect(md.size, 7);
       expect(md.contentType, 'text/plain');
       expect(md.updated.isAfter(md.timeCreated), isTrue);
-      expect(md.downloadURLs.single.pathSegments.last, contains(fileName));
       expect(md.customMetadata, isNull);
     });
   });

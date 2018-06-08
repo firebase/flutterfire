@@ -1,6 +1,7 @@
 ## 4.5.0
 
 * Updated tested JS API version to `4.13.0`.
+  * Deprecated `downloadURL` and `downloadURLs`. 
 
 * Require at least Dart SDK `2.0.0-dev.36`.
 

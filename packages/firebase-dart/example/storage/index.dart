@@ -45,10 +45,10 @@ class ImageUploadApp {
 
       try {
         var snapshot = await uploadTask.future;
-        var filePath = snapshot.downloadURL;
-        var metadata = snapshot.metadata.customMetadata;
+        var filePath = await snapshot.ref.getDownloadURL();
         var image = new ImageElement(src: filePath.toString());
         document.body.append(image);
+        var metadata = snapshot.metadata.customMetadata;
         querySelector("#message").text = "Metadata: ${metadata.toString()}";
       } catch (e) {
         print(e);

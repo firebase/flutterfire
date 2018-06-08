@@ -169,7 +169,8 @@ class FullMetadata
   /// The bucket the actual object is contained in.
   String get bucket => jsObject.bucket;
 
-  /// Returns an array of long-lived download URLs. With at least one URL.
+  /// **DEPRECATED** - Use [StorageReference.getDownloadURL] instead.
+  @Deprecated('Use Reference.getDownloadURL() instead')
   List<Uri> get downloadURLs => jsObject.downloadURLs.map(Uri.parse).toList();
 
   /// The full path.
@@ -333,8 +334,8 @@ class UploadTaskSnapshot
   /// The number of bytes that have been successfully transferred.
   int get bytesTransferred => jsObject.bytesTransferred;
 
-  /// Contains a long-lived download URL for the object after the upload
-  /// completes. It is also accessible from [metadata].
+  /// **DEPRECATED** - Use [StorageReference.getDownloadURL] instead.
+  @Deprecated('Use StorageReference.getDownloadURL() instead')
   Uri get downloadURL => Uri.parse(jsObject.downloadURL);
 
   /// The metadata. Before the upload completes, it contains the metadata sent
