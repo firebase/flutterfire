@@ -71,7 +71,7 @@ dynamic jsify(Object dartObject) {
   }
 
   if (dartObject is Iterable) {
-    return util.jsify(dartObject.map(jsify));
+    return js.toJSArray(dartObject.map(jsify).toList());
   }
 
   if (dartObject is Map) {

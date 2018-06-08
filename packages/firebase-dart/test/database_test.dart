@@ -459,6 +459,16 @@ void main() {
         expect(priorities.contains(null), isTrue);
       });
 
+      test('update with complex object', () async {
+        // Regression test for github.com/firebase/firebase-dart/issues/173
+        var childRef = ref.child("people");
+        await childRef.child("one").update({
+          'list': [
+            {'key': 'value'}
+          ]
+        });
+      });
+
       test("set with wrong priority type", () {
         var childRef = ref.child("people");
 

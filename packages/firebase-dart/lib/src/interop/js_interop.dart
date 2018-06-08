@@ -10,6 +10,9 @@ external String stringify(Object obj);
 @JS("Object.keys")
 external List<String> objectKeys(Object obj);
 
+@JS("Array.from")
+external Object toJSArray(List source);
+
 @JS("Date")
 class JsDate {
   // https://github.com/dart-lang/linter/issues/864
