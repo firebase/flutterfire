@@ -717,7 +717,7 @@ class DocumentSnapshot
   dynamic get(/*String|FieldPath*/ fieldPath) =>
       dartify(jsObject.get(fieldPath));
 
-  /// Returns [true] if this [DocumentSnapshot] is equal to the provided one.
+  /// Returns `true` if this [DocumentSnapshot] is equal to the provided one.
   bool isEqual(DocumentSnapshot other) => jsObject.isEqual(other.jsObject);
 }
 
@@ -774,7 +774,7 @@ class QuerySnapshot
     return jsObject.forEach(callbackWrap);
   }
 
-  /// Returns [true] if this [QuerySnapshot] is equal to the provided one.
+  /// Returns `true` if this [QuerySnapshot] is equal to the provided one.
   bool isEqual(QuerySnapshot other) => jsObject.isEqual(other.jsObject);
 }
 
