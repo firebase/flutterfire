@@ -471,8 +471,8 @@ class ThenableReference
       : super._fromJsObject(jsObject);
 
   /// A Future property.
-  Future<DatabaseReference> get future => _future ??=
-      handleThenableWithMapper(jsObject, DatabaseReference.getInstance);
+  Future<DatabaseReference> get future =>
+      _future ??= handleThenable(jsObject).then(DatabaseReference.getInstance);
 }
 
 /// A structure used in [DatabaseReference.transaction].

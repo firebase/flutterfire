@@ -40,13 +40,12 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
   /// Notification permissions are required to send a user push messages.
   /// Calling this method displays the permission dialog to the user and resolves if the permission is granted.
   Future requestPermission() async {
-    await handleThenableWithMapper(jsObject.requestPermission(), dartify);
+    await handleThenable(jsObject.requestPermission()).then(dartify);
   }
 
   /// After calling [requestPermission] you can call this method to get an FCM registration token
   /// that can be used to send push messages to this user.
-  Future<String> getToken() =>
-      handleThenableWithMapper(jsObject.getToken(), (s) => s);
+  Future<String> getToken() => handleThenable(jsObject.getToken());
 
   StreamController<Payload> _onMessageController;
   StreamController<Null> _onTokenRefresh;

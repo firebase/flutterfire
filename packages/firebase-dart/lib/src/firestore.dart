@@ -96,8 +96,8 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
         handleFutureWithMapper(
             updateFunction(Transaction.getInstance(transaction)), jsify));
 
-    return handleThenableWithMapper(
-        jsObject.runTransaction(updateFunctionWrap), dartify);
+    return handleThenable(jsObject.runTransaction(updateFunctionWrap))
+        .then(dartify);
   }
 
   /// Specifies custom [Settings] to be used to configure the Firestore
@@ -272,7 +272,7 @@ class DocumentReference
   /// that resolves with a [DocumentSnapshot] containing the current document
   /// contents.
   Future<DocumentSnapshot> get() =>
-      handleThenableWithMapper(jsObject.get(), DocumentSnapshot.getInstance);
+      handleThenable(jsObject.get()).then(DocumentSnapshot.getInstance);
 
   StreamController<DocumentSnapshot> _onSnapshotController;
   StreamController<DocumentSnapshot> _onMetadataController;
@@ -408,7 +408,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// Returns non-null [Future] that will be resolved with the results of the
   /// query.
   Future<QuerySnapshot> get() =>
-      handleThenableWithMapper(jsObject.get(), QuerySnapshot.getInstance);
+      handleThenable(jsObject.get()).then(QuerySnapshot.getInstance);
 
   /// Creates a new [Query] where the results are limited to the specified
   /// number of documents.
@@ -608,8 +608,8 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
   /// pointing to the newly created document after it has been written
   /// to the backend.
   Future<DocumentReference> add(Map<String, dynamic> data) =>
-      handleThenableWithMapper(
-          jsObject.add(jsify(data)), DocumentReference.getInstance);
+      handleThenable(jsObject.add(jsify(data)))
+          .then(DocumentReference.getInstance);
 
   /// Gets a [DocumentReference] for the document within the collection
   /// at the specified path. If no [documentPath] is specified,
@@ -815,8 +815,8 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
   ///
   /// Returns non-null [Future] of the read data in a [DocumentSnapshot].
   Future<DocumentSnapshot> get(DocumentReference documentRef) =>
-      handleThenableWithMapper(
-          jsObject.get(documentRef.jsObject), DocumentSnapshot.getInstance);
+      handleThenable(jsObject.get(documentRef.jsObject))
+          .then(DocumentSnapshot.getInstance);
 
   /// Writes to the document referred to by the provided [DocumentReference].
   /// If the document does not exist yet, it will be created.

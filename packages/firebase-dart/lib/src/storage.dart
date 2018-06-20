@@ -113,8 +113,8 @@ class StorageReference
   }
 
   /// Returns a [FullMetadata] from this reference at actual location.
-  Future<FullMetadata> getMetadata() => handleThenableWithMapper(
-      jsObject.getMetadata(), FullMetadata.getInstance);
+  Future<FullMetadata> getMetadata() =>
+      handleThenable(jsObject.getMetadata()).then(FullMetadata.getInstance);
 
   /// Uploads data [blob] to the actual location with optional [metadata].
   /// Returns the [UploadTask] which can be used to monitor and manage
@@ -155,8 +155,8 @@ class StorageReference
   /// Updates metadata from this reference at actual location with
   /// the new [metadata].
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) =>
-      handleThenableWithMapper(
-          jsObject.updateMetadata(metadata.jsObject), FullMetadata.getInstance);
+      handleThenable(jsObject.updateMetadata(metadata.jsObject))
+          .then(FullMetadata.getInstance);
 }
 
 /// The full set of object metadata, including read-only properties.
@@ -259,8 +259,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
 
   /// Returns the UploadTaskSnapshot when the upload successfully completes.
   Future<UploadTaskSnapshot> get future {
-    _future ??=
-        handleThenableWithMapper(jsObject, UploadTaskSnapshot.getInstance);
+    _future ??= handleThenable(jsObject).then(UploadTaskSnapshot.getInstance);
     return _future;
   }
 

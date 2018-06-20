@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html' show promiseToFuture;
 
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
@@ -109,26 +110,8 @@ bool _isBasicType(Object value) {
 }
 
 /// Handles the [ThenableJsImpl] object.
-Future<T> handleThenable<T>(ThenableJsImpl<T> thenable) {
-  var completer = new Completer<T>();
-
-  thenable.then(allowInterop(([value]) {
-    completer.complete(value);
-  }), resolveError(completer));
-  return completer.future;
-}
-
-/// Handles the [ThenableJsImpl] object with the provided [mapper] function.
-Future<S> handleThenableWithMapper<T, S>(
-    ThenableJsImpl<T> thenable, Func1<T, S> mapper) {
-  var completer = new Completer<S>();
-
-  thenable.then(allowInterop((val) {
-    var mappedValue = mapper(val);
-    completer.complete(mappedValue);
-  }), resolveError(completer));
-  return completer.future;
-}
+Future<T> handleThenable<T>(ThenableJsImpl<T> thenable) =>
+    promiseToFuture(thenable);
 
 /// Handles the [Future] object with the provided [mapper] function.
 PromiseJsImpl<S> handleFutureWithMapper<T, S>(
