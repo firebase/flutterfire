@@ -1,3 +1,11 @@
+## 4.5.1
+
+* Require at least Dart SDK `2.0.0-dev.61`.
+
+* Simplify promise-Future interop using new `dart:html` API.
+
+* Fixed remaining issues with Dart2 runtime semantics.
+
 ## 4.5.0
 
 * Updated tested JS API version to `4.13.0`.

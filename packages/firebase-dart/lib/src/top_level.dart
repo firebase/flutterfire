@@ -4,6 +4,7 @@ import 'app.dart';
 import 'auth.dart';
 import 'database.dart';
 import 'firestore.dart';
+import 'interop/app_interop.dart' show AppJsImpl;
 import 'interop/firebase_interop.dart' as firebase;
 import 'messaging.dart';
 import 'storage.dart';
@@ -13,7 +14,12 @@ export 'interop/firebase_interop.dart' show SDK_VERSION;
 /// A (read-only) array of all the initialized Apps.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase#.apps>.
-List<App> get apps => firebase.apps.map(App.getInstance).toList();
+List<App> get apps => firebase.apps
+    // explicitly casting the returned list due to
+    // https://github.com/dart-lang/sdk/issues/33537
+    .cast<AppJsImpl>()
+    .map(App.getInstance)
+    .toList();
 
 const String _defaultAppName = "[DEFAULT]";
 

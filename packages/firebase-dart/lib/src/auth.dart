@@ -67,6 +67,9 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
 
   /// List of additional provider-specific information about the user.
   List<UserInfo> get providerData => jsObject.providerData
+      // explicitly casting the returned list due to
+      // https://github.com/dart-lang/sdk/issues/33537
+      .cast<firebase_interop.UserInfoJsImpl>()
       .map((data) =>
           new UserInfo<firebase_interop.UserInfoJsImpl>.fromJsObject(data))
       .toList();
