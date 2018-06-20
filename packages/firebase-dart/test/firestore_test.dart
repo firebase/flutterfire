@@ -271,7 +271,7 @@ void main() {
       var snapshot = await docRef.get();
       var snapshotData = snapshot.data();
 
-      expect(snapshotData, new isInstanceOf<Map>());
+      expect(snapshotData, new TypeMatcher<Map>());
       expect(snapshotData["text"], "Message2");
 
       await docRef.set({"title": "Ahoj"});
@@ -435,7 +435,7 @@ void main() {
       var snapshot = await docRef.get();
       var timeStamp = snapshot.data()['timestamp'];
 
-      expect(timeStamp, new isInstanceOf<DateTime>());
+      expect(timeStamp, new TypeMatcher<DateTime>());
     });
 
     test("update nested with dot notation", () async {
