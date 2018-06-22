@@ -735,18 +735,18 @@ class QuerySnapshot
   /// If this is the first snapshot, all documents will be in the list as
   /// added changes.
   List<DocumentChange> get docChanges => jsObject.docChanges
-      // explicitly casting the returned list due to
+      // explicitly typing the param as dynamic to work-around
       // https://github.com/dart-lang/sdk/issues/33537
-      .cast<firestore_interop.DocumentChangeJsImpl>()
-      .map(DocumentChange.getInstance)
+      // ignore: unnecessary_lambdas
+      .map((dynamic e) => DocumentChange.getInstance(e))
       .toList();
 
   /// Non-null list of all the documents.
   List<DocumentSnapshot> get docs => jsObject.docs
-      // explicitly casting the returned list due to
+      // explicitly typing the param as dynamic to work-around
       // https://github.com/dart-lang/sdk/issues/33537
-      .cast<firestore_interop.DocumentSnapshotJsImpl>()
-      .map(DocumentSnapshot.getInstance)
+      // ignore: unnecessary_lambdas
+      .map((dynamic e) => DocumentSnapshot.getInstance(e))
       .toList();
 
   /// [:true:] if there are no documents.
