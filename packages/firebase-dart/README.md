@@ -60,7 +60,7 @@ You must include the original Firebase JavaScript source into your `.html` file
 to be able to use the library.
 
 ```html
-<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
 ```
 
 #### Do you need to use Firestore?
@@ -68,8 +68,8 @@ to be able to use the library.
 Include the `firebase-firestore.js` script also:
 
 ```html
-<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-firestore.js"></script>
 ```
 
 Firestore library is available in the `firestore.dart` and you can find an example

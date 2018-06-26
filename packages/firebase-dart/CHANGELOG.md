@@ -1,3 +1,22 @@
+## 5.0.0
+
+* Updated from `4.13.0` of the JS API to `5.1.0`.
+
+* Auth
+  * `getToken` has been removed.
+  * `linkWithCredential`, `fetchProvidersForEmail`, `signinWithCredential`, and 
+    `reauthenticateWithCredential` have been deprecated.
+  * `createUserWithEmailAndPassword`, `signInAnonymously`, 
+    `signinWithCustomToken`, and `signInWithEmailAndPassword` all return 
+    `UserCredential` instead of `User`.
+
+* Firestore
+  * `QuerySnapshot.docChanges` is now a function.
+  * `timestampInSnapshots` is set to `true` by default.
+
+* Storage
+  * `downloadURLs` and `downloadURL` have been removed.
+
 ## 4.5.1
 
 * Require at least Dart SDK `2.0.0-dev.61`.

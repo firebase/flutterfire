@@ -8,7 +8,7 @@ import 'firestore.dart';
 import 'func.dart';
 
 import 'interop/firebase_interop.dart' show ThenableJsImpl, PromiseJsImpl;
-import 'interop/firestore_interop.dart' show FieldValue;
+import 'interop/firestore_interop.dart' show FieldValue, TimestampJsImpl;
 import 'interop/js_interop.dart' as js;
 
 /// Returns Dart representation from JS Object.
@@ -44,6 +44,12 @@ dynamic dartify(Object jsObject) {
 
   var proto = util.getProperty(jsObject, '__proto__');
 
+  if (util.hasProperty(proto, 'toDate') &&
+      util.hasProperty(proto, 'toMillis')) {
+    return new DateTime.fromMillisecondsSinceEpoch(
+        (jsObject as TimestampJsImpl).toMillis());
+  }
+
   if (util.hasProperty(proto, 'isEqual') &&
       util.hasProperty(proto, 'toBase64')) {
     // This is likely a GeoPoint – return it as-is
@@ -66,9 +72,8 @@ dynamic jsify(Object dartObject) {
     return dartObject;
   }
 
-  var dartDateTime = js.jsifyDate(dartObject);
-  if (dartDateTime != null) {
-    return dartDateTime;
+  if (dartObject is DateTime) {
+    return TimestampJsImpl.fromMillis(dartObject.millisecondsSinceEpoch);
   }
 
   if (dartObject is Iterable) {

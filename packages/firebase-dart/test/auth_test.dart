@@ -214,13 +214,13 @@ void main() {
 
   group('anonymous user', () {
     Auth authValue;
-    User user;
+    UserCredential userCredential;
     setUp(() async {
       authValue = auth();
       expect(authValue.currentUser, isNull);
 
       try {
-        user = await authValue.signInAnonymously();
+        userCredential = await authValue.signInAnonymously();
       } on FirebaseError catch (e) {
         printException(e);
         rethrow;
@@ -228,41 +228,41 @@ void main() {
     });
 
     tearDown(() async {
-      if (user != null) {
-        await user.delete();
-        user = null;
+      if (userCredential != null) {
+        await userCredential.user.delete();
+        userCredential = null;
       }
     });
 
     test('properties', () {
-      expect(user.isAnonymous, isTrue);
-      expect(user.emailVerified, isFalse);
-      expect(user.providerData, isEmpty);
-      expect(user.providerId, 'firebase');
-      expect(user.metadata, isNotNull);
-      expect(user.metadata.lastSignInTime, isNotNull);
-      expect(user.metadata.creationTime, isNotNull);
+      expect(userCredential.user.isAnonymous, isTrue);
+      expect(userCredential.user.emailVerified, isFalse);
+      expect(userCredential.user.providerData, isEmpty);
+      expect(userCredential.user.providerId, 'firebase');
+      expect(userCredential.user.metadata, isNotNull);
+      expect(userCredential.user.metadata.lastSignInTime, isNotNull);
+      expect(userCredential.user.metadata.creationTime, isNotNull);
     });
 
     test('delete', () async {
-      await user.delete();
+      await userCredential.user.delete();
       expect(authValue.currentUser, isNull);
 
       try {
-        await user.delete();
+        await userCredential.user.delete();
         fail('user.delete should throw');
       } on FirebaseError catch (e) {
         expect(e.code, 'auth/app-deleted');
       } catch (e) {
         fail('Should have been a FirebaseError');
       }
-      user = null;
+      userCredential = null;
     });
   });
 
   group('user', () {
     Auth authValue;
-    User user;
+    UserCredential userCredential;
     String userEmail;
     User lastAuthEventUser;
     User lastIdTokenChangedUser;
@@ -304,9 +304,9 @@ void main() {
 
     tearDown(() async {
       userEmail = null;
-      if (user != null) {
-        await user.delete();
-        user = null;
+      if (userCredential != null) {
+        await userCredential.user.delete();
+        userCredential = null;
       }
 
       if (authStateChangeSubscription != null) {
@@ -324,10 +324,10 @@ void main() {
 
     test('getIdToken', () async {
       try {
-        user = await authValue.createUserWithEmailAndPassword(
+        userCredential = await authValue.createUserWithEmailAndPassword(
             userEmail, "janicka");
 
-        var token = await user.getIdToken();
+        var token = await userCredential.user.getIdToken();
 
         // The following is a basic verification of a JWT token
         // See https://en.wikipedia.org/wiki/JSON_Web_Token
@@ -356,11 +356,11 @@ void main() {
 
     test('create user with email and password', () async {
       try {
-        user = await authValue.createUserWithEmailAndPassword(
+        userCredential = await authValue.createUserWithEmailAndPassword(
             userEmail, "janicka");
-        expect(user, isNotNull);
-        expect(user.email, userEmail);
-        expect(user.phoneNumber, isNull);
+        expect(userCredential, isNotNull);
+        expect(userCredential.user.email, userEmail);
+        expect(userCredential.user.phoneNumber, isNull);
       } on FirebaseError catch (e) {
         printException(e);
         rethrow;
@@ -369,14 +369,13 @@ void main() {
 
     test('createUserAndRetrieveDataWithEmailAndPassword', () async {
       try {
-        var credential =
+        userCredential =
             await authValue.createUserAndRetrieveDataWithEmailAndPassword(
                 userEmail, "janicka");
-        user = credential.user;
-        expect(user, isNotNull);
-        expect(user.email, userEmail);
-        expect(user.phoneNumber, isNull);
-        expect(credential.additionalUserInfo.isNewUser, isTrue);
+        expect(userCredential, isNotNull);
+        expect(userCredential.user.email, userEmail);
+        expect(userCredential.user.phoneNumber, isNull);
+        expect(userCredential.additionalUserInfo.isNewUser, isTrue);
       } on FirebaseError catch (e) {
         printException(e);
         rethrow;
@@ -385,10 +384,9 @@ void main() {
 
     test('signInAnonymouslyAndRetrieveData', () async {
       try {
-        var credential = await authValue.signInAnonymouslyAndRetrieveData();
-        user = credential.user;
+        userCredential = await authValue.signInAnonymouslyAndRetrieveData();
 
-        expect(user.isAnonymous, isTrue);
+        expect(userCredential.user.isAnonymous, isTrue);
       } on FirebaseError catch (e) {
         printException(e);
         rethrow;
@@ -397,11 +395,12 @@ void main() {
 
     test('link anonymous user with credential', () async {
       try {
-        user = await authValue.signInAnonymously();
-        expect(user.isAnonymous, isTrue);
+        userCredential = await authValue.signInAnonymously();
+        expect(userCredential.user.isAnonymous, isTrue);
 
         var credential = EmailAuthProvider.credential(userEmail, "janicka");
-        user = await user.linkWithCredential(credential);
+        // ignore: deprecated_member_use
+        var user = await userCredential.user.linkWithCredential(credential);
         expect(user.isAnonymous, isFalse);
         expect(user.email, userEmail);
       } on FirebaseError catch (e) {
@@ -412,14 +411,15 @@ void main() {
 
     test('linkAndRetrieveDataWithCredential anonymous user', () async {
       try {
-        user = await authValue.signInAnonymously();
-        expect(user.isAnonymous, isTrue);
+        userCredential = await authValue.signInAnonymously();
+        expect(userCredential.user.isAnonymous, isTrue);
 
         var credential = EmailAuthProvider.credential(userEmail, "janicka");
-        var userCred = await user.linkAndRetrieveDataWithCredential(credential);
+        var userCred = await userCredential.user
+            .linkAndRetrieveDataWithCredential(credential);
 
         expect(userCred.operationType, 'link');
-        expect(userCred.user.uid, user.uid);
+        expect(userCred.user.uid, userCredential.user.uid);
         expect(userCred.additionalUserInfo, isNotNull);
         expect(userCred.additionalUserInfo.isNewUser, isFalse);
       } on FirebaseError catch (e) {
@@ -430,11 +430,12 @@ void main() {
 
     test('reauthenticate with credential', () async {
       try {
-        user = await authValue.createUserWithEmailAndPassword(
+        userCredential = await authValue.createUserWithEmailAndPassword(
             userEmail, "janicka");
 
         var credential = EmailAuthProvider.credential(userEmail, "janicka");
-        await user.reauthenticateWithCredential(credential);
+        // ignore: deprecated_member_use
+        await userCredential.user.reauthenticateWithCredential(credential);
 
         expect(authValue.currentUser, isNotNull);
         expect(authValue.currentUser.email, userEmail);
@@ -446,15 +447,15 @@ void main() {
 
     test('reauthenticateAndRetrieveDataWithCredential', () async {
       try {
-        user = await authValue.createUserWithEmailAndPassword(
+        userCredential = await authValue.createUserWithEmailAndPassword(
             userEmail, "janicka");
 
         var credential = EmailAuthProvider.credential(userEmail, "janicka");
-        var userCred =
-            await user.reauthenticateAndRetrieveDataWithCredential(credential);
+        var userCred = await userCredential.user
+            .reauthenticateAndRetrieveDataWithCredential(credential);
 
         expect(userCred.operationType, 'reauthenticate');
-        expect(userCred.user.uid, user.uid);
+        expect(userCred.user.uid, userCredential.user.uid);
 
         expect(lastAuthEventUser, isNotNull);
         expect(lastAuthEventUser.email, userEmail);
@@ -469,18 +470,19 @@ void main() {
     });
 
     test('reauthenticate with bad credential fails', () async {
-      user =
+      userCredential =
           await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
       var credential = EmailAuthProvider.credential(userEmail, "something");
 
       expect(
-          user.reauthenticateWithCredential(credential),
+          userCredential.user
+              .reauthenticateAndRetrieveDataWithCredential(credential),
           throwsToString(contains(
               'The password is invalid or the user does not have a password')));
     });
 
     test("signInAndRetrieveDataWithCredential", () async {
-      user =
+      userCredential =
           await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
 
       // Firefox takes a second to get the event values that are checked below
@@ -543,13 +545,13 @@ void main() {
 
   group('registered user', () {
     Auth authValue;
-    User user;
+    UserCredential userCredential;
 
     setUp(() async {
       authValue = auth();
 
       try {
-        user = await authValue.createUserWithEmailAndPassword(
+        userCredential = await authValue.createUserWithEmailAndPassword(
             getTestEmail(), "hesloheslo");
         expect(authValue.currentUser, isNotNull);
       } on FirebaseError catch (e) {
@@ -559,20 +561,20 @@ void main() {
     });
 
     tearDown(() async {
-      if (user != null) {
-        await user.delete();
-        user = null;
+      if (userCredential != null) {
+        await userCredential.user.delete();
+        userCredential = null;
       }
     });
 
     test('update profile', () async {
       try {
-        expect(user, isNotNull);
-        expect(user.displayName, isNull);
+        expect(userCredential, isNotNull);
+        expect(userCredential.user.displayName, isNull);
 
         var profile = new UserProfile(displayName: "Other User");
-        await user.updateProfile(profile);
-        expect(user.displayName, "Other User");
+        await userCredential.user.updateProfile(profile);
+        expect(userCredential.user.displayName, "Other User");
       } on FirebaseError catch (e) {
         printException(e);
         rethrow;
@@ -581,13 +583,13 @@ void main() {
 
     test('toJson', () async {
       try {
-        expect(user, isNotNull);
+        expect(userCredential, isNotNull);
 
         var profile = new UserProfile(
             displayName: "Other User", photoURL: "http://google.com");
-        await user.updateProfile(profile);
+        await userCredential.user.updateProfile(profile);
 
-        var userMap = user.toJson();
+        var userMap = userCredential.user.toJson();
         expect(userMap, isNotNull);
         expect(userMap, isNotEmpty);
         expect(userMap["displayName"], "Other User");
@@ -595,7 +597,7 @@ void main() {
 
         await authValue.signOut();
         await authValue.signInAnonymously();
-        user = authValue.currentUser;
+        var user = authValue.currentUser;
 
         userMap = user.toJson();
         expect(userMap, isNotNull);

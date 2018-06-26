@@ -15,12 +15,14 @@ abstract class AuthJsImpl {
   external PromiseJsImpl applyActionCode(String code);
   external PromiseJsImpl<ActionCodeInfo> checkActionCode(String code);
   external PromiseJsImpl confirmPasswordReset(String code, String newPassword);
-  external PromiseJsImpl<UserJsImpl> createUserWithEmailAndPassword(
+  external PromiseJsImpl<UserCredentialJsImpl> createUserWithEmailAndPassword(
       String email, String password);
   external PromiseJsImpl<UserCredentialJsImpl>
       createUserAndRetrieveDataWithEmailAndPassword(
           String email, String password);
   external UserJsImpl get currentUser;
+
+  @deprecated
   external PromiseJsImpl<List<String>> fetchProvidersForEmail(String email);
   external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult();
   external String get languageCode;
@@ -34,15 +36,18 @@ abstract class AuthJsImpl {
   external PromiseJsImpl setPersistence(String persistence);
   external PromiseJsImpl<UserCredentialJsImpl>
       signInAndRetrieveDataWithCredential(AuthCredential credential);
-  external PromiseJsImpl<UserJsImpl> signInAnonymously();
+  external PromiseJsImpl<UserCredentialJsImpl> signInAnonymously();
   external PromiseJsImpl<UserCredentialJsImpl>
       signInAnonymouslyAndRetrieveData();
+
+  @deprecated
   external PromiseJsImpl<UserJsImpl> signInWithCredential(
       AuthCredential credential);
-  external PromiseJsImpl<UserJsImpl> signInWithCustomToken(String token);
+  external PromiseJsImpl<UserCredentialJsImpl> signInWithCustomToken(
+      String token);
   external PromiseJsImpl<UserCredentialJsImpl>
       signInAndRetrieveDataWithCustomToken(String token);
-  external PromiseJsImpl<UserJsImpl> signInWithEmailAndPassword(
+  external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailAndPassword(
       String email, String password);
   external PromiseJsImpl<UserCredentialJsImpl>
       signInAndRetrieveDataWithEmailAndPassword(String email, String password);

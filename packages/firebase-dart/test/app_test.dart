@@ -125,7 +125,7 @@ void main() {
     });
 
     test("SDK version", () {
-      expect(fb.SDK_VERSION, startsWith("4."));
+      expect(fb.SDK_VERSION, startsWith("5."));
     });
 
     group('ServerValue', () {

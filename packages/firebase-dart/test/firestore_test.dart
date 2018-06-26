@@ -744,9 +744,9 @@ void main() {
     test("onSnapshot", () async {
       StreamSubscription subscription;
 
-      subscription = ref.onSnapshot.listen((snapshot) {
+      subscription = ref.onSnapshot.listen((fs.QuerySnapshot snapshot) {
         expect(snapshot, isNotNull);
-        expect(snapshot.docChanges, isNotEmpty);
+        expect(snapshot.docChanges(), isNotEmpty);
 
         snapshot.forEach(expectAsync1((doc) {
           expect(doc.id, anyOf("message1", "message2", "message3", "message4"));
@@ -759,7 +759,7 @@ void main() {
 
     test("onSnapshot view changes", () async {
       ref.onSnapshot.listen((snapshot) {
-        for (var change in snapshot.docChanges) {
+        for (var change in snapshot.docChanges()) {
           if (change.type == "added") {
             expect(change.doc.id,
                 anyOf("message1", "message2", "message3", "message4"));

@@ -219,8 +219,7 @@ abstract class QueryJsImpl {
 
 @JS("QuerySnapshot")
 abstract class QuerySnapshotJsImpl {
-  external List<DocumentChangeJsImpl> get docChanges;
-  external set docChanges(List<DocumentChangeJsImpl> v);
+  external List<DocumentChangeJsImpl> docChanges();
   external List<DocumentSnapshotJsImpl> get docs;
   external set docs(List<DocumentSnapshotJsImpl> v);
   external bool get empty;
@@ -244,6 +243,26 @@ abstract class TransactionJsImpl {
       [SetOptions options]);
   external TransactionJsImpl update(
       DocumentReferenceJsImpl documentRef, dataOrFieldsAndValues);
+}
+
+@JS('Timestamp')
+abstract class TimestampJsImpl {
+  external int get seconds;
+  external int get nanoseconds;
+
+  external factory TimestampJsImpl(int seconds, int nanoseconds);
+
+  //external JsDate toDate();
+  external int toMillis();
+
+  external static TimestampJsImpl now();
+
+  //external static TimestampJsImpl fromDate(JsDate date);
+  external static TimestampJsImpl fromMillis(int milliseconds);
+
+  external bool isEqual(TimestampJsImpl other);
+  @override
+  external String toString();
 }
 
 /// The set of Cloud Firestore status codes.
@@ -298,14 +317,10 @@ abstract class QueryListenOptions {
 @anonymous
 @JS()
 abstract class Settings {
-  /// The hostname to connect to.
-  external String get host;
-  external set host(String v);
+  external bool get timestampsInSnapshots;
+  external set timestampsInSnapshots(bool v);
 
-  /// Whether to use SSL when connecting.
-  external bool get ssl;
-  external set ssl(bool v);
-  external factory Settings({String host, bool ssl});
+  external factory Settings({bool timestampsInSnapshots});
 }
 
 /// Metadata about a snapshot, describing the state of the snapshot.

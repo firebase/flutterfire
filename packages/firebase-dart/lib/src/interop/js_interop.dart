@@ -13,14 +13,6 @@ external List<String> objectKeys(Object obj);
 @JS("Array.from")
 external Object toJSArray(List source);
 
-@JS("Date")
-class JsDate {
-  // https://github.com/dart-lang/linter/issues/864
-  // ignore: avoid_unused_constructor_parameters
-  external factory JsDate(Object millisecondsSinceEpochOr8601String);
-  external int getTime();
-}
-
 DateTime dartifyDate(Object jsObject) {
   if (util.hasProperty(jsObject, "toDateString")) {
     try {
@@ -30,13 +22,6 @@ DateTime dartifyDate(Object jsObject) {
       // so it's not a JsDate!
       return null;
     }
-  }
-  return null;
-}
-
-Object jsifyDate(Object dartObject) {
-  if (dartObject is DateTime) {
-    return new JsDate(dartObject.millisecondsSinceEpoch);
   }
   return null;
 }

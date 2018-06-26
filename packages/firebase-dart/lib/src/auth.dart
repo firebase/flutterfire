@@ -97,16 +97,6 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
 
   /// Returns a JWT token used to identify the user to a Firebase service.
   ///
-  /// It forces refresh regardless of token expiration if [forceRefresh]
-  /// parameter is `true`.
-  ///
-  /// This method is **DEPRECATED**. Use [getIdToken] instead.
-  @Deprecated('Use `getIdToken` instead.')
-  Future<String> getToken([bool forceRefresh = false]) =>
-      handleThenable(jsObject.getToken(forceRefresh));
-
-  /// Returns a JWT token used to identify the user to a Firebase service.
-  ///
   /// Returns the current token if it has not expired, otherwise this will
   /// refresh the token and return a new one.
   ///
@@ -123,6 +113,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
           .then((u) => new UserCredential.fromJsObject(u));
 
   /// Links the user account with the given [credential] and returns the user.
+  @deprecated
   Future<User> linkWithCredential(AuthCredential credential) =>
       handleThenable(jsObject.linkWithCredential(credential))
           .then(User.getInstance);
@@ -171,6 +162,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   /// Re-authenticates a user using a fresh [credential]. Should be used
   /// before operations such as [updatePassword()] that require tokens
   /// from recent sign in attempts.
+  @deprecated
   Future reauthenticateWithCredential(AuthCredential credential) =>
       handleThenable(jsObject.reauthenticateWithCredential(credential));
 
@@ -372,9 +364,10 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   ///
   /// The creation can fail, if the user with given [email] already exists
   /// or the password is not valid.
-  Future<User> createUserWithEmailAndPassword(String email, String password) =>
+  Future<UserCredential> createUserWithEmailAndPassword(
+          String email, String password) =>
       handleThenable(jsObject.createUserWithEmailAndPassword(email, password))
-          .then(User.getInstance);
+          .then((u) => new UserCredential.fromJsObject(u));
 
   /// Creates a new user account associated with the specified [email] address
   /// and [password] and returns any additional user info data or credentials.
@@ -400,6 +393,7 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
 
   /// Returns the list of provider IDs for the given [email] address,
   /// that can be used to sign in.
+  @deprecated
   Future<List<String>> fetchProvidersForEmail(String email) =>
       handleThenable(jsObject.fetchProvidersForEmail(email));
 
@@ -469,8 +463,9 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   ///
   /// This method will be deprecated and will be updated to resolve with a
   /// [UserCredential] as is returned in [signInAnonymouslyAndRetrieveData()].
-  Future<User> signInAnonymously() =>
-      handleThenable(jsObject.signInAnonymously()).then(User.getInstance);
+  Future<UserCredential> signInAnonymously() =>
+      handleThenable(jsObject.signInAnonymously())
+          .then((u) => new UserCredential.fromJsObject(u));
 
   /// Signs in a user anonymously and returns any additional user info data
   /// or credentials.
@@ -486,6 +481,7 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
           .then((u) => new UserCredential.fromJsObject(u));
 
   /// Signs in with the given [credential] and returns the [User].
+  @deprecated
   Future<User> signInWithCredential(AuthCredential credential) =>
       handleThenable(jsObject.signInWithCredential(credential))
           .then(User.getInstance);
@@ -497,9 +493,9 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   ///
   /// This method will be deprecated and will be updated to resolve with a
   /// [UserCredential] as is returned in [signInAndRetrieveDataWithCustomToken()].
-  Future<User> signInWithCustomToken(String token) =>
+  Future<UserCredential> signInWithCustomToken(String token) =>
       handleThenable(jsObject.signInWithCustomToken(token))
-          .then(User.getInstance);
+          .then((u) => new UserCredential.fromJsObject(u));
 
   /// Signs in a user asynchronously using a custom [token] and returns any
   /// additional user info data or credentials.
@@ -522,9 +518,10 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   /// This method will be deprecated and will be updated to resolve with a
   /// [UserCredential] as is returned in
   /// [signInAndRetrieveDataWithEmailAndPassword()].
-  Future<User> signInWithEmailAndPassword(String email, String password) =>
+  Future<UserCredential> signInWithEmailAndPassword(
+          String email, String password) =>
       handleThenable(jsObject.signInWithEmailAndPassword(email, password))
-          .then(User.getInstance);
+          .then((u) => new UserCredential.fromJsObject(u));
 
   /// Asynchronously signs in using an [email] and [password] and returns any
   /// additional user info data or credentials.

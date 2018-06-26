@@ -55,7 +55,6 @@ abstract class ReferenceJsImpl {
 @anonymous
 class FullMetadataJsImpl extends UploadMetadataJsImpl {
   external String get bucket;
-  external List<String> get downloadURLs;
   external String get fullPath;
   external String get generation;
   external String get metageneration;
@@ -109,7 +108,6 @@ abstract class UploadTaskJsImpl
 @JS('UploadTaskSnapshot')
 abstract class UploadTaskSnapshotJsImpl {
   external int get bytesTransferred;
-  external String get downloadURL;
   external FullMetadataJsImpl get metadata;
   external ReferenceJsImpl get ref;
   external String get state;

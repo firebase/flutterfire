@@ -74,7 +74,7 @@ class MessagesApp {
 
   showMessages() {
     this.ref.orderBy("createdAt").onSnapshot.listen((querySnapshot) {
-      for (var change in querySnapshot.docChanges) {
+      for (var change in querySnapshot.docChanges()) {
         var docSnapshot = change.doc;
         switch (change.type) {
           case "added":

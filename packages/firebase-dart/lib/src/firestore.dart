@@ -32,7 +32,9 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new Firestore._fromJsObject(jsObject);
+
+    return _expando[jsObject] ??= new Firestore._fromJsObject(jsObject
+      ..settings(new firestore_interop.Settings(timestampsInSnapshots: true)));
   }
 
   Firestore._fromJsObject(firestore_interop.FirestoreJsImpl jsObject)
@@ -734,7 +736,8 @@ class QuerySnapshot
   /// Non-null list of the documents that changed since the last snapshot.
   /// If this is the first snapshot, all documents will be in the list as
   /// added changes.
-  List<DocumentChange> get docChanges => jsObject.docChanges
+  List<DocumentChange> docChanges() => jsObject
+      .docChanges()
       // explicitly typing the param as dynamic to work-around
       // https://github.com/dart-lang/sdk/issues/33537
       // ignore: unnecessary_lambdas
