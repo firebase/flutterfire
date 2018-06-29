@@ -100,7 +100,8 @@ class PromiseJsImpl<T> extends ThenableJsImpl<T> {
   external static PromiseJsImpl resolve(value);
 }
 
-@JS('Thenable')
+@anonymous
+@JS()
 abstract class ThenableJsImpl<T> {
   external ThenableJsImpl JS$catch([Func1 onReject]);
   external ThenableJsImpl then([Func1 onResolve, Func1 onReject]);

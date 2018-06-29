@@ -127,7 +127,8 @@ abstract class Blob {
   external bool isEqual(Object other);
 }
 
-@JS("DocumentChange")
+@anonymous
+@JS()
 abstract class DocumentChangeJsImpl {
   external String /*'added'|'removed'|'modified'*/ get type;
   external set type(String /*'added'|'removed'|'modified'*/ v);
