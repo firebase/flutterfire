@@ -654,6 +654,43 @@ void main() {
     });
   });
 
+  test('metadata docChanges', () async {
+    var ref = firestore.collection('$testPath/with/index');
+
+    await _deleteCollection(firestore, ref);
+
+    var count = 0;
+    ref.onSnapshotMetadata.listen(expectAsync1((qs) {
+      count++;
+      var metadata = qs.metadata;
+      var changes = qs.docChanges();
+      switch (count) {
+        case 1:
+          expect(changes.single.type, 'added');
+          expect(changes.single.doc.data()['value'], isNull);
+          expect(metadata.hasPendingWrites, isTrue);
+          expect(metadata.fromCache, isTrue);
+          return;
+        case 2:
+          expect(changes, isEmpty);
+          expect(metadata.hasPendingWrites, isTrue);
+          expect(metadata.fromCache, isFalse);
+          return;
+        case 3:
+          expect(changes.single.type, 'modified');
+          expect(
+              changes.single.doc.data()['value'], new TypeMatcher<DateTime>());
+          expect(metadata.hasPendingWrites, isFalse);
+          expect(metadata.fromCache, isFalse);
+          return;
+      }
+      fail('should never get here!');
+    }, count: 3));
+
+    // ignore: unawaited_futures
+    ref.doc("message1").set({'value': fs.FieldValue.serverTimestamp()});
+  });
+
   group("Quering data", () {
     fs.CollectionReference ref;
 
