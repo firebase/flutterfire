@@ -421,59 +421,45 @@ class Query<T extends firestore_interop.QueryJsImpl>
   Query limit(num limit) => new Query.fromJsObject(jsObject.limit(limit));
 
   StreamController<QuerySnapshot> _onSnapshotController;
-  StreamController<QuerySnapshot> _onDocumentMetadataController;
-  StreamController<QuerySnapshot> _onQueryMetadataController;
+  StreamController<QuerySnapshot> _onSnapshotMetadataController;
 
   /// Attaches a listener for [QuerySnapshot] events.
-  Stream<QuerySnapshot> get onSnapshot => _createStream(_onSnapshotController);
+  Stream<QuerySnapshot> get onSnapshot =>
+      (_onSnapshotController ??= _createStream(false)).stream;
 
-  /// Attaches a listener for [QuerySnapshot] events
-  /// with [: {includeDocumentMetadataChanges: true} :] - raise an event even
-  /// if only metadata of a document in the query results changes
-  /// (for example, one of the [DocumentSnapshot.metadata] properties
-  /// on one of the documents). Default is [:false:].
-  Stream<QuerySnapshot> get onDocumentMetadataChangesSnapshot => _createStream(
-      _onDocumentMetadataController,
-      new firestore_interop.QueryListenOptions(
-          includeDocumentMetadataChanges: true));
+  /// Attaches a listener for [QuerySnapshot] events.
+  Stream<QuerySnapshot> get onSnapshotMetadata =>
+      (_onSnapshotMetadataController ??= _createStream(true)).stream;
 
-  /// Attaches a listener for [QuerySnapshot] events
-  /// with [: {includeQueryMetadataChanges: true} :] - raise an event even
-  /// if only metadata changes (for example, one of the
-  /// [QuerySnapshot.metadata] properties). Default is [:false:].
-  Stream<QuerySnapshot> get onQueryMetadataChangesSnapshot => _createStream(
-      _onQueryMetadataController,
-      new firestore_interop.QueryListenOptions(
-          includeQueryMetadataChanges: true));
+  StreamController<QuerySnapshot> _createStream(bool includeMetadataChanges) {
+    StreamController<QuerySnapshot> controller;
 
-  Stream<QuerySnapshot> _createStream(
-      StreamController<QuerySnapshot> controller,
-      [firestore_interop.QueryListenOptions options]) {
-    if (controller == null) {
-      var nextWrapper =
-          allowInterop((firestore_interop.QuerySnapshotJsImpl snapshot) {
-        controller.add(QuerySnapshot.getInstance(snapshot));
-      });
+    var nextWrapper =
+        allowInterop((firestore_interop.QuerySnapshotJsImpl snapshot) {
+      controller.add(QuerySnapshot._fromJsObject(snapshot));
+    });
 
-      var errorWrapper = allowInterop((e) => controller.addError(e));
+    var errorWrapper = allowInterop((e) => controller.addError(e));
 
-      ZoneCallback onSnapshotUnsubscribe;
+    ZoneCallback onSnapshotUnsubscribe;
 
-      void startListen() {
-        onSnapshotUnsubscribe = (options != null)
-            ? jsObject.onSnapshot(options, nextWrapper, errorWrapper)
-            : jsObject.onSnapshot(nextWrapper, errorWrapper);
-      }
+    var options = new firestore_interop.SnapshotListenOptions(
+        includeMetadataChanges: includeMetadataChanges);
 
-      void stopListen() {
-        onSnapshotUnsubscribe();
-        onSnapshotUnsubscribe = null;
-      }
-
-      controller = new StreamController<QuerySnapshot>.broadcast(
-          onListen: startListen, onCancel: stopListen, sync: true);
+    void startListen() {
+      onSnapshotUnsubscribe =
+          jsObject.onSnapshot(options, nextWrapper, errorWrapper);
     }
-    return controller.stream;
+
+    void stopListen() {
+      onSnapshotUnsubscribe();
+      onSnapshotUnsubscribe = null;
+    }
+
+    controller = new StreamController<QuerySnapshot>.broadcast(
+        onListen: startListen, onCancel: stopListen, sync: true);
+
+    return controller;
   }
 
   /// Creates a new [Query] where the results are sorted by the specified field,

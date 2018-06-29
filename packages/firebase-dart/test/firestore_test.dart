@@ -741,24 +741,23 @@ void main() {
           snapshot.docs[0].data()["text"], anyOf("hello", "hi", "ahoj", "cau"));
     });
 
-    test("onSnapshot", () async {
-      StreamSubscription subscription;
+    group('onSnapshot', () {
+      test("from ref", () async {
+        var snapshot = await ref.onSnapshot.first;
 
-      subscription = ref.onSnapshot.listen((fs.QuerySnapshot snapshot) {
-        expect(snapshot, isNotNull);
-        expect(snapshot.docChanges(), isNotEmpty);
+        var size = snapshot.docs.length;
+        expect(size, inInclusiveRange(1, 4));
 
-        snapshot.forEach(expectAsync1((doc) {
+        expect(snapshot.docChanges(), hasLength(size));
+
+        var forEachCount = 0;
+        snapshot.forEach((doc) {
+          forEachCount++;
           expect(doc.id, anyOf("message1", "message2", "message3", "message4"));
           expect(doc.metadata, isNotNull);
-        }, count: 4));
+        });
+        expect(forEachCount, size);
 
-        subscription.cancel();
-      });
-    });
-
-    test("onSnapshot view changes", () async {
-      ref.onSnapshot.listen((snapshot) {
         for (var change in snapshot.docChanges()) {
           if (change.type == "added") {
             expect(change.doc.id,
@@ -766,21 +765,29 @@ void main() {
           }
         }
       });
-    });
 
-    test("onSnapshot document", () async {
-      ref.doc("message1").onSnapshot.listen((doc) {
-        if (doc.exists) {
-          expect(doc.data()["text"], "hello");
-        }
+      test("from ref.doc", () async {
+        var doc = await ref.doc("message1").onSnapshot.first;
+        expect(doc.exists, isTrue);
+        expect(doc.data()["text"], "hello");
       });
-    });
 
-    test("onSnapshot document", () async {
-      ref.doc("message1").onSnapshot.listen((doc) {
-        if (doc.exists) {
-          expect(doc.data()["text"], "hello");
-        }
+      test('normal', () async {
+        var events = await ref.onSnapshot.take(4).toList();
+        expect(
+            events,
+            everyElement(new TypeMatcher<fs.QuerySnapshot>()
+                .having(
+                    (qs) => qs.metadata.fromCache, 'metadata.fromCache', isTrue)
+                .having((qs) => qs.metadata.hasPendingWrites,
+                    'metadata.hasPendingWrites', isFalse)
+                .having((qs) => qs.docChanges(), 'docChanges', hasLength(1))));
+      });
+
+      test('metadata', () async {
+        var events = await ref.onSnapshotMetadata.take(5).toList();
+        expect(events.last.metadata.hasPendingWrites, isFalse);
+        expect(events.last.docChanges(), isEmpty);
       });
     });
 

@@ -204,9 +204,10 @@ abstract class QueryJsImpl {
       /*DocumentSnapshot|List<dynamic>*/ snapshotOrFieldValues);
   external PromiseJsImpl<QuerySnapshotJsImpl> get();
   external QueryJsImpl limit(num limit);
-  external VoidFunc0 onSnapshot(
-      optionsOrObserverOrOnNext, observerOrOnNextOrOnError,
-      [Func1<FirebaseError, dynamic> onError, QueryListenOptions onCompletion]);
+  external void Function() onSnapshot(
+      SnapshotListenOptions options,
+      void Function(QuerySnapshotJsImpl) onNext,
+      Func1<FirebaseError, dynamic> onError);
   external QueryJsImpl orderBy(/*String|FieldPath*/ fieldPath,
       [String /*'desc'|'asc'*/ directionStr]);
   external QueryJsImpl startAfter(
@@ -288,26 +289,17 @@ abstract class FirestoreError {
       String stack});
 }
 
-/// Options for use with [Query.onDocumentMetadataChangesSnapshot()] and
-/// [Query.onQueryMetadataChangesSnapshot()] to control the behavior of
-/// the snapshot listener.
-///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.QueryListenOptions>.
+/// Options for use with `Query.onSnapshot() to control the behavior of the
+/// snapshot listener.
 @anonymous
 @JS()
-abstract class QueryListenOptions {
-  /// Raise an event even if only metadata of a document in the query results
-  /// changes (for example, one of the [DocumentSnapshot.metadata] properties on
-  /// one of the documents). Default is [:false:].
-  external bool get includeQueryMetadataChanges;
-  external set includeQueryMetadataChanges(bool v);
-
-  /// Raise an event even if only metadata changes (for example, one of the
-  /// [QuerySnapshot.metadata] properties). Default is [:false:].
-  external bool get includeDocumentMetadataChanges;
-  external set includeDocumentMetadataChanges(bool v);
-  external factory QueryListenOptions(
-      {bool includeQueryMetadataChanges, bool includeDocumentMetadataChanges});
+abstract class SnapshotListenOptions {
+  /// Raise an event even if only metadata of the query or document changes.
+  ///
+  /// Default is `false`.
+  external bool get includeMetadataChanges;
+  external set includeMetadataChanges(bool value);
+  external factory SnapshotListenOptions({bool includeMetadataChanges});
 }
 
 /// Specifies custom configurations for your Cloud Firestore instance.
