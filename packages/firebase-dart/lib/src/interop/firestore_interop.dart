@@ -221,6 +221,7 @@ abstract class QueryJsImpl {
 
 @JS("QuerySnapshot")
 abstract class QuerySnapshotJsImpl {
+  // TODO: [SnapshotOptions options]
   external List<DocumentChangeJsImpl> docChanges();
   external List<DocumentSnapshotJsImpl> get docs;
   external set docs(List<DocumentSnapshotJsImpl> v);

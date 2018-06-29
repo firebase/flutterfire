@@ -722,6 +722,7 @@ class QuerySnapshot
   /// Non-null list of the documents that changed since the last snapshot.
   /// If this is the first snapshot, all documents will be in the list as
   /// added changes.
+  // TODO: [SnapshotOptions options]
   List<DocumentChange> docChanges() => jsObject
       .docChanges()
       // explicitly typing the param as dynamic to work-around
