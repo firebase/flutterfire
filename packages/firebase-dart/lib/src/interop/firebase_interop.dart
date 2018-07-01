@@ -38,7 +38,8 @@ external FirestoreJsImpl firestore([AppJsImpl app]);
 external MessagingJsImpl messaging([AppJsImpl app]);
 
 /// https://firebase.google.com/docs/reference/js/firebase.User
-@JS('User')
+@anonymous
+@JS()
 abstract class UserJsImpl extends UserInfoJsImpl {
   external bool get emailVerified;
   external bool get isAnonymous;
@@ -82,7 +83,8 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external Object toJSON();
 }
 
-@JS('UserInfo')
+@anonymous
+@JS()
 abstract class UserInfoJsImpl {
   external String get displayName;
   external String get email;
