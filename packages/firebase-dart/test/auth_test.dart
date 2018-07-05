@@ -335,7 +335,7 @@ void main() {
           // If `t.length` is not a multiple of 4, pad it to the right w/ `=`.
           var originalLength = t.length;
           var remainder = (originalLength / 4).ceil() * 4 - originalLength;
-          t = "$t${'='* remainder}";
+          t = "$t${'=' * remainder}";
           return base64Url.decode(t);
         }).toList();
 
