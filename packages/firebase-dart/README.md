@@ -49,31 +49,24 @@ Install the library from pub:
 
 ```yaml
 dependencies:
-  firebase: '^4.3.0'
+  firebase: ^5.0.0
 ```
 
 ## Using this package for browser applications
 
-### Include Firebase JavaScript source
+You must include the right Firebase JavaScript libraries into your `.html` file
+to be able to use this package. Usually this means including `firebase-app.js`
+as well as one or more libraries corresponding to the features you are using.
 
-You must include the original Firebase JavaScript source into your `.html` file
-to be able to use the library.
-
-```html
-<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
-```
-
-#### Do you need to use Firestore?
-
-Include the `firebase-firestore.js` script also:
+For example:
 
 ```html
-<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-firestore.js"></script>
 ```
 
-Firestore library is available in the `firestore.dart` and you can find an example
-how to use this library in the [example/firestore](example/firestore).
+The firestore library is available in `firestore.dart`. Youou can find an
+example how to use this library in the [example/firestore](example/firestore).
 
 ### Real-time Database Example 
 

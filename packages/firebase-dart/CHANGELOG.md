@@ -1,3 +1,7 @@
+## 5.0.1
+
+* README updates.
+
 ## 5.0.0
 
 * Updated from `4.13.0` of the JS API to `5.1.0`.
