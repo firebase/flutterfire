@@ -65,7 +65,7 @@ For example:
 <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-firestore.js"></script>
 ```
 
-The firestore library is available in `firestore.dart`. Youou can find an
+The firestore library is available in `firestore.dart`. You can find an
 example how to use this library in the [example/firestore](example/firestore).
 
 ### Real-time Database Example 
