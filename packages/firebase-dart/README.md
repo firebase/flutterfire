@@ -81,8 +81,8 @@ void main() {
     projectId: "YourProjectId",
     storageBucket: "YourStorageBucket");
 
-  Database database = database();
-  DatabaseReference ref = database.ref("messages");
+  Database db = database();
+  DatabaseReference ref = db.ref("messages");
 
   ref.onValue.listen((e) {
     DataSnapshot datasnapshot = e.snapshot;
@@ -105,11 +105,11 @@ void main() {
     projectId: "YourProjectId",
     storageBucket: "YourStorageBucket");
 
-  fs.Firestore firestore = firestore();
-  fs.CollectionReference ref = firestore.collection("messages");
+  fs.Firestore store = firestore();
+  fs.CollectionReference ref = store.collection("messages");
 
   ref.onSnapshot.listen((querySnapshot) {
-    querySnapshot.docChanges.forEach((change) {
+    querySnapshot.docChanges().forEach((change) {
       if (change.type == "added") {
         // Do something with change.doc
       }     
