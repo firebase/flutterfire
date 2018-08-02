@@ -61,8 +61,8 @@ as well as one or more libraries corresponding to the features you are using.
 For example:
 
 ```html
-<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-firestore.js"></script>
 ```
 
 The firestore library is available in `firestore.dart`. You can find an
