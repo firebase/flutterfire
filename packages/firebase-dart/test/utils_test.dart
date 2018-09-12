@@ -1,5 +1,6 @@
 @TestOn('browser')
 import 'package:firebase/src/utils.dart';
+import 'package:firebase/src/interop/firestore_interop.dart';
 
 import 'package:test/test.dart';
 
@@ -19,7 +20,12 @@ void main() {
         'bool': true,
         'double': 1.1,
         'list': [1, 2, 3],
-        'map': {'a': true}
+        'map': {'a': true},
+        'not a geopoint': {
+          'latitude': 45.5122,
+          'longitude': -122.6587,
+          'foo': 'bar'
+        }
       };
 
       jsonObjects.forEach((key, value) {
@@ -33,6 +39,13 @@ void main() {
 
     test('custom object with toJson', () {
       expect(() => jsify(new _TestClassWithToJson()), throwsArgumentError);
+    });
+
+    test('geopoint', () {
+      var value = {'latitude': 45.5122, 'longitude': -122.6587};
+      var js = jsify(value);
+      var roundTrip = dartify(js);
+      expect(roundTrip, const TypeMatcher<GeoPoint>());
     });
   });
 }

@@ -36,9 +36,9 @@ dynamic dartify(Object jsObject) {
   }
 
   if (util.hasProperty(jsObject, 'latitude') &&
-      util.hasProperty(jsObject, 'longitude')) {
+      util.hasProperty(jsObject, 'longitude') &&
+      js.objectKeys(jsObject).length == 2) {
     // This is likely a GeoPoint – return it as-is
-    // TODO(kevmoo): figure out if there is a more robust way to detect
     return jsObject as GeoPoint;
   }
 
