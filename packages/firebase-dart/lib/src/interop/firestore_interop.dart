@@ -117,6 +117,7 @@ class GeoPoint {
 }
 
 @JS("Blob")
+@anonymous
 abstract class Blob {
   external static Blob fromBase64String(String base64);
   external static Blob fromUint8Array(Uint8List list);
@@ -183,6 +184,7 @@ abstract class DocumentSnapshotJsImpl {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.FieldValue>.
 @JS()
+@anonymous
 abstract class FieldValue {
   /// Returns a sentinel for use with [update()] to mark a field for deletion.
   external static FieldValue delete();

@@ -81,6 +81,7 @@ abstract class QueryJsImpl {
 }
 
 @JS('DataSnapshot')
+@anonymous
 abstract class DataSnapshotJsImpl {
   external String get key;
   external set key(String s);
