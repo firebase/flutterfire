@@ -158,7 +158,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// Set [applyLocally] to `false` to not see intermediate states.
   Future<Transaction> transaction(Func1 transactionUpdate,
       [bool applyLocally = true]) {
-    Completer<Transaction> c = Completer<Transaction>();
+    var c = Completer<Transaction>();
 
     var transactionUpdateWrap =
         allowInterop((update) => jsify(transactionUpdate(dartify(update))));
@@ -318,7 +318,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Listens for exactly one [eventType] and then stops listening.
   Future<QueryEvent> once(String eventType) {
-    Completer<QueryEvent> c = Completer<QueryEvent>();
+    var c = Completer<QueryEvent>();
 
     jsObject.once(eventType, allowInterop(
         (database_interop.DataSnapshotJsImpl snapshot, [String string]) {

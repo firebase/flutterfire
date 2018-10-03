@@ -55,7 +55,7 @@ class MessagesApp {
 
   void showMessages() {
     this.ref.onChildAdded.listen((e) {
-      fb.DataSnapshot datasnapshot = e.snapshot;
+      var datasnapshot = e.snapshot;
 
       var spanElement = SpanElement()..text = datasnapshot.val()["text"];
 
@@ -82,7 +82,7 @@ class MessagesApp {
     });
 
     this.ref.onChildChanged.listen((e) {
-      fb.DataSnapshot datasnapshot = e.snapshot;
+      var datasnapshot = e.snapshot;
       var element = querySelector("#${datasnapshot.key} span");
 
       if (element != null) {
@@ -91,7 +91,7 @@ class MessagesApp {
     });
 
     this.ref.onChildRemoved.listen((e) {
-      fb.DataSnapshot datasnapshot = e.snapshot;
+      var datasnapshot = e.snapshot;
 
       var element = querySelector("#${datasnapshot.key}");
 

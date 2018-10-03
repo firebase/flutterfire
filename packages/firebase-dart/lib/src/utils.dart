@@ -60,7 +60,7 @@ dynamic dartify(Object jsObject) {
   // Assume a map then...
   var keys = js.objectKeys(jsObject);
   var map = <String, dynamic>{};
-  for (String key in keys) {
+  for (var key in keys) {
     map[key] = dartify(util.getProperty(jsObject, key));
   }
   return map;

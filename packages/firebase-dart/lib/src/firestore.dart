@@ -541,7 +541,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
           "Please provide either snapshot or fieldValues parameter.");
     }
 
-    List<dynamic> args = (snapshot != null)
+    var args = (snapshot != null)
         ? [snapshot.jsObject]
         : fieldValues.map(jsify).toList();
     return callMethod(jsObject, method, args);
@@ -875,7 +875,7 @@ abstract class _Updatable {
           "Please provide either data or fieldsAndValues parameter.");
     }
 
-    List<dynamic> args = (data != null)
+    var args = (data != null)
         ? [jsify(data)]
         : fieldsAndValues
             .map((f) => (f is firestore_interop.FieldPath) ? f : jsify(f))
