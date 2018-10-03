@@ -2,6 +2,8 @@
 
 * Updated documented JS library from `5.1.0` of the JS API to `5.5.2`.
 
+* Fixed issues with canceled subscriptions in Database `Query`.
+
 ## 5.0.1
 
 * README updates.
