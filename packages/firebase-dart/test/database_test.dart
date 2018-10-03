@@ -146,7 +146,9 @@ void main() {
           // print("second listener called.");
         }, count: 0));
 
-        await sub2.cancel().then((_) => print("second listener cancelled."));
+        await sub2.cancel().then((_) {
+          // print("second listener cancelled.")
+        });
 
         var anotherRef = database.ref("test");
         var sub3 = anotherRef.onValue.listen(expectAsync1((event) {
@@ -160,7 +162,9 @@ void main() {
           // print("fourth listener called.");
         }, count: 0));
 
-        await sub4.cancel().then((_) => print("fourth listener cancelled."));
+        await sub4.cancel().then((_) {
+          // print("fourth listener cancelled.")
+        });
       });
 
       test("onValue", () async {
