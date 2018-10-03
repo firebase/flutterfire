@@ -309,7 +309,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     }
 
     void stopListen() {
-      jsObject.off(eventType);
+      jsObject.off(eventType, callbackWrap);
     }
 
     streamController = new StreamController<QueryEvent>.broadcast(
