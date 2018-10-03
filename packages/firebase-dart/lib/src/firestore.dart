@@ -102,10 +102,10 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
         .then(dartify);
   }
 
-  /// Specifies custom [Settings] to be used to configure the Firestore
+  /// Specifies custom [settings] to be used to configure the Firestore
   /// instance. Must be set before invoking any other methods.
   ///
-  /// The [Settings] parameter is the settings for your Cloud Firestore instance.
+  /// The [settings] parameter is the settings for your Cloud Firestore instance.
   /// Value must not be null.
   void settings(firestore_interop.Settings settings) =>
       jsObject.settings(settings);
@@ -172,7 +172,7 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
   /// The [data] parameter is a Map of the fields and values for the document.
   /// Value must not be null.
   ///
-  /// The optional [SetOptions] parameters is an object to configure the set
+  /// The optional [options] parameters is an object to configure the set
   /// behavior. Pass [: {merge: true} :] to only replace the values specified in
   /// the data argument. Fields omitted will remain untouched. Value may be null.
   ///
@@ -189,7 +189,7 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
   /// The update will fail if applied to a document that does not exist.
   ///
   /// Nested fields can be updated by providing dot-separated field path strings
-  /// or by providing [FieldPath] objects.
+  /// or by providing `FieldPath` objects.
   ///
   /// The [DocumentReference] parameter is a reference to the document to
   /// be updated. Value must not be null.
@@ -198,7 +198,7 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
   /// to update.
   ///
   /// The [fieldsAndValues] param is the List alternating between fields
-  /// (as String or [FieldPath] objects) and values.
+  /// (as String or `FieldPath` objects) and values.
   ///
   /// Returns non-null [WriteBatch] instance used for chaining method calls.
   WriteBatch update(DocumentReference documentRef,
@@ -329,7 +329,7 @@ class DocumentReference
   /// The [data] parameter is a Map of the fields and values for the
   /// document. Value must not be null.
   ///
-  /// The optional [SetOptions] is an object to configure the set behavior.
+  /// The optional [options] is an object to configure the set behavior.
   /// Pass [: {merge: true} :] to only replace the values specified in the data
   /// argument. Fields omitted will remain untouched. Value may be null.
   ///
@@ -347,13 +347,13 @@ class DocumentReference
   /// The update will fail if applied to a document that does not exist.
   ///
   /// Nested fields can be updated by providing dot-separated field path strings
-  /// or by providing [FieldPath] objects.
+  /// or by providing `FieldPath` objects.
   ///
   /// The [data] param is the Map containing all of the fields and values
   /// to update.
   ///
   /// The [fieldsAndValues] param is the List alternating between fields
-  /// (as String or [FieldPath] objects) and values.
+  /// (as String or `FieldPath` objects) and values.
   ///
   /// Returns non-null [Future] that resolves once the data has been successfully
   /// written to the backend (Note that it won't resolve while you're offline).
@@ -465,7 +465,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// Creates a new [Query] where the results are sorted by the specified field,
   /// in descending or ascending order.
   ///
-  /// The [fieldPath] parameter is a String or [FieldPath] to sort by.
+  /// The [fieldPath] parameter is a String or `FieldPath` to sort by.
   ///
   /// The optional [directionStr] parameter is a direction to sort by
   /// ([:asc:] or [:desc:]). If not specified, the default order is ascending.
@@ -520,7 +520,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// Creates a new [Query] that returns only documents that include the
   /// specified fields and where the values satisfy the constraints provided.
   ///
-  /// The [fieldPath] parameter is a String or non-null [FieldPath] to compare.
+  /// The [fieldPath] parameter is a String or non-null `FieldPath` to compare.
   ///
   /// The [opStr] parameter is the operation string
   /// (e.g [:<:], [:<=:], [:==:], [:>:], [:>=:]).
@@ -700,7 +700,7 @@ class DocumentSnapshot
   /// Retrieves the field specified by [fieldPath] parameter at the specified
   /// field location or [:null:] if no such field exists in the document.
   ///
-  /// The [fieldPath] is the String or [FieldPath] - the path
+  /// The [fieldPath] is the String or `FieldPath` - the path
   /// (e.g. 'foo' or 'foo.bar') to a specific field.
   dynamic get(/*String|FieldPath*/ fieldPath) =>
       dartify(jsObject.get(fieldPath));
@@ -827,7 +827,7 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
   /// The [data] paramater is object of the fields and values for
   /// the document. Value must not be null.
   ///
-  /// The optional [SetOptions] is an object to configure the set behavior.
+  /// The optional [options] is an object to configure the set behavior.
   /// Pass [: {merge: true} :] to only replace the values specified in the
   /// data argument. Fields omitted will remain untouched.
   /// Value must not be null.
@@ -846,13 +846,13 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
   /// The value must not be null.
   ///
   /// Nested fields can be updated by providing dot-separated field path strings
-  /// or by providing [FieldPath] objects.
+  /// or by providing `FieldPath` objects.
   ///
   /// The [data] param is the object containing all of the fields and values
   /// to update.
   ///
   /// The [fieldsAndValues] param is the List alternating between fields
-  /// (as String or [FieldPath] objects) and values.
+  /// (as String or `FieldPath` objects) and values.
   ///
   /// Returns non-null [Transaction] instance used for chaining method calls.
   Transaction update(DocumentReference documentRef,
