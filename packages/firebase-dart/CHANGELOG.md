@@ -1,6 +1,6 @@
 ## 5.0.2
 
-* Updated from `5.1.0` of the JS API to `5.3.0`.
+* Updated documented JS library from `5.1.0` of the JS API to `5.5.2`.
 
 ## 5.0.1
 
