@@ -119,7 +119,7 @@ void main() {
       });
 
       test("wrong value push", () {
-        expect(() => ref.push(new _TestClass()), throwsArgumentError);
+        expect(() => ref.push(_TestClass()), throwsArgumentError);
       });
 
       test("transaction", () async {

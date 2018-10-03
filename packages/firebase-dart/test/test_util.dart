@@ -4,15 +4,14 @@ import 'package:test/test.dart';
 String validDatePath() => p.join('pkg_firebase_test', validDatePathComponent());
 
 String validDatePathComponent() =>
-    new DateTime.now().toUtc().toIso8601String().replaceAll('.', '_');
+    DateTime.now().toUtc().toIso8601String().replaceAll('.', '_');
 
 printException(e) => print(
     [e.name, e.code, e.message, e.stack].where((s) => s != null).join('\n'));
 
-String getTestEmail() =>
-    '${new DateTime.now().millisecondsSinceEpoch}@example.com';
+String getTestEmail() => '${DateTime.now().millisecondsSinceEpoch}@example.com';
 
-Matcher throwsToString(value) => throwsA(new _ToStringMatcher(value));
+Matcher throwsToString(value) => throwsA(_ToStringMatcher(value));
 
 class _ToStringMatcher extends CustomMatcher {
   _ToStringMatcher(matcher)

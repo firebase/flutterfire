@@ -7,13 +7,13 @@ import 'js.dart';
 import 'utils.dart';
 
 class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
-  static final _expando = new Expando<Messaging>();
+  static final _expando = Expando<Messaging>();
 
   static Messaging getInstance(messaging_interop.MessagingJsImpl jsObject) {
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new Messaging._fromJsObject(jsObject);
+    return _expando[jsObject] ??= Messaging._fromJsObject(jsObject);
   }
 
   Messaging._fromJsObject(messaging_interop.MessagingJsImpl jsObject)
@@ -66,9 +66,9 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
 
   Stream<Payload> _createOnMessageStream(StreamController<Payload> controller) {
     if (controller == null) {
-      controller = new StreamController.broadcast(sync: true);
+      controller = StreamController.broadcast(sync: true);
       final nextWrapper = allowInterop((payload) {
-        controller.add(new Payload._fromJsObject(payload));
+        controller.add(Payload._fromJsObject(payload));
       });
       final errorWrapper = allowInterop((e) {
         controller.addError(e);
@@ -81,9 +81,9 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
   Stream<Payload> _createBackgroundMessagedStream(
       StreamController<Payload> controller) {
     if (controller == null) {
-      controller = new StreamController.broadcast(sync: true);
+      controller = StreamController.broadcast(sync: true);
       final nextWrapper = allowInterop((payload) {
-        controller.add(new Payload._fromJsObject(payload));
+        controller.add(Payload._fromJsObject(payload));
       });
       jsObject.setBackgroundMessageHandler(nextWrapper);
     }
@@ -108,7 +108,7 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
         onSnapshotUnsubscribe = null;
       }
 
-      controller = new StreamController<Null>.broadcast(
+      controller = StreamController<Null>.broadcast(
           onListen: startListen, onCancel: stopListen, sync: true);
     }
     return controller.stream;
@@ -131,7 +131,7 @@ class Payload extends JsObjectWrapper<messaging_interop.PayloadJsImpl> {
       : super.fromJsObject(jsObject);
 
   Notification get notification =>
-      new Notification._fromJsObject(jsObject.notification);
+      Notification._fromJsObject(jsObject.notification);
   String get collapseKey => jsObject.collapse_key;
   String get from => jsObject.from;
   Map<String, dynamic> get data => dartify(jsObject.data);

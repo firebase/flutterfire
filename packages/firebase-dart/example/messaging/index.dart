@@ -19,7 +19,7 @@ main() async {
         storageBucket: storageBucket,
         messagingSenderId: messagingSenderId);
 
-    await new MessagesApp().showMessages();
+    await MessagesApp().showMessages();
   } on fb.FirebaseJsNotLoadedException catch (e) {
     print(e);
   }
@@ -52,11 +52,11 @@ class MessagesApp {
       tokenInput.value = token;
       messaging.onMessage.listen((payload) {
         payloadData.text = payload.data.toString();
-        new Notification(payload.notification.title,
+        Notification(payload.notification.title,
             body: payload.notification.body);
       });
       newNotification.onClick.listen((_) async {
-        final client = new BrowserClient();
+        final client = BrowserClient();
 
         await client.post('https://fcm.googleapis.com/fcm/send',
             headers: {
@@ -68,7 +68,7 @@ class MessagesApp {
                 "title": "New demo message!",
                 "body": "There is a new message in Messaging Demo",
               },
-              "data": {"Current time": new DateTime.now().toIso8601String()},
+              "data": {"Current time": DateTime.now().toIso8601String()},
               "to": token
             }));
       });

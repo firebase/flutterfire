@@ -14,7 +14,7 @@ main() async {
         databaseURL: databaseUrl,
         storageBucket: storageBucket);
 
-    new ImageUploadApp();
+    ImageUploadApp();
   } on fb.FirebaseJsNotLoadedException catch (e) {
     print(e);
   }
@@ -36,7 +36,7 @@ class ImageUploadApp {
       var customMetadata = {"location": "Prague", "owner": "You"};
       var uploadTask = ref.child(file.name).put(
           file,
-          new fb.UploadMetadata(
+          fb.UploadMetadata(
               contentType: file.type, customMetadata: customMetadata));
       uploadTask.onStateChanged.listen((e) {
         querySelector("#message").text =
@@ -46,7 +46,7 @@ class ImageUploadApp {
       try {
         var snapshot = await uploadTask.future;
         var filePath = await snapshot.ref.getDownloadURL();
-        var image = new ImageElement(src: filePath.toString());
+        var image = ImageElement(src: filePath.toString());
         document.body.append(image);
         var metadata = snapshot.metadata.customMetadata;
         querySelector("#message").text = "Metadata: ${metadata.toString()}";

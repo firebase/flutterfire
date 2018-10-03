@@ -15,7 +15,7 @@ main() async {
         databaseURL: databaseUrl,
         storageBucket: storageBucket);
 
-    new PhoneAuthApp();
+    PhoneAuthApp();
   } on fb.FirebaseJsNotLoadedException catch (e) {
     print(e);
   }
@@ -77,7 +77,7 @@ class PhoneAuthApp {
 
   _initVerifier() {
     // This is anonymous recaptcha - size must be defined
-    verifier = new fb.RecaptchaVerifier("register", {
+    verifier = fb.RecaptchaVerifier("register", {
       "size": "invisible",
       "callback": (resp) {
         print("reCAPTCHA solved, allow signInWithPhoneNumber.");

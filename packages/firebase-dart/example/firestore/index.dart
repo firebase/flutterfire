@@ -16,7 +16,7 @@ main() async {
         storageBucket: storageBucket,
         projectId: projectId);
 
-    new MessagesApp().showMessages();
+    MessagesApp().showMessages();
   } on fb.FirebaseJsNotLoadedException catch (e) {
     print(e);
   }
@@ -60,7 +60,7 @@ class MessagesApp {
 
       if (newMessage.value.trim().isNotEmpty) {
         // store also created at for purposes of ordering
-        var map = {"text": newMessage.value, "createdAt": new DateTime.now()};
+        var map = {"text": newMessage.value, "createdAt": DateTime.now()};
 
         try {
           newMessage.value = "";
@@ -92,23 +92,23 @@ class MessagesApp {
   }
 
   _renderItemView(DocumentSnapshot docSnapshot) {
-    var spanElement = new SpanElement()..text = docSnapshot.data()["text"];
+    var spanElement = SpanElement()..text = docSnapshot.data()["text"];
 
-    var aElementDelete = new AnchorElement(href: "#")
+    var aElementDelete = AnchorElement(href: "#")
       ..text = "Delete"
       ..onClick.listen((e) {
         e.preventDefault();
         _deleteItem(docSnapshot);
       });
 
-    var aElementUpdate = new AnchorElement(href: "#")
+    var aElementUpdate = AnchorElement(href: "#")
       ..text = "To Uppercase"
       ..onClick.listen((e) {
         e.preventDefault();
         _uppercaseItem(docSnapshot);
       });
 
-    var element = new LIElement()
+    var element = LIElement()
       ..id = "item-${docSnapshot.id}"
       ..append(spanElement)
       ..append(aElementDelete)

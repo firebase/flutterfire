@@ -38,7 +38,7 @@ App initializeApp(
 
   try {
     return App.getInstance(firebase.initializeApp(
-        new firebase.FirebaseOptions(
+        firebase.FirebaseOptions(
             apiKey: apiKey,
             authDomain: authDomain,
             databaseURL: databaseURL,
@@ -48,7 +48,7 @@ App initializeApp(
         name));
   } catch (e) {
     if (_firebaseNotLoaded(e)) {
-      throw new FirebaseJsNotLoadedException('firebase.js must be loaded.');
+      throw FirebaseJsNotLoadedException('firebase.js must be loaded.');
     }
 
     rethrow;

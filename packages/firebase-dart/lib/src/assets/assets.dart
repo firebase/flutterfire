@@ -16,13 +16,13 @@ String get vapidKey => _getConfig('VAPID_KEY');
 
 String _getConfig(String key) {
   if (_configVal == null) {
-    throw new StateError('You must call config() first');
+    throw StateError('You must call config() first');
   }
 
   var value = _configVal[key];
 
   if (value == null) {
-    throw new ArgumentError('`$key` is not configured in `config.json`.');
+    throw ArgumentError('`$key` is not configured in `config.json`.');
   }
 
   return value;
@@ -36,7 +36,7 @@ Future config() async {
   try {
     var response = await sw.fetch('packages/firebase/src/assets/config.json');
     if (response.status > 399) {
-      throw new StateError(
+      throw StateError(
           "Problem with server: ${response.status} ${response.body}");
     }
 

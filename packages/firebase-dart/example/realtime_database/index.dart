@@ -14,7 +14,7 @@ main() async {
         databaseURL: databaseUrl,
         storageBucket: storageBucket);
 
-    new MessagesApp().showMessages();
+    MessagesApp().showMessages();
   } on fb.FirebaseJsNotLoadedException catch (e) {
     print(e);
   }
@@ -57,23 +57,23 @@ class MessagesApp {
     this.ref.onChildAdded.listen((e) {
       fb.DataSnapshot datasnapshot = e.snapshot;
 
-      var spanElement = new SpanElement()..text = datasnapshot.val()["text"];
+      var spanElement = SpanElement()..text = datasnapshot.val()["text"];
 
-      var aElementDelete = new AnchorElement(href: "#")
+      var aElementDelete = AnchorElement(href: "#")
         ..text = "Delete"
         ..onClick.listen((e) {
           e.preventDefault();
           _deleteItem(datasnapshot);
         });
 
-      var aElementUpdate = new AnchorElement(href: "#")
+      var aElementUpdate = AnchorElement(href: "#")
         ..text = "To Uppercase"
         ..onClick.listen((e) {
           e.preventDefault();
           _uppercaseItem(datasnapshot);
         });
 
-      var element = new LIElement()
+      var element = LIElement()
         ..id = datasnapshot.key
         ..append(spanElement)
         ..append(aElementDelete)

@@ -16,7 +16,7 @@ export 'interop/firebase_interop.dart' show FirebaseError, FirebaseOptions;
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.app>.
 class App extends JsObjectWrapper<AppJsImpl> {
-  static final _expando = new Expando<App>();
+  static final _expando = Expando<App>();
 
   /// Name of the app.
   String get name => jsObject.name;
@@ -29,7 +29,7 @@ class App extends JsObjectWrapper<AppJsImpl> {
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new App._fromJsObject(jsObject);
+    return _expando[jsObject] ??= App._fromJsObject(jsObject);
   }
 
   App._fromJsObject(AppJsImpl jsObject) : super.fromJsObject(jsObject);

@@ -76,8 +76,8 @@ void main() {
 
   group('equality', () {
     test("GeoPoint", () {
-      var a = new fs.GeoPoint(1, 2);
-      var b = new fs.GeoPoint(1, 2);
+      var a = fs.GeoPoint(1, 2);
+      var b = fs.GeoPoint(1, 2);
       expect(a.isEqual(b), isTrue);
       expect(a.isEqual(a), isTrue);
       expect(b.isEqual(a), isTrue);
@@ -98,8 +98,8 @@ void main() {
     });
 
     test("FieldPath", () {
-      var a = new fs.FieldPath('bob');
-      var b = new fs.FieldPath('bob');
+      var a = fs.FieldPath('bob');
+      var b = fs.FieldPath('bob');
       expect(a.isEqual(b), isTrue);
       expect(a.isEqual(a), isTrue);
       expect(b.isEqual(a), isTrue);
@@ -112,7 +112,7 @@ void main() {
       expect(a.isEqual(a), isTrue);
       expect(b.isEqual(a), isTrue);
 
-      var c = fs.Blob.fromUint8Array(new Uint8List.fromList([1, 2, 3, 4]));
+      var c = fs.Blob.fromUint8Array(Uint8List.fromList([1, 2, 3, 4]));
       expect(a.isEqual(c), isTrue);
       expect(c.isEqual(a), isTrue);
     });
@@ -271,7 +271,7 @@ void main() {
       var snapshot = await docRef.get();
       var snapshotData = snapshot.data();
 
-      expect(snapshotData, new TypeMatcher<Map>());
+      expect(snapshotData, TypeMatcher<Map>());
       expect(snapshotData["text"], "Message2");
 
       await docRef.set({"title": "Ahoj"});
@@ -289,8 +289,8 @@ void main() {
       var snapshot = await docRef.get();
       var snapshotData = snapshot.data();
 
-      await docRef.set({"text": "MessageNew", "title": "Ahoj"},
-          new fs.SetOptions(merge: true));
+      await docRef.set(
+          {"text": "MessageNew", "title": "Ahoj"}, fs.SetOptions(merge: true));
       snapshot = await docRef.get();
       snapshotData = snapshot.data();
 
@@ -300,7 +300,7 @@ void main() {
 
     test('reference values', () async {
       var ref = firestore.collection(testPath);
-      var mapValue = new DateTime.now().toIso8601String();
+      var mapValue = DateTime.now().toIso8601String();
       var documentToReference = ref.doc("reference_target");
       await documentToReference.set({'value': mapValue});
 
@@ -330,13 +330,13 @@ void main() {
           "b": {"nested": "foo"},
           'toDateString': 'Regression for Date type detection'
         },
-        "dateTime": new DateTime.fromMillisecondsSinceEpoch(123456789),
+        "dateTime": DateTime.fromMillisecondsSinceEpoch(123456789),
         "dateTimeUtc":
-            new DateTime.fromMillisecondsSinceEpoch(123456789, isUtc: true),
-        'geoPoint': new fs.GeoPoint(43.3247, -95.1500),
+            DateTime.fromMillisecondsSinceEpoch(123456789, isUtc: true),
+        'geoPoint': fs.GeoPoint(43.3247, -95.1500),
         'blob - base64': fs.Blob.fromBase64String('AQIDBA=='),
         'blob - bytes':
-            fs.Blob.fromUint8Array(new Uint8List.fromList([1, 2, 3, 4])),
+            fs.Blob.fromUint8Array(Uint8List.fromList([1, 2, 3, 4])),
       };
 
       void expectSameGeo(fs.GeoPoint value, fs.GeoPoint expected) {
@@ -397,8 +397,7 @@ void main() {
 
       expect(snapshot.get("stringExample"), "Hello world!");
       expect(snapshot.get("innerMap.someNumber"), 3.14159265);
-      expect(
-          snapshot.get(new fs.FieldPath("innerMap", "someNumber")), 3.14159265);
+      expect(snapshot.get(fs.FieldPath("innerMap", "someNumber")), 3.14159265);
       expect(snapshot.get("someNotExistentValue"), isNull);
     });
 
@@ -435,7 +434,7 @@ void main() {
       var snapshot = await docRef.get();
       var timeStamp = snapshot.data()['timestamp'];
 
-      expect(timeStamp, new TypeMatcher<DateTime>());
+      expect(timeStamp, TypeMatcher<DateTime>());
     });
 
     test("update nested with dot notation", () async {
@@ -455,9 +454,9 @@ void main() {
         "greeting": {"text": "Good Evening"}
       });
       await docRef.update(fieldsAndValues: [
-        new fs.FieldPath("greeting", "text"),
+        fs.FieldPath("greeting", "text"),
         "Good Evening after update",
-        new fs.FieldPath("greeting", "text_cs"),
+        fs.FieldPath("greeting", "text_cs"),
         "Dobry vecer po uprave"
       ]);
 
@@ -540,9 +539,9 @@ void main() {
 
       await firestore.runTransaction((transaction) async {
         transaction.update(docRef, fieldsAndValues: [
-          new fs.FieldPath("description", "text"),
+          fs.FieldPath("description", "text"),
           "Good morning after update!!!",
-          new fs.FieldPath("description", "text_cs"),
+          fs.FieldPath("description", "text_cs"),
           "Dobre rano po uprave!!!"
         ]);
       });
@@ -616,9 +615,9 @@ void main() {
 
       var batch = firestore.batch();
       batch.update(sfRef, fieldsAndValues: [
-        new fs.FieldPath("name", "long"),
+        fs.FieldPath("name", "long"),
         "San Francisco",
-        new fs.FieldPath("population"),
+        fs.FieldPath("population"),
         1000000
       ]);
       await batch.commit();
@@ -678,8 +677,7 @@ void main() {
           return;
         case 3:
           expect(changes.single.type, 'modified');
-          expect(
-              changes.single.doc.data()['value'], new TypeMatcher<DateTime>());
+          expect(changes.single.doc.data()['value'], TypeMatcher<DateTime>());
           expect(metadata.hasPendingWrites, isFalse);
           expect(metadata.fromCache, isFalse);
           return;
@@ -743,7 +741,7 @@ void main() {
     });
 
     test("get documents where with FieldPath", () async {
-      var snapshot = await ref.where(new fs.FieldPath("new"), "==", true).get();
+      var snapshot = await ref.where(fs.FieldPath("new"), "==", true).get();
       expect(snapshot.size, 2);
     });
 
@@ -813,7 +811,7 @@ void main() {
         var events = await ref.onSnapshot.take(4).toList();
         expect(
             events,
-            everyElement(new TypeMatcher<fs.QuerySnapshot>()
+            everyElement(TypeMatcher<fs.QuerySnapshot>()
                 .having(
                     (qs) => qs.metadata.fromCache, 'metadata.fromCache', isTrue)
                 .having((qs) => qs.metadata.hasPendingWrites,

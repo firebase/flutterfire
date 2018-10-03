@@ -22,7 +22,7 @@ export 'interop/firestore_interop.dart'
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.Firestore>.
 class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
-  static final _expando = new Expando<Firestore>();
+  static final _expando = Expando<Firestore>();
 
   /// Non-null App for this instance of firestore service.
   App get app => App.getInstance(jsObject.app);
@@ -33,8 +33,8 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
       return null;
     }
 
-    return _expando[jsObject] ??= new Firestore._fromJsObject(jsObject
-      ..settings(new firestore_interop.Settings(timestampsInSnapshots: true)));
+    return _expando[jsObject] ??= Firestore._fromJsObject(jsObject
+      ..settings(firestore_interop.Settings(timestampsInSnapshots: true)));
   }
 
   Firestore._fromJsObject(firestore_interop.FirestoreJsImpl jsObject)
@@ -132,14 +132,14 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.WriteBatch>.
 class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
     with _Updatable {
-  static final _expando = new Expando<WriteBatch>();
+  static final _expando = Expando<WriteBatch>();
 
   /// Creates a new WriteBatch from a [jsObject].
   static WriteBatch getInstance(firestore_interop.WriteBatchJsImpl jsObject) {
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new WriteBatch._fromJsObject(jsObject);
+    return _expando[jsObject] ??= WriteBatch._fromJsObject(jsObject);
   }
 
   WriteBatch._fromJsObject(firestore_interop.WriteBatchJsImpl jsObject)
@@ -219,7 +219,7 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
 class DocumentReference
     extends JsObjectWrapper<firestore_interop.DocumentReferenceJsImpl>
     with _Updatable {
-  static final _expando = new Expando<DocumentReference>();
+  static final _expando = Expando<DocumentReference>();
 
   /// Non-null [Firestore] the document is in.
   /// This is useful for performing transactions, for example.
@@ -242,7 +242,7 @@ class DocumentReference
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new DocumentReference._fromJsObject(jsObject);
+    return _expando[jsObject] ??= DocumentReference._fromJsObject(jsObject);
   }
 
   DocumentReference._fromJsObject(
@@ -288,8 +288,7 @@ class DocumentReference
   /// metadata of the document changed. Default is [:false:].
   Stream<DocumentSnapshot> get onMetadataChangesSnapshot => _createStream(
       _onMetadataController,
-      new firestore_interop.DocumentListenOptions(
-          includeMetadataChanges: true));
+      firestore_interop.DocumentListenOptions(includeMetadataChanges: true));
 
   Stream<DocumentSnapshot> _createStream(
       StreamController<DocumentSnapshot> controller,
@@ -315,7 +314,7 @@ class DocumentReference
         onSnapshotUnsubscribe = null;
       }
 
-      controller = new StreamController<DocumentSnapshot>.broadcast(
+      controller = StreamController<DocumentSnapshot>.broadcast(
           onListen: startListen, onCancel: stopListen, sync: true);
     }
     return controller.stream;
@@ -388,7 +387,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   ///
   /// Returns non-null created [Query].
   Query endAt({DocumentSnapshot snapshot, List<dynamic> fieldValues}) =>
-      new Query.fromJsObject(
+      Query.fromJsObject(
           _wrapPaginatingFunctionCall("endAt", snapshot, fieldValues));
 
   /// Creates a new [Query] where the results end before the provided document
@@ -402,7 +401,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   ///
   /// Returns non-null created [Query].
   Query endBefore({DocumentSnapshot snapshot, List<dynamic> fieldValues}) =>
-      new Query.fromJsObject(
+      Query.fromJsObject(
           _wrapPaginatingFunctionCall("endBefore", snapshot, fieldValues));
 
   /// Executes the query and returns the results as a [QuerySnapshot].
@@ -418,7 +417,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// The [limit] parameter is the maximum number of items to return.
   ///
   /// Returns non-null created [Query].
-  Query limit(num limit) => new Query.fromJsObject(jsObject.limit(limit));
+  Query limit(num limit) => Query.fromJsObject(jsObject.limit(limit));
 
   StreamController<QuerySnapshot> _onSnapshotController;
   StreamController<QuerySnapshot> _onSnapshotMetadataController;
@@ -443,7 +442,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
     ZoneCallback onSnapshotUnsubscribe;
 
-    var options = new firestore_interop.SnapshotListenOptions(
+    var options = firestore_interop.SnapshotListenOptions(
         includeMetadataChanges: includeMetadataChanges);
 
     void startListen() {
@@ -456,7 +455,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
       onSnapshotUnsubscribe = null;
     }
 
-    controller = new StreamController<QuerySnapshot>.broadcast(
+    controller = StreamController<QuerySnapshot>.broadcast(
         onListen: startListen, onCancel: stopListen, sync: true);
 
     return controller;
@@ -476,7 +475,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
     var jsObjectOrderBy = (directionStr != null)
         ? jsObject.orderBy(fieldPath, directionStr)
         : jsObject.orderBy(fieldPath);
-    return new Query.fromJsObject(jsObjectOrderBy);
+    return Query.fromJsObject(jsObjectOrderBy);
   }
 
   /// Creates a new [Query] where the results start after the provided document
@@ -495,7 +494,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   ///         .orderBy("state")
   ///         .startAfter(fieldValues: ["Springfield", "Missouri"]);
   Query startAfter({DocumentSnapshot snapshot, List<dynamic> fieldValues}) =>
-      new Query.fromJsObject(
+      Query.fromJsObject(
           _wrapPaginatingFunctionCall("startAfter", snapshot, fieldValues));
 
   /// Creates a new [Query] where the results start at the provided document
@@ -514,7 +513,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   ///         .orderBy("state")
   ///         .startAt(fieldValues: ["Springfield", "Missouri"]);
   Query startAt({DocumentSnapshot snapshot, List<dynamic> fieldValues}) =>
-      new Query.fromJsObject(
+      Query.fromJsObject(
           _wrapPaginatingFunctionCall("startAt", snapshot, fieldValues));
 
   /// Creates a new [Query] that returns only documents that include the
@@ -530,7 +529,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// Returns non-null created [Query].
   Query where(/*String|FieldPath*/ fieldPath,
           String /*'<'|'<='|'=='|'>='|'>'*/ opStr, value) =>
-      new Query.fromJsObject(jsObject.where(fieldPath, opStr, jsify(value)));
+      Query.fromJsObject(jsObject.where(fieldPath, opStr, jsify(value)));
 
   /// Calls js paginating [method] with [DocumentSnapshot] or List of [fieldValues].
   /// We need to call this method in all paginating methods to fix that Dart
@@ -538,7 +537,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   _wrapPaginatingFunctionCall(
       String method, DocumentSnapshot snapshot, List<dynamic> fieldValues) {
     if (snapshot == null && fieldValues == null) {
-      throw new ArgumentError(
+      throw ArgumentError(
           "Please provide either snapshot or fieldValues parameter.");
     }
 
@@ -556,7 +555,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.CollectionReference>.
 class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
     extends Query<T> {
-  static final _expando = new Expando<CollectionReference>();
+  static final _expando = Expando<CollectionReference>();
 
   /// The collection's identifier.
   String get id => jsObject.id;
@@ -575,13 +574,12 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??=
-        new CollectionReference._fromJsObject(jsObject);
+    return _expando[jsObject] ??= CollectionReference._fromJsObject(jsObject);
   }
 
   /// Creates a new CollectionReference
-  factory CollectionReference() => new CollectionReference._fromJsObject(
-      new firestore_interop.CollectionReferenceJsImpl());
+  factory CollectionReference() => CollectionReference._fromJsObject(
+      firestore_interop.CollectionReferenceJsImpl());
 
   CollectionReference._fromJsObject(
       firestore_interop.CollectionReferenceJsImpl jsObject)
@@ -623,7 +621,7 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.DocumentChange>.
 class DocumentChange
     extends JsObjectWrapper<firestore_interop.DocumentChangeJsImpl> {
-  static final _expando = new Expando<DocumentChange>();
+  static final _expando = Expando<DocumentChange>();
 
   /// Type of the change: [:added:], [:removed:] or [:modified:].
   String get type => jsObject.type;
@@ -648,7 +646,7 @@ class DocumentChange
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new DocumentChange._fromJsObject(jsObject);
+    return _expando[jsObject] ??= DocumentChange._fromJsObject(jsObject);
   }
 
   DocumentChange._fromJsObject(firestore_interop.DocumentChangeJsImpl jsObject)
@@ -662,7 +660,7 @@ class DocumentChange
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.DocumentSnapshot>.
 class DocumentSnapshot
     extends JsObjectWrapper<firestore_interop.DocumentSnapshotJsImpl> {
-  static final _expando = new Expando<DocumentSnapshot>();
+  static final _expando = Expando<DocumentSnapshot>();
 
   /// Signals whether or not the data exists. [:true:] if the document exists.
   bool get exists => jsObject.exists;
@@ -684,7 +682,7 @@ class DocumentSnapshot
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new DocumentSnapshot._fromJsObject(jsObject);
+    return _expando[jsObject] ??= DocumentSnapshot._fromJsObject(jsObject);
   }
 
   DocumentSnapshot._fromJsObject(
@@ -717,7 +715,7 @@ class DocumentSnapshot
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.QuerySnapshot>.
 class QuerySnapshot
     extends JsObjectWrapper<firestore_interop.QuerySnapshotJsImpl> {
-  static final _expando = new Expando<QuerySnapshot>();
+  static final _expando = Expando<QuerySnapshot>();
 
   /// Non-null list of the documents that changed since the last snapshot.
   /// If this is the first snapshot, all documents will be in the list as
@@ -748,7 +746,7 @@ class QuerySnapshot
 
   /// The [Query] you called [Query.get] or [Query.onSnapshot] on to get the
   /// [QuerySnapshot].
-  Query get query => new Query.fromJsObject(jsObject.query);
+  Query get query => Query.fromJsObject(jsObject.query);
 
   /// The number of documents.
   num get size => jsObject.size;
@@ -759,7 +757,7 @@ class QuerySnapshot
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new QuerySnapshot._fromJsObject(jsObject);
+    return _expando[jsObject] ??= QuerySnapshot._fromJsObject(jsObject);
   }
 
   QuerySnapshot._fromJsObject(firestore_interop.QuerySnapshotJsImpl jsObject)
@@ -784,14 +782,14 @@ class QuerySnapshot
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.Transaction>.
 class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
     with _Updatable {
-  static final _expando = new Expando<Transaction>();
+  static final _expando = Expando<Transaction>();
 
   /// Creates a new Transaction from a [jsObject].
   static Transaction getInstance(firestore_interop.TransactionJsImpl jsObject) {
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new Transaction._fromJsObject(jsObject);
+    return _expando[jsObject] ??= Transaction._fromJsObject(jsObject);
   }
 
   Transaction._fromJsObject(firestore_interop.TransactionJsImpl jsObject)
@@ -873,7 +871,7 @@ abstract class _Updatable {
       List< /*String|FieldPath|dynamic*/ dynamic> fieldsAndValues,
       [DocumentReference documentRef]) {
     if (data == null && fieldsAndValues == null) {
-      throw new ArgumentError(
+      throw ArgumentError(
           "Please provide either data or fieldsAndValues parameter.");
     }
 

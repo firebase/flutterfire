@@ -41,10 +41,10 @@ void main() {
       var storage = app.storage();
 
       ref = storage.ref(filePath);
-      var metadata = new UploadMetadata(
+      var metadata = UploadMetadata(
           contentType: r'application/json',
           customMetadata: {'the answer': '42'});
-      var bytes = new JsonUtf8Encoder().convert([1, 2, 3]);
+      var bytes = JsonUtf8Encoder().convert([1, 2, 3]);
 
       var upload = ref.put(bytes, metadata);
       var snapShot = await upload.future;
@@ -91,7 +91,7 @@ void main() {
     });
 
     test('updateMetadata', () async {
-      var newMetadata = new SettableMetadata(contentType: 'text/plain');
+      var newMetadata = SettableMetadata(contentType: 'text/plain');
 
       var md = await ref.updateMetadata(newMetadata);
 

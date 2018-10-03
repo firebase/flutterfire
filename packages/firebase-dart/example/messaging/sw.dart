@@ -18,8 +18,7 @@ main(List<String> args) async {
 
   final messaging = firebase.messaging();
   messaging.onBackgroundMessage.listen((payload) {
-    final options =
-        new sw.ShowNotificationOptions(body: payload.notification.body);
+    final options = sw.ShowNotificationOptions(body: payload.notification.body);
     sw.registration.showNotification(payload.notification.title, options);
   });
 }

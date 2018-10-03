@@ -21,7 +21,7 @@ void enableLogging([logger, bool persistent = false]) =>
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database>.
 class Database extends JsObjectWrapper<database_interop.DatabaseJsImpl> {
-  static final _expando = new Expando<Database>();
+  static final _expando = Expando<Database>();
 
   /// App for this instance of database service.
   App get app => App.getInstance(jsObject.app);
@@ -31,7 +31,7 @@ class Database extends JsObjectWrapper<database_interop.DatabaseJsImpl> {
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new Database._fromJsObject(jsObject);
+    return _expando[jsObject] ??= Database._fromJsObject(jsObject);
   }
 
   Database._fromJsObject(database_interop.DatabaseJsImpl jsObject)
@@ -61,7 +61,7 @@ class Database extends JsObjectWrapper<database_interop.DatabaseJsImpl> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database.Reference>.
 class DatabaseReference<T extends database_interop.ReferenceJsImpl>
     extends Query<T> {
-  static final _expando = new Expando<DatabaseReference>();
+  static final _expando = Expando<DatabaseReference>();
 
   /// The last part of the current path.
   /// It is `null` in case of root DatabaseReference.
@@ -80,7 +80,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new DatabaseReference._fromJsObject(jsObject);
+    return _expando[jsObject] ??= DatabaseReference._fromJsObject(jsObject);
   }
 
   DatabaseReference._fromJsObject(T jsObject) : super.fromJsObject(jsObject);
@@ -91,7 +91,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
 
   /// Returns [OnDisconnect] object.
   OnDisconnect onDisconnect() =>
-      new OnDisconnect.fromJsObject(jsObject.onDisconnect());
+      OnDisconnect.fromJsObject(jsObject.onDisconnect());
 
   /// Pushes provided [value] to the actual location.
   ///
@@ -108,7 +108,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// This method returns [ThenableReference], [DatabaseReference]
   /// with a [Future] property.
   ThenableReference push([value]) =>
-      new ThenableReference.fromJsObject(jsObject.push(jsify(value)));
+      ThenableReference.fromJsObject(jsObject.push(jsify(value)));
 
   /// Removes data from actual database location.
   Future remove() => handleThenable(jsObject.remove());
@@ -158,7 +158,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// Set [applyLocally] to `false` to not see intermediate states.
   Future<Transaction> transaction(Func1 transactionUpdate,
       [bool applyLocally = true]) {
-    Completer<Transaction> c = new Completer<Transaction>();
+    Completer<Transaction> c = Completer<Transaction>();
 
     var transactionUpdateWrap =
         allowInterop((update) => jsify(transactionUpdate(dartify(update))));
@@ -168,7 +168,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
       if (error != null) {
         c.completeError(error);
       } else {
-        c.complete(new Transaction(
+        c.complete(Transaction(
             committed: committed,
             snapshot: DataSnapshot.getInstance(snapshot)));
       }
@@ -262,7 +262,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
-  Query endAt(value, [String key]) => new Query.fromJsObject(
+  Query endAt(value, [String key]) => Query.fromJsObject(
       key == null ? jsObject.endAt(value) : jsObject.endAt(value, key));
 
   /// Returns a Query which includes children which match the specified [value].
@@ -270,7 +270,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
-  Query equalTo(value, [String key]) => new Query.fromJsObject(
+  Query equalTo(value, [String key]) => Query.fromJsObject(
       key == null ? jsObject.equalTo(value) : jsObject.equalTo(value, key));
 
   /// Returns `true` if the current and [other] queries are equal - they
@@ -286,20 +286,19 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// Returns a new Query limited to the first specific number of children
   /// provided by [limit].
   Query limitToFirst(int limit) =>
-      new Query.fromJsObject(jsObject.limitToFirst(limit));
+      Query.fromJsObject(jsObject.limitToFirst(limit));
 
   /// Returns a new Query limited to the last specific number of children
   /// provided by [limit].
   Query limitToLast(int limit) =>
-      new Query.fromJsObject(jsObject.limitToLast(limit));
+      Query.fromJsObject(jsObject.limitToLast(limit));
 
   Stream<QueryEvent> _createStream(String eventType) {
     StreamController<QueryEvent> streamController;
 
     var callbackWrap = allowInterop((database_interop.DataSnapshotJsImpl data,
         [String string]) {
-      streamController
-          .add(new QueryEvent(DataSnapshot.getInstance(data), string));
+      streamController.add(QueryEvent(DataSnapshot.getInstance(data), string));
     });
 
     void startListen() {
@@ -312,18 +311,18 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
       jsObject.off(eventType, callbackWrap);
     }
 
-    streamController = new StreamController<QueryEvent>.broadcast(
+    streamController = StreamController<QueryEvent>.broadcast(
         onListen: startListen, onCancel: stopListen, sync: true);
     return streamController.stream;
   }
 
   /// Listens for exactly one [eventType] and then stops listening.
   Future<QueryEvent> once(String eventType) {
-    Completer<QueryEvent> c = new Completer<QueryEvent>();
+    Completer<QueryEvent> c = Completer<QueryEvent>();
 
     jsObject.once(eventType, allowInterop(
         (database_interop.DataSnapshotJsImpl snapshot, [String string]) {
-      c.complete(new QueryEvent(DataSnapshot.getInstance(snapshot), string));
+      c.complete(QueryEvent(DataSnapshot.getInstance(snapshot), string));
     }), resolveError(c));
 
     return c.future;
@@ -331,16 +330,16 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Returns a new Query ordered by the specified child [path].
   Query orderByChild(String path) =>
-      new Query.fromJsObject(jsObject.orderByChild(path));
+      Query.fromJsObject(jsObject.orderByChild(path));
 
   /// Returns a new Query ordered by key.
-  Query orderByKey() => new Query.fromJsObject(jsObject.orderByKey());
+  Query orderByKey() => Query.fromJsObject(jsObject.orderByKey());
 
   /// Returns a new Query ordered by priority.
-  Query orderByPriority() => new Query.fromJsObject(jsObject.orderByPriority());
+  Query orderByPriority() => Query.fromJsObject(jsObject.orderByPriority());
 
   /// Returns a new Query ordered by child values.
-  Query orderByValue() => new Query.fromJsObject(jsObject.orderByValue());
+  Query orderByValue() => Query.fromJsObject(jsObject.orderByValue());
 
   /// Returns a Query with the starting point [value]. The starting point
   /// is inclusive.
@@ -348,7 +347,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
-  Query startAt(value, [String key]) => new Query.fromJsObject(
+  Query startAt(value, [String key]) => Query.fromJsObject(
       key == null ? jsObject.startAt(value) : jsObject.startAt(value, key));
 
   /// Returns a String representation of Query object.
@@ -364,7 +363,7 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database.DataSnapshot>.
 class DataSnapshot
     extends JsObjectWrapper<database_interop.DataSnapshotJsImpl> {
-  static final _expando = new Expando<DataSnapshot>();
+  static final _expando = Expando<DataSnapshot>();
 
   /// The last part of the path at location for this DataSnapshot.
   String get key => jsObject.key;
@@ -378,7 +377,7 @@ class DataSnapshot
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new DataSnapshot._fromJsObject(jsObject);
+    return _expando[jsObject] ??= DataSnapshot._fromJsObject(jsObject);
   }
 
   DataSnapshot._fromJsObject(database_interop.DataSnapshotJsImpl jsObject)
@@ -486,7 +485,7 @@ class Transaction extends JsObjectWrapper<database_interop.TransactionJsImpl> {
   /// Creates a new Transaction with optional [committed] and [snapshot]
   /// properties.
   factory Transaction({bool committed, DataSnapshot snapshot}) =>
-      new Transaction.fromJsObject(new database_interop.TransactionJsImpl(
+      Transaction.fromJsObject(database_interop.TransactionJsImpl(
           committed: committed, snapshot: snapshot.jsObject));
 
   /// Creates a new Transaction from a [jsObject].

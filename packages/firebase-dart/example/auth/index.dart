@@ -15,7 +15,7 @@ main() async {
         databaseURL: databaseUrl,
         storageBucket: storageBucket);
 
-    new AuthApp();
+    AuthApp();
   } on fb.FirebaseJsNotLoadedException catch (e) {
     print(e);
   }
@@ -75,7 +75,7 @@ class AuthApp {
         // for this example, authDomain because it is whitelisted by default
         // More info: https://firebase.google.com/docs/auth/web/passing-state-in-email-actions
         await auth.currentUser.sendEmailVerification(
-            new fb.ActionCodeSettings(url: "https://$authDomain"));
+            fb.ActionCodeSettings(url: "https://$authDomain"));
         verifyEmail.text = 'Verification email sent!';
       } catch (e) {
         verifyEmail

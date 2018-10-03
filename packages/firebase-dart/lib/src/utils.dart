@@ -46,7 +46,7 @@ dynamic dartify(Object jsObject) {
 
   if (util.hasProperty(proto, 'toDate') &&
       util.hasProperty(proto, 'toMillis')) {
-    return new DateTime.fromMillisecondsSinceEpoch(
+    return DateTime.fromMillisecondsSinceEpoch(
         (jsObject as TimestampJsImpl).toMillis());
   }
 
@@ -98,7 +98,7 @@ dynamic jsify(Object dartObject) {
     return dartObject;
   }
 
-  throw new ArgumentError.value(dartObject, 'dartObject', 'Could not convert');
+  throw ArgumentError.value(dartObject, 'dartObject', 'Could not convert');
 }
 
 /// Calls [method] on JavaScript object [jsObject].
@@ -121,8 +121,7 @@ Future<T> handleThenable<T>(ThenableJsImpl<T> thenable) =>
 /// Handles the [Future] object with the provided [mapper] function.
 PromiseJsImpl<S> handleFutureWithMapper<T, S>(
     Future<T> future, Func1<T, S> mapper) {
-  return new PromiseJsImpl<S>(
-      allowInterop((VoidFunc1 resolve, VoidFunc1 reject) {
+  return PromiseJsImpl<S>(allowInterop((VoidFunc1 resolve, VoidFunc1 reject) {
     future.then((value) {
       var mappedValue = mapper(value);
       resolve(mappedValue);

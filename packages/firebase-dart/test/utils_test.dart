@@ -34,11 +34,11 @@ void main() {
     });
 
     test('custom object', () {
-      expect(() => jsify(new _TestClass()), throwsArgumentError);
+      expect(() => jsify(_TestClass()), throwsArgumentError);
     });
 
     test('custom object with toJson', () {
-      expect(() => jsify(new _TestClassWithToJson()), throwsArgumentError);
+      expect(() => jsify(_TestClassWithToJson()), throwsArgumentError);
     });
 
     test('geopoint', () {

@@ -12,8 +12,8 @@ void main() {
   String testUri;
 
   setUpAll(() async {
-    var token = await getAccessToken(new IOClient());
-    fbClient = new FirebaseClient(token.data);
+    var token = await getAccessToken(IOClient());
+    fbClient = FirebaseClient(token.data);
     databaseUri = await getDatabaseUri();
   });
 

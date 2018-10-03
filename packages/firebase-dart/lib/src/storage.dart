@@ -19,7 +19,7 @@ enum TaskState { RUNNING, PAUSED, SUCCESS, CANCELED, ERROR }
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.Storage>
 class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
-  static final _expando = new Expando<Storage>();
+  static final _expando = Expando<Storage>();
 
   /// App for this instance of storage service.
   App get app => App.getInstance(jsObject.app);
@@ -36,7 +36,7 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new Storage._fromJsObject(jsObject);
+    return _expando[jsObject] ??= Storage._fromJsObject(jsObject);
   }
 
   Storage._fromJsObject(storage_interop.StorageJsImpl jsObject)
@@ -65,7 +65,7 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.Reference>
 class StorageReference
     extends JsObjectWrapper<storage_interop.ReferenceJsImpl> {
-  static final _expando = new Expando<StorageReference>();
+  static final _expando = Expando<StorageReference>();
 
   /// The name of the bucket.
   String get bucket => jsObject.bucket;
@@ -92,7 +92,7 @@ class StorageReference
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new StorageReference._fromJsObject(jsObject);
+    return _expando[jsObject] ??= StorageReference._fromJsObject(jsObject);
   }
 
   StorageReference._fromJsObject(storage_interop.ReferenceJsImpl jsObject)
@@ -164,7 +164,7 @@ class StorageReference
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.FullMetadata>
 class FullMetadata
     extends _UploadMetadataBase<storage_interop.FullMetadataJsImpl> {
-  static final _expando = new Expando<FullMetadata>();
+  static final _expando = Expando<FullMetadata>();
 
   /// The bucket the actual object is contained in.
   String get bucket => jsObject.bucket;
@@ -195,7 +195,7 @@ class FullMetadata
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new FullMetadata._fromJsObject(jsObject);
+    return _expando[jsObject] ??= FullMetadata._fromJsObject(jsObject);
   }
 
   FullMetadata._fromJsObject(jsObject) : super.fromJsObject(jsObject);
@@ -215,7 +215,7 @@ class UploadMetadata
           String contentLanguage,
           String contentType,
           Map<String, String> customMetadata}) =>
-      new UploadMetadata.fromJsObject(new storage_interop.UploadMetadataJsImpl(
+      UploadMetadata.fromJsObject(storage_interop.UploadMetadataJsImpl(
           md5Hash: md5Hash,
           cacheControl: cacheControl,
           contentDisposition: contentDisposition,
@@ -249,7 +249,7 @@ abstract class _UploadMetadataBase<
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.UploadTask>.
 class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
-  static final _expando = new Expando<UploadTask>();
+  static final _expando = Expando<UploadTask>();
 
   Future<UploadTaskSnapshot> _future;
 
@@ -268,7 +268,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??= new UploadTask._fromJsObject(jsObject);
+    return _expando[jsObject] ??= UploadTask._fromJsObject(jsObject);
   }
 
   UploadTask._fromJsObject(storage_interop.UploadTaskJsImpl jsObject)
@@ -304,7 +304,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
         _onStateChangedUnsubscribe();
       }
 
-      _changeController = new StreamController<UploadTaskSnapshot>.broadcast(
+      _changeController = StreamController<UploadTaskSnapshot>.broadcast(
           onListen: startListen, onCancel: stopListen, sync: true);
     }
     return _changeController.stream;
@@ -324,7 +324,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.UploadTaskSnapshot>.
 class UploadTaskSnapshot
     extends JsObjectWrapper<storage_interop.UploadTaskSnapshotJsImpl> {
-  static final _expando = new Expando<UploadTaskSnapshot>();
+  static final _expando = Expando<UploadTaskSnapshot>();
 
   /// The number of bytes that have been successfully transferred.
   int get bytesTransferred => jsObject.bytesTransferred;
@@ -351,7 +351,7 @@ class UploadTaskSnapshot
       case "error":
         return TaskState.ERROR;
       default:
-        throw new UnsupportedError(
+        throw UnsupportedError(
             'Unknown state "${jsObject.state}" please file a bug.');
     }
   }
@@ -368,8 +368,7 @@ class UploadTaskSnapshot
     if (jsObject == null) {
       return null;
     }
-    return _expando[jsObject] ??=
-        new UploadTaskSnapshot._fromJsObject(jsObject);
+    return _expando[jsObject] ??= UploadTaskSnapshot._fromJsObject(jsObject);
   }
 
   UploadTaskSnapshot._fromJsObject(
@@ -390,15 +389,14 @@ class SettableMetadata
           String contentLanguage,
           String contentType,
           Map customMetadata}) =>
-      new SettableMetadata.fromJsObject(
-          new storage_interop.SettableMetadataJsImpl(
-              cacheControl: cacheControl,
-              contentDisposition: contentDisposition,
-              contentEncoding: contentEncoding,
-              contentLanguage: contentLanguage,
-              contentType: contentType,
-              customMetadata:
-                  (customMetadata != null) ? jsify(customMetadata) : null));
+      SettableMetadata.fromJsObject(storage_interop.SettableMetadataJsImpl(
+          cacheControl: cacheControl,
+          contentDisposition: contentDisposition,
+          contentEncoding: contentEncoding,
+          contentLanguage: contentLanguage,
+          contentType: contentType,
+          customMetadata:
+              (customMetadata != null) ? jsify(customMetadata) : null));
 
   /// Creates a new SettableMetadata from a [jsObject].
   SettableMetadata.fromJsObject(storage_interop.SettableMetadataJsImpl jsObject)

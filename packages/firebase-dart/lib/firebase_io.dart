@@ -18,12 +18,12 @@ class FirebaseClient {
   /// an authentication token.
   /// See: <https://firebase.google.com/docs/reference/rest/database/user-auth>.
   FirebaseClient(this.credential, {BaseClient client})
-      : _client = client ?? new IOClient();
+      : _client = client ?? IOClient();
 
   /// Creates a new anonymous FirebaseClient with optional [client].
   FirebaseClient.anonymous({BaseClient client})
       : credential = null,
-        _client = client ?? new IOClient();
+        _client = client ?? IOClient();
 
   /// Reads data from database using a HTTP GET request.
   /// The response from a successful request contains a data being retrieved.
@@ -62,7 +62,7 @@ class FirebaseClient {
   Future<dynamic> send(String method, url, {json}) async {
     Uri uri = url is String ? Uri.parse(url) : url;
 
-    var request = new Request(method, uri);
+    var request = Request(method, uri);
     if (credential != null) {
       request.headers['Authorization'] = "Bearer $credential";
     }
@@ -81,7 +81,7 @@ class FirebaseClient {
     } on FormatException {
       var contentType = response.headers['content-type'];
       if (contentType != null && !contentType.contains('application/json')) {
-        throw new Exception(
+        throw Exception(
             'Returned value was not JSON. Did the uri end with ".json"?');
       }
       rethrow;
@@ -91,13 +91,11 @@ class FirebaseClient {
       if (bodyJson is Map) {
         var error = bodyJson['error'];
         if (error != null) {
-          throw new FirebaseClientException(
-              response.statusCode, error.toString());
+          throw FirebaseClientException(response.statusCode, error.toString());
         }
       }
 
-      throw new FirebaseClientException(
-          response.statusCode, bodyJson.toString());
+      throw FirebaseClientException(response.statusCode, bodyJson.toString());
     }
 
     return bodyJson;

@@ -18,7 +18,7 @@ void print(obj) => core.print(
 /// Wait for 500ms
 Future _wait() async {
   //print("waiting...");
-  await new Future.delayed(const Duration(milliseconds: 500));
+  await Future.delayed(const Duration(milliseconds: 500));
   //print("waited...");
 }
 
@@ -58,12 +58,12 @@ void main() {
       });
 
       test('type', () {
-        var verifier = new RecaptchaVerifier("test-recaptcha");
+        var verifier = RecaptchaVerifier("test-recaptcha");
         expect(verifier.type, "recaptcha");
       });
 
       test('render', () async {
-        var verifier = new RecaptchaVerifier("test-recaptcha");
+        var verifier = RecaptchaVerifier("test-recaptcha");
         await verifier.render();
 
         var iframe = document.querySelector("#test-recaptcha iframe");
@@ -72,7 +72,7 @@ void main() {
       });
 
       test('clear', () async {
-        var verifier = new RecaptchaVerifier("test-recaptcha");
+        var verifier = RecaptchaVerifier("test-recaptcha");
         await verifier.render();
 
         var iframe = document.querySelector("#test-recaptcha iframe");
@@ -92,7 +92,7 @@ void main() {
         expect(EmailAuthProvider.PROVIDER_ID, 'password');
       });
       test('instance', () {
-        var provider = new EmailAuthProvider();
+        var provider = EmailAuthProvider();
         expect(provider.providerId, EmailAuthProvider.PROVIDER_ID);
       });
       test('credential', () {
@@ -106,7 +106,7 @@ void main() {
         expect(FacebookAuthProvider.PROVIDER_ID, 'facebook.com');
       });
       test('instance', () {
-        var provider = new FacebookAuthProvider();
+        var provider = FacebookAuthProvider();
         expect(provider.providerId, FacebookAuthProvider.PROVIDER_ID);
       });
       test('credential', () {
@@ -114,12 +114,12 @@ void main() {
         expect(cred.providerId, equals(FacebookAuthProvider.PROVIDER_ID));
       });
       test('scope', () {
-        var provider = new FacebookAuthProvider();
+        var provider = FacebookAuthProvider();
         var providerWithScope = provider.addScope('user_birthday');
         expect(provider.providerId, equals(providerWithScope.providerId));
       });
       test('custom parameters', () {
-        var provider = new FacebookAuthProvider();
+        var provider = FacebookAuthProvider();
         var providerWithParameters =
             provider.setCustomParameters({'display': 'popup'});
         expect(provider.providerId, equals(providerWithParameters.providerId));
@@ -131,7 +131,7 @@ void main() {
         expect(GithubAuthProvider.PROVIDER_ID, 'github.com');
       });
       test('instance', () {
-        var provider = new GithubAuthProvider();
+        var provider = GithubAuthProvider();
         expect(provider.providerId, GithubAuthProvider.PROVIDER_ID);
       });
       test('credential', () {
@@ -139,12 +139,12 @@ void main() {
         expect(cred.providerId, equals(GithubAuthProvider.PROVIDER_ID));
       });
       test('scope', () {
-        var provider = new GithubAuthProvider();
+        var provider = GithubAuthProvider();
         var providerWithScope = provider.addScope('repo');
         expect(provider.providerId, equals(providerWithScope.providerId));
       });
       test('custom parameters', () {
-        var provider = new GithubAuthProvider();
+        var provider = GithubAuthProvider();
         var providerWithParameters =
             provider.setCustomParameters({'allow_signup': 'false'});
         expect(provider.providerId, equals(providerWithParameters.providerId));
@@ -156,7 +156,7 @@ void main() {
         expect(GoogleAuthProvider.PROVIDER_ID, 'google.com');
       });
       test('instance', () {
-        var provider = new GoogleAuthProvider();
+        var provider = GoogleAuthProvider();
         expect(provider.providerId, GoogleAuthProvider.PROVIDER_ID);
       });
       test('credential', () {
@@ -164,13 +164,13 @@ void main() {
         expect(cred.providerId, equals(GoogleAuthProvider.PROVIDER_ID));
       });
       test('scope', () {
-        var provider = new GoogleAuthProvider();
+        var provider = GoogleAuthProvider();
         var providerWithScope =
             provider.addScope('https://www.googleapis.com/auth/plus.login');
         expect(provider.providerId, equals(providerWithScope.providerId));
       });
       test('custom parameters', () {
-        var provider = new GoogleAuthProvider();
+        var provider = GoogleAuthProvider();
         var providerWithParameters = provider
             .setCustomParameters({'login_hint': 'some_email@example.com'});
         expect(provider.providerId, equals(providerWithParameters.providerId));
@@ -182,7 +182,7 @@ void main() {
         expect(TwitterAuthProvider.PROVIDER_ID, 'twitter.com');
       });
       test('instance', () {
-        var provider = new TwitterAuthProvider();
+        var provider = TwitterAuthProvider();
         expect(provider.providerId, TwitterAuthProvider.PROVIDER_ID);
       });
       test('credential', () {
@@ -190,7 +190,7 @@ void main() {
         expect(cred.providerId, equals(TwitterAuthProvider.PROVIDER_ID));
       });
       test('custom parameters', () {
-        var provider = new TwitterAuthProvider();
+        var provider = TwitterAuthProvider();
         var providerWithParameters =
             provider.setCustomParameters({'lang': 'es'});
         expect(provider.providerId, equals(providerWithParameters.providerId));
@@ -202,7 +202,7 @@ void main() {
         expect(PhoneAuthProvider.PROVIDER_ID, 'phone');
       });
       test('instance', () {
-        var provider = new PhoneAuthProvider();
+        var provider = PhoneAuthProvider();
         expect(provider.providerId, PhoneAuthProvider.PROVIDER_ID);
       });
       test('credential', () {
@@ -572,7 +572,7 @@ void main() {
         expect(userCredential, isNotNull);
         expect(userCredential.user.displayName, isNull);
 
-        var profile = new UserProfile(displayName: "Other User");
+        var profile = UserProfile(displayName: "Other User");
         await userCredential.user.updateProfile(profile);
         expect(userCredential.user.displayName, "Other User");
       } on FirebaseError catch (e) {
@@ -585,7 +585,7 @@ void main() {
       try {
         expect(userCredential, isNotNull);
 
-        var profile = new UserProfile(
+        var profile = UserProfile(
             displayName: "Other User", photoURL: "http://google.com");
         await userCredential.user.updateProfile(profile);
 
