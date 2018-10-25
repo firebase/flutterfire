@@ -1,3 +1,7 @@
+## 5.0.3
+
+- Support the latest `pkg:http`.
+
 ## 5.0.2
 
 * Updated documented JS library from `5.1.0` of the JS API to `5.5.2`.

@@ -18,7 +18,7 @@ const _firebaseScopes = [
   "https://www.googleapis.com/auth/userinfo.email"
 ];
 
-Future<AccessToken> getAccessToken(IOClient client) async {
+Future<AccessToken> getAccessToken(Client client) async {
   var serviceAccountJsonPath = (await Isolate.resolvePackageUri(
           Uri.parse('package:firebase/src/assets/service_account.json')))
       .toFilePath();

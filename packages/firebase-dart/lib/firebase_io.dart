@@ -18,12 +18,12 @@ class FirebaseClient {
   /// an authentication token.
   /// See: <https://firebase.google.com/docs/reference/rest/database/user-auth>.
   FirebaseClient(this.credential, {BaseClient client})
-      : _client = client ?? IOClient();
+      : _client = client ?? Client();
 
   /// Creates a new anonymous FirebaseClient with optional [client].
   FirebaseClient.anonymous({BaseClient client})
       : credential = null,
-        _client = client ?? IOClient();
+        _client = client ?? Client();
 
   /// Reads data from database using a HTTP GET request.
   /// The response from a successful request contains a data being retrieved.

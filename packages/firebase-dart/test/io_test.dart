@@ -12,7 +12,7 @@ void main() {
   String testUri;
 
   setUpAll(() async {
-    var token = await getAccessToken(IOClient());
+    var token = await getAccessToken(Client());
     fbClient = FirebaseClient(token.data);
     databaseUri = await getDatabaseUri();
   });
