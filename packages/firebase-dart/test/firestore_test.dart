@@ -687,7 +687,7 @@ void main() {
 
     // ignore: unawaited_futures
     ref.doc("message1").set({'value': fs.FieldValue.serverTimestamp()});
-  });
+  }, timeout: Timeout.parse('10s'), retry: 3);
 
   group("Quering data", () {
     fs.CollectionReference ref;
