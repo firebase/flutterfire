@@ -11,7 +11,6 @@ export 'interop/firestore_interop.dart'
     show
         Blob,
         FieldPath,
-        FieldValue,
         GeoPoint,
         setLogLevel,
         SetOptions,
@@ -887,4 +886,111 @@ abstract class _Updatable {
     }
     return callMethod(jsObject, "update", args);
   }
+}
+
+// Field values
+
+class _FieldValueDelete implements FieldValue {
+  @override
+  dynamic _jsify() {
+    return firestore_interop.FieldValue.delete();
+  }
+
+  @override
+  String toString() => 'FieldValue.delete()';
+}
+
+class _FieldValueServerTimestamp implements FieldValue {
+  @override
+  dynamic _jsify() {
+    return firestore_interop.FieldValue.serverTimestamp();
+  }
+
+  @override
+  String toString() => 'FieldValue.serverTimestamp()';
+}
+
+abstract class _FieldValueArray implements FieldValue {
+  final List elements;
+
+  _FieldValueArray(this.elements);
+}
+
+class _FieldValueArrayUnion extends _FieldValueArray {
+  _FieldValueArrayUnion(List elements) : super(elements);
+  @override
+  _jsify() {
+    // This uses var arg so cannot use js package
+    return callMethod(
+        firestore_interop.fieldValues, 'arrayUnion', jsifyList(elements));
+  }
+
+  @override
+  String toString() => 'FieldValue.arrayUnion($elements)';
+}
+
+class _FieldValueArrayRemove extends _FieldValueArray {
+  _FieldValueArrayRemove(List elements) : super(elements);
+  @override
+  _jsify() {
+    // This uses var arg so cannot use js package
+    return callMethod(
+        firestore_interop.fieldValues, 'arrayRemove', jsifyList(elements));
+  }
+
+  @override
+  String toString() => 'FieldValue.arrayRemove($elements)';
+}
+
+dynamic jsifyFieldValue(FieldValue fieldValue) => fieldValue._jsify();
+
+/// Sentinel values that can be used when writing document fields with set()
+/// or update().
+abstract class FieldValue {
+  factory FieldValue._fromJs(dynamic jsFieldValue) {
+    if (jsFieldValue == firestore_interop.FieldValue.delete()) {
+      return FieldValue.delete();
+    } else if (jsFieldValue == firestore_interop.FieldValue.serverTimestamp()) {
+      return FieldValue.serverTimestamp();
+    } else {
+      throw ArgumentError.value(jsFieldValue, 'jsFieldValue',
+          "Invalid value provided. We don't support dartfying object like arrayUnion or arrayRemove since not needed");
+    }
+  }
+  dynamic _jsify();
+
+  /// Returns a sentinel used with set() or update() to include a
+  /// server-generated timestamp in the written data.
+  static FieldValue serverTimestamp() => _serverTimestamp;
+
+  /// Returns a sentinel for use with update() to mark a field for deletion.
+  static FieldValue delete() => _delete;
+
+  /// Returns a special value that tells the server to union the given elements
+  /// with any array value that already exists on the server.
+  ///
+  /// Can be used with set(), create() or update() operations.
+  ///
+  /// Each specified element that doesn't already exist in the array will be
+  /// added to the end. If the field being modified is not already an array it
+  /// will be overwritten with an array containing exactly the specified
+  /// elements.
+  static FieldValue arrayUnion(List elements) =>
+      _FieldValueArrayUnion(elements);
+
+  /// Returns a special value that tells the server to remove the given elements
+  /// from any array value that already exists on the server.
+  ///
+  /// Can be used with set(), create() or update() operations.
+  ///
+  /// All instances of each element specified will be removed from the array.
+  /// If the field being modified is not already an array it will be overwritten
+  /// with an empty array.
+  static FieldValue arrayRemove(List elements) =>
+      _FieldValueArrayRemove(elements);
+
+  FieldValue._();
+
+  static final FieldValue _serverTimestamp = _FieldValueServerTimestamp();
+  static final FieldValue _delete = _FieldValueDelete();
 }

@@ -8,7 +8,7 @@ import 'firestore.dart';
 import 'func.dart';
 
 import 'interop/firebase_interop.dart' show ThenableJsImpl, PromiseJsImpl;
-import 'interop/firestore_interop.dart' show FieldValue, TimestampJsImpl;
+import 'interop/firestore_interop.dart' show TimestampJsImpl;
 import 'interop/js_interop.dart' as js;
 
 /// Returns Dart representation from JS Object.
@@ -66,6 +66,10 @@ dynamic dartify(Object jsObject) {
   return map;
 }
 
+dynamic jsifyList(Iterable list) {
+  return js.toJSArray(list.map(jsify).toList());
+}
+
 /// Returns the JS implementation from Dart Object.
 dynamic jsify(Object dartObject) {
   if (_isBasicType(dartObject)) {
@@ -77,7 +81,7 @@ dynamic jsify(Object dartObject) {
   }
 
   if (dartObject is Iterable) {
-    return js.toJSArray(dartObject.map(jsify).toList());
+    return jsifyList(dartObject);
   }
 
   if (dartObject is Map) {
@@ -92,9 +96,11 @@ dynamic jsify(Object dartObject) {
     return dartObject.jsObject;
   }
 
-  if (dartObject is FieldValue ||
-      dartObject is Blob ||
-      dartObject is GeoPoint) {
+  if (dartObject is FieldValue) {
+    return jsifyFieldValue(dartObject);
+  }
+
+  if (dartObject is Blob || dartObject is GeoPoint) {
     return dartObject;
   }
 

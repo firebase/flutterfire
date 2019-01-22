@@ -197,6 +197,10 @@ abstract class FieldValue {
   external bool isEqual(Object other);
 }
 
+/// Used internally to allow calling FieldValue.arrayUnion and arrayRemove
+@JS('FieldValue')
+external dynamic get fieldValues;
+
 @JS("Query")
 abstract class QueryJsImpl {
   external FirestoreJsImpl get firestore;

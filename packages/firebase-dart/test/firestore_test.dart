@@ -86,15 +86,15 @@ void main() {
     test("FieldValue", () {
       var a = fs.FieldValue.delete();
       var b = fs.FieldValue.delete();
-      expect(a.isEqual(b), isTrue);
-      expect(a.isEqual(a), isTrue);
-      expect(b.isEqual(a), isTrue);
+      expect(a, b);
+      expect(a, a);
+      expect(b, a);
 
       a = fs.FieldValue.serverTimestamp();
       b = fs.FieldValue.serverTimestamp();
-      expect(a.isEqual(b), isTrue);
-      expect(a.isEqual(a), isTrue);
-      expect(b.isEqual(a), isTrue);
+      expect(a, b);
+      expect(a, a);
+      expect(b, a);
     });
 
     test("FieldPath", () {
@@ -483,6 +483,68 @@ void main() {
 
       expect(snapshotData["greeting"]["text"], "Hello after update");
       expect(snapshotData["greeting"]["text_cs"], "Ahoj po uprave");
+    });
+
+    test('array field value', () async {
+      var docRef = ref.doc('array_field_value');
+
+      // Make sure FieldValue class is exported by using it here
+      final fieldValueArrayUnion = fs.FieldValue.arrayUnion([1, 2]);
+      final fieldValueArrayUnion2 = fs.FieldValue.arrayUnion([10, 11]);
+      final fieldValueArrayComplex = fs.FieldValue.arrayUnion([
+        100,
+        "text",
+        {
+          'sub': [1]
+        },
+      ]);
+
+      // create document
+      var data = <String, dynamic>{
+        'array': fieldValueArrayUnion,
+        'array2': fieldValueArrayUnion2,
+        'complex': fieldValueArrayComplex
+      };
+
+      await docRef.set(data);
+
+      // read it
+      data = (await docRef.get()).data();
+      expect(data, {
+        'array': [1, 2],
+        'array2': [10, 11],
+        'complex': [
+          100,
+          'text',
+          {
+            'sub': [1]
+          },
+        ]
+      });
+
+      // update and remove some data
+      var updateData = {
+        'array': fs.FieldValue.arrayUnion([2, 3]),
+        'array2': fs.FieldValue.arrayRemove([11, 12]),
+        // try to remove a complex object
+        'complex': fs.FieldValue.arrayRemove([
+          100,
+          {
+            'sub': [1]
+          }
+        ])
+      };
+      await docRef.update(data: updateData);
+
+      // read again
+      data = (await docRef.get()).data();
+      expect(data, {
+        'array': [1, 2, 3],
+        'array2': [10],
+        'complex': [
+          'text',
+        ]
+      });
     });
 
     test("transaction", () async {
