@@ -1,9 +1,9 @@
 [![Build Status](https://travis-ci.org/FirebaseExtended/firebase-dart.svg?branch=master)](https://travis-ci.org/FirebaseExtended/firebase-dart)
 
-**NOTE:** This package provides two libraries:
+**NOTE:** This package provides three libraries:
 
 * Browser-based applications:
-  [`package:firebase/firebase.dart`](#using-this-package-for-browser-applications)
+  [`package:firebase/firebase.dart` and `package:firebase/firestore.dart`](#using-this-package-for-browser-applications)
 
   A wrapper over the [Firebase JS API](https://firebase.google.com/docs/reference/js/).
 
