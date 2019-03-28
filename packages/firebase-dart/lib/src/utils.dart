@@ -6,7 +6,6 @@ import 'package:js/js_util.dart' as util;
 
 import 'firestore.dart';
 import 'func.dart';
-
 import 'interop/firebase_interop.dart' show ThenableJsImpl, PromiseJsImpl;
 import 'interop/firestore_interop.dart' show TimestampJsImpl;
 import 'interop/js_interop.dart' as js;
@@ -100,8 +99,17 @@ dynamic jsify(Object dartObject) {
     return jsifyFieldValue(dartObject);
   }
 
-  if (dartObject is Blob || dartObject is GeoPoint) {
+  if (dartObject is Blob) {
     return dartObject;
+  }
+
+  // NOTE: if the firestore JS lib is not imported, we'll get a DDC warning here
+  if (dartObject is GeoPoint) {
+    return dartObject;
+  }
+
+  if (dartObject is Function) {
+    return allowInterop(dartObject);
   }
 
   throw ArgumentError.value(dartObject, 'dartObject', 'Could not convert');
