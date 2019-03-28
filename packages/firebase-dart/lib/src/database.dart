@@ -395,7 +395,7 @@ class DataSnapshot
 
   /// Enumerates the top-level children of the DataSnapshot in their query-order.
   /// [action] is called for each child DataSnapshot.
-  bool forEach(action(DataSnapshot snapshot)) {
+  bool forEach(Function(DataSnapshot) action) {
     var actionWrap = allowInterop((d) => action(DataSnapshot.getInstance(d)));
     return jsObject.forEach(actionWrap);
   }

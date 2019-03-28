@@ -12,6 +12,7 @@ export 'interop/storage_interop.dart' show StringFormat;
 /// Represents the current state of a running upload.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage#.TaskState>.
+// ignore: constant_identifier_names
 enum TaskState { RUNNING, PAUSED, SUCCESS, CANCELED, ERROR }
 
 /// A service for uploading and downloading large objects to and from the
@@ -255,8 +256,8 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
 
   /// Returns the UploadTaskSnapshot when the upload successfully completes.
   Future<UploadTaskSnapshot> get future {
-    _future ??= handleThenable(jsObject).then(UploadTaskSnapshot.getInstance);
-    return _future;
+    return _future ??=
+        handleThenable(jsObject).then(UploadTaskSnapshot.getInstance);
   }
 
   /// Returns the upload task snapshot of the current task state.

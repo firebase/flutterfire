@@ -7,12 +7,12 @@ final _assetPath = 'lib/src/assets/';
 
 main() {
   // make sure the working dir is the root of the project
-  if (!(File('pubspec.yaml').existsSync())) {
+  if (!File('pubspec.yaml').existsSync()) {
     throw StateError("Not in the root! - ${Directory.current}");
   }
 
   var samplePath = p.join(_assetPath, 'config.json.sample');
-  if (!(File(samplePath).existsSync())) {
+  if (!File(samplePath).existsSync()) {
     throw StateError("'$samplePath should exist");
   }
 
@@ -40,7 +40,8 @@ main() {
     }
   }
 
-  configFile.writeAsStringSync(JsonEncoder.withIndent('  ').convert(config));
+  configFile
+      .writeAsStringSync(const JsonEncoder.withIndent('  ').convert(config));
 
   // now for the service_account silly
   if (!Platform.environment.containsKey('SERVICE_ACCOUNT_JSON')) {

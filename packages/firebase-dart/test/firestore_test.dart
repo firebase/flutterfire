@@ -271,7 +271,7 @@ void main() {
       var snapshot = await docRef.get();
       var snapshotData = snapshot.data();
 
-      expect(snapshotData, TypeMatcher<Map>());
+      expect(snapshotData, isA<Map>());
       expect(snapshotData["text"], "Message2");
 
       await docRef.set({"title": "Ahoj"});
@@ -434,7 +434,7 @@ void main() {
       var snapshot = await docRef.get();
       var timeStamp = snapshot.data()['timestamp'];
 
-      expect(timeStamp, TypeMatcher<DateTime>());
+      expect(timeStamp, isA<DateTime>());
     });
 
     test("update nested with dot notation", () async {
@@ -567,7 +567,7 @@ void main() {
 
       var newValue = await firestore.runTransaction((transaction) async {
         var documentSnapshot = await transaction.get(docRef);
-        var value = documentSnapshot.data()["text"] + " val from transaction";
+        var value = '${documentSnapshot.data()["text"]} val from transaction';
         transaction.update(docRef, data: {"text": value});
         return value;
       });
@@ -739,7 +739,7 @@ void main() {
           return;
         case 3:
           expect(changes.single.type, 'modified');
-          expect(changes.single.doc.data()['value'], TypeMatcher<DateTime>());
+          expect(changes.single.doc.data()['value'], isA<DateTime>());
           expect(metadata.hasPendingWrites, isFalse);
           expect(metadata.fromCache, isFalse);
           return;
@@ -873,7 +873,7 @@ void main() {
         var events = await ref.onSnapshot.take(4).toList();
         expect(
             events,
-            everyElement(TypeMatcher<fs.QuerySnapshot>()
+            everyElement(isA<fs.QuerySnapshot>()
                 .having(
                     (qs) => qs.metadata.fromCache, 'metadata.fromCache', isTrue)
                 .having((qs) => qs.metadata.hasPendingWrites,

@@ -15,6 +15,6 @@ void main() {
             authDomain: authDomain,
             databaseURL: databaseUrl,
             storageBucket: storageBucket),
-        throwsA(TypeMatcher<fb.FirebaseJsNotLoadedException>()));
+        throwsA(isA<fb.FirebaseJsNotLoadedException>()));
   });
 }

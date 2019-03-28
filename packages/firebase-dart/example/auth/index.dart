@@ -139,7 +139,7 @@ class AuthApp {
           row.addCell()
             ..text = k
             ..classes.add('header');
-          row.addCell()..text = "$v";
+          row.addCell().text = "$v";
         }
       });
 

@@ -4,9 +4,9 @@
 
 // TODO: once Dart v1 support is dropped, use new Function syntax instead
 
-typedef R Func0<R>();
-typedef R Func1<A, R>(A a);
-typedef R Func3<A, B, C, R>(A a, B b, C c);
-typedef R Func2Opt1<A, B, R>(A a, [B b]);
-typedef void VoidFunc0();
-typedef void VoidFunc1<A>(A a);
+typedef Func0<R> = R Function();
+typedef Func1<A, R> = R Function(A a);
+typedef Func3<A, B, C, R> = R Function(A a, B b, C c);
+typedef Func2Opt1<A, B, R> = R Function(A a, [B b]);
+typedef VoidFunc0 = void Function();
+typedef VoidFunc1<A> = void Function(A a);

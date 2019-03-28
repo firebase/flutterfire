@@ -92,7 +92,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   /// the Future returned by the [updateFunction] is returned here.
   /// Else, if the transaction failed, a rejected Future with the corresponding
   /// failure error will be returned.
-  Future runTransaction(updateFunction(Transaction transaction)) {
+  Future runTransaction(Function(Transaction) updateFunction) {
     var updateFunctionWrap = allowInterop((transaction) =>
         handleFutureWithMapper(
             updateFunction(Transaction.getInstance(transaction)), jsify));
@@ -454,10 +454,8 @@ class Query<T extends firestore_interop.QueryJsImpl>
       onSnapshotUnsubscribe = null;
     }
 
-    controller = StreamController<QuerySnapshot>.broadcast(
+    return controller = StreamController<QuerySnapshot>.broadcast(
         onListen: startListen, onCancel: stopListen, sync: true);
-
-    return controller;
   }
 
   /// Creates a new [Query] where the results are sorted by the specified field,
@@ -763,7 +761,7 @@ class QuerySnapshot
       : super.fromJsObject(jsObject);
 
   /// Enumerates all of the documents in the [QuerySnapshot].
-  void forEach(callback(DocumentSnapshot snapshot)) {
+  void forEach(Function(DocumentSnapshot) callback) {
     var callbackWrap =
         allowInterop((s) => callback(DocumentSnapshot.getInstance(s)));
     return jsObject.forEach(callbackWrap);
