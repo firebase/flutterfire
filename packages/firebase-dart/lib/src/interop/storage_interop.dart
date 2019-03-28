@@ -105,7 +105,8 @@ abstract class UploadTaskJsImpl
   external ThenableJsImpl then([Func1 onResolve, Func1 onReject]);
 }
 
-@JS('UploadTaskSnapshot')
+@JS()
+@anonymous
 abstract class UploadTaskSnapshotJsImpl {
   external int get bytesTransferred;
   external FullMetadataJsImpl get metadata;
