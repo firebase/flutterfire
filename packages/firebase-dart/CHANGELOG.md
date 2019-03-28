@@ -1,6 +1,7 @@
 ## 5.0.3
 
 - Add support for firestore `FieldValue.arrayUnion()` and `FieldValue.arrayRemove()`
+- Fix a number of issues in interop.
 - Support the latest `pkg:http`.
 
 ## 5.0.2
