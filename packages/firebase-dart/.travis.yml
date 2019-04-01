@@ -9,6 +9,8 @@ jobs:
   include:
     - dart: dev
       dart_task: dartanalyzer
+    - dart: 2.1.0
+      dart_task: dartanalyzer
     - dart_task: dartfmt
       dart: dev
 

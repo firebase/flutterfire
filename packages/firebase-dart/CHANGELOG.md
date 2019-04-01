@@ -1,3 +1,7 @@
+## 5.0.4
+
+- Require at least Dart 2.1.0.
+
 ## 5.0.3
 
 - Add support for firestore `FieldValue.arrayUnion()` and `FieldValue.arrayRemove()`
