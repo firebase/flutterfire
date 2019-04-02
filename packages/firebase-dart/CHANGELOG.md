@@ -1,6 +1,7 @@
 ## 5.0.4
 
 - Require at least Dart 2.1.0.
+- Updated documented JS library from `5.5.2` of the JS API to `5.9.2`.
 
 ## 5.0.3
 
