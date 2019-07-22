@@ -2,7 +2,8 @@ language: dart
 
 stages:
   - analyze_and_format
-  - test
+  - name: test
+    if: (type != pull_request) OR (sender = kevmoo)
 
 jobs:
   include:
