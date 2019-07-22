@@ -1,6 +1,6 @@
 name: firebase
 description: Firebase libraries for Dart on the web and server
-version: 5.0.4
+version: 6.0.0-dev
 authors:
 - Jana Moudra <jana.moudra@gmail.com>
 - Kevin Moore <kevmoo@google.com>

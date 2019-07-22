@@ -7,7 +7,7 @@ import 'package:js/js.dart';
 
 import '../func.dart';
 import 'app_interop.dart';
-import 'firebase_interop.dart';
+import 'es6_interop.dart';
 
 external void enableLogging([logger, bool persistent]);
 
@@ -113,11 +113,9 @@ abstract class OnDisconnectJsImpl {
 
 @JS('ThenableReference')
 abstract class ThenableReferenceJsImpl extends ReferenceJsImpl
-    implements ThenableJsImpl<ReferenceJsImpl> {
+    implements PromiseJsImpl<ReferenceJsImpl> {
   @override
-  external ThenableJsImpl JS$catch([Func1 onReject]);
-  @override
-  external ThenableJsImpl then([Func1 onResolve, Func1 onReject]);
+  external PromiseJsImpl then([Func1 onResolve, Func1 onReject]);
 }
 
 @JS()

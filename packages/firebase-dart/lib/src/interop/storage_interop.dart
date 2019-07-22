@@ -7,7 +7,7 @@ import 'package:js/js.dart';
 
 import '../func.dart';
 import 'app_interop.dart';
-import 'firebase_interop.dart';
+import 'es6_interop.dart';
 
 @JS('Storage')
 abstract class StorageJsImpl {
@@ -91,7 +91,7 @@ class UploadMetadataJsImpl extends SettableMetadataJsImpl {
 
 @JS('UploadTask')
 abstract class UploadTaskJsImpl
-    implements ThenableJsImpl<UploadTaskSnapshotJsImpl> {
+    implements PromiseJsImpl<UploadTaskSnapshotJsImpl> {
   external UploadTaskSnapshotJsImpl get snapshot;
   external set snapshot(UploadTaskSnapshotJsImpl t);
   external bool cancel();
@@ -100,9 +100,7 @@ abstract class UploadTaskJsImpl
   external bool pause();
   external bool resume();
   @override
-  external ThenableJsImpl JS$catch([Func1 onReject]);
-  @override
-  external ThenableJsImpl then([Func1 onResolve, Func1 onReject]);
+  external PromiseJsImpl then([Func1 onResolve, Func1 onReject]);
 }
 
 @JS()

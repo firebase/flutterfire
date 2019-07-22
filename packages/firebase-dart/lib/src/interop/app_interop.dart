@@ -5,6 +5,7 @@ import 'package:js/js.dart';
 
 import 'auth_interop.dart';
 import 'database_interop.dart';
+import 'es6_interop.dart';
 import 'firebase_interop.dart';
 import 'firestore_interop.dart';
 import 'storage_interop.dart';

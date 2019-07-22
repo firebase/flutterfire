@@ -6,7 +6,7 @@ import 'package:js/js_util.dart' as util;
 
 import 'firestore.dart';
 import 'func.dart';
-import 'interop/firebase_interop.dart' show ThenableJsImpl, PromiseJsImpl;
+import 'interop/es6_interop.dart';
 import 'interop/firestore_interop.dart' show TimestampJsImpl;
 import 'interop/js_interop.dart' as js;
 
@@ -128,8 +128,8 @@ bool _isBasicType(Object value) {
   return false;
 }
 
-/// Handles the [ThenableJsImpl] object.
-Future<T> handleThenable<T>(ThenableJsImpl<T> thenable) =>
+/// Handles the [PromiseJsImpl] object.
+Future<T> handleThenable<T>(PromiseJsImpl<T> thenable) =>
     promiseToFuture(thenable);
 
 /// Handles the [Future] object with the provided [mapper] function.

@@ -32,8 +32,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
       return null;
     }
 
-    return _expando[jsObject] ??= Firestore._fromJsObject(jsObject
-      ..settings(firestore_interop.Settings(timestampsInSnapshots: true)));
+    return _expando[jsObject] ??= Firestore._fromJsObject(jsObject);
   }
 
   Firestore._fromJsObject(firestore_interop.FirestoreJsImpl jsObject)
@@ -916,6 +915,7 @@ abstract class _FieldValueArray implements FieldValue {
 
 class _FieldValueArrayUnion extends _FieldValueArray {
   _FieldValueArrayUnion(List elements) : super(elements);
+
   @override
   _jsify() {
     // This uses var arg so cannot use js package
@@ -929,6 +929,7 @@ class _FieldValueArrayUnion extends _FieldValueArray {
 
 class _FieldValueArrayRemove extends _FieldValueArray {
   _FieldValueArrayRemove(List elements) : super(elements);
+
   @override
   _jsify() {
     // This uses var arg so cannot use js package
@@ -955,6 +956,7 @@ abstract class FieldValue {
           "Invalid value provided. We don't support dartfying object like arrayUnion or arrayRemove since not needed");
     }
   }
+
   dynamic _jsify();
 
   /// Returns a sentinel used with set() or update() to include a

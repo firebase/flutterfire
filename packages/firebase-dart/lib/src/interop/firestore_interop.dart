@@ -9,6 +9,7 @@ import 'package:js/js.dart';
 
 import '../func.dart';
 import 'app_interop.dart';
+import 'es6_interop.dart';
 import 'firebase_interop.dart';
 
 /// Sets the verbosity of Cloud Firestore logs.
@@ -34,8 +35,8 @@ abstract class FirestoreJsImpl {
   external PromiseJsImpl runTransaction(
       Func1<TransactionJsImpl, PromiseJsImpl> updateFunction);
   external void settings(Settings settings);
-  external ThenableJsImpl<Null> disableNetwork();
-  external ThenableJsImpl<Null> enableNetwork();
+  external PromiseJsImpl<Null> disableNetwork();
+  external PromiseJsImpl<Null> enableNetwork();
 }
 
 @JS("WriteBatch")

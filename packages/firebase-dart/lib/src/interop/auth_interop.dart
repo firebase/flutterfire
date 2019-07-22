@@ -7,6 +7,7 @@ import 'package:js/js.dart';
 
 import '../func.dart';
 import 'app_interop.dart';
+import 'es6_interop.dart';
 import 'firebase_interop.dart';
 
 @JS('Auth')
@@ -17,9 +18,6 @@ abstract class AuthJsImpl {
   external PromiseJsImpl confirmPasswordReset(String code, String newPassword);
   external PromiseJsImpl<UserCredentialJsImpl> createUserWithEmailAndPassword(
       String email, String password);
-  external PromiseJsImpl<UserCredentialJsImpl>
-      createUserAndRetrieveDataWithEmailAndPassword(
-          String email, String password);
   external UserJsImpl get currentUser;
 
   @deprecated
@@ -34,14 +32,9 @@ abstract class AuthJsImpl {
   external PromiseJsImpl sendPasswordResetEmail(String email,
       [ActionCodeSettings actionCodeSettings]);
   external PromiseJsImpl setPersistence(String persistence);
-  external PromiseJsImpl<UserCredentialJsImpl>
-      signInAndRetrieveDataWithCredential(AuthCredential credential);
   external PromiseJsImpl<UserCredentialJsImpl> signInAnonymously();
-  external PromiseJsImpl<UserCredentialJsImpl>
-      signInAnonymouslyAndRetrieveData();
 
-  @deprecated
-  external PromiseJsImpl<UserJsImpl> signInWithCredential(
+  external PromiseJsImpl<UserCredentialJsImpl> signInWithCredential(
       AuthCredential credential);
   external PromiseJsImpl<UserCredentialJsImpl> signInWithCustomToken(
       String token);
@@ -49,8 +42,6 @@ abstract class AuthJsImpl {
       signInAndRetrieveDataWithCustomToken(String token);
   external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailAndPassword(
       String email, String password);
-  external PromiseJsImpl<UserCredentialJsImpl>
-      signInAndRetrieveDataWithEmailAndPassword(String email, String password);
   external PromiseJsImpl<ConfirmationResultJsImpl> signInWithPhoneNumber(
       String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
   external PromiseJsImpl<UserCredentialJsImpl> signInWithPopup(

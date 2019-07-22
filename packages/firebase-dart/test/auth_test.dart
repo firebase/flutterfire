@@ -1,5 +1,4 @@
 @TestOn('browser')
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core' hide print;
@@ -9,6 +8,7 @@ import 'dart:html';
 import 'package:firebase/firebase.dart';
 import 'package:firebase/src/assets/assets.dart';
 import 'package:test/test.dart';
+
 import 'test_util.dart';
 
 /// A nice util to include timing with print calls
@@ -367,42 +367,11 @@ void main() {
       }
     });
 
-    test('createUserAndRetrieveDataWithEmailAndPassword', () async {
-      try {
-        userCredential =
-            await authValue.createUserAndRetrieveDataWithEmailAndPassword(
-                userEmail, "janicka");
-        expect(userCredential, isNotNull);
-        expect(userCredential.user.email, userEmail);
-        expect(userCredential.user.phoneNumber, isNull);
-        expect(userCredential.additionalUserInfo.isNewUser, isTrue);
-      } on FirebaseError catch (e) {
-        printException(e);
-        rethrow;
-      }
-    });
-
-    test('signInAnonymouslyAndRetrieveData', () async {
-      try {
-        userCredential = await authValue.signInAnonymouslyAndRetrieveData();
-
-        expect(userCredential.user.isAnonymous, isTrue);
-      } on FirebaseError catch (e) {
-        printException(e);
-        rethrow;
-      }
-    });
-
-    test('link anonymous user with credential', () async {
+    test('signInAnonymously', () async {
       try {
         userCredential = await authValue.signInAnonymously();
-        expect(userCredential.user.isAnonymous, isTrue);
 
-        var credential = EmailAuthProvider.credential(userEmail, "janicka");
-        // ignore: deprecated_member_use
-        var user = await userCredential.user.linkWithCredential(credential);
-        expect(user.isAnonymous, isFalse);
-        expect(user.email, userEmail);
+        expect(userCredential.user.isAnonymous, isTrue);
       } on FirebaseError catch (e) {
         printException(e);
         rethrow;
@@ -415,8 +384,7 @@ void main() {
         expect(userCredential.user.isAnonymous, isTrue);
 
         var credential = EmailAuthProvider.credential(userEmail, "janicka");
-        var userCred = await userCredential.user
-            .linkAndRetrieveDataWithCredential(credential);
+        var userCred = await userCredential.user.linkWithCredential(credential);
 
         expect(userCred.operationType, 'link');
         expect(userCred.user.uid, userCredential.user.uid);
@@ -428,31 +396,14 @@ void main() {
       }
     });
 
-    test('reauthenticate with credential', () async {
+    test('reauthenticateWithCredential', () async {
       try {
         userCredential = await authValue.createUserWithEmailAndPassword(
             userEmail, "janicka");
 
         var credential = EmailAuthProvider.credential(userEmail, "janicka");
-        // ignore: deprecated_member_use
-        await userCredential.user.reauthenticateWithCredential(credential);
-
-        expect(authValue.currentUser, isNotNull);
-        expect(authValue.currentUser.email, userEmail);
-      } on FirebaseError catch (e) {
-        printException(e);
-        rethrow;
-      }
-    });
-
-    test('reauthenticateAndRetrieveDataWithCredential', () async {
-      try {
-        userCredential = await authValue.createUserWithEmailAndPassword(
-            userEmail, "janicka");
-
-        var credential = EmailAuthProvider.credential(userEmail, "janicka");
-        var userCred = await userCredential.user
-            .reauthenticateAndRetrieveDataWithCredential(credential);
+        var userCred =
+            await userCredential.user.reauthenticateWithCredential(credential);
 
         expect(userCred.operationType, 'reauthenticate');
         expect(userCred.user.uid, userCredential.user.uid);
@@ -475,10 +426,10 @@ void main() {
       var credential = EmailAuthProvider.credential(userEmail, "something");
 
       expect(
-          userCredential.user
-              .reauthenticateAndRetrieveDataWithCredential(credential),
-          throwsToString(contains(
-              'The password is invalid or the user does not have a password')));
+        userCredential.user.reauthenticateWithCredential(credential),
+        throwsToString(contains(
+            'The password is invalid or the user does not have a password')),
+      );
     });
 
     test("signInAndRetrieveDataWithCredential", () async {
@@ -497,8 +448,7 @@ void main() {
 
       var credential = EmailAuthProvider.credential(userEmail, "janicka");
 
-      var userCred =
-          await authValue.signInAndRetrieveDataWithCredential(credential);
+      var userCred = await authValue.signInWithCredential(credential);
 
       // Firefox takes a second to get the event values that are checked below
       await _wait();
@@ -513,9 +463,9 @@ void main() {
           reason: 'Is updated with signInAndRetrieveDataWithCredential');
     });
 
-    test("signInAndRetrieveDataWithEmailAndPassword", () async {
-      var credential = await authValue
-          .createUserAndRetrieveDataWithEmailAndPassword(userEmail, "janicka");
+    test("signInWithEmailAndPassword", () async {
+      var credential =
+          await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
 
       expect(credential.user.email, userEmail);
       expect(credential.additionalUserInfo.isNewUser, isTrue);
@@ -524,8 +474,8 @@ void main() {
 
       await _wait();
 
-      var credential2 = await authValue
-          .signInAndRetrieveDataWithEmailAndPassword(userEmail, "janicka");
+      var credential2 =
+          await authValue.signInWithEmailAndPassword(userEmail, "janicka");
 
       expect(credential.user.email, credential2.user.email);
       expect(credential2.additionalUserInfo.isNewUser, isFalse);

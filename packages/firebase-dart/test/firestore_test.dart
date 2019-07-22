@@ -6,6 +6,7 @@ import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase/firestore.dart' as fs;
 import 'package:firebase/src/assets/assets.dart';
 import 'package:test/test.dart';
+
 import 'test_util.dart' show throwsToString, validDatePathComponent;
 
 //  TODO add MetadataSnapshot test
@@ -547,96 +548,106 @@ void main() {
       });
     });
 
-    test("transaction", () async {
-      var docRef = ref.doc("message5");
-      await docRef.set({"text": "Hi"});
+    group('transaction', () {
+      test("simple", () async {
+        var docRef = ref.doc("message5");
+        await docRef.set({"text": "Hi"});
 
-      await firestore.runTransaction((transaction) async {
-        transaction.update(docRef, data: {"text": "Hi from transaction"});
+        await firestore.runTransaction((transaction) async {
+          transaction.update(docRef, data: {"text": "Hi from transaction"});
+        });
+
+        var snapshot = await docRef.get();
+        var snapshotData = snapshot.data();
+
+        expect(snapshotData["text"], "Hi from transaction");
       });
 
-      var snapshot = await docRef.get();
-      var snapshotData = snapshot.data();
+      test("returns updated value", () async {
+        var docRef = ref.doc("message6");
+        await docRef.set({"text": "Hi"});
 
-      expect(snapshotData["text"], "Hi from transaction");
-    });
+        var newValue = await firestore.runTransaction((transaction) async {
+          var documentSnapshot = await transaction.get(docRef);
+          var value = '${documentSnapshot.data()["text"]} val from transaction';
+          transaction.update(docRef, data: {"text": value});
+          return value;
+        });
 
-    test("transaction returns updated value", () async {
-      var docRef = ref.doc("message6");
-      await docRef.set({"text": "Hi"});
+        expect(newValue, "Hi val from transaction");
 
-      var newValue = await firestore.runTransaction((transaction) async {
-        var documentSnapshot = await transaction.get(docRef);
-        var value = '${documentSnapshot.data()["text"]} val from transaction';
-        transaction.update(docRef, data: {"text": value});
-        return value;
+        var snapshot = await docRef.get();
+        var snapshotData = snapshot.data();
+
+        expect(snapshotData["text"], newValue);
       });
 
-      expect(newValue, "Hi val from transaction");
+      test("fails", () async {
+        // update is before get -> transaction fails
+        var docRef = ref.doc("message7");
+        await docRef.set({"text": "Hi"});
 
-      var snapshot = await docRef.get();
-      var snapshotData = snapshot.data();
-
-      expect(snapshotData["text"], newValue);
-    });
-
-    test("transaction fails", () async {
-      // update is before get -> transaction fails
-      var docRef = ref.doc("message7");
-      await docRef.set({"text": "Hi"});
-
-      expect(firestore.runTransaction((transaction) async {
-        transaction.update(docRef, data: {"text": "Some value"});
-        await transaction.get(docRef);
-      }),
+        expect(
+          firestore.runTransaction((transaction) async {
+            transaction.update(docRef, data: {"text": "Some value"});
+            await transaction.get(docRef);
+          }),
           throwsToString(
-              contains('Transactions lookups are invalid after writes.')));
-    });
-
-    test("transaction with FieldPath", () async {
-      var docRef = ref.doc("message8");
-      await docRef.set({
-        "description": {"text": "Good morning!!!"}
+            contains(
+              'Firestore transactions require all reads to be executed before all writes.',
+            ),
+          ),
+        );
       });
 
-      await firestore.runTransaction((transaction) async {
-        transaction.update(docRef, fieldsAndValues: [
-          fs.FieldPath("description", "text"),
-          "Good morning after update!!!",
-          fs.FieldPath("description", "text_cs"),
-          "Dobre rano po uprave!!!"
-        ]);
+      test("with FieldPath", () async {
+        var docRef = ref.doc("message8");
+        await docRef.set({
+          "description": {"text": "Good morning!!!"}
+        });
+
+        await firestore.runTransaction((transaction) async {
+          transaction.update(docRef, fieldsAndValues: [
+            fs.FieldPath("description", "text"),
+            "Good morning after update!!!",
+            fs.FieldPath("description", "text_cs"),
+            "Dobre rano po uprave!!!"
+          ]);
+        });
+
+        var snapshot = await docRef.get();
+        var snapshotData = snapshot.data();
+
+        expect(snapshotData["description"]["text"],
+            "Good morning after update!!!");
+        expect(
+            snapshotData["description"]["text_cs"], "Dobre rano po uprave!!!");
       });
 
-      var snapshot = await docRef.get();
-      var snapshotData = snapshot.data();
+      test("transaction with alternating fields as Strings and values",
+          () async {
+        var docRef = ref.doc("message8");
+        await docRef.set({
+          "description": {"text": "Good morning!!!"}
+        });
 
-      expect(
-          snapshotData["description"]["text"], "Good morning after update!!!");
-      expect(snapshotData["description"]["text_cs"], "Dobre rano po uprave!!!");
-    });
+        await firestore.runTransaction((transaction) async {
+          transaction.update(docRef, fieldsAndValues: [
+            "description.text",
+            "Good morning after update!!!",
+            "description.text_cs",
+            "Dobre rano po uprave!!!"
+          ]);
+        });
 
-    test("transaction with alternating fields as Strings and values", () async {
-      var docRef = ref.doc("message8");
-      await docRef.set({
-        "description": {"text": "Good morning!!!"}
+        var snapshot = await docRef.get();
+        var snapshotData = snapshot.data();
+
+        expect(snapshotData["description"]["text"],
+            "Good morning after update!!!");
+        expect(
+            snapshotData["description"]["text_cs"], "Dobre rano po uprave!!!");
       });
-
-      await firestore.runTransaction((transaction) async {
-        transaction.update(docRef, fieldsAndValues: [
-          "description.text",
-          "Good morning after update!!!",
-          "description.text_cs",
-          "Dobre rano po uprave!!!"
-        ]);
-      });
-
-      var snapshot = await docRef.get();
-      var snapshotData = snapshot.data();
-
-      expect(
-          snapshotData["description"]["text"], "Good morning after update!!!");
-      expect(snapshotData["description"]["text_cs"], "Dobre rano po uprave!!!");
     });
 
     test("WriteBatch operations", () async {
