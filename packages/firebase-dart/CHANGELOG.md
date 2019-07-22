@@ -6,6 +6,8 @@
 - **BREAKING** The `Promise` polyfil has been removed from the JS SDK. Users
   will have to include their own polyfil for `Promise`. 
 
+- Added `FieldValue.increment` static function.
+
 ## 5.0.4
 
 - Require at least Dart 2.1.0.

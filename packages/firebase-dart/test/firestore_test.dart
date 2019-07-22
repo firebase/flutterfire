@@ -438,6 +438,29 @@ void main() {
       expect(timeStamp, isA<DateTime>());
     });
 
+    test('increment', () async {
+      var docRef = ref.doc("increment");
+
+      await docRef.set({
+        'increment': {'int': 1, 'double': 3.141, 'nonnumber': 'firebase'}
+      });
+
+      await docRef.set({
+        'increment': {
+          'int': fs.FieldValue.increment(100),
+          'double': fs.FieldValue.increment(1.618),
+          'nonnumber': fs.FieldValue.increment(42)
+        }
+      }, fs.SetOptions(merge: true));
+
+      var snapshot = await docRef.get();
+      var snapshotData = snapshot.data();
+
+      expect(snapshotData, {
+        "increment": {'int': 101, 'double': 4.759, 'nonnumber': 42}
+      });
+    });
+
     test("update nested with dot notation", () async {
       var docRef = await ref.add({
         "greeting": {"text": "Good Morning"}

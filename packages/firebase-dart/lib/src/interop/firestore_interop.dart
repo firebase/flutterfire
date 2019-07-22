@@ -194,6 +194,8 @@ abstract class FieldValue {
   /// server-generated timestamp in the written data.
   external static FieldValue serverTimestamp();
 
+  external static FieldValue increment(num n);
+
   /// Returns `true` if this [FieldValue] is equal to the provided [other].
   external bool isEqual(Object other);
 }
