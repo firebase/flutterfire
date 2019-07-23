@@ -7,6 +7,7 @@
   will have to include their own polyfil for `Promise`. 
 
 - Added `FieldValue.increment` static function.
+- Added support for storage List API.
 
 ## 5.0.4
 

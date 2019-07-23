@@ -103,5 +103,51 @@ void main() {
       expect(md.updated.isAfter(md.timeCreated), isTrue);
       expect(md.customMetadata, isNull);
     });
+
+    group("List API", () {
+      StorageReference subfolder;
+      Iterable<StorageReference> refs;
+
+      setUp(() async {
+        var storage = app.storage();
+        subfolder = storage.ref(validDatePath()).child('sub');
+        refs = ['a', 'b', 'c', 'd'].map((n) => subfolder.child(n));
+        await Future.wait(refs.map((r) => r.putString('Dartlang <3').future));
+      });
+
+      tearDown(() async {
+        await Future.wait(refs.map((r) => r.delete()));
+      });
+
+      test('paginated list', () async {
+        var pageA = await subfolder.list(ListOptions(maxResults: 2));
+
+        expect(pageA.prefixes, hasLength(0));
+        expect(pageA.items, hasLength(2));
+        expect(pageA.items.map((f) => f.name), containsAllInOrder(['a', 'b']));
+        expect(pageA.nextPageToken, isNotNull);
+
+        var pageB = await subfolder
+            .list(ListOptions(maxResults: 2, pageToken: pageA.nextPageToken));
+
+        expect(pageB.items, hasLength(2));
+        expect(pageB.items.map((f) => f.name), containsAllInOrder(['c', 'd']));
+      });
+
+      test('listAll', () async {
+        var folder = await subfolder.parent.listAll();
+
+        expect(folder.prefixes, hasLength(1));
+        expect(folder.prefixes.first.name, equals('sub'));
+        expect(folder.items, hasLength(0));
+
+        var sub = await subfolder.listAll();
+
+        expect(sub.prefixes, hasLength(0));
+        expect(sub.items, hasLength(4));
+        expect(sub.items.map((f) => f.name),
+            containsAllInOrder(['a', 'b', 'c', 'd']));
+      });
+    });
   });
 }

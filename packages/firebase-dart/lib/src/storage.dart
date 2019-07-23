@@ -117,6 +117,34 @@ class StorageReference
   Future<FullMetadata> getMetadata() =>
       handleThenable(jsObject.getMetadata()).then(FullMetadata.getInstance);
 
+  /// List items (files) and prefixes (folders) under this storage reference.
+  /// List API is only available for Firebase Storage Rules Version 2.
+  ///
+  /// GCS is a key-blob store. Firebase Storage imposes the semantic of '/' delimited
+  /// folder structure. Refer to GCS's List API if you want to learn more.
+  ///
+  /// To adhere to Firebase Rules's Semantics, Firebase Storage does not
+  /// support objects whose paths end with "/" or contain two consecutive "/"s.
+  /// Firebase Storage List API will filter these unsupported objects.
+  /// [list()] may fail if there are too many unsupported objects in the bucket.
+  Future<ListResult> list(ListOptions options) =>
+      handleThenable(jsObject.list(options?.jsObject))
+          .then(ListResult.getInstance);
+
+  /// List all items (files) and prefixes (folders) under this storage reference.
+  /// List API is only available for Firebase Rules Version 2.
+  ///
+  /// This is a helper method for calling [list()] repeatedly until there are no
+  /// more results. The default pagination size is 1000.
+  ///
+  /// Note: The results may not be consistent if objects are changed while this
+  /// operation is running.
+  ///
+  /// Warning: [listAll] may potentially consume too many resources if there are
+  /// too many results.
+  Future<ListResult> listAll() =>
+      handleThenable(jsObject.listAll()).then(ListResult.getInstance);
+
   /// Uploads data [blob] to the actual location with optional [metadata].
   /// Returns the [UploadTask] which can be used to monitor and manage
   /// the upload.
@@ -445,4 +473,61 @@ abstract class _SettableMetadataBase<
   }
 
   _SettableMetadataBase.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+}
+
+/// The options [StorageReference.list] accepts.
+class ListOptions extends JsObjectWrapper<storage_interop.ListOptionsJsImpl> {
+  /// If set, limits the total number of prefixes and items to return.
+  /// The default and maximum maxResults is 1000.
+  int get maxResults => jsObject.maxResults;
+  set maxResults(int n) => jsObject.maxResults = n;
+
+  /// The [ListResult.nextPageToken] from a previous call to
+  /// [StorageReference.list]. If provided, listing is resumed from the
+  /// previous position.
+  String get pageToken => jsObject.pageToken;
+  set pageToken(String t) => jsObject.pageToken = t;
+
+  factory ListOptions({int maxResults, String pageToken}) =>
+      ListOptions._fromJsObject(storage_interop.ListOptionsJsImpl(
+          maxResults: maxResults, pageToken: pageToken));
+
+  ListOptions._fromJsObject(storage_interop.ListOptionsJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+}
+
+/// Result returned by [StorageReference.list].
+class ListResult extends JsObjectWrapper<storage_interop.ListResultJsImpl> {
+  static final _expando = Expando<ListResult>();
+
+  /// Objects in this directory. You can call [getMetadata()] and
+  /// [getDownloadUrl()] on them.
+  List<StorageReference> get items => jsObject.items
+      .map((dynamic data) => StorageReference._fromJsObject(data))
+      .toList();
+
+  /// If set, there might be more results for this list. Use this
+  /// token to resume the list.
+  String get nextPageToken => jsObject.nextPageToken;
+
+  /// References to prefixes (sub-folders). You can call [list()] on
+  /// them to get its contents.
+
+  /// Folders are implicit based on '/' in the object paths. For example,
+  /// if a bucket has two objects '/a/b/1' and '/a/b/2', [list('/a')] will
+  /// return '/a/b' as a prefix.
+  List<StorageReference> get prefixes => jsObject.prefixes
+      .map((dynamic data) => StorageReference._fromJsObject(data))
+      .toList();
+
+  /// Creates a new ListResult from a [jsObject].
+  static ListResult getInstance(storage_interop.ListResultJsImpl jsObject) {
+    if (jsObject == null) {
+      return null;
+    }
+    return _expando[jsObject] ??= ListResult._fromJsObject(jsObject);
+  }
+
+  ListResult._fromJsObject(storage_interop.ListResultJsImpl jsObject)
+      : super.fromJsObject(jsObject);
 }

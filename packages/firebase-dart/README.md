@@ -247,10 +247,13 @@ See [more info](#do-you-need-to-use-firestore).
 ### Storage tests and example
 
 Storage tests and example need to have **public rules** to be able to read and
-write to storage. Update your rules in Firebase console, `Storage/Rules` section
+write to storage. Firebase Storage Rules Version 2 is
+[required](https://firebase.google.com/docs/storage/web/list-files) for `list` and 
+`listAll`. Update your rules in Firebase console, `Storage/Rules` section
 to:
 
 ```
+rules_version = '2';
 service firebase.storage {
   match /b/YOUR_STORAGE_BUCKET_URL/o {
     match /{allPaths=**} {
