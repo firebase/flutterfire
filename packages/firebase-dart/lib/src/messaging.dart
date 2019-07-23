@@ -16,6 +16,8 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
     return _expando[jsObject] ??= Messaging._fromJsObject(jsObject);
   }
 
+  static bool isSupported() => messaging_interop.isSupported();
+
   Messaging._fromJsObject(messaging_interop.MessagingJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
