@@ -5,7 +5,9 @@
   [JS API](https://firebase.google.com/support/release-notes/js#version_600_-_may_7_2019).
 - **BREAKING** The `Promise` polyfil has been removed from the JS SDK. Users
   will have to include their own polyfil for `Promise`. 
+- **BREAKING** All of the setters on `FirebaseError` have been removed.
 
+- Added `serverResponse` getter to `FirebaseError`.
 - Added `FieldValue.increment` static function.
 - Added support for storage List API.
 

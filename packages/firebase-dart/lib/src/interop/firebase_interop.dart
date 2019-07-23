@@ -94,13 +94,12 @@ abstract class UserInfoJsImpl {
 @JS()
 abstract class FirebaseError {
   external String get code;
-  external set code(String s);
   external String get message;
-  external set message(String s);
   external String get name;
-  external set name(String s);
   external String get stack;
-  external set stack(String s);
+
+  /// Not part of the core JS API, but occasionally exposed in error objects.
+  external Object get serverResponse;
 }
 
 /// A structure for [User]'s user profile.

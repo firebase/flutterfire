@@ -7,6 +7,7 @@ import 'package:js/js_util.dart' as util;
 import 'firestore.dart';
 import 'func.dart';
 import 'interop/es6_interop.dart';
+import 'interop/firebase_interop.dart' show FirebaseError;
 import 'interop/firestore_interop.dart' show TimestampJsImpl;
 import 'interop/js_interop.dart' as js;
 
@@ -129,8 +130,18 @@ bool _isBasicType(Object value) {
 }
 
 /// Handles the [PromiseJsImpl] object.
-Future<T> handleThenable<T>(PromiseJsImpl<T> thenable) =>
-    promiseToFuture(thenable);
+Future<T> handleThenable<T>(PromiseJsImpl<T> thenable) async {
+  T value;
+  try {
+    value = await promiseToFuture(thenable);
+  } catch (e) {
+    if (util.hasProperty(e, 'code')) {
+      throw _FirebaseErrorWrapper(e);
+    }
+    rethrow;
+  }
+  return value;
+}
 
 /// Handles the [Future] object with the provided [mapper] function.
 PromiseJsImpl<S> handleFutureWithMapper<T, S>(
@@ -147,3 +158,27 @@ PromiseJsImpl<S> handleFutureWithMapper<T, S>(
 
 /// Resolves error.
 VoidFunc1 resolveError(Completer c) => allowInterop(c.completeError);
+
+class _FirebaseErrorWrapper extends Error implements FirebaseError {
+  final FirebaseError _source;
+
+  _FirebaseErrorWrapper(this._source);
+
+  @override
+  String get code => util.getProperty(_source, 'code');
+
+  @override
+  String get message => util.getProperty(_source, 'message');
+
+  @override
+  String get name => util.getProperty(_source, 'name');
+
+  @override
+  Object get serverResponse => util.getProperty(_source, 'serverResponse');
+
+  @override
+  String get stack => util.getProperty(_source, 'stack');
+
+  @override
+  String toString() => 'FirebaseError: $message ($code)';
+}
