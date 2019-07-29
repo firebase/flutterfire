@@ -872,6 +872,15 @@ void main() {
           snapshot.docs[0].data()["text"], anyOf("hello", "hi", "ahoj", "cau"));
     });
 
+    test("collectionGroup", () async {
+      var group = firestore.collectionGroup("index");
+      var snapshot = await group.get();
+
+      expect(snapshot.size, 4);
+      expect(snapshot.docs.map((d) => d.ref.path),
+          everyElement(contains("index")));
+    });
+
     group('onSnapshot', () {
       test("from ref", () async {
         var snapshot = await ref.onSnapshot.first;

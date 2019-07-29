@@ -30,6 +30,7 @@ abstract class FirestoreJsImpl {
   external set app(AppJsImpl a);
   external WriteBatchJsImpl batch();
   external CollectionReferenceJsImpl collection(String collectionPath);
+  external QueryJsImpl collectionGroup(String collectionId);
   external DocumentReferenceJsImpl doc(String documentPath);
   external PromiseJsImpl<Null> enablePersistence();
   external PromiseJsImpl runTransaction(

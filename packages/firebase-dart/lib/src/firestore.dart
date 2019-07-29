@@ -53,6 +53,16 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   CollectionReference collection(String collectionPath) =>
       CollectionReference.getInstance(jsObject.collection(collectionPath));
 
+  /// Creates and returns a new [Query] that includes all documents in the
+  /// database that are contained in a collection or subcollection with
+  /// the given collectionId.
+  ///
+  /// The collectionId identifies the collections to query over. Every
+  /// collection or subcollection with this ID as the last segment of
+  /// its path will be included. Cannot contain a slash.
+  Query collectionGroup(String collectionId) =>
+      Query.fromJsObject(jsObject.collectionGroup(collectionId));
+
   /// Gets a [DocumentReference] instance that refers to
   /// the document at the specified path.
   /// The [documentPath] parameter is a slash-separated path to a document.
