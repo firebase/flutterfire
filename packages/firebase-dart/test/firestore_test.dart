@@ -876,7 +876,7 @@ void main() {
       var group = firestore.collectionGroup("index");
       var snapshot = await group.get();
 
-      expect(snapshot.size, 4);
+      expect(snapshot.size, greaterThanOrEqualTo(4));
       expect(snapshot.docs.map((d) => d.ref.path),
           everyElement(contains("index")));
     });
