@@ -108,9 +108,9 @@ designers build modern mobile apps for iOS and Android.
 
 ## Issues
 
-Please file Flutterfire specific issues, bugs, or feature requests [here](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
-Issues that are not specific to Flutterfire can be filed in the [Flutter repo](https://github.com/flutter/flutter/issues/new).
+Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 ## Contributing
 
