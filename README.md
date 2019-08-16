@@ -1,4 +1,4 @@
-# Flutterfirre
+# FlutterFire
 
 [![Build Status](https://api.cirrus-ci.com/github/flutter/plugins.svg)](https://cirrus-ci.com/github/flutter/plugins/master)
 
@@ -8,8 +8,7 @@ that enable Flutter apps to use one or more [Firebase](https://firebase.google.c
 [Flutter](https://flutter.io) is a new mobile app SDK to help developers and
 designers build modern mobile apps for iOS and Android.
 
-*Note*: These plugins are part of the [Flutter open source project](https://github.com/flutter).
-The plugins are still under development, and some APIs might not be available yet.
+*Note*: The plugins are still under development, and some APIs might not be available yet.
 [Feedback](https://github.com/flutter/flutter/issues) and [Pull Requests](https://github.com/flutter/plugins/pulls) are most welcome!
 
 ## Available FlutterFire plugins
@@ -109,20 +108,13 @@ The plugins are still under development, and some APIs might not be available ye
 
 ## Issues
 
-Please file any issues, bugs, or feature requests in the [main flutter
-repo](https://github.com/flutter/flutter/issues/new).
+Please file Flutterfire specific issues, bugs, or feature requests [here](https://github.com/FirebaseExtended/flutterfire/issues/new).
+
+Issues that are not specific to Flutterfire can be filed in the [Flutter repo](https://github.com/flutter/flutter/issues/new).
 
 ## Contributing
 
-If you wish to contribute a new plugin to the Flutter ecosystem, please
-see the documentation for [developing packages](https://flutter.dev/developing-packages/) and
-[platform channels](https://flutter.dev/platform-channels/). You can store
-your plugin source code in any GitHub repository (the present repo is only
-intended for plugins developed by the core Flutter team). Once your plugin
-is ready you can [publish](https://flutter.dev/developing-packages/#publish)
-to the [pub repository](https://pub.dev/).
-
 If you wish to contribute a change to any of the existing plugins in this repo,
 please review our [contribution guide](https://github.com/flutter/plugins/blob/master/CONTRIBUTING.md),
-and send a [pull request](https://github.com/flutter/plugins/pulls).
+and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
 
