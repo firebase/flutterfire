@@ -1,7 +1,6 @@
-# Contributing to Flutter Plugins
+# Contributing to FlutterFire
 
-
-[![Build Status](https://api.cirrus-ci.com/github/flutter/plugins.svg)](https://cirrus-ci.com/github/flutter/plugins/master)
+[![Build Status](https://api.cirrus-ci.com/github/flutter/plugins.svg)](https://cirrus-ci.com/github/FirebaseExtended/flutterfire/master)
 
 _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#code-of-conduct)_
 
@@ -16,7 +15,7 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
 
 
  * Ensure all the dependencies described in the previous section are installed.
- * Fork `https://github.com/flutter/plugins` into your own GitHub account. If
+ * Fork `https://github.com/FirebaseExtended/flutterfire` into your own GitHub account. If
    you already have a fork, and are now installing a development environment on
    a new machine, make sure you've updated your fork so that you don't use stale
    configuration options from long ago.
@@ -37,7 +36,7 @@ example's directory, run `pub get` to make sure its dependencies have been
 downloaded, and use `flutter run`. Make sure you have a device connected over
 USB and debugging enabled on that device.
 
- * `cd packages/battery/example`
+ * `cd packages/cloud_firestore/example`
  * `flutter run`
 
 ## Running the tests
@@ -61,8 +60,8 @@ flutter drive test/<name_of_plugin>.dart
 
 We gladly accept contributions via GitHub pull requests.
 
-Please peruse our
-[style guide](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo) and
+Please peruse the
+[Flutter style guide](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo) and
 [design principles](https://flutter.io/design-principles/) before
 working on anything non-trivial. These guidelines are intended to
 keep the code consistent and avoid common pitfalls.
@@ -85,7 +84,7 @@ pub global run flutter_plugin_tools test --plugins plugin_name
 To send us a pull request:
 
 * `git pull-request` (if you are using [Hub](http://github.com/github/hub/)) or
-  go to `https://github.com/flutter/plugins` and click the
+  go to `https://github.com/FirebaseExtended/flutterfire` and click the
   "Compare & pull request" button
 
 Please make sure all your checkins have detailed commit messages explaining the patch.

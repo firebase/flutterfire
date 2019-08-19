@@ -1,79 +1,120 @@
-# Flutter plugins
+# FlutterFire
 
-[![Build Status](https://api.cirrus-ci.com/github/flutter/plugins.svg)](https://cirrus-ci.com/github/flutter/plugins/master)
+[![Build Status](https://api.cirrus-ci.com/github/flutter/plugins.svg)](https://cirrus-ci.com/github/FirebaseExtended/flutterfire/master)
 
-This repo is a companion repo to the main [flutter
-repo](https://github.com/flutter/flutter). It contains the source code for
-Flutter first-party plugins (i.e., plugins developed by the core Flutter team).
-Check the `packages` directory for all plugins.
+FlutterFire is a set of [Flutter plugins](https://flutter.io/platform-plugins/)
+that enable Flutter apps to use one or more [Firebase](https://firebase.google.com/) services. You can follow an example that shows how to use these plugins in the [Firebase for Flutter](https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html#0) codelab.
 
-Flutter plugins enable access to platform-specific APIs. For more information
-about plugins, and how to use them, see
-[https://flutter.dev/platform-plugins/](https://flutter.dev/platform-plugins/).
+[Flutter](https://flutter.io) is a new mobile app SDK to help developers and
+designers build modern mobile apps for iOS and Android.
 
-These plugins are also available on
-[pub](https://pub.dev/flutter/packages).
+*Note*: The plugins are still under development, and some APIs might not be available yet.
+[Feedback](https://github.com/flutter/flutter/issues) and [Pull Requests](https://github.com/flutter/plugins/pulls) are most welcome!
+
+## Available FlutterFire plugins
+
+| Plugin | Version | Firebase feature | Source code |
+|---|---|---|---|
+| [cloud_firestore][firestore_pub] | ![pub package][firestore_badge] | [Cloud Firestore][firestore_product] | [`packages/cloud_firestore`][firestore_code] |
+| [cloud_functions][functions_pub] | ![pub package][functions_badge] | [Cloud Functions][functions_product] | [`packages/cloud_functions`][functions_code] |
+| [firebase_admob][admob_pub] | ![pub package][admob_badge] | [Firebase AdMob][admob_product] | [`packages/firebase_admob`][admob_code] |
+| [firebase_analytics][analytics_pub] | ![pub package][analytics_badge] | [Firebase Analytics][analytics_product] | [`packages/firebase_analytics`][analytics_code] |
+| [firebase_auth][auth_pub] | ![pub package][auth_badge] | [Firebase Authentication][auth_product] | [`packages/firebase_auth`][auth_code] |
+| [firebase_core][core_pub] | ![pub package][core_badge] | [Firebase Core][core_product] | [`packages/firebase_core`][core_code] |
+| [firebase_crashlytics][crash_pub] | ![pub package][crash_badge] | [Firebase Crashlytics][crash_product] | [`packages/firebase_crashlytics`][crash_code] |
+| [firebase_database][database_pub] | ![pub package][database_badge] | [Firebase Realtime Database][database_product] | [`packages/firebase_database`][database_code] |
+| [firebase_dynamic_links][dynamic_links_pub] | ![pub package][dynamic_links_badge] | [Firebase Dynamic Links][dynamic_links_product] | [`packages/firebase_dynamic_links`][dynamic_links_code] |
+| [in_app_messaging][in_app_messaging_pub] | ![pub package][in_app_messaging_badge] | [Firebase In-App Messaging][in_app_messaging_product] | [`packages/firebase_in_app_messaging`][in_app_messaging_code] |
+| [firebase_messaging][messaging_pub] | ![pub package][messaging_badge] | [Firebase Cloud Messaging][messaging_product] | [`packages/firebase_messaging`][messaging_code] |
+| [firebase_ml_vision][ml_vision_pub] | ![pub package][ml_vision_badge] | [Firebase ML Kit][ml_vision_product] | [`packages/firebase_ml_vision`][ml_vision_code] |
+| [firebase_performance][performance_pub] | ![pub package][performance_badge] | [Firebase Performance Monitoring][performance_product] | [`packages/firebase_performance`][performance_code] |
+| [firebase_remote_config][remote_config_pub] | ![pub package][remote_config_badge] | [Firebase Remote Config][remote_config_product] | [`packages/firebase_remote_config`][remote_config_code] |
+| [firebase_storage][storage_pub] | ![pub package][storage_badge] | [Firebase Cloud Storage][storage_product] | [`packages/firebase_storage`][storage_code] |
+
+[admob_pub]: https://pub.dartlang.org/packages/firebase_admob
+[admob_product]: https://firebase.google.com/docs/admob/
+[admob_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_admob
+[admob_badge]: https://img.shields.io/pub/v/firebase_admob.svg
+
+[analytics_pub]: https://pub.dartlang.org/packages/firebase_analytics
+[analytics_product]: https://firebase.google.com/products/analytics/
+[analytics_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_analytics
+[analytics_badge]: https://img.shields.io/pub/v/firebase_analytics.svg
+
+[auth_pub]: https://pub.dartlang.org/packages/firebase_auth
+[auth_product]: https://firebase.google.com/products/auth/
+[auth_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_auth
+[auth_badge]: https://img.shields.io/pub/v/firebase_auth.svg
+
+[core_pub]: https://pub.dartlang.org/packages/firebase_core
+[core_product]: https://firebase.google.com/
+[core_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_core
+[core_badge]: https://img.shields.io/pub/v/firebase_core.svg
+
+[crash_pub]: https://pub.dartlang.org/packages/firebase_crashlytics
+[crash_product]: https://firebase.google.com/products/crashlytics/
+[crash_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_crashlytics
+[crash_badge]: https://img.shields.io/pub/v/firebase_crashlytics.svg
+
+[database_pub]: https://pub.dartlang.org/packages/firebase_database
+[database_product]: https://firebase.google.com/products/database/
+[database_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_database
+[database_badge]: https://img.shields.io/pub/v/firebase_database.svg
+
+[dynamic_links_pub]: https://pub.dartlang.org/packages/firebase_dynamic_links
+[dynamic_links_product]: https://firebase.google.com/products/dynamic-links/
+[dynamic_links_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_dynamic_links
+[dynamic_links_badge]: https://img.shields.io/pub/v/firebase_dynamic_links.svg
+
+[firestore_pub]: https://pub.dartlang.org/packages/cloud_firestore
+[firestore_product]: https://firebase.google.com/products/firestore/
+[firestore_code]: https://github.com/flutter/plugins/tree/master/packages/cloud_firestore
+[firestore_badge]: https://img.shields.io/pub/v/cloud_firestore.svg
+
+[functions_pub]: https://pub.dartlang.org/packages/cloud_functions
+[functions_product]: https://firebase.google.com/products/functions/
+[functions_code]: https://github.com/flutter/plugins/tree/master/packages/cloud_functions
+[functions_badge]: https://img.shields.io/pub/v/cloud_functions.svg
+
+[in_app_messaging_pub]: https://pub.dartlang.org/packages/firebase_in_app_messaging
+[in_app_messaging_product]: https://firebase.google.com/products/in-app-messaging/
+[in_app_messaging_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_in_app_messaging
+[in_app_messaging_badge]: https://img.shields.io/pub/v/firebase_in_app_messaging.svg
+
+[messaging_pub]: https://pub.dartlang.org/packages/firebase_messaging
+[messaging_product]: https://firebase.google.com/products/cloud-messaging/
+[messaging_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_messaging
+[messaging_badge]: https://img.shields.io/pub/v/firebase_messaging.svg
+
+[ml_vision_pub]: https://pub.dartlang.org/packages/firebase_ml_vision
+[ml_vision_product]: https://firebase.google.com/products/ml-kit/
+[ml_vision_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_ml_vision
+[ml_vision_badge]: https://img.shields.io/pub/v/firebase_ml_vision.svg
+
+[performance_pub]: https://pub.dartlang.org/packages/firebase_performance
+[performance_product]: https://firebase.google.com/products/performance/
+[performance_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_performance
+[performance_badge]: https://img.shields.io/pub/v/firebase_performance.svg
+
+[remote_config_pub]: https://pub.dartlang.org/packages/firebase_remote_config
+[remote_config_product]: https://firebase.google.com/products/remote-config/
+[remote_config_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_remote_config
+[remote_config_badge]: https://img.shields.io/pub/v/firebase_remote_config.svg
+
+[storage_pub]: https://pub.dartlang.org/packages/firebase_storage
+[storage_product]: https://firebase.google.com/products/storage/
+[storage_code]: https://github.com/flutter/plugins/tree/master/packages/firebase_storage
+[storage_badge]: https://img.shields.io/pub/v/firebase_storage.svg
 
 ## Issues
 
-Please file any issues, bugs, or feature requests in the [main flutter
-repo](https://github.com/flutter/flutter/issues/new).
+Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+
+Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 ## Contributing
 
-If you wish to contribute a new plugin to the Flutter ecosystem, please
-see the documentation for [developing packages](https://flutter.dev/developing-packages/) and
-[platform channels](https://flutter.dev/platform-channels/). You can store
-your plugin source code in any GitHub repository (the present repo is only
-intended for plugins developed by the core Flutter team). Once your plugin
-is ready you can [publish](https://flutter.dev/developing-packages/#publish)
-to the [pub repository](https://pub.dev/).
-
 If you wish to contribute a change to any of the existing plugins in this repo,
 please review our [contribution guide](https://github.com/flutter/plugins/blob/master/CONTRIBUTING.md),
-and send a [pull request](https://github.com/flutter/plugins/pulls).
+and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
 
-## Plugins
-These are the available plugins in this repository.
-
-| Plugin | Pub |
-|--------|-----|
-| [android_alarm_manager](./packages/android_alarm_manager/) | [![pub package](https://img.shields.io/pub/v/android_alarm_manager.svg)](https://pub.dev/packages/android_alarm_manager) |
-| [android_intent](./packages/android_intent/) | [![pub package](https://img.shields.io/pub/v/android_intent.svg)](https://pub.dev/packages/android_intent) |
-| [battery](./packages/battery/) | [![pub package](https://img.shields.io/pub/v/battery.svg)](https://pub.dev/packages/battery) |
-| [camera](./packages/camera/) | [![pub package](https://img.shields.io/pub/v/camera.svg)](https://pub.dev/packages/camera) |
-| [connectivity](./packages/connectivity/) | [![pub package](https://img.shields.io/pub/v/connectivity.svg)](https://pub.dev/packages/connectivity) |
-| [device_info](./packages/device_info/) | [![pub package](https://img.shields.io/pub/v/device_info.svg)](https://pub.dev/packages/device_info) |
-| [google_maps_flutter](./packages/google_maps_flutter) | [![pub package](https://img.shields.io/pub/v/google_maps_flutter.svg)](https://pub.dev/packages/google_maps_flutter) |
-| [google_sign_in](./packages/google_sign_in/) | [![pub package](https://img.shields.io/pub/v/google_sign_in.svg)](https://pub.dev/packages/google_sign_in) |
-| [image_picker](./packages/image_picker/) | [![pub package](https://img.shields.io/pub/v/image_picker.svg)](https://pub.dev/packages/image_picker) |
-| [in_app_purchase](./packages/in_app_purchase/) | [![pub package](https://img.shields.io/pub/v/in_app_purchase.svg)](https://pub.dev/packages/in_app_purchase) |
-| [local_auth](./packages/local_auth/) | [![pub package](https://img.shields.io/pub/v/local_auth.svg)](https://pub.dev/packages/local_auth) |
-| [package_info](./packages/package_info/) | [![pub package](https://img.shields.io/pub/v/package_info.svg)](https://pub.dev/packages/package_info) |
-| [path_provider](./packages/path_provider/) | [![pub package](https://img.shields.io/pub/v/path_provider.svg)](https://pub.dev/packages/path_provider) |
-| [quick_actions](./packages/quick_actions/) | [![pub package](https://img.shields.io/pub/v/quick_actions.svg)](https://pub.dev/packages/quick_actions) |
-| [sensors](./packages/sensors/) | [![pub package](https://img.shields.io/pub/v/sensors.svg)](https://pub.dev/packages/sensors) |
-| [share](./packages/share/) | [![pub package](https://img.shields.io/pub/v/share.svg)](https://pub.dev/packages/share) |
-| [shared_preferences](./packages/shared_preferences/) | [![pub package](https://img.shields.io/pub/v/shared_preferences.svg)](https://pub.dev/packages/shared_preferences) |
-| [url_launcher](./packages/url_launcher/) | [![pub package](https://img.shields.io/pub/v/url_launcher.svg)](https://pub.dev/packages/url_launcher) |
-| [video_player](./packages/video_player/) | [![pub package](https://img.shields.io/pub/v/video_player.svg)](https://pub.dev/packages/video_player) |
-| [webview_flutter](./packages/webview_flutter/) | [![pub package](https://img.shields.io/pub/v/webview_flutter.svg)](https://pub.dev/packages/webview_flutter) |
-| | |
-| **FlutterFire Plugins** |  |
-| [cloud_firestore](./packages/cloud_firestore/) | [![pub package](https://img.shields.io/pub/v/cloud_firestore.svg)](https://pub.dev/packages/cloud_firestore)
-| [cloud_functions](./packages/cloud_functions/) | [![pub package](https://img.shields.io/pub/v/cloud_functions.svg)](https://pub.dev/packages/cloud_functions) |
-| [firebase_admob](./packages/firebase_admob/) | [![pub package](https://img.shields.io/pub/v/firebase_admob.svg)](https://pub.dev/packages/firebase_admob) |
-| [firebase_analytics](./packages/firebase_analytics/) | [![pub package](https://img.shields.io/pub/v/firebase_analytics.svg)](https://pub.dev/packages/firebase_analytics) |
-| [firebase_auth](./packages/firebase_auth/) | [![pub package](https://img.shields.io/pub/v/firebase_auth.svg)](https://pub.dev/packages/firebase_auth) |
-| [firebase_core](./packages/firebase_core/) | [![pub package](https://img.shields.io/pub/v/firebase_core.svg)](https://pub.dev/packages/firebase_core) |
-| [firebase_crashlytics](./packages/firebase_crashlytics/) | [![pub package](https://img.shields.io/pub/v/firebase_crashlytics.svg)](https://pub.dev/packages/firebase_crashlytics) |
-| [firebase_database](./packages/firebase_database/) | [![pub package](https://img.shields.io/pub/v/firebase_database.svg)](https://pub.dev/packages/firebase_database) |
-| [firebase_dynamic_links](./packages/firebase_dynamic_links/) | [![pub package](https://img.shields.io/pub/v/firebase_dynamic_links.svg)](https://pub.dev/packages/firebase_dynamic_links) |
-| [firebase_in_app_messaging](./packages/firebase_in_app_messaging/) | [![pub package](https://img.shields.io/pub/v/firebase_in_app_messaging.svg)](https://pub.dev/packages/firebase_in_app_messaging) |
-| [firebase_messaging](./packages/firebase_messaging/) | [![pub package](https://img.shields.io/pub/v/firebase_messaging.svg)](https://pub.dev/packages/firebase_messaging) |
-| [firebase_ml_vision](./packages/firebase_ml_vision/) | [![pub package](https://img.shields.io/pub/v/firebase_ml_vision.svg)](https://pub.dev/packages/firebase_ml_vision) |
-| [firebase_performance](./packages/firebase_performance/) | [![pub package](https://img.shields.io/pub/v/firebase_performance.svg)](https://pub.dev/packages/firebase_performance) |
-| [firebase_remote_config](./packages/firebase_remote_config/) | [![pub package](https://img.shields.io/pub/v/firebase_remote_config.svg)](https://pub.dev/packages/firebase_remote_config) |
-| [firebase_storage](./packages/firebase_storage/) | [![pub package](https://img.shields.io/pub/v/firebase_storage.svg)](https://pub.dev/packages/firebase_storage) |
-
-Learn more about [FlutterFire](https://github.com/flutter/plugins/blob/master/FlutterFire.md).
