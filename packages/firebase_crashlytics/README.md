@@ -124,5 +124,5 @@ for a complete sample app using `firebase_crashlytics`.
 
 ## Issues and feedback
 
-Please file [issues](https://github.com/flutter/flutter/issues/new)
+Please file [issues](https://github.com/FirebaseExtended/flutterfire/issues/new)
 to send feedback or report a bug. Thank you!
