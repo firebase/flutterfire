@@ -31,7 +31,7 @@ Does your PR require plugin users to manually update their apps to accommodate y
 
 <!-- Links -->
 [issue database]: https://github.com/flutter/flutter/issues
-[Contributor Guide]: https://github.com/flutter/plugins/blob/master/CONTRIBUTING.md
+[Contributor Guide]: https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md
 [Flutter Style Guide]: https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo
 [pub versioning philosophy]: https://www.dartlang.org/tools/pub/versioning
 [CLA]: https://cla.developers.google.com/

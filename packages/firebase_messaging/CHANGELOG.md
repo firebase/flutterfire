@@ -242,7 +242,7 @@ In FirebaseMessagingPlugin.m:
 ## 0.0.2+1
 
 * Added workaround for https://github.com/flutter/flutter/issues/9694 to README
-* Moved code to https://github.com/flutter/plugins
+* Moved code to https://github.com/FirebaseExtended/flutterfire
 
 ## 0.0.2
 
