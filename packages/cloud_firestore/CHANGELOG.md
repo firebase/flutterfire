@@ -1,3 +1,7 @@
+## 0.12.9+1
+
+* Update documentation to reflect new repository location.
+
 ## 0.12.9
 
 * New optional `includeMetadataChanges` parameter added to `DocumentReference.snapshots()`

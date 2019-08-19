@@ -1,3 +1,7 @@
+## 0.5.0+1
+
+* Update documentation to reflect new repository location.
+
 ## 0.5.0
 
 * **Breaking change**. Changed architecture and method names to be able to differentiate between

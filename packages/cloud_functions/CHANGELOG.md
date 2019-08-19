@@ -1,3 +1,7 @@
+## 0.4.1+1
+
+* Update documentation to reflect new repository location.
+
 ## 0.4.1
 
 * Support for cloud functions emulators.

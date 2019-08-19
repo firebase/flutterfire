@@ -1,3 +1,7 @@
+## 5.0.1
+
+* Update documentation to reflect new repository location.
+
 ## 5.0.0
 
 * **Breaking change**. Remove deprecated method `setMinimumSessionDuration`.

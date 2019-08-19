@@ -1,3 +1,7 @@
+## 3.0.6
+
+* Update documentation to reflect new repository location.
+
 ## 3.0.5
 
 * Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
