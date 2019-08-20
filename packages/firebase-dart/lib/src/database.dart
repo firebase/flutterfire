@@ -262,16 +262,18 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
-  Query endAt(value, [String key]) => Query.fromJsObject(
-      key == null ? jsObject.endAt(value) : jsObject.endAt(value, key));
+  Query endAt(value, [String key]) => Query.fromJsObject(key == null
+      ? jsObject.endAt(jsify(value))
+      : jsObject.endAt(jsify(value), key));
 
   /// Returns a Query which includes children which match the specified [value].
   ///
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
-  Query equalTo(value, [String key]) => Query.fromJsObject(
-      key == null ? jsObject.equalTo(value) : jsObject.equalTo(value, key));
+  Query equalTo(value, [String key]) => Query.fromJsObject(key == null
+      ? jsObject.equalTo(jsify(value))
+      : jsObject.equalTo(jsify(value), key));
 
   /// Returns `true` if the current and [other] queries are equal - they
   /// represent the exactly same location, have the same query parameters,
@@ -347,8 +349,9 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
   /// is thrown.
   /// The optional [key] can be used to further limit the range of the query.
-  Query startAt(value, [String key]) => Query.fromJsObject(
-      key == null ? jsObject.startAt(value) : jsObject.startAt(value, key));
+  Query startAt(value, [String key]) => Query.fromJsObject(key == null
+      ? jsObject.startAt(jsify(value))
+      : jsObject.startAt(jsify(value), key));
 
   /// Returns a String representation of Query object.
   @override
