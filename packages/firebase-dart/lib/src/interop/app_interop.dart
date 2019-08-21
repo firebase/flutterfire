@@ -8,6 +8,7 @@ import 'database_interop.dart';
 import 'es6_interop.dart';
 import 'firebase_interop.dart';
 import 'firestore_interop.dart';
+import 'functions_interop.dart';
 import 'storage_interop.dart';
 
 @JS('App')
@@ -19,4 +20,5 @@ abstract class AppJsImpl {
   external PromiseJsImpl delete();
   external StorageJsImpl storage([String url]);
   external FirestoreJsImpl firestore();
+  external FunctionsJsImpl functions([String region]);
 }

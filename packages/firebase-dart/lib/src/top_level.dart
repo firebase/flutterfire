@@ -7,6 +7,7 @@ import 'app.dart';
 import 'auth.dart';
 import 'database.dart';
 import 'firestore.dart';
+import 'functions.dart';
 import 'interop/firebase_interop.dart' as firebase;
 import 'messaging.dart';
 import 'performance.dart';
@@ -121,6 +122,16 @@ Firestore firestore([App app]) {
       (app != null) ? firebase.firestore(app.jsObject) : firebase.firestore();
 
   return Firestore.getInstance(jsObject);
+}
+
+/// Accesses the [Functions] service for the default App or a given app.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.functions>.
+Functions functions([App app]) {
+  var jsObject =
+      (app != null) ? firebase.functions(app.jsObject) : firebase.functions();
+
+  return Functions.getInstance(jsObject);
 }
 
 Messaging messaging([App app]) {

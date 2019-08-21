@@ -11,3 +11,7 @@ doc/api/
 # Files with private data. Used for development and testing
 lib/src/assets/config.json
 lib/src/assets/service_account.json
+
+# Firebase function files
+tool/firebase_functions/.firebaserc
+tool/firebase_functions/functions/node_modules

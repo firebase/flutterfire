@@ -1,7 +1,8 @@
-## 7.0.0-dev
+## 7.0.0
 
 - **BREAKING** renamed `AuthCredential` into `OAuthCredential` to align with JS API
 - **BREAKING** removed deprecated Firestore `Settings.timestampsInSnapshots`. 
+- Added support for functions.
 - Added `idToken`, `accessToken` and `secret` to `OAuthCredential`
 - Added support for Email Link authentication.
 - Firestore `Settings` added `cacheSizeBytes`, `host`, and `ssl` properties.

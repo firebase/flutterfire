@@ -8,6 +8,7 @@ export 'src/analytics.dart';
 export 'src/app.dart';
 export 'src/auth.dart';
 export 'src/database.dart';
+export 'src/functions.dart';
 export 'src/messaging.dart';
 export 'src/performance.dart';
 export 'src/storage.dart';
