@@ -11,6 +11,7 @@ import 'package:platform/platform.dart';
 import 'package:test/test.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   MockMethodChannel mockChannel;
   FirebaseMessaging firebaseMessaging;
 

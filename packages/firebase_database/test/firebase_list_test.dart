@@ -10,6 +10,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   group('FirebaseList', () {
     StreamController<Event> onChildAddedStreamController;
     StreamController<Event> onChildRemovedStreamController;
