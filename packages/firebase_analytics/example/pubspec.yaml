@@ -6,8 +6,7 @@ dependencies:
     sdk: flutter
   firebase_analytics:
     path: ../
-  _firebase_api: 43.0.0
-  firebase_core: any
+  firebase_core: ^0.4.0
 
 dev_dependencies:
   flutter_test:
