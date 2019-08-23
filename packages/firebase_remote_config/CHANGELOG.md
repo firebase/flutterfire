@@ -1,6 +1,7 @@
 ## 0.2.0+6
 
 * Update documentation to reflect new repository location.
+* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized();`
 
 ## 0.2.0+5
 
