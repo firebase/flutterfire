@@ -1,3 +1,7 @@
+## 0.5.0+1
+
+* Don't crash if registrar.activity() is not there.
+
 ## 0.5.0
 
 * **Breaking change**. Changed architecture and method names to be able to differentiate between
