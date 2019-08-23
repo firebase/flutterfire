@@ -11,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
   group('$Crashlytics', () {
     final List<MethodCall> log = <MethodCall>[];
 

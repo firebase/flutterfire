@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
   group('FirebaseAdMob', () {
     const MethodChannel channel =
         MethodChannel('plugins.flutter.io/firebase_admob');

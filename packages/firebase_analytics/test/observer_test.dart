@@ -15,6 +15,7 @@ import 'package:firebase_analytics/observer.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
   group('FirebaseAnalyticsObserver', () {
     FirebaseAnalytics analytics;
     FirebaseAnalyticsObserver observer;

@@ -12,6 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
   group('FirebaseStorage', () {
     final FirebaseApp app = const FirebaseApp(
       name: 'testApp',

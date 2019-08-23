@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
   group('$FirebaseDynamicLinks', () {
     final List<MethodCall> log = <MethodCall>[];
 

@@ -11,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
   group('$FirebaseDatabase', () {
     const MethodChannel channel = MethodChannel(
       'plugins.flutter.io/firebase_database',
