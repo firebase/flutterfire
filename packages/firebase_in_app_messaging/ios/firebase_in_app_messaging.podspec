@@ -4,11 +4,11 @@
 Pod::Spec.new do |s|
   s.name             = 'firebase_in_app_messaging'
   s.version          = '0.0.1'
-  s.summary          = 'InAppMessaging Plugin for Firebase'
+  s.summary          = 'In-App Messaging Plugin for Firebase'
   s.description      = <<-DESC
-A new flutter plugin project.
+Flutter plugin for Firebase In-App Messaging.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_in_app_messaging'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Flutter Team' => 'flutter-dev@googlegroups.com' }
   s.source           = { :path => '.' }
