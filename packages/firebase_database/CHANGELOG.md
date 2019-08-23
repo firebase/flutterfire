@@ -1,7 +1,7 @@
 ## 3.0.6
 
 * Update documentation to reflect new repository location.
-* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized();`
+* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized`.
 
 ## 3.0.5
 

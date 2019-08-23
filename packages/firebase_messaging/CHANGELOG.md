@@ -1,7 +1,7 @@
 ## 5.1.4
 
 * Update documentation to reflect new repository location.
-* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized();`
+* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized`.
 
 ## 5.1.3
 
