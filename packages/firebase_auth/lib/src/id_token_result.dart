@@ -15,6 +15,14 @@ class IdTokenResult {
   @visibleForTesting
   IdTokenResult(this._data, this._app);
 
+  /// Constructs a token result from a token.
+  ///
+  /// This is useful when apps are implementing [FirebaseUser] and managing their
+  /// own tokens.
+  IdTokenResult.fromToken(String token)
+      : _data = <String, String>{'token': token},
+        _app = null;
+
   final FirebaseApp _app;
 
   final Map<dynamic, dynamic> _data;
