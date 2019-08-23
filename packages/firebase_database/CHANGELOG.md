@@ -2,6 +2,7 @@
 
 * Update documentation to reflect new repository location.
 * Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized`.
+* Remove executable bit on LICENSE file.
 
 ## 3.0.5
 
