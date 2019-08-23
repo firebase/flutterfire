@@ -22,7 +22,7 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
  * If you haven't configured your machine with an SSH key that's known to github, then
    follow [GitHub's directions](https://help.github.com/articles/generating-ssh-keys/)
    to generate an SSH key.
- * `git clone git@github.com:<your_name_here>/plugins.git`
+ * `git clone git@github.com:<your_name_here>/flutterfire.git`
  * `cd plugins`
  * `git remote add upstream git@github.com:FirebaseExtended/flutterfire.git` (So that you
    fetch from the master repository, not your clone, when running `git fetch`
