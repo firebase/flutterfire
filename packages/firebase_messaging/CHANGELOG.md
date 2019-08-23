@@ -1,3 +1,6 @@
+## 5.1.5
+* Add checkIosNotificationSettings method to check whether the user has previously accepted or declined the push notifications on iOS devices.
+
 ## 5.1.4
 
 * Update documentation to reflect new repository location.
