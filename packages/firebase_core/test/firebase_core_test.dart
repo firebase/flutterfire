@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('$FirebaseApp', () {
     final List<MethodCall> log = <MethodCall>[];
     const FirebaseApp testApp = FirebaseApp(
