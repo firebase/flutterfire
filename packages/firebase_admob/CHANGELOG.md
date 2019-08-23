@@ -1,6 +1,10 @@
-## 0.9.0+4
+## 0.9.0+5
 
 * Update documentation to reflect new repository location.
+
+## 0.9.0+4
+
+* Add the ability to horizontally adjust the ads banner location by specifying a pixel offset from the centre.
 
 ## 0.9.0+3
 
