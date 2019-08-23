@@ -23,7 +23,7 @@ that enable Flutter apps to use one or more [Firebase](https://firebase.google.c
 | [firebase_crashlytics][crash_pub] | ![pub package][crash_badge] | [Firebase Crashlytics][crash_product] | [`packages/firebase_crashlytics`][crash_code] |
 | [firebase_database][database_pub] | ![pub package][database_badge] | [Firebase Realtime Database][database_product] | [`packages/firebase_database`][database_code] |
 | [firebase_dynamic_links][dynamic_links_pub] | ![pub package][dynamic_links_badge] | [Firebase Dynamic Links][dynamic_links_product] | [`packages/firebase_dynamic_links`][dynamic_links_code] |
-| [in_app_messaging][in_app_messaging_pub] | ![pub package][in_app_messaging_badge] | [Firebase In-App Messaging][in_app_messaging_product] | [`packages/firebase_in_app_messaging`][in_app_messaging_code] |
+| [firebase_in_app_messaging][in_app_messaging_pub] | ![pub package][in_app_messaging_badge] | [Firebase In-App Messaging][in_app_messaging_product] | [`packages/firebase_in_app_messaging`][in_app_messaging_code] |
 | [firebase_messaging][messaging_pub] | ![pub package][messaging_badge] | [Firebase Cloud Messaging][messaging_product] | [`packages/firebase_messaging`][messaging_code] |
 | [firebase_ml_vision][ml_vision_pub] | ![pub package][ml_vision_badge] | [Firebase ML Kit][ml_vision_product] | [`packages/firebase_ml_vision`][ml_vision_code] |
 | [firebase_performance][performance_pub] | ![pub package][performance_badge] | [Firebase Performance Monitoring][performance_product] | [`packages/firebase_performance`][performance_code] |
