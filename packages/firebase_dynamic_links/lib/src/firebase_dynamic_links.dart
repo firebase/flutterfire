@@ -146,6 +146,6 @@ class PendingDynamicLinkDataIOS {
 
 /// This object is returned by the handler when an error occurs.
 class OnLinkErrorException extends PlatformException {
-  OnLinkErrorException._(String code, String message, dynamic details):
-      super(code: code, message: message, details: details);
+  OnLinkErrorException._(String code, String message, dynamic details)
+      : super(code: code, message: message, details: details);
 }
