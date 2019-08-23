@@ -79,7 +79,7 @@ FirebaseInAppMessaging.setAutomaticDataCollectionEnabled(false);
 
 ## Example
 
-See the [example application](https://github.com/flutter/plugins/tree/master/packages/firebase_in_app_messaging/example) source
+See the [example application](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_in_app_messaging/example) source
 for a complete sample app using the Firebase In-App Messaging.
 
 ## Issues and feedback
