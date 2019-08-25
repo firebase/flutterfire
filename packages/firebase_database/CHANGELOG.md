@@ -1,3 +1,7 @@
+## 3.0.7
+
+* Fix possible NullPointerException when plugin is registered without a valid Activity.
+
 ## 3.0.6
 
 * Update documentation to reflect new repository location.
