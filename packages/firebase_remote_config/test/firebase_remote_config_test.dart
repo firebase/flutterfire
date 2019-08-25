@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   final int lastFetchTime = 1520618753782;
   Map<String, dynamic> getDefaultInstance() {
     return <String, dynamic>{
