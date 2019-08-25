@@ -11,21 +11,19 @@ final String testDisplayName = 'testDisplayName';
 final String testToken = 'testToken';
 
 /// Implements an app specific [FirebaseUser] object.
-/// 
+///
 /// This is useful for making sure APIs used within the object are "implements"
 /// friendly with no private constructors.
 class TestFirebaseUser implements FirebaseUser {
-  String _username;
-  String _password;
+  String _username = 'test';
+  String _password = 'pwd';
   String _email;
   String _displayName = testDisplayName;
   String _token = testToken;
   String _uid;
 
   @override
-  Future<void> delete() {
-    return null;
-  }
+  Future<void> delete() async => null;
 
   @override
   String get displayName => _displayName;
@@ -39,10 +37,10 @@ class TestFirebaseUser implements FirebaseUser {
   }
 
   @override
-  bool get isAnonymous => false;
+  bool get isAnonymous => (_username != null);
 
   @override
-  bool get isEmailVerified => true;
+  bool get isEmailVerified => (_password != null);
 
   @override
   Future<AuthResult> linkWithCredential(AuthCredential credential) async {
