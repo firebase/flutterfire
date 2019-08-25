@@ -5,8 +5,8 @@ displaying banner, interstitial (full-screen), and rewarded video ads using the
 [Firebase AdMob API](https://firebase.google.com/docs/admob/).
 
 *Note*: This plugin is in beta, and may still have a few issues and missing APIs.
-[Feedback](https://github.com/flutter/flutter/issues) and
-[Pull Requests](https://github.com/flutter/plugins/pulls) are welcome.
+[Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and
+[Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are welcome.
 
 ## AndroidManifest changes
 
@@ -213,4 +213,4 @@ limitations:
   interstitial ad
 
 For Flutter plugins for other Firebase products, see
-[FlutterFire.md](https://github.com/flutter/plugins/blob/master/FlutterFire.md).
+[README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
