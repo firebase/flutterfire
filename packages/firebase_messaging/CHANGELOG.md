@@ -1,3 +1,7 @@
+## 5.1.4
+
+* Updates to README instructions for adding gradle dependencies implementation.
+
 ## 5.1.3
 
 * Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
