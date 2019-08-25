@@ -1,3 +1,16 @@
+## 0.5.0+3
+
+* Don't crash if registrar.activity() is not there.
+
+## 0.5.0+2
+
+* Change the OnLinkError object to be a real exception.
+
+## 0.5.0+1
+
+* Update documentation to reflect new repository location.
+* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized`.
+
 ## 0.5.0
 
 * **Breaking change**. Changed architecture and method names to be able to differentiate between

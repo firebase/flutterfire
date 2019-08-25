@@ -4,9 +4,9 @@ A Flutter plugin to use the [Firebase Crashlytics Service](https://firebase.goog
 
 [![pub package](https://img.shields.io/pub/v/firebase_crashlytics.svg)](https://pub.dartlang.org/packages/firebase_crashlytics)
 
-For Flutter plugins for other Firebase products, see [FlutterFire.md](https://github.com/flutter/plugins/blob/master/FlutterFire.md).
+For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
-*Note*: This plugin is still under development, and some APIs might not be available yet. [Feedback](https://github.com/flutter/flutter/issues) and [Pull Requests](https://github.com/flutter/plugins/pulls) are most welcome!
+*Note*: This plugin is still under development, and some APIs might not be available yet. [Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
 
 ## Usage
 
@@ -119,10 +119,10 @@ flutter: Error reported to Crashlytics.
 
 ## Example
 
-See the [example application](https://github.com/flutter/plugins/tree/master/packages/firebase_crashlytics/example) source
+See the [example application](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_crashlytics/example) source
 for a complete sample app using `firebase_crashlytics`.
 
 ## Issues and feedback
 
-Please file [issues](https://github.com/flutter/flutter/issues/new)
+Please file [issues](https://github.com/FirebaseExtended/flutterfire/issues/new)
 to send feedback or report a bug. Thank you!

@@ -4,9 +4,9 @@
 
 A Flutter plugin to use the [Google Analytics for Firebase API](https://firebase.google.com/docs/analytics/).
 
-For Flutter plugins for other Firebase products, see [FlutterFire.md](https://github.com/flutter/plugins/blob/master/FlutterFire.md).
+For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
-*Note*: This plugin is still under development, and some APIs might not be available yet. [Feedback](https://github.com/flutter/flutter/issues) and [Pull Requests](https://github.com/flutter/plugins/pulls) are most welcome!
+*Note*: This plugin is still under development, and some APIs might not be available yet. [Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
 
 ## Usage
 To use this plugin, add `firebase_analytics` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). You must also configure firebase analytics for each platform project: Android and iOS (see the example folder or https://codelabs.developers.google.com/codelabs/flutter-firebase/#4 for step by step details).
@@ -36,5 +36,5 @@ for an example of how to wire that up.
 
 See the [`example`][example] directory for a complete sample app using Google Analytics for Firebase.
 
-[example]: https://github.com/flutter/plugins/tree/master/packages/firebase_analytics/example
-[tabs_page]: https://github.com/flutter/plugins/tree/master/packages/firebase_analytics/example/lib/tabs_page.dart
+[example]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics/example
+[tabs_page]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics/example/lib/tabs_page.dart
