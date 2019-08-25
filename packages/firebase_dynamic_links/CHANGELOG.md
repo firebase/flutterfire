@@ -1,3 +1,7 @@
+## 0.5.0+3
+
+* Don't crash if registrar.activity() is not there.
+
 ## 0.5.0+2
 
 * Change the OnLinkError object to be a real exception.
