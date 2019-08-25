@@ -1,3 +1,9 @@
+## 3.0.6
+
+* Update documentation to reflect new repository location.
+* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized`.
+* Remove executable bit on LICENSE file.
+
 ## 3.0.5
 
 * Update google-services Android gradle plugin to 4.3.0 in documentation and examples.

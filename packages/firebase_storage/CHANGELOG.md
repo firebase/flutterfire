@@ -1,4 +1,11 @@
+## 3.0.6
+
+* Update documentation to reflect new repository location.
+* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized`.
+* Remove executable bit on LICENSE file.
+
 ## 3.0.5
+
 * Removed automatic print statements for `StorageTaskEvent`'s.
   If you want to see the event status in your logs now, you will have to use the following:
   `storageReference.put{File/Data}(..).events.listen((event) => print('EVENT ${event.type}'));`
