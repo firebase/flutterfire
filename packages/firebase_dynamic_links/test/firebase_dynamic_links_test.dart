@@ -8,6 +8,8 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('$FirebaseDynamicLinks', () {
     final List<MethodCall> log = <MethodCall>[];
 

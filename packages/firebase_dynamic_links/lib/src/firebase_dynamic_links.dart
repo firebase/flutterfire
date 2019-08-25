@@ -144,12 +144,8 @@ class PendingDynamicLinkDataIOS {
   final String minimumVersion;
 }
 
-class OnLinkErrorException {
-  OnLinkErrorException._(this.code, this.message, this.details);
-
-  final String code;
-
-  final String message;
-
-  final dynamic details;
+/// This object is returned by the handler when an error occurs.
+class OnLinkErrorException extends PlatformException {
+  OnLinkErrorException._(String code, String message, dynamic details)
+      : super(code: code, message: message, details: details);
 }

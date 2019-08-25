@@ -67,6 +67,8 @@ const Map<String, dynamic> kMockAdditionalUserInfo = <String, dynamic>{
 };
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('$FirebaseAuth', () {
     final String appName = 'testApp';
     final FirebaseApp app = FirebaseApp(name: appName);

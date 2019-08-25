@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
 Flutter plugin for Google Dynamic Links for Firebase, an app solution for creating and handling
  links across multiple platforms.
                        DESC
-  s.homepage         = 'https://github.com/flutter/plugins/tree/master/packages/firebase_dynamic_links'
+  s.homepage         = 'https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_dynamic_links'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Flutter Team' => 'flutter-dev@googlegroups.com' }
   s.source           = { :path => '.' }

@@ -1,3 +1,8 @@
+## 0.9.2+1
+
+* Update documentation to reflect new repository location.
+* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized`.
+
 ## 0.9.2
 
 * Add detection of `FaceContour`s when using the `FaceDetector`. See `README.md` for more information.
