@@ -4,8 +4,8 @@
 
 package io.flutter.plugins.firebase.cloudfirestore;
 
-import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
 import androidx.annotation.NonNull;
@@ -59,8 +59,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
 
   private static final String TAG = "CloudFirestorePlugin";
   private final MethodChannel channel;
-  private final Activity activity;
-
+  private final Handler handler = new Handler();
   // Handles are ints used as indexes into the sparse array of active observers
   private int nextListenerHandle = 0;
   private int nextBatchHandle = 0;
@@ -77,12 +76,11 @@ public class CloudFirestorePlugin implements MethodCallHandler {
             registrar.messenger(),
             "plugins.flutter.io/cloud_firestore",
             new StandardMethodCodec(FirestoreMessageCodec.INSTANCE));
-    channel.setMethodCallHandler(new CloudFirestorePlugin(channel, registrar.activity()));
+    channel.setMethodCallHandler(new CloudFirestorePlugin(channel));
   }
 
-  private CloudFirestorePlugin(MethodChannel channel, Activity activity) {
+  private CloudFirestorePlugin(MethodChannel channel) {
     this.channel = channel;
-    this.activity = activity;
   }
 
   private FirebaseFirestore getFirestore(Map<String, Object> arguments) {
@@ -383,7 +381,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                       completionTasks.append(transactionId, transactionTCS);
 
                       // Start operations on Dart side.
-                      activity.runOnUiThread(
+                      handler.post(
                           new Runnable() {
                             @Override
                             public void run() {
@@ -467,7 +465,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                 metadata.put("hasPendingWrites", documentSnapshot.getMetadata().hasPendingWrites());
                 metadata.put("isFromCache", documentSnapshot.getMetadata().isFromCache());
                 snapshotMap.put("metadata", metadata);
-                activity.runOnUiThread(
+                handler.post(
                     new Runnable() {
                       @Override
                       public void run() {
@@ -475,7 +473,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                       }
                     });
               } catch (final FirebaseFirestoreException e) {
-                activity.runOnUiThread(
+                handler.post(
                     new Runnable() {
                       @Override
                       public void run() {
@@ -499,7 +497,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
               Map<String, Object> data = (Map<String, Object>) arguments.get("data");
               try {
                 transaction.update(getDocumentReference(arguments), data);
-                activity.runOnUiThread(
+                handler.post(
                     new Runnable() {
                       @Override
                       public void run() {
@@ -507,7 +505,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                       }
                     });
               } catch (final IllegalStateException e) {
-                activity.runOnUiThread(
+                handler.post(
                     new Runnable() {
                       @Override
                       public void run() {
@@ -530,7 +528,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
             protected Void doInBackground(Void... voids) {
               Map<String, Object> data = (Map<String, Object>) arguments.get("data");
               transaction.set(getDocumentReference(arguments), data);
-              activity.runOnUiThread(
+              handler.post(
                   new Runnable() {
                     @Override
                     public void run() {
@@ -550,7 +548,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
             @Override
             protected Void doInBackground(Void... voids) {
               transaction.delete(getDocumentReference(arguments));
-              activity.runOnUiThread(
+              handler.post(
                   new Runnable() {
                     @Override
                     public void run() {
