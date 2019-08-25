@@ -83,6 +83,9 @@ void main() {
         password: testPassword,
       );
       expect(result.user.uid, equals(user.uid));
+      List<String> methods = await auth.fetchSignInMethodsForEmail(email: testEmail);
+      expect(methods.length, 1);
+      expect(methods[0], 'password');
       await user.delete();
     });
 
@@ -96,6 +99,13 @@ void main() {
       expect(await auth.isSignInWithEmailLink(emailLink1), true);
       expect(await auth.isSignInWithEmailLink(emailLink2), false);
       expect(await auth.isSignInWithEmailLink(emailLink3), false);
+    });
+
+    test('fetchSignInMethodsForEmail nonexistent user', () async {
+      String testEmail = 'testuser${Uuid().v4()}@example.com';
+      List<String> methods = await auth.fetchSignInMethodsForEmail(email: testEmail);
+      expect(methods, isNotNull);
+      expect(methods.length, 0);
     });
   });
 }

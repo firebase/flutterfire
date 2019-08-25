@@ -109,17 +109,18 @@ class FirebaseAuth {
   /// This method is useful when you support multiple authentication mechanisms
   /// if you want to implement an email-first authentication flow.
   ///
+  /// An empty `List` is returned if the user could not be found.
+  ///
   /// Errors:
   ///   • `ERROR_INVALID_CREDENTIAL` - If the [email] address is malformed.
-  ///   • `ERROR_USER_NOT_FOUND` - If there is no user corresponding to the given [email] address.
   Future<List<String>> fetchSignInMethodsForEmail({
     @required String email,
   }) async {
     assert(email != null);
     return await channel.invokeListMethod<String>(
-      'fetchSignInMethodsForEmail',
-      <String, String>{'email': email, 'app': app.name},
-    );
+          'fetchSignInMethodsForEmail',
+          <String, String>{'email': email, 'app': app.name},
+        );
   }
 
   /// Triggers the Firebase Authentication backend to send a password-reset
