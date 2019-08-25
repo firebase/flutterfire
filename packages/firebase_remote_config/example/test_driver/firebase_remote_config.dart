@@ -39,16 +39,5 @@ void main() {
         ValueSource.valueStatic,
       );
     });
-
-    test('doubleInstance', () async {
-      final List<Future<RemoteConfig>> futures = <Future<RemoteConfig>>[
-        RemoteConfig.instance,
-        RemoteConfig.instance,
-      ];
-      Future.wait(futures).then((List<RemoteConfig> remoteConfigs) {
-        // Check that both returned Remote Config instances are the same.
-        expect(remoteConfigs[0], remoteConfigs[1]);
-      });
-    });
   });
 }
