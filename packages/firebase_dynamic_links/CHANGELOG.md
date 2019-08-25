@@ -1,3 +1,7 @@
+## 0.5.0+2
+
+* Change the OnLinkError object to be a real exception.
+
 ## 0.5.0+1
 
 * Update documentation to reflect new repository location.
