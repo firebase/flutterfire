@@ -11,6 +11,10 @@ class AuthResult {
   AuthResult._(this._data, FirebaseApp app)
       : user = FirebaseUser._(_data['user'].cast<String, dynamic>(), app);
 
+  /// Constructs a authentication result from a user.
+  ///
+  /// This is useful when apps are implementing [FirebaseUser] and managing their
+  /// own auth mechanism.
   AuthResult.fromUser(this.user) : _data = null;
 
   final Map<String, dynamic> _data;

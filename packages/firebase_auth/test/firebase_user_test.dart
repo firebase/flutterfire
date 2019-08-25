@@ -10,6 +10,10 @@ import 'package:flutter_test/flutter_test.dart';
 final String testDisplayName = 'testDisplayName';
 final String testToken = 'testToken';
 
+/// Implements an app specific [FirebaseUser] object.
+/// 
+/// This is useful for making sure APIs used within the object are "implements"
+/// friendly with no private constructors.
 class TestFirebaseUser implements FirebaseUser {
   String _username;
   String _password;
