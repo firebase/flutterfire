@@ -133,7 +133,7 @@ int nextHandle = 0;
                     completion:^(NSArray<NSString *> *providers, NSError *error) {
                       // For unrecognized emails, the Auth iOS SDK should return an
                       // empty `NSArray` here, but instead returns `nil`, so we coalesce
-                      // to an empty array.
+                      // with an empty `NSArray`.
                       // https://github.com/firebase/firebase-ios-sdk/issues/3655
                       [self sendResult:result forObject:providers ?: @[] error:error];
                     }];
