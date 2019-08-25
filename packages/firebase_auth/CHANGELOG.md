@@ -1,3 +1,7 @@
+## 0.14.0+4
+
+* Fixed "Register a user" example code snippet in README.md.
+
 ## 0.14.0+3
 
 * Update documentation to reflect new repository location.
