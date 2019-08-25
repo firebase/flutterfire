@@ -11,6 +11,8 @@ class AuthResult {
   AuthResult._(this._data, FirebaseApp app)
       : user = FirebaseUser._(_data['user'].cast<String, dynamic>(), app);
 
+  AuthResult.fromUser(this.user) : _data = null;
+
   final Map<String, dynamic> _data;
 
   /// Returns the currently signed-in [FirebaseUser], or `null` if there isn't
