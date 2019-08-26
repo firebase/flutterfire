@@ -63,9 +63,11 @@ class MyHomePage extends StatelessWidget {
   CollectionReference get messages => firestore.collection('messages');
 
   Future<void> _addMessage() async {
-    await messages.add(<String, dynamic>{
-      'message': 'Hello world!',
-      'created_at': FieldValue.serverTimestamp(),
+    firestore.runTransaction((Transaction tx) async {
+      await tx.set(messages.document(), <String, dynamic>{
+        'message': 'Hello world!',
+        'created_at': FieldValue.serverTimestamp(),
+      });
     });
   }
 

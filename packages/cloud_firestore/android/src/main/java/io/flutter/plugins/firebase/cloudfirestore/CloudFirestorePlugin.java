@@ -4,7 +4,6 @@
 
 package io.flutter.plugins.firebase.cloudfirestore;
 
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
@@ -153,7 +152,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
       paths.add(document.getReference().getPath());
       documents.add(document.getData());
-      Map<String, Object> metadata = new HashMap<String, Object>();
+      Map<String, Object> metadata = new HashMap<>();
       metadata.put("hasPendingWrites", document.getMetadata().hasPendingWrites());
       metadata.put("isFromCache", document.getMetadata().isFromCache());
       metadatas.add(metadata);
@@ -182,7 +181,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
       change.put("newIndex", documentChange.getNewIndex());
       change.put("document", documentChange.getDocument().getData());
       change.put("path", documentChange.getDocument().getReference().getPath());
-      Map<String, Object> metadata = new HashMap();
+      Map<String, Object> metadata = new HashMap<>();
       metadata.put(
           "hasPendingWrites", documentChange.getDocument().getMetadata().hasPendingWrites());
       metadata.put("isFromCache", documentChange.getDocument().getMetadata().isFromCache());
@@ -203,12 +202,11 @@ public class CloudFirestorePlugin implements MethodCallHandler {
     return transactions.get((Integer) arguments.get("transactionId"));
   }
 
+  @SuppressWarnings("unchecked")
   private Query getQuery(Map<String, Object> arguments) {
     Query query = getReference(arguments);
-    @SuppressWarnings("unchecked")
     Map<String, Object> parameters = (Map<String, Object>) arguments.get("parameters");
     if (parameters == null) return query;
-    @SuppressWarnings("unchecked")
     List<List<Object>> whereConditions = (List<List<Object>>) parameters.get("where");
     for (List<Object> condition : whereConditions) {
       String fieldName = (String) condition.get(0);
@@ -230,12 +228,14 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         // Invalid operator.
       }
     }
-    @SuppressWarnings("unchecked")
+
     Number limit = (Number) parameters.get("limit");
     if (limit != null) query = query.limit(limit.longValue());
-    @SuppressWarnings("unchecked")
+
     List<List<Object>> orderBy = (List<List<Object>>) parameters.get("orderBy");
+
     if (orderBy == null) return query;
+
     for (List<Object> order : orderBy) {
       String orderByFieldName = (String) order.get(0);
       boolean descending = (boolean) order.get(1);
@@ -243,14 +243,14 @@ public class CloudFirestorePlugin implements MethodCallHandler {
           descending ? Query.Direction.DESCENDING : Query.Direction.ASCENDING;
       query = query.orderBy(orderByFieldName, direction);
     }
-    @SuppressWarnings("unchecked")
+
     Map<String, Object> startAtDocument = (Map<String, Object>) parameters.get("startAtDocument");
-    @SuppressWarnings("unchecked")
+
     Map<String, Object> startAfterDocument =
         (Map<String, Object>) parameters.get("startAfterDocument");
-    @SuppressWarnings("unchecked")
+
     Map<String, Object> endAtDocument = (Map<String, Object>) parameters.get("endAtDocument");
-    @SuppressWarnings("unchecked")
+
     Map<String, Object> endBeforeDocument =
         (Map<String, Object>) parameters.get("endBeforeDocument");
     if (startAtDocument != null
@@ -268,24 +268,30 @@ public class CloudFirestorePlugin implements MethodCallHandler {
     if (startAfterDocument != null) {
       query = query.startAfter(getDocumentValues(startAfterDocument, orderBy, arguments));
     }
-    @SuppressWarnings("unchecked")
+
     List<Object> startAt = (List<Object>) parameters.get("startAt");
+
     if (startAt != null) query = query.startAt(startAt.toArray());
-    @SuppressWarnings("unchecked")
+
     List<Object> startAfter = (List<Object>) parameters.get("startAfter");
+
     if (startAfter != null) query = query.startAfter(startAfter.toArray());
+
     if (endAtDocument != null) {
       query = query.endAt(getDocumentValues(endAtDocument, orderBy, arguments));
     }
     if (endBeforeDocument != null) {
       query = query.endBefore(getDocumentValues(endBeforeDocument, orderBy, arguments));
     }
-    @SuppressWarnings("unchecked")
+
     List<Object> endAt = (List<Object>) parameters.get("endAt");
+
     if (endAt != null) query = query.endAt(endAt.toArray());
-    @SuppressWarnings("unchecked")
+
     List<Object> endBefore = (List<Object>) parameters.get("endBefore");
+
     if (endBefore != null) query = query.endBefore(endBefore.toArray());
+
     return query;
   }
 
@@ -360,7 +366,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
   }
 
   @Override
-  public void onMethodCall(MethodCall call, final Result result) {
+  public void onMethodCall(final MethodCall call, @NonNull final Result result) {
     switch (call.method) {
       case "Firestore#runTransaction":
         {
@@ -376,7 +382,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                     @Override
                     public Map<String, Object> apply(@NonNull Transaction transaction) {
                       // Store transaction.
-                      int transactionId = (Integer) arguments.get("transactionId");
+                      Integer transactionId = call.argument("transactionId");
                       transactions.append(transactionId, transaction);
                       completionTasks.append(transactionId, transactionTCS);
 
@@ -417,7 +423,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                       // Wait till transaction is complete.
                       try {
                         String timeoutKey = "transactionTimeout";
-                        long timeout = ((Number) arguments.get(timeoutKey)).longValue();
+                        Long timeout = call.argument(timeoutKey);
                         final Map<String, Object> transactionResult =
                             Tasks.await(transactionTCSTask, timeout, TimeUnit.MILLISECONDS);
 
@@ -433,7 +439,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
               .addOnCompleteListener(
                   new OnCompleteListener<Map<String, Object>>() {
                     @Override
-                    public void onComplete(Task<Map<String, Object>> task) {
+                    public void onComplete(@NonNull Task<Map<String, Object>> task) {
                       if (task.isSuccessful()) {
                         result.success(task.getResult());
                       } else {
@@ -448,116 +454,94 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         {
           final Map<String, Object> arguments = call.arguments();
           final Transaction transaction = getTransaction(arguments);
-          new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-              try {
-                DocumentSnapshot documentSnapshot =
-                    transaction.get(getDocumentReference(arguments));
-                final Map<String, Object> snapshotMap = new HashMap<>();
-                snapshotMap.put("path", documentSnapshot.getReference().getPath());
-                if (documentSnapshot.exists()) {
-                  snapshotMap.put("data", documentSnapshot.getData());
-                } else {
-                  snapshotMap.put("data", null);
-                }
-                Map<String, Object> metadata = new HashMap();
-                metadata.put("hasPendingWrites", documentSnapshot.getMetadata().hasPendingWrites());
-                metadata.put("isFromCache", documentSnapshot.getMetadata().isFromCache());
-                snapshotMap.put("metadata", metadata);
-                handler.post(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        result.success(snapshotMap);
-                      }
-                    });
-              } catch (final FirebaseFirestoreException e) {
-                handler.post(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        result.error("Error performing Transaction#get", e.getMessage(), null);
-                      }
-                    });
-              }
-              return null;
+
+          try {
+            DocumentSnapshot documentSnapshot = transaction.get(getDocumentReference(arguments));
+            final Map<String, Object> snapshotMap = new HashMap<>();
+            snapshotMap.put("path", documentSnapshot.getReference().getPath());
+            if (documentSnapshot.exists()) {
+              snapshotMap.put("data", documentSnapshot.getData());
+            } else {
+              snapshotMap.put("data", null);
             }
-          }.execute();
+            Map<String, Object> metadata = new HashMap<>();
+            metadata.put("hasPendingWrites", documentSnapshot.getMetadata().hasPendingWrites());
+            metadata.put("isFromCache", documentSnapshot.getMetadata().isFromCache());
+            snapshotMap.put("metadata", metadata);
+            handler.post(
+                new Runnable() {
+                  @Override
+                  public void run() {
+                    result.success(snapshotMap);
+                  }
+                });
+          } catch (final FirebaseFirestoreException e) {
+            handler.post(
+                new Runnable() {
+                  @Override
+                  public void run() {
+                    result.error("Error performing Transaction#get", e.getMessage(), null);
+                  }
+                });
+          }
           break;
         }
       case "Transaction#update":
         {
           final Map<String, Object> arguments = call.arguments();
           final Transaction transaction = getTransaction(arguments);
-          new AsyncTask<Void, Void, Void>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            protected Void doInBackground(Void... voids) {
-              Map<String, Object> data = (Map<String, Object>) arguments.get("data");
-              try {
-                transaction.update(getDocumentReference(arguments), data);
-                handler.post(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        result.success(null);
-                      }
-                    });
-              } catch (final IllegalStateException e) {
-                handler.post(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        result.error("Error performing Transaction#update", e.getMessage(), null);
-                      }
-                    });
-              }
-              return null;
-            }
-          }.execute();
+
+          Map<String, Object> data = call.argument("data");
+          try {
+            transaction.update(getDocumentReference(arguments), data);
+            handler.post(
+                new Runnable() {
+                  @Override
+                  public void run() {
+                    result.success(null);
+                  }
+                });
+          } catch (final IllegalStateException e) {
+            handler.post(
+                new Runnable() {
+                  @Override
+                  public void run() {
+                    result.error("Error performing Transaction#update", e.getMessage(), null);
+                  }
+                });
+          }
           break;
         }
       case "Transaction#set":
         {
           final Map<String, Object> arguments = call.arguments();
           final Transaction transaction = getTransaction(arguments);
-          new AsyncTask<Void, Void, Void>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            protected Void doInBackground(Void... voids) {
-              Map<String, Object> data = (Map<String, Object>) arguments.get("data");
-              transaction.set(getDocumentReference(arguments), data);
-              handler.post(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      result.success(null);
-                    }
-                  });
-              return null;
-            }
-          }.execute();
+
+          Map<String, Object> data = call.argument("data");
+          transaction.set(getDocumentReference(arguments), data);
+          handler.post(
+              new Runnable() {
+                @Override
+                public void run() {
+                  result.success(null);
+                }
+              });
           break;
         }
       case "Transaction#delete":
         {
           final Map<String, Object> arguments = call.arguments();
           final Transaction transaction = getTransaction(arguments);
-          new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-              transaction.delete(getDocumentReference(arguments));
-              handler.post(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      result.success(null);
-                    }
-                  });
-              return null;
-            }
-          }.execute();
+
+          transaction.delete(getDocumentReference(arguments));
+          handler.post(
+              new Runnable() {
+                @Override
+                public void run() {
+                  result.success(null);
+                }
+              });
+
           break;
         }
       case "WriteBatch#create":
@@ -572,10 +556,9 @@ public class CloudFirestorePlugin implements MethodCallHandler {
       case "WriteBatch#setData":
         {
           Map<String, Object> arguments = call.arguments();
-          int handle = (Integer) arguments.get("handle");
+          Integer handle = call.argument("handle");
           DocumentReference reference = getDocumentReference(arguments);
-          @SuppressWarnings("unchecked")
-          Map<String, Object> options = (Map<String, Object>) arguments.get("options");
+          Map<String, Object> options = call.argument("options");
           WriteBatch batch = batches.get(handle);
           if (options != null && (boolean) options.get("merge")) {
             batch.set(reference, arguments.get("data"), SetOptions.merge());
@@ -588,10 +571,9 @@ public class CloudFirestorePlugin implements MethodCallHandler {
       case "WriteBatch#updateData":
         {
           Map<String, Object> arguments = call.arguments();
-          int handle = (Integer) arguments.get("handle");
+          Integer handle = call.argument("handle");
           DocumentReference reference = getDocumentReference(arguments);
-          @SuppressWarnings("unchecked")
-          Map<String, Object> data = (Map<String, Object>) arguments.get("data");
+          Map<String, Object> data = call.argument("data");
           WriteBatch batch = batches.get(handle);
           batch.update(reference, data);
           result.success(null);
@@ -600,7 +582,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
       case "WriteBatch#delete":
         {
           Map<String, Object> arguments = call.arguments();
-          int handle = (Integer) arguments.get("handle");
+          Integer handle = call.argument("handle");
           DocumentReference reference = getDocumentReference(arguments);
           WriteBatch batch = batches.get(handle);
           batch.delete(reference);
@@ -609,8 +591,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         }
       case "WriteBatch#commit":
         {
-          Map<String, Object> arguments = call.arguments();
-          int handle = (Integer) arguments.get("handle");
+          Integer handle = call.argument("handle");
           WriteBatch batch = batches.get(handle);
           Task<Void> task = batch.commit();
           batches.delete(handle);
@@ -650,8 +631,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         }
       case "removeListener":
         {
-          Map<String, Object> arguments = call.arguments();
-          int handle = (Integer) arguments.get("handle");
+          Integer handle = call.argument("handle");
           listenerRegistrations.get(handle).remove();
           listenerRegistrations.remove(handle);
           observers.remove(handle);
@@ -684,10 +664,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         {
           Map<String, Object> arguments = call.arguments();
           DocumentReference documentReference = getDocumentReference(arguments);
-          @SuppressWarnings("unchecked")
-          Map<String, Object> options = (Map<String, Object>) arguments.get("options");
-          @SuppressWarnings("unchecked")
-          Map<String, Object> data = (Map<String, Object>) arguments.get("data");
+          Map<String, Object> options = call.argument("options");
+          Map<String, Object> data = call.argument("data");
           Task<Void> task;
           if (options != null && (boolean) options.get("merge")) {
             task = documentReference.set(data, SetOptions.merge());
@@ -701,8 +679,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         {
           Map<String, Object> arguments = call.arguments();
           DocumentReference documentReference = getDocumentReference(arguments);
-          @SuppressWarnings("unchecked")
-          Map<String, Object> data = (Map<String, Object>) arguments.get("data");
+          Map<String, Object> data = call.argument("data");
           Task<Void> task = documentReference.update(data);
           addDefaultListeners("updateData", task, result);
           break;
@@ -751,42 +728,43 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         }
       case "Firestore#enablePersistence":
         {
-          Map<String, Object> arguments = call.arguments();
-          boolean enable = (boolean) arguments.get("enable");
+          Boolean enable = call.argument("enable");
           FirebaseFirestoreSettings.Builder builder = new FirebaseFirestoreSettings.Builder();
           builder.setPersistenceEnabled(enable);
           FirebaseFirestoreSettings settings = builder.build();
+          Map<String, Object> arguments = call.arguments();
           getFirestore(arguments).setFirestoreSettings(settings);
           result.success(null);
           break;
         }
       case "Firestore#settings":
         {
-          final Map<String, Object> arguments = call.arguments();
           final FirebaseFirestoreSettings.Builder builder = new FirebaseFirestoreSettings.Builder();
 
-          if (arguments.get("persistenceEnabled") != null) {
-            builder.setPersistenceEnabled((boolean) arguments.get("persistenceEnabled"));
+          Boolean persistenceEnabled = call.argument("persistenceEnabled");
+          if (persistenceEnabled != null) {
+            builder.setPersistenceEnabled(persistenceEnabled);
           }
-
-          if (arguments.get("host") != null) {
-            builder.setHost((String) arguments.get("host"));
+          final String host = call.argument("host");
+          if (host != null) {
+            builder.setHost(host);
           }
-
-          if (arguments.get("sslEnabled") != null) {
-            builder.setSslEnabled((boolean) arguments.get("sslEnabled"));
+          final Boolean sslEnabled = call.argument("sslEnabled");
+          if (sslEnabled != null) {
+            builder.setSslEnabled(sslEnabled);
           }
-
-          if (arguments.get("timestampsInSnapshotsEnabled") != null) {
-            builder.setTimestampsInSnapshotsEnabled(
-                (boolean) arguments.get("timestampsInSnapshotsEnabled"));
+          final Boolean timestampsInSnapshotsEnabled =
+              call.argument("timestampsInSnapshotsEnabled");
+          if (timestampsInSnapshotsEnabled != null) {
+            builder.setTimestampsInSnapshotsEnabled(timestampsInSnapshotsEnabled);
           }
-
-          if (arguments.get("cacheSizeBytes") != null) {
-            builder.setCacheSizeBytes(((Integer) arguments.get("cacheSizeBytes")).longValue());
+          final Integer cacheSizeBytes = call.argument("cacheSizeBytes");
+          if (cacheSizeBytes != null) {
+            builder.setCacheSizeBytes(cacheSizeBytes.longValue());
           }
 
           FirebaseFirestoreSettings settings = builder.build();
+          final Map<String, Object> arguments = call.arguments();
           getFirestore(arguments).setFirestoreSettings(settings);
           result.success(null);
           break;
