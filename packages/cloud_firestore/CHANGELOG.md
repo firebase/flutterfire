@@ -1,3 +1,7 @@
+## 0.12.9+2
+
+* Removed Activity reference to avoid possible NullPointerException.
+
 ## 0.12.9+1
 
 * Update documentation to reflect new repository location.
