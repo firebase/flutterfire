@@ -123,17 +123,15 @@ void main() {
       expect(snapshot.metadata.isFromCache, true);
       expect(snapshot.data['hello'], 'world');
 
-      final List<DocumentSnapshot> snapshots =
-          await snapshotsWithMetadataChanges.toList();
-      snapshot = snapshotsWithMetadataChanges.take(1).first;
-      expect(snapshots.metadata.hasPendingWrites, true);
-      expect(snapshots.metadata.isFromCache, true);
-      expect(snapshots.data['hello'], 'world');
+      snapshot = await snapshotsWithMetadataChanges.take(1).first;
+      expect(snapshot.metadata.hasPendingWrites, true);
+      expect(snapshot.metadata.isFromCache, true);
+      expect(snapshot.data['hello'], 'world');
 
-      while (snapshot.hasPendingWrites || snapshot.isFromCache) {
-        snapshot = snapshotsWithMetadataChanges.take(1).first;
+      while (snapshot.metadata.hasPendingWrites || snapshot.metadata.isFromCache) {
+        snapshot = await snapshotsWithMetadataChanges.take(1).first;
       }
-      expect(snapshots.data['hello'], 'world');
+      expect(snapshot.data['hello'], 'world');
 
       await ref.delete();
     });
