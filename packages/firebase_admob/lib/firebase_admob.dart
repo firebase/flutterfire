@@ -238,7 +238,7 @@ abstract class MobileAd {
   /// Disposing a banner ad that's been shown removes it from the screen.
   /// Interstitial ads can't be programmatically removed from view.
   Future<bool> dispose() {
-    assert(_allAds[id] != null);
+    if (_allAds[id] == null) return Future<bool>.value(true);
     _allAds[id] = null;
     return _invokeBooleanMethod("disposeAd", <String, dynamic>{'id': id});
   }
@@ -520,9 +520,19 @@ class FirebaseAdMob {
 }
 
 Future<bool> _invokeBooleanMethod(String method, [dynamic arguments]) async {
-  final bool result = await FirebaseAdMob.instance._channel.invokeMethod<bool>(
-    method,
-    arguments,
-  );
+  bool result = false;
+  try {
+    result = await FirebaseAdMob.instance._channel.invokeMethod<bool>(
+      method,
+      arguments,
+    );
+  } on PlatformException catch (e) {
+    if (e.code == "no_ad_for_id") {
+      result = false;
+      return result;
+    }
+    rethrow;
+  }
+
   return result;
 }
