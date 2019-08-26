@@ -1,3 +1,8 @@
+## 0.4.1+1
+
+* Update documentation to reflect new repository location.
+* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized`.
+
 ## 0.4.1
 
 * Support for cloud functions emulators.

@@ -94,7 +94,7 @@ int nextHandle = 0;
 // * reauthenticateAndRetrieveDataWithCredential:completion:
 // * linkAndRetrieveDataWithCredential:completion:
 // * signInAndRetrieveDataWithCredential:completion:
-// See discussion at https://github.com/flutter/plugins/pull/1487
+// See discussion at https://github.com/FirebaseExtended/flutterfire/pull/1487
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {

@@ -1,3 +1,8 @@
+## 5.1.4
+
+* Update documentation to reflect new repository location.
+* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized`.
+
 ## 5.1.3
 
 * Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
@@ -242,7 +247,7 @@ In FirebaseMessagingPlugin.m:
 ## 0.0.2+1
 
 * Added workaround for https://github.com/flutter/flutter/issues/9694 to README
-* Moved code to https://github.com/flutter/plugins
+* Moved code to https://github.com/FirebaseExtended/flutterfire
 
 ## 0.0.2
 

@@ -1,3 +1,9 @@
+## 5.0.1
+
+* Update documentation to reflect new repository location.
+* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized`.
+* Remove executable bit on LICENSE file.
+
 ## 5.0.0
 
 * **Breaking change**. Remove deprecated method `setMinimumSessionDuration`.

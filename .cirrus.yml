@@ -22,8 +22,6 @@ task:
       test_script: ./script/incremental_build.sh test
     - name: analyze
       script: ./script/incremental_build.sh analyze
-    - name: build_all_plugins_apk
-      script: ./script/build_all_plugins_app.sh apk
     - name: build-apks+java-test+drive-examples
       env:
         matrix:
@@ -70,8 +68,6 @@ task:
     - xcrun simctl list
     - xcrun simctl create Flutter-iPhone com.apple.CoreSimulator.SimDeviceType.iPhone-X com.apple.CoreSimulator.SimRuntime.iOS-12-2 | xargs xcrun simctl boot
   matrix:
-    - name: build_all_plugins_ipa
-      script: ./script/build_all_plugins_app.sh ios --no-codesign
     - name: build-ipas+drive-examples
       env:
         PATH: $PATH:/usr/local/bin

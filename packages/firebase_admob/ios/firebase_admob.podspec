@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 Firebase Admob plugin for Flutter.
                        DESC
-  s.homepage         = 'https://github.com/flutter/plugins/tree/master/packages/firebase_admob'
+  s.homepage         = 'https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_admob'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Flutter Team' => 'flutter-dev@googlegroups.com' }
   s.source           = { :path => '.' }
