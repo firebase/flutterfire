@@ -1,3 +1,7 @@
+## 0.9.0+6
+
+* Remove duplicate example from documentation.
+
 ## 0.9.0+5
 
 * Update documentation to reflect new repository location.
