@@ -4,9 +4,11 @@
 
 package io.flutter.plugins.firebase.database;
 
-import android.app.Activity;
+import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -38,7 +40,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
   private static final String TAG = "FirebaseDatabasePlugin";
 
   private final MethodChannel channel;
-  private final Activity activity;
+  private final Handler handler = new Handler();
   private static final String EVENT_TYPE_CHILD_ADDED = "_EventType.childAdded";
   private static final String EVENT_TYPE_CHILD_REMOVED = "_EventType.childRemoved";
   private static final String EVENT_TYPE_CHILD_CHANGED = "_EventType.childChanged";
@@ -52,12 +54,11 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
   public static void registerWith(PluginRegistry.Registrar registrar) {
     final MethodChannel channel =
         new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_database");
-    channel.setMethodCallHandler(new FirebaseDatabasePlugin(channel, registrar.activity()));
+    channel.setMethodCallHandler(new FirebaseDatabasePlugin(channel));
   }
 
-  private FirebaseDatabasePlugin(MethodChannel channel, Activity activity) {
+  private FirebaseDatabasePlugin(MethodChannel channel) {
     this.channel = channel;
-    this.activity = activity;
   }
 
   private DatabaseReference getReference(FirebaseDatabase database, Map<String, Object> arguments) {
@@ -162,7 +163,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
     }
 
     @Override
-    public void onComplete(DatabaseError error, DatabaseReference ref) {
+    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
       if (error != null) {
         result.error(String.valueOf(error.getCode()), error.getMessage(), error.getDetails());
       } else {
@@ -180,7 +181,8 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
       this.handle = handle;
     }
 
-    private void sendEvent(String eventType, DataSnapshot snapshot, String previousChildName) {
+    private void sendEvent(
+        String eventType, @NonNull DataSnapshot snapshot, String previousChildName) {
       if (eventType.equals(requestedEventType)) {
         Map<String, Object> arguments = new HashMap<>();
         Map<String, Object> snapshotMap = new HashMap<>();
@@ -194,7 +196,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
     }
 
     @Override
-    public void onCancelled(DatabaseError error) {
+    public void onCancelled(@NonNull DatabaseError error) {
       Map<String, Object> arguments = new HashMap<>();
       arguments.put("handle", handle);
       arguments.put("error", asMap(error));
@@ -202,37 +204,37 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
     }
 
     @Override
-    public void onChildAdded(DataSnapshot snapshot, String previousChildName) {
+    public void onChildAdded(@NonNull DataSnapshot snapshot, String previousChildName) {
       sendEvent(EVENT_TYPE_CHILD_ADDED, snapshot, previousChildName);
     }
 
     @Override
-    public void onChildRemoved(DataSnapshot snapshot) {
+    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
       sendEvent(EVENT_TYPE_CHILD_REMOVED, snapshot, null);
     }
 
     @Override
-    public void onChildChanged(DataSnapshot snapshot, String previousChildName) {
+    public void onChildChanged(@NonNull DataSnapshot snapshot, String previousChildName) {
       sendEvent(EVENT_TYPE_CHILD_CHANGED, snapshot, previousChildName);
     }
 
     @Override
-    public void onChildMoved(DataSnapshot snapshot, String previousChildName) {
+    public void onChildMoved(@NonNull DataSnapshot snapshot, String previousChildName) {
       sendEvent(EVENT_TYPE_CHILD_MOVED, snapshot, previousChildName);
     }
 
     @Override
-    public void onDataChange(DataSnapshot snapshot) {
+    public void onDataChange(@NonNull DataSnapshot snapshot) {
       sendEvent(EVENT_TYPE_VALUE, snapshot, null);
     }
   }
 
   @Override
-  public void onMethodCall(final MethodCall call, final Result result) {
+  public void onMethodCall(final MethodCall call, @NonNull final Result result) {
     final Map<String, Object> arguments = call.arguments();
     FirebaseDatabase database;
-    String appName = (String) arguments.get("app");
-    String databaseURL = (String) arguments.get("databaseURL");
+    String appName = call.argument("app");
+    String databaseURL = call.argument("databaseURL");
     if (appName != null && databaseURL != null) {
       database = FirebaseDatabase.getInstance(FirebaseApp.getInstance(appName), databaseURL);
     } else if (appName != null) {
@@ -266,7 +268,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
 
       case "FirebaseDatabase#setPersistenceEnabled":
         {
-          Boolean isEnabled = (Boolean) arguments.get("enabled");
+          Boolean isEnabled = call.argument("enabled");
           try {
             database.setPersistenceEnabled(isEnabled);
             result.success(true);
@@ -279,7 +281,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
 
       case "FirebaseDatabase#setPersistenceCacheSizeBytes":
         {
-          long cacheSize = (Integer) arguments.get("cacheSize");
+          Long cacheSize = call.argument("cacheSize");
           try {
             database.setPersistenceCacheSizeBytes(cacheSize);
             result.success(true);
@@ -292,8 +294,8 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
 
       case "DatabaseReference#set":
         {
-          Object value = arguments.get("value");
-          Object priority = arguments.get("priority");
+          Object value = call.argument("value");
+          Object priority = call.argument("priority");
           DatabaseReference reference = getReference(database, arguments);
           if (priority != null) {
             reference.setValue(value, priority, new DefaultCompletionListener(result));
@@ -305,8 +307,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
 
       case "DatabaseReference#update":
         {
-          @SuppressWarnings("unchecked")
-          Map<String, Object> value = (Map<String, Object>) arguments.get("value");
+          Map<String, Object> value = call.argument("value");
           DatabaseReference reference = getReference(database, arguments);
           reference.updateChildren(value, new DefaultCompletionListener(result));
           break;
@@ -314,7 +315,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
 
       case "DatabaseReference#setPriority":
         {
-          Object priority = arguments.get("priority");
+          Object priority = call.argument("priority");
           DatabaseReference reference = getReference(database, arguments);
           reference.setPriority(priority, new DefaultCompletionListener(result));
           break;
@@ -327,8 +328,9 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
           // Initiate native transaction.
           reference.runTransaction(
               new Transaction.Handler() {
+                @NonNull
                 @Override
-                public Transaction.Result doTransaction(MutableData mutableData) {
+                public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
                   // Tasks are used to allow native execution of doTransaction to wait while Snapshot is
                   // processed by logic on the Dart side.
                   final TaskCompletionSource<Map<String, Object>> updateMutableDataTCS =
@@ -337,7 +339,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
                       updateMutableDataTCS.getTask();
 
                   final Map<String, Object> doTransactionMap = new HashMap<>();
-                  doTransactionMap.put("transactionKey", arguments.get("transactionKey"));
+                  doTransactionMap.put("transactionKey", call.argument("transactionKey"));
 
                   final Map<String, Object> snapshotMap = new HashMap<>();
                   snapshotMap.put("key", mutableData.getKey());
@@ -345,7 +347,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
                   doTransactionMap.put("snapshot", snapshotMap);
 
                   // Return snapshot to Dart side for update.
-                  activity.runOnUiThread(
+                  handler.post(
                       new Runnable() {
                         @Override
                         public void run() {
@@ -405,7 +407,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
                 public void onComplete(
                     DatabaseError databaseError, boolean committed, DataSnapshot dataSnapshot) {
                   final Map<String, Object> completionMap = new HashMap<>();
-                  completionMap.put("transactionKey", arguments.get("transactionKey"));
+                  completionMap.put("transactionKey", call.argument("transactionKey"));
                   if (databaseError != null) {
                     completionMap.put("error", asMap(databaseError));
                   }
@@ -418,7 +420,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
                   }
 
                   // Invoke transaction completion on the Dart side.
-                  activity.runOnUiThread(
+                  handler.post(
                       new Runnable() {
                         public void run() {
                           result.success(completionMap);
@@ -431,8 +433,8 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
 
       case "OnDisconnect#set":
         {
-          Object value = arguments.get("value");
-          Object priority = arguments.get("priority");
+          Object value = call.argument("value");
+          Object priority = call.argument("priority");
           DatabaseReference reference = getReference(database, arguments);
           if (priority != null) {
             if (priority instanceof String) {
@@ -456,8 +458,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
 
       case "OnDisconnect#update":
         {
-          @SuppressWarnings("unchecked")
-          Map<String, Object> value = (Map<String, Object>) arguments.get("value");
+          Map<String, Object> value = call.argument("value");
           DatabaseReference reference = getReference(database, arguments);
           reference.onDisconnect().updateChildren(value, new DefaultCompletionListener(result));
           break;
@@ -472,7 +473,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
 
       case "Query#keepSynced":
         {
-          boolean value = (Boolean) arguments.get("value");
+          Boolean value = call.argument("value");
           getQuery(database, arguments).keepSynced(value);
           result.success(null);
           break;
@@ -480,11 +481,11 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
 
       case "Query#observe":
         {
-          String eventType = (String) arguments.get("eventType");
+          String eventType = call.argument("eventType");
           int handle = nextHandle++;
           EventObserver observer = new EventObserver(eventType, handle);
           observers.put(handle, observer);
-          if (eventType.equals(EVENT_TYPE_VALUE)) {
+          if (EVENT_TYPE_VALUE.equals(eventType)) {
             getQuery(database, arguments).addValueEventListener(observer);
           } else {
             getQuery(database, arguments).addChildEventListener(observer);
@@ -496,7 +497,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
       case "Query#removeObserver":
         {
           Query query = getQuery(database, arguments);
-          int handle = (Integer) arguments.get("handle");
+          Integer handle = call.argument("handle");
           EventObserver observer = observers.get(handle);
           if (observer != null) {
             if (observer.requestedEventType.equals(EVENT_TYPE_VALUE)) {
