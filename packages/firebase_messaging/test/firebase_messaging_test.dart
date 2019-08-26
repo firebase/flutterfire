@@ -170,7 +170,8 @@ void main() {
   });
 
   test('setupBackgroundCallback', () {
-    fcmSetupBackgroundChannel(backgroundChannel: mockBackgroundChannel);
+    FirebaseMessaging.fcmSetupBackgroundChannel(
+        backgroundChannel: mockBackgroundChannel);
     verify(
         mockBackgroundChannel.invokeMethod<void>('FcmDartService#initialized'));
   });

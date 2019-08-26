@@ -56,6 +56,11 @@ Note: When you are debugging on Android, use a device or AVD with Google Play se
   ```
 #### Optionally handle background messages
 
+>Background message handling is intended to be performed quickly. Do not perform
+long running tasks as they may not be allowed to finish by the Android system.
+See [Background Execution Limits](https://developer.android.com/about/versions/oreo/background)
+for more.
+
 By default background messaging is not enabled. To handle messages in the background:
 
 1. Add an Application.java class to your app
