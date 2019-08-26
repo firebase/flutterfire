@@ -6,7 +6,6 @@ package io.flutter.plugins.firebaseadmob;
 
 import android.app.Activity;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +72,7 @@ abstract class MobileAd extends AdListener {
   abstract void show();
 
   void dispose() {
-    allAds.remove(id);
+    adRegistrar.unregister(id);
   }
 
   private Map<String, Object> argumentsMap(Object... args) {
@@ -127,8 +126,13 @@ abstract class MobileAd extends AdListener {
     private AdView adView;
     private AdSize adSize;
 
-    private Banner(Integer id, AdSize adSize, Activity activity, MethodChannel channel) {
-      super(id, activity, channel);
+    Banner(
+        MobileAdRegistrar adRegistrar,
+        Integer id,
+        AdSize adSize,
+        Activity activity,
+        MethodChannel channel) {
+      super(adRegistrar, id, activity, channel);
       this.adSize = adSize;
     }
 
@@ -195,8 +199,8 @@ abstract class MobileAd extends AdListener {
   static class Interstitial extends MobileAd {
     private InterstitialAd interstitial = null;
 
-    private Interstitial(int id, Activity activity, MethodChannel channel) {
-      super(id, activity, channel);
+    Interstitial(MobileAdRegistrar adRegistrar, int id, Activity activity, MethodChannel channel) {
+      super(adRegistrar, id, activity, channel);
     }
 
     @Override
