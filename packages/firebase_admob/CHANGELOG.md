@@ -1,3 +1,7 @@
+## 0.9.0+6
+
+* Handle exception in `BannerAd.dispose()` call for `no_ad_for_id` scenario.
+
 ## 0.9.0+5
 
 * Update documentation to reflect new repository location.
