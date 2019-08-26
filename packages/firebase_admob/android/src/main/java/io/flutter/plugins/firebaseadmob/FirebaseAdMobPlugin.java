@@ -150,28 +150,30 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
     result.success(Boolean.TRUE);
   }
 
-  private void callShowAd(int id, MethodCall call, Result result) {
+  private void callShowAd(Integer id, MethodCall call, Result result) {
     MobileAd ad = MobileAd.getAdForId(id);
     if (ad == null) {
       result.error("ad_not_loaded", "show failed, the specified ad was not loaded id=" + id, null);
       return;
     }
-    if (call.argument("anchorOffset") != null) {
-      ad.anchorOffset = Double.parseDouble((String) call.argument("anchorOffset"));
+    final String anchorOffset = call.argument("anchorOffset");
+    final String horizontalCenterOffset = call.argument("horizontalCenterOffset");
+    final String anchorType = call.argument("anchorType");
+    if (anchorOffset != null) {
+      ad.anchorOffset = Double.parseDouble(anchorOffset);
     }
-    if (call.argument("horizontalCenterOffset") != null) {
-      ad.horizontalCenterOffset =
-          Double.parseDouble((String) call.argument("horizontalCenterOffset"));
+    if (anchorType != null) {
+      ad.horizontalCenterOffset = Double.parseDouble(horizontalCenterOffset);
     }
-    if (call.argument("anchorType") != null) {
-      ad.anchorType = call.argument("anchorType").equals("bottom") ? Gravity.BOTTOM : Gravity.TOP;
+    if (anchorType != null) {
+      ad.anchorType = "bottom".equals(anchorType) ? Gravity.BOTTOM : Gravity.TOP;
     }
 
     ad.show();
     result.success(Boolean.TRUE);
   }
 
-  private void callIsAdLoaded(int id, MethodCall call, Result result) {
+  private void callIsAdLoaded(Integer id, Result result) {
     MobileAd ad = MobileAd.getAdForId(id);
     if (ad == null) {
       result.error("no_ad_for_id", "isAdLoaded failed, no add exists for id=" + id, null);
