@@ -32,6 +32,6 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-        api 'com.google.firebase:firebase-inappmessaging-display:18.0.2'
+        implementation 'com.google.firebase:firebase-inappmessaging-display:18.0.2'
     }
 }
