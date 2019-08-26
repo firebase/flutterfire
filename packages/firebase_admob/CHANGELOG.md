@@ -1,3 +1,7 @@
+## 0.9.0+6
+
+* Fix Android memory leak.
+
 ## 0.9.0+5
 
 * Update documentation to reflect new repository location.

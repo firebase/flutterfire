@@ -20,15 +20,15 @@ import java.util.Map;
 
 abstract class MobileAd extends AdListener {
   private static final String TAG = "flutter";
-  private static SparseArray<MobileAd> allAds = new SparseArray<MobileAd>();
 
+  private final MethodChannel channel;
+  private final MobileAdRegistrar adRegistrar;
   final Activity activity;
-  final MethodChannel channel;
   final int id;
-  Status status;
   double anchorOffset;
   double horizontalCenterOffset;
   int anchorType;
+  Status status;
 
   enum Status {
     CREATED,
@@ -38,7 +38,8 @@ abstract class MobileAd extends AdListener {
     LOADED,
   }
 
-  private MobileAd(int id, Activity activity, MethodChannel channel) {
+  private MobileAd(
+      MobileAdRegistrar adRegistrar, int id, Activity activity, MethodChannel channel) {
     this.id = id;
     this.activity = activity;
     this.channel = channel;
@@ -46,21 +47,8 @@ abstract class MobileAd extends AdListener {
     this.anchorOffset = 0.0;
     this.horizontalCenterOffset = 0.0;
     this.anchorType = Gravity.BOTTOM;
-    allAds.put(id, this);
-  }
-
-  static Banner createBanner(Integer id, AdSize adSize, Activity activity, MethodChannel channel) {
-    MobileAd ad = getAdForId(id);
-    return (ad != null) ? (Banner) ad : new Banner(id, adSize, activity, channel);
-  }
-
-  static Interstitial createInterstitial(Integer id, Activity activity, MethodChannel channel) {
-    MobileAd ad = getAdForId(id);
-    return (ad != null) ? (Interstitial) ad : new Interstitial(id, activity, channel);
-  }
-
-  static MobileAd getAdForId(Integer id) {
-    return allAds.get(id);
+    this.adRegistrar = adRegistrar;
+    adRegistrar.register(id, this);
   }
 
   Status getStatus() {
