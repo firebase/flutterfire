@@ -263,23 +263,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     // If another thread is waiting, then wake that thread when the callback returns a result.
     MethodChannel.Result result = null;
     if (latch != null) {
-      result =
-          new MethodChannel.Result() {
-            @Override
-            public void success(Object result) {
-              latch.countDown();
-            }
-
-            @Override
-            public void error(String errorCode, String errorMessage, Object errorDetails) {
-              latch.countDown();
-            }
-
-            @Override
-            public void notImplemented() {
-              latch.countDown();
-            }
-          };
+      result = new LatchResult(latch).getResult();
     }
 
     Map<String, Object> args = new HashMap<>();
