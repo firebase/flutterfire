@@ -128,7 +128,8 @@ void main() {
       expect(snapshot.metadata.isFromCache, true);
       expect(snapshot.data['hello'], 'world');
 
-      while (snapshot.metadata.hasPendingWrites || snapshot.metadata.isFromCache) {
+      while (
+          snapshot.metadata.hasPendingWrites || snapshot.metadata.isFromCache) {
         snapshot = await snapshotsWithMetadataChanges.take(1).first;
       }
       expect(snapshot.data['hello'], 'world');
