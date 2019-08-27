@@ -48,9 +48,9 @@ class FirebaseMessaging {
     backgroundChannel.setMethodCallHandler((MethodCall call) async {
       if (call.method == 'handleBackgroundMessage') {
         final CallbackHandle handle =
-        CallbackHandle.fromRawHandle(call.arguments['handle']);
+            CallbackHandle.fromRawHandle(call.arguments['handle']);
         final Function handlerFunction =
-        PluginUtilities.getCallbackFromHandle(handle);
+            PluginUtilities.getCallbackFromHandle(handle);
         try {
           await handlerFunction(
               Map<String, dynamic>.from(call.arguments['message']));
