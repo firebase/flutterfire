@@ -4,13 +4,19 @@
 
 #include "AppDelegate.h"
 #include "GeneratedPluginRegistrant.h"
+#import <firebase_messaging/FirebaseMessagingPlugin.h>
 
 @implementation AppDelegate
+    
+void callback(NSObject<FlutterPluginRegistry>* registry) {
+    [GeneratedPluginRegistrant registerWithRegistry:registry];
+}
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [GeneratedPluginRegistrant registerWithRegistry:self];
-  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+    [GeneratedPluginRegistrant registerWithRegistry:self];
+    [FLTFirebaseMessagingPlugin setPluginRegistrantCallback:callback];
+    return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
 @end

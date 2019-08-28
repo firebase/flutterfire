@@ -289,7 +289,7 @@ static FlutterError *getFlutterError(NSError *error) {
     NSLog(@"Finished background setup");
 }
 
-- (void) startBackgroundRunner {
+- (void)startBackgroundRunner {
     NSLog(@"Starting background runner");
     
     int64_t handle = [self getCallbackHandle:backgroundMessageCallback];
