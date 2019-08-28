@@ -73,7 +73,7 @@ static FlutterError *getFlutterError(NSError *error) {
     _userDefaults = [NSUserDefaults standardUserDefaults];
     _eventQueue = [[NSMutableArray alloc] init];
     _registrar = registrar;
-    _headlessRunner = [[FlutterEngine alloc] initWithName:@"firebase_messaging_isolate" project:nil allowHeadlessExecution:YES];
+    _headlessRunner = [[FlutterEngine alloc] initWithName:@"firebase_messaging_background" project:nil allowHeadlessExecution:YES];
     _backgroundChannel = [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_messaging_background" binaryMessenger:[_headlessRunner binaryMessenger]];
   }
   return self;
@@ -98,20 +98,10 @@ static FlutterError *getFlutterError(NSError *error) {
     [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
 
     result(nil);
-  /*  Even when the app is not active the `FirebaseMessagingService` extended by
-   *  `FlutterFirebaseMessagingService` allows incoming FCM messages to be handled.
-   *
-   *  `FcmDartService#start` and `FcmDartService#initialized` are the two methods used
-   *  to optionally setup handling messages received while the app is not active.
-   *
-   *  `FcmDartService#start` sets up the plumbing that allows messages received while
-   *  the app is not active to be handled by a background isolate.
-   *
-   *  `FcmDartService#initialized` is called by the Dart side when the plumbing for
-   *  background message handling is complete.
-   */
   } else if ([@"FcmDartService#start" isEqualToString:method]) {
-      
+      long handle = [call.arguments[0] longValue];
+      [self saveCallbackHandle:backgroundMessageCallback handle:handle];
+      result(nil);
   } else if ([@"FcmDartService#initialized" isEqualToString:method]) {
       /**
        * Acknowledge that background message handling on the Dart side is ready. This is called by the
@@ -284,7 +274,7 @@ static FlutterError *getFlutterError(NSError *error) {
 - (void)setupBackgroundHandling:(int64_t)handle {
     NSLog(@"Setting up Firebase background handling");
     
-    [self _saveCallbackHandle:backgroundMessageCallback handle:handle];
+    [self saveCallbackHandle:backgroundMessageCallback handle:handle];
     
     NSLog(@"Finished background setup");
 }
@@ -320,7 +310,7 @@ static FlutterError *getFlutterError(NSError *error) {
     return [handle longLongValue];
 }
 
-- (void)_saveCallbackHandle:(NSString *)key handle:(int64_t)handle {
+- (void) saveCallbackHandle:(NSString *)key handle:(int64_t)handle {
     NSLog(@"Saving callback handle for key %@", key);
     
     [_userDefaults setObject:[NSNumber numberWithLongLong:handle] forKey:key];
