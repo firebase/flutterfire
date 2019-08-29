@@ -422,8 +422,9 @@ public class CloudFirestorePlugin implements MethodCallHandler {
 
                       // Wait till transaction is complete.
                       try {
-                        String timeoutKey = "transactionTimeout";
-                        Long timeout = call.argument(timeoutKey);
+                        final String timeoutKey = "transactionTimeout";
+                        final Integer timeout = call.argument(timeoutKey);
+
                         final Map<String, Object> transactionResult =
                             Tasks.await(transactionTCSTask, timeout, TimeUnit.MILLISECONDS);
 
