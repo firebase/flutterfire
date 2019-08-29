@@ -41,9 +41,11 @@ class MessageList extends StatelessWidget {
       });
     });
   }
-  Future<void> _transactionWithMultipleOperations(DocumentSnapshot document) async {
+
+  Future<void> _transactionWithMultipleOperations(
+      DocumentSnapshot document) async {
     firestore.runTransaction((Transaction tx) async {
-     // these operations make no particular sense.
+      // these operations make no particular sense.
       // They are here just to test this case in the plugin.
       await tx.update(document.reference, <String, dynamic>{
         'message': 'Message updated at' + DateTime.now().toIso8601String(),
@@ -80,7 +82,8 @@ class MessageList extends StatelessWidget {
                     ),
                     PopupMenuItem<String>(
                       value: 'BATCH',
-                      child: const Text('Get, update and delete in a single transaction'),
+                      child: const Text(
+                          'Get, update and delete in a single transaction'),
                     ),
                   ];
                 },
