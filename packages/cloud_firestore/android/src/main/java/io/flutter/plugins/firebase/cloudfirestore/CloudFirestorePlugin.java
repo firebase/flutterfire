@@ -4,6 +4,7 @@
 
 package io.flutter.plugins.firebase.cloudfirestore;
 
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
@@ -455,7 +456,9 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         {
           final Map<String, Object> arguments = call.arguments();
           final Transaction transaction = getTransaction(arguments);
-
+          new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
           try {
             DocumentSnapshot documentSnapshot = transaction.get(getDocumentReference(arguments));
             final Map<String, Object> snapshotMap = new HashMap<>();
@@ -485,14 +488,20 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                   }
                 });
           }
+              return null;
+            }
+          }.execute();
           break;
         }
       case "Transaction#update":
         {
           final Map<String, Object> arguments = call.arguments();
           final Transaction transaction = getTransaction(arguments);
-
-          Map<String, Object> data = call.argument("data");
+          new AsyncTask<Void, Void, Void>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            protected Void doInBackground(Void... voids) {
+              Map<String, Object> data = (Map<String, Object>) arguments.get("data");
           try {
             transaction.update(getDocumentReference(arguments), data);
             handler.post(
@@ -511,14 +520,20 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                   }
                 });
           }
+              return null;
+            }
+          }.execute();
           break;
         }
       case "Transaction#set":
         {
           final Map<String, Object> arguments = call.arguments();
           final Transaction transaction = getTransaction(arguments);
-
-          Map<String, Object> data = call.argument("data");
+          new AsyncTask<Void, Void, Void>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            protected Void doInBackground(Void... voids) {
+              Map<String, Object> data = (Map<String, Object>) arguments.get("data");
           transaction.set(getDocumentReference(arguments), data);
           handler.post(
               new Runnable() {
@@ -527,13 +542,18 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                   result.success(null);
                 }
               });
+              return null;
+            }
+          }.execute();
           break;
         }
       case "Transaction#delete":
         {
           final Map<String, Object> arguments = call.arguments();
           final Transaction transaction = getTransaction(arguments);
-
+          new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
           transaction.delete(getDocumentReference(arguments));
           handler.post(
               new Runnable() {
@@ -542,7 +562,9 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                   result.success(null);
                 }
               });
-
+              return null;
+            }
+          }.execute();
           break;
         }
       case "WriteBatch#create":
