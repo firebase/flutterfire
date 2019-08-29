@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final FirebaseApp app = await FirebaseApp.configure(
     name: 'test',
     options: const FirebaseOptions(
@@ -30,6 +31,29 @@ class MessageList extends StatelessWidget {
 
   final Firestore firestore;
 
+  CollectionReference get messages => firestore.collection('messages');
+
+  Future<void> _updateMessage(DocumentSnapshot document) async {
+    firestore.runTransaction((Transaction tx) async {
+      await tx.update(document.reference, <String, dynamic>{
+        'message': 'Message updated at' + DateTime.now().toIso8601String(),
+        'created_at': FieldValue.serverTimestamp(),
+      });
+    });
+  }
+  Future<void> _transactionWithMultipleOperations(DocumentSnapshot document) async {
+    firestore.runTransaction((Transaction tx) async {
+     // these operations make no particular sense.
+      // They are here just to test this case in the plugin.
+      await tx.update(document.reference, <String, dynamic>{
+        'message': 'Message updated at' + DateTime.now().toIso8601String(),
+        'created_at': FieldValue.serverTimestamp(),
+      });
+      await tx.get(document.reference);
+      await tx.delete(document.reference);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -43,6 +67,33 @@ class MessageList extends StatelessWidget {
             final DocumentSnapshot document = snapshot.data.documents[index];
             final dynamic message = document['message'];
             return ListTile(
+              trailing: PopupMenuButton<String>(
+                itemBuilder: (_) {
+                  return <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                      value: 'UPDATE',
+                      child: const Text('Update with local timestamp'),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'DELETE',
+                      child: const Text('Delete'),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'BATCH',
+                      child: const Text('Get, update and delete in a single transaction'),
+                    ),
+                  ];
+                },
+                onSelected: (String entry) async {
+                  if (entry == 'UPDATE') {
+                    await _updateMessage(document);
+                  } else if (entry == 'DELETE') {
+                    await messages.document(document.documentID).delete();
+                  } else if (entry == 'BATCH') {
+                    _transactionWithMultipleOperations(document);
+                  }
+                },
+              ),
               title: Text(
                 message != null ? message.toString() : '<No message retrieved>',
               ),
