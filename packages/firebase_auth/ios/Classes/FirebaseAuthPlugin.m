@@ -131,7 +131,11 @@ int nextHandle = 0;
     [[self getAuth:call.arguments]
         fetchProvidersForEmail:email
                     completion:^(NSArray<NSString *> *providers, NSError *error) {
-                      [self sendResult:result forObject:providers error:error];
+                      // For unrecognized emails, the Auth iOS SDK should return an
+                      // empty `NSArray` here, but instead returns `nil`, so we coalesce
+                      // with an empty `NSArray`.
+                      // https://github.com/firebase/firebase-ios-sdk/issues/3655
+                      [self sendResult:result forObject:providers ?: @[] error:error];
                     }];
   } else if ([@"sendEmailVerification" isEqualToString:call.method]) {
     [[self getAuth:call.arguments].currentUser
