@@ -1,6 +1,16 @@
-## 0.9.0+6
+## 0.9.0+8
 
 * Handle exception in `BannerAd.dispose()` call for `no_ad_for_id` scenario.
+
+## 0.9.0+7
+
+* Update Android gradle plugin, gradle, and Admob versions.
+* Improvements to the Android implementation, fixing warnings about a possible null pointer exception.
+* Fixed an issue where an advertisement could incorrectly remain displayed when transitioning to another screen.
+
+## 0.9.0+6
+
+* Remove duplicate example from documentation.
 
 ## 0.9.0+5
 
