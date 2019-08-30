@@ -1,3 +1,7 @@
+## 0.12.9+2
+
+* Fix flaky integration test for `includeMetadataChanges`.
+
 ## 0.12.9+1
 
 * Update documentation to reflect new repository location.
