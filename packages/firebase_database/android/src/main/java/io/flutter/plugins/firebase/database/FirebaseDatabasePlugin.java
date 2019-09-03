@@ -281,7 +281,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
 
       case "FirebaseDatabase#setPersistenceCacheSizeBytes":
         {
-          Long cacheSize = call.argument("cacheSize");
+          long cacheSize = ((Integer) call.argument("cacheSize")).longValue();
           try {
             database.setPersistenceCacheSizeBytes(cacheSize);
             result.success(true);
