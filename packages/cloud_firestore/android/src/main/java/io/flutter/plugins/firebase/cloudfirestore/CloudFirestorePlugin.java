@@ -532,20 +532,20 @@ public class CloudFirestorePlugin implements MethodCallHandler {
               try {
                 transaction.set(getDocumentReference(arguments), data);
                 activity.runOnUiThread(
-                        new Runnable() {
-                          @Override
-                          public void run() {
-                            result.success(null);
-                          }
-                        });
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        result.success(null);
+                      }
+                    });
               } catch (final Exception e) {
                 activity.runOnUiThread(
-                        new Runnable() {
-                          @Override
-                          public void run() {
-                            result.error("Error performing Transaction#set", e.getMessage(), null);
-                          }
-                        });
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        result.error("Error performing Transaction#set", e.getMessage(), null);
+                      }
+                    });
               }
               return null;
             }
@@ -562,20 +562,20 @@ public class CloudFirestorePlugin implements MethodCallHandler {
               try {
                 transaction.delete(getDocumentReference(arguments));
                 activity.runOnUiThread(
-                        new Runnable() {
-                          @Override
-                          public void run() {
-                            result.success(null);
-                          }
-                        });
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        result.success(null);
+                      }
+                    });
               } catch (final Exception e) {
                 activity.runOnUiThread(
-                        new Runnable() {
-                          @Override
-                          public void run() {
-                            result.error("Error performing Transaction#delete", e.getMessage(), null);
-                          }
-                        });
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        result.error("Error performing Transaction#delete", e.getMessage(), null);
+                      }
+                    });
               }
               return null;
             }
