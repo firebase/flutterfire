@@ -1,7 +1,6 @@
-## 0.12.10
+## 0.12.9+4
 
-* Fixes crash on Android when run a transaction and without internet connection.
-
+* Fixes a crash on Android when running a transaction without an internet connection.
 
 ## 0.12.9+3
 
