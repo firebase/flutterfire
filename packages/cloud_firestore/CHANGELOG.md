@@ -1,3 +1,8 @@
+## 0.12.10
+
+* Fixes crash on Android when run a transaction and without internet connection.
+
+
 ## 0.12.9+3
 
 * Updated error handling on Android for transactions to prevent crashes.
