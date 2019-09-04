@@ -494,7 +494,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                         result.success(snapshotMap);
                       }
                     });
-              } catch (final FirebaseFirestoreException e) {
+              } catch (final Exception e) {
                 handler.post(
                     new Runnable() {
                       @Override
@@ -526,7 +526,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                         result.success(null);
                       }
                     });
-              } catch (final IllegalStateException e) {
+              } catch (final Exception e) {
                 handler.post(
                     new Runnable() {
                       @Override
@@ -550,13 +550,23 @@ public class CloudFirestorePlugin implements MethodCallHandler {
             protected Void doInBackground(Void... voids) {
               Map<String, Object> data = (Map<String, Object>) arguments.get("data");
               transaction.set(getDocumentReference(arguments), data);
-              handler.post(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      result.success(null);
-                    }
-                  });
+              try {
+                handler.post(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        result.success(null);
+                      }
+                    });
+              } catch (final Exception e) {
+                handler.post(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        result.error("Error performing Transaction#set", e.getMessage(), null);
+                      }
+                    });
+              }
               return null;
             }
           }.execute();
@@ -569,14 +579,24 @@ public class CloudFirestorePlugin implements MethodCallHandler {
           new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-              transaction.delete(getDocumentReference(arguments));
-              handler.post(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      result.success(null);
-                    }
-                  });
+              try {
+                transaction.delete(getDocumentReference(arguments));
+                handler.post(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        result.success(null);
+                      }
+                    });
+              } catch (final Exception e) {
+                handler.post(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        result.error("Error performing Transaction#delete", e.getMessage(), null);
+                      }
+                    });
+              }
               return null;
             }
           }.execute();

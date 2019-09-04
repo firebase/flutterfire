@@ -1,6 +1,8 @@
+* Removed Activity reference to avoid possible NullPointerException.
+
 ## 0.12.9+3
 
-* Removed Activity reference to avoid possible NullPointerException.
+* Updated error handling on Android for transactions to prevent crashes.
 
 ## 0.12.9+2
 
