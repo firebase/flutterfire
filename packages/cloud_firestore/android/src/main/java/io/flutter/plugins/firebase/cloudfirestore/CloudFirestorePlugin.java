@@ -446,7 +446,9 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                         result.success(transactionResult);
                       } else {
                         result.error(
-                            "Error performing transaction", transactionResult.exception.getMessage(), null);
+                            "Error performing transaction",
+                            transactionResult.exception.getMessage(),
+                            null);
                       }
                     }
                   });
