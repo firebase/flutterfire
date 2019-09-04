@@ -443,7 +443,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
 
                       TransactionResult transactionResult = task.getResult();
                       if (transactionResult.exception == null) {
-                        result.success(transactionResult);
+                        result.success(transactionResult.result);
                       } else {
                         result.error(
                             "Error performing transaction",
