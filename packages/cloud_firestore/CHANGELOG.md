@@ -1,3 +1,7 @@
+## 0.12.9+3
+
+* Updated error handling on Android for transactions to prevent crashes.
+
 ## 0.12.9+2
 
 * Fix flaky integration test for `includeMetadataChanges`.
