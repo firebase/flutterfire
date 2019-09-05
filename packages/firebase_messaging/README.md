@@ -96,12 +96,12 @@ By default background messaging is not enabled. To handle messages in the backgr
     Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
       if (message.containsKey('data')) {
         // Handle data message
-        dynamic data = message['data'];
+        final dynamic data = message['data'];
       }
     
       if (message.containsKey('notification')) {
         // Handle notification message
-        dynamic notification = message['notification'];
+        final dynamic notification = message['notification'];
       }
     
       // Or do other work.

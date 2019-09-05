@@ -15,12 +15,10 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MockMethodChannel mockChannel;
-  MockMethodChannel mockBackgroundChannel;
   FirebaseMessaging firebaseMessaging;
 
   setUp(() {
     mockChannel = MockMethodChannel();
-    mockBackgroundChannel = MockMethodChannel();
     firebaseMessaging = FirebaseMessaging.private(
         mockChannel, FakePlatform(operatingSystem: 'ios'));
   });
