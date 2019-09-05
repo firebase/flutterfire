@@ -20,8 +20,7 @@ typedef Future<dynamic> MessageHandler(Map<String, dynamic> message);
 ///
 /// Your app should never call this method directly, this is only for use
 /// by the firebase_messaging plugin to setup background message handling.
-@visibleForTesting
-void fcmSetupBackgroundChannel(
+void _fcmSetupBackgroundChannel(
     {MethodChannel backgroundChannel = const MethodChannel(
         'plugins.flutter.io/firebase_messaging_background')}) async {
   // Setup Flutter state needed for MethodChannels.
@@ -113,7 +112,7 @@ class FirebaseMessaging {
     if (onBackgroundMessage != null) {
       _onBackgroundMessage = onBackgroundMessage;
       final CallbackHandle backgroundSetupHandle =
-          PluginUtilities.getCallbackHandle(fcmSetupBackgroundChannel);
+          PluginUtilities.getCallbackHandle(_fcmSetupBackgroundChannel);
       final CallbackHandle backgroundMessageHandle =
           PluginUtilities.getCallbackHandle(_onBackgroundMessage);
       _channel.invokeMethod<bool>(

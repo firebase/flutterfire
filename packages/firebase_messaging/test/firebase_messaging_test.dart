@@ -168,13 +168,6 @@ void main() {
 
     verify(mockChannel.invokeMethod<void>('setAutoInitEnabled', false));
   });
-
-  test('setupBackgroundCallback', () {
-    fcmSetupBackgroundChannel(
-        backgroundChannel: mockBackgroundChannel);
-    verify(
-        mockBackgroundChannel.invokeMethod<void>('FcmDartService#initialized'));
-  });
 }
 
 class MockMethodChannel extends Mock implements MethodChannel {}
