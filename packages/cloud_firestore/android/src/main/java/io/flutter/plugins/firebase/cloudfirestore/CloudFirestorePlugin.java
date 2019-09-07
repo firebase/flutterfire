@@ -426,7 +426,6 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                         // Once transaction completes return the result to the Dart side.
                         return transactionResult;
                       } catch (Exception e) {
-                        Log.e(TAG, e.getMessage(), e);
                         result.error("Error performing transaction", e.getMessage(), null);
                       }
                       return null;
