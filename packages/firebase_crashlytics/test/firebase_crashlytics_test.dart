@@ -82,11 +82,15 @@ void main() {
     test('recordError', () async {
       crashlytics.enableInDevMode = true;
       crashlytics.log('foo');
-      await crashlytics.recordError('foo exception', StackTrace.current,
-          context: "context");
+      await crashlytics.recordError('foo exception', null, context: "context");
       expect(log[0].method, 'Crashlytics#onError');
       expect(log[0].arguments['exception'], 'foo exception');
       expect(log[0].arguments['context'], "context");
+      // Confirm that the stack trace contains current stack.
+      expect(
+        log[0].arguments['stackTraceElements'],
+        contains(containsPair('file', 'firebase_crashlytics_test.dart')),
+      );
       expect(log[0].arguments['logs'], isNotEmpty);
       expect(log[0].arguments['logs'], contains('foo'));
       expect(log[0].arguments['keys'][0]['key'], 'testBool');
