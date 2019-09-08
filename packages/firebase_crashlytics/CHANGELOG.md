@@ -1,3 +1,7 @@
+## 0.1.0+4
+
+* Fix linter finding in examples.
+
 ## 0.1.0+3
 
 * Update documentation to reflect new repository location.
