@@ -100,11 +100,18 @@ runZoned<Future<void>>(() async {
     // ...
   }, onError: Crashlytics.instance.recordError);
 ```
-With Flutter 1.17 which includes Dart 2.8, use runZonedGuarded instead:
+
+Finally, to catch errors that happen outside Flutter context, install an error
+listener on the current Isolate:
+
 ```dart
-runZonedGuarded<Future<void>>(() async {
-    // ...
-  }, onError: Crashlytics.instance.recordError);
+Isolate.current.addErrorListener(RawReceivePort((pair) async {
+  final List<dynamic> errorAndStacktrace = pair;
+  await Crashlytics.instance.recordError(
+    errorAndStacktrace.first,
+    errorAndStacktrace.last,
+  );
+}).sendPort);
 ```
 
 ## Result
