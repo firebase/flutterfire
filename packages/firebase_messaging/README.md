@@ -63,9 +63,10 @@ for more.
 
 By default background messaging is not enabled. To handle messages in the background:
 
-1. Add an Application.java class to your app
+1. Add an Application.java class to `[project]/android/app/src/main/java/[com.example.project]`
 
     ```
+    // Replace the below package with your project's package
     package io.flutter.plugins.firebasemessagingexample;
     
     import io.flutter.app.FlutterApplication;
