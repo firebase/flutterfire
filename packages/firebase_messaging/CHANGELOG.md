@@ -1,3 +1,6 @@
+## 5.1.6
+* Update README so one can understand `Optionally handle background messages` better
+
 ## 5.1.5
 
 * Enable background message handling on Android.
