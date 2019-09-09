@@ -1,3 +1,22 @@
+## 6.0.0
+
+* Use `UNUserNotificationCenter` to receive messages on iOS version >= 10.
+* **Breaking Change** For iOS versions >= 10, this will cause any other plugin that specifies a
+  `UNUserNotificationCenterDelegate` to `[UNUserNotificationCenter currentNotificationCenter]` to
+  stop receiving notifications. To have this plugin work with plugins that specify their own
+  `UNUserNotificationCenterDelegate`, you can replace the line
+  ```objectivec
+  [UNUserNotificationCenter currentNotificationCenter].delegate = // plugin specified delegate
+  ```
+
+  with
+
+  ```objectivec
+  // `registrar` refers to `FlutterPluginRegistrar` provided by
+  // registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar; method.
+  [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) registrar;
+  ```
+
 ## 5.1.9
 
 * Fix strict compilation errors.
