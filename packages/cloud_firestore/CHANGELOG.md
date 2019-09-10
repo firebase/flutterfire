@@ -1,3 +1,7 @@
+## 0.12.9+4
+
+* Fix integer conversion warnings on iOS.
+
 ## 0.12.9+3
 
 * Updated error handling on Android for transactions to prevent crashes.
