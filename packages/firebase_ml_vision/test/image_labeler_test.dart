@@ -30,6 +30,13 @@ void main() {
     });
 
     group('$ImageLabeler', () {
+      test('close', () async {
+        final ImageLabeler detector = FirebaseVision.instance.imageLabeler();
+        expect(detector.isClosed, isFalse);
+        await detector.close();
+        expect(detector.isClosed, isTrue);
+      });
+
       test('processImage', () async {
         final List<dynamic> labelData = <dynamic>[
           <dynamic, dynamic>{
@@ -115,6 +122,14 @@ void main() {
     });
 
     group('Cloud $ImageLabeler', () {
+      test('close', () async {
+        final ImageLabeler detector =
+            FirebaseVision.instance.cloudImageLabeler();
+        expect(detector.isClosed, isFalse);
+        await detector.close();
+        expect(detector.isClosed, isTrue);
+      });
+
       test('processImage', () async {
         final List<dynamic> labelData = <dynamic>[
           <dynamic, dynamic>{

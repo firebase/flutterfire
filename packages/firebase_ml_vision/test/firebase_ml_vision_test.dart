@@ -119,6 +119,14 @@ void main() {
         ];
       });
 
+      test('close', () async {
+        final BarcodeDetector detector =
+            FirebaseVision.instance.barcodeDetector();
+        expect(detector.isClosed, isFalse);
+        await detector.close();
+        expect(detector.isClosed, isTrue);
+      });
+
       test('detectInImage unknown', () async {
         returnBarcodes[0]['valueType'] = BarcodeValueType.unknown.index;
         returnValue = returnBarcodes;
@@ -590,6 +598,13 @@ void main() {
         ];
       });
 
+      test('close', () async {
+        final FaceDetector detector = FirebaseVision.instance.faceDetector();
+        expect(detector.isClosed, isFalse);
+        await detector.close();
+        expect(detector.isClosed, isTrue);
+      });
+
       test('processImage', () async {
         returnValue = testFaces;
 
@@ -896,6 +911,14 @@ void main() {
         returnValue = visionText;
       });
 
+      test('close', () async {
+        final TextRecognizer detector =
+            FirebaseVision.instance.textRecognizer();
+        expect(detector.isClosed, isFalse);
+        await detector.close();
+        expect(detector.isClosed, isTrue);
+      });
+
       group('$TextBlock', () {
         test('processImage', () async {
           final VisionText text = await recognizer.processImage(image);
@@ -1156,6 +1179,14 @@ void main() {
         };
 
         returnValue = visionText;
+      });
+
+      test('close', () async {
+        final TextRecognizer detector =
+            FirebaseVision.instance.cloudTextRecognizer();
+        expect(detector.isClosed, isFalse);
+        await detector.close();
+        expect(detector.isClosed, isTrue);
       });
 
       group('$TextBlock', () {
