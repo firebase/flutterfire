@@ -1,3 +1,7 @@
+## 0.9.3
+
+* Get closed state of a detector.
+
 ## 0.9.2+1
 
 * Update documentation to reflect new repository location.
