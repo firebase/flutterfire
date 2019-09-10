@@ -660,6 +660,12 @@ const UInt8 INCREMENT_INTEGER = 138;
     FIRFirestore *db = getFirestore(call.arguments);
     db.settings = settings;
     result(nil);
+  } else if ([@"Firestore#disableNetwork" isEqualToString:call.method]) {
+    [[FIRFirestore firestore] disableNetworkWithCompletion:^(NSError *_Nullable error) {
+    }];
+  } else if ([@"Firestore#enableNetwork" isEqualToString:call.method]) {
+    [[FIRFirestore firestore] enableNetworkWithCompletion:^(NSError *_Nullable error) {
+    }];
   } else {
     result(FlutterMethodNotImplemented);
   }

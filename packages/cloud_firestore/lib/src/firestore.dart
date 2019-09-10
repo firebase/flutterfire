@@ -145,6 +145,14 @@ class Firestore {
     });
   }
 
+  Future<void> disableNetwork() async {
+    await channel.invokeMethod<void>('Firestore#disableNetwork', <String, dynamic>{'app': app.name});
+  }
+
+  Future<void> enableNetwork() async {
+    await channel.invokeMethod<void>('Firestore#enableNetwork', <String, dynamic>{'app': app.name});
+  }
+
   Future<void> settings(
       {bool persistenceEnabled,
       String host,

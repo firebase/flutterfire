@@ -782,6 +782,14 @@ public class CloudFirestorePlugin implements MethodCallHandler {
           result.success(null);
           break;
         }
+      case "Firestore#disableNetwork":
+        final Map<String, Object> arguments = call.arguments();
+        getFirestore(arguments).disableNetwork();
+        break;
+      case "Firestore#enableNetwork":
+        final Map<String, Object> arguments = call.arguments();
+        getFirestore(arguments).enableNetwork();
+        break;
       case "Firestore#settings":
         {
           final Map<String, Object> arguments = call.arguments();
