@@ -1,5 +1,6 @@
 ## 5.1.6
 
+* Fix Deprecated Api issue
 * Update to `firebase-messaging:20.0.0`
 * Update gradle to 3.5.0
 
