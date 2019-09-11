@@ -27,7 +27,7 @@ To integrate your plugin into the Android part of your app, follow these steps:
 ```
 dependencies {
   // Example existing classpath
-  classpath 'com.android.tools.build:gradle:3.2.1'
+  classpath 'com.android.tools.build:gradle:3.5.0'
   // Add the google services classpath
   classpath 'com.google.gms:google-services:4.3.0'
 }
