@@ -1,97 +1,95 @@
 ## 5.1.6
 
-* Fix Deprecated Api issue
-* Update to `firebase-messaging:20.0.0`
-* Update gradle to 3.5.0
+- Fix Deprecated Api issue
 
 ## 5.1.5
 
-* Enable background message handling on Android.
+- Enable background message handling on Android.
 
 ## 5.1.4
 
-* Update documentation to reflect new repository location.
-* Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized`.
+- Update documentation to reflect new repository location.
+- Update unit tests to call `TestWidgetsFlutterBinding.ensureInitialized`.
 
 ## 5.1.3
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+- Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
 
 ## 5.1.2
 
-* Updates to README and example with explanations of differences in data format.
+- Updates to README and example with explanations of differences in data format.
 
 ## 5.1.1
 
-* Update README with more detailed integration instructions.
+- Update README with more detailed integration instructions.
 
 ## 5.1.0
 
-* Changed the return type of `subscribeToTopic` and `unsubscribeFromTopic` to
+- Changed the return type of `subscribeToTopic` and `unsubscribeFromTopic` to
   `Future<void>`.
 
 ## 5.0.6
 
-* Additional integration tests.
+- Additional integration tests.
 
 ## 5.0.5
 
-* On Android, fix crash when calling `deleteInstanceID` with latest Flutter engine.
+- On Android, fix crash when calling `deleteInstanceID` with latest Flutter engine.
 
 ## 5.0.4
 
-* Automatically use version from pubspec.yaml when reporting usage to Firebase.
+- Automatically use version from pubspec.yaml when reporting usage to Firebase.
 
 ## 5.0.3
 
-* Update Dart code to conform to current Dart formatter.
+- Update Dart code to conform to current Dart formatter.
 
 ## 5.0.2
 
-* Add missing template type parameter to `invokeMethod` calls.
-* Bump minimum Flutter version to 1.5.0.
-* Replace invokeMethod with invokeMapMethod wherever necessary.
- 
+- Add missing template type parameter to `invokeMethod` calls.
+- Bump minimum Flutter version to 1.5.0.
+- Replace invokeMethod with invokeMapMethod wherever necessary.
+
 ## 5.0.1+1
 
-* Enable support for `onMessage` on iOS using `shouldEstablishDirectChannel`.
+- Enable support for `onMessage` on iOS using `shouldEstablishDirectChannel`.
 
 ## 5.0.1
 
-* Fix error in the logs on startup if unable to retrieve token on startup on Android.
+- Fix error in the logs on startup if unable to retrieve token on startup on Android.
 
 ## 5.0.0
 
-* Update Android dependencies to latest.
+- Update Android dependencies to latest.
 
 ## 4.0.0+4
 
-* Remove obsolete `use_frameworks!` instruction.
+- Remove obsolete `use_frameworks!` instruction.
 
 ## 4.0.0+3
 
-* Update iOS configuration documentation.
+- Update iOS configuration documentation.
 
 ## 4.0.0+2
 
-* Fix example app's floating action button that stopped working due to a breaking change.
+- Fix example app's floating action button that stopped working due to a breaking change.
 
 ## 4.0.0+1
 
-* Log messages about automatic configuration of the default app are now less confusing.
+- Log messages about automatic configuration of the default app are now less confusing.
 
 ## 4.0.0
 
-*  **Breaking Change** Update message structure for onMessage to match onLaunch and onResume
+- **Breaking Change** Update message structure for onMessage to match onLaunch and onResume
 
 ## 3.0.1
 
-* Log a more detailed warning at build time about the previous AndroidX
+- Log a more detailed warning at build time about the previous AndroidX
   migration.
 
 ## 3.0.0
 
-* **Breaking change**. Migrate from the deprecated original Android Support
+- **Breaking change**. Migrate from the deprecated original Android Support
   Library to AndroidX. This shouldn't result in any functional changes, but it
   requires any Android apps using this plugin to [also
   migrate](https://developer.android.com/jetpack/androidx/migrate) if they're
@@ -101,7 +99,7 @@
 
 ## 2.2.0+1
 
-* **Revert the breaking 2.2.0 update**. 2.2.0 was known to be breaking and
+- **Revert the breaking 2.2.0 update**. 2.2.0 was known to be breaking and
   should have incremented the major version number instead of the minor. This
   revert is in and of itself breaking for anyone that has already migrated
   however. Anyone who has already migrated their app to AndroidX should
@@ -110,10 +108,10 @@
 
 ## 2.2.0
 
-* **BAD**. This was a breaking change that was incorrectly published on a minor
+- **BAD**. This was a breaking change that was incorrectly published on a minor
   version upgrade, should never have happened. Reverted by `2.2.0+1`.
 
-* **Breaking change**. Migrate from the deprecated original Android Support
+- **Breaking change**. Migrate from the deprecated original Android Support
   Library to AndroidX. This shouldn't result in any functional changes, but it
   requires any Android apps using this plugin to [also
   migrate](https://developer.android.com/jetpack/androidx/migrate) if they're
@@ -121,157 +119,158 @@
 
 ## 2.1.0
 
-* Adding support for deleteInstanceID(), autoInitEnabled() and setAutoInitEnabled().
+- Adding support for deleteInstanceID(), autoInitEnabled() and setAutoInitEnabled().
 
 ## 2.0.3
 
-* Removing local cache of getToken() in the dart part of the plugin. Now getToken() calls directly its counterparts in the iOS and Android implementations. This enables obtaining its value without calling configure() or having to wait for a new token refresh.
+- Removing local cache of getToken() in the dart part of the plugin. Now getToken() calls directly its counterparts in the iOS and Android implementations. This enables obtaining its value without calling configure() or having to wait for a new token refresh.
 
 ## 2.0.2
 
-* Use boolean values when checking for notification types on iOS.
+- Use boolean values when checking for notification types on iOS.
 
 ## 2.0.1
 
-* Bump Android dependencies to latest.
+- Bump Android dependencies to latest.
 
 ## 2.0.0
 
-* Updated Android to send Remote Message's title and body to Dart.
+- Updated Android to send Remote Message's title and body to Dart.
 
 ## 1.0.5
 
-* Bumped test and mockito versions to pick up Dart 2 support.
+- Bumped test and mockito versions to pick up Dart 2 support.
 
 ## 1.0.4
 
-* Bump Android and Firebase dependency versions.
+- Bump Android and Firebase dependency versions.
 
 ## 1.0.3
 
-* Updated iOS token hook from 'didRefreshRegistrationToken' to 'didReceiveRegistrationToken'
+- Updated iOS token hook from 'didRefreshRegistrationToken' to 'didReceiveRegistrationToken'
 
 ## 1.0.2
 
-* Updated Gradle tooling to match Android Studio 3.2.2.
+- Updated Gradle tooling to match Android Studio 3.2.2.
 
 ## 1.0.1
 
-* Fix for Android where the onLaunch event is not triggered when the Activity is killed by the OS (or if the Don't keep activities toggle is enabled)
+- Fix for Android where the onLaunch event is not triggered when the Activity is killed by the OS (or if the Don't keep activities toggle is enabled)
 
 ## 1.0.0
 
-* Bump to released version
+- Bump to released version
 
 ## 0.2.5
 
-* Fixed Dart 2 type error.
+- Fixed Dart 2 type error.
 
 ## 0.2.4
 
-* Updated Google Play Services dependencies to version 15.0.0.
+- Updated Google Play Services dependencies to version 15.0.0.
 
 ## 0.2.3
 
-* Updated package channel name
+- Updated package channel name
 
 ## 0.2.2
 
-* Simplified podspec for Cocoapods 1.5.0, avoiding link issues in app archives.
+- Simplified podspec for Cocoapods 1.5.0, avoiding link issues in app archives.
 
 ## 0.2.1
 
-* Fixed Dart 2 type errors.
+- Fixed Dart 2 type errors.
 
 ## 0.2.0
 
-* **Breaking change**. Set SDK constraints to match the Flutter beta release.
+- **Breaking change**. Set SDK constraints to match the Flutter beta release.
 
 ## 0.1.4
 
-* Fixed Dart 2 type error in example project.
+- Fixed Dart 2 type error in example project.
 
 ## 0.1.3
 
-* Enabled use in Swift projects.
+- Enabled use in Swift projects.
 
 ## 0.2.2
 
-* Fix for APNS not being correctly registered on iOS when reinstalling application.
+- Fix for APNS not being correctly registered on iOS when reinstalling application.
 
 ## 0.1.1
 
-* Simplified and upgraded Android project template to Android SDK 27.
-* Updated package description.
+- Simplified and upgraded Android project template to Android SDK 27.
+- Updated package description.
 
 ## 0.1.0
 
-* **Breaking change**. Upgraded to Gradle 4.1 and Android Studio Gradle plugin
+- **Breaking change**. Upgraded to Gradle 4.1 and Android Studio Gradle plugin
   3.0.1. Older Flutter projects need to upgrade their Gradle setup as well in
   order to use this version of the plugin. Instructions can be found
   [here](https://github.com/flutter/flutter/wiki/Updating-Flutter-projects-to-Gradle-4.1-and-Android-Studio-Gradle-plugin-3.0.1).
-* Relaxed GMS dependency to [11.4.0,12.0[
+- Relaxed GMS dependency to [11.4.0,12.0[
 
 ## 0.0.8
 
-* Added FLT prefix to iOS types
-* Change GMS dependency to 11.4.+
+- Added FLT prefix to iOS types
+- Change GMS dependency to 11.4.+
 
 ## 0.0.7
 
 In FirebaseMessagingPlugin.m:
-* moved logic from 'tokenRefreshNotification' to 'didRefreshRegistrationToken'
-* removed 'tokenRefreshNotification' as well as observer registration
-* removed 'connectToFcm' method and related calls
-* removed unnecessary FIRMessaging disconnect
+
+- moved logic from 'tokenRefreshNotification' to 'didRefreshRegistrationToken'
+- removed 'tokenRefreshNotification' as well as observer registration
+- removed 'connectToFcm' method and related calls
+- removed unnecessary FIRMessaging disconnect
 
 ## 0.0.6
 
-* Change GMS dependency to 11.+
+- Change GMS dependency to 11.+
 
 ## 0.0.5+2
 
-* Fixed README example for "click_action"
+- Fixed README example for "click_action"
 
 ## 0.0.5+1
 
-* Aligned author name with rest of repo.
+- Aligned author name with rest of repo.
 
 ## 0.0.5
 
-* Updated to Firebase SDK to always use latest patch version for 11.0.x builds
+- Updated to Firebase SDK to always use latest patch version for 11.0.x builds
 
 ## 0.0.4
 
-* Updated to Firebase SDK Version 11.0.1
+- Updated to Firebase SDK Version 11.0.1
 
 ## 0.0.3
 
-* Updated README.md
-* Bumped buildToolsVersion to 25.0.3
+- Updated README.md
+- Bumped buildToolsVersion to 25.0.3
 
 ## 0.0.2+2
 
-* Updated README.md
+- Updated README.md
 
 ## 0.0.2+1
 
-* Added workaround for https://github.com/flutter/flutter/issues/9694 to README
-* Moved code to https://github.com/FirebaseExtended/flutterfire
+- Added workaround for https://github.com/flutter/flutter/issues/9694 to README
+- Moved code to https://github.com/FirebaseExtended/flutterfire
 
 ## 0.0.2
 
-* Updated to latest plugin API
+- Updated to latest plugin API
 
 ## 0.0.2.2
 
-* Downgraded gradle dependency for example app to make `flutter run` happy
+- Downgraded gradle dependency for example app to make `flutter run` happy
 
 ## 0.0.1+1
 
-* Updated README with installation instructions
-* Added CHANGELOG
+- Updated README with installation instructions
+- Added CHANGELOG
 
 ## 0.0.1
 
-* Initial Release
+- Initial Release
