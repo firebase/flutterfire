@@ -1,3 +1,8 @@
+## 5.1.6
+
+* Update to `firebase-messaging:20.0.0`
+* Update gradle to 3.5.0
+
 ## 5.1.5
 
 * Enable background message handling on Android.
