@@ -11,14 +11,22 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.google.android.gms.ads.*;
+import androidx.arch.core.util.Function;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+
 import io.flutter.plugin.common.MethodChannel;
 import java.util.HashMap;
 import java.util.Map;
 
 abstract class MobileAd extends AdListener {
   private static final String TAG = "flutter";
-  private static SparseArray<MobileAd> allAds = new SparseArray<MobileAd>();
+  private static SparseArray<MobileAd> allAds = new SparseArray<>();
 
   final Activity activity;
   final MethodChannel channel;
@@ -57,6 +65,11 @@ abstract class MobileAd extends AdListener {
     return (ad != null) ? (Interstitial) ad : new Interstitial(id, activity, channel);
   }
 
+  static Native createNative(Integer id, Activity activity, MethodChannel channel, ) {
+    MobileAd ad = getAdForId(id);
+    return (ad != null) ? (Native) ad : new Native(id, activity, channel);
+  }
+
   static MobileAd getAdForId(Integer id) {
     return allAds.get(id);
   }
@@ -69,12 +82,43 @@ abstract class MobileAd extends AdListener {
 
   abstract void show();
 
+  void showAdView(View view) {
+    if (status == Status.LOADING) {
+      status = Status.PENDING;
+      return;
+    }
+    if (status != Status.LOADED) return;
+
+    if (activity.findViewById(id) == null) {
+      LinearLayout content = new LinearLayout(activity);
+      content.setId(id);
+      content.setOrientation(LinearLayout.VERTICAL);
+      content.setGravity(anchorType);
+      content.addView(view);
+      final float scale = activity.getResources().getDisplayMetrics().density;
+
+      int left = horizontalCenterOffset > 0 ? (int) (horizontalCenterOffset * scale) : 0;
+      int right =
+          horizontalCenterOffset < 0 ? (int) (Math.abs(horizontalCenterOffset) * scale) : 0;
+      if (anchorType == Gravity.BOTTOM) {
+        content.setPadding(left, 0, right, (int) (anchorOffset * scale));
+      } else {
+        content.setPadding(left, (int) (anchorOffset * scale), right, 0);
+      }
+
+      activity.addContentView(
+          content,
+          new ViewGroup.LayoutParams(
+              ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    }
+  }
+
   void dispose() {
     allAds.remove(id);
   }
 
-  private Map<String, Object> argumentsMap(Object... args) {
-    Map<String, Object> arguments = new HashMap<String, Object>();
+  static private Map<String, Object> argumentsMap(int id, Object... args) {
+    Map<String, Object> arguments = new HashMap<>();
     arguments.put("id", id);
     for (int i = 0; i < args.length; i += 2) arguments.put(args[i].toString(), args[i + 1]);
     return arguments;
@@ -84,7 +128,7 @@ abstract class MobileAd extends AdListener {
   public void onAdLoaded() {
     boolean statusWasPending = status == Status.PENDING;
     status = Status.LOADED;
-    channel.invokeMethod("onAdLoaded", argumentsMap());
+    channel.invokeMethod("onAdLoaded", argumentsMap(id));
     if (statusWasPending) show();
   }
 
@@ -92,32 +136,32 @@ abstract class MobileAd extends AdListener {
   public void onAdFailedToLoad(int errorCode) {
     Log.w(TAG, "onAdFailedToLoad: " + errorCode);
     status = Status.FAILED;
-    channel.invokeMethod("onAdFailedToLoad", argumentsMap("errorCode", errorCode));
+    channel.invokeMethod("onAdFailedToLoad", argumentsMap(id, "errorCode", errorCode));
   }
 
   @Override
   public void onAdOpened() {
-    channel.invokeMethod("onAdOpened", argumentsMap());
+    channel.invokeMethod("onAdOpened", argumentsMap(id));
   }
 
   @Override
   public void onAdClicked() {
-    channel.invokeMethod("onAdClicked", argumentsMap());
+    channel.invokeMethod("onAdClicked", argumentsMap(id));
   }
 
   @Override
   public void onAdImpression() {
-    channel.invokeMethod("onAdImpression", argumentsMap());
+    channel.invokeMethod("onAdImpression", argumentsMap(id));
   }
 
   @Override
   public void onAdLeftApplication() {
-    channel.invokeMethod("onAdLeftApplication", argumentsMap());
+    channel.invokeMethod("onAdLeftApplication", argumentsMap(id));
   }
 
   @Override
   public void onAdClosed() {
-    channel.invokeMethod("onAdClosed", argumentsMap());
+    channel.invokeMethod("onAdClosed", argumentsMap(id));
   }
 
   static class Banner extends MobileAd {
@@ -145,34 +189,7 @@ abstract class MobileAd extends AdListener {
 
     @Override
     void show() {
-      if (status == Status.LOADING) {
-        status = Status.PENDING;
-        return;
-      }
-      if (status != Status.LOADED) return;
-
-      if (activity.findViewById(id) == null) {
-        LinearLayout content = new LinearLayout(activity);
-        content.setId(id);
-        content.setOrientation(LinearLayout.VERTICAL);
-        content.setGravity(anchorType);
-        content.addView(adView);
-        final float scale = activity.getResources().getDisplayMetrics().density;
-
-        int left = horizontalCenterOffset > 0 ? (int) (horizontalCenterOffset * scale) : 0;
-        int right =
-            horizontalCenterOffset < 0 ? (int) (Math.abs(horizontalCenterOffset) * scale) : 0;
-        if (anchorType == Gravity.BOTTOM) {
-          content.setPadding(left, 0, right, (int) (anchorOffset * scale));
-        } else {
-          content.setPadding(left, (int) (anchorOffset * scale), right, 0);
-        }
-
-        activity.addContentView(
-            content,
-            new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-      }
+      showAdView(adView);
     }
 
     @Override
@@ -204,8 +221,6 @@ abstract class MobileAd extends AdListener {
       interstitial.setAdUnitId(adUnitId);
 
       interstitial.setAdListener(this);
-      AdRequestBuilderFactory factory = new AdRequestBuilderFactory(targetingInfo);
-      interstitial.loadAd(factory.createAdRequestBuilder().build());
     }
 
     @Override
@@ -218,5 +233,54 @@ abstract class MobileAd extends AdListener {
     }
 
     // It is not possible to hide/remove/destroy an AdMob interstitial Ad.
+  }
+
+  static class Native extends MobileAd {
+    private UnifiedNativeAd nativeAd;
+    private Function<UnifiedNativeAd, View> nativeAdGenerator;
+
+    private Native(int id,
+                   Activity activity,
+                   MethodChannel channel,
+                   Function<UnifiedNativeAd, View> nativeAdGenerator) {
+      super(id, activity, channel);
+      this.nativeAdGenerator = nativeAdGenerator;
+    }
+
+    @Override
+    void load(String adUnitId, Map<String, Object> targetingInfo) {
+      status = Status.LOADING;
+
+      final AdLoader adLoader = new AdLoader.Builder(activity, "ca-app-pub-3940256099942544/2247696110")
+          .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+            @Override
+            public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+              nativeAd = unifiedNativeAd;
+
+              boolean statusWasPending = status == Status.PENDING;
+              status = Status.LOADED;
+
+              channel.invokeMethod("onUnifiedNativeAdLoaded", argumentsMap(id));
+              if (statusWasPending) show();
+            }
+          })
+          .withAdListener(this)
+          .withNativeAdOptions(new NativeAdOptions.Builder()
+              // TODO(bparrishMines): Add options to configure the ad from dart.
+              .build())
+          .build();
+
+      AdRequestBuilderFactory factory = new AdRequestBuilderFactory(targetingInfo);
+      adLoader.loadAd(factory.createAdRequestBuilder().build());
+    }
+
+    @Override
+    void show() {
+      if (status == Status.LOADING) {
+        status = Status.PENDING;
+        return;
+      }
+      showAdView(nativeAdGenerator.apply(nativeAd));
+    }
   }
 }

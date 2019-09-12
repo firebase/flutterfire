@@ -179,11 +179,11 @@ class AdSize {
 /// A valid [adUnitId] is required.
 abstract class MobileAd {
   /// Default constructor, used by subclasses.
-  MobileAd(
-      {@required this.adUnitId,
-      MobileAdTargetingInfo targetingInfo,
-      this.listener})
-      : _targetingInfo = targetingInfo ?? const MobileAdTargetingInfo() {
+  MobileAd({
+    @required this.adUnitId,
+    MobileAdTargetingInfo targetingInfo,
+    this.listener,
+  }) : _targetingInfo = targetingInfo ?? const MobileAdTargetingInfo() {
     assert(adUnitId != null && adUnitId.isNotEmpty);
     assert(_allAds[id] == null);
     _allAds[id] = this;
@@ -283,6 +283,13 @@ class BannerAd extends MobileAd {
       'height': size.height,
       'adSizeType': size.adSizeType.toString(),
     });
+  }
+}
+
+class NativeAd extends MobileAd {
+  @override
+  Future<bool> load() {
+    return null;
   }
 }
 
