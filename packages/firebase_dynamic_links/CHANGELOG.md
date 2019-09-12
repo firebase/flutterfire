@@ -1,3 +1,7 @@
+## 0.5.0+4
+
+* Increase iOS CocoaPod dependency to '~> 6.8' to address `UIWebView` deprecation.
+
 ## 0.5.0+3
 
 * Don't crash if registrar.activity() is not there.
