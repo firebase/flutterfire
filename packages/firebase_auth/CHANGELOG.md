@@ -1,3 +1,7 @@
+## 0.14.0+6
+
+* Increase iOS CocoaPod dependency to '~> 6.8' to address `UIWebView` deprecation.
+
 ## 0.14.0+5
 
 * On iOS, `fetchSignInMethodsForEmail` now returns an empty list when the email
