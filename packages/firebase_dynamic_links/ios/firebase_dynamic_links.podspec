@@ -21,7 +21,7 @@ Flutter plugin for Google Dynamic Links for Firebase, an app solution for creati
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'Firebase/DynamicLinks'
+  s.dependency 'Firebase/DynamicLinks', '~> 6.8'
   s.ios.deployment_target = '8.0'
   s.static_framework = true
 
