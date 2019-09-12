@@ -65,7 +65,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
     NSDictionary *arguments = call.arguments;
     if (@available(iOS 10.0, *)) {
       [UNUserNotificationCenter currentNotificationCenter].delegate =
-          (id<UNUserNotificationCenterDelegate>) _registrar;
+          (id<UNUserNotificationCenterDelegate>)_registrar;
 
       UNAuthorizationOptions authOptions = 0;
       if ([arguments[@"sound"] boolValue]) {
@@ -78,10 +78,11 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
         authOptions |= UNAuthorizationOptionBadge;
       }
 
-      [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions
-        completionHandler:^(BOOL granted, NSError * _Nullable error) {
-          // Do nothing
-        }];
+      [[UNUserNotificationCenter currentNotificationCenter]
+          requestAuthorizationWithOptions:authOptions
+                        completionHandler:^(BOOL granted, NSError *_Nullable error){
+                            // Do nothing
+                        }];
     } else {
       UIUserNotificationType notificationTypes = 0;
       if ([arguments[@"sound"] boolValue]) {
@@ -94,8 +95,8 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
         notificationTypes |= UIUserNotificationTypeBadge;
       }
 
-      UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:notificationTypes
-                                                                               categories:nil];
+      UIUserNotificationSettings *settings =
+          [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
       [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     }
 
@@ -106,7 +107,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
     [FIRMessaging messaging].shouldEstablishDirectChannel = true;
     if (@available(iOS 10.0, *)) {
       [UNUserNotificationCenter currentNotificationCenter].delegate =
-          (id<UNUserNotificationCenterDelegate>) _registrar;
+          (id<UNUserNotificationCenterDelegate>)_registrar;
     }
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     if (_launchNotification != nil) {
