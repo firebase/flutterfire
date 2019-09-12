@@ -80,7 +80,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 
       [[UNUserNotificationCenter currentNotificationCenter]
           requestAuthorizationWithOptions:authOptions
-                        completionHandler:^(BOOL granted, NSError *_Nullable error){
+                        completionHandler:^(BOOL granted, NSError *_Nullable error) {
                           if (error) {
                             result(getFlutterError(error));
                           } else {
