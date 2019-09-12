@@ -81,28 +81,34 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
       [[UNUserNotificationCenter currentNotificationCenter]
           requestAuthorizationWithOptions:authOptions
                         completionHandler:^(BOOL granted, NSError *_Nullable error){
-                            // Do nothing
+                          if (error) {
+                            result(getFlutterError(error));
+                          } else {
+                            result([NSNumber numberWithBool:granted]);
+                          }
                         }];
-    } else {
-      UIUserNotificationType notificationTypes = 0;
-      if ([arguments[@"sound"] boolValue]) {
-        notificationTypes |= UIUserNotificationTypeSound;
-      }
-      if ([arguments[@"alert"] boolValue]) {
-        notificationTypes |= UIUserNotificationTypeAlert;
-      }
-      if ([arguments[@"badge"] boolValue]) {
-        notificationTypes |= UIUserNotificationTypeBadge;
-      }
 
-      UIUserNotificationSettings *settings =
-          [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
-      [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+      [[UIApplication sharedApplication] registerForRemoteNotifications];
+      return;
     }
 
+    UIUserNotificationType notificationTypes = 0;
+    if ([arguments[@"sound"] boolValue]) {
+      notificationTypes |= UIUserNotificationTypeSound;
+    }
+    if ([arguments[@"alert"] boolValue]) {
+      notificationTypes |= UIUserNotificationTypeAlert;
+    }
+    if ([arguments[@"badge"] boolValue]) {
+      notificationTypes |= UIUserNotificationTypeBadge;
+    }
+
+    UIUserNotificationSettings *settings =
+        [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     [[UIApplication sharedApplication] registerForRemoteNotifications];
 
-    result(nil);
+    result([NSNumber numberWithBool:YES]);
   } else if ([@"configure" isEqualToString:method]) {
     [FIRMessaging messaging].shouldEstablishDirectChannel = true;
     if (@available(iOS 10.0, *)) {
