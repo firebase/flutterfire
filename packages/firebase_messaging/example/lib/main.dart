@@ -7,7 +7,15 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
+// myBackgroundMessageHandler must be either global or static otherwise you will encounter a runtime exception.
+Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
+  print("run background message handler - $message");
+
+  return Future<void>.value();
+}
+
 final Map<String, Item> _items = <String, Item>{};
+
 Item _itemForMessage(Map<String, dynamic> message) {
   final dynamic data = message['data'] ?? message;
   final String itemId = data['id'];
@@ -18,19 +26,24 @@ Item _itemForMessage(Map<String, dynamic> message) {
 
 class Item {
   Item({this.itemId});
+
   final String itemId;
 
   StreamController<Item> _controller = StreamController<Item>.broadcast();
+
   Stream<Item> get onChanged => _controller.stream;
 
   String _status;
+
   String get status => _status;
+
   set status(String value) {
     _status = value;
     _controller.add(this);
   }
 
   static final Map<String, Route<void>> routes = <String, Route<void>>{};
+
   Route<void> get route {
     final String routeName = '/detail/$itemId';
     return routes.putIfAbsent(
@@ -45,7 +58,9 @@ class Item {
 
 class DetailPage extends StatefulWidget {
   DetailPage(this.itemId);
+
   final String itemId;
+
   @override
   _DetailPageState createState() => _DetailPageState();
 }
@@ -139,6 +154,7 @@ class _PushMessagingExampleState extends State<PushMessagingExample> {
   void initState() {
     super.initState();
     _firebaseMessaging.configure(
+      onBackgroundMessage: myBackgroundMessageHandler,
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         _showItemDialog(message);
