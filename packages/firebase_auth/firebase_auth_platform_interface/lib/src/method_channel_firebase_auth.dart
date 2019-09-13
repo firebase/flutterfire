@@ -94,6 +94,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     @required String androidPackageName,
     @required bool androidInstallIfNotAvailable,
     @required String androidMinimumVersion,
+    String dynamicLinkDomain,
   }) {
     return channel.invokeMethod<void>(
       'sendLinkToEmail',
@@ -106,6 +107,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         'androidInstallIfNotAvailable': androidInstallIfNotAvailable,
         'androidMinimumVersion': androidMinimumVersion,
         'app': app,
+        'dynamicLinkDomain': dynamicLinkDomain,
       },
     );
   }

@@ -110,6 +110,7 @@ class FirebaseAuth {
     @required String androidPackageName,
     @required bool androidInstallIfNotAvailable,
     @required String androidMinimumVersion,
+    String dynamicLinkDomain,
   }) {
     assert(email != null);
     assert(url != null);
@@ -127,6 +128,8 @@ class FirebaseAuth {
       androidPackageName: androidPackageName,
       androidInstallIfNotAvailable: androidInstallIfNotAvailable,
       androidMinimumVersion: androidMinimumVersion,
+      dynamicLinkDomain: dynamicLinkDomain,
+        'dynamicLinkDomain': dynamicLinkDomain
     );
   }
 

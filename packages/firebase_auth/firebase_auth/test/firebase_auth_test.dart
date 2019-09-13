@@ -211,6 +211,7 @@ void main() {
           androidInstallIfNotAvailable:
               captureAnyNamed('androidInstallIfNotAvailable'),
           androidMinimumVersion: captureAnyNamed('androidMinimumVersion'),
+          dynamicLinkDomain: captureAnyNamed('dynamicLinkDomain'),
         )).captured,
         <dynamic>[
           'test@example.com',

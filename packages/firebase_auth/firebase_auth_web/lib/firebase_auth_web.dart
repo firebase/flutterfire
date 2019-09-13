@@ -225,10 +225,12 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       String iOSBundleID,
       String androidPackageName,
       bool androidInstallIfNotAvailable,
-      String androidMinimumVersion}) {
+      String androidMinimumVersion,
+      String dynamicLinkDomain}) {
     final firebase.Auth auth = _getAuth(app);
     final actionCodeSettings = firebase.ActionCodeSettings(
       url: url,
+      dynamicLinkDomain: dynamicLinkDomain,
       handleCodeInApp: handleCodeInApp,
       iOS: firebase.IosSettings(
         bundleId: iOSBundleID,

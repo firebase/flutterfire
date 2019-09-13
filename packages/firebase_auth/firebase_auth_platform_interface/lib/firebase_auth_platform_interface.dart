@@ -83,6 +83,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     @required String androidPackageName,
     @required bool androidInstallIfNotAvailable,
     @required String androidMinimumVersion,
+    String dynamicLinkDomain,
   }) {
     throw UnimplementedError('sendLinkToEmail() is not implemented');
   }

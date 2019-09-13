@@ -173,6 +173,7 @@ int nextHandle = 0;
     FIRActionCodeSettings *actionCodeSettings = [FIRActionCodeSettings new];
     actionCodeSettings.URL = [NSURL URLWithString:call.arguments[@"url"]];
     actionCodeSettings.handleCodeInApp = call.arguments[@"handleCodeInApp"];
+    actionCodeSettings.dynamicLinkDomain = call.arguments[@"dynamicLinkDomain"];
     [actionCodeSettings setIOSBundleID:call.arguments[@"iOSBundleID"]];
     [actionCodeSettings setAndroidPackageName:call.arguments[@"androidPackageName"]
                         installIfNotAvailable:call.arguments[@"androidInstallIfNotAvailable"]
