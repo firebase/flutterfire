@@ -54,18 +54,18 @@ Note: When you are debugging on Android, use a device or AVD with Google Play se
       <category android:name="android.intent.category.DEFAULT" />
   </intent-filter>
   ```
-
 #### Optionally handle background messages
 
- >Background message handling is intended to be performed quickly. Do not perform
+>Background message handling is intended to be performed quickly. Do not perform
 long running tasks as they may not be allowed to finish by the Android system.
 See [Background Execution Limits](https://developer.android.com/about/versions/oreo/background)
 for more.
- By default background messaging is not enabled. To handle messages in the background:
 
- 1. For Android add an Application.java class to your app
+By default background messaging is not enabled. To handle messages in the background:
 
-     ```
+1. Add an Application.java class to your app
+
+    ```
     package io.flutter.plugins.firebasemessagingexample;
     
     import io.flutter.app.FlutterApplication;
@@ -91,26 +91,17 @@ for more.
     ```
     <application android:name=".Application" ...>
     ```
-1. For iOS (Swift)
-    ```
-    func callback(registry: FlutterPluginRegistry) {
-        GeneratedPluginRegistrant.register(with: registry)
-    }
-    
-    FLTFirebaseMessagingPlugin.setPluginRegistrantCallback(callback)
-    ```
-
 1. Define a top level Dart method to handle background messages
     ```
     Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
       if (message.containsKey('data')) {
         // Handle data message
-        dynamic data = message['data'];
+        final dynamic data = message['data'];
       }
     
       if (message.containsKey('notification')) {
         // Handle notification message
-        dynamic notification = message['notification'];
+        final dynamic notification = message['notification'];
       }
     
       // Or do other work.

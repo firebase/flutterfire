@@ -11,10 +11,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.*;
 import io.flutter.plugin.common.MethodChannel;
 import java.util.HashMap;
 import java.util.Map;
@@ -182,10 +179,10 @@ abstract class MobileAd extends AdListener {
     void dispose() {
       super.dispose();
 
+      adView.destroy();
+
       View contentView = activity.findViewById(id);
       if (contentView == null || !(contentView.getParent() instanceof ViewGroup)) return;
-
-      adView.destroy();
 
       ViewGroup contentParent = (ViewGroup) (contentView.getParent());
       contentParent.removeView(contentView);

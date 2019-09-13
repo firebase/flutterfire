@@ -1,6 +1,6 @@
 ## 5.1.5
 
- * Enable background message handling on iOS.
+* Enable background message handling on Android.
 
 ## 5.1.4
 

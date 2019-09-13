@@ -1,3 +1,15 @@
+## 0.12.9+4
+
+* Fix integer conversion warnings on iOS.
+
+## 0.12.9+3
+
+* Updated error handling on Android for transactions to prevent crashes.
+
+## 0.12.9+2
+
+* Fix flaky integration test for `includeMetadataChanges`.
+
 ## 0.12.9+1
 
 * Update documentation to reflect new repository location.
