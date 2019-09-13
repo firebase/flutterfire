@@ -93,6 +93,11 @@ final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
         .user;
 ```
 
+### Error handling
+
+If a method fails it will throw a `PlatformException` with the error code as a string.
+Check the source comments to see which error codes could be thrown.
+
 ### Supported Firebase authentication methods
 
 * Google
