@@ -121,6 +121,7 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
       long setupCallbackHandle = 0;
       long backgroundMessageHandle = 0;
       try {
+        @SuppressWarnings("unchecked")
         Map<String, Long> callbacks = ((Map<String, Long>) call.arguments);
         setupCallbackHandle = callbacks.get("setupHandle");
         backgroundMessageHandle = callbacks.get("backgroundHandle");
