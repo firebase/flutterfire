@@ -73,7 +73,7 @@ class _MyAppState extends State<MyApp> {
                 BannerAd(
                   adUnitId: BannerAd.testAdUnitId,
                   adSize: BannerAdSize.BANNER,
-                  listener: (event, data) {
+                  listener: (AdmobAdEvent event, Map<String, dynamic> data) {
                     print(event);
                   },
                 ),
