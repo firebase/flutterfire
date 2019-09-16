@@ -29,15 +29,17 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
 
     public static void registerWith(Registrar registrar) {
         if (registrar.activity() == null) {
-            // If a background Flutter view tries to register the plugin, there will be no activity from the registrar.
-            // We stop the registering process immediately because the firebase_admob requires an activity.
+            // If a background Flutter view tries to register the plugin, there will be no
+            // activity from the registrar.
+            // We stop the registering process immediately because the firebase_admob
+            // requires an activity.
             return;
         }
-        final MethodChannel channel =
-                new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_admob");
+        final MethodChannel channel = new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_admob");
         channel.setMethodCallHandler(new FirebaseAdMobPlugin(registrar, channel));
 
-        registrar.platformViewRegistry().registerViewFactory("plugins.flutter.io/firebase_admob/banner", new BannerAdFactory(registrar.messenger()));
+        registrar.platformViewRegistry().registerViewFactory("plugins.flutter.io/firebase_admob/banner",
+                new BannerAdFactory(registrar.messenger()));
 
     }
 
@@ -58,72 +60,18 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
         result.success(Boolean.TRUE);
     }
 
-    private void callLoadBannerAd(Integer id, Activity activity, MethodCall call, Result result) {
-        String adUnitId = call.argument("adUnitId");
-        if (adUnitId == null || adUnitId.isEmpty()) {
-            result.error("no_unit_id", "a null or empty adUnitId was provided for ad id=" + id, null);
-            return;
-        }
-
-        final Integer width = call.argument("width");
-        final Integer height = call.argument("height");
-        final String adSizeType = call.argument("adSizeType");
-
-        if (!"AdSizeType.WidthAndHeight".equals(adSizeType)
-                && !"AdSizeType.SmartBanner".equals(adSizeType)) {
-            String errMsg =
-                    String.format(
-                            Locale.ENGLISH,
-                            "an invalid adSizeType (%s) was provided for banner id=%d",
-                            adSizeType,
-                            id);
-            result.error("invalid_adsizetype", errMsg, null);
-        }
-
-        if ("AdSizeType.WidthAndHeight".equals(adSizeType) && (width <= 0 || height <= 0)) {
-            String errMsg =
-                    String.format(
-                            Locale.ENGLISH,
-                            "an invalid AdSize (%d, %d) was provided for banner id=%d",
-                            width,
-                            height,
-                            id);
-            result.error("invalid_adsize", errMsg, null);
-        }
-
-        AdSize adSize;
-        if ("AdSizeType.SmartBanner".equals(adSizeType)) {
-            adSize = AdSize.SMART_BANNER;
-        } else {
-            adSize = new AdSize(width, height);
-        }
-
-        MobileAd.Banner banner = MobileAd.createBanner(id, adSize, activity, channel);
-
-        if (banner.status != MobileAd.Status.CREATED) {
-            if (banner.status == MobileAd.Status.FAILED)
-                result.error("load_failed_ad", "cannot reload a failed ad, id=" + id, null);
-            else result.success(Boolean.TRUE); // The ad was already loaded.
-            return;
-        }
-
-        Map<String, Object> targetingInfo = call.argument("targetingInfo");
-        banner.load(adUnitId, targetingInfo);
-        result.success(Boolean.TRUE);
-    }
-
     private void callLoadInterstitialAd(MobileAd ad, MethodCall call, Result result) {
         if (ad.status != MobileAd.Status.CREATED) {
             if (ad.status == MobileAd.Status.FAILED)
                 result.error("load_failed_ad", "cannot reload a failed ad, id=" + ad.id, null);
-            else result.success(Boolean.TRUE); // The ad was already loaded.
+            else
+                result.success(Boolean.TRUE); // The ad was already loaded.
             return;
         }
 
         String adUnitId = call.argument("adUnitId");
         if (adUnitId == null || adUnitId.isEmpty()) {
-            result.error(
-                    "no_adunit_id", "a null or empty adUnitId was provided for ad id=" + ad.id, null);
+            result.error("no_adunit_id", "a null or empty adUnitId was provided for ad id=" + ad.id, null);
             return;
         }
         Map<String, Object> targetingInfo = call.argument("targetingInfo");
@@ -140,15 +88,13 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
 
         String adUnitId = call.argument("adUnitId");
         if (adUnitId == null || adUnitId.isEmpty()) {
-            result.error(
-                    "no_ad_unit_id", "a non-empty adUnitId was not provided for rewarded video", null);
+            result.error("no_ad_unit_id", "a non-empty adUnitId was not provided for rewarded video", null);
             return;
         }
 
         Map<String, Object> targetingInfo = call.argument("targetingInfo");
         if (targetingInfo == null) {
-            result.error(
-                    "no_targeting_info", "a null targetingInfo object was provided for rewarded video", null);
+            result.error("no_targeting_info", "a null targetingInfo object was provided for rewarded video", null);
             return;
         }
 
@@ -220,32 +166,29 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
         Integer id = call.argument("id");
 
         switch (call.method) {
-            case "initialize":
-                callInitialize(call, result);
-                break;
-            case "loadBannerAd":
-                callLoadBannerAd(id, activity, call, result);
-                break;
-            case "loadInterstitialAd":
-                callLoadInterstitialAd(MobileAd.createInterstitial(id, activity, channel), call, result);
-                break;
-            case "loadRewardedVideoAd":
-                callLoadRewardedVideoAd(call, result);
-                break;
-            case "showAd":
-                callShowAd(id, call, result);
-                break;
-            case "showRewardedVideoAd":
-                callShowRewardedVideoAd(result);
-                break;
-            case "disposeAd":
-                callDisposeAd(id, result);
-                break;
-            case "isAdLoaded":
-                callIsAdLoaded(id, result);
-                break;
-            default:
-                result.notImplemented();
+        case "initialize":
+            callInitialize(call, result);
+            break;
+        case "loadInterstitialAd":
+            callLoadInterstitialAd(MobileAd.createInterstitial(id, activity, channel), call, result);
+            break;
+        case "loadRewardedVideoAd":
+            callLoadRewardedVideoAd(call, result);
+            break;
+        case "showAd":
+            callShowAd(id, call, result);
+            break;
+        case "showRewardedVideoAd":
+            callShowRewardedVideoAd(result);
+            break;
+        case "disposeAd":
+            callDisposeAd(id, result);
+            break;
+        case "isAdLoaded":
+            callIsAdLoaded(id, result);
+            break;
+        default:
+            result.notImplemented();
         }
     }
 }
