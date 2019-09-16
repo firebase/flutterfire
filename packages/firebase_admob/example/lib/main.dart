@@ -23,20 +23,8 @@ class _MyAppState extends State<MyApp> {
     nonPersonalizedAds: true,
   );
 
-  BannerAd _bannerAd;
   InterstitialAd _interstitialAd;
   int _coins = 0;
-
-  BannerAd createBannerAd() {
-    return BannerAd(
-      adUnitId: BannerAd.testAdUnitId,
-      size: AdSize.banner,
-      targetingInfo: targetingInfo,
-      listener: (MobileAdEvent event) {
-        print("BannerAd event $event");
-      },
-    );
-  }
 
   InterstitialAd createInterstitialAd() {
     return InterstitialAd(
@@ -52,7 +40,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     FirebaseAdMob.instance.initialize(appId: FirebaseAdMob.testAppId);
-    _bannerAd = createBannerAd()..load();
     RewardedVideoAd.instance.listener =
         (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
       print("RewardedVideoAd event $event");
@@ -66,7 +53,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
     _interstitialAd?.dispose();
     super.dispose();
   }
@@ -84,28 +70,10 @@ class _MyAppState extends State<MyApp> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                RaisedButton(
-                    child: const Text('SHOW BANNER'),
-                    onPressed: () {
-                      _bannerAd ??= createBannerAd();
-                      _bannerAd
-                        ..load()
-                        ..show();
-                    }),
-                RaisedButton(
-                    child: const Text('SHOW BANNER WITH OFFSET'),
-                    onPressed: () {
-                      _bannerAd ??= createBannerAd();
-                      _bannerAd
-                        ..load()
-                        ..show(horizontalCenterOffset: -50, anchorOffset: 100);
-                    }),
-                RaisedButton(
-                    child: const Text('REMOVE BANNER'),
-                    onPressed: () {
-                      _bannerAd?.dispose();
-                      _bannerAd = null;
-                    }),
+                AdmobBanner(
+                  adUnitId: AdmobBanner.testAdUnitId,
+                  adSize: AdmobBannerSize.BANNER,
+                ),
                 RaisedButton(
                   child: const Text('LOAD INTERSTITIAL'),
                   onPressed: () {

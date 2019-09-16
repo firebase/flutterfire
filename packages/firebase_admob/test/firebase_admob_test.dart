@@ -50,40 +50,6 @@ void main() {
       ]);
     });
 
-    test('banner', () async {
-      log.clear();
-
-      final BannerAd banner = BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
-        size: AdSize.banner,
-      );
-      final int id = banner.id;
-
-      expect(await banner.load(), true);
-      expect(await banner.show(), true);
-      expect(await banner.dispose(), true);
-
-      expect(log, <Matcher>[
-        isMethodCall('loadBannerAd', arguments: <String, dynamic>{
-          'id': id,
-          'adUnitId': BannerAd.testAdUnitId,
-          'targetingInfo': <String, String>{'requestAgent': 'flutter-alpha'},
-          'width': 320,
-          'height': 50,
-          'adSizeType': 'AdSizeType.WidthAndHeight',
-        }),
-        isMethodCall('showAd', arguments: <String, dynamic>{
-          'id': id,
-          'anchorOffset': '0.0',
-          'horizontalCenterOffset': '0.0',
-          'anchorType': 'bottom',
-        }),
-        isMethodCall('disposeAd', arguments: <String, dynamic>{
-          'id': id,
-        }),
-      ]);
-    });
-
     test('interstitial', () async {
       log.clear();
 

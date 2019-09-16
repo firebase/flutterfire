@@ -3,13 +3,21 @@
 // found in the LICENSE file.
 
 // ignore_for_file: deprecated_member_use_from_same_package
+library firebase_admob;
 
 import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
+
+part "admob_banner_controller.dart";
+part "admob_banner_size.dart";
+part "admob_banner.dart";
+part "admob_event_handler.dart";
+part "admob_events.dart";
 
 /// [MobileAd] status changes reported to [MobileAdListener]s.
 ///
@@ -105,73 +113,6 @@ enum AdSizeType {
   SmartBanner,
 }
 
-/// [AdSize] represents the size of a banner ad. There are six sizes available,
-/// which are the same for both iOS and Android. See the guides for banners on
-/// [Android](https://developers.google.com/admob/android/banner#banner_sizes)
-/// and [iOS](https://developers.google.com/admob/ios/banner#banner_sizes) for
-/// additional details.
-class AdSize {
-  // Private constructor. Apps should use the static constants rather than
-  // create their own instances of [AdSize].
-  const AdSize._({
-    @required this.width,
-    @required this.height,
-    @required this.adSizeType,
-  });
-
-  final int height;
-  final int width;
-  final AdSizeType adSizeType;
-
-  /// The standard banner (320x50) size.
-  static const AdSize banner = AdSize._(
-    width: 320,
-    height: 50,
-    adSizeType: AdSizeType.WidthAndHeight,
-  );
-
-  /// The large banner (320x100) size.
-  static const AdSize largeBanner = AdSize._(
-    width: 320,
-    height: 100,
-    adSizeType: AdSizeType.WidthAndHeight,
-  );
-
-  /// The medium rectangle (300x250) size.
-  static const AdSize mediumRectangle = AdSize._(
-    width: 300,
-    height: 250,
-    adSizeType: AdSizeType.WidthAndHeight,
-  );
-
-  /// The full banner (468x60) size.
-  static const AdSize fullBanner = AdSize._(
-    width: 468,
-    height: 60,
-    adSizeType: AdSizeType.WidthAndHeight,
-  );
-
-  /// The leaderboard (728x90) size.
-  static const AdSize leaderboard = AdSize._(
-    width: 728,
-    height: 90,
-    adSizeType: AdSizeType.WidthAndHeight,
-  );
-
-  /// The smart banner size. Smart banners are unique in that the width and
-  /// height values declared here aren't used. At runtime, the Mobile Ads SDK
-  /// will automatically adjust the banner's width to match the width of the
-  /// displaying device's screen. It will also set the banner's height using a
-  /// calculation based on the displaying device's height. For more info see the
-  /// [Android](https://developers.google.com/admob/android/banner) and
-  /// [iOS](https://developers.google.com/admob/ios/banner) banner ad guides.
-  static const AdSize smartBanner = AdSize._(
-    width: 0,
-    height: 0,
-    adSizeType: AdSizeType.SmartBanner,
-  );
-}
-
 /// A mobile [BannerAd] or [InterstitialAd] for the [FirebaseAdMobPlugin].
 ///
 /// A [MobileAd] must be loaded with [load] before it is shown with [show].
@@ -246,42 +187,6 @@ abstract class MobileAd {
   Future<bool> isLoaded() {
     return _invokeBooleanMethod("isAdLoaded", <String, dynamic>{
       'id': id,
-    });
-  }
-}
-
-/// A banner ad for the [FirebaseAdMobPlugin].
-class BannerAd extends MobileAd {
-  /// Create a BannerAd.
-  ///
-  /// A valid [adUnitId] is required.
-  BannerAd({
-    @required String adUnitId,
-    @required this.size,
-    MobileAdTargetingInfo targetingInfo,
-    MobileAdListener listener,
-  }) : super(
-            adUnitId: adUnitId,
-            targetingInfo: targetingInfo,
-            listener: listener);
-
-  final AdSize size;
-
-  /// These are AdMob's test ad unit IDs, which always return test ads. You're
-  /// encouraged to use them for testing in your own apps.
-  static final String testAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/6300978111'
-      : 'ca-app-pub-3940256099942544/2934735716';
-
-  @override
-  Future<bool> load() {
-    return _invokeBooleanMethod("loadBannerAd", <String, dynamic>{
-      'id': id,
-      'adUnitId': adUnitId,
-      'targetingInfo': targetingInfo?.toJson(),
-      'width': size.width,
-      'height': size.height,
-      'adSizeType': size.adSizeType.toString(),
     });
   }
 }
