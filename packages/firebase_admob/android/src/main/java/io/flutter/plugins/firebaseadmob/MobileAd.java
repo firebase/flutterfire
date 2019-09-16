@@ -65,7 +65,7 @@ abstract class MobileAd extends AdListener {
     return (ad != null) ? (Interstitial) ad : new Interstitial(id, activity, channel);
   }
 
-  static Native createNative(Integer id, Activity activity, MethodChannel channel, ) {
+  static Native createNative(Integer id, Activity activity, MethodChannel channel) {
     MobileAd ad = getAdForId(id);
     return (ad != null) ? (Native) ad : new Native(id, activity, channel);
   }
@@ -237,14 +237,9 @@ abstract class MobileAd extends AdListener {
 
   static class Native extends MobileAd {
     private UnifiedNativeAd nativeAd;
-    private Function<UnifiedNativeAd, View> nativeAdGenerator;
 
-    private Native(int id,
-                   Activity activity,
-                   MethodChannel channel,
-                   Function<UnifiedNativeAd, View> nativeAdGenerator) {
+    private Native(int id, Activity activity, MethodChannel channel) {
       super(id, activity, channel);
-      this.nativeAdGenerator = nativeAdGenerator;
     }
 
     @Override
@@ -280,7 +275,8 @@ abstract class MobileAd extends AdListener {
         status = Status.PENDING;
         return;
       }
-      showAdView(nativeAdGenerator.apply(nativeAd));
+      if (FirebaseAdMobPlugin.nativeAdGenerator == null) throw new IllegalMonitorStateException();
+      showAdView(FirebaseAdMobPlugin.nativeAdGenerator.apply(nativeAd));
     }
   }
 }

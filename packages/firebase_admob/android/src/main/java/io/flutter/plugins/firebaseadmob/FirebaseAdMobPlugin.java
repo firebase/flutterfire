@@ -6,8 +6,11 @@ package io.flutter.plugins.firebaseadmob;
 
 import android.app.Activity;
 import android.view.Gravity;
+import android.view.View;
+import androidx.arch.core.util.Function;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.firebase.FirebaseApp;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -23,6 +26,12 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
   private final MethodChannel channel;
 
   RewardedVideoAdWrapper rewardedWrapper;
+
+  static Function<UnifiedNativeAd, View> nativeAdGenerator;
+
+  public static void setNativeAdGenerator(Function<UnifiedNativeAd, View> nativeAdGenerator) {
+    FirebaseAdMobPlugin.nativeAdGenerator = nativeAdGenerator;
+  }
 
   public static void registerWith(Registrar registrar) {
     if (registrar.activity() == null) {
@@ -49,6 +58,25 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
       return;
     }
     MobileAds.initialize(registrar.context(), appId);
+    result.success(Boolean.TRUE);
+  }
+
+  private void callLoadNativeAd(Integer id, Activity activity, MethodCall call, Result result) {
+    String adUnitId = call.argument("adUnitId");
+    if (adUnitId == null || adUnitId.isEmpty()) {
+      result.error("no_unit_id", "a null or empty adUnitId was provided for ad id=" + id, null);
+      return;
+    }
+
+    final MobileAd.Native nativeAd = MobileAd.createNative(id, activity, channel);
+
+    if (nativeAd.status != MobileAd.Status.CREATED) {
+      if (nativeAd.status == MobileAd.Status.FAILED)
+        result.error("load_failed_ad", "cannot reload a failed ad, id=" + id, null);
+      else result.success(Boolean.TRUE); // The ad was already loaded.
+      return;
+    }
+
     result.success(Boolean.TRUE);
   }
 
@@ -204,7 +232,6 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
 
   @Override
   public void onMethodCall(MethodCall call, Result result) {
-
     Activity activity = registrar.activity();
     if (activity == null) {
       result.error("no_activity", "firebase_admob plugin requires a foreground activity", null);
@@ -225,6 +252,9 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
         break;
       case "loadRewardedVideoAd":
         callLoadRewardedVideoAd(call, result);
+        break;
+      case "loadNativeAd":
+        callLoadNativeAd(id, activity, call, result);
         break;
       case "showAd":
         callShowAd(id, call, result);
