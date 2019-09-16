@@ -1,10 +1,9 @@
 part of firebase_admob;
 
 abstract class AdmobEventHandler {
-  final Function(AdmobAdEvent, Map<String, dynamic>) _listener;
-
   AdmobEventHandler(Function(AdmobAdEvent, Map<String, dynamic>) listener)
       : _listener = listener;
+  final Function(AdmobAdEvent, Map<String, dynamic>) _listener;
 
   Future<dynamic> handleEvent(MethodCall call) async {
     switch (call.method) {

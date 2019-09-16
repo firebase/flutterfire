@@ -1,18 +1,18 @@
 part of firebase_admob;
 
-class AdmobBanner extends StatefulWidget {
-  final String adUnitId;
-  final AdmobBannerSize adSize;
-  final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
-  final void Function(AdmobBannerController) onBannerCreated;
-
-  AdmobBanner({
+class BannerAd extends StatefulWidget {
+  BannerAd({
     Key key,
     @required this.adUnitId,
     @required this.adSize,
     this.listener,
     this.onBannerCreated,
   }) : super(key: key);
+
+  final String adUnitId;
+  final BannerAdSize adSize;
+  final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
+  final void Function(BannerAdController) onBannerCreated;
 
   /// These are AdMob's test ad unit IDs, which always return test ads. You're
   /// encouraged to use them for testing in your own apps.
@@ -21,11 +21,11 @@ class AdmobBanner extends StatefulWidget {
       : 'ca-app-pub-3940256099942544/2934735716';
 
   @override
-  _AdmobBannerState createState() => _AdmobBannerState();
+  _BannerAdState createState() => _BannerAdState();
 }
 
-class _AdmobBannerState extends State<AdmobBanner> {
-  AdmobBannerController _controller;
+class _BannerAdState extends State<BannerAd> {
+  BannerAdController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
             "adUnitId": widget.adUnitId,
             "adSize": widget.adSize.toMap,
           },
-          creationParamsCodec: StandardMessageCodec(),
+          creationParamsCodec: const StandardMessageCodec(),
           onPlatformViewCreated: _onPlatformViewCreated,
         ),
       );
@@ -59,7 +59,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
             "adUnitId": widget.adUnitId,
             "adSize": widget.adSize.toMap,
           },
-          creationParamsCodec: StandardMessageCodec(),
+          creationParamsCodec: const StandardMessageCodec(),
           onPlatformViewCreated: _onPlatformViewCreated,
         ),
       );
@@ -74,7 +74,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
   }
 
   void _onPlatformViewCreated(int id) {
-    _controller = AdmobBannerController(id, widget.listener);
+    _controller = BannerAdController(id, widget.listener);
 
     if (widget.onBannerCreated != null) {
       widget.onBannerCreated(_controller);

@@ -37,7 +37,7 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
                 new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_admob");
         channel.setMethodCallHandler(new FirebaseAdMobPlugin(registrar, channel));
 
-        registrar.platformViewRegistry().registerViewFactory("plugins.flutter.io/firebase_admob/banner", new AdmobBannerFactory(registrar.messenger()));
+        registrar.platformViewRegistry().registerViewFactory("plugins.flutter.io/firebase_admob/banner", new BannerAdFactory(registrar.messenger()));
 
     }
 

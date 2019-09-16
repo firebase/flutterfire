@@ -1,9 +1,7 @@
 part of firebase_admob;
 
-class AdmobBannerController extends AdmobEventHandler {
-  final MethodChannel _channel;
-
-  AdmobBannerController(
+class BannerAdController extends AdmobEventHandler {
+  BannerAdController(
       int id, Function(AdmobAdEvent, Map<String, dynamic>) listener)
       : _channel =
             MethodChannel('plugins.flutter.io/firebase_admob/banner_$id'),
@@ -13,6 +11,8 @@ class AdmobBannerController extends AdmobEventHandler {
       _channel.invokeMethod<dynamic>('setListener');
     }
   }
+
+  final MethodChannel _channel;
 
   void dispose() {
     _channel.invokeMethod<dynamic>('dispose');

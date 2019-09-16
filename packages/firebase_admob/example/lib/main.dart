@@ -70,9 +70,9 @@ class _MyAppState extends State<MyApp> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                AdmobBanner(
-                  adUnitId: AdmobBanner.testAdUnitId,
-                  adSize: AdmobBannerSize.BANNER,
+                BannerAd(
+                  adUnitId: BannerAd.testAdUnitId,
+                  adSize: BannerAdSize.BANNER,
                 ),
                 RaisedButton(
                   child: const Text('LOAD INTERSTITIAL'),

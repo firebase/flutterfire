@@ -18,13 +18,13 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.platform.PlatformView;
 
-public class AdmobBanner implements MethodCallHandler, PlatformView {
+public class BannerAd implements MethodCallHandler, PlatformView {
 
     private MethodChannel channel;
 
     private AdView adView;
 
-    AdmobBanner(Context context, BinaryMessenger messenger, int id, HashMap args) {
+    BannerAd(Context context, BinaryMessenger messenger, int id, HashMap args) {
         channel = new MethodChannel(messenger, "plugins.flutter.io/firebase_admob/banner_"+id);
         adView = new AdView(context);
         channel.setMethodCallHandler(this);
