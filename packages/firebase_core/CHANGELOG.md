@@ -1,3 +1,8 @@
+## 0.5.0
+
+* Migrate To AndroidX.
+* This is a breaking change and requires manual migration. [Click here for more details](https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility#how-to-migrate-a-flutter-app-to-androidx)
+
 ## 0.4.0+9
 
 * Update documentation to reflect new repository location.

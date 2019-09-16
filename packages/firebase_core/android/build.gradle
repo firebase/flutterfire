@@ -21,7 +21,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.android.tools.build:gradle:3.5.0'
     }
 }
 
@@ -45,7 +45,7 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-        api 'com.google.firebase:firebase-core:16.0.9'
+        api 'com.google.firebase:firebase-core:17.2.0'
         implementation 'com.google.firebase:firebase-common:16.1.0'
     }
 }
