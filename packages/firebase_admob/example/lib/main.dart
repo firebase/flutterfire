@@ -73,6 +73,9 @@ class _MyAppState extends State<MyApp> {
                 BannerAd(
                   adUnitId: BannerAd.testAdUnitId,
                   adSize: BannerAdSize.BANNER,
+                  listener: (event, data) {
+                    print(event);
+                  },
                 ),
                 RaisedButton(
                   child: const Text('LOAD INTERSTITIAL'),

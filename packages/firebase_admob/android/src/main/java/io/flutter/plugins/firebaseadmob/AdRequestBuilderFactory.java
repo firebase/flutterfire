@@ -23,7 +23,8 @@ class AdRequestBuilderFactory {
   }
 
   private String getTargetingInfoString(String key, Object value) {
-    if (value == null) return null;
+    if (value == null)
+      return null;
     if (!(value instanceof String)) {
       Log.w(TAG, "targeting info " + key + ": expected a String");
       return null;
@@ -37,7 +38,8 @@ class AdRequestBuilderFactory {
   }
 
   private Boolean getTargetingInfoBoolean(String key, Object value) {
-    if (value == null) return null;
+    if (value == null)
+      return null;
     if (!(value instanceof Boolean)) {
       Log.w(TAG, "targeting info " + key + ": expected a boolean");
       return null;
@@ -46,7 +48,8 @@ class AdRequestBuilderFactory {
   }
 
   private Integer getTargetingInfoInteger(String key, Object value) {
-    if (value == null) return null;
+    if (value == null)
+      return null;
     if (!(value instanceof Integer)) {
       Log.w(TAG, "targeting info " + key + ": expected an integer");
       return null;
@@ -55,7 +58,8 @@ class AdRequestBuilderFactory {
   }
 
   private List getTargetingInfoArrayList(String key, Object value) {
-    if (value == null) return null;
+    if (value == null)
+      return null;
     if (!(value instanceof ArrayList)) {
       Log.w(TAG, "targeting info " + key + ": expected an ArrayList");
       return null;
@@ -65,13 +69,15 @@ class AdRequestBuilderFactory {
 
   AdRequest.Builder createAdRequestBuilder() {
     AdRequest.Builder builder = new AdRequest.Builder();
-    if (targetingInfo == null) return builder;
+    if (targetingInfo == null)
+      return builder;
 
     List testDevices = getTargetingInfoArrayList("testDevices", targetingInfo.get("testDevices"));
     if (testDevices != null) {
       for (Object deviceValue : testDevices) {
         String device = getTargetingInfoString("testDevices element", deviceValue);
-        if (device != null) builder.addTestDevice(device);
+        if (device != null)
+          builder.addTestDevice(device);
       }
     }
 
@@ -79,46 +85,50 @@ class AdRequestBuilderFactory {
     if (keywords != null) {
       for (Object keywordValue : keywords) {
         String keyword = getTargetingInfoString("keywords element", keywordValue);
-        if (keyword != null) builder.addKeyword(keyword);
+        if (keyword != null)
+          builder.addKeyword(keyword);
       }
     }
 
     String contentUrl = getTargetingInfoString("contentUrl", targetingInfo.get("contentUrl"));
-    if (contentUrl != null) builder.setContentUrl(contentUrl);
+    if (contentUrl != null)
+      builder.setContentUrl(contentUrl);
 
     Object birthday = targetingInfo.get("birthday");
     if (birthday != null) {
       if (!(birthday instanceof Long))
         Log.w(TAG, "targetingInfo birthday: expected a long integer");
-      else builder.setBirthday(new Date((Long) birthday));
+      else
+        builder.setBirthday(new Date((Long) birthday));
     }
 
     Integer gender = getTargetingInfoInteger("gender", targetingInfo.get("gender"));
     if (gender != null) {
       switch (gender) {
-        case 0: // MobileAdGender.unknown
-        case 1: // MobileAdGender.male
-        case 2: // MobileAdGender.female
-          builder.setGender(gender);
-          break;
-        default:
-          Log.w(TAG, "targetingInfo gender: invalid value");
+      case 0: // MobileAdGender.unknown
+      case 1: // MobileAdGender.male
+      case 2: // MobileAdGender.female
+        builder.setGender(gender);
+        break;
+      default:
+        Log.w(TAG, "targetingInfo gender: invalid value");
       }
     }
 
-    Boolean designedForFamilies =
-        getTargetingInfoBoolean("designedForFamilies", targetingInfo.get("designedForFamilies"));
-    if (designedForFamilies != null) builder.setIsDesignedForFamilies(designedForFamilies);
+    Boolean designedForFamilies = getTargetingInfoBoolean("designedForFamilies",
+        targetingInfo.get("designedForFamilies"));
+    if (designedForFamilies != null)
+      builder.setIsDesignedForFamilies(designedForFamilies);
 
-    Boolean childDirected =
-        getTargetingInfoBoolean("childDirected", targetingInfo.get("childDirected"));
-    if (childDirected != null) builder.tagForChildDirectedTreatment(childDirected);
+    Boolean childDirected = getTargetingInfoBoolean("childDirected", targetingInfo.get("childDirected"));
+    if (childDirected != null)
+      builder.tagForChildDirectedTreatment(childDirected);
 
     String requestAgent = getTargetingInfoString("requestAgent", targetingInfo.get("requestAgent"));
-    if (requestAgent != null) builder.setRequestAgent(requestAgent);
+    if (requestAgent != null)
+      builder.setRequestAgent(requestAgent);
 
-    Boolean nonPersonalizedAds =
-        getTargetingInfoBoolean("nonPersonalizedAds", targetingInfo.get("nonPersonalizedAds"));
+    Boolean nonPersonalizedAds = getTargetingInfoBoolean("nonPersonalizedAds", targetingInfo.get("nonPersonalizedAds"));
     if (nonPersonalizedAds != null && nonPersonalizedAds) {
       Bundle extras = new Bundle();
       extras.putString("npa", "1");
