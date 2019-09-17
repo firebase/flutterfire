@@ -23,6 +23,7 @@ enum MobileAdEvent {
   opened,
   leftApplication,
   closed,
+  unifiedNativeAdLoaded,
 }
 
 /// The user's gender for the sake of ad targeting using [MobileAdTargetingInfo].
@@ -287,9 +288,25 @@ class BannerAd extends MobileAd {
 }
 
 class NativeAd extends MobileAd {
+  NativeAd(
+      {@required String adUnitId,
+      MobileAdTargetingInfo targetingInfo,
+      MobileAdListener listener})
+      : super(
+            adUnitId: adUnitId,
+            targetingInfo: targetingInfo,
+            listener: listener);
+
+  // TODO: Add testAdUnitId for iOS
+  static final String testAdUnitId = 'ca-app-pub-3940256099942544/2247696110';
+
   @override
   Future<bool> load() {
-    return null;
+    return _invokeBooleanMethod("loadNativeAd", <String, dynamic>{
+      'id': id,
+      'targetingInfo': targetingInfo?.toJson(),
+      'adUnitId': adUnitId,
+    });
   }
 }
 

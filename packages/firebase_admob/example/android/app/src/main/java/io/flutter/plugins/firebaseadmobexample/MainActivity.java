@@ -18,6 +18,8 @@ public class MainActivity extends FlutterActivity {
     GeneratedPluginRegistrant.registerWith(this);
     FirebaseAdMobPlugin.setNativeAdGenerator((UnifiedNativeAd ad) -> {
       final TextView myAdView = new TextView(this);
+      myAdView.setWidth(200);
+      myAdView.setHeight(200);
       myAdView.setText("This is an ad!");
       return myAdView;
     });

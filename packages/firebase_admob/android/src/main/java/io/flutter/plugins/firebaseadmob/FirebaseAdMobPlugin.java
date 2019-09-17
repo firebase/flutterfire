@@ -77,6 +77,8 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
       return;
     }
 
+    final Map<String, Object> targetingInfo = call.argument("targetingInfo");
+    nativeAd.load(adUnitId, targetingInfo);
     result.success(Boolean.TRUE);
   }
 

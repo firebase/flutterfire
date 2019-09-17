@@ -11,7 +11,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import androidx.arch.core.util.Function;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdSize;
@@ -246,23 +245,16 @@ abstract class MobileAd extends AdListener {
     void load(String adUnitId, Map<String, Object> targetingInfo) {
       status = Status.LOADING;
 
-      final AdLoader adLoader = new AdLoader.Builder(activity, "ca-app-pub-3940256099942544/2247696110")
+      final AdLoader adLoader = new AdLoader.Builder(activity, adUnitId)
           .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
             @Override
             public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
               nativeAd = unifiedNativeAd;
-
-              boolean statusWasPending = status == Status.PENDING;
-              status = Status.LOADED;
-
-              channel.invokeMethod("onUnifiedNativeAdLoaded", argumentsMap(id));
-              if (statusWasPending) show();
+              onAdLoaded();
             }
           })
           .withAdListener(this)
-          .withNativeAdOptions(new NativeAdOptions.Builder()
-              // TODO(bparrishMines): Add options to configure the ad from dart.
-              .build())
+          .withNativeAdOptions(new NativeAdOptions.Builder().build())
           .build();
 
       AdRequestBuilderFactory factory = new AdRequestBuilderFactory(targetingInfo);
@@ -275,7 +267,12 @@ abstract class MobileAd extends AdListener {
         status = Status.PENDING;
         return;
       }
-      if (FirebaseAdMobPlugin.nativeAdGenerator == null) throw new IllegalMonitorStateException();
+
+      if (FirebaseAdMobPlugin.nativeAdGenerator == null) {
+        throw new IllegalStateException("The native ad generator was null. Did you add" +
+            " `FirebaseAdMobPlugin.setNativeAdGenerator(Function<UnifiedNativeAd, View>" +
+            " nativeAdGenerator)` to your `MainActivity.java`");
+      }
       showAdView(FirebaseAdMobPlugin.nativeAdGenerator.apply(nativeAd));
     }
   }
