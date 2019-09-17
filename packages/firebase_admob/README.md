@@ -4,14 +4,28 @@ A plugin for [Flutter](https://flutter.io) that supports loading and
 displaying banner, interstitial (full-screen), and rewarded video ads using the
 [Firebase AdMob API](https://firebase.google.com/docs/admob/).
 
-*Note*: This plugin is in beta, and may still have a few issues and missing APIs.
+_Note_: This plugin is in beta, and may still have a few issues and missing APIs.
 [Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and
 [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are welcome.
+
+## Developers Preview Status
+
+The plugin relies on Flutter's new mechanism for embedding Android and iOS views.
+As that mechanism is currently in a developers preview, this plugin should also be
+considered a developers preview.
+
+Known issues are tagged with the [platform-views](https://github.com/flutter/flutter/labels/a%3A%20platform-views) and/or [maps](https://github.com/flutter/flutter/labels/p%3A%20maps) labels.
+
+To use this plugin on iOS you need to opt-in for the embedded views preview by
+adding a boolean property to the app's `Info.plist` file, with the key `io.flutter.embedded_views_preview`
+and the value `YES`.
+
+The API exposed by this plugin is not yet stable, and we expect some breaking changes to land soon.
 
 ## AndroidManifest changes
 
 AdMob 17 requires the App ID to be included in the `AndroidManifest.xml`. Failure
-to do so will result in a crash on launch of your app.  The line should look like:
+to do so will result in a crash on launch of your app. The line should look like:
 
 ```xml
 <meta-data
@@ -19,7 +33,7 @@ to do so will result in a crash on launch of your app.  The line should look lik
     android:value="[ADMOB_APP_ID]"/>
 ```
 
-where `[ADMOB_APP_ID]` is your App ID.  You must pass the same value when you 
+where `[ADMOB_APP_ID]` is your App ID. You must pass the same value when you
 initialize the plugin in your Dart code.
 
 See https://goo.gl/fQ2neu for more information about configuring `AndroidManifest.xml`
@@ -34,17 +48,20 @@ Admob 7.42.0 requires the App ID to be included in `Info.plist`. Failure to do s
 <string>[ADMOB_APP_ID]</string>
 ```
 
-where `[ADMOB_APP_ID]` is your App ID.  You must pass the same value when you initialize the plugin in your Dart code.
+where `[ADMOB_APP_ID]` is your App ID. You must pass the same value when you initialize the plugin in your Dart code.
 
 See https://developers.google.com/admob/ios/quick-start#update_your_infoplist for more information about configuring `Info.plist` and setting up your App ID.
 
 ## Initializing the plugin
+
 The AdMob plugin must be initialized with an AdMob App ID.
 
 ```dart
 FirebaseAdMob.instance.initialize(appId: appId);
 ```
+
 ### Android
+
 Starting in version 17.0.0, if you are an AdMob publisher you are now required to add your AdMob app ID in your **AndroidManifest.xml** file. Once you find your AdMob app ID in the AdMob UI, add it to your manifest adding the following tag:
 
 ```xml
@@ -58,12 +75,13 @@ Starting in version 17.0.0, if you are an AdMob publisher you are now required t
 </manifest>
 ```
 
-Failure to add this tag will result in the app crashing at app launch with a message starting with *"The Google Mobile Ads SDK was initialized incorrectly."*
+Failure to add this tag will result in the app crashing at app launch with a message starting with _"The Google Mobile Ads SDK was initialized incorrectly."_
 
-On Android, this value must be the same as the App ID value set in your 
+On Android, this value must be the same as the App ID value set in your
 `AndroidManifest.xml`.
 
 ### iOS
+
 Starting in version 7.42.0, you are required to add your AdMob app ID in your **Info.plist** file under the Runner directory. You can add it using Xcode or edit the file manually:
 
 ```xml
@@ -73,9 +91,10 @@ Starting in version 7.42.0, you are required to add your AdMob app ID in your **
 </dict>
 ```
 
-Failure to add this tag will result in the app crashing at app launch with a message including *"GADVerifyApplicationID."*
+Failure to add this tag will result in the app crashing at app launch with a message including _"GADVerifyApplicationID."_
 
 ## Using banners and interstitials
+
 Banner and interstitial ads can be configured with target information.
 And in the example below, the ads are given test ad unit IDs for a quick start.
 
@@ -115,6 +134,7 @@ InterstitialAd myInterstitial = InterstitialAd(
 ```
 
 Ads must be loaded before they're shown.
+
 ```dart
 myBanner
   // typically this happens well before the ad is shown
@@ -152,6 +172,7 @@ listener can be used to detect when the ad has actually finished loading
 Unlike banners and interstitials, rewarded video ads are loaded one at a time
 via a singleton object, `RewardedVideoAd.instance`. Its `load` method takes an
 AdMob ad unit ID and an instance of `MobileAdTargetingInfo`:
+
 ```dart
 RewardedVideoAd.instance.load(myAdMobAdUnitId, targetingInfo);
 ```
@@ -163,12 +184,14 @@ function will be invoked whenever one of the events in the `RewardedVideAdEvent`
 enum occurs. After a rewarded video ad loads, for example, the
 `RewardedVideoAdEvent.loaded` is sent. Any time after that, apps can show the ad
 by calling `show`:
+
 ```dart
 RewardedVideoAd.instance.show();
 ```
 
 When the AdMob SDK decides it's time to grant an in-app reward, it does so via
 the `RewardedVideoAdEvent.rewarded` event:
+
 ```dart
 RewardedVideoAd.instance.listener =
     (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
