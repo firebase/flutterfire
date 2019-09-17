@@ -287,6 +287,15 @@ class BannerAd extends MobileAd {
   }
 }
 
+/// A NativeAd for the [FirebaseAdMobPlugin].
+///
+/// Native ads are ad assets that are presented to users via UI components that
+/// are native to the platform. They're shown using the same types of views with
+/// which you're already building your layouts, and can be formatted to match
+/// the visual design of the user experience in which they live. In coding
+/// terms, this means that when a native ad loads, your app receives a NativeAd
+/// object that contains its assets, and the app (rather than the Google Mobile
+/// Ads SDK) is then responsible for displaying them.
 class NativeAd extends MobileAd {
   NativeAd(
       {@required String adUnitId,
@@ -295,10 +304,20 @@ class NativeAd extends MobileAd {
       : super(
             adUnitId: adUnitId,
             targetingInfo: targetingInfo,
-            listener: listener);
+            listener: listener) {
+    if (!Platform.isAndroid) {
+      throw UnimplementedError(
+        '$NativeAd is currently only available for Android',
+      );
+    }
+  }
 
-  // TODO: Add testAdUnitId for iOS
-  static final String testAdUnitId = 'ca-app-pub-3940256099942544/2247696110';
+  /// A platform-specific AdMob test ad unit ID for Native ads. This ad unit
+  /// has been specially configured to always return test ads, and developers
+  /// are encouraged to use it while building and testing their apps.
+  static final String testAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/2247696110'
+      : 'ca-app-pub-3940256099942544/3986624511';
 
   @override
   Future<bool> load() {
