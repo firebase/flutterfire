@@ -49,6 +49,15 @@ void main() {
       ]);
     });
 
+    testWidgets('bannerAd', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        BannerAd(
+          adUnitId: BannerAd.testAdUnitId,
+          adSize: BannerAdSize.BANNER,
+        ),
+      );
+    });
+
     test('interstitial', () async {
       log.clear();
 
