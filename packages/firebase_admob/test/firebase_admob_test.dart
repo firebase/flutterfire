@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -49,11 +50,14 @@ void main() {
       ]);
     });
 
-    testWidgets('bannerAd', (WidgetTester tester) async {
+    testWidgets('banner', (WidgetTester tester) async {
       await tester.pumpWidget(
-        BannerAd(
-          adUnitId: BannerAd.testAdUnitId,
-          adSize: BannerAdSize.BANNER,
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: BannerAd(
+            adUnitId: BannerAd.testAdUnitId,
+            adSize: BannerAdSize.BANNER,
+          ),
         ),
       );
     });
