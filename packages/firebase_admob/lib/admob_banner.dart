@@ -1,6 +1,10 @@
 part of firebase_admob;
 
+/// A banner ad for the [FirebaseAdMobPlugin].
 class BannerAd extends StatefulWidget {
+  /// Create a BannerAd.
+  ///
+  /// A valid [adUnitId] and [adSize] is required.
   BannerAd({
     Key key,
     @required this.adUnitId,
