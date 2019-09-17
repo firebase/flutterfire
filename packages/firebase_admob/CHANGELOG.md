@@ -1,6 +1,6 @@
 ## 0.10.0
 
-- BannerAd now uses PlatformView.
+- **Breaking change**. BannerAd now uses PlatformView.
 
 ## 0.9.0+7
 
