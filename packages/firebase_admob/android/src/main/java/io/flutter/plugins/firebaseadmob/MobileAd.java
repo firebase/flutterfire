@@ -18,7 +18,6 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
-
 import io.flutter.plugin.common.MethodChannel;
 import java.util.HashMap;
 import java.util.Map;
@@ -116,7 +115,7 @@ abstract class MobileAd extends AdListener {
     allAds.remove(id);
   }
 
-  static private Map<String, Object> argumentsMap(int id, Object... args) {
+  private Map<String, Object> argumentsMap(Object... args) {
     Map<String, Object> arguments = new HashMap<>();
     arguments.put("id", id);
     for (int i = 0; i < args.length; i += 2) arguments.put(args[i].toString(), args[i + 1]);
@@ -127,7 +126,7 @@ abstract class MobileAd extends AdListener {
   public void onAdLoaded() {
     boolean statusWasPending = status == Status.PENDING;
     status = Status.LOADED;
-    channel.invokeMethod("onAdLoaded", argumentsMap(id));
+    channel.invokeMethod("onAdLoaded", argumentsMap());
     if (statusWasPending) show();
   }
 
@@ -135,32 +134,32 @@ abstract class MobileAd extends AdListener {
   public void onAdFailedToLoad(int errorCode) {
     Log.w(TAG, "onAdFailedToLoad: " + errorCode);
     status = Status.FAILED;
-    channel.invokeMethod("onAdFailedToLoad", argumentsMap(id, "errorCode", errorCode));
+    channel.invokeMethod("onAdFailedToLoad", argumentsMap("errorCode", errorCode));
   }
 
   @Override
   public void onAdOpened() {
-    channel.invokeMethod("onAdOpened", argumentsMap(id));
+    channel.invokeMethod("onAdOpened", argumentsMap());
   }
 
   @Override
   public void onAdClicked() {
-    channel.invokeMethod("onAdClicked", argumentsMap(id));
+    channel.invokeMethod("onAdClicked", argumentsMap());
   }
 
   @Override
   public void onAdImpression() {
-    channel.invokeMethod("onAdImpression", argumentsMap(id));
+    channel.invokeMethod("onAdImpression", argumentsMap());
   }
 
   @Override
   public void onAdLeftApplication() {
-    channel.invokeMethod("onAdLeftApplication", argumentsMap(id));
+    channel.invokeMethod("onAdLeftApplication", argumentsMap());
   }
 
   @Override
   public void onAdClosed() {
-    channel.invokeMethod("onAdClosed", argumentsMap(id));
+    channel.invokeMethod("onAdClosed", argumentsMap());
   }
 
   static class Banner extends MobileAd {
@@ -236,6 +235,7 @@ abstract class MobileAd extends AdListener {
 
   static class Native extends MobileAd {
     private UnifiedNativeAd nativeAd;
+    View adView;
 
     private Native(int id, Activity activity, MethodChannel channel) {
       super(id, activity, channel);
@@ -271,9 +271,21 @@ abstract class MobileAd extends AdListener {
       if (FirebaseAdMobPlugin.nativeAdGenerator == null) {
         throw new IllegalStateException("The native ad generator was null. Did you add" +
             " `FirebaseAdMobPlugin.setNativeAdGenerator(Function<UnifiedNativeAd, View>" +
-            " nativeAdGenerator)` to your `MainActivity.java`");
+            " nativeAdGenerator)` to your `MainActivity.java`?");
       }
+
       showAdView(FirebaseAdMobPlugin.nativeAdGenerator.apply(nativeAd));
+    }
+
+    @Override
+    void dispose() {
+      super.dispose();
+
+      View contentView = activity.findViewById(id);
+      if (contentView == null || !(contentView.getParent() instanceof ViewGroup)) return;
+
+      ViewGroup contentParent = (ViewGroup) (contentView.getParent());
+      contentParent.removeView(contentView);
     }
   }
 }
