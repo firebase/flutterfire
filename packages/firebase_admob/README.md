@@ -184,6 +184,32 @@ RewardedVideoAd.instance.listener =
 Because `RewardedVideoAd` is a singleton object, it does not offer a `dispose`
 method.
 
+## Using native ads
+
+### Android
+You will need to specify a native ad generator which takes a
+[UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd)
+and return an `Android` View.
+
+In your `MainActivity.java`, include the imports:
+
+```java
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin;
+```
+ 
+and add this line to the `onCreate()` method:
+
+```java
+FirebaseAdMobPlugin.setNativeAdGenerator((UnifiedNativeAd ad) -> {
+  // return a View;
+});
+```
+
+## iOS
+
+Currently unsupported.
+
 ## Limitations
 
 This is just an initial version of the plugin. There are still some
