@@ -8,6 +8,7 @@
 
 #import "FLTMobileAd.h"
 #import "FLTRewardedVideoAdWrapper.h"
+#import "FLTBannerAdFactory.h"
 #import "Firebase/Firebase.h"
 
 @interface FLTFirebaseAdMobPlugin ()
@@ -24,6 +25,9 @@
                                   binaryMessenger:[registrar messenger]];
   [registrar addMethodCallDelegate:instance channel:instance.channel];
   instance.rewardedWrapper = [[FLTRewardedVideoAdWrapper alloc] initWithChannel:instance.channel];
+    FLTBannerAdFactory* bannerAdFactory =
+    [[FLTBannerAdFactory alloc] initWithMessenger:registrar.messenger];
+    [registrar registerViewFactory:bannerAdFactory withId:@"plugins.flutter.io/firebase_admob/banner"];
 }
 
 - (instancetype)init {
