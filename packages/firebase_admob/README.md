@@ -93,9 +93,24 @@ Starting in version 7.42.0, you are required to add your AdMob app ID in your **
 
 Failure to add this tag will result in the app crashing at app launch with a message including _"GADVerifyApplicationID."_
 
-## Using banners and interstitials
+## Using banners
 
-Banner and interstitial ads can be configured with target information.
+Banner can be embedded as Widget in the widget tree.
+And in the example below, the ads are given test ad unit IDs for a quick start.
+
+```dart
+BannerAd(
+  adUnitId: BannerAd.testAdUnitId,
+  adSize: BannerAdSize.BANNER,
+  listener: (AdmobAdEvent event, Map<String, dynamic> data) {
+    print(event);
+  },
+);
+```
+
+## Using interstitials
+
+Interstitial ads can be configured with target information.
 And in the example below, the ads are given test ad unit IDs for a quick start.
 
 ```dart
@@ -107,18 +122,6 @@ MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
   designedForFamilies: false,
   gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
   testDevices: <String>[], // Android emulators are considered test devices
-);
-
-BannerAd myBanner = BannerAd(
-  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-  // https://developers.google.com/admob/android/test-ads
-  // https://developers.google.com/admob/ios/test-ads
-  adUnitId: BannerAd.testAdUnitId,
-  size: AdSize.smartBanner,
-  targetingInfo: targetingInfo,
-  listener: (MobileAdEvent event) {
-    print("BannerAd event is $event");
-  },
 );
 
 InterstitialAd myInterstitial = InterstitialAd(
@@ -136,20 +139,6 @@ InterstitialAd myInterstitial = InterstitialAd(
 Ads must be loaded before they're shown.
 
 ```dart
-myBanner
-  // typically this happens well before the ad is shown
-  ..load()
-  ..show(
-    // Positions the banner ad 60 pixels from the bottom of the screen
-    anchorOffset: 60.0,
-    // Positions the banner ad 10 pixels from the center of the screen to the right
-    horizontalCenterOffset: 10.0,
-    // Banner Position
-    anchorType: AnchorType.bottom,
-  );
-```
-
-```dart
 myInterstitial
   ..load()
   ..show(
@@ -159,17 +148,15 @@ myInterstitial
   );
 ```
 
-`BannerAd` and `InterstitialAd` objects can be disposed to free up plugin
-resources. Disposing a banner ad that's been shown removes it from the screen.
 Interstitial ads, however, can't be programmatically removed from view.
 
-Banner and interstitial ads can be created with a `MobileAdEvent` listener. The
+Interstitial ads can be created with a `MobileAdEvent` listener. The
 listener can be used to detect when the ad has actually finished loading
 (or failed to load at all).
 
 ## Using rewarded video ads
 
-Unlike banners and interstitials, rewarded video ads are loaded one at a time
+Unlike interstitials, rewarded video ads are loaded one at a time
 via a singleton object, `RewardedVideoAd.instance`. Its `load` method takes an
 AdMob ad unit ID and an instance of `MobileAdTargetingInfo`:
 
