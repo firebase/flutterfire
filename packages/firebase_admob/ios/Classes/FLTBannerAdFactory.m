@@ -1,12 +1,5 @@
-//
-//  FLTBannerAdFactory.m
-//  firebase_admob
-//
-//  Created by Aawaz Gyawali on 9/16/19.
-//
-
 #import "FLTBannerAdFactory.h"
-#import "FLTBannerAd.m"
+#import "FLTBannerAd.h"
 
 
 @implementation FLTBannerAdFactory {

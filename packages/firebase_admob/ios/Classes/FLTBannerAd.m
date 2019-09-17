@@ -16,7 +16,11 @@
         _messenger = messenger;
         _args = args;
         _viewId = viewId;
-        _channel = [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_admob/banner" binaryMessenger:messenger];
+        _channel = [FlutterMethodChannel methodChannelWithName:[NSString stringWithFormat:@"plugins.flutter.io/firebase_admob/banner_%lld", viewId] binaryMessenger:messenger];
+        __weak __typeof__(self) weakSelf = self;
+        [_channel setMethodCallHandler:^(FlutterMethodCall* call, FlutterResult result) {
+            [weakSelf onMethodCall:call result:result];
+        }];
     }
     return self;
 }
@@ -33,7 +37,7 @@
 
 - (GADBannerView*) getBannerAdView {
     if(_adView ==nil){
-        _adView = [GADBannerView init];
+        _adView = [[GADBannerView alloc] initWithAdSize:self.getSize];
         _adView.rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
         _adView.frame = _frame.size.width == 0? CGRectMake(0, 0, 1, 1) :_frame;
         _adView.adUnitID = (NSString*) _args[@"adUnitId"];
@@ -45,7 +49,7 @@
 - (void) requestAd {
     GADBannerView *ad = [self getBannerAdView];
     if(ad){
-        GADRequest *request = [GADRequest init];
+        GADRequest *request = [[GADRequest alloc] init];
         request.testDevices = [NSArray arrayWithObjects:kGADSimulatorID, nil];
         [ad loadRequest:request];
     }
@@ -75,7 +79,6 @@
         return GADAdSizeFromCGSize(CGSizeMake(0, 0));
     
 }
-
 - (void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     if([call.method  isEqual: @"setListener"])
         _adView.delegate = self;
