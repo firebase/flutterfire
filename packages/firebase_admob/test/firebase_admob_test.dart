@@ -23,7 +23,6 @@ void main() {
         log.add(methodCall);
         switch (methodCall.method) {
           case 'initialize':
-          case 'loadBannerAd':
           case 'loadInterstitialAd':
           case 'loadRewardedVideoAd':
           case 'showAd':
