@@ -1,4 +1,10 @@
+## 0.12.9+5
+
 * Removed Activity reference to avoid possible NullPointerException.
+
+## 0.12.9+4
+
+* Fix integer conversion warnings on iOS.
 
 ## 0.12.9+3
 
