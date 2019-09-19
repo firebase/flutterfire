@@ -1,6 +1,6 @@
 ## 5.1.6
 
-* Fix deprecated API warnings when compiling on Android.
+* Fix warnings when compiling on Android.
 
 ## 5.1.5
 
