@@ -1,3 +1,7 @@
+## 5.1.6
+
+* Fix warnings when compiling on Android.
+
 ## 5.1.5
 
 * Enable background message handling on Android.
