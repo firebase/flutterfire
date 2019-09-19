@@ -8,10 +8,9 @@ With this plugin, your Flutter app can receive and process push notifications as
 
 For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
-_Note_: This plugin is still under development, and some APIs might not be available yet. [Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
+*Note*: This plugin is still under development, and some APIs might not be available yet. [Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
 
 ## Usage
-
 To use this plugin, add `firebase_messaging` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
 ## Getting Started
@@ -25,7 +24,6 @@ To integrate your plugin into the Android part of your app, follow these steps:
 1. Using the [Firebase Console](https://console.firebase.google.com/) add an Android app to your project: Follow the assistant, download the generated `google-services.json` file and place it inside `android/app`.
 
 2. Add the classpath to the `[project]/android/build.gradle` file.
-
 ```
 dependencies {
   // Example existing classpath
@@ -34,16 +32,13 @@ dependencies {
   classpath 'com.google.gms:google-services:4.3.0'
 }
 ```
-
 3. Add the apply plugin to the `[project]/android/app/build.gradle` file.
-
 ```
 // ADD THIS AT THE BOTTOM
 apply plugin: 'com.google.gms.google-services'
 ```
 
 Note: If this section is not completed you will get an error like this:
-
 ```
 java.lang.IllegalStateException:
 Default FirebaseApp is not initialized in this process [package name].
@@ -53,88 +48,85 @@ Make sure to call FirebaseApp.initializeApp(Context) first.
 Note: When you are debugging on Android, use a device or AVD with Google Play services. Otherwise you will not be able to authenticate.
 
 4. (optional, but recommended) If want to be notified in your app (via `onResume` and `onLaunch`, see below) when the user clicks on a notification in the system tray include the following `intent-filter` within the `<activity>` tag of your `android/app/src/main/AndroidManifest.xml`:
-
-```xml
-<intent-filter>
-    <action android:name="FLUTTER_NOTIFICATION_CLICK" />
-    <category android:name="android.intent.category.DEFAULT" />
-</intent-filter>
-```
-
+  ```xml
+  <intent-filter>
+      <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+      <category android:name="android.intent.category.DEFAULT" />
+  </intent-filter>
+  ```
 #### Optionally handle background messages
 
-> Background message handling is intended to be performed quickly. Do not perform
-> long running tasks as they may not be allowed to finish by the Android system.
-> See [Background Execution Limits](https://developer.android.com/about/versions/oreo/background)
-> for more.
+>Background message handling is intended to be performed quickly. Do not perform
+long running tasks as they may not be allowed to finish by the Android system.
+See [Background Execution Limits](https://developer.android.com/about/versions/oreo/background)
+for more.
 
 By default background messaging is not enabled. To handle messages in the background:
 
 1. Add an Application.java class to your app
 
-   ```
-   package io.flutter.plugins.firebasemessagingexample;
-
-   import io.flutter.app.FlutterApplication;
-   import io.flutter.plugin.common.PluginRegistry;
-   import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
-   import io.flutter.plugins.GeneratedPluginRegistrant;
-   import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
-
-   public class Application extends FlutterApplication implements PluginRegistrantCallback {
-     @Override
-     public void onCreate() {
-       super.onCreate();
-       FlutterFirebaseMessagingService.setPluginRegistrant(this);
-     }
-
-     @Override
-     public void registerWith(PluginRegistry registry) {
-       GeneratedPluginRegistrant.registerWith(registry);
-     }
-   }
-   ```
-
+    ```
+    package io.flutter.plugins.firebasemessagingexample;
+    
+    import io.flutter.app.FlutterApplication;
+    import io.flutter.plugin.common.PluginRegistry;
+    import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
+    import io.flutter.plugins.GeneratedPluginRegistrant;
+    import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
+    
+    public class Application extends FlutterApplication implements PluginRegistrantCallback {
+      @Override
+      public void onCreate() {
+        super.onCreate();
+        FlutterFirebaseMessagingService.setPluginRegistrant(this);
+      }
+    
+      @Override
+      public void registerWith(PluginRegistry registry) {
+        GeneratedPluginRegistrant.registerWith(registry);
+      }
+    }
+    ```
 1. Set name property of application in `AndroidManifest.xml`
-   ```
-   <application android:name=".Application" ...>
-   ```
+    ```
+    <application android:name=".Application" ...>
+    ```
 1. Define a top level Dart method to handle background messages
-   ```
-   Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
-     if (message.containsKey('data')) {
-       // Handle data message
-       final dynamic data = message['data'];
-     }
-
-     if (message.containsKey('notification')) {
-       // Handle notification message
-       final dynamic notification = message['notification'];
-     }
-
-     // Or do other work.
-   }
-   ```
+    ```
+    Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+      if (message.containsKey('data')) {
+        // Handle data message
+        final dynamic data = message['data'];
+      }
+    
+      if (message.containsKey('notification')) {
+        // Handle notification message
+        final dynamic notification = message['notification'];
+      }
+    
+      // Or do other work.
+    }
+    ```
    Note: the protocol of `data` and `notification` are in line with the
-   fields defined by a [RemoteMessage](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/RemoteMessage).
+   fields defined by a [RemoteMessage](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/RemoteMessage). 
 1. Set `onBackgroundMessage` handler when calling `configure`
-   ```
-   _firebaseMessaging.configure(
-         onMessage: (Map<String, dynamic> message) async {
-           print("onMessage: $message");
-           _showItemDialog(message);
-         },
-         onBackgroundMessage: myBackgroundMessageHandler,
-         onLaunch: (Map<String, dynamic> message) async {
-           print("onLaunch: $message");
-           _navigateToItemDetail(message);
-         },
-         onResume: (Map<String, dynamic> message) async {
-           print("onResume: $message");
-           _navigateToItemDetail(message);
-         },
-       );
-   ```
+    ```
+    _firebaseMessaging.configure(
+          onMessage: (Map<String, dynamic> message) async {
+            print("onMessage: $message");
+            _showItemDialog(message);
+          },
+          onBackgroundMessage: myBackgroundMessageHandler,
+          onLaunch: (Map<String, dynamic> message) async {
+            print("onLaunch: $message");
+            _navigateToItemDetail(message);
+          },
+          onResume: (Map<String, dynamic> message) async {
+            print("onResume: $message");
+            _navigateToItemDetail(message);
+          },
+        );
+    ```
    Note: `configure` should be called early in the lifecycle of your application
    so that it can be ready to receive messages as early as possible. See the
    example app for a demonstration.
@@ -167,33 +159,31 @@ Next, you should probably request permissions for receiving Push Notifications. 
 
 Messages are sent to your Flutter app via the `onMessage`, `onLaunch`, and `onResume` callbacks that you configured with the plugin during setup. Here is how different message types are delivered on the supported platforms:
 
-|                             | App in Foreground | App in Background                                                                                                                                                   | App Terminated                                                                                                                                                      |
-| --------------------------: | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Notification on Android** | `onMessage`       | Notification is delivered to system tray. When the user clicks on it to open app `onResume` fires if `click_action: FLUTTER_NOTIFICATION_CLICK` is set (see below). | Notification is delivered to system tray. When the user clicks on it to open app `onLaunch` fires if `click_action: FLUTTER_NOTIFICATION_CLICK` is set (see below). |
-|     **Notification on iOS** | `onMessage`       | Notification is delivered to system tray. When the user clicks on it to open app `onResume` fires.                                                                  | Notification is delivered to system tray. When the user clicks on it to open app `onLaunch` fires.                                                                  |
-| **Data Message on Android** | `onMessage`       | `onMessage` while app stays in the background.                                                                                                                      | _not supported by plugin, message is lost_                                                                                                                          |
-|     **Data Message on iOS** | `onMessage`       | Message is stored by FCM and delivered to app via `onMessage` when the app is brought back to foreground.                                                           | Message is stored by FCM and delivered to app via `onMessage` when the app is brought back to foreground.                                                           |
+|                             | App in Foreground | App in Background | App Terminated |
+| --------------------------: | ----------------- | ----------------- | -------------- |
+| **Notification on Android** | `onMessage` | Notification is delivered to system tray. When the user clicks on it to open app `onResume` fires if `click_action: FLUTTER_NOTIFICATION_CLICK` is set (see below). | Notification is delivered to system tray. When the user clicks on it to open app `onLaunch` fires if `click_action: FLUTTER_NOTIFICATION_CLICK` is set (see below). |
+| **Notification on iOS** | `onMessage` | Notification is delivered to system tray. When the user clicks on it to open app `onResume` fires. | Notification is delivered to system tray. When the user clicks on it to open app `onLaunch` fires. |
+| **Data Message on Android** | `onMessage` | `onMessage` while app stays in the background. | *not supported by plugin, message is lost* |
+| **Data Message on iOS**     | `onMessage` | Message is stored by FCM and delivered to app via `onMessage` when the app is brought back to foreground. | Message is stored by FCM and delivered to app via `onMessage` when the app is brought back to foreground. |
 
 Additional reading: Firebase's [About FCM Messages](https://firebase.google.com/docs/cloud-messaging/concept-options).
 
 ## Notification messages with additional data
-
 It is possible to include additional data in notification messages by adding them to the `"data"`-field of the message.
 
 On Android, the message contains an additional field `data` containing the data. On iOS, the data is directly appended to the message and the additional `data`-field is omitted.
 
 To receive the data on both platforms:
 
-```dart
+````dart
 Future<void> _handleNotification (Map<dynamic, dynamic> message, bool dialog) async {
     var data = message['data'] ?? message;
     String expectedAttribute = data['expectedAttribute'];
     /// [...]
 }
-```
+````
 
 ## Sending Messages
-
 Refer to the [Firebase documentation](https://firebase.google.com/docs/cloud-messaging/) about FCM for all the details about sending messages to your app. When sending a notification message to an Android device, you need to make sure to set the `click_action` property of the message to `FLUTTER_NOTIFICATION_CLICK`. Otherwise the plugin will be unable to deliver the notification to your app when the users clicks on it in the system tray.
 
 For testing purposes, the simplest way to send a notification is via the [Firebase Console](https://firebase.google.com/docs/cloud-messaging/send-with-console). Make sure to include `click_action: FLUTTER_NOTIFICATION_CLICK` as a "Custom data" key-value-pair (under "Advanced options") when targeting an Android device. The Firebase Console does not support sending data messages.
