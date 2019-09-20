@@ -27,10 +27,10 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
 
   RewardedVideoAdWrapper rewardedWrapper;
 
-  static Function<UnifiedNativeAd, View> nativeAdGenerator;
+  static Function<UnifiedNativeAd, View> nativeAdFactory;
 
-  public static void setNativeAdGenerator(Function<UnifiedNativeAd, View> nativeAdGenerator) {
-    FirebaseAdMobPlugin.nativeAdGenerator = nativeAdGenerator;
+  public static void setNativeAdFactory(Function<UnifiedNativeAd, View> nativeAdFactory) {
+    FirebaseAdMobPlugin.nativeAdFactory = nativeAdGenerator;
   }
 
   public static void registerWith(Registrar registrar) {

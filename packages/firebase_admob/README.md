@@ -187,7 +187,7 @@ method.
 ## Using native ads
 
 ### Android
-You will need to specify a native ad generator which takes a
+You will need to specify a native ad factory which takes a
 [UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd)
 and returns an `Android` [View](https://developer.android.com/reference/android/view/View). See
 https://developers.google.com/admob/android/native/advanced for more details on displaying a Native
@@ -208,7 +208,7 @@ FirebaseAdMobPlugin.setNativeAdGenerator((UnifiedNativeAd ad) -> {
 });
 ```
 
-## iOS
+### iOS
 
 Currently unsupported.
 

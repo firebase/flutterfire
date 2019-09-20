@@ -1,6 +1,6 @@
 ## 0.9.1
 
-* Add basic Native ad support for Android.
+* Add basic Native Ads support for Android.
 
 ## 0.9.0+7
 

@@ -96,8 +96,7 @@ abstract class MobileAd extends AdListener {
       final float scale = activity.getResources().getDisplayMetrics().density;
 
       int left = horizontalCenterOffset > 0 ? (int) (horizontalCenterOffset * scale) : 0;
-      int right =
-          horizontalCenterOffset < 0 ? (int) (Math.abs(horizontalCenterOffset) * scale) : 0;
+      int right = horizontalCenterOffset < 0 ? (int) (Math.abs(horizontalCenterOffset) * scale) : 0;
       if (anchorType == Gravity.BOTTOM) {
         content.setPadding(left, 0, right, (int) (anchorOffset * scale));
       } else {
@@ -245,17 +244,19 @@ abstract class MobileAd extends AdListener {
     void load(String adUnitId, Map<String, Object> targetingInfo) {
       status = Status.LOADING;
 
-      final AdLoader adLoader = new AdLoader.Builder(activity, adUnitId)
-          .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
-            @Override
-            public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-              nativeAd = unifiedNativeAd;
-              onAdLoaded();
-            }
-          })
-          .withAdListener(this)
-          .withNativeAdOptions(new NativeAdOptions.Builder().build())
-          .build();
+      final AdLoader adLoader =
+          new AdLoader.Builder(activity, adUnitId)
+              .forUnifiedNativeAd(
+                  new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+                    @Override
+                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                      nativeAd = unifiedNativeAd;
+                      onAdLoaded();
+                    }
+                  })
+              .withAdListener(this)
+              .withNativeAdOptions(new NativeAdOptions.Builder().build())
+              .build();
 
       AdRequestBuilderFactory factory = new AdRequestBuilderFactory(targetingInfo);
       adLoader.loadAd(factory.createAdRequestBuilder().build());
@@ -269,9 +270,10 @@ abstract class MobileAd extends AdListener {
       }
 
       if (FirebaseAdMobPlugin.nativeAdGenerator == null) {
-        throw new IllegalStateException("The native ad generator was null. Did you add" +
-            " `FirebaseAdMobPlugin.setNativeAdGenerator(Function<UnifiedNativeAd, View>" +
-            " nativeAdGenerator)` to your `MainActivity.java`?");
+        throw new IllegalStateException(
+            "The native ad factory was null. Did you add"
+                + " `FirebaseAdMobPlugin.setNativeAdGenerator(Function<UnifiedNativeAd, View>"
+                + " nativeAdGenerator)` to your `MainActivity.java`?");
       }
 
       showAdView(FirebaseAdMobPlugin.nativeAdGenerator.apply(nativeAd));

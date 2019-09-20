@@ -290,18 +290,26 @@ class BannerAd extends MobileAd {
 /// A NativeAd for the [FirebaseAdMobPlugin].
 ///
 /// Native ads are ad assets that are presented to users via UI components that
-/// are native to the platform. They're shown using the same types of views with
-/// which you're already building your layouts, and can be formatted to match
+/// are native to the platform. (e.g. A
+/// (View)[https://developer.android.com/reference/android/view/View] on Android
+/// or a
+/// [UIView](https://developer.apple.com/documentation/uikit/uiview?language=objc)
+/// on iOS). Using Flutter widgets to create native ads is not supported by
+/// this.
+///
+/// Using platform specific UI components, these ads can be formatted to match
 /// the visual design of the user experience in which they live. In coding
 /// terms, this means that when a native ad loads, your app receives a NativeAd
 /// object that contains its assets, and the app (rather than the Google Mobile
 /// Ads SDK) is then responsible for displaying them.
+///
+/// See the README for more details on using Native Ads.
 class NativeAd extends MobileAd {
-  NativeAd(
-      {@required String adUnitId,
-      MobileAdTargetingInfo targetingInfo,
-      MobileAdListener listener})
-      : super(
+  NativeAd({
+    @required String adUnitId,
+    MobileAdTargetingInfo targetingInfo,
+    MobileAdListener listener,
+  }) : super(
             adUnitId: adUnitId,
             targetingInfo: targetingInfo,
             listener: listener) {
