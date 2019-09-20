@@ -74,15 +74,15 @@ class MessageList extends StatelessWidget {
                   return <PopupMenuEntry<String>>[
                     PopupMenuItem<String>(
                       value: 'UPDATE',
-                      child: const Text('Update with local timestamp'),
+                      child: Text('Update with local timestamp'),
                     ),
                     PopupMenuItem<String>(
                       value: 'DELETE',
-                      child: const Text('Delete'),
+                      child: Text('Delete'),
                     ),
                     PopupMenuItem<String>(
                       value: 'BATCH',
-                      child: const Text(
+                      child: Text(
                           'Get, update and delete in a single transaction'),
                     ),
                   ];
