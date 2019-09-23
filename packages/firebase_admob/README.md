@@ -186,6 +186,13 @@ method.
 
 ## Using native ads
 
+Native ads are presented to users via UI components that
+are native to the platform. (e.g. A
+[View](https://developer.android.com/reference/android/view/View) on Android or a
+[UIView](https://developer.apple.com/documentation/uikit/uiview?language=objc)
+on iOS). Using Flutter widgets to create native ads is NOT supported by
+this.
+
 ### Android
 You will need to specify a native ad factory which takes a
 [UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd)
@@ -207,6 +214,11 @@ FirebaseAdMobPlugin.setNativeAdGenerator((UnifiedNativeAd ad) -> {
   // return a View;
 });
 ```
+
+It is highly encouraged that you return a
+[UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView).
+An example of displaying a `UnifiedNativeAd` with a `UnifiedNativeAdView` can be found
+[here](https://developers.google.com/admob/android/native/advanced).
 
 ### iOS
 

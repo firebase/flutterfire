@@ -295,10 +295,10 @@ class BannerAd extends MobileAd {
 ///
 /// Native ads are ad assets that are presented to users via UI components that
 /// are native to the platform. (e.g. A
-/// (View)[https://developer.android.com/reference/android/view/View] on Android
+/// [View](https://developer.android.com/reference/android/view/View) on Android
 /// or a
 /// [UIView](https://developer.apple.com/documentation/uikit/uiview?language=objc)
-/// on iOS). Using Flutter widgets to create native ads is not supported by
+/// on iOS). Using Flutter widgets to create native ads is NOT supported by
 /// this.
 ///
 /// Using platform specific UI components, these ads can be formatted to match
