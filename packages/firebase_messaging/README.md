@@ -141,6 +141,15 @@ To integrate your plugin into the iOS part of your app, follow these steps:
 
 1. Follow the steps in the "[Upload your APNs certificate](https://firebase.google.com/docs/cloud-messaging/ios/client#upload_your_apns_certificate)" section of the Firebase docs.
 
+1. Add the following lines to the `(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions`
+method In the `AppDelegate.m` of your iOS project.
+
+```objectivec
+if (@available(iOS 10.0, *)) {
+  [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
+}
+```
+
 ### Dart/Flutter Integration
 
 From your Dart code, you need to import the plugin and instantiate it:
