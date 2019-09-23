@@ -20,8 +20,6 @@ public class MainActivity extends FlutterActivity {
     FirebaseAdMobPlugin.setNativeAdFactory(
         (UnifiedNativeAd ad) -> {
           final TextView myAdView = new TextView(this);
-          myAdView.setWidth(200);
-          myAdView.setHeight(200);
           myAdView.setBackgroundColor(Color.YELLOW);
           myAdView.setText(ad.getBody());
           return myAdView;

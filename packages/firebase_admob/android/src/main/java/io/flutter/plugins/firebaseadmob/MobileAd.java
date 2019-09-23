@@ -234,7 +234,6 @@ abstract class MobileAd extends AdListener {
 
   static class Native extends MobileAd {
     private UnifiedNativeAd nativeAd;
-    View adView;
 
     private Native(int id, Activity activity, MethodChannel channel) {
       super(id, activity, channel);
