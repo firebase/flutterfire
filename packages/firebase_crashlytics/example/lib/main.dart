@@ -4,9 +4,8 @@
 
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   // Set `enableInDevMode` to true to see reports while in debug mode
@@ -74,7 +73,7 @@ class _MyAppState extends State<MyApp> {
                     // Example of an exception that does not get caught
                     // by `FlutterError.onError` but is caught by the `onError` handler of
                     // `runZoned`.
-                    Future<void>.delayed(Duration(seconds: 2), () {
+                    Future<void>.delayed(const Duration(seconds: 2), () {
                       final List<int> list = <int>[];
                       print(list[100]);
                     });
