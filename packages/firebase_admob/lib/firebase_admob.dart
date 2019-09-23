@@ -268,8 +268,12 @@ class BannerAd extends MobileAd {
 
   final AdSize size;
 
-  /// These are AdMob's test ad unit IDs, which always return test ads. You're
-  /// encouraged to use them for testing in your own apps.
+  /// {@template firebase_admob.testAdUnitId}
+  /// A platform-specific AdMob test ad unit ID. This ad unit
+  /// has been specially configured to always return test ads, and developers
+  /// are encouraged to use it while building and testing their apps.
+  /// {@endtemplate}
+  /// {@macro firebase_admob.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/6300978111'
       : 'ca-app-pub-3940256099942544/2934735716';
@@ -322,9 +326,7 @@ class NativeAd extends MobileAd {
     }
   }
 
-  /// A platform-specific AdMob test ad unit ID for Native ads. This ad unit
-  /// has been specially configured to always return test ads, and developers
-  /// are encouraged to use it while building and testing their apps.
+  /// {@macro firebase_admob.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/2247696110'
       : 'ca-app-pub-3940256099942544/3986624511';
@@ -353,9 +355,7 @@ class InterstitialAd extends MobileAd {
             targetingInfo: targetingInfo,
             listener: listener);
 
-  /// A platform-specific AdMob test ad unit ID for interstitials. This ad unit
-  /// has been specially configured to always return test ads, and developers
-  /// are encouraged to use it while building and testing their apps.
+  /// {@macro firebase_admob.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/1033173712'
       : 'ca-app-pub-3940256099942544/4411468910';
@@ -489,9 +489,7 @@ class FirebaseAdMob {
     _channel.setMethodCallHandler(_handleMethod);
   }
 
-  // A placeholder AdMob App ID for testing. AdMob App IDs and ad unit IDs are
-  // specific to a single operating system, so apps building for both Android and
-  // iOS will need a set for each platform.
+  /// {@macro firebase_admob.testAdUnitId}
   static final String testAppId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544~3347511713'
       : 'ca-app-pub-3940256099942544~1458002511';
