@@ -304,6 +304,8 @@ class BannerAd extends MobileAd {
 /// Ads SDK) is then responsible for displaying them.
 ///
 /// See the README for more details on using Native Ads.
+///
+/// Note: This is currently only supported for Android.
 class NativeAd extends MobileAd {
   NativeAd({
     @required String adUnitId,
