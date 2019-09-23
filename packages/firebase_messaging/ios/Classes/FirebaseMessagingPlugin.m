@@ -64,9 +64,6 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
   if ([@"requestNotificationPermissions" isEqualToString:method]) {
     NSDictionary *arguments = call.arguments;
     if (@available(iOS 10.0, *)) {
-      [UNUserNotificationCenter currentNotificationCenter].delegate =
-          (id<UNUserNotificationCenterDelegate>)_registrar;
-
       UNAuthorizationOptions authOptions = 0;
       if ([arguments[@"sound"] boolValue]) {
         authOptions |= UNAuthorizationOptionSound;
@@ -111,10 +108,6 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
     result([NSNumber numberWithBool:YES]);
   } else if ([@"configure" isEqualToString:method]) {
     [FIRMessaging messaging].shouldEstablishDirectChannel = true;
-    if (@available(iOS 10.0, *)) {
-      [UNUserNotificationCenter currentNotificationCenter].delegate =
-          (id<UNUserNotificationCenterDelegate>)_registrar;
-    }
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     if (_launchNotification != nil) {
       [_channel invokeMethod:@"onLaunch" arguments:_launchNotification];
