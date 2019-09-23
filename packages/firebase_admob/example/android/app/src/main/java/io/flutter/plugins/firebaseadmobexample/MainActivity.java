@@ -4,6 +4,7 @@
 
 package io.flutter.plugins.firebaseadmobexample;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
@@ -21,7 +22,8 @@ public class MainActivity extends FlutterActivity {
           final TextView myAdView = new TextView(this);
           myAdView.setWidth(200);
           myAdView.setHeight(200);
-          myAdView.setText("This is an ad!");
+          myAdView.setBackgroundColor(Color.YELLOW);
+          myAdView.setText(ad.getBody());
           return myAdView;
         });
   }

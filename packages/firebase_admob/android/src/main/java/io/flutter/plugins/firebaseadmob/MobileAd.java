@@ -269,14 +269,14 @@ abstract class MobileAd extends AdListener {
         return;
       }
 
-      if (FirebaseAdMobPlugin.nativeAdGenerator == null) {
+      if (FirebaseAdMobPlugin.nativeAdFactory == null) {
         throw new IllegalStateException(
             "The native ad factory was null. Did you add"
                 + " `FirebaseAdMobPlugin.setNativeAdGenerator(Function<UnifiedNativeAd, View>"
                 + " nativeAdGenerator)` to your `MainActivity.java`?");
       }
 
-      showAdView(FirebaseAdMobPlugin.nativeAdGenerator.apply(nativeAd));
+      showAdView(FirebaseAdMobPlugin.nativeAdFactory.apply(nativeAd));
     }
 
     @Override

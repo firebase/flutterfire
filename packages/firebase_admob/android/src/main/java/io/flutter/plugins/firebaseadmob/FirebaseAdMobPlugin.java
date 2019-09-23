@@ -30,7 +30,7 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
   static Function<UnifiedNativeAd, View> nativeAdFactory;
 
   public static void setNativeAdFactory(Function<UnifiedNativeAd, View> nativeAdFactory) {
-    FirebaseAdMobPlugin.nativeAdFactory = nativeAdGenerator;
+    FirebaseAdMobPlugin.nativeAdFactory = nativeAdFactory;
   }
 
   public static void registerWith(Registrar registrar) {
