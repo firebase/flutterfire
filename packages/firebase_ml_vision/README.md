@@ -55,6 +55,9 @@ Optional but recommended: If you use the on-device API, configure your app to au
 Versions `0.7.0+` use the latest ML Kit for Firebase version which requires a minimum deployment
 target of 9.0. You can add the line `platform :ios, '9.0'` in your iOS project `Podfile`.
 
+You may also need to update your app's deployment target to 9.0 using Xcode. Otherwise, you may see
+compilation errors.
+
 If you're using one of the on-device APIs, include the corresponding ML Kit library model in your
 `Podfile`. Then run `pod update` in a terminal within the same directory as your `Podfile`.
 
@@ -77,8 +80,6 @@ final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(imageFile);
 ```
 
 ### 2. Create an instance of a detector.
-
-Get an instance of a `FirebaseVisionDetector`.
 
 ```dart
 final BarcodeDetector barcodeDetector = FirebaseVision.instance.barcodeDetector();
