@@ -7,7 +7,6 @@ part of cloud_firestore;
 typedef Future<dynamic> TransactionHandler(Transaction transaction);
 
 class Transaction {
-  @visibleForTesting
   Transaction(this._transactionId, this._firestore);
 
   int _transactionId;
