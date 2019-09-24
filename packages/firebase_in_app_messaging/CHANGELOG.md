@@ -1,3 +1,7 @@
+## 0.0.1+4
+
+* Update example app with correct const constructors.
+
 ## 0.0.1+3
 
 * Update AGP, gradle and inappmessaging-display versions on Android.
