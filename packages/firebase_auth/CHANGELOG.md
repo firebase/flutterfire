@@ -1,3 +1,7 @@
+## 0.14.0+6
+
+* Update example app with correct const constructors.
+
 ## 0.14.0+5
 
 * On iOS, `fetchSignInMethodsForEmail` now returns an empty list when the email

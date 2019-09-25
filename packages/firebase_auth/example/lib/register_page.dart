@@ -32,7 +32,7 @@ class RegisterPageState extends State<RegisterPage> {
           children: <Widget>[
             TextFormField(
               controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'Email'),
               validator: (String value) {
                 if (value.isEmpty) {
                   return 'Please enter some text';
@@ -42,7 +42,7 @@ class RegisterPageState extends State<RegisterPage> {
             ),
             TextFormField(
               controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Password'),
               validator: (String value) {
                 if (value.isEmpty) {
                   return 'Please enter some text';
