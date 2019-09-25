@@ -127,6 +127,9 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
       case "UploadTask#cancel":
         cancelUploadTask(call, result);
         break;
+      case "StorageReference#list":
+        list(call, result);
+        break;
       default:
         result.notImplemented();
         break;
@@ -284,6 +287,13 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
     final int handle = addUploadListeners(uploadTask);
     result.success(handle);
   }
+
+  private void list(MethodCall call, final Result result) {
+    String path = call.argument("path");
+    StorageReference ref = firebaseStorage.getReference().child(path);
+    result.success(ref.listAll());
+  }
+
 
   private StorageMetadata buildMetadataFromMap(Map<String, Object> map) {
     StorageMetadata.Builder builder = new StorageMetadata.Builder();

@@ -98,6 +98,8 @@ static FlutterError *getFlutterError(NSError *error) {
     [self resumeUploadTask:call result:result];
   } else if ([@"UploadTask#cancel" isEqualToString:call.method]) {
     [self cancelUploadTask:call result:result];
+  } else if ([@"StorageReference#list" isEqualToString:call.method]) {
+    [self list:call result:result];
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -405,6 +407,12 @@ typedef NS_ENUM(NSUInteger, StorageTaskEventType) {
   NSString *path = call.arguments[@"path"];
   FIRStorageReference *ref = [storage.reference child:path];
   result([ref fullPath]);
+}
+
+- (void)list:(FlutterMethodCall *)call result:(FlutterResult)result {
+  NSString *path = call.arguments[@"path"];
+  FIRStorageReference *ref = [storage.reference child:path];
+  result([ref list]);
 }
 
 - (void)getDownloadUrl:(FlutterMethodCall *)call result:(FlutterResult)result {
