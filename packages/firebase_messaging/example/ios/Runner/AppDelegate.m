@@ -10,7 +10,8 @@
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   if (@available(iOS 10.0, *)) {
-    [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
+    [UNUserNotificationCenter currentNotificationCenter].delegate =
+        (id<UNUserNotificationCenterDelegate>)self;
   }
   [GeneratedPluginRegistrant registerWithRegistry:self];
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
