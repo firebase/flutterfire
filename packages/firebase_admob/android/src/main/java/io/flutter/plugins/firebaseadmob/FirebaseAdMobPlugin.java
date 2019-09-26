@@ -6,11 +6,11 @@ package io.flutter.plugins.firebaseadmob;
 
 import android.app.Activity;
 import android.view.Gravity;
-import android.view.View;
 import androidx.arch.core.util.Function;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.google.firebase.FirebaseApp;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -27,9 +27,10 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
 
   RewardedVideoAdWrapper rewardedWrapper;
 
-  static Function<UnifiedNativeAd, View> nativeAdFactory;
+  static Function<UnifiedNativeAd, UnifiedNativeAdView> nativeAdFactory;
 
-  public static void setNativeAdFactory(Function<UnifiedNativeAd, View> nativeAdFactory) {
+  public static void setNativeAdFactory(
+      Function<UnifiedNativeAd, UnifiedNativeAdView> nativeAdFactory) {
     FirebaseAdMobPlugin.nativeAdFactory = nativeAdFactory;
   }
 
