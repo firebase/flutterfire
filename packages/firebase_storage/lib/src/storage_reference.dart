@@ -135,6 +135,15 @@ class StorageReference {
     return task;
   }
 
+  Future<ListResult> list() async {
+    return await FirebaseStorage.channel
+        .invokeMethod<ListResult>("StorageReference#list", <String, String>{
+      'app': _firebaseStorage.app?.name,
+      'bucket': _firebaseStorage.storageBucket,
+      'path': _pathComponents.join("/"),
+    });
+  }
+
   /// Asynchronously retrieves a long lived download URL with a revokable token.
   /// This can be used to share the file with others, but can be revoked by a
   /// developer in the Firebase Console if desired.

@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -17,21 +18,20 @@ void main() async {
   final FirebaseApp app = await FirebaseApp.configure(
     name: 'test',
     options: FirebaseOptions(
-      googleAppID: Platform.isIOS
-          ? '1:159623150305:ios:4a213ef3dbd8997b'
-          : '1:159623150305:android:ef48439a0cc0263d',
-      gcmSenderID: '159623150305',
-      apiKey: 'AIzaSyChk3KEG7QYrs4kQPLP1tjJNxBTbfCAdgg',
-      projectID: 'flutter-firebase-plugins',
+      googleAppID:
+          Platform.isIOS ? '1:159623150305:ios:4a213ef3dbd8997b' : '1:207870425357:android:6f6ea31edffb6870ef1844',
+      gcmSenderID: '207870425357',
+      apiKey: 'AIzaSyDFvVt27L_gVmvL_lte_QX_eoZa_zjgLKE',
+      projectID: 'flutterfirebaseplugins',
     ),
   );
-  final FirebaseStorage storage = FirebaseStorage(
-      app: app, storageBucket: 'gs://flutter-firebase-plugins.appspot.com');
+  final FirebaseStorage storage = FirebaseStorage(app: app, storageBucket: 'gs://flutterfirebaseplugins.appspot.com');
   runApp(MyApp(storage: storage));
 }
 
 class MyApp extends StatelessWidget {
   MyApp({this.storage});
+
   final FirebaseStorage storage;
 
   @override
@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({this.storage});
+
   final FirebaseStorage storage;
 
   @override
@@ -61,8 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final File file = await File('${systemTempDir.path}/foo$uuid.txt').create();
     await file.writeAsString(kTestString);
     assert(await file.readAsString() == kTestString);
-    final StorageReference ref =
-        widget.storage.ref().child('text').child('foo$uuid.txt');
+    final StorageReference ref = widget.storage.ref().child('text').child('foo$uuid.txt');
     final StorageUploadTask uploadTask = ref.putFile(
       file,
       StorageMetadata(
@@ -107,6 +107,12 @@ class _MyHomePageState extends State<MyHomePage> {
     ));
   }
 
+  Future<void> _listOfFiles() async {
+    final StorageReference ref = widget.storage.ref().child('text');
+    final dynamic result = await ref.list();
+    log( result.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = <Widget>[];
@@ -125,9 +131,12 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.clear_all),
-            onPressed:
-                _tasks.isNotEmpty ? () => setState(() => _tasks.clear()) : null,
-          )
+            onPressed: _tasks.isNotEmpty ? () => setState(() => _tasks.clear()) : null,
+          ),
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: _listOfFiles, //_tasks.isNotEmpty ? () => setState(() => _tasks.clear()) : null,
+          ),
         ],
       ),
       body: ListView(
@@ -142,10 +151,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+
+
 class UploadTaskListTile extends StatelessWidget {
-  const UploadTaskListTile(
-      {Key key, this.task, this.onDismissed, this.onDownload})
-      : super(key: key);
+  const UploadTaskListTile({Key key, this.task, this.onDismissed, this.onDownload}) : super(key: key);
 
   final StorageUploadTask task;
   final VoidCallback onDismissed;
@@ -177,8 +186,7 @@ class UploadTaskListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<StorageTaskEvent>(
       stream: task.events,
-      builder: (BuildContext context,
-          AsyncSnapshot<StorageTaskEvent> asyncSnapshot) {
+      builder: (BuildContext context, AsyncSnapshot<StorageTaskEvent> asyncSnapshot) {
         Widget subtitle;
         if (asyncSnapshot.hasData) {
           final StorageTaskEvent event = asyncSnapshot.data;

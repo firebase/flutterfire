@@ -5,6 +5,7 @@
 package io.flutter.plugins.firebase.storage;
 
 import android.net.Uri;
+import android.util.Log;
 import android.util.SparseArray;
 import android.webkit.MimeTypeMap;
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageException;
@@ -289,9 +291,30 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
   }
 
   private void list(MethodCall call, final Result result) {
+    Log.d( "list", "start method");
     String path = call.argument("path");
+    Log.d( "list", "path : " + path);
+
     StorageReference ref = firebaseStorage.getReference().child(path);
-    result.success(ref.listAll());
+    Log.d( "list", "storage reference : " + ref.toString());
+
+    final Task<ListResult> listTask = ref.listAll();
+    listTask.addOnSuccessListener(new OnSuccessListener<ListResult>() {
+      @Override
+      public void onSuccess(ListResult listResult) {
+        Log.d( "list", "task onSuccess : " + listResult.toString());
+
+        result.success(listResult);
+      }
+    });
+    listTask.addOnFailureListener(new OnFailureListener() {
+      @Override
+      public void onFailure(@NonNull Exception e) {
+        Log.d( "list", "task onFailrue : " + e.getMessage());
+        result.error("listing_error", e.getMessage(), null);
+
+      }
+    });
   }
 
 
