@@ -135,9 +135,9 @@ class StorageReference {
     return task;
   }
 
-  Future<ListResult> list() async {
+  Future<dynamic> list() async {
     return await FirebaseStorage.channel
-        .invokeMethod<ListResult>("StorageReference#list", <String, String>{
+        .invokeMethod<dynamic>("StorageReference#list", <String, String>{
       'app': _firebaseStorage.app?.name,
       'bucket': _firebaseStorage.storageBucket,
       'path': _pathComponents.join("/"),

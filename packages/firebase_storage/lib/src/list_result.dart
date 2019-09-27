@@ -9,16 +9,23 @@ class ListResult {
   List<StorageReference> items;
   String pageToken;
 
-  ListResult(List<StorageReference> prefixes, List<StorageReference> items, String pageToken) {
-    this.prefixes = prefixes;
-    this.items = items;
-    this.pageToken = pageToken;
+  ListResult(Map<String, Object> map){
+    this.pageToken = map['pageToken'];
+    this.items = List();
+    this.prefixes = List();
+
   }
 
-  /*
+//  ListResult(List<StorageReference> prefixes, List<StorageReference> items, String pageToken) {
+//    this.prefixes = prefixes;
+//    this.items = items;
+//    this.pageToken = pageToken;
+//  }
+
+/*
   static ListResult fromJSON(FirebaseStorage storage, JSONObject resultBody) {
-    List<StorageReference> prefixes = new ArrayList();
-    List<StorageReference> items = new ArrayList();
+    List<StorageReference> prefixes = [];
+    List<StorageReference> items = [];
     JSONArray itemEntries;
     int i;
     if (resultBody.has("prefixes")) {
