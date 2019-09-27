@@ -412,7 +412,24 @@ typedef NS_ENUM(NSUInteger, StorageTaskEventType) {
 - (void)list:(FlutterMethodCall *)call result:(FlutterResult)result {
   NSString *path = call.arguments[@"path"];
   FIRStorageReference *ref = [storage.reference child:path];
-  result([ref list]);
+//  result([ref listAllWithCompletion]);
+
+  [ref listAllWithCompletion:^(FIRStorageListResult *result, NSError *error) {
+    if (error != nil) {
+        result(getFlutterError(error));
+    }
+
+    for (FIRStorageReference *prefix in result.prefixes) {
+      // All the prefixes under storageReference.
+      // You may call listAllWithCompletion: recursively on them.
+    }
+    for (FIRStorageReference *item in result.items) {
+      // All items under storageReference.
+    }
+
+    result( result);
+  }];
+
 }
 
 - (void)getDownloadUrl:(FlutterMethodCall *)call result:(FlutterResult)result {
