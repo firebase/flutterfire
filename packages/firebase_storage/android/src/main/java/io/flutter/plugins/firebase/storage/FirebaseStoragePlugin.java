@@ -314,32 +314,15 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
             public void onSuccess(ListResult listResult) {
                 Log.d("list", "task onSuccess : " + listResult.toString());
 
-          Map<String, Object> map = new HashMap<>();
+                Map<String, Object> map = new HashMap<>();
 
-          map.put("pageToken", listResult.getPageToken());
-          Map<String, Object> mapItems = new HashMap<>();
-          for (int i = 0; i < listResult.getItems().size(); i++) {
-              mapItems.put(listResult.getItems().get(i).getName(), buildMapStorageReference(listResult.getItems().get(i)));
-          }
-          map.put("items", mapItems);
-          result.success(map);
-
-/*
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("pageToken", listResult.getPageToken());
-                    JSONArray jsonArray = new JSONArray();
-                    for (int i = 0; i < listResult.getItems().size(); i++) {
-                        jsonArray.put(buildJsonStorageReference(listResult.getItems().get(i)));
-                    }
-                    jsonObject.put("items", jsonArray);
-                    result.success(jsonObject);
-                } catch (JSONException e) {
-                    Log.d("list", e.getMessage());
-                    result.error("listing_error", e.getMessage(), null);
+                map.put("pageToken", listResult.getPageToken());
+                Map<String, Object> mapItems = new HashMap<>();
+                for (int i = 0; i < listResult.getItems().size(); i++) {
+                    mapItems.put(listResult.getItems().get(i).getName(), buildMapStorageReference(listResult.getItems().get(i)));
                 }
-*/
-                //result.success(listResult);
+                map.put("items", mapItems);
+                result.success(map);
             }
         });
         listTask.addOnFailureListener(new OnFailureListener() {
@@ -356,16 +339,6 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
         Map<String, Object> map = new HashMap<>();
         map.put("name", storageReference.getName());
         return map;
-    }
-
-    private JSONObject buildJsonStorageReference(StorageReference storageReference) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("name", storageReference.getName());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
     }
 
 
