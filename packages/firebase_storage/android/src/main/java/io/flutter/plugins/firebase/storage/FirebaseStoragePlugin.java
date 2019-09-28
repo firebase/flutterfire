@@ -48,7 +48,7 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
 
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel =
-            new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_storage");
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_storage");
     channel.setMethodCallHandler(new FirebaseStoragePlugin(channel, registrar));
   }
 
@@ -172,20 +172,20 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
     String path = call.argument("path");
     StorageReference ref = firebaseStorage.getReference().child(path);
     ref.getMetadata()
-            .addOnSuccessListener(
-                    new OnSuccessListener<StorageMetadata>() {
-                      @Override
-                      public void onSuccess(StorageMetadata storageMetadata) {
-                        result.success(buildMapFromMetadata(storageMetadata));
-                      }
-                    })
-            .addOnFailureListener(
-                    new OnFailureListener() {
-                      @Override
-                      public void onFailure(@NonNull Exception e) {
-                        result.error("metadata_error", e.getMessage(), null);
-                      }
-                    });
+        .addOnSuccessListener(
+            new OnSuccessListener<StorageMetadata>() {
+              @Override
+              public void onSuccess(StorageMetadata storageMetadata) {
+                result.success(buildMapFromMetadata(storageMetadata));
+              }
+            })
+        .addOnFailureListener(
+            new OnFailureListener() {
+              @Override
+              public void onFailure(@NonNull Exception e) {
+                result.error("metadata_error", e.getMessage(), null);
+              }
+            });
   }
 
   private void updateMetadata(MethodCall call, final Result result) {
@@ -193,20 +193,20 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
     Map<String, Object> metadata = call.argument("metadata");
     StorageReference ref = firebaseStorage.getReference().child(path);
     ref.updateMetadata(buildMetadataFromMap(metadata))
-            .addOnSuccessListener(
-                    new OnSuccessListener<StorageMetadata>() {
-                      @Override
-                      public void onSuccess(StorageMetadata storageMetadata) {
-                        result.success(buildMapFromMetadata(storageMetadata));
-                      }
-                    })
-            .addOnFailureListener(
-                    new OnFailureListener() {
-                      @Override
-                      public void onFailure(@NonNull Exception e) {
-                        result.error("metadata_error", e.getMessage(), null);
-                      }
-                    });
+        .addOnSuccessListener(
+            new OnSuccessListener<StorageMetadata>() {
+              @Override
+              public void onSuccess(StorageMetadata storageMetadata) {
+                result.success(buildMapFromMetadata(storageMetadata));
+              }
+            })
+        .addOnFailureListener(
+            new OnFailureListener() {
+              @Override
+              public void onFailure(@NonNull Exception e) {
+                result.error("metadata_error", e.getMessage(), null);
+              }
+            });
   }
 
   private void getBucket(MethodCall call, final Result result) {
@@ -231,20 +231,20 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
     String path = call.argument("path");
     StorageReference ref = firebaseStorage.getReference().child(path);
     ref.getDownloadUrl()
-            .addOnSuccessListener(
-                    new OnSuccessListener<Uri>() {
-                      @Override
-                      public void onSuccess(Uri uri) {
-                        result.success(uri.toString());
-                      }
-                    })
-            .addOnFailureListener(
-                    new OnFailureListener() {
-                      @Override
-                      public void onFailure(@NonNull Exception e) {
-                        result.error("download_error", e.getMessage(), null);
-                      }
-                    });
+        .addOnSuccessListener(
+            new OnSuccessListener<Uri>() {
+              @Override
+              public void onSuccess(Uri uri) {
+                result.success(uri.toString());
+              }
+            })
+        .addOnFailureListener(
+            new OnFailureListener() {
+              @Override
+              public void onFailure(@NonNull Exception e) {
+                result.error("download_error", e.getMessage(), null);
+              }
+            });
   }
 
   private void delete(MethodCall call, final Result result) {
@@ -252,19 +252,19 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
     StorageReference ref = firebaseStorage.getReference().child(path);
     final Task<Void> deleteTask = ref.delete();
     deleteTask.addOnSuccessListener(
-            new OnSuccessListener<Void>() {
-              @Override
-              public void onSuccess(Void aVoid) {
-                result.success(null);
-              }
-            });
+        new OnSuccessListener<Void>() {
+          @Override
+          public void onSuccess(Void aVoid) {
+            result.success(null);
+          }
+        });
     deleteTask.addOnFailureListener(
-            new OnFailureListener() {
-              @Override
-              public void onFailure(@NonNull Exception e) {
-                result.error("deletion_error", e.getMessage(), null);
-              }
-            });
+        new OnFailureListener() {
+          @Override
+          public void onFailure(@NonNull Exception e) {
+            result.error("deletion_error", e.getMessage(), null);
+          }
+        });
   }
 
   private void putFile(MethodCall call, Result result) {
@@ -384,19 +384,19 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
     StorageReference ref = firebaseStorage.getReference().child(path);
     Task<byte[]> downloadTask = ref.getBytes(maxSize);
     downloadTask.addOnSuccessListener(
-            new OnSuccessListener<byte[]>() {
-              @Override
-              public void onSuccess(byte[] bytes) {
-                result.success(bytes);
-              }
-            });
+        new OnSuccessListener<byte[]>() {
+          @Override
+          public void onSuccess(byte[] bytes) {
+            result.success(bytes);
+          }
+        });
     downloadTask.addOnFailureListener(
-            new OnFailureListener() {
-              @Override
-              public void onFailure(@NonNull Exception e) {
-                result.error("download_error", e.getMessage(), null);
-              }
-            });
+        new OnFailureListener() {
+          @Override
+          public void onFailure(@NonNull Exception e) {
+            result.error("download_error", e.getMessage(), null);
+          }
+        });
   }
 
   private void writeToFile(MethodCall call, final Result result) {
@@ -406,19 +406,19 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
     StorageReference ref = firebaseStorage.getReference().child(path);
     FileDownloadTask downloadTask = ref.getFile(file);
     downloadTask.addOnSuccessListener(
-            new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-              @Override
-              public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                result.success(taskSnapshot.getTotalByteCount());
-              }
-            });
+        new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+          @Override
+          public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+            result.success(taskSnapshot.getTotalByteCount());
+          }
+        });
     downloadTask.addOnFailureListener(
-            new OnFailureListener() {
-              @Override
-              public void onFailure(@NonNull Exception e) {
-                result.error("download_error", e.getMessage(), null);
-              }
-            });
+        new OnFailureListener() {
+          @Override
+          public void onFailure(@NonNull Exception e) {
+            result.error("download_error", e.getMessage(), null);
+          }
+        });
   }
 
   private void pauseUploadTask(MethodCall call, final Result result) {
@@ -457,37 +457,37 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
   private int addUploadListeners(final UploadTask uploadTask) {
     final int handle = ++nextUploadHandle;
     uploadTask
-            .addOnProgressListener(
-                    new OnProgressListener<UploadTask.TaskSnapshot>() {
-                      @Override
-                      public void onProgress(UploadTask.TaskSnapshot snapshot) {
-                        invokeStorageTaskEvent(handle, StorageTaskEventType.progress, snapshot, null);
-                      }
-                    })
-            .addOnPausedListener(
-                    new OnPausedListener<UploadTask.TaskSnapshot>() {
-                      @Override
-                      public void onPaused(UploadTask.TaskSnapshot snapshot) {
-                        invokeStorageTaskEvent(handle, StorageTaskEventType.pause, snapshot, null);
-                      }
-                    })
-            .addOnCompleteListener(
-                    new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                      @Override
-                      public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (!task.isSuccessful()) {
-                          invokeStorageTaskEvent(
-                                  handle,
-                                  StorageTaskEventType.failure,
-                                  uploadTask.getSnapshot(),
-                                  (StorageException) task.getException());
-                        } else {
-                          invokeStorageTaskEvent(
-                                  handle, StorageTaskEventType.success, task.getResult(), null);
-                        }
-                        uploadTasks.remove(handle);
-                      }
-                    });
+        .addOnProgressListener(
+            new OnProgressListener<UploadTask.TaskSnapshot>() {
+              @Override
+              public void onProgress(UploadTask.TaskSnapshot snapshot) {
+                invokeStorageTaskEvent(handle, StorageTaskEventType.progress, snapshot, null);
+              }
+            })
+        .addOnPausedListener(
+            new OnPausedListener<UploadTask.TaskSnapshot>() {
+              @Override
+              public void onPaused(UploadTask.TaskSnapshot snapshot) {
+                invokeStorageTaskEvent(handle, StorageTaskEventType.pause, snapshot, null);
+              }
+            })
+        .addOnCompleteListener(
+            new OnCompleteListener<UploadTask.TaskSnapshot>() {
+              @Override
+              public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if (!task.isSuccessful()) {
+                  invokeStorageTaskEvent(
+                      handle,
+                      StorageTaskEventType.failure,
+                      uploadTask.getSnapshot(),
+                      (StorageException) task.getException());
+                } else {
+                  invokeStorageTaskEvent(
+                      handle, StorageTaskEventType.success, task.getResult(), null);
+                }
+                uploadTasks.remove(handle);
+              }
+            });
     uploadTasks.put(handle, uploadTask);
     return handle;
   }
@@ -501,18 +501,18 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
   }
 
   private void invokeStorageTaskEvent(
-          int handle,
-          StorageTaskEventType type,
-          UploadTask.TaskSnapshot snapshot,
-          StorageException error) {
+      int handle,
+      StorageTaskEventType type,
+      UploadTask.TaskSnapshot snapshot,
+      StorageException error) {
     channel.invokeMethod("StorageTaskEvent", buildMapFromTaskEvent(handle, type, snapshot, error));
   }
 
   private Map<String, Object> buildMapFromTaskEvent(
-          int handle,
-          StorageTaskEventType type,
-          UploadTask.TaskSnapshot snapshot,
-          StorageException error) {
+      int handle,
+      StorageTaskEventType type,
+      UploadTask.TaskSnapshot snapshot,
+      StorageException error) {
     Map<String, Object> map = new HashMap<>();
     map.put("handle", handle);
     map.put("type", type.ordinal());
@@ -521,7 +521,7 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
   }
 
   private Map<String, Object> buildMapFromTaskSnapshot(
-          UploadTask.TaskSnapshot snapshot, StorageException error) {
+      UploadTask.TaskSnapshot snapshot, StorageException error) {
     Map<String, Object> map = new HashMap<>();
     map.put("bytesTransferred", snapshot.getBytesTransferred());
     map.put("totalByteCount", snapshot.getTotalByteCount());
