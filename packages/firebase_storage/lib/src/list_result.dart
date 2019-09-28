@@ -15,5 +15,4 @@ class ListResult {
   final String pageToken;
   final Map<String, ListResultItem> items;
   final Map<String, ListResultPrefix> prefixes;
-
 }

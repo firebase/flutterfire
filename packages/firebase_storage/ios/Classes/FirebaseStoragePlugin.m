@@ -418,19 +418,18 @@ typedef NS_ENUM(NSUInteger, StorageTaskEventType) {
     } else {
       NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
       [dictionary setValue:[resultList pageToken] forKey:@"pageToken"];
-        
       NSMutableDictionary *dictionaryItems = [[NSMutableDictionary alloc] init];
       for (FIRStorageReference *item in resultList.items) {
-        [dictionaryItems setValue:[self buildDictionaryStorageReference:item] forKey:[item name]];
+        [dictionaryItems setValue:[self buildDictionaryStorageReference:item]
+                           forKey:[item name]];
       }
       [dictionary setValue:dictionaryItems forKey:@"items"];
-
       NSMutableDictionary *dictionaryPrefixes = [[NSMutableDictionary alloc] init];
       for (FIRStorageReference *prefix in resultList.prefixes) {
-        [dictionaryPrefixes setValue:[self buildDictionaryStorageReference:prefix] forKey:[prefix name]];
+        [dictionaryPrefixes setValue:[self buildDictionaryStorageReference:prefix]
+                              forKey:[prefix name]];
       }
       [dictionary setValue:dictionaryPrefixes forKey:@"prefixes"];
-
       result(dictionary);
     }
   }];
@@ -441,7 +440,6 @@ typedef NS_ENUM(NSUInteger, StorageTaskEventType) {
   [dictionary setValue:[storageReference name] forKey:@"name"];
   [dictionary setValue:[storageReference bucket] forKey:@"bucket"];
   [dictionary setValue:[storageReference fullPath] forKey:@"path"];
-    
   return dictionary;
 }
 

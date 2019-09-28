@@ -18,8 +18,9 @@ void main() async {
   final FirebaseApp app = await FirebaseApp.configure(
     name: 'test',
     options: FirebaseOptions(
-      googleAppID:
-          Platform.isIOS ? '1:207870425357:ios:d7c47ec26b7d75faef1844' : '1:207870425357:android:6f6ea31edffb6870ef1844',
+      googleAppID: Platform.isIOS
+          ? '1:207870425357:ios:d7c47ec26b7d75faef1844'
+          : '1:207870425357:android:6f6ea31edffb6870ef1844',
       gcmSenderID: '207870425357',
       apiKey: 'AIzaSyDFvVt27L_gVmvL_lte_QX_eoZa_zjgLKE',
       projectID: 'flutterfirebaseplugins',
@@ -110,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _listOfFiles() async {
     final StorageReference ref = widget.storage.ref().child('text');
     final dynamic result = await ref.listAll();
-    log( result.toString());
+    log(result.toString());
   }
 
   @override
@@ -151,8 +152,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
-
 class UploadTaskListTile extends StatelessWidget {
   const UploadTaskListTile({Key key, this.task, this.onDismissed, this.onDownload}) : super(key: key);
 
@@ -186,7 +185,8 @@ class UploadTaskListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<StorageTaskEvent>(
       stream: task.events,
-      builder: (BuildContext context, AsyncSnapshot<StorageTaskEvent> asyncSnapshot) {
+      builder: (BuildContext context,
+          AsyncSnapshot<StorageTaskEvent> asyncSnapshot) {
         Widget subtitle;
         if (asyncSnapshot.hasData) {
           final StorageTaskEvent event = asyncSnapshot.data;
