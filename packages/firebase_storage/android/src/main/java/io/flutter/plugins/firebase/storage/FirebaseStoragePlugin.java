@@ -31,9 +31,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * FirebaseStoragePlugin
- */
+/** FirebaseStoragePlugin */
 public class FirebaseStoragePlugin implements MethodCallHandler {
   private FirebaseStorage firebaseStorage;
   private final MethodChannel channel;
