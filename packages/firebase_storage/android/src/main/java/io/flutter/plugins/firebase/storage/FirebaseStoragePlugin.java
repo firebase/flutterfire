@@ -300,32 +300,36 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
     String path = call.argument("path");
     StorageReference ref = firebaseStorage.getReference().child(path);
     final Task<ListResult> listTask = ref.listAll();
-    listTask.addOnSuccessListener(new OnSuccessListener<ListResult>() {
-      @Override
-      public void onSuccess(ListResult listResult) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("pageToken", listResult.getPageToken());
-        Map<String, Object> mapItems = new HashMap<>();
-        for (int i = 0; i < listResult.getItems().size(); i++) {
-          mapItems.put(listResult.getItems().get(i).getName(),
-              buildMapStorageReference(listResult.getItems().get(i)));
-        }
-        map.put("items", mapItems);
-        Map<String, Object> mapPrefixes = new HashMap<>();
-        for (int i = 0; i < listResult.getPrefixes().size(); i++) {
-          mapItems.put(listResult.getPrefixes().get(i).getName(),
-              buildMapStorageReference(listResult.getPrefixes().get(i)));
-        }
-        map.put("prefixes", mapPrefixes);
-        result.success(map);
-      }
-    });
-    listTask.addOnFailureListener(new OnFailureListener() {
-      @Override
-      public void onFailure(@NonNull Exception e) {
-        result.error("listing_error", e.getMessage(), null);
-      }
-    });
+    listTask.addOnSuccessListener(
+        new OnSuccessListener<ListResult>() {
+          @Override
+          public void onSuccess(ListResult listResult) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("pageToken", listResult.getPageToken());
+            Map<String, Object> mapItems = new HashMap<>();
+            for (int i = 0; i < listResult.getItems().size(); i++) {
+              mapItems.put(
+                  listResult.getItems().get(i).getName(),
+                  buildMapStorageReference(listResult.getItems().get(i)));
+            }
+            map.put("items", mapItems);
+            Map<String, Object> mapPrefixes = new HashMap<>();
+            for (int i = 0; i < listResult.getPrefixes().size(); i++) {
+              mapItems.put(
+                  listResult.getPrefixes().get(i).getName(),
+                  buildMapStorageReference(listResult.getPrefixes().get(i)));
+            }
+            map.put("prefixes", mapPrefixes);
+            result.success(map);
+          }
+        });
+    listTask.addOnFailureListener(
+        new OnFailureListener() {
+          @Override
+          public void onFailure(@NonNull Exception e) {
+            result.error("listing_error", e.getMessage(), null);
+          }
+        });
   }
 
   private Map<String, Object> buildMapStorageReference(StorageReference storageReference) {
