@@ -26,7 +26,8 @@ void main() async {
       projectID: 'flutterfirebaseplugins',
     ),
   );
-  final FirebaseStorage storage = FirebaseStorage(app: app, storageBucket: 'gs://flutterfirebaseplugins.appspot.com');
+  final FirebaseStorage storage = FirebaseStorage(
+      app: app, storageBucket: 'gs://flutterfirebaseplugins.appspot.com');
   runApp(MyApp(storage: storage));
 }
 
@@ -63,7 +64,8 @@ class _MyHomePageState extends State<MyHomePage> {
     final File file = await File('${systemTempDir.path}/foo$uuid.txt').create();
     await file.writeAsString(kTestString);
     assert(await file.readAsString() == kTestString);
-    final StorageReference ref = widget.storage.ref().child('text').child('foo$uuid.txt');
+    final StorageReference ref =
+        widget.storage.ref().child('text').child('foo$uuid.txt');
     final StorageUploadTask uploadTask = ref.putFile(
       file,
       StorageMetadata(
@@ -132,7 +134,8 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.clear_all),
-            onPressed: _tasks.isNotEmpty ? () => setState(() => _tasks.clear()) : null,
+            onPressed:
+                _tasks.isNotEmpty ? () => setState(() => _tasks.clear()) : null,
           ),
           IconButton(
             icon: const Icon(Icons.list),
@@ -153,7 +156,9 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class UploadTaskListTile extends StatelessWidget {
-  const UploadTaskListTile({Key key, this.task, this.onDismissed, this.onDownload}) : super(key: key);
+  const UploadTaskListTile(
+      {Key key, this.task, this.onDismissed, this.onDownload})
+      : super(key: key);
 
   final StorageUploadTask task;
   final VoidCallback onDismissed;
