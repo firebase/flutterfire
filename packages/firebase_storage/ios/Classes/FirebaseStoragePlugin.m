@@ -420,8 +420,7 @@ typedef NS_ENUM(NSUInteger, StorageTaskEventType) {
       [dictionary setValue:[resultList pageToken] forKey:@"pageToken"];
       NSMutableDictionary *dictionaryItems = [[NSMutableDictionary alloc] init];
       for (FIRStorageReference *item in resultList.items) {
-        [dictionaryItems setValue:[self buildDictionaryStorageReference:item]
-                           forKey:[item name]];
+        [dictionaryItems setValue:[self buildDictionaryStorageReference:item] forKey:[item name]];
       }
       [dictionary setValue:dictionaryItems forKey:@"items"];
       NSMutableDictionary *dictionaryPrefixes = [[NSMutableDictionary alloc] init];
