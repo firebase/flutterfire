@@ -109,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _listOfFiles() async {
     final StorageReference ref = widget.storage.ref().child('text');
-    final dynamic result = await ref.list();
+    final dynamic result = await ref.listAll();
     log( result.toString());
   }
 

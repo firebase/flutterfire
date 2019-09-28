@@ -26,10 +26,6 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -139,8 +135,8 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
             case "UploadTask#cancel":
                 cancelUploadTask(call, result);
                 break;
-            case "StorageReference#list":
-                list(call, result);
+            case "StorageReference#listAll":
+                listAll(call, result);
                 break;
             default:
                 result.notImplemented();
@@ -300,20 +296,14 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
         result.success(handle);
     }
 
-    private void list(MethodCall call, final Result result) {
-        Log.d("list", "start method");
+    private void listAll(MethodCall call, final Result result) {
         String path = call.argument("path");
-        Log.d("list", "path : " + path);
-
         StorageReference ref = firebaseStorage.getReference().child(path);
-        Log.d("list", "storage reference : " + ref.toString());
 
         final Task<ListResult> listTask = ref.listAll();
         listTask.addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
-                Log.d("list", "task onSuccess : " + listResult.toString());
-
                 Map<String, Object> map = new HashMap<>();
 
                 map.put("pageToken", listResult.getPageToken());
@@ -335,7 +325,6 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
         listTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("list", "task onFailrue : " + e.getMessage());
                 result.error("listing_error", e.getMessage(), null);
 
             }
