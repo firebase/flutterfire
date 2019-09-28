@@ -307,12 +307,14 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
         map.put("pageToken", listResult.getPageToken());
         Map<String, Object> mapItems = new HashMap<>();
         for (int i = 0; i < listResult.getItems().size(); i++) {
-          mapItems.put(listResult.getItems().get(i).getName(), buildMapStorageReference(listResult.getItems().get(i)));
+          mapItems.put(listResult.getItems().get(i).getName(),
+              buildMapStorageReference(listResult.getItems().get(i)));
         }
         map.put("items", mapItems);
         Map<String, Object> mapPrefixes = new HashMap<>();
         for (int i = 0; i < listResult.getPrefixes().size(); i++) {
-          mapItems.put(listResult.getPrefixes().get(i).getName(), buildMapStorageReference(listResult.getPrefixes().get(i)));
+          mapItems.put(listResult.getPrefixes().get(i).getName(),
+              buildMapStorageReference(listResult.getPrefixes().get(i)));
         }
         map.put("prefixes", mapPrefixes);
         result.success(map);
@@ -322,7 +324,6 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
       @Override
       public void onFailure(@NonNull Exception e) {
         result.error("listing_error", e.getMessage(), null);
-
       }
     });
   }
