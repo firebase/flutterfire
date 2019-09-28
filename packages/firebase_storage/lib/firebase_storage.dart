@@ -17,4 +17,6 @@ part 'src/firebase_storage.dart';
 part 'src/storage_metadata.dart';
 part 'src/storage_reference.dart';
 part 'src/list_result.dart';
+part 'src/list_result_item.dart';
+part 'src/list_result_prefix.dart';
 part 'src/upload_task.dart';
