@@ -19,7 +19,7 @@ void main() async {
     name: 'test',
     options: FirebaseOptions(
       googleAppID:
-          Platform.isIOS ? '1:159623150305:ios:4a213ef3dbd8997b' : '1:207870425357:android:6f6ea31edffb6870ef1844',
+          Platform.isIOS ? '1:207870425357:ios:d7c47ec26b7d75faef1844' : '1:207870425357:android:6f6ea31edffb6870ef1844',
       gcmSenderID: '207870425357',
       apiKey: 'AIzaSyDFvVt27L_gVmvL_lte_QX_eoZa_zjgLKE',
       projectID: 'flutterfirebaseplugins',
