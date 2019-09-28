@@ -135,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           IconButton(
             icon: const Icon(Icons.list),
-            onPressed: _listOfFiles, //_tasks.isNotEmpty ? () => setState(() => _tasks.clear()) : null,
+            onPressed: _listOfFiles,
           ),
         ],
       ),

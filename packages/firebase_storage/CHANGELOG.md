@@ -1,3 +1,7 @@
+## 3.1.0
+* Update Android dependencies to latest.
+* Implement `listAll` function both in Android and iOS.
+
 ## 3.0.6
 
 * Update documentation to reflect new repository location.
