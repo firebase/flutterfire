@@ -1,3 +1,7 @@
+## 0.1.0+5
+
+* Fix example app build.
+
 ## 0.1.0+4
 
 * Fix linter finding in examples.
