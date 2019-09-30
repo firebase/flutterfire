@@ -176,7 +176,7 @@ On Android, the message contains an additional field `data` containing the data.
 To receive the data on both platforms:
 
 ````dart
-Future<void> _handleNotification (Map<dynamic, dynamic> message, bool dialog) async {
+Future<void> _handleNotification (Map<dynamic, dynamic> message) async {
     var data = message['data'] ?? message;
     String expectedAttribute = data['expectedAttribute'];
     /// [...]
