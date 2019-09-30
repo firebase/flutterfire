@@ -1,6 +1,6 @@
 ## 0.1.0+5
 
-* Fix example app build.
+* Fix example app `support-compat` crash by setting `compileSdkVersion` to 28.
 
 ## 0.1.0+4
 
