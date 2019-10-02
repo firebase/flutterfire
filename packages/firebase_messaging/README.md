@@ -91,7 +91,7 @@ By default background messaging is not enabled. To handle messages in the backgr
     ```
     <application android:name=".Application" ...>
     ```
-1. Define a top level Dart method to handle background messages
+1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
     ```
     Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
       if (message.containsKey('data')) {
