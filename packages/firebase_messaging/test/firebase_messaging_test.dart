@@ -97,13 +97,18 @@ void main() {
     final Completer<dynamic> onLaunch = Completer<dynamic>();
     final Completer<dynamic> onResume = Completer<dynamic>();
 
-    firebaseMessaging.configure(onMessage: (dynamic m) async {
-      onMessage.complete(m);
-    }, onLaunch: (dynamic m) async {
-      onLaunch.complete(m);
-    }, onResume: (dynamic m) async {
-      onResume.complete(m);
-    });
+    firebaseMessaging.configure(
+      onMessage: (dynamic m) async {
+        onMessage.complete(m);
+      },
+      onLaunch: (dynamic m) async {
+        onLaunch.complete(m);
+      },
+      onResume: (dynamic m) async {
+        onResume.complete(m);
+      },
+      onBackgroundMessage: validOnBackgroundMessage,
+    );
     final dynamic handler =
         verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
 
@@ -166,6 +171,17 @@ void main() {
 
     verify(mockChannel.invokeMethod<void>('setAutoInitEnabled', false));
   });
+
+  test('configure bad onBackgroundMessage', () {
+    expect(
+      () => firebaseMessaging.configure(
+        onBackgroundMessage: (dynamic message) => Future<dynamic>.value(),
+      ),
+      throwsArgumentError,
+    );
+  });
 }
+
+Future<dynamic> validOnBackgroundMessage(Map<String, dynamic> message) async {}
 
 class MockMethodChannel extends Mock implements MethodChannel {}
