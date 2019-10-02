@@ -1,4 +1,4 @@
-## 5.1.6+1
+## 5.1.7
 
 * `FirebaseMessaging.configure` will throw an `ArgumentError` when `onBackgroundMessage` parameter
 is not a top-level or static function.
