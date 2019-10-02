@@ -143,10 +143,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     String appBundlePath = FlutterMain.findAppBundlePath();
     FlutterCallbackInformation flutterCallback =
         FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
-    if (flutterCallback == null) {
-      Log.e(TAG, "Fatal: failed to find callback");
-      return;
-    }
+    if (flutterCallback == null) return;
 
     // Note that we're passing `true` as the second argument to our
     // FlutterNativeView constructor. This specifies the FlutterNativeView
