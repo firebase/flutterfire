@@ -41,15 +41,9 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel =
         new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_messaging");
-    final MethodChannel backgroundCallbackChannel =
-        new MethodChannel(
-            registrar.messenger(), "plugins.flutter.io/firebase_messaging_background");
     final FirebaseMessagingPlugin plugin = new FirebaseMessagingPlugin(registrar, channel);
     registrar.addNewIntentListener(plugin);
     channel.setMethodCallHandler(plugin);
-    backgroundCallbackChannel.setMethodCallHandler(plugin);
-
-    FlutterFirebaseMessagingService.setBackgroundChannel(backgroundCallbackChannel);
   }
 
   private FirebaseMessagingPlugin(Registrar registrar, MethodChannel channel) {
@@ -135,9 +129,6 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
           this.registrar.context(), setupCallbackHandle);
       FlutterFirebaseMessagingService.setBackgroundMessageHandle(
           this.registrar.context(), backgroundMessageHandle);
-      result.success(true);
-    } else if ("FcmDartService#initialized".equals(call.method)) {
-      FlutterFirebaseMessagingService.onInitialized();
       result.success(true);
     } else if ("configure".equals(call.method)) {
       FirebaseInstanceId.getInstance()

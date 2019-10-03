@@ -12,10 +12,16 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Process;
 import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
+import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.view.FlutterCallbackInformation;
 import io.flutter.view.FlutterMain;
@@ -50,6 +56,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   /** Background Dart execution context. */
   private static FlutterNativeView backgroundFlutterView;
 
+  @Nullable
   private static MethodChannel backgroundChannel;
 
   private static Long backgroundMessageHandle;
@@ -162,6 +169,24 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
       args.libraryPath = flutterCallback.callbackLibraryPath;
       backgroundFlutterView.runFromBundle(args);
       pluginRegistrantCallback.registerWith(backgroundFlutterView.getPluginRegistry());
+
+      BinaryMessenger messenger = backgroundFlutterView.getPluginRegistry()
+          .registrarFor("io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService")
+          .messenger();
+      final MethodChannel backgroundCallbackChannel =
+          new MethodChannel(messenger, "plugins.flutter.io/firebase_messaging_background");
+      backgroundCallbackChannel.setMethodCallHandler(new MethodCallHandler() {
+        @Override
+        public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+          if ("FcmDartService#initialized".equals(call.method)) {
+            FlutterFirebaseMessagingService.onInitialized();
+            result.success(true);
+          } else {
+            result.notImplemented();
+          }
+        }
+      });
+      setBackgroundChannel(backgroundCallbackChannel);
     }
   }
 
