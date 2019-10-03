@@ -1,23 +1,54 @@
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
+import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
+final ValueNotifier<String> _messageNotifier = ValueNotifier<String>("");
+
+final EdgeInsets _cardPadding = const EdgeInsets.all(8);
 
 class SignInPage extends StatefulWidget {
   final String title = 'Registration';
+
   @override
   State<StatefulWidget> createState() => SignInPageState();
 }
 
 class SignInPageState extends State<SignInPage> {
+  @override
+  void initState() {
+    super.initState();
+    _messageNotifier.addListener(_handleMessage);
+  }
+
+  void _handleMessage() {
+    showModalBottomSheet<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            padding: const EdgeInsets.all(8),
+            child: Text(
+              _messageNotifier.value,
+            ),
+            height: 100,
+          );
+        });
+  }
+
+  @override
+  void dispose() {
+    _messageNotifier.removeListener(_handleMessage);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,16 +62,13 @@ class SignInPageState extends State<SignInPage> {
               onPressed: () async {
                 final FirebaseUser user = await _auth.currentUser();
                 if (user == null) {
-                  Scaffold.of(context).showSnackBar(const SnackBar(
-                    content: Text('No one has signed in.'),
-                  ));
+                  _messageNotifier.value = 'No one has signed in.';
                   return;
                 }
-                _signOut();
-                final String uid = user.uid;
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(uid + ' has successfully signed out.'),
-                ));
+                // Example code for sign out.
+                await _auth.signOut();
+                _messageNotifier.value =
+                '${user.uid} has successfully signed out.';
               },
             );
           })
@@ -54,17 +82,12 @@ class SignInPageState extends State<SignInPage> {
             _EmailLinkSignInSection(),
             _AnonymouslySignInSection(),
             _GoogleSignInSection(),
-            _PhoneSignInSection(Scaffold.of(context)),
+            _PhoneSignInSection(),
             _OtherProvidersSignInSection(),
           ],
         );
       }),
     );
-  }
-
-  // Example code for sign out.
-  void _signOut() async {
-    await _auth.signOut();
   }
 }
 
@@ -77,65 +100,67 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _success;
-  String _userEmail;
+
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: const Text('Test sign in with email and password'),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
+    return Card(
+      child: Container(
+        padding: _cardPadding,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                child: const Text('Test sign in with email and password'),
+                padding: const EdgeInsets.all(16),
+                alignment: Alignment.center,
+              ),
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _passwordController,
+                decoration: const InputDecoration(labelText: 'Password'),
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                alignment: Alignment.center,
+                child: RaisedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      try {
+                        // Example code of how to sign in with email and password.
+                        final AuthResult authRes = await _auth.signInWithEmailAndPassword(
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                        );
+                        _messageNotifier.value =
+                        'Successfully signed in ${authRes.user.email}';
+                      } on Exception catch (e) {
+                        _messageNotifier.value = 'Sign in failed: $e';
+                      }
+                    }
+                  },
+                  child: const Text('Submit'),
+                ),
+              ),
+            ],
           ),
-          TextFormField(
-            controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
-            validator: (String value) {
-              if (value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _passwordController,
-            decoration: const InputDecoration(labelText: 'Password'),
-            validator: (String value) {
-              if (value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            alignment: Alignment.center,
-            child: RaisedButton(
-              onPressed: () async {
-                if (_formKey.currentState.validate()) {
-                  _signInWithEmailAndPassword();
-                }
-              },
-              child: const Text('Submit'),
-            ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              _success == null
-                  ? ''
-                  : (_success
-                      ? 'Successfully signed in ' + _userEmail
-                      : 'Sign in failed'),
-              style: TextStyle(color: Colors.red),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
@@ -145,23 +170,6 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  // Example code of how to sign in with email and password.
-  void _signInWithEmailAndPassword() async {
-    final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    ))
-        .user;
-    if (user != null) {
-      setState(() {
-        _success = true;
-        _userEmail = user.email;
-      });
-    } else {
-      _success = false;
-    }
   }
 }
 
@@ -175,111 +183,95 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection>
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
 
-  bool _success;
-  String _userEmail;
-  String _userID;
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     _emailController.dispose();
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.resumed) {
-      final Uri link = await _retrieveDynamicLink();
-
-      if (link != null) {
-        final FirebaseUser user = (await _auth.signInWithEmailAndLink(
-          email: _userEmail,
-          link: link.toString(),
-        ))
-            .user;
-
-        if (user != null) {
-          _userID = user.uid;
-          _success = true;
-        } else {
-          _success = false;
-        }
-      } else {
-        _success = false;
-      }
-
-      setState(() {});
-    }
-  }
-
-  Future<Uri> _retrieveDynamicLink() async {
+  void _trySignInWithDynamicLink() async {
     final PendingDynamicLinkData data =
-        await FirebaseDynamicLinks.instance.retrieveDynamicLink();
-    return data?.link;
+    await FirebaseDynamicLinks.instance.retrieveDynamicLink();
+
+    final Uri link = data?.link;
+    if (link != null) {
+      final AuthResult authRes = await _auth.signInWithEmailAndLink(
+        email: _emailController.text,
+        link: link.toString(),
+      );
+      if (authRes.user != null) {
+        _messageNotifier.value = 'Successfully signed in, uid: ${authRes.user.uid}';
+      } else {
+        _messageNotifier.value = 'Sign in failed';
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: const Text('Test sign in with email and link'),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
+    return Card(
+      child: Container(
+        padding: _cardPadding,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                child: const Text('Test sign in with email and link'),
+                padding: const EdgeInsets.all(16),
+                alignment: Alignment.center,
+              ),
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'Please enter your email.';
+                  }
+                  return null;
+                },
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                alignment: Alignment.center,
+                child: Column(
+                  children: <Widget>[
+                    RaisedButton(
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          _signInWithEmailAndLink();
+                        }
+                      },
+                      child: const Text('Send sign in with email link'),
+                    ),
+                    RaisedButton(
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          _trySignInWithDynamicLink();
+                        }
+                      },
+                      child: const Text(
+                          'Try to retreive dynamic link and sign in'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          TextFormField(
-            controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
-            validator: (String value) {
-              if (value.isEmpty) {
-                return 'Please enter your email.';
-              }
-              return null;
-            },
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            alignment: Alignment.center,
-            child: RaisedButton(
-              onPressed: () async {
-                if (_formKey.currentState.validate()) {
-                  _signInWithEmailAndLink();
-                }
-              },
-              child: const Text('Submit'),
-            ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              _success == null
-                  ? ''
-                  : (_success
-                      ? 'Successfully signed in, uid: ' + _userID
-                      : 'Sign in failed'),
-              style: TextStyle(color: Colors.red),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
 
   Future<void> _signInWithEmailAndLink() async {
-    _userEmail = _emailController.text;
-
     return await _auth.sendSignInWithEmailLink(
-      email: _userEmail,
+      email: _emailController.text,
       url: '<Url with domain from your Firebase project>',
       handleCodeInApp: true,
       iOSBundleID: 'io.flutter.plugins.firebaseAuthExample',
@@ -290,159 +282,120 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection>
   }
 }
 
-class _AnonymouslySignInSection extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _AnonymouslySignInSectionState();
-}
-
-class _AnonymouslySignInSectionState extends State<_AnonymouslySignInSection> {
-  bool _success;
-  String _userID;
+class _AnonymouslySignInSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          child: const Text('Test sign in anonymously'),
-          padding: const EdgeInsets.all(16),
-          alignment: Alignment.center,
+    return Card(
+      child: Container(
+        padding: _cardPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              child: const Text('Test sign in anonymously'),
+              padding: const EdgeInsets.all(16),
+              alignment: Alignment.center,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              alignment: Alignment.center,
+              child: RaisedButton(
+                onPressed: () {
+                  _signInAnonymously();
+                },
+                child: const Text('Sign in anonymously'),
+              ),
+            ),
+          ],
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          alignment: Alignment.center,
-          child: RaisedButton(
-            onPressed: () async {
-              _signInAnonymously();
-            },
-            child: const Text('Sign in anonymously'),
-          ),
-        ),
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            _success == null
-                ? ''
-                : (_success
-                    ? 'Successfully signed in, uid: ' + _userID
-                    : 'Sign in failed'),
-            style: TextStyle(color: Colors.red),
-          ),
-        )
-      ],
+      ),
     );
   }
 
   // Example code of how to sign in anonymously.
   void _signInAnonymously() async {
-    final FirebaseUser user = (await _auth.signInAnonymously()).user;
-    assert(user != null);
-    assert(user.isAnonymous);
-    assert(!user.isEmailVerified);
-    assert(await user.getIdToken() != null);
-    if (Platform.isIOS) {
-      // Anonymous auth doesn't show up as a provider on iOS
-      assert(user.providerData.isEmpty);
-    } else if (Platform.isAndroid) {
-      // Anonymous auth does show up as a provider on Android
-      assert(user.providerData.length == 1);
-      assert(user.providerData[0].providerId == 'firebase');
-      assert(user.providerData[0].uid != null);
-      assert(user.providerData[0].displayName == null);
-      assert(user.providerData[0].photoUrl == null);
-      assert(user.providerData[0].email == null);
-    }
-
-    final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-    setState(() {
-      if (user != null) {
-        _success = true;
-        _userID = user.uid;
-      } else {
-        _success = false;
+    try {
+      final AuthResult authRes = await _auth.signInAnonymously();
+      assert(authRes.user != null);
+      assert(authRes.user.isAnonymous);
+      assert(!authRes.user.isEmailVerified);
+      assert(await authRes.user.getIdToken() != null);
+      if (Platform.isIOS) {
+        // Anonymous auth doesn't show up as a provider on iOS
+        assert(authRes.user.providerData.isEmpty);
+      } else if (Platform.isAndroid) {
+        // Anonymous auth does show up as a provider on Android
+        assert(authRes.user.providerData.length == 1);
+        assert(authRes.user.providerData[0].providerId == 'firebase');
+        assert(authRes.user.providerData[0].uid != null);
+        assert(authRes.user.providerData[0].displayName == null);
+        assert(authRes.user.providerData[0].photoUrl == null);
+        assert(authRes.user.providerData[0].email == null);
       }
-    });
+
+      final FirebaseUser currentUser = await _auth.currentUser();
+      assert(authRes.user.uid == currentUser.uid);
+      _messageNotifier.value = 'Successfully signed in, uid: ${authRes.user.uid}';
+    } on Exception catch (e) {
+      _messageNotifier.value = 'Sign in failed: $e';
+    }
   }
 }
 
-class _GoogleSignInSection extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _GoogleSignInSectionState();
-}
-
-class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
-  bool _success;
-  String _userID;
+class _GoogleSignInSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          child: const Text('Test sign in with Google'),
-          padding: const EdgeInsets.all(16),
-          alignment: Alignment.center,
+    return Card(
+      child: Container(
+        padding: _cardPadding,
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: const Text('Test sign in with Google'),
+              padding: const EdgeInsets.all(16),
+              alignment: Alignment.center,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              alignment: Alignment.center,
+              child: RaisedButton(
+                onPressed: () async {
+                  _signInWithGoogle();
+                },
+                child: const Text('Sign in with Google'),
+              ),
+            ),
+          ],
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          alignment: Alignment.center,
-          child: RaisedButton(
-            onPressed: () async {
-              _signInWithGoogle();
-            },
-            child: const Text('Sign in with Google'),
-          ),
-        ),
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            _success == null
-                ? ''
-                : (_success
-                    ? 'Successfully signed in, uid: ' + _userID
-                    : 'Sign in failed'),
-            style: TextStyle(color: Colors.red),
-          ),
-        )
-      ],
+      ),
     );
   }
 
-  // Example code of how to sign in with google.
   void _signInWithGoogle() async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
-    assert(user.email != null);
-    assert(user.displayName != null);
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
+    try {
+      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser?.authentication;
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      final AuthResult authRes = await _auth.signInWithCredential(credential);
+      assert(authRes.user != null && authRes.user.email != null);
+      assert(authRes.user.displayName != null);
+      assert(!authRes.user.isAnonymous);
+      assert(await authRes.user.getIdToken() != null);
 
-    final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-    setState(() {
-      if (user != null) {
-        _success = true;
-        _userID = user.uid;
-      } else {
-        _success = false;
-      }
-    });
+      final FirebaseUser currentUser = await _auth.currentUser();
+      assert(authRes.user.uid == currentUser.uid);
+      _messageNotifier.value = 'Successfully signed in, uid: ${authRes.user.uid}';
+    } on Exception catch (e) {
+      _messageNotifier.value = 'Sign in failed: $e';
+    }
   }
 }
 
 class _PhoneSignInSection extends StatefulWidget {
-  _PhoneSignInSection(this._scaffold);
-
-  final ScaffoldState _scaffold;
   @override
   State<StatefulWidget> createState() => _PhoneSignInSectionState();
 }
@@ -451,92 +404,81 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _smsController = TextEditingController();
 
-  String _message = '';
   String _verificationId;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          child: const Text('Test sign in with phone number'),
-          padding: const EdgeInsets.all(16),
-          alignment: Alignment.center,
+    return Card(
+      child: Container(
+        padding: _cardPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              child: const Text('Test sign in with phone number'),
+              padding: const EdgeInsets.all(16),
+              alignment: Alignment.center,
+            ),
+            TextFormField(
+              controller: _phoneNumberController,
+              decoration:
+              const InputDecoration(labelText: 'Phone number (+x xxx-xxx-xxxx)'),
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return 'Phone number (+x xxx-xxx-xxxx)';
+                }
+                return null;
+              },
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              alignment: Alignment.center,
+              child: RaisedButton(
+                onPressed: () async {
+                  _verifyPhoneNumber();
+                },
+                child: const Text('Verify phone number'),
+              ),
+            ),
+            TextField(
+              controller: _smsController,
+              decoration: const InputDecoration(labelText: 'Verification code'),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              alignment: Alignment.center,
+              child: RaisedButton(
+                onPressed: () async {
+                  _signInWithPhoneNumber();
+                },
+                child: const Text('Sign in with phone number'),
+              ),
+            ),
+          ],
         ),
-        TextFormField(
-          controller: _phoneNumberController,
-          decoration: const InputDecoration(
-              labelText: 'Phone number (+x xxx-xxx-xxxx)'),
-          validator: (String value) {
-            if (value.isEmpty) {
-              return 'Phone number (+x xxx-xxx-xxxx)';
-            }
-            return null;
-          },
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          alignment: Alignment.center,
-          child: RaisedButton(
-            onPressed: () async {
-              _verifyPhoneNumber();
-            },
-            child: const Text('Verify phone number'),
-          ),
-        ),
-        TextField(
-          controller: _smsController,
-          decoration: const InputDecoration(labelText: 'Verification code'),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          alignment: Alignment.center,
-          child: RaisedButton(
-            onPressed: () async {
-              _signInWithPhoneNumber();
-            },
-            child: const Text('Sign in with phone number'),
-          ),
-        ),
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            _message,
-            style: TextStyle(color: Colors.red),
-          ),
-        )
-      ],
+      ),
     );
   }
 
   // Example code of how to verify phone number
   void _verifyPhoneNumber() async {
-    setState(() {
-      _message = '';
-    });
     final PhoneVerificationCompleted verificationCompleted =
         (AuthCredential phoneAuthCredential) {
       _auth.signInWithCredential(phoneAuthCredential);
-      setState(() {
-        _message = 'Received phone auth credential: $phoneAuthCredential';
-      });
+      _messageNotifier.value =
+      'Received phone auth credential: $phoneAuthCredential';
     };
 
     final PhoneVerificationFailed verificationFailed =
         (AuthException authException) {
-      setState(() {
-        _message =
-            'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
-      });
+      _messageNotifier.value =
+      'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
     };
 
     final PhoneCodeSent codeSent =
         (String verificationId, [int forceResendingToken]) async {
-      widget._scaffold.showSnackBar(const SnackBar(
-        content: Text('Please check your phone for the verification code.'),
-      ));
+      _messageNotifier.value =
+      'Please check your phone for the verification code.';
       _verificationId = verificationId;
     };
 
@@ -560,17 +502,14 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
       verificationId: _verificationId,
       smsCode: _smsController.text,
     );
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
+    final AuthResult authRes = await _auth.signInWithCredential(credential);
     final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-    setState(() {
-      if (user != null) {
-        _message = 'Successfully signed in, uid: ' + user.uid;
-      } else {
-        _message = 'Sign in failed';
-      }
-    });
+    assert(authRes.user.uid == currentUser.uid);
+    if (authRes.user != null) {
+      _messageNotifier.value = 'Successfully signed in, uid: ' + authRes.user.uid;
+    } else {
+      _messageNotifier.value = 'Sign in failed';
+    }
   }
 }
 
@@ -586,92 +525,87 @@ class _OtherProvidersSignInSectionState
   final TextEditingController _tokenController = TextEditingController();
   final TextEditingController _tokenSecretController = TextEditingController();
 
-  String _message = '';
   int _selection = 0;
   bool _showAuthSecretTextField = false;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          child: const Text(
-              'Test other providers authentication. (We do not provide an API to obtain the token for below providers. Please use a third party service to obtain token for below providers.)'),
-          padding: const EdgeInsets.all(16),
-          alignment: Alignment.center,
+    return Card(
+      child: Container(
+        padding: _cardPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              child: const Text(
+                  'Test other providers authentication. (We do not provide an API to obtain the token for below providers. Please use a third party service to obtain token for below providers.)'),
+              padding: const EdgeInsets.all(16),
+              alignment: Alignment.center,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Radio<int>(
+                    value: 0,
+                    groupValue: _selection,
+                    onChanged: _handleRadioButtonSelected,
+                  ),
+                  const Text(
+                    'Github',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  Radio<int>(
+                    value: 1,
+                    groupValue: _selection,
+                    onChanged: _handleRadioButtonSelected,
+                  ),
+                  const Text(
+                    'Facebook',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  Radio<int>(
+                    value: 2,
+                    groupValue: _selection,
+                    onChanged: _handleRadioButtonSelected,
+                  ),
+                  const Text(
+                    'Twitter',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ],
+              ),
+            ),
+            TextField(
+              controller: _tokenController,
+              decoration: const InputDecoration(labelText: 'Enter provider\'s token'),
+            ),
+            Container(
+              child: _showAuthSecretTextField
+                  ? TextField(
+                controller: _tokenSecretController,
+                decoration: const InputDecoration(
+                    labelText: 'Enter provider\'s authTokenSecret'),
+              )
+                  : null,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              alignment: Alignment.center,
+              child: RaisedButton(
+                onPressed: () async {
+                  _signInWithOtherProvider();
+                },
+                child: const Text('Sign in'),
+              ),
+            ),
+          ],
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Radio<int>(
-                value: 0,
-                groupValue: _selection,
-                onChanged: _handleRadioButtonSelected,
-              ),
-              const Text(
-                'Github',
-                style: TextStyle(fontSize: 16.0),
-              ),
-              Radio<int>(
-                value: 1,
-                groupValue: _selection,
-                onChanged: _handleRadioButtonSelected,
-              ),
-              const Text(
-                'Facebook',
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-              Radio<int>(
-                value: 2,
-                groupValue: _selection,
-                onChanged: _handleRadioButtonSelected,
-              ),
-              const Text(
-                'Twitter',
-                style: TextStyle(fontSize: 16.0),
-              ),
-            ],
-          ),
-        ),
-        TextField(
-          controller: _tokenController,
-          decoration:
-              const InputDecoration(labelText: 'Enter provider\'s token'),
-        ),
-        Container(
-          child: _showAuthSecretTextField
-              ? TextField(
-                  controller: _tokenSecretController,
-                  decoration: const InputDecoration(
-                      labelText: 'Enter provider\'s authTokenSecret'),
-                )
-              : null,
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          alignment: Alignment.center,
-          child: RaisedButton(
-            onPressed: () async {
-              _signInWithOtherProvider();
-            },
-            child: const Text('Sign in'),
-          ),
-        ),
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            _message,
-            style: TextStyle(color: Colors.red),
-          ),
-        )
-      ],
+      ),
     );
   }
 
@@ -706,22 +640,20 @@ class _OtherProvidersSignInSectionState
     final AuthCredential credential = GithubAuthProvider.getCredential(
       token: _tokenController.text,
     );
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
-    assert(user.email != null);
-    assert(user.displayName != null);
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
+    final AuthResult authRes = await _auth.signInWithCredential(credential);
+    assert(authRes.user.email != null);
+    assert(authRes.user.displayName != null);
+    assert(!authRes.user.isAnonymous);
+    assert(await authRes.user.getIdToken() != null);
 
     final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-    setState(() {
-      if (user != null) {
-        _message = 'Successfully signed in with Github. ' + user.uid;
-      } else {
-        _message = 'Failed to sign in with Github. ';
-      }
-    });
+    assert(authRes.user.uid == currentUser.uid);
+    if (authRes.user != null) {
+      _messageNotifier.value =
+          'Successfully signed in with Github. ' + authRes.user.uid;
+    } else {
+      _messageNotifier.value = 'Failed to sign in with Github. ';
+    }
   }
 
   // Example code of how to sign in with Facebook.
@@ -729,22 +661,20 @@ class _OtherProvidersSignInSectionState
     final AuthCredential credential = FacebookAuthProvider.getCredential(
       accessToken: _tokenController.text,
     );
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
-    assert(user.email != null);
-    assert(user.displayName != null);
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
+    final AuthResult authResult = await _auth.signInWithCredential(credential);
+    assert(authResult.user.email != null);
+    assert(authResult.user.displayName != null);
+    assert(!authResult.user.isAnonymous);
+    assert(await authResult.user.getIdToken() != null);
 
     final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-    setState(() {
-      if (user != null) {
-        _message = 'Successfully signed in with Facebook. ' + user.uid;
-      } else {
-        _message = 'Failed to sign in with Facebook. ';
-      }
-    });
+    assert(authResult.user.uid == currentUser.uid);
+    if (authResult.user != null) {
+      _messageNotifier.value =
+          'Successfully signed in with Facebook. ' + authResult.user.uid;
+    } else {
+      _messageNotifier.value = 'Failed to sign in with Facebook. ';
+    }
   }
 
   // Example code of how to sign in with Twitter.
@@ -752,21 +682,19 @@ class _OtherProvidersSignInSectionState
     final AuthCredential credential = TwitterAuthProvider.getCredential(
         authToken: _tokenController.text,
         authTokenSecret: _tokenSecretController.text);
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
-    assert(user.email != null);
-    assert(user.displayName != null);
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
+    final AuthResult authResult = await _auth.signInWithCredential(credential);
+    assert(authResult.user.email != null);
+    assert(authResult.user.displayName != null);
+    assert(!authResult.user.isAnonymous);
+    assert(await authResult.user.getIdToken() != null);
 
     final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-    setState(() {
-      if (user != null) {
-        _message = 'Successfully signed in with Twitter. ' + user.uid;
-      } else {
-        _message = 'Failed to sign in with Twitter. ';
-      }
-    });
+    assert(authResult.user.uid == currentUser.uid);
+    if (authResult.user != null) {
+      _messageNotifier.value =
+          'Successfully signed in with Twitter. ' + authResult.user.uid;
+    } else {
+      _messageNotifier.value = 'Failed to sign in with Twitter. ';
+    }
   }
 }
