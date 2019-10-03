@@ -68,7 +68,7 @@ class SignInPageState extends State<SignInPage> {
                 // Example code for sign out.
                 await _auth.signOut();
                 _messageNotifier.value =
-                '${user.uid} has successfully signed out.';
+                    '${user.uid} has successfully signed out.';
               },
             );
           })
@@ -144,12 +144,13 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                     if (_formKey.currentState.validate()) {
                       try {
                         // Example code of how to sign in with email and password.
-                        final AuthResult authRes = await _auth.signInWithEmailAndPassword(
+                        final AuthResult authRes =
+                            await _auth.signInWithEmailAndPassword(
                           email: _emailController.text,
                           password: _passwordController.text,
                         );
                         _messageNotifier.value =
-                        'Successfully signed in ${authRes.user.email}';
+                            'Successfully signed in ${authRes.user.email}';
                       } on Exception catch (e) {
                         _messageNotifier.value = 'Sign in failed: $e';
                       }
@@ -196,7 +197,7 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection>
 
   void _trySignInWithDynamicLink() async {
     final PendingDynamicLinkData data =
-    await FirebaseDynamicLinks.instance.retrieveDynamicLink();
+        await FirebaseDynamicLinks.instance.retrieveDynamicLink();
 
     final Uri link = data?.link;
     if (link != null) {
@@ -205,7 +206,8 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection>
         link: link.toString(),
       );
       if (authRes.user != null) {
-        _messageNotifier.value = 'Successfully signed in, uid: ${authRes.user.uid}';
+        _messageNotifier.value =
+            'Successfully signed in, uid: ${authRes.user.uid}';
       } else {
         _messageNotifier.value = 'Sign in failed';
       }
@@ -335,7 +337,8 @@ class _AnonymouslySignInSection extends StatelessWidget {
 
       final FirebaseUser currentUser = await _auth.currentUser();
       assert(authRes.user.uid == currentUser.uid);
-      _messageNotifier.value = 'Successfully signed in, uid: ${authRes.user.uid}';
+      _messageNotifier.value =
+          'Successfully signed in, uid: ${authRes.user.uid}';
     } on Exception catch (e) {
       _messageNotifier.value = 'Sign in failed: $e';
     }
@@ -375,7 +378,7 @@ class _GoogleSignInSection extends StatelessWidget {
     try {
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
       final GoogleSignInAuthentication googleAuth =
-      await googleUser?.authentication;
+          await googleUser?.authentication;
       final AuthCredential credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
@@ -388,7 +391,8 @@ class _GoogleSignInSection extends StatelessWidget {
 
       final FirebaseUser currentUser = await _auth.currentUser();
       assert(authRes.user.uid == currentUser.uid);
-      _messageNotifier.value = 'Successfully signed in, uid: ${authRes.user.uid}';
+      _messageNotifier.value =
+          'Successfully signed in, uid: ${authRes.user.uid}';
     } on Exception catch (e) {
       _messageNotifier.value = 'Sign in failed: $e';
     }
@@ -421,8 +425,8 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
             ),
             TextFormField(
               controller: _phoneNumberController,
-              decoration:
-              const InputDecoration(labelText: 'Phone number (+x xxx-xxx-xxxx)'),
+              decoration: const InputDecoration(
+                  labelText: 'Phone number (+x xxx-xxx-xxxx)'),
               validator: (String value) {
                 if (value.isEmpty) {
                   return 'Phone number (+x xxx-xxx-xxxx)';
@@ -466,19 +470,19 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
         (AuthCredential phoneAuthCredential) {
       _auth.signInWithCredential(phoneAuthCredential);
       _messageNotifier.value =
-      'Received phone auth credential: $phoneAuthCredential';
+          'Received phone auth credential: $phoneAuthCredential';
     };
 
     final PhoneVerificationFailed verificationFailed =
         (AuthException authException) {
       _messageNotifier.value =
-      'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
+          'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
     };
 
     final PhoneCodeSent codeSent =
         (String verificationId, [int forceResendingToken]) async {
       _messageNotifier.value =
-      'Please check your phone for the verification code.';
+          'Please check your phone for the verification code.';
       _verificationId = verificationId;
     };
 
@@ -506,7 +510,8 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(authRes.user.uid == currentUser.uid);
     if (authRes.user != null) {
-      _messageNotifier.value = 'Successfully signed in, uid: ' + authRes.user.uid;
+      _messageNotifier.value =
+          'Successfully signed in, uid: ' + authRes.user.uid;
     } else {
       _messageNotifier.value = 'Sign in failed';
     }
@@ -582,15 +587,16 @@ class _OtherProvidersSignInSectionState
             ),
             TextField(
               controller: _tokenController,
-              decoration: const InputDecoration(labelText: 'Enter provider\'s token'),
+              decoration:
+                  const InputDecoration(labelText: 'Enter provider\'s token'),
             ),
             Container(
               child: _showAuthSecretTextField
                   ? TextField(
-                controller: _tokenSecretController,
-                decoration: const InputDecoration(
-                    labelText: 'Enter provider\'s authTokenSecret'),
-              )
+                      controller: _tokenSecretController,
+                      decoration: const InputDecoration(
+                          labelText: 'Enter provider\'s authTokenSecret'),
+                    )
                   : null,
             ),
             Container(
