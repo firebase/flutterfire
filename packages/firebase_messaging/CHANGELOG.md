@@ -1,3 +1,8 @@
+## 5.1.7
+
+* Update Android Gradle plugin dependency to 3.5.1, update documentation and example.
+* Update google-services Android gradle plugin to 4.3.2 in documentation and examples.
+
 ## 5.1.6
 
 * Fix warnings when compiling on Android.
