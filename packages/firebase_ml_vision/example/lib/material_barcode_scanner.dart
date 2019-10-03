@@ -341,8 +341,8 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
               Container(
                 height: 56,
                 alignment: Alignment.centerLeft,
-                decoration: BoxDecoration(
-                  border: Border(bottom: const BorderSide(color: Colors.grey)),
+                decoration: const BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.grey)),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),

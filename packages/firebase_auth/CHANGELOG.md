@@ -1,3 +1,12 @@
+## 0.14.0+6
+
+* Update example app with correct const constructors.
+
+## 0.14.0+5
+
+* On iOS, `fetchSignInMethodsForEmail` now returns an empty list when the email
+  cannot be found, matching the Android behavior.
+
 ## 0.14.0+4
 
 * Fixed "Register a user" example code snippet in README.md.

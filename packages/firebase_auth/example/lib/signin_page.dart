@@ -31,8 +31,8 @@ class SignInPageState extends State<SignInPage> {
               onPressed: () async {
                 final FirebaseUser user = await _auth.currentUser();
                 if (user == null) {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: const Text('No one has signed in.'),
+                  Scaffold.of(context).showSnackBar(const SnackBar(
+                    content: Text('No one has signed in.'),
                   ));
                   return;
                 }
@@ -93,7 +93,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
           ),
           TextFormField(
             controller: _emailController,
-            decoration: InputDecoration(labelText: 'Email'),
+            decoration: const InputDecoration(labelText: 'Email'),
             validator: (String value) {
               if (value.isEmpty) {
                 return 'Please enter some text';
@@ -103,7 +103,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
           ),
           TextFormField(
             controller: _passwordController,
-            decoration: InputDecoration(labelText: 'Password'),
+            decoration: const InputDecoration(labelText: 'Password'),
             validator: (String value) {
               if (value.isEmpty) {
                 return 'Please enter some text';
@@ -238,7 +238,7 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection>
           ),
           TextFormField(
             controller: _emailController,
-            decoration: InputDecoration(labelText: 'Email'),
+            decoration: const InputDecoration(labelText: 'Email'),
             validator: (String value) {
               if (value.isEmpty) {
                 return 'Please enter your email.';
@@ -466,8 +466,8 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
         ),
         TextFormField(
           controller: _phoneNumberController,
-          decoration:
-              InputDecoration(labelText: 'Phone number (+x xxx-xxx-xxxx)'),
+          decoration: const InputDecoration(
+              labelText: 'Phone number (+x xxx-xxx-xxxx)'),
           validator: (String value) {
             if (value.isEmpty) {
               return 'Phone number (+x xxx-xxx-xxxx)';
@@ -487,7 +487,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
         ),
         TextField(
           controller: _smsController,
-          decoration: InputDecoration(labelText: 'Verification code'),
+          decoration: const InputDecoration(labelText: 'Verification code'),
         ),
         Container(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -534,9 +534,8 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
 
     final PhoneCodeSent codeSent =
         (String verificationId, [int forceResendingToken]) async {
-      widget._scaffold.showSnackBar(SnackBar(
-        content:
-            const Text('Please check your phone for the verification code.'),
+      widget._scaffold.showSnackBar(const SnackBar(
+        content: Text('Please check your phone for the verification code.'),
       ));
       _verificationId = verificationId;
     };
@@ -613,7 +612,7 @@ class _OtherProvidersSignInSectionState
                 groupValue: _selection,
                 onChanged: _handleRadioButtonSelected,
               ),
-              Text(
+              const Text(
                 'Github',
                 style: TextStyle(fontSize: 16.0),
               ),
@@ -622,7 +621,7 @@ class _OtherProvidersSignInSectionState
                 groupValue: _selection,
                 onChanged: _handleRadioButtonSelected,
               ),
-              Text(
+              const Text(
                 'Facebook',
                 style: TextStyle(
                   fontSize: 16.0,
@@ -633,7 +632,7 @@ class _OtherProvidersSignInSectionState
                 groupValue: _selection,
                 onChanged: _handleRadioButtonSelected,
               ),
-              Text(
+              const Text(
                 'Twitter',
                 style: TextStyle(fontSize: 16.0),
               ),
@@ -642,13 +641,14 @@ class _OtherProvidersSignInSectionState
         ),
         TextField(
           controller: _tokenController,
-          decoration: InputDecoration(labelText: 'Enter provider\'s token'),
+          decoration:
+              const InputDecoration(labelText: 'Enter provider\'s token'),
         ),
         Container(
           child: _showAuthSecretTextField
               ? TextField(
                   controller: _tokenSecretController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       labelText: 'Enter provider\'s authTokenSecret'),
                 )
               : null,

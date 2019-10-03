@@ -1,3 +1,7 @@
+## 0.9.2+2
+
+* Update deployment target of iOS example app to 9.0.
+
 ## 0.9.2+1
 
 * Update documentation to reflect new repository location.

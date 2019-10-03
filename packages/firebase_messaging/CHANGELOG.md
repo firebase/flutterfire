@@ -1,6 +1,10 @@
+## 5.1.6
+
+* Fix warnings when compiling on Android.
+
 ## 5.1.5
 
-* Updates to README instructions for adding gradle dependencies implementation.
+* Enable background message handling on Android.
 
 ## 5.1.4
 

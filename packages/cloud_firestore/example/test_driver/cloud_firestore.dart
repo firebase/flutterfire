@@ -110,28 +110,29 @@ void main() {
       final DocumentReference ref = firestore.collection('messages').document();
       final Stream<DocumentSnapshot> snapshotWithoutMetadataChanges =
           ref.snapshots(includeMetadataChanges: false).take(1);
+      // It should take either two or three snapshots to make a change when
+      // metadata is included, depending on whether `hasPendingWrites` and
+      // `isFromCache` update at the same time.
       final Stream<DocumentSnapshot> snapshotsWithMetadataChanges =
           ref.snapshots(includeMetadataChanges: true).take(3);
 
       ref.setData(<String, dynamic>{'hello': 'world'});
 
-      final DocumentSnapshot snapshot =
-          await snapshotWithoutMetadataChanges.first;
+      DocumentSnapshot snapshot = await snapshotWithoutMetadataChanges.first;
       expect(snapshot.metadata.hasPendingWrites, true);
       expect(snapshot.metadata.isFromCache, true);
       expect(snapshot.data['hello'], 'world');
 
-      final List<DocumentSnapshot> snapshots =
-          await snapshotsWithMetadataChanges.toList();
-      expect(snapshots[0].metadata.hasPendingWrites, true);
-      expect(snapshots[0].metadata.isFromCache, true);
-      expect(snapshots[0].data['hello'], 'world');
-      expect(snapshots[1].metadata.hasPendingWrites, true);
-      expect(snapshots[1].metadata.isFromCache, false);
-      expect(snapshots[1].data['hello'], 'world');
-      expect(snapshots[2].metadata.hasPendingWrites, false);
-      expect(snapshots[2].metadata.isFromCache, false);
-      expect(snapshots[2].data['hello'], 'world');
+      snapshot = await snapshotsWithMetadataChanges.take(1).first;
+      expect(snapshot.metadata.hasPendingWrites, true);
+      expect(snapshot.metadata.isFromCache, true);
+      expect(snapshot.data['hello'], 'world');
+
+      while (
+          snapshot.metadata.hasPendingWrites || snapshot.metadata.isFromCache) {
+        snapshot = await snapshotsWithMetadataChanges.take(1).first;
+      }
+      expect(snapshot.data['hello'], 'world');
 
       await ref.delete();
     });

@@ -1,3 +1,8 @@
+## 0.2.0+7
+
+* Fix `Bad state: Future already completed` error when initially
+  calling `RemoteConfig.instance` multiple times in parallel.
+
 ## 0.2.0+6
 
 * Update documentation to reflect new repository location.
