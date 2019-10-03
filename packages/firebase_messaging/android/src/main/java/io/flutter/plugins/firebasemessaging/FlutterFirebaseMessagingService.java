@@ -56,8 +56,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   /** Background Dart execution context. */
   private static FlutterNativeView backgroundFlutterView;
 
-  @Nullable
-  private static MethodChannel backgroundChannel;
+  @Nullable private static MethodChannel backgroundChannel;
 
   private static Long backgroundMessageHandle;
 
@@ -170,22 +169,25 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
       backgroundFlutterView.runFromBundle(args);
       pluginRegistrantCallback.registerWith(backgroundFlutterView.getPluginRegistry());
 
-      BinaryMessenger messenger = backgroundFlutterView.getPluginRegistry()
-          .registrarFor("io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService")
-          .messenger();
+      BinaryMessenger messenger =
+          backgroundFlutterView
+              .getPluginRegistry()
+              .registrarFor("io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService")
+              .messenger();
       final MethodChannel backgroundCallbackChannel =
           new MethodChannel(messenger, "plugins.flutter.io/firebase_messaging_background");
-      backgroundCallbackChannel.setMethodCallHandler(new MethodCallHandler() {
-        @Override
-        public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-          if ("FcmDartService#initialized".equals(call.method)) {
-            FlutterFirebaseMessagingService.onInitialized();
-            result.success(true);
-          } else {
-            result.notImplemented();
-          }
-        }
-      });
+      backgroundCallbackChannel.setMethodCallHandler(
+          new MethodCallHandler() {
+            @Override
+            public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+              if ("FcmDartService#initialized".equals(call.method)) {
+                FlutterFirebaseMessagingService.onInitialized();
+                result.success(true);
+              } else {
+                result.notImplemented();
+              }
+            }
+          });
       setBackgroundChannel(backgroundCallbackChannel);
     }
   }
