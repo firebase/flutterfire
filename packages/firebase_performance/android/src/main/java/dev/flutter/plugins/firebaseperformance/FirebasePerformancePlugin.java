@@ -16,7 +16,7 @@ public class FirebasePerformancePlugin implements FlutterPlugin {
 
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
-    channel.setMethodCallHandler(new FirebasePerformancePluginHandler());
+    channel.setMethodCallHandler(new io.flutter.plugins.firebaseperformance.FirebasePerformancePlugin());
   }
 
   @Override
