@@ -239,8 +239,8 @@ int nextHandle = 0;
     [[self getAuth:call.arguments].currentUser
         reauthenticateAndRetrieveDataWithCredential:[self getCredential:call.arguments]
                                          completion:^(FIRAuthDataResult *r,
-                                                      NSError *_Nullable error) {
-                                           [self sendResult:result forObject:nil error:error];
+                                                      NSError *error) {
+                                           [self sendResult:result forAuthDataResult:nil error:error];
                                          }];
   } else if ([@"linkWithCredential" isEqualToString:call.method]) {
     [[self getAuth:call.arguments].currentUser
