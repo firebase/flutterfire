@@ -238,7 +238,8 @@ int nextHandle = 0;
   } else if ([@"reauthenticateWithCredential" isEqualToString:call.method]) {
     [[self getAuth:call.arguments].currentUser
         reauthenticateAndRetrieveDataWithCredential:[self getCredential:call.arguments]
-                                         completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                                         completion:^(FIRAuthDataResult *authResult,
+                                                      NSError *error) {
                                            [self sendResult:result
                                                forAuthDataResult:authResult
                                                            error:error];
