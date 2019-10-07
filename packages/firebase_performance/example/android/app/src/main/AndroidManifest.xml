@@ -23,9 +23,9 @@
             <!--</intent-filter>-->
         </activity>
         <activity
-            android:name="dev.flutter.plugins.firebaseperformanceexample.MainActivity"
+            android:name=".MainActivity2"
             android:theme="@style/LaunchTheme"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>

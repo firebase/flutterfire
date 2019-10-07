@@ -1,11 +1,10 @@
-package dev.flutter.plugins.firebaseperformance;
+package io.flutter.plugins.firebaseperformance;
 
 import android.util.SparseArray;
-
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
-public class FirebasePerformancePluginHandler implements MethodChannel.MethodCallHandler {
+public class FirebasePerformanceHandler implements MethodChannel.MethodCallHandler {
   private final SparseArray<MethodChannel.MethodCallHandler> handlers = new SparseArray<>();
 
   void addHandler(final int handle, final MethodChannel.MethodCallHandler handler) {

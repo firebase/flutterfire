@@ -4,55 +4,30 @@
 
 package io.flutter.plugins.firebaseperformance;
 
-import android.util.SparseArray;
-import io.flutter.plugin.common.MethodCall;
+import androidx.annotation.NonNull;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /** FirebasePerformancePlugin */
-public class FirebasePerformancePlugin implements MethodChannel.MethodCallHandler {
+public class FirebasePerformancePlugin implements FlutterPlugin {
   private static final String CHANNEL_NAME = "plugins.flutter.io/firebase_performance";
 
-  private static final SparseArray<MethodChannel.MethodCallHandler> handlers = new SparseArray<>();
+  private MethodChannel channel;
 
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
-    channel.setMethodCallHandler(new FirebasePerformancePlugin());
+    channel.setMethodCallHandler(new FirebasePerformanceHandler());
   }
 
   @Override
-  public void onMethodCall(MethodCall call, MethodChannel.Result result) {
-    if (call.method.equals("FirebasePerformance#instance")) {
-      handlers.clear();
-      FlutterFirebasePerformance.getInstance(call, result);
-    } else {
-      final MethodChannel.MethodCallHandler handler = getHandler(call);
-
-      if (handler != null) {
-        handler.onMethodCall(call, result);
-      } else {
-        result.notImplemented();
-      }
-    }
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
+    channel = new MethodChannel(binding.getFlutterEngine().getDartExecutor(), CHANNEL_NAME);
+    channel.setMethodCallHandler(new FirebasePerformanceHandler());
   }
 
-  static void addHandler(final int handle, final MethodChannel.MethodCallHandler handler) {
-    if (handlers.get(handle) != null) {
-      final String message = String.format("Object for handle already exists: %s", handle);
-      throw new IllegalArgumentException(message);
-    }
-
-    handlers.put(handle, handler);
-  }
-
-  static void removeHandler(final int handle) {
-    handlers.remove(handle);
-  }
-
-  private static MethodChannel.MethodCallHandler getHandler(final MethodCall call) {
-    final Integer handle = call.argument("handle");
-
-    if (handle == null) return null;
-    return handlers.get(handle);
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);
   }
 }

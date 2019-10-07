@@ -36,16 +36,11 @@ public class FlutterFirebasePerformance implements MethodChannel.MethodCallHandl
     }
   }
 
+  private final FirebasePerformanceHandler handler;
   private final FirebasePerformance performance;
 
-  @SuppressWarnings("ConstantConditions")
-  static void getInstance(MethodCall call, MethodChannel.Result result) {
-    final Integer handle = call.argument("handle");
-    FirebasePerformancePlugin.addHandler(handle, new FlutterFirebasePerformance());
-    result.success(null);
-  }
-
-  private FlutterFirebasePerformance() {
+  FlutterFirebasePerformance(FirebasePerformanceHandler handler) {
+    this.handler = handler;
     this.performance = FirebasePerformance.getInstance();
   }
 
@@ -87,7 +82,7 @@ public class FlutterFirebasePerformance implements MethodChannel.MethodCallHandl
     final Trace trace = performance.newTrace(name);
 
     final Integer handle = call.argument("traceHandle");
-    FirebasePerformancePlugin.addHandler(handle, new FlutterTrace(trace));
+    handler.addHandler(handle, new FlutterTrace(handler, trace));
 
     result.success(null);
   }
@@ -100,7 +95,7 @@ public class FlutterFirebasePerformance implements MethodChannel.MethodCallHandl
     final HttpMetric metric = performance.newHttpMetric(url, parseHttpMethod(httpMethod));
 
     final Integer handle = call.argument("httpMetricHandle");
-    FirebasePerformancePlugin.addHandler(handle, new FlutterHttpMetric(metric));
+    handler.addHandler(handle, new FlutterHttpMetric(handler, metric));
 
     result.success(null);
   }
