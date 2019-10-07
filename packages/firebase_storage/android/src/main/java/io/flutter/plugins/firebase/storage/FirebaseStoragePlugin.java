@@ -164,6 +164,10 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
   }
 
   private void getMetadata(MethodCall call, final Result result) {
+    Log.d( TAG, "arguments : " + call.arguments.toString());
+    Log.d( TAG, "argument path : " + call.argument("path"));
+    Log.d( TAG, "argument app : " + call.argument("app"));
+    Log.d( TAG, "argument bucket : " + call.argument("bucket"));
     String path = call.argument("path");
     StorageReference ref = firebaseStorage.getReference().child(path);
     ref.getMetadata()
