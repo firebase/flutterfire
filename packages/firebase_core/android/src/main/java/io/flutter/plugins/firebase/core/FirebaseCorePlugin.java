@@ -4,7 +4,6 @@
 package io.flutter.plugins.firebase.core;
 
 import androidx.annotation.NonNull;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
@@ -20,7 +19,9 @@ public class FirebaseCorePlugin implements FlutterPlugin {
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    channel = new MethodChannel(binding.getFlutterEngine().getDartExecutor(), "plugins.flutter.io/firebase_core");
+    channel =
+        new MethodChannel(
+            binding.getFlutterEngine().getDartExecutor(), "plugins.flutter.io/firebase_core");
     channel.setMethodCallHandler(new FirebaseCoreHandler(binding.getApplicationContext()));
   }
 
