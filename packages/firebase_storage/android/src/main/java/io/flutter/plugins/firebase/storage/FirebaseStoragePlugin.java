@@ -5,6 +5,7 @@
 package io.flutter.plugins.firebase.storage;
 
 import android.net.Uri;
+import android.util.Log;
 import android.util.SparseArray;
 import android.webkit.MimeTypeMap;
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ import java.util.Map;
 
 /** FirebaseStoragePlugin */
 public class FirebaseStoragePlugin implements MethodCallHandler {
+  private static final String TAG = "FirebaseStoragePlugin";
   private FirebaseStorage firebaseStorage;
   private final MethodChannel channel;
 
@@ -290,6 +292,10 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
   }
 
   private void listAll(MethodCall call, final Result result) {
+    Log.d( TAG, "arguments : " + call.arguments.toString());
+    Log.d( TAG, "argument path : " + call.argument("path"));
+    Log.d( TAG, "argument app : " + call.argument("app"));
+    Log.d( TAG, "argument bucket : " + call.argument("bucket"));
     String path = call.argument("path");
     StorageReference ref = firebaseStorage.getReference().child(path);
     final Task<ListResult> listTask = ref.listAll();
