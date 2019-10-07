@@ -93,7 +93,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
           ),
           TextFormField(
             controller: _emailController,
-            decoration: InputDecoration(labelText: 'Email'),
+            decoration: const InputDecoration(labelText: 'Email'),
             validator: (String value) {
               if (value.isEmpty) {
                 return 'Please enter some text';
@@ -103,7 +103,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
           ),
           TextFormField(
             controller: _passwordController,
-            decoration: InputDecoration(labelText: 'Password'),
+            decoration: const InputDecoration(labelText: 'Password'),
             validator: (String value) {
               if (value.isEmpty) {
                 return 'Please enter some text';
@@ -238,7 +238,7 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection>
           ),
           TextFormField(
             controller: _emailController,
-            decoration: InputDecoration(labelText: 'Email'),
+            decoration: const InputDecoration(labelText: 'Email'),
             validator: (String value) {
               if (value.isEmpty) {
                 return 'Please enter your email.';
@@ -466,8 +466,8 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
         ),
         TextFormField(
           controller: _phoneNumberController,
-          decoration:
-              InputDecoration(labelText: 'Phone number (+x xxx-xxx-xxxx)'),
+          decoration: const InputDecoration(
+              labelText: 'Phone number (+x xxx-xxx-xxxx)'),
           validator: (String value) {
             if (value.isEmpty) {
               return 'Phone number (+x xxx-xxx-xxxx)';
@@ -487,7 +487,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
         ),
         TextField(
           controller: _smsController,
-          decoration: InputDecoration(labelText: 'Verification code'),
+          decoration: const InputDecoration(labelText: 'Verification code'),
         ),
         Container(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -642,13 +642,14 @@ class _OtherProvidersSignInSectionState
         ),
         TextField(
           controller: _tokenController,
-          decoration: InputDecoration(labelText: 'Enter provider\'s token'),
+          decoration:
+              const InputDecoration(labelText: 'Enter provider\'s token'),
         ),
         Container(
           child: _showAuthSecretTextField
               ? TextField(
                   controller: _tokenSecretController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       labelText: 'Enter provider\'s authTokenSecret'),
                 )
               : null,

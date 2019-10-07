@@ -1,6 +1,7 @@
 ## 0.14.0+6
 
 * Remove invalid `visibleForTesting` annotation from `IdTokenResult`.
+* Fix analyzer failures in the example app by using const constructors.
 
 ## 0.14.0+5
 
