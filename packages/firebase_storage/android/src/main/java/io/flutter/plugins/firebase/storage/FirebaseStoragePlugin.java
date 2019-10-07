@@ -302,11 +302,13 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
     Log.d( TAG, "argument bucket : " + call.argument("bucket"));
     String path = call.argument("path");
     StorageReference ref = firebaseStorage.getReference().child(path);
+    Log.d( TAG, "reference : " + ref.toString() + " " + ref.getPath());
     final Task<ListResult> listTask = ref.listAll();
     listTask.addOnSuccessListener(
         new OnSuccessListener<ListResult>() {
           @Override
           public void onSuccess(ListResult listResult) {
+            Log.d( TAG, "task result : success " + String.valueOf( listResult.getItems().size()));
             Map<String, Object> map = new HashMap<>();
             map.put("pageToken", listResult.getPageToken());
             Map<String, Object> mapItems = new HashMap<>();
@@ -330,6 +332,7 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
         new OnFailureListener() {
           @Override
           public void onFailure(@NonNull Exception e) {
+            Log.d( TAG, "task result : FAIL " + e.getMessage());
             result.error("listing_error", e.getMessage(), null);
           }
         });
