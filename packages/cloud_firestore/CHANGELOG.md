@@ -1,3 +1,8 @@
+## 0.12.9+5
+
+* Remove invalid `visibleForTesting` annotations
+* Document `Transaction` class
+
 ## 0.12.9+4
 
 * Fix integer conversion warnings on iOS.

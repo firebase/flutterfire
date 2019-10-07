@@ -1,3 +1,7 @@
+## 0.14.0+6
+
+* Remove invalid `visibleForTesting` annotation from `IdTokenResult`.
+
 ## 0.14.0+5
 
 * On iOS, `fetchSignInMethodsForEmail` now returns an empty list when the email

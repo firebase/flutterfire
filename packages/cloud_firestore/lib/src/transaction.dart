@@ -6,6 +6,7 @@ part of cloud_firestore;
 
 typedef Future<dynamic> TransactionHandler(Transaction transaction);
 
+/// `Transaction` provides methods to read and write data within a transaction.
 class Transaction {
   Transaction(this._transactionId, this._firestore);
 
