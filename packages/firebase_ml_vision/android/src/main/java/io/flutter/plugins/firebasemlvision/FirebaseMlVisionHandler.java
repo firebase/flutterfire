@@ -10,11 +10,11 @@ import androidx.exifinterface.media.ExifInterface;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
 
 public class FirebaseMlVisionHandler implements MethodChannel.MethodCallHandler {
   private final SparseArray<Detector> detectors = new SparseArray<>();
