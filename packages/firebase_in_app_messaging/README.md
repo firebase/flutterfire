@@ -19,7 +19,7 @@ dependencies {
   // Example existing classpath
   classpath 'com.android.tools.build:gradle:3.3.0'
   // Add the google services classpath
-  classpath 'com.google.gms:google-services:4.3.0'
+  classpath 'com.google.gms:google-services:4.2.0'
 }
 ```
 
