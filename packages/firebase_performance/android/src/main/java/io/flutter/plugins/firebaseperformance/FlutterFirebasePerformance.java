@@ -36,11 +36,11 @@ public class FlutterFirebasePerformance implements MethodChannel.MethodCallHandl
     }
   }
 
-  private final FirebasePerformanceHandler handler;
+  private final FirebasePerformancePlugin plugin;
   private final FirebasePerformance performance;
 
-  FlutterFirebasePerformance(FirebasePerformanceHandler handler) {
-    this.handler = handler;
+  FlutterFirebasePerformance(FirebasePerformancePlugin plugin) {
+    this.plugin = plugin;
     this.performance = FirebasePerformance.getInstance();
   }
 
@@ -82,7 +82,7 @@ public class FlutterFirebasePerformance implements MethodChannel.MethodCallHandl
     final Trace trace = performance.newTrace(name);
 
     final Integer handle = call.argument("traceHandle");
-    handler.addHandler(handle, new FlutterTrace(handler, trace));
+    plugin.addHandler(handle, new FlutterTrace(plugin, trace));
 
     result.success(null);
   }
@@ -95,7 +95,7 @@ public class FlutterFirebasePerformance implements MethodChannel.MethodCallHandl
     final HttpMetric metric = performance.newHttpMetric(url, parseHttpMethod(httpMethod));
 
     final Integer handle = call.argument("httpMetricHandle");
-    handler.addHandler(handle, new FlutterHttpMetric(handler, metric));
+    plugin.addHandler(handle, new FlutterHttpMetric(plugin, metric));
 
     result.success(null);
   }
