@@ -373,10 +373,10 @@ public class CloudFirestorePlugin implements MethodCallHandler {
           final Map<String, Object> arguments = call.arguments();
           getFirestore(arguments)
               .runTransaction(
-                  new Transaction.Function<Map<String, Object>>() {
+                  new Transaction.Function<TransactionResult>() {
                     @Nullable
                     @Override
-                    public Map<String, Object> apply(@NonNull Transaction transaction) {
+                    public TransactionResult apply(@NonNull Transaction transaction) {
                       // Store transaction.
                       int transactionId = (Integer) arguments.get("transactionId");
                       transactions.append(transactionId, transaction);
@@ -424,23 +424,31 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                             Tasks.await(transactionTCSTask, timeout, TimeUnit.MILLISECONDS);
 
                         // Once transaction completes return the result to the Dart side.
-                        return transactionResult;
+                        return new TransactionResult(transactionResult);
                       } catch (Exception e) {
                         Log.e(TAG, e.getMessage(), e);
-                        result.error("Error performing transaction", e.getMessage(), null);
+                        return new TransactionResult(e);
                       }
-                      return null;
                     }
                   })
               .addOnCompleteListener(
-                  new OnCompleteListener<Map<String, Object>>() {
+                  new OnCompleteListener<TransactionResult>() {
                     @Override
-                    public void onComplete(Task<Map<String, Object>> task) {
-                      if (task.isSuccessful()) {
-                        result.success(task.getResult());
-                      } else {
+                    public void onComplete(Task<TransactionResult> task) {
+                      if (!task.isSuccessful()) {
                         result.error(
                             "Error performing transaction", task.getException().getMessage(), null);
+                        return;
+                      }
+
+                      TransactionResult transactionResult = task.getResult();
+                      if (transactionResult.exception == null) {
+                        result.success(transactionResult.result);
+                      } else {
+                        result.error(
+                            "Error performing transaction",
+                            transactionResult.exception.getMessage(),
+                            null);
                       }
                     }
                   });
@@ -474,7 +482,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                         result.success(snapshotMap);
                       }
                     });
-              } catch (final FirebaseFirestoreException e) {
+              } catch (final Exception e) {
                 activity.runOnUiThread(
                     new Runnable() {
                       @Override
@@ -506,7 +514,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                         result.success(null);
                       }
                     });
-              } catch (final IllegalStateException e) {
+              } catch (final Exception e) {
                 activity.runOnUiThread(
                     new Runnable() {
                       @Override
@@ -529,14 +537,24 @@ public class CloudFirestorePlugin implements MethodCallHandler {
             @Override
             protected Void doInBackground(Void... voids) {
               Map<String, Object> data = (Map<String, Object>) arguments.get("data");
-              transaction.set(getDocumentReference(arguments), data);
-              activity.runOnUiThread(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      result.success(null);
-                    }
-                  });
+              try {
+                transaction.set(getDocumentReference(arguments), data);
+                activity.runOnUiThread(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        result.success(null);
+                      }
+                    });
+              } catch (final Exception e) {
+                activity.runOnUiThread(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        result.error("Error performing Transaction#set", e.getMessage(), null);
+                      }
+                    });
+              }
               return null;
             }
           }.execute();
@@ -549,14 +567,24 @@ public class CloudFirestorePlugin implements MethodCallHandler {
           new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-              transaction.delete(getDocumentReference(arguments));
-              activity.runOnUiThread(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      result.success(null);
-                    }
-                  });
+              try {
+                transaction.delete(getDocumentReference(arguments));
+                activity.runOnUiThread(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        result.success(null);
+                      }
+                    });
+              } catch (final Exception e) {
+                activity.runOnUiThread(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        result.error("Error performing Transaction#delete", e.getMessage(), null);
+                      }
+                    });
+              }
               return null;
             }
           }.execute();
@@ -798,6 +826,21 @@ public class CloudFirestorePlugin implements MethodCallHandler {
           result.notImplemented();
           break;
         }
+    }
+  }
+
+  private static final class TransactionResult {
+    final @Nullable Map<String, Object> result;
+    final @Nullable Exception exception;
+
+    TransactionResult(@NonNull Exception exception) {
+      this.exception = exception;
+      this.result = null;
+    }
+
+    TransactionResult(@Nullable Map<String, Object> result) {
+      this.result = result;
+      this.exception = null;
     }
   }
 }

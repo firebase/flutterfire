@@ -33,12 +33,12 @@ class RemoteConfig extends ChangeNotifier {
   /// Gets the instance of RemoteConfig for the default Firebase app.
   static Future<RemoteConfig> get instance async {
     if (!_instanceCompleter.isCompleted) {
-      _getRemoteConfigInstance();
+      _instanceCompleter.complete(await _getRemoteConfigInstance());
     }
     return _instanceCompleter.future;
   }
 
-  static void _getRemoteConfigInstance() async {
+  static Future<RemoteConfig> _getRemoteConfigInstance() async {
     final Map<String, dynamic> properties =
         await channel.invokeMapMethod<String, dynamic>('RemoteConfig#instance');
 
@@ -53,7 +53,7 @@ class RemoteConfig extends ChangeNotifier {
     instance._remoteConfigSettings = remoteConfigSettings;
     instance._parameters =
         _parseRemoteConfigParameters(parameters: properties['parameters']);
-    _instanceCompleter.complete(instance);
+    return instance;
   }
 
   static Map<String, RemoteConfigValue> _parseRemoteConfigParameters(

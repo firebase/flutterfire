@@ -1,3 +1,7 @@
+## 5.0.2
+
+* Fixed `setAnalyticsCollectionEnabled` on iOS.
+
 ## 5.0.1
 
 * Update documentation to reflect new repository location.
