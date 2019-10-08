@@ -22,11 +22,32 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /** CloudFunctionsPlugin */
-public class CloudFunctionsPlugin implements MethodCallHandler {
+public class CloudFunctionsPlugin implements MethodCallHandler, FlutterPlugin {
+  private MethodChannel methodChannel;
+
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "cloud_functions");
     channel.setMethodCallHandler(new CloudFunctionsPlugin());
+    final CloudFunctionsPlugin instance = new CloudFunctionsPlugin();
+    instance.onAttachedToEngine(registrar.context(), registrar.messenger());
+  }
+
+  @Override
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
+    onAttachedToEngine(
+            binding.getApplicationContext(), binding.getFlutterEngine().getDartExecutor());
+  }
+
+  private void onAttachedToEngine(Context applicationContext, BinaryMessenger messenger) {
+    methodChannel = new MethodChannel(messenger, "plugins.flutter.dev/cloud_functions");
+    methodChannel.setMethodCallHandler(this);
+  }
+
+  @Override
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
+    methodChannel.setMethodCallHandler(null);
+    methodChannel = null;
   }
 
   @Override

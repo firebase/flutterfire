@@ -3,22 +3,21 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'package:e2e/e2e.dart';
 import 'package:flutter_driver/driver_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 
 void main() {
-  final Completer<String> completer = Completer<String>();
-  enableFlutterDriverExtension(handler: (_) => completer.future);
-  tearDownAll(() => completer.complete(null));
+  E2EWidgetsFlutterBinding.ensureInitialized();
 
   group('$CloudFunctions', () {
-    test('call', () async {
+    testWidgets('call', (_) async {
       // default timeout
       final HttpsCallable callable =
-          CloudFunctions.instance.getHttpsCallable(functionName: 'repeat');
+      CloudFunctions.instance.getHttpsCallable(functionName: 'repeat');
       final HttpsCallableResult response =
-          await callable.call(<String, dynamic>{
+      await callable.call(<String, dynamic>{
         'message': 'foo',
         'count': 1,
       });
