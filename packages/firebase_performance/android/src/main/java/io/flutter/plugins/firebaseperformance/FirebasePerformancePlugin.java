@@ -15,6 +15,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 public class FirebasePerformancePlugin implements FlutterPlugin, MethodChannel.MethodCallHandler {
   private static final String CHANNEL_NAME = "plugins.flutter.io/firebase_performance";
 
+  private final SparseArray<MethodChannel.MethodCallHandler> handlers = new SparseArray<>();
   private MethodChannel channel;
 
   public static void registerWith(Registrar registrar) {
@@ -33,7 +34,23 @@ public class FirebasePerformancePlugin implements FlutterPlugin, MethodChannel.M
     channel.setMethodCallHandler(null);
   }
 
-  private final SparseArray<MethodChannel.MethodCallHandler> handlers = new SparseArray<>();
+  @Override
+  public void onMethodCall(MethodCall call, MethodChannel.Result result) {
+    if (call.method.equals("FirebasePerformance#instance")) {
+      handlers.clear();
+      final Integer handle = call.argument("handle");
+      addHandler(handle, new FlutterFirebasePerformance(this));
+      result.success(null);
+    } else {
+      final MethodChannel.MethodCallHandler handler = getHandler(call);
+
+      if (handler != null) {
+        handler.onMethodCall(call, result);
+      } else {
+        result.notImplemented();
+      }
+    }
+  }
 
   void addHandler(final int handle, final MethodChannel.MethodCallHandler handler) {
     if (handlers.get(handle) != null) {
@@ -53,23 +70,5 @@ public class FirebasePerformancePlugin implements FlutterPlugin, MethodChannel.M
 
     if (handle == null) return null;
     return handlers.get(handle);
-  }
-
-  @Override
-  public void onMethodCall(MethodCall call, MethodChannel.Result result) {
-    if (call.method.equals("FirebasePerformance#instance")) {
-      handlers.clear();
-      final Integer handle = call.argument("handle");
-      addHandler(handle, new FlutterFirebasePerformance(this));
-      result.success(null);
-    } else {
-      final MethodChannel.MethodCallHandler handler = getHandler(call);
-
-      if (handler != null) {
-        handler.onMethodCall(call, result);
-      } else {
-        result.notImplemented();
-      }
-    }
   }
 }
