@@ -9,24 +9,23 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 
 public class FirebaseCorePlugin implements FlutterPlugin {
+  private static final String CHANNEL_NAME = "plugins.flutter.io/firebase_core";
+
   private MethodChannel channel;
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
-    final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_core");
+    final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
     channel.setMethodCallHandler(new FirebaseCoreHandler(registrar.context()));
   }
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    channel =
-        new MethodChannel(
-            binding.getFlutterEngine().getDartExecutor(), "plugins.flutter.io/firebase_core");
+    channel = new MethodChannel(binding.getFlutterEngine().getDartExecutor(), CHANNEL_NAME);
     channel.setMethodCallHandler(new FirebaseCoreHandler(binding.getApplicationContext()));
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    if (channel != null) channel.setMethodCallHandler(null);
+    channel.setMethodCallHandler(null);
   }
 }
