@@ -17,7 +17,7 @@ public class MainActivity extends FlutterActivity {
         shimPluginRegistry.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"));
     ImagePickerPlugin.registerWith(
         shimPluginRegistry.registrarFor("io.flutter.plugins.imagepicker.VideoPlayerPlugin"));
-//    CameraPlugin.registerWith(
-//        shimPluginRegistry.registrarFor("io.flutter.plugins.camera.CameraPlugin"));
+    //    CameraPlugin.registerWith(
+    //        shimPluginRegistry.registrarFor("io.flutter.plugins.camera.CameraPlugin"));
   }
 }

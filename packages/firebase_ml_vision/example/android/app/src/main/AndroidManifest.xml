@@ -23,9 +23,6 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-            <meta-data
-              android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-              android:value="barcode,face,label,ocr" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -38,5 +35,8 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
         </activity>
+        <meta-data
+          android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+          android:value="barcode,face,label,ocr" />
     </application>
 </manifest>
