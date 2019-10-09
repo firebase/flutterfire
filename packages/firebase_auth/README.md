@@ -121,10 +121,16 @@ After a successful authentication, you will receive a `FirebaseUser` object. You
 
   - When testing you can add test phone numbers and verification codes to the Firebase console.
 
-1. [Enable App verification](https://firebase.google.com/docs/auth/ios/phone-auth#enable-app-verification)  
+2. [Enable App verification](https://firebase.google.com/docs/auth/ios/phone-auth#enable-app-verification)  
 
 **Note:** App verification may use APNs, if using a simulator (where APNs does not work) or APNs is not setup on the
 device you are using you must set the `URL Schemes` to the `REVERSE_CLIENT_ID` from the GoogleServices-Info.plist file.
+
+**Known issue:** If you are trying to call `verifyPhoneNumber` and are receiving an `verifyPhoneNumberError` with the message 
+
+> If app delegate swizzling is disabled, remote notifications received by UIApplicationDelegate need to be forwarded to FIRAuth's canHandleNotificaton: method.
+
+you should take a look at [this appendix on Firebase docs](https://firebase.google.com/docs/auth/ios/phone-auth#appendix:-using-phone-sign-in-without-swizzling). It'll require some changes in your iOS project.
 
 #### Android setup
 
