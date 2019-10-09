@@ -1,3 +1,7 @@
+## 0.14.0+7
+
+* Update README to show how to fix the method swizzling problem on iOS when call `verifyPhoneNumber`
+
 ## 0.14.0+6
 
 * Update example app with correct const constructors.
