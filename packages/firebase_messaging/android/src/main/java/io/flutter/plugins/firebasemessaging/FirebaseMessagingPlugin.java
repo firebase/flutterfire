@@ -25,6 +25,8 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.NewIntentListener;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.plugin.common.PluginRegistry.ViewDestroyListener;
+import io.flutter.view.FlutterNativeView;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +46,13 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     final FirebaseMessagingPlugin plugin = new FirebaseMessagingPlugin(registrar, channel);
     registrar.addNewIntentListener(plugin);
     channel.setMethodCallHandler(plugin);
+    registrar.addViewDestroyListener(new ViewDestroyListener() {
+      @Override
+      public boolean onViewDestroy(FlutterNativeView view) {
+        plugin.release();
+        return false;
+      }
+    });
   }
 
   private FirebaseMessagingPlugin(Registrar registrar, MethodChannel channel) {
@@ -56,6 +65,11 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     intentFilter.addAction(FlutterFirebaseMessagingService.ACTION_REMOTE_MESSAGE);
     LocalBroadcastManager manager = LocalBroadcastManager.getInstance(registrar.context());
     manager.registerReceiver(this, intentFilter);
+  }
+
+  private void release() {
+    LocalBroadcastManager manager = LocalBroadcastManager.getInstance(registrar.context());
+    manager.unregisterReceiver(this);
   }
 
   // BroadcastReceiver implementation.
