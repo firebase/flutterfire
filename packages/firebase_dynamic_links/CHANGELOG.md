@@ -1,3 +1,7 @@
+## 0.5.0+4
+
+* Fix example app build by updating version of `url_launcher` that is compatible with androidx apps.
+
 ## 0.5.0+3
 
 * Don't crash if registrar.activity() is not there.
