@@ -5,10 +5,16 @@
 package io.flutter.plugins.firebaseadmob;
 
 import android.app.Activity;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
+import io.flutter.embedding.engine.dart.DartExecutor;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -17,10 +23,14 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import java.util.Locale;
 import java.util.Map;
 
-public class FirebaseAdMobPlugin implements MethodCallHandler {
+public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
+  static final String CHANNEL_NAME = "plugins.flutter.io/firebase_admob";
 
-  private final Registrar registrar;
-  private final MethodChannel channel;
+  //private final Registrar registrar;
+  private MethodChannel channel;
+  private Context applicationContext;
+  private Activity activity;
+  private DartExecutor dartExecutor;
 
   RewardedVideoAdWrapper rewardedWrapper;
 
@@ -30,16 +40,20 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
       // We stop the registering process immediately because the firebase_admob requires an activity.
       return;
     }
-    final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_admob");
-    channel.setMethodCallHandler(new FirebaseAdMobPlugin(registrar, channel));
+    final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
+    channel.setMethodCallHandler(
+        new FirebaseAdMobPlugin(registrar.context(), registrar.activity(), channel));
   }
 
-  private FirebaseAdMobPlugin(Registrar registrar, MethodChannel channel) {
-    this.registrar = registrar;
+  public FirebaseAdMobPlugin() {}
+
+  private FirebaseAdMobPlugin(
+      Context applicationContext, Activity activity, MethodChannel channel) {
+    this.applicationContext = applicationContext;
+    this.activity = activity;
     this.channel = channel;
-    FirebaseApp.initializeApp(registrar.context());
-    rewardedWrapper = new RewardedVideoAdWrapper(registrar.activity(), channel);
+    FirebaseApp.initializeApp(applicationContext);
+    rewardedWrapper = new RewardedVideoAdWrapper(activity, channel);
   }
 
   private void callInitialize(MethodCall call, Result result) {
@@ -48,7 +62,7 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
       result.error("no_app_id", "a null or empty AdMob appId was provided", null);
       return;
     }
-    MobileAds.initialize(registrar.context(), appId);
+    MobileAds.initialize(applicationContext, appId);
     result.success(Boolean.TRUE);
   }
 
@@ -203,9 +217,44 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
   }
 
   @Override
-  public void onMethodCall(MethodCall call, Result result) {
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    applicationContext = binding.getApplicationContext();
+    dartExecutor = binding.getFlutterEngine().getDartExecutor();
+  }
 
-    Activity activity = registrar.activity();
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);
+    applicationContext = null;
+    dartExecutor = null;
+  }
+
+  @Override
+  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+    activity = binding.getActivity();
+    channel = new MethodChannel(dartExecutor, CHANNEL_NAME);
+    channel.setMethodCallHandler(this);
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    MobileAd.disposeAll();
+    activity = null;
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+    activity = binding.getActivity();
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    MobileAd.disposeAll();
+    activity = null;
+  }
+
+  @Override
+  public void onMethodCall(MethodCall call, Result result) {
     if (activity == null) {
       result.error("no_activity", "firebase_admob plugin requires a foreground activity", null);
       return;

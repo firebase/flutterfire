@@ -73,6 +73,13 @@ abstract class MobileAd extends AdListener {
     allAds.remove(id);
   }
 
+  static void disposeAll() {
+    for (int i = 0; i < allAds.size(); i++) {
+      allAds.valueAt(i).dispose();
+    }
+    allAds.clear();
+  }
+
   private Map<String, Object> argumentsMap(Object... args) {
     Map<String, Object> arguments = new HashMap<String, Object>();
     arguments.put("id", id);
