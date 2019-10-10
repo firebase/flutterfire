@@ -1,6 +1,7 @@
 ## 0.9.2+3
 
 * Use `BoxDecoration` `const` constructor in example app.
+* Use a clearer test image for contact QR barcode.
 
 ## 0.9.2+2
 
