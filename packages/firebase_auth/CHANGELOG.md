@@ -1,3 +1,7 @@
+## 0.14.0+7
+
+* Formatted lists in member documentations for better readability.
+
 ## 0.14.0+6
 
 * Update example app with correct const constructors.

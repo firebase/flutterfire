@@ -1,3 +1,7 @@
+## 5.0.3
+
+* Formatted `setCurrentScreen` documentation.
+
 ## 5.0.2
 
 * Fixed `setAnalyticsCollectionEnabled` on iOS.

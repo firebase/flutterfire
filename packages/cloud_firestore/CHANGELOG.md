@@ -1,3 +1,7 @@
+## 0.12.9+6
+
+* Formatted method documentations.
+
 ## 0.12.9+5
 
 * Fixes a crash on Android when running a transaction without an internet connection.

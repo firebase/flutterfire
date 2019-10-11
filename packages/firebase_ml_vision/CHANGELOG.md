@@ -1,3 +1,7 @@
+## 0.9.2+4
+
+* Formatted member documentations.
+
 ## 0.9.2+3
 
 * Use `BoxDecoration` `const` constructor in example app.
