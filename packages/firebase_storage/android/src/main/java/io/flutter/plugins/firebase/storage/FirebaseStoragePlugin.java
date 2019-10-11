@@ -5,7 +5,6 @@
 package io.flutter.plugins.firebase.storage;
 
 import android.net.Uri;
-import android.util.Log;
 import android.util.SparseArray;
 import android.webkit.MimeTypeMap;
 import androidx.annotation.NonNull;
