@@ -1,4 +1,5 @@
 ## 3.1.0
+
 * Update Android dependencies to latest.
 * Implement `listAll` function both in Android and iOS.
 

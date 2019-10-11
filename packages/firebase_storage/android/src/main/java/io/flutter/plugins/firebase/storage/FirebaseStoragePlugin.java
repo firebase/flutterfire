@@ -34,7 +34,6 @@ import java.util.Map;
 
 /** FirebaseStoragePlugin */
 public class FirebaseStoragePlugin implements MethodCallHandler {
-  private static final String TAG = "FirebaseStoragePlugin";
   private FirebaseStorage firebaseStorage;
   private final MethodChannel channel;
 
@@ -164,10 +163,6 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
   }
 
   private void getMetadata(MethodCall call, final Result result) {
-    Log.d( TAG, "arguments : " + call.arguments.toString());
-    Log.d( TAG, "argument path : " + call.argument("path"));
-    Log.d( TAG, "argument app : " + call.argument("app"));
-    Log.d( TAG, "argument bucket : " + call.argument("bucket"));
     String path = call.argument("path");
     StorageReference ref = firebaseStorage.getReference().child(path);
     ref.getMetadata()
@@ -296,19 +291,13 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
   }
 
   private void listAll(MethodCall call, final Result result) {
-    Log.d( TAG, "arguments : " + call.arguments.toString());
-    Log.d( TAG, "argument path : " + call.argument("path"));
-    Log.d( TAG, "argument app : " + call.argument("app"));
-    Log.d( TAG, "argument bucket : " + call.argument("bucket"));
     String path = call.argument("path");
     StorageReference ref = firebaseStorage.getReference().child(path);
-    Log.d( TAG, "reference : " + ref.toString() + " " + ref.getPath());
     final Task<ListResult> listTask = ref.listAll();
     listTask.addOnSuccessListener(
         new OnSuccessListener<ListResult>() {
           @Override
           public void onSuccess(ListResult listResult) {
-            Log.d( TAG, "task result : success " + String.valueOf( listResult.getItems().size()));
             Map<String, Object> map = new HashMap<>();
             map.put("pageToken", listResult.getPageToken());
             Map<String, Object> mapItems = new HashMap<>();
@@ -332,7 +321,6 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
         new OnFailureListener() {
           @Override
           public void onFailure(@NonNull Exception e) {
-            Log.d( TAG, "task result : FAIL " + e.getMessage());
             result.error("listing_error", e.getMessage(), null);
           }
         });

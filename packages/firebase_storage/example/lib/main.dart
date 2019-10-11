@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -19,21 +18,20 @@ void main() async {
     name: 'test',
     options: FirebaseOptions(
       googleAppID: Platform.isIOS
-          ? '1:207870425357:ios:d7c47ec26b7d75faef1844'
-          : '1:207870425357:android:6f6ea31edffb6870ef1844',
-      gcmSenderID: '207870425357',
-      apiKey: 'AIzaSyDFvVt27L_gVmvL_lte_QX_eoZa_zjgLKE',
-      projectID: 'flutterfirebaseplugins',
+          ? '1:159623150305:ios:4a213ef3dbd8997b'
+          : '1:159623150305:android:ef48439a0cc0263d',
+      gcmSenderID: '159623150305',
+      apiKey: 'AIzaSyChk3KEG7QYrs4kQPLP1tjJNxBTbfCAdgg',
+      projectID: 'flutter-firebase-plugins',
     ),
   );
   final FirebaseStorage storage = FirebaseStorage(
-      app: app, storageBucket: 'gs://flutterfirebaseplugins.appspot.com');
+      app: app, storageBucket: 'gs://flutter-firebase-plugins.appspot.com');
   runApp(MyApp(storage: storage));
 }
 
 class MyApp extends StatelessWidget {
   MyApp({this.storage});
-
   final FirebaseStorage storage;
 
   @override
@@ -47,7 +45,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({this.storage});
-
   final FirebaseStorage storage;
 
   @override
@@ -110,12 +107,6 @@ class _MyHomePageState extends State<MyHomePage> {
     ));
   }
 
-  Future<void> _listOfFiles() async {
-    final StorageReference ref = widget.storage.ref().child('text');
-    final dynamic result = await ref.listAll();
-    log(result.toString());
-  }
-
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = <Widget>[];
@@ -136,11 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(Icons.clear_all),
             onPressed:
                 _tasks.isNotEmpty ? () => setState(() => _tasks.clear()) : null,
-          ),
-          IconButton(
-            icon: const Icon(Icons.list),
-            onPressed: _listOfFiles,
-          ),
+          )
         ],
       ),
       body: ListView(
