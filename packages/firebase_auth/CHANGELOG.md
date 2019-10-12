@@ -1,3 +1,7 @@
+## 0.14.0+7
+
+* Fixes broken `reauthenticateWithCredential` method on both Android and iOS.
+
 ## 0.14.0+6
 
 * Update example app with correct const constructors.
