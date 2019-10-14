@@ -84,13 +84,25 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     }
   }
 
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+
+    if (isIsolateRunning.getAndSet(false)) {
+      backgroundChannel = null;
+
+      backgroundFlutterView.destroy();
+      backgroundFlutterView = null;
+    }
+  }
+
   /**
    * Called when message is received.
    *
    * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
    */
   @Override
-  public void onMessageReceived(final RemoteMessage remoteMessage) {
+  public void onMessageReceived(@NonNull final RemoteMessage remoteMessage) {
     // If application is running in the foreground use local broadcast to handle message.
     // Otherwise use the background isolate to handle message.
     if (isApplicationForeground(this)) {
@@ -129,7 +141,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
    *     the same as the one retrieved by getInstanceId().
    */
   @Override
-  public void onNewToken(String token) {
+  public void onNewToken(@NonNull String token) {
     Intent intent = new Intent(ACTION_TOKEN);
     intent.putExtra(EXTRA_TOKEN, token);
     LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
@@ -215,7 +227,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
    *
    * @param channel Background method channel.
    */
-  public static void setBackgroundChannel(MethodChannel channel) {
+  public static void setBackgroundChannel(@NonNull MethodChannel channel) {
     backgroundChannel = channel;
   }
 
@@ -300,9 +312,8 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     }
     args.put("handle", backgroundMessageHandle);
 
-    if (remoteMessage.getData() != null) {
-      messageData.put("data", remoteMessage.getData());
-    }
+    messageData.put("data", remoteMessage.getData());
+
     if (remoteMessage.getNotification() != null) {
       messageData.put("notification", remoteMessage.getNotification());
     }
