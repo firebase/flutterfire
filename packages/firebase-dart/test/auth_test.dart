@@ -126,6 +126,24 @@ void main() {
       });
     });
 
+    group('OAuthProvider', () {
+      test('instance', () {
+        var provider = OAuthProvider('example.com');
+        expect(provider.providerId, 'example.com');
+      });
+      test('scope', () {
+        var provider = OAuthProvider('example.com');
+        var providerWithScope = provider.addScope('email');
+        expect(provider.providerId, equals(providerWithScope.providerId));
+      });
+      test('custom parameters', () {
+        var provider = OAuthProvider('example.com');
+        var providerWithParameters =
+        provider.setCustomParameters({'display': 'popup'});
+        expect(provider.providerId, equals(providerWithParameters.providerId));
+      });
+    });
+
     group('GitHub', () {
       test('PROVIDER_ID', () {
         expect(GithubAuthProvider.PROVIDER_ID, 'github.com');

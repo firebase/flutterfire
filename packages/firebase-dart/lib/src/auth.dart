@@ -648,6 +648,39 @@ class GoogleAuthProvider extends AuthProvider<GoogleAuthProviderJsImpl> {
       GoogleAuthProviderJsImpl.credential(idToken, accessToken);
 }
 
+/// OAuth auth provider.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.auth.GoogleAuthProvider>.
+class OAuthProvider extends AuthProvider<OAuthProviderJsImpl>{
+
+  /// Creates a new OAuthProvider.
+  factory OAuthProvider(String providerId) =>
+      OAuthProvider.fromJsObject(OAuthProviderJsImpl(providerId));
+
+  /// Creates a new OAuthProvider from a [jsObject].
+  OAuthProvider.fromJsObject(OAuthProviderJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  /// Adds additional OAuth 2.0 scopes that you want to request from the
+  /// authentication provider.
+  OAuthProvider addScope(String scope) =>
+      OAuthProvider.fromJsObject(jsObject.addScope(scope));
+
+  /// Sets the OAuth custom parameters to pass in an OAuth request for popup
+  /// and redirect sign-in operations. For a detailed list, check the reserved
+  /// required OAuth 2.0 parameters such as client_id, redirect_uri, scope,
+  /// response_type and state are not allowed and will be ignored.
+  OAuthProvider setCustomParameters(
+      Map<String, dynamic> customOAuthParameters) =>
+      OAuthProvider.fromJsObject(
+          jsObject.setCustomParameters(jsify(customOAuthParameters)));
+
+  /// Creates a credential for Google.
+  /// At least one of [idToken] and [accessToken] is required.
+  AuthCredential credential([String idToken, String accessToken]) =>
+      jsObject.credential(idToken, accessToken);
+}
+
 /// Twitter auth provider.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.TwitterAuthProvider>.
