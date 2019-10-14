@@ -651,8 +651,7 @@ class GoogleAuthProvider extends AuthProvider<GoogleAuthProviderJsImpl> {
 /// OAuth auth provider.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.GoogleAuthProvider>.
-class OAuthProvider extends AuthProvider<OAuthProviderJsImpl>{
-
+class OAuthProvider extends AuthProvider<OAuthProviderJsImpl> {
   /// Creates a new OAuthProvider.
   factory OAuthProvider(String providerId) =>
       OAuthProvider.fromJsObject(OAuthProviderJsImpl(providerId));
@@ -671,7 +670,7 @@ class OAuthProvider extends AuthProvider<OAuthProviderJsImpl>{
   /// required OAuth 2.0 parameters such as client_id, redirect_uri, scope,
   /// response_type and state are not allowed and will be ignored.
   OAuthProvider setCustomParameters(
-      Map<String, dynamic> customOAuthParameters) =>
+          Map<String, dynamic> customOAuthParameters) =>
       OAuthProvider.fromJsObject(
           jsObject.setCustomParameters(jsify(customOAuthParameters)));
 

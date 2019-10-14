@@ -127,8 +127,7 @@ class OAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory OAuthProviderJsImpl(String providerId);
   external OAuthProviderJsImpl addScope(String scope);
   external OAuthProviderJsImpl setCustomParameters(customOAuthParameters);
-  external AuthCredential credential(
-      [String idToken, String accessToken]);
+  external AuthCredential credential([String idToken, String accessToken]);
 }
 
 @JS('TwitterAuthProvider')

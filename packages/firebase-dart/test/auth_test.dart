@@ -139,7 +139,7 @@ void main() {
       test('custom parameters', () {
         var provider = OAuthProvider('example.com');
         var providerWithParameters =
-        provider.setCustomParameters({'display': 'popup'});
+            provider.setCustomParameters({'display': 'popup'});
         expect(provider.providerId, equals(providerWithParameters.providerId));
       });
     });
