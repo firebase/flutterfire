@@ -46,13 +46,14 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     final FirebaseMessagingPlugin plugin = new FirebaseMessagingPlugin(registrar, channel);
     registrar.addNewIntentListener(plugin);
     channel.setMethodCallHandler(plugin);
-    registrar.addViewDestroyListener(new ViewDestroyListener() {
-      @Override
-      public boolean onViewDestroy(FlutterNativeView view) {
-        plugin.release();
-        return false;
-      }
-    });
+    registrar.addViewDestroyListener(
+        new ViewDestroyListener() {
+          @Override
+          public boolean onViewDestroy(FlutterNativeView view) {
+            plugin.release();
+            return false;
+          }
+        });
   }
 
   private FirebaseMessagingPlugin(Registrar registrar, MethodChannel channel) {
