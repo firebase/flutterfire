@@ -1,5 +1,6 @@
 ## 0.14.0+7
 
+
 * Fix NoSuchMethodError exception in `reauthenticateWithCredential`
 
 ## 0.14.0+6
