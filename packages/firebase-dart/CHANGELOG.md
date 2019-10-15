@@ -10,7 +10,8 @@
 - Added `serverResponse` getter to `FirebaseError`.
 - Added `FieldValue.increment` static function.
 - Added support for storage List API.
-- Added support for firestore collectionGroup
+- Added support for firestore `collectionGroup`.
+- Added `OAuthProvider`.
 
 ## 5.0.4
 
