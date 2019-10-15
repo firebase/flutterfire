@@ -32,7 +32,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "io.flutter.plugins.firebase.cloudfunctions.cloudfunctionsexample"
+        applicationId "dev.flutter.plugins.firebase.cloudfunctionsexample"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
