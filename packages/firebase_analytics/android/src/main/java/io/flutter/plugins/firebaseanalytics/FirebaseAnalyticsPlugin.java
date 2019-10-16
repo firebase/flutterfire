@@ -7,12 +7,9 @@ package io.flutter.plugins.firebaseanalytics;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -38,16 +35,14 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-    onAttachedToEngine(binding.getApplicationContext(),
-        binding.getFlutterEngine().getDartExecutor());
+    onAttachedToEngine(
+        binding.getApplicationContext(), binding.getFlutterEngine().getDartExecutor());
   }
 
-  private void onAttachedToEngine(Context applicationContext,
-                                  BinaryMessenger binaryMessenger) {
+  private void onAttachedToEngine(Context applicationContext, BinaryMessenger binaryMessenger) {
     FirebaseApp.initializeApp(applicationContext);
     firebaseAnalytics = FirebaseAnalytics.getInstance(applicationContext);
-    methodChannel =
-        new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_analytics");
+    methodChannel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_analytics");
     methodChannel.setMethodCallHandler(this);
   }
 
