@@ -1,3 +1,7 @@
+## 0.4.1+2
+
+* Update Android package name.
+
 ## 0.4.1+1
 
 * Update documentation to reflect new repository location.
