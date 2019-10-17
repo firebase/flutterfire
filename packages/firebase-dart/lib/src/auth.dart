@@ -15,7 +15,7 @@ export 'interop/auth_interop.dart'
     show
         ActionCodeInfo,
         ActionCodeEmail,
-        AuthCredential,
+        OAuthCredential,
         ActionCodeSettings,
         IosSettings,
         AndroidSettings,
@@ -107,7 +107,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
 
   /// Links the user account with the given credentials, and returns any
   /// available additional user information, such as user name.
-  Future<UserCredential> linkWithCredential(AuthCredential credential) =>
+  Future<UserCredential> linkWithCredential(OAuthCredential credential) =>
       handleThenable(jsObject.linkWithCredential(credential))
           .then((u) => UserCredential.fromJsObject(u));
 
@@ -136,7 +136,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   /// Re-authenticates a user using a fresh credential, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> reauthenticateWithCredential(
-          AuthCredential credential) =>
+          OAuthCredential credential) =>
       handleThenable(jsObject.reauthenticateWithCredential(credential))
           .then((o) => UserCredential.fromJsObject(o));
 
@@ -202,7 +202,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
       handleThenable(jsObject.updatePassword(newPassword));
 
   /// Updates the user's phone number.
-  Future updatePhoneNumber(AuthCredential phoneCredential) =>
+  Future updatePhoneNumber(OAuthCredential phoneCredential) =>
       handleThenable(jsObject.updatePhoneNumber(phoneCredential));
 
   /// Updates a user's [profile] data.
@@ -416,7 +416,7 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
 
   /// Asynchronously signs in with the given credentials, and returns any
   /// available additional user information, such as user name.
-  Future<UserCredential> signInWithCredential(AuthCredential credential) =>
+  Future<UserCredential> signInWithCredential(OAuthCredential credential) =>
       handleThenable(jsObject.signInWithCredential(credential))
           .then((u) => UserCredential.fromJsObject(u));
 
@@ -534,7 +534,7 @@ class EmailAuthProvider extends AuthProvider<EmailAuthProviderJsImpl> {
       : super.fromJsObject(jsObject);
 
   /// Creates a credential for e-mail.
-  static AuthCredential credential(String email, String password) =>
+  static OAuthCredential credential(String email, String password) =>
       EmailAuthProviderJsImpl.credential(email, password);
 }
 
@@ -570,7 +570,7 @@ class FacebookAuthProvider extends AuthProvider<FacebookAuthProviderJsImpl> {
           jsObject.setCustomParameters(jsify(customOAuthParameters)));
 
   /// Creates a credential for Facebook.
-  static AuthCredential credential(String token) =>
+  static OAuthCredential credential(String token) =>
       FacebookAuthProviderJsImpl.credential(token);
 }
 
@@ -606,7 +606,7 @@ class GithubAuthProvider extends AuthProvider<GithubAuthProviderJsImpl> {
           jsObject.setCustomParameters(jsify(customOAuthParameters)));
 
   /// Creates a credential for GitHub.
-  static AuthCredential credential(String token) =>
+  static OAuthCredential credential(String token) =>
       GithubAuthProviderJsImpl.credential(token);
 }
 
@@ -644,7 +644,7 @@ class GoogleAuthProvider extends AuthProvider<GoogleAuthProviderJsImpl> {
 
   /// Creates a credential for Google.
   /// At least one of [idToken] and [accessToken] is required.
-  static AuthCredential credential([String idToken, String accessToken]) =>
+  static OAuthCredential credential([String idToken, String accessToken]) =>
       GoogleAuthProviderJsImpl.credential(idToken, accessToken);
 }
 
@@ -676,7 +676,7 @@ class OAuthProvider extends AuthProvider<OAuthProviderJsImpl> {
 
   /// Creates a credential for Google.
   /// At least one of [idToken] and [accessToken] is required.
-  AuthCredential credential([String idToken, String accessToken]) =>
+  OAuthCredential credential([String idToken, String accessToken]) =>
       jsObject.credential(idToken, accessToken);
 }
 
@@ -705,7 +705,7 @@ class TwitterAuthProvider extends AuthProvider<TwitterAuthProviderJsImpl> {
           jsObject.setCustomParameters(jsify(customOAuthParameters)));
 
   /// Creates a credential for Twitter.
-  static AuthCredential credential(String token, String secret) =>
+  static OAuthCredential credential(String token, String secret) =>
       TwitterAuthProviderJsImpl.credential(token, secret);
 }
 
@@ -740,7 +740,7 @@ class PhoneAuthProvider extends AuthProvider<PhoneAuthProviderJsImpl> {
   /// Creates a phone auth credential given the verification ID
   /// from [verifyPhoneNumber] and the [verificationCode] that was sent to the
   /// user's mobile device.
-  static AuthCredential credential(
+  static OAuthCredential credential(
           String verificationId, String verificationCode) =>
       PhoneAuthProviderJsImpl.credential(verificationId, verificationCode);
 }
@@ -836,7 +836,7 @@ class ConfirmationResult extends JsObjectWrapper<ConfirmationResultJsImpl> {
           .then((u) => UserCredential.fromJsObject(u));
 }
 
-/// A structure containing a [User], an [AuthCredential] and [operationType].
+/// A structure containing a [User], an [OAuthCredential] and [operationType].
 /// operationType could be 'signIn' for a sign-in operation, 'link' for a
 /// linking operation and 'reauthenticate' for a reauthentication operation.
 ///
@@ -846,7 +846,7 @@ class UserCredential extends JsObjectWrapper<UserCredentialJsImpl> {
   User get user => User.getInstance(jsObject.user);
 
   /// Returns the auth credential.
-  AuthCredential get credential => jsObject.credential;
+  OAuthCredential get credential => jsObject.credential;
 
   /// Returns the operation type.
   String get operationType => jsObject.operationType;

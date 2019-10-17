@@ -1,3 +1,8 @@
+## 7.0.0-dev
+
+- **BREAKING** renamed `AuthCredential` into `OAuthCredential` to align with JS API
+- Added `idToken`, `accessToken` and `secret` to `OAuthCredential`
+
 ## 6.0.0
 
 - **BREAKING** Removed and renamed members across `auth` and `firestore` to

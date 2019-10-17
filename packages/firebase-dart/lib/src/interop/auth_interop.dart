@@ -35,7 +35,7 @@ abstract class AuthJsImpl {
   external PromiseJsImpl<UserCredentialJsImpl> signInAnonymously();
 
   external PromiseJsImpl<UserCredentialJsImpl> signInWithCredential(
-      AuthCredential credential);
+      OAuthCredential credential);
   external PromiseJsImpl<UserCredentialJsImpl> signInWithCustomToken(
       String token);
   external PromiseJsImpl<UserCredentialJsImpl>
@@ -74,11 +74,29 @@ class Persistence {
 /// Implementations specify the details about each auth provider's credential
 /// requirements.
 ///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.auth.AuthCredential>.
-@JS()
-abstract class AuthCredential {
+/// See: <https://firebase.google.com/docs/reference/js/firebase.auth.OAuthCredential>.
+@JS('OAuthCredential')
+abstract class OAuthCredential {
   /// The authentication provider ID for the credential.
   external String get providerId;
+
+  /// The OAuth access token associated with the credential if it belongs to
+  /// an OAuth provider, such as facebook.com, twitter.com, etc.
+  external String get accessToken;
+
+  /// The OAuth ID token associated with the credential if it belongs to an
+  /// OIDC provider, such as google.com.
+  external String get idToken;
+
+  /// The OAuth access token secret associated with the credential if it
+  /// belongs to an OAuth 1.0 provider, such as twitter.com.
+  external String get secret;
+
+  /// The authentication sign in method for the credential. For example,
+  /// 'password', or 'emailLink. This corresponds to the sign-in method
+  /// identifier as returned in: fetchsigninmethodsforemail
+  /// See <https://firebase.google.com/docs/reference/js/firebase.auth.Auth.html#fetchsigninmethodsforemail>
+  external String get signInMethod;
 }
 
 @JS('AuthProvider')
@@ -90,7 +108,7 @@ abstract class AuthProviderJsImpl {
 class EmailAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory EmailAuthProviderJsImpl();
   external static String get PROVIDER_ID;
-  external static AuthCredential credential(String email, String password);
+  external static OAuthCredential credential(String email, String password);
 }
 
 @JS('FacebookAuthProvider')
@@ -100,7 +118,7 @@ class FacebookAuthProviderJsImpl extends AuthProviderJsImpl {
   external FacebookAuthProviderJsImpl addScope(String scope);
   external FacebookAuthProviderJsImpl setCustomParameters(
       customOAuthParameters);
-  external static AuthCredential credential(String token);
+  external static OAuthCredential credential(String token);
 }
 
 @JS('GithubAuthProvider')
@@ -109,7 +127,7 @@ class GithubAuthProviderJsImpl extends AuthProviderJsImpl {
   external static String get PROVIDER_ID;
   external GithubAuthProviderJsImpl addScope(String scope);
   external GithubAuthProviderJsImpl setCustomParameters(customOAuthParameters);
-  external static AuthCredential credential(String token);
+  external static OAuthCredential credential(String token);
 }
 
 @JS('GoogleAuthProvider')
@@ -118,7 +136,7 @@ class GoogleAuthProviderJsImpl extends AuthProviderJsImpl {
   external static String get PROVIDER_ID;
   external GoogleAuthProviderJsImpl addScope(String scope);
   external GoogleAuthProviderJsImpl setCustomParameters(customOAuthParameters);
-  external static AuthCredential credential(
+  external static OAuthCredential credential(
       [String idToken, String accessToken]);
 }
 
@@ -127,7 +145,7 @@ class OAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory OAuthProviderJsImpl(String providerId);
   external OAuthProviderJsImpl addScope(String scope);
   external OAuthProviderJsImpl setCustomParameters(customOAuthParameters);
-  external AuthCredential credential([String idToken, String accessToken]);
+  external OAuthCredential credential([String idToken, String accessToken]);
 }
 
 @JS('TwitterAuthProvider')
@@ -135,7 +153,7 @@ class TwitterAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory TwitterAuthProviderJsImpl();
   external static String get PROVIDER_ID;
   external TwitterAuthProviderJsImpl setCustomParameters(customOAuthParameters);
-  external static AuthCredential credential(String token, String secret);
+  external static OAuthCredential credential(String token, String secret);
 }
 
 @JS('PhoneAuthProvider')
@@ -145,7 +163,7 @@ class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
   external PromiseJsImpl<String> verifyPhoneNumber(
       String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
   // TODO official documentation says PromiseJsImpl<AuthCredential> return type
-  external static AuthCredential credential(
+  external static OAuthCredential credential(
       String verificationId, String verificationCode);
 }
 
@@ -292,7 +310,7 @@ class AndroidSettings {
 @anonymous
 class UserCredentialJsImpl {
   external UserJsImpl get user;
-  external AuthCredential get credential;
+  external OAuthCredential get credential;
   external String get operationType;
   external AdditionalUserInfoJsImpl get additionalUserInfo;
 }

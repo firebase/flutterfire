@@ -49,7 +49,7 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external PromiseJsImpl delete();
   external PromiseJsImpl<String> getIdToken([bool opt_forceRefresh]);
   external PromiseJsImpl<UserCredentialJsImpl> linkWithCredential(
-      AuthCredential credential);
+      OAuthCredential credential);
   external PromiseJsImpl<ConfirmationResultJsImpl> linkWithPhoneNumber(
       String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
   external PromiseJsImpl<UserCredentialJsImpl> linkWithPopup(
@@ -57,7 +57,7 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external PromiseJsImpl linkWithRedirect(AuthProviderJsImpl provider);
 
   external PromiseJsImpl reauthenticateWithCredential(
-      AuthCredential credential);
+      OAuthCredential credential);
   external PromiseJsImpl<ConfirmationResultJsImpl>
       reauthenticateWithPhoneNumber(
           String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
@@ -71,7 +71,7 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external PromiseJsImpl<UserJsImpl> unlink(String providerId);
   external PromiseJsImpl updateEmail(String newEmail);
   external PromiseJsImpl updatePassword(String newPassword);
-  external PromiseJsImpl updatePhoneNumber(AuthCredential phoneCredential);
+  external PromiseJsImpl updatePhoneNumber(OAuthCredential phoneCredential);
   external PromiseJsImpl updateProfile(UserProfile profile);
   external Object toJSON();
 }
