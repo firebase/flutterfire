@@ -49,7 +49,6 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     firebaseAnalytics = null;
-    setActivity(null);
     methodChannel = null;
   }
 
@@ -69,9 +68,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   }
 
   @Override
-  public void onDetachedFromActivity() {
-    setActivity(null);
-  }
+  public void onDetachedFromActivity() {}
 
   @Override
   public void onMethodCall(MethodCall call, Result result) {

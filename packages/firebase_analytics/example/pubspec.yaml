@@ -7,9 +7,9 @@ dependencies:
   firebase_analytics:
     path: ../
   firebase_core: ^0.4.0
+  e2e: ^0.2.1
 
 dev_dependencies:
-  e2e: ^0.2.1
   flutter_test:
     sdk: flutter
   flutter_driver:
