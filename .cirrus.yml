@@ -5,6 +5,8 @@ task:
     cpu: 8
     memory: 16G
   upgrade_script:
+    - flutter channel stable
+    - flutter upgrade
     - flutter channel master
     - flutter upgrade
     - git fetch origin master
@@ -12,26 +14,44 @@ task:
   matrix:
     - name: publishable
       script: ./script/check_publish.sh
-    - name: test+format
+    - name: test
+    - name: format
       install_script:
         - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
         - sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main"
         - sudo apt-get update
         - sudo apt-get install -y --allow-unauthenticated clang-format-7
       format_script: ./script/incremental_build.sh format --travis --clang-format=clang-format-7
-      test_script: ./script/incremental_build.sh test
+    - name: test
+      env:
+        matrix:
+          CHANNEL: "master"
+          CHANNEL: "stable"
+      test_script:
+        # TODO(jackson): Allow web plugins once supported on stable
+        # https://github.com/flutter/flutter/issues/42864
+        - if [[ "$CHANNEL" -eq "stable" ]]; then find . | grep _web$ | xargs rm -rf; fi
+        - flutter channel $CHANNEL
+        - ./script/incremental_build.sh test
     - name: analyze
       script: ./script/incremental_build.sh analyze
-    - name: build-apks+java-test+drive-examples
+    - name: build-apks+java-test+firebase-test-lab
       env:
         matrix:
           PLUGIN_SHARDING: "--shardIndex 0 --shardCount 2"
           PLUGIN_SHARDING: "--shardIndex 1 --shardCount 2"
+        matrix:
+          CHANNEL: "master"
+          CHANNEL: "stable"
         MAPS_API_KEY: ENCRYPTED[596a9f6bca436694625ac50851dc5da6b4d34cba8025f7db5bc9465142e8cd44e15f69e3507787753accebfc4910d550]
         GCLOUD_FIREBASE_TESTLAB_KEY: ENCRYPTED[fd81ffb7c44af2f8a1ae55e470c69690c1ec7e90aba49d18635fa4f3c72b6807034287e9e697f64e37ab836a66ba9eab]
       create_device_script:
         echo no | avdmanager -v create avd -n test -k "system-images;android-21;default;armeabi-v7a"
       script:
+        # TODO(jackson): Allow web plugins once supported on stable
+        # https://github.com/flutter/flutter/issues/42864
+        - if [[ "$CHANNEL" -eq "stable" ]]; then find . | grep _web$ | xargs rm -rf; fi
+        - flutter channel $CHANNEL
         # Unsetting CIRRUS_CHANGE_MESSAGE and CIRRUS_COMMIT_MESSAGE as they
         # might include non-ASCII characters which makes Gradle crash.
         # See: https://github.com/flutter/flutter/issues/24935
@@ -60,6 +80,8 @@ task:
   setup_script:
     - pod repo update
   upgrade_script:
+    - flutter channel stable
+    - flutter upgrade
     - flutter channel master
     - flutter upgrade
     - git fetch origin master
@@ -77,7 +99,14 @@ task:
           PLUGIN_SHARDING: "--shardIndex 1 --shardCount 4"
           PLUGIN_SHARDING: "--shardIndex 2 --shardCount 4"
           PLUGIN_SHARDING: "--shardIndex 3 --shardCount 4"
+        matrix:
+          CHANNEL: "master"
+          CHANNEL: "stable"
         SIMCTL_CHILD_MAPS_API_KEY: ENCRYPTED[596a9f6bca436694625ac50851dc5da6b4d34cba8025f7db5bc9465142e8cd44e15f69e3507787753accebfc4910d550]
       build_script:
+        # TODO(jackson): Allow web plugins once supported on stable
+        # https://github.com/flutter/flutter/issues/42864
+        - if [[ "$CHANNEL" -eq "stable" ]]; then find . | grep _web$ | xargs rm -rf; fi
+        - flutter channel $CHANNEL
         - ./script/incremental_build.sh build-examples --ipa
         - ./script/incremental_build.sh drive-examples
