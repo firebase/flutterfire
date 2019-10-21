@@ -10,7 +10,7 @@
 static FlutterError *getFlutterError(NSError *error) {
   if (error == nil) return nil;
 
-  return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %ld", error.code]
+  return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %ld", (long) error.code]
                              message:error.domain
                              details:error.localizedDescription];
 }
@@ -423,7 +423,7 @@ const UInt8 INCREMENT_INTEGER = 138;
         }
         completion:^(id transactionResult, NSError *error) {
           if (error != nil) {
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code]
+            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", (long) error.code]
                                        message:error.localizedDescription
                                        details:nil]);
           }
