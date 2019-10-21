@@ -1,3 +1,7 @@
+## 5.0.3
+
+* Support the v2 Android embedding.
+
 ## 5.0.2
 
 * Fixed `setAnalyticsCollectionEnabled` on iOS.
