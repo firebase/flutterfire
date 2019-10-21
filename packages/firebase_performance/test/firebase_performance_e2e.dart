@@ -5,9 +5,9 @@ import 'package:e2e/e2e.dart';
 void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Enable ', (WidgetTester tester) async {
+  testWidgets('Enable performance collection', (WidgetTester tester) async {
     final FirebasePerformance performance = FirebasePerformance.instance;
-    performance.setPerformanceCollectionEnabled(true);
-    expect(performance.isPerformanceCollectionEnabled(), completion(isFalse));
+    await performance.setPerformanceCollectionEnabled(true);
+    expect(performance.isPerformanceCollectionEnabled(), completion(isTrue));
   });
 }
