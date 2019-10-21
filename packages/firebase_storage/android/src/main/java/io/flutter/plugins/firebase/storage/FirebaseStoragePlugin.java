@@ -22,7 +22,6 @@ import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -55,7 +54,8 @@ public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    onAttachedToEngine(binding.getApplicationContext(), binding.getFlutterEngine().getDartExecutor());
+    onAttachedToEngine(
+        binding.getApplicationContext(), binding.getFlutterEngine().getDartExecutor());
   }
 
   @Override
@@ -470,7 +470,8 @@ public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
       StorageTaskEventType type,
       UploadTask.TaskSnapshot snapshot,
       StorageException error) {
-    methodChannel.invokeMethod("StorageTaskEvent", buildMapFromTaskEvent(handle, type, snapshot, error));
+    methodChannel.invokeMethod(
+        "StorageTaskEvent", buildMapFromTaskEvent(handle, type, snapshot, error));
   }
 
   private Map<String, Object> buildMapFromTaskEvent(
