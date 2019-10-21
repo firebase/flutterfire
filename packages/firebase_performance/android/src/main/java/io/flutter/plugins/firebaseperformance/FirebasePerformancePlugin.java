@@ -5,7 +5,6 @@
 package io.flutter.plugins.firebaseperformance;
 
 import android.util.SparseArray;
-import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -30,7 +29,7 @@ public class FirebasePerformancePlugin implements FlutterPlugin, MethodChannel.M
   }
 
   @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
   }
 
