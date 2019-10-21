@@ -4,6 +4,7 @@
 
 package io.flutter.plugins.firebase.storage;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.SparseArray;
 import android.webkit.MimeTypeMap;
@@ -21,32 +22,46 @@ import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.plugin.common.PluginRegistry;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 /** FirebaseStoragePlugin */
-public class FirebaseStoragePlugin implements MethodCallHandler {
+public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
   private FirebaseStorage firebaseStorage;
-  private final MethodChannel channel;
+  private MethodChannel methodChannel;
 
   private int nextUploadHandle = 0;
   private final SparseArray<UploadTask> uploadTasks = new SparseArray<>();
 
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_storage");
-    channel.setMethodCallHandler(new FirebaseStoragePlugin(channel, registrar));
+  public static void registerWith(PluginRegistry.Registrar registrar) {
+    FirebaseStoragePlugin instance = new FirebaseStoragePlugin();
+    instance.onAttachedToEngine(registrar.context(), registrar.messenger());
   }
 
-  private FirebaseStoragePlugin(MethodChannel channel, Registrar registrar) {
-    this.channel = channel;
-    FirebaseApp.initializeApp(registrar.context());
+  private void onAttachedToEngine(Context applicationContext, BinaryMessenger binaryMessenger) {
+    FirebaseApp.initializeApp(applicationContext);
+    methodChannel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_storage");
+    methodChannel.setMethodCallHandler(this);
+  }
+
+  @Override
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
+    onAttachedToEngine(binding.getApplicationContext(), binding.getFlutterEngine().getDartExecutor());
+  }
+
+  @Override
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
+    firebaseStorage = null;
+    methodChannel = null;
   }
 
   @Override
@@ -455,7 +470,7 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
       StorageTaskEventType type,
       UploadTask.TaskSnapshot snapshot,
       StorageException error) {
-    channel.invokeMethod("StorageTaskEvent", buildMapFromTaskEvent(handle, type, snapshot, error));
+    methodChannel.invokeMethod("StorageTaskEvent", buildMapFromTaskEvent(handle, type, snapshot, error));
   }
 
   private Map<String, Object> buildMapFromTaskEvent(
