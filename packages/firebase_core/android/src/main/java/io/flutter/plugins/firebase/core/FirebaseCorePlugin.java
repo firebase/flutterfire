@@ -4,7 +4,6 @@
 package io.flutter.plugins.firebase.core;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -41,7 +40,7 @@ public class FirebaseCorePlugin implements FlutterPlugin, MethodChannel.MethodCa
   }
 
   @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
     applicationContext = null;
   }
