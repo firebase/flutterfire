@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Flutter plugin implementation controlling the entrypoint for the Firebase SDK.
  *
- * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.</p>
+ * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
  */
 public class FirebaseCorePlugin implements FlutterPlugin, MethodChannel.MethodCallHandler {
   private static final String CHANNEL_NAME = "plugins.flutter.io/firebase_core";
@@ -40,7 +40,8 @@ public class FirebaseCorePlugin implements FlutterPlugin, MethodChannel.MethodCa
   /**
    * Default Constructor.
    *
-   * <p>Use this constructor in an add to app scenario to gracefully handle activity and context changes.</p>
+   * <p>Use this constructor in an add to app scenario to gracefully handle activity and context
+   * changes.
    */
   public FirebaseCorePlugin() {}
 
