@@ -968,6 +968,32 @@ void main() {
           ),
         );
       });
+
+      test('FieldPath', () async {
+          await collectionReference
+              .where(FieldPath.documentId, isEqualTo: 'bar')
+              .getDocuments();
+          expect(
+            log,
+            equals(<Matcher>[
+              isMethodCall(
+                'Query#getDocuments',
+                arguments: <String, dynamic>{
+                  'app': app.name,
+                  'path': 'foo',
+                  'isCollectionGroup': false,
+                  'parameters': <String, dynamic>{
+                    'where': <List<dynamic>>[
+                      <dynamic>['__name__', '==', 'bar'],
+                    ],
+                    'orderBy': <List<dynamic>>[],
+                  },
+                  'source': 'default',
+                },
+              ),
+            ]),
+          );
+        });
     });
 
     group('FirestoreMessageCodec', () {

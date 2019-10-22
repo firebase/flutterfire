@@ -294,5 +294,30 @@ void main() {
       await doc1.delete();
       await doc2.delete();
     });
+
+    test('FieldPath.documentId', () async {
+      // Populate the database with two test documents.
+      final CollectionReference messages = firestore.collection('messages');
+      final DocumentReference doc = messages.document();
+      // Use document ID as a unique identifier to ensure that we don't
+      // collide with other tests running against this database.
+      final String uniqueId = doc.documentID;
+      await doc.setData(<String, dynamic>{
+        'message': 'testing field path',
+        'created_at': FieldValue.serverTimestamp(),
+      });
+
+      final QuerySnapshot snapshot = await messages
+          .where(FieldPath.documentId, isEqualTo: uniqueId)
+          .getDocuments();
+
+      await doc.delete();
+
+      final List<DocumentSnapshot> results = snapshot.documents;
+      final DocumentSnapshot result = results[0];
+
+      expect(results.length, 1);
+      expect(result.data['message'], 'testing field path');
+    });
   });
 }

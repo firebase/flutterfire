@@ -1,3 +1,7 @@
+## 0.12.10
+
+* Added `FieldPath` class and `FieldPath.documentId` to refer to the document id in queries.
+
 ## 0.12.9+5
 
 * Fixes a crash on Android when running a transaction without an internet connection.
