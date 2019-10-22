@@ -1,3 +1,7 @@
+## 0.12.9+6
+
+* Cast error.code to long to avoid using NSInteger as %ld format warnings.
+
 ## 0.12.9+5
 
 * Fixes a crash on Android when running a transaction without an internet connection.
