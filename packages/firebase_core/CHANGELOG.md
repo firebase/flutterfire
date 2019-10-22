@@ -1,3 +1,7 @@
+## 0.4.1
+
+* Support the v2 Android embedding.
+
 ## 0.4.0+9
 
 * Update documentation to reflect new repository location.
