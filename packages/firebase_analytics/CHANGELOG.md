@@ -1,6 +1,10 @@
-## 5.0.3
+## 5.0.4
 
 * Formatted `setCurrentScreen` documentation.
+
+## 5.0.3
+
+* Support the v2 Android embedding.
 
 ## 5.0.2
 
