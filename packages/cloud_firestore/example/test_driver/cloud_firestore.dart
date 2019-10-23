@@ -298,26 +298,53 @@ void main() {
     test('FieldPath.documentId', () async {
       // Populate the database with two test documents.
       final CollectionReference messages = firestore.collection('messages');
-      final DocumentReference doc = messages.document();
+
       // Use document ID as a unique identifier to ensure that we don't
       // collide with other tests running against this database.
-      final String uniqueId = doc.documentID;
-      await doc.setData(<String, dynamic>{
-        'message': 'testing field path',
+      final DocumentReference doc1 = messages.document();
+      final DocumentReference doc2 = messages.document();
+      final String id2 = doc2.documentID;
+
+      await doc1.setData(<String, dynamic>{
+        'message': 'testing field path [doc1]',
+        'created_at': FieldValue.serverTimestamp(),
+      });
+      await doc2.setData(<String, dynamic>{
+        'message': 'testing field path [doc2]',
         'created_at': FieldValue.serverTimestamp(),
       });
 
-      final QuerySnapshot snapshot = await messages
-          .where(FieldPath.documentId, isEqualTo: uniqueId)
+      final DocumentSnapshot snapshot1 = await doc1.get();
+
+      // Need to test orderBy, where, and startAfterDocument in queries
+      // to test all implementations of FieldPath in the native code,
+      // e.g. in getQuery and getDocumentValues in the Java implementation.
+      final QuerySnapshot querySnapshot1 = await messages
+          .orderBy(FieldPath.documentId)
+          .where(FieldPath.documentId, isEqualTo: id2)
+          .startAfterDocument(snapshot1)
+          .getDocuments();
+      final QuerySnapshot querySnapshot2 = await messages
+          .orderBy(FieldPath.documentId)
+          .where(FieldPath.documentId, isEqualTo: id2)
           .getDocuments();
 
-      await doc.delete();
+      await doc1.delete();
+      await doc2.delete();
 
-      final List<DocumentSnapshot> results = snapshot.documents;
-      final DocumentSnapshot result = results[0];
+      final List<DocumentSnapshot> results1 = querySnapshot1.documents;
+      final DocumentSnapshot result1 = results1[0];
 
-      expect(results.length, 1);
-      expect(result.data['message'], 'testing field path');
+      expect(results1.length, 1);
+      expect(result1.data['message'], 'testing field path [doc2]');
+      expect(result1.documentID, id2);
+
+      final List<DocumentSnapshot> results2 = querySnapshot2.documents;
+      final DocumentSnapshot result2 = results1[0];
+
+      expect(results2.length, 1);
+      expect(result2.data['message'], 'testing field path [doc2]');
+      expect(result2.documentID, id2);
     });
   });
 }

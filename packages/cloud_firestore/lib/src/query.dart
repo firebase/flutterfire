@@ -165,6 +165,14 @@ class Query {
   /// Creates and returns a new [Query] that's additionally sorted by the specified
   /// [field].
   /// The field may be a [String] representing a single field name or a [FieldPath].
+  ///
+  /// After a [FieldPath.documentId] order by call, you cannot add any more [orderBy]
+  /// calls. This will result in the following [PlatformException]:
+  /// `INVALID_ARGUMENT: Order by clause cannot contain more fields after the key __name__`
+  /// Furthermore, you may not use [orderBy] on the [FieldPath.documentId] [field] when
+  /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
+  /// or [endAtDocument] because the order by clause on the document id
+  /// is added by these methods implicitly.
   Query orderBy(dynamic field, {bool descending = false}) {
     final List<List<dynamic>> orders =
         List<List<dynamic>>.from(_parameters['orderBy']);
