@@ -8,10 +8,8 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.SparseArray;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,7 +38,13 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
-
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
+import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.plugin.common.StandardMessageCodec;
+import io.flutter.plugin.common.StandardMethodCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -50,14 +54,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugin.common.StandardMessageCodec;
-import io.flutter.plugin.common.StandardMethodCodec;
 
 public class CloudFirestorePlugin implements MethodCallHandler {
 
@@ -444,7 +440,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
   @Override
   public void onMethodCall(MethodCall call, final Result result) {
     switch (call.method) {
-      case "Firestore#runTransaction": {
+      case "Firestore#runTransaction":
+      {
         final TaskCompletionSource<Map<String, Object>> transactionTCS =
                 new TaskCompletionSource<>();
         final Task<Map<String, Object>> transactionTCSTask = transactionTCS.getTask();
@@ -533,7 +530,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                         });
         break;
       }
-      case "Transaction#get": {
+      case "Transaction#get":
+      {
         final Map<String, Object> arguments = call.arguments();
         final Transaction transaction = getTransaction(arguments);
         new AsyncTask<Void, Void, Void>() {
@@ -574,7 +572,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         }.execute();
         break;
       }
-      case "Transaction#update": {
+      case "Transaction#update":
+      {
         final Map<String, Object> arguments = call.arguments();
         final Transaction transaction = getTransaction(arguments);
         new AsyncTask<Void, Void, Void>() {
@@ -605,7 +604,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         }.execute();
         break;
       }
-      case "Transaction#set": {
+      case "Transaction#set":
+      {
         final Map<String, Object> arguments = call.arguments();
         final Transaction transaction = getTransaction(arguments);
         new AsyncTask<Void, Void, Void>() {
@@ -636,7 +636,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         }.execute();
         break;
       }
-      case "Transaction#delete": {
+      case "Transaction#delete":
+      {
         final Map<String, Object> arguments = call.arguments();
         final Transaction transaction = getTransaction(arguments);
         new AsyncTask<Void, Void, Void>() {
@@ -665,7 +666,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         }.execute();
         break;
       }
-      case "WriteBatch#create": {
+      case "WriteBatch#create":
+      {
         int handle = nextBatchHandle++;
         final Map<String, Object> arguments = call.arguments();
         WriteBatch batch = getFirestore(arguments).batch();
@@ -673,7 +675,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         result.success(handle);
         break;
       }
-      case "WriteBatch#setData": {
+      case "WriteBatch#setData":
+      {
         Map<String, Object> arguments = call.arguments();
         int handle = (Integer) arguments.get("handle");
         DocumentReference reference = getDocumentReference(arguments);
@@ -688,7 +691,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         result.success(null);
         break;
       }
-      case "WriteBatch#updateData": {
+      case "WriteBatch#updateData":
+      {
         Map<String, Object> arguments = call.arguments();
         int handle = (Integer) arguments.get("handle");
         DocumentReference reference = getDocumentReference(arguments);
@@ -699,7 +703,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         result.success(null);
         break;
       }
-      case "WriteBatch#delete": {
+      case "WriteBatch#delete":
+      {
         Map<String, Object> arguments = call.arguments();
         int handle = (Integer) arguments.get("handle");
         DocumentReference reference = getDocumentReference(arguments);
@@ -708,7 +713,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         result.success(null);
         break;
       }
-      case "WriteBatch#commit": {
+      case "WriteBatch#commit":
+      {
         Map<String, Object> arguments = call.arguments();
         int handle = (Integer) arguments.get("handle");
         WriteBatch batch = batches.get(handle);
@@ -717,7 +723,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         addDefaultListeners("commit", task, result);
         break;
       }
-      case "Query#addSnapshotListener": {
+      case "Query#addSnapshotListener":
+      {
         Map<String, Object> arguments = call.arguments();
         int handle = nextListenerHandle++;
         EventObserver observer = new EventObserver(handle);
@@ -731,7 +738,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         result.success(handle);
         break;
       }
-      case "DocumentReference#addSnapshotListener": {
+      case "DocumentReference#addSnapshotListener":
+      {
         Map<String, Object> arguments = call.arguments();
         int handle = nextListenerHandle++;
         DocumentObserver observer = new DocumentObserver(handle);
@@ -746,7 +754,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         result.success(handle);
         break;
       }
-      case "removeListener": {
+      case "removeListener":
+      {
         Map<String, Object> arguments = call.arguments();
         int handle = (Integer) arguments.get("handle");
         listenerRegistrations.get(handle).remove();
@@ -755,7 +764,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         result.success(null);
         break;
       }
-      case "Query#getDocuments": {
+      case "Query#getDocuments":
+      {
         Map<String, Object> arguments = call.arguments();
         Query query = getQuery(arguments);
         Source source = getSource(arguments);
@@ -776,7 +786,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                         });
         break;
       }
-      case "DocumentReference#setData": {
+      case "DocumentReference#setData":
+      {
         Map<String, Object> arguments = call.arguments();
         DocumentReference documentReference = getDocumentReference(arguments);
         @SuppressWarnings("unchecked")
@@ -792,7 +803,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         addDefaultListeners("setData", task, result);
         break;
       }
-      case "DocumentReference#updateData": {
+      case "DocumentReference#updateData":
+      {
         Map<String, Object> arguments = call.arguments();
         DocumentReference documentReference = getDocumentReference(arguments);
         @SuppressWarnings("unchecked")
@@ -801,7 +813,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         addDefaultListeners("updateData", task, result);
         break;
       }
-      case "DocumentReference#get": {
+      case "DocumentReference#get":
+      {
         Map<String, Object> arguments = call.arguments();
         DocumentReference documentReference = getDocumentReference(arguments);
         Source source = getSource(arguments);
@@ -834,14 +847,16 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                         });
         break;
       }
-      case "DocumentReference#delete": {
+      case "DocumentReference#delete":
+      {
         Map<String, Object> arguments = call.arguments();
         DocumentReference documentReference = getDocumentReference(arguments);
         Task<Void> task = documentReference.delete();
         addDefaultListeners("delete", task, result);
         break;
       }
-      case "Firestore#enablePersistence": {
+      case "Firestore#enablePersistence":
+      {
         Map<String, Object> arguments = call.arguments();
         boolean enable = (boolean) arguments.get("enable");
         FirebaseFirestoreSettings.Builder builder = new FirebaseFirestoreSettings.Builder();
@@ -851,7 +866,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         result.success(null);
         break;
       }
-      case "Firestore#settings": {
+      case "Firestore#settings":
+      {
         final Map<String, Object> arguments = call.arguments();
         final FirebaseFirestoreSettings.Builder builder = new FirebaseFirestoreSettings.Builder();
 
@@ -881,7 +897,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         result.success(null);
         break;
       }
-      default: {
+      default:
+      {
         result.notImplemented();
         break;
       }
@@ -889,10 +906,8 @@ public class CloudFirestorePlugin implements MethodCallHandler {
   }
 
   private static final class TransactionResult {
-    final @Nullable
-    Map<String, Object> result;
-    final @Nullable
-    Exception exception;
+    final @Nullable Map<String, Object> result;
+    final @Nullable Exception exception;
 
     TransactionResult(@NonNull Exception exception) {
       this.exception = exception;

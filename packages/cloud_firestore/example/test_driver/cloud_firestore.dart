@@ -320,7 +320,6 @@ void main() {
       // to test all implementations of FieldPath in the native code,
       // e.g. in getQuery and getDocumentValues in the Java implementation.
       final QuerySnapshot querySnapshot1 = await messages
-          .orderBy(FieldPath.documentId)
           .where(FieldPath.documentId, isEqualTo: id2)
           .startAfterDocument(snapshot1)
           .getDocuments();
