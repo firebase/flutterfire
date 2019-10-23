@@ -4,9 +4,9 @@
 
 package io.flutter.plugins.firebasedynamiclinks;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -15,6 +15,10 @@ import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -27,13 +31,27 @@ import java.util.List;
 import java.util.Map;
 
 /** FirebaseDynamicLinksPlugin */
-public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentListener {
-  private final Registrar registrar;
-  private final MethodChannel channel;
+public class FirebaseDynamicLinksPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler, NewIntentListener {
+  private Registrar registrar;
+  private MethodChannel channel;
+  private ActivityPluginBinding activityBinding;
 
   private FirebaseDynamicLinksPlugin(Registrar registrar, MethodChannel channel) {
     this.registrar = registrar;
     this.channel = channel;
+  }
+
+  public FirebaseDynamicLinksPlugin() { }
+
+  public static void registerWith(Registrar registrar) {
+    final MethodChannel channel = createChannel(registrar.messenger());
+    final FirebaseDynamicLinksPlugin plugin = new FirebaseDynamicLinksPlugin(registrar, channel);
+    registrar.addNewIntentListener(plugin);
+    channel.setMethodCallHandler(plugin);
+  }
+
+  private static MethodChannel createChannel(final BinaryMessenger messenger) {
+    return new MethodChannel(messenger, "plugins.flutter.io/firebase_dynamic_links");
   }
 
   @Override
@@ -54,7 +72,7 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
         .addOnFailureListener(
             new OnFailureListener() {
               @Override
-              public void onFailure(@NonNull Exception e) {
+              public void onFailure(Exception e) {
                 Map<String, Object> exception = new HashMap<>();
                 exception.put("code", e.getClass().getSimpleName());
                 exception.put("message", e.getMessage());
@@ -66,12 +84,39 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
     return false;
   }
 
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_dynamic_links");
-    final FirebaseDynamicLinksPlugin plugin = new FirebaseDynamicLinksPlugin(registrar, channel);
-    registrar.addNewIntentListener(plugin);
-    channel.setMethodCallHandler(plugin);
+  @Override
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
+    channel = createChannel(binding.getFlutterEngine().getDartExecutor());
+    channel.setMethodCallHandler(this);
+  }
+
+  @Override
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);
+  }
+
+  @Override
+  public void onAttachedToActivity(ActivityPluginBinding binding) {
+    activityBinding = binding;
+    activityBinding.addOnNewIntentListener(this);
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    activityBinding.removeOnNewIntentListener(this);
+    activityBinding = null;
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
+    activityBinding = binding;
+    activityBinding.addOnNewIntentListener(this);
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    activityBinding.removeOnNewIntentListener(this);
+    activityBinding = null;
   }
 
   @Override
@@ -116,15 +161,14 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
 
   private void handleGetInitialDynamicLink(final Result result) {
     // If there's no activity, then there's no initial dynamic link.
-    if (registrar.activity() == null) {
+    if (registrar.activity() == null && activityBinding == null) {
       result.success(null);
       return;
     }
 
     FirebaseDynamicLinks.getInstance()
-        .getDynamicLink(registrar.activity().getIntent())
+        .getDynamicLink(getActivity().getIntent())
         .addOnSuccessListener(
-            registrar.activity(),
             new OnSuccessListener<PendingDynamicLinkData>() {
               @Override
               public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
@@ -138,19 +182,23 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
               }
             })
         .addOnFailureListener(
-            registrar.activity(),
             new OnFailureListener() {
               @Override
-              public void onFailure(@NonNull Exception e) {
+              public void onFailure(Exception e) {
                 result.error(e.getClass().getSimpleName(), e.getMessage(), null);
               }
             });
   }
 
+  private Activity getActivity() {
+    return registrar != null ? registrar.activity() : activityBinding.getActivity();
+  }
+
+
   private OnCompleteListener<ShortDynamicLink> createShortLinkListener(final Result result) {
     return new OnCompleteListener<ShortDynamicLink>() {
       @Override
-      public void onComplete(@NonNull Task<ShortDynamicLink> task) {
+      public void onComplete(Task<ShortDynamicLink> task) {
         if (task.isSuccessful()) {
           Map<String, Object> url = new HashMap<>();
           url.put("url", task.getResult().getShortLink().toString());
