@@ -8,7 +8,7 @@ import com.google.firebase.perf.metrics.HttpMetric;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
-public class FlutterHttpMetric implements MethodChannel.MethodCallHandler {
+class FlutterHttpMetric implements MethodChannel.MethodCallHandler {
   private final FirebasePerformancePlugin plugin;
   private final HttpMetric httpMetric;
 

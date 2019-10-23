@@ -10,7 +10,7 @@ import com.google.firebase.perf.metrics.Trace;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
-public class FlutterFirebasePerformance implements MethodChannel.MethodCallHandler {
+class FlutterFirebasePerformance implements MethodChannel.MethodCallHandler {
   private static String parseHttpMethod(String httpMethod) {
     switch (httpMethod) {
       case "HttpMethod.Connect":

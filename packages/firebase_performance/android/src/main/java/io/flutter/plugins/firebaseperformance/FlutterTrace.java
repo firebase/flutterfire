@@ -8,7 +8,7 @@ import com.google.firebase.perf.metrics.Trace;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
-public class FlutterTrace implements MethodChannel.MethodCallHandler {
+class FlutterTrace implements MethodChannel.MethodCallHandler {
   private final FirebasePerformancePlugin plugin;
   private final Trace trace;
 
