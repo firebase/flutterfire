@@ -110,14 +110,16 @@ class Query {
   /// Creates and returns a new [Query] with additional filter on specified
   /// [field]. [field] refers to a field in a document.
   ///
-  /// The [field] may consist of a single field name (referring to a top level
-  /// field in the document), or a series of field names seperated by dots '.'
+  /// The [field] may be a [String] consisting of a single field name
+  /// (referring to a top level field in the document),
+  /// or a series of field names separated by dots '.'
   /// (referring to a nested field in the document).
+  /// Alternatively, the [field] can also be a [FieldPath].
   ///
   /// Only documents satisfying provided condition are included in the result
   /// set.
   Query where(
-    String field, {
+    dynamic field, {
     dynamic isEqualTo,
     dynamic isLessThan,
     dynamic isLessThanOrEqualTo,
@@ -130,7 +132,7 @@ class Query {
     final List<List<dynamic>> conditions =
         List<List<dynamic>>.from(_parameters['where']);
 
-    void addCondition(String field, String operator, dynamic value) {
+    void addCondition(dynamic field, String operator, dynamic value) {
       final List<dynamic> condition = <dynamic>[field, operator, value];
       assert(
           conditions
@@ -162,7 +164,8 @@ class Query {
 
   /// Creates and returns a new [Query] that's additionally sorted by the specified
   /// [field].
-  Query orderBy(String field, {bool descending = false}) {
+  /// The field may be a [String] representing a single field name or a [FieldPath].
+  Query orderBy(dynamic field, {bool descending = false}) {
     final List<List<dynamic>> orders =
         List<List<dynamic>>.from(_parameters['orderBy']);
 

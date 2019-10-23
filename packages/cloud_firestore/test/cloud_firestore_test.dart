@@ -984,7 +984,7 @@ void main() {
                 'isCollectionGroup': false,
                 'parameters': <String, dynamic>{
                   'where': <List<dynamic>>[
-                    <dynamic>['__name__', '==', 'bar'],
+                    <dynamic>[FieldPath.documentId, '==', 'bar'],
                   ],
                   'orderBy': <List<dynamic>>[],
                 },
@@ -1029,6 +1029,10 @@ void main() {
         _checkEncodeDecode<dynamic>(codec, FieldValue.serverTimestamp());
         _checkEncodeDecode<dynamic>(codec, FieldValue.increment(1.0));
         _checkEncodeDecode<dynamic>(codec, FieldValue.increment(1));
+      });
+
+      test('encode and decode FieldPath', () {
+        _checkEncodeDecode<dynamic>(codec, FieldPath.documentId);
       });
     });
 
@@ -1260,6 +1264,7 @@ bool _deepEquals(dynamic valueA, dynamic valueB) {
   if (valueA is FieldValue) {
     return valueB is FieldValue && _deepEqualsFieldValue(valueA, valueB);
   }
+  if (valueA is FieldPath) return valueB is FieldPath && valueA.type == valueB.type;
   return valueA == valueB;
 }
 

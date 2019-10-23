@@ -4,8 +4,17 @@
 
 part of cloud_firestore;
 
+enum _FieldPathType {
+  documentId,
+}
+
 /// A [FieldPath] refers to a field in a document.
 class FieldPath {
+  const FieldPath._(this.type);
+
+  @visibleForTesting
+  final _FieldPathType type;
+
   /// The path to the document id, which can be used in queries.
-  static String get documentId => '__name__';
+  static FieldPath get documentId => const FieldPath._(_FieldPathType.documentId);
 }

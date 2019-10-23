@@ -221,6 +221,7 @@ const UInt8 SERVER_TIMESTAMP = 135;
 const UInt8 TIMESTAMP = 136;
 const UInt8 INCREMENT_DOUBLE = 137;
 const UInt8 INCREMENT_INTEGER = 138;
+const UInt8 DOCUMENT_ID = 138;
 
 @interface FirestoreWriter : FlutterStandardWriter
 - (void)writeValue:(id)value;
@@ -322,6 +323,9 @@ const UInt8 INCREMENT_INTEGER = 138;
     case INCREMENT_INTEGER: {
       NSNumber *value = [self readValue];
       return [FIRFieldValue fieldValueForIntegerIncrement:value.intValue];
+    }
+    case DOCUMENT_ID: {
+      return [FIRFieldPath documentID];
     }
     default:
       return [super readValueOfType:type];
