@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TextRecognizer implements Detector {
+class TextRecognizer implements Detector {
   private final FirebaseVisionTextRecognizer recognizer;
 
   TextRecognizer(FirebaseVision vision, Map<String, Object> options) {

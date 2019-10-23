@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-public class FirebaseMlVisionHandler implements MethodChannel.MethodCallHandler {
+class FirebaseMlVisionHandler implements MethodChannel.MethodCallHandler {
   private final SparseArray<Detector> detectors = new SparseArray<>();
   private final Context applicationContext;
 
