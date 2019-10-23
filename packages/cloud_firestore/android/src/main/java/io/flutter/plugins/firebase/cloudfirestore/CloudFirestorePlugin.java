@@ -339,8 +339,9 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         || endAtDocument != null
         || endBeforeDocument != null) {
       if (orderBy.isEmpty()) {
-        throw new IllegalStateException("You need to order by at least one field when using " +
-                "{start/end}{At/After/Before}Document as you need some value to e.g. start after.");
+        throw new IllegalStateException(
+            "You need to order by at least one field when using "
+                + "{start/end}{At/After/Before}Document as you need some value to e.g. start after.");
       }
       boolean descending = (boolean) orderBy.get(orderBy.size() - 1).get(1);
       Query.Direction direction =
