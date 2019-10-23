@@ -34,7 +34,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
   static const Map<_FieldPathType, int> _kFieldPathCodes =
       <_FieldPathType, int>{
     _FieldPathType.documentId: _kDocumentId,
-      };
+  };
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {

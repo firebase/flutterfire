@@ -16,5 +16,6 @@ class FieldPath {
   final _FieldPathType type;
 
   /// The path to the document id, which can be used in queries.
-  static FieldPath get documentId => const FieldPath._(_FieldPathType.documentId);
+  static FieldPath get documentId =>
+      const FieldPath._(_FieldPathType.documentId);
 }

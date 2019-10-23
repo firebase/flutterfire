@@ -128,7 +128,8 @@ class Query {
     dynamic arrayContains,
     bool isNull,
   }) {
-    assert(field is String || field is FieldPath, 'Supported [field] types are [String] and [FieldPath].');
+    assert(field is String || field is FieldPath,
+        'Supported [field] types are [String] and [FieldPath].');
 
     final ListEquality<dynamic> equality = const ListEquality<dynamic>();
     final List<List<dynamic>> conditions =
@@ -175,7 +176,9 @@ class Query {
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
   Query orderBy(dynamic field, {bool descending = false}) {
-    assert(field is String || field is FieldPath, 'Supported [field] types are [String] and [FieldPath].');
+    assert(field != null && descending != null);
+    assert(field is String || field is FieldPath,
+        'Supported [field] types are [String] and [FieldPath].');
 
     final List<List<dynamic>> orders =
         List<List<dynamic>>.from(_parameters['orderBy']);
@@ -188,12 +191,13 @@ class Query {
       if (field == FieldPath.documentId) {
         return !(_parameters.containsKey('startAfterDocument') ||
             _parameters.containsKey('startAtDocument') ||
-        _parameters.containsKey('endAfterDocument') ||
-        _parameters.containsKey('endAtDocument'));
+            _parameters.containsKey('endAfterDocument') ||
+            _parameters.containsKey('endAtDocument'));
       }
-      return false;
-    }(), '{start/end}{At/After}Document order by document id themselves. '
-        'Hence, you may not use an order by [FieldPath.documentId] when using any of these methods.');
+      return true;
+    }(),
+        '{start/end}{At/After/Before}Document order by document id themselves. '
+        'Hence, you may not use an order by [FieldPath.documentId] when using any of these methods for a query.');
 
     orders.add(order);
     return _copyWithParameters(<String, dynamic>{'orderBy': orders});
@@ -218,6 +222,12 @@ class Query {
     assert(!_parameters.containsKey('startAt'));
     assert(!_parameters.containsKey('startAfterDocument'));
     assert(!_parameters.containsKey('startAtDocument'));
+    assert(
+        List<List<dynamic>>.from(_parameters['orderBy'])
+            .where((List<dynamic> item) => item[0] == FieldPath.documentId)
+            .isEmpty,
+        '[startAfterDocument] orders by document id itself. '
+        'Hence, you may not use an order by [FieldPath.documentId] when using [startAfterDocument].');
     return _copyWithParameters(<String, dynamic>{
       'startAfterDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
@@ -246,6 +256,12 @@ class Query {
     assert(!_parameters.containsKey('startAt'));
     assert(!_parameters.containsKey('startAfterDocument'));
     assert(!_parameters.containsKey('startAtDocument'));
+    assert(
+        List<List<dynamic>>.from(_parameters['orderBy'])
+            .where((List<dynamic> item) => item[0] == FieldPath.documentId)
+            .isEmpty,
+        '[startAtDocument] orders by document id itself. '
+        'Hence, you may not use an order by [FieldPath.documentId] when using [startAtDocument].');
     return _copyWithParameters(<String, dynamic>{
       'startAtDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
@@ -308,6 +324,12 @@ class Query {
     assert(!_parameters.containsKey('endAt'));
     assert(!_parameters.containsKey('endBeforeDocument'));
     assert(!_parameters.containsKey('endAtDocument'));
+    assert(
+        List<List<dynamic>>.from(_parameters['orderBy'])
+            .where((List<dynamic> item) => item[0] == FieldPath.documentId)
+            .isEmpty,
+        '[endAtDocument] orders by document id itself. '
+        'Hence, you may not use an order by [FieldPath.documentId] when using [endAtDocument].');
     return _copyWithParameters(<String, dynamic>{
       'endAtDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
@@ -353,6 +375,12 @@ class Query {
     assert(!_parameters.containsKey('endAt'));
     assert(!_parameters.containsKey('endBeforeDocument'));
     assert(!_parameters.containsKey('endAtDocument'));
+    assert(
+        List<List<dynamic>>.from(_parameters['orderBy'])
+            .where((List<dynamic> item) => item[0] == FieldPath.documentId)
+            .isEmpty,
+        '[endBeforeDocument] orders by document id itself. '
+        'Hence, you may not use an order by [FieldPath.documentId] when using [endBeforeDocument].');
     return _copyWithParameters(<String, dynamic>{
       'endBeforeDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
