@@ -127,7 +127,6 @@ public class CloudFirestorePlugin implements MethodCallHandler {
     String documentId = (String) document.get("id");
     Map<String, Object> documentData = (Map<String, Object>) document.get("data");
     List<Object> data = new ArrayList<>();
-    // TODO (logcat)
     if (orderBy != null) {
       for (List<Object> order : orderBy) {
         final Object field = order.get(0);
@@ -141,7 +140,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
           } else {
             // Unsupported type.
           }
-        } else if (field instanceof  String) {
+        } else if (field instanceof String) {
           String orderByFieldName = (String) field;
           if (orderByFieldName.contains(".")) {
             String[] fieldNameParts = orderByFieldName.split("\\.");
