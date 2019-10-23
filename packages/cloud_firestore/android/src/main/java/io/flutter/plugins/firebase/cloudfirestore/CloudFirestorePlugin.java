@@ -313,7 +313,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
 
       boolean descending = (boolean) order.get(1);
       Query.Direction direction =
-              descending ? Query.Direction.DESCENDING : Query.Direction.ASCENDING;
+          descending ? Query.Direction.DESCENDING : Query.Direction.ASCENDING;
 
       if (fieldName != null) {
         query = query.orderBy(fieldName, direction);
@@ -338,8 +338,10 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         || endAtDocument != null
         || endBeforeDocument != null) {
       if (orderBy.size() == 0) {
-        throw new IllegalStateException("You need to order by at least one field when using " +
-                "{start/end}{At/After/Before}Document as you need some value to e.g. start after.");
+            throw new IllegalArgumentException(
+                "You cannot order by the document id when using"
+                    + "{start/end}{At/After/Before}Document a the library will order by the document id"
+                    + "implicitly in order to to add other fields to the order clause.");
       }
       boolean descending = (boolean) orderBy.get(orderBy.size() - 1).get(1);
       Query.Direction direction =
