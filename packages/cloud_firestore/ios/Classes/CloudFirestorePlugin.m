@@ -35,10 +35,12 @@ static NSArray *getDocumentValues(NSDictionary *document, NSArray *orderBy,
       if ([field isKindOfClass:[FIRFieldPath class]]) {
         if ([field isEqual:FIRFieldPath.documentID]) {
           // This is also checked by an assertion on the Dart side.
-          [NSException raise:@"Invalid use of FieldValue.documentId"
-              format:@"You cannot order by the document id when using"
-                      "{start/end}{At/After/Before}Document a the library will order by the document"
-                      "id implicitly in order to to add other fields to the order clause."];
+          [NSException
+               raise:@"Invalid use of FieldValue.documentId"
+              format:
+                  @"You cannot order by the document id when using"
+                   "{start/end}{At/After/Before}Document a the library will order by the document"
+                   "id implicitly in order to to add other fields to the order clause."];
         } else {
           // Unsupported type.
         }
@@ -51,8 +53,9 @@ static NSArray *getDocumentValues(NSDictionary *document, NSArray *orderBy,
           for (int i = 1; i < [fieldNameParts count] - 1; i++) {
             currentMap = [currentMap objectForKey:[fieldNameParts objectAtIndex:i]];
           }
-          [values addObject:[currentMap objectForKey:[fieldNameParts
-                                                         objectAtIndex:[fieldNameParts count] - 1]]];
+          [values
+              addObject:[currentMap objectForKey:[fieldNameParts
+                                                     objectAtIndex:[fieldNameParts count] - 1]]];
         } else {
           [values addObject:[documentData objectForKey:fieldName]];
         }
