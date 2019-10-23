@@ -301,50 +301,32 @@ void main() {
 
       // Use document ID as a unique identifier to ensure that we don't
       // collide with other tests running against this database.
-      final DocumentReference doc1 = messages.document();
-      final DocumentReference doc2 = messages.document();
-      final String id2 = doc2.documentID;
+      final DocumentReference doc = messages.document();
+      final String documentId = doc.documentID;
 
-      await doc1.setData(<String, dynamic>{
-        'message': 'testing field path [doc1]',
-        'created_at': FieldValue.serverTimestamp(),
-      });
-      await doc2.setData(<String, dynamic>{
-        'message': 'testing field path [doc2]',
+      await doc.setData(<String, dynamic>{
+        'message': 'testing field path',
         'created_at': FieldValue.serverTimestamp(),
       });
 
-      final DocumentSnapshot snapshot1 = await doc1.get();
-
-      // Need to test orderBy, where, and startAfterDocument in queries
-      // to test all implementations of FieldPath in the native code,
-      // e.g. in getQuery and getDocumentValues in the Java implementation.
-      final QuerySnapshot querySnapshot1 = await messages
-          .orderBy('message')
-          .where(FieldPath.documentId, isEqualTo: id2)
-          .startAfterDocument(snapshot1)
-          .getDocuments();
-      final QuerySnapshot querySnapshot2 = await messages
+      // This tests the native implementations of the where and
+      // orderBy methods handling FieldPath.documentId.
+      // There is also an error thrown when ordering by document id
+      // natively, however, that is also covered by assertion
+      // on the Dart side, which is tested with a unit test.
+      final QuerySnapshot querySnapshot = await messages
           .orderBy(FieldPath.documentId)
-          .where(FieldPath.documentId, isEqualTo: id2)
+          .where(FieldPath.documentId, isEqualTo: documentId)
           .getDocuments();
 
-      await doc1.delete();
-      await doc2.delete();
+      await doc.delete();
 
-      final List<DocumentSnapshot> results1 = querySnapshot1.documents;
-      final DocumentSnapshot result1 = results1[0];
+      final List<DocumentSnapshot> results = querySnapshot.documents;
+      final DocumentSnapshot result = results[0];
 
-      expect(results1.length, 1);
-      expect(result1.data['message'], 'testing field path [doc2]');
-      expect(result1.documentID, id2);
-
-      final List<DocumentSnapshot> results2 = querySnapshot2.documents;
-      final DocumentSnapshot result2 = results1[0];
-
-      expect(results2.length, 1);
-      expect(result2.data['message'], 'testing field path [doc2]');
-      expect(result2.documentID, id2);
+      expect(results.length, 1);
+      expect(result.data['message'], 'testing field path');
+      expect(result.documentID, documentId);
     });
   });
 }
