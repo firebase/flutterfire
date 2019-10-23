@@ -30,6 +30,7 @@ static NSArray *getDocumentValues(NSDictionary *document, NSArray *orderBy,
   NSDictionary *documentData = document[@"data"];
   if (orderBy) {
     for (id item in orderBy) {
+      NSArray *orderByParameters = item;
       NSObject *field = orderByParameters[0];
 
       if ([field isKindOfClass:[FIRFieldPath class]]) {
@@ -45,7 +46,6 @@ static NSArray *getDocumentValues(NSDictionary *document, NSArray *orderBy,
           // Unsupported type.
         }
       } else if ([field isKindOfClass:[NSSTring class]]) {
-        NSArray *orderByParameters = item;
         NSString *fieldName = orderByParameters[0];
         if ([fieldName rangeOfString:@"."].location != NSNotFound) {
           NSArray *fieldNameParts = [fieldName componentsSeparatedByString:@"."];
