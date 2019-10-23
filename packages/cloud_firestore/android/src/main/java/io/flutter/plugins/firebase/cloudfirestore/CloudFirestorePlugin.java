@@ -127,16 +127,17 @@ public class CloudFirestorePlugin implements MethodCallHandler {
     String documentId = (String) document.get("id");
     Map<String, Object> documentData = (Map<String, Object>) document.get("data");
     List<Object> data = new ArrayList<>();
+    // TODO (logcat)
     if (orderBy != null) {
       for (List<Object> order : orderBy) {
         final Object field = order.get(0);
 
         if (field instanceof FieldPath) {
           if (field == FieldPath.documentId()) {
-            throw new IllegalArgumentException("You cannot use {start/end}{At/After}Document " +
-                    "when ordering by the document id. When using any of the mentioned methods, " +
-                    "the library will order by the document id implicitly as " +
-                    "it needs to add other fields to the order clause.");
+            // This is also checked by an assertion on the Dart side.
+            throw new IllegalArgumentException("You cannot order by the document id when using" +
+                    "{start/end}{At/After}Document a the library will order by the document id" +
+                    "implicitly in order to to add other fields to the order clause.");
           } else {
             // Unsupported type.
           }

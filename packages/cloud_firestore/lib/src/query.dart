@@ -128,6 +128,8 @@ class Query {
     dynamic arrayContains,
     bool isNull,
   }) {
+    assert(field is String || field is FieldPath, 'Supported [field] types are [String] and [FieldPath].');
+
     final ListEquality<dynamic> equality = const ListEquality<dynamic>();
     final List<List<dynamic>> conditions =
         List<List<dynamic>>.from(_parameters['where']);
@@ -167,19 +169,32 @@ class Query {
   /// The field may be a [String] representing a single field name or a [FieldPath].
   ///
   /// After a [FieldPath.documentId] order by call, you cannot add any more [orderBy]
-  /// calls. This will result in the following [PlatformException]:
-  /// `INVALID_ARGUMENT: Order by clause cannot contain more fields after the key __name__`
+  /// calls.
   /// Furthermore, you may not use [orderBy] on the [FieldPath.documentId] [field] when
   /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
   Query orderBy(dynamic field, {bool descending = false}) {
+    assert(field is String || field is FieldPath, 'Supported [field] types are [String] and [FieldPath].');
+
     final List<List<dynamic>> orders =
         List<List<dynamic>>.from(_parameters['orderBy']);
 
     final List<dynamic> order = <dynamic>[field, descending];
     assert(orders.where((List<dynamic> item) => field == item[0]).isEmpty,
         'OrderBy $field already exists in this query');
+
+    assert(() {
+      if (field == FieldPath.documentId) {
+        return !(_parameters.containsKey('startAfterDocument') ||
+            _parameters.containsKey('startAtDocument') ||
+        _parameters.containsKey('endAfterDocument') ||
+        _parameters.containsKey('endAtDocument'));
+      }
+      return false;
+    }(), '{start/end}{At/After}Document order by document id themselves. '
+        'Hence, you may not use an order by [FieldPath.documentId] when using any of these methods.');
+
     orders.add(order);
     return _copyWithParameters(<String, dynamic>{'orderBy': orders});
   }
