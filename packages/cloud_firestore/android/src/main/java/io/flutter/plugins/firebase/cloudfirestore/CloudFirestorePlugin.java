@@ -134,9 +134,10 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         if (field instanceof FieldPath) {
           if (field == FieldPath.documentId()) {
             // This is also checked by an assertion on the Dart side.
-            throw new IllegalArgumentException("You cannot order by the document id when using" +
-                    "{start/end}{At/After/Before}Document a the library will order by the document id" +
-                    "implicitly in order to to add other fields to the order clause.");
+            throw new IllegalArgumentException(
+                "You cannot order by the document id when using"
+                    + "{start/end}{At/After/Before}Document a the library will order by the document id"
+                    + "implicitly in order to to add other fields to the order clause.");
           } else {
             // Unsupported type.
           }
@@ -337,11 +338,9 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         || startAfterDocument != null
         || endAtDocument != null
         || endBeforeDocument != null) {
-      if (orderBy.size() == 0) {
-            throw new IllegalArgumentException(
-                "You cannot order by the document id when using"
-                    + "{start/end}{At/After/Before}Document a the library will order by the document id"
-                    + "implicitly in order to to add other fields to the order clause.");
+      if (orderBy.isEmpty()) {
+        throw new IllegalStateException("You need to order by at least one field when using " +
+                "{start/end}{At/After/Before}Document as you need some value to e.g. start after.");
       }
       boolean descending = (boolean) orderBy.get(orderBy.size() - 1).get(1);
       Query.Direction direction =

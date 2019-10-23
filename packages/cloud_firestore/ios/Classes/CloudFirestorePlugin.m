@@ -191,6 +191,11 @@ static FIRQuery *getQuery(NSDictionary *arguments) {
   id endAtDocument = parameters[@"endAtDocument"];
   id endBeforeDocument = parameters[@"endBeforeDocument"];
   if (startAtDocument || startAfterDocument || endAtDocument || endBeforeDocument) {
+    if ([orderBy count] == 0) {
+      [NSException raise:@"No order by clause specified"
+                    format:@"You need to order by at least one field when using {start/end}{At/"
+                            "After/Before}Document as you need some value to e.g. start after."];
+    }
     NSArray *orderByParameters = [orderBy lastObject];
     NSNumber *descending = orderByParameters[1];
     query = [query queryOrderedByFieldPath:FIRFieldPath.documentID

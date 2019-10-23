@@ -1,6 +1,7 @@
 ## 0.12.10
 
 * Added `FieldPath` class and `FieldPath.documentId` to refer to the document id in queries.
+* Added assertions and exceptions that help you building correct queries.
 
 ## 0.12.9+6
 
