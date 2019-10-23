@@ -132,9 +132,11 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         final Object field = order.get(0);
 
         if (field instanceof FieldPath) {
-          final FieldPath fieldPath = (FieldPath) field;
-          if (fieldPath == FieldPath.documentId()) {
-            data.add(documentId);
+          if (field == FieldPath.documentId()) {
+            throw new IllegalArgumentException("You cannot use {start/end}{At/After}Document " +
+                    "when ordering by the document id. When using any of the mentioned methods, " +
+                    "the library will order by the document id implicitly as " +
+                    "it needs to add other fields to the order clause.");
           } else {
             // Unsupported type.
           }
