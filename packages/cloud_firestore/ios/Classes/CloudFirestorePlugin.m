@@ -45,7 +45,7 @@ static NSArray *getDocumentValues(NSDictionary *document, NSArray *orderBy,
         } else {
           // Unsupported type.
         }
-      } else if ([field isKindOfClass:[NSSTring class]]) {
+      } else if ([field isKindOfClass:[NSString class]]) {
         NSString *fieldName = orderByParameters[0];
         if ([fieldName rangeOfString:@"."].location != NSNotFound) {
           NSArray *fieldNameParts = [fieldName componentsSeparatedByString:@"."];
