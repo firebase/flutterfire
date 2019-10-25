@@ -1,3 +1,8 @@
+## 0.12.10
+
+* Added support for `Query.whereIn()` and `Query.whereArrayContainsAny()` query
+    operators.
+
 ## 0.12.9+6
 
 * Cast error.code to long to avoid using NSInteger as %ld format warnings.

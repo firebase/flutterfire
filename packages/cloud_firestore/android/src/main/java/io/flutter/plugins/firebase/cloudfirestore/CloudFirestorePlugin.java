@@ -228,6 +228,10 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         query = query.whereGreaterThanOrEqualTo(fieldName, value);
       } else if ("array-contains".equals(operator)) {
         query = query.whereArrayContains(fieldName, value);
+      } else if("array-contains-any") {
+        query = query.whereArrayContainsAny(fieldName, value);
+      } else if("in") {
+        query = query.whereIn(fieldName, value);
       } else {
         // Invalid operator.
       }
