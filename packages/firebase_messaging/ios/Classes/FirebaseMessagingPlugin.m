@@ -84,28 +84,28 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
                             result([NSNumber numberWithBool:granted]);
                           }
                         }];
+    } else {
+      UIUserNotificationType notificationTypes = 0;
+      if ([arguments[@"sound"] boolValue]) {
+        notificationTypes |= UIUserNotificationTypeSound;
+      }
+      if ([arguments[@"alert"] boolValue]) {
+        notificationTypes |= UIUserNotificationTypeAlert;
+      }
+      if ([arguments[@"badge"] boolValue]) {
+        notificationTypes |= UIUserNotificationTypeBadge;
+      }
 
-      [[UIApplication sharedApplication] registerForRemoteNotifications];
-      return;
+      UIUserNotificationSettings *settings =
+          [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
+      [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     }
 
-    UIUserNotificationType notificationTypes = 0;
-    if ([arguments[@"sound"] boolValue]) {
-      notificationTypes |= UIUserNotificationTypeSound;
-    }
-    if ([arguments[@"alert"] boolValue]) {
-      notificationTypes |= UIUserNotificationTypeAlert;
-    }
-    if ([arguments[@"badge"] boolValue]) {
-      notificationTypes |= UIUserNotificationTypeBadge;
-    }
-
-    UIUserNotificationSettings *settings =
-        [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     [[UIApplication sharedApplication] registerForRemoteNotifications];
 
-    result([NSNumber numberWithBool:YES]);
+    if (!@available(iOS 10.0, *)) {
+      result([NSNumber numberWithBool:YES]);
+    }
   } else if ([@"configure" isEqualToString:method]) {
     [FIRMessaging messaging].shouldEstablishDirectChannel = true;
     [[UIApplication sharedApplication] registerForRemoteNotifications];
