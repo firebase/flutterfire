@@ -68,7 +68,7 @@ void main() {
         message,
         containsPair('notification', containsPair('body', 'this is a body')),
       );
-    }, timeout: const Timeout(Duration(seconds: 5)), skip: false);
+    }, timeout: const Timeout(Duration(seconds: 5)), skip: true);
 
     test('autoInitEnabled', () async {
       await firebaseMessaging.setAutoInitEnabled(false);
