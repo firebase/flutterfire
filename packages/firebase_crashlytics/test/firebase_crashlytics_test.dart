@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -151,11 +152,10 @@ void main() {
     });
 
     test('getStackTraceElements with character index', () async {
-      final List<String> lines = <String>[
-        'package:flutter/src/widgets/framework.dart 3825:27  StatefulElement.build'
-      ];
+      final Trace trace = Trace.parse(
+          'package:flutter/src/widgets/framework.dart 3825:27  StatefulElement.build');
       final List<Map<String, String>> elements =
-          crashlytics.getStackTraceElements(lines);
+          crashlytics.getStackTraceElements(trace);
       expect(elements.length, 1);
       expect(elements.first, <String, String>{
         'class': 'StatefulElement',
@@ -166,11 +166,10 @@ void main() {
     });
 
     test('getStackTraceElements without character index', () async {
-      final List<String> lines = <String>[
-        'package:flutter/src/widgets/framework.dart 3825  StatefulElement.build'
-      ];
+      final Trace trace = Trace.parse(
+          'package:flutter/src/widgets/framework.dart 3825  StatefulElement.build');
       final List<Map<String, String>> elements =
-          crashlytics.getStackTraceElements(lines);
+          crashlytics.getStackTraceElements(trace);
       expect(elements.length, 1);
       expect(elements.first, <String, String>{
         'class': 'StatefulElement',
@@ -181,11 +180,10 @@ void main() {
     });
 
     test('getStackTraceElements without class', () async {
-      final List<String> lines = <String>[
-        'package:firebase_crashlytics/test/main.dart 12  main'
-      ];
+      final Trace trace =
+          Trace.parse('package:firebase_crashlytics/test/main.dart 12  main');
       final List<Map<String, String>> elements =
-          crashlytics.getStackTraceElements(lines);
+          crashlytics.getStackTraceElements(trace);
       expect(elements.length, 1);
       expect(elements.first, <String, String>{
         'method': 'main',

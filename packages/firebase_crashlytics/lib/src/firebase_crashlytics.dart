@@ -157,46 +157,24 @@ class Crashlytics {
   }
 
   @visibleForTesting
-  List<Map<String, String>> getStackTraceElements(List<String> lines) {
-    final List<Map<String, String>> elements = <Map<String, String>>[];
-    for (String line in lines) {
-      final List<String> lineParts = line.split(RegExp('\\s+'));
-      try {
-        final String fileName = lineParts[0];
-        final String lineNumber = lineParts[1].contains(":")
-            ? lineParts[1].substring(0, lineParts[1].indexOf(":")).trim()
-            : lineParts[1];
-
+  List<Map<String, String>> getStackTraceElements(Trace trace) =>
+      trace.frames.map((final Frame frame) {
         final Map<String, String> element = <String, String>{
-          'file': fileName,
-          'line': lineNumber,
+          'file': frame.library,
+          'line': frame.line.toString(),
         };
 
-        // The next section would throw an exception in some cases if there was no stop here.
-        if (lineParts.length < 3) {
-          elements.add(element);
-          continue;
-        }
-
-        if (lineParts[2].contains(".")) {
-          final String className =
-              lineParts[2].substring(0, lineParts[2].indexOf(".")).trim();
-          final String methodName =
-              lineParts[2].substring(lineParts[2].indexOf(".") + 1).trim();
-
-          element['class'] = className;
-          element['method'] = methodName;
+        final String member = frame.member.toString();
+        final int dotIndex = member.indexOf(".");
+        if (dotIndex > 0) {
+          element['class'] = member.substring(0, dotIndex).trim();
+          element['method'] = member.substring(dotIndex + 1).trim();
         } else {
-          element['method'] = lineParts[2];
+          element['method'] = member;
         }
 
-        elements.add(element);
-      } catch (e) {
-        print(e.toString());
-      }
-    }
-    return elements;
-  }
+        return element;
+      }).toList();
 
   // On top of the default exception components, [information] can be passed as well.
   // This allows the developer to get a better understanding of exceptions thrown
@@ -239,15 +217,11 @@ class Crashlytics {
     }
     if (!inDebugMode || enableInDevMode) {
       // The stack trace can be null. To avoid the following exception:
-      // Invalid argument(s): Cannot create a Trace from null.
-      // To avoid that exception, we can check for null and provide an empty stack trace.
-      stack ??= StackTrace.fromString('');
-
-      // Report error.
-      final List<String> stackTraceLines =
-          Trace.format(stack).trimRight().split('\n');
-      final List<Map<String, String>> stackTraceElements =
-          getStackTraceElements(stackTraceLines);
+      //   Invalid argument(s): Cannot create a Trace from null.
+      // we can check for null and provide an empty stack trace.
+      final List<Map<String, String>> stackTraceElements = stack == null
+          ? <List<Map<String, String>>>[]
+          : getStackTraceElements(Trace.from(stack).terse);
 
       // The context is a string that "should be in a form that will make sense in
       // English when following the word 'thrown'" according to the documentation for
