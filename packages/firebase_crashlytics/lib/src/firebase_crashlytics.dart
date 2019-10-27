@@ -264,7 +264,7 @@ class Crashlytics {
       });
 
       // Print result.
-      print(result);
+      print('firebase_crashlytics: $result');
     }
   }
 }
