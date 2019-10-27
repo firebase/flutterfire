@@ -72,7 +72,7 @@
     // Crashlytics.
     NSString *information = call.arguments[@"information"];
     if ([information length] != 0) {
-      CLSLog(information);
+      CLSLog(@"%@", information);
     }
 
     // Report crash.
