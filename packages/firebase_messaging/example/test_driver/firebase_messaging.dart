@@ -18,14 +18,16 @@ void main() {
   group('$FirebaseMessaging', () {
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
-    setUpAll(() async {
-      await firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: true, badge: true, alert: true),
-      );
-    });
+    // Uncomment this when testing onMessage callback.
+//    setUpAll(() async {
+//      await firebaseMessaging.requestNotificationPermissions(
+//        const IosNotificationSettings(sound: true, badge: true, alert: true),
+//      );
+//    });
 
-    // We skip this test because it requires a valid server token specified at the top of this file.
-    // It also requires agreeing to receive messages by hand on ios.
+    // We skip this test because it requires a valid server token specified at
+    // the top of this file uncommenting `setUpAll`, and requires agreeing to
+    // receive messages by hand on ios.
     test('onMessage', () async {
       await http.post(
         'https://fcm.googleapis.com/fcm/send',
