@@ -1,3 +1,7 @@
+## 0.4.1+1
+
+* Update the homepage in the pubspec now that this is a federated plugin.
+
 ## 0.4.1
 
 * Support the v2 Android embedding.
