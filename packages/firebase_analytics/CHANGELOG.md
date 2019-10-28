@@ -1,4 +1,4 @@
-## 5.0.3+1
+## 5.0.4
 
 * Include lifecycle dependency as a compileOnly one on Android to resolve
   potential version conflicts with other transitive libraries.
