@@ -5,9 +5,15 @@
 package io.flutter.plugins.firebaseanalytics;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -16,21 +22,53 @@ import io.flutter.plugin.common.PluginRegistry;
 import java.util.Map;
 
 /** Flutter plugin for Firebase Analytics. */
-public class FirebaseAnalyticsPlugin implements MethodCallHandler {
-  private final PluginRegistry.Registrar registrar;
-  private final FirebaseAnalytics firebaseAnalytics;
+public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
+  private FirebaseAnalytics firebaseAnalytics;
+  private MethodChannel methodChannel;
+  private Activity activity;
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
-    final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_analytics");
-    channel.setMethodCallHandler(new FirebaseAnalyticsPlugin(registrar));
+    FirebaseAnalyticsPlugin instance = new FirebaseAnalyticsPlugin();
+    instance.setActivity(registrar.activity());
+    instance.onAttachedToEngine(registrar.context(), registrar.messenger());
   }
 
-  private FirebaseAnalyticsPlugin(PluginRegistry.Registrar registrar) {
-    this.registrar = registrar;
-    FirebaseApp.initializeApp(registrar.context());
-    this.firebaseAnalytics = FirebaseAnalytics.getInstance(registrar.context());
+  @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    onAttachedToEngine(
+        binding.getApplicationContext(), binding.getFlutterEngine().getDartExecutor());
   }
+
+  private void onAttachedToEngine(Context applicationContext, BinaryMessenger binaryMessenger) {
+    FirebaseApp.initializeApp(applicationContext);
+    firebaseAnalytics = FirebaseAnalytics.getInstance(applicationContext);
+    methodChannel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_analytics");
+    methodChannel.setMethodCallHandler(this);
+  }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    firebaseAnalytics = null;
+    methodChannel = null;
+  }
+
+  @Override
+  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+    setActivity(binding.getActivity());
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    setActivity(null);
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+    setActivity(binding.getActivity());
+  }
+
+  @Override
+  public void onDetachedFromActivity() {}
 
   @Override
   public void onMethodCall(MethodCall call, Result result) {
@@ -62,6 +100,10 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler {
     }
   }
 
+  private void setActivity(Activity activity) {
+    this.activity = activity;
+  }
+
   private void handleLogEvent(MethodCall call, Result result) {
 
     final String eventName = call.argument("name");
@@ -78,7 +120,6 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler {
   }
 
   private void handleSetCurrentScreen(MethodCall call, Result result) {
-    Activity activity = registrar.activity();
     if (activity == null) {
       result.error("no_activity", "handleSetCurrentScreen requires a foreground activity", null);
       return;

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package io.flutter.plugins.firebase.cloudfunctions.cloudfunctions;
+package io.flutter.plugins.firebase.cloudfunctions;
 
 import android.content.Context;
 import androidx.annotation.NonNull;

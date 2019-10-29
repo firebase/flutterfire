@@ -1,8 +1,12 @@
-## 0.4.1+2
+## 0.4.1+3
 
 * Support the v2 Android embedder.
 * Update to AndroidX.
 * Migrate tests to use e2e testing.
+
+## 0.4.1+2
+
+* Update Android package name.
 
 ## 0.4.1+1
 
