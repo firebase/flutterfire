@@ -1,6 +1,11 @@
+## 0.4.1+2
+
+* Update the homepage now that the package structure has changed.
+
 ## 0.4.1+1
 
-* Update the homepage in the pubspec now that this is a federated plugin.
+* Include lifecycle dependency as a compileOnly one on Android to resolve
+  potential version conflicts with other transitive libraries.
 
 ## 0.4.1
 
