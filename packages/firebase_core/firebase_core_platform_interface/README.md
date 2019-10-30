@@ -8,7 +8,7 @@ same interface.
 
 # Usage
 
-To implement a new platform-specific implementation of `firebasse_core`, extend
+To implement a new platform-specific implementation of `firebase_core`, extend
 [`FirebaseCorePlatform`][2] with an implementation that performs the
 platform-specific behavior, and when you register your plugin, set the default
 `FirebaseCorePlatform` by calling

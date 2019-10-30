@@ -27,8 +27,8 @@ class MethodChannelFirebaseCore extends FirebaseCorePlatform {
   }
 
   @override
-  Future<void> configure(String name, FirebaseOptions options) async {
-    await channel.invokeMethod<void>(
+  Future<void> configure(String name, FirebaseOptions options) {
+    return channel.invokeMethod<void>(
       'FirebaseApp#configure',
       <String, dynamic>{'name': name, 'options': options.asMap},
     );
