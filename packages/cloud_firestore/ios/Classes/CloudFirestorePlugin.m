@@ -39,9 +39,9 @@ static NSArray *getDocumentValues(NSDictionary *document, NSArray *orderBy,
           [NSException
                raise:@"Invalid use of FieldValue.documentId"
               format:
-                  @"You cannot order by the document id when using"
-                   "{start/end}{At/After/Before}Document a the library will order by the document"
-                   "id implicitly in order to to add other fields to the order clause."];
+                  @"You cannot order by the document id when using "
+                   "{start/end}{At/After/Before}Document as the library will order by the document"
+                   " id implicitly in order to to add other fields to the order clause."];
         } else {
           // Unsupported type.
         }
