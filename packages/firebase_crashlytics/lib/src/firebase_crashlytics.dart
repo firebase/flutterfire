@@ -28,7 +28,9 @@ class Crashlytics {
   /// to Firebase Crashlytics.
   Future<void> recordFlutterError(FlutterErrorDetails details) async {
     print('Flutter error caught by Crashlytics plugin:');
-    FlutterError.dumpErrorToConsole(details);
+    // Since multiple errors can be caught during a single session, we set
+    // forceReport=true.
+    FlutterError.dumpErrorToConsole(details, forceReport: true);
 
     _recordError(details.exceptionAsString(), details.stack,
         context: details.context,
