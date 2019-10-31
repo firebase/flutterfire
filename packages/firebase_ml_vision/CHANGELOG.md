@@ -1,3 +1,7 @@
+## 0.9.3+1
+
+* Remove AndroidX warning.
+
 ## 0.9.3
 
 * Support v2 embedding. This plugin will remain compatible with the original embedding and won't

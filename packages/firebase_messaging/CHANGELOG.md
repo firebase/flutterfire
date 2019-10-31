@@ -1,3 +1,7 @@
+## 5.1.6+1
+
+* Remove AndroidX warning.
+
 ## 5.1.6
 
 * Fix warnings when compiling on Android.

@@ -1,3 +1,7 @@
+## 0.12.9+7
+
+* Remove AndroidX warning.
+
 ## 0.12.9+6
 
 * Cast error.code to long to avoid using NSInteger as %ld format warnings.
