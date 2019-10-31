@@ -1,4 +1,4 @@
-## 3.0.7+1
+## 3.0.8
 
 * Remove AndroidX warning.
 
