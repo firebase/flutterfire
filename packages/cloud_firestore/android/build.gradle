@@ -47,9 +47,8 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-        // TODO: Update the version number once the feature is released
-        api 'com.google.firebase:firebase-firestore:21.2.0'
-        implementation 'com.google.firebase:firebase-common:19.2.0'
+        api 'com.google.firebase:firebase-firestore:21.3.0'
+        implementation 'com.google.firebase:firebase-common:19.3.0'
         implementation 'androidx.annotation:annotation:1.1.0'
     }
 }
