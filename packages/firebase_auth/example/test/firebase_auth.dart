@@ -55,7 +55,8 @@ void main() {
       expect(tokenResult.claims['firebase']['sign_in_provider'], 'anonymous');
       expect(tokenResult.claims['user_id'], user.uid);
       // Verify that token will be the same after another getIdToken call with refresh = false option
-      final IdTokenResult newTokenResultWithoutRefresh = await user.getIdToken(refresh: false);
+      final IdTokenResult newTokenResultWithoutRefresh =
+          await user.getIdToken(refresh: false);
       expect(originalToken, newTokenResultWithoutRefresh.token);
       await auth.signOut();
       final FirebaseUser user2 = (await auth.signInAnonymously()).user;
