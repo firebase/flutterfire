@@ -12,15 +12,15 @@ void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Find text in image', (WidgetTester tester) async {
-//    final String tmpFilename = await _loadImage('assets/test_text.png');
-//    final FirebaseVisionImage visionImage =
-//        FirebaseVisionImage.fromFilePath(tmpFilename);
-//
-//    final VisionText text = await FirebaseVision.instance
-//        .textRecognizer()
-//        .processImage(visionImage);
-//
-//    expect(text.text, 'TEXT');
+    final String tmpFilename = await _loadImage('assets/test_text.png');
+    final FirebaseVisionImage visionImage =
+        FirebaseVisionImage.fromFilePath(tmpFilename);
+
+    final VisionText text = await FirebaseVision.instance
+        .textRecognizer()
+        .processImage(visionImage);
+
+    expect(text.text, 'TEXT');
   });
 }
 
