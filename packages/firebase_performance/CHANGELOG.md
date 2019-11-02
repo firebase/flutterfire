@@ -1,3 +1,7 @@
+## 0.3.1+1
+
+* Lower Flutter SDK version constraint to match the current stable version.
+
 ## 0.3.1
 
 * Support v2 embedding. This will remain compatible with the original embedding and won't require
