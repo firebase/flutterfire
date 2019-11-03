@@ -1,3 +1,7 @@
+## 0.1.1+1
+
+* Fix "publishable" findings in `pubspec.yaml`.
+
 ## 0.1.1
 
 * Log FlutterErrorDetails using Flutter's standard `FlutterError.dumpErrorToConsole`.
