@@ -22,6 +22,11 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Flutter plugin accessing Firebase Admob API.
+ *
+ * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
+ */
 public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
   static final String CHANNEL_NAME = "plugins.flutter.io/firebase_admob";
 
@@ -32,6 +37,16 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
 
   RewardedVideoAdWrapper rewardedWrapper;
 
+  /**
+   * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
+   *
+   * <p>Calling this will register the plugin with the passed registrar. However, plugins
+   * initialized this way won't react to changes in activity or context.
+   *
+   * @param registrar connects this plugin's {@link
+   *     io.flutter.plugin.common.MethodChannel.MethodCallHandler} to its {@link
+   *     io.flutter.plugin.common.BinaryMessenger}.
+   */
   public static void registerWith(Registrar registrar) {
     if (registrar.activity() == null) {
       // If a background Flutter view tries to register the plugin, there will be no activity from the registrar.
@@ -43,6 +58,12 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
         new FirebaseAdMobPlugin(registrar.context(), registrar.activity(), channel));
   }
 
+  /**
+   * Default constructor for Firebase Admob Plugin.
+   *
+   * <p>Instantiate this in an add to app scenario to gracefully handle activity and context
+   * changes.
+   */
   public FirebaseAdMobPlugin() {}
 
   private FirebaseAdMobPlugin(
