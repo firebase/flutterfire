@@ -4,9 +4,13 @@
 
 package io.flutter.plugins.firebase.crashlytics.firebasecrashlytics;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -17,19 +21,34 @@ import java.util.List;
 import java.util.Map;
 
 /** FirebaseCrashlyticsPlugin */
-public class FirebaseCrashlyticsPlugin implements MethodCallHandler {
-
+public class FirebaseCrashlyticsPlugin
+    implements FlutterPlugin, MethodCallHandler {
   public static final String TAG = "CrashlyticsPlugin";
 
-  /** Plugin registration. */
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_crashlytics");
+  @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    // TODO: your plugin is now attached to a Flutter experience.
+    setup(binding.getBinaryMessenger(), binding.getApplicationContext());
+  }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    // TODO: your plugin is no longer attached to a Flutter experience.
+  }
+
+  private static void setup(BinaryMessenger binaryMessenger, Context context) {
+    final MethodChannel channel = new MethodChannel(
+        binaryMessenger, "plugins.flutter.io/firebase_crashlytics");
     channel.setMethodCallHandler(new FirebaseCrashlyticsPlugin());
 
     if (!Fabric.isInitialized()) {
-      Fabric.with(registrar.context(), new Crashlytics());
+      Fabric.with(context, new Crashlytics());
     }
+  }
+
+  /** Plugin registration. */
+  public static void registerWith(Registrar registrar) {
+    setup(registrar.messenger(), registrar.context());
   }
 
   @Override
@@ -44,44 +63,52 @@ public class FirebaseCrashlyticsPlugin implements MethodCallHandler {
       // Set keys.
       List<Map<String, Object>> keys = call.argument("keys");
       for (Map<String, Object> key : keys) {
-        switch ((String) key.get("type")) {
-          case "int":
-            Crashlytics.setInt((String) key.get("key"), (int) key.get("value"));
-            break;
-          case "double":
-            Crashlytics.setDouble((String) key.get("key"), (double) key.get("value"));
-            break;
-          case "string":
-            Crashlytics.setString((String) key.get("key"), (String) key.get("value"));
-            break;
-          case "boolean":
-            Crashlytics.setBool((String) key.get("key"), (boolean) key.get("value"));
-            break;
+        switch ((String)key.get("type")) {
+        case "int":
+          Crashlytics.setInt((String)key.get("key"), (int)key.get("value"));
+          break;
+        case "double":
+          Crashlytics.setDouble((String)key.get("key"),
+                                (double)key.get("value"));
+          break;
+        case "string":
+          Crashlytics.setString((String)key.get("key"),
+                                (String)key.get("value"));
+          break;
+        case "boolean":
+          Crashlytics.setBool((String)key.get("key"),
+                              (boolean)key.get("value"));
+          break;
         }
       }
 
       // Report crash.
-      String dartExceptionMessage = (String) call.argument("exception");
+      String dartExceptionMessage = (String)call.argument("exception");
       Exception exception = new Exception(dartExceptionMessage);
-      List<Map<String, String>> errorElements = call.argument("stackTraceElements");
+      List<Map<String, String>> errorElements =
+          call.argument("stackTraceElements");
       List<StackTraceElement> elements = new ArrayList<>();
       for (Map<String, String> errorElement : errorElements) {
-        StackTraceElement stackTraceElement = generateStackTraceElement(errorElement);
+        StackTraceElement stackTraceElement =
+            generateStackTraceElement(errorElement);
         if (stackTraceElement != null) {
           elements.add(stackTraceElement);
         }
       }
-      exception.setStackTrace(elements.toArray(new StackTraceElement[elements.size()]));
+      exception.setStackTrace(
+          elements.toArray(new StackTraceElement[elements.size()]));
 
-      Crashlytics.setString("exception", (String) call.argument("exception"));
+      Crashlytics.setString("exception", (String)call.argument("exception"));
 
       // Set a "reason" (to match iOS) to show where the exception was thrown.
       final String context = call.argument("context");
-      if (context != null) Crashlytics.setString("reason", "thrown " + context);
+      if (context != null)
+        Crashlytics.setString("reason", "thrown " + context);
 
       // Log information.
       final String information = call.argument("information");
-      if (information != null && !information.isEmpty()) Crashlytics.log(information);
+      if (information != null && !information.isEmpty())
+        Crashlytics.log(information);
 
       Crashlytics.logException(exception);
       result.success("Error reported to Crashlytics.");
@@ -90,13 +117,13 @@ public class FirebaseCrashlyticsPlugin implements MethodCallHandler {
     } else if (call.method.equals("Crashlytics#getVersion")) {
       result.success(Crashlytics.getInstance().getVersion());
     } else if (call.method.equals("Crashlytics#setUserEmail")) {
-      Crashlytics.setUserEmail((String) call.argument("email"));
+      Crashlytics.setUserEmail((String)call.argument("email"));
       result.success(null);
     } else if (call.method.equals("Crashlytics#setUserIdentifier")) {
-      Crashlytics.setUserIdentifier((String) call.argument("identifier"));
+      Crashlytics.setUserIdentifier((String)call.argument("identifier"));
       result.success(null);
     } else if (call.method.equals("Crashlytics#setUserName")) {
-      Crashlytics.setUserName((String) call.argument("name"));
+      Crashlytics.setUserName((String)call.argument("name"));
       result.success(null);
     } else {
       result.notImplemented();
@@ -109,17 +136,20 @@ public class FirebaseCrashlyticsPlugin implements MethodCallHandler {
    * @param errorElement Map representing the parts of a Dart error.
    * @return Stack trace element to be used as part of an Exception stack trace.
    */
-  private StackTraceElement generateStackTraceElement(Map<String, String> errorElement) {
+  private StackTraceElement
+  generateStackTraceElement(Map<String, String> errorElement) {
     try {
       String fileName = errorElement.get("file");
       String lineNumber = errorElement.get("line");
       String className = errorElement.get("class");
       String methodName = errorElement.get("method");
 
-      return new StackTraceElement(
-          className == null ? "" : className, methodName, fileName, Integer.parseInt(lineNumber));
+      return new StackTraceElement(className == null ? "" : className,
+                                   methodName, fileName,
+                                   Integer.parseInt(lineNumber));
     } catch (Exception e) {
-      Log.e(TAG, "Unable to generate stack trace element from Dart side error.");
+      Log.e(TAG,
+            "Unable to generate stack trace element from Dart side error.");
       return null;
     }
   }
