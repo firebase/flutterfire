@@ -16,12 +16,23 @@ void main() {
     final FirebaseVisionImage visionImage =
         FirebaseVisionImage.fromFilePath(tmpFilename);
 
-    final VisionText text = await FirebaseVision.instance
-        .textRecognizer()
-        .processImage(visionImage);
+    bool waitingOnModels = true;
+    VisionText text;
+    while (waitingOnModels) {
+      try {
+        text = await FirebaseVision.instance
+            .textRecognizer()
+            .processImage(visionImage);
+        waitingOnModels = false;
+      } on PlatformException catch (exception) {
+        if (!exception.message.contains('model to be downloaded')) {
+          waitingOnModels = false;
+        }
+      }
+    }
 
     expect(text.text, 'TEXT');
-  });
+  }, timeout: const Timeout(Duration(minutes: 1)));
 }
 
 // Since there is no way to get the full asset filename, this method loads the
