@@ -26,7 +26,6 @@ void main() {
         waitingOnModels = false;
       } on PlatformException catch (exception) {
         if (!exception.message.contains('model to be downloaded')) {
-          waitingOnModels = false;
           rethrow;
         }
       }
