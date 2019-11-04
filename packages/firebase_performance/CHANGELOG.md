@@ -1,3 +1,8 @@
+## 0.3.1
+
+* Support v2 embedding. This will remain compatible with the original embedding and won't require
+app migration.
+
 ## 0.3.0+5
 
 * Update documentation to reflect new repository location.

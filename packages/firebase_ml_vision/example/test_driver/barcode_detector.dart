@@ -22,7 +22,7 @@ void barcodeDetectorTests() {
 
     test('detectInImage contactInfo', () async {
       final String tmpFilename = await _loadImage(
-        'assets/test_contact_barcode.png',
+        'assets/test_contact_barcode.jpg',
       );
 
       final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFilePath(
