@@ -8,5 +8,10 @@ dependencies:
     path: ../
   firebase_core: ^0.4.0
 
+dev_dependencies:
+  e2e: ^0.2.1
+  flutter_driver:
+    sdk: flutter
+
 flutter:
   uses-material-design: true

@@ -28,7 +28,7 @@ abstract class MobileAd extends AdListener {
   double horizontalCenterOffset;
   int anchorType;
 
-  enum Status {
+  public enum Status {
     CREATED,
     LOADING,
     FAILED,

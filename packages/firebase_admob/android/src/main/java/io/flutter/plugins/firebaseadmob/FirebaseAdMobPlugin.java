@@ -6,7 +6,6 @@ package io.flutter.plugins.firebaseadmob;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.Gravity;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
@@ -26,7 +25,6 @@ import java.util.Map;
 public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
   static final String CHANNEL_NAME = "plugins.flutter.io/firebase_admob";
 
-  //private final Registrar registrar;
   private MethodChannel channel;
   private Context applicationContext;
   private Activity activity;
@@ -217,20 +215,20 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   }
 
   @Override
-  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
     applicationContext = binding.getApplicationContext();
     dartExecutor = binding.getFlutterEngine().getDartExecutor();
   }
 
   @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
     applicationContext = null;
     dartExecutor = null;
   }
 
   @Override
-  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+  public void onAttachedToActivity(ActivityPluginBinding binding) {
     activity = binding.getActivity();
     channel = new MethodChannel(dartExecutor, CHANNEL_NAME);
     channel.setMethodCallHandler(this);
@@ -243,7 +241,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   }
 
   @Override
-  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
     activity = binding.getActivity();
   }
 
