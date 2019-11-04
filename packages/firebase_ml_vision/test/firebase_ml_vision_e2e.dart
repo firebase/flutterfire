@@ -32,7 +32,7 @@ void main() {
     }
 
     expect(text.text, 'TEXT');
-  }, timeout: const Timeout(Duration(minutes: 5)));
+  }, timeout: const Timeout(Duration(minutes: 10)));
 }
 
 // Since there is no way to get the full asset filename, this method loads the
