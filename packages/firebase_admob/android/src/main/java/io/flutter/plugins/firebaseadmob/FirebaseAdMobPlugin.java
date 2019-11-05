@@ -10,10 +10,10 @@ import android.view.Gravity;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
-import io.flutter.embedding.engine.dart.DartExecutor;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -28,14 +28,11 @@ import java.util.Map;
  * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
  */
 public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
-  static final String CHANNEL_NAME = "plugins.flutter.io/firebase_admob";
-
-  private MethodChannel channel;
   private Context applicationContext;
+  private MethodChannel channel;
   private Activity activity;
-  private DartExecutor dartExecutor;
-
-  RewardedVideoAdWrapper rewardedWrapper;
+  private FlutterPluginBinding pluginBinding;
+  private RewardedVideoAdWrapper rewardedWrapper;
 
   /**
    * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
@@ -53,25 +50,20 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
       // We stop the registering process immediately because the firebase_admob requires an activity.
       return;
     }
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
-    channel.setMethodCallHandler(
-        new FirebaseAdMobPlugin(registrar.context(), registrar.activity(), channel));
+
+    final FirebaseAdMobPlugin plugin = new FirebaseAdMobPlugin();
+    plugin.initializePlugin(registrar.context(), registrar.activity(), registrar.messenger());
   }
 
-  /**
-   * Default constructor for Firebase Admob Plugin.
-   *
-   * <p>Instantiate this in an add to app scenario to gracefully handle activity and context
-   * changes.
-   */
-  public FirebaseAdMobPlugin() {}
-
-  private FirebaseAdMobPlugin(
-      Context applicationContext, Activity activity, MethodChannel channel) {
-    this.applicationContext = applicationContext;
+  private void initializePlugin(
+      Context applicationContext, Activity activity, BinaryMessenger messenger) {
     this.activity = activity;
-    this.channel = channel;
+    this.applicationContext = applicationContext;
     FirebaseApp.initializeApp(applicationContext);
+
+    this.channel = new MethodChannel(messenger, "plugins.flutter.io/firebase_admob");
+    channel.setMethodCallHandler(this);
+
     rewardedWrapper = new RewardedVideoAdWrapper(activity, channel);
   }
 
@@ -237,22 +229,20 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    applicationContext = binding.getApplicationContext();
-    dartExecutor = binding.getFlutterEngine().getDartExecutor();
+    pluginBinding = binding;
   }
 
   @Override
   public void onDetachedFromEngine(FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);
-    applicationContext = null;
-    dartExecutor = null;
+    pluginBinding = null;
   }
 
   @Override
   public void onAttachedToActivity(ActivityPluginBinding binding) {
-    activity = binding.getActivity();
-    channel = new MethodChannel(dartExecutor, CHANNEL_NAME);
-    channel.setMethodCallHandler(this);
+    initializePlugin(
+        pluginBinding.getApplicationContext(),
+        binding.getActivity(),
+        pluginBinding.getFlutterEngine().getDartExecutor());
   }
 
   @Override
@@ -263,7 +253,10 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
 
   @Override
   public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
-    activity = binding.getActivity();
+    initializePlugin(
+        pluginBinding.getApplicationContext(),
+        binding.getActivity(),
+        pluginBinding.getFlutterEngine().getDartExecutor());
   }
 
   @Override
