@@ -1,4 +1,4 @@
-package io.flutter.plugins.firebase.core;
+package io.flutter.plugins.firebaseadmob;
 
 import androidx.test.rule.ActivityTestRule;
 import dev.flutter.plugins.e2e.FlutterRunner;

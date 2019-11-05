@@ -15,3 +15,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+environment:
+  sdk: ">=2.0.0-dev.28.0 <3.0.0"
