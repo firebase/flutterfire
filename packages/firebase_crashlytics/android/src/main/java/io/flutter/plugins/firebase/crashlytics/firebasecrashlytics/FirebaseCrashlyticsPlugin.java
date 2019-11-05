@@ -24,19 +24,24 @@ import java.util.Map;
 public class FirebaseCrashlyticsPlugin
     implements FlutterPlugin, MethodCallHandler {
   public static final String TAG = "CrashlyticsPlugin";
+  private MethodChannel channel;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-    // TODO: your plugin is now attached to a Flutter experience.
-    setup(binding.getBinaryMessenger(), binding.getApplicationContext());
+    channel =
+        setup(binding.getBinaryMessenger(), binding.getApplicationContext());
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    // TODO: your plugin is no longer attached to a Flutter experience.
+    if (channel != null) {
+      channel.setMethodCallHandler(null);
+      channel = null;
+    }
   }
 
-  private static void setup(BinaryMessenger binaryMessenger, Context context) {
+  private static MethodChannel setup(BinaryMessenger binaryMessenger,
+                                     Context context) {
     final MethodChannel channel = new MethodChannel(
         binaryMessenger, "plugins.flutter.io/firebase_crashlytics");
     channel.setMethodCallHandler(new FirebaseCrashlyticsPlugin());
@@ -44,6 +49,8 @@ public class FirebaseCrashlyticsPlugin
     if (!Fabric.isInitialized()) {
       Fabric.with(context, new Crashlytics());
     }
+
+    return channel;
   }
 
   /** Plugin registration. */
