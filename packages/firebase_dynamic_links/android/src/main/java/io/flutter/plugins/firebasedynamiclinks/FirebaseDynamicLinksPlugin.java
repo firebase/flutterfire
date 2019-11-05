@@ -31,7 +31,8 @@ import java.util.List;
 import java.util.Map;
 
 /** FirebaseDynamicLinksPlugin */
-public class FirebaseDynamicLinksPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler, NewIntentListener {
+public class FirebaseDynamicLinksPlugin
+    implements FlutterPlugin, ActivityAware, MethodCallHandler, NewIntentListener {
   private Registrar registrar;
   private MethodChannel channel;
   private ActivityPluginBinding activityBinding;
@@ -41,7 +42,7 @@ public class FirebaseDynamicLinksPlugin implements FlutterPlugin, ActivityAware,
     this.channel = channel;
   }
 
-  public FirebaseDynamicLinksPlugin() { }
+  public FirebaseDynamicLinksPlugin() {}
 
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = createChannel(registrar.messenger());
@@ -193,7 +194,6 @@ public class FirebaseDynamicLinksPlugin implements FlutterPlugin, ActivityAware,
   private Activity getActivity() {
     return registrar != null ? registrar.activity() : activityBinding.getActivity();
   }
-
 
   private OnCompleteListener<ShortDynamicLink> createShortLinkListener(final Result result) {
     return new OnCompleteListener<ShortDynamicLink>() {
