@@ -5,7 +5,7 @@ import 'package:e2e/e2e.dart';
 void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Is true true?', (WidgetTester tester) async {
+  testWidgets('Initialize Firebase Admob', (WidgetTester tester) async {
     expect(
       FirebaseAdMob.instance.initialize(appId: FirebaseAdMob.testAppId),
       completion(isTrue),
