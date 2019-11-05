@@ -6,6 +6,9 @@ void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Is true true?', (WidgetTester tester) async {
-    expect(true, isTrue);
+    expect(
+      FirebaseAdMob.instance.initialize(appId: FirebaseAdMob.testAppId),
+      completion(isTrue),
+    );
   });
 }
