@@ -45,7 +45,8 @@ if [[ "${BRANCH_NAME}" == "master" ]]; then
   (cd "$REPO_DIR" && pub global run flutter_plugin_tools "${ACTIONS[@]}" $PLUGIN_SHARDING)
 else
   # Sets CHANGED_PACKAGES
-  check_changed_packages
+  # check_changed_packages
+  CHANGED_PACKAGES="firebase_storage"
 
   if [[ "$CHANGED_PACKAGES" == "" ]]; then
     echo "No changes detected in packages."

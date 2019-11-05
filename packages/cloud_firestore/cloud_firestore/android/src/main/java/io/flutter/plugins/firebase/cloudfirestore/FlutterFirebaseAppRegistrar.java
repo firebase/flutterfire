@@ -4,12 +4,15 @@
 
 package io.flutter.plugins.firebase.cloudfirestore;
 
+import androidx.annotation.Keep;
+
 import com.google.firebase.components.Component;
 import com.google.firebase.components.ComponentRegistrar;
 import com.google.firebase.platforminfo.LibraryVersionComponent;
 import java.util.Collections;
 import java.util.List;
 
+@Keep
 public class FlutterFirebaseAppRegistrar implements ComponentRegistrar {
   @Override
   public List<Component<?>> getComponents() {
