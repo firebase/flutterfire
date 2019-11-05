@@ -17,11 +17,13 @@ import io.flutter.plugin.common.BinaryMessenger;
 /** FirebaseInAppMessagingPlugin */
 public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHandler {
   private final FirebaseInAppMessaging instance;
+  private MethodChannel channel;
 
-  private static void setup(BinaryMessenger binaryMessenger) {
-    final MethodChannel channel =
-    new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_in_app_messaging");
-      channel.setMethodCallHandler(new FirebaseInAppMessagingPlugin());
+  private static MethodChannel setup(BinaryMessenger binaryMessenger) {
+    final MethodChannel channel = new MethodChannel(
+        binaryMessenger, "plugins.flutter.io/firebase_in_app_messaging");
+    channel.setMethodCallHandler(new FirebaseInAppMessagingPlugin());
+    return channel;
   }
 
   public static void registerWith(Registrar registrar) {
@@ -34,12 +36,15 @@ public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHa
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-    setup(binding.getBinaryMessenger());
+    channel = setup(binding.getBinaryMessenger());
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    // TODO: your plugin is no longer attached to a Flutter experience.
+    if (channel != null) {
+      channel.setMethodCallHandler(null);
+      channel = null;
+    }
   }
 
   @Override
