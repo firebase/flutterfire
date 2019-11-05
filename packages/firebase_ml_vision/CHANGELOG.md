@@ -1,6 +1,6 @@
 ## 0.9.3+1
 
-* Fix Android e2e test.
+* Skip e2e test on Android.
 
 ## 0.9.3
 
