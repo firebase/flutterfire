@@ -1,3 +1,10 @@
+## 0.1.2
+
+* When reporting to Crashlytics on iOS, and printing supplied logs, do not
+  prepend each line with "FirebaseCrashlyticsPlugin.m line 44".
+* Prepend `firebase_crashlytics: ` to the final answer from Crashlytics
+  plugin in the log to realize where it's coming from.
+
 ## 0.1.1
 
 * Log FlutterErrorDetails using Flutter's standard `FlutterError.dumpErrorToConsole`.
