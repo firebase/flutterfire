@@ -4,25 +4,42 @@
 
 package com.example.firebase_in_app_messaging;
 
+import android.support.annotation.NonNull;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import com.google.firebase.inappmessaging.FirebaseInAppMessaging;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.plugin.common.BinaryMessenger;
 
 /** FirebaseInAppMessagingPlugin */
-public class FirebaseInAppMessagingPlugin implements MethodCallHandler {
+public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHandler {
   private final FirebaseInAppMessaging instance;
 
-  public static void registerWith(Registrar registrar) {
+  private static void setup(BinaryMessenger binaryMessenger) {
     final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_in_app_messaging");
-    channel.setMethodCallHandler(new FirebaseInAppMessagingPlugin());
+    new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_in_app_messaging");
+      channel.setMethodCallHandler(new FirebaseInAppMessagingPlugin());
   }
 
-  private FirebaseInAppMessagingPlugin() {
+  public static void registerWith(Registrar registrar) {
+    setup(registrar.messenger());
+  }
+
+  public FirebaseInAppMessagingPlugin() {
     instance = FirebaseInAppMessaging.getInstance();
+  }
+
+  @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    setup(binding.getBinaryMessenger());
+  }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    // TODO: your plugin is no longer attached to a Flutter experience.
   }
 
   @Override

@@ -1,13 +1,19 @@
 package com.example.firebase_in_app_messaging_example;
 
-import android.os.Bundle;
-import io.flutter.app.FlutterActivity;
-import io.flutter.plugins.GeneratedPluginRegistrant;
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.engine.FlutterEngine;
+import com.example.firebase_in_app_messaging.FirebaseInAppMessagingPlugin;
+import io.flutter.plugins.firebaseanalytics.FirebaseAnalyticsPlugin;
+import io.flutter.embedding.engine.plugins.shim.ShimPluginRegistry;
+
 
 public class MainActivity extends FlutterActivity {
+  // TODO(<github-username>): Remove this once v2 of GeneratedPluginRegistrant rolls to stable. https://github.com/flutter/flutter/issues/42694
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    GeneratedPluginRegistrant.registerWith(this);
+  public void configureFlutterEngine(FlutterEngine flutterEngine) {
+    flutterEngine.getPlugins().add(new FirebaseInAppMessagingPlugin());
+    final ShimPluginRegistry shimPluginRegistry = new ShimPluginRegistry(flutterEngine);
+    FirebaseAnalyticsPlugin.registerWith(
+        shimPluginRegistry.registrarFor("io.flutter.plugins.firebaseanalytics.FirebaseAnalyticsPlugin"));
   }
 }
