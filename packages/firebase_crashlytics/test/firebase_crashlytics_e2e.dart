@@ -1,11 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:e2e/e2e.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('some test', (WidgetTester tester) async {
-    // TODO: write test
-    expect(1, equals(2));
+  testWidgets('get version', (WidgetTester tester) async {
+    String version = await Crashlytics.instance.getVersion();
+    expect(version, isNotNull);
   });
 }
