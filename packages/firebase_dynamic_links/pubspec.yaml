@@ -11,6 +11,9 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
+  e2e: ^0.2.1
+  flutter_driver:
+    sdk: flutter
   flutter_test:
     sdk: flutter
   url_launcher: ^4.2.0
@@ -24,4 +27,4 @@ flutter:
 
 environment:
   sdk: ">=2.0.0-dev.28.0 <3.0.0"
-  flutter: ">=1.5.0 <2.0.0"
+  flutter: ">=1.9.1+hotfix.5 <2.0.0"
