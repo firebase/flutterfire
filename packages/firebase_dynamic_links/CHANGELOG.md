@@ -1,3 +1,7 @@
+## 0.5.0+5
+
+* <PLACEHOLDER FOR NOW>
+
 ## 0.5.0+4
 
 * Fix example app build by updating version of `url_launcher` that is compatible with androidx apps.
