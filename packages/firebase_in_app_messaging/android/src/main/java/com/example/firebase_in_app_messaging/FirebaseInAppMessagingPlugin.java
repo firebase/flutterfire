@@ -4,7 +4,6 @@
 
 package com.example.firebase_in_app_messaging;
 
-import android.support.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import com.google.firebase.inappmessaging.FirebaseInAppMessaging;
 import io.flutter.plugin.common.MethodCall;
@@ -35,12 +34,12 @@ public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHa
   }
 
   @Override
-  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
     channel = setup(binding.getBinaryMessenger());
   }
 
   @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
     if (channel != null) {
       channel.setMethodCallHandler(null);
       channel = null;
