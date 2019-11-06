@@ -1,3 +1,7 @@
+## 0.9.3+2
+
+* Remove AndroidX warning.
+
 ## 0.9.3+1
 
 * Skip e2e test on Android.

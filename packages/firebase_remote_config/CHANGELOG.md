@@ -1,3 +1,7 @@
+## 0.2.0+8
+
+* Remove AndroidX warning.
+
 ## 0.2.0+7
 
 * Fix `Bad state: Future already completed` error when initially

@@ -1,3 +1,7 @@
+## 3.0.8
+
+* Remove AndroidX warning.
+
 ## 3.0.7
 
 * Fix possible NullPointerException when plugin is registered without a valid Activity.

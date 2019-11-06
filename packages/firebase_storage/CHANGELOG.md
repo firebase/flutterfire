@@ -1,3 +1,7 @@
+## 3.0.7
+
+* Remove AndroidX warning.
+
 ## 3.0.6
 
 * Update documentation to reflect new repository location.

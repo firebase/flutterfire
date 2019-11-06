@@ -1,3 +1,7 @@
+## 0.14.0+7
+
+* Remove AndroidX warning.
+
 ## 0.14.0+6
 
 * Update example app with correct const constructors.
