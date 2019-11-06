@@ -1,4 +1,4 @@
-## 0.0.1+5
+## 0.1.0
 
 * Updated README instructions for contributing for consistency with other Flutterfire plugins.
 
