@@ -5,7 +5,6 @@
 package io.flutter.plugins.firebaseauth;
 
 import androidx.annotation.Keep;
-
 import com.google.firebase.components.Component;
 import com.google.firebase.components.ComponentRegistrar;
 import com.google.firebase.platforminfo.LibraryVersionComponent;
