@@ -44,7 +44,7 @@ class FirebaseDynamicLinks {
     if (reply == null) {
       return null;
     }
-    return Uri.tryParse(reply['url']);
+    return Uri.tryParse(reply);
   }
 
   PendingDynamicLinkData getPendingDynamicLinkDataFromMap(

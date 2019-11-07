@@ -92,6 +92,9 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
         builder.setLongLink(url);
         buildShortDynamicLink(builder, call, createShortLinkListener(result));
         break;
+      case "FirebaseDynamicLinks#getDynamicLink":
+        handleGetDynamicLink(result, Uri.parse(call.argument("url")));
+        break;
       case "FirebaseDynamicLinks#getInitialLink":
         handleGetInitialDynamicLink(result);
         break;
@@ -112,6 +115,30 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
 
     dynamicLink.put("android", androidData);
     return dynamicLink;
+  }
+
+  private void handleGetDynamicLink(final Result result, Uri uri) {
+    FirebaseDynamicLinks.getInstance()
+        .getDynamicLink(uri)
+        .addOnSuccessListener(new OnSuccessListener<PendingDynamicLinkData>() {
+          @Override
+          public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+            if (pendingDynamicLinkData != null) {
+              Uri link = pendingDynamicLinkData.getLink();
+              if (link != null) {
+                result.success(link.toString());
+                return;
+              }
+            }
+            result.success(null);
+          }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+          @Override
+          public void onFailure(@NonNull Exception e) {
+            result.error(e.getClass().getSimpleName(), e.getMessage(), null);
+          }
+        });
   }
 
   private void handleGetInitialDynamicLink(final Result result) {
