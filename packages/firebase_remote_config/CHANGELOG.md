@@ -1,3 +1,11 @@
+## 0.2.0+9
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.2.0+8
+
+* Remove AndroidX warning.
+
 ## 0.2.0+7
 
 * Fix `Bad state: Future already completed` error when initially
