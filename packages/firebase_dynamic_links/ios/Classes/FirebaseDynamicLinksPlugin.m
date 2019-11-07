@@ -101,7 +101,7 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
     }
   } else if ([@"FirebaseDynamicLinks#getDynamicLink" isEqualToString:call.method]) {
     NSURL *shortLink = [NSURL URLWithString:call.arguments[@"url"]];
-    FIRDynamicLinkUniversalLinkHandler completion = 
+    FIRDynamicLinkUniversalLinkHandler completion =
         ^(FIRDynamicLink *_Nullable dynamicLink, NSError *_Nullable error) {
           if (error) {
             result(getFlutterError(error));
@@ -111,8 +111,7 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
             result(null);
           }
         };
-    [[FIRDynamicLinks dynamicLinks] handleUniversalLink:shortLink
-                                             completion:completion];
+    [[FIRDynamicLinks dynamicLinks] handleUniversalLink:shortLink completion:completion];
   } else {
     result(FlutterMethodNotImplemented);
   }

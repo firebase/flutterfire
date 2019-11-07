@@ -120,25 +120,27 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
   private void handleGetDynamicLink(final Result result, Uri uri) {
     FirebaseDynamicLinks.getInstance()
         .getDynamicLink(uri)
-        .addOnSuccessListener(new OnSuccessListener<PendingDynamicLinkData>() {
-          @Override
-          public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
-            if (pendingDynamicLinkData != null) {
-              Uri link = pendingDynamicLinkData.getLink();
-              if (link != null) {
-                result.success(link.toString());
-                return;
+        .addOnSuccessListener(
+            new OnSuccessListener<PendingDynamicLinkData>() {
+              @Override
+              public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                if (pendingDynamicLinkData != null) {
+                  Uri link = pendingDynamicLinkData.getLink();
+                  if (link != null) {
+                    result.success(link.toString());
+                    return;
+                  }
+                }
+                result.success(null);
               }
-            }
-            result.success(null);
-          }
-        })
-        .addOnFailureListener(new OnFailureListener() {
-          @Override
-          public void onFailure(@NonNull Exception e) {
-            result.error(e.getClass().getSimpleName(), e.getMessage(), null);
-          }
-        });
+            })
+        .addOnFailureListener(
+            new OnFailureListener() {
+              @Override
+              public void onFailure(@NonNull Exception e) {
+                result.error(e.getClass().getSimpleName(), e.getMessage(), null);
+              }
+            });
   }
 
   private void handleGetInitialDynamicLink(final Result result) {

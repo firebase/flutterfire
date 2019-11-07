@@ -38,9 +38,9 @@ class FirebaseDynamicLinks {
   }
 
   Future<Uri> getDynamicLink(Uri url) async {
-    final String reply = await FirebaseDynamicLinks.channel.invokeMethod<String>(
-        'FirebaseDynamicLinks#getDynamicLink',
-        <String, dynamic>{'url': url.toString()});
+    final String reply = await FirebaseDynamicLinks.channel
+        .invokeMethod<String>('FirebaseDynamicLinks#getDynamicLink',
+            <String, dynamic>{'url': url.toString()});
     if (reply == null) {
       return null;
     }
