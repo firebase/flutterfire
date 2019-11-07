@@ -1,4 +1,4 @@
-## 0.1.2
+## 0.1.1+1
 
 * When reporting to Crashlytics on iOS, and printing supplied logs, do not
   prepend each line with "FirebaseCrashlyticsPlugin.m line 44".
