@@ -760,9 +760,6 @@ const UInt8 DOCUMENT_ID = 139;
     if (![call.arguments[@"sslEnabled"] isEqual:[NSNull null]]) {
       settings.sslEnabled = (bool)call.arguments[@"sslEnabled"];
     }
-    if (![call.arguments[@"timestampsInSnapshotsEnabled"] isEqual:[NSNull null]]) {
-      settings.timestampsInSnapshotsEnabled = (bool)call.arguments[@"timestampsInSnapshotsEnabled"];
-    }
     if (![call.arguments[@"cacheSizeBytes"] isEqual:[NSNull null]]) {
       settings.cacheSizeBytes = ((NSNumber *)call.arguments[@"cacheSizeBytes"]).intValue;
     }

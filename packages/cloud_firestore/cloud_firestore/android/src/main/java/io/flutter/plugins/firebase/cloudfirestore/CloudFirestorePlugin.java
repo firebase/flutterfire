@@ -122,6 +122,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private Object[] getDocumentValues(
       Map<String, Object> document, List<List<Object>> orderBy, Map<String, Object> arguments) {
     String documentId = (String) document.get("id");
@@ -200,7 +201,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
       change.put("newIndex", documentChange.getNewIndex());
       change.put("document", documentChange.getDocument().getData());
       change.put("path", documentChange.getDocument().getReference().getPath());
-      Map<String, Object> metadata = new HashMap();
+      Map<String, Object> metadata = new HashMap<>();
       metadata.put(
           "hasPendingWrites", documentChange.getDocument().getMetadata().hasPendingWrites());
       metadata.put("isFromCache", documentChange.getDocument().getMetadata().isFromCache());
@@ -573,7 +574,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                 } else {
                   snapshotMap.put("data", null);
                 }
-                Map<String, Object> metadata = new HashMap();
+                Map<String, Object> metadata = new HashMap<>();
                 metadata.put("hasPendingWrites", documentSnapshot.getMetadata().hasPendingWrites());
                 metadata.put("isFromCache", documentSnapshot.getMetadata().isFromCache());
                 snapshotMap.put("metadata", metadata);
@@ -907,11 +908,6 @@ public class CloudFirestorePlugin implements MethodCallHandler {
 
           if (arguments.get("sslEnabled") != null) {
             builder.setSslEnabled((boolean) arguments.get("sslEnabled"));
-          }
-
-          if (arguments.get("timestampsInSnapshotsEnabled") != null) {
-            builder.setTimestampsInSnapshotsEnabled(
-                (boolean) arguments.get("timestampsInSnapshotsEnabled"));
           }
 
           if (arguments.get("cacheSizeBytes") != null) {

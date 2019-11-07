@@ -149,14 +149,12 @@ class Firestore {
       {bool persistenceEnabled,
       String host,
       bool sslEnabled,
-      bool timestampsInSnapshotsEnabled,
       int cacheSizeBytes}) async {
     await channel.invokeMethod<void>('Firestore#settings', <String, dynamic>{
       'app': app.name,
       'persistenceEnabled': persistenceEnabled,
       'host': host,
       'sslEnabled': sslEnabled,
-      'timestampsInSnapshotsEnabled': timestampsInSnapshotsEnabled,
       'cacheSizeBytes': cacheSizeBytes,
     });
   }

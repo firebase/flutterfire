@@ -184,7 +184,6 @@ void main() {
         persistenceEnabled: true,
         host: null,
         sslEnabled: true,
-        timestampsInSnapshotsEnabled: true,
         cacheSizeBytes: 500000,
       );
       expect(log, <Matcher>[
