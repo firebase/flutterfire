@@ -1,3 +1,7 @@
+## 0.1.1+1
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
 ## 0.1.1
 
 * Log FlutterErrorDetails using Flutter's standard `FlutterError.dumpErrorToConsole`.

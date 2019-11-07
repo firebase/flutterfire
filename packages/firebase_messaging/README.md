@@ -8,8 +8,6 @@ With this plugin, your Flutter app can receive and process push notifications as
 
 For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
-*Note*: This plugin is still under development, and some APIs might not be available yet. [Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
-
 ## Usage
 To use this plugin, add `firebase_messaging` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
@@ -196,3 +194,13 @@ curl https://fcm.googleapis.com/fcm/send -H "Content-Type:application/json" -X P
 ```
 
 Remove the `notification` property in `DATA` to send a data message.
+
+## Issues and feedback
+
+Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+
+Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+
+To contribute a change to this plugin,
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
+and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
