@@ -93,7 +93,7 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
         buildShortDynamicLink(builder, call, createShortLinkListener(result));
         break;
       case "FirebaseDynamicLinks#getDynamicLink":
-        handleGetDynamicLink(result, Uri.parse(call.argument("url")));
+        handleGetDynamicLink(result, Uri.parse((String) call.argument("url")));
         break;
       case "FirebaseDynamicLinks#getInitialLink":
         handleGetInitialDynamicLink(result);
