@@ -1,7 +1,6 @@
 ## 0.12.10
 
-* Added support for `Query.whereIn()` and `Query.whereArrayContainsAny()` query
-    operators.
+* Added support for `in` and `array-contains-any` query operators.
 
 ## 0.12.9+6
 

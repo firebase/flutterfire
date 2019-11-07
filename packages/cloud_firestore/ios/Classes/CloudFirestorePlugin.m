@@ -86,7 +86,6 @@ static FIRQuery *getQuery(NSDictionary *arguments) {
     } else if ([op isEqualToString:@"array-contains-any"]) {
       query = [query queryWhereField:fieldName arrayContainsAny:value];
     } else if ([op isEqualToString:@"in"]) {
-      // TODO: Make sure this is the correct function name
       query = [query queryWhereField:fieldName in:value];
     } else {
       // Unsupported operator
