@@ -1,6 +1,14 @@
-## 0.12.10
+## 0.13.0+1
 
 * Added support for `in` and `array-contains-any` query operators.
+
+## 0.12.9+8
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.12.9+7
+
+* Remove AndroidX warning.
 
 ## 0.12.9+6
 
