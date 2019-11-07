@@ -1,14 +1,15 @@
 ## 0.14.0+8
 
+<<<<<<< HEAD
 * Updated README instructions for contributing for consistency with other Flutterfire plugins.
+=======
+* getIdToken use actual refresh value instead of checking if object exists
+>>>>>>> Rebase fixes
 
 ## 0.14.0+7
 
-<<<<<<< HEAD
 * Remove AndroidX warning.
-=======
-* Do not ignore "refresh" value for "getIdToken" on iOS
->>>>>>> getIdToken use actual refresh value instead of checking if object exists
+
 
 ## 0.14.0+6
 
