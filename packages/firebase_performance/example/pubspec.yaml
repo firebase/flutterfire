@@ -11,6 +11,7 @@ dependencies:
   firebase_core: ^0.4.0
 
 dev_dependencies:
+  e2e: ^0.2.1
   flutter_test:
     sdk: flutter
   flutter_driver:
@@ -18,3 +19,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+environment:
+  sdk: ">=2.0.0-dev.28.0 <3.0.0"

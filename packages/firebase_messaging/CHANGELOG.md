@@ -1,6 +1,14 @@
-## 5.1.7
+## 5.1.9
 
 * Fix strict compilation errors.
+
+## 5.1.8
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 5.1.7
+
+* Remove AndroidX warning.
 
 ## 5.1.6
 

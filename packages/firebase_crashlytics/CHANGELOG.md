@@ -1,3 +1,12 @@
+## 0.1.1+1
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.1.1
+
+* Log FlutterErrorDetails using Flutter's standard `FlutterError.dumpErrorToConsole`.
+* In debug mode, always log errors.
+
 ## 0.1.0+5
 
 * Fix example app `support-compat` crash by setting `compileSdkVersion` to 28.
