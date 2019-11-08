@@ -39,7 +39,7 @@ class FirebaseDynamicLinks {
 
   Future<PendingDynamicLinkData> getDynamicLink(Uri url) async {
     final Map<String, dynamic> linkData = await FirebaseDynamicLinks.channel
-        .invokeMethod<String>('FirebaseDynamicLinks#getDynamicLink',
+        .invokeMapMethod<String, dynamic>('FirebaseDynamicLinks#getDynamicLink',
             <String, dynamic>{'url': url.toString()});
     return getPendingDynamicLinkDataFromMap(linkData);
   }

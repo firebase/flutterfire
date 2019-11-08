@@ -40,7 +40,9 @@ void main() {
               },
             };
           case 'FirebaseDynamicLinks#getDynamicLink':
-            return 'https://google.com';
+            return <dynamic, dynamic>{
+              'link': 'https://google.com',
+            };
           default:
             return null;
         }
@@ -69,10 +71,10 @@ void main() {
 
     test('getDynamicLink', () async {
       final Uri argument = Uri.parse('short-link');
-      final Uri url =
+      final PendingDynamicLinkData data =
           await FirebaseDynamicLinks.instance.getDynamicLink(argument);
 
-      expect(url.host, 'google.com');
+      expect(data.link.host, 'google.com');
 
       expect(log, <Matcher>[
         isMethodCall('FirebaseDynamicLinks#getDynamicLink',
