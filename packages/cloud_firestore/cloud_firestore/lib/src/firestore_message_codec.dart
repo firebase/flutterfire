@@ -76,7 +76,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
   }
 
   @override
-  dynamic readValueOfType(int type, ReadBuffer buffer) {
+  dynamic readValueOfType(int type, ReadBuffer buffer) async {
     switch (type) {
       case _kDateTime:
         return DateTime.fromMillisecondsSinceEpoch(buffer.getInt64());
@@ -88,7 +88,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
         final int appNameLength = readSize(buffer);
         final String appName =
             utf8.decoder.convert(buffer.getUint8List(appNameLength));
-        final FirebaseApp app = FirebaseApp(name: appName);
+        final FirebaseApp app = await FirebaseApp.appNamed(appName);
         final Firestore firestore = Firestore(app: app);
         final int pathLength = readSize(buffer);
         final String path =
