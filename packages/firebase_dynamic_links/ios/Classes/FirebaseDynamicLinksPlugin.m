@@ -105,10 +105,8 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
         ^(FIRDynamicLink *_Nullable dynamicLink, NSError *_Nullable error) {
           if (error) {
             result(getFlutterError(error));
-          } else if (dynamicLink && dynamicLink.url) {
-            result([dynamicLink.url absoluteString]);
           } else {
-            result(nil);
+            result(getDictionaryFromDynamicLink(dynamicLink));
           }
         };
     [[FIRDynamicLinks dynamicLinks] handleUniversalLink:shortLink completion:completion];
