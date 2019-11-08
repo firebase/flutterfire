@@ -1,3 +1,7 @@
+## 0.5.0+6
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
 ## 0.5.0+5
 
 * Remove AndroidX warning.
