@@ -117,43 +117,8 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
     return dynamicLink;
   }
 
-  private void handleGetDynamicLink(final Result result, Uri uri) {
-    FirebaseDynamicLinks.getInstance()
-        .getDynamicLink(uri)
-        .addOnSuccessListener(
-            new OnSuccessListener<PendingDynamicLinkData>() {
-              @Override
-              public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
-                if (pendingDynamicLinkData != null) {
-                  Uri link = pendingDynamicLinkData.getLink();
-                  if (link != null) {
-                    result.success(link.toString());
-                    return;
-                  }
-                }
-                result.success(null);
-              }
-            })
-        .addOnFailureListener(
-            new OnFailureListener() {
-              @Override
-              public void onFailure(@NonNull Exception e) {
-                result.error(e.getClass().getSimpleName(), e.getMessage(), null);
-              }
-            });
-  }
-
-  private void handleGetInitialDynamicLink(final Result result) {
-    // If there's no activity, then there's no initial dynamic link.
-    if (registrar.activity() == null) {
-      result.success(null);
-      return;
-    }
-
-    FirebaseDynamicLinks.getInstance()
-        .getDynamicLink(registrar.activity().getIntent())
-        .addOnSuccessListener(
-            registrar.activity(),
+  private void addDynamicLinkListener(Task<PendingDynamicLinkData> task, Result result) {
+    task.addOnSuccessListener(
             new OnSuccessListener<PendingDynamicLinkData>() {
               @Override
               public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
@@ -167,13 +132,28 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
               }
             })
         .addOnFailureListener(
-            registrar.activity(),
             new OnFailureListener() {
               @Override
               public void onFailure(@NonNull Exception e) {
                 result.error(e.getClass().getSimpleName(), e.getMessage(), null);
               }
             });
+  }
+
+  private void handleGetDynamicLink(final Result result, Uri uri) {
+    addDynamicLinkListener(FirebaseDynamicLinks.getInstance().getDynamicLink(uri), result);
+  }
+
+  private void handleGetInitialDynamicLink(final Result result) {
+    // If there's no activity, then there's no initial dynamic link.
+    if (registrar.activity() == null) {
+      result.success(null);
+      return;
+    }
+
+    addDynamicLinkListener(
+        FirebaseDynamicLinks.getInstance().getDynamicLink(registrar.activity().getIntent()),
+        result);
   }
 
   private OnCompleteListener<ShortDynamicLink> createShortLinkListener(final Result result) {
