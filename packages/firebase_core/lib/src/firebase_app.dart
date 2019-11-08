@@ -5,7 +5,6 @@
 part of firebase_core;
 
 class FirebaseApp {
-  @visibleForTesting
   const FirebaseApp({@required this.name}) : assert(name != null);
 
   /// The name of this app.
