@@ -5,7 +5,7 @@
 part of firebase_core;
 
 class FirebaseApp {
-  // TODO(kroikie): Track and assert configured apps and those retrieved via
+  // TODO(jackson): We could assert here that an app with this name was configured previously.
   //                appNamed.
   FirebaseApp({@required this.name}) : assert(name != null);
 
