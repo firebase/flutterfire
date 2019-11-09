@@ -2,6 +2,7 @@
 
 - **BREAKING** renamed `AuthCredential` into `OAuthCredential` to align with JS API
 - Added `idToken`, `accessToken` and `secret` to `OAuthCredential`
+- Added support for Email Link authentication
 
 ## 6.0.0
 

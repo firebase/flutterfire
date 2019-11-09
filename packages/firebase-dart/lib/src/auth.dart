@@ -370,6 +370,20 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
       handleThenable(jsObject.getRedirectResult())
           .then((u) => UserCredential.fromJsObject(u));
 
+  /// Sends a sign-in email link to the user with the specified email.
+  ///
+  /// The sign-in operation has to always be completed in the app unlike other out
+  /// of band email actions (password reset and email verifications). This is
+  /// because, at the end of the flow, the user is expected to be signed in and
+  /// their Auth state persisted within the app.
+  ///
+  /// To complete sign in with the email link, call
+  /// [Auth.signInWithEmailLink] with the email address and
+  /// the email link supplied in the email sent to the user.
+  Future sendSignInLinkToEmail(String email,
+          [ActionCodeSettings actionCodeSettings]) =>
+      handleThenable(jsObject.sendSignInLinkToEmail(email, actionCodeSettings));
+
   /// Sends a password reset e-mail to the given [email].
   /// To confirm password reset, use the [Auth.confirmPasswordReset].
   ///
@@ -465,6 +479,11 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   Future<UserCredential> signInWithEmailAndPassword(
           String email, String password) =>
       handleThenable(jsObject.signInWithEmailAndPassword(email, password))
+          .then((u) => UserCredential.fromJsObject(u));
+
+  /// Signs in using [email] and [emailLink] link.
+  Future<UserCredential> signInWithEmailLink(String email, String emailLink) =>
+      handleThenable(jsObject.signInWithEmailLink(email, emailLink))
           .then((u) => UserCredential.fromJsObject(u));
 
   /// Asynchronously signs in using a phone number in E.164 format

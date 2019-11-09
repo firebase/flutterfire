@@ -29,6 +29,8 @@ abstract class AuthJsImpl {
       [Func1 opt_error, Func0 opt_completed]);
   external Func0 onIdTokenChanged(nextOrObserver,
       [Func1 opt_error, Func0 opt_completed]);
+  external PromiseJsImpl sendSignInLinkToEmail(String email,
+      [ActionCodeSettings actionCodeSettings]);
   external PromiseJsImpl sendPasswordResetEmail(String email,
       [ActionCodeSettings actionCodeSettings]);
   external PromiseJsImpl setPersistence(String persistence);
@@ -42,6 +44,8 @@ abstract class AuthJsImpl {
       signInAndRetrieveDataWithCustomToken(String token);
   external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailAndPassword(
       String email, String password);
+  external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailLink(
+      String email, String emailLink);
   external PromiseJsImpl<ConfirmationResultJsImpl> signInWithPhoneNumber(
       String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
   external PromiseJsImpl<UserCredentialJsImpl> signInWithPopup(
