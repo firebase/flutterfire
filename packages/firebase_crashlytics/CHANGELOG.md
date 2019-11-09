@@ -1,3 +1,7 @@
+## 0.1.3
+
+* Use `Trace` object instead of parsing strings.
+
 ## 0.1.2
 
 * Updated to use the v2 plugin API.
