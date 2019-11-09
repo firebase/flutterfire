@@ -1,3 +1,7 @@
+## 0.4.1+4
+
+* Remove visibleForTesting annotation from FirebaseApp constructor. 
+
 ## 0.4.1+3
 
 * Updated README instructions for contributing for consistency with other Flutterfire plugins.
