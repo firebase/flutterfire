@@ -42,7 +42,12 @@
     // Add logs.
     NSArray *logs = call.arguments[@"logs"];
     for (NSString *log in logs) {
-      CLS_LOG(@"%@", log);
+      // Here and below, use CLSLog instead of CLS_LOG to try and avoid
+      // automatic inclusion of the current code location. It also ensures that
+      // the log is only written to Crashlytics and not also to the offline log
+      // as explained here:
+      // https://support.crashlytics.com/knowledgebase/articles/92519-how-do-i-use-logging
+      CLSLog(@"%@", log);
     }
 
     // Set keys.
@@ -64,14 +69,10 @@
     }
 
     // Add additional information from the Flutter framework to the exception reported in
-    // Crashlytics. Using CLSLog instead of CLS_LOG to try to avoid the automatic inclusion of the
-    // line number. It also ensures that the log is only written to Crashlytics and not also to the
-    // offline log as explained here:
-    // https://support.crashlytics.com/knowledgebase/articles/92519-how-do-i-use-logging
-    // Although, that would only happen in debug mode, which this method call is never called in.
+    // Crashlytics.
     NSString *information = call.arguments[@"information"];
     if ([information length] != 0) {
-      CLSLog(information);
+      CLSLog(@"%@", information);
     }
 
     // Report crash.

@@ -5,26 +5,55 @@
 package io.flutter.plugins.firebaseperformance;
 
 import android.util.SparseArray;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
-/** FirebasePerformancePlugin */
-public class FirebasePerformancePlugin implements MethodChannel.MethodCallHandler {
+/**
+ * Flutter plugin accessing Firebase Performance API.
+ *
+ * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
+ */
+public class FirebasePerformancePlugin implements FlutterPlugin, MethodChannel.MethodCallHandler {
   private static final String CHANNEL_NAME = "plugins.flutter.io/firebase_performance";
 
-  private static final SparseArray<MethodChannel.MethodCallHandler> handlers = new SparseArray<>();
+  private final SparseArray<MethodChannel.MethodCallHandler> handlers = new SparseArray<>();
+  private MethodChannel channel;
 
+  /**
+   * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
+   *
+   * <p>Calling this will register the plugin with the passed registrar. However, plugins
+   * initialized this way won't react to changes in activity or context.
+   *
+   * @param registrar connects this plugin's {@link
+   *     io.flutter.plugin.common.MethodChannel.MethodCallHandler} to its {@link
+   *     io.flutter.plugin.common.BinaryMessenger}.
+   */
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
     channel.setMethodCallHandler(new FirebasePerformancePlugin());
   }
 
   @Override
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
+    channel = new MethodChannel(binding.getFlutterEngine().getDartExecutor(), CHANNEL_NAME);
+    channel.setMethodCallHandler(this);
+  }
+
+  @Override
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);
+  }
+
+  @Override
   public void onMethodCall(MethodCall call, MethodChannel.Result result) {
     if (call.method.equals("FirebasePerformance#instance")) {
       handlers.clear();
-      FlutterFirebasePerformance.getInstance(call, result);
+      final Integer handle = call.argument("handle");
+      addHandler(handle, new FlutterFirebasePerformance(this));
+      result.success(null);
     } else {
       final MethodChannel.MethodCallHandler handler = getHandler(call);
 
@@ -36,7 +65,7 @@ public class FirebasePerformancePlugin implements MethodChannel.MethodCallHandle
     }
   }
 
-  static void addHandler(final int handle, final MethodChannel.MethodCallHandler handler) {
+  void addHandler(final int handle, final MethodChannel.MethodCallHandler handler) {
     if (handlers.get(handle) != null) {
       final String message = String.format("Object for handle already exists: %s", handle);
       throw new IllegalArgumentException(message);
@@ -45,11 +74,11 @@ public class FirebasePerformancePlugin implements MethodChannel.MethodCallHandle
     handlers.put(handle, handler);
   }
 
-  static void removeHandler(final int handle) {
+  void removeHandler(final int handle) {
     handlers.remove(handle);
   }
 
-  private static MethodChannel.MethodCallHandler getHandler(final MethodCall call) {
+  private MethodChannel.MethodCallHandler getHandler(final MethodCall call) {
     final Integer handle = call.argument("handle");
 
     if (handle == null) return null;

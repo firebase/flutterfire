@@ -1,6 +1,14 @@
-## 0.14.0+7
+## 0.14.0+9
 
 * Fix NoSuchMethodError in `reauthenticateWithCredential`
+
+## 0.14.0+8
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.14.0+7
+
+* Remove AndroidX warning.
 
 ## 0.14.0+6
 
