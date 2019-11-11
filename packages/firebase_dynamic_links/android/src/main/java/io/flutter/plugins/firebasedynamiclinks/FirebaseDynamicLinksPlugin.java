@@ -162,7 +162,7 @@ public class FirebaseDynamicLinksPlugin
 
   private void handleGetInitialDynamicLink(final Result result) {
     // If there's no activity, then there's no initial dynamic link.
-    if (registrar.activity() == null && activityBinding == null) {
+    if ((registrar != null && registrar.activity() == null) && activityBinding == null) {
       result.success(null);
       return;
     }
