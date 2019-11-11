@@ -1,6 +1,11 @@
-## 0.13.0+1
+## 0.12.11
 
 * Added support for `in` and `array-contains-any` query operators.
+
+## 0.12.10
+
+* Added `FieldPath` class and `FieldPath.documentId` to refer to the document id in queries.
+* Added assertions and exceptions that help you building correct queries.
 
 ## 0.12.9+8
 
