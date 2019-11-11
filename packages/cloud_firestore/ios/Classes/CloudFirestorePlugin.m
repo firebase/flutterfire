@@ -154,7 +154,7 @@ static FIRQuery *getQuery(NSDictionary *arguments) {
       if (fieldName != nil) {
         query = [query queryWhereField:fieldName arrayContainsAny:value];
       } else if (fieldPath != nil) {
-        query = [query queryWhereFieldPath:fieldPath arrayContains:value];
+        query = [query queryWhereFieldPath:fieldPath arrayContainsAny:value];
       } else {
         // Invalid type.
       }
