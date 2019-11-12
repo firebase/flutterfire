@@ -1,3 +1,7 @@
+## 0.4.1+5
+
+* Remove deprecated [firebase-core](https://firebase.google.com/support/release-notes/android) dependency.
+
 ## 0.4.1+4
 
 * Remove visibleForTesting annotation from FirebaseApp constructor. 
