@@ -16,14 +16,14 @@ class MethodChannelFirebaseCore extends FirebaseCorePlatform {
   );
 
   @override
-  Future<FirebaseAppData> appNamed(String name) async {
+  Future<PlatformFirebaseApp> appNamed(String name) async {
     final Map<String, dynamic> app =
         await channel.invokeMapMethod<String, dynamic>(
       'FirebaseApp#appNamed',
       name,
     );
     if (app == null) return null;
-    return FirebaseAppData(app['name'], FirebaseOptions.from(app['options']));
+    return PlatformFirebaseApp(app['name'], FirebaseOptions.from(app['options']));
   }
 
   @override
@@ -35,13 +35,13 @@ class MethodChannelFirebaseCore extends FirebaseCorePlatform {
   }
 
   @override
-  Future<List<FirebaseAppData>> allApps() async {
+  Future<List<PlatformFirebaseApp>> allApps() async {
     final List<dynamic> result = await channel.invokeListMethod<dynamic>(
       'FirebaseApp#allApps',
     );
     return result
-        ?.map<FirebaseAppData>(
-          (dynamic app) => FirebaseAppData(
+        ?.map<PlatformFirebaseApp>(
+          (dynamic app) => PlatformFirebaseApp(
             app['name'],
             FirebaseOptions.from(app['options']),
           ),

@@ -7,8 +7,18 @@ import 'package:quiver_hashcode/hashcode.dart';
 import 'firebase_options.dart';
 
 /// A data class storing the name and options of a Firebase app.
-class FirebaseAppData {
-  FirebaseAppData(this.name, this.options);
+///
+/// This is created as a result of calling
+/// [`firebase.initializeApp`](https://firebase.google.com/docs/reference/js/firebase#initialize-app)
+/// in the various platform implementations.
+///
+/// This class is different from `FirebaseApp` declared in
+/// `package:firebase_core`: `FirebaseApp` is initialized synchronously, and
+/// the options for the app are obtained via a call that returns
+/// `Future<FirebaseOptions>`. This class is the platform representation of a
+/// Firebase app.
+class PlatformFirebaseApp {
+  PlatformFirebaseApp(this.name, this.options);
 
   /// The name of this Firebase app.
   final String name;
@@ -19,7 +29,7 @@ class FirebaseAppData {
   @override
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
-    if (other is! FirebaseAppData) return false;
+    if (other is! PlatformFirebaseApp) return false;
     return other.name == name && other.options == options;
   }
 
@@ -27,5 +37,5 @@ class FirebaseAppData {
   int get hashCode => hash2(name, options);
 
   @override
-  String toString() => '$FirebaseAppData($name)';
+  String toString() => '$PlatformFirebaseApp($name)';
 }

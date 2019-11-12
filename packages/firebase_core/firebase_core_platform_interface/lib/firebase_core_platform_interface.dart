@@ -6,11 +6,11 @@ import 'dart:async';
 
 import 'package:meta/meta.dart' show visibleForTesting;
 
-import 'src/firebase_app_data.dart';
+import 'src/platform_firebase_app.dart';
 import 'src/firebase_options.dart';
 import 'src/method_channel_firebase_core.dart';
 
-export 'src/firebase_app_data.dart';
+export 'src/platform_firebase_app.dart';
 export 'src/firebase_options.dart';
 export 'src/method_channel_firebase_core.dart';
 
@@ -67,7 +67,7 @@ abstract class FirebaseCorePlatform {
   /// Returns the data for the Firebase app with the given [name].
   ///
   /// If there is no such app, returns null.
-  Future<FirebaseAppData> appNamed(String name) {
+  Future<PlatformFirebaseApp> appNamed(String name) {
     throw UnimplementedError('appNamed() has not been implemented.');
   }
 
@@ -79,7 +79,7 @@ abstract class FirebaseCorePlatform {
   /// Returns a list of all extant Firebase app instances.
   ///
   /// If there are no live Firebase apps, returns `null`.
-  Future<List<FirebaseAppData>> allApps() {
+  Future<List<PlatformFirebaseApp>> allApps() {
     throw UnimplementedError('allApps() has not been implemented.');
   }
 }
