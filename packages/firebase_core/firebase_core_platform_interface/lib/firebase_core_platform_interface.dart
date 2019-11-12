@@ -6,13 +6,13 @@ import 'dart:async';
 
 import 'package:meta/meta.dart' show visibleForTesting;
 
-import 'src/platform_firebase_app.dart';
 import 'src/firebase_options.dart';
 import 'src/method_channel_firebase_core.dart';
+import 'src/platform_firebase_app.dart';
 
-export 'src/platform_firebase_app.dart';
 export 'src/firebase_options.dart';
 export 'src/method_channel_firebase_core.dart';
+export 'src/platform_firebase_app.dart';
 
 /// The interface that implementations of `firebase_core` must extend.
 ///
