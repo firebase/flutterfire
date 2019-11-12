@@ -23,7 +23,8 @@ class MethodChannelFirebaseCore extends FirebaseCorePlatform {
       name,
     );
     if (app == null) return null;
-    return PlatformFirebaseApp(app['name'], FirebaseOptions.from(app['options']));
+    return PlatformFirebaseApp(
+        app['name'], FirebaseOptions.from(app['options']));
   }
 
   @override
