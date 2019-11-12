@@ -1,3 +1,11 @@
+## 0.5.0+6
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.5.0+5
+
+* Remove AndroidX warning.
+
 ## 0.5.0+4
 
 * Fix example app build by updating version of `url_launcher` that is compatible with androidx apps.
