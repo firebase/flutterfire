@@ -14,7 +14,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('FirebaseStorage', () {
-    final FirebaseApp app = FirebaseApp(
+    final FirebaseApp app = const FirebaseApp(
       name: 'testApp',
     );
     final String storageBucket = 'gs://fake-storage-bucket-url.com';
