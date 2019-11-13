@@ -5,7 +5,6 @@
 package io.flutter.plugins.firebase.firebaseremoteconfig;
 
 import android.content.SharedPreferences;
-import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -26,8 +25,8 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
 
   private static SharedPreferences sharedPreferences;
 
-  MethodCallHandlerImpl(@NonNull SharedPreferences sharedPreferences) {
-    this.sharedPreferences = sharedPreferences;
+  MethodCallHandlerImpl(SharedPreferences sharedPreferences) {
+    MethodCallHandlerImpl.sharedPreferences = sharedPreferences;
   }
 
   @Override
@@ -67,7 +66,7 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
               .addOnCompleteListener(
                   new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public void onComplete(Task<Void> task) {
                       FirebaseRemoteConfigInfo firebaseRemoteConfigInfo =
                           firebaseRemoteConfig.getInfo();
                       Map<String, Object> properties = new HashMap<>();

@@ -1,3 +1,8 @@
+## 0.2.1
+
+* Support Android V2 embedding.
+* Migrate to using the new e2e test binding.
+
 ## 0.2.0+7
 
 * Fix `Bad state: Future already completed` error when initially

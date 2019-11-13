@@ -32,7 +32,7 @@ public class FirebaseRemoteConfigPlugin implements FlutterPlugin {
 
   @Override
   public void onDetachedFromEngine(FlutterPluginBinding binding) {
-    channel = null;
+    tearDownChannel();
   }
 
   private void setupChannel(BinaryMessenger messenger, Context context) {
@@ -40,5 +40,10 @@ public class FirebaseRemoteConfigPlugin implements FlutterPlugin {
         new MethodCallHandlerImpl(context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE));
     channel = new MethodChannel(messenger, METHOD_CHANNEL);
     channel.setMethodCallHandler(handler);
+  }
+
+  private void tearDownChannel() {
+    channel.setMethodCallHandler(null);
+    channel = null;
   }
 }
