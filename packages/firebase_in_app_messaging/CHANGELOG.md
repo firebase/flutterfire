@@ -1,3 +1,7 @@
+## 0.1.0
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
 ## 0.0.1+4
 
 * Update example app with correct const constructors.
