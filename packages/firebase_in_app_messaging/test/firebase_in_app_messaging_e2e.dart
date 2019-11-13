@@ -6,9 +6,9 @@ void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('test triggerEvent', (WidgetTester tester) async {
-    await expect(
+    expect(
         () async =>
-            {await FirebaseInAppMessaging.instance.triggerEvent("foobar")},
+            await FirebaseInAppMessaging.instance.triggerEvent("foobar"),
         returnsNormally);
   });
 }
