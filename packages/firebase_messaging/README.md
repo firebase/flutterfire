@@ -212,6 +212,54 @@ curl https://fcm.googleapis.com/fcm/send -H "Content-Type:application/json" -X P
 
 Remove the `notification` property in `DATA` to send a data message.
 
+You could also test this from within Flutter using the [http](https://pub.dev/packages/http) package:
+
+```dart
+// Replace with server token from firebase console settings.
+final String serverToken = '<Server-Token>';
+final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+
+Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
+  await firebaseMessaging.requestNotificationPermissions(
+    const IosNotificationSettings(sound: true, badge: true, alert: true),
+  );
+
+  await http.post(
+    'https://fcm.googleapis.com/fcm/send',
+     headers: <String, String>{
+       'Content-Type': 'application/json',
+       'Authorization': 'key=$serverToken',
+     },
+     body: jsonEncode(
+     <String, dynamic>{
+       'notification': <String, dynamic>{
+         'body': 'this is a body',
+         'title': 'this is a title'
+       },
+       'priority': 'high',
+       'data': <String, dynamic>{
+         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+         'id': '1',
+         'status': 'done'
+       },
+       'to': await firebaseMessaging.getToken(),
+     },
+    ),
+  );
+
+  final Completer<Map<String, dynamic>> completer =
+     Completer<Map<String, dynamic>>();
+
+  firebaseMessaging.configure(
+    onMessage: (Map<String, dynamic> message) async {
+      completer.complete(message);
+    },
+  );
+
+  return completer.future;
+}
+```
+
 ## Issues and feedback
 
 Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
