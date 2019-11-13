@@ -10,6 +10,7 @@ dependencies:
   cupertino_icons: ^0.1.0
 
 dev_dependencies:
+  e2e: ^0.2.1
   flutter_test:
     sdk: flutter
 
@@ -22,3 +23,6 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   uses-material-design: true
+
+environment:
+  sdk: ">=2.0.0-dev.28.0 <3.0.0"

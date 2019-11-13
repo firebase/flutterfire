@@ -129,16 +129,32 @@ public class CloudFirestorePlugin implements MethodCallHandler {
     List<Object> data = new ArrayList<>();
     if (orderBy != null) {
       for (List<Object> order : orderBy) {
-        String orderByFieldName = (String) order.get(0);
-        if (orderByFieldName.contains(".")) {
-          String[] fieldNameParts = orderByFieldName.split("\\.");
-          Map<String, Object> current = (Map<String, Object>) documentData.get(fieldNameParts[0]);
-          for (int i = 1; i < fieldNameParts.length - 1; i++) {
-            current = (Map<String, Object>) current.get(fieldNameParts[i]);
+        final Object field = order.get(0);
+
+        if (field instanceof FieldPath) {
+          if (field == FieldPath.documentId()) {
+            // This is also checked by an assertion on the Dart side.
+            throw new IllegalArgumentException(
+                "You cannot order by the document id when using"
+                    + "{start/end}{At/After/Before}Document as the library will order by the document"
+                    + " id implicitly in order to to add other fields to the order clause.");
+          } else {
+            // Unsupported type.
           }
-          data.add(current.get(fieldNameParts[fieldNameParts.length - 1]));
+        } else if (field instanceof String) {
+          String orderByFieldName = (String) field;
+          if (orderByFieldName.contains(".")) {
+            String[] fieldNameParts = orderByFieldName.split("\\.");
+            Map<String, Object> current = (Map<String, Object>) documentData.get(fieldNameParts[0]);
+            for (int i = 1; i < fieldNameParts.length - 1; i++) {
+              current = (Map<String, Object>) current.get(fieldNameParts[i]);
+            }
+            data.add(current.get(fieldNameParts[fieldNameParts.length - 1]));
+          } else {
+            data.add(documentData.get(orderByFieldName));
+          }
         } else {
-          data.add(documentData.get(orderByFieldName));
+          // Invalid type.
         }
       }
     }
@@ -213,21 +229,67 @@ public class CloudFirestorePlugin implements MethodCallHandler {
     @SuppressWarnings("unchecked")
     List<List<Object>> whereConditions = (List<List<Object>>) parameters.get("where");
     for (List<Object> condition : whereConditions) {
-      String fieldName = (String) condition.get(0);
+      String fieldName = null;
+      FieldPath fieldPath = null;
+      final Object field = condition.get(0);
+      if (field instanceof String) {
+        fieldName = (String) field;
+      } else if (field instanceof FieldPath) {
+        fieldPath = (FieldPath) field;
+      } else {
+        // Invalid type.
+      }
+
       String operator = (String) condition.get(1);
       Object value = condition.get(2);
       if ("==".equals(operator)) {
-        query = query.whereEqualTo(fieldName, value);
+        if (fieldName != null) {
+          query = query.whereEqualTo(fieldName, value);
+        } else if (fieldPath != null) {
+          query = query.whereEqualTo(fieldPath, value);
+        } else {
+          // Invalid type.
+        }
       } else if ("<".equals(operator)) {
-        query = query.whereLessThan(fieldName, value);
+        if (fieldName != null) {
+          query = query.whereLessThan(fieldName, value);
+        } else if (fieldPath != null) {
+          query = query.whereLessThan(fieldPath, value);
+        } else {
+          // Invalid type.
+        }
       } else if ("<=".equals(operator)) {
-        query = query.whereLessThanOrEqualTo(fieldName, value);
+        if (fieldName != null) {
+          query = query.whereLessThanOrEqualTo(fieldName, value);
+        } else if (fieldPath != null) {
+          query = query.whereLessThanOrEqualTo(fieldPath, value);
+        } else {
+          // Invalid type.
+        }
       } else if (">".equals(operator)) {
-        query = query.whereGreaterThan(fieldName, value);
+        if (fieldName != null) {
+          query = query.whereGreaterThan(fieldName, value);
+        } else if (fieldPath != null) {
+          query = query.whereGreaterThan(fieldPath, value);
+        } else {
+          // Invalid type.
+        }
       } else if (">=".equals(operator)) {
-        query = query.whereGreaterThanOrEqualTo(fieldName, value);
+        if (fieldName != null) {
+          query = query.whereGreaterThanOrEqualTo(fieldName, value);
+        } else if (fieldPath != null) {
+          query = query.whereGreaterThanOrEqualTo(fieldPath, value);
+        } else {
+          // Invalid type.
+        }
       } else if ("array-contains".equals(operator)) {
-        query = query.whereArrayContains(fieldName, value);
+        if (fieldName != null) {
+          query = query.whereArrayContains(fieldName, value);
+        } else if (fieldPath != null) {
+          query = query.whereArrayContains(fieldPath, value);
+        } else {
+          // Invalid type.
+        }
       } else {
         // Invalid operator.
       }
@@ -239,11 +301,28 @@ public class CloudFirestorePlugin implements MethodCallHandler {
     List<List<Object>> orderBy = (List<List<Object>>) parameters.get("orderBy");
     if (orderBy == null) return query;
     for (List<Object> order : orderBy) {
-      String orderByFieldName = (String) order.get(0);
+      String fieldName = null;
+      FieldPath fieldPath = null;
+      final Object field = order.get(0);
+      if (field instanceof String) {
+        fieldName = (String) field;
+      } else if (field instanceof FieldPath) {
+        fieldPath = (FieldPath) field;
+      } else {
+        // Invalid type.
+      }
+
       boolean descending = (boolean) order.get(1);
       Query.Direction direction =
           descending ? Query.Direction.DESCENDING : Query.Direction.ASCENDING;
-      query = query.orderBy(orderByFieldName, direction);
+
+      if (fieldName != null) {
+        query = query.orderBy(fieldName, direction);
+      } else if (fieldPath != null) {
+        query = query.orderBy(fieldPath, direction);
+      } else {
+        // Invalid type.
+      }
     }
     @SuppressWarnings("unchecked")
     Map<String, Object> startAtDocument = (Map<String, Object>) parameters.get("startAtDocument");
@@ -259,6 +338,11 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         || startAfterDocument != null
         || endAtDocument != null
         || endBeforeDocument != null) {
+      if (orderBy.isEmpty()) {
+        throw new IllegalStateException(
+            "You need to order by at least one field when using "
+                + "{start/end}{At/After/Before}Document as you need some value to e.g. start after.");
+      }
       boolean descending = (boolean) orderBy.get(orderBy.size() - 1).get(1);
       Query.Direction direction =
           descending ? Query.Direction.DESCENDING : Query.Direction.ASCENDING;
@@ -373,10 +457,10 @@ public class CloudFirestorePlugin implements MethodCallHandler {
           final Map<String, Object> arguments = call.arguments();
           getFirestore(arguments)
               .runTransaction(
-                  new Transaction.Function<Map<String, Object>>() {
+                  new Transaction.Function<TransactionResult>() {
                     @Nullable
                     @Override
-                    public Map<String, Object> apply(@NonNull Transaction transaction) {
+                    public TransactionResult apply(@NonNull Transaction transaction) {
                       // Store transaction.
                       int transactionId = (Integer) arguments.get("transactionId");
                       transactions.append(transactionId, transaction);
@@ -424,23 +508,31 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                             Tasks.await(transactionTCSTask, timeout, TimeUnit.MILLISECONDS);
 
                         // Once transaction completes return the result to the Dart side.
-                        return transactionResult;
+                        return new TransactionResult(transactionResult);
                       } catch (Exception e) {
                         Log.e(TAG, e.getMessage(), e);
-                        result.error("Error performing transaction", e.getMessage(), null);
+                        return new TransactionResult(e);
                       }
-                      return null;
                     }
                   })
               .addOnCompleteListener(
-                  new OnCompleteListener<Map<String, Object>>() {
+                  new OnCompleteListener<TransactionResult>() {
                     @Override
-                    public void onComplete(Task<Map<String, Object>> task) {
-                      if (task.isSuccessful()) {
-                        result.success(task.getResult());
-                      } else {
+                    public void onComplete(Task<TransactionResult> task) {
+                      if (!task.isSuccessful()) {
                         result.error(
                             "Error performing transaction", task.getException().getMessage(), null);
+                        return;
+                      }
+
+                      TransactionResult transactionResult = task.getResult();
+                      if (transactionResult.exception == null) {
+                        result.success(transactionResult.result);
+                      } else {
+                        result.error(
+                            "Error performing transaction",
+                            transactionResult.exception.getMessage(),
+                            null);
                       }
                     }
                   });
@@ -820,6 +912,21 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         }
     }
   }
+
+  private static final class TransactionResult {
+    final @Nullable Map<String, Object> result;
+    final @Nullable Exception exception;
+
+    TransactionResult(@NonNull Exception exception) {
+      this.exception = exception;
+      this.result = null;
+    }
+
+    TransactionResult(@Nullable Map<String, Object> result) {
+      this.result = result;
+      this.exception = null;
+    }
+  }
 }
 
 final class FirestoreMessageCodec extends StandardMessageCodec {
@@ -836,6 +943,7 @@ final class FirestoreMessageCodec extends StandardMessageCodec {
   private static final byte TIMESTAMP = (byte) 136;
   private static final byte INCREMENT_DOUBLE = (byte) 137;
   private static final byte INCREMENT_INTEGER = (byte) 138;
+  private static final byte DOCUMENT_ID = (byte) 139;
 
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
@@ -899,6 +1007,8 @@ final class FirestoreMessageCodec extends StandardMessageCodec {
       case INCREMENT_DOUBLE:
         final Number doubleIncrementValue = (Number) readValue(buffer);
         return FieldValue.increment(doubleIncrementValue.doubleValue());
+      case DOCUMENT_ID:
+        return FieldPath.documentId();
       default:
         return super.readValueOfType(type, buffer);
     }

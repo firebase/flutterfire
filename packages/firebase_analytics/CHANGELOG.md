@@ -1,3 +1,20 @@
+## 5.0.6
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 5.0.5
+
+* Remove AndroidX warning.
+
+## 5.0.4
+
+* Include lifecycle dependency as a compileOnly one on Android to resolve
+  potential version conflicts with other transitive libraries.
+
+## 5.0.3
+
+* Support the v2 Android embedding.
+
 ## 5.0.2
 
 * Fixed `setAnalyticsCollectionEnabled` on iOS.
