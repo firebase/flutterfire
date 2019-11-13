@@ -1,6 +1,6 @@
 ## 0.14.0+9
 
-* getIdToken use actual refresh value instead of checking if object exists
+* Fix the behavior of `getIdToken` to use the `refresh` parameter instead of always refreshing.
 
 ## 0.14.0+8
 
