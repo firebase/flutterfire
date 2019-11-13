@@ -13,7 +13,9 @@ task:
   activate_script: pub global activate flutter_plugin_tools
   matrix:
     - name: publishable
-      script: ./script/check_publish.sh
+      script:
+        - flutter channel stable
+        - ./script/check_publish.sh
     - name: format
       install_script:
         - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
@@ -78,7 +80,7 @@ task:
   activate_script: pub global activate flutter_plugin_tools
   create_simulator_script:
     - xcrun simctl list
-    - xcrun simctl create Flutter-iPhone com.apple.CoreSimulator.SimDeviceType.iPhone-X com.apple.CoreSimulator.SimRuntime.iOS-12-2 | xargs xcrun simctl boot
+    - xcrun simctl create Flutter-iPhone com.apple.CoreSimulator.SimDeviceType.iPhone-X com.apple.CoreSimulator.SimRuntime.iOS-13-2 | xargs xcrun simctl boot
   matrix:
     - name: build-ipas+drive-examples
       env:
