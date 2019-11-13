@@ -4,9 +4,7 @@ A plugin for [Flutter](https://flutter.io) that supports loading and
 displaying banner, interstitial (full-screen), and rewarded video ads using the
 [Firebase AdMob API](https://firebase.google.com/docs/admob/).
 
-*Note*: This plugin is in beta, and may still have a few issues and missing APIs.
-[Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and
-[Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are welcome.
+For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
 ## AndroidManifest changes
 
@@ -186,8 +184,7 @@ method.
 
 ## Limitations
 
-This is just an initial version of the plugin. There are still some
-limitations:
+This plugin currently has some limitations:
 
 - Banner ads cannot be animated into view.
 - It's not possible to specify a banner ad's size.
@@ -197,5 +194,12 @@ limitations:
 - The example should demonstrate how to show gate a route push with an
   interstitial ad
 
-For Flutter plugins for other Firebase products, see
-[README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
+## Issues and feedback
+
+Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+
+Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+
+To contribute a change to this plugin,
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
+and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).

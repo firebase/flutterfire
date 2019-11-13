@@ -5,8 +5,8 @@
 part of firebase_core;
 
 class FirebaseApp {
-  @visibleForTesting
-  const FirebaseApp({@required this.name}) : assert(name != null);
+  // TODO(jackson): We could assert here that an app with this name was configured previously.
+  FirebaseApp({@required this.name}) : assert(name != null);
 
   /// The name of this app.
   final String name;

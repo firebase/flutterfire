@@ -4,14 +4,15 @@
 
 package io.flutter.plugins.firebaseanalyticsexample;
 
-import android.os.Bundle;
-import io.flutter.app.FlutterActivity;
-import io.flutter.plugins.GeneratedPluginRegistrant;
+import dev.flutter.plugins.e2e.E2EPlugin;
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugins.firebaseanalytics.FirebaseAnalyticsPlugin;
 
 public class MainActivity extends FlutterActivity {
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    GeneratedPluginRegistrant.registerWith(this);
+  public void configureFlutterEngine(FlutterEngine flutterEngine) {
+    flutterEngine.getPlugins().add(new FirebaseAnalyticsPlugin());
+    flutterEngine.getPlugins().add(new E2EPlugin());
   }
 }

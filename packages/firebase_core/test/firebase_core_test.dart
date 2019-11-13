@@ -11,7 +11,7 @@ void main() {
 
   group('$FirebaseApp', () {
     final List<MethodCall> log = <MethodCall>[];
-    const FirebaseApp testApp = FirebaseApp(
+    final FirebaseApp testApp = FirebaseApp(
       name: 'testApp',
     );
     const FirebaseOptions testOptions = FirebaseOptions(
