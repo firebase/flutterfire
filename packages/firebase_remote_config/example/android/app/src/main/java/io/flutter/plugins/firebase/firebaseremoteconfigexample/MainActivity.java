@@ -4,6 +4,7 @@
 
 package io.flutter.plugins.firebase.firebaseremoteconfigexample;
 
+import dev.flutter.plugins.e2e.E2EPlugin;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.plugins.shim.ShimPluginRegistry;
@@ -18,9 +19,6 @@ public class MainActivity extends FlutterActivity {
   public void configureFlutterEngine(FlutterEngine flutterEngine) {
     super.configureFlutterEngine(flutterEngine);
     flutterEngine.getPlugins().add(new FirebaseRemoteConfigPlugin());
-
-    ShimPluginRegistry shimPluginRegistry = new ShimPluginRegistry(flutterEngine);
-    FirebaseCorePlugin.registerWith(
-        shimPluginRegistry.registrarFor("io.flutter.plugins.firebase.core.FirebaseCorePlugin"));
+    flutterEngine.getPlugins().add(new E2EPlugin());
   }
 }
