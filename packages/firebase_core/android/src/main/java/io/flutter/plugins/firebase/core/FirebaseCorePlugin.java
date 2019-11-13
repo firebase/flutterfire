@@ -62,10 +62,19 @@ public class FirebaseCorePlugin implements FlutterPlugin, MethodChannel.MethodCa
     applicationContext = null;
   }
 
-  @Override
-  public void onAttachedToEngine(FlutterPluginBinding binding) {
-    channel = new MethodChannel(binding.getFlutterEngine().getDartExecutor(), CHANNEL_NAME);
-    channel.setMethodCallHandler(new FirebaseCoreHandler(binding.getApplicationContext()));
+  private Map<String, Object> asMap(FirebaseApp app) {
+    Map<String, Object> appMap = new HashMap<>();
+    appMap.put("name", app.getName());
+    FirebaseOptions options = app.getOptions();
+    Map<String, String> optionsMap = new HashMap<>();
+    optionsMap.put("googleAppID", options.getApplicationId());
+    optionsMap.put("GCMSenderID", options.getGcmSenderId());
+    optionsMap.put("APIKey", options.getApiKey());
+    optionsMap.put("databaseURL", options.getDatabaseUrl());
+    optionsMap.put("storageBucket", options.getStorageBucket());
+    optionsMap.put("projectID", options.getProjectId());
+    appMap.put("options", optionsMap);
+    return appMap;
   }
 
   @Override
