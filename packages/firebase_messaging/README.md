@@ -142,11 +142,19 @@ To integrate your plugin into the iOS part of your app, follow these steps:
 1. Follow the steps in the "[Upload your APNs certificate](https://firebase.google.com/docs/cloud-messaging/ios/client#upload_your_apns_certificate)" section of the Firebase docs.
 
 1. Add the following lines to the `(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions`
-method In the `AppDelegate.m` of your iOS project.
+method in the `AppDelegate.m`/`AppDelegate.swift` of your iOS project.
 
+Objective-C:
 ```objectivec
 if (@available(iOS 10.0, *)) {
   [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
+}
+```
+
+Swift:
+```swift
+if #available(iOS 10.0, *) {
+  UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
 }
 ```
 
