@@ -19,6 +19,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
   static const int _kTimestamp = 136;
   static const int _kIncrementDouble = 137;
   static const int _kIncrementInteger = 138;
+  static const int _kDocumentId = 139;
 
   static const Map<FieldValueType, int> _kFieldValueCodes =
       <FieldValueType, int>{
@@ -28,6 +29,11 @@ class FirestoreMessageCodec extends StandardMessageCodec {
     FieldValueType.serverTimestamp: _kServerTimestamp,
     FieldValueType.incrementDouble: _kIncrementDouble,
     FieldValueType.incrementInteger: _kIncrementInteger,
+  };
+
+  static const Map<_FieldPathType, int> _kFieldPathCodes =
+      <_FieldPathType, int>{
+    _FieldPathType.documentId: _kDocumentId,
   };
 
   @override
@@ -60,6 +66,10 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       assert(code != null);
       buffer.putUint8(code);
       if (value.value != null) writeValue(buffer, value.value);
+    } else if (value is FieldPath) {
+      final int code = _kFieldPathCodes[value.type];
+      assert(code != null);
+      buffer.putUint8(code);
     } else {
       super.writeValue(buffer, value);
     }
@@ -104,6 +114,8 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       case _kIncrementInteger:
         final int value = readValue(buffer);
         return FieldValue.increment(value);
+      case _kDocumentId:
+        return FieldPath.documentId;
       default:
         return super.readValueOfType(type, buffer);
     }
