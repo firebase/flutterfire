@@ -6,7 +6,7 @@ void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('get version', (WidgetTester tester) async {
-    String version = await Crashlytics.instance.getVersion();
+    final String version = await Crashlytics.instance.getVersion();
     expect(version, isNotNull);
   });
 }
