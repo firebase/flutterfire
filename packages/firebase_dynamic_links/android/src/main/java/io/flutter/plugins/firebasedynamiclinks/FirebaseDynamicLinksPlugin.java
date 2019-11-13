@@ -30,7 +30,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** FirebaseDynamicLinksPlugin */
+/**
+ * Flutter plugin accessing for Firebase Dynamic Links API.
+ *
+ * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
+ */
 public class FirebaseDynamicLinksPlugin
     implements FlutterPlugin, ActivityAware, MethodCallHandler, NewIntentListener {
   private Registrar registrar;
@@ -42,8 +46,23 @@ public class FirebaseDynamicLinksPlugin
     this.channel = channel;
   }
 
+  /**
+   * Default Constructor.
+   *
+   * <p>Use this when adding the plugin to your FlutterEngine</p>
+   */
   public FirebaseDynamicLinksPlugin() {}
 
+  /**
+   * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
+   *
+   * <p>Calling this will register the plugin with the passed registrar. However, plugins
+   * initialized this way won't react to changes in activity or context.
+   *
+   * @param registrar attaches this plugin's {@link
+   *     io.flutter.plugin.common.MethodChannel.MethodCallHandler} to the registrar's {@link
+   *     io.flutter.plugin.common.BinaryMessenger}.
+   */
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = createChannel(registrar.messenger());
     final FirebaseDynamicLinksPlugin plugin = new FirebaseDynamicLinksPlugin(registrar, channel);
