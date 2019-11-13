@@ -126,8 +126,8 @@ class Query {
     dynamic isGreaterThan,
     dynamic isGreaterThanOrEqualTo,
     dynamic arrayContains,
-    dynamic arrayContainsAny,
-    dynamic whereIn,
+    List<dynamic> arrayContainsAny,
+    List<dynamic> whereIn,
     bool isNull,
   }) {
     assert(field is String || field is FieldPath,
