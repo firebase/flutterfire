@@ -1,3 +1,7 @@
+## 0.14.0+9
+
+* Fix the behavior of `getIdToken` to use the `refresh` parameter instead of always refreshing.
+
 ## 0.14.0+8
 
 * Updated README instructions for contributing for consistency with other Flutterfire plugins.
