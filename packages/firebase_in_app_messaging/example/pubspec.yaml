@@ -1,7 +1,6 @@
 name: firebase_in_app_messaging_example
 description: Demonstrates how to use the firebase_in_app_messaging plugin.
 publish_to: 'none'
-version: 1.0.0
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
