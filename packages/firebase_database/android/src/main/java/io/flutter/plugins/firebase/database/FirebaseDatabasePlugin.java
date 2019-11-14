@@ -4,7 +4,6 @@
 
 package io.flutter.plugins.firebase.database;
 
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;

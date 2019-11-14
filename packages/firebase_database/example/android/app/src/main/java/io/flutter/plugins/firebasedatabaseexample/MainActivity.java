@@ -4,9 +4,9 @@
 
 package io.flutter.plugins.firebasedatabaseexample;
 
-import dev.flutter.plugins.e2e.E2EPlugin;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugins.firebase.core.FirebaseCorePlugin;
 import io.flutter.plugins.firebase.database.FirebaseDatabasePlugin;
 
 public class MainActivity extends FlutterActivity {
@@ -17,6 +17,6 @@ public class MainActivity extends FlutterActivity {
   public void configureFlutterEngine(FlutterEngine flutterEngine) {
     super.configureFlutterEngine(flutterEngine);
     flutterEngine.getPlugins().add(new FirebaseDatabasePlugin());
-    flutterEngine.getPlugins().add(new E2EPlugin());
+    flutterEngine.getPlugins().add(new FirebaseCorePlugin());
   }
 }
