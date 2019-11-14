@@ -4,21 +4,19 @@
 
 package io.flutter.plugins.firebasedatabaseexample;
 
+import dev.flutter.plugins.e2e.E2EPlugin;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
-import io.flutter.embedding.engine.plugins.shim.ShimPluginRegistry;
-import io.flutter.plugins.firebase.core.FirebaseCorePlugin;
 import io.flutter.plugins.firebase.database.FirebaseDatabasePlugin;
 
 public class MainActivity extends FlutterActivity {
 
-    @Override
-    public void configureFlutterEngine(FlutterEngine flutterEngine) {
-        super.configureFlutterEngine(flutterEngine);
-        flutterEngine.getPlugins().add(new FirebaseDatabasePlugin());
-
-        ShimPluginRegistry shimPluginRegistry = new ShimPluginRegistry(flutterEngine);
-        FirebaseCorePlugin.registerWith(
-                shimPluginRegistry.registrarFor("io.flutter.plugins.firebase.core.FirebaseCorePlugin"));
-    }
+  // TODO(cyanglaz): Remove this once v2 of GeneratedPluginRegistrant rolls to stable.
+  // https://github.com/flutter/flutter/issues/42694
+  @Override
+  public void configureFlutterEngine(FlutterEngine flutterEngine) {
+    super.configureFlutterEngine(flutterEngine);
+    flutterEngine.getPlugins().add(new FirebaseDatabasePlugin());
+    flutterEngine.getPlugins().add(new E2EPlugin());
+  }
 }
