@@ -11,9 +11,10 @@ dependencies:
   firebase_ml_vision:
     path: ../
   firebase_core: ^0.4.0
-  camera: ^0.5.2+1
+  camera: ^0.5.6+1
 
 dev_dependencies:
+  e2e: ^0.2.1
   flutter_test:
     sdk: flutter
   flutter_driver:
@@ -27,6 +28,6 @@ flutter:
   assets:
     - assets/test_face.jpg
     - assets/test_barcode.jpg
-    - assets/test_contact_barcode.png
+    - assets/test_contact_barcode.jpg
     - assets/test_text.png
     - assets/span_book.jpg
