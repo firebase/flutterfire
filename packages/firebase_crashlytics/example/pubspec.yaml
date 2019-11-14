@@ -1,5 +1,6 @@
 name: firebase_crashlytics_example
 description: Demonstrates how to use the firebase_crashlytics plugin.
+version: 1.0.0
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
