@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:e2e/e2e.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_database/firebase_database.dart';
