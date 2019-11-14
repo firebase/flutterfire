@@ -1,3 +1,7 @@
+## 0.4.1+6
+
+* Update the homepage now that the package structure has changed.
+
 ## 0.4.1+5
 
 * Remove deprecated [firebase-core](https://firebase.google.com/support/release-notes/android) dependency.
