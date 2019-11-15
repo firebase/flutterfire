@@ -4,14 +4,14 @@
 
 package com.example.firebase_in_app_messaging;
 
-import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import com.google.firebase.inappmessaging.FirebaseInAppMessaging;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
-import io.flutter.plugin.common.BinaryMessenger;
 
 /** FirebaseInAppMessagingPlugin */
 public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHandler {
@@ -19,8 +19,8 @@ public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHa
   private MethodChannel channel;
 
   private static MethodChannel setup(BinaryMessenger binaryMessenger) {
-    final MethodChannel channel = new MethodChannel(
-        binaryMessenger, "plugins.flutter.io/firebase_in_app_messaging");
+    final MethodChannel channel =
+        new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_in_app_messaging");
     channel.setMethodCallHandler(new FirebaseInAppMessagingPlugin());
     return channel;
   }
