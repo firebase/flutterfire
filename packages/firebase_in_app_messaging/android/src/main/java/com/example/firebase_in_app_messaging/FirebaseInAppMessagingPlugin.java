@@ -35,7 +35,8 @@ public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHa
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    channel = setup(binding.getBinaryMessenger());
+    BinaryMessenger binaryMessenger = binding.getFlutterEngine().getDartExecutor();
+    channel = setup(binaryMessenger);
   }
 
   @Override
