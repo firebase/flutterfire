@@ -1,9 +1,8 @@
-
 package com.example.firebase_in_app_messaging;
 
 import androidx.test.rule.ActivityTestRule;
-import dev.flutter.plugins.e2e.FlutterRunner;
 import com.example.firebase_in_app_messaging_example.MainActivity;
+import dev.flutter.plugins.e2e.FlutterRunner;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 
