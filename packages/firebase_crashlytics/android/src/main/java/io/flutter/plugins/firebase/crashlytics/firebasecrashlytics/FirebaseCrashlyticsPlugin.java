@@ -5,7 +5,6 @@
 package io.flutter.plugins.firebase.crashlytics.firebasecrashlytics;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
@@ -16,6 +15,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +26,13 @@ public class FirebaseCrashlyticsPlugin implements FlutterPlugin, MethodCallHandl
   private MethodChannel channel;
 
   @Override
-  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-    channel = setup(binding.getBinaryMessenger(), binding.getApplicationContext());
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
+    BinaryMessenger binaryMessenger = binding.getFlutterEngine().getDartExecutor();
+    channel = setup(binaryMessenger, binding.getApplicationContext());
   }
 
   @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
     if (channel != null) {
       channel.setMethodCallHandler(null);
       channel = null;
