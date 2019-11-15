@@ -175,7 +175,7 @@ void main() {
     });
 
     test('settings', () async {
-      final FirebaseApp app = const FirebaseApp(name: "testApp2");
+      final FirebaseApp app = FirebaseApp(name: "testApp2");
       final Firestore firestoreWithSettings = Firestore(app: app);
       await firestoreWithSettings.settings(
         persistenceEnabled: true,

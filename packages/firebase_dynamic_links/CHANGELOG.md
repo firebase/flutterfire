@@ -1,3 +1,7 @@
+## 0.5.0+7
+
+* Add `getDynamicLink` to support expanding from short links.
+
 ## 0.5.0+6
 
 * Updated README instructions for contributing for consistency with other Flutterfire plugins.

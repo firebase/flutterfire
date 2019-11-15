@@ -14,7 +14,7 @@
 
 static FlutterError *getFlutterError(NSError *error) {
   if (error == nil) return nil;
-  return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %ld", error.code]
+  return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %ld", (long)error.code]
                              message:error.domain
                              details:error.localizedDescription];
 }
@@ -175,7 +175,7 @@ static FlutterError *getFlutterError(NSError *error) {
   application.applicationIconBadgeNumber = 0;
 }
 
-- (bool)application:(UIApplication *)application
+- (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
   [self didReceiveRemoteNotification:userInfo];

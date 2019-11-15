@@ -39,6 +39,10 @@ void main() {
                 'minimumVersion': 'Version 12',
               },
             };
+          case 'FirebaseDynamicLinks#getDynamicLink':
+            return <dynamic, dynamic>{
+              'link': 'https://google.com',
+            };
           default:
             return null;
         }
@@ -62,6 +66,21 @@ void main() {
           'FirebaseDynamicLinks#getInitialLink',
           arguments: null,
         )
+      ]);
+    });
+
+    test('getDynamicLink', () async {
+      final Uri argument = Uri.parse('short-link');
+      final PendingDynamicLinkData data =
+          await FirebaseDynamicLinks.instance.getDynamicLink(argument);
+
+      expect(data.link.host, 'google.com');
+
+      expect(log, <Matcher>[
+        isMethodCall('FirebaseDynamicLinks#getDynamicLink',
+            arguments: <String, dynamic>{
+              'url': argument.toString(),
+            })
       ]);
     });
 

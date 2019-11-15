@@ -1,3 +1,7 @@
+## 5.1.9
+
+* Fix strict compilation errors.
+
 ## 5.1.8
 
 * Updated README instructions for contributing for consistency with other Flutterfire plugins.
