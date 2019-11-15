@@ -1,3 +1,23 @@
+## 0.4.1+6
+
+* Update the homepage now that the package structure has changed.
+
+## 0.4.1+5
+
+* Remove deprecated [firebase-core](https://firebase.google.com/support/release-notes/android) dependency.
+
+## 0.4.1+4
+
+* Remove visibleForTesting annotation from FirebaseApp constructor. 
+
+## 0.4.1+3
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.4.1+2
+
+* Remove AndroidX warning.
+
 ## 0.4.1+1
 
 * Include lifecycle dependency as a compileOnly one on Android to resolve

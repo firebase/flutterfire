@@ -205,7 +205,7 @@ int nextHandle = 0;
     }
   } else if ([@"getIdToken" isEqualToString:call.method]) {
     NSDictionary *args = call.arguments;
-    BOOL refresh = [args objectForKey:@"refresh"];
+    BOOL refresh = [[args objectForKey:@"refresh"] boolValue];
     [[self getAuth:call.arguments].currentUser
         getIDTokenResultForcingRefresh:refresh
                             completion:^(FIRAuthTokenResult *_Nullable tokenResult,

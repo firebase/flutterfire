@@ -92,6 +92,9 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
         builder.setLongLink(url);
         buildShortDynamicLink(builder, call, createShortLinkListener(result));
         break;
+      case "FirebaseDynamicLinks#getDynamicLink":
+        handleGetDynamicLink(result, Uri.parse((String) call.argument("url")));
+        break;
       case "FirebaseDynamicLinks#getInitialLink":
         handleGetInitialDynamicLink(result);
         break;
@@ -114,17 +117,8 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
     return dynamicLink;
   }
 
-  private void handleGetInitialDynamicLink(final Result result) {
-    // If there's no activity, then there's no initial dynamic link.
-    if (registrar.activity() == null) {
-      result.success(null);
-      return;
-    }
-
-    FirebaseDynamicLinks.getInstance()
-        .getDynamicLink(registrar.activity().getIntent())
-        .addOnSuccessListener(
-            registrar.activity(),
+  private void addDynamicLinkListener(Task<PendingDynamicLinkData> task, final Result result) {
+    task.addOnSuccessListener(
             new OnSuccessListener<PendingDynamicLinkData>() {
               @Override
               public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
@@ -138,13 +132,28 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
               }
             })
         .addOnFailureListener(
-            registrar.activity(),
             new OnFailureListener() {
               @Override
               public void onFailure(@NonNull Exception e) {
                 result.error(e.getClass().getSimpleName(), e.getMessage(), null);
               }
             });
+  }
+
+  private void handleGetDynamicLink(final Result result, Uri uri) {
+    addDynamicLinkListener(FirebaseDynamicLinks.getInstance().getDynamicLink(uri), result);
+  }
+
+  private void handleGetInitialDynamicLink(final Result result) {
+    // If there's no activity, then there's no initial dynamic link.
+    if (registrar.activity() == null) {
+      result.success(null);
+      return;
+    }
+
+    addDynamicLinkListener(
+        FirebaseDynamicLinks.getInstance().getDynamicLink(registrar.activity().getIntent()),
+        result);
   }
 
   private OnCompleteListener<ShortDynamicLink> createShortLinkListener(final Result result) {
