@@ -13,6 +13,7 @@ dependencies:
   uuid: ^2.0.2
 
 dev_dependencies:
+  e2e: ^0.2.1
   flutter_driver:
     sdk: flutter
   test: any

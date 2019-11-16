@@ -4,6 +4,10 @@
 
 package io.flutter.plugins.firebaseauth;
 
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import android.app.Activity;
 import android.net.Uri;
 import android.util.SparseArray;
 import androidx.annotation.NonNull;
@@ -52,25 +56,56 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /** Flutter plugin for Firebase Auth. */
-public class FirebaseAuthPlugin implements MethodCallHandler {
-  private final PluginRegistry.Registrar registrar;
+public class FirebaseAuthPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
+
   private final SparseArray<AuthStateListener> authStateListeners = new SparseArray<>();
   private final SparseArray<ForceResendingToken> forceResendingTokens = new SparseArray<>();
-  private final MethodChannel channel;
+  private PluginRegistry.Registrar registrar;
+  private MethodChannel channel;
+  private ActivityPluginBinding activityBinding;
 
   // Handles are ints used as indexes into the sparse array of active observers
   private int nextHandle = 0;
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
-    MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_auth");
-    channel.setMethodCallHandler(new FirebaseAuthPlugin(registrar, channel));
+    final FirebaseAuthPlugin instance = new FirebaseAuthPlugin();
+    instance.channel = new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_auth");
+    instance.channel.setMethodCallHandler(instance);
+    instance.registrar = registrar;
+    FirebaseApp.initializeApp(registrar.context());
   }
 
-  private FirebaseAuthPlugin(PluginRegistry.Registrar registrar, MethodChannel channel) {
-    this.registrar = registrar;
-    this.channel = channel;
-    FirebaseApp.initializeApp(registrar.context());
+  @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    channel = new MethodChannel(binding.getBinaryMessenger(), "plugins.flutter.io/firebase_auth");
+    channel.setMethodCallHandler(this);
+    FirebaseApp.initializeApp(binding.getApplicationContext());
+  }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);;
+    channel = null;
+  }
+
+  @Override
+  public void onAttachedToActivity(ActivityPluginBinding activityPluginBinding) {
+    activityBinding = activityPluginBinding;
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    activityBinding = null;
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding activityPluginBinding) {
+    activityBinding = activityPluginBinding;
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    activityBinding = null;
   }
 
   private FirebaseAuth getAuth(MethodCall call) {
@@ -189,6 +224,18 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
     final int handle = (int) arguments.get("handle");
     String phoneNumber = (String) arguments.get("phoneNumber");
     int timeout = (int) arguments.get("timeout");
+    Activity activity = null;
+    if (activityBinding != null) {
+      // Using v2 APIs and activity is bound.
+      activity = activityBinding.getActivity();
+    } else if (registrar != null) {
+      // Using v1 APIs. Make best efforts to get activity.
+      activity = registrar.activity();
+    }
+    if (activity == null) {
+      result.error("NOT_IN_FOREGROUND", "Cannot verify phone number when not in foreground", null);
+      return;
+    }
 
     PhoneAuthProvider.OnVerificationStateChangedCallbacks verificationCallbacks =
         new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -237,7 +284,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
               phoneNumber,
               timeout,
               TimeUnit.MILLISECONDS,
-              registrar.activity(),
+              activity,
               verificationCallbacks,
               forceResendingToken);
     } else {
@@ -246,7 +293,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
               phoneNumber,
               timeout,
               TimeUnit.MILLISECONDS,
-              registrar.activity(),
+              activity,
               verificationCallbacks);
     }
 
