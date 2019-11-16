@@ -26,6 +26,7 @@
   } else if ([@"Trace#setMetric" isEqualToString:call.method]) {
     [self setMetric:call result:result];
   } else if ([@"Trace#incrementMetric" isEqualToString:call.method]) {
+    NSLog(@"incrementing on the native side");
     [self incrementMetric:call result:result];
   } else if ([@"Trace#getMetric" isEqualToString:call.method]) {
     [self getMetric:call result:result];
