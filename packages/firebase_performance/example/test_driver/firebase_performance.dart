@@ -65,10 +65,10 @@ void main() {
         await testTrace.start();
 
         testTrace.incrementMetric('metric', 14);
-        expect(testTrace.getMetric('metric'), completion(14));
+        expectLater(testTrace.getMetric('metric'), completion(14));
 
         testTrace.incrementMetric('metric', 45);
-        expect(testTrace.getMetric('metric'), completion(59));
+        expectLater(testTrace.getMetric('metric'), completion(59));
       });
 
       test('setMetric', () {
