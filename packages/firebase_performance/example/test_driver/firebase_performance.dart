@@ -65,12 +65,12 @@ void main() {
         await testTrace.start();
 
         print('incrementing 14');
-        testTrace.incrementMetric('metric', 14);
+        await testTrace.incrementMetric('metric', 14);
         print('expecting 14');
         expect(testTrace.getMetric('metric'), completion(14));
 
         print('incrementing 45');
-        testTrace.incrementMetric('metric', 45);
+        await testTrace.incrementMetric('metric', 45);
         print('expecting 59');
         expect(testTrace.getMetric('metric'), completion(59));
       });
