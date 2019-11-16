@@ -1,6 +1,19 @@
-## 0.12.9+7
+## 0.12.10+1
 
 * Formatted method documentations.
+
+## 0.12.10
+
+* Added `FieldPath` class and `FieldPath.documentId` to refer to the document id in queries.
+* Added assertions and exceptions that help you building correct queries.
+
+## 0.12.9+8
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.12.9+7
+
+* Remove AndroidX warning.
 
 ## 0.12.9+6
 

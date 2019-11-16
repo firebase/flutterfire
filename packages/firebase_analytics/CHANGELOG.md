@@ -1,6 +1,14 @@
-## 5.0.5
+## 5.0.7
 
 * Formatted `setCurrentScreen` documentation.
+
+## 5.0.6
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 5.0.5
+
+* Remove AndroidX warning.
 
 ## 5.0.4
 

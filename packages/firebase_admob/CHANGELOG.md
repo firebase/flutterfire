@@ -1,3 +1,11 @@
+## 0.9.0+9
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.9.0+8
+
+* Remove AndroidX warning.
+
 ## 0.9.0+7
 
 * Update Android gradle plugin, gradle, and Admob versions.

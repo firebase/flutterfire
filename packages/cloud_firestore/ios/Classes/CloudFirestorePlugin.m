@@ -31,17 +31,36 @@ static NSArray *getDocumentValues(NSDictionary *document, NSArray *orderBy,
   if (orderBy) {
     for (id item in orderBy) {
       NSArray *orderByParameters = item;
-      NSString *fieldName = orderByParameters[0];
-      if ([fieldName rangeOfString:@"."].location != NSNotFound) {
-        NSArray *fieldNameParts = [fieldName componentsSeparatedByString:@"."];
-        NSDictionary *currentMap = [documentData objectForKey:[fieldNameParts objectAtIndex:0]];
-        for (int i = 1; i < [fieldNameParts count] - 1; i++) {
-          currentMap = [currentMap objectForKey:[fieldNameParts objectAtIndex:i]];
+      NSObject *field = orderByParameters[0];
+
+      if ([field isKindOfClass:[FIRFieldPath class]]) {
+        if ([field isEqual:FIRFieldPath.documentID]) {
+          // This is also checked by an assertion on the Dart side.
+          [NSException
+               raise:@"Invalid use of FieldValue.documentId"
+              format:
+                  @"You cannot order by the document id when using "
+                   "{start/end}{At/After/Before}Document as the library will order by the document"
+                   " id implicitly in order to to add other fields to the order clause."];
+        } else {
+          // Unsupported type.
         }
-        [values addObject:[currentMap objectForKey:[fieldNameParts
-                                                       objectAtIndex:[fieldNameParts count] - 1]]];
+      } else if ([field isKindOfClass:[NSString class]]) {
+        NSString *fieldName = orderByParameters[0];
+        if ([fieldName rangeOfString:@"."].location != NSNotFound) {
+          NSArray *fieldNameParts = [fieldName componentsSeparatedByString:@"."];
+          NSDictionary *currentMap = [documentData objectForKey:[fieldNameParts objectAtIndex:0]];
+          for (int i = 1; i < [fieldNameParts count] - 1; i++) {
+            currentMap = [currentMap objectForKey:[fieldNameParts objectAtIndex:i]];
+          }
+          [values
+              addObject:[currentMap objectForKey:[fieldNameParts
+                                                     objectAtIndex:[fieldNameParts count] - 1]]];
+        } else {
+          [values addObject:[documentData objectForKey:fieldName]];
+        }
       } else {
-        [values addObject:[documentData objectForKey:fieldName]];
+        // Invalid type.
       }
     }
   }
@@ -68,21 +87,69 @@ static FIRQuery *getQuery(NSDictionary *arguments) {
   NSArray *whereConditions = parameters[@"where"];
   for (id item in whereConditions) {
     NSArray *condition = item;
-    NSString *fieldName = condition[0];
+
+    FIRFieldPath *fieldPath = nil;
+    NSString *fieldName = nil;
+    NSObject *field = condition[0];
+
+    if ([field isKindOfClass:[NSString class]]) {
+      fieldName = (NSString *)field;
+    } else if ([field isKindOfClass:[FIRFieldPath class]]) {
+      fieldPath = (FIRFieldPath *)field;
+    } else {
+      // Invalid type.
+    }
+
     NSString *op = condition[1];
     id value = condition[2];
     if ([op isEqualToString:@"=="]) {
-      query = [query queryWhereField:fieldName isEqualTo:value];
+      if (fieldName != nil) {
+        query = [query queryWhereField:fieldName isEqualTo:value];
+      } else if (fieldPath != nil) {
+        query = [query queryWhereFieldPath:fieldPath isEqualTo:value];
+      } else {
+        // Invalid type.
+      }
     } else if ([op isEqualToString:@"<"]) {
-      query = [query queryWhereField:fieldName isLessThan:value];
+      if (fieldName != nil) {
+        query = [query queryWhereField:fieldName isLessThan:value];
+      } else if (fieldPath != nil) {
+        query = [query queryWhereFieldPath:fieldPath isLessThan:value];
+      } else {
+        // Invalid type.
+      }
     } else if ([op isEqualToString:@"<="]) {
-      query = [query queryWhereField:fieldName isLessThanOrEqualTo:value];
+      if (fieldName != nil) {
+        query = [query queryWhereField:fieldName isLessThanOrEqualTo:value];
+      } else if (fieldPath != nil) {
+        query = [query queryWhereFieldPath:fieldPath isLessThanOrEqualTo:value];
+      } else {
+        // Invalid type.
+      }
     } else if ([op isEqualToString:@">"]) {
-      query = [query queryWhereField:fieldName isGreaterThan:value];
+      if (fieldName != nil) {
+        query = [query queryWhereField:fieldName isGreaterThan:value];
+      } else if (fieldPath != nil) {
+        query = [query queryWhereFieldPath:fieldPath isGreaterThan:value];
+      } else {
+        // Invalid type.
+      }
     } else if ([op isEqualToString:@">="]) {
-      query = [query queryWhereField:fieldName isGreaterThanOrEqualTo:value];
+      if (fieldName != nil) {
+        query = [query queryWhereField:fieldName isGreaterThanOrEqualTo:value];
+      } else if (fieldPath != nil) {
+        query = [query queryWhereFieldPath:fieldPath isGreaterThanOrEqualTo:value];
+      } else {
+        // Invalid type.
+      }
     } else if ([op isEqualToString:@"array-contains"]) {
-      query = [query queryWhereField:fieldName arrayContains:value];
+      if (fieldName != nil) {
+        query = [query queryWhereField:fieldName arrayContains:value];
+      } else if (fieldPath != nil) {
+        query = [query queryWhereFieldPath:fieldPath arrayContains:value];
+      } else {
+        // Invalid type.
+      }
     } else {
       // Unsupported operator
     }
@@ -95,9 +162,26 @@ static FIRQuery *getQuery(NSDictionary *arguments) {
   NSArray *orderBy = parameters[@"orderBy"];
   if (orderBy) {
     for (NSArray *orderByParameters in orderBy) {
-      NSString *fieldName = orderByParameters[0];
+      FIRFieldPath *fieldPath = nil;
+      NSString *fieldName = nil;
+      NSObject *field = orderByParameters[0];
+      if ([field isKindOfClass:[NSString class]]) {
+        fieldName = (NSString *)field;
+      } else if ([field isKindOfClass:[FIRFieldPath class]]) {
+        fieldPath = (FIRFieldPath *)field;
+      } else {
+        // Invalid type.
+      }
+
       NSNumber *descending = orderByParameters[1];
-      query = [query queryOrderedByField:fieldName descending:[descending boolValue]];
+
+      if (fieldName != nil) {
+        query = [query queryOrderedByField:fieldName descending:[descending boolValue]];
+      } else if (fieldPath != nil) {
+        query = [query queryOrderedByFieldPath:fieldPath descending:[descending boolValue]];
+      } else {
+        // Invalid type.
+      }
     }
   }
   id startAt = parameters[@"startAt"];
@@ -110,6 +194,11 @@ static FIRQuery *getQuery(NSDictionary *arguments) {
   id endAtDocument = parameters[@"endAtDocument"];
   id endBeforeDocument = parameters[@"endBeforeDocument"];
   if (startAtDocument || startAfterDocument || endAtDocument || endBeforeDocument) {
+    if ([orderBy count] == 0) {
+      [NSException raise:@"No order by clause specified"
+                  format:@"You need to order by at least one field when using {start/end}{At/"
+                          "After/Before}Document as you need some value to e.g. start after."];
+    }
     NSArray *orderByParameters = [orderBy lastObject];
     NSNumber *descending = orderByParameters[1];
     query = [query queryOrderedByFieldPath:FIRFieldPath.documentID
@@ -221,6 +310,7 @@ const UInt8 SERVER_TIMESTAMP = 135;
 const UInt8 TIMESTAMP = 136;
 const UInt8 INCREMENT_DOUBLE = 137;
 const UInt8 INCREMENT_INTEGER = 138;
+const UInt8 DOCUMENT_ID = 139;
 
 @interface FirestoreWriter : FlutterStandardWriter
 - (void)writeValue:(id)value;
@@ -322,6 +412,9 @@ const UInt8 INCREMENT_INTEGER = 138;
     case INCREMENT_INTEGER: {
       NSNumber *value = [self readValue];
       return [FIRFieldValue fieldValueForIntegerIncrement:value.intValue];
+    }
+    case DOCUMENT_ID: {
+      return [FIRFieldPath documentID];
     }
     default:
       return [super readValueOfType:type];
