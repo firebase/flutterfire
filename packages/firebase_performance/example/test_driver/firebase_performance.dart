@@ -61,11 +61,11 @@ void main() {
         testTrace = null;
       });
 
-      test('incrementMetric', () {
-        testTrace.start();
+      test('incrementMetric', () async {
+        await testTrace.start();
 
         testTrace.incrementMetric('metric', 14);
-        expectLater(testTrace.getMetric('metric'), completion(14));
+        expect(testTrace.getMetric('metric'), completion(14));
 
         testTrace.incrementMetric('metric', 45);
         expect(testTrace.getMetric('metric'), completion(59));
