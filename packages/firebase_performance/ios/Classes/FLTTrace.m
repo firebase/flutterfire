@@ -29,6 +29,7 @@
     NSLog(@"incrementing on the native side");
     [self incrementMetric:call result:result];
   } else if ([@"Trace#getMetric" isEqualToString:call.method]) {
+    NSLog(@"getting metric on the native side");
     [self getMetric:call result:result];
   } else if ([@"PerformanceAttributes#putAttribute" isEqualToString:call.method]) {
     [self putAttribute:call result:result];
@@ -67,6 +68,7 @@
   NSString *name = call.arguments[@"name"];
   NSNumber *value = call.arguments[@"value"];
 
+  NSLog(@"incrementing on native side with name: %@ and value: %@", name, [value stringValue]);
   [_trace incrementMetric:name byInt:value.longValue];
   result(nil);
 }
@@ -75,6 +77,8 @@
   NSString *name = call.arguments[@"name"];
 
   int64_t metric = [_trace valueForIntMetric:name];
+
+  NSLog(@"getting metric native side with name: %@ and value: %d", name, metric);
   result(@(metric));
 }
 
