@@ -4,9 +4,6 @@
 
 package io.flutter.plugins.firebaseauth;
 
-import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.embedding.engine.plugins.activity.ActivityAware;
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import android.app.Activity;
 import android.net.Uri;
 import android.util.SparseArray;
@@ -42,6 +39,9 @@ import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.gson.Gson;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -84,7 +84,8 @@ public class FirebaseAuthPlugin implements FlutterPlugin, MethodCallHandler, Act
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);;
+    channel.setMethodCallHandler(null);
+    ;
     channel = null;
   }
 
@@ -290,11 +291,7 @@ public class FirebaseAuthPlugin implements FlutterPlugin, MethodCallHandler, Act
     } else {
       PhoneAuthProvider.getInstance()
           .verifyPhoneNumber(
-              phoneNumber,
-              timeout,
-              TimeUnit.MILLISECONDS,
-              activity,
-              verificationCallbacks);
+              phoneNumber, timeout, TimeUnit.MILLISECONDS, activity, verificationCallbacks);
     }
 
     result.success(null);
