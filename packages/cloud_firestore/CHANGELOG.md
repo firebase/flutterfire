@@ -1,3 +1,7 @@
+## 0.12.10+1
+
+* Formatted method documentations.
+
 ## 0.12.10
 
 * Added `FieldPath` class and `FieldPath.documentId` to refer to the document id in queries.

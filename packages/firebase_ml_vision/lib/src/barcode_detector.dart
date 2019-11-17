@@ -393,7 +393,9 @@ class BarcodePhone {
 
   /// Type of the phone number.
   ///
-  /// See also [BarcodePhoneType]
+  /// See also:
+  ///
+  ///  * [BarcodePhoneType]
   final BarcodePhoneType type;
 }
 
@@ -527,7 +529,9 @@ class BarcodeAddress {
 
   /// Type of the address.
   ///
-  /// See also [BarcodeAddressType]
+  /// See also:
+  ///
+  /// * [BarcodeAddressType]
   final BarcodeAddressType type;
 }
 

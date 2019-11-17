@@ -50,15 +50,16 @@ class FirebaseUser extends UserInfo {
   /// the given account.
   ///
   /// Errors:
-  ///   • `ERROR_WEAK_PASSWORD` - If the password is not strong enough.
-  ///   • `ERROR_INVALID_CREDENTIAL` - If the credential is malformed or has expired.
-  ///   • `ERROR_EMAIL_ALREADY_IN_USE` - If the email is already in use by a different account.
-  ///   • `ERROR_CREDENTIAL_ALREADY_IN_USE` - If the account is already in use by a different account, e.g. with phone auth.
-  ///   • `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
-  ///   • `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
-  ///   • `ERROR_PROVIDER_ALREADY_LINKED` - If the current user already has an account of this type linked.
-  ///   • `ERROR_OPERATION_NOT_ALLOWED` - Indicates that this type of account is not enabled.
-  ///   • `ERROR_INVALID_ACTION_CODE` - If the action code in the link is malformed, expired, or has already been used.
+  ///
+  ///  * `ERROR_WEAK_PASSWORD` - If the password is not strong enough.
+  ///  * `ERROR_INVALID_CREDENTIAL` - If the credential is malformed or has expired.
+  ///  * `ERROR_EMAIL_ALREADY_IN_USE` - If the email is already in use by a different account.
+  ///  * `ERROR_CREDENTIAL_ALREADY_IN_USE` - If the account is already in use by a different account, e.g. with phone auth.
+  ///  * `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
+  ///  * `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
+  ///  * `ERROR_PROVIDER_ALREADY_LINKED` - If the current user already has an account of this type linked.
+  ///  * `ERROR_OPERATION_NOT_ALLOWED` - Indicates that this type of account is not enabled.
+  ///  * `ERROR_INVALID_ACTION_CODE` - If the action code in the link is malformed, expired, or has already been used.
   ///       This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
   Future<AuthResult> linkWithCredential(AuthCredential credential) async {
     assert(credential != null);
@@ -91,10 +92,11 @@ class FirebaseUser extends UserInfo {
   /// Deletes the current user (also signs out the user).
   ///
   /// Errors:
-  ///   • `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
-  ///   • `ERROR_INVALID_CREDENTIAL` - If the credential is malformed or has expired.
-  ///   • `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
-  ///   • `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
+  ///
+  ///  * `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
+  ///  * `ERROR_INVALID_CREDENTIAL` - If the credential is malformed or has expired.
+  ///  * `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
+  ///  * `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
   Future<void> delete() async {
     await FirebaseAuth.channel
         .invokeMethod<void>('delete', <String, String>{'app': _app.name});
@@ -110,12 +112,13 @@ class FirebaseUser extends UserInfo {
   /// the user to have recently signed in.
   ///
   /// Errors:
-  ///   • `ERROR_INVALID_CREDENTIAL` - If the email address is malformed.
-  ///   • `ERROR_EMAIL_ALREADY_IN_USE` - If the email is already in use by a different account.
-  ///   • `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
-  ///   • `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
-  ///   • `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
-  ///   • `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Email & Password accounts are not enabled.
+  ///
+  ///  * `ERROR_INVALID_CREDENTIAL` - If the email address is malformed.
+  ///  * `ERROR_EMAIL_ALREADY_IN_USE` - If the email is already in use by a different account.
+  ///  * `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
+  ///  * `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
+  ///  * `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
+  ///  * `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Email & Password accounts are not enabled.
   Future<void> updateEmail(String email) async {
     assert(email != null);
     return await FirebaseAuth.channel.invokeMethod<void>(
@@ -154,11 +157,12 @@ class FirebaseUser extends UserInfo {
   /// the user to have recently signed in.
   ///
   /// Errors:
-  ///   • `ERROR_WEAK_PASSWORD` - If the password is not strong enough.
-  ///   • `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
-  ///   • `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
-  ///   • `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
-  ///   • `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Email & Password accounts are not enabled.
+  ///
+  ///  * `ERROR_WEAK_PASSWORD` - If the password is not strong enough.
+  ///  * `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
+  ///  * `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
+  ///  * `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
+  ///  * `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Email & Password accounts are not enabled.
   Future<void> updatePassword(String password) async {
     assert(password != null);
     return await FirebaseAuth.channel.invokeMethod<void>(
@@ -170,8 +174,9 @@ class FirebaseUser extends UserInfo {
   /// Updates the user profile information.
   ///
   /// Errors:
-  ///   • `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
-  ///   • `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
+  ///
+  ///  * `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
+  ///  * `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
   Future<void> updateProfile(UserUpdateInfo userUpdateInfo) async {
     assert(userUpdateInfo != null);
     final Map<String, String> data = userUpdateInfo._updateData;
@@ -194,10 +199,11 @@ class FirebaseUser extends UserInfo {
   /// error is returned and the current user remains signed in.
   ///
   /// Errors:
-  ///   • `ERROR_INVALID_CREDENTIAL` - If the [authToken] or [authTokenSecret] is malformed or has expired.
-  ///   • `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
-  ///   • `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
-  ///   • `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Email & Password accounts are not enabled.
+  ///
+  ///  * `ERROR_INVALID_CREDENTIAL` - If the [authToken] or [authTokenSecret] is malformed or has expired.
+  ///  * `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
+  ///  * `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
+  ///  * `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Email & Password accounts are not enabled.
   Future<AuthResult> reauthenticateWithCredential(
       AuthCredential credential) async {
     assert(credential != null);
@@ -224,8 +230,9 @@ class FirebaseUser extends UserInfo {
   /// Use the `providerId` method of an auth provider for [provider].
   ///
   /// Errors:
-  ///   • `ERROR_NO_SUCH_PROVIDER` - If the user does not have a Github Account linked to their account.
-  ///   • `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
+  ///
+  ///  * `ERROR_NO_SUCH_PROVIDER` - If the user does not have a Github Account linked to their account.
+  ///  * `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
   Future<void> unlinkFromProvider(String provider) async {
     assert(provider != null);
     return await FirebaseAuth.channel.invokeMethod<void>(
