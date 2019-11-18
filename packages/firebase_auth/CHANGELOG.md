@@ -1,3 +1,7 @@
+## 0.14.0+11
+
+*  Added missing ERROR_WRONG_PASSWORD Exception to the `reauthenticateWithCredential` docs.
+
 ## 0.14.0+10
 
 * Formatted lists in member documentations for better readability.
