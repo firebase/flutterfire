@@ -119,10 +119,11 @@ After a successful authentication, you will receive a `FirebaseUser` object. You
 
   - When testing you can add test phone numbers and verification codes to the Firebase console.
 
-1. [Enable App verification](https://firebase.google.com/docs/auth/ios/phone-auth#enable-app-verification)  
+2. Generate the certificates required by Apple for receiving push notifications following [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) in the Firebase docs. You can skip the section titled "Create the Provisioning Profile".
 
-**Note:** App verification may use APNs, if using a simulator (where APNs does not work) or APNs is not setup on the
-device you are using you must set the `URL Schemes` to the `REVERSE_CLIENT_ID` from the GoogleServices-Info.plist file.
+3. In Xcode, select Runner in the Project Navigator. In the Capabilities Tab turn on Push Notifications and Background Modes, and enable Background fetch and Remote notifications under Background Modes.
+
+4. Also in the Project Navigator, choose the Info Tab. The `URL Types` section will need an entry where the `URL Schemes` has the value of your `REVERSE_CLIENT_ID` from the GoogleServices-Info.plist file. This ensures that ReCaptcha is triggered when  developing locally or device is not configured for silent push notifications
 
 #### Android setup
 
