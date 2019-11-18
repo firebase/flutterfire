@@ -1,3 +1,9 @@
+## 0.3.0
+
+* Bump Firebase Config dependency to 19.0.3
+* Resolve a compiler warning due to deprecated API usage
+* Bump Gradle, AGP & Google Services plugin versions
+
 ## 0.2.1
 
 * Support Android V2 embedding.
