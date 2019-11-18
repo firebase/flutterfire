@@ -1,6 +1,6 @@
 ## 0.3.1+3
 
-* Fix analyzer warnings
+* Fixed analyzer warnings about unused fields.
 
 ## 0.3.1+2
 
