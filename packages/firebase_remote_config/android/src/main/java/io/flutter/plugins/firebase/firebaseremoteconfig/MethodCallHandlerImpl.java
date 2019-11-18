@@ -110,7 +110,7 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
                     public void onComplete(Task<Boolean> task) {
                       if (!task.isSuccessful()) {
                         String errorMessage = "Unable to complete activate.";
-                        result.error("fetchFailed", errorMessage, null);
+                        result.error("activateFailed", errorMessage, null);
                       } else {
                         Map<String, Object> properties = new HashMap<>();
                         properties.put("parameters", getConfigParameters());
