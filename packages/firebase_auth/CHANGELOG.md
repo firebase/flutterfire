@@ -1,3 +1,9 @@
+## 0.15.0
+
+* Fixed `NoSuchMethodError` in `reauthenticateWithCredential`.
+* Fixed `IdTokenResult` analyzer warnings.
+* Reduced visibility of `IdTokenResult` constructor.
+
 ## 0.14.0+10
 
 * Formatted lists in member documentations for better readability.
