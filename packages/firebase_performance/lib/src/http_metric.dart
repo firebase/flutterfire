@@ -25,9 +25,6 @@ class HttpMetric extends PerformanceAttributes {
   final HttpMethod httpMethod;
 
   @override
-  bool _hasStarted = false;
-
-  @override
   bool _hasStopped = false;
 
   int _httpResponseCode;
