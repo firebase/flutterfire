@@ -92,7 +92,8 @@ void main() {
           await auth.fetchSignInMethodsForEmail(email: testEmail);
       expect(methods.length, 1);
       expect(methods[0], 'password');
-      final AuthResult renewResult = await result.user.reauthenticateWithCredential(
+      final AuthResult renewResult =
+          await result.user.reauthenticateWithCredential(
         EmailAuthProvider.getCredential(
           email: testEmail,
           password: testPassword,
