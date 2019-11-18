@@ -69,14 +69,14 @@ void main() {
 
         testTrace.incrementMetric('metric', 45);
         expect(testTrace.getMetric('metric'), completion(59));
-      });
+      }, skip: true);
 
       test('setMetric', () {
         testTrace.start();
 
         testTrace.setMetric('metric2', 37);
         expect(testTrace.getMetric('metric2'), completion(37));
-      });
+      }, skip: true);
 
       test('putAttribute', () {
         testTrace.putAttribute('apple', 'sauce');
@@ -86,7 +86,7 @@ void main() {
           testTrace.getAttributes(),
           completion(<String, String>{'apple': 'sauce', 'banana': 'pie'}),
         );
-      });
+      }, skip: true);
 
       test('removeAttribute', () {
         testTrace.putAttribute('sponge', 'bob');
@@ -97,7 +97,7 @@ void main() {
           testTrace.getAttributes(),
           completion(<String, String>{'patrick': 'star'}),
         );
-      });
+      }, skip: true);
 
       test('getAttributes', () {
         testTrace.putAttribute('yugi', 'oh');
@@ -114,7 +114,7 @@ void main() {
           completion(<String, String>{'yugi': 'oh'}),
         );
       });
-    });
+    }, skip: true);
 
     group('$HttpMetric', () {
       HttpMetric testMetric;
@@ -138,7 +138,7 @@ void main() {
           testMetric.getAttributes(),
           completion(<String, String>{'apple': 'sauce', 'banana': 'pie'}),
         );
-      });
+      }, skip: true);
 
       test('removeAttribute', () {
         testMetric.putAttribute('sponge', 'bob');
@@ -149,7 +149,7 @@ void main() {
           testMetric.getAttributes(),
           completion(<String, String>{'patrick': 'star'}),
         );
-      });
+      }, skip: true);
 
       test('getAttributes', () {
         testMetric.putAttribute('yugi', 'oh');
@@ -165,7 +165,7 @@ void main() {
           testMetric.getAttributes(),
           completion(<String, String>{'yugi': 'oh'}),
         );
-      });
+      }, skip: true);
 
       test('http setters shouldn\'t cause a crash', () async {
         testMetric.start();
