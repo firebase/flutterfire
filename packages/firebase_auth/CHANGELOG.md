@@ -1,6 +1,14 @@
-## 0.14.0+9
+## 0.14.0+11
 
 * Fix NoSuchMethodError in `reauthenticateWithCredential`
+
+## 0.14.0+10
+
+* Formatted lists in member documentations for better readability.
+
+## 0.14.0+9
+
+* Fix the behavior of `getIdToken` to use the `refresh` parameter instead of always refreshing.
 
 ## 0.14.0+8
 
