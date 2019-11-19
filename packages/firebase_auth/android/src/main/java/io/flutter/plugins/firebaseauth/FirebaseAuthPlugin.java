@@ -491,8 +491,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
     AuthCredential credential = getCredential((Map<String, Object>) call.arguments());
 
     currentUser
-        .reauthenticate(credential)
-        .addOnCompleteListener(new TaskVoidCompleteListener(result));
+        .reauthenticateAndRetrieveData(credential)
+        .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
   private void handleUnlinkFromProvider(MethodCall call, Result result, FirebaseAuth firebaseAuth) {

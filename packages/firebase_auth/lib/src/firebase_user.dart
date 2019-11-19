@@ -40,7 +40,7 @@ class FirebaseUser extends UserInfo {
       'app': _app.name,
     });
 
-    return IdTokenResult(data, _app);
+    return IdTokenResult._(data);
   }
 
   /// Associates a user account from a third-party identity provider with this

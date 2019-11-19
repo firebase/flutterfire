@@ -1,3 +1,7 @@
+## 0.12.10+2
+
+* Fixed analyzer warnings about unused fields.
+
 ## 0.12.10+1
 
 * Formatted method documentations.
