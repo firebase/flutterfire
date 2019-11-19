@@ -1,3 +1,7 @@
+## 0.3.1+3
+
+* Fixed analyzer warnings about unused fields.
+
 ## 0.3.1+2
 
 * Updated README instructions for contributing for consistency with other Flutterfire plugins.
