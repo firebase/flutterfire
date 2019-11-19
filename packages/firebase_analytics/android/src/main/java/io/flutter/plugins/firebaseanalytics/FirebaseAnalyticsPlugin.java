@@ -159,6 +159,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
     result.success(null);
   }
 
+  @SuppressWarnings("unchecked")
   private static Bundle createBundleFromMap(Map<String, Object> map) {
     if (map == null) {
       return null;
@@ -179,20 +180,18 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
       } else if (value instanceof Boolean) {
         bundle.putBoolean(key, (Boolean) value);
       } else if (value instanceof ArrayList<?>) {
-        // Map<String, Object>
+        ArrayList<Parcelable> list = new ArrayList<Parcelable>();
 
+        for (Object item : (ArrayList<?>)value) {
+          if (item instanceof Map) {
+            list.add(createBundleFromMap((Map<String, Object>)item));
+          } else {
+            throw new IllegalArgumentException(
+                "Unsupported value type: " + value.getClass().getCanonicalName() + " in list at key " + key);
+          }
+		    }
 
-        ArrayList<Parcelable> listWithMap = new ArrayList<Parcelable>() { 
-            { 
-                add(
-                  createBundleFromMap(
-                    (Map<String, Object>)(((ArrayList<?>)value).get(0))
-                  )
-                ); 
-            } 
-        }; 
-
-        bundle.putParcelableArrayList(key, listWithMap);
+        bundle.putParcelableArrayList(key, list);
       } else {
         throw new IllegalArgumentException(
             "Unsupported value type: " + value.getClass().getCanonicalName());
