@@ -1,3 +1,8 @@
+## 5.1.0
+
+* Update Firebase Analytics dependency on Android to 17.2.1
+* Updates Android gradle plugin dependency to 3.5.2
+
 ## 5.0.7
 
 * Formatted `setCurrentScreen` documentation.
