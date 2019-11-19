@@ -29,6 +29,8 @@ class Trace extends PerformanceAttributes {
 
   final Map<String, int> _metrics = <String, int>{};
 
+  bool _hasStarted = false;
+
   @override
   bool _hasStopped = false;
 
