@@ -91,7 +91,15 @@ void main() {
           await auth.fetchSignInMethodsForEmail(email: testEmail);
       expect(methods.length, 1);
       expect(methods[0], 'password');
-      await user.delete();
+      final AuthResult renewResult =
+          await result.user.reauthenticateWithCredential(
+        EmailAuthProvider.getCredential(
+          email: testEmail,
+          password: testPassword,
+        ),
+      );
+      expect(renewResult.user.uid, equals(user.uid));
+      await renewResult.user.delete();
     });
 
     testWidgets('isSignInWithEmailLink', (_) async {

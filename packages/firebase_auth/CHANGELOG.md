@@ -1,6 +1,21 @@
-## 0.14.1
+## 0.15.1
 
 * Add support for v2 plugin APIs.
+
+## 0.15.0+1
+
+*  Added missing ERROR_WRONG_PASSWORD Exception to the `reauthenticateWithCredential` docs.
+
+## 0.15.0
+
+* Fixed `NoSuchMethodError` in `reauthenticateWithCredential`.
+* Fixed `IdTokenResult` analyzer warnings.
+* Reduced visibility of `IdTokenResult` constructor.
+
+## 0.14.0+10
+
+* Formatted lists in member documentations for better readability.
+>>>>>>> origin/master
 
 ## 0.14.0+9
 

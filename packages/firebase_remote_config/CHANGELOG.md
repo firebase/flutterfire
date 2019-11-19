@@ -1,3 +1,9 @@
+## 0.3.0
+
+* Update Android Firebase Remote Config dependency to 19.0.3.
+* Resolve an Android compiler warning due to deprecated API usage.
+* Bump Gradle, AGP & Google Services plugin versions.
+
 ## 0.2.1
 
 * Support Android V2 embedding.

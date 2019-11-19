@@ -1,3 +1,7 @@
+## 5.0.7
+
+* Formatted `setCurrentScreen` documentation.
+
 ## 5.0.6
 
 * Updated README instructions for contributing for consistency with other Flutterfire plugins.
