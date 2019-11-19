@@ -1,3 +1,7 @@
+## 0.3.1+4
+
+* Skip flaky driver tests.
+
 ## 0.3.1+3
 
 * Fixed analyzer warnings about unused fields.
