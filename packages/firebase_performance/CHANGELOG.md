@@ -1,6 +1,6 @@
 ## 0.3.1+4
 
-* Skip flaky driver tests. Track updating tests [here](https://github.com/FirebaseExtended/flutterfire/issues/1454).
+* Skip flaky driver tests.
 
 ## 0.3.1+3
 
