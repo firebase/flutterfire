@@ -102,11 +102,23 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         }
       case "RemoteConfig#activate":
         {
-          boolean newConfig = FirebaseRemoteConfig.getInstance().activateFetched();
-          Map<String, Object> properties = new HashMap<>();
-          properties.put("parameters", getConfigParameters());
-          properties.put("newConfig", newConfig);
-          result.success(properties);
+          FirebaseRemoteConfig.getInstance()
+              .activate()
+              .addOnCompleteListener(
+                  new OnCompleteListener<Boolean>() {
+                    @Override
+                    public void onComplete(Task<Boolean> task) {
+                      if (!task.isSuccessful()) {
+                        String errorMessage = "Unable to complete activate.";
+                        result.error("activateFailed", errorMessage, null);
+                      } else {
+                        Map<String, Object> properties = new HashMap<>();
+                        properties.put("parameters", getConfigParameters());
+                        properties.put("newConfig", task.getResult());
+                        result.success(properties);
+                      }
+                    }
+                  });
           break;
         }
       case "RemoteConfig#setDefaults":

@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.android.tools.build:gradle:3.5.2'
     }
 }
 
@@ -32,8 +32,8 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-        api 'com.google.firebase:firebase-config:16.4.1'
-        implementation 'com.google.firebase:firebase-common:16.1.0'
+        api 'com.google.firebase:firebase-config:19.0.3'
+        implementation 'com.google.firebase:firebase-common:19.3.0'
         implementation 'androidx.annotation:annotation:1.0.0'
     }
 }
