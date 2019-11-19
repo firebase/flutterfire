@@ -124,7 +124,6 @@ class HttpMetric extends PerformanceAttributes {
   Future<void> start() {
     if (_hasStopped) return Future<void>.value(null);
 
-    _hasStarted = true;
     return FirebasePerformance.channel.invokeMethod<void>(
       'HttpMetric#start',
       <String, dynamic>{'handle': _handle},
