@@ -7,6 +7,7 @@ package io.flutter.plugins.firebaseanalytics;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -19,6 +20,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
+import java.util.ArrayList;
 import java.util.Map;
 
 /** Flutter plugin for Firebase Analytics. */
@@ -176,11 +178,27 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
         bundle.putDouble(key, (Double) value);
       } else if (value instanceof Boolean) {
         bundle.putBoolean(key, (Boolean) value);
+      } else if (value instanceof ArrayList<?>) {
+        // Map<String, Object>
+
+
+        ArrayList<Parcelable> listWithMap = new ArrayList<Parcelable>() { 
+            { 
+                add(
+                  createBundleFromMap(
+                    (Map<String, Object>)(((ArrayList<?>)value).get(0))
+                  )
+                ); 
+            } 
+        }; 
+
+        bundle.putParcelableArrayList(key, listWithMap);
       } else {
         throw new IllegalArgumentException(
             "Unsupported value type: " + value.getClass().getCanonicalName());
       }
     }
+
     return bundle;
   }
 }
