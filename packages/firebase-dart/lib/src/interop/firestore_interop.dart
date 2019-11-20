@@ -321,14 +321,11 @@ abstract class SnapshotListenOptions {
 @anonymous
 @JS()
 abstract class Settings {
-  external bool get timestampsInSnapshots;
-  external set timestampsInSnapshots(bool v);
   external set cacheSizeBytes(int i);
   external set host(String h);
   external set ssl(bool v);
 
   external factory Settings({
-    bool timestampsInSnapshots,
     int cacheSizeBytes,
     String host,
     bool ssl,
