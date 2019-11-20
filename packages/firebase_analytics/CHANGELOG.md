@@ -1,3 +1,8 @@
+## 5.0.8
+
+* Updated Android's `logEvent` implementation so it supports `parameters` values of type `List<Map<String, dynamic>>` like the iOS implementation
+
+
 ## 5.0.7
 
 * Formatted `setCurrentScreen` documentation.
