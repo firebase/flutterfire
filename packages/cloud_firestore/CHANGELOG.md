@@ -1,3 +1,7 @@
+## 0.12.0+3
+
+* Migrate to use e2e tests.
+
 ## 0.12.10+2
 
 * Fixed analyzer warnings about unused fields.

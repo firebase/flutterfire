@@ -1,20 +1,19 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_driver/driver_extension.dart';
+import 'package:e2e/e2e.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final Completer<String> completer = Completer<String>();
-  enableFlutterDriverExtension(handler: (_) => completer.future);
-  tearDownAll(() => completer.complete(null));
+  E2EWidgetsFlutterBinding.ensureInitialized();
 
   group('$Firestore', () {
     Firestore firestore;
     Firestore firestoreWithSettings;
 
-    setUp(() async {
+    setUp(() async{
       final FirebaseOptions firebaseOptions = const FirebaseOptions(
         googleAppID: '1:79601577497:ios:5f2bcc6ba8cecddd',
         gcmSenderID: '79601577497',
@@ -40,13 +39,13 @@ void main() {
       );
     });
 
-    test('getDocumentsWithFirestoreSettings', () async {
+    testWidgets('getDocumentsWithFirestoreSettings', (WidgetTester tester) async{
       final Query query = firestoreWithSettings.collection('messages').limit(1);
       final QuerySnapshot querySnapshot = await query.getDocuments();
       expect(querySnapshot.documents.length, 1);
     });
 
-    test('getDocumentsFromCollection', () async {
+    testWidgets('getDocumentsFromCollection', (WidgetTester tester) async{
       final Query query = firestore
           .collection('messages')
           .where('message', isEqualTo: 'Hello world!')
@@ -65,7 +64,7 @@ void main() {
       expect(snapshot.data['message'], 'Hello world!');
     });
 
-    test('getDocumentsFromCollectionGroup', () async {
+    testWidgets('getDocumentsFromCollectionGroup', (WidgetTester tester) async{
       final Query query = firestore
           .collectionGroup('reviews')
           .where('stars', isEqualTo: 5)
@@ -75,7 +74,7 @@ void main() {
       expect(querySnapshot.metadata, isNotNull);
     });
 
-    test('increment', () async {
+    testWidgets('increment', (WidgetTester tester) async{
       final DocumentReference ref = firestore.collection('messages').document();
       await ref.setData(<String, dynamic>{
         'message': 1,
@@ -106,7 +105,7 @@ void main() {
       await ref.delete();
     });
 
-    test('includeMetadataChanges', () async {
+    testWidgets('includeMetadataChanges', (WidgetTester tester) async{
       final DocumentReference ref = firestore.collection('messages').document();
       final Stream<DocumentSnapshot> snapshotWithoutMetadataChanges =
           ref.snapshots(includeMetadataChanges: false).take(1);
@@ -137,7 +136,7 @@ void main() {
       await ref.delete();
     });
 
-    test('runTransaction', () async {
+    testWidgets('runTransaction', (WidgetTester tester) async{
       final DocumentReference ref = firestore.collection('messages').document();
       await ref.setData(<String, dynamic>{
         'message': 'testing',
@@ -163,7 +162,7 @@ void main() {
       expect(nonexistentSnapshot.exists, false);
     });
 
-    test('pagination', () async {
+    testWidgets('pagination', (WidgetTester tester) async{
       // Populate the database with two test documents
       final CollectionReference messages = firestore.collection('messages');
       final DocumentReference doc1 = messages.document();
@@ -256,7 +255,7 @@ void main() {
       await doc2.delete();
     });
 
-    test('pagination with map', () async {
+    testWidgets('pagination with map', (WidgetTester tester) async{
       // Populate the database with two test documents.
       final CollectionReference messages = firestore.collection('messages');
       final DocumentReference doc1 = messages.document();
@@ -295,7 +294,7 @@ void main() {
       await doc2.delete();
     });
 
-    test('FieldPath.documentId', () async {
+    testWidgets('FieldPath.documentId', (WidgetTester tester) async{
       // Populate the database with two test documents.
       final CollectionReference messages = firestore.collection('messages');
 
