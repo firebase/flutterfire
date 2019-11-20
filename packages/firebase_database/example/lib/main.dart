@@ -11,6 +11,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final FirebaseApp app = await FirebaseApp.configure(
     name: 'db2',
     options: Platform.isIOS

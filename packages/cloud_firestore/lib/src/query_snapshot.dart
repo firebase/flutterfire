@@ -6,7 +6,7 @@ part of cloud_firestore;
 
 /// A QuerySnapshot contains zero or more DocumentSnapshot objects.
 class QuerySnapshot {
-  QuerySnapshot._(Map<dynamic, dynamic> data, this._firestore)
+  QuerySnapshot._(Map<dynamic, dynamic> data, Firestore firestore)
       : documents = List<DocumentSnapshot>.generate(data['documents'].length,
             (int index) {
           return DocumentSnapshot._(
@@ -16,14 +16,14 @@ class QuerySnapshot {
               data['metadatas'][index]['hasPendingWrites'],
               data['metadatas'][index]['isFromCache'],
             ),
-            _firestore,
+            firestore,
           );
         }),
         documentChanges = List<DocumentChange>.generate(
             data['documentChanges'].length, (int index) {
           return DocumentChange._(
             data['documentChanges'][index],
-            _firestore,
+            firestore,
           );
         }),
         metadata = SnapshotMetadata._(
@@ -39,6 +39,4 @@ class QuerySnapshot {
   final List<DocumentChange> documentChanges;
 
   final SnapshotMetadata metadata;
-
-  final Firestore _firestore;
 }
