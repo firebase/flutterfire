@@ -205,7 +205,7 @@ int nextHandle = 0;
     }
   } else if ([@"getIdToken" isEqualToString:call.method]) {
     NSDictionary *args = call.arguments;
-    BOOL refresh = [args objectForKey:@"refresh"];
+    BOOL refresh = [[args objectForKey:@"refresh"] boolValue];
     [[self getAuth:call.arguments].currentUser
         getIDTokenResultForcingRefresh:refresh
                             completion:^(FIRAuthTokenResult *_Nullable tokenResult,
@@ -238,9 +238,11 @@ int nextHandle = 0;
   } else if ([@"reauthenticateWithCredential" isEqualToString:call.method]) {
     [[self getAuth:call.arguments].currentUser
         reauthenticateAndRetrieveDataWithCredential:[self getCredential:call.arguments]
-                                         completion:^(FIRAuthDataResult *r,
-                                                      NSError *_Nullable error) {
-                                           [self sendResult:result forObject:nil error:error];
+                                         completion:^(FIRAuthDataResult *authResult,
+                                                      NSError *error) {
+                                           [self sendResult:result
+                                               forAuthDataResult:authResult
+                                                           error:error];
                                          }];
   } else if ([@"linkWithCredential" isEqualToString:call.method]) {
     [[self getAuth:call.arguments].currentUser

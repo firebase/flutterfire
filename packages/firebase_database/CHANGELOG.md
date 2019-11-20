@@ -1,3 +1,8 @@
+## 3.1.0
+
+* Support Android V2 embedding.
+* Migrate to using the new e2e test binding.
+
 ## 3.0.9
 
 * Updated README instructions for contributing for consistency with other Flutterfire plugins.
