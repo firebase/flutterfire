@@ -1,7 +1,30 @@
-## 5.1.9
+## 6.0.1
 
 * `FirebaseMessaging.configure` will throw an `ArgumentError` when `onBackgroundMessage` parameter
 is not a top-level or static function.
+
+## 6.0.0
+
+* Use `UNUserNotificationCenter` to receive messages on iOS version >= 10.
+* **Breaking Change** For iOS versions >= 10, this will cause any other plugin that specifies a
+  `UNUserNotificationCenterDelegate` to `[UNUserNotificationCenter currentNotificationCenter]` to
+  stop receiving notifications. To have this plugin work with plugins that specify their own
+  `UNUserNotificationCenterDelegate`, you can remove the line
+  ```objectivec
+  [UNUserNotificationCenter currentNotificationCenter].delegate = // plugin specified delegate
+  ```
+
+  and add this line to your iOS project `AppDelegate.m`
+
+  ```swift
+  if (@available(iOS 10.0, *)) {
+    [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
+  }
+  ```
+
+## 5.1.9
+
+* Fix strict compilation errors.
 
 ## 5.1.8
 
