@@ -1,3 +1,7 @@
+## 0.4.1+5
+
+* Migrate to e2e tests.
+
 ## 0.4.1+4
 
 * Updated README instructions for contributing for consistency with other Flutterfire plugins.
