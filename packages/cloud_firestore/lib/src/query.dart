@@ -213,6 +213,7 @@ class Query {
   /// [endBefore], [endAtDocument] and [endBeforeDocument].
   ///
   /// See also:
+  ///
   ///  * [endAfterDocument] for a query that ends after a document.
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.
@@ -247,6 +248,7 @@ class Query {
   /// [endBefore], [endAtDocument] and [endBeforeDocument].
   ///
   /// See also:
+  ///
   ///  * [startAfterDocument] for a query that starts after a document.
   ///  * [endAtDocument] for a query that ends at a document.
   ///  * [endBeforeDocument] for a query that ends before a document.
@@ -315,6 +317,7 @@ class Query {
   /// [startAfter], [startAtDocument] and [startAfterDocument].
   ///
   /// See also:
+  ///
   ///  * [startAfterDocument] for a query that starts after a document.
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endBeforeDocument] for a query that ends before a document.
@@ -366,6 +369,7 @@ class Query {
   /// [startAfter], [startAtDocument] and [startAfterDocument].
   ///
   /// See also:
+  ///
   ///  * [startAfterDocument] for a query that starts after document.
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.

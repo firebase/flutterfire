@@ -1,3 +1,17 @@
+## 0.15.0+1
+
+*  Added missing ERROR_WRONG_PASSWORD Exception to the `reauthenticateWithCredential` docs.
+
+## 0.15.0
+
+* Fixed `NoSuchMethodError` in `reauthenticateWithCredential`.
+* Fixed `IdTokenResult` analyzer warnings.
+* Reduced visibility of `IdTokenResult` constructor.
+
+## 0.14.0+10
+
+* Formatted lists in member documentations for better readability.
+
 ## 0.14.0+9
 
 * Fix the behavior of `getIdToken` to use the `refresh` parameter instead of always refreshing.

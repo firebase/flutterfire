@@ -70,7 +70,8 @@ class FirebaseAuth {
   /// of the Firebase console before being able to use them.
   ///
   /// Errors:
-  ///   • `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Anonymous accounts are not enabled.
+  ///
+  ///  * `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Anonymous accounts are not enabled.
   Future<AuthResult> signInAnonymously() async {
     final Map<String, dynamic> data = await channel
         .invokeMapMethod<String, dynamic>(
@@ -85,9 +86,10 @@ class FirebaseAuth {
   /// the [onAuthStateChanged] stream.
   ///
   /// Errors:
-  ///   • `ERROR_WEAK_PASSWORD` - If the password is not strong enough.
-  ///   • `ERROR_INVALID_EMAIL` - If the email address is malformed.
-  ///   • `ERROR_EMAIL_ALREADY_IN_USE` - If the email is already in use by a different account.
+  ///
+  ///  * `ERROR_WEAK_PASSWORD` - If the password is not strong enough.
+  ///  * `ERROR_INVALID_EMAIL` - If the email address is malformed.
+  ///  * `ERROR_EMAIL_ALREADY_IN_USE` - If the email is already in use by a different account.
   Future<AuthResult> createUserWithEmailAndPassword({
     @required String email,
     @required String password,
@@ -112,7 +114,8 @@ class FirebaseAuth {
   /// An empty `List` is returned if the user could not be found.
   ///
   /// Errors:
-  ///   • `ERROR_INVALID_CREDENTIAL` - If the [email] address is malformed.
+  ///
+  ///  * `ERROR_INVALID_CREDENTIAL` - If the [email] address is malformed.
   Future<List<String>> fetchSignInMethodsForEmail({
     @required String email,
   }) async {
@@ -128,8 +131,9 @@ class FirebaseAuth {
   /// user of your app.
   ///
   /// Errors:
-  ///   • `ERROR_INVALID_EMAIL` - If the [email] address is malformed.
-  ///   • `ERROR_USER_NOT_FOUND` - If there is no user corresponding to the given [email] address.
+  ///
+  ///  * `ERROR_INVALID_EMAIL` - If the [email] address is malformed.
+  ///  * `ERROR_USER_NOT_FOUND` - If there is no user corresponding to the given [email] address.
   Future<void> sendPasswordResetEmail({
     @required String email,
   }) async {
@@ -183,11 +187,12 @@ class FirebaseAuth {
   /// Signs in using an email address and email sign-in link.
   ///
   /// Errors:
-  ///   • `ERROR_NOT_ALLOWED` - Indicates that email and email sign-in link
+  ///
+  ///  * `ERROR_NOT_ALLOWED` - Indicates that email and email sign-in link
   ///      accounts are not enabled. Enable them in the Auth section of the
   ///      Firebase console.
-  ///   • `ERROR_DISABLED` - Indicates the user's account is disabled.
-  ///   • `ERROR_INVALID` - Indicates the email address is invalid.
+  ///  * `ERROR_DISABLED` - Indicates the user's account is disabled.
+  ///  * `ERROR_INVALID` - Indicates the email address is invalid.
   Future<AuthResult> signInWithEmailAndLink({String email, String link}) async {
     final Map<String, dynamic> data =
         await channel.invokeMapMethod<String, dynamic>(
@@ -211,12 +216,13 @@ class FirebaseAuth {
   /// section of the Firebase console before being able to use them.
   ///
   /// Errors:
-  ///   • `ERROR_INVALID_EMAIL` - If the [email] address is malformed.
-  ///   • `ERROR_WRONG_PASSWORD` - If the [password] is wrong.
-  ///   • `ERROR_USER_NOT_FOUND` - If there is no user corresponding to the given [email] address, or if the user has been deleted.
-  ///   • `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
-  ///   • `ERROR_TOO_MANY_REQUESTS` - If there was too many attempts to sign in as this user.
-  ///   • `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Email & Password accounts are not enabled.
+  ///
+  ///  * `ERROR_INVALID_EMAIL` - If the [email] address is malformed.
+  ///  * `ERROR_WRONG_PASSWORD` - If the [password] is wrong.
+  ///  * `ERROR_USER_NOT_FOUND` - If there is no user corresponding to the given [email] address, or if the user has been deleted.
+  ///  * `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
+  ///  * `ERROR_TOO_MANY_REQUESTS` - If there was too many attempts to sign in as this user.
+  ///  * `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Email & Password accounts are not enabled.
   Future<AuthResult> signInWithEmailAndPassword({
     @required String email,
     @required String password,
@@ -243,13 +249,14 @@ class FirebaseAuth {
   /// of the Firebase console before being able to use them.
   ///
   /// Errors:
-  ///   • `ERROR_INVALID_CREDENTIAL` - If the credential data is malformed or has expired.
-  ///   • `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
-  ///   • `ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL` - If there already exists an account with the email address asserted by Google.
+  ///
+  ///  * `ERROR_INVALID_CREDENTIAL` - If the credential data is malformed or has expired.
+  ///  * `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
+  ///  * `ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL` - If there already exists an account with the email address asserted by Google.
   ///       Resolve this case by calling [fetchSignInMethodsForEmail] and then asking the user to sign in using one of them.
   ///       This error will only be thrown if the "One account per email address" setting is enabled in the Firebase console (recommended).
-  ///   • `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Google accounts are not enabled.
-  ///   • `ERROR_INVALID_ACTION_CODE` - If the action code in the link is malformed, expired, or has already been used.
+  ///  * `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Google accounts are not enabled.
+  ///  * `ERROR_INVALID_ACTION_CODE` - If the action code in the link is malformed, expired, or has already been used.
   ///       This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
   Future<AuthResult> signInWithCredential(AuthCredential credential) async {
     assert(credential != null);
@@ -274,10 +281,11 @@ class FirebaseAuth {
   /// No duplicated SMS will be sent out upon re-entry (before timeout).
   ///
   /// Make sure to test all scenarios below:
-  ///   • You directly get logged in if Google Play Services verified the phone
+  ///
+  ///  * You directly get logged in if Google Play Services verified the phone
   ///     number instantly or helped you auto-retrieve the verification code.
-  ///   • Auto-retrieve verification code timed out.
-  ///   • Error cases when you receive [verificationFailed] callback.
+  ///  * Auto-retrieve verification code timed out.
+  ///  * Error cases when you receive [verificationFailed] callback.
   ///
   /// [phoneNumber] The phone number for the account the user is signing up
   ///   for or signing into. Make sure to pass in a phone number with country
@@ -352,9 +360,10 @@ class FirebaseAuth {
   /// useful in [the guides](https://firebase.google.com/docs/auth/android/custom-auth).
   ///
   /// Errors:
-  ///   • `ERROR_INVALID_CUSTOM_TOKEN` - The custom token format is incorrect.
+  ///
+  ///  * `ERROR_INVALID_CUSTOM_TOKEN` - The custom token format is incorrect.
   ///     Please check the documentation.
-  ///   • `ERROR_CUSTOM_TOKEN_MISMATCH` - Invalid configuration.
+  ///  * `ERROR_CUSTOM_TOKEN_MISMATCH` - Invalid configuration.
   ///     Ensure your app's SHA1 is correct in the Firebase console.
   Future<AuthResult> signInWithCustomToken({@required String token}) async {
     assert(token != null);
