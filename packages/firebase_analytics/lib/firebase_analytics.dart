@@ -31,6 +31,11 @@ class FirebaseAnalytics {
           : null;
 
   /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
+  ///
+  /// [parameters] supports values of the following type:
+  ///  * [int], [float], [double]
+  ///  * [String]
+  ///  * [List<Map<String, dynamic>>], whose [Map] only supports values of type [int], [float], [double], or [String]
   Future<void> logEvent(
       {@required String name, Map<String, dynamic> parameters}) async {
     if (_reservedEventNames.contains(name)) {
