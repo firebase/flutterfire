@@ -37,19 +37,18 @@ import java.util.Map;
  */
 public class FirebaseDynamicLinksPlugin
     implements FlutterPlugin, ActivityAware, MethodCallHandler, NewIntentListener {
-  private Registrar registrar;
+  private Activity activity;
   private MethodChannel channel;
-  private ActivityPluginBinding activityBinding;
 
-  private FirebaseDynamicLinksPlugin(Registrar registrar, MethodChannel channel) {
-    this.registrar = registrar;
+  private FirebaseDynamicLinksPlugin(Activity activity, MethodChannel channel) {
+    this.activity = activity;
     this.channel = channel;
   }
 
   /**
    * Default Constructor.
    *
-   * <p>Use this when adding the plugin to your FlutterEngine</p>
+   * <p>Use this when adding the plugin to your FlutterEngine
    */
   public FirebaseDynamicLinksPlugin() {}
 
@@ -65,7 +64,8 @@ public class FirebaseDynamicLinksPlugin
    */
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = createChannel(registrar.messenger());
-    final FirebaseDynamicLinksPlugin plugin = new FirebaseDynamicLinksPlugin(registrar, channel);
+    final FirebaseDynamicLinksPlugin plugin =
+        new FirebaseDynamicLinksPlugin(registrar.activity(), channel);
     registrar.addNewIntentListener(plugin);
     channel.setMethodCallHandler(plugin);
   }
@@ -117,26 +117,24 @@ public class FirebaseDynamicLinksPlugin
 
   @Override
   public void onAttachedToActivity(ActivityPluginBinding binding) {
-    activityBinding = binding;
-    activityBinding.addOnNewIntentListener(this);
+    activity = binding.getActivity();
+    binding.addOnNewIntentListener(this);
   }
 
   @Override
   public void onDetachedFromActivityForConfigChanges() {
-    activityBinding.removeOnNewIntentListener(this);
-    activityBinding = null;
+    activity = null;
   }
 
   @Override
   public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
-    activityBinding = binding;
-    activityBinding.addOnNewIntentListener(this);
+    activity = binding.getActivity();
+    binding.addOnNewIntentListener(this);
   }
 
   @Override
   public void onDetachedFromActivity() {
-    activityBinding.removeOnNewIntentListener(this);
-    activityBinding = null;
+    activity = null;
   }
 
   @Override
@@ -205,24 +203,19 @@ public class FirebaseDynamicLinksPlugin
             });
   }
 
-  private Activity getActivity() {
-      return registrar != null ? registrar.activity() : activityBinding.getActivity();
-    }
-
   private void handleGetDynamicLink(final Result result, Uri uri) {
     addDynamicLinkListener(FirebaseDynamicLinks.getInstance().getDynamicLink(uri), result);
   }
 
   private void handleGetInitialDynamicLink(final Result result) {
     // If there's no activity, then there's no initial dynamic link.
-    if (registrar.activity() == null) {
+    if (activity == null) {
       result.success(null);
       return;
     }
 
     addDynamicLinkListener(
-        FirebaseDynamicLinks.getInstance().getDynamicLink(registrar.activity().getIntent()),
-        result);
+        FirebaseDynamicLinks.getInstance().getDynamicLink(activity.getIntent()), result);
   }
 
   private OnCompleteListener<ShortDynamicLink> createShortLinkListener(final Result result) {
