@@ -7,7 +7,6 @@ package io.flutter.plugins.firebaseanalytics;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -34,7 +33,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   }
 
   @Override
-  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
     onAttachedToEngine(
         binding.getApplicationContext(), binding.getFlutterEngine().getDartExecutor());
   }
@@ -47,13 +46,13 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   }
 
   @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
     firebaseAnalytics = null;
     methodChannel = null;
   }
 
   @Override
-  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+  public void onAttachedToActivity(ActivityPluginBinding binding) {
     setActivity(binding.getActivity());
   }
 
@@ -63,7 +62,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   }
 
   @Override
-  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
     setActivity(binding.getActivity());
   }
 
