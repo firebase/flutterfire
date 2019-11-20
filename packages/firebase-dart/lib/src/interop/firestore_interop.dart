@@ -327,7 +327,12 @@ abstract class Settings {
   external set host(String h);
   external set ssl(bool v);
 
-  external factory Settings({bool timestampsInSnapshots, int cacheSizeBytes, String host, bool ssl});
+  external factory Settings({
+    bool timestampsInSnapshots,
+    int cacheSizeBytes,
+    String host,
+    bool ssl,
+  });
 }
 
 /// Metadata about a snapshot, describing the state of the snapshot.
