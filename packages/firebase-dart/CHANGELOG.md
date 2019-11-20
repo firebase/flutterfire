@@ -4,6 +4,8 @@
 - Added `idToken`, `accessToken` and `secret` to `OAuthCredential`
 - Added support for Email Link authentication.
 - Firestore `Settings` added `cacheSizeBytes`, `host`, and `ssl` properties.
+- Added `measurementId` and `appId` to `FirebaseOptions` (both required for analytics)
+- Added analytics and performance interop
 
 ## 6.0.0
 
