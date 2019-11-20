@@ -2,7 +2,8 @@
 
 - **BREAKING** renamed `AuthCredential` into `OAuthCredential` to align with JS API
 - Added `idToken`, `accessToken` and `secret` to `OAuthCredential`
-- Added support for Email Link authentication
+- Added support for Email Link authentication.
+- Firestore `Settings` added `cacheSizeBytes`, `host`, and `ssl` properties.
 
 ## 6.0.0
 
