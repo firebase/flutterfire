@@ -19,6 +19,8 @@ static FlutterError *getFlutterError(NSError *error) {
                              details:error.localizedDescription];
 }
 
+static NSObject<FlutterPluginRegistrar> *_registrar;
+
 @implementation FLTFirebaseMessagingPlugin {
   FlutterMethodChannel *_channel;
   NSDictionary *_launchNotification;
@@ -26,6 +28,7 @@ static FlutterError *getFlutterError(NSError *error) {
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+  _registrar = registrar;
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_messaging"
                                   binaryMessenger:[registrar messenger]];
@@ -59,22 +62,50 @@ static FlutterError *getFlutterError(NSError *error) {
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
   NSString *method = call.method;
   if ([@"requestNotificationPermissions" isEqualToString:method]) {
-    UIUserNotificationType notificationTypes = 0;
     NSDictionary *arguments = call.arguments;
-    if ([arguments[@"sound"] boolValue]) {
-      notificationTypes |= UIUserNotificationTypeSound;
-    }
-    if ([arguments[@"alert"] boolValue]) {
-      notificationTypes |= UIUserNotificationTypeAlert;
-    }
-    if ([arguments[@"badge"] boolValue]) {
-      notificationTypes |= UIUserNotificationTypeBadge;
-    }
-    UIUserNotificationSettings *settings =
-        [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    if (@available(iOS 10.0, *)) {
+      UNAuthorizationOptions authOptions = 0;
+      if ([arguments[@"sound"] boolValue]) {
+        authOptions |= UNAuthorizationOptionSound;
+      }
+      if ([arguments[@"alert"] boolValue]) {
+        authOptions |= UNAuthorizationOptionAlert;
+      }
+      if ([arguments[@"badge"] boolValue]) {
+        authOptions |= UNAuthorizationOptionBadge;
+      }
 
-    result(nil);
+      [[UNUserNotificationCenter currentNotificationCenter]
+          requestAuthorizationWithOptions:authOptions
+                        completionHandler:^(BOOL granted, NSError *_Nullable error) {
+                          if (error) {
+                            result(getFlutterError(error));
+                          } else {
+                            result([NSNumber numberWithBool:granted]);
+                          }
+                        }];
+    } else {
+      UIUserNotificationType notificationTypes = 0;
+      if ([arguments[@"sound"] boolValue]) {
+        notificationTypes |= UIUserNotificationTypeSound;
+      }
+      if ([arguments[@"alert"] boolValue]) {
+        notificationTypes |= UIUserNotificationTypeAlert;
+      }
+      if ([arguments[@"badge"] boolValue]) {
+        notificationTypes |= UIUserNotificationTypeBadge;
+      }
+
+      UIUserNotificationSettings *settings =
+          [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
+      [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    }
+
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+
+    if (!@available(iOS 10.0, *)) {
+      result([NSNumber numberWithBool:YES]);
+    }
   } else if ([@"configure" isEqualToString:method]) {
     [FIRMessaging messaging].shouldEstablishDirectChannel = true;
     [[UIApplication sharedApplication] registerForRemoteNotifications];
