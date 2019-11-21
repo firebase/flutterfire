@@ -8,7 +8,7 @@ import io.flutter.embedding.engine.plugins.shim.ShimPluginRegistry;
 import io.flutter.plugins.firebaseanalytics.FirebaseAnalyticsPlugin;
 
 public class MainActivity extends FlutterActivity {
-  // TODO(<github-username>): Remove this once v2 of GeneratedPluginRegistrant rolls to stable.
+  // TODO(gaaclarke): Remove this once v2 of GeneratedPluginRegistrant rolls to stable.
   // https://github.com/flutter/flutter/issues/42694
   @Override
   public void configureFlutterEngine(FlutterEngine flutterEngine) {
