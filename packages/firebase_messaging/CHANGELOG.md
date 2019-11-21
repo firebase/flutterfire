@@ -1,3 +1,8 @@
+## 6.0.1
+
+* `FirebaseMessaging.configure` will throw an `ArgumentError` when `onBackgroundMessage` parameter
+is not a top-level or static function.
+
 ## 6.0.0
 
 * Use `UNUserNotificationCenter` to receive messages on iOS version >= 10.
@@ -11,7 +16,7 @@
 
   and add this line to your iOS project `AppDelegate.m`
 
-  ```objectivec
+  ```swift
   if (@available(iOS 10.0, *)) {
     [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
   }

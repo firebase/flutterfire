@@ -61,7 +61,7 @@ for more.
 
 By default background messaging is not enabled. To handle messages in the background:
 
-1. Add an Application.java class to your app
+1. Add an Application.java class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
 
     ```
     package io.flutter.plugins.firebasemessagingexample;
@@ -85,11 +85,11 @@ By default background messaging is not enabled. To handle messages in the backgr
       }
     }
     ```
-1. Set name property of application in `AndroidManifest.xml`
+1. Set name property of application in `AndroidManifest.xml`. This is typically found in `<app-name>/android/app/src/main/`.
     ```
     <application android:name=".Application" ...>
     ```
-1. Define a top level Dart method to handle background messages
+1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
     ```
     Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
       if (message.containsKey('data')) {
