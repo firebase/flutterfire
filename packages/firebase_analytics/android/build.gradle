@@ -34,6 +34,7 @@ android {
     dependencies {
         api 'com.google.firebase:firebase-analytics:17.2.1'
         implementation 'com.google.firebase:firebase-common:19.3.0'
+        implementation 'androidx.annotation:annotation:1.1.0'
     }
 }
 
