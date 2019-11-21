@@ -2,7 +2,6 @@
 
 * Update Firebase Analytics dependency on Android to 17.2.1
 * Updates Android gradle plugin dependency to 3.5.2
-* Remove AndroidX constraint
 
 ## 5.0.7
 
