@@ -28,10 +28,12 @@ void main() {
       "hasPendingWrites": false,
       "isFromCache": false,
     };
+    const MethodChannel firebaseCoreChannel = MethodChannel('plugins.flutter.io/firebase_core');
+
     setUp(() async {
       mockHandleId = 0;
       // Required for FirebaseApp.configure
-      FirebaseApp.channel.setMockMethodCallHandler(
+      firebaseCoreChannel.setMockMethodCallHandler(
         (MethodCall methodCall) async {},
       );
       app = await FirebaseApp.configure(
