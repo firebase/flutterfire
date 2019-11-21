@@ -1,3 +1,7 @@
+## 0.12.10+3
+
+* Fixed test that used `FirebaseApp.channel`.
+
 ## 0.12.10+2
 
 * Fixed analyzer warnings about unused fields.
