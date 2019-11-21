@@ -33,7 +33,7 @@ class MessageList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: firestore.collection('messages').snapshots(),
+      stream: firestore.collection('messages').orderBy('created_at', descending: true).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) return const Text('Loading...');
         final int messageCount = snapshot.data.documents.length;
@@ -42,11 +42,12 @@ class MessageList extends StatelessWidget {
           itemBuilder: (_, int index) {
             final DocumentSnapshot document = snapshot.data.documents[index];
             final dynamic message = document['message'];
+            final dynamic createdAt = document['created_at'];
             return ListTile(
               title: Text(
                 message != null ? message.toString() : '<No message retrieved>',
               ),
-              subtitle: Text('Message ${index + 1} of $messageCount'),
+              subtitle: Text('Message ${index + 1} of $messageCount at ${createdAt != null ? createdAt.toDate(): "retrieving..."}}'),
             );
           },
         );
