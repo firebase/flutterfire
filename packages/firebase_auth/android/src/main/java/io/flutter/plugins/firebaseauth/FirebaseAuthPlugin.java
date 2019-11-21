@@ -77,7 +77,7 @@ public class FirebaseAuthPlugin implements FlutterPlugin, MethodCallHandler, Act
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-    channel = new MethodChannel(binding.getBinaryMessenger(), "plugins.flutter.io/firebase_auth");
+    channel = new MethodChannel(binding.getFlutterEngine().getDartExecutor(), "plugins.flutter.io/firebase_auth");
     channel.setMethodCallHandler(this);
     FirebaseApp.initializeApp(binding.getApplicationContext());
   }
