@@ -28,7 +28,8 @@ void main() {
       "hasPendingWrites": false,
       "isFromCache": false,
     };
-    const MethodChannel firebaseCoreChannel = MethodChannel('plugins.flutter.io/firebase_core');
+    const MethodChannel firebaseCoreChannel =
+        MethodChannel('plugins.flutter.io/firebase_core');
 
     setUp(() async {
       mockHandleId = 0;
