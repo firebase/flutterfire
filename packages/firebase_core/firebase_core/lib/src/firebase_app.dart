@@ -14,37 +14,23 @@ class FirebaseApp {
   static final String defaultAppName =
       Platform.isIOS ? '__FIRAPP_DEFAULT' : '[DEFAULT]';
 
-  @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_core',
-  );
-
   /// A copy of the options for this app. These are non-modifiable.
   ///
   /// This getter is asynchronous because apps can also be configured by native
   /// code.
   Future<FirebaseOptions> get options async {
-    final Map<String, dynamic> app =
-        await channel.invokeMapMethod<String, dynamic>(
-      'FirebaseApp#appNamed',
-      name,
-    );
+    final PlatformFirebaseApp app =
+        await FirebaseCorePlatform.instance.appNamed(name);
     assert(app != null);
-    return FirebaseOptions.from(app['options']);
+    return app.options;
   }
 
   /// Returns a previously created FirebaseApp instance with the given name,
   /// or null if no such app exists.
   static Future<FirebaseApp> appNamed(String name) async {
-    // TODO(amirh): remove this on when the invokeMethod update makes it to stable Flutter.
-    // https://github.com/flutter/flutter/issues/26431
-    // ignore: strong_mode_implicit_dynamic_method
-    final Map<String, dynamic> app =
-        await channel.invokeMapMethod<String, dynamic>(
-      'FirebaseApp#appNamed',
-      name,
-    );
-    return app == null ? null : FirebaseApp(name: app['name']);
+    final PlatformFirebaseApp app =
+        await FirebaseCorePlatform.instance.appNamed(name);
+    return app == null ? null : FirebaseApp(name: app.name);
   }
 
   /// Returns the default (first initialized) instance of the FirebaseApp.
@@ -69,22 +55,18 @@ class FirebaseApp {
     if (existingApp != null) {
       return existingApp;
     }
-    await channel.invokeMethod<void>(
-      'FirebaseApp#configure',
-      <String, dynamic>{'name': name, 'options': options.asMap},
-    );
+    await FirebaseCorePlatform.instance.configure(name, options);
     return FirebaseApp(name: name);
   }
 
   /// Returns a list of all extant FirebaseApp instances, or null if there are
   /// no FirebaseApp instances.
   static Future<List<FirebaseApp>> allApps() async {
-    final List<dynamic> result = await channel.invokeListMethod<dynamic>(
-      'FirebaseApp#allApps',
-    );
+    final List<PlatformFirebaseApp> result =
+        await FirebaseCorePlatform.instance.allApps();
     return result
         ?.map<FirebaseApp>(
-          (dynamic app) => FirebaseApp(name: app['name']),
+          (PlatformFirebaseApp app) => FirebaseApp(name: app.name),
         )
         ?.toList();
   }
