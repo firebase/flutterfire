@@ -4,11 +4,18 @@ import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 
 void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
+  FirebaseInAppMessaging fiam;
 
-  testWidgets('test triggerEvent', (WidgetTester tester) async {
-    expect(
-        () async =>
-            await FirebaseInAppMessaging.instance.triggerEvent("foobar"),
-        returnsNormally);
+  setUp(() {
+    fiam = FirebaseInAppMessaging();
+  });
+
+  testWidgets('triggerEvent', (WidgetTester tester) async {
+    expect(fiam.triggerEvent('someEvent'), completes);
+  });
+
+  testWidgets('logging', (WidgetTester tester) async {
+    expect(fiam.setMessagesSuppressed(true), completes);
+    expect(fiam.setAutomaticDataCollectionEnabled(true), completes);
   });
 }
