@@ -15,7 +15,6 @@
 ## 0.14.0+10
 
 * Formatted lists in member documentations for better readability.
->>>>>>> origin/master
 
 ## 0.14.0+9
 
