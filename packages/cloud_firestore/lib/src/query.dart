@@ -158,8 +158,7 @@ class Query {
       addCondition(field, 'array-contains', arrayContains);
     if (arrayContainsAny != null)
       addCondition(field, 'array-contains-any', arrayContainsAny);
-    if (whereIn != null)
-      addCondition(field, 'in', whereIn);
+    if (whereIn != null) addCondition(field, 'in', whereIn);
     if (isNull != null) {
       assert(
           isNull,

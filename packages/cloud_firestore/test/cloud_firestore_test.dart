@@ -400,7 +400,7 @@ void main() {
       test('where in', () async {
         final StreamSubscription<QuerySnapshot> subscription =
         collectionReference
-            .where('country', whereIn: ['USA', 'Japan'])
+            .where('country', whereIn: <String>['USA', 'Japan'])
             .snapshots()
             .listen((QuerySnapshot querySnapshot) {});
         subscription.cancel();
@@ -433,7 +433,7 @@ void main() {
       test('where array-contains-any', () async {
         final StreamSubscription<QuerySnapshot> subscription =
         collectionReference
-            .where('regions', arrayContainsAny: ['west-coast', 'east-coast'])
+            .where('regions', arrayContainsAny: <String>['west-coast', 'east-coast'])
             .snapshots()
             .listen((QuerySnapshot querySnapshot) {});
         subscription.cancel();
