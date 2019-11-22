@@ -341,7 +341,7 @@ void main() {
         'country': 'Mozambique',
       });
       QuerySnapshot snapshot = await ref
-          .where('country', whereIn: ['USA', 'Mozambique'])
+          .where('country', whereIn: <String>['USA', 'Mozambique'])
           .orderBy('country')
           .getDocuments();
       final List<DocumentSnapshot> results = snapshot.documents;
@@ -363,7 +363,7 @@ void main() {
         'regions': ['kanto', 'honshu'],
       });
       QuerySnapshot snapshot = await ref
-          .where('regions', arrayContainsAny: ['kanto', 'west-coast'])
+          .where('regions', arrayContainsAny: <String>['kanto', 'west-coast'])
           .orderBy('country')
           .getDocuments();
       final List<DocumentSnapshot> results = snapshot.documents;
@@ -373,6 +373,5 @@ void main() {
       expect(snapshot1.documentID, 'moz');
       expect(snapshot2.documentID, 'usa');
     });
-
   });
 }
