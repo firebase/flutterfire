@@ -399,10 +399,10 @@ void main() {
       });
       test('where in', () async {
         final StreamSubscription<QuerySnapshot> subscription =
-        collectionReference
-            .where('country', whereIn: <String>['USA', 'Japan'])
-            .snapshots()
-            .listen((QuerySnapshot querySnapshot) {});
+            collectionReference
+                .where('country', whereIn: <String>['USA', 'Japan'])
+                .snapshots()
+                .listen((QuerySnapshot querySnapshot) {});
         subscription.cancel();
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -416,7 +416,11 @@ void main() {
                 'isCollectionGroup': false,
                 'parameters': <String, dynamic>{
                   'where': <List<dynamic>>[
-                    <dynamic>['country', 'in', ['USA', 'Japan']],
+                    <dynamic>[
+                      'country',
+                      'in',
+                      ['USA', 'Japan']
+                    ],
                   ],
                   'orderBy': <List<dynamic>>[],
                 },
@@ -432,10 +436,11 @@ void main() {
       });
       test('where array-contains-any', () async {
         final StreamSubscription<QuerySnapshot> subscription =
-        collectionReference
-            .where('regions', arrayContainsAny: <String>['west-coast', 'east-coast'])
-            .snapshots()
-            .listen((QuerySnapshot querySnapshot) {});
+            collectionReference
+                .where('regions',
+                    arrayContainsAny: <String>['west-coast', 'east-coast'])
+                .snapshots()
+                .listen((QuerySnapshot querySnapshot) {});
         subscription.cancel();
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -449,7 +454,11 @@ void main() {
                 'isCollectionGroup': false,
                 'parameters': <String, dynamic>{
                   'where': <List<dynamic>>[
-                    <dynamic>['regions', 'array-contains-any', ['west-coast', 'east-coast']],
+                    <dynamic>[
+                      'regions',
+                      'array-contains-any',
+                      ['west-coast', 'east-coast']
+                    ],
                   ],
                   'orderBy': <List<dynamic>>[],
                 },
