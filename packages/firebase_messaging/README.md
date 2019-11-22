@@ -221,7 +221,7 @@ final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
 Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
   await firebaseMessaging.requestNotificationPermissions(
-    const IosNotificationSettings(sound: true, badge: true, alert: true),
+    const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
   );
 
   await http.post(

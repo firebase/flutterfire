@@ -74,6 +74,9 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
       if ([arguments[@"badge"] boolValue]) {
         authOptions |= UNAuthorizationOptionBadge;
       }
+      if (@available(iOS 12, *) && [arguments[@"provisional"] boolValue]) {
+        authOptions |= UNAuthorizationOptionProvisional;
+      }
 
       [[UNUserNotificationCenter currentNotificationCenter]
           requestAuthorizationWithOptions:authOptions
