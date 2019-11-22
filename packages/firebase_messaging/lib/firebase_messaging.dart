@@ -104,7 +104,8 @@ class FirebaseMessaging {
   void configure({
     MessageHandler onMessage,
     MessageHandler onBackgroundMessage,
-    MessageHandler onLaunch,
+    @Deprecated('Use `FirebaseMessaging.getLaunchMessage` instead.')
+        MessageHandler onLaunch,
     MessageHandler onResume,
   }) {
     _onMessage = onMessage;
@@ -135,6 +136,13 @@ class FirebaseMessaging {
         },
       );
     }
+  }
+
+  /// Retrieves the FCM message that launched the application (if any,
+  /// otherwise returns null).
+  Future<Map<dynamic, dynamic>> getLaunchMessage() async {
+    return await _channel
+        .invokeMethod<Map<dynamic, dynamic>>('getLaunchMessage');
   }
 
   final StreamController<String> _tokenStreamController =

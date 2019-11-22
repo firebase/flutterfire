@@ -136,6 +136,8 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
       [[UIApplication sharedApplication] registerForRemoteNotifications];
       result([NSNumber numberWithBool:YES]);
     }
+  } else if ([@"getLaunchMessage" isEqualToString:method]) {
+    result(_launchNotification);
   } else if ([@"configure" isEqualToString:method]) {
     [FIRMessaging messaging].shouldEstablishDirectChannel = true;
     [[UIApplication sharedApplication] registerForRemoteNotifications];

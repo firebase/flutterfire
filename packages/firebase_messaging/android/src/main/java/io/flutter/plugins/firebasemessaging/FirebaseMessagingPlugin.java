@@ -199,6 +199,13 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
         sendMessageFromIntent("onLaunch", mainActivity.getIntent());
       }
       result.success(null);
+    } else if ("getLaunchMessage".equals(call.method)) {
+      if (mainActivity != null) {
+        Map<String, Object> message = this.getMessageFromIntent(mainActivity.getIntent());
+        result.success(message);
+        return;
+      }
+      result.success(null);
     } else if ("subscribeToTopic".equals(call.method)) {
       String topic = call.arguments();
       FirebaseMessaging.getInstance()
@@ -300,15 +307,14 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     return res;
   }
 
-  /** @return true if intent contained a message to send. */
-  private boolean sendMessageFromIntent(String method, Intent intent) {
+  private Map<String, Object> getMessageFromIntent(Intent intent) {
     if (CLICK_ACTION_VALUE.equals(intent.getAction())
         || CLICK_ACTION_VALUE.equals(intent.getStringExtra("click_action"))) {
       Map<String, Object> message = new HashMap<>();
       Bundle extras = intent.getExtras();
 
       if (extras == null) {
-        return false;
+        return null;
       }
 
       Map<String, Object> notificationMap = new HashMap<>();
@@ -323,10 +329,20 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
 
       message.put("notification", notificationMap);
       message.put("data", dataMap);
-
-      channel.invokeMethod(method, message);
-      return true;
+      return message;
     }
-    return false;
+    return null;
+  }
+
+  /** @return true if intent contained a message to send. */
+  private boolean sendMessageFromIntent(String method, Intent intent) {
+    Map<String, Object> message = this.getMessageFromIntent(intent);
+
+    if (message == null) {
+      return false;
+    }
+
+    channel.invokeMethod(method, message);
+    return true;
   }
 }

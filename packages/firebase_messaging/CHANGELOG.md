@@ -1,3 +1,9 @@
+## 6.0.9
+
+* Separated onLaunch to an specific method to be able to retrieve launch
+  message in a synchronous way.
+* Deprecated the `onLaunch` function from `FirebaseMessaging.configure`.
+
 ## 6.0.8
 
 * Support for provisional notifications for iOS version >= 12.
