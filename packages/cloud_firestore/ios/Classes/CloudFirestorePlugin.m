@@ -150,6 +150,22 @@ static FIRQuery *getQuery(NSDictionary *arguments) {
       } else {
         // Invalid type.
       }
+    } else if ([op isEqualToString:@"array-contains-any"]) {
+      if (fieldName != nil) {
+        query = [query queryWhereField:fieldName arrayContainsAny:value];
+      } else if (fieldPath != nil) {
+        query = [query queryWhereFieldPath:fieldPath arrayContainsAny:value];
+      } else {
+        // Invalid type.
+      }
+    } else if ([op isEqualToString:@"in"]) {
+      if (fieldName != nil) {
+        query = [query queryWhereField:fieldName in:value];
+      } else if (fieldPath != nil) {
+        query = [query queryWhereFieldPath:fieldPath in:value];
+      } else {
+        // Invalid type.
+      }
     } else {
       // Unsupported operator
     }
