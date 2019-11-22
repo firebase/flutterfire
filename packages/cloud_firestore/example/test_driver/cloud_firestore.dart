@@ -370,8 +370,8 @@ void main() {
       expect(results.length, 2);
       final DocumentSnapshot snapshot1 = results[0];
       final DocumentSnapshot snapshot2 = results[1];
-      expect(snapshot1.documentID, 'moz');
-      expect(snapshot2.documentID, 'usa');
+      expect(snapshot1.documentID, 'la');
+      expect(snapshot2.documentID, 'tokyo');
     });
   });
 }
