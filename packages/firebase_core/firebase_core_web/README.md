@@ -25,9 +25,27 @@ dependencies:
   ...
 ```
 
+### Updating `index.html`
+
+Due to [this bug in dartdevc][2], you will need to manually add the Firebase
+JavaScript file to you `index.html` file.
+
+In your app directory, edit `web/index.html` to add the line:
+
+```html
+<html>
+    ...
+    <body>
+        <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+        <script src="main.dart.js"></script>
+    </body>
+</html>
+```
+
 ### Using the plugin
 
 Once you have added the `firebase_core_web` dependency to your pubspec,
 you can use `package:firebase_core` as normal.
 
 [1]: ../firebase_core/firebase_core
+[2]: https://github.com/dart-lang/sdk/issues/33979
