@@ -84,7 +84,8 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
                             result([NSNumber numberWithBool:granted]);
                           }
                         }];
-    } else {
+      [[UIApplication sharedApplication] registerForRemoteNotifications];
+    } else { // If iOS version is less than 10
       UIUserNotificationType notificationTypes = 0;
       if ([arguments[@"sound"] boolValue]) {
         notificationTypes |= UIUserNotificationTypeSound;
@@ -99,11 +100,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
       UIUserNotificationSettings *settings =
           [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
       [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-    }
-
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
-
-    if (!@available(iOS 10.0, *)) {
+      [[UIApplication sharedApplication] registerForRemoteNotifications];
       result([NSNumber numberWithBool:YES]);
     }
   } else if ([@"configure" isEqualToString:method]) {
