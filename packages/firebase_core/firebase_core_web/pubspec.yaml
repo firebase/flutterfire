@@ -23,9 +23,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-#  firebase_core: ^0.4.2
-  firebase_core:
-    path: ../firebase_core
+  firebase_core: ^0.4.2
 
 environment:
   sdk: ">=2.0.0-dev.28.0 <3.0.0"
