@@ -1,3 +1,7 @@
+## 0.4.3
+
+* Check `kIsWeb` before checking `Platform.isIos` for the default app name.
+
 ## 0.4.2
 
 * Migrate to `firebase_core_platform_interface`.
