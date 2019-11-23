@@ -9,21 +9,19 @@ import 'dart:js' as js;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:firebase_core/firebase_core.dart';
-
-import 'utils.dart';
 
 void main() {
   group('$FirebaseCoreWeb', () {
+    FirebaseCoreWeb firebaseCoreWeb;
     setUp(() async {
       js.JsObject firebaseMock = js.JsObject.jsify(<String, dynamic>{});
       js.context['firebase'] = firebaseMock;
-      FirebaseCorePlatform.instance = FirebaseCoreWeb();
+      firebaseCoreWeb = FirebaseCoreWeb();
     });
 
     test('allApps() calls firebase.apps', () async {
-      js.context['firebase']['apps'] = js.JsArray<FirebaseApp>();
-      final List<FirebaseApp> apps = await FirebaseApp.allApps();
+      js.context['firebase']['apps'] = js.JsArray<dynamic>();
+      final List<PlatformFirebaseApp> apps = await firebaseCoreWeb.allApps();
       expect(apps, hasLength(0));
     });
 
@@ -34,21 +32,28 @@ void main() {
           'options': <String, String>{'appId': '123'},
         });
       });
-      final FirebaseApp app = await FirebaseApp.appNamed('foo');
+      final PlatformFirebaseApp app = await firebaseCoreWeb.appNamed('foo');
       expect(app.name, equals('foo'));
+      expect(app.options.googleAppID, equals('123'));
     });
 
     test('configure() calls firebase.initializeApp', () async {
+      String appName;
+      js.JsObject appOptions;
+
       js.context['firebase']['initializeApp'] =
           js.allowInterop((js.JsObject options, String name) {
+        appName = name;
+        appOptions = options;
         return js.JsObject.jsify(<String, dynamic>{
           'name': name,
           'options': options,
         });
       });
-      final FirebaseApp app = await FirebaseApp.configure(
-          name: 'foo', options: FirebaseOptions(googleAppID: '123'));
-      expect(app.name, equals('foo'));
+      firebaseCoreWeb.configure(
+          'foo', const FirebaseOptions(googleAppID: '123'));
+      expect(appName, equals('foo'));
+      expect(appOptions['appId'], equals('123'));
     });
   });
 }
