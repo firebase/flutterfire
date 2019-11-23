@@ -85,7 +85,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
                           }
                         }];
       [[UIApplication sharedApplication] registerForRemoteNotifications];
-    } else { // If iOS version is less than 10
+    } else {  // If iOS version is less than 10
       UIUserNotificationType notificationTypes = 0;
       if ([arguments[@"sound"] boolValue]) {
         notificationTypes |= UIUserNotificationTypeSound;
