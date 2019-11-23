@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:meta/meta.dart' show required;
-import 'package:quiver_hashcode/hashcode.dart';
+import 'package:quiver/core.dart';
 
 /// The options used to configure a Firebase app.
 class FirebaseOptions {
