@@ -1,3 +1,7 @@
+## 6.0.2
+
+* Fix negated `available` fn in iOS implementation.
+
 ## 6.0.1
 
 * `FirebaseMessaging.configure` will throw an `ArgumentError` when `onBackgroundMessage` parameter
