@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html' as html;
 import 'dart:js' as js;
 import 'dart:js_util' as js_util;
 
@@ -14,14 +13,14 @@ import 'src/firebase_js.dart' as firebase;
 
 /// The implementation of `firebase_core` for web.
 class FirebaseCoreWeb extends FirebaseCorePlatform {
-  static void registerWith(Registrar registrar) {
-    FirebaseCorePlatform.instance = FirebaseCoreWeb();
-  }
-
   FirebaseCoreWeb() {
     if (!js.context.hasProperty('firebase')) {
       throw StateError('firebase.js has not been loaded');
     }
+  }
+
+  static void registerWith(Registrar registrar) {
+    FirebaseCorePlatform.instance = FirebaseCoreWeb();
   }
 
   @override
@@ -44,7 +43,7 @@ class FirebaseCoreWeb extends FirebaseCorePlatform {
 
   @override
   Future<List<PlatformFirebaseApp>> allApps() async {
-    List<firebase.App> jsApps = firebase.apps;
+    final List<firebase.App> jsApps = firebase.apps;
     return jsApps.map<PlatformFirebaseApp>(_createFromJsApp).toList();
   }
 }

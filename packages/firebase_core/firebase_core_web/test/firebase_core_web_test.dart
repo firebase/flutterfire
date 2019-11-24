@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 @TestOn('browser')
 
-import 'dart:html' as html;
 import 'dart:js' as js;
 
 import 'package:flutter_test/flutter_test.dart';
@@ -14,7 +13,7 @@ void main() {
   group('$FirebaseCoreWeb', () {
     FirebaseCoreWeb firebaseCoreWeb;
     setUp(() async {
-      js.JsObject firebaseMock = js.JsObject.jsify(<String, dynamic>{});
+      final js.JsObject firebaseMock = js.JsObject.jsify(<String, dynamic>{});
       js.context['firebase'] = firebaseMock;
       firebaseCoreWeb = FirebaseCoreWeb();
     });

@@ -16,15 +16,6 @@ class App {
 @JS()
 @anonymous
 class Options {
-  external String get apiKey;
-  external String get authDomain;
-  external String get databaseURL;
-  external String get projectId;
-  external String get storageBucket;
-  external String get messagingSenderId;
-  external String get appId;
-  external String get measurementId;
-
   external factory Options({
     String apiKey,
     String authDomain,
@@ -35,6 +26,15 @@ class Options {
     String appId,
     String measurementId,
   });
+
+  external String get apiKey;
+  external String get authDomain;
+  external String get databaseURL;
+  external String get projectId;
+  external String get storageBucket;
+  external String get messagingSenderId;
+  external String get appId;
+  external String get measurementId;
 }
 
 @JS()
