@@ -99,11 +99,12 @@ abstract class AuthCredential {
 }
 
 class EmailAuthCredential extends AuthCredential {
-  static const String _providerId = 'password';
   const EmailAuthCredential({@required this.email, this.password, this.link})
       : assert(password != null || link != null,
             'One of "password" or "link" must be provided'),
         super(_providerId);
+
+  static const String _providerId = 'password';
 
   final String email;
   final String password;
@@ -123,11 +124,12 @@ class EmailAuthCredential extends AuthCredential {
 }
 
 class GoogleAuthCredential extends AuthCredential {
-  static const String _providerId = 'google.com';
   const GoogleAuthCredential({
     @required this.idToken,
     @required this.accessToken,
   }) : super(_providerId);
+
+  static const String _providerId = 'google.com';
 
   final String idToken;
   final String accessToken;
@@ -140,9 +142,10 @@ class GoogleAuthCredential extends AuthCredential {
 }
 
 class FacebookAuthCredential extends AuthCredential {
-  static const String _providerId = 'facebook.com';
   const FacebookAuthCredential({@required this.accessToken})
       : super(_providerId);
+
+  static const String _providerId = 'facebook.com';
 
   final String accessToken;
 
@@ -153,11 +156,12 @@ class FacebookAuthCredential extends AuthCredential {
 }
 
 class TwitterAuthCredential extends AuthCredential {
-  static const String _providerId = 'twitter.com';
   const TwitterAuthCredential({
     @required this.authToken,
     @required this.authTokenSecret,
   }) : super(_providerId);
+
+  static const String _providerId = 'twitter.com';
 
   final String authToken;
   final String authTokenSecret;
@@ -170,8 +174,9 @@ class TwitterAuthCredential extends AuthCredential {
 }
 
 class GithubAuthCredential extends AuthCredential {
-  static const String _providerId = 'github.com';
   const GithubAuthCredential({@required this.token}) : super(_providerId);
+
+  static const String _providerId = 'github.com';
 
   final String token;
 
@@ -182,11 +187,12 @@ class GithubAuthCredential extends AuthCredential {
 }
 
 class PhoneAuthCredential extends AuthCredential {
-  static const String _providerId = 'phone';
   const PhoneAuthCredential(
       {this.verificationId, this.smsCode, this.jsonObject})
       : assert(verificationId != null || jsonObject != null),
         super(_providerId);
+
+  static const String _providerId = 'phone';
 
   final String verificationId;
   final String smsCode;

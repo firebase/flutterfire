@@ -176,7 +176,7 @@ abstract class FirebaseAuthPlatform {
   }
 
   /// Unlinks the current user with the given [provider].
-  Future<PlatformAuthResult> unlinkFromProvider(String app, String provider) {
+  Future<void> unlinkFromProvider(String app, String provider) {
     throw UnimplementedError('unlinkFromProvider() is not implemented');
   }
 

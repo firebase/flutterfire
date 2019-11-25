@@ -228,7 +228,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<PlatformAuthResult> unlinkFromProvider(String app, String provider) {
+  Future<void> unlinkFromProvider(String app, String provider) {
     return channel.invokeMethod<void>(
       'unlinkFromProvider',
       <String, String>{'provider': provider, 'app': app},
@@ -272,7 +272,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     String displayName,
     String photoUrl,
   }) {
-    Map<String, String> arguments = <String, String>{'app': app};
+    final Map<String, String> arguments = <String, String>{'app': app};
     if (displayName != null) {
       arguments['displayName'] = displayName;
     }
@@ -398,10 +398,10 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 }
 
-PlatformUser _decodeUser(Map<String, dynamic> data) {
+PlatformUser _decodeUser(Map<dynamic, dynamic> data) {
   final List<dynamic> rawProviderData = data['providerData'];
-  final List<Map<String, dynamic>> castProviderData =
-      rawProviderData.cast<Map<String, dynamic>>();
+  final List<Map<dynamic, dynamic>> castProviderData =
+      rawProviderData.cast<Map<dynamic, dynamic>>();
   final List<PlatformUserInfo> providerData =
       castProviderData.map<PlatformUserInfo>(_decodeUserInfo).toList();
   return PlatformUser(
@@ -419,7 +419,7 @@ PlatformUser _decodeUser(Map<String, dynamic> data) {
   );
 }
 
-PlatformUserInfo _decodeUserInfo(Map<String, dynamic> data) {
+PlatformUserInfo _decodeUserInfo(Map<dynamic, dynamic> data) {
   return PlatformUserInfo(
     providerId: data['providerId'],
     uid: data['uid'],
@@ -430,7 +430,7 @@ PlatformUserInfo _decodeUserInfo(Map<String, dynamic> data) {
   );
 }
 
-PlatformAuthResult _decodeAuthResult(Map<String, dynamic> data) {
+PlatformAuthResult _decodeAuthResult(Map<dynamic, dynamic> data) {
   final PlatformUser user = _decodeUser(data['user']);
   final PlatformAdditionalUserInfo additionalUserInfo =
       _decodeAdditionalUserInfo(data['additionalUserInfo']);
@@ -438,7 +438,7 @@ PlatformAuthResult _decodeAuthResult(Map<String, dynamic> data) {
 }
 
 PlatformAdditionalUserInfo _decodeAdditionalUserInfo(
-    Map<String, dynamic> data) {
+    Map<dynamic, dynamic> data) {
   return PlatformAdditionalUserInfo(
     isNewUser: data['isNewUser'],
     username: data['username'],

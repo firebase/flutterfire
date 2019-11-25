@@ -7,6 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('$FirebaseAuthPlatform', () {
     test('$MethodChannelFirebaseAuth is the default instance', () {
       expect(FirebaseAuthPlatform.instance, isA<MethodChannelFirebaseAuth>());
