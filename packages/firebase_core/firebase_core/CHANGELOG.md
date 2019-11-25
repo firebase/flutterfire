@@ -1,4 +1,4 @@
-## 0.4.3
+## 0.4.2+1
 
 * Check `kIsWeb` before checking `Platform.isIos` for the default app name.
 
