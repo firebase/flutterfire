@@ -10,7 +10,7 @@ class UserInfo {
 
   final FirebaseApp _app;
 
-  final PlatformUser _data;
+  final PlatformUserInfo _data;
 
   /// The provider identifier.
   String get providerId => _data.providerId;
