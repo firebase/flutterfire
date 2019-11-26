@@ -1,7 +1,8 @@
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-import 'package:meta/meta.dart';
+
+part of firebase_auth_platform_interface;
 
 typedef void PhoneVerificationCompleted(AuthCredential phoneAuthCredential);
 typedef void PhoneVerificationFailed(AuthException error);
@@ -77,6 +78,9 @@ class PlatformAdditionalUserInfo {
   final Map<String, dynamic> profile;
 }
 
+/// Represents `UserCredential` from Firebase.
+///
+/// See also: https://firebase.google.com/docs/reference/js/firebase.auth.html#usercredential
 class PlatformAuthResult {
   const PlatformAuthResult({
     @required this.user,
@@ -94,10 +98,14 @@ abstract class AuthCredential {
   /// An id that identifies the specific type of provider.
   final String providerId;
 
-  /// Returns the data for this credential as a map.
-  Map<String, String> asMap();
+  /// Returns the data for this credential serialized as a map.
+  Map<String, String> _asMap();
+
+  @override
+  String toString() => _asMap().toString();
 }
 
+/// An [AuthCredential] created by an email auth provider.
 class EmailAuthCredential extends AuthCredential {
   const EmailAuthCredential({@required this.email, this.password, this.link})
       : assert(password != null || link != null,
@@ -106,12 +114,17 @@ class EmailAuthCredential extends AuthCredential {
 
   static const String _providerId = 'password';
 
+  /// The user's email address.
   final String email;
+
+  /// The user account password.
   final String password;
+
+  /// The sign-in email link.
   final String link;
 
   @override
-  Map<String, String> asMap() {
+  Map<String, String> _asMap() {
     final Map<String, String> result = <String, String>{'email': email};
     if (password != null) {
       result['password'] = password;
@@ -123,6 +136,7 @@ class EmailAuthCredential extends AuthCredential {
   }
 }
 
+/// An [AuthCredential] for authenticating via google.com.
 class GoogleAuthCredential extends AuthCredential {
   const GoogleAuthCredential({
     @required this.idToken,
@@ -131,30 +145,36 @@ class GoogleAuthCredential extends AuthCredential {
 
   static const String _providerId = 'google.com';
 
+  /// The Google ID token.
   final String idToken;
+
+  /// The Google access token.
   final String accessToken;
 
   @override
-  Map<String, String> asMap() => <String, String>{
+  Map<String, String> _asMap() => <String, String>{
         'idToken': idToken,
         'accessToken': accessToken,
       };
 }
 
+/// An [AuthCredential] for authenticating via facebook.com.
 class FacebookAuthCredential extends AuthCredential {
   const FacebookAuthCredential({@required this.accessToken})
       : super(_providerId);
 
   static const String _providerId = 'facebook.com';
 
+  /// The Facebook access token.
   final String accessToken;
 
   @override
-  Map<String, String> asMap() => <String, String>{
+  Map<String, String> _asMap() => <String, String>{
         'accessToken': accessToken,
       };
 }
 
+/// An [AuthCredential] for authenticating via twitter.com.
 class TwitterAuthCredential extends AuthCredential {
   const TwitterAuthCredential({
     @required this.authToken,
@@ -163,43 +183,65 @@ class TwitterAuthCredential extends AuthCredential {
 
   static const String _providerId = 'twitter.com';
 
+  /// The Twitter access token.
   final String authToken;
+
+  /// The Twitter secret token.
   final String authTokenSecret;
 
   @override
-  Map<String, String> asMap() => <String, String>{
+  Map<String, String> _asMap() => <String, String>{
         'authToken': authToken,
         'authTokenSecret': authTokenSecret,
       };
 }
 
+/// An [AuthCredential] for authenticating via github.com.
 class GithubAuthCredential extends AuthCredential {
   const GithubAuthCredential({@required this.token}) : super(_providerId);
 
   static const String _providerId = 'github.com';
 
+  /// The Github token.
   final String token;
 
   @override
-  Map<String, String> asMap() => <String, String>{
+  Map<String, String> _asMap() => <String, String>{
         'token': token,
       };
 }
 
+/// An [AuthCredential] for authenticating via phone.
 class PhoneAuthCredential extends AuthCredential {
   const PhoneAuthCredential(
-      {this.verificationId, this.smsCode, this.jsonObject})
-      : assert(verificationId != null || jsonObject != null),
+      {@required this.verificationId, @required this.smsCode})
+      : _jsonObject = null,
+        super(_providerId);
+
+  /// On Android, when the SMS code is automatically detected, the credential
+  /// is returned serialized as JSON.
+  const PhoneAuthCredential._fromDetectedOnAndroid(
+      {@required String jsonObject})
+      : _jsonObject = jsonObject,
+        verificationId = null,
+        smsCode = null,
         super(_providerId);
 
   static const String _providerId = 'phone';
 
+  /// The verification ID returned from [FirebaseAuthPlatform.verifyPhoneNumber].
   final String verificationId;
+
+  /// The verification code sent to the user's phone.
   final String smsCode;
-  final String jsonObject;
+
+  /// The credential serialized to JSON.
+  ///
+  /// See [PhoneAuthCredential._fromDetectedOnAndroid].
+  final String _jsonObject;
 
   @override
-  Map<String, String> asMap() {
+  Map<String, String> _asMap() {
     final Map<String, String> result = <String, String>{};
     if (verificationId != null) {
       result['verificationId'] = verificationId;
@@ -207,13 +249,14 @@ class PhoneAuthCredential extends AuthCredential {
     if (smsCode != null) {
       result['smsCode'] = smsCode;
     }
-    if (jsonObject != null) {
-      result['jsonObject'] = jsonObject;
+    if (_jsonObject != null) {
+      result['jsonObject'] = _jsonObject;
     }
     return result;
   }
 }
 
+/// The result of calling [FirebaseAuthPlatform.getIdToken].
 class PlatformIdTokenResult {
   const PlatformIdTokenResult({
     @required this.token,
@@ -224,11 +267,29 @@ class PlatformIdTokenResult {
     this.signInProvider,
   });
 
+  /// The Firebase Auth ID token JWT string.
   final String token;
+
+  /// The time when the ID token expires.
   final int expirationTimestamp;
+
+
+  /// The time the user authenticated (signed in).
+  ///
+  /// Note that this is not the time the token was refreshed.
   final int authTimestamp;
+
+
+  /// The time when ID token was issued.
   final int issuedAtTimestamp;
+
+
+  /// The sign-in provider through which the ID token was obtained (anonymous,
+  /// custom, phone, password, etc). Note, this does not map to provider IDs.
   final Map<dynamic, dynamic> claims;
+
+  /// The entire payload claims of the ID token including the standard reserved
+  /// claims as well as the custom claims.
   final String signInProvider;
 }
 
@@ -237,6 +298,9 @@ class PlatformIdTokenResult {
 class AuthException implements Exception {
   const AuthException(this.code, this.message);
 
+  /// The error code of the exception.
   final String code;
+
+  /// A message containing extra information about the exception.
   final String message;
 }

@@ -2,12 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
-
-import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:flutter/services.dart';
-
-import 'package:meta/meta.dart';
+part of firebase_auth_platform_interface;
 
 class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   MethodChannelFirebaseAuth() {
@@ -30,7 +25,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<PlatformUser> getCurrentUser(String app) async {
     final Map<String, dynamic> data = await channel
         .invokeMapMethod<String, dynamic>(
-            "currentUser", <String, String>{'app': app});
+            'currentUser', <String, String>{'app': app});
     final PlatformUser currentUser = data == null ? null : _decodeUser(data);
     return currentUser;
   }
@@ -39,7 +34,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<PlatformAuthResult> signInAnonymously(String app) async {
     final Map<String, dynamic> data = await channel
         .invokeMapMethod<String, dynamic>(
-            'signInAnonymously', <String, String>{"app": app});
+            'signInAnonymously', <String, String>{'app': app});
     final PlatformAuthResult authResult = _decodeAuthResult(data);
     return authResult;
   }
@@ -155,7 +150,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       <String, dynamic>{
         'app': app,
         'provider': credential.providerId,
-        'data': credential.asMap(),
+        'data': credential._asMap(),
       },
     );
     final PlatformAuthResult authResult = _decodeAuthResult(data);
@@ -203,7 +198,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       <String, dynamic>{
         'app': app,
         'provider': credential.providerId,
-        'data': credential.asMap(),
+        'data': credential._asMap(),
       },
     );
     return _decodeAuthResult(data);
@@ -220,7 +215,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       <String, dynamic>{
         'app': app,
         'provider': credential.providerId,
-        'data': credential.asMap(),
+        'data': credential._asMap(),
       },
     );
     final PlatformAuthResult result = _decodeAuthResult(data);
@@ -253,7 +248,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       <String, dynamic>{
         'app': app,
         'provider': phoneAuthCredential.providerId,
-        'data': phoneAuthCredential.asMap(),
+        'data': phoneAuthCredential._asMap(),
       },
     );
   }
@@ -300,14 +295,14 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     StreamController<PlatformUser> controller;
     controller = StreamController<PlatformUser>.broadcast(onListen: () {
       _handle = channel.invokeMethod<int>('startListeningAuthState',
-          <String, String>{"app": app}).then<int>((dynamic v) => v);
+          <String, String>{'app': app}).then<int>((dynamic v) => v);
       _handle.then((int handle) {
         _authStateChangedControllers[handle] = controller;
       });
     }, onCancel: () {
       _handle.then((int handle) async {
-        await channel.invokeMethod<void>("stopListeningAuthState",
-            <String, dynamic>{"id": handle, "app": app});
+        await channel.invokeMethod<void>('stopListeningAuthState',
+            <String, dynamic>{'id': handle, 'app': app});
         _authStateChangedControllers.remove(handle);
       });
     });
@@ -355,8 +350,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         final int handle = call.arguments['handle'];
         final PhoneVerificationCompleted verificationCompleted =
             _phoneAuthCallbacks[handle]['PhoneVerificationCompleted'];
-        verificationCompleted(PhoneAuthCredential(
-            jsonObject: call.arguments["phoneAuthCredential"].toString()));
+        verificationCompleted(PhoneAuthCredential._fromDetectedOnAndroid(
+            jsonObject: call.arguments['phoneAuthCredential'].toString()));
         break;
       case 'phoneVerificationFailed':
         final int handle = call.arguments['handle'];

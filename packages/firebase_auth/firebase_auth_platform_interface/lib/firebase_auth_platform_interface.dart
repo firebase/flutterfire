@@ -2,15 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+library firebase_auth_platform_interface;
+
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show required, visibleForTesting;
 
-import 'src/method_channel_firebase_auth.dart';
-import 'src/types.dart';
-
-export 'src/method_channel_firebase_auth.dart';
-export 'src/types.dart';
+part 'src/method_channel_firebase_auth.dart';
+part 'src/types.dart';
 
 /// The interface that implementations of `firebase_auth` must extend.
 ///
