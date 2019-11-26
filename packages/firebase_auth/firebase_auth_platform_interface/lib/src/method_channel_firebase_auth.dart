@@ -467,7 +467,7 @@ PlatformIdTokenResult _decodeIdTokenResult(Map<String, dynamic> data) {
 
 /// A utilily class that collects the callbacks for a [verifyPhoneNumber] call.
 class _PhoneAuthCallbacks {
-  _PhoneAuthCallbacks(
+  const _PhoneAuthCallbacks(
     this.verificationCompleted,
     this.verificationFailed,
     this.codeSent,
