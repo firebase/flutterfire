@@ -9,37 +9,6 @@ typedef void PhoneVerificationFailed(AuthException error);
 typedef void PhoneCodeSent(String verificationId, [int forceResendingToken]);
 typedef void PhoneCodeAutoRetrievalTimeout(String verificationId);
 
-/// Represents a `User` in Firebase.
-///
-/// See also: https://firebase.google.com/docs/reference/js/firebase.User
-class PlatformUser {
-  const PlatformUser({
-    @required this.providerId,
-    @required this.uid,
-    this.displayName,
-    this.photoUrl,
-    this.email,
-    this.phoneNumber,
-    this.creationTimestamp,
-    this.lastSignInTimestamp,
-    @required this.isAnonymous,
-    @required this.isEmailVerified,
-    @required this.providerData,
-  });
-
-  final String providerId;
-  final String uid;
-  final String displayName;
-  final String photoUrl;
-  final String email;
-  final String phoneNumber;
-  final int creationTimestamp;
-  final int lastSignInTimestamp;
-  final bool isAnonymous;
-  final bool isEmailVerified;
-  final List<PlatformUserInfo> providerData;
-}
-
 /// Represents a `UserInfo` from Firebase.
 ///
 /// See also: https://firebase.google.com/docs/reference/js/firebase.UserInfo
@@ -59,6 +28,38 @@ class PlatformUserInfo {
   final String photoUrl;
   final String email;
   final String phoneNumber;
+}
+
+/// Represents a `User` in Firebase.
+///
+/// See also: https://firebase.google.com/docs/reference/js/firebase.User
+class PlatformUser extends PlatformUserInfo {
+  const PlatformUser({
+    @required String providerId,
+    @required String uid,
+    String displayName,
+    String photoUrl,
+    String email,
+    String phoneNumber,
+    this.creationTimestamp,
+    this.lastSignInTimestamp,
+    @required this.isAnonymous,
+    @required this.isEmailVerified,
+    @required this.providerData,
+  }) : super(
+          providerId: providerId,
+          uid: uid,
+          displayName: displayName,
+          photoUrl: photoUrl,
+          email: email,
+          phoneNumber: phoneNumber,
+        );
+
+  final int creationTimestamp;
+  final int lastSignInTimestamp;
+  final bool isAnonymous;
+  final bool isEmailVerified;
+  final List<PlatformUserInfo> providerData;
 }
 
 /// Represents `AdditionalUserInfo` from Firebase.
