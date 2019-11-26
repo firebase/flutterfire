@@ -1,5 +1,9 @@
 ## 6.0.1
 
+* Fix the availability check when using ios < 10.
+
+## 6.0.1
+
 * `FirebaseMessaging.configure` will throw an `ArgumentError` when `onBackgroundMessage` parameter
 is not a top-level or static function.
 
