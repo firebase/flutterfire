@@ -340,7 +340,7 @@ void main() {
       await ref.document('maputo').setData(<String, dynamic>{
         'country': 'Mozambique',
       });
-      final  QuerySnapshot snapshot = await ref
+      final QuerySnapshot snapshot = await ref
           .where('country', whereIn: <String>['USA', 'Mozambique'])
           .orderBy('country')
           .getDocuments();
@@ -356,13 +356,13 @@ void main() {
       final CollectionReference ref = firestore.collection('cities');
       await ref.document('la').setData(<String, dynamic>{
         'country': 'USA',
-        'regions': ['west-coast', 'east-coast'],
+        'regions': <String>['west-coast', 'east-coast'],
       });
       await ref.document('tokyo').setData(<String, dynamic>{
         'country': 'Japan',
-        'regions': ['kanto', 'honshu'],
+        'regions': <String>['kanto', 'honshu'],
       });
-      QuerySnapshot snapshot = await ref
+      final QuerySnapshot snapshot = await ref
           .where('regions', arrayContainsAny: <String>['kanto', 'west-coast'])
           .orderBy('country')
           .getDocuments();
