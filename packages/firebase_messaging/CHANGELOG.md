@@ -1,4 +1,4 @@
-## 6.0.1
+## 6.0.2
 
 * Fix the availability check when using ios < 10.
 
