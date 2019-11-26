@@ -273,16 +273,13 @@ class PlatformIdTokenResult {
   /// The time when the ID token expires.
   final int expirationTimestamp;
 
-
   /// The time the user authenticated (signed in).
   ///
   /// Note that this is not the time the token was refreshed.
   final int authTimestamp;
 
-
   /// The time when ID token was issued.
   final int issuedAtTimestamp;
-
 
   /// The sign-in provider through which the ID token was obtained (anonymous,
   /// custom, phone, password, etc). Note, this does not map to provider IDs.
