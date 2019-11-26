@@ -1,3 +1,6 @@
+## 6.0.2
+Support for provisional notifications for iOS version >= 12.
+
 ## 6.0.1
 
 * `FirebaseMessaging.configure` will throw an `ArgumentError` when `onBackgroundMessage` parameter
