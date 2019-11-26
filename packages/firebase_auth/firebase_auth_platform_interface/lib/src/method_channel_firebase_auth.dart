@@ -14,12 +14,28 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     'plugins.flutter.io/firebase_auth',
   );
 
+  /// Holds the [StreamController] for a call to [onAuthStateChanged].
+  ///
+  /// When [onAuthStateChanged] is called, we send a request to start listening
+  /// for auth events to the platform-side via the [MethodChannel], and the
+  /// platform-side returns an [int] handle. Whenever the platform-side
+  /// observes an auth event, it calls our [MethodChannel] with the event and
+  /// the handle it gave us earlier. We look up the corresponding
+  /// [StreamController] for the handle in this map and push the event to its
+  /// stream.
   final Map<int, StreamController<PlatformUser>> _authStateChangedControllers =
       <int, StreamController<PlatformUser>>{};
 
-  static int _nextHandle = 0;
-  final Map<int, Map<String, dynamic>> _phoneAuthCallbacks =
-      <int, Map<String, dynamic>>{};
+  /// Holds the callbacks for a call to [verifyPhoneNumber].
+  ///
+  /// When the user calls [verifyPhoneNumber], we ask the platform-side to
+  /// verify the phone number, and give it an [int] handle to return results
+  /// to ([nextPhoneAuthHandle]). When the platform-side completes its work,
+  /// it sends a message on our [MethodChannel] with the handle we gave it and
+  /// which callback to call.
+  static int _nextPhoneAuthHandle = 0;
+  final Map<int, _PhoneAuthCallbacks> _phoneAuthCallbacks =
+      <int, _PhoneAuthCallbacks>{};
 
   @override
   Future<PlatformUser> getCurrentUser(String app) async {
@@ -35,8 +51,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     final Map<String, dynamic> data = await channel
         .invokeMapMethod<String, dynamic>(
             'signInAnonymously', <String, String>{'app': app});
-    final PlatformAuthResult authResult = _decodeAuthResult(data);
-    return authResult;
+    return _decodeAuthResult(data);
   }
 
   @override
@@ -50,8 +65,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       'createUserWithEmailAndPassword',
       <String, String>{'email': email, 'password': password, 'app': app},
     );
-    final PlatformAuthResult authResult = _decodeAuthResult(data);
-    return authResult;
+    return _decodeAuthResult(data);
   }
 
   @override
@@ -119,8 +133,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         'link': link,
       },
     );
-    final PlatformAuthResult authResult = _decodeAuthResult(data);
-    return authResult;
+    return _decodeAuthResult(data);
   }
 
   @override
@@ -153,8 +166,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         'data': credential._asMap(),
       },
     );
-    final PlatformAuthResult authResult = _decodeAuthResult(data);
-    return authResult;
+    return _decodeAuthResult(data);
   }
 
   @override
@@ -167,8 +179,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       'signInWithCustomToken',
       <String, String>{'token': token, 'app': app},
     );
-    final PlatformAuthResult authResult = _decodeAuthResult(data);
-    return authResult;
+    return _decodeAuthResult(data);
   }
 
   @override
@@ -321,17 +332,17 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     @required PhoneCodeSent codeSent,
     @required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
   }) {
-    final Map<String, dynamic> callbacks = <String, dynamic>{
-      'PhoneVerificationCompleted': verificationCompleted,
-      'PhoneVerificationFailed': verificationFailed,
-      'PhoneCodeSent': codeSent,
-      'PhoneCodeAuthRetrievalTimeout': codeAutoRetrievalTimeout,
-    };
-    _nextHandle += 1;
-    _phoneAuthCallbacks[_nextHandle] = callbacks;
+    final _PhoneAuthCallbacks callbacks = _PhoneAuthCallbacks(
+      verificationCompleted,
+      verificationFailed,
+      codeSent,
+      codeAutoRetrievalTimeout,
+    );
+    _nextPhoneAuthHandle += 1;
+    _phoneAuthCallbacks[_nextPhoneAuthHandle] = callbacks;
 
     final Map<String, dynamic> params = <String, dynamic>{
-      'handle': _nextHandle,
+      'handle': _nextPhoneAuthHandle,
       'phoneNumber': phoneNumber,
       'timeout': timeout.inMilliseconds,
       'forceResendingToken': forceResendingToken,
@@ -349,25 +360,26 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       case 'phoneVerificationCompleted':
         final int handle = call.arguments['handle'];
         final PhoneVerificationCompleted verificationCompleted =
-            _phoneAuthCallbacks[handle]['PhoneVerificationCompleted'];
+            _phoneAuthCallbacks[handle].verificationCompleted;
         verificationCompleted(PhoneAuthCredential._fromDetectedOnAndroid(
             jsonObject: call.arguments['phoneAuthCredential'].toString()));
+        _phoneAuthCallbacks.remove(handle);
         break;
       case 'phoneVerificationFailed':
         final int handle = call.arguments['handle'];
         final PhoneVerificationFailed verificationFailed =
-            _phoneAuthCallbacks[handle]['PhoneVerificationFailed'];
+            _phoneAuthCallbacks[handle].verificationFailed;
         final Map<dynamic, dynamic> exception = call.arguments['exception'];
         verificationFailed(
             AuthException(exception['code'], exception['message']));
+        _phoneAuthCallbacks.remove(handle);
         break;
       case 'phoneCodeSent':
         final int handle = call.arguments['handle'];
         final String verificationId = call.arguments['verificationId'];
         final int forceResendingToken = call.arguments['forceResendingToken'];
 
-        final PhoneCodeSent codeSent =
-            _phoneAuthCallbacks[handle]['PhoneCodeSent'];
+        final PhoneCodeSent codeSent = _phoneAuthCallbacks[handle].codeSent;
         if (forceResendingToken == null) {
           codeSent(verificationId);
         } else {
@@ -377,7 +389,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       case 'phoneCodeAutoRetrievalTimeout':
         final int handle = call.arguments['handle'];
         final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
-            _phoneAuthCallbacks[handle]['PhoneCodeAuthRetrievalTimeout'];
+            _phoneAuthCallbacks[handle].codeAutoRetrievalTimeout;
         final String verificationId = call.arguments['verificationId'];
         codeAutoRetrievalTimeout(verificationId);
         break;
@@ -451,4 +463,19 @@ PlatformIdTokenResult _decodeIdTokenResult(Map<String, dynamic> data) {
     signInProvider: data['signInProvider'],
     claims: data['claims'],
   );
+}
+
+/// A utilily class that collects the callbacks for a [verifyPhoneNumber] call.
+class _PhoneAuthCallbacks {
+  _PhoneAuthCallbacks(
+    this.verificationCompleted,
+    this.verificationFailed,
+    this.codeSent,
+    this.codeAutoRetrievalTimeout,
+  );
+
+  final PhoneVerificationCompleted verificationCompleted;
+  final PhoneVerificationFailed verificationFailed;
+  final PhoneCodeSent codeSent;
+  final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout;
 }
