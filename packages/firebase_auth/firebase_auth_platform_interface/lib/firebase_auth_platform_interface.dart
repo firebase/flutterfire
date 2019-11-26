@@ -186,11 +186,11 @@ abstract class FirebaseAuthPlatform {
   }
 
   /// Update the current user's phone number with the given [phoneAuthCredential].
-  Future<void> updatePhoneNumber(
+  Future<void> updatePhoneNumberCredential(
     String app,
     PhoneAuthCredential phoneAuthCredential,
   ) {
-    throw UnimplementedError('updatePhoneNumber() is not implemented');
+    throw UnimplementedError('updatePhoneNumberCredential() is not implemented');
   }
 
   /// Update the current user's password to the given [password].

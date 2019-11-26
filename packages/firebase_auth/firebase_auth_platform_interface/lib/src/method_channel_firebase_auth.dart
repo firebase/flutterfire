@@ -250,7 +250,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> updatePhoneNumber(
+  Future<void> updatePhoneNumberCredential(
     String app,
     PhoneAuthCredential phoneAuthCredential,
   ) {

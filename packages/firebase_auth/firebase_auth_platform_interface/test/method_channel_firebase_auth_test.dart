@@ -978,7 +978,7 @@ void main() {
         verificationId: kMockVerificationId,
         smsCode: kMockSmsCode,
       );
-      await auth.updatePhoneNumber(appName, credentials);
+      await auth.updatePhoneNumberCredential(appName, credentials);
       expect(log, <Matcher>[
         isMethodCall(
           'updatePhoneNumberCredential',
