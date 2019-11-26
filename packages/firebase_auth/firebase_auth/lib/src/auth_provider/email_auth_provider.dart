@@ -7,23 +7,17 @@ part of firebase_auth;
 class EmailAuthProvider {
   static const String providerId = 'password';
 
-  static AuthCredential getCredential({
+  static EmailAuthCredential getCredential({
     String email,
     String password,
   }) {
-    return AuthCredential._(providerId, <String, String>{
-      'email': email,
-      'password': password,
-    });
+    return EmailAuthCredential(email: email, password: password);
   }
 
-  static AuthCredential getCredentialWithLink({
+  static EmailAuthCredential getCredentialWithLink({
     String email,
     String link,
   }) {
-    return AuthCredential._(providerId, <String, String>{
-      'email': email,
-      'link': link,
-    });
+    return EmailAuthCredential(email: email, link: link);
   }
 }

@@ -7,13 +7,10 @@ part of firebase_auth;
 class GoogleAuthProvider {
   static const String providerId = 'google.com';
 
-  static AuthCredential getCredential({
+  static GoogleAuthCredential getCredential({
     @required String idToken,
     @required String accessToken,
   }) {
-    return AuthCredential._(providerId, <String, String>{
-      'idToken': idToken,
-      'accessToken': accessToken,
-    });
+    return GoogleAuthCredential(idToken: idToken, accessToken: accessToken);
   }
 }

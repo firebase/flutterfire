@@ -11,7 +11,20 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
-export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart' show AuthCredential;
+export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
+    show
+        AuthCredential,
+        AuthException,
+        EmailAuthCredential,
+        FacebookAuthCredential,
+        GithubAuthCredential,
+        GoogleAuthCredential,
+        PhoneAuthCredential,
+        TwitterAuthCredential,
+        PhoneVerificationCompleted,
+        PhoneVerificationFailed,
+        PhoneCodeSent,
+        PhoneCodeAutoRetrievalTimeout;
 
 part 'src/auth_provider/email_auth_provider.dart';
 part 'src/auth_provider/facebook_auth_provider.dart';
@@ -20,7 +33,6 @@ part 'src/auth_provider/google_auth_provider.dart';
 part 'src/auth_provider/phone_auth_provider.dart';
 part 'src/auth_provider/twitter_auth_provider.dart';
 part 'src/additional_user_info.dart';
-part 'src/auth_exception.dart';
 part 'src/auth_result.dart';
 part 'src/firebase_auth.dart';
 part 'src/firebase_user.dart';
