@@ -1,6 +1,6 @@
 ## 6.0.2
 
-* Fix the availability check when using ios < 10.
+* Fixed a build warning caused by availability check.
 
 ## 6.0.1
 
