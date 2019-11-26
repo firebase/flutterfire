@@ -340,8 +340,8 @@ void main() {
       await ref.document('maputo').setData(<String, dynamic>{
         'country': 'Mozambique',
       });
-      QuerySnapshot snapshot = await ref
-          .where('country', whereIn: ['USA', 'Mozambique'])
+      final QuerySnapshot snapshot = await ref
+          .where('country', whereIn: <String>['USA', 'Mozambique'])
           .orderBy('country')
           .getDocuments();
       final List<DocumentSnapshot> results = snapshot.documents;
@@ -356,23 +356,22 @@ void main() {
       final CollectionReference ref = firestore.collection('cities');
       await ref.document('la').setData(<String, dynamic>{
         'country': 'USA',
-        'regions': ['west-coast', 'east-coast'],
+        'regions': <String>['west-coast', 'east-coast'],
       });
       await ref.document('tokyo').setData(<String, dynamic>{
         'country': 'Japan',
-        'regions': ['kanto', 'honshu'],
+        'regions': <String>['kanto', 'honshu'],
       });
-      QuerySnapshot snapshot = await ref
-          .where('regions', arrayContainsAny: ['kanto', 'west-coast'])
+      final QuerySnapshot snapshot = await ref
+          .where('regions', arrayContainsAny: <String>['kanto', 'west-coast'])
           .orderBy('country')
           .getDocuments();
       final List<DocumentSnapshot> results = snapshot.documents;
       expect(results.length, 2);
       final DocumentSnapshot snapshot1 = results[0];
       final DocumentSnapshot snapshot2 = results[1];
-      expect(snapshot1.documentID, 'moz');
-      expect(snapshot2.documentID, 'usa');
+      expect(snapshot1.documentID, 'la');
+      expect(snapshot2.documentID, 'tokyo');
     });
-
   });
 }

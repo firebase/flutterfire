@@ -28,10 +28,13 @@ void main() {
       "hasPendingWrites": false,
       "isFromCache": false,
     };
+    const MethodChannel firebaseCoreChannel =
+        MethodChannel('plugins.flutter.io/firebase_core');
+
     setUp(() async {
       mockHandleId = 0;
       // Required for FirebaseApp.configure
-      FirebaseApp.channel.setMockMethodCallHandler(
+      firebaseCoreChannel.setMockMethodCallHandler(
         (MethodCall methodCall) async {},
       );
       app = await FirebaseApp.configure(
@@ -175,7 +178,7 @@ void main() {
     });
 
     test('settings', () async {
-      final FirebaseApp app = const FirebaseApp(name: "testApp2");
+      final FirebaseApp app = FirebaseApp(name: "testApp2");
       final Firestore firestoreWithSettings = Firestore(app: app);
       await firestoreWithSettings.settings(
         persistenceEnabled: true,
@@ -396,10 +399,10 @@ void main() {
       });
       test('where in', () async {
         final StreamSubscription<QuerySnapshot> subscription =
-        collectionReference
-            .where('country', whereIn: ['USA', 'Japan'])
-            .snapshots()
-            .listen((QuerySnapshot querySnapshot) {});
+            collectionReference
+                .where('country', whereIn: <String>['USA', 'Japan'])
+                .snapshots()
+                .listen((QuerySnapshot querySnapshot) {});
         subscription.cancel();
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -413,7 +416,11 @@ void main() {
                 'isCollectionGroup': false,
                 'parameters': <String, dynamic>{
                   'where': <List<dynamic>>[
-                    <dynamic>['country', 'in', ['USA', 'Japan']],
+                    <dynamic>[
+                      'country',
+                      'in',
+                      <String>['USA', 'Japan']
+                    ],
                   ],
                   'orderBy': <List<dynamic>>[],
                 },
@@ -429,10 +436,11 @@ void main() {
       });
       test('where array-contains-any', () async {
         final StreamSubscription<QuerySnapshot> subscription =
-        collectionReference
-            .where('regions', arrayContainsAny: ['west-coast', 'east-coast'])
-            .snapshots()
-            .listen((QuerySnapshot querySnapshot) {});
+            collectionReference
+                .where('regions',
+                    arrayContainsAny: <String>['west-coast', 'east-coast'])
+                .snapshots()
+                .listen((QuerySnapshot querySnapshot) {});
         subscription.cancel();
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -446,7 +454,11 @@ void main() {
                 'isCollectionGroup': false,
                 'parameters': <String, dynamic>{
                   'where': <List<dynamic>>[
-                    <dynamic>['regions', 'array-contains-any', ['west-coast', 'east-coast']],
+                    <dynamic>[
+                      'regions',
+                      'array-contains-any',
+                      <String>['west-coast', 'east-coast']
+                    ],
                   ],
                   'orderBy': <List<dynamic>>[],
                 },

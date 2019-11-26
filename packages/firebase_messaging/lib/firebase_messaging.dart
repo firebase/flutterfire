@@ -77,14 +77,17 @@ class FirebaseMessaging {
   /// On iOS, prompts the user for notification permissions the first time
   /// it is called.
   ///
-  /// Does nothing on Android.
-  void requestNotificationPermissions(
-      [IosNotificationSettings iosSettings = const IosNotificationSettings()]) {
+  /// Does nothing and returns null on Android.
+  FutureOr<bool> requestNotificationPermissions([
+    IosNotificationSettings iosSettings = const IosNotificationSettings(),
+  ]) {
     if (!_platform.isIOS) {
-      return;
+      return null;
     }
-    _channel.invokeMethod<void>(
-        'requestNotificationPermissions', iosSettings.toMap());
+    return _channel.invokeMethod<bool>(
+      'requestNotificationPermissions',
+      iosSettings.toMap(),
+    );
   }
 
   final StreamController<IosNotificationSettings> _iosSettingsStreamController =
@@ -115,6 +118,15 @@ class FirebaseMessaging {
           PluginUtilities.getCallbackHandle(_fcmSetupBackgroundChannel);
       final CallbackHandle backgroundMessageHandle =
           PluginUtilities.getCallbackHandle(_onBackgroundMessage);
+
+      if (backgroundMessageHandle == null) {
+        throw ArgumentError(
+          '''Failed to setup background message handler! `onBackgroundMessage`
+          should be a TOP-LEVEL OR STATIC FUNCTION and should NOT be tied to a
+          class or an anonymous function.''',
+        );
+      }
+
       _channel.invokeMethod<bool>(
         'FcmDartService#start',
         <String, dynamic>{

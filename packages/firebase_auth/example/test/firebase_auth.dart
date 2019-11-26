@@ -40,6 +40,7 @@ void main() {
       expect(user.metadata.creationTime.isAfter(DateTime(2018, 1, 1)), isTrue);
       expect(user.metadata.creationTime.isBefore(DateTime.now()), isTrue);
       final IdTokenResult tokenResult = await user.getIdToken();
+      final String originalToken = tokenResult.token;
       expect(tokenResult.token, isNotNull);
       expect(tokenResult.expirationTime.isAfter(DateTime.now()), isTrue);
       expect(tokenResult.authTime, isNotNull);
@@ -53,6 +54,10 @@ void main() {
       expect(tokenResult.claims['provider_id'], 'anonymous');
       expect(tokenResult.claims['firebase']['sign_in_provider'], 'anonymous');
       expect(tokenResult.claims['user_id'], user.uid);
+      // Verify that token will be the same after another getIdToken call with refresh = false option
+      final IdTokenResult newTokenResultWithoutRefresh =
+          await user.getIdToken(refresh: false);
+      expect(originalToken, newTokenResultWithoutRefresh.token);
       await auth.signOut();
       final FirebaseUser user2 = (await auth.signInAnonymously()).user;
       expect(user2.uid, isNot(equals(user.uid)));
@@ -87,7 +92,15 @@ void main() {
           await auth.fetchSignInMethodsForEmail(email: testEmail);
       expect(methods.length, 1);
       expect(methods[0], 'password');
-      await user.delete();
+      final AuthResult renewResult =
+          await result.user.reauthenticateWithCredential(
+        EmailAuthProvider.getCredential(
+          email: testEmail,
+          password: testPassword,
+        ),
+      );
+      expect(renewResult.user.uid, equals(user.uid));
+      await renewResult.user.delete();
     });
 
     test('isSignInWithEmailLink', () async {

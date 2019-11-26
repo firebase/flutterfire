@@ -2,6 +2,18 @@
 
 * Added support for `in` and `array-contains-any` query operators.
 
+## 0.12.10+3
+
+* Fixed test that used `FirebaseApp.channel`.
+
+## 0.12.10+2
+
+* Fixed analyzer warnings about unused fields.
+
+## 0.12.10+1
+
+* Formatted method documentations.
+
 ## 0.12.10
 
 * Added `FieldPath` class and `FieldPath.documentId` to refer to the document id in queries.
@@ -44,7 +56,7 @@
 ## 0.12.9
 
 * New optional `includeMetadataChanges` parameter added to `DocumentReference.snapshots()`
- and `Query.snapshots()`
+  and `Query.snapshots()`
 * Fix example app crash when the `message` field was not a string
 * Internal renaming of method names.
 
@@ -77,6 +89,7 @@
 * Automatically use version from pubspec.yaml when reporting usage to Firebase.
 
 ## 0.12.5+1
+
 * Added support for combining any of `Query.startAtDocument` and `Query.startAfterDocument`
   with any of `Query.endAtDocument` and `Query.endBeforeDocument`.
 
@@ -363,15 +376,19 @@ To update iOS SDK in existing projects run `pod update Firebase/Firestore`.
 * Add `DocumentSnapshot.exists`.
 
 ## 0.2.11
+
 * Fix Dart 2 type errors.
 
 ## 0.2.10
+
 * Fix Dart 2 type errors.
 
 ## 0.2.9
-* Relax sdk upper bound constraint to  '<2.0.0' to allow 'edge' dart sdk use.
+
+* Relax sdk upper bound constraint to '<2.0.0' to allow 'edge' dart sdk use.
 
 ## 0.2.8
+
 * Support for Query.getDocuments
 
 ## 0.2.7
