@@ -340,7 +340,7 @@ void main() {
       await ref.document('maputo').setData(<String, dynamic>{
         'country': 'Mozambique',
       });
-      QuerySnapshot snapshot = await ref
+      final  QuerySnapshot snapshot = await ref
           .where('country', whereIn: <String>['USA', 'Mozambique'])
           .orderBy('country')
           .getDocuments();

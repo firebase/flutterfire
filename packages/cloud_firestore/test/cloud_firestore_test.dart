@@ -419,7 +419,7 @@ void main() {
                     <dynamic>[
                       'country',
                       'in',
-                      ['USA', 'Japan']
+                      <String>['USA', 'Japan']
                     ],
                   ],
                   'orderBy': <List<dynamic>>[],
@@ -457,7 +457,7 @@ void main() {
                     <dynamic>[
                       'regions',
                       'array-contains-any',
-                      ['west-coast', 'east-coast']
+                      <String>['west-coast', 'east-coast']
                     ],
                   ],
                   'orderBy': <List<dynamic>>[],
