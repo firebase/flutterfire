@@ -6,9 +6,9 @@ part of firebase_auth;
 
 /// Represents a user.
 class FirebaseUser extends UserInfo {
-  FirebaseUser._(Map<String, dynamic> data, FirebaseApp app)
-      : providerData = data['providerData']
-            .map<UserInfo>((dynamic item) => UserInfo._(item, app))
+  FirebaseUser._(PlatformUser data, FirebaseApp app)
+      : providerData = data.providerData
+            .map<UserInfo>((PlatformUserInfo item) => UserInfo._(item, app))
             .toList(),
         _metadata = FirebaseUserMetadata._(data),
         super._(data, app);

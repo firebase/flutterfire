@@ -11,9 +11,7 @@ typedef void PhoneCodeAutoRetrievalTimeout(String verificationId);
 
 /// The entry point of the Firebase Authentication SDK.
 class FirebaseAuth {
-  FirebaseAuth._(this.app) {
-    channel.setMethodCallHandler(_callHandler);
-  }
+  FirebaseAuth._(this.app);
 
   /// Provides an instance of this class corresponding to `app`.
   factory FirebaseAuth.fromApp(FirebaseApp app) {
@@ -24,40 +22,12 @@ class FirebaseAuth {
   /// Provides an instance of this class corresponding to the default app.
   static final FirebaseAuth instance = FirebaseAuth._(FirebaseApp.instance);
 
-  @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_auth',
-  );
-
-  final Map<int, StreamController<FirebaseUser>> _authStateChangedControllers =
-      <int, StreamController<FirebaseUser>>{};
-
-  static int _nextHandle = 0;
-  final Map<int, Map<String, dynamic>> _phoneAuthCallbacks =
-      <int, Map<String, dynamic>>{};
-
   final FirebaseApp app;
 
   /// Receive [FirebaseUser] each time the user signIn or signOut
   Stream<FirebaseUser> get onAuthStateChanged {
-    Future<int> _handle;
-
-    StreamController<FirebaseUser> controller;
-    controller = StreamController<FirebaseUser>.broadcast(onListen: () {
-      _handle = channel.invokeMethod<int>('startListeningAuthState',
-          <String, String>{"app": app.name}).then<int>((dynamic v) => v);
-      _handle.then((int handle) {
-        _authStateChangedControllers[handle] = controller;
-      });
-    }, onCancel: () {
-      _handle.then((int handle) async {
-        await channel.invokeMethod<void>("stopListeningAuthState",
-            <String, dynamic>{"id": handle, "app": app.name});
-        _authStateChangedControllers.remove(handle);
-      });
+    return FirebaseAuthPlatform.instance.onAuthStateChanged(app.name).map((PlatformUser user) {
     });
-
-    return controller.stream;
   }
 
   /// Asynchronously creates and becomes an anonymous user.

@@ -10,25 +10,25 @@ class UserInfo {
 
   final FirebaseApp _app;
 
-  final Map<dynamic, dynamic> _data;
+  final PlatformUser _data;
 
   /// The provider identifier.
-  String get providerId => _data['providerId'];
+  String get providerId => _data.providerId;
 
   /// The provider’s user ID for the user.
-  String get uid => _data['uid'];
+  String get uid => _data.uid;
 
   /// The name of the user.
-  String get displayName => _data['displayName'];
+  String get displayName => _data.displayName;
 
   /// The URL of the user’s profile photo.
-  String get photoUrl => _data['photoUrl'];
+  String get photoUrl => _data.photoUrl;
 
   /// The user’s email address.
-  String get email => _data['email'];
+  String get email => _data.email;
 
   /// The user's phone number.
-  String get phoneNumber => _data['phoneNumber'];
+  String get phoneNumber => _data.phoneNumber;
 
   @override
   String toString() {
