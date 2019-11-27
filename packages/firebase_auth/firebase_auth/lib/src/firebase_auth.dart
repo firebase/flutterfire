@@ -21,9 +21,8 @@ class FirebaseAuth {
 
   /// Receive [FirebaseUser] each time the user signIn or signOut
   Stream<FirebaseUser> get onAuthStateChanged {
-    return FirebaseAuthPlatform.instance
-        .onAuthStateChanged(app.name)
-        .map((PlatformUser user) => FirebaseUser._(user, app));
+    return FirebaseAuthPlatform.instance.onAuthStateChanged(app.name).map(
+        (PlatformUser user) => user == null ? null : FirebaseUser._(user, app));
   }
 
   /// Asynchronously creates and becomes an anonymous user.

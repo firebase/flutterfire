@@ -21,8 +21,10 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
+  async: ^2.4.0
   google_sign_in: ^3.0.4
   firebase_dynamic_links: ^0.3.0
+  mockito: ^4.1.1
   uuid: ^2.0.2
   test: ^1.3.0
   flutter_test:
