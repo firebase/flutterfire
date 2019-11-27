@@ -12,7 +12,7 @@ class FirebaseApp {
   final String name;
 
   static final String defaultAppName =
-      Platform.isIOS ? '__FIRAPP_DEFAULT' : '[DEFAULT]';
+      (!kIsWeb && Platform.isIOS) ? '__FIRAPP_DEFAULT' : '[DEFAULT]';
 
   /// A copy of the options for this app. These are non-modifiable.
   ///

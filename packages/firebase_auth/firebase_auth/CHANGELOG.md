@@ -1,3 +1,7 @@
+## 0.15.0+2
+
+*  Update homepage since this package was moved.
+
 ## 0.15.0+1
 
 *  Added missing ERROR_WRONG_PASSWORD Exception to the `reauthenticateWithCredential` docs.
