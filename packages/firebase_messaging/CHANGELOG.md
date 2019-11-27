@@ -1,5 +1,10 @@
+## 6.0.3
+
+* Support for provisional notifications for iOS version >= 12.
+
 ## 6.0.2
-Support for provisional notifications for iOS version >= 12.
+
+* Fixed a build warning caused by availability check.
 
 ## 6.0.1
 

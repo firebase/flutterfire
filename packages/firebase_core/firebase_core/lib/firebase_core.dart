@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:meta/meta.dart';
 
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
