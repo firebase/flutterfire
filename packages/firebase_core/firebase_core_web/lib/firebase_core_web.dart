@@ -12,12 +12,14 @@ import 'src/firebase_js.dart';
 
 /// The implementation of `firebase_core` for web.
 class FirebaseCoreWeb extends FirebaseCorePlatform {
+  /// Creates a new instance of [FirebaseCoreWeb].
   FirebaseCoreWeb() {
     if (firebase == null) {
       throw StateError('firebase.js has not been loaded');
     }
   }
 
+  /// Registers that [FirebaseCoreWeb] is the platform implementation.
   static void registerWith(Registrar registrar) {
     FirebaseCorePlatform.instance = FirebaseCoreWeb();
   }

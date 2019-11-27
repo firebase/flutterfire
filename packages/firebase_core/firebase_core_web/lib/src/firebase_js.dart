@@ -66,7 +66,7 @@ class FirebaseCore {
 
   /// Initializes the app named [name] with the given [options].
   external App initializeApp(Options options, String name);
-  
+
   /// Returns the already-initialized app with the given [name].
   external App app(String name);
 }
