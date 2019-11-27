@@ -1,4 +1,4 @@
-## 0.12.11
+## 0.12.10+4
 
 * Moved package to `cloud_firestore/cloud_firestore` subdir, to allow for federated implementations.
 
