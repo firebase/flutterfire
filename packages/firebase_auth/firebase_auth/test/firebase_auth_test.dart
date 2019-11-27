@@ -8,7 +8,6 @@ import 'package:async/async.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -54,7 +53,7 @@ final PlatformUser kMockUser = PlatformUser(
   creationTimestamp: kMockCreationTimestamp,
   lastSignInTimestamp: kMockLastSignInTimestamp,
   providerData: <PlatformUserInfo>[
-    PlatformUserInfo(
+    const PlatformUserInfo(
       providerId: kMockProviderId,
       uid: kMockUid,
       displayName: kMockDisplayName,
@@ -64,7 +63,7 @@ final PlatformUser kMockUser = PlatformUser(
   ],
 );
 final PlatformAdditionalUserInfo kMockAdditionalUserInfo =
-    PlatformAdditionalUserInfo(
+    const PlatformAdditionalUserInfo(
   isNewUser: false,
   username: 'flutterUser',
   providerId: 'testProvider',
@@ -83,8 +82,6 @@ void main() {
     final FirebaseApp app = FirebaseApp(name: appName);
     final FirebaseAuth auth = FirebaseAuth.fromApp(app);
     MockFirebaseAuth mock;
-
-    int mockHandleId = 0;
 
     setUp(() {
       mock = MockFirebaseAuth();
@@ -163,6 +160,8 @@ void main() {
       final FirebaseUser user = await auth.currentUser();
       verifyIdTokenResult(await user.getIdToken());
       verifyIdTokenResult(await user.getIdToken(refresh: true));
+      // It's ugly to specify types for mockito verifications
+      // ignore: always_specify_types
       verifyInOrder([
         mock.getCurrentUser(auth.app.name),
         mock.getIdToken(auth.app.name, false),
@@ -429,10 +428,14 @@ void main() {
           verificationFailed: null,
           codeSent: null,
           codeAutoRetrievalTimeout: null);
-      List<dynamic> captured = verify(mock.verifyPhoneNumber(
+      final List<dynamic> captured = verify(mock.verifyPhoneNumber(
         auth.app.name,
         phoneNumber: captureAnyNamed('phoneNumber'),
         timeout: captureAnyNamed('timeout'),
+        verificationCompleted: anyNamed('verificationCompleted'),
+        verificationFailed: anyNamed('verificationFailed'),
+        codeSent: anyNamed('codeSent'),
+        codeAutoRetrievalTimeout: anyNamed('codeAutoRetrievalTimeout'),
       )).captured;
       expect(captured, <dynamic>[
         kMockPhoneNumber,
@@ -728,7 +731,7 @@ void main() {
       final FirebaseUser user = await auth.currentUser();
       await user.updateProfile(userUpdateInfo);
       verify(mock.getCurrentUser(auth.app.name));
-      List<dynamic> captured = verify(
+      final List<dynamic> captured = verify(
         mock.updateProfile(
           auth.app.name,
           displayName: captureAnyNamed('displayName'),
@@ -788,8 +791,8 @@ void main() {
     });
 
     test('onAuthStateChanged', () async {
-      when(mock.onAuthStateChanged(auth.app.name)).thenAnswer(
-          (_) => Stream<PlatformUser>.fromIterable([null, kMockUser]));
+      when(mock.onAuthStateChanged(auth.app.name)).thenAnswer((_) =>
+          Stream<PlatformUser>.fromIterable(<PlatformUser>[null, kMockUser]));
 
       // Wrap onAuthStateChanged in a StreamQueue so we can request events.
       final StreamQueue<FirebaseUser> changes =
