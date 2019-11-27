@@ -3,18 +3,17 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:js' as js;
-import 'dart:js_util' as js_util;
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:js/js_util.dart' as js_util;
 
-import 'src/firebase_js.dart' as firebase;
+import 'src/firebase_js.dart';
 
 /// The implementation of `firebase_core` for web.
 class FirebaseCoreWeb extends FirebaseCorePlatform {
   FirebaseCoreWeb() {
-    if (!js.context.hasProperty('firebase')) {
+    if (firebase == null) {
       throw StateError('firebase.js has not been loaded');
     }
   }
@@ -26,7 +25,10 @@ class FirebaseCoreWeb extends FirebaseCorePlatform {
   @override
   Future<PlatformFirebaseApp> appNamed(String name) async {
     try {
-      final firebase.App jsApp = firebase.app(name);
+      final App jsApp = firebase.app(name);
+      if (jsApp == null) {
+        return null;
+      }
       return _createFromJsApp(jsApp);
     } catch (e) {
       if (_isFirebaseError(e)) {
@@ -43,7 +45,7 @@ class FirebaseCoreWeb extends FirebaseCorePlatform {
 
   @override
   Future<List<PlatformFirebaseApp>> allApps() async {
-    final List<firebase.App> jsApps = firebase.apps;
+    final List<App> jsApps = firebase.apps;
     return jsApps.map<PlatformFirebaseApp>(_createFromJsApp).toList();
   }
 }
@@ -53,11 +55,11 @@ bool _isFirebaseError(dynamic e) {
   return js_util.getProperty(e, 'name') == 'FirebaseError';
 }
 
-PlatformFirebaseApp _createFromJsApp(firebase.App jsApp) {
+PlatformFirebaseApp _createFromJsApp(App jsApp) {
   return PlatformFirebaseApp(jsApp.name, _createFromJsOptions(jsApp.options));
 }
 
-FirebaseOptions _createFromJsOptions(firebase.Options options) {
+FirebaseOptions _createFromJsOptions(Options options) {
   return FirebaseOptions(
     apiKey: options.apiKey,
     trackingID: options.measurementId,
@@ -69,8 +71,8 @@ FirebaseOptions _createFromJsOptions(firebase.Options options) {
   );
 }
 
-firebase.Options _createFromFirebaseOptions(FirebaseOptions options) {
-  return firebase.Options(
+Options _createFromFirebaseOptions(FirebaseOptions options) {
+  return Options(
     apiKey: options.apiKey,
     measurementId: options.trackingID,
     messagingSenderId: options.gcmSenderID,

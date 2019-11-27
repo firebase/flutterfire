@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-@JS('firebase')
+@JS()
 library firebase_js;
 
 import 'package:js/js.dart';
@@ -38,10 +38,11 @@ class Options {
 }
 
 @JS()
-external List<App> get apps;
+class FirebaseCore {
+  external List<App> get apps;
+  external App initializeApp(Options options, String name);
+  external App app(String name);
+}
 
 @JS()
-external App initializeApp(Options options, String name);
-
-@JS()
-external App app(String name);
+external FirebaseCore get firebase;
