@@ -6,6 +6,7 @@ package io.flutter.plugins.firebase.storage;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.util.SparseArray;
 import android.webkit.MimeTypeMap;
 import androidx.annotation.NonNull;
@@ -33,6 +34,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO(kroikie): Better handle empty paths.
+//                https://github.com/FirebaseExtended/flutterfire/issues/1505
 /** FirebaseStoragePlugin */
 public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
   private FirebaseStorage firebaseStorage;
@@ -173,8 +176,11 @@ public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
   }
 
   private void getMetadata(MethodCall call, final Result result) {
+    StorageReference ref = firebaseStorage.getReference();
     String path = call.argument("path");
-    StorageReference ref = firebaseStorage.getReference().child(path);
+    if (!path.isEmpty()) {
+      ref = ref.child(path);
+    }
     ref.getMetadata()
         .addOnSuccessListener(
             new OnSuccessListener<StorageMetadata>() {
@@ -193,9 +199,12 @@ public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
   }
 
   private void updateMetadata(MethodCall call, final Result result) {
+    StorageReference ref = firebaseStorage.getReference();
     String path = call.argument("path");
+    if (!path.isEmpty()) {
+      ref = ref.child(path);
+    }
     Map<String, Object> metadata = call.argument("metadata");
-    StorageReference ref = firebaseStorage.getReference().child(path);
     ref.updateMetadata(buildMetadataFromMap(metadata))
         .addOnSuccessListener(
             new OnSuccessListener<StorageMetadata>() {
@@ -214,8 +223,13 @@ public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
   }
 
   private void getBucket(MethodCall call, final Result result) {
+    StorageReference ref = firebaseStorage.getReference();
+
     String path = call.argument("path");
-    StorageReference ref = firebaseStorage.getReference().child(path);
+    if (!path.isEmpty()) {
+      ref = ref.child(path);
+    }
+
     result.success(ref.getBucket());
   }
 
