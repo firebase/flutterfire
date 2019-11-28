@@ -361,6 +361,24 @@ void main() {
       expect(payload, containsPair('email', userEmail));
     });
 
+    test('getIdTokenResult', () async {
+      userCredential =
+          await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
+
+      var token = await userCredential.user.getIdTokenResult();
+
+      expect(token.signInProvider, 'password');
+
+      expect(token.authTime, equals(token.issuedAtTime));
+
+      expect(token.expirationTime.isAfter(token.authTime), isTrue);
+
+      // Just validating one of the claim entries
+      expect(token.claims, containsPair('email_verified', false));
+
+      expect(token.token, isNotEmpty);
+    });
+
     test('create user with email and password', () async {
       userCredential =
           await authValue.createUserWithEmailAndPassword(userEmail, "janicka");

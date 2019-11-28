@@ -11,6 +11,7 @@ environment:
 
 dependencies:
   http: '>=0.11.3 <0.13.0'
+  http_parser: ^3.0.0
   js: ^0.6.0
 
 dev_dependencies:

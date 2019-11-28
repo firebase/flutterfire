@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:http_parser/http_parser.dart';
 import 'package:js/js.dart';
 
 import 'app.dart';
@@ -211,13 +212,63 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   ///     UserProfile profile = new UserProfile(displayName: "Smart user");
   ///     await user.updateProfile(profile);
   Future updateProfile(firebase_interop.UserProfile profile) =>
-      handleThenable(jsObject.updateProfile(profile));
+      handleThenable(jsObject.updateProfile(profile))
+          .then((jso) => IdTokenResult._fromJsObject(jso));
+
+  Future<IdTokenResult> getIdTokenResult([bool forceRefresh]) {
+    final promise = forceRefresh == null
+        ? jsObject.getIdTokenResult()
+        : jsObject.getIdTokenResult(forceRefresh);
+
+    return handleThenable(promise)
+        .then((object) => IdTokenResult._fromJsObject(object));
+  }
 
   /// Returns a JSON-serializable representation of this object.
   Map<String, dynamic> toJson() => dartify(jsObject.toJSON());
 
   @override
   String toString() => 'User: $uid';
+}
+
+/// Contains the ID token JWT string and other helper properties for getting
+/// different data associated with the token as well as all the decoded payload
+/// claims.
+///
+/// Note that these claims are not to be trusted as they are parsed client side.
+/// Only server side verification can guarantee the integrity of the token
+/// claims.
+///
+/// See https://firebase.google.com/docs/reference/js/firebase.auth.IDTokenResult.html
+class IdTokenResult
+    extends JsObjectWrapper<firebase_interop.IdTokenResultImpl> {
+  IdTokenResult._fromJsObject(firebase_interop.IdTokenResultImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  /// The authentication time.
+  ///
+  /// This is the time the user authenticated (signed in) and not the time the
+  /// token was refreshed.
+  DateTime get authTime => parseHttpDate(jsObject.authTime);
+
+  /// The entire payload claims of the ID token including the standard reserved
+  /// claims as well as the custom claims.
+  Map<String, dynamic> get claims => dartifyMap(jsObject.claims);
+
+  /// The ID token expiration time.
+  DateTime get expirationTime => parseHttpDate(jsObject.expirationTime);
+
+  /// The ID token issued at time.
+  DateTime get issuedAtTime => parseHttpDate(jsObject.issuedAtTime);
+
+  /// The sign-in provider through which the ID token was obtained (anonymous,
+  /// custom, phone, password, etc).
+  ///
+  /// Note, this does not map to provider IDs.
+  String get signInProvider => jsObject.signInProvider;
+
+  /// The Firebase Auth ID token JWT string.
+  String get token => jsObject.token;
 }
 
 /// The Firebase Auth service class.

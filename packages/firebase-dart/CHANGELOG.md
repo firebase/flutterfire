@@ -8,6 +8,7 @@
 - Firestore `Settings` added `cacheSizeBytes`, `host`, and `ssl` properties.
 - Added `measurementId` and `appId` to `FirebaseOptions` (both required for analytics)
 - Added analytics and performance interop
+- Added `User.getIdTokenResult`.
 - Updated documented JS library from `6.6.1` of the JS API to `7.4.0`.
 
 ## 6.0.0

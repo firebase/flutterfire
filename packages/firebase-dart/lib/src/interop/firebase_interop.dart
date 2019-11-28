@@ -82,7 +82,19 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external PromiseJsImpl updatePassword(String newPassword);
   external PromiseJsImpl updatePhoneNumber(OAuthCredential phoneCredential);
   external PromiseJsImpl updateProfile(UserProfile profile);
+  external PromiseJsImpl getIdTokenResult([bool forceRefresh]);
   external Object toJSON();
+}
+
+@anonymous
+@JS()
+abstract class IdTokenResultImpl {
+  external String get authTime;
+  external Object get claims;
+  external String get expirationTime;
+  external String get issuedAtTime;
+  external String get signInProvider;
+  external String get token;
 }
 
 @anonymous

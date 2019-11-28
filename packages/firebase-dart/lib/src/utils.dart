@@ -58,6 +58,10 @@ dynamic dartify(Object jsObject) {
   }
 
   // Assume a map then...
+  return dartifyMap(jsObject);
+}
+
+Map<String, dynamic> dartifyMap(Object jsObject) {
   var keys = js.objectKeys(jsObject);
   var map = <String, dynamic>{};
   for (var key in keys) {
