@@ -13,7 +13,8 @@ void main() {
   });
 
   testWidgets('Can get metadata', (WidgetTester tester) async {
-    final Future<StorageMetadata> future = FirebaseStorage().ref().getMetadata();
+    final Future<StorageMetadata> future =
+        FirebaseStorage().ref().getMetadata();
     expect(future, completes);
   });
 }
