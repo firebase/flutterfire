@@ -406,12 +406,6 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
       handleThenable(jsObject.createUserWithEmailAndPassword(email, password))
           .then((u) => UserCredential.fromJsObject(u));
 
-  /// Returns the list of provider IDs for the given [email] address,
-  /// that can be used to sign in.
-  @deprecated
-  Future<List<String>> fetchProvidersForEmail(String email) =>
-      handleThenable(jsObject.fetchProvidersForEmail(email));
-
   /// Returns a [UserCredential] from the redirect-based sign in flow.
   /// If sign is successful, returns the signed in user. Or fails with an error
   /// if sign is unsuccessful.

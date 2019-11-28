@@ -20,8 +20,6 @@ abstract class AuthJsImpl {
       String email, String password);
   external UserJsImpl get currentUser;
 
-  @deprecated
-  external PromiseJsImpl<List<String>> fetchProvidersForEmail(String email);
   external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult();
   external String get languageCode;
   external set languageCode(String s);
