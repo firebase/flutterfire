@@ -393,7 +393,7 @@ void main() {
       expect(userCredential.user.isAnonymous, isTrue);
     });
 
-    test('linkAndRetrieveDataWithCredential anonymous user', () async {
+    test('linkWithCredential anonymous user', () async {
       userCredential = await authValue.signInAnonymously();
       expect(userCredential.user.isAnonymous, isTrue);
 
@@ -437,7 +437,7 @@ void main() {
       );
     });
 
-    test("signInAndRetrieveDataWithCredential", () async {
+    test("signInWithCredential", () async {
       userCredential =
           await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
 
