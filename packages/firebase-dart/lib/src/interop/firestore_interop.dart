@@ -33,7 +33,7 @@ abstract class FirestoreJsImpl {
   external QueryJsImpl collectionGroup(String collectionId);
   external DocumentReferenceJsImpl doc(String documentPath);
   external PromiseJsImpl<Null> enablePersistence();
-  external PromiseJsImpl runTransaction(
+  external PromiseJsImpl<void> runTransaction(
       Func1<TransactionJsImpl, PromiseJsImpl> updateFunction);
   external void settings(Settings settings);
   external PromiseJsImpl<Null> disableNetwork();

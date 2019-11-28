@@ -94,7 +94,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
       : super.fromJsObject(jsObject);
 
   /// Deletes and signs out the user.
-  Future delete() => handleThenable(jsObject.delete());
+  Future<void> delete() => handleThenable(jsObject.delete());
 
   /// Returns a JWT token used to identify the user to a Firebase service.
   ///
@@ -129,7 +129,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
 
   /// Links the authenticated [provider] to the user account using
   /// a full-page redirect flow.
-  Future linkWithRedirect(AuthProvider provider) =>
+  Future<void> linkWithRedirect(AuthProvider provider) =>
       handleThenable(jsObject.linkWithRedirect(provider.jsObject));
 
   // FYI: as of 2017-07-03 – the return type of this guy is documented as
@@ -161,11 +161,11 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
 
   /// Reauthenticates a user with the specified OAuth [provider] using
   /// a full-page redirect flow.
-  Future reauthenticateWithRedirect(AuthProvider provider) =>
+  Future<void> reauthenticateWithRedirect(AuthProvider provider) =>
       handleThenable(jsObject.reauthenticateWithRedirect(provider.jsObject));
 
   /// If signed in, it refreshes the current user.
-  Future reload() => handleThenable(jsObject.reload());
+  Future<void> reload() => handleThenable(jsObject.reload());
 
   /// Sends an e-mail verification to a user.
   ///
@@ -185,7 +185,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   ///
   /// The Android package name and iOS bundle ID will be respected only if
   /// they are configured in the same Firebase Auth project used.
-  Future sendEmailVerification([ActionCodeSettings actionCodeSettings]) =>
+  Future<void> sendEmailVerification([ActionCodeSettings actionCodeSettings]) =>
       handleThenable(jsObject.sendEmailVerification(actionCodeSettings));
 
   /// Unlinks a provider with [providerId] from a user account.
@@ -193,27 +193,22 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
       handleThenable(jsObject.unlink(providerId)).then(User.getInstance);
 
   /// Updates the user's e-mail address to [newEmail].
-  Future updateEmail(String newEmail) =>
+  Future<void> updateEmail(String newEmail) =>
       handleThenable(jsObject.updateEmail(newEmail));
 
   /// Updates the user's password to [newPassword].
   /// Requires the user to have recently signed in. If not, ask the user
   /// to authenticate again and then use [reauthenticate()].
-  Future updatePassword(String newPassword) =>
+  Future<void> updatePassword(String newPassword) =>
       handleThenable(jsObject.updatePassword(newPassword));
 
   /// Updates the user's phone number.
-  Future updatePhoneNumber(OAuthCredential phoneCredential) =>
+  Future<void> updatePhoneNumber(OAuthCredential phoneCredential) =>
       handleThenable(jsObject.updatePhoneNumber(phoneCredential));
 
-  /// Updates a user's [profile] data.
-  /// UserProfile has a displayName and photoURL.
-  ///
-  ///     UserProfile profile = new UserProfile(displayName: "Smart user");
-  ///     await user.updateProfile(profile);
-  Future updateProfile(firebase_interop.UserProfile profile) =>
-      handleThenable(jsObject.updateProfile(profile))
-          .then((jso) => IdTokenResult._fromJsObject(jso));
+  /// Updates a user's profile data.
+  Future<void> updateProfile(firebase_interop.UserProfile profile) =>
+      handleThenable(jsObject.updateProfile(profile));
 
   Future<IdTokenResult> getIdTokenResult([bool forceRefresh]) {
     final promise = forceRefresh == null

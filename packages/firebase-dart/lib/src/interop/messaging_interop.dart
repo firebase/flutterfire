@@ -12,7 +12,7 @@ external bool isSupported();
 @JS('Messaging')
 abstract class MessagingJsImpl {
   external void usePublicVapidKey(String key);
-  external PromiseJsImpl requestPermission();
+  external PromiseJsImpl<void> requestPermission();
   external PromiseJsImpl<String> getToken();
   external VoidFunc0 onMessage(
       optionsOrObserverOrOnNext, observerOrOnNextOrOnError);

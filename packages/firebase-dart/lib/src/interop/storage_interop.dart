@@ -38,7 +38,7 @@ abstract class ReferenceJsImpl {
   external StorageJsImpl get storage;
   external set storage(StorageJsImpl s);
   external ReferenceJsImpl child(String path);
-  external PromiseJsImpl delete();
+  external PromiseJsImpl<void> delete();
   external PromiseJsImpl<String> getDownloadURL();
   external PromiseJsImpl<FullMetadataJsImpl> getMetadata();
   external PromiseJsImpl<ListResultJsImpl> list([ListOptionsJsImpl options]);
@@ -102,7 +102,7 @@ abstract class UploadTaskJsImpl
   external bool pause();
   external bool resume();
   @override
-  external PromiseJsImpl then([Func1 onResolve, Func1 onReject]);
+  external PromiseJsImpl<void> then([Func1 onResolve, Func1 onReject]);
 }
 
 @JS()

@@ -55,7 +55,7 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external List<UserInfoJsImpl> get providerData;
   external String get refreshToken;
   external UserMetadata get metadata;
-  external PromiseJsImpl delete();
+  external PromiseJsImpl<void> delete();
   external PromiseJsImpl<String> getIdToken([bool opt_forceRefresh]);
   external PromiseJsImpl<UserCredentialJsImpl> linkWithCredential(
       OAuthCredential credential);
@@ -63,26 +63,28 @@ abstract class UserJsImpl extends UserInfoJsImpl {
       String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
   external PromiseJsImpl<UserCredentialJsImpl> linkWithPopup(
       AuthProviderJsImpl provider);
-  external PromiseJsImpl linkWithRedirect(AuthProviderJsImpl provider);
+  external PromiseJsImpl<void> linkWithRedirect(AuthProviderJsImpl provider);
 
-  external PromiseJsImpl reauthenticateWithCredential(
+  external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithCredential(
       OAuthCredential credential);
   external PromiseJsImpl<ConfirmationResultJsImpl>
       reauthenticateWithPhoneNumber(
           String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
   external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithPopup(
       AuthProviderJsImpl provider);
-  external PromiseJsImpl reauthenticateWithRedirect(
+  external PromiseJsImpl<void> reauthenticateWithRedirect(
       AuthProviderJsImpl provider);
-  external PromiseJsImpl reload();
-  external PromiseJsImpl sendEmailVerification(
+  external PromiseJsImpl<void> reload();
+  external PromiseJsImpl<void> sendEmailVerification(
       [ActionCodeSettings actionCodeSettings]);
   external PromiseJsImpl<UserJsImpl> unlink(String providerId);
-  external PromiseJsImpl updateEmail(String newEmail);
-  external PromiseJsImpl updatePassword(String newPassword);
-  external PromiseJsImpl updatePhoneNumber(OAuthCredential phoneCredential);
-  external PromiseJsImpl updateProfile(UserProfile profile);
-  external PromiseJsImpl getIdTokenResult([bool forceRefresh]);
+  external PromiseJsImpl<void> updateEmail(String newEmail);
+  external PromiseJsImpl<void> updatePassword(String newPassword);
+  external PromiseJsImpl<void> updatePhoneNumber(
+      OAuthCredential phoneCredential);
+  external PromiseJsImpl<void> updateProfile(UserProfile profile);
+  external PromiseJsImpl<IdTokenResultImpl> getIdTokenResult(
+      [bool forceRefresh]);
   external Object toJSON();
 }
 

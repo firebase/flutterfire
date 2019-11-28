@@ -42,15 +42,15 @@ abstract class ReferenceJsImpl extends QueryJsImpl {
   external ReferenceJsImpl child(String path);
   external OnDisconnectJsImpl onDisconnect();
   external ThenableReferenceJsImpl push([value, Func1 onComplete]);
-  external PromiseJsImpl remove([Func1 onComplete]);
-  external PromiseJsImpl set(value, [Func1 onComplete]);
-  external PromiseJsImpl setPriority(priority, [Func1 onComplete]);
-  external PromiseJsImpl setWithPriority(newVal, newPriority,
+  external PromiseJsImpl<void> remove([Func1 onComplete]);
+  external PromiseJsImpl<void> set(value, [Func1 onComplete]);
+  external PromiseJsImpl<void> setPriority(priority, [Func1 onComplete]);
+  external PromiseJsImpl<void> setWithPriority(newVal, newPriority,
       [Func1 onComplete]);
   external PromiseJsImpl<TransactionJsImpl> transaction(Func1 transactionUpdate,
       [Func3<Object, bool, DataSnapshotJsImpl, Null> onComplete,
       bool applyLocally]);
-  external PromiseJsImpl update(values, [Func1 onComplete]);
+  external PromiseJsImpl<void> update(values, [Func1 onComplete]);
 }
 
 @JS('Query')
@@ -104,18 +104,19 @@ abstract class DataSnapshotJsImpl {
 
 @JS('OnDisconnect')
 abstract class OnDisconnectJsImpl {
-  external PromiseJsImpl cancel([Func1 onComplete]);
-  external PromiseJsImpl remove([Func1 onComplete]);
-  external PromiseJsImpl set(value, [Func1 onComplete]);
-  external PromiseJsImpl setWithPriority(value, priority, [Func1 onComplete]);
-  external PromiseJsImpl update(values, [Func1 onComplete]);
+  external PromiseJsImpl<void> cancel([Func1 onComplete]);
+  external PromiseJsImpl<void> remove([Func1 onComplete]);
+  external PromiseJsImpl<void> set(value, [Func1 onComplete]);
+  external PromiseJsImpl<void> setWithPriority(value, priority,
+      [Func1 onComplete]);
+  external PromiseJsImpl<void> update(values, [Func1 onComplete]);
 }
 
 @JS('ThenableReference')
 abstract class ThenableReferenceJsImpl extends ReferenceJsImpl
     implements PromiseJsImpl<ReferenceJsImpl> {
   @override
-  external PromiseJsImpl then([Func1 onResolve, Func1 onReject]);
+  external PromiseJsImpl<void> then([Func1 onResolve, Func1 onReject]);
 }
 
 @JS()

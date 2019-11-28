@@ -13,9 +13,10 @@ import 'firebase_interop.dart';
 @JS('Auth')
 abstract class AuthJsImpl {
   external AppJsImpl get app;
-  external PromiseJsImpl applyActionCode(String code);
+  external PromiseJsImpl<void> applyActionCode(String code);
   external PromiseJsImpl<ActionCodeInfo> checkActionCode(String code);
-  external PromiseJsImpl confirmPasswordReset(String code, String newPassword);
+  external PromiseJsImpl<void> confirmPasswordReset(
+      String code, String newPassword);
   external PromiseJsImpl<UserCredentialJsImpl> createUserWithEmailAndPassword(
       String email, String password);
   external UserJsImpl get currentUser;
@@ -27,11 +28,11 @@ abstract class AuthJsImpl {
       [Func1 opt_error, Func0 opt_completed]);
   external Func0 onIdTokenChanged(nextOrObserver,
       [Func1 opt_error, Func0 opt_completed]);
-  external PromiseJsImpl sendSignInLinkToEmail(String email,
+  external PromiseJsImpl<void> sendSignInLinkToEmail(String email,
       [ActionCodeSettings actionCodeSettings]);
-  external PromiseJsImpl sendPasswordResetEmail(String email,
+  external PromiseJsImpl<void> sendPasswordResetEmail(String email,
       [ActionCodeSettings actionCodeSettings]);
-  external PromiseJsImpl setPersistence(String persistence);
+  external PromiseJsImpl<void> setPersistence(String persistence);
   external PromiseJsImpl<UserCredentialJsImpl> signInAnonymously();
 
   external PromiseJsImpl<UserCredentialJsImpl> signInWithCredential(
@@ -48,8 +49,8 @@ abstract class AuthJsImpl {
       String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
   external PromiseJsImpl<UserCredentialJsImpl> signInWithPopup(
       AuthProviderJsImpl provider);
-  external PromiseJsImpl signInWithRedirect(AuthProviderJsImpl provider);
-  external PromiseJsImpl signOut();
+  external PromiseJsImpl<void> signInWithRedirect(AuthProviderJsImpl provider);
+  external PromiseJsImpl<void> signOut();
   external void useDeviceLanguage();
   external PromiseJsImpl<String> verifyPasswordResetCode(String code);
 }

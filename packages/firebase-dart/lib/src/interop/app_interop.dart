@@ -17,7 +17,7 @@ abstract class AppJsImpl {
   external FirebaseOptions get options;
   external AuthJsImpl auth();
   external DatabaseJsImpl database();
-  external PromiseJsImpl delete();
+  external PromiseJsImpl<void> delete();
   external StorageJsImpl storage([String url]);
   external FirestoreJsImpl firestore();
   external FunctionsJsImpl functions([String region]);
