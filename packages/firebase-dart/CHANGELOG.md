@@ -1,3 +1,7 @@
+## 7.1.0
+
+- Added `Auth.fetchSignInMethodsForEmail`.
+
 ## 7.0.0
 
 - **BREAKING** renamed `AuthCredential` into `OAuthCredential` to align with JS API

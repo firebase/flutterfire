@@ -403,6 +403,15 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
       handleThenable(jsObject.createUserWithEmailAndPassword(email, password))
           .then((u) => UserCredential.fromJsObject(u));
 
+  /// Gets the list of possible sign in methods for the given email address.
+  ///
+  /// This is useful to differentiate methods of sign-in for the same provider,
+  /// eg. EmailAuthProvider which has 2 methods of sign-in, email/password and
+  /// email/link.
+  Future<List<String>> fetchSignInMethodsForEmail(String email) =>
+      handleThenable(jsObject.fetchSignInMethodsForEmail(email))
+          .then((list) => List<String>.from(list));
+
   /// Returns a [UserCredential] from the redirect-based sign in flow.
   /// If sign is successful, returns the signed in user. Or fails with an error
   /// if sign is unsuccessful.

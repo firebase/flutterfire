@@ -387,6 +387,24 @@ void main() {
       expect(userCredential.user.phoneNumber, isNull);
     });
 
+    test('fetchSignInMethodsForEmail', () async {
+      expect(
+        await authValue.fetchSignInMethodsForEmail('nothere@example.com'),
+        isEmpty,
+      );
+
+      await expectLater(
+        authValue.fetchSignInMethodsForEmail('bad email'),
+        throwsA(
+          const TypeMatcher<FirebaseError>().having(
+            (e) => e.message,
+            'message',
+            'The email address is badly formatted.',
+          ),
+        ),
+      );
+    });
+
     test('signInAnonymously', () async {
       userCredential = await authValue.signInAnonymously();
 

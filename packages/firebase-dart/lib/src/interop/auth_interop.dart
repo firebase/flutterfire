@@ -19,6 +19,7 @@ abstract class AuthJsImpl {
       String code, String newPassword);
   external PromiseJsImpl<UserCredentialJsImpl> createUserWithEmailAndPassword(
       String email, String password);
+  external PromiseJsImpl<List> fetchSignInMethodsForEmail(String email);
   external UserJsImpl get currentUser;
 
   external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult();
