@@ -143,7 +143,7 @@ void main() {
 ## Examples
 
 You can find more examples on realtime database, auth, storage and firestore in
-the [example](https://github.com/firebase/firebase-dart/tree/master/example)
+the [example](https://github.com/FirebaseExtended/firebase-dart/tree/master/example)
 folder.
 
 ## Dart Dev Summit 2016 demo app
@@ -169,7 +169,7 @@ Rename the file to `service_account.json` and put it into the `lib/src/assets`
 folder.
 
 > Warning: Use the contents of
-[`lib/src/assets`](https://github.com/firebase/firebase-dart/tree/master/lib/src/assets)
+[`lib/src/assets`](https://github.com/FirebaseExtended/firebase-dart/tree/master/lib/src/assets)
 is only for development and testing this package.
 
 ### App tests
@@ -264,4 +264,4 @@ official
 ## Bugs
 
 If you find a bug, please file an
-[issue](https://github.com/firebase/firebase-dart/issues).
+[issue](https://github.com/FirebaseExtended/firebase-dart/issues).

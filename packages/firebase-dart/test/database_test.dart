@@ -489,7 +489,7 @@ void main() {
     });
 
     test('update with complex object', () async {
-      // Regression test for github.com/firebase/firebase-dart/issues/173
+      // Regression test for github.com/FirebaseExtended/firebase-dart/issues/173
       var childRef = ref.child("people");
       await childRef.child("one").update({
         'list': [

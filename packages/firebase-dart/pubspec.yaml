@@ -4,7 +4,7 @@ version: 7.0.0
 authors:
 - Jana Moudra <jana.moudra@gmail.com>
 - Kevin Moore <kevmoo@google.com>
-homepage: https://github.com/firebase/firebase-dart
+homepage: https://github.com/FirebaseExtended/firebase-dart/firebase-dart
 
 environment:
   sdk: '>=2.1.0 <3.0.0'
