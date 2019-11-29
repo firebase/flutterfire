@@ -150,7 +150,10 @@ Future<T> handleThenable<T>(PromiseJsImpl<T> thenable) async {
 /// Handles the [Future] object with the provided [mapper] function.
 PromiseJsImpl<S> handleFutureWithMapper<T, S>(
     Future<T> future, Func1<T, S> mapper) {
-  return PromiseJsImpl<S>(allowInterop((VoidFunc1 resolve, VoidFunc1 reject) {
+  return PromiseJsImpl<S>(allowInterop((
+    void Function(S) resolve,
+    void Function(Object) reject,
+  ) {
     future.then((value) {
       var mappedValue = mapper(value);
       resolve(mappedValue);
@@ -159,7 +162,8 @@ PromiseJsImpl<S> handleFutureWithMapper<T, S>(
 }
 
 /// Resolves error.
-VoidFunc1 resolveError(Completer c) => allowInterop(c.completeError);
+void Function(Object) resolveError(Completer c) =>
+    allowInterop(c.completeError);
 
 class _FirebaseErrorWrapper extends Error implements FirebaseError {
   final FirebaseError _source;

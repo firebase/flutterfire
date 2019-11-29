@@ -14,10 +14,14 @@ abstract class MessagingJsImpl {
   external void usePublicVapidKey(String key);
   external PromiseJsImpl<void> requestPermission();
   external PromiseJsImpl<String> getToken();
-  external VoidFunc0 onMessage(
-      optionsOrObserverOrOnNext, observerOrOnNextOrOnError);
-  external VoidFunc0 onTokenRefresh(
-      optionsOrObserverOrOnNext, observerOrOnNextOrOnError);
+  external void Function() onMessage(
+    optionsOrObserverOrOnNext,
+    observerOrOnNextOrOnError,
+  );
+  external void Function() onTokenRefresh(
+    optionsOrObserverOrOnNext,
+    observerOrOnNextOrOnError,
+  );
   external void setBackgroundMessageHandler(Func1 f);
   external void useServiceWorker(registration);
   external void deleteToken(String token);

@@ -157,9 +157,11 @@ abstract class DocumentReferenceJsImpl {
   external CollectionReferenceJsImpl collection(String collectionPath);
   external PromiseJsImpl<Null> delete();
   external PromiseJsImpl<DocumentSnapshotJsImpl> get();
-  external VoidFunc0 onSnapshot(
-      optionsOrObserverOrOnNext, observerOrOnNextOrOnError,
-      [Func1<FirebaseError, dynamic> onError]);
+  external void Function() onSnapshot(
+    optionsOrObserverOrOnNext,
+    observerOrOnNextOrOnError, [
+    Func1<FirebaseError, dynamic> onError,
+  ]);
   external PromiseJsImpl<Null> set(data, [SetOptions options]);
   external PromiseJsImpl<Null> update(dataOrFieldsAndValues);
 }
@@ -243,7 +245,10 @@ abstract class QuerySnapshotJsImpl {
   external set query(QueryJsImpl v);
   external num get size;
   external set size(num v);
-  external void forEach(VoidFunc1<DocumentSnapshotJsImpl> callback, [thisArg]);
+  external void forEach(
+    void Function(DocumentSnapshotJsImpl) callback, [
+    thisArg,
+  ]);
   external bool isEqual(QuerySnapshotJsImpl other);
 }
 
