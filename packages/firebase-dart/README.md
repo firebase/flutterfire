@@ -43,15 +43,6 @@ For more info, see the
 [next section](#before-tests-and-examples-are-run)
 in this document.
 
-## Installation
-
-Install the library from pub:
-
-```yaml
-dependencies:
-  firebase: ^6.0.0
-```
-
 ## Using this package for browser applications
 
 You must include the right Firebase JavaScript libraries into your `.html` file
