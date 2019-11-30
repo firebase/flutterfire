@@ -7,8 +7,13 @@ import 'dart:async';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter/services.dart' show PlatformException;
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
+  static void registerWith(Registrar registrar) {
+    FirebaseAuthPlatform.instance = FirebaseAuthWeb();
+  }
+
   firebase.Auth _getAuth(String name) {
     final firebase.App app = firebase.app(name);
     return firebase.auth(app);

@@ -24,6 +24,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  firebase_auth: ^0.15.1
 
 environment:
   sdk: ">=2.0.0-dev.28.0 <3.0.0"
