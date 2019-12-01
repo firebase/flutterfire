@@ -406,6 +406,31 @@ void main() {
       expect(captured.accessToken, equals(kMockAccessToken));
     });
 
+    test('AppleAuthProvider signInWithCredential', () async {
+      final AuthCredential credential = AppleAuthProvider.getCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final AuthResult result = await auth.signInWithCredential(credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'signInWithCredential',
+            arguments: <String, dynamic>{
+              'app': auth.app.name,
+              'provider': 'apple.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
+    });
+
     test('PhoneAuthProvider signInWithCredential', () async {
       final AuthCredential credential = PhoneAuthProvider.getCredential(
         verificationId: kMockVerificationId,
@@ -483,6 +508,34 @@ void main() {
       expect(captured.accessToken, equals(kMockAccessToken));
     });
 
+    test('AppleAuthProvider reauthenticateWithCredential', () async {
+      final FirebaseUser user = await auth.currentUser();
+      log.clear();
+      final AuthCredential credential = AppleAuthProvider.getCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final AuthResult result =
+          await user.reauthenticateWithCredential(credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'reauthenticateWithCredential',
+            arguments: <String, dynamic>{
+              'app': auth.app.name,
+              'provider': 'apple.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
+    });
+
     test('FacebookAuthProvider reauthenticateWithCredential', () async {
       final FirebaseUser user = await auth.currentUser();
       final AuthCredential credential = FacebookAuthProvider.getCredential(
@@ -552,6 +605,38 @@ void main() {
       expect(captured.providerId, equals('google.com'));
       expect(captured.idToken, equals(kMockIdToken));
       expect(captured.accessToken, equals(kMockAccessToken));
+    });
+
+    test('AppleAuthProvider linkWithCredential', () async {
+      final AuthCredential credential = AppleAuthProvider.getCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final FirebaseUser user = await auth.currentUser();
+      final AuthResult result = await user.linkWithCredential(credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'currentUser',
+            arguments: <String, dynamic>{
+              'app': auth.app.name,
+            },
+          ),
+          isMethodCall(
+            'linkWithCredential',
+            arguments: <String, dynamic>{
+              'app': auth.app.name,
+              'provider': 'apple.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
     });
 
     test('FacebookAuthProvider linkWithCredential', () async {
@@ -755,6 +840,24 @@ void main() {
       await user.unlinkFromProvider(GoogleAuthProvider.providerId);
       verify(mock.getCurrentUser(auth.app.name));
       verify(mock.unlinkFromProvider(auth.app.name, 'google.com'));
+    });
+
+    test('AppleAuthProvider unlinkFromProvider', () async {
+      final FirebaseUser user = await auth.currentUser();
+      await user.unlinkFromProvider(AppleAuthProvider.providerId);
+      expect(log, <Matcher>[
+        isMethodCall(
+          'currentUser',
+          arguments: <String, String>{'app': auth.app.name},
+        ),
+        isMethodCall(
+          'unlinkFromProvider',
+          arguments: <String, String>{
+            'app': auth.app.name,
+            'provider': 'apple.com',
+          },
+        ),
+      ]);
     });
 
     test('FacebookAuthProvider unlinkFromProvider', () async {
