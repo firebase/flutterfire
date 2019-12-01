@@ -545,6 +545,31 @@ void main() {
       );
     });
 
+    test('AppleAuthProvider signInWithCredential', () async {
+      final AuthCredential credential = AppleAuthProvider.getCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final AuthResult result = await auth.signInWithCredential(credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'signInWithCredential',
+            arguments: <String, dynamic>{
+              'app': auth.app.name,
+              'provider': 'apple.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
+    });
+
     test('PhoneAuthProvider signInWithCredential', () async {
       final AuthCredential credential = PhoneAuthProvider.getCredential(
         verificationId: kMockVerificationId,
@@ -628,6 +653,34 @@ void main() {
             arguments: <String, dynamic>{
               'app': auth.app.name,
               'provider': 'google.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
+    });
+
+    test('AppleAuthProvider reauthenticateWithCredential', () async {
+      final FirebaseUser user = await auth.currentUser();
+      log.clear();
+      final AuthCredential credential = AppleAuthProvider.getCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final AuthResult result =
+          await user.reauthenticateWithCredential(credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'reauthenticateWithCredential',
+            arguments: <String, dynamic>{
+              'app': auth.app.name,
+              'provider': 'apple.com',
               'data': <String, String>{
                 'idToken': kMockIdToken,
                 'accessToken': kMockAccessToken,
@@ -740,6 +793,38 @@ void main() {
             arguments: <String, dynamic>{
               'app': auth.app.name,
               'provider': 'google.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
+    });
+
+    test('AppleAuthProvider linkWithCredential', () async {
+      final AuthCredential credential = AppleAuthProvider.getCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final FirebaseUser user = await auth.currentUser();
+      final AuthResult result = await user.linkWithCredential(credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'currentUser',
+            arguments: <String, dynamic>{
+              'app': auth.app.name,
+            },
+          ),
+          isMethodCall(
+            'linkWithCredential',
+            arguments: <String, dynamic>{
+              'app': auth.app.name,
+              'provider': 'apple.com',
               'data': <String, String>{
                 'idToken': kMockIdToken,
                 'accessToken': kMockAccessToken,
@@ -1136,6 +1221,24 @@ void main() {
           arguments: <String, String>{
             'app': auth.app.name,
             'provider': 'google.com',
+          },
+        ),
+      ]);
+    });
+
+    test('AppleAuthProvider unlinkFromProvider', () async {
+      final FirebaseUser user = await auth.currentUser();
+      await user.unlinkFromProvider(AppleAuthProvider.providerId);
+      expect(log, <Matcher>[
+        isMethodCall(
+          'currentUser',
+          arguments: <String, String>{'app': auth.app.name},
+        ),
+        isMethodCall(
+          'unlinkFromProvider',
+          arguments: <String, String>{
+            'app': auth.app.name,
+            'provider': 'apple.com',
           },
         ),
       ]);

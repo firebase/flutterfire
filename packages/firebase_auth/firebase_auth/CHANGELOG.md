@@ -1,3 +1,7 @@
+## 0.15.0+3
+
+*  Added Apple auth provider for iOS (not run in Android).
+
 ## 0.15.0+2
 
 *  Update homepage since this package was moved.
