@@ -24,7 +24,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  firebase_auth: ^0.15.1
+  firebase_auth:
+    path: ../firebase_auth
+  firebase_core_platform_interface: ^1.0.0
+  firebase_core_web:
+    path: ../../firebase_core/firebase_core_web
 
 environment:
   sdk: ">=2.0.0-dev.28.0 <3.0.0"

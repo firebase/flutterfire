@@ -68,6 +68,18 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     );
   }
 
+  PlatformIdTokenResult _fromJsIdTokenResult(
+      firebase.IdTokenResult idTokenResult) {
+    return PlatformIdTokenResult(
+      token: idTokenResult.token,
+      expirationTimestamp: idTokenResult.expirationTime.millisecondsSinceEpoch,
+      authTimestamp: idTokenResult.authTime.millisecondsSinceEpoch,
+      issuedAtTimestamp: idTokenResult.issuedAtTime.millisecondsSinceEpoch,
+      claims: idTokenResult.claims,
+      signInProvider: idTokenResult.signInProvider,
+    );
+  }
+
   firebase.User _getCurrentUserOrThrow(firebase.Auth auth) {
     final firebase.User user = auth.currentUser;
     if (user == null) {
@@ -79,7 +91,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     return user;
   }
 
-  firebase.AuthCredential _getCredential(AuthCredential credential) {
+  firebase.OAuthCredential _getCredential(AuthCredential credential) {
     if (credential is EmailAuthCredential) {
       return firebase.EmailAuthProvider.credential(
         credential.email,
@@ -134,8 +146,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     // TODO(hterkelsen): Use `fetchSignInMethodsForEmail` once
     // https://github.com/FirebaseExtended/firebase-dart/issues/272
     // is resolved.
-    final firebase.Auth auth = _getAuth(app);
-    return auth.fetchProvidersForEmail(email);
+    throw UnimplementedError('fetchSignInMethodsForEmail');
   }
 
   @override
@@ -152,7 +163,11 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<PlatformIdTokenResult> getIdToken(String app, bool refresh) async {
     // TODO(hterkelsen): `package:firebase` added `getIdTokenResult` in
     // version 7.0.0. Use it here once that is published.
-    throw UnimplementedError('getIdToken');
+    final firebase.Auth auth = _getAuth(app);
+    final firebase.User currentUser = auth.currentUser;
+    final firebase.IdTokenResult idTokenResult =
+        await currentUser.getIdTokenResult(refresh);
+    return _fromJsIdTokenResult(idTokenResult);
   }
 
   @override
@@ -168,7 +183,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       String app, AuthCredential credential) async {
     final firebase.Auth auth = _getAuth(app);
     final firebase.User currentUser = _getCurrentUserOrThrow(auth);
-    final firebase.AuthCredential firebaseCredential =
+    final firebase.OAuthCredential firebaseCredential =
         _getCredential(credential);
     final firebase.UserCredential userCredential =
         await currentUser.linkWithCredential(firebaseCredential);
@@ -186,7 +201,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       String app, AuthCredential credential) async {
     final firebase.Auth auth = _getAuth(app);
     final firebase.User currentUser = _getCurrentUserOrThrow(auth);
-    final firebase.AuthCredential firebaseCredential =
+    final firebase.OAuthCredential firebaseCredential =
         _getCredential(credential);
     final firebase.UserCredential userCredential =
         await currentUser.reauthenticateWithCredential(firebaseCredential);
@@ -245,7 +260,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<PlatformAuthResult> signInWithCredential(
       String app, AuthCredential credential) async {
     final firebase.Auth auth = _getAuth(app);
-    final firebase.AuthCredential firebaseCredential =
+    final firebase.OAuthCredential firebaseCredential =
         _getCredential(credential);
     final firebase.UserCredential userCredential =
         await auth.signInWithCredential(firebaseCredential);
@@ -301,7 +316,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       String app, PhoneAuthCredential phoneAuthCredential) async {
     final firebase.Auth auth = _getAuth(app);
     final firebase.User currentUser = _getCurrentUserOrThrow(auth);
-    final firebase.AuthCredential credential =
+    final firebase.OAuthCredential credential =
         _getCredential(phoneAuthCredential);
     await currentUser.updatePhoneNumber(credential);
   }
