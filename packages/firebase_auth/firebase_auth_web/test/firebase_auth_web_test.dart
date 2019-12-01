@@ -1,6 +1,7 @@
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+@TestOn('chrome')
 
 import 'dart:js' as js;
 
@@ -16,8 +17,52 @@ void main() {
     setUp(() {
       final js.JsObject firebaseMock = js.JsObject.jsify(<String, dynamic>{});
       js.context['firebase'] = firebaseMock;
+      js.context['firebase']['app'] = js.allowInterop((String name) {
+        return js.JsObject.jsify(<String, dynamic>{
+          'name': name,
+          'options': <String, String>{'appId': '123'},
+        });
+      });
+      js.context['firebase']['auth'] = js.allowInterop((dynamic app) {});
       FirebaseCorePlatform.instance = FirebaseCoreWeb();
       FirebaseAuthPlatform.instance = FirebaseAuthWeb();
     });
+
+    test('signInAnonymously calls firebase APIs', () async {
+      js.context['firebase']['auth'] = js.allowInterop((dynamic app) {
+        return js.JsObject.jsify(
+          <String, dynamic>{
+            'signInAnonymously': () {
+              return _jsFuture(_fakeUserCredential());
+            },
+          },
+        );
+      });
+      FirebaseAuth auth = FirebaseAuth.instance;
+      AuthResult result = await auth.signInAnonymously();
+      expect(result, isNotNull);
+    });
+  });
+}
+
+js.JsObject _jsFuture(dynamic value) {
+  return js.JsObject.jsify(<String, dynamic>{
+    'then': (js.JsFunction f) {
+      f.apply(<dynamic>[value]);
+    },
+  });
+}
+
+js.JsObject _fakeUserCredential() {
+  return js.JsObject.jsify(<String, dynamic>{
+    'user': <String, dynamic>{
+      'providerId': 'email',
+      'metadata': <String, dynamic>{
+        'creationTime': '2019-12-01T00:53:11Z',
+        'lastSignInTime': '2019-12-01T00:53:11Z',
+      },
+      'providerData': <dynamic>[],
+    },
+    'additionalUserInfo': <String, dynamic>{},
   });
 }
