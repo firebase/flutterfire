@@ -58,7 +58,7 @@ abstract class FirebaseAnalyticsPlatform {
   /// if the provided instance is a class implemented with `implements`.
   void _verifyProvidesDefaultImplementations() {}
 
-  // Logs the given event [name] with the given [parameters].
+  /// Logs the given event [name] with the given [parameters].
   Future<void> logEvent({
     @required String name,
     Map<String, dynamic> parameters,

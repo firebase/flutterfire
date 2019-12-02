@@ -5,10 +5,11 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart' show required, visibleForTesting;
+import 'package:meta/meta.dart' show required;
 
 import 'firebase_analytics_platform_interface.dart';
 
+/// The method channel implementation of [FirebaseAnalyticsPlatform].
 class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   static const MethodChannel _channel =
       MethodChannel('plugins.flutter.io/firebase_analytics');

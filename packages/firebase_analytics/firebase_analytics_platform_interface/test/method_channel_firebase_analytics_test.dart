@@ -2,10 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:firebase_analytics_platform_interface/method_channel_firebase_analytics.dart';
 import 'package:flutter/services.dart';
 
