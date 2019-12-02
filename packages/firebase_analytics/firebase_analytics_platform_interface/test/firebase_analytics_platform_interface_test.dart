@@ -16,7 +16,8 @@ void main() {
 
     test('Cannot be implemented with `implements`', () {
       expect(() {
-        FirebaseAnalyticsPlatform.instance = ImplementsFirebaseAnalyticsPlatform();
+        FirebaseAnalyticsPlatform.instance =
+            ImplementsFirebaseAnalyticsPlatform();
       }, throwsAssertionError);
     });
 
