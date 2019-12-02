@@ -1,3 +1,7 @@
-# 0.1.0
+## 0.1.0+1
 
-- Initial open-source release.
+* Use `package:firebase` for firebase functionality.
+
+## 0.1.0
+
+* Initial open-source release.
