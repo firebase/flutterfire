@@ -1,3 +1,7 @@
+## 0.12.11
+
+* Added support for `in` and `array-contains-any` query operators.
+
 ## 0.12.10+5
 
 * Moved `.gitignore` which was left behind in previous change.

@@ -328,5 +328,50 @@ void main() {
       expect(result.data['message'], 'testing field path');
       expect(result.documentID, documentId);
     });
+
+    test('Query.whereIn', () async {
+      final CollectionReference ref = firestore.collection('cities');
+      await ref.document('la').setData(<String, dynamic>{
+        'country': 'USA',
+      });
+      await ref.document('tokyo').setData(<String, dynamic>{
+        'country': 'Japan',
+      });
+      await ref.document('maputo').setData(<String, dynamic>{
+        'country': 'Mozambique',
+      });
+      final QuerySnapshot snapshot = await ref
+          .where('country', whereIn: <String>['USA', 'Mozambique'])
+          .orderBy('country')
+          .getDocuments();
+      final List<DocumentSnapshot> results = snapshot.documents;
+      expect(results.length, 2);
+      final DocumentSnapshot snapshot1 = results[0];
+      final DocumentSnapshot snapshot2 = results[1];
+      expect(snapshot1.documentID, 'maputo');
+      expect(snapshot2.documentID, 'la');
+    });
+
+    test('Query.whereArrayContainsAny', () async {
+      final CollectionReference ref = firestore.collection('cities');
+      await ref.document('la').setData(<String, dynamic>{
+        'country': 'USA',
+        'regions': <String>['west-coast', 'east-coast'],
+      });
+      await ref.document('tokyo').setData(<String, dynamic>{
+        'country': 'Japan',
+        'regions': <String>['kanto', 'honshu'],
+      });
+      final QuerySnapshot snapshot = await ref
+          .where('regions', arrayContainsAny: <String>['kanto', 'west-coast'])
+          .orderBy('country')
+          .getDocuments();
+      final List<DocumentSnapshot> results = snapshot.documents;
+      expect(results.length, 2);
+      final DocumentSnapshot snapshot1 = results[0];
+      final DocumentSnapshot snapshot2 = results[1];
+      expect(snapshot1.documentID, 'la');
+      expect(snapshot2.documentID, 'tokyo');
+    });
   });
 }

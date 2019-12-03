@@ -397,6 +397,81 @@ void main() {
           ]),
         );
       });
+      test('where in', () async {
+        final StreamSubscription<QuerySnapshot> subscription =
+            collectionReference
+                .where('country', whereIn: <String>['USA', 'Japan'])
+                .snapshots()
+                .listen((QuerySnapshot querySnapshot) {});
+        subscription.cancel();
+        await Future<void>.delayed(Duration.zero);
+        expect(
+          log,
+          equals(<Matcher>[
+            isMethodCall(
+              'Query#addSnapshotListener',
+              arguments: <String, dynamic>{
+                'app': app.name,
+                'path': 'foo',
+                'isCollectionGroup': false,
+                'parameters': <String, dynamic>{
+                  'where': <List<dynamic>>[
+                    <dynamic>[
+                      'country',
+                      'in',
+                      <String>['USA', 'Japan']
+                    ],
+                  ],
+                  'orderBy': <List<dynamic>>[],
+                },
+                'includeMetadataChanges': false,
+              },
+            ),
+            isMethodCall(
+              'removeListener',
+              arguments: <String, dynamic>{'handle': 0},
+            ),
+          ]),
+        );
+      });
+      test('where array-contains-any', () async {
+        final StreamSubscription<QuerySnapshot> subscription =
+            collectionReference
+                .where('regions',
+                    arrayContainsAny: <String>['west-coast', 'east-coast'])
+                .snapshots()
+                .listen((QuerySnapshot querySnapshot) {});
+        subscription.cancel();
+        await Future<void>.delayed(Duration.zero);
+        expect(
+          log,
+          equals(<Matcher>[
+            isMethodCall(
+              'Query#addSnapshotListener',
+              arguments: <String, dynamic>{
+                'app': app.name,
+                'path': 'foo',
+                'isCollectionGroup': false,
+                'parameters': <String, dynamic>{
+                  'where': <List<dynamic>>[
+                    <dynamic>[
+                      'regions',
+                      'array-contains-any',
+                      <String>['west-coast', 'east-coast']
+                    ],
+                  ],
+                  'orderBy': <List<dynamic>>[],
+                },
+                'includeMetadataChanges': false,
+              },
+            ),
+            isMethodCall(
+              'removeListener',
+              arguments: <String, dynamic>{'handle': 0},
+            ),
+          ]),
+        );
+      });
       test('where field isNull', () async {
         final StreamSubscription<QuerySnapshot> subscription =
             collectionReference

@@ -290,6 +290,24 @@ public class CloudFirestorePlugin implements MethodCallHandler {
         } else {
           // Invalid type.
         }
+      } else if ("array-contains-any".equals(operator)) {
+        List<Object> values = (List<Object>) value;
+        if (fieldName != null) {
+          query = query.whereArrayContainsAny(fieldName, values);
+        } else if (fieldPath != null) {
+          query = query.whereArrayContainsAny(fieldPath, values);
+        } else {
+          // Invalid type.
+        }
+      } else if ("in".equals(operator)) {
+        List<Object> values = (List<Object>) value;
+        if (fieldName != null) {
+          query = query.whereIn(fieldName, values);
+        } else if (fieldPath != null) {
+          query = query.whereIn(fieldPath, values);
+        } else {
+          // Invalid type.
+        }
       } else {
         // Invalid operator.
       }
