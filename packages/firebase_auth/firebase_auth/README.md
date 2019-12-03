@@ -132,7 +132,7 @@ device you are using you must set the `URL Schemes` to the `REVERSE_CLIENT_ID` f
 
 ## Example
 
-See the [example application](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_auth/example) source
+See the [example application](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_auth/firebase_auth/example) source
 for a complete sample app using the Firebase authentication.
 
 ## Issues and feedback

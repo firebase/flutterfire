@@ -1,3 +1,7 @@
+## 6.0.2
+
+* Fixed a build warning caused by availability check.
+
 ## 6.0.1
 
 * `FirebaseMessaging.configure` will throw an `ArgumentError` when `onBackgroundMessage` parameter

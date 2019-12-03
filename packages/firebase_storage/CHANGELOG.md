@@ -1,3 +1,7 @@
+## 3.0.9
+
+* Support the v2 Android embedding.
+
 ## 3.0.8
 
 * Updated README instructions for contributing for consistency with other Flutterfire plugins.
