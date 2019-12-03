@@ -17,8 +17,8 @@ void main() {
   MethodCall methodCall;
 
   setUp(() async {
-    channel.setMockMethodCallHandler((MethodCall m) async {
-      methodCall = m;
+    channel.setMockMethodCallHandler((MethodCall call) async {
+      methodCall = call;
     });
   });
 
