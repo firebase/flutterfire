@@ -23,6 +23,7 @@ abstract class AuthJsImpl {
   external UserJsImpl get currentUser;
 
   external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult();
+  external bool isSignInWithEmailLink(String emailLink);
   external String get languageCode;
   external set languageCode(String s);
   external Func0 onAuthStateChanged(nextOrObserver,

@@ -412,6 +412,10 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
       handleThenable(jsObject.fetchSignInMethodsForEmail(email))
           .then((list) => List<String>.from(list));
 
+  /// Checks if an incoming link is a sign-in with email link.
+  bool isSignInWithEmailLink(String emailLink) =>
+      jsObject.isSignInWithEmailLink(emailLink);
+
   /// Returns a [UserCredential] from the redirect-based sign in flow.
   /// If sign is successful, returns the signed in user. Or fails with an error
   /// if sign is unsuccessful.

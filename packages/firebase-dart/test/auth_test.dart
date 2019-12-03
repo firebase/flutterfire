@@ -405,6 +405,10 @@ void main() {
       );
     });
 
+    test('isSignInWithEmailLink', () {
+      expect(authValue.isSignInWithEmailLink('randomlink.com'), isFalse);
+    });
+
     test('signInAnonymously', () async {
       userCredential = await authValue.signInAnonymously();
 
