@@ -6,9 +6,18 @@ library firebase_auth;
 
 import 'dart:async';
 
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
+
+export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
+    show
+        AuthCredential,
+        AuthException,
+        PhoneVerificationCompleted,
+        PhoneVerificationFailed,
+        PhoneCodeSent,
+        PhoneCodeAutoRetrievalTimeout;
 
 part 'src/auth_provider/email_auth_provider.dart';
 part 'src/auth_provider/facebook_auth_provider.dart';
@@ -18,8 +27,6 @@ part 'src/auth_provider/apple_auth_provider.dart';
 part 'src/auth_provider/phone_auth_provider.dart';
 part 'src/auth_provider/twitter_auth_provider.dart';
 part 'src/additional_user_info.dart';
-part 'src/auth_credential.dart';
-part 'src/auth_exception.dart';
 part 'src/auth_result.dart';
 part 'src/firebase_auth.dart';
 part 'src/firebase_user.dart';

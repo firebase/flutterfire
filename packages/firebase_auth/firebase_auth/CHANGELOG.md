@@ -1,7 +1,11 @@
-## 0.15.0+3
+## 0.15.1+1
 
 *  Added Apple auth provider for iOS (not run in Android).
 *  Change iOS Deployment target to 9.0, because google-sign-in 4.0.14 required it.
+
+## 0.15.1
+
+* Migrate to use `firebase_auth_platform_interface`.
 
 ## 0.15.0+2
 
