@@ -1,3 +1,7 @@
+## 0.12.10+5
+
+* Moved `.gitignore` which was left behind in previous change.
+
 ## 0.12.10+4
 
 * Moved package to `cloud_firestore/cloud_firestore` subdir, to allow for federated implementations.
