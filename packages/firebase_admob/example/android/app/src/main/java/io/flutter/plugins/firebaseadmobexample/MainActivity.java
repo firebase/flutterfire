@@ -12,9 +12,9 @@ import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugins.GeneratedPluginRegistrant;
-import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin;
+import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
 
-public class MainActivity extends FlutterActivity implements FirebaseAdMobPlugin.NativeAdFactory {
+public class MainActivity extends FlutterActivity implements NativeAdFactory {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
