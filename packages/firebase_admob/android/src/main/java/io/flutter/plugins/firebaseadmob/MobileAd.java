@@ -19,6 +19,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -268,14 +269,13 @@ abstract class MobileAd extends AdListener {
         return;
       }
 
-      if (FirebaseAdMobPlugin.nativeAdFactory == null) {
-        throw new IllegalStateException(
-            "The native ad factory was null. Did you add"
-                + " `FirebaseAdMobPlugin.setNativeAdGenerator(Function<UnifiedNativeAd, View>"
-                + " nativeAdGenerator)` to your `MainActivity.java`?");
+      if (!(activity instanceof NativeAdFactory)) {
+        throw new IllegalStateException(String.format("Activity does not implement %s.",
+            NativeAdFactory.class.getSimpleName()));
       }
 
-      showAdView(FirebaseAdMobPlugin.nativeAdFactory.apply(nativeAd));
+      final NativeAdFactory adFactory = (NativeAdFactory) activity;
+      showAdView(adFactory.createNativeAd(nativeAd));
     }
 
     @Override

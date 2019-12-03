@@ -134,14 +134,6 @@ class _MyAppState extends State<MyApp> {
                   },
                 ),
                 RaisedButton(
-                  child: const Text('LOAD REWARDED VIDEO'),
-                  onPressed: () {
-                    RewardedVideoAd.instance.load(
-                        adUnitId: RewardedVideoAd.testAdUnitId,
-                        targetingInfo: targetingInfo);
-                  },
-                ),
-                RaisedButton(
                   child: const Text('SHOW NATIVE'),
                   onPressed: () {
                     _nativeAd ??= createNativeAd();
@@ -155,6 +147,14 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () {
                     _nativeAd?.dispose();
                     _nativeAd = null;
+                  },
+                ),
+                RaisedButton(
+                  child: const Text('LOAD REWARDED VIDEO'),
+                  onPressed: () {
+                    RewardedVideoAd.instance.load(
+                        adUnitId: RewardedVideoAd.testAdUnitId,
+                        targetingInfo: targetingInfo);
                   },
                 ),
                 RaisedButton(
