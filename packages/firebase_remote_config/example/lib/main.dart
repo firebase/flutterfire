@@ -8,6 +8,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
       title: 'Remote Config Example',
       home: FutureBuilder<RemoteConfig>(

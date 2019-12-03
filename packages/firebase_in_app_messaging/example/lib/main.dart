@@ -48,7 +48,7 @@ class ProgrammaticTriggersExample extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: <Widget>[
-            Text(
+            const Text(
               "Programmatic Trigger",
               style: TextStyle(
                 fontStyle: FontStyle.italic,
@@ -61,8 +61,8 @@ class ProgrammaticTriggersExample extends StatelessWidget {
             RaisedButton(
               onPressed: () {
                 fiam.triggerEvent('chicken_event');
-                Scaffold.of(context).showSnackBar(SnackBar(
-                    content: const Text("Triggering event: chicken_event")));
+                Scaffold.of(context).showSnackBar(const SnackBar(
+                    content: Text("Triggering event: chicken_event")));
               },
               color: Colors.blue,
               child: Text(
@@ -92,7 +92,7 @@ class AnalyticsEventExample extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: <Widget>[
-            Text(
+            const Text(
               "Log an analytics event",
               style: TextStyle(
                 fontStyle: FontStyle.italic,
@@ -105,9 +105,8 @@ class AnalyticsEventExample extends StatelessWidget {
             RaisedButton(
               onPressed: () {
                 _sendAnalyticsEvent();
-                Scaffold.of(context).showSnackBar(SnackBar(
-                    content:
-                        const Text("Firing analytics event: awesome_event")));
+                Scaffold.of(context).showSnackBar(const SnackBar(
+                    content: Text("Firing analytics event: awesome_event")));
               },
               color: Colors.blue,
               child: Text(

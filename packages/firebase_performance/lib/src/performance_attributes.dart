@@ -17,7 +17,6 @@ abstract class PerformanceAttributes {
 
   final Map<String, String> _attributes = <String, String>{};
 
-  bool get _hasStarted;
   bool get _hasStopped;
 
   int get _handle;
