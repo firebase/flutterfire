@@ -35,7 +35,6 @@ void main() {
         persistenceEnabled: true,
         host: null,
         sslEnabled: true,
-        timestampsInSnapshotsEnabled: true,
         cacheSizeBytes: 1048576,
       );
     });
