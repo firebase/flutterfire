@@ -11,9 +11,9 @@ class TwitterAuthProvider {
     @required String authToken,
     @required String authTokenSecret,
   }) {
-    return AuthCredential._(providerId, <String, String>{
-      'authToken': authToken,
-      'authTokenSecret': authTokenSecret,
-    });
+    return TwitterAuthCredential(
+      authToken: authToken,
+      authTokenSecret: authTokenSecret,
+    );
   }
 }

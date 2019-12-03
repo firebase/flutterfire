@@ -1,3 +1,7 @@
+## 0.15.1
+
+* Migrate to use `firebase_auth_platform_interface`.
+
 ## 0.15.0+2
 
 *  Update homepage since this package was moved.
