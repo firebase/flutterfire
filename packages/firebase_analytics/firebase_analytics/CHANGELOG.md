@@ -1,3 +1,7 @@
+## 5.0.8
+
+* Update homepage since the package moved for the platform interface migration.
+
 ## 5.0.7
 
 * Formatted `setCurrentScreen` documentation.
