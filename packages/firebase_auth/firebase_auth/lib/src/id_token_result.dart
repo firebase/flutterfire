@@ -14,32 +14,32 @@ part of firebase_auth;
 class IdTokenResult {
   IdTokenResult._(this._data);
 
-  final Map<dynamic, dynamic> _data;
+  final PlatformIdTokenResult _data;
 
   /// The Firebase Auth ID token JWT string.
-  String get token => _data['token'];
+  String get token => _data.token;
 
   /// The time when the ID token expires.
   DateTime get expirationTime =>
-      DateTime.fromMillisecondsSinceEpoch(_data['expirationTimestamp'] * 1000);
+      DateTime.fromMillisecondsSinceEpoch(_data.expirationTimestamp * 1000);
 
   /// The time the user authenticated (signed in).
   ///
   /// Note that this is not the time the token was refreshed.
   DateTime get authTime =>
-      DateTime.fromMillisecondsSinceEpoch(_data['authTimestamp'] * 1000);
+      DateTime.fromMillisecondsSinceEpoch(_data.authTimestamp * 1000);
 
   /// The time when ID token was issued.
   DateTime get issuedAtTime =>
-      DateTime.fromMillisecondsSinceEpoch(_data['issuedAtTimestamp'] * 1000);
+      DateTime.fromMillisecondsSinceEpoch(_data.issuedAtTimestamp * 1000);
 
   /// The sign-in provider through which the ID token was obtained (anonymous,
   /// custom, phone, password, etc). Note, this does not map to provider IDs.
-  String get signInProvider => _data['signInProvider'];
+  String get signInProvider => _data.signInProvider;
 
   /// The entire payload claims of the ID token including the standard reserved
   /// claims as well as the custom claims.
-  Map<dynamic, dynamic> get claims => _data['claims'];
+  Map<dynamic, dynamic> get claims => _data.claims;
 
   @override
   String toString() {

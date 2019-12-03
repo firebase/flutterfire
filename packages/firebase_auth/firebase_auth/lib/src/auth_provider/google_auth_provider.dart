@@ -11,9 +11,6 @@ class GoogleAuthProvider {
     @required String idToken,
     @required String accessToken,
   }) {
-    return AuthCredential._(providerId, <String, String>{
-      'idToken': idToken,
-      'accessToken': accessToken,
-    });
+    return GoogleAuthCredential(idToken: idToken, accessToken: accessToken);
   }
 }
