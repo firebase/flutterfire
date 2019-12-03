@@ -6,8 +6,6 @@ package io.flutter.plugins.firebaseadmob;
 
 import android.app.Activity;
 import android.view.Gravity;
-import android.view.View;
-import androidx.arch.core.util.Function;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
@@ -29,9 +27,20 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
   RewardedVideoAdWrapper rewardedWrapper;
 
   /**
-   * Creates
+   * Interface used to display a {@link com.google.android.gms.ads.formats.UnifiedNativeAd}.
+   *
+   * <p>Have your activity implement this in order to display Native Ads
    */
   public interface NativeAdFactory {
+    /**
+     * Creates a {@link com.google.android.gms.ads.formats.UnifiedNativeAdView} with a {@link
+     * com.google.android.gms.ads.formats.UnifiedNativeAd}.
+     *
+     * @param nativeAd Ad information used to create a {@link
+     *     com.google.android.gms.ads.formats.UnifiedNativeAdView}
+     * @return a {@link com.google.android.gms.ads.formats.UnifiedNativeAdView} that is overlaid on
+     *     top of the FlutterView.
+     */
     UnifiedNativeAdView createNativeAd(UnifiedNativeAd nativeAd);
   }
 

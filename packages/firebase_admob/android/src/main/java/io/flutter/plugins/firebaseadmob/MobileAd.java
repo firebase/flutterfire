@@ -270,8 +270,9 @@ abstract class MobileAd extends AdListener {
       }
 
       if (!(activity instanceof NativeAdFactory)) {
-        throw new IllegalStateException(String.format("Activity does not implement %s.",
-            NativeAdFactory.class.getSimpleName()));
+        throw new IllegalStateException(
+            String.format(
+                "Activity does not implement %s.", NativeAdFactory.class.getSimpleName()));
       }
 
       final NativeAdFactory adFactory = (NativeAdFactory) activity;
