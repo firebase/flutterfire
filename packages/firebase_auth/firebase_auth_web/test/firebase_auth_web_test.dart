@@ -28,12 +28,12 @@ void main() {
       FirebaseAuthPlatform.instance = FirebaseAuthWeb();
     });
 
-    test('signInAnonymously calls firebase APIs', () async {
+    test('signInAnonymously calls Firebase APIs', () async {
       js.context['firebase']['auth'] = js.allowInterop((dynamic app) {
         return js.JsObject.jsify(
           <String, dynamic>{
             'signInAnonymously': () {
-              return _jsFuture(_fakeUserCredential());
+              return _jsPromise(_fakeUserCredential());
             },
           },
         );
@@ -45,7 +45,7 @@ void main() {
   });
 }
 
-js.JsObject _jsFuture(dynamic value) {
+js.JsObject _jsPromise(dynamic value) {
   return js.JsObject.jsify(<String, dynamic>{
     'then': (js.JsFunction f) {
       f.apply(<dynamic>[value]);

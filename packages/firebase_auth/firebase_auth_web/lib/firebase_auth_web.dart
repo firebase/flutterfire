@@ -347,6 +347,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout}) async {
     // TODO(hterkelsen): Figure out how to do this on Web. We need to display
     // a DOM element to contain the reCaptcha.
+    // See https://github.com/flutter/flutter/issues/46021
     throw UnimplementedError('verifyPhoneNumber');
   }
 }
