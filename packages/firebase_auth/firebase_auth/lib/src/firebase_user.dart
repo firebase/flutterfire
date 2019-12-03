@@ -125,7 +125,7 @@ class FirebaseUser extends UserInfo {
   Future<void> updatePhoneNumberCredential(AuthCredential credential) {
     assert(credential != null);
     if (credential is! PhoneAuthCredential) {
-      throw new ArgumentError.value(
+      throw ArgumentError.value(
         credential,
         'Credential must be a phone credential, '
         'i.e. made with PhoneAuthProvider.getCredential()',
