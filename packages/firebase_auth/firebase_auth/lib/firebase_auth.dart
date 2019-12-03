@@ -14,12 +14,6 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
     show
         AuthCredential,
         AuthException,
-        EmailAuthCredential,
-        FacebookAuthCredential,
-        GithubAuthCredential,
-        GoogleAuthCredential,
-        PhoneAuthCredential,
-        TwitterAuthCredential,
         PhoneVerificationCompleted,
         PhoneVerificationFailed,
         PhoneCodeSent,

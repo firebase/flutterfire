@@ -122,8 +122,15 @@ class FirebaseUser extends UserInfo {
   /// **Important**: This is a security sensitive operation that requires
   /// the user to have recently signed in.
   ///
-  Future<void> updatePhoneNumberCredential(PhoneAuthCredential credential) {
+  Future<void> updatePhoneNumberCredential(AuthCredential credential) {
     assert(credential != null);
+    if (credential is! PhoneAuthCredential) {
+      throw new ArgumentError.value(
+        credential,
+        'Credential must be a phone credential, '
+        'i.e. made with PhoneAuthProvider.getCredential()',
+      );
+    }
     return FirebaseAuthPlatform.instance
         .updatePhoneNumberCredential(_app.name, credential);
   }

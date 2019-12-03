@@ -7,7 +7,7 @@ part of firebase_auth;
 class GoogleAuthProvider {
   static const String providerId = 'google.com';
 
-  static GoogleAuthCredential getCredential({
+  static AuthCredential getCredential({
     @required String idToken,
     @required String accessToken,
   }) {

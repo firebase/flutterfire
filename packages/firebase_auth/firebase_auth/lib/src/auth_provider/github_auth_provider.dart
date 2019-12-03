@@ -7,7 +7,7 @@ part of firebase_auth;
 class GithubAuthProvider {
   static const String providerId = 'github.com';
 
-  static GithubAuthCredential getCredential({@required String token}) {
+  static AuthCredential getCredential({@required String token}) {
     return GithubAuthCredential(token: token);
   }
 }

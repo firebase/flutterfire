@@ -7,7 +7,7 @@ part of firebase_auth;
 class TwitterAuthProvider {
   static const String providerId = 'twitter.com';
 
-  static TwitterAuthCredential getCredential({
+  static AuthCredential getCredential({
     @required String authToken,
     @required String authTokenSecret,
   }) {

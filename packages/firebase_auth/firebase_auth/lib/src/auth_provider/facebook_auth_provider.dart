@@ -7,7 +7,7 @@ part of firebase_auth;
 class FacebookAuthProvider {
   static const String providerId = 'facebook.com';
 
-  static FacebookAuthCredential getCredential({String accessToken}) {
+  static AuthCredential getCredential({String accessToken}) {
     return FacebookAuthCredential(accessToken: accessToken);
   }
 }
