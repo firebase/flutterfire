@@ -4,16 +4,9 @@
 
 part of firebase_auth;
 
-typedef void PhoneVerificationCompleted(AuthCredential phoneAuthCredential);
-typedef void PhoneVerificationFailed(AuthException error);
-typedef void PhoneCodeSent(String verificationId, [int forceResendingToken]);
-typedef void PhoneCodeAutoRetrievalTimeout(String verificationId);
-
 /// The entry point of the Firebase Authentication SDK.
 class FirebaseAuth {
-  FirebaseAuth._(this.app) {
-    channel.setMethodCallHandler(_callHandler);
-  }
+  FirebaseAuth._(this.app);
 
   /// Provides an instance of this class corresponding to `app`.
   factory FirebaseAuth.fromApp(FirebaseApp app) {
@@ -24,40 +17,12 @@ class FirebaseAuth {
   /// Provides an instance of this class corresponding to the default app.
   static final FirebaseAuth instance = FirebaseAuth._(FirebaseApp.instance);
 
-  @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_auth',
-  );
-
-  final Map<int, StreamController<FirebaseUser>> _authStateChangedControllers =
-      <int, StreamController<FirebaseUser>>{};
-
-  static int _nextHandle = 0;
-  final Map<int, Map<String, dynamic>> _phoneAuthCallbacks =
-      <int, Map<String, dynamic>>{};
-
   final FirebaseApp app;
 
   /// Receive [FirebaseUser] each time the user signIn or signOut
   Stream<FirebaseUser> get onAuthStateChanged {
-    Future<int> _handle;
-
-    StreamController<FirebaseUser> controller;
-    controller = StreamController<FirebaseUser>.broadcast(onListen: () {
-      _handle = channel.invokeMethod<int>('startListeningAuthState',
-          <String, String>{"app": app.name}).then<int>((dynamic v) => v);
-      _handle.then((int handle) {
-        _authStateChangedControllers[handle] = controller;
-      });
-    }, onCancel: () {
-      _handle.then((int handle) async {
-        await channel.invokeMethod<void>("stopListeningAuthState",
-            <String, dynamic>{"id": handle, "app": app.name});
-        _authStateChangedControllers.remove(handle);
-      });
-    });
-
-    return controller.stream;
+    return FirebaseAuthPlatform.instance.onAuthStateChanged(app.name).map(
+        (PlatformUser user) => user == null ? null : FirebaseUser._(user, app));
   }
 
   /// Asynchronously creates and becomes an anonymous user.
@@ -73,9 +38,8 @@ class FirebaseAuth {
   ///
   ///  * `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Anonymous accounts are not enabled.
   Future<AuthResult> signInAnonymously() async {
-    final Map<String, dynamic> data = await channel
-        .invokeMapMethod<String, dynamic>(
-            'signInAnonymously', <String, String>{"app": app.name});
+    final PlatformAuthResult data =
+        await FirebaseAuthPlatform.instance.signInAnonymously(app.name);
     final AuthResult authResult = AuthResult._(data, app);
     return authResult;
   }
@@ -96,11 +60,8 @@ class FirebaseAuth {
   }) async {
     assert(email != null);
     assert(password != null);
-    final Map<String, dynamic> data =
-        await channel.invokeMapMethod<String, dynamic>(
-      'createUserWithEmailAndPassword',
-      <String, String>{'email': email, 'password': password, 'app': app.name},
-    );
+    final PlatformAuthResult data = await FirebaseAuthPlatform.instance
+        .createUserWithEmailAndPassword(app.name, email, password);
     final AuthResult authResult = AuthResult._(data, app);
     return authResult;
   }
@@ -118,12 +79,10 @@ class FirebaseAuth {
   ///  * `ERROR_INVALID_CREDENTIAL` - If the [email] address is malformed.
   Future<List<String>> fetchSignInMethodsForEmail({
     @required String email,
-  }) async {
+  }) {
     assert(email != null);
-    return await channel.invokeListMethod<String>(
-      'fetchSignInMethodsForEmail',
-      <String, String>{'email': email, 'app': app.name},
-    );
+    return FirebaseAuthPlatform.instance
+        .fetchSignInMethodsForEmail(app.name, email);
   }
 
   /// Triggers the Firebase Authentication backend to send a password-reset
@@ -136,12 +95,10 @@ class FirebaseAuth {
   ///  * `ERROR_USER_NOT_FOUND` - If there is no user corresponding to the given [email] address.
   Future<void> sendPasswordResetEmail({
     @required String email,
-  }) async {
+  }) {
     assert(email != null);
-    return await channel.invokeMethod<void>(
-      'sendPasswordResetEmail',
-      <String, String>{'email': email, 'app': app.name},
-    );
+    return FirebaseAuthPlatform.instance
+        .sendPasswordResetEmail(app.name, email);
   }
 
   /// Sends a sign in with email link to provided email address.
@@ -153,7 +110,7 @@ class FirebaseAuth {
     @required String androidPackageName,
     @required bool androidInstallIfNotAvailable,
     @required String androidMinimumVersion,
-  }) async {
+  }) {
     assert(email != null);
     assert(url != null);
     assert(handleCodeInApp != null);
@@ -161,27 +118,21 @@ class FirebaseAuth {
     assert(androidPackageName != null);
     assert(androidInstallIfNotAvailable != null);
     assert(androidMinimumVersion != null);
-    await channel.invokeMethod<void>(
-      'sendLinkToEmail',
-      <String, dynamic>{
-        'email': email,
-        'url': url,
-        'handleCodeInApp': handleCodeInApp,
-        'iOSBundleID': iOSBundleID,
-        'androidPackageName': androidPackageName,
-        'androidInstallIfNotAvailable': androidInstallIfNotAvailable,
-        'androidMinimumVersion': androidMinimumVersion,
-        'app': app.name,
-      },
+    return FirebaseAuthPlatform.instance.sendLinkToEmail(
+      app.name,
+      email: email,
+      url: url,
+      handleCodeInApp: handleCodeInApp,
+      iOSBundleID: iOSBundleID,
+      androidPackageName: androidPackageName,
+      androidInstallIfNotAvailable: androidInstallIfNotAvailable,
+      androidMinimumVersion: androidMinimumVersion,
     );
   }
 
   /// Checks if link is an email sign-in link.
-  Future<bool> isSignInWithEmailLink(String link) async {
-    return await channel.invokeMethod<bool>(
-      'isSignInWithEmailLink',
-      <String, String>{'link': link, 'app': app.name},
-    );
+  Future<bool> isSignInWithEmailLink(String link) {
+    return FirebaseAuthPlatform.instance.isSignInWithEmailLink(app.name, link);
   }
 
   /// Signs in using an email address and email sign-in link.
@@ -194,15 +145,8 @@ class FirebaseAuth {
   ///  * `ERROR_DISABLED` - Indicates the user's account is disabled.
   ///  * `ERROR_INVALID` - Indicates the email address is invalid.
   Future<AuthResult> signInWithEmailAndLink({String email, String link}) async {
-    final Map<String, dynamic> data =
-        await channel.invokeMapMethod<String, dynamic>(
-      'signInWithEmailAndLink',
-      <String, dynamic>{
-        'app': app.name,
-        'email': email,
-        'link': link,
-      },
-    );
+    final PlatformAuthResult data = await FirebaseAuthPlatform.instance
+        .signInWithEmailAndLink(app.name, email, link);
     final AuthResult authResult = AuthResult._(data, app);
     return authResult;
   }
@@ -260,15 +204,8 @@ class FirebaseAuth {
   ///       This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
   Future<AuthResult> signInWithCredential(AuthCredential credential) async {
     assert(credential != null);
-    final Map<String, dynamic> data =
-        await channel.invokeMapMethod<String, dynamic>(
-      'signInWithCredential',
-      <String, dynamic>{
-        'app': app.name,
-        'provider': credential._provider,
-        'data': credential._data,
-      },
-    );
+    final PlatformAuthResult data = await FirebaseAuthPlatform.instance
+        .signInWithCredential(app.name, credential);
     final AuthResult authResult = AuthResult._(data, app);
     return authResult;
   }
@@ -325,25 +262,17 @@ class FirebaseAuth {
     @required PhoneVerificationFailed verificationFailed,
     @required PhoneCodeSent codeSent,
     @required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
-  }) async {
-    final Map<String, dynamic> callbacks = <String, dynamic>{
-      'PhoneVerificationCompleted': verificationCompleted,
-      'PhoneVerificationFailed': verificationFailed,
-      'PhoneCodeSent': codeSent,
-      'PhoneCodeAuthRetrievalTimeout': codeAutoRetrievalTimeout,
-    };
-    _nextHandle += 1;
-    _phoneAuthCallbacks[_nextHandle] = callbacks;
-
-    final Map<String, dynamic> params = <String, dynamic>{
-      'handle': _nextHandle,
-      'phoneNumber': phoneNumber,
-      'timeout': timeout.inMilliseconds,
-      'forceResendingToken': forceResendingToken,
-      'app': app.name,
-    };
-
-    await channel.invokeMethod<void>('verifyPhoneNumber', params);
+  }) {
+    return FirebaseAuthPlatform.instance.verifyPhoneNumber(
+      app.name,
+      phoneNumber: phoneNumber,
+      timeout: timeout,
+      forceResendingToken: forceResendingToken,
+      verificationCompleted: verificationCompleted,
+      verificationFailed: verificationFailed,
+      codeSent: codeSent,
+      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+    );
   }
 
   /// Tries to sign in a user with a given Custom Token [token].
@@ -367,11 +296,8 @@ class FirebaseAuth {
   ///     Ensure your app's SHA1 is correct in the Firebase console.
   Future<AuthResult> signInWithCustomToken({@required String token}) async {
     assert(token != null);
-    final Map<String, dynamic> data =
-        await channel.invokeMapMethod<String, dynamic>(
-      'signInWithCustomToken',
-      <String, String>{'token': token, 'app': app.name},
-    );
+    final PlatformAuthResult data = await FirebaseAuthPlatform.instance
+        .signInWithCustomToken(app.name, token);
     final AuthResult authResult = AuthResult._(data, app);
     return authResult;
   }
@@ -380,16 +306,14 @@ class FirebaseAuth {
   ///
   /// If successful, it signs the user out of the app and updates
   /// the [onAuthStateChanged] stream.
-  Future<void> signOut() async {
-    return await channel
-        .invokeMethod<void>("signOut", <String, String>{'app': app.name});
+  Future<void> signOut() {
+    return FirebaseAuthPlatform.instance.signOut(app.name);
   }
 
   /// Returns the currently signed-in [FirebaseUser] or [null] if there is none.
   Future<FirebaseUser> currentUser() async {
-    final Map<String, dynamic> data = await channel
-        .invokeMapMethod<String, dynamic>(
-            "currentUser", <String, String>{'app': app.name});
+    final PlatformUser data =
+        await FirebaseAuthPlatform.instance.getCurrentUser(app.name);
     final FirebaseUser currentUser =
         data == null ? null : FirebaseUser._(data, app);
     return currentUser;
@@ -398,64 +322,8 @@ class FirebaseAuth {
   /// Sets the user-facing language code for auth operations that can be
   /// internationalized, such as [sendEmailVerification]. This language
   /// code should follow the conventions defined by the IETF in BCP47.
-  Future<void> setLanguageCode(String language) async {
+  Future<void> setLanguageCode(String language) {
     assert(language != null);
-    await FirebaseAuth.channel
-        .invokeMethod<void>('setLanguageCode', <String, String>{
-      'language': language,
-      'app': app.name,
-    });
-  }
-
-  Future<void> _callHandler(MethodCall call) async {
-    switch (call.method) {
-      case 'onAuthStateChanged':
-        _onAuthStageChangedHandler(call);
-        break;
-      case 'phoneVerificationCompleted':
-        final int handle = call.arguments['handle'];
-        final PhoneVerificationCompleted verificationCompleted =
-            _phoneAuthCallbacks[handle]['PhoneVerificationCompleted'];
-        verificationCompleted(PhoneAuthProvider._getCredentialFromObject(
-            jsonObject: call.arguments["phoneAuthCredential"].toString()));
-        break;
-      case 'phoneVerificationFailed':
-        final int handle = call.arguments['handle'];
-        final PhoneVerificationFailed verificationFailed =
-            _phoneAuthCallbacks[handle]['PhoneVerificationFailed'];
-        final Map<dynamic, dynamic> exception = call.arguments['exception'];
-        verificationFailed(
-            AuthException(exception['code'], exception['message']));
-        break;
-      case 'phoneCodeSent':
-        final int handle = call.arguments['handle'];
-        final String verificationId = call.arguments['verificationId'];
-        final int forceResendingToken = call.arguments['forceResendingToken'];
-
-        final PhoneCodeSent codeSent =
-            _phoneAuthCallbacks[handle]['PhoneCodeSent'];
-        if (forceResendingToken == null) {
-          codeSent(verificationId);
-        } else {
-          codeSent(verificationId, forceResendingToken);
-        }
-        break;
-      case 'phoneCodeAutoRetrievalTimeout':
-        final int handle = call.arguments['handle'];
-        final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
-            _phoneAuthCallbacks[handle]['PhoneCodeAuthRetrievalTimeout'];
-        final String verificationId = call.arguments['verificationId'];
-        codeAutoRetrievalTimeout(verificationId);
-        break;
-    }
-  }
-
-  void _onAuthStageChangedHandler(MethodCall call) {
-    final Map<dynamic, dynamic> data = call.arguments["user"];
-    final int id = call.arguments["id"];
-
-    final FirebaseUser currentUser =
-        data != null ? FirebaseUser._(data.cast<String, dynamic>(), app) : null;
-    _authStateChangedControllers[id].add(currentUser);
+    return FirebaseAuthPlatform.instance.setLanguageCode(app.name, language);
   }
 }
