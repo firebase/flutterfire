@@ -1,6 +1,6 @@
 ## 0.1.2+1
 
-* Updated the docs.
+* Updated a confusing comment.
 
 ## 0.1.2
 
