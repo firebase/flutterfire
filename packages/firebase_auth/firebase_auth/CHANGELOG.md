@@ -1,7 +1,3 @@
-## 0.15.1+1
-
-*  Added Apple auth provider for iOS (not run in Android).
-
 ## 0.15.1
 
 * Migrate to use `firebase_auth_platform_interface`.
