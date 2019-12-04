@@ -1,7 +1,6 @@
 ## 0.15.1+1
 
 *  Added Apple auth provider for iOS (not run in Android).
-*  Change iOS Deployment target to 9.0, because google-sign-in 4.0.14 required it.
 
 ## 0.15.1
 
