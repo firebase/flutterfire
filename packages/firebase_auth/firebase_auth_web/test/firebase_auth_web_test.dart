@@ -58,8 +58,8 @@ js.JsObject _fakeUserCredential() {
     'user': <String, dynamic>{
       'providerId': 'email',
       'metadata': <String, dynamic>{
-        'creationTime': '2019-12-01T00:53:11Z',
-        'lastSignInTime': '2019-12-01T00:53:11Z',
+        'creationTime': 'Wed, 04 Dec 2019 18:19:11 GMT',
+        'lastSignInTime': 'Wed, 04 Dec 2019 18:19:11 GMT',
       },
       'providerData': <dynamic>[],
     },

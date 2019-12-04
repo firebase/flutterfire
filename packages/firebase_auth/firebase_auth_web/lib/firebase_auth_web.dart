@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase/firebase.dart' as firebase;
@@ -49,9 +50,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       email: user.email,
       phoneNumber: user.phoneNumber,
       creationTimestamp:
-          DateTime.parse(user.metadata.creationTime).millisecondsSinceEpoch,
+          HttpDate.parse(user.metadata.creationTime).millisecondsSinceEpoch,
       lastSignInTimestamp:
-          DateTime.parse(user.metadata.lastSignInTime).millisecondsSinceEpoch,
+          HttpDate.parse(user.metadata.lastSignInTime).millisecondsSinceEpoch,
       isAnonymous: user.isAnonymous,
       isEmailVerified: user.emailVerified,
       providerData:
