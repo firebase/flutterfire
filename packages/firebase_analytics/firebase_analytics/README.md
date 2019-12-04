@@ -34,8 +34,8 @@ for an example of how to wire that up.
 
 See the [`example`][example] directory for a complete sample app using Google Analytics for Firebase.
 
-[example]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics/example
-[tabs_page]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics/example/lib/tabs_page.dart
+[example]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics/firebase_analytics/example
+[tabs_page]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics/firebase_analytics/example/lib/tabs_page.dart
 
 ## Issues and feedback
 

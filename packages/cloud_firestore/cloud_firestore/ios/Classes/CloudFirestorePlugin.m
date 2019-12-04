@@ -150,6 +150,22 @@ static FIRQuery *getQuery(NSDictionary *arguments) {
       } else {
         // Invalid type.
       }
+    } else if ([op isEqualToString:@"array-contains-any"]) {
+      if (fieldName != nil) {
+        query = [query queryWhereField:fieldName arrayContainsAny:value];
+      } else if (fieldPath != nil) {
+        query = [query queryWhereFieldPath:fieldPath arrayContainsAny:value];
+      } else {
+        // Invalid type.
+      }
+    } else if ([op isEqualToString:@"in"]) {
+      if (fieldName != nil) {
+        query = [query queryWhereField:fieldName in:value];
+      } else if (fieldPath != nil) {
+        query = [query queryWhereFieldPath:fieldPath in:value];
+      } else {
+        // Invalid type.
+      }
     } else {
       // Unsupported operator
     }
@@ -743,9 +759,6 @@ const UInt8 DOCUMENT_ID = 139;
     }
     if (![call.arguments[@"sslEnabled"] isEqual:[NSNull null]]) {
       settings.sslEnabled = (bool)call.arguments[@"sslEnabled"];
-    }
-    if (![call.arguments[@"timestampsInSnapshotsEnabled"] isEqual:[NSNull null]]) {
-      settings.timestampsInSnapshotsEnabled = (bool)call.arguments[@"timestampsInSnapshotsEnabled"];
     }
     if (![call.arguments[@"cacheSizeBytes"] isEqual:[NSNull null]]) {
       settings.cacheSizeBytes = ((NSNumber *)call.arguments[@"cacheSizeBytes"]).intValue;

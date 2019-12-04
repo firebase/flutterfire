@@ -1,3 +1,17 @@
+## 0.13.0
+
+* **Breaking change** Remove use of [deprecated](https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/FirebaseFirestoreSettings.Builder.html#setTimestampsInSnapshotsEnabled(boolean)) 
+  setting `setTimestampsInSnapshotsEnabled`. If you are already setting it to true, just remove the setting. If you are
+  setting it to false, you should update your code to expect Timestamps.
+
+## 0.12.11
+
+* Added support for `in` and `array-contains-any` query operators.
+
+## 0.12.10+5
+
+* Moved `.gitignore` which was left behind in previous change.
+
 ## 0.12.10+4
 
 * Moved package to `cloud_firestore/cloud_firestore` subdir, to allow for federated implementations.
