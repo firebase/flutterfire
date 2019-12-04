@@ -171,7 +171,7 @@ class AppleAuthCredential extends AuthCredential {
   /// The Apple ID token.
   final String idToken;
 
-  /// The Google access token.
+  /// The Apple access token.
   final String accessToken;
 
   @override
