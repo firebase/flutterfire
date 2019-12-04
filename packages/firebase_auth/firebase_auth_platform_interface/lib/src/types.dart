@@ -168,7 +168,7 @@ class AppleAuthCredential extends AuthCredential {
 
   static const String _providerId = 'apple.com';
 
-  /// The Google ID token.
+  /// The Apple ID token.
   final String idToken;
 
   /// The Google access token.
