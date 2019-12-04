@@ -1,6 +1,6 @@
 ## 1.0.1
 
-- Added type AppleAuthCredential.
+- Added type `AppleAuthCredential`.
 
 ## 1.0.0
 
