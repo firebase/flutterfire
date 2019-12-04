@@ -16,6 +16,8 @@ dev_dependencies:
 
   firebase_core:
     path: ../
+  firebase_core_web:
+    path: ../../firebase_core_web
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

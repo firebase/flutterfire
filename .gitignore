@@ -34,8 +34,10 @@ gradle-wrapper.jar
 GeneratedPluginRegistrant.h
 GeneratedPluginRegistrant.m
 GeneratedPluginRegistrant.java
+generated_plugin_registrant.dart
 build/
 .flutter-plugins
+.flutter-plugins-dependencies
 
 .project
 .classpath
