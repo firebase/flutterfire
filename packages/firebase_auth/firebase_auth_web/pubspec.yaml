@@ -2,7 +2,7 @@ name: firebase_auth_web
 description: The web implementation of firebase_auth
 author: Flutter Team <flutter-dev@googlegroups.com>
 homepage: https://github.com/FirebaseExtended/flutterfire/packages/firebase_auth/firebase_auth_web
-version: 0.1.0
+version: 0.1.0+1
 
 flutter:
   plugin:
