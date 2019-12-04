@@ -3,12 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:http_parser/http_parser.dart';
 
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
   static void registerWith(Registrar registrar) {
@@ -50,9 +50,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       email: user.email,
       phoneNumber: user.phoneNumber,
       creationTimestamp:
-          HttpDate.parse(user.metadata.creationTime).millisecondsSinceEpoch,
+          parseHttpDate(user.metadata.creationTime).millisecondsSinceEpoch,
       lastSignInTimestamp:
-          HttpDate.parse(user.metadata.lastSignInTime).millisecondsSinceEpoch,
+          parseHttpDate(user.metadata.lastSignInTime).millisecondsSinceEpoch,
       isAnonymous: user.isAnonymous,
       isEmailVerified: user.emailVerified,
       providerData:
