@@ -406,22 +406,6 @@ void main() {
       expect(captured.accessToken, equals(kMockAccessToken));
     });
 
-    test('AppleAuthProvider signInWithCredential', () async {
-      final AuthCredential credential = AppleAuthProvider.getCredential(
-        idToken: kMockIdToken,
-        accessToken: kMockAccessToken,
-      );
-      final AuthResult result = await auth.signInWithCredential(credential);
-      verifyAuthResult(result);
-      final AppleAuthCredential captured =
-          verify(mock.signInWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('apple.com'));
-      expect(captured.idToken, equals(kMockIdToken));
-      expect(captured.accessToken, equals(kMockAccessToken));
-    });
-
     test('PhoneAuthProvider signInWithCredential', () async {
       final AuthCredential credential = PhoneAuthProvider.getCredential(
         verificationId: kMockVerificationId,
@@ -499,25 +483,6 @@ void main() {
       expect(captured.accessToken, equals(kMockAccessToken));
     });
 
-    test('AppleAuthProvider reauthenticateWithCredential', () async {
-      final FirebaseUser user = await auth.currentUser();
-      final AuthCredential credential = AppleAuthProvider.getCredential(
-        idToken: kMockIdToken,
-        accessToken: kMockAccessToken,
-      );
-      final AuthResult result =
-          await user.reauthenticateWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final AppleAuthCredential captured =
-          verify(mock.reauthenticateWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('apple.com'));
-      expect(captured.idToken, equals(kMockIdToken));
-      expect(captured.accessToken, equals(kMockAccessToken));
-    });
-
     test('FacebookAuthProvider reauthenticateWithCredential', () async {
       final FirebaseUser user = await auth.currentUser();
       final AuthCredential credential = FacebookAuthProvider.getCredential(
@@ -585,24 +550,6 @@ void main() {
               .captured
               .single;
       expect(captured.providerId, equals('google.com'));
-      expect(captured.idToken, equals(kMockIdToken));
-      expect(captured.accessToken, equals(kMockAccessToken));
-    });
-
-    test('AppleAuthProvider linkWithCredential', () async {
-      final AuthCredential credential = AppleAuthProvider.getCredential(
-        idToken: kMockIdToken,
-        accessToken: kMockAccessToken,
-      );
-      final FirebaseUser user = await auth.currentUser();
-      final AuthResult result = await user.linkWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final AppleAuthCredential captured =
-          verify(mock.linkWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('apple.com'));
       expect(captured.idToken, equals(kMockIdToken));
       expect(captured.accessToken, equals(kMockAccessToken));
     });
@@ -808,13 +755,6 @@ void main() {
       await user.unlinkFromProvider(GoogleAuthProvider.providerId);
       verify(mock.getCurrentUser(auth.app.name));
       verify(mock.unlinkFromProvider(auth.app.name, 'google.com'));
-    });
-
-    test('AppleAuthProvider unlinkFromProvider', () async {
-      final FirebaseUser user = await auth.currentUser();
-      await user.unlinkFromProvider(AppleAuthProvider.providerId);
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.unlinkFromProvider(auth.app.name, 'apple.com'));
     });
 
     test('FacebookAuthProvider unlinkFromProvider', () async {
