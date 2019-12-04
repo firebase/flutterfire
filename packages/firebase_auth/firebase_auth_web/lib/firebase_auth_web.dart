@@ -104,6 +104,12 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         credential.accessToken,
       );
     }
+    if (credential is AppleAuthCredential) {
+      return firebase.AppleAuthProvider.credential(
+        credential.idToken,
+        credential.accessToken,
+      );
+    }
     if (credential is FacebookAuthCredential) {
       return firebase.FacebookAuthProvider.credential(credential.accessToken);
     }

@@ -538,6 +538,32 @@ void main() {
       );
     });
 
+    test('AppleAuthProvider signInWithCredential', () async {
+      const AuthCredential credential = AppleAuthCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final PlatformAuthResult result =
+          await auth.signInWithCredential(appName, credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'signInWithCredential',
+            arguments: <String, dynamic>{
+              'app': appName,
+              'provider': 'apple.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
+    });
+
     test('PhoneAuthProvider signInWithCredential', () async {
       const AuthCredential credential = PhoneAuthCredential(
         verificationId: kMockVerificationId,
@@ -618,6 +644,32 @@ void main() {
             arguments: <String, dynamic>{
               'app': appName,
               'provider': 'google.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
+    });
+
+    test('AppleAuthProvider reauthenticateWithCredential', () async {
+      const AuthCredential credential = AppleAuthCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final PlatformAuthResult result =
+          await auth.reauthenticateWithCredential(appName, credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'reauthenticateWithCredential',
+            arguments: <String, dynamic>{
+              'app': appName,
+              'provider': 'apple.com',
               'data': <String, String>{
                 'idToken': kMockIdToken,
                 'accessToken': kMockAccessToken,
@@ -718,6 +770,32 @@ void main() {
             arguments: <String, dynamic>{
               'app': appName,
               'provider': 'google.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
+    });
+
+    test('AppleAuthProvider linkWithCredential', () async {
+      const AuthCredential credential = AppleAuthCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final PlatformAuthResult result =
+          await auth.linkWithCredential(appName, credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'linkWithCredential',
+            arguments: <String, dynamic>{
+              'app': appName,
+              'provider': 'apple.com',
               'data': <String, String>{
                 'idToken': kMockIdToken,
                 'accessToken': kMockAccessToken,
@@ -1054,6 +1132,23 @@ void main() {
           arguments: <String, String>{
             'app': appName,
             'provider': 'google.com',
+          },
+        ),
+      ]);
+    });
+
+    test('AppleAuthProvider unlinkFromProvider', () async {
+      const AppleAuthCredential appleCredential = AppleAuthCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      await auth.unlinkFromProvider(appName, appleCredential.providerId);
+      expect(log, <Matcher>[
+        isMethodCall(
+          'unlinkFromProvider',
+          arguments: <String, String>{
+            'app': appName,
+            'provider': 'apple.com',
           },
         ),
       ]);

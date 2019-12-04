@@ -159,6 +159,28 @@ class GoogleAuthCredential extends AuthCredential {
       };
 }
 
+/// An [AuthCredential] for authenticating via apple.com.
+class AppleAuthCredential extends AuthCredential {
+  const AppleAuthCredential({
+    @required this.idToken,
+    @required this.accessToken,
+  }) : super(_providerId);
+
+  static const String _providerId = 'apple.com';
+
+  /// The Google ID token.
+  final String idToken;
+
+  /// The Google access token.
+  final String accessToken;
+
+  @override
+  Map<String, String> _asMap() => <String, String>{
+        'idToken': idToken,
+        'accessToken': accessToken,
+      };
+}
+
 /// An [AuthCredential] for authenticating via facebook.com.
 class FacebookAuthCredential extends AuthCredential {
   const FacebookAuthCredential({@required this.accessToken})
