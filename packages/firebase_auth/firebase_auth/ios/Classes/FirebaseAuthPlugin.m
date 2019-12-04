@@ -481,6 +481,12 @@ int nextHandle = 0;
     credential = [[FIRPhoneAuthProvider providerWithAuth:[self getAuth:arguments]]
         credentialWithVerificationID:verificationId
                     verificationCode:smsCode];
+  } else if ([@"apple.com" isEqualToString:provider]) {
+    NSString *idToken = data[@"idToken"];
+    NSString *accessToken = data[@"accessToken"];
+    credential = [FIROAuthProvider credentialWithProviderID:@"apple.com"
+                                                    IDToken:idToken
+                                                accessToken:accessToken];
   } else {
     NSLog(@"Support for an auth provider with identifier '%@' is not implemented.", provider);
   }
