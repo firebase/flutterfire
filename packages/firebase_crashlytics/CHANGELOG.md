@@ -1,3 +1,7 @@
+## 0.1.2+1
+
+* Updated the docs.
+
 ## 0.1.2
 
 * Updated to use the v2 plugin API.
