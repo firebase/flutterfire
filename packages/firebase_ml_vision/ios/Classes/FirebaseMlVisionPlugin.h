@@ -41,9 +41,3 @@
 
 @interface RemoteVisionEdgeDetector : ImageLabeler
 @end
-
-@interface SetupLocalModel : NSObject <ModelManager>
-@end
-
-@interface SetupRemoteModel : NSObject <ModelManager>
-@end
