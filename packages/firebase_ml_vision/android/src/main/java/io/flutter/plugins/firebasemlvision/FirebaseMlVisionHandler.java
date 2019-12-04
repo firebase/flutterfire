@@ -26,17 +26,27 @@ class FirebaseMlVisionHandler implements MethodChannel.MethodCallHandler {
 
   @Override
   public void onMethodCall(MethodCall call, MethodChannel.Result result) {
+    String modelName = call.argument("model");
     switch (call.method) {
+      case "ModelManager#setupLocalModel":
+        SetupLocalModel.instance.setup(modelName, result);
+        break;
+      case "ModelManager#setupRemoteModel":
+        SetupRemoteModel.instance.setup(modelName, result);
+        break;
       case "BarcodeDetector#detectInImage":
       case "FaceDetector#processImage":
       case "ImageLabeler#processImage":
       case "TextRecognizer#processImage":
+      case "VisionEdgeImageLabeler#processLocalImage":
+      case "VisionEdgeImageLabeler#processRemoteImage":
         handleDetection(call, result);
         break;
       case "BarcodeDetector#close":
       case "FaceDetector#close":
       case "ImageLabeler#close":
       case "TextRecognizer#close":
+      case "VisionEdgeImageLabeler#close":
         closeDetector(call, result);
         break;
       default:
@@ -70,6 +80,12 @@ class FirebaseMlVisionHandler implements MethodChannel.MethodCallHandler {
           break;
         case "TextRecognizer":
           detector = new TextRecognizer(FirebaseVision.getInstance(), options);
+          break;
+        case "VisionEdgeImageLabeler#processLocalImage":
+          detector = new LocalVisionEdgeDetector(options);
+          break;
+        case "VisionEdgeImageLabeler#processRemoteImage":
+          detector = new RemoteVisionEdgeDetector(options);
           break;
       }
 

@@ -10,6 +10,12 @@
 + (void)handleError:(NSError *)error result:(FlutterResult)result;
 @end
 
+@protocol ModelManager
+@required
++ (void)modelName:(NSString *)modelName result:(FlutterResult)result;
+@optional
+@end
+
 @protocol Detector
 @required
 - (instancetype)initWithVision:(FIRVision *)vision options:(NSDictionary *)options;
@@ -23,8 +29,21 @@
 @interface FaceDetector : NSObject <Detector>
 @end
 
-@interface ImageLabeler : NSObject <Detector>
+@interface TextRecognizer : NSObject <Detector>
 @end
 
-@interface TextRecognizer : NSObject <Detector>
+@interface ImageLabeler : NSObject <Detector>
+@property FIRVisionImageLabeler *labeler;
+@end
+
+@interface LocalVisionEdgeDetector : ImageLabeler
+@end
+
+@interface RemoteVisionEdgeDetector : ImageLabeler
+@end
+
+@interface SetupLocalModel : NSObject <ModelManager>
+@end
+
+@interface SetupRemoteModel : NSObject <ModelManager>
 @end

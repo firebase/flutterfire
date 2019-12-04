@@ -4,10 +4,6 @@
 
 #import "FirebaseMlVisionPlugin.h"
 
-@interface ImageLabeler ()
-@property FIRVisionImageLabeler *labeler;
-@end
-
 @implementation ImageLabeler
 - (instancetype)initWithVision:(FIRVision *)vision options:(NSDictionary *)options {
   self = [super init];

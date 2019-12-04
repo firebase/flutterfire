@@ -7,7 +7,15 @@ import 'dart:ui' as ui;
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 
-enum Detector { barcode, face, label, cloudLabel, text, cloudText }
+enum Detector {
+  barcode,
+  face,
+  label,
+  cloudLabel,
+  text,
+  cloudText,
+  visionEdgeLabel,
+}
 
 class BarcodeDetectorPainter extends CustomPainter {
   BarcodeDetectorPainter(this.absoluteImageSize, this.barcodeLocations);
@@ -117,6 +125,43 @@ class LabelDetectorPainter extends CustomPainter {
   bool shouldRepaint(LabelDetectorPainter oldDelegate) {
     return oldDelegate.absoluteImageSize != absoluteImageSize ||
         oldDelegate.labels != labels;
+  }
+}
+
+class VisionEdgeLabelDetectorPainter extends CustomPainter {
+  VisionEdgeLabelDetectorPainter(this.imageSize, this.labels);
+
+  final Size imageSize;
+  final List<VisionEdgeImageLabel> labels;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+      ui.ParagraphStyle(
+          textAlign: TextAlign.left,
+          fontSize: 23.0,
+          textDirection: TextDirection.ltr),
+    );
+
+    builder.pushStyle(ui.TextStyle(color: Colors.green));
+    for (VisionEdgeImageLabel label in labels) {
+      builder.addText('Label: ${label.text}, '
+          'Confidence: ${label.confidence.toStringAsFixed(2)}\n');
+    }
+    builder.pop();
+
+    canvas.drawParagraph(
+      builder.build()
+        ..layout(ui.ParagraphConstraints(
+          width: size.width,
+        )),
+      const Offset(0.0, 0.0),
+    );
+  }
+
+  @override
+  bool shouldRepaint(VisionEdgeLabelDetectorPainter oldDelegate) {
+    return oldDelegate.imageSize != imageSize || oldDelegate.labels != labels;
   }
 }
 

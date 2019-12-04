@@ -1,4 +1,4 @@
-# ML Kit Vision for Firebase
+# ML Kit Vision and AutoML Vision Edge for Firebase
 
 [![pub package](https://img.shields.io/pub/v/firebase_ml_vision.svg)](https://pub.dartlang.org/packages/firebase_ml_vision)
 
@@ -64,6 +64,8 @@ pod 'Firebase/MLVisionBarcodeModel'
 pod 'Firebase/MLVisionFaceModel'
 pod 'Firebase/MLVisionLabelModel'
 pod 'Firebase/MLVisionTextModel'
+pod 'Firebase/MLCommon'
+pod 'Firebase/MLVisionAutoML'
 ```
 
 ## Using an ML Vision Detector
@@ -85,6 +87,7 @@ final ImageLabeler cloudLabeler = FirebaseVision.instance.cloudImageLabeler();
 final FaceDetector faceDetector = FirebaseVision.instance.faceDetector();
 final ImageLabeler labeler = FirebaseVision.instance.imageLabeler();
 final TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
+final VisionEdgeImageLabeler visionEdgeLabeler = FirebaseVision.instance.visionEdgeImageLabeler('<foldername(modelname)>', modelLocation);
 ```
 
 You can also configure all detectors, except `TextRecognizer`, with desired options.
@@ -103,6 +106,7 @@ final List<ImageLabel> cloudLabels = await cloudLabeler.processImage(visionImage
 final List<Face> faces = await faceDetector.processImage(visionImage);
 final List<ImageLabel> labels = await labeler.processImage(visionImage);
 final VisionText visionText = await textRecognizer.processImage(visionImage);
+final List<VisionEdgeImageLabel> visionEdgeLabels = await visionEdgeLabeler.processImage(visionImage);
 ```
 
 ### 4. Extract data.
@@ -190,6 +194,15 @@ for (TextBlock block in visionText.blocks) {
 }
 ```
 
+e. Extract Cloud Vision Edge labels.
+
+```dart
+for (VisionEdgeImageLabel label in labels) {
+  final String text = label.text;
+  final double confidence = label.confidence;
+}
+```
+
 ### 5. Release resources with `close()`.
 
 ```dart
@@ -198,6 +211,28 @@ cloudLabeler.close();
 faceDetector.close();
 labeler.close();
 textRecognizer.close();
+```
+
+### Using AutoML Vision Edge
+
+If you plan to use AutoML Vision Edge to detect labels using a custom model, either download or host the trained model by following [these instructions](https://firebase.google.com/docs/ml-kit/train-image-labeler).
+
+If you downloaded the file, follow the instructions below to enable the plugin.
+
+Unzip the file downloaded, and rename the folder to reflect the model name.
+
+Create a `assets` folder and place the previous folder within it. In `pubspec.yaml` add the appropriate paths:
+
+```
+  assets:
+   - assets/<foldername>/dict.txt
+   - assets/<foldername>/manifest.json
+   - assets/<foldername>/model.tflite
+```
+
+Optional but recommended: Get an instance of `ModelManager`, and setup the local or remote model(optional, results in faster first-use)
+```dart
+FirebaseVision.instance.modelManager().setupModel('<foldername(modelname)>', modelLocation);
 ```
 
 ## Getting Started

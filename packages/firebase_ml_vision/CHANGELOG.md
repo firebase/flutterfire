@@ -1,3 +1,7 @@
+## 0.10.0
+
+* Add AutoML Vision Edge Support.
+
 ## 0.9.3+4
 
 * Formatted member documentations.

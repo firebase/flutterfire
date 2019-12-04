@@ -48,12 +48,15 @@ static NSMutableDictionary<NSNumber *, id<Detector>> *detectors;
   if ([@"BarcodeDetector#detectInImage" isEqualToString:call.method] ||
       [@"FaceDetector#processImage" isEqualToString:call.method] ||
       [@"ImageLabeler#processImage" isEqualToString:call.method] ||
-      [@"TextRecognizer#processImage" isEqualToString:call.method]) {
+      [@"TextRecognizer#processImage" isEqualToString:call.method] ||
+      [@"VisionEdgeImageLabeler#processLocalImage" isEqualToString:call.method] ||
+      [@"VisionEdgeImageLabeler#processRemoteImage" isEqualToString:call.method]) {
     [self handleDetection:call result:result];
   } else if ([@"BarcodeDetector#close" isEqualToString:call.method] ||
              [@"FaceDetector#close" isEqualToString:call.method] ||
              [@"ImageLabeler#close" isEqualToString:call.method] ||
-             [@"TextRecognizer#close" isEqualToString:call.method]) {
+             [@"TextRecognizer#close" isEqualToString:call.method] ||
+             [@"VisionEdgeImageLabeler#close" isEqualToString:call.method]) {
     NSNumber *handle = call.arguments[@"handle"];
     [detectors removeObjectForKey:handle];
     result(nil);
@@ -77,6 +80,12 @@ static NSMutableDictionary<NSNumber *, id<Detector>> *detectors;
       detector = [[ImageLabeler alloc] initWithVision:[FIRVision vision] options:options];
     } else if ([call.method hasPrefix:@"TextRecognizer"]) {
       detector = [[TextRecognizer alloc] initWithVision:[FIRVision vision] options:options];
+    } else if ([call.method isEqualToString:@"VisionEdgeImageLabeler#processLocalImage"]) {
+      detector = [[LocalVisionEdgeDetector alloc] initWithVision:[FIRVision vision]
+                                                         options:options];
+    } else if ([call.method isEqualToString:@"VisionEdgeImageLabeler#processRemoteImage"]) {
+      detector = [[RemoteVisionEdgeDetector alloc] initWithVision:[FIRVision vision]
+                                                          options:options];
     }
 
     [FLTFirebaseMlVisionPlugin addDetector:handle detector:detector];

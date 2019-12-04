@@ -90,6 +90,22 @@ class FirebaseVision {
       handle: nextHandle++,
     );
   }
+
+  /// Creates an instance of [VisionEdgeImageLabeler].
+  VisionEdgeImageLabeler visionEdgeImageLabeler(
+      String dataset, String modelLocation,
+      [VisionEdgeImageLabelerOptions options]) {
+    return VisionEdgeImageLabeler._(
+        options: options ?? const VisionEdgeImageLabelerOptions(),
+        dataset: dataset,
+        handle: nextHandle++,
+        modelLocation: modelLocation);
+  }
+
+  /// Creates an instance of [ModelManager].
+  ModelManager modelManager() {
+    return ModelManager._();
+  }
 }
 
 /// Represents an image object used for both on-device and cloud API detectors.
