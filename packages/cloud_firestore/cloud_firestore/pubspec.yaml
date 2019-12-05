@@ -4,7 +4,7 @@ description:
   live synchronization and offline support on Android and iOS.
 author: Flutter Team <flutter-dev@googlegroups.com>
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore
-version: 0.13.0
+version: 0.13.0+1
 
 flutter:
   plugin:
