@@ -1,7 +1,6 @@
 ## 7.1.0
 
-- Added `Auth.fetchSignInMethodsForEmail`.
-- Added `Auth.isSignInWithEmailLink`.
+- Added `Auth.fetchSignInMethodsForEmail` and `Auth.isSignInWithEmailLink`.
 
 ## 7.0.0
 
