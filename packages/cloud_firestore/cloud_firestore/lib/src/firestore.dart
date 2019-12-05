@@ -32,10 +32,6 @@ class Firestore {
   static final Map<int, StreamController<DocumentSnapshot>> _documentObservers =
       <int, StreamController<DocumentSnapshot>>{};
 
-  static final Map<int, TransactionHandler> _transactionHandlers =
-      <int, TransactionHandler>{};
-  static int _transactionHandlerId = 0;
-
   @override
   bool operator ==(dynamic o) => o is Firestore && o.app == app;
 
@@ -98,9 +94,17 @@ class Firestore {
       {Duration timeout = const Duration(seconds: 5)}) async {
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds');
-    final int transactionId = _transactionHandlerId++;
-    _transactionHandlers[transactionId] = transactionHandler;
-    final Map<String, dynamic> result = await platform.runTransaction(app.name, transactionId: transactionId, transactionTimeout: timeout.inMilliseconds,);
+
+    // Wrap the transactionHandler into something that can be passed to the Platform implementation
+    final PlatformTransactionHandler handler = (int transactionId) async {
+      Transaction transaction = Transaction(transactionId, this);
+      final dynamic result = await transactionHandler(transaction);
+      await transaction._finish();
+      return result;
+    };
+
+    // Move to a runTransaction method in the method channel!
+    final Map<String, dynamic> result = await platform.runTransaction(app.name, transactionHandler: handler, transactionTimeout: timeout.inMilliseconds,);
     return result ?? <String, dynamic>{};
   }
 
