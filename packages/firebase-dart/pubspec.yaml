@@ -1,9 +1,6 @@
 name: firebase
 description: Firebase libraries for Dart on the web and server
 version: 7.1.0
-authors:
-- Jana Moudra <jana.moudra@gmail.com>
-- Kevin Moore <kevmoo@google.com>
 homepage: https://github.com/FirebaseExtended/firebase-dart/firebase-dart
 
 environment:
