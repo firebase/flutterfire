@@ -107,7 +107,6 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
       bool persistenceEnabled,
       String host,
       bool sslEnabled,
-      bool timestampsInSnapshotsEnabled,
       int cacheSizeBytes,
     }) =>
      channel.invokeMethod<void>('Firestore#settings', <String, dynamic>{
@@ -115,7 +114,6 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
       'persistenceEnabled': persistenceEnabled,
       'host': host,
       'sslEnabled': sslEnabled,
-      'timestampsInSnapshotsEnabled': timestampsInSnapshotsEnabled,
       'cacheSizeBytes': cacheSizeBytes,
     });
 

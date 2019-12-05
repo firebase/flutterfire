@@ -58,26 +58,15 @@ class Query {
     StreamController<QuerySnapshot> controller; // ignore: close_sinks
     controller = StreamController<QuerySnapshot>.broadcast(
       onListen: () {
-        _handle = Firestore.channel.invokeMethod<int>(
-          'Query#addSnapshotListener',
-          <String, dynamic>{
-            'app': firestore.app.name,
-            'path': _path,
-            'isCollectionGroup': _isCollectionGroup,
-            'parameters': _parameters,
-            'includeMetadataChanges': includeMetadataChanges,
-          },
-        ).then<int>((dynamic result) => result);
+        _handle = Firestore.platform.addQuerySnapshotListener(firestore.app.name, path: _path, isCollectionGroup: _isCollectionGroup, parameters: _parameters, includeMetadataChanges: includeMetadataChanges,)
+        .then<int>((dynamic result) => result);
         _handle.then((int handle) {
           Firestore._queryObservers[handle] = controller;
         });
       },
       onCancel: () {
         _handle.then((int handle) async {
-          await Firestore.channel.invokeMethod<void>(
-            'removeListener',
-            <String, dynamic>{'handle': handle},
-          );
+          await Firestore.platform.removeListener(handle);
           Firestore._queryObservers.remove(handle);
         });
       },
@@ -90,16 +79,7 @@ class Query {
       {Source source = Source.serverAndCache}) async {
     assert(source != null);
     final Map<dynamic, dynamic> data =
-        await Firestore.channel.invokeMapMethod<String, dynamic>(
-      'Query#getDocuments',
-      <String, dynamic>{
-        'app': firestore.app.name,
-        'path': _path,
-        'isCollectionGroup': _isCollectionGroup,
-        'parameters': _parameters,
-        'source': _getSourceString(source),
-      },
-    );
+        await Firestore.platform.getQueryDocuments(firestore.app.name, path: _path, isCollectionGroup: _isCollectionGroup, parameters: _parameters, source: _getSourceString(source),);
     return QuerySnapshot._(data, firestore);
   }
 

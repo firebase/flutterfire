@@ -88,7 +88,6 @@ abstract class CloudFirestorePlatform {
       bool persistenceEnabled,
       String host,
       bool sslEnabled,
-      bool timestampsInSnapshotsEnabled,
       int cacheSizeBytes,
     }) async {
     throw UnimplementedError('settings() is not implemented');

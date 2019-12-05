@@ -12,8 +12,7 @@ part of cloud_firestore;
 /// nor can it be committed again.
 class WriteBatch {
   WriteBatch._(this._firestore)
-      : _handle = Firestore.channel.invokeMethod<dynamic>(
-            'WriteBatch#create', <String, dynamic>{'app': _firestore.app.name});
+      : _handle = Firestore.platform.createWriteBatch(_firestore.app.name);
 
   final Firestore _firestore;
   Future<dynamic> _handle;
@@ -29,8 +28,7 @@ class WriteBatch {
     if (!_committed) {
       _committed = true;
       await Future.wait<dynamic>(_actions);
-      await Firestore.channel.invokeMethod<void>(
-          'WriteBatch#commit', <String, dynamic>{'handle': await _handle});
+      await Firestore.platform.commitWriteBatch(handle: await _handle);
     } else {
       throw StateError("This batch has already been committed.");
     }
@@ -41,14 +39,7 @@ class WriteBatch {
     if (!_committed) {
       _handle.then((dynamic handle) {
         _actions.add(
-          Firestore.channel.invokeMethod<void>(
-            'WriteBatch#delete',
-            <String, dynamic>{
-              'app': _firestore.app.name,
-              'handle': handle,
-              'path': document.path,
-            },
-          ),
+          Firestore.platform.deleteWriteBatch(_firestore.app.name, handle: handle, path: document.path,),
         );
       });
     } else {
@@ -68,16 +59,7 @@ class WriteBatch {
     if (!_committed) {
       _handle.then((dynamic handle) {
         _actions.add(
-          Firestore.channel.invokeMethod<void>(
-            'WriteBatch#setData',
-            <String, dynamic>{
-              'app': _firestore.app.name,
-              'handle': handle,
-              'path': document.path,
-              'data': data,
-              'options': <String, bool>{'merge': merge},
-            },
-          ),
+          Firestore.platform.setWriteBatchData(_firestore.app.name, handle: handle, path: document.path, data: data, options: <String, bool>{'merge': merge},),
         );
       });
     } else {
@@ -93,15 +75,7 @@ class WriteBatch {
     if (!_committed) {
       _handle.then((dynamic handle) {
         _actions.add(
-          Firestore.channel.invokeMethod<void>(
-            'WriteBatch#updateData',
-            <String, dynamic>{
-              'app': _firestore.app.name,
-              'handle': handle,
-              'path': document.path,
-              'data': data,
-            },
-          ),
+          Firestore.platform.updateWriteBatchData(_firestore.app.name, handle: handle, path: document.path, data: data,),
         );
       });
     } else {

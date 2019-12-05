@@ -10,28 +10,6 @@ part of cloud_firestore;
 class Firestore {
   Firestore({FirebaseApp app}) : app = app ?? FirebaseApp.instance {
     if (_initialized) return;
-    channel.setMethodCallHandler((MethodCall call) async {
-      if (call.method == 'QuerySnapshot') {
-        final QuerySnapshot snapshot = QuerySnapshot._(call.arguments, this);
-        _queryObservers[call.arguments['handle']].add(snapshot);
-      } else if (call.method == 'DocumentSnapshot') {
-        final DocumentSnapshot snapshot = DocumentSnapshot._(
-          call.arguments['path'],
-          _asStringKeyedMap(call.arguments['data']),
-          SnapshotMetadata._(call.arguments['metadata']['hasPendingWrites'],
-              call.arguments['metadata']['isFromCache']),
-          this,
-        );
-        _documentObservers[call.arguments['handle']].add(snapshot);
-      } else if (call.method == 'DoTransaction') {
-        final int transactionId = call.arguments['transactionId'];
-        final Transaction transaction = Transaction(transactionId, this);
-        final dynamic result =
-            await _transactionHandlers[transactionId](transaction);
-        await transaction._finish();
-        return result;
-      }
-    });
     _initialized = true;
   }
 
@@ -46,10 +24,7 @@ class Firestore {
   static bool _initialized = false;
 
   @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/cloud_firestore',
-    StandardMethodCodec(FirestoreMessageCodec()),
-  );
+  static CloudFirestorePlatform platform = CloudFirestorePlatform.instance;
 
   static final Map<int, StreamController<QuerySnapshot>> _queryObservers =
       <int, StreamController<QuerySnapshot>>{};
@@ -125,24 +100,14 @@ class Firestore {
         'Transaction timeout must be more than 0 milliseconds');
     final int transactionId = _transactionHandlerId++;
     _transactionHandlers[transactionId] = transactionHandler;
-    final Map<String, dynamic> result = await channel
-        .invokeMapMethod<String, dynamic>(
-            'Firestore#runTransaction', <String, dynamic>{
-      'app': app.name,
-      'transactionId': transactionId,
-      'transactionTimeout': timeout.inMilliseconds
-    });
+    final Map<String, dynamic> result = await platform.runTransaction(app.name, transactionId: transactionId, transactionTimeout: timeout.inMilliseconds,);
     return result ?? <String, dynamic>{};
   }
 
   @deprecated
   Future<void> enablePersistence(bool enable) async {
     assert(enable != null);
-    await channel
-        .invokeMethod<void>('Firestore#enablePersistence', <String, dynamic>{
-      'app': app.name,
-      'enable': enable,
-    });
+    await platform.enablePersistence(app.name, enable: enable,);
   }
 
   Future<void> settings(
@@ -150,12 +115,8 @@ class Firestore {
       String host,
       bool sslEnabled,
       int cacheSizeBytes}) async {
-    await channel.invokeMethod<void>('Firestore#settings', <String, dynamic>{
-      'app': app.name,
-      'persistenceEnabled': persistenceEnabled,
-      'host': host,
-      'sslEnabled': sslEnabled,
-      'cacheSizeBytes': cacheSizeBytes,
-    });
+    await platform.settings(app.name, persistenceEnabled: persistenceEnabled,
+        host: host, sslEnabled: sslEnabled,
+        cacheSizeBytes: cacheSizeBytes);
   }
 }
