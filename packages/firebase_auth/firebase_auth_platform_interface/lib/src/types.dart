@@ -169,11 +169,12 @@ class GoogleAuthCredential extends AuthCredential {
 /// Optionally you can provide a rawNonce param
 /// More info in https://firebase.google.com/docs/auth/ios/apple
 class PlatformOAuthCredential extends OAuthCredential {
-  const PlatformOAuthCredential({
-    @required String providerId, 
-    @required String idToken, 
-    String accessToken, 
-    String rawNonce}) : super(providerId, idToken, accessToken, rawNonce);
+  const PlatformOAuthCredential(
+      {@required String providerId,
+      @required String idToken,
+      String accessToken,
+      String rawNonce})
+      : super(providerId, idToken, accessToken, rawNonce);
 }
 
 /// Abstract class to implement [OAuthCredential] authentications
@@ -205,7 +206,6 @@ abstract class OAuthCredential extends AuthCredential {
         'rawNonce': rawNonce,
       };
 }
-
 
 /// An [AuthCredential] for authenticating via facebook.com.
 class FacebookAuthCredential extends AuthCredential {
