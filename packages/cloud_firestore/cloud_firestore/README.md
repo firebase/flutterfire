@@ -109,6 +109,8 @@ install! 'cocoapods',
    incremental_installation: true
 ```
 
+See https://github.com/flutter/flutter/issues/46198 for enabling incremental installation by default in the future.
+
 ## Getting Started
 
 See the `example` directory for a complete sample app using Cloud Firestore.
