@@ -11,28 +11,7 @@ import '../cloud_firestore_platform_interface.dart';
 
 class MethodChannelCloudFirestore extends CloudFirestorePlatform {
   MethodChannelCloudFirestore() {
-        channel.setMethodCallHandler((MethodCall call) async {
-      if (call.method == 'QuerySnapshot') {
-        final QuerySnapshot snapshot = QuerySnapshot._(call.arguments, this);
-        _queryObservers[call.arguments['handle']].add(snapshot);
-      } else if (call.method == 'DocumentSnapshot') {
-        final DocumentSnapshot snapshot = DocumentSnapshot._(
-          call.arguments['path'],
-          _asStringKeyedMap(call.arguments['data']),
-          SnapshotMetadata._(call.arguments['metadata']['hasPendingWrites'],
-              call.arguments['metadata']['isFromCache']),
-          this,
-        );
-        _documentObservers[call.arguments['handle']].add(snapshot);
-      } else if (call.method == 'DoTransaction') {
-        final int transactionId = call.arguments['transactionId'];
-        final Transaction transaction = Transaction(transactionId, this);
-        final dynamic result =
-            await _transactionHandlers[transactionId](transaction);
-        await transaction._finish();
-        return result;
-      }
-    });
+    channel.setMethodCallHandler(_handlePlatformCall);
   }
 
   @visibleForTesting
@@ -43,44 +22,24 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
   // Platform calls
   Future<void> _handlePlatformCall(MethodCall call) async {
     switch(call.method) {
-      case 'QuerySnapshot': 
-        final QuerySnapshot snapshot = QuerySnapshot._(call.arguments, this);
-        _queryObservers[call.arguments['handle']].add(snapshot);
-        break;
-      case 'DocumentSnapshot':
-        final DocumentSnapshot snapshot = DocumentSnapshot._(
-          call.arguments['path'],
-          _asStringKeyedMap(call.arguments['data']),
-          SnapshotMetadata._(call.arguments['metadata']['hasPendingWrites'],
-              call.arguments['metadata']['isFromCache']),
-          this,
-        );
-        _documentObservers[call.arguments['handle']].add(snapshot);
-        break;
+      // case 'QuerySnapshot': 
+      //   final QuerySnapshot snapshot = QuerySnapshot._(call.arguments, this);
+      //   _queryObservers[call.arguments['handle']].add(snapshot);
+      //   break;
+      // case 'DocumentSnapshot':
+      //   final DocumentSnapshot snapshot = DocumentSnapshot._(
+      //     call.arguments['path'],
+      //     _asStringKeyedMap(call.arguments['data']),
+      //     SnapshotMetadata._(call.arguments['metadata']['hasPendingWrites'],
+      //         call.arguments['metadata']['isFromCache']),
+      //     this,
+      //   );
+      //   _documentObservers[call.arguments['handle']].add(snapshot);
+      //   break;
       case 'DoTransaction':
-        final int transactionId = call.arguments['transactionId'];
-        final Transaction transaction = Transaction(transactionId, this);
-        final dynamic result =
-            await _transactionHandlers[transactionId](transaction);
-        await transaction._finish();
-        return result;
+        return _handleDoTransaction(call);
         break;
     }
-  }
-
-  @override
-  Future<void> onQuerySnapshot(PlatformQuerySnapshot snapshot) {
-
-  }
-
-  @override
-  Future<void> onDocumentSnapshot(PlatformDocumentSnapshot snapshot) {
-
-  }
-
-  @override
-  Future<void> onDoTransaction(PlatformTransaction transaction) {
-    
   }
 
   // Global
@@ -117,18 +76,37 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
       'cacheSizeBytes': cacheSizeBytes,
     });
 
+  // Transaction data
+  static final Map<int, PlatformTransactionHandler> _transactionHandlers =
+      <int, PlatformTransactionHandler>{};
+  static int _transactionHandlerId = 0;
 
   @override
   Future<Map<String, dynamic>> runTransaction(String app, {
-    @required int transactionId,
+    @required PlatformTransactionHandler transactionHandler,
     int transactionTimeout,
-  }) => channel
+  }) async {
+    // Store the transaction handler function so we can use it later on DoTransaction...
+    final int transactionId = _transactionHandlerId++;
+    _transactionHandlers[transactionId] = transactionHandler;
+
+    return channel
         .invokeMapMethod<String, dynamic>(
             'Firestore#runTransaction', <String, dynamic>{
       'app': app,
       'transactionId': transactionId,
       'transactionTimeout': transactionTimeout
     });
+  }
+
+  Future<dynamic> _handleDoTransaction(MethodCall call) async {
+    final int transactionId = call.arguments['transactionId'];
+    final PlatformTransactionHandler transactionHandler = _transactionHandlers[transactionId];
+    // Delete the handler from the list...
+    _transactionHandlers.remove(transactionId);
+    // Delegate handling to the implementation
+    return await transactionHandler(transactionId);
+  }
 
   // Document Reference
   @override

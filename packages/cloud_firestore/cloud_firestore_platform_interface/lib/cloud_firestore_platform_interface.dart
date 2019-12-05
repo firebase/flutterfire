@@ -8,6 +8,10 @@ import 'package:meta/meta.dart' show required, visibleForTesting;
 
 import 'src/method_channel_cloud_firestore.dart';
 
+import 'src/types.dart';
+
+export 'src/types.dart';
+
 /// The interface that implementations of `cloud_firestore` must extend.
 ///
 /// Platform implementations should extend this class rather than implement it
@@ -59,19 +63,6 @@ abstract class CloudFirestorePlatform {
   void _verifyProvidesDefaultImplementations() {}
 
   // Actual API 
-  // Platform calls
-  Future<void> onQuerySnapshot(PlatformQuerySnapshot snapshot) async {
-    throw UnimplementedError('onQuerySnapshot() is not implemented');
-  }
-
-  Future<void> onDocumentSnapshot(PlatformDocumentSnapshot snapshot) async {
-    throw UnimplementedError('onDocumentSnapshot() is not implemented');
-  }
-
-  Future<void> onDoTransaction(PlatformTransaction transaction) async {
-    throw UnimplementedError('onDoTransaction() is not implemented');
-  }
-
   // Global
   /// Removes any listener by its handle.
   /// All handles must be unique across al types of listeners.
@@ -94,7 +85,7 @@ abstract class CloudFirestorePlatform {
   }
 
   Future<Map<String, dynamic>> runTransaction(String app, {
-    @required int transactionId,
+    @required PlatformTransactionHandler transactionHandler,
     int transactionTimeout,
   }) async {
     throw UnimplementedError('runTransaction() is not implemented');
