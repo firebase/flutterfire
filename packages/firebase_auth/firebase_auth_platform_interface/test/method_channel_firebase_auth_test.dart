@@ -538,7 +538,7 @@ void main() {
       );
     });
 
-    test('AppleAuthProvider signInWithCredential', () async {
+    test('PlatformOAuthProvider signInWithCredential', () async {
       const AuthCredential credential = PlatformOAuthCredential(
         providerId: "apple.com",
         idToken: kMockIdToken,
@@ -558,6 +558,8 @@ void main() {
               'data': <String, String>{
                 'idToken': kMockIdToken,
                 'accessToken': kMockAccessToken,
+                'providerId': "apple.com",
+                'rawNonce': null
               },
             },
           ),
@@ -655,7 +657,7 @@ void main() {
       );
     });
 
-    test('AppleAuthProvider reauthenticateWithCredential', () async {
+    test('PlatformOAuthProvider reauthenticateWithCredential', () async {
       const AuthCredential credential = PlatformOAuthCredential(
         providerId: "apple.com",
         idToken: kMockIdToken,
@@ -675,6 +677,8 @@ void main() {
               'data': <String, String>{
                 'idToken': kMockIdToken,
                 'accessToken': kMockAccessToken,
+                'providerId': "apple.com",
+                'rawNonce': null
               },
             },
           ),
@@ -782,7 +786,7 @@ void main() {
       );
     });
 
-    test('AppleAuthProvider linkWithCredential', () async {
+    test('PlatformOAuthProvider linkWithCredential', () async {
       const AuthCredential credential = PlatformOAuthCredential(
         providerId: "apple.com",
         idToken: kMockIdToken,
@@ -802,6 +806,8 @@ void main() {
               'data': <String, String>{
                 'idToken': kMockIdToken,
                 'accessToken': kMockAccessToken,
+                'providerId': "apple.com",
+                'rawNonce': null
               },
             },
           ),
@@ -1140,13 +1146,13 @@ void main() {
       ]);
     });
 
-    test('AppleAuthProvider unlinkFromProvider', () async {
-      const PlatformOAuthCredential appleCredential = PlatformOAuthCredential(
+    test('PlatformOAuthProvider unlinkFromProvider', () async {
+      const PlatformOAuthCredential oAuthCredential = PlatformOAuthCredential(
         providerId: "apple.com",
         idToken: kMockIdToken,
         accessToken: kMockAccessToken,
       );
-      await auth.unlinkFromProvider(appName, appleCredential.providerId);
+      await auth.unlinkFromProvider(appName, oAuthCredential.providerId);
       expect(log, <Matcher>[
         isMethodCall(
           'unlinkFromProvider',

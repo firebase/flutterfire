@@ -173,7 +173,7 @@ class PlatformOAuthCredential extends OAuthCredential {
     @required String providerId, 
     @required String idToken, 
     String accessToken, 
-    String rawNonce}) : assert(idToken != null), assert(providerId != null), super(providerId, idToken, accessToken, rawNonce);
+    String rawNonce}) : super(providerId, idToken, accessToken, rawNonce);
 }
 
 /// Abstract class to implement [OAuthCredential] authentications
@@ -205,6 +205,7 @@ abstract class OAuthCredential extends AuthCredential {
         'rawNonce': rawNonce,
       };
 }
+
 
 /// An [AuthCredential] for authenticating via facebook.com.
 class FacebookAuthCredential extends AuthCredential {
