@@ -1,3 +1,7 @@
+## 0.1.2+2
+
+* Removed the `async` from the `runZoned()` in the example, as there's no `await` to be executed.
+
 ## 0.1.2+1
 
 * Updated a confusing comment.
