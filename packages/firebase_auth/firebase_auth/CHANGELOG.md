@@ -1,3 +1,7 @@
+## 0.15.1+1
+
+* Add web support to the example.
+
 ## 0.15.1
 
 * Migrate to use `firebase_auth_platform_interface`.

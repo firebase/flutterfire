@@ -1,3 +1,7 @@
+## 0.4.2+2
+
+* Add web support to the example.
+
 ## 0.4.2+1
 
 * Check `kIsWeb` before checking `Platform.isIos` for the default app name.
