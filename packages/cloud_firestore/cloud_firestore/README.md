@@ -97,9 +97,9 @@ Firestore.instance.runTransaction((Transaction tx) async {
 });
 ```
 
-## Improving iOS build times
+## Faster iOS builds
 
-Cloud Firestore has dependencies on iOS that lead to slow builds (see [#349](https://github.com/FirebaseExtended/flutterfire/issues/349)). A solution is in the works to speed up initial builds (see https://github.com/firebase/firebase-ios-sdk/issues/4284), but in the meantime, you can improve the performance of subsequent builds using the `cocoapods-binary` plugin.
+Cloud Firestore has dependencies on iOS that lead to significant build times (see https://github.com/FirebaseExtended/flutterfire/issues/349 and https://github.com/firebase/firebase-ios-sdk/issues/4284). You can substantially reduce build times after the initial build using the `cocoapods-binary` plugin.
 
 To use, run `brew install cocoapods-binary` or `gem install cocoapods-binary` and add the following to your app's ios/Podfile.
 
