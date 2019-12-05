@@ -539,7 +539,8 @@ void main() {
     });
 
     test('AppleAuthProvider signInWithCredential', () async {
-      const AuthCredential credential = AppleAuthCredential(
+      const AuthCredential credential = PlatformOAuthCredential(
+        providerId: "apple.com",
         idToken: kMockIdToken,
         accessToken: kMockAccessToken,
       );
@@ -655,7 +656,8 @@ void main() {
     });
 
     test('AppleAuthProvider reauthenticateWithCredential', () async {
-      const AuthCredential credential = AppleAuthCredential(
+      const AuthCredential credential = PlatformOAuthCredential(
+        providerId: "apple.com",
         idToken: kMockIdToken,
         accessToken: kMockAccessToken,
       );
@@ -781,7 +783,8 @@ void main() {
     });
 
     test('AppleAuthProvider linkWithCredential', () async {
-      const AuthCredential credential = AppleAuthCredential(
+      const AuthCredential credential = PlatformOAuthCredential(
+        providerId: "apple.com",
         idToken: kMockIdToken,
         accessToken: kMockAccessToken,
       );
@@ -1138,7 +1141,8 @@ void main() {
     });
 
     test('AppleAuthProvider unlinkFromProvider', () async {
-      const AppleAuthCredential appleCredential = AppleAuthCredential(
+      const PlatformOAuthCredential appleCredential = PlatformOAuthCredential(
+        providerId: "apple.com",
         idToken: kMockIdToken,
         accessToken: kMockAccessToken,
       );

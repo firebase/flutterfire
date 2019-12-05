@@ -159,25 +159,50 @@ class GoogleAuthCredential extends AuthCredential {
       };
 }
 
-/// An [AuthCredential] for authenticating via apple.com.
-class AppleAuthCredential extends AuthCredential {
-  const AppleAuthCredential({
-    @required this.idToken,
-    @required this.accessToken,
-  }) : super(_providerId);
+/// An [OAuthCredential] for authenticating via custom providerId.
+/// Example: For Apple you can do it with
+/// PlatformOAuthCredential _credential = PlatformOAuthCredential(
+///   providerId: "apple.com",
+///   idToken: appleIdToken,
+///   accessToken: appleAccessToken
+/// )
+/// Optionally you can provide a rawNonce param
+/// More info in https://firebase.google.com/docs/auth/ios/apple
+class PlatformOAuthCredential extends OAuthCredential {
+  const PlatformOAuthCredential({
+    @required String providerId, 
+    @required String idToken, 
+    String accessToken, 
+    String rawNonce}) : assert(idToken != null), assert(providerId != null), super(providerId, idToken, accessToken, rawNonce);
+}
 
-  static const String _providerId = 'apple.com';
-
-  /// The Apple ID token.
+/// Abstract class to implement [OAuthCredential] authentications
+abstract class OAuthCredential extends AuthCredential {
+  /// The ID Token associated with this credential.
   final String idToken;
 
-  /// The Apple access token.
+  /// The OAuth access token.
   final String accessToken;
+
+  /// The OAuth raw nonce.
+  final String rawNonce;
+
+  /// The OAuth raw nonce.
+  final String providerId;
+
+  const OAuthCredential(
+    this.providerId,
+    this.idToken,
+    this.accessToken,
+    this.rawNonce,
+  ) : super(providerId);
 
   @override
   Map<String, String> _asMap() => <String, String>{
         'idToken': idToken,
         'accessToken': accessToken,
+        'providerId': providerId,
+        'rawNonce': rawNonce,
       };
 }
 
