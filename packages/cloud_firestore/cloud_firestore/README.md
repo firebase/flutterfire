@@ -109,7 +109,7 @@ install! 'cocoapods',
    incremental_installation: true
 ```
 
-See https://github.com/flutter/flutter/issues/46198 for enabling incremental installation by default in the future.
+In the future, incremental installation may be enabled by default. Follow https://github.com/flutter/flutter/issues/46198 for updates.
 
 ## Getting Started
 
