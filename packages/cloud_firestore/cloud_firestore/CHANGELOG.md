@@ -1,3 +1,7 @@
+## 0.13.0+1
+
+* Updated README to suggest incremental installation.
+
 ## 0.13.0
 
 * **Breaking change** Remove use of [deprecated](https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/FirebaseFirestoreSettings.Builder.html#setTimestampsInSnapshotsEnabled(boolean)) 
