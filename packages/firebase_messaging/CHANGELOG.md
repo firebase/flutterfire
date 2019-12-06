@@ -1,6 +1,10 @@
-## 6.0.3
+## 6.0.4
 
 * Support for provisional notifications for iOS version >= 12.
+
+## 6.0.3
+
+* Fix bug where `onIosSettingsRegistered` wasn't streamed on iOS >= 10.
 
 ## 6.0.2
 

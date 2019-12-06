@@ -29,6 +29,9 @@ task:
           CHANNEL: "master"
           CHANNEL: "stable"
       test_script:
+        # TODO(jackson): Allow web plugins once supported on stable
+        # https://github.com/flutter/flutter/issues/42864
+        - if [[ "$CHANNEL" -eq "stable" ]]; then find . | grep _web$ | xargs rm -rf; fi
         - flutter channel $CHANNEL
         - ./script/incremental_build.sh test
     - name: analyze
@@ -43,6 +46,9 @@ task:
           CHANNEL: "stable"
         GCLOUD_FIREBASE_TESTLAB_KEY: ENCRYPTED[fd81ffb7c44af2f8a1ae55e470c69690c1ec7e90aba49d18635fa4f3c72b6807034287e9e697f64e37ab836a66ba9eab]
       script:
+        # TODO(jackson): Allow web plugins once supported on stable
+        # https://github.com/flutter/flutter/issues/42864
+        - if [[ "$CHANNEL" -eq "stable" ]]; then find . | grep _web$ | xargs rm -rf; fi
         - flutter channel $CHANNEL
         # Unsetting CIRRUS_CHANGE_MESSAGE and CIRRUS_COMMIT_MESSAGE as they
         # might include non-ASCII characters which makes Gradle crash.
@@ -94,6 +100,9 @@ task:
           CHANNEL: "master"
           CHANNEL: "stable"
       build_script:
+        # TODO(jackson): Allow web plugins once supported on stable
+        # https://github.com/flutter/flutter/issues/42864
+        - if [[ "$CHANNEL" -eq "stable" ]]; then find . | grep _web$ | xargs rm -rf; fi
         - flutter channel $CHANNEL
         - ./script/incremental_build.sh build-examples --ipa
         - ./script/incremental_build.sh drive-examples

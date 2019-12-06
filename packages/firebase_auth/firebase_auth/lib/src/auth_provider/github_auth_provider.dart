@@ -8,6 +8,6 @@ class GithubAuthProvider {
   static const String providerId = 'github.com';
 
   static AuthCredential getCredential({@required String token}) {
-    return AuthCredential._(providerId, <String, String>{'token': token});
+    return GithubAuthCredential(token: token);
   }
 }

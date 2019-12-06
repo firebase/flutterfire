@@ -6,13 +6,15 @@ part of firebase_auth;
 
 /// Represents a user.
 class FirebaseUser extends UserInfo {
-  FirebaseUser._(Map<String, dynamic> data, FirebaseApp app)
-      : providerData = data['providerData']
-            .map<UserInfo>((dynamic item) => UserInfo._(item, app))
+  FirebaseUser._(PlatformUser data, FirebaseApp app)
+      : providerData = data.providerData
+            .map<UserInfo>((PlatformUserInfo item) => UserInfo._(item, app))
             .toList(),
         _metadata = FirebaseUserMetadata._(data),
+        _userData = data,
         super._(data, app);
 
+  final PlatformUser _userData;
   final List<UserInfo> providerData;
   final FirebaseUserMetadata _metadata;
 
@@ -21,10 +23,10 @@ class FirebaseUser extends UserInfo {
   // account.
   FirebaseUserMetadata get metadata => _metadata;
 
-  bool get isAnonymous => _data['isAnonymous'];
+  bool get isAnonymous => _userData.isAnonymous;
 
   /// Returns true if the user's email is verified.
-  bool get isEmailVerified => _data['isEmailVerified'];
+  bool get isEmailVerified => _userData.isEmailVerified;
 
   /// Obtains the id token result for the current user, forcing a [refresh] if desired.
   ///
@@ -34,13 +36,9 @@ class FirebaseUser extends UserInfo {
   ///
   /// Completes with an error if the user is signed out.
   Future<IdTokenResult> getIdToken({bool refresh = false}) async {
-    final Map<String, dynamic> data = await FirebaseAuth.channel
-        .invokeMapMethod<String, dynamic>('getIdToken', <String, dynamic>{
-      'refresh': refresh,
-      'app': _app.name,
-    });
-
-    return IdTokenResult._(data);
+    final PlatformIdTokenResult result =
+        await FirebaseAuthPlatform.instance.getIdToken(_app.name, refresh);
+    return IdTokenResult._(result);
   }
 
   /// Associates a user account from a third-party identity provider with this
@@ -63,30 +61,22 @@ class FirebaseUser extends UserInfo {
   ///       This can only occur when using [EmailAuthProvider.getCredentialWithLink] to obtain the credential.
   Future<AuthResult> linkWithCredential(AuthCredential credential) async {
     assert(credential != null);
-    final Map<String, dynamic> data =
-        await FirebaseAuth.channel.invokeMapMethod<String, dynamic>(
-      'linkWithCredential',
-      <String, dynamic>{
-        'app': _app.name,
-        'provider': credential._provider,
-        'data': credential._data,
-      },
-    );
-    final AuthResult result = AuthResult._(data, _app);
+    final PlatformAuthResult platformResult = await FirebaseAuthPlatform
+        .instance
+        .linkWithCredential(_app.name, credential);
+    final AuthResult result = AuthResult._(platformResult, _app);
     return result;
   }
 
   /// Initiates email verification for the user.
-  Future<void> sendEmailVerification() async {
-    await FirebaseAuth.channel.invokeMethod<void>(
-        'sendEmailVerification', <String, String>{'app': _app.name});
+  Future<void> sendEmailVerification() {
+    return FirebaseAuthPlatform.instance.sendEmailVerification(_app.name);
   }
 
   /// Manually refreshes the data of the current user (for example,
   /// attached providers, display name, and so on).
-  Future<void> reload() async {
-    await FirebaseAuth.channel
-        .invokeMethod<void>('reload', <String, String>{'app': _app.name});
+  Future<void> reload() {
+    return FirebaseAuthPlatform.instance.reload(_app.name);
   }
 
   /// Deletes the current user (also signs out the user).
@@ -97,9 +87,8 @@ class FirebaseUser extends UserInfo {
   ///  * `ERROR_INVALID_CREDENTIAL` - If the credential is malformed or has expired.
   ///  * `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
   ///  * `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
-  Future<void> delete() async {
-    await FirebaseAuth.channel
-        .invokeMethod<void>('delete', <String, String>{'app': _app.name});
+  Future<void> delete() {
+    return FirebaseAuthPlatform.instance.delete(_app.name);
   }
 
   /// Updates the email address of the user.
@@ -119,12 +108,9 @@ class FirebaseUser extends UserInfo {
   ///  * `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
   ///  * `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
   ///  * `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Email & Password accounts are not enabled.
-  Future<void> updateEmail(String email) async {
+  Future<void> updateEmail(String email) {
     assert(email != null);
-    return await FirebaseAuth.channel.invokeMethod<void>(
-      'updateEmail',
-      <String, String>{'email': email, 'app': _app.name},
-    );
+    return FirebaseAuthPlatform.instance.updateEmail(_app.name, email);
   }
 
   /// Updates the phone number of the user.
@@ -136,16 +122,17 @@ class FirebaseUser extends UserInfo {
   /// **Important**: This is a security sensitive operation that requires
   /// the user to have recently signed in.
   ///
-  Future<void> updatePhoneNumberCredential(AuthCredential credential) async {
+  Future<void> updatePhoneNumberCredential(AuthCredential credential) {
     assert(credential != null);
-    await FirebaseAuth.channel.invokeMethod<void>(
-      'updatePhoneNumberCredential',
-      <String, dynamic>{
-        'app': _app.name,
-        'provider': credential._provider,
-        'data': credential._data,
-      },
-    );
+    if (credential is! PhoneAuthCredential) {
+      throw ArgumentError.value(
+        credential,
+        'Credential must be a phone credential, '
+        'i.e. made with PhoneAuthProvider.getCredential()',
+      );
+    }
+    return FirebaseAuthPlatform.instance
+        .updatePhoneNumberCredential(_app.name, credential);
   }
 
   /// Updates the password of the user.
@@ -163,12 +150,9 @@ class FirebaseUser extends UserInfo {
   ///  * `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
   ///  * `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
   ///  * `ERROR_OPERATION_NOT_ALLOWED` - Indicates that Email & Password accounts are not enabled.
-  Future<void> updatePassword(String password) async {
+  Future<void> updatePassword(String password) {
     assert(password != null);
-    return await FirebaseAuth.channel.invokeMethod<void>(
-      'updatePassword',
-      <String, String>{'password': password, 'app': _app.name},
-    );
+    return FirebaseAuthPlatform.instance.updatePassword(_app.name, password);
   }
 
   /// Updates the user profile information.
@@ -177,13 +161,12 @@ class FirebaseUser extends UserInfo {
   ///
   ///  * `ERROR_USER_DISABLED` - If the user has been disabled (for example, in the Firebase console)
   ///  * `ERROR_USER_NOT_FOUND` - If the user has been deleted (for example, in the Firebase console)
-  Future<void> updateProfile(UserUpdateInfo userUpdateInfo) async {
+  Future<void> updateProfile(UserUpdateInfo userUpdateInfo) {
     assert(userUpdateInfo != null);
-    final Map<String, String> data = userUpdateInfo._updateData;
-    data['app'] = _app.name;
-    return await FirebaseAuth.channel.invokeMethod<void>(
-      'updateProfile',
-      data,
+    return FirebaseAuthPlatform.instance.updateProfile(
+      _app.name,
+      displayName: userUpdateInfo.displayName,
+      photoUrl: userUpdateInfo.photoUrl,
     );
   }
 
@@ -208,16 +191,9 @@ class FirebaseUser extends UserInfo {
   Future<AuthResult> reauthenticateWithCredential(
       AuthCredential credential) async {
     assert(credential != null);
-    final Map<String, dynamic> data =
-        await FirebaseAuth.channel.invokeMapMethod<String, dynamic>(
-      'reauthenticateWithCredential',
-      <String, dynamic>{
-        'app': _app.name,
-        'provider': credential._provider,
-        'data': credential._data,
-      },
-    );
-    return AuthResult._(data, _app);
+    final PlatformAuthResult result = await FirebaseAuthPlatform.instance
+        .reauthenticateWithCredential(_app.name, credential);
+    return AuthResult._(result, _app);
   }
 
   /// Detaches the [provider] account from the current user.
@@ -234,12 +210,10 @@ class FirebaseUser extends UserInfo {
   ///
   ///  * `ERROR_NO_SUCH_PROVIDER` - If the user does not have a Github Account linked to their account.
   ///  * `ERROR_REQUIRES_RECENT_LOGIN` - If the user's last sign-in time does not meet the security threshold. Use reauthenticate methods to resolve.
-  Future<void> unlinkFromProvider(String provider) async {
+  Future<void> unlinkFromProvider(String provider) {
     assert(provider != null);
-    return await FirebaseAuth.channel.invokeMethod<void>(
-      'unlinkFromProvider',
-      <String, String>{'provider': provider, 'app': _app.name},
-    );
+    return FirebaseAuthPlatform.instance
+        .unlinkFromProvider(_app.name, provider);
   }
 
   @override
