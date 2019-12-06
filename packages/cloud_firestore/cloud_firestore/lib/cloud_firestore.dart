@@ -10,6 +10,7 @@ import 'dart:typed_data';
 import 'dart:ui' show hashValues, hashList;
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+
 import 'package:collection/collection.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;

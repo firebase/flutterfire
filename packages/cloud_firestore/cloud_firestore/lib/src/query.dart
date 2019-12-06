@@ -52,26 +52,9 @@ class Query {
   // TODO(jackson): Reduce code duplication with [DocumentReference]
   Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
     assert(includeMetadataChanges != null);
-    Future<int> _handle;
-    // It's fine to let the StreamController be garbage collected once all the
-    // subscribers have cancelled; this analyzer warning is safe to ignore.
-    StreamController<QuerySnapshot> controller; // ignore: close_sinks
-    controller = StreamController<QuerySnapshot>.broadcast(
-      onListen: () {
-        _handle = Firestore.platform.addQuerySnapshotListener(firestore.app.name, path: _path, isCollectionGroup: _isCollectionGroup, parameters: _parameters, includeMetadataChanges: includeMetadataChanges,)
-        .then<int>((dynamic result) => result);
-        _handle.then((int handle) {
-          Firestore._queryObservers[handle] = controller;
-        });
-      },
-      onCancel: () {
-        _handle.then((int handle) async {
-          await Firestore.platform.removeListener(handle);
-          Firestore._queryObservers.remove(handle);
-        });
-      },
-    );
-    return controller.stream;
+
+    return Firestore.platform.snapshots(firestore.app.name, path: _path, isCollectionGroup: _isCollectionGroup, parameters: _parameters, includeMetadataChanges: includeMetadataChanges,)
+    .map((dynamic data) => QuerySnapshot._(data, firestore));
   }
 
   /// Fetch the documents for this query

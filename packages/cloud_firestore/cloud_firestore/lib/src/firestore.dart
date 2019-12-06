@@ -26,9 +26,6 @@ class Firestore {
   @visibleForTesting
   static CloudFirestorePlatform platform = CloudFirestorePlatform.instance;
 
-  static final Map<int, StreamController<QuerySnapshot>> _queryObservers =
-      <int, StreamController<QuerySnapshot>>{};
-
   static final Map<int, StreamController<DocumentSnapshot>> _documentObservers =
       <int, StreamController<DocumentSnapshot>>{};
 
