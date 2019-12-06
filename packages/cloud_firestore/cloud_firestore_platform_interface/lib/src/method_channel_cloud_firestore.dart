@@ -36,18 +36,22 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
 
   // Global
   @override
-  Future<void> removeListener(int handle) => channel.invokeMethod<void>(
-        'removeListener',
-        <String, dynamic>{'handle': handle},
-      );
+  Future<void> removeListener(int handle) {
+    return channel.invokeMethod<void>(
+      'removeListener',
+      <String, dynamic>{'handle': handle},
+    );
+  }
 
   // Firestore
   @override
-  Future<void> enablePersistence(String app, {bool enable = true}) => channel
-          .invokeMethod<void>('Firestore#enablePersistence', <String, dynamic>{
-        'app': app,
-        'enable': enable,
-      });
+  Future<void> enablePersistence(String app, {bool enable = true}) {
+    return channel
+        .invokeMethod<void>('Firestore#enablePersistence', <String, dynamic>{
+      'app': app,
+      'enable': enable,
+    });
+  }
 
   @override
   Future<void> settings(
@@ -56,14 +60,15 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     String host,
     bool sslEnabled,
     int cacheSizeBytes,
-  }) =>
-      channel.invokeMethod<void>('Firestore#settings', <String, dynamic>{
-        'app': app,
-        'persistenceEnabled': persistenceEnabled,
-        'host': host,
-        'sslEnabled': sslEnabled,
-        'cacheSizeBytes': cacheSizeBytes,
-      });
+  }) {
+    return channel.invokeMethod<void>('Firestore#settings', <String, dynamic>{
+      'app': app,
+      'persistenceEnabled': persistenceEnabled,
+      'host': host,
+      'sslEnabled': sslEnabled,
+      'cacheSizeBytes': cacheSizeBytes,
+    });
+  }
 
   // Transaction data
   static final Map<int, PlatformTransactionHandler> _transactionHandlers =
@@ -76,7 +81,7 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     @required PlatformTransactionHandler transactionHandler,
     int transactionTimeout,
   }) async {
-    // Store the transaction handler function so we can use it later on DoTransaction...
+    // The [transactionHandler] will be used by the [_handleDoTransaction] method later
     final int transactionId = _transactionHandlerId++;
     _transactionHandlers[transactionId] = transactionHandler;
 
@@ -90,11 +95,11 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
 
   Future<dynamic> _handleDoTransaction(MethodCall call) async {
     final int transactionId = call.arguments['transactionId'];
+    // Retrieve the handler passed to [runTransaction]...
     final PlatformTransactionHandler transactionHandler =
         _transactionHandlers[transactionId];
-    // Delete the handler from the list...
     _transactionHandlers.remove(transactionId);
-    // Delegate handling to the implementation
+    // Delegate handling to it
     return await transactionHandler(transactionId);
   }
 
@@ -106,31 +111,33 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     // TODO: Type SetOptions: https://firebase.google.com/docs/reference/js/firebase.firestore.SetOptions.html
     Map<String, dynamic> options,
     Map<String, dynamic> data = const <String, dynamic>{},
-  }) =>
-      channel.invokeMethod<void>(
-        'DocumentReference#setData',
-        <String, dynamic>{
-          'app': app,
-          'path': path,
-          'data': data,
-          'options': options,
-        },
-      );
+  }) {
+    return channel.invokeMethod<void>(
+      'DocumentReference#setData',
+      <String, dynamic>{
+        'app': app,
+        'path': path,
+        'data': data,
+        'options': options,
+      },
+    );
+  }
 
   @override
   Future<void> updateDocumentReferenceData(
     String app, {
     @required String path,
     Map<String, dynamic> data = const <String, dynamic>{},
-  }) =>
-      channel.invokeMethod<void>(
-        'DocumentReference#updateData',
-        <String, dynamic>{
-          'app': app,
-          'path': path,
-          'data': data,
-        },
-      );
+  }) {
+    return channel.invokeMethod<void>(
+      'DocumentReference#updateData',
+      <String, dynamic>{
+        'app': app,
+        'path': path,
+        'data': data,
+      },
+    );
+  }
 
   // TODO: Type this return
   @override
@@ -138,39 +145,42 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     String app, {
     @required String path,
     @required String source,
-  }) =>
-      channel.invokeMapMethod<String, dynamic>(
-        'DocumentReference#get',
-        <String, dynamic>{
-          'app': app,
-          'path': path,
-          'source': source,
-        },
-      );
+  }) {
+    return channel.invokeMapMethod<String, dynamic>(
+      'DocumentReference#get',
+      <String, dynamic>{
+        'app': app,
+        'path': path,
+        'source': source,
+      },
+    );
+  }
 
   @override
   Future<void> deleteDocumentReference(
     String app, {
     @required String path,
-  }) =>
-      channel.invokeMethod<void>(
-        'DocumentReference#delete',
-        <String, dynamic>{'app': app, 'path': path},
-      );
+  }) {
+    return channel.invokeMethod<void>(
+      'DocumentReference#delete',
+      <String, dynamic>{'app': app, 'path': path},
+    );
+  }
 
   Future<int> _addDocumentReferenceSnapshotListener(
     String app, {
     @required String path,
     bool includeMetadataChanges,
-  }) =>
-      channel.invokeMethod<int>(
-        'DocumentReference#addSnapshotListener',
-        <String, dynamic>{
-          'app': app,
-          'path': path,
-          'includeMetadataChanges': includeMetadataChanges,
-        },
-      );
+  }) {
+    return channel.invokeMethod<int>(
+      'DocumentReference#addSnapshotListener',
+      <String, dynamic>{
+        'app': app,
+        'path': path,
+        'includeMetadataChanges': includeMetadataChanges,
+      },
+    );
+  }
 
   static final Map<int, StreamController<int>> _documentObservers =
       <int, StreamController<int>>{};
@@ -182,6 +192,7 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     @required String path,
     bool includeMetadataChanges,
   }) {
+    assert(includeMetadataChanges != null);
     Future<int> _handle;
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
@@ -219,17 +230,18 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     bool isCollectionGroup,
     Map<String, dynamic> parameters,
     bool includeMetadataChanges,
-  }) =>
-      channel.invokeMethod<int>(
-        'Query#addSnapshotListener',
-        <String, dynamic>{
-          'app': app,
-          'path': path,
-          'isCollectionGroup': isCollectionGroup,
-          'parameters': parameters,
-          'includeMetadataChanges': includeMetadataChanges,
-        },
-      );
+  }) {
+    return channel.invokeMethod<int>(
+      'Query#addSnapshotListener',
+      <String, dynamic>{
+        'app': app,
+        'path': path,
+        'isCollectionGroup': isCollectionGroup,
+        'parameters': parameters,
+        'includeMetadataChanges': includeMetadataChanges,
+      },
+    );
+  }
 
   static final Map<int, StreamController<int>> _queryObservers =
       <int, StreamController<int>>{};
@@ -242,7 +254,6 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     Map<String, dynamic> parameters,
     bool includeMetadataChanges,
   }) {
-    // Create a stream of query snapshot handles, as they happen
     assert(includeMetadataChanges != null);
     Future<int> _handle;
     // It's fine to let the StreamController be garbage collected once all the
@@ -285,17 +296,18 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     bool isCollectionGroup,
     Map<String, dynamic> parameters,
     String source,
-  }) =>
-      channel.invokeMapMethod<String, dynamic>(
-        'Query#getDocuments',
-        <String, dynamic>{
-          'app': app,
-          'path': path,
-          'isCollectionGroup': isCollectionGroup,
-          'parameters': parameters,
-          'source': source,
-        },
-      );
+  }) {
+    return channel.invokeMapMethod<String, dynamic>(
+      'Query#getDocuments',
+      <String, dynamic>{
+        'app': app,
+        'path': path,
+        'isCollectionGroup': isCollectionGroup,
+        'parameters': parameters,
+        'source': source,
+      },
+    );
+  }
 
   // Transaction
   // TODO: Type this return
@@ -304,25 +316,27 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     String app, {
     @required String path,
     @required int transactionId,
-  }) =>
-      channel.invokeMapMethod<String, dynamic>(
-          'Transaction#get', <String, dynamic>{
-        'app': app,
-        'transactionId': transactionId,
-        'path': path,
-      });
+  }) {
+    return channel
+        .invokeMapMethod<String, dynamic>('Transaction#get', <String, dynamic>{
+      'app': app,
+      'transactionId': transactionId,
+      'path': path,
+    });
+  }
 
   @override
   Future<void> deleteTransaction(
     String app, {
     @required String path,
     @required int transactionId,
-  }) =>
-      channel.invokeMethod<void>('Transaction#delete', <String, dynamic>{
-        'app': app,
-        'transactionId': transactionId,
-        'path': path,
-      });
+  }) {
+    return channel.invokeMethod<void>('Transaction#delete', <String, dynamic>{
+      'app': app,
+      'transactionId': transactionId,
+      'path': path,
+    });
+  }
 
   @override
   Future<void> updateTransaction(
@@ -330,13 +344,14 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     @required String path,
     @required int transactionId,
     Map<String, dynamic> data,
-  }) =>
-      channel.invokeMethod<void>('Transaction#update', <String, dynamic>{
-        'app': app,
-        'transactionId': transactionId,
-        'path': path,
-        'data': data,
-      });
+  }) {
+    return channel.invokeMethod<void>('Transaction#update', <String, dynamic>{
+      'app': app,
+      'transactionId': transactionId,
+      'path': path,
+      'data': data,
+    });
+  }
 
   @override
   Future<void> setTransaction(
@@ -344,40 +359,45 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     @required String path,
     @required int transactionId,
     Map<String, dynamic> data,
-  }) =>
-      channel.invokeMethod<void>('Transaction#set', <String, dynamic>{
-        'app': app,
-        'transactionId': transactionId,
-        'path': path,
-        'data': data,
-      });
+  }) {
+    return channel.invokeMethod<void>('Transaction#set', <String, dynamic>{
+      'app': app,
+      'transactionId': transactionId,
+      'path': path,
+      'data': data,
+    });
+  }
 
   // Write Batch
   @override
-  Future<dynamic> createWriteBatch(String app) => channel.invokeMethod<dynamic>(
-      'WriteBatch#create', <String, dynamic>{'app': app});
+  Future<dynamic> createWriteBatch(String app) {
+    return channel.invokeMethod<dynamic>(
+        'WriteBatch#create', <String, dynamic>{'app': app});
+  }
 
   @override
   Future<void> commitWriteBatch({
     @required dynamic handle,
-  }) =>
-      channel.invokeMethod<void>(
-          'WriteBatch#commit', <String, dynamic>{'handle': handle});
+  }) {
+    return channel.invokeMethod<void>(
+        'WriteBatch#commit', <String, dynamic>{'handle': handle});
+  }
 
   @override
   Future<void> deleteWriteBatch(
     String app, {
     @required dynamic handle,
     @required String path,
-  }) =>
-      channel.invokeMethod<void>(
-        'WriteBatch#delete',
-        <String, dynamic>{
-          'app': app,
-          'handle': handle,
-          'path': path,
-        },
-      );
+  }) {
+    return channel.invokeMethod<void>(
+      'WriteBatch#delete',
+      <String, dynamic>{
+        'app': app,
+        'handle': handle,
+        'path': path,
+      },
+    );
+  }
 
   @override
   Future<void> setWriteBatchData(
@@ -386,17 +406,18 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     @required String path,
     Map<String, dynamic> data,
     Map<String, dynamic> options,
-  }) =>
-      channel.invokeMethod<void>(
-        'WriteBatch#setData',
-        <String, dynamic>{
-          'app': app,
-          'handle': handle,
-          'path': path,
-          'data': data,
-          'options': options,
-        },
-      );
+  }) {
+    return channel.invokeMethod<void>(
+      'WriteBatch#setData',
+      <String, dynamic>{
+        'app': app,
+        'handle': handle,
+        'path': path,
+        'data': data,
+        'options': options,
+      },
+    );
+  }
 
   @override
   Future<void> updateWriteBatchData(
@@ -404,14 +425,15 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     @required dynamic handle,
     @required String path,
     Map<String, dynamic> data,
-  }) =>
-      channel.invokeMethod<void>(
-        'WriteBatch#updateData',
-        <String, dynamic>{
-          'app': app,
-          'handle': handle,
-          'path': path,
-          'data': data,
-        },
-      );
+  }) {
+    return channel.invokeMethod<void>(
+      'WriteBatch#updateData',
+      <String, dynamic>{
+        'app': app,
+        'handle': handle,
+        'path': path,
+        'data': data,
+      },
+    );
+  }
 }
