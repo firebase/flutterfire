@@ -75,16 +75,30 @@ class Persistence {
   external static String get SESSION;
 }
 
-/// Represents the credentials returned by an auth provider.
+/// Interface that represents the credentials returned by an auth provider.
 /// Implementations specify the details about each auth provider's credential
 /// requirements.
 ///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.auth.OAuthCredential>.
-@JS('OAuthCredential')
-abstract class OAuthCredential {
-  /// The authentication provider ID for the credential.
+/// See <https://firebase.google.com/docs/reference/js/firebase.auth.AuthCredential>.
+@JS('AuthCredential')
+abstract class AuthCredential {
+  /// The authentication provider ID for the credential. For example,
+  /// 'facebook.com', or 'google.com'.
   external String get providerId;
 
+  /// The authentication sign in method for the credential. For example,
+  /// 'password', or 'emailLink'. This corresponds to the sign-in method
+  /// identifier as returned in firebase.auth.Auth.fetchSignInMethodsForEmail.
+  external String get signInMethod;
+}
+
+/// Interface that represents the OAuth credentials returned by an OAuth
+/// provider. Implementations specify the details about each auth provider's
+/// credential requirements.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.auth.OAuthCredential>.
+@JS('OAuthCredential')
+abstract class OAuthCredential extends AuthCredential {
   /// The OAuth access token associated with the credential if it belongs to
   /// an OAuth provider, such as facebook.com, twitter.com, etc.
   external String get accessToken;
@@ -96,12 +110,6 @@ abstract class OAuthCredential {
   /// The OAuth access token secret associated with the credential if it
   /// belongs to an OAuth 1.0 provider, such as twitter.com.
   external String get secret;
-
-  /// The authentication sign in method for the credential. For example,
-  /// 'password', or 'emailLink. This corresponds to the sign-in method
-  /// identifier as returned in: fetchsigninmethodsforemail
-  /// See <https://firebase.google.com/docs/reference/js/firebase.auth.Auth.html#fetchsigninmethodsforemail>
-  external String get signInMethod;
 }
 
 @JS('AuthProvider')
@@ -113,7 +121,7 @@ abstract class AuthProviderJsImpl {
 class EmailAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory EmailAuthProviderJsImpl();
   external static String get PROVIDER_ID;
-  external static OAuthCredential credential(String email, String password);
+  external static AuthCredential credential(String email, String password);
 }
 
 @JS('FacebookAuthProvider')
@@ -167,8 +175,7 @@ class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
   external static String get PROVIDER_ID;
   external PromiseJsImpl<String> verifyPhoneNumber(
       String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
-  // TODO official documentation says PromiseJsImpl<AuthCredential> return type
-  external static OAuthCredential credential(
+  external static AuthCredential credential(
       String verificationId, String verificationCode);
 }
 

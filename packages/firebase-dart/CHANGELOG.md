@@ -1,3 +1,7 @@
+## 8.0.0
+
+- Added back `AuthProvider` and made `OAuthProvider` a subtype.
+
 ## 7.1.0
 
 - Added `Auth.fetchSignInMethodsForEmail` and `Auth.isSignInWithEmailLink`.
