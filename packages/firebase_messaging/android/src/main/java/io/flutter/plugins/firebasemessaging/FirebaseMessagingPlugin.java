@@ -20,7 +20,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -58,8 +57,7 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     FirebaseApp.initializeApp(applicationContext);
     channel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging");
     final MethodChannel backgroundCallbackChannel =
-        new MethodChannel(
-            binaryMessenger, "plugins.flutter.io/firebase_messaging_background");
+        new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging_background");
 
     channel.setMethodCallHandler(this);
     backgroundCallbackChannel.setMethodCallHandler(this);
@@ -174,10 +172,8 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
         Log.e(TAG, "There was an exception when getting callback handle from Dart side");
         e.printStackTrace();
       }
-      FlutterFirebaseMessagingService.setBackgroundSetupHandle(
-          mainActivity, setupCallbackHandle);
-      FlutterFirebaseMessagingService.startBackgroundIsolate(
-          mainActivity, setupCallbackHandle);
+      FlutterFirebaseMessagingService.setBackgroundSetupHandle(mainActivity, setupCallbackHandle);
+      FlutterFirebaseMessagingService.startBackgroundIsolate(mainActivity, setupCallbackHandle);
       FlutterFirebaseMessagingService.setBackgroundMessageHandle(
           mainActivity, backgroundMessageHandle);
       result.success(true);
@@ -260,26 +256,24 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
                   try {
                     FirebaseInstanceId.getInstance().deleteInstanceId();
                     if (mainActivity != null) {
-                      mainActivity
-                          .runOnUiThread(
-                              new Runnable() {
-                                @Override
-                                public void run() {
-                                  result.success(true);
-                                }
-                              });
+                      mainActivity.runOnUiThread(
+                          new Runnable() {
+                            @Override
+                            public void run() {
+                              result.success(true);
+                            }
+                          });
                     }
                   } catch (IOException ex) {
                     Log.e(TAG, "deleteInstanceID, error:", ex);
                     if (mainActivity != null) {
-                      mainActivity
-                          .runOnUiThread(
-                              new Runnable() {
-                                @Override
-                                public void run() {
-                                  result.success(false);
-                                }
-                              });
+                      mainActivity.runOnUiThread(
+                          new Runnable() {
+                            @Override
+                            public void run() {
+                              result.success(false);
+                            }
+                          });
                     }
                   }
                 }
