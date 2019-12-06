@@ -53,7 +53,7 @@ class Query {
   Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
     assert(includeMetadataChanges != null);
 
-    return Firestore.platform.snapshots(firestore.app.name, path: _path, isCollectionGroup: _isCollectionGroup, parameters: _parameters, includeMetadataChanges: includeMetadataChanges,)
+    return Firestore.platform.getQuerySnapshots(firestore.app.name, path: _path, isCollectionGroup: _isCollectionGroup, parameters: _parameters, includeMetadataChanges: includeMetadataChanges,)
     .map((dynamic data) => QuerySnapshot._(data, firestore));
   }
 
