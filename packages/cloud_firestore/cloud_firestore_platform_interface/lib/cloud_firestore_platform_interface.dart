@@ -131,13 +131,13 @@ abstract class CloudFirestorePlatform {
   }
 
   // Query
-  Stream<dynamic> snapshots(String app, {
+  Stream<dynamic> getQuerySnapshots(String app, {
     @required String path,
     bool isCollectionGroup,
     Map<String, dynamic> parameters,
     bool includeMetadataChanges,
   }) {
-    throw UnimplementedError('snapshots() is not implemented');
+    throw UnimplementedError('getQuerySnapshots() is not implemented');
   }
 
   //TODO: Type this return

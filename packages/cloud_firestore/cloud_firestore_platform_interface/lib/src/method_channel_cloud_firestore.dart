@@ -194,7 +194,7 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
       <int, StreamController<int>>{};
 
   @override
-  Stream<dynamic> snapshots(String app, {
+  Stream<dynamic> getQuerySnapshots(String app, {
     @required String path,
     bool isCollectionGroup,
     Map<String, dynamic> parameters,
