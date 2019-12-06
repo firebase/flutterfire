@@ -98,14 +98,21 @@ class Firestore {
     };
 
     // Move to a runTransaction method in the method channel!
-    final Map<String, dynamic> result = await platform.runTransaction(app.name, transactionHandler: handler, transactionTimeout: timeout.inMilliseconds,);
+    final Map<String, dynamic> result = await platform.runTransaction(
+      app.name,
+      transactionHandler: handler,
+      transactionTimeout: timeout.inMilliseconds,
+    );
     return result ?? <String, dynamic>{};
   }
 
   @deprecated
   Future<void> enablePersistence(bool enable) async {
     assert(enable != null);
-    await platform.enablePersistence(app.name, enable: enable,);
+    await platform.enablePersistence(
+      app.name,
+      enable: enable,
+    );
   }
 
   Future<void> settings(
@@ -113,8 +120,10 @@ class Firestore {
       String host,
       bool sslEnabled,
       int cacheSizeBytes}) async {
-    await platform.settings(app.name, persistenceEnabled: persistenceEnabled,
-        host: host, sslEnabled: sslEnabled,
+    await platform.settings(app.name,
+        persistenceEnabled: persistenceEnabled,
+        host: host,
+        sslEnabled: sslEnabled,
         cacheSizeBytes: cacheSizeBytes);
   }
 }

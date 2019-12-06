@@ -48,7 +48,12 @@ class DocumentReference {
   /// If [merge] is true, the provided data will be merged into an
   /// existing document instead of overwriting.
   Future<void> setData(Map<String, dynamic> data, {bool merge = false}) {
-    return Firestore.platform.setDocumentReferenceData(firestore.app.name, path: path, data: data, options: <String, bool>{'merge': merge},);
+    return Firestore.platform.setDocumentReferenceData(
+      firestore.app.name,
+      path: path,
+      data: data,
+      options: <String, bool>{'merge': merge},
+    );
   }
 
   /// Updates fields in the document referred to by this [DocumentReference].
@@ -58,7 +63,11 @@ class DocumentReference {
   ///
   /// If no document exists yet, the update will fail.
   Future<void> updateData(Map<String, dynamic> data) {
-    return Firestore.platform.updateDocumentReferenceData(firestore.app.name, path: path, data: data,);
+    return Firestore.platform.updateDocumentReferenceData(
+      firestore.app.name,
+      path: path,
+      data: data,
+    );
   }
 
   /// Reads the document referenced by this [DocumentReference].
@@ -66,7 +75,11 @@ class DocumentReference {
   /// If no document exists, the read will return null.
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
     final Map<String, dynamic> data =
-        await Firestore.platform.getDocumentReference(firestore.app.name, path: path, source: _getSourceString(source),);
+        await Firestore.platform.getDocumentReference(
+      firestore.app.name,
+      path: path,
+      source: _getSourceString(source),
+    );
 
     return DocumentSnapshot._(
       data['path'],
@@ -79,7 +92,10 @@ class DocumentReference {
 
   /// Deletes the document referred to by this [DocumentReference].
   Future<void> delete() {
-    return Firestore.platform.deleteDocumentReference(firestore.app.name, path: path,);
+    return Firestore.platform.deleteDocumentReference(
+      firestore.app.name,
+      path: path,
+    );
   }
 
   /// Returns the reference of a collection contained inside of this
@@ -95,13 +111,18 @@ class DocumentReference {
   Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) {
     assert(includeMetadataChanges != null);
 
-    return Firestore.platform.getDocumentReferenceSnapshots(firestore.app.name, path: path, includeMetadataChanges: includeMetadataChanges,)
-    .map((dynamic data) => DocumentSnapshot._(
-          data['path'],
-          _asStringKeyedMap(data['data']),
-          SnapshotMetadata._(data['metadata']['hasPendingWrites'],
-              data['metadata']['isFromCache']),
-          firestore,
-        ));
+    return Firestore.platform
+        .getDocumentReferenceSnapshots(
+          firestore.app.name,
+          path: path,
+          includeMetadataChanges: includeMetadataChanges,
+        )
+        .map((dynamic data) => DocumentSnapshot._(
+              data['path'],
+              _asStringKeyedMap(data['data']),
+              SnapshotMetadata._(data['metadata']['hasPendingWrites'],
+                  data['metadata']['isFromCache']),
+              firestore,
+            ));
   }
 }

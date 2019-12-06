@@ -39,7 +39,11 @@ class WriteBatch {
     if (!_committed) {
       _handle.then((dynamic handle) {
         _actions.add(
-          Firestore.platform.deleteWriteBatch(_firestore.app.name, handle: handle, path: document.path,),
+          Firestore.platform.deleteWriteBatch(
+            _firestore.app.name,
+            handle: handle,
+            path: document.path,
+          ),
         );
       });
     } else {
@@ -59,7 +63,13 @@ class WriteBatch {
     if (!_committed) {
       _handle.then((dynamic handle) {
         _actions.add(
-          Firestore.platform.setWriteBatchData(_firestore.app.name, handle: handle, path: document.path, data: data, options: <String, bool>{'merge': merge},),
+          Firestore.platform.setWriteBatchData(
+            _firestore.app.name,
+            handle: handle,
+            path: document.path,
+            data: data,
+            options: <String, bool>{'merge': merge},
+          ),
         );
       });
     } else {
@@ -75,7 +85,12 @@ class WriteBatch {
     if (!_committed) {
       _handle.then((dynamic handle) {
         _actions.add(
-          Firestore.platform.updateWriteBatchData(_firestore.app.name, handle: handle, path: document.path, data: data,),
+          Firestore.platform.updateWriteBatchData(
+            _firestore.app.name,
+            handle: handle,
+            path: document.path,
+            data: data,
+          ),
         );
       });
     } else {

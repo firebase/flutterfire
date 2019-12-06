@@ -23,7 +23,11 @@ class Transaction {
   }
 
   Future<DocumentSnapshot> _get(DocumentReference documentReference) async {
-    final Map<String, dynamic> result = await Firestore.platform.getTransaction(_firestore.app.name, transactionId: _transactionId, path: documentReference.path,);
+    final Map<String, dynamic> result = await Firestore.platform.getTransaction(
+      _firestore.app.name,
+      transactionId: _transactionId,
+      path: documentReference.path,
+    );
 
     if (result != null) {
       return DocumentSnapshot._(
@@ -48,7 +52,11 @@ class Transaction {
   }
 
   Future<void> _delete(DocumentReference documentReference) async {
-    return Firestore.platform.deleteTransaction(_firestore.app.name, transactionId: _transactionId, path: documentReference.path,);
+    return Firestore.platform.deleteTransaction(
+      _firestore.app.name,
+      transactionId: _transactionId,
+      path: documentReference.path,
+    );
   }
 
   /// Updates fields in the document referred to by [documentReference].
@@ -65,7 +73,10 @@ class Transaction {
 
   Future<void> _update(
       DocumentReference documentReference, Map<String, dynamic> data) async {
-    return Firestore.platform.updateTransaction(_firestore.app.name, transactionId: _transactionId, path: documentReference.path, data: data);
+    return Firestore.platform.updateTransaction(_firestore.app.name,
+        transactionId: _transactionId,
+        path: documentReference.path,
+        data: data);
   }
 
   /// Writes to the document referred to by the provided [DocumentReference].
@@ -83,6 +94,11 @@ class Transaction {
 
   Future<void> _set(
       DocumentReference documentReference, Map<String, dynamic> data) async {
-    return Firestore.platform.setTransaction(_firestore.app.name, transactionId: _transactionId, path: documentReference.path, data: data,);
+    return Firestore.platform.setTransaction(
+      _firestore.app.name,
+      transactionId: _transactionId,
+      path: documentReference.path,
+      data: data,
+    );
   }
 }

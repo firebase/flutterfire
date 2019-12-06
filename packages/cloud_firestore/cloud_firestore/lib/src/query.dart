@@ -53,8 +53,15 @@ class Query {
   Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
     assert(includeMetadataChanges != null);
 
-    return Firestore.platform.getQuerySnapshots(firestore.app.name, path: _path, isCollectionGroup: _isCollectionGroup, parameters: _parameters, includeMetadataChanges: includeMetadataChanges,)
-    .map((dynamic data) => QuerySnapshot._(data, firestore));
+    return Firestore.platform
+        .getQuerySnapshots(
+          firestore.app.name,
+          path: _path,
+          isCollectionGroup: _isCollectionGroup,
+          parameters: _parameters,
+          includeMetadataChanges: includeMetadataChanges,
+        )
+        .map((dynamic data) => QuerySnapshot._(data, firestore));
   }
 
   /// Fetch the documents for this query
@@ -62,7 +69,13 @@ class Query {
       {Source source = Source.serverAndCache}) async {
     assert(source != null);
     final Map<dynamic, dynamic> data =
-        await Firestore.platform.getQueryDocuments(firestore.app.name, path: _path, isCollectionGroup: _isCollectionGroup, parameters: _parameters, source: _getSourceString(source),);
+        await Firestore.platform.getQueryDocuments(
+      firestore.app.name,
+      path: _path,
+      isCollectionGroup: _isCollectionGroup,
+      parameters: _parameters,
+      source: _getSourceString(source),
+    );
     return QuerySnapshot._(data, firestore);
   }
 
