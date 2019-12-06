@@ -131,14 +131,13 @@ abstract class CloudFirestorePlatform {
   }
 
   // Query
-  // TODO: Port to stream
-  Future<int> addQuerySnapshotListener(String app, {
+  Stream<dynamic> snapshots(String app, {
     @required String path,
     bool isCollectionGroup,
     Map<String, dynamic> parameters,
     bool includeMetadataChanges,
-  }) async {
-    throw UnimplementedError('addQuerySnapshotListener() is not implemented');
+  }) {
+    throw UnimplementedError('snapshots() is not implemented');
   }
 
   //TODO: Type this return

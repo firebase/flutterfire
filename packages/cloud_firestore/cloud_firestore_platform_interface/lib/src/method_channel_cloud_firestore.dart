@@ -22,10 +22,9 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
   // Platform calls
   Future<void> _handlePlatformCall(MethodCall call) async {
     switch(call.method) {
-      // case 'QuerySnapshot': 
-      //   final QuerySnapshot snapshot = QuerySnapshot._(call.arguments, this);
-      //   _queryObservers[call.arguments['handle']].add(snapshot);
-      //   break;
+      case 'QuerySnapshot':
+        return _handleQuerySnapshot(call);
+        break;
       // case 'DocumentSnapshot':
       //   final DocumentSnapshot snapshot = DocumentSnapshot._(
       //     call.arguments['path'],
@@ -175,9 +174,7 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
         );
 
   // Query
-  // TODO: Port to stream
-  @override
-  Future<int> addQuerySnapshotListener(String app, {
+  Future<int> _addQuerySnapshotListener(String app, {
     @required String path,
     bool isCollectionGroup,
     Map<String, dynamic> parameters,
@@ -192,6 +189,46 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
             'includeMetadataChanges': includeMetadataChanges,
           },
         );
+
+  static final Map<int, StreamController<int>> _queryObservers =
+      <int, StreamController<int>>{};
+
+  @override
+  Stream<dynamic> snapshots(String app, {
+    @required String path,
+    bool isCollectionGroup,
+    Map<String, dynamic> parameters,
+    bool includeMetadataChanges,
+  }) {
+    // Create a stream of query snapshot handles, as they happen
+        assert(includeMetadataChanges != null);
+    Future<int> _handle;
+    // It's fine to let the StreamController be garbage collected once all the
+    // subscribers have cancelled; this analyzer warning is safe to ignore.
+    StreamController<int> controller; // ignore: close_sinks
+    controller = StreamController<int>.broadcast(
+      onListen: () {
+        _handle = _addQuerySnapshotListener(app, path: path, isCollectionGroup: isCollectionGroup, parameters: parameters, includeMetadataChanges: includeMetadataChanges,)
+        .then<int>((dynamic result) => result);
+        _handle.then((int handle) {
+          _queryObservers[handle] = controller;
+        });
+      },
+      onCancel: () {
+        _handle.then((int handle) async {
+          await removeListener(handle);
+          _queryObservers.remove(handle);
+        });
+      },
+    );
+    return controller.stream;
+  }
+
+  // Broadcast the QuerySnapshot data
+  void _handleQuerySnapshot(MethodCall call) {
+    final int handle = call.arguments['handle'];
+    _queryObservers[handle].add(call.arguments);
+  }
 
   //TODO: Type this return
   @override
