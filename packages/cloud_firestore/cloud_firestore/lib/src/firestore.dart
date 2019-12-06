@@ -26,9 +26,6 @@ class Firestore {
   @visibleForTesting
   static CloudFirestorePlatform platform = CloudFirestorePlatform.instance;
 
-  static final Map<int, StreamController<DocumentSnapshot>> _documentObservers =
-      <int, StreamController<DocumentSnapshot>>{};
-
   @override
   bool operator ==(dynamic o) => o is Firestore && o.app == app;
 
