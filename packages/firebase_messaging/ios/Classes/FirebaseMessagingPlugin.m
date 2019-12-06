@@ -82,7 +82,6 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
                             result(getFlutterError(error));
                             return;
                           }
-                          result([NSNumber numberWithBool:granted]);
                           // This works for iOS >= 10. See
                           // [UIApplication:didRegisterUserNotificationSettings:notificationSettings]
                           // for ios < 10.
@@ -100,6 +99,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
                                 [self->_channel invokeMethod:@"onIosSettingsRegistered"
                                                    arguments:settingsDictionary];
                               }];
+                          result([NSNumber numberWithBool:granted]);
                         }];
 
       [[UIApplication sharedApplication] registerForRemoteNotifications];
