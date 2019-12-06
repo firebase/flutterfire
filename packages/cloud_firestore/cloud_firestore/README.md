@@ -101,10 +101,11 @@ Firestore.instance.runTransaction((Transaction tx) async {
 
 Cloud Firestore has dependencies on iOS that lead to significant build times (see https://github.com/FirebaseExtended/flutterfire/issues/349 and https://github.com/firebase/firebase-ios-sdk/issues/4284). You can substantially reduce build times after the initial build using [incremental installation](https://medium.com/@corteggo/incremental-pod-installation-cocoapods-1-7-0-multiple-projects-302da0208af3).
 
-Add the following anywhere in your app's ios/Podfile:
+To use, ensure that `generate_multiple_pod_projects: true` and `incremental_installation: true` are included in the `install!` command in your `Podfile`. If there isn't one yet, you can use this:
 
 ```
 install! 'cocoapods',
+   disable_input_output_paths: true,
    generate_multiple_pod_projects: true,
    incremental_installation: true
 ```
