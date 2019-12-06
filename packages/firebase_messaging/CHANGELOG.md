@@ -1,3 +1,7 @@
+## 6.0.3
+
+* Fix bug where `onIosSettingsRegistered` wasn't streamed on iOS >= 10.
+
 ## 6.0.2
 
 * Fixed a build warning caused by availability check.
