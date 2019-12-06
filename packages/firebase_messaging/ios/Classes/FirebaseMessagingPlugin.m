@@ -65,6 +65,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
     NSDictionary *arguments = call.arguments;
     if (@available(iOS 10.0, *)) {
       UNAuthorizationOptions authOptions = 0;
+      NSNumber *provisional = arguments[@"provisional"];
       if ([arguments[@"sound"] boolValue]) {
         authOptions |= UNAuthorizationOptionSound;
       }
@@ -74,8 +75,13 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
       if ([arguments[@"badge"] boolValue]) {
         authOptions |= UNAuthorizationOptionBadge;
       }
-      if (@available(iOS 12, *) && [arguments[@"provisional"] boolValue]) {
-        authOptions |= UNAuthorizationOptionProvisional;
+
+      NSNumber *isAtLeastVersion12;
+      if (@available(iOS 12, *)) {
+        isAtLeastVersion12 = [NSNumber numberWithBool:YES];
+        if ([provisional boolValue]) authOptions |= UNAuthorizationOptionProvisional;
+      } else {
+        isAtLeastVersion12 = [NSNumber numberWithBool:NO];
       }
 
       [[UNUserNotificationCenter currentNotificationCenter]
@@ -98,6 +104,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
                                                                       UNNotificationSettingEnabled],
                                   @"alert" : [NSNumber numberWithBool:settings.alertSetting ==
                                                                       UNNotificationSettingEnabled],
+                                  @"provisional" : [NSNumber numberWithBool:granted && [provisional boolValue] && isAtLeastVersion12],
                                 };
                                 [self->_channel invokeMethod:@"onIosSettingsRegistered"
                                                    arguments:settingsDictionary];
@@ -252,6 +259,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
     @"sound" : [NSNumber numberWithBool:notificationSettings.types & UIUserNotificationTypeSound],
     @"badge" : [NSNumber numberWithBool:notificationSettings.types & UIUserNotificationTypeBadge],
     @"alert" : [NSNumber numberWithBool:notificationSettings.types & UIUserNotificationTypeAlert],
+    @"provisional" : [NSNumber numberWithBool:NO],
   };
   [_channel invokeMethod:@"onIosSettingsRegistered" arguments:settingsDictionary];
 }
