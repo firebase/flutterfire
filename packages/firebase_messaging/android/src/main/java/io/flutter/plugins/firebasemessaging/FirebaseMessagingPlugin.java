@@ -77,7 +77,7 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    onAttachedToEngine(binding.getApplicationContext(), binding.getBinaryMessenger());
+    onAttachedToEngine(binding.getApplicationContext(), binding.getFlutterEngine().getDartExecutor());
   }
 
   @Override
