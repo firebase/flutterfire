@@ -122,11 +122,10 @@ abstract class CloudFirestorePlatform {
     throw UnimplementedError('deleteDocumentReference() is not implemented');
   }
 
-  // TODO: Port to stream
-  Future<int> addDocumentReferenceSnapshotListener(String app, {
+  Stream<dynamic> getDocumentReferenceSnapshots(String app, {
     @required String path,
     bool includeMetadataChanges,
-  }) async {
+  }) {
     throw UnimplementedError('addDocumentReferenceSnapshotListener() is not implemented');
   }
 

@@ -25,16 +25,9 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
       case 'QuerySnapshot':
         return _handleQuerySnapshot(call);
         break;
-      // case 'DocumentSnapshot':
-      //   final DocumentSnapshot snapshot = DocumentSnapshot._(
-      //     call.arguments['path'],
-      //     _asStringKeyedMap(call.arguments['data']),
-      //     SnapshotMetadata._(call.arguments['metadata']['hasPendingWrites'],
-      //         call.arguments['metadata']['isFromCache']),
-      //     this,
-      //   );
-      //   _documentObservers[call.arguments['handle']].add(snapshot);
-      //   break;
+      case 'DocumentSnapshot':
+        return _handleDocumentSnapshot(call);
+        break;
       case 'DoTransaction':
         return _handleDoTransaction(call);
         break;
@@ -159,9 +152,7 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
       <String, dynamic>{'app': app, 'path': path},
     );
 
-  // TODO: Port to stream
-  @override
-  Future<int> addDocumentReferenceSnapshotListener(String app, {
+  Future<int> _addDocumentReferenceSnapshotListener(String app, {
     @required String path,
     bool includeMetadataChanges,
   }) => channel.invokeMethod<int>(
@@ -172,6 +163,42 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
             'includeMetadataChanges': includeMetadataChanges,
           },
         );
+
+  static final Map<int, StreamController<int>> _documentObservers =
+      <int, StreamController<int>>{};
+
+  // This method is very similar to getQuerySnapshots. Extract common logic?
+  @override
+  Stream<dynamic> getDocumentReferenceSnapshots(String app, {
+    @required String path,
+    bool includeMetadataChanges,
+  }) {
+    Future<int> _handle;
+    // It's fine to let the StreamController be garbage collected once all the
+    // subscribers have cancelled; this analyzer warning is safe to ignore.
+    StreamController<dynamic> controller; // ignore: close_sinks
+    controller = StreamController<int>.broadcast(
+      onListen: () {
+        _handle = _addDocumentReferenceSnapshotListener(app, path: path, includeMetadataChanges: includeMetadataChanges,)
+          .then<int>((dynamic result) => result);
+        _handle.then((int handle) {
+          _documentObservers[handle] = controller;
+        });
+      },
+      onCancel: () {
+        _handle.then((int handle) async {
+          await removeListener(handle);
+          _documentObservers.remove(handle);
+        });
+      },
+    );
+    return controller.stream;
+  }
+
+  void _handleDocumentSnapshot(MethodCall call) {
+    final int handle = call.arguments['handle'];
+    _queryObservers[handle].add(call.arguments);
+  }
 
   // Query
   Future<int> _addQuerySnapshotListener(String app, {
@@ -205,8 +232,8 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     Future<int> _handle;
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
-    StreamController<int> controller; // ignore: close_sinks
-    controller = StreamController<int>.broadcast(
+    StreamController<dynamic> controller; // ignore: close_sinks
+    controller = StreamController<dynamic>.broadcast(
       onListen: () {
         _handle = _addQuerySnapshotListener(app, path: path, isCollectionGroup: isCollectionGroup, parameters: parameters, includeMetadataChanges: includeMetadataChanges,)
         .then<int>((dynamic result) => result);
