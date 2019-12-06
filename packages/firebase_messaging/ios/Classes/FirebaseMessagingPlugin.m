@@ -104,7 +104,9 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
                                                                       UNNotificationSettingEnabled],
                                   @"alert" : [NSNumber numberWithBool:settings.alertSetting ==
                                                                       UNNotificationSettingEnabled],
-                                  @"provisional" : [NSNumber numberWithBool:granted && [provisional boolValue] && isAtLeastVersion12],
+                                  @"provisional" :
+                                      [NSNumber numberWithBool:granted && [provisional boolValue] &&
+                                                               isAtLeastVersion12],
                                 };
                                 [self->_channel invokeMethod:@"onIosSettingsRegistered"
                                                    arguments:settingsDictionary];
