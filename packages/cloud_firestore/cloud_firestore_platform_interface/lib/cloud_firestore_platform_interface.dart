@@ -62,7 +62,7 @@ abstract class CloudFirestorePlatform {
   /// if the provided instance is a class implemented with `implements`.
   void _verifyProvidesDefaultImplementations() {}
 
-  // Actual API 
+  // Actual API
   // Global
   /// Removes any listener by its handle.
   /// All handles must be unique across al types of listeners.
@@ -75,16 +75,18 @@ abstract class CloudFirestorePlatform {
     throw UnimplementedError('enablePersistence() is not implemented');
   }
 
-  Future<void> settings(String app, {
-      bool persistenceEnabled,
-      String host,
-      bool sslEnabled,
-      int cacheSizeBytes,
-    }) async {
+  Future<void> settings(
+    String app, {
+    bool persistenceEnabled,
+    String host,
+    bool sslEnabled,
+    int cacheSizeBytes,
+  }) async {
     throw UnimplementedError('settings() is not implemented');
   }
 
-  Future<Map<String, dynamic>> runTransaction(String app, {
+  Future<Map<String, dynamic>> runTransaction(
+    String app, {
     @required PlatformTransactionHandler transactionHandler,
     int transactionTimeout,
   }) async {
@@ -92,45 +94,53 @@ abstract class CloudFirestorePlatform {
   }
 
   // Document Reference
-  Future<void> setDocumentReferenceData(String app, {
+  Future<void> setDocumentReferenceData(
+    String app, {
     @required String path,
     Map<String, dynamic> data,
-    // TODO: Type https://firebase.google.com/docs/reference/js/firebase.firestore.SetOptions.html 
+    // TODO: Type https://firebase.google.com/docs/reference/js/firebase.firestore.SetOptions.html
     Map<String, dynamic> options,
   }) async {
     throw UnimplementedError('setDocumentReferenceData() is not implemented');
   }
 
-  Future<void> updateDocumentReferenceData(String app, {
+  Future<void> updateDocumentReferenceData(
+    String app, {
     @required String path,
     Map<String, dynamic> data,
   }) async {
-    throw UnimplementedError('updateDocumentReferenceData() is not implemented');
+    throw UnimplementedError(
+        'updateDocumentReferenceData() is not implemented');
   }
 
   // TODO: Type this return
-  Future<Map<String, dynamic>> getDocumentReference(String app, {
+  Future<Map<String, dynamic>> getDocumentReference(
+    String app, {
     @required String path,
     @required String source,
   }) async {
     throw UnimplementedError('getDocumentReference() is not implemented');
   }
 
-  Future<void> deleteDocumentReference(String app, {
+  Future<void> deleteDocumentReference(
+    String app, {
     @required String path,
   }) async {
     throw UnimplementedError('deleteDocumentReference() is not implemented');
   }
 
-  Stream<dynamic> getDocumentReferenceSnapshots(String app, {
+  Stream<dynamic> getDocumentReferenceSnapshots(
+    String app, {
     @required String path,
     bool includeMetadataChanges,
   }) {
-    throw UnimplementedError('addDocumentReferenceSnapshotListener() is not implemented');
+    throw UnimplementedError(
+        'addDocumentReferenceSnapshotListener() is not implemented');
   }
 
   // Query
-  Stream<dynamic> getQuerySnapshots(String app, {
+  Stream<dynamic> getQuerySnapshots(
+    String app, {
     @required String path,
     bool isCollectionGroup,
     Map<String, dynamic> parameters,
@@ -140,7 +150,8 @@ abstract class CloudFirestorePlatform {
   }
 
   //TODO: Type this return
-  Future<Map<dynamic, dynamic>> getQueryDocuments(String app, {
+  Future<Map<dynamic, dynamic>> getQueryDocuments(
+    String app, {
     @required String path,
     bool isCollectionGroup,
     Map<String, dynamic> parameters,
@@ -151,21 +162,24 @@ abstract class CloudFirestorePlatform {
 
   // Transaction
   // TODO: Type this return
-  Future<Map<String, dynamic>> getTransaction(String app, {
+  Future<Map<String, dynamic>> getTransaction(
+    String app, {
     @required String path,
     @required int transactionId,
   }) async {
     throw UnimplementedError('getTransaction() is not implemented');
   }
 
-  Future<void> deleteTransaction(String app, {
+  Future<void> deleteTransaction(
+    String app, {
     @required String path,
     @required int transactionId,
   }) async {
     throw UnimplementedError('deleteTransaction() is not implemented');
   }
 
-  Future<void> updateTransaction(String app, {
+  Future<void> updateTransaction(
+    String app, {
     @required String path,
     @required int transactionId,
     Map<String, dynamic> data,
@@ -173,7 +187,8 @@ abstract class CloudFirestorePlatform {
     throw UnimplementedError('updateTransaction() is not implemented');
   }
 
-  Future<void> setTransaction(String app, {
+  Future<void> setTransaction(
+    String app, {
     @required String path,
     @required int transactionId,
     Map<String, dynamic> data,
@@ -192,14 +207,16 @@ abstract class CloudFirestorePlatform {
     throw UnimplementedError('commitWriteBatch() is not implemented');
   }
 
-  Future<void> deleteWriteBatch(String app, {
+  Future<void> deleteWriteBatch(
+    String app, {
     @required dynamic handle,
     @required String path,
   }) async {
     throw UnimplementedError('deleteWriteBatch() is not implemented');
   }
 
-  Future<void> setWriteBatchData(String app, {
+  Future<void> setWriteBatchData(
+    String app, {
     @required dynamic handle,
     @required String path,
     Map<String, dynamic> data,
@@ -208,7 +225,8 @@ abstract class CloudFirestorePlatform {
     throw UnimplementedError('setWriteBatchData() is not implemented');
   }
 
-  Future<void> updateWriteBatchData(String app, {
+  Future<void> updateWriteBatchData(
+    String app, {
     @required dynamic handle,
     @required String path,
     Map<String, dynamic> data,

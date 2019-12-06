@@ -11,7 +11,8 @@ import 'package:mockito/mockito.dart';
 void main() {
   group('$CloudFirestorePlatform', () {
     test('$MethodChannelCloudFirestore is the default instance', () {
-      expect(CloudFirestorePlatform.instance, isA<MethodChannelCloudFirestore>());
+      expect(
+          CloudFirestorePlatform.instance, isA<MethodChannelCloudFirestore>());
     });
 
     test('Cannot be implemented with `implements`', () {

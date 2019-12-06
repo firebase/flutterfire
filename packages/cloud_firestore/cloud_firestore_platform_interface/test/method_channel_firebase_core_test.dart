@@ -14,8 +14,5 @@ void main() {
   group('$MethodChannelCloudFirestore', () {
     final MethodChannelCloudFirestore channelPlatform =
         MethodChannelCloudFirestore();
-
-
-
   });
 }
