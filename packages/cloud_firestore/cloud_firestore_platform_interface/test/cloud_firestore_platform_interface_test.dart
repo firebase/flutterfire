@@ -9,6 +9,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('$CloudFirestorePlatform', () {
     test('$MethodChannelCloudFirestore is the default instance', () {
       expect(

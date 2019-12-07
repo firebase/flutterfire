@@ -197,7 +197,7 @@ class MethodChannelCloudFirestore extends CloudFirestorePlatform {
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     StreamController<dynamic> controller; // ignore: close_sinks
-    controller = StreamController<int>.broadcast(
+    controller = StreamController<dynamic>.broadcast(
       onListen: () {
         _handle = _addDocumentReferenceSnapshotListener(
           app,
