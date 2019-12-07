@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:html' show promiseToFuture;
 
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
@@ -137,7 +136,7 @@ bool _isBasicType(Object value) {
 Future<T> handleThenable<T>(PromiseJsImpl<T> thenable) async {
   T value;
   try {
-    value = await promiseToFuture(thenable);
+    value = await util.promiseToFuture(thenable);
   } catch (e) {
     if (util.hasProperty(e, 'code')) {
       throw _FirebaseErrorWrapper(e);
