@@ -12,8 +12,8 @@ Matcher throwsToString(value) => throwsA(_ToStringMatcher(value));
 
 class _ToStringMatcher extends CustomMatcher {
   _ToStringMatcher(matcher)
-      : super("Object toString value", "toString", matcher);
+      : super('Object toString value', 'toString', matcher);
 
   @override
-  featureValueOf(actual) => actual.toString();
+  Object featureValueOf(actual) => actual.toString();
 }

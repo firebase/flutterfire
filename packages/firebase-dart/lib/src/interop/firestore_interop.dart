@@ -18,13 +18,13 @@ import 'firebase_interop.dart';
 /// logging.
 ///
 /// Can be any of the following values:
-/// * "debug" for the most verbose logging level, primarily for debugging.
-/// * "error" to log errors only.
-/// * "silent" to turn off logging.
+/// * 'debug' for the most verbose logging level, primarily for debugging.
+/// * 'error' to log errors only.
+/// * 'silent' to turn off logging.
 @JS()
 external void setLogLevel(String logLevel);
 
-@JS("Firestore")
+@JS('Firestore')
 abstract class FirestoreJsImpl {
   external AppJsImpl get app;
   external set app(AppJsImpl a);
@@ -40,7 +40,7 @@ abstract class FirestoreJsImpl {
   external PromiseJsImpl<Null> enableNetwork();
 }
 
-@JS("WriteBatch")
+@JS('WriteBatch')
 abstract class WriteBatchJsImpl {
   external PromiseJsImpl<Null> commit();
   external WriteBatchJsImpl delete(DocumentReferenceJsImpl documentRef);
@@ -50,7 +50,7 @@ abstract class WriteBatchJsImpl {
       DocumentReferenceJsImpl documentRef, dataOrFieldsAndValues);
 }
 
-@JS("CollectionReference")
+@JS('CollectionReference')
 class CollectionReferenceJsImpl extends QueryJsImpl {
   external String get id;
   external set id(String v);
@@ -118,7 +118,7 @@ class GeoPoint {
   external bool isEqual(Object other);
 }
 
-@JS("Blob")
+@JS('Blob')
 @anonymous
 abstract class Blob {
   external static Blob fromBase64String(String base64);
@@ -143,7 +143,7 @@ abstract class DocumentChangeJsImpl {
   external set newIndex(num v);
 }
 
-@JS("DocumentReference")
+@JS('DocumentReference')
 abstract class DocumentReferenceJsImpl {
   external FirestoreJsImpl get firestore;
   external set firestore(FirestoreJsImpl f);
@@ -166,7 +166,7 @@ abstract class DocumentReferenceJsImpl {
   external PromiseJsImpl<Null> update(dataOrFieldsAndValues);
 }
 
-@JS("DocumentSnapshot")
+@JS('DocumentSnapshot')
 abstract class DocumentSnapshotJsImpl {
   external bool get exists;
   external set exists(bool v);
@@ -207,7 +207,7 @@ abstract class FieldValue {
 @JS('FieldValue')
 external dynamic get fieldValues;
 
-@JS("Query")
+@JS('Query')
 abstract class QueryJsImpl {
   external FirestoreJsImpl get firestore;
   external set firestore(FirestoreJsImpl f);
@@ -231,7 +231,7 @@ abstract class QueryJsImpl {
       String /*'<'|'<='|'=='|'>='|'>'*/ opStr, value);
 }
 
-@JS("QuerySnapshot")
+@JS('QuerySnapshot')
 abstract class QuerySnapshotJsImpl {
   // TODO: [SnapshotOptions options]
   external List<DocumentChangeJsImpl> docChanges();
@@ -252,7 +252,7 @@ abstract class QuerySnapshotJsImpl {
   external bool isEqual(QuerySnapshotJsImpl other);
 }
 
-@JS("Transaction")
+@JS('Transaction')
 abstract class TransactionJsImpl {
   external TransactionJsImpl delete(DocumentReferenceJsImpl documentRef);
   external PromiseJsImpl<DocumentSnapshotJsImpl> get(

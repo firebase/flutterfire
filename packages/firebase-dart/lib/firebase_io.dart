@@ -64,7 +64,7 @@ class FirebaseClient {
 
     var request = Request(method, uri);
     if (credential != null) {
-      request.headers['Authorization'] = "Bearer $credential";
+      request.headers['Authorization'] = 'Bearer $credential';
     }
 
     if (json != null) {
@@ -82,7 +82,7 @@ class FirebaseClient {
       var contentType = response.headers['content-type'];
       if (contentType != null && !contentType.contains('application/json')) {
         throw Exception(
-            'Returned value was not JSON. Did the uri end with ".json"?');
+            "Returned value was not JSON. Did the uri end with '.json'?");
       }
       rethrow;
     }

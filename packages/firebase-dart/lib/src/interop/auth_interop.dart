@@ -189,7 +189,7 @@ abstract class ApplicationVerifierJsImpl {
 class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
   external factory RecaptchaVerifierJsImpl(container,
       [Object parameters, AppJsImpl app]);
-  external clear();
+  external void clear();
   external PromiseJsImpl<num> render();
 }
 

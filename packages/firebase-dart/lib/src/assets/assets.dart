@@ -37,12 +37,12 @@ Future config() async {
     var response = await sw.fetch('packages/firebase/src/assets/config.json');
     if (response.status > 399) {
       throw StateError(
-          "Problem with server: ${response.status} ${response.body}");
+          'Problem with server: ${response.status} ${response.body}');
     }
 
     _configVal = jsonDecode(await response.text());
   } catch (e) {
-    print("Error getting `config.json`. Make sure it exists.");
+    print('Error getting `config.json`. Make sure it exists.');
     rethrow;
   }
 }

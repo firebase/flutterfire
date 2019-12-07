@@ -396,7 +396,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// Returns non-null created [Query].
   Query endAt({DocumentSnapshot snapshot, List<dynamic> fieldValues}) =>
       Query.fromJsObject(
-          _wrapPaginatingFunctionCall("endAt", snapshot, fieldValues));
+          _wrapPaginatingFunctionCall('endAt', snapshot, fieldValues));
 
   /// Creates a new [Query] where the results end before the provided document
   /// (exclusive). The end position is relative to the order of the query.
@@ -410,7 +410,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// Returns non-null created [Query].
   Query endBefore({DocumentSnapshot snapshot, List<dynamic> fieldValues}) =>
       Query.fromJsObject(
-          _wrapPaginatingFunctionCall("endBefore", snapshot, fieldValues));
+          _wrapPaginatingFunctionCall('endBefore', snapshot, fieldValues));
 
   /// Executes the query and returns the results as a [QuerySnapshot].
   ///
@@ -495,13 +495,13 @@ class Query<T extends firestore_interop.QueryJsImpl>
   ///
   /// Returns non-null created [Query].
   ///
-  ///     firestore().collection("cities")
-  ///         .orderBy("name")
-  ///         .orderBy("state")
-  ///         .startAfter(fieldValues: ["Springfield", "Missouri"]);
+  ///     firestore().collection('cities')
+  ///         .orderBy('name')
+  ///         .orderBy('state')
+  ///         .startAfter(fieldValues: ['Springfield', 'Missouri']);
   Query startAfter({DocumentSnapshot snapshot, List<dynamic> fieldValues}) =>
       Query.fromJsObject(
-          _wrapPaginatingFunctionCall("startAfter", snapshot, fieldValues));
+          _wrapPaginatingFunctionCall('startAfter', snapshot, fieldValues));
 
   /// Creates a new [Query] where the results start at the provided document
   /// (inclusive). The starting position is relative to the order of the query.
@@ -514,13 +514,13 @@ class Query<T extends firestore_interop.QueryJsImpl>
   ///
   /// Returns non-null created [Query].
   ///
-  ///     firestore().collection("cities")
-  ///         .orderBy("name")
-  ///         .orderBy("state")
-  ///         .startAt(fieldValues: ["Springfield", "Missouri"]);
+  ///     firestore().collection('cities')
+  ///         .orderBy('name')
+  ///         .orderBy('state')
+  ///         .startAt(fieldValues: ['Springfield', 'Missouri']);
   Query startAt({DocumentSnapshot snapshot, List<dynamic> fieldValues}) =>
       Query.fromJsObject(
-          _wrapPaginatingFunctionCall("startAt", snapshot, fieldValues));
+          _wrapPaginatingFunctionCall('startAt', snapshot, fieldValues));
 
   /// Creates a new [Query] that returns only documents that include the
   /// specified fields and where the values satisfy the constraints provided.
@@ -540,11 +540,11 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// Calls js paginating [method] with [DocumentSnapshot] or List of [fieldValues].
   /// We need to call this method in all paginating methods to fix that Dart
   /// doesn't support varargs - we need to use [List] to call js function.
-  _wrapPaginatingFunctionCall(
+  S _wrapPaginatingFunctionCall<S>(
       String method, DocumentSnapshot snapshot, List<dynamic> fieldValues) {
     if (snapshot == null && fieldValues == null) {
       throw ArgumentError(
-          "Please provide either snapshot or fieldValues parameter.");
+          'Please provide either snapshot or fieldValues parameter.');
     }
 
     var args = (snapshot != null)
@@ -873,12 +873,12 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
 abstract class _Updatable {
   /// Calls js [:update():] method on [jsObject] with [data] or list of
   /// [fieldsAndValues] and optionally [documentRef].
-  _wrapUpdateFunctionCall(jsObject, Map<String, dynamic> data,
+  T _wrapUpdateFunctionCall<T>(jsObject, Map<String, dynamic> data,
       List< /*String|FieldPath|dynamic*/ dynamic> fieldsAndValues,
       [DocumentReference documentRef]) {
     if (data == null && fieldsAndValues == null) {
       throw ArgumentError(
-          "Please provide either data or fieldsAndValues parameter.");
+          'Please provide either data or fieldsAndValues parameter.');
     }
 
     var args = (data != null)
@@ -891,7 +891,7 @@ abstract class _Updatable {
     if (documentRef != null) {
       args.insert(0, documentRef.jsObject);
     }
-    return callMethod(jsObject, "update", args);
+    return callMethod(jsObject, 'update', args);
   }
 }
 
@@ -925,7 +925,7 @@ class _FieldValueArrayUnion extends _FieldValueArray {
   _FieldValueArrayUnion(List elements) : super(elements);
 
   @override
-  _jsify() {
+  firestore_interop.FieldValue _jsify() {
     // This uses var arg so cannot use js package
     return callMethod(
         firestore_interop.fieldValues, 'arrayUnion', jsifyList(elements));
@@ -939,7 +939,7 @@ class _FieldValueArrayRemove extends _FieldValueArray {
   _FieldValueArrayRemove(List elements) : super(elements);
 
   @override
-  _jsify() {
+  firestore_interop.FieldValue _jsify() {
     // This uses var arg so cannot use js package
     return callMethod(
         firestore_interop.fieldValues, 'arrayRemove', jsifyList(elements));

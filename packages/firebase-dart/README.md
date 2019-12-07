@@ -73,7 +73,7 @@ void main() {
     storageBucket: "YourStorageBucket");
 
   Database db = database();
-  DatabaseReference ref = db.ref("messages");
+  DatabaseReference ref = db.ref('messages');
 
   ref.onValue.listen((e) {
     DataSnapshot datasnapshot = e.snapshot;
@@ -97,7 +97,7 @@ void main() {
     storageBucket: "YourStorageBucket");
 
   fs.Firestore store = firestore();
-  fs.CollectionReference ref = store.collection("messages");
+  fs.CollectionReference ref = store.collection('messages');
 
   ref.onSnapshot.listen((querySnapshot) {
     querySnapshot.docChanges().forEach((change) {

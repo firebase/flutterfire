@@ -170,7 +170,7 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
   /// Sends an e-mail verification to a user.
   ///
   /// The optional parameter [actionCodeSettings] is the action code settings.
-  /// If specified, the state/continue URL will be set as the "continueUrl"
+  /// If specified, the state/continue URL will be set as the 'continueUrl'
   /// parameter in the email verification link.
   /// The default email verification landing page will use this to display
   /// a link to go back to the app if it is installed.
@@ -443,7 +443,7 @@ class Auth extends JsObjectWrapper<AuthJsImpl> {
   /// To confirm password reset, use the [Auth.confirmPasswordReset].
   ///
   /// The optional parameter [actionCodeSettings] is the action code settings.
-  /// If specified, the state/continue URL will be set as the "continueUrl"
+  /// If specified, the state/continue URL will be set as the 'continueUrl'
   /// parameter in the password reset link.
   /// The default password reset landing page will use this to display
   /// a link to go back to the app if it is installed.
@@ -825,7 +825,7 @@ class PhoneAuthProvider extends AuthProvider<PhoneAuthProviderJsImpl> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.ApplicationVerifier>
 abstract class ApplicationVerifier<T extends ApplicationVerifierJsImpl>
     extends JsObjectWrapper<T> {
-  /// Returns the type of application verifier (e.g. "recaptcha").
+  /// Returns the type of application verifier (e.g. 'recaptcha').
   String get type => jsObject.type;
 
   /// Creates a new ApplicationVerifier from a [jsObject].
@@ -860,13 +860,13 @@ class RecaptchaVerifier extends ApplicationVerifier<RecaptchaVerifierJsImpl> {
   /// The [app] is the corresponding Firebase app.
   /// If none is provided, the default Firebase App instance is used.
   ///
-  ///     verifier = new fb.RecaptchaVerifier("register", {
-  ///       "size": "invisible",
-  ///       "callback": (resp) {
-  ///         print("Successful reCAPTCHA response");
+  ///     verifier = new fb.RecaptchaVerifier('register', {
+  ///       'size': 'invisible',
+  ///       'callback': (resp) {
+  ///         print('Successful reCAPTCHA response');
   ///       },
-  ///       "expired-callback": () {
-  ///         print("Response expired");
+  ///       'expired-callback': () {
+  ///         print('Response expired');
   ///       }
   ///     });
   factory RecaptchaVerifier(container,
@@ -884,7 +884,7 @@ class RecaptchaVerifier extends ApplicationVerifier<RecaptchaVerifierJsImpl> {
       : super.fromJsObject(jsObject);
 
   /// Clears the reCAPTCHA widget from the page and destroys the current instance.
-  clear() => jsObject.clear();
+  void clear() => jsObject.clear();
 
   /// Renders the reCAPTCHA widget on the page.
   /// Returns a Future that resolves with the reCAPTCHA widget ID.

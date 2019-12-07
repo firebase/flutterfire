@@ -4,7 +4,7 @@ import 'dart:html';
 import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase/src/assets/assets.dart';
 
-main() async {
+void main() async {
   //Use for firebase package development only
   await config();
 
@@ -33,24 +33,24 @@ class AuthApp {
   final DivElement registeredUser, verifyEmailContainer;
 
   AuthApp()
-      : this.auth = fb.auth(),
-        this.email = querySelector("#email"),
-        this.password = querySelector("#password"),
-        this.authInfo = querySelector("#auth_info"),
-        this.error = querySelector("#register_form p"),
-        this.logout = querySelector("#logout_btn"),
-        this.registerForm = querySelector("#register_form"),
-        this.persistenceState = querySelector("#persistent_state"),
-        this.verifyEmail = querySelector('#verify_email'),
-        this.verifyEmailLanguage = querySelector('#verify_email_language'),
-        this.registeredUser = querySelector("#registered_user"),
-        this.verifyEmailContainer = querySelector("#verify_email_container") {
+      : auth = fb.auth(),
+        email = querySelector('#email'),
+        password = querySelector('#password'),
+        authInfo = querySelector('#auth_info'),
+        error = querySelector('#register_form p'),
+        logout = querySelector('#logout_btn'),
+        registerForm = querySelector('#register_form'),
+        persistenceState = querySelector('#persistent_state'),
+        verifyEmail = querySelector('#verify_email'),
+        verifyEmailLanguage = querySelector('#verify_email_language'),
+        registeredUser = querySelector('#registered_user'),
+        verifyEmailContainer = querySelector('#verify_email_container') {
     logout.onClick.listen((e) {
       e.preventDefault();
       auth.signOut();
     });
 
-    this.registerForm.onSubmit.listen((e) {
+    registerForm.onSubmit.listen((e) {
       e.preventDefault();
       var emailValue = email.value.trim();
       var passwordvalue = password.value.trim();
@@ -75,7 +75,7 @@ class AuthApp {
         // for this example, authDomain because it is whitelisted by default
         // More info: https://firebase.google.com/docs/auth/web/passing-state-in-email-actions
         await auth.currentUser.sendEmailVerification(
-            fb.ActionCodeSettings(url: "https://$authDomain"));
+            fb.ActionCodeSettings(url: 'https://$authDomain'));
         verifyEmail.text = 'Verification email sent!';
       } catch (e) {
         verifyEmail
@@ -85,7 +85,7 @@ class AuthApp {
     });
   }
 
-  _registerUser(String email, String password) async {
+  void _registerUser(String email, String password) async {
     if (email.isNotEmpty && password.isNotEmpty) {
       var trySignin = false;
       try {
@@ -94,7 +94,7 @@ class AuthApp {
         await auth.setPersistence(selectedPersistence);
         await auth.createUserWithEmailAndPassword(email, password);
       } on fb.FirebaseError catch (e) {
-        if (e.code == "auth/email-already-in-use") {
+        if (e.code == 'auth/email-already-in-use') {
           trySignin = true;
         }
       } catch (e) {
@@ -109,7 +109,7 @@ class AuthApp {
         }
       }
     } else {
-      error.text = "Please fill correct e-mail and password.";
+      error.text = 'Please fill correct e-mail and password.';
     }
   }
 
@@ -118,11 +118,11 @@ class AuthApp {
 
   void _setLayout(fb.User user) {
     if (user != null) {
-      registerForm.style.display = "none";
-      registeredUser.style.display = "block";
-      email.value = "";
-      password.value = "";
-      error.text = "";
+      registerForm.style.display = 'none';
+      registeredUser.style.display = 'block';
+      email.value = '';
+      password.value = '';
+      error.text = '';
 
       var data = <String, dynamic>{
         'email': user.email,
@@ -139,7 +139,7 @@ class AuthApp {
           row.addCell()
             ..text = k
             ..classes.add('header');
-          row.addCell().text = "$v";
+          row.addCell().text = '$v';
         }
       });
 
@@ -147,10 +147,10 @@ class AuthApp {
       print(const JsonEncoder.withIndent(' ').convert(user));
 
       verifyEmailContainer.style.display =
-          user.emailVerified ? "none" : "block";
+          user.emailVerified ? 'none' : 'block';
     } else {
-      registerForm.style.display = "block";
-      registeredUser.style.display = "none";
+      registerForm.style.display = 'block';
+      registeredUser.style.display = 'none';
 
       authInfo.children.clear();
     }

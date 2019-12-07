@@ -101,9 +101,9 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// but the [ThenableReference] is still returned and can be used for later
   /// operation.
   ///
-  ///     DatabaseReference ref = firebase.database().ref("messages");
+  ///     DatabaseReference ref = firebase.database().ref('messages');
   ///     ThenableReference childRef = ref.push();
-  ///     childRef.set({"text": "Hello"});
+  ///     childRef.set({'text': 'Hello'});
   ///
   /// This method returns [ThenableReference], [DatabaseReference]
   /// with a [Future] property.
@@ -145,11 +145,11 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// The provided [transactionUpdate] function is used to update
   /// the current value into a new value.
   ///
-  ///     DatabaseReference ref = firebase.database().ref("numbers");
+  ///     DatabaseReference ref = firebase.database().ref('numbers');
   ///     ref.set(2);
   ///     ref.transaction((currentValue) => currentValue * 2);
   ///
-  ///     var event = await ref.once("value");
+  ///     var event = await ref.once('value');
   ///     print(event.snapshot.val()); //prints 4
   ///
   /// The returned value from [transactionUpdate] function must be a Dart basic
@@ -189,7 +189,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
 /// Example:
 ///
 ///     Database database = firebase.database();
-///     database.ref("messages").onValue.listen((QueryEvent e) {
+///     database.ref('messages').onValue.listen((QueryEvent e) {
 ///       DataSnapshot datasnapshot = e.snapshot;
 ///       //...
 ///     });
@@ -222,21 +222,21 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Stream for a value event. Event is triggered once with the initial
   /// data stored at location, and then again each time the data changes.
-  Stream<QueryEvent> get onValue => _onValue ??= _createStream("value");
+  Stream<QueryEvent> get onValue => _onValue ??= _createStream('value');
 
   Stream<QueryEvent> _onChildAdded;
 
   /// Stream for a child_added event. Event is triggered once for each
   /// initial child at location, and then again every time a new child is added.
   Stream<QueryEvent> get onChildAdded =>
-      _onChildAdded ??= _createStream("child_added");
+      _onChildAdded ??= _createStream('child_added');
 
   Stream<QueryEvent> _onChildRemoved;
 
   /// Stream for a child_removed event. Event is triggered once every time
   /// a child is removed.
   Stream<QueryEvent> get onChildRemoved =>
-      _onChildRemoved ??= _createStream("child_removed");
+      _onChildRemoved ??= _createStream('child_removed');
 
   Stream<QueryEvent> _onChildChanged;
 
@@ -244,14 +244,14 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// stored in a child (or any of its descendants) changes.
   /// Single child_changed event may represent multiple changes to the child.
   Stream<QueryEvent> get onChildChanged =>
-      _onChildChanged ??= _createStream("child_changed");
+      _onChildChanged ??= _createStream('child_changed');
 
   Stream<QueryEvent> _onChildMoved;
 
   /// Stream for a child_moved event. Event is triggered when a child's priority
   /// changes such that its position relative to its siblings changes.
   Stream<QueryEvent> get onChildMoved =>
-      _onChildMoved ??= _createStream("child_moved");
+      _onChildMoved ??= _createStream('child_moved');
 
   /// Creates a new Query from a [jsObject].
   Query.fromJsObject(T jsObject) : super.fromJsObject(jsObject);

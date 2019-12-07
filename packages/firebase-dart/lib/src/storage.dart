@@ -124,7 +124,7 @@ class StorageReference
   /// folder structure. Refer to GCS's List API if you want to learn more.
   ///
   /// To adhere to Firebase Rules's Semantics, Firebase Storage does not
-  /// support objects whose paths end with "/" or contain two consecutive "/"s.
+  /// support objects whose paths end with "/' or contain two consecutive '/"s.
   /// Firebase Storage List API will filter these unsupported objects.
   /// [list()] may fail if there are too many unsupported objects in the bucket.
   Future<ListResult> list(ListOptions options) =>
@@ -369,19 +369,19 @@ class UploadTaskSnapshot
   /// The actual task state.
   TaskState get state {
     switch (jsObject.state) {
-      case "running":
+      case 'running':
         return TaskState.RUNNING;
-      case "paused":
+      case 'paused':
         return TaskState.PAUSED;
-      case "success":
+      case 'success':
         return TaskState.SUCCESS;
-      case "canceled":
+      case 'canceled':
         return TaskState.CANCELED;
-      case "error":
+      case 'error':
         return TaskState.ERROR;
       default:
         throw UnsupportedError(
-            'Unknown state "${jsObject.state}" please file a bug.');
+            "Unknown state '${jsObject.state}' please file a bug.");
     }
   }
 

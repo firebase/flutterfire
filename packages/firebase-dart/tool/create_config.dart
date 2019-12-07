@@ -5,10 +5,10 @@ import 'package:path/path.dart' as p;
 
 final _assetPath = 'lib/src/assets/';
 
-main() {
+void main() {
   // make sure the working dir is the root of the project
   if (!File('pubspec.yaml').existsSync()) {
-    throw StateError("Not in the root! - ${Directory.current}");
+    throw StateError('Not in the root! - ${Directory.current}');
   }
 
   var samplePath = p.join(_assetPath, 'config.json.sample');
@@ -24,11 +24,11 @@ main() {
   }
 
   var vars = [
-    "API_KEY",
-    "AUTH_DOMAIN",
-    "DATABASE_URL",
-    "STORAGE_BUCKET",
-    "PROJECT_ID"
+    'API_KEY',
+    'AUTH_DOMAIN',
+    'DATABASE_URL',
+    'STORAGE_BUCKET',
+    'PROJECT_ID'
   ];
 
   var config = <String, String>{};

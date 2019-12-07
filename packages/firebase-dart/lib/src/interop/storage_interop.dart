@@ -164,7 +164,7 @@ class ListResultJsImpl {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage#.StringFormat>
 @JS()
 class StringFormat {
-  /// Indicates the string should be interpreted "raw", that is, as normal text.
+  /// Indicates the string should be interpreted 'raw', that is, as normal text.
   /// The string will be interpreted as UTF-16, then uploaded as a UTF-8 byte
   /// sequence.
   external static String get RAW;
@@ -187,5 +187,5 @@ class StringFormat {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage#.TaskEvent>.
 @JS()
 abstract class TaskEvent {
-  external static get STATE_CHANGED;
+  external static String get STATE_CHANGED;
 }

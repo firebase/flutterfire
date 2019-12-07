@@ -25,7 +25,7 @@ List<App> get apps => firebase.apps
     .map((dynamic e) => App.getInstance(e))
     .toList();
 
-const String _defaultAppName = "[DEFAULT]";
+const String _defaultAppName = '[DEFAULT]';
 
 /// Creates (and initializes) a Firebase App with API key, auth domain,
 /// database URL and storage bucket.

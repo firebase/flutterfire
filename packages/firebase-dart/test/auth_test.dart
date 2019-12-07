@@ -17,9 +17,9 @@ void print(obj) => core.print(
 
 /// Wait for 500ms
 Future _wait() async {
-  //print("waiting...");
+  //print('waiting...');
   await Future.delayed(const Duration(milliseconds: 500));
-  //print("waited...");
+  //print('waited...');
 }
 
 void main() {
@@ -49,7 +49,7 @@ void main() {
 
     group('Recaptcha', () {
       setUp(() {
-        el = document.createElement("div")..id = "test-recaptcha";
+        el = document.createElement('div')..id = 'test-recaptcha';
         document.body.append(el);
       });
 
@@ -58,29 +58,29 @@ void main() {
       });
 
       test('type', () {
-        var verifier = RecaptchaVerifier("test-recaptcha");
-        expect(verifier.type, "recaptcha");
+        var verifier = RecaptchaVerifier('test-recaptcha');
+        expect(verifier.type, 'recaptcha');
       });
 
       test('render', () async {
-        var verifier = RecaptchaVerifier("test-recaptcha");
+        var verifier = RecaptchaVerifier('test-recaptcha');
         await verifier.render();
 
-        var iframe = document.querySelector("#test-recaptcha iframe");
+        var iframe = document.querySelector('#test-recaptcha iframe');
         expect(iframe, isNotNull);
-        expect(iframe.getAttribute("src"), contains("recaptcha"));
+        expect(iframe.getAttribute('src'), contains('recaptcha'));
       });
 
       test('clear', () async {
-        var verifier = RecaptchaVerifier("test-recaptcha");
+        var verifier = RecaptchaVerifier('test-recaptcha');
         await verifier.render();
 
-        var iframe = document.querySelector("#test-recaptcha iframe");
+        var iframe = document.querySelector('#test-recaptcha iframe');
         expect(iframe, isNotNull);
 
         verifier.clear();
 
-        iframe = document.querySelector("#test-recaptcha iframe");
+        iframe = document.querySelector('#test-recaptcha iframe');
         expect(iframe, isNull);
       });
     });
@@ -300,17 +300,17 @@ void main() {
         lastAuthEventUser = event;
         //print('authstate - $event');
       }, onError: (e, stack) {
-        print("AuthStateError! $e $stack");
+        print('AuthStateError! $e $stack');
       }, onDone: () {
-        //print("done!");
+        //print('done!');
       });
 
       idTokenChangedSubscription = authValue.onIdTokenChanged.listen((event) {
         lastIdTokenChangedUser = event;
       }, onError: (e, stack) {
-        print("IdToken error! $e $stack");
+        print('IdToken error! $e $stack');
       }, onDone: () {
-        //print("done!");
+        //print('done!');
       });
     });
 
@@ -336,7 +336,7 @@ void main() {
 
     test('getIdToken', () async {
       userCredential =
-          await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
+          await authValue.createUserWithEmailAndPassword(userEmail, 'janicka');
 
       var token = await userCredential.user.getIdToken();
 
@@ -363,7 +363,7 @@ void main() {
 
     test('getIdTokenResult', () async {
       userCredential =
-          await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
+          await authValue.createUserWithEmailAndPassword(userEmail, 'janicka');
 
       var token = await userCredential.user.getIdTokenResult();
 
@@ -381,7 +381,7 @@ void main() {
 
     test('create user with email and password', () async {
       userCredential =
-          await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
+          await authValue.createUserWithEmailAndPassword(userEmail, 'janicka');
       expect(userCredential, isNotNull);
       expect(userCredential.user.email, userEmail);
       expect(userCredential.user.phoneNumber, isNull);
@@ -419,7 +419,7 @@ void main() {
       userCredential = await authValue.signInAnonymously();
       expect(userCredential.user.isAnonymous, isTrue);
 
-      var credential = EmailAuthProvider.credential(userEmail, "janicka");
+      var credential = EmailAuthProvider.credential(userEmail, 'janicka');
       var userCred = await userCredential.user.linkWithCredential(credential);
 
       expect(userCred.operationType, 'link');
@@ -430,9 +430,9 @@ void main() {
 
     test('reauthenticateWithCredential', () async {
       userCredential =
-          await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
+          await authValue.createUserWithEmailAndPassword(userEmail, 'janicka');
 
-      var credential = EmailAuthProvider.credential(userEmail, "janicka");
+      var credential = EmailAuthProvider.credential(userEmail, 'janicka');
       var userCred =
           await userCredential.user.reauthenticateWithCredential(credential);
 
@@ -449,8 +449,8 @@ void main() {
 
     test('reauthenticate with bad credential fails', () async {
       userCredential =
-          await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
-      var credential = EmailAuthProvider.credential(userEmail, "something");
+          await authValue.createUserWithEmailAndPassword(userEmail, 'janicka');
+      var credential = EmailAuthProvider.credential(userEmail, 'something');
 
       expect(
         userCredential.user.reauthenticateWithCredential(credential),
@@ -459,21 +459,21 @@ void main() {
       );
     });
 
-    test("signInWithCredential", () async {
+    test('signInWithCredential', () async {
       userCredential =
-          await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
+          await authValue.createUserWithEmailAndPassword(userEmail, 'janicka');
 
       // Firefox takes a second to get the event values that are checked below
       await _wait();
 
-      // at this point, we should have the same refresh tokens for "everything"
+      // at this point, we should have the same refresh tokens for 'everything'
       expect(lastAuthEventUser, isNotNull);
       expect(lastIdTokenChangedUser, isNotNull);
 
       lastAuthEventUser = null;
       lastIdTokenChangedUser = null;
 
-      var credential = EmailAuthProvider.credential(userEmail, "janicka");
+      var credential = EmailAuthProvider.credential(userEmail, 'janicka');
 
       var userCred = await authValue.signInWithCredential(credential);
 
@@ -490,9 +490,9 @@ void main() {
           reason: 'Is updated with signInAndRetrieveDataWithCredential');
     });
 
-    test("signInWithEmailAndPassword", () async {
+    test('signInWithEmailAndPassword', () async {
       var credential =
-          await authValue.createUserWithEmailAndPassword(userEmail, "janicka");
+          await authValue.createUserWithEmailAndPassword(userEmail, 'janicka');
 
       expect(credential.user.email, userEmail);
       expect(credential.additionalUserInfo.isNewUser, isTrue);
@@ -502,7 +502,7 @@ void main() {
       await _wait();
 
       var credential2 =
-          await authValue.signInWithEmailAndPassword(userEmail, "janicka");
+          await authValue.signInWithEmailAndPassword(userEmail, 'janicka');
 
       expect(credential.user.email, credential2.user.email);
       expect(credential2.additionalUserInfo.isNewUser, isFalse);
@@ -528,7 +528,7 @@ void main() {
       authValue = auth();
 
       userCredential = await authValue.createUserWithEmailAndPassword(
-          getTestEmail(), "hesloheslo");
+          getTestEmail(), 'hesloheslo');
       expect(authValue.currentUser, isNotNull);
     });
 
@@ -543,23 +543,23 @@ void main() {
       expect(userCredential, isNotNull);
       expect(userCredential.user.displayName, isNull);
 
-      var profile = UserProfile(displayName: "Other User");
+      var profile = UserProfile(displayName: 'Other User');
       await userCredential.user.updateProfile(profile);
-      expect(userCredential.user.displayName, "Other User");
+      expect(userCredential.user.displayName, 'Other User');
     });
 
     test('toJson', () async {
       expect(userCredential, isNotNull);
 
       var profile =
-          UserProfile(displayName: "Other User", photoURL: "http://google.com");
+          UserProfile(displayName: 'Other User', photoURL: 'http://google.com');
       await userCredential.user.updateProfile(profile);
 
       var userMap = userCredential.user.toJson();
       expect(userMap, isNotNull);
       expect(userMap, isNotEmpty);
-      expect(userMap["displayName"], "Other User");
-      expect(userMap["photoURL"], "http://google.com");
+      expect(userMap['displayName'], 'Other User');
+      expect(userMap['photoURL'], 'http://google.com');
 
       await authValue.signOut();
       await authValue.signInAnonymously();
@@ -568,9 +568,9 @@ void main() {
       userMap = user.toJson();
       expect(userMap, isNotNull);
       expect(userMap, isNotEmpty);
-      expect(userMap["displayName"], isNot("Other User"));
-      expect(userMap["photoURL"], isNot("http://google.com"));
-      expect(userMap["phoneNumber"], isNull);
+      expect(userMap['displayName'], isNot('Other User'));
+      expect(userMap['photoURL'], isNot('http://google.com'));
+      expect(userMap['phoneNumber'], isNull);
     });
   });
 }

@@ -18,7 +18,7 @@ abstract class FunctionsJsImpl {
   external void useFunctionsEmulator(String url);
 }
 
-/// An HttpsCallable is a reference to a "callable" http trigger
+/// An HttpsCallable is a reference to a 'callable' http trigger
 /// in Google Cloud Functions.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.functions.Functions>.

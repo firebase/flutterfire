@@ -3,7 +3,7 @@ import 'dart:html';
 import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase/src/assets/assets.dart';
 
-main() async {
+void main() async {
   //Use for firebase package development only
   await config();
 
@@ -28,46 +28,46 @@ class MessagesApp {
   final FormElement newMessageForm;
 
   MessagesApp()
-      : ref = fb.database().ref("pkg_firebase/examples/database"),
-        messages = querySelector("#messages"),
-        newMessage = querySelector("#new_message"),
+      : ref = fb.database().ref('pkg_firebase/examples/database'),
+        messages = querySelector('#messages'),
+        newMessage = querySelector('#new_message'),
         submit = querySelector('#submit'),
-        newMessageForm = querySelector("#new_message_form") {
+        newMessageForm = querySelector('#new_message_form') {
     newMessage.disabled = false;
 
     submit.disabled = false;
 
-    this.newMessageForm.onSubmit.listen((e) async {
+    newMessageForm.onSubmit.listen((e) async {
       e.preventDefault();
 
       if (newMessage.value.trim().isNotEmpty) {
-        var map = {"text": newMessage.value};
+        var map = {'text': newMessage.value};
 
         try {
           await ref.push(map).future;
-          newMessage.value = "";
+          newMessage.value = '';
         } catch (e) {
-          print("Error while writing to db, $e");
+          print('Error while writing to db, $e');
         }
       }
     });
   }
 
   void showMessages() {
-    this.ref.onChildAdded.listen((e) {
+    ref.onChildAdded.listen((e) {
       var datasnapshot = e.snapshot;
 
-      var spanElement = SpanElement()..text = datasnapshot.val()["text"];
+      var spanElement = SpanElement()..text = datasnapshot.val()['text'];
 
-      var aElementDelete = AnchorElement(href: "#")
-        ..text = "Delete"
+      var aElementDelete = AnchorElement(href: '#')
+        ..text = 'Delete'
         ..onClick.listen((e) {
           e.preventDefault();
           _deleteItem(datasnapshot);
         });
 
-      var aElementUpdate = AnchorElement(href: "#")
-        ..text = "To Uppercase"
+      var aElementUpdate = AnchorElement(href: '#')
+        ..text = 'To Uppercase'
         ..onClick.listen((e) {
           e.preventDefault();
           _uppercaseItem(datasnapshot);
@@ -81,19 +81,19 @@ class MessagesApp {
       messages.append(element);
     });
 
-    this.ref.onChildChanged.listen((e) {
+    ref.onChildChanged.listen((e) {
       var datasnapshot = e.snapshot;
-      var element = querySelector("#${datasnapshot.key} span");
+      var element = querySelector('#${datasnapshot.key} span');
 
       if (element != null) {
-        element.text = datasnapshot.val()["text"];
+        element.text = datasnapshot.val()['text'];
       }
     });
 
-    this.ref.onChildRemoved.listen((e) {
+    ref.onChildRemoved.listen((e) {
       var datasnapshot = e.snapshot;
 
-      var element = querySelector("#${datasnapshot.key}");
+      var element = querySelector('#${datasnapshot.key}');
 
       if (element != null) {
         element.remove();
@@ -101,23 +101,23 @@ class MessagesApp {
     });
   }
 
-  _deleteItem(fb.DataSnapshot datasnapshot) async {
+  Future _deleteItem(fb.DataSnapshot datasnapshot) async {
     try {
-      await this.ref.child(datasnapshot.key).remove();
+      await ref.child(datasnapshot.key).remove();
     } catch (e) {
-      print("Error while deleting item, $e");
+      print('Error while deleting item, $e');
     }
   }
 
-  _uppercaseItem(fb.DataSnapshot datasnapshot) async {
+  void _uppercaseItem(fb.DataSnapshot datasnapshot) async {
     var value = datasnapshot.val();
-    var valueUppercase = value["text"].toString().toUpperCase();
-    value["text"] = valueUppercase;
+    var valueUppercase = value['text'].toString().toUpperCase();
+    value['text'] = valueUppercase;
 
     try {
-      await this.ref.child(datasnapshot.key).update(value);
+      await ref.child(datasnapshot.key).update(value);
     } catch (e) {
-      print("Error while updating item, $e");
+      print('Error while updating item, $e');
     }
   }
 }

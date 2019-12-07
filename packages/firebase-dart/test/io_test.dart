@@ -19,7 +19,7 @@ void main() {
 
   setUp(() {
     var path = validDatePath();
-    testUri = "$databaseUri/$path.json";
+    testUri = '$databaseUri/$path.json';
   });
 
   tearDown(() async {
@@ -33,17 +33,17 @@ void main() {
     }
   });
 
-  test("never-accessed path is null", () async {
+  test('never-accessed path is null', () async {
     var response = await fbClient.get(testUri);
     expect(response, isNull);
   });
 
-  test("Uri is fine, too", () async {
+  test('Uri is fine, too', () async {
     var response = await fbClient.get(Uri.parse(testUri));
     expect(response, isNull);
   });
 
-  test("put", () async {
+  test('put', () async {
     var response = await fbClient.put(testUri, 'bob');
     expect(response, 'bob');
 
@@ -51,7 +51,7 @@ void main() {
     expect(response, 'bob');
   });
 
-  test("post", () async {
+  test('post', () async {
     var response = await fbClient.post(testUri, 'bob') as Map;
     expect(response, contains('name'));
 
@@ -61,7 +61,7 @@ void main() {
     expect(response, {key: 'bob'});
   });
 
-  test("patch", () async {
+  test('patch', () async {
     var response = await fbClient.patch(testUri, {'someNewKey': 'bob'}) as Map;
     expect(response, contains('someNewKey'));
 

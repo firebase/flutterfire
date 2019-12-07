@@ -8,7 +8,7 @@ void main() {
     await config();
   });
 
-  test("firebase.js not loaded throws exception", () {
+  test('firebase.js not loaded throws exception', () {
     expect(
         () => fb.initializeApp(
             apiKey: apiKey,

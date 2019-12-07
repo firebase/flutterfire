@@ -4,7 +4,7 @@ import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase/firestore.dart';
 import 'package:firebase/src/assets/assets.dart';
 
-main() async {
+void main() async {
   //Use for firebase package development only
   await config();
 
@@ -32,13 +32,13 @@ class MessagesApp {
   final ButtonElement disableNetwork;
 
   MessagesApp()
-      : ref = fb.firestore().collection("pkg_firestore"),
-        messages = querySelector("#messages"),
-        newMessage = querySelector("#new_message"),
+      : ref = fb.firestore().collection('pkg_firestore'),
+        messages = querySelector('#messages'),
+        newMessage = querySelector('#new_message'),
         submit = querySelector('#submit'),
-        newMessageForm = querySelector("#new_message_form"),
-        disableNetwork = querySelector("#disable"),
-        enableNetwork = querySelector("#enable") {
+        newMessageForm = querySelector('#new_message_form'),
+        disableNetwork = querySelector('#disable'),
+        enableNetwork = querySelector('#enable') {
     newMessage.disabled = false;
 
     submit.disabled = false;
@@ -55,35 +55,35 @@ class MessagesApp {
       enableNetwork.hidden = true;
     });
 
-    this.newMessageForm.onSubmit.listen((e) async {
+    newMessageForm.onSubmit.listen((e) async {
       e.preventDefault();
 
       if (newMessage.value.trim().isNotEmpty) {
         // store also created at for purposes of ordering
-        var map = {"text": newMessage.value, "createdAt": DateTime.now()};
+        var map = {'text': newMessage.value, 'createdAt': DateTime.now()};
 
         try {
-          newMessage.value = "";
+          newMessage.value = '';
           await ref.add(map);
         } catch (e) {
-          print("Error while writing document, $e");
+          print('Error while writing document, $e');
         }
       }
     });
   }
 
-  showMessages() {
-    this.ref.orderBy("createdAt").onSnapshot.listen((querySnapshot) {
+  void showMessages() {
+    ref.orderBy('createdAt').onSnapshot.listen((querySnapshot) {
       for (var change in querySnapshot.docChanges()) {
         var docSnapshot = change.doc;
         switch (change.type) {
-          case "added":
+          case 'added':
             _renderItemView(docSnapshot);
             break;
-          case "removed":
+          case 'removed':
             _removeItemView(docSnapshot);
             break;
-          case "modified":
+          case 'modified':
             _modifyItemView(docSnapshot);
             break;
         }
@@ -91,64 +91,64 @@ class MessagesApp {
     });
   }
 
-  _renderItemView(DocumentSnapshot docSnapshot) {
-    var spanElement = SpanElement()..text = docSnapshot.data()["text"];
+  void _renderItemView(DocumentSnapshot docSnapshot) {
+    var spanElement = SpanElement()..text = docSnapshot.data()['text'];
 
-    var aElementDelete = AnchorElement(href: "#")
-      ..text = "Delete"
+    var aElementDelete = AnchorElement(href: '#')
+      ..text = 'Delete'
       ..onClick.listen((e) {
         e.preventDefault();
         _deleteItem(docSnapshot);
       });
 
-    var aElementUpdate = AnchorElement(href: "#")
-      ..text = "To Uppercase"
+    var aElementUpdate = AnchorElement(href: '#')
+      ..text = 'To Uppercase'
       ..onClick.listen((e) {
         e.preventDefault();
         _uppercaseItem(docSnapshot);
       });
 
     var element = LIElement()
-      ..id = "item-${docSnapshot.id}"
+      ..id = 'item-${docSnapshot.id}'
       ..append(spanElement)
       ..append(aElementDelete)
       ..append(aElementUpdate);
     messages.append(element);
   }
 
-  _removeItemView(DocumentSnapshot docSnapshot) {
-    var element = querySelector("#item-${docSnapshot.id}");
+  void _removeItemView(DocumentSnapshot docSnapshot) {
+    var element = querySelector('#item-${docSnapshot.id}');
 
     if (element != null) {
       element.remove();
     }
   }
 
-  _modifyItemView(DocumentSnapshot docSnapshot) {
-    var element = querySelector("#item-${docSnapshot.id} span");
+  void _modifyItemView(DocumentSnapshot docSnapshot) {
+    var element = querySelector('#item-${docSnapshot.id} span');
 
     if (element != null) {
-      element.text = docSnapshot.data()["text"];
+      element.text = docSnapshot.data()['text'];
     }
   }
 
-  _deleteItem(DocumentSnapshot docSnapshot) async {
+  Future _deleteItem(DocumentSnapshot docSnapshot) async {
     try {
-      await this.ref.doc(docSnapshot.id).delete();
+      await ref.doc(docSnapshot.id).delete();
     } catch (e) {
-      print("Error while deleting item, $e");
+      print('Error while deleting item, $e');
     }
   }
 
-  _uppercaseItem(DocumentSnapshot docSnapshot) async {
+  Future _uppercaseItem(DocumentSnapshot docSnapshot) async {
     var value = docSnapshot.data();
-    var valueUppercase = value["text"].toString().toUpperCase();
-    value["text"] = valueUppercase;
+    var valueUppercase = value['text'].toString().toUpperCase();
+    value['text'] = valueUppercase;
 
     try {
-      await this.ref.doc(docSnapshot.id).update(data: value);
+      await ref.doc(docSnapshot.id).update(data: value);
     } catch (e) {
-      print("Error while updating item, $e");
+      print('Error while updating item, $e');
     }
   }
 }

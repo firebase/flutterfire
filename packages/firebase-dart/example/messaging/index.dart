@@ -7,7 +7,7 @@ import 'package:firebase/src/assets/assets.dart';
 import 'package:http/browser_client.dart';
 import 'package:service_worker/window.dart' as sw;
 
-main() async {
+void main() async {
   //Use for firebase package development only
   await config();
 
@@ -32,10 +32,10 @@ class MessagesApp {
   final InputElement permissionInput;
 
   MessagesApp()
-      : tokenInput = document.querySelector("#token"),
+      : tokenInput = document.querySelector('#token'),
         newNotification = document.querySelector('#new_notification'),
-        payloadData = document.querySelector("#payload_data"),
-        permissionInput = document.querySelector("#permission");
+        payloadData = document.querySelector('#payload_data'),
+        permissionInput = document.querySelector('#permission');
 
   Future showMessages() async {
     await sw.register('sw.dart.js');
@@ -64,12 +64,12 @@ class MessagesApp {
               'Authorization': 'key=$serverKey',
             },
             body: jsonEncode({
-              "notification": {
-                "title": "New demo message!",
-                "body": "There is a new message in Messaging Demo",
+              'notification': {
+                'title': 'New demo message!',
+                'body': 'There is a new message in Messaging Demo',
               },
-              "data": {"Current time": DateTime.now().toIso8601String()},
-              "to": token
+              'data': {'Current time': DateTime.now().toIso8601String()},
+              'to': token
             }));
       });
     } catch (e) {

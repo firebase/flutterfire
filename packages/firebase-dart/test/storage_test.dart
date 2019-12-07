@@ -104,7 +104,7 @@ void main() {
       expect(md.customMetadata, isNull);
     });
 
-    group("List API", () {
+    group('List API', () {
       StorageReference subfolder;
       Iterable<StorageReference> refs;
 

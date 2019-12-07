@@ -3,7 +3,7 @@ import 'dart:html';
 import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase/src/assets/assets.dart';
 
-main() async {
+void main() async {
   //Use for firebase package development only
   await config();
 
@@ -25,22 +25,22 @@ class ImageUploadApp {
   final InputElement _uploadImage;
 
   ImageUploadApp()
-      : ref = fb.storage().ref("pkg_firebase/examples/storage"),
-        _uploadImage = querySelector("#upload_image") {
+      : ref = fb.storage().ref('pkg_firebase/examples/storage'),
+        _uploadImage = querySelector('#upload_image') {
     _uploadImage.disabled = false;
 
     _uploadImage.onChange.listen((e) async {
       e.preventDefault();
       var file = (e.target as FileUploadInputElement).files[0];
 
-      var customMetadata = {"location": "Prague", "owner": "You"};
+      var customMetadata = {'location': 'Prague', 'owner': 'You'};
       var uploadTask = ref.child(file.name).put(
           file,
           fb.UploadMetadata(
               contentType: file.type, customMetadata: customMetadata));
       uploadTask.onStateChanged.listen((e) {
-        querySelector("#message").text =
-            "Transfered ${e.bytesTransferred}/${e.totalBytes}...";
+        querySelector('#message').text =
+            'Transfered ${e.bytesTransferred}/${e.totalBytes}...';
       });
 
       try {
@@ -49,7 +49,7 @@ class ImageUploadApp {
         var image = ImageElement(src: filePath.toString());
         document.body.append(image);
         var metadata = snapshot.metadata.customMetadata;
-        querySelector("#message").text = "Metadata: ${metadata.toString()}";
+        querySelector('#message').text = 'Metadata: ${metadata.toString()}';
       } catch (e) {
         print(e);
       }

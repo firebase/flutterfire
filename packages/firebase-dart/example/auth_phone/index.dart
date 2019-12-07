@@ -4,7 +4,7 @@ import 'dart:html';
 import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase/src/assets/assets.dart';
 
-main() async {
+void main() async {
   //Use for firebase package development only
   await config();
 
@@ -36,29 +36,29 @@ class PhoneAuthApp {
   fb.ConfirmationResult confirmationResult;
 
   PhoneAuthApp()
-      : this.auth = fb.auth(),
-        this.logout = querySelector("#logout_btn"),
-        this.error = querySelector(".error"),
-        this.authInfo = querySelector("#auth_info"),
-        this._phoneElement = querySelector("#phone"),
-        this._codeElement = querySelector("#code"),
-        this.registerForm = querySelector("#register_form"),
-        this.verificationForm = querySelector("#verification_form"),
-        this._registerSubmit = querySelector('#register'),
-        this._verifySubmit = querySelector('#verify') {
+      : auth = fb.auth(),
+        logout = querySelector('#logout_btn'),
+        error = querySelector('.error'),
+        authInfo = querySelector('#auth_info'),
+        _phoneElement = querySelector('#phone'),
+        _codeElement = querySelector('#code'),
+        registerForm = querySelector('#register_form'),
+        verificationForm = querySelector('#verification_form'),
+        _registerSubmit = querySelector('#register'),
+        _verifySubmit = querySelector('#verify') {
     logout.onClick.listen((e) {
       e.preventDefault();
       auth.signOut();
       _resetVerifier();
     });
 
-    this.registerForm.onSubmit.listen((e) {
+    registerForm.onSubmit.listen((e) {
       e.preventDefault();
       var phoneValue = _phoneElement.value.trim();
       _registerUser(phoneValue);
     });
 
-    this.verificationForm.onSubmit.listen((e) {
+    verificationForm.onSubmit.listen((e) {
       e.preventDefault();
       var codeValue = _codeElement.value.trim();
       _verifyUser(codeValue);
@@ -75,36 +75,36 @@ class PhoneAuthApp {
     auth.onAuthStateChanged.listen(_setLayout);
   }
 
-  _initVerifier() {
+  void _initVerifier() {
     // This is anonymous recaptcha - size must be defined
-    verifier = fb.RecaptchaVerifier("register", {
-      "size": "invisible",
-      "callback": (resp) {
-        print("reCAPTCHA solved, allow signInWithPhoneNumber.");
+    verifier = fb.RecaptchaVerifier('register', {
+      'size': 'invisible',
+      'callback': (resp) {
+        print('reCAPTCHA solved, allow signInWithPhoneNumber.');
       },
-      "expired-callback": () {
-        print("Response expired. Ask user to solve reCAPTCHA again.");
+      'expired-callback': () {
+        print('Response expired. Ask user to solve reCAPTCHA again.');
       }
     });
 
     // Use this if you want to use recaptcha widget directly
-    //verifier = new fb.RecaptchaVerifier("recaptcha-container")..render();
+    //verifier = new fb.RecaptchaVerifier('recaptcha-container')..render();
   }
 
-  _resetVerifier() {
+  void _resetVerifier() {
     verifier.clear();
     _initVerifier();
   }
 
-  _registerUser(String phone) async {
+  void _registerUser(String phone) async {
     if (phone.isNotEmpty) {
       try {
         _registerSubmit.disabled = _phoneElement.disabled = true;
         error.text = 'Signing in...';
         confirmationResult = await auth.signInWithPhoneNumber(phone, verifier);
         error.text = '';
-        verificationForm.style.display = "block";
-        registerForm.style.display = "none";
+        verificationForm.style.display = 'block';
+        registerForm.style.display = 'none';
       } catch (e, stack) {
         window.console.error(e);
         window.console.error(stack);
@@ -113,11 +113,11 @@ class PhoneAuthApp {
         _registerSubmit.disabled = _phoneElement.disabled = false;
       }
     } else {
-      error.text = "Please fill correct phone number.";
+      error.text = 'Please fill correct phone number.';
     }
   }
 
-  _verifyUser(String code) async {
+  Future<void> _verifyUser(String code) async {
     if (code.isNotEmpty && confirmationResult != null) {
       try {
         _verifySubmit.disabled = _codeElement.disabled = true;
@@ -132,27 +132,27 @@ class PhoneAuthApp {
         _verifySubmit.disabled = _codeElement.disabled = false;
       }
     } else {
-      error.text = "Please fill correct verification code.";
+      error.text = 'Please fill correct verification code.';
     }
   }
 
   void _setLayout(fb.User user) {
     if (user != null) {
-      registerForm.style.display = "none";
-      verificationForm.style.display = "none";
-      logout.style.display = "block";
-      _phoneElement.value = "";
-      _codeElement.value = "";
-      error.text = "";
-      authInfo.style.display = "block";
+      registerForm.style.display = 'none';
+      verificationForm.style.display = 'none';
+      logout.style.display = 'block';
+      _phoneElement.value = '';
+      _codeElement.value = '';
+      error.text = '';
+      authInfo.style.display = 'block';
 
       var data = <String, dynamic>{
-        "email": user.email,
-        "emailVerified": user.emailVerified,
-        "isAnonymous": user.isAnonymous,
-        "phoneNumber": user.phoneNumber,
-        "metadata.creationTime": user.metadata.creationTime,
-        "metadata.lastSignInTime": user.metadata.lastSignInTime
+        'email': user.email,
+        'emailVerified': user.emailVerified,
+        'isAnonymous': user.isAnonymous,
+        'phoneNumber': user.phoneNumber,
+        'metadata.creationTime': user.metadata.creationTime,
+        'metadata.lastSignInTime': user.metadata.lastSignInTime
       };
 
       data.forEach((k, v) {
@@ -161,17 +161,17 @@ class PhoneAuthApp {
 
           row.addCell()
             ..text = k
-            ..classes.add("header");
-          row.addCell().text = "$v";
+            ..classes.add('header');
+          row.addCell().text = '$v';
         }
       });
 
-      print("User.toJson:");
+      print('User.toJson:');
       print(const JsonEncoder.withIndent(' ').convert(user));
     } else {
-      registerForm.style.display = "block";
-      authInfo.style.display = "none";
-      logout.style.display = "none";
+      registerForm.style.display = 'block';
+      authInfo.style.display = 'none';
+      logout.style.display = 'none';
       authInfo.children.clear();
     }
   }
