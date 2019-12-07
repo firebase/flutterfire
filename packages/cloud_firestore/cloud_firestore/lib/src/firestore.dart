@@ -89,7 +89,8 @@ class Firestore {
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds');
 
-    // Wrap the transactionHandler into something that can be passed to the Platform implementation
+    // Wrap the incoming [TransactionHandler] into something that can be passed
+    // to the Platform implementation.
     final PlatformTransactionHandler handler = (int transactionId) async {
       Transaction transaction = Transaction(transactionId, this);
       final dynamic result = await transactionHandler(transaction);
@@ -97,7 +98,6 @@ class Firestore {
       return result;
     };
 
-    // Move to a runTransaction method in the method channel!
     final Map<String, dynamic> result = await platform.runTransaction(
       app.name,
       transactionHandler: handler,
