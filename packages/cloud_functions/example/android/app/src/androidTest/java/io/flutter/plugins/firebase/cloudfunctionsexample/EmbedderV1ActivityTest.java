@@ -11,5 +11,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(FlutterRunner.class)
 public class EmbedderV1ActivityTest {
-    @Rule public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(EmbedderV1ActivityTest.class);
+  @Rule
+  public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(EmbedderV1ActivityTest.class);
 }
