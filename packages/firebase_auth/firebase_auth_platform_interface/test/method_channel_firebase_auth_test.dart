@@ -538,6 +538,35 @@ void main() {
       );
     });
 
+    test('PlatformOAuthProvider signInWithCredential', () async {
+      const AuthCredential credential = PlatformOAuthCredential(
+        providerId: "generic_provider.com",
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final PlatformAuthResult result =
+          await auth.signInWithCredential(appName, credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'signInWithCredential',
+            arguments: <String, dynamic>{
+              'app': appName,
+              'provider': 'generic_provider.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+                'providerId': "generic_provider.com",
+                'rawNonce': null
+              },
+            },
+          ),
+        ],
+      );
+    });
+
     test('PhoneAuthProvider signInWithCredential', () async {
       const AuthCredential credential = PhoneAuthCredential(
         verificationId: kMockVerificationId,
@@ -621,6 +650,35 @@ void main() {
               'data': <String, String>{
                 'idToken': kMockIdToken,
                 'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
+    });
+
+    test('PlatformOAuthProvider reauthenticateWithCredential', () async {
+      const AuthCredential credential = PlatformOAuthCredential(
+        providerId: "generic_provider.com",
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final PlatformAuthResult result =
+          await auth.reauthenticateWithCredential(appName, credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'reauthenticateWithCredential',
+            arguments: <String, dynamic>{
+              'app': appName,
+              'provider': 'generic_provider.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+                'providerId': "generic_provider.com",
+                'rawNonce': null
               },
             },
           ),
@@ -721,6 +779,35 @@ void main() {
               'data': <String, String>{
                 'idToken': kMockIdToken,
                 'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
+    });
+
+    test('PlatformOAuthProvider linkWithCredential', () async {
+      const AuthCredential credential = PlatformOAuthCredential(
+        providerId: "generic_provider.com",
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final PlatformAuthResult result =
+          await auth.linkWithCredential(appName, credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'linkWithCredential',
+            arguments: <String, dynamic>{
+              'app': appName,
+              'provider': 'generic_provider.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+                'providerId': "generic_provider.com",
+                'rawNonce': null
               },
             },
           ),
@@ -1054,6 +1141,24 @@ void main() {
           arguments: <String, String>{
             'app': appName,
             'provider': 'google.com',
+          },
+        ),
+      ]);
+    });
+
+    test('PlatformOAuthProvider unlinkFromProvider', () async {
+      const PlatformOAuthCredential oAuthCredential = PlatformOAuthCredential(
+        providerId: "generic_provider.com",
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      await auth.unlinkFromProvider(appName, oAuthCredential.providerId);
+      expect(log, <Matcher>[
+        isMethodCall(
+          'unlinkFromProvider',
+          arguments: <String, String>{
+            'app': appName,
+            'provider': 'generic_provider.com',
           },
         ),
       ]);
