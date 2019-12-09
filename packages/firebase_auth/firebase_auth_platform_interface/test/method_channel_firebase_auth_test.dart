@@ -210,7 +210,6 @@ void main() {
     });
 
     test('signInAnonymously with null additionalUserInfo', () async {
-      final PlatformAuthResult result = await auth.signInAnonymously(appName);
       MethodChannelFirebaseAuth.channel
           .setMockMethodCallHandler((MethodCall call) async {
         log.add(call);
@@ -218,7 +217,9 @@ void main() {
           'user': kMockUser,
         };
       });
+      final PlatformAuthResult result = await auth.signInAnonymously(appName);
       verifyUser(result.user);
+      expect(result.additionalUserInfo, isNull);
       expect(
         log,
         <Matcher>[
