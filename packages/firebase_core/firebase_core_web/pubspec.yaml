@@ -1,0 +1,31 @@
+name: firebase_core_web
+description: The web implementation of firebase_core
+author: Flutter Team <flutter-dev@googlegroups.com>
+homepage: https://github.com/FirebaseExtended/flutterfire/packages/firebase_core/firebase_core_web
+version: 0.1.0+2
+
+flutter:
+  plugin:
+    platforms:
+      web:
+        pluginClass: FirebaseCoreWeb
+        fileName: firebase_core_web.dart
+
+dependencies:
+  firebase: ^7.0.0
+  firebase_core_platform_interface: ^1.0.0
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  meta: ^1.1.7
+  js: ^0.6.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  firebase_core: ^0.4.2+1
+
+environment:
+  sdk: ">=2.0.0-dev.28.0 <3.0.0"
+  flutter: ">=1.9.1+hotfix.2 <2.0.0"

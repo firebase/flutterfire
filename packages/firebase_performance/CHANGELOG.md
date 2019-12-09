@@ -1,3 +1,24 @@
+## 0.3.1+4
+
+* Skip flaky driver tests.
+
+## 0.3.1+3
+
+* Fixed analyzer warnings about unused fields.
+
+## 0.3.1+2
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.3.1+1
+
+* Remove AndroidX warning.
+
+## 0.3.1
+
+* Support v2 embedding. This will remain compatible with the original embedding and won't require
+app migration.
+
 ## 0.3.0+5
 
 * Update documentation to reflect new repository location.

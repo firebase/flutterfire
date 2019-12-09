@@ -1,8 +1,16 @@
-## 0.4.1+3
+## 0.4.1+5
 
 * Support the v2 Android embedder.
 * Update to AndroidX.
 * Migrate tests to use e2e testing.
+
+## 0.4.1+4
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.4.1+3
+
+* Remove AndroidX warning.
 
 ## 0.4.1+2
 
