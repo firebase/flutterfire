@@ -1,3 +1,7 @@
+## 6.0.5
+
+* Add import for UserNotifications on iOS.
+
 ## 6.0.4
 
 * Support the v2 Android embedding.
