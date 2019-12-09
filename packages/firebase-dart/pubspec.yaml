@@ -21,7 +21,3 @@ dev_dependencies:
   build_runner: ^1.0.0
   build_test: ^0.10.0
   build_web_compilers: '>=1.2.0 <3.0.0'
-
-  # work-around issues with 0.39.2
-  # https://github.com/dart-lang/sdk/issues/39702
-  analyzer: '<0.39.2'
