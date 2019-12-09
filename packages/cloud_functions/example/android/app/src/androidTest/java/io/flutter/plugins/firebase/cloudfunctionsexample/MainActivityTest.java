@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 package io.flutter.plugins.firebase.cloudfunctionsexample;
-\
+
 import androidx.test.rule.ActivityTestRule;
 import dev.flutter.plugins.instrumentationadapter.FlutterRunner;
 import org.junit.Rule;
