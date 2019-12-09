@@ -118,6 +118,15 @@ class FirebaseMessaging {
           PluginUtilities.getCallbackHandle(_fcmSetupBackgroundChannel);
       final CallbackHandle backgroundMessageHandle =
           PluginUtilities.getCallbackHandle(_onBackgroundMessage);
+
+      if (backgroundMessageHandle == null) {
+        throw ArgumentError(
+          '''Failed to setup background message handler! `onBackgroundMessage`
+          should be a TOP-LEVEL OR STATIC FUNCTION and should NOT be tied to a
+          class or an anonymous function.''',
+        );
+      }
+
       _channel.invokeMethod<bool>(
         'FcmDartService#start',
         <String, dynamic>{

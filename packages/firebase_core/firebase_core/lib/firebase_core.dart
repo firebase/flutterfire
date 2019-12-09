@@ -6,10 +6,12 @@ library firebase_core;
 
 import 'dart:async';
 import 'dart:io' show Platform;
-import 'dart:ui' show hashValues;
 
-import 'package:flutter/services.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:meta/meta.dart';
 
+export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show FirebaseOptions;
+
 part 'src/firebase_app.dart';
-part 'src/firebase_options.dart';

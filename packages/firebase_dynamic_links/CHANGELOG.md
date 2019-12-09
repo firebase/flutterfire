@@ -1,3 +1,7 @@
+## 0.5.0+8
+
+* Support v2 embedding. This will remain compatible with the original embedding and won't require app migration.
+
 ## 0.5.0+7
 
 * Add `getDynamicLink` to support expanding from short links.

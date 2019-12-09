@@ -1,3 +1,11 @@
+## 0.4.2+1
+
+* Check `kIsWeb` before checking `Platform.isIos` for the default app name.
+
+## 0.4.2
+
+* Migrate to `firebase_core_platform_interface`.
+
 ## 0.4.1+6
 
 * Update the homepage now that the package structure has changed.

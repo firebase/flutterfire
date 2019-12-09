@@ -11,5 +11,10 @@ dependencies:
 
   url_launcher: ^5.1.6
 
+dev_dependencies:
+  e2e: ^0.2.1
+  flutter_driver:
+    sdk: flutter
+
 flutter:
   uses-material-design: true
