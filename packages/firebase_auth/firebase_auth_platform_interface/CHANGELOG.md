@@ -1,3 +1,8 @@
+## 1.1.1
+
+- Fixed crash when platform returns an auth result where `additionalUserInfo`
+  is not provided.
+
 ## 1.1.0
 
 - Added type `PlatformOAuthCredential` for generic OAuth providers.

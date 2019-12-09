@@ -209,6 +209,25 @@ void main() {
       );
     });
 
+    test('signInAnonymously with null additionalUserInfo', () async {
+      final PlatformAuthResult result = await auth.signInAnonymously(appName);
+      MethodChannelFirebaseAuth.channel
+          .setMockMethodCallHandler((MethodCall call) async {
+        log.add(call);
+        return <String, dynamic>{
+          'user': kMockUser,
+        };
+      });
+      verifyUser(result.user);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall('signInAnonymously',
+              arguments: <String, String>{'app': appName}),
+        ],
+      );
+    });
+
     test('sendLinkToEmail', () async {
       await auth.sendLinkToEmail(
         appName,
