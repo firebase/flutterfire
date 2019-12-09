@@ -15,9 +15,9 @@ void main() {
     testWidgets('call', (_) async {
       // default timeout
       final HttpsCallable callable =
-      CloudFunctions.instance.getHttpsCallable(functionName: 'repeat');
+          CloudFunctions.instance.getHttpsCallable(functionName: 'repeat');
       final HttpsCallableResult response =
-      await callable.call(<String, dynamic>{
+          await callable.call(<String, dynamic>{
         'message': 'foo',
         'count': 1,
       });

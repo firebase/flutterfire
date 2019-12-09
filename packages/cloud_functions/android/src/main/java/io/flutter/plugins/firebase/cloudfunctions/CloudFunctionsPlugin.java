@@ -39,7 +39,7 @@ public class CloudFunctionsPlugin implements MethodCallHandler, FlutterPlugin {
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
     onAttachedToEngine(
-            binding.getApplicationContext(), binding.getFlutterEngine().getDartExecutor());
+        binding.getApplicationContext(), binding.getFlutterEngine().getDartExecutor());
   }
 
   private void onAttachedToEngine(Context applicationContext, BinaryMessenger messenger) {
