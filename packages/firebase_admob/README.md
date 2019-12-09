@@ -4,9 +4,7 @@ A plugin for [Flutter](https://flutter.io) that supports loading and
 displaying banner, interstitial (full-screen), and rewarded video ads using the
 [Firebase AdMob API](https://firebase.google.com/docs/admob/).
 
-*Note*: This plugin is in beta, and may still have a few issues and missing APIs.
-[Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and
-[Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are welcome.
+For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
 ## AndroidManifest changes
 
@@ -194,31 +192,39 @@ on iOS). Using Flutter widgets to create native ads is NOT supported by
 this.
 
 ### Android
-You will need to specify a native ad factory which takes a
-[UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd)
-and returns an `Android` [View](https://developer.android.com/reference/android/view/View). See
-https://developers.google.com/admob/android/native/advanced for more details on displaying a Native
-ad in a `View`.
+This requires your activity to implement `NativeAdFactory` which calls createNative(
+[UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd) nativeAd)
+and returns a
+[UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView).
+See example below:
 
 In your `MainActivity.java`, include the imports:
 
 ```java
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
 ```
  
-and add this line to the `onCreate()` method:
+and have `MainActivity.java` implement `NativeAdFactory`:
 
 ```java
-FirebaseAdMobPlugin.setNativeAdGenerator((UnifiedNativeAd ad) -> {
-  // return a View;
-});
+public class MainActivity extends FlutterActivity implements NativeAdFactory {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    // onCreate
+  }
+
+  @Override
+  public UnifiedNativeAdView createNativeAd(UnifiedNativeAd nativeAd) {
+    /// Create UnifiedNativeAdView
+  }
+}
 ```
 
-It is highly encouraged that you return a
-[UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView).
 An example of displaying a `UnifiedNativeAd` with a `UnifiedNativeAdView` can be found
-[here](https://developers.google.com/admob/android/native/advanced).
+[here](https://developers.google.com/admob/android/native/advanced). The example app also inflates
+a custom layout and displays the test Native ad.
 
 ### iOS
 
@@ -226,8 +232,7 @@ Currently unsupported.
 
 ## Limitations
 
-This is just an initial version of the plugin. There are still some
-limitations:
+This plugin currently has some limitations:
 
 - Banner ads cannot be animated into view.
 - It's not possible to specify a banner ad's size.
@@ -237,5 +242,12 @@ limitations:
 - The example should demonstrate how to show gate a route push with an
   interstitial ad
 
-For Flutter plugins for other Firebase products, see
-[README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
+## Issues and feedback
+
+Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+
+Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+
+To contribute a change to this plugin,
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
+and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).

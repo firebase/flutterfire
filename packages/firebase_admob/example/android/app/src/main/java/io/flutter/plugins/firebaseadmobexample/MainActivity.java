@@ -6,51 +6,35 @@ package io.flutter.plugins.firebaseadmobexample;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugins.GeneratedPluginRegistrant;
-import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin;
+import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
 
-public class MainActivity extends FlutterActivity {
+public class MainActivity extends FlutterActivity implements NativeAdFactory {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     GeneratedPluginRegistrant.registerWith(this);
-    FirebaseAdMobPlugin.setNativeAdFactory(
-        (UnifiedNativeAd ad) -> {
-          final UnifiedNativeAdView adView = new UnifiedNativeAdView(this);
-          adView.setLayoutParams(
-              new ViewGroup.LayoutParams(
-                  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-          adView.setBackgroundColor(Color.GREEN);
-          adView.setNativeAd(ad);
+  }
 
-          final LinearLayout content = new LinearLayout(this);
-          content.setLayoutParams(
-              new ViewGroup.LayoutParams(
-                  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-          content.setOrientation(LinearLayout.VERTICAL);
+  @Override
+  public UnifiedNativeAdView createNativeAd(UnifiedNativeAd nativeAd) {
+    final UnifiedNativeAdView adView =
+        (UnifiedNativeAdView) getLayoutInflater().inflate(R.layout.my_native_ad, null);
+    final TextView headlineView = adView.findViewById(R.id.ad_headline);
+    final TextView bodyView = adView.findViewById(R.id.ad_body);
 
-          final TextView headlineView = new TextView(this);
-          headlineView.setWidth(100);
-          headlineView.setHeight(100);
-          headlineView.setText(ad.getHeadline());
-          content.addView(headlineView);
-          adView.setHeadlineView(headlineView);
+    headlineView.setText(nativeAd.getHeadline());
+    bodyView.setText(nativeAd.getBody());
 
-          final TextView bodyView = new TextView(this);
-          bodyView.setWidth(100);
-          bodyView.setHeight(100);
-          bodyView.setText(ad.getBody());
-          content.addView(bodyView);
-          adView.setBodyView(bodyView);
+    adView.setBackgroundColor(Color.YELLOW);
 
-          adView.addView(content);
-          return adView;
-        });
+    adView.setNativeAd(nativeAd);
+    adView.setBodyView(bodyView);
+    adView.setHeadlineView(headlineView);
+    return adView;
   }
 }

@@ -4,9 +4,9 @@
 
 package io.flutter.plugins.firebasedynamiclinks;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -15,6 +15,10 @@ import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -26,14 +30,48 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** FirebaseDynamicLinksPlugin */
-public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentListener {
-  private final Registrar registrar;
-  private final MethodChannel channel;
+/**
+ * Flutter plugin accessing for Firebase Dynamic Links API.
+ *
+ * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
+ */
+public class FirebaseDynamicLinksPlugin
+    implements FlutterPlugin, ActivityAware, MethodCallHandler, NewIntentListener {
+  private Activity activity;
+  private MethodChannel channel;
 
-  private FirebaseDynamicLinksPlugin(Registrar registrar, MethodChannel channel) {
-    this.registrar = registrar;
+  private FirebaseDynamicLinksPlugin(Activity activity, MethodChannel channel) {
+    this.activity = activity;
     this.channel = channel;
+  }
+
+  /**
+   * Default Constructor.
+   *
+   * <p>Use this when adding the plugin to your FlutterEngine
+   */
+  public FirebaseDynamicLinksPlugin() {}
+
+  /**
+   * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
+   *
+   * <p>Calling this will register the plugin with the passed registrar. However, plugins
+   * initialized this way won't react to changes in activity or context.
+   *
+   * @param registrar attaches this plugin's {@link
+   *     io.flutter.plugin.common.MethodChannel.MethodCallHandler} to the registrar's {@link
+   *     io.flutter.plugin.common.BinaryMessenger}.
+   */
+  public static void registerWith(Registrar registrar) {
+    final MethodChannel channel = createChannel(registrar.messenger());
+    final FirebaseDynamicLinksPlugin plugin =
+        new FirebaseDynamicLinksPlugin(registrar.activity(), channel);
+    registrar.addNewIntentListener(plugin);
+    channel.setMethodCallHandler(plugin);
+  }
+
+  private static MethodChannel createChannel(final BinaryMessenger messenger) {
+    return new MethodChannel(messenger, "plugins.flutter.io/firebase_dynamic_links");
   }
 
   @Override
@@ -54,7 +92,7 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
         .addOnFailureListener(
             new OnFailureListener() {
               @Override
-              public void onFailure(@NonNull Exception e) {
+              public void onFailure(Exception e) {
                 Map<String, Object> exception = new HashMap<>();
                 exception.put("code", e.getClass().getSimpleName());
                 exception.put("message", e.getMessage());
@@ -66,12 +104,37 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
     return false;
   }
 
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_dynamic_links");
-    final FirebaseDynamicLinksPlugin plugin = new FirebaseDynamicLinksPlugin(registrar, channel);
-    registrar.addNewIntentListener(plugin);
-    channel.setMethodCallHandler(plugin);
+  @Override
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
+    channel = createChannel(binding.getFlutterEngine().getDartExecutor());
+    channel.setMethodCallHandler(this);
+  }
+
+  @Override
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);
+  }
+
+  @Override
+  public void onAttachedToActivity(ActivityPluginBinding binding) {
+    activity = binding.getActivity();
+    binding.addOnNewIntentListener(this);
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    activity = null;
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
+    activity = binding.getActivity();
+    binding.addOnNewIntentListener(this);
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    activity = null;
   }
 
   @Override
@@ -91,6 +154,9 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
         Uri url = Uri.parse((String) call.argument("url"));
         builder.setLongLink(url);
         buildShortDynamicLink(builder, call, createShortLinkListener(result));
+        break;
+      case "FirebaseDynamicLinks#getDynamicLink":
+        handleGetDynamicLink(result, Uri.parse((String) call.argument("url")));
         break;
       case "FirebaseDynamicLinks#getInitialLink":
         handleGetInitialDynamicLink(result);
@@ -114,17 +180,8 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
     return dynamicLink;
   }
 
-  private void handleGetInitialDynamicLink(final Result result) {
-    // If there's no activity, then there's no initial dynamic link.
-    if (registrar.activity() == null) {
-      result.success(null);
-      return;
-    }
-
-    FirebaseDynamicLinks.getInstance()
-        .getDynamicLink(registrar.activity().getIntent())
-        .addOnSuccessListener(
-            registrar.activity(),
+  private void addDynamicLinkListener(Task<PendingDynamicLinkData> task, final Result result) {
+    task.addOnSuccessListener(
             new OnSuccessListener<PendingDynamicLinkData>() {
               @Override
               public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
@@ -138,19 +195,33 @@ public class FirebaseDynamicLinksPlugin implements MethodCallHandler, NewIntentL
               }
             })
         .addOnFailureListener(
-            registrar.activity(),
             new OnFailureListener() {
               @Override
-              public void onFailure(@NonNull Exception e) {
+              public void onFailure(Exception e) {
                 result.error(e.getClass().getSimpleName(), e.getMessage(), null);
               }
             });
   }
 
+  private void handleGetDynamicLink(final Result result, Uri uri) {
+    addDynamicLinkListener(FirebaseDynamicLinks.getInstance().getDynamicLink(uri), result);
+  }
+
+  private void handleGetInitialDynamicLink(final Result result) {
+    // If there's no activity, then there's no initial dynamic link.
+    if (activity == null) {
+      result.success(null);
+      return;
+    }
+
+    addDynamicLinkListener(
+        FirebaseDynamicLinks.getInstance().getDynamicLink(activity.getIntent()), result);
+  }
+
   private OnCompleteListener<ShortDynamicLink> createShortLinkListener(final Result result) {
     return new OnCompleteListener<ShortDynamicLink>() {
       @Override
-      public void onComplete(@NonNull Task<ShortDynamicLink> task) {
+      public void onComplete(Task<ShortDynamicLink> task) {
         if (task.isSuccessful()) {
           Map<String, Object> url = new HashMap<>();
           url.put("url", task.getResult().getShortLink().toString());

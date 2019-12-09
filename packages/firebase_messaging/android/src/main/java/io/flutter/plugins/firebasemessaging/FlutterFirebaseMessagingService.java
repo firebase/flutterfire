@@ -140,7 +140,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
    */
   public static void startBackgroundIsolate(Context context, long callbackHandle) {
     FlutterMain.ensureInitializationComplete(context, null);
-    String appBundlePath = FlutterMain.findAppBundlePath(context);
+    String appBundlePath = FlutterMain.findAppBundlePath();
     FlutterCallbackInformation flutterCallback =
         FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
     if (flutterCallback == null) {
@@ -309,7 +309,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     KeyguardManager keyguardManager =
         (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
 
-    if (keyguardManager.inKeyguardRestrictedInputMode()) {
+    if (keyguardManager.isKeyguardLocked()) {
       return false;
     }
     int myPid = Process.myPid();

@@ -7,7 +7,7 @@ part of 'firebase_ml_vision.dart';
 void faceDetectorTests() {
   group('$FaceDetector', () {
     final FaceDetector detector = FirebaseVision.instance.faceDetector(
-      FaceDetectorOptions(
+      const FaceDetectorOptions(
           enableContours: true, mode: FaceDetectorMode.accurate),
     );
 
