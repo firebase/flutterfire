@@ -1,6 +1,5 @@
 name: cloud_functions_example
 description: Demonstrates how to use the cloud_functions plugin.
-version: 1.0.0+1
 author: Flutter Team <flutter-dev@googlegroups.com>
 
 dependencies:
