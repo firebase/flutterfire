@@ -5,7 +5,7 @@
 part of firebase_auth;
 
 class OAuthProvider {
-  const OAuthProvider({ @required this.providerId }) : assert(providerId != null);
+  const OAuthProvider({@required this.providerId}) : assert(providerId != null);
 
   /// The provider ID with which this provider is associated
   final String providerId;
@@ -16,6 +16,10 @@ class OAuthProvider {
     String accessToken,
     String rawNonce,
   }) {
-    return PlatformOAuthCredential(providerId: providerId, idToken: idToken, accessToken: accessToken, rawNonce: rawNonce);
+    return PlatformOAuthCredential(
+        providerId: providerId,
+        idToken: idToken,
+        accessToken: accessToken,
+        rawNonce: rawNonce);
   }
 }
