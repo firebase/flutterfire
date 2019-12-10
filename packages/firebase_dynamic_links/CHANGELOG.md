@@ -1,3 +1,9 @@
+## 0.5.0+9
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
 ## 0.5.0+8
 
 * Support v2 embedding. This will remain compatible with the original embedding and won't require app migration.
