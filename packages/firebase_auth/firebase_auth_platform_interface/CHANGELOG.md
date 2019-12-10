@@ -1,6 +1,6 @@
-## 1.0.1
+## 1.1.0
 
-- Added type AppleAuthCredential.
+- Added type `PlatformOAuthCredential` for generic OAuth providers.
 
 ## 1.0.0
 
