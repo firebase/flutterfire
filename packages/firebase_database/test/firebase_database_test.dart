@@ -19,7 +19,7 @@ void main() {
 
     int mockHandleId = 0;
     final List<MethodCall> log = <MethodCall>[];
-    final FirebaseApp app = const FirebaseApp(
+    final FirebaseApp app = FirebaseApp(
       name: 'testApp',
     );
     final String databaseURL = 'https://fake-database-url2.firebaseio.com';

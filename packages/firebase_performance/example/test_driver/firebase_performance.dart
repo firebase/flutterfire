@@ -45,6 +45,8 @@ void main() {
       });
     });
 
+    // TODO(kroikie): Update flaky test and remove skip parameter
+    //                https://github.com/FirebaseExtended/flutterfire/issues/1454.
     group('$Trace', () {
       Trace testTrace;
 
@@ -114,8 +116,10 @@ void main() {
           completion(<String, String>{'yugi': 'oh'}),
         );
       });
-    });
+    }, skip: true);
 
+    // TODO(kroikie): Update flaky test and remove skip parameter
+    //                https://github.com/FirebaseExtended/flutterfire/issues/1454.
     group('$HttpMetric', () {
       HttpMetric testMetric;
 
@@ -177,6 +181,6 @@ void main() {
 
         await pumpEventQueue();
       });
-    });
+    }, skip: true);
   });
 }

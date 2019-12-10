@@ -1,7 +1,63 @@
+## 6.0.7
+
+* Update Android Gradle plugin dependency to 3.5.3, update documentation and example.
+* Update google-services Android gradle plugin to 4.3.2 in documentation and examples.
+
+## 6.0.6
+
+* Updated README instructions for Android.
+
+## 6.0.5
+
+* Add import for UserNotifications on iOS.
+
+## 6.0.4
+
+* Support the v2 Android embedding.
+
+## 6.0.3
+
+* Fix bug where `onIosSettingsRegistered` wasn't streamed on iOS >= 10.
+
+## 6.0.2
+
+* Fixed a build warning caused by availability check.
+
+## 6.0.1
+
+* `FirebaseMessaging.configure` will throw an `ArgumentError` when `onBackgroundMessage` parameter
+is not a top-level or static function.
+
+## 6.0.0
+
+* Use `UNUserNotificationCenter` to receive messages on iOS version >= 10.
+* **Breaking Change** For iOS versions >= 10, this will cause any other plugin that specifies a
+  `UNUserNotificationCenterDelegate` to `[UNUserNotificationCenter currentNotificationCenter]` to
+  stop receiving notifications. To have this plugin work with plugins that specify their own
+  `UNUserNotificationCenterDelegate`, you can remove the line
+  ```objectivec
+  [UNUserNotificationCenter currentNotificationCenter].delegate = // plugin specified delegate
+  ```
+
+  and add this line to your iOS project `AppDelegate.m`
+
+  ```swift
+  if (@available(iOS 10.0, *)) {
+    [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
+  }
+  ```
+
+## 5.1.9
+
+* Fix strict compilation errors.
+
+## 5.1.8
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
 ## 5.1.7
 
-* Update Android Gradle plugin dependency to 3.5.1, update documentation and example.
-* Update google-services Android gradle plugin to 4.3.2 in documentation and examples.
+* Remove AndroidX warning.
 
 ## 5.1.6
 

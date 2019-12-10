@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#import <UserNotifications/UserNotifications.h>
+
 #import "FirebaseMessagingPlugin.h"
 #import "UserAgent.h"
 
@@ -14,10 +16,12 @@
 
 static FlutterError *getFlutterError(NSError *error) {
   if (error == nil) return nil;
-  return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %ld", error.code]
+  return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %ld", (long)error.code]
                              message:error.domain
                              details:error.localizedDescription];
 }
+
+static NSObject<FlutterPluginRegistrar> *_registrar;
 
 @implementation FLTFirebaseMessagingPlugin {
   FlutterMethodChannel *_channel;
@@ -26,6 +30,7 @@ static FlutterError *getFlutterError(NSError *error) {
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+  _registrar = registrar;
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_messaging"
                                   binaryMessenger:[registrar messenger]];
@@ -59,22 +64,66 @@ static FlutterError *getFlutterError(NSError *error) {
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
   NSString *method = call.method;
   if ([@"requestNotificationPermissions" isEqualToString:method]) {
-    UIUserNotificationType notificationTypes = 0;
     NSDictionary *arguments = call.arguments;
-    if ([arguments[@"sound"] boolValue]) {
-      notificationTypes |= UIUserNotificationTypeSound;
-    }
-    if ([arguments[@"alert"] boolValue]) {
-      notificationTypes |= UIUserNotificationTypeAlert;
-    }
-    if ([arguments[@"badge"] boolValue]) {
-      notificationTypes |= UIUserNotificationTypeBadge;
-    }
-    UIUserNotificationSettings *settings =
-        [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
-    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    if (@available(iOS 10.0, *)) {
+      UNAuthorizationOptions authOptions = 0;
+      if ([arguments[@"sound"] boolValue]) {
+        authOptions |= UNAuthorizationOptionSound;
+      }
+      if ([arguments[@"alert"] boolValue]) {
+        authOptions |= UNAuthorizationOptionAlert;
+      }
+      if ([arguments[@"badge"] boolValue]) {
+        authOptions |= UNAuthorizationOptionBadge;
+      }
 
-    result(nil);
+      [[UNUserNotificationCenter currentNotificationCenter]
+          requestAuthorizationWithOptions:authOptions
+                        completionHandler:^(BOOL granted, NSError *_Nullable error) {
+                          if (error) {
+                            result(getFlutterError(error));
+                            return;
+                          }
+                          // This works for iOS >= 10. See
+                          // [UIApplication:didRegisterUserNotificationSettings:notificationSettings]
+                          // for ios < 10.
+                          [[UNUserNotificationCenter currentNotificationCenter]
+                              getNotificationSettingsWithCompletionHandler:^(
+                                  UNNotificationSettings *_Nonnull settings) {
+                                NSDictionary *settingsDictionary = @{
+                                  @"sound" : [NSNumber numberWithBool:settings.soundSetting ==
+                                                                      UNNotificationSettingEnabled],
+                                  @"badge" : [NSNumber numberWithBool:settings.badgeSetting ==
+                                                                      UNNotificationSettingEnabled],
+                                  @"alert" : [NSNumber numberWithBool:settings.alertSetting ==
+                                                                      UNNotificationSettingEnabled],
+                                };
+                                [self->_channel invokeMethod:@"onIosSettingsRegistered"
+                                                   arguments:settingsDictionary];
+                              }];
+                          result([NSNumber numberWithBool:granted]);
+                        }];
+
+      [[UIApplication sharedApplication] registerForRemoteNotifications];
+    } else {
+      UIUserNotificationType notificationTypes = 0;
+      if ([arguments[@"sound"] boolValue]) {
+        notificationTypes |= UIUserNotificationTypeSound;
+      }
+      if ([arguments[@"alert"] boolValue]) {
+        notificationTypes |= UIUserNotificationTypeAlert;
+      }
+      if ([arguments[@"badge"] boolValue]) {
+        notificationTypes |= UIUserNotificationTypeBadge;
+      }
+
+      UIUserNotificationSettings *settings =
+          [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
+      [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+
+      [[UIApplication sharedApplication] registerForRemoteNotifications];
+      result([NSNumber numberWithBool:YES]);
+    }
   } else if ([@"configure" isEqualToString:method]) {
     [FIRMessaging messaging].shouldEstablishDirectChannel = true;
     [[UIApplication sharedApplication] registerForRemoteNotifications];
@@ -175,7 +224,7 @@ static FlutterError *getFlutterError(NSError *error) {
   application.applicationIconBadgeNumber = 0;
 }
 
-- (bool)application:(UIApplication *)application
+- (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
   [self didReceiveRemoteNotification:userInfo];
@@ -194,6 +243,8 @@ static FlutterError *getFlutterError(NSError *error) {
   [_channel invokeMethod:@"onToken" arguments:[FIRMessaging messaging].FCMToken];
 }
 
+// This will only be called for iOS < 10. For iOS >= 10, we make this call when we request
+// permissions.
 - (void)application:(UIApplication *)application
     didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
   NSDictionary *settingsDictionary = @{

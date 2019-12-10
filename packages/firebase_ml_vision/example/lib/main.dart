@@ -47,7 +47,7 @@ class _ExampleListState extends State<_ExampleList> {
           final String widgetName = _exampleWidgetNames[index];
 
           return Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(bottom: BorderSide(color: Colors.grey)),
             ),
             child: ListTile(

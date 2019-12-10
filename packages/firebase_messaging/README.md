@@ -8,8 +8,6 @@ With this plugin, your Flutter app can receive and process push notifications as
 
 For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
-*Note*: This plugin is still under development, and some APIs might not be available yet. [Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
-
 ## Usage
 To use this plugin, add `firebase_messaging` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
@@ -27,7 +25,7 @@ To integrate your plugin into the Android part of your app, follow these steps:
 ```
 dependencies {
   // Example existing classpath
-  classpath 'com.android.tools.build:gradle:3.5.1'
+  classpath 'com.android.tools.build:gradle:3.5.3'
   // Add the google services classpath
   classpath 'com.google.gms:google-services:4.3.2'
 }
@@ -63,7 +61,7 @@ for more.
 
 By default background messaging is not enabled. To handle messages in the background:
 
-1. Add an Application.java class to your app
+1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
 
     ```
     package io.flutter.plugins.firebasemessagingexample;
@@ -87,11 +85,15 @@ By default background messaging is not enabled. To handle messages in the backgr
       }
     }
     ```
-1. Set name property of application in `AndroidManifest.xml`
+1. In `Application.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
+    ```
+    package com.domain.myapplication;
+    ```
+1. Set name property of application in `AndroidManifest.xml`. This is typically found in `<app-name>/android/app/src/main/`.
     ```
     <application android:name=".Application" ...>
     ```
-1. Define a top level Dart method to handle background messages
+1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
     ```
     Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
       if (message.containsKey('data')) {
@@ -142,6 +144,23 @@ To integrate your plugin into the iOS part of your app, follow these steps:
 1. In Xcode, select `Runner` in the Project Navigator. In the Capabilities Tab turn on `Push Notifications` and `Background Modes`, and enable `Background fetch` and `Remote notifications` under `Background Modes`.
 
 1. Follow the steps in the "[Upload your APNs certificate](https://firebase.google.com/docs/cloud-messaging/ios/client#upload_your_apns_certificate)" section of the Firebase docs.
+
+1. Add the following lines to the `(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions`
+method in the `AppDelegate.m`/`AppDelegate.swift` of your iOS project.
+
+Objective-C:
+```objectivec
+if (@available(iOS 10.0, *)) {
+  [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
+}
+```
+
+Swift:
+```swift
+if #available(iOS 10.0, *) {
+  UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+}
+```
 
 ### Dart/Flutter Integration
 
@@ -196,3 +215,61 @@ curl https://fcm.googleapis.com/fcm/send -H "Content-Type:application/json" -X P
 ```
 
 Remove the `notification` property in `DATA` to send a data message.
+
+You could also test this from within Flutter using the [http](https://pub.dev/packages/http) package:
+
+```dart
+// Replace with server token from firebase console settings.
+final String serverToken = '<Server-Token>';
+final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+
+Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
+  await firebaseMessaging.requestNotificationPermissions(
+    const IosNotificationSettings(sound: true, badge: true, alert: true),
+  );
+
+  await http.post(
+    'https://fcm.googleapis.com/fcm/send',
+     headers: <String, String>{
+       'Content-Type': 'application/json',
+       'Authorization': 'key=$serverToken',
+     },
+     body: jsonEncode(
+     <String, dynamic>{
+       'notification': <String, dynamic>{
+         'body': 'this is a body',
+         'title': 'this is a title'
+       },
+       'priority': 'high',
+       'data': <String, dynamic>{
+         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+         'id': '1',
+         'status': 'done'
+       },
+       'to': await firebaseMessaging.getToken(),
+     },
+    ),
+  );
+
+  final Completer<Map<String, dynamic>> completer =
+     Completer<Map<String, dynamic>>();
+
+  firebaseMessaging.configure(
+    onMessage: (Map<String, dynamic> message) async {
+      completer.complete(message);
+    },
+  );
+
+  return completer.future;
+}
+```
+
+## Issues and feedback
+
+Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+
+Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+
+To contribute a change to this plugin,
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
+and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).

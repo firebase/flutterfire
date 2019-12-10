@@ -1,15 +1,42 @@
 #!/bin/bash
 set -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
-REPO_DIR="$(dirname "$SCRIPT_DIR")"
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
+readonly REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
 source "$SCRIPT_DIR/common.sh"
 
+# Plugins that deliberately use their own analysis_options.yaml.
+#
+# This list should only be deleted from, never added to. This only exists
+# because we adopted stricter analysis rules recently and needed to exclude
+# already failing packages to start linting the repo as a whole.
+#
+# TODO(mklim): Remove everything from this list. https://github.com/flutter/flutter/issues/45440
+CUSTOM_ANALYSIS_PLUGINS=(
+  "cloud_firestore"
+  "cloud_functions"
+  "firebase_analytics"
+  "firebase_auth"
+  "firebase_core"
+  "firebase_crashlytics"
+  "firebase_database"
+  "firebase_dynamic_links"
+  "firebase_in_app_messaging"
+  "firebase_messaging"
+  "firebase_ml_vision"
+  "firebase_performance"
+  "firebase_remote_config"
+  "firebase_storage"
+)
+# Comma-separated string of the list above
+readonly CUSTOM_FLAG=$(IFS=, ; echo "${CUSTOM_ANALYSIS_PLUGINS[*]}")
 # Set some default actions if run without arguments.
 ACTIONS=("$@")
 if [[ "${#ACTIONS[@]}" == 0 ]]; then
-  ACTIONS=("test" "analyze" "java-test")
+  ACTIONS=("analyze" "--custom-analysis" "$CUSTOM_FLAG" "test" "java-test")
+elif [[ "${ACTIONS[@]}" == "analyze" ]]; then
+  ACTIONS=("analyze" "--custom-analysis" "$CUSTOM_FLAG")
 fi
 
 BRANCH_NAME="${BRANCH_NAME:-"$(git rev-parse --abbrev-ref HEAD)"}"

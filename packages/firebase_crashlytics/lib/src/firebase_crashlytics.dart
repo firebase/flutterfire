@@ -28,12 +28,16 @@ class Crashlytics {
   /// to Firebase Crashlytics.
   Future<void> recordFlutterError(FlutterErrorDetails details) async {
     print('Flutter error caught by Crashlytics plugin:');
+    // Since multiple errors can be caught during a single session, we set
+    // forceReport=true.
+    FlutterError.dumpErrorToConsole(details, forceReport: true);
 
     _recordError(details.exceptionAsString(), details.stack,
         context: details.context,
         information: details.informationCollector == null
             ? null
-            : details.informationCollector());
+            : details.informationCollector(),
+        printDetails: false);
   }
 
   /// Submits a report of a non-fatal error.
@@ -200,18 +204,25 @@ class Crashlytics {
   // occurred and give useful background information in [FlutterErrorDetails.informationCollector].
   // Crashlytics will log this information in addition to the stack trace.
   // If [information] is `null` or empty, it will be ignored.
-  Future<void> _recordError(dynamic exception, StackTrace stack,
-      {dynamic context, Iterable<DiagnosticsNode> information}) async {
+  Future<void> _recordError(
+    dynamic exception,
+    StackTrace stack, {
+    dynamic context,
+    Iterable<DiagnosticsNode> information,
+    bool printDetails,
+  }) async {
     bool inDebugMode = false;
     if (!enableInDevMode) {
       assert(inDebugMode = true);
     }
 
+    printDetails ??= inDebugMode;
+
     final String _information = (information == null || information.isEmpty)
         ? ''
         : (StringBuffer()..writeAll(information, '\n')).toString();
 
-    if (inDebugMode && !enableInDevMode) {
+    if (printDetails) {
       // If available, give context to the exception.
       if (context != null)
         print('The following exception was thrown $context:');
@@ -225,10 +236,11 @@ class Crashlytics {
       // Not using Trace.format here to stick to the default stack trace format
       // that Flutter developers are used to seeing.
       if (stack != null) print('\n$stack');
-    } else {
+    }
+    if (!inDebugMode || enableInDevMode) {
       // The stack trace can be null. To avoid the following exception:
       // Invalid argument(s): Cannot create a Trace from null.
-      // To avoid that exception, we can check for null and provide an empty stack trace.
+      // We can check for null and provide an empty stack trace.
       stack ??= StackTrace.fromString('');
 
       // Report error.
@@ -252,7 +264,7 @@ class Crashlytics {
       });
 
       // Print result.
-      print(result);
+      print('firebase_crashlytics: $result');
     }
   }
 }

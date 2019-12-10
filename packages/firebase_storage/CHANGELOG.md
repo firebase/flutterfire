@@ -1,3 +1,19 @@
+## 3.0.10
+
+* Fix example app by adding a call to `ensureInitialized`.
+
+## 3.0.9
+
+* Support the v2 Android embedding.
+
+## 3.0.8
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 3.0.7
+
+* Remove AndroidX warning.
+
 ## 3.0.6
 
 * Update documentation to reflect new repository location.

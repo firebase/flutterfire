@@ -4,6 +4,14 @@
 
 // ignore_for_file: deprecated_member_use_from_same_package
 
+// These are temporary ignores to allow us to land a new set of linter rules in
+// a series of manageable patches instead of one gigantic PR. It disables some
+// of the new lints that are already failing on this plugin, for this plugin. It
+// should be deleted and the failing lints addressed as soon as possible.
+//
+// ignore_for_file: public_member_api_docs
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'dart:async';
 import 'dart:io' show Platform;
 
