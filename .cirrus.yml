@@ -17,6 +17,7 @@ task:
         # Temporarily disabling CI on stable to allow using new Flutter features closely
         # before a new release.
         # TODO(cyanglaz): re-enable this
+        # https://github.com/flutter/flutter/issues/46258
         - flutter channel master
         - ./script/check_publish.sh
     - name: format
