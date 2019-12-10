@@ -1,6 +1,18 @@
-## 6.0.4
+## 6.0.7
 
 * Support for provisional notifications for iOS version >= 12.
+
+## 6.0.6
+
+* Updated README instructions for Android.
+
+## 6.0.5
+
+* Add import for UserNotifications on iOS.
+
+## 6.0.4
+
+* Support the v2 Android embedding.
 
 ## 6.0.3
 

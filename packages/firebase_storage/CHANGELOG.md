@@ -1,3 +1,7 @@
+## 3.0.10
+
+* Fix example app by adding a call to `ensureInitialized`.
+
 ## 3.0.9
 
 * Support the v2 Android embedding.
