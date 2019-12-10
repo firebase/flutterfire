@@ -1,3 +1,15 @@
+## 6.0.5
+
+* Add import for UserNotifications on iOS.
+
+## 6.0.4
+
+* Support the v2 Android embedding.
+
+## 6.0.3
+
+* Fix bug where `onIosSettingsRegistered` wasn't streamed on iOS >= 10.
+
 ## 6.0.2
 
 * Fixed a build warning caused by availability check.

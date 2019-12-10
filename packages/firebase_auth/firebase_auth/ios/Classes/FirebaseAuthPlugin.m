@@ -482,11 +482,29 @@ int nextHandle = 0;
         credentialWithVerificationID:verificationId
                     verificationCode:smsCode];
   } else if ([@"apple.com" isEqualToString:provider]) {
+    // This section is for a generic oAuth provider, like apple.com
+    // If someone need to add new oAuth provider simply add your provider string in the if condition
     NSString *idToken = data[@"idToken"];
     NSString *accessToken = data[@"accessToken"];
-    credential = [FIROAuthProvider credentialWithProviderID:@"apple.com"
-                                                    IDToken:idToken
-                                                accessToken:accessToken];
+    NSString *rawNonce = data[@"rawNonce"];
+
+    if (accessToken != (id)[NSNull null] && rawNonce != (id)[NSNull null] && [accessToken length] != 0 && [rawNonce length] != 0){
+      credential = [FIROAuthProvider credentialWithProviderID:provider
+                      IDToken:idToken
+                      rawNonce:rawNonce
+                      accessToken:accessToken];
+    }else if (accessToken != (id)[NSNull null] && [accessToken length] != 0){
+      credential = [FIROAuthProvider credentialWithProviderID:provider
+                      IDToken:idToken
+                      accessToken:accessToken];
+    }else if (rawNonce != (id)[NSNull null] && [rawNonce length] != 0){
+      credential = [FIROAuthProvider credentialWithProviderID:provider
+                      IDToken:idToken
+                      rawNonce:rawNonce];
+    }else {
+      NSLog(@"To use OAuthProvider you need to provide at least one of the following 'accessToken' or 'rawNonce'.");
+    }
+    
   } else {
     NSLog(@"Support for an auth provider with identifier '%@' is not implemented.", provider);
   }

@@ -1,6 +1,6 @@
 ## 0.15.1+1
 
-*  Added Apple auth provider for iOS (not run in Android).
+*  Added OAuth auth provider for iOS (not run in Android), to solve Apple account link in firebase.
 
 ## 0.15.1
 
