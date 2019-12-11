@@ -1,6 +1,12 @@
-## 6.0.7
+## 6.0.8
 
 * Support for provisional notifications for iOS version >= 12.
+
+## 6.0.7
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
 
 ## 6.0.6
 

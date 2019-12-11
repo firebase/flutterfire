@@ -1,3 +1,14 @@
+## 0.4.3
+
+* Enable the `web` implementation by default.
+* Raise minimum required Flutter SDK version to 1.12.13+hotfix.4
+
+## 0.4.2+2
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
 ## 0.4.2+1
 
 * Check `kIsWeb` before checking `Platform.isIos` for the default app name.

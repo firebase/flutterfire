@@ -1,3 +1,9 @@
+## 3.0.11
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
 ## 3.0.10
 
 * Fix example app by adding a call to `ensureInitialized`.

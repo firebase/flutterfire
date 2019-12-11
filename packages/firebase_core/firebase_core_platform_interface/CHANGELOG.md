@@ -1,3 +1,7 @@
+## 1.0.2
+
+- Remove the deprecated `author:` field from pubspec.yaml
+
 ## 1.0.1
 
 - Switch away from quiver_hashcode.
