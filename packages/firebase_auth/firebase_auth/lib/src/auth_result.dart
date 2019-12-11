@@ -9,9 +9,9 @@ part of firebase_auth;
 /// the operation has completed.
 class AuthResult {
   AuthResult._(this._data, FirebaseApp app)
-      : user = FirebaseUser._(_data['user'].cast<String, dynamic>(), app);
+      : user = FirebaseUser._(_data.user, app);
 
-  final Map<String, dynamic> _data;
+  final PlatformAuthResult _data;
 
   /// Returns the currently signed-in [FirebaseUser], or `null` if there isn't
   /// any (i.e. the user is signed out).
@@ -19,10 +19,9 @@ class AuthResult {
 
   /// Returns IDP-specific information for the user if the provider is one of
   /// Facebook, Github, Google, or Twitter.
-  AdditionalUserInfo get additionalUserInfo =>
-      _data['additionalUserInfo'] == null
-          ? null
-          : AdditionalUserInfo._(_data['additionalUserInfo']);
+  AdditionalUserInfo get additionalUserInfo => _data.additionalUserInfo == null
+      ? null
+      : AdditionalUserInfo._(_data.additionalUserInfo);
 
   @override
   String toString() {

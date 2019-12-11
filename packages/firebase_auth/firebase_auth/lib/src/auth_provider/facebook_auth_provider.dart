@@ -8,9 +8,6 @@ class FacebookAuthProvider {
   static const String providerId = 'facebook.com';
 
   static AuthCredential getCredential({String accessToken}) {
-    return AuthCredential._(
-      providerId,
-      <String, String>{'accessToken': accessToken},
-    );
+    return FacebookAuthCredential(accessToken: accessToken);
   }
 }

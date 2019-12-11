@@ -446,6 +446,9 @@ PlatformAuthResult _decodeAuthResult(Map<dynamic, dynamic> data) {
 
 PlatformAdditionalUserInfo _decodeAdditionalUserInfo(
     Map<dynamic, dynamic> data) {
+  if (data == null) {
+    return null;
+  }
   return PlatformAdditionalUserInfo(
     isNewUser: data['isNewUser'],
     username: data['username'],

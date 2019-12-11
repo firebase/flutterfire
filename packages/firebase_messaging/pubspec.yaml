@@ -1,15 +1,17 @@
 name: firebase_messaging
 description: Flutter plugin for Firebase Cloud Messaging, a cross-platform
   messaging solution that lets you reliably deliver messages on Android and iOS.
-author: Flutter Team <flutter-dev@googlegroups.com>
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging
-version: 6.0.2
+version: 6.0.7
 
 flutter:
   plugin:
-    androidPackage: io.flutter.plugins.firebasemessaging
-    iosPrefix: FLT
-    pluginClass: FirebaseMessagingPlugin
+    platforms:
+      android:
+        package: io.flutter.plugins.firebasemessaging
+        pluginClass: FirebaseMessagingPlugin
+      ios:
+        pluginClass: FLTFirebaseMessagingPlugin
 
 dependencies:
   meta: ^1.0.4
@@ -23,9 +25,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   firebase_core: ^0.4.0
+  e2e: ^0.2.1
   flutter_driver:
     sdk: flutter
 
 environment:
   sdk: ">=2.0.0-dev.28.0 <3.0.0"
-  flutter: ">=1.5.0 <2.0.0"
+  flutter: ">=1.10.0 <2.0.0"

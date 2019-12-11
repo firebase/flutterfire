@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
     s.version          = '0.1.0'
     s.summary          = 'No-op implementation of firebase_core_web web plugin to avoid build issues on iOS'
     s.description      = <<-DESC
-  temp fake google_sign_in_web plugin
+  temp fake firebase_core_web plugin
                          DESC
     s.homepage         = 'https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_core/firebase_core_web'
     s.license          = { :file => '../LICENSE' }
