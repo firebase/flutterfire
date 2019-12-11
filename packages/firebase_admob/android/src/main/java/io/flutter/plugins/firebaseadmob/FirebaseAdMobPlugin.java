@@ -31,6 +31,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   private Context applicationContext;
   private MethodChannel channel;
   private Activity activity;
+  // This is always null when not using v2 embedding.
   private FlutterPluginBinding pluginBinding;
   private RewardedVideoAdWrapper rewardedWrapper;
 
