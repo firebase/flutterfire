@@ -28,7 +28,7 @@ abstract class MobileAd extends AdListener {
   double horizontalCenterOffset;
   int anchorType;
 
-  enum Status {
+  public enum Status {
     CREATED,
     LOADING,
     FAILED,
@@ -71,6 +71,13 @@ abstract class MobileAd extends AdListener {
 
   void dispose() {
     allAds.remove(id);
+  }
+
+  static void disposeAll() {
+    for (int i = 0; i < allAds.size(); i++) {
+      allAds.valueAt(i).dispose();
+    }
+    allAds.clear();
   }
 
   private Map<String, Object> argumentsMap(Object... args) {

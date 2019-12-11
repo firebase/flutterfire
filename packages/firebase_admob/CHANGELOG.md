@@ -1,3 +1,8 @@
+## 0.9.1
+
+* Support v2 embedding. This will remain compatible with the original embedding and won't require
+  app migration.
+
 ## 0.9.0+10
 
 * Remove the deprecated `author:` field from pubspec.yaml
