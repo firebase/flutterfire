@@ -17,7 +17,15 @@ Demonstrates how to use the firebase_auth plugin.
    verification code.
 1. Click the `Test signInWithPhoneNumber` button.
 1. Signed in user's details are displayed in the UI.
-   
+
+## Running on Web
+
+Make sure you run the example app on port 5000, since `localhost:5000` is
+whitelisted for Google authentication. To do so, run:
+
+```
+flutter run -d web-server --web-port 5000
+```
 
 ## Getting Started
 
