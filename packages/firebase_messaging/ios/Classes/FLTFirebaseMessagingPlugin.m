@@ -4,7 +4,7 @@
 
 #import <UserNotifications/UserNotifications.h>
 
-#import "FirebaseMessagingPlugin.h"
+#import "FLTFirebaseMessagingPlugin.h"
 #import "UserAgent.h"
 
 #import "Firebase/Firebase.h"

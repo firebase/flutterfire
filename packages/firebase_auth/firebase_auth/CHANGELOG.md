@@ -1,3 +1,9 @@
+## 0.15.1+1
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
 ## 0.15.1
 
 * Migrate to use `firebase_auth_platform_interface`.

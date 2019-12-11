@@ -1,3 +1,9 @@
+## 0.1.2+3
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
 ## 0.1.2+2
 
 * Removed the `async` from the `runZoned()` in the example, as there's no `await` to be executed.
