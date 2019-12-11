@@ -24,9 +24,10 @@ dev_dependencies:
 
 flutter:
   plugin:
-    android:
-      pacakge: io.flutter.plugins.firebase.crashlytics.firebasecrashlytics
-      pluginClass: FirebaseCrashlyticsPlugin
-    ios:
-      pluginClass: FirebaseCrashlyticsPlugin
+    platforms:
+      android:
+        pacakge: io.flutter.plugins.firebase.crashlytics.firebasecrashlytics
+        pluginClass: FirebaseCrashlyticsPlugin
+      ios:
+        pluginClass: FirebaseCrashlyticsPlugin
 

@@ -7,11 +7,12 @@ version: 0.15.1+1
 
 flutter:
   plugin:
-    android:
-      package: io.flutter.plugins.firebaseauth
-      pluginClass: FirebaseAuthPlugin
-    ios:
-      pluginClass: FLTFirebaseAuthPlugin
+    platforms:
+      android:
+        package: io.flutter.plugins.firebaseauth
+        pluginClass: FirebaseAuthPlugin
+      ios:
+        pluginClass: FLTFirebaseAuthPlugin
 
 dependencies:
   meta: ^1.0.4
