@@ -1,3 +1,25 @@
+## 6.0.8
+
+* Support for provisional notifications for iOS version >= 12.
+
+## 6.0.7
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 6.0.6
+
+* Updated README instructions for Android.
+
+## 6.0.5
+
+* Add import for UserNotifications on iOS.
+
+## 6.0.4
+
+* Support the v2 Android embedding.
+
 ## 6.0.3
 
 * Fix bug where `onIosSettingsRegistered` wasn't streamed on iOS >= 10.

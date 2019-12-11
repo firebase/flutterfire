@@ -14,6 +14,8 @@ import 'package:uuid/uuid.dart';
 const String kTestString = 'Hello world!';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final FirebaseApp app = await FirebaseApp.configure(
     name: 'test',
     options: FirebaseOptions(

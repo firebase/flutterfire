@@ -1,3 +1,9 @@
+## 5.0.9
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
 ## 5.0.8
 
 * Update homepage since the package moved for the platform interface migration.
