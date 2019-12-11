@@ -1,6 +1,5 @@
 name: firebase_core_web
 description: The web implementation of firebase_core
-author: Flutter Team <flutter-dev@googlegroups.com>
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_core/firebase_core_web
 version: 0.1.1
 
