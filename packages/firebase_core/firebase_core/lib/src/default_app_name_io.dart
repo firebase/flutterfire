@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebaseOptions;
+import 'dart:io';
 
-export 'src/firebase_app.dart';
+/// The default app name.
+final String firebaseDefaultAppName =
+    Platform.isIOS ? '__FIRAPP_DEFAULT' : '[DEFAULT]';
