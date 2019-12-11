@@ -1,3 +1,8 @@
+## 0.1.1
+
+* Require Flutter SDK 1.12.13+hotfix.4 or greater.
+* Fix homepage.
+
 ## 0.1.0+3
 
 * Remove the deprecated `author:` field from pubspec.yaml
