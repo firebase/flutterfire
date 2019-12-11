@@ -51,8 +51,24 @@ void main() {
       }
       await tempFile.create();
       expect(await tempFile.readAsString(), '');
+
+      final StorageFileDownloadTask invalidTask =
+          ref.child("invalid").writeToFile(tempFile);
+      Exception taskException;
+      try {
+        (await invalidTask.future).totalByteCount;
+      } catch (e) {
+        taskException = e;
+      }
+      expect(taskException, isNotNull);
+
       final StorageFileDownloadTask task = ref.writeToFile(tempFile);
-      final int byteCount = (await task.future).totalByteCount;
+      int byteCount = 0;
+      try {
+        byteCount = (await task.future).totalByteCount;
+      } catch (e) {
+        // Unexpected exception
+      }
       final String tempFileContents = await tempFile.readAsString();
       expect(tempFileContents, kTestString);
       expect(byteCount, kTestString.length);
