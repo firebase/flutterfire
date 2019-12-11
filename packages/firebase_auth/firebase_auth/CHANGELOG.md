@@ -1,6 +1,12 @@
+## 0.15.1+2
+
+* Add support for OAuth Authentication for iOS to solve Apple sign in.
+
 ## 0.15.1+1
 
-*  Added OAuth auth provider for iOS (not run in Android), to solve Apple account link in firebase.
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
 
 ## 0.15.1
 
