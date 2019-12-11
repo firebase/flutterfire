@@ -25,15 +25,25 @@ void main() {
 
   test('requestNotificationPermissions on ios with default permissions', () {
     firebaseMessaging.requestNotificationPermissions();
-    verify(mockChannel.invokeMethod<void>('requestNotificationPermissions',
-        <String, bool>{'sound': true, 'badge': true, 'alert': true}));
+    verify(mockChannel.invokeMethod<void>(
+        'requestNotificationPermissions', <String, bool>{
+      'sound': true,
+      'badge': true,
+      'alert': true,
+      'provisional': false
+    }));
   });
 
   test('requestNotificationPermissions on ios with custom permissions', () {
     firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: false));
-    verify(mockChannel.invokeMethod<void>('requestNotificationPermissions',
-        <String, bool>{'sound': false, 'badge': true, 'alert': true}));
+        const IosNotificationSettings(sound: false, provisional: true));
+    verify(mockChannel.invokeMethod<void>(
+        'requestNotificationPermissions', <String, bool>{
+      'sound': false,
+      'badge': true,
+      'alert': true,
+      'provisional': true
+    }));
   });
 
   test('requestNotificationPermissions on android', () {

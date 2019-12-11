@@ -1,3 +1,7 @@
+## 6.0.8
+
+* Support for provisional notifications for iOS version >= 12.
+
 ## 6.0.7
 
 * Remove the deprecated `author:` field from pubspec.yaml
