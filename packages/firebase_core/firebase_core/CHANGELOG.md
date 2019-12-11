@@ -1,3 +1,8 @@
+## 0.4.3
+
+* Enable the `web` implementation by default.
+* Raise minimum required Flutter SDK version to 1.12.13+hotfix.4
+
 ## 0.4.2+2
 
 * Remove the deprecated `author:` field from pubspec.yaml
