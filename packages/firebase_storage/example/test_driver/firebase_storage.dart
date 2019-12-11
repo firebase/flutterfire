@@ -50,9 +50,10 @@ void main() {
         await tempFile.delete();
       }
       await tempFile.create();
-      expect(await tempFile.readAsString(), '');      
+      expect(await tempFile.readAsString(), '');
 
-      final StorageFileDownloadTask invalidTask = ref.child("invalid").writeToFile(tempFile);
+      final StorageFileDownloadTask invalidTask =
+          ref.child("invalid").writeToFile(tempFile);
       Exception taskException;
       try {
         (await invalidTask.future).totalByteCount;
