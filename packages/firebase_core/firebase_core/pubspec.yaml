@@ -6,11 +6,12 @@ version: 0.4.2+2
 
 flutter:
   plugin:
-    android:
-      package: io.flutter.plugins.firebase.core
-      pluginClass: FirebaseCorePlugin
-    ios:
-      pluginClass: FLTFirebaseCorePlugin
+    platforms:
+      android:
+        package: io.flutter.plugins.firebase.core
+        pluginClass: FirebaseCorePlugin
+      ios:
+        pluginClass: FLTFirebaseCorePlugin
 
 dependencies:
   firebase_core_platform_interface: ^1.0.0
