@@ -1,3 +1,9 @@
+## 0.1.1
+
+* Require Flutter SDK version 1.12.13+hotfix.4 or later.
+* Add fake podspec so we don't break compilation on iOS.
+* Fix homepage.
+
 ## 0.1.0+2
 
 * Remove the deprecated `author:` field from pubspec.yaml.
