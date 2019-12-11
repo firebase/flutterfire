@@ -7,8 +7,7 @@ import 'dart:async';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:meta/meta.dart';
 
-import 'default_app_name.dart'
-  if (dart.library.io) 'default_app_name_io.dart';
+import 'default_app_name.dart' if (dart.library.io) 'default_app_name_io.dart';
 
 class FirebaseApp {
   // TODO(jackson): We could assert here that an app with this name was configured previously.
