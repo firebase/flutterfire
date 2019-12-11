@@ -2,7 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FirebaseMessagingPlugin.h"
+#import <UserNotifications/UserNotifications.h>
+
+#import "FLTFirebaseMessagingPlugin.h"
 #import "UserAgent.h"
 
 #import "Firebase/Firebase.h"
@@ -80,9 +82,26 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
                         completionHandler:^(BOOL granted, NSError *_Nullable error) {
                           if (error) {
                             result(getFlutterError(error));
-                          } else {
-                            result([NSNumber numberWithBool:granted]);
+                            return;
                           }
+                          // This works for iOS >= 10. See
+                          // [UIApplication:didRegisterUserNotificationSettings:notificationSettings]
+                          // for ios < 10.
+                          [[UNUserNotificationCenter currentNotificationCenter]
+                              getNotificationSettingsWithCompletionHandler:^(
+                                  UNNotificationSettings *_Nonnull settings) {
+                                NSDictionary *settingsDictionary = @{
+                                  @"sound" : [NSNumber numberWithBool:settings.soundSetting ==
+                                                                      UNNotificationSettingEnabled],
+                                  @"badge" : [NSNumber numberWithBool:settings.badgeSetting ==
+                                                                      UNNotificationSettingEnabled],
+                                  @"alert" : [NSNumber numberWithBool:settings.alertSetting ==
+                                                                      UNNotificationSettingEnabled],
+                                };
+                                [self->_channel invokeMethod:@"onIosSettingsRegistered"
+                                                   arguments:settingsDictionary];
+                              }];
+                          result([NSNumber numberWithBool:granted]);
                         }];
 
       [[UIApplication sharedApplication] registerForRemoteNotifications];
@@ -224,6 +243,8 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
   [_channel invokeMethod:@"onToken" arguments:[FIRMessaging messaging].FCMToken];
 }
 
+// This will only be called for iOS < 10. For iOS >= 10, we make this call when we request
+// permissions.
 - (void)application:(UIApplication *)application
     didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
   NSDictionary *settingsDictionary = @{
