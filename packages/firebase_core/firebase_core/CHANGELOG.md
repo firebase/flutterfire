@@ -1,3 +1,8 @@
+## 0.4.3+1
+
+* Move `Platform.isIOS` check behind a configurable import so that pub.dev registers
+  this as a Web plugin.
+
 ## 0.4.3
 
 * Enable the `web` implementation by default.
