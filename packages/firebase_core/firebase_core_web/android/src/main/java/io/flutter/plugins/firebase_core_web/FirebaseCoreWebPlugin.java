@@ -1,6 +1,5 @@
 package io.flutter.plugins.firebase_core_web;
 
-import android.support.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
