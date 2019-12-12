@@ -1,3 +1,7 @@
+## 0.1.1+1
+
+* Add an android/ folder with no-op implementation to workaround https://github.com/flutter/flutter/issues/46898
+
 ## 0.1.1
 
 * Require Flutter SDK version 1.12.13+hotfix.4 or later.
