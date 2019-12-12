@@ -126,6 +126,8 @@ class Query {
     dynamic isGreaterThan,
     dynamic isGreaterThanOrEqualTo,
     dynamic arrayContains,
+    List<dynamic> arrayContainsAny,
+    List<dynamic> whereIn,
     bool isNull,
   }) {
     assert(field is String || field is FieldPath,
@@ -154,6 +156,9 @@ class Query {
       addCondition(field, '>=', isGreaterThanOrEqualTo);
     if (arrayContains != null)
       addCondition(field, 'array-contains', arrayContains);
+    if (arrayContainsAny != null)
+      addCondition(field, 'array-contains-any', arrayContainsAny);
+    if (whereIn != null) addCondition(field, 'in', whereIn);
     if (isNull != null) {
       assert(
           isNull,

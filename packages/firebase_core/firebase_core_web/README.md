@@ -28,7 +28,7 @@ dependencies:
 ### Updating `index.html`
 
 Due to [this bug in dartdevc][2], you will need to manually add the Firebase
-JavaScript file to you `index.html` file.
+JavaScript file to your `index.html` file.
 
 In your app directory, edit `web/index.html` to add the line:
 
@@ -42,6 +42,29 @@ In your app directory, edit `web/index.html` to add the line:
 </html>
 ```
 
+### Initialize Firebase
+
+If you want to initialize the default app, follow the steps in the
+[Firebase Web Setup][3] docs. Specifically, you'll want to add the
+following lines to your `web/index.html` file:
+
+```html
+<body>
+  <!-- Previously loaded Firebase SDKs -->
+
+  <script>
+    // TODO: Replace the following with your app's Firebase project configuration
+    var firebaseConfig = {
+      // ...
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <script src="main.dart.js"></script>
+</body> 
+```
+
 ### Using the plugin
 
 Once you have added the `firebase_core_web` dependency to your pubspec,
@@ -49,3 +72,4 @@ you can use `package:firebase_core` as normal.
 
 [1]: ../firebase_core/firebase_core
 [2]: https://github.com/dart-lang/sdk/issues/33979
+[3]: https://firebase.google.com/docs/web/setup#add-sdks-initialize

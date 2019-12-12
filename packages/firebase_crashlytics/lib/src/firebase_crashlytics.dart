@@ -240,7 +240,7 @@ class Crashlytics {
     if (!inDebugMode || enableInDevMode) {
       // The stack trace can be null. To avoid the following exception:
       // Invalid argument(s): Cannot create a Trace from null.
-      // To avoid that exception, we can check for null and provide an empty stack trace.
+      // We can check for null and provide an empty stack trace.
       stack ??= StackTrace.fromString('');
 
       // Report error.

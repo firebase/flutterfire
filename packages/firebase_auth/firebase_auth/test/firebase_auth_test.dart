@@ -48,6 +48,8 @@ final int kMockLastSignInTimestamp =
     DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
 // ignore: missing_required_param_with_details
 final PlatformUser kMockUser = PlatformUser(
+  providerId: 'foo',
+  uid: 'bar',
   isAnonymous: true,
   isEmailVerified: false,
   creationTimestamp: kMockCreationTimestamp,
