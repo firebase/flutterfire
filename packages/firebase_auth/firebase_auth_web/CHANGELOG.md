@@ -1,4 +1,4 @@
-## 0.1.2
+## 0.1.1+1
 
 * Add an android/ folder with no-op implementation to workaround https://github.com/flutter/flutter/issues/46898
 
