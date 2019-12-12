@@ -1,7 +1,17 @@
-## 6.0.7
+## 6.0.9
 
 * Update Android Gradle plugin dependency to 3.5.3, update documentation and example.
 * Update google-services Android gradle plugin to 4.3.2 in documentation and examples.
+
+## 6.0.8
+
+* Support for provisional notifications for iOS version >= 12.
+
+## 6.0.7
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
 
 ## 6.0.6
 

@@ -8,7 +8,6 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713"/>
         <activity android:name=".MainActivity"
-                  android:launchMode="singleTop"
                   android:theme="@android:style/Theme.Black.NoTitleBar"
                   android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection"
                   android:hardwareAccelerated="true"
@@ -17,6 +16,13 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+          android:name=".EmbeddingV1Activity"
+          android:theme="@android:style/Theme.Black.NoTitleBar"
+          android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale"
+          android:hardwareAccelerated="true"
+          android:windowSoftInputMode="adjustResize">
         </activity>
     </application>
 </manifest>

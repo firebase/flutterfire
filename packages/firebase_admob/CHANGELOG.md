@@ -1,3 +1,14 @@
+## 0.9.1
+
+* Support v2 embedding. This will remain compatible with the original embedding and won't require
+  app migration.
+
+## 0.9.0+10
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
 ## 0.9.0+9
 
 * Updated README instructions for contributing for consistency with other Flutterfire plugins.

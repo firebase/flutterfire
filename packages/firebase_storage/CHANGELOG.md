@@ -1,3 +1,15 @@
+## 3.1.0
+
+* Added error handling to `StorageFileDownloadTask` and added propagation of errors to the Future returned by the `writeToFile` method in `StorageReference`. 
+* Added unit tests for writeToFile. 
+* Updated integration test in example to use proper error handling.
+
+## 3.0.11
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
 ## 3.0.10
 
 * Fix example app by adding a call to `ensureInitialized`.
