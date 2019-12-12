@@ -226,6 +226,8 @@ abstract class MobileAd extends AdListener {
       interstitial.setAdUnitId(adUnitId);
 
       interstitial.setAdListener(this);
+      AdRequestBuilderFactory factory = new AdRequestBuilderFactory(targetingInfo);
+      interstitial.loadAd(factory.createAdRequestBuilder().build());
     }
 
     @Override

@@ -31,7 +31,6 @@ enum MobileAdEvent {
   opened,
   leftApplication,
   closed,
-  unifiedNativeAdLoaded,
 }
 
 /// The user's gender for the sake of ad targeting using [MobileAdTargetingInfo].
