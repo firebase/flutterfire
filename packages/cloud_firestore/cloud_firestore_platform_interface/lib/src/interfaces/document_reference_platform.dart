@@ -7,7 +7,7 @@ import 'package:meta/meta.dart' show required;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../implementations/method_channel_document_reference.dart';
-import '../types/set_options.dart';
+import '../types.dart';
 
 /// The Document Reference platform interface.
 abstract class DocumentReferencePlatform extends PlatformInterface {
@@ -37,8 +37,7 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
 
   /// A Stream of Document Snapshots.
   /// The snapshot stream is never-ending.
-  // TODO(ditman): Type the return of this Stream (PlatformDocumentSnapshot?)
-  Stream<dynamic> snapshots(
+  Stream<PlatformDocumentSnapshot> snapshots(
     String app, {
     @required String path,
     bool includeMetadataChanges,
@@ -52,12 +51,10 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   /// data from the server, but it may return cached data or fail if you are offline and
   /// the server cannot be reached.
   /// This behavior can be altered via the [source] parameter.
-  // TODO: Type this return (PlatformDocumentSnapshot?)
-  Future<Map<String, dynamic>> get(
+  Future<PlatformDocumentSnapshot> get(
     String app, {
     @required String path,
-    // TODO(ditman): Type Source
-    @required String source,
+    @required Source source,
   }) async {
     throw UnimplementedError(
         'DocumentReferencePlatform::get() is not implemented');

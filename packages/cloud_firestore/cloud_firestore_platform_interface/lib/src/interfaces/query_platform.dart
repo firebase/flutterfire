@@ -7,6 +7,7 @@ import 'package:meta/meta.dart' show required;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../implementations/method_channel_query.dart';
+import '../types.dart';
 
 /// The Query platform interface.
 abstract class QueryPlatform extends PlatformInterface {
@@ -37,7 +38,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// A Stream of QuerySnapshots.
   /// The snapshot stream is never-ending.
   // TODO(ditman): Type the return of this Stream (PlatformQuerySnapshot?)
-  Stream<dynamic> snapshots(
+  Stream<PlatformQuerySnapshot> snapshots(
     String app, {
     @required String path,
     bool isCollectionGroup,
@@ -49,12 +50,12 @@ abstract class QueryPlatform extends PlatformInterface {
 
   /// What does this method correspond to in the Firebase API?
   // TODO(ditman): Type this return (PlatformQueryDocument?)
-  Future<Map<dynamic, dynamic>> getDocuments(
+  Future<PlatformQuerySnapshot> getDocuments(
     String app, {
     @required String path,
     bool isCollectionGroup,
     Map<String, dynamic> parameters,
-    String source,
+    Source source,
   }) async {
     throw UnimplementedError(
         'QueryPlatform::getDocuments() is not implemented');

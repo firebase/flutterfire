@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 export 'types/document.dart';
+export 'types/query.dart';
 export 'types/set_options.dart';
 export 'types/transaction.dart';
 export 'types/write_batch.dart';

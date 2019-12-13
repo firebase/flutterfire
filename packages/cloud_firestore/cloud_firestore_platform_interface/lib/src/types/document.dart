@@ -3,7 +3,8 @@
 // found in the LICENSE file.
 
 class PlatformDocumentSnapshot {
-  PlatformDocumentSnapshot({this.data, this.metadata});
+  PlatformDocumentSnapshot({this.path, this.data, this.metadata});
+  String path;
   Map<String, dynamic> data;
   PlatformSnapshotMetadata metadata;
 
