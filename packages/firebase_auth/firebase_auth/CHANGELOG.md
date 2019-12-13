@@ -1,6 +1,6 @@
 ## 0.15.2+1
 
-* Add support for OAuth Authentication for iOS to solve Apple sign in.
+* Add support for OAuth Authentication for iOS and Android to solve generic providers authentication.
 
 ## 0.15.2
 

@@ -467,30 +467,25 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
           String accessToken = data.get("accessToken");
           String rawNonce = data.get("rawNonce");
 
-          if(
-            providerId != null && providerId != "" &&
-            idToken != null && idToken != ""
-          ){
-              OAuthProvider.CredentialBuilder oAuthProvider = OAuthProvider.newCredentialBuilder(providerId);
+          if (providerId != null && providerId != "" && idToken != null && idToken != "") {
+            OAuthProvider.CredentialBuilder oAuthProvider =
+                OAuthProvider.newCredentialBuilder(providerId);
 
-            if(
-              accessToken != null && accessToken != ""
-              && rawNonce != null && rawNonce != ""
-            ){
-                oAuthProvider.setAccessToken(accessToken);
-                oAuthProvider.setIdTokenWithRawNonce(idToken,rawNonce);
-                credential = oAuthProvider.build();
-            }else if(accessToken != null && accessToken != ""){
-                oAuthProvider.setAccessToken(accessToken);
-                oAuthProvider.setIdToken(idToken);
-                credential = oAuthProvider.build();
-            }else if(rawNonce != null && rawNonce != ""){
-                oAuthProvider.setIdTokenWithRawNonce(idToken,rawNonce);
-                credential = oAuthProvider.build();
-            }else{
+            if (accessToken != null && accessToken != "" && rawNonce != null && rawNonce != "") {
+              oAuthProvider.setAccessToken(accessToken);
+              oAuthProvider.setIdTokenWithRawNonce(idToken, rawNonce);
+              credential = oAuthProvider.build();
+            } else if (accessToken != null && accessToken != "") {
+              oAuthProvider.setAccessToken(accessToken);
+              oAuthProvider.setIdToken(idToken);
+              credential = oAuthProvider.build();
+            } else if (rawNonce != null && rawNonce != "") {
+              oAuthProvider.setIdTokenWithRawNonce(idToken, rawNonce);
+              credential = oAuthProvider.build();
+            } else {
               credential = null;
             }
-          }else{
+          } else {
             credential = null;
           }
           break;
