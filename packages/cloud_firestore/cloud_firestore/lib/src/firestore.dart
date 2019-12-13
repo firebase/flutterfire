@@ -14,6 +14,9 @@ class Firestore {
   @visibleForTesting
   static final FirestorePlatform platform = FirestorePlatform.instance;
 
+  /// Gets the instance of Firestore for the default Firebase app.
+  static final Firestore instance = Firestore();
+
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
   /// If null, the default [FirebaseApp] is used.
@@ -90,7 +93,7 @@ class Firestore {
       return result;
     };
 
-    final Map<String, dynamic> result = await platform.transaction.run(
+    final Map<String, dynamic> result = await Firestore.platform.transaction.run(
       app.name,
       updateFunction: handler,
       transactionTimeout: timeout.inMilliseconds,
@@ -102,7 +105,7 @@ class Firestore {
   @deprecated
   Future<void> enablePersistence(bool enable) {
     assert(enable != null);
-    return platform.enablePersistence(app.name, enable: enable);
+    return Firestore.platform.enablePersistence(app.name, enable: enable);
   }
 
   Future<void> settings(
@@ -111,7 +114,7 @@ class Firestore {
       bool sslEnabled,
       int cacheSizeBytes}) {
 
-    return platform.settings(app.name, 
+    return Firestore.platform.settings(app.name, 
         persistenceEnabled: persistenceEnabled,
         host: host,
         sslEnabled: sslEnabled,

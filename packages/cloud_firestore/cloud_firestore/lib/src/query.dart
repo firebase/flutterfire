@@ -52,55 +52,30 @@ class Query {
   // TODO(jackson): Reduce code duplication with [DocumentReference]
   Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
     assert(includeMetadataChanges != null);
-    Future<int> _handle;
-    // It's fine to let the StreamController be garbage collected once all the
-    // subscribers have cancelled; this analyzer warning is safe to ignore.
-    StreamController<QuerySnapshot> controller; // ignore: close_sinks
-    controller = StreamController<QuerySnapshot>.broadcast(
-      onListen: () {
-        _handle = Firestore.channel.invokeMethod<int>(
-          'Query#addSnapshotListener',
-          <String, dynamic>{
-            'app': firestore.app.name,
-            'path': _path,
-            'isCollectionGroup': _isCollectionGroup,
-            'parameters': _parameters,
-            'includeMetadataChanges': includeMetadataChanges,
-          },
-        ).then<int>((dynamic result) => result);
-        _handle.then((int handle) {
-          Firestore._queryObservers[handle] = controller;
-        });
-      },
-      onCancel: () {
-        _handle.then((int handle) async {
-          await Firestore.channel.invokeMethod<void>(
-            'removeListener',
-            <String, dynamic>{'handle': handle},
-          );
-          Firestore._queryObservers.remove(handle);
-        });
-      },
-    );
-    return controller.stream;
+
+    return Firestore.platform.query.snapshots(
+        firestore.app.name,
+        path: _path,
+        isCollectionGroup: _isCollectionGroup,
+        parameters: _parameters,
+        includeMetadataChanges: includeMetadataChanges,
+      ).map((PlatformQuerySnapshot snapshot) => QuerySnapshot._(snapshot.asMap(), firestore));
   }
 
   /// Fetch the documents for this query
   Future<QuerySnapshot> getDocuments(
       {Source source = Source.serverAndCache}) async {
     assert(source != null);
-    final Map<dynamic, dynamic> data =
-        await Firestore.channel.invokeMapMethod<String, dynamic>(
-      'Query#getDocuments',
-      <String, dynamic>{
-        'app': firestore.app.name,
-        'path': _path,
-        'isCollectionGroup': _isCollectionGroup,
-        'parameters': _parameters,
-        'source': _getSourceString(source),
-      },
-    );
-    return QuerySnapshot._(data, firestore);
+
+    final PlatformQuerySnapshot snapshot = await Firestore.platform.query.getDocuments(
+        firestore.app.name,
+        path: _path,
+        isCollectionGroup: _isCollectionGroup,
+        parameters: _parameters,
+        source: source,
+      );
+        
+    return QuerySnapshot._(snapshot.asMap(), firestore);
   }
 
   /// Obtains a CollectionReference corresponding to this query's location.

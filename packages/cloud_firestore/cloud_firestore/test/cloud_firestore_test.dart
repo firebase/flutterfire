@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -48,7 +49,8 @@ void main() {
       collectionReference = firestore.collection('foo');
       collectionGroupQuery = firestore.collectionGroup('bar');
       transaction = Transaction(0, firestore);
-      Firestore.channel.setMockMethodCallHandler((MethodCall methodCall) async {
+
+      Function methodCallHandler = (MethodCall methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
           case 'Query#addSnapshotListener':
@@ -60,8 +62,8 @@ void main() {
               // https://github.com/flutter/flutter/issues/33446
               // ignore: deprecated_member_use
               BinaryMessages.handlePlatformMessage(
-                Firestore.channel.name,
-                Firestore.channel.codec.encodeMethodCall(
+                MethodChannelFirestore.channel.name,
+                MethodChannelFirestore.channel.codec.encodeMethodCall(
                   MethodCall('QuerySnapshot', <String, dynamic>{
                     'app': app.name,
                     'handle': handle,
@@ -93,8 +95,8 @@ void main() {
               // https://github.com/flutter/flutter/issues/33446
               // ignore: deprecated_member_use
               BinaryMessages.handlePlatformMessage(
-                Firestore.channel.name,
-                Firestore.channel.codec.encodeMethodCall(
+                MethodChannelFirestore.channel.name,
+                MethodChannelFirestore.channel.codec.encodeMethodCall(
                   MethodCall('DocumentSnapshot', <String, dynamic>{
                     'handle': handle,
                     'path': methodCall.arguments['path'],
@@ -167,7 +169,14 @@ void main() {
           default:
             return null;
         }
-      });
+      };
+
+      MethodChannelDocumentReference.channel.setMockMethodCallHandler(methodCallHandler);
+      MethodChannelFirestore.channel.setMockMethodCallHandler(methodCallHandler);
+      MethodChannelQuery.channel.setMockMethodCallHandler(methodCallHandler);
+      MethodChannelTransaction.channel.setMockMethodCallHandler(methodCallHandler);
+      MethodChannelWriteBatch.channel.setMockMethodCallHandler(methodCallHandler);
+
       log.clear();
     });
 
