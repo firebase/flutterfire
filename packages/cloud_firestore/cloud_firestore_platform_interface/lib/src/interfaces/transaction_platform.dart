@@ -3,6 +3,8 @@
 // found in the LICENSE file.
 import 'dart:async';
 
+import 'package:cloud_firestore_platform_interface/src/types/document.dart';
+import 'package:cloud_firestore_platform_interface/src/types/transaction.dart';
 import 'package:meta/meta.dart' show required;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -41,19 +43,17 @@ abstract class TransactionPlatform extends PlatformInterface {
   /// If the transaction completed successfully or was explicitly aborted (the updateFunction returned a failed promise),
   /// the promise returned by the updateFunction is returned here.
   /// Else, if the transaction failed, a rejected promise with the corresponding failure error will be returned.
-  // TODO(ditman): type the return (PlatformTransaction?)
+  // TODO(ditman): What's the type of this return?
   Future<Map<String, dynamic>> run(
     String app, {
-    // TODO(ditman): type PlatformTransactionHandler
-    @required Function updateFunction,
+    @required PlatformTransactionHandler updateFunction,
     int transactionTimeout,
   }) async {
     throw UnimplementedError('TransactionPlatform::run() is not implemented');
   }
 
   /// Reads the transaction referenced by the provided [transactionId].
-  // TODO(ditman): type the return (PlatformTransaction?)
-  Future<Map<String, dynamic>> get(
+  Future<PlatformDocumentSnapshot> get(
     String app, {
     @required String path,
     @required int transactionId,
@@ -76,7 +76,6 @@ abstract class TransactionPlatform extends PlatformInterface {
     String app, {
     @required String path,
     @required int transactionId,
-    // TODO(ditman): can we be more specific with the type of `data`?
     Map<String, dynamic> data,
   }) async {
     throw UnimplementedError(
@@ -88,7 +87,6 @@ abstract class TransactionPlatform extends PlatformInterface {
     String app, {
     @required String path,
     @required int transactionId,
-    // TODO(ditman): can we be more specific with the type of `data`?
     Map<String, dynamic> data,
   }) async {
     throw UnimplementedError('TransactionPlatform::set() is not implemented');

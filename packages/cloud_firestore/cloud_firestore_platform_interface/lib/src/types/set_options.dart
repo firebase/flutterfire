@@ -1,3 +1,7 @@
+// Copyright 2019 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 /// An options object that configures the behavior of set() calls in DocumentReference, WriteBatch and Transaction.
 /// These calls can be configured to perform granular merges instead of overwriting the target documents in their
 /// entirety by providing a SetOptions with merge: true.

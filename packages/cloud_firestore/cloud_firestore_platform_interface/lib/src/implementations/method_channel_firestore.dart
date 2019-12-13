@@ -6,17 +6,14 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show visibleForTesting;
 
-import '../implementations/method_channel_document_reference.dart';
-import '../implementations/method_channel_query.dart';
-import '../implementations/method_channel_transaction.dart';
-import '../implementations/method_channel_write_batch.dart';
+import './method_channel_document_reference.dart';
+import './method_channel_query.dart';
+import './method_channel_transaction.dart';
+import './method_channel_write_batch.dart';
 
-import '../interfaces/firestore_platform.dart';
-import '../interfaces/document_reference_platform.dart';
-import '../interfaces/query_platform.dart';
-import '../interfaces/transaction_platform.dart';
-import '../interfaces/write_batch_platform.dart';
+import '../interfaces.dart';
 
+/// A method channel implementation of the Firestore platform.
 class MethodChannelFirestore extends FirestorePlatform {
   /// Constructor
   MethodChannelFirestore() {
@@ -76,6 +73,5 @@ class MethodChannelFirestore extends FirestorePlatform {
     });
   }
 
-  // runTransaction as a facade to TransactionPlatform::run?
-
+  // Find runTransaction in transaction.run
 }

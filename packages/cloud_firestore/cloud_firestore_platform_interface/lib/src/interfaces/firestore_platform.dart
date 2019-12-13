@@ -81,23 +81,4 @@ abstract class FirestorePlatform extends PlatformInterface {
     throw UnimplementedError(
         'FirestorePlatform::enablePersistence() is not implemented');
   }
-
-  /// A facade for [TransactionPlatform.run].
-  /// Executes the given [updateFunction] and then attempts to commit the changes applied within the transaction.
-  /// If any document read within the transaction has changed, Firestore retries the updateFunction.
-  /// If it fails to commit after 5 attempts, the transaction fails.
-  ///
-  /// If the transaction completed successfully or was explicitly aborted (the updateFunction returned a failed promise),
-  /// the promise returned by the updateFunction is returned here.
-  /// Else, if the transaction failed, a rejected promise with the corresponding failure error will be returned.
-  // TODO(ditman): type the return (PlatformTransaction?)
-  Future<Map<String, dynamic>> runTransaction(
-    String app, {
-    // TODO(ditman): type PlatformTransactionHandler
-    @required Function updateFunction,
-    int transactionTimeout,
-  }) async {
-    throw UnimplementedError(
-        'FirestorePlatform::runTransaction() is not implemented');
-  }
 }
