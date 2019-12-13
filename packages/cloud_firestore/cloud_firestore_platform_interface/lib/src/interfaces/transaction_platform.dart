@@ -15,7 +15,7 @@ abstract class TransactionPlatform extends PlatformInterface {
   /// Constructor
   TransactionPlatform() : super(token: _token);
 
-  static const Object _token = Object();
+  static final Object _token = Object();
 
   /// The default instance of [TransactionPlatform] to use.
   ///

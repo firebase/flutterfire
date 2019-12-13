@@ -14,7 +14,7 @@ abstract class WriteBatchPlatform extends PlatformInterface {
   /// Constructor
   WriteBatchPlatform() : super(token: _token);
 
-  static const Object _token = Object();
+  static final Object _token = Object();
 
   /// The default instance of [WriteBatchPlatform] to use.
   ///

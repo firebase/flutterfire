@@ -14,7 +14,7 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   /// Constructor
   DocumentReferencePlatform() : super(token: _token);
 
-  static const Object _token = Object();
+  static final Object _token = Object();
 
   /// The default instance of [DocumentReferencePlatform] to use.
   ///

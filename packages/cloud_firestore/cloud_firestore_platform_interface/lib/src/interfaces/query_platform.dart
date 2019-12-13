@@ -14,7 +14,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// Constructor
   QueryPlatform() : super(token: _token);
 
-  static const Object _token = Object();
+  static final Object _token = Object();
 
   /// The default instance of [QueryPlatform] to use.
   ///

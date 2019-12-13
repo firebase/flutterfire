@@ -18,7 +18,7 @@ abstract class FirestorePlatform extends PlatformInterface {
   /// Constructor
   FirestorePlatform() : super(token: _token);
 
-  static const Object _token = Object();
+  static final Object _token = Object();
 
   /// The default instance of [FirestorePlatform] to use.
   ///
