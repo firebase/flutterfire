@@ -1,0 +1,1 @@
+{"_info":"// This is a generated file; do not edit or check into version control.","dependencyGraph":[{"name":"firebase_auth","dependencies":["firebase_core","firebase_auth_web"]},{"name":"firebase_auth_web","dependencies":[]},{"name":"firebase_core","dependencies":[]},{"name":"firebase_dynamic_links","dependencies":[]},{"name":"google_sign_in","dependencies":[]}]}

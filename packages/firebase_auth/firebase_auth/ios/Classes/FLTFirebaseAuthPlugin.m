@@ -481,9 +481,9 @@ int nextHandle = 0;
     credential = [[FIRPhoneAuthProvider providerWithAuth:[self getAuth:arguments]]
         credentialWithVerificationID:verificationId
                     verificationCode:smsCode];
-  } else if ([@"apple.com" isEqualToString:provider]) {
-    // This section is for a generic oAuth provider, like apple.com
-    // If someone need to add new oAuth provider simply add your provider string in the if condition
+  } else if ([provider length] != 0 && data[@"idToken"] != (id)[NSNull null] &&
+             (data[@"accessToken"] != (id)[NSNull null] ||
+              data[@"rawNonce"] != (id)[NSNull null])) {
     NSString *idToken = data[@"idToken"];
     NSString *accessToken = data[@"accessToken"];
     NSString *rawNonce = data[@"rawNonce"];

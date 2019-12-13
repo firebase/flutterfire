@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken;
@@ -461,7 +462,32 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
         }
       default:
         {
-          credential = null;
+          String providerId = (String) arguments.get("provider");
+          String idToken = data.get("idToken");
+          String accessToken = data.get("accessToken");
+          String rawNonce = data.get("rawNonce");
+
+          if (providerId != null && providerId != "" && idToken != null && idToken != "") {
+            OAuthProvider.CredentialBuilder oAuthProvider =
+                OAuthProvider.newCredentialBuilder(providerId);
+
+            if (accessToken != null && accessToken != "" && rawNonce != null && rawNonce != "") {
+              oAuthProvider.setAccessToken(accessToken);
+              oAuthProvider.setIdTokenWithRawNonce(idToken, rawNonce);
+              credential = oAuthProvider.build();
+            } else if (accessToken != null && accessToken != "") {
+              oAuthProvider.setAccessToken(accessToken);
+              oAuthProvider.setIdToken(idToken);
+              credential = oAuthProvider.build();
+            } else if (rawNonce != null && rawNonce != "") {
+              oAuthProvider.setIdTokenWithRawNonce(idToken, rawNonce);
+              credential = oAuthProvider.build();
+            } else {
+              credential = null;
+            }
+          } else {
+            credential = null;
+          }
           break;
         }
     }
