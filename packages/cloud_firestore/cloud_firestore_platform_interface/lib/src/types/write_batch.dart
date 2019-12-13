@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-export 'types/document.dart';
-export 'types/set_options.dart';
-export 'types/transaction.dart';
-export 'types/write_batch.dart';
+class PlatformWriteBatch {
+  PlatformWriteBatch({this.writeBatchId});
+  int writeBatchId;
+}

@@ -14,4 +14,6 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/cloud_firestore',
   );
+
+  
 }
