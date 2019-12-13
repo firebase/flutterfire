@@ -8,58 +8,16 @@ part of cloud_firestore;
 ///
 /// You can get an instance by calling [Firestore.instance].
 class Firestore {
-  Firestore({FirebaseApp app}) : app = app ?? FirebaseApp.instance {
-    if (_initialized) return;
-    channel.setMethodCallHandler((MethodCall call) async {
-      if (call.method == 'QuerySnapshot') {
-        final QuerySnapshot snapshot = QuerySnapshot._(call.arguments, this);
-        _queryObservers[call.arguments['handle']].add(snapshot);
-      } else if (call.method == 'DocumentSnapshot') {
-        final DocumentSnapshot snapshot = DocumentSnapshot._(
-          call.arguments['path'],
-          _asStringKeyedMap(call.arguments['data']),
-          SnapshotMetadata._(call.arguments['metadata']['hasPendingWrites'],
-              call.arguments['metadata']['isFromCache']),
-          this,
-        );
-        _documentObservers[call.arguments['handle']].add(snapshot);
-      } else if (call.method == 'DoTransaction') {
-        final int transactionId = call.arguments['transactionId'];
-        final Transaction transaction = Transaction(transactionId, this);
-        final dynamic result =
-            await _transactionHandlers[transactionId](transaction);
-        await transaction._finish();
-        return result;
-      }
-    });
-    _initialized = true;
-  }
+  Firestore({FirebaseApp app}) : app = app ?? FirebaseApp.instance;
 
-  /// Gets the instance of Firestore for the default Firebase app.
-  static final Firestore instance = Firestore();
+  /// The platform instance that talks to the native side of the plugin.
+  @visibleForTesting
+  static final FirestorePlatform platform = FirestorePlatform.instance;
 
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
   /// If null, the default [FirebaseApp] is used.
   final FirebaseApp app;
-
-  static bool _initialized = false;
-
-  @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/cloud_firestore',
-    StandardMethodCodec(FirestoreMessageCodec()),
-  );
-
-  static final Map<int, StreamController<QuerySnapshot>> _queryObservers =
-      <int, StreamController<QuerySnapshot>>{};
-
-  static final Map<int, StreamController<DocumentSnapshot>> _documentObservers =
-      <int, StreamController<DocumentSnapshot>>{};
-
-  static final Map<int, TransactionHandler> _transactionHandlers =
-      <int, TransactionHandler>{};
-  static int _transactionHandlerId = 0;
 
   @override
   bool operator ==(dynamic o) => o is Firestore && o.app == app;
@@ -123,39 +81,41 @@ class Firestore {
       {Duration timeout = const Duration(seconds: 5)}) async {
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds');
-    final int transactionId = _transactionHandlerId++;
-    _transactionHandlers[transactionId] = transactionHandler;
-    final Map<String, dynamic> result = await channel
-        .invokeMapMethod<String, dynamic>(
-            'Firestore#runTransaction', <String, dynamic>{
-      'app': app.name,
-      'transactionId': transactionId,
-      'transactionTimeout': timeout.inMilliseconds
-    });
+
+    // Wrap the user-supplied [TransactionHandler] into something that can be passed to the Platform implementation.
+    final PlatformTransactionHandler handler = (PlatformTransaction platformTransaction) async {
+      Transaction transaction = Transaction(platformTransaction.transactionId, this);
+      final dynamic result = await transactionHandler(transaction);
+      await transaction._finish();
+      return result;
+    };
+
+    final Map<String, dynamic> result = await platform.transaction.run(
+      app.name,
+      updateFunction: handler,
+      transactionTimeout: timeout.inMilliseconds,
+    );
+
     return result ?? <String, dynamic>{};
   }
 
   @deprecated
-  Future<void> enablePersistence(bool enable) async {
+  Future<void> enablePersistence(bool enable) {
     assert(enable != null);
-    await channel
-        .invokeMethod<void>('Firestore#enablePersistence', <String, dynamic>{
-      'app': app.name,
-      'enable': enable,
-    });
+    return platform.enablePersistence(app.name, enable: enable);
   }
 
   Future<void> settings(
       {bool persistenceEnabled,
       String host,
       bool sslEnabled,
-      int cacheSizeBytes}) async {
-    await channel.invokeMethod<void>('Firestore#settings', <String, dynamic>{
-      'app': app.name,
-      'persistenceEnabled': persistenceEnabled,
-      'host': host,
-      'sslEnabled': sslEnabled,
-      'cacheSizeBytes': cacheSizeBytes,
-    });
+      int cacheSizeBytes}) {
+
+    return platform.settings(app.name, 
+        persistenceEnabled: persistenceEnabled,
+        host: host,
+        sslEnabled: sslEnabled,
+        cacheSizeBytes: cacheSizeBytes,
+      );
   }
 }
