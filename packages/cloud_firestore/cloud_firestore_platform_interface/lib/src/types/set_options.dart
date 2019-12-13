@@ -12,4 +12,10 @@ class PlatformSetOptions {
   /// Changes the behavior of a set() call to only replace the values specified in its data argument.
   /// Fields omitted from the set() call remain untouched.
   bool merge;
+
+  Map<String, dynamic> asMap() {
+    return <String, dynamic> {
+      'merge': merge,
+    };
+  }
 }
