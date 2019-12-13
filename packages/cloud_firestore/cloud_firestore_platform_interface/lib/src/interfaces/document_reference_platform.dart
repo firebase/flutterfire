@@ -7,6 +7,7 @@ import 'package:meta/meta.dart' show required;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../implementations/method_channel_document_reference.dart';
+import '../types/set_options.dart';
 
 /// The Document Reference platform interface.
 abstract class DocumentReferencePlatform extends PlatformInterface {
@@ -78,8 +79,7 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
     String app, {
     @required String path,
     Map<String, dynamic> data,
-    // TODO: Type https://firebase.google.com/docs/reference/js/firebase.firestore.SetOptions.html
-    Map<String, dynamic> options,
+    PlatformSetOptions options,
   }) async {
     throw UnimplementedError(
         'DocumentReferencePlatform::set() is not implemented');

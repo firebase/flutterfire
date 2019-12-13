@@ -7,6 +7,7 @@ import 'package:meta/meta.dart' show required;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../implementations/method_channel_write_batch.dart';
+import '../types/set_options.dart';
 
 /// The WriteBatch platform interface.
 abstract class WriteBatchPlatform extends PlatformInterface {
@@ -66,8 +67,7 @@ abstract class WriteBatchPlatform extends PlatformInterface {
     @required dynamic handle,
     @required String path,
     Map<String, dynamic> data,
-    // TODO(ditman): Type SetOptions
-    Map<String, dynamic> options,
+    PlatformSetOptions options,
   }) async {
     throw UnimplementedError('WriteBatchPlatform::set() is not implemented');
   }
