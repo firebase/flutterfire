@@ -1,6 +1,8 @@
 //
 // Generated file. Do not edit.
 //
+import 'dart:ui';
+
 import 'package:firebase_auth_web/firebase_auth_web.dart';
 
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
