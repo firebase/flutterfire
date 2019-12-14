@@ -25,9 +25,9 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   /// Creates a new Write Batch
   // Android returns a WriteBatch id int
   @override
-  Future<PlatformWriteBatch> create(String app) {
+  Future<PlatformWriteBatchHandle> create(String app) {
     return channel.invokeMethod<dynamic>(
-        'WriteBatch#create', <String, dynamic>{'app': app}).then((id) => PlatformWriteBatch(writeBatchId: id));
+        'WriteBatch#create', <String, dynamic>{'app': app}).then((id) => PlatformWriteBatchHandle(writeBatchId: id));
   }
 
   /// Commits all of the writes in this write batch as a single atomic unit.
@@ -36,7 +36,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   /// Note that it won't resolve while you're offline.
   @override
   Future<void> commit({
-    @required PlatformWriteBatch handle,
+    @required PlatformWriteBatchHandle handle,
   }) async {
     return channel.invokeMethod<void>(
         'WriteBatch#commit', <String, dynamic>{'handle': handle.writeBatchId});
@@ -46,7 +46,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   @override
   Future<void> delete(
     String app, {
-    @required PlatformWriteBatch handle,
+    @required PlatformWriteBatchHandle handle,
     @required String path,
   }) async {
     return channel.invokeMethod<void>(
@@ -65,7 +65,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   @override
   Future<void> set(
     String app, {
-    @required PlatformWriteBatch handle,
+    @required PlatformWriteBatchHandle handle,
     @required String path,
     Map<String, dynamic> data,
     PlatformSetOptions options,
@@ -87,7 +87,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   @override
   Future<void> update(
     String app, {
-    @required PlatformWriteBatch handle,
+    @required PlatformWriteBatchHandle handle,
     @required String path,
     Map<String, dynamic> data,
   }) async {

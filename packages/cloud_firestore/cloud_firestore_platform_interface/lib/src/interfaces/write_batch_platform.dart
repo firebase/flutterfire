@@ -33,7 +33,7 @@ abstract class WriteBatchPlatform extends PlatformInterface {
   // Actual interface
   /// Creates a new Write Batch
   // Android returns a WriteBatch id int
-  Future<PlatformWriteBatch> create(String app) async {
+  Future<PlatformWriteBatchHandle> create(String app) async {
     throw UnimplementedError('WriteBatchPlatform::create() is not implemented');
   }
 
@@ -42,7 +42,7 @@ abstract class WriteBatchPlatform extends PlatformInterface {
   /// successfully written to the backend as an atomic unit.
   /// Note that it won't resolve while you're offline.
   Future<void> commit({
-    @required PlatformWriteBatch handle,
+    @required PlatformWriteBatchHandle handle,
   }) async {
     throw UnimplementedError('WriteBatchPlatform::commit() is not implemented');
   }
@@ -50,7 +50,7 @@ abstract class WriteBatchPlatform extends PlatformInterface {
   /// Deletes the document referred to by the provided [handle] and [path].
   Future<void> delete(
     String app, {
-    @required PlatformWriteBatch handle,
+    @required PlatformWriteBatchHandle handle,
     @required String path,
   }) async {
     throw UnimplementedError('WriteBatchPlatform::delete() is not implemented');
@@ -61,7 +61,7 @@ abstract class WriteBatchPlatform extends PlatformInterface {
   /// If you pass [options], the provided data can be merged into the existing document.
   Future<void> set(
     String app, {
-    @required PlatformWriteBatch handle,
+    @required PlatformWriteBatchHandle handle,
     @required String path,
     Map<String, dynamic> data,
     PlatformSetOptions options,
@@ -73,7 +73,7 @@ abstract class WriteBatchPlatform extends PlatformInterface {
   /// The update will fail if applied to a document that does not exist.
   Future<void> update(
     String app, {
-    @required PlatformWriteBatch handle,
+    @required PlatformWriteBatchHandle handle,
     @required String path,
     Map<String, dynamic> data,
   }) async {
