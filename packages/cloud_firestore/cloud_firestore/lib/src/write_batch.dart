@@ -15,7 +15,7 @@ class WriteBatch {
       : _handle = Firestore.platform.writeBatch.create(_firestore.app.name);
 
   final Firestore _firestore;
-  Future<PlatformWriteBatch> _handle;
+  Future<PlatformWriteBatchHandle> _handle;
   final List<Future<dynamic>> _actions = <Future<dynamic>>[];
 
   /// Indicator to whether or not this [WriteBatch] has been committed.
@@ -44,7 +44,7 @@ class WriteBatch {
   void delete(DocumentReference document) {
     _ensureNotCommitted();
 
-    _handle.then((PlatformWriteBatch handle) {
+    _handle.then((PlatformWriteBatchHandle handle) {
       _actions.add(
         Firestore.platform.writeBatch.delete(
             _firestore.app.name,
@@ -65,7 +65,7 @@ class WriteBatch {
       {bool merge = false}) {
     _ensureNotCommitted();
 
-    _handle.then((PlatformWriteBatch handle) {
+    _handle.then((PlatformWriteBatchHandle handle) {
       _actions.add(
         Firestore.platform.writeBatch.set(
             _firestore.app.name,
@@ -84,7 +84,7 @@ class WriteBatch {
   void updateData(DocumentReference document, Map<String, dynamic> data) {
     _ensureNotCommitted();
 
-    _handle.then((PlatformWriteBatch handle) {
+    _handle.then((PlatformWriteBatchHandle handle) {
       _actions.add(
         Firestore.platform.writeBatch.update(
             _firestore.app.name,
