@@ -32,7 +32,7 @@ class Transaction {
     if (result != null) {
       return DocumentSnapshot._(
           documentReference.path,
-          result.data?.cast<String, dynamic>(),
+          result.data,
           SnapshotMetadata._(result.metadata.hasPendingWrites,
               result.metadata.isFromCache),
           _firestore);
