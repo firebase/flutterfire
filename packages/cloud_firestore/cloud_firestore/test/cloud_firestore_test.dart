@@ -171,6 +171,9 @@ void main() {
         }
       };
 
+      // Ensure the MethodChannel platform is initialized
+      Firestore.platform;
+      // So we can plug the mock method call handlers
       MethodChannelDocumentReference.channel.setMockMethodCallHandler(methodCallHandler);
       MethodChannelFirestore.channel.setMockMethodCallHandler(methodCallHandler);
       MethodChannelQuery.channel.setMockMethodCallHandler(methodCallHandler);

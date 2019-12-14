@@ -12,7 +12,7 @@ class Firestore {
 
   /// The platform instance that talks to the native side of the plugin.
   @visibleForTesting
-  static final FirestorePlatform platform = FirestorePlatform.instance;
+  static final FirestorePlatform platform = FirestorePlatform.instance ?? (FirestorePlatform.instance = MethodChannelFirestore(FirestoreMessageCodec()));
 
   /// Gets the instance of Firestore for the default Firebase app.
   static final Firestore instance = Firestore();
