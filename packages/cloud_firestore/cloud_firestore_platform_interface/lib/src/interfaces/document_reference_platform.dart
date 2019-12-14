@@ -6,7 +6,6 @@ import 'dart:async';
 import 'package:meta/meta.dart' show required;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import '../implementations/method_channel_document_reference.dart';
 import '../types.dart';
 
 /// The Document Reference platform interface.

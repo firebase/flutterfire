@@ -3,12 +3,10 @@
 // found in the LICENSE file.
 import 'dart:async';
 
-import 'package:cloud_firestore_platform_interface/src/types/document.dart';
-import 'package:cloud_firestore_platform_interface/src/types/transaction.dart';
 import 'package:meta/meta.dart' show required;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import '../implementations/method_channel_transaction.dart';
+import '../types.dart';
 
 /// The Transaction platform interface.
 abstract class TransactionPlatform extends PlatformInterface {
