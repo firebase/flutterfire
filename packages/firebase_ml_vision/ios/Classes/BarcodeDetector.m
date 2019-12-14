@@ -190,20 +190,20 @@ NSDictionary *calendarEventToDictionary(FIRVisionBarcodeCalendarEvent *calendar)
 
 NSDictionary *driverLicenseToDictionary(FIRVisionBarcodeDriverLicense *license) {
   return @{
-    @"firstName" : license.firstName,
-    @"middleName" : license.middleName,
-    @"lastName" : license.lastName,
-    @"gender" : license.gender,
-    @"addressCity" : license.addressCity,
-    @"addressStreet" : license.addressStreet,
-    @"addressState" : license.addressState,
-    @"addressZip" : license.addressZip,
-    @"birthDate" : license.birthDate,
-    @"documentType" : license.documentType,
-    @"licenseNumber" : license.licenseNumber,
-    @"expiryDate" : license.expiryDate,
-    @"issuingDate" : license.issuingDate,
-    @"issuingCountry" : license.issuingCountry,
+    @"firstName" : license.firstName ? license.firstName : [NSNull null],
+    @"middleName" : license.middleName ? license.middleName : [NSNull null],
+    @"lastName" : license.lastName ? license.lastName : [NSNull null],
+    @"gender" : license.gender ? license.gender : [NSNull null],
+    @"addressCity" : license.addressCity ? license.addressCity : [NSNull null],
+    @"addressStreet" : license.addressStreet ? license.addressStreet : [NSNull null],
+    @"addressState" : license.addressState ? license.addressState : [NSNull null],
+    @"addressZip" : license.addressZip ? license.addressZip : [NSNull null],
+    @"birthDate" : license.birthDate ? license.birthDate : [NSNull null],
+    @"documentType" : license.documentType ? license.documentType : [NSNull null],
+    @"licenseNumber" : license.licenseNumber ? license.licenseNumber : [NSNull null],
+    @"expiryDate" : license.expiryDate ? license.expiryDate : [NSNull null],
+    @"issuingDate" : license.issuingDate ? license.issuingDate : [NSNull null],
+    @"issuingCountry" : license.issuingCountry ? license.issuingCountry : [NSNull null]
   };
 }
 
