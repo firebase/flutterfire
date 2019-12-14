@@ -20,11 +20,9 @@ abstract class WriteBatchPlatform extends PlatformInterface {
   ///
   /// Platform-specific plugins should override this with their own class
   /// that extends [WriteBatchPlatform] when they register themselves.
-  ///
-  /// Defaults to [MethodChannelWriteBatch].
   static WriteBatchPlatform get instance => _instance;
 
-  static WriteBatchPlatform _instance = MethodChannelWriteBatch();
+  static WriteBatchPlatform _instance;
 
   // TODO(amirh): Extract common platform interface logic.
   // https://github.com/flutter/flutter/issues/43368

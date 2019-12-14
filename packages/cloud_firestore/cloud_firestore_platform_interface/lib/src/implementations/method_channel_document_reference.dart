@@ -9,14 +9,17 @@ import 'package:meta/meta.dart' show visibleForTesting;
 import '../interfaces/document_reference_platform.dart';
 
 class MethodChannelDocumentReference extends DocumentReferencePlatform {
-  MethodChannelDocumentReference() {
-    channel.setMethodCallHandler(_callHandler);
+  MethodChannelDocumentReference(StandardMessageCodec codec) {
+    MethodChannelDocumentReference._channel = MethodChannel(
+      'plugins.flutter.io/cloud_firestore',
+      StandardMethodCodec(codec),
+    );
+    MethodChannelDocumentReference._channel.setMethodCallHandler(_callHandler);
   }
 
   @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/cloud_firestore',
-  );
+  static MethodChannel get channel => MethodChannelDocumentReference._channel;
+  static MethodChannel _channel;
 
   Future<dynamic> _callHandler(MethodCall call) async {
     switch (call.method) {

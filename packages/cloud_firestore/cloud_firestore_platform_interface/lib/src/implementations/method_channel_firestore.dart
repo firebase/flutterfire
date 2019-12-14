@@ -15,14 +15,24 @@ import '../interfaces.dart';
 
 /// A method channel implementation of the Firestore platform.
 class MethodChannelFirestore extends FirestorePlatform {
-  /// Constructor
-  MethodChannelFirestore() {
+  /// Constructor. Requires a MethodCodec [codec] that can live in userland and have business logic there.
+  MethodChannelFirestore(StandardMessageCodec codec) {
     // Register all other instances...
-    DocumentReferencePlatform.instance = MethodChannelDocumentReference();
-    QueryPlatform.instance = MethodChannelQuery();
-    TransactionPlatform.instance = MethodChannelTransaction();
-    WriteBatchPlatform.instance = MethodChannelWriteBatch();
+    MethodChannelFirestore._channel = MethodChannel(
+      'plugins.flutter.io/cloud_firestore',
+      StandardMethodCodec(codec),
+    );
+    
+    DocumentReferencePlatform.instance = MethodChannelDocumentReference(codec);
+    QueryPlatform.instance = MethodChannelQuery(codec);
+    TransactionPlatform.instance = MethodChannelTransaction(codec);
+    WriteBatchPlatform.instance = MethodChannelWriteBatch(codec);
   }
+
+  /// The MethodChannel used to pass messages to the native side.
+  @visibleForTesting
+  static MethodChannel get channel => MethodChannelFirestore._channel;
+  static MethodChannel _channel;
 
   /// DocumentReference delegate
   @override
@@ -40,12 +50,6 @@ class MethodChannelFirestore extends FirestorePlatform {
   /// WriteBatch delegate
   @override
   WriteBatchPlatform get writeBatch => WriteBatchPlatform.instance;
-
-  /// The MethodChannel used to pass messages to the native side.
-  @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/cloud_firestore',
-  );
 
   @override
   Future<void> enablePersistence(String app, {bool enable = true}) {

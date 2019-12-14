@@ -9,14 +9,17 @@ import 'package:meta/meta.dart' show visibleForTesting;
 import '../interfaces/transaction_platform.dart';
 
 class MethodChannelTransaction extends TransactionPlatform {
-  MethodChannelTransaction() {
-    channel.setMethodCallHandler(_callHandler);
+  MethodChannelTransaction(StandardMessageCodec codec) {
+    MethodChannelTransaction._channel = MethodChannel(
+      'plugins.flutter.io/cloud_firestore',
+      StandardMethodCodec(codec),
+    );
+    MethodChannelTransaction._channel.setMethodCallHandler(_callHandler);
   }
 
   @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/cloud_firestore',
-  );
+  static MethodChannel get channel => MethodChannelTransaction._channel;
+  static MethodChannel _channel;
 
   Future<dynamic> _callHandler(MethodCall call) async {
     switch (call.method) {

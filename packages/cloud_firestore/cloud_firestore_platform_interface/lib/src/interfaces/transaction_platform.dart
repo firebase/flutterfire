@@ -21,11 +21,9 @@ abstract class TransactionPlatform extends PlatformInterface {
   ///
   /// Platform-specific plugins should override this with their own class
   /// that extends [TransactionPlatform] when they register themselves.
-  ///
-  /// Defaults to [MethodChannelTransaction].
   static TransactionPlatform get instance => _instance;
 
-  static TransactionPlatform _instance = MethodChannelTransaction();
+  static TransactionPlatform _instance;
 
   // TODO(amirh): Extract common platform interface logic.
   // https://github.com/flutter/flutter/issues/43368

@@ -20,11 +20,9 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   ///
   /// Platform-specific plugins should override this with their own class
   /// that extends [DocumentReferencePlatform] when they register themselves.
-  ///
-  /// Defaults to [MethodChannelDocumentReference].
   static DocumentReferencePlatform get instance => _instance;
 
-  static DocumentReferencePlatform _instance = MethodChannelDocumentReference();
+  static DocumentReferencePlatform _instance;
 
   // TODO(amirh): Extract common platform interface logic.
   // https://github.com/flutter/flutter/issues/43368

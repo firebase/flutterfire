@@ -11,8 +11,6 @@ import './query_platform.dart';
 import './transaction_platform.dart';
 import './write_batch_platform.dart';
 
-import '../implementations/method_channel_firestore.dart';
-
 /// The Firestore platform interface.
 abstract class FirestorePlatform extends PlatformInterface {
   /// Constructor
@@ -24,11 +22,9 @@ abstract class FirestorePlatform extends PlatformInterface {
   ///
   /// Platform-specific plugins should override this with their own class
   /// that extends [FirestorePlatform] when they register themselves.
-  ///
-  /// Defaults to [MethodChannelFirestore].
   static FirestorePlatform get instance => _instance;
 
-  static FirestorePlatform _instance = MethodChannelFirestore();
+  static FirestorePlatform _instance;
 
   // TODO(amirh): Extract common platform interface logic.
   // https://github.com/flutter/flutter/issues/43368

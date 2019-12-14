@@ -20,11 +20,9 @@ abstract class QueryPlatform extends PlatformInterface {
   ///
   /// Platform-specific plugins should override this with their own class
   /// that extends [QueryPlatform] when they register themselves.
-  ///
-  /// Defaults to [MethodChannelQuery].
   static QueryPlatform get instance => _instance;
 
-  static QueryPlatform _instance = MethodChannelQuery();
+  static QueryPlatform _instance;
 
   // TODO(amirh): Extract common platform interface logic.
   // https://github.com/flutter/flutter/issues/43368

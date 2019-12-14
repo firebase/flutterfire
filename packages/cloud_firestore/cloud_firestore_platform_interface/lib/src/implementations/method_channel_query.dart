@@ -9,14 +9,17 @@ import 'package:meta/meta.dart' show visibleForTesting;
 import '../interfaces/query_platform.dart';
 
 class MethodChannelQuery extends QueryPlatform {
-  MethodChannelQuery() {
-    channel.setMethodCallHandler(_callHandler);
+  MethodChannelQuery(StandardMessageCodec codec) {
+    MethodChannelQuery._channel = MethodChannel(
+      'plugins.flutter.io/cloud_firestore',
+      StandardMethodCodec(codec),
+    );
+    MethodChannelQuery._channel.setMethodCallHandler(_callHandler);
   }
 
   @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/cloud_firestore',
-  );
+  static MethodChannel get channel => MethodChannelQuery._channel;
+  static MethodChannel _channel;
 
   Future<dynamic> _callHandler(MethodCall call) async {
     switch (call.method) {

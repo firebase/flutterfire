@@ -11,12 +11,16 @@ import '../interfaces/write_batch_platform.dart';
 
 class MethodChannelWriteBatch extends WriteBatchPlatform {
   /// Constructor
-  MethodChannelWriteBatch();
+  MethodChannelWriteBatch(StandardMessageCodec codec) {
+    MethodChannelWriteBatch._channel = MethodChannel(
+      'plugins.flutter.io/cloud_firestore',
+      StandardMethodCodec(codec),
+    );
+  }
 
   @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/cloud_firestore',
-  );
+  static MethodChannel get channel => MethodChannelWriteBatch._channel;
+  static MethodChannel _channel;
 
   /// Creates a new Write Batch
   // Android returns a WriteBatch id int
