@@ -1,3 +1,7 @@
+## 0.9.3+6
+
+* Added NSNull validation to driverLicenseDictionary to prevent errors when NSArray:addObject is called
+
 ## 0.9.3+5
 
 * Remove the deprecated `author:` field from pubspec.yaml
