@@ -1,6 +1,6 @@
 ## 3.1.1
 
-* Remove unnecessary debug print statements like "i am working".
+* Removed unnecessary debug print statements ("i am working").
 
 ## 3.1.0
 
