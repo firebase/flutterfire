@@ -4,21 +4,21 @@ import 'package:firebase/firestore.dart' as web;
 
 class CollectionReferenceWeb extends CollectionReference {
   final web.Firestore webFirestore;
-  final List<String> _pathComponents;
+  final List<String> pathComponents;
 
   CollectionReferenceWeb(
-      this.webFirestore, FirestorePlatform firestore, this._pathComponents)
-      : super(firestore, _pathComponents);
+      this.webFirestore, FirestorePlatform firestore, this.pathComponents)
+      : super(firestore, pathComponents);
 
   @override
   DocumentReference parent() {
-    if (_pathComponents.length < 2) {
+    if (pathComponents.length < 2) {
       return null;
     }
     return DocumentReferenceWeb(
       webFirestore,
       firestore,
-      (List<String>.from(_pathComponents)..removeLast()),
+      (List<String>.from(pathComponents)..removeLast()),
     );
   }
 
@@ -27,9 +27,9 @@ class CollectionReferenceWeb extends CollectionReference {
     List<String> childPath;
     if (path == null) {
       final String key = AutoIdGenerator.autoId();
-      childPath = List<String>.from(_pathComponents)..add(key);
+      childPath = List<String>.from(pathComponents)..add(key);
     } else {
-      childPath = List<String>.from(_pathComponents)..addAll(path.split(('/')));
+      childPath = List<String>.from(pathComponents)..addAll(path.split(('/')));
     }
     return DocumentReferenceWeb(
       webFirestore,

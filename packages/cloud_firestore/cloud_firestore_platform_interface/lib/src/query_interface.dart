@@ -5,15 +5,15 @@
 part of cloud_firestore_platform_interface;
 
 /// Represents a query over the data at a particular location.
-abstract class QueryPlatform {
-  QueryPlatform._(
+abstract class Query {
+  Query(
       {@required this.firestore,
       @required List<String> pathComponents,
       bool isCollectionGroup = false,
       Map<String, dynamic> parameters})
-      : _pathComponents = pathComponents,
-        _isCollectionGroup = isCollectionGroup,
-        _parameters = parameters ??
+      : pathComponents = pathComponents,
+        isCollectionGroup = isCollectionGroup,
+        parameters = parameters ??
             Map<String, dynamic>.unmodifiable(<String, dynamic>{
               'where': List<List<dynamic>>.unmodifiable(<List<dynamic>>[]),
               'orderBy': List<List<dynamic>>.unmodifiable(<List<dynamic>>[]),
@@ -24,27 +24,20 @@ abstract class QueryPlatform {
   /// The Firestore instance associated with this query
   final FirestorePlatform firestore;
 
-  final List<String> _pathComponents;
-  final Map<String, dynamic> _parameters;
-  final bool _isCollectionGroup;
+  final List<String> pathComponents;
+  final Map<String, dynamic> parameters;
+  final bool isCollectionGroup;
 
-  String get _path => _pathComponents.join('/');
+  String get path => pathComponents.join('/');
 
-  Query _copyWithParameters(Map<String, dynamic> parameters) {
-    return Query(
-      firestore: firestore,
-      isCollectionGroup: _isCollectionGroup,
-      pathComponents: _pathComponents,
-      parameters: Map<String, dynamic>.unmodifiable(
-        Map<String, dynamic>.from(_parameters)..addAll(parameters),
-      ),
-    );
+  Query copyWithParameters(Map<String, dynamic> parameters) {
+    throw UnimplementedError("copyWithParameters() is not implemented");
   }
 
   Map<String, dynamic> buildArguments() {
-    return Map<String, dynamic>.from(_parameters)
+    return Map<String, dynamic>.from(parameters)
       ..addAll(<String, dynamic>{
-        'path': _path,
+        'path': path,
       });
   }
 
@@ -61,7 +54,7 @@ abstract class QueryPlatform {
 
   /// Obtains a CollectionReference corresponding to this query's location.
   CollectionReference reference() =>
-      CollectionReference(firestore, _pathComponents);
+      CollectionReference(firestore, pathComponents);
 
   /// Creates and returns a new [Query] with additional filter on specified
   /// [field]. [field] refers to a field in a document.
@@ -91,7 +84,7 @@ abstract class QueryPlatform {
 
     final ListEquality<dynamic> equality = const ListEquality<dynamic>();
     final List<List<dynamic>> conditions =
-        List<List<dynamic>>.from(_parameters['where']);
+        List<List<dynamic>>.from(parameters['where']);
 
     void addCondition(dynamic field, String operator, dynamic value) {
       final List<dynamic> condition = <dynamic>[field, operator, value];
@@ -123,7 +116,7 @@ abstract class QueryPlatform {
       addCondition(field, '==', null);
     }
 
-    return _copyWithParameters(<String, dynamic>{'where': conditions});
+    return copyWithParameters(<String, dynamic>{'where': conditions});
   }
 
   /// Creates and returns a new [Query] that's additionally sorted by the specified
@@ -142,7 +135,7 @@ abstract class QueryPlatform {
         'Supported [field] types are [String] and [FieldPath].');
 
     final List<List<dynamic>> orders =
-        List<List<dynamic>>.from(_parameters['orderBy']);
+        List<List<dynamic>>.from(parameters['orderBy']);
 
     final List<dynamic> order = <dynamic>[field, descending];
     assert(orders.where((List<dynamic> item) => field == item[0]).isEmpty,
@@ -150,10 +143,10 @@ abstract class QueryPlatform {
 
     assert(() {
       if (field == FieldPath.documentId) {
-        return !(_parameters.containsKey('startAfterDocument') ||
-            _parameters.containsKey('startAtDocument') ||
-            _parameters.containsKey('endAfterDocument') ||
-            _parameters.containsKey('endAtDocument'));
+        return !(parameters.containsKey('startAfterDocument') ||
+            parameters.containsKey('startAtDocument') ||
+            parameters.containsKey('endAfterDocument') ||
+            parameters.containsKey('endAtDocument'));
       }
       return true;
     }(),
@@ -161,7 +154,7 @@ abstract class QueryPlatform {
         'Hence, you may not use an order by [FieldPath.documentId] when using any of these methods for a query.');
 
     orders.add(order);
-    return _copyWithParameters(<String, dynamic>{'orderBy': orders});
+    return copyWithParameters(<String, dynamic>{'orderBy': orders});
   }
 
   /// Creates and returns a new [Query] that starts after the provided document
@@ -180,17 +173,17 @@ abstract class QueryPlatform {
   ///  * [endAtDocument] for a query that ends at a document.
   Query startAfterDocument(DocumentSnapshot documentSnapshot) {
     assert(documentSnapshot != null);
-    assert(!_parameters.containsKey('startAfter'));
-    assert(!_parameters.containsKey('startAt'));
-    assert(!_parameters.containsKey('startAfterDocument'));
-    assert(!_parameters.containsKey('startAtDocument'));
+    assert(!parameters.containsKey('startAfter'));
+    assert(!parameters.containsKey('startAt'));
+    assert(!parameters.containsKey('startAfterDocument'));
+    assert(!parameters.containsKey('startAtDocument'));
     assert(
-        List<List<dynamic>>.from(_parameters['orderBy'])
+        List<List<dynamic>>.from(parameters['orderBy'])
             .where((List<dynamic> item) => item[0] == FieldPath.documentId)
             .isEmpty,
         '[startAfterDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [startAfterDocument].');
-    return _copyWithParameters(<String, dynamic>{
+    return copyWithParameters(<String, dynamic>{
       'startAfterDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
         'path': documentSnapshot.reference.path,
@@ -215,17 +208,17 @@ abstract class QueryPlatform {
   ///  * [endBeforeDocument] for a query that ends before a document.
   Query startAtDocument(DocumentSnapshot documentSnapshot) {
     assert(documentSnapshot != null);
-    assert(!_parameters.containsKey('startAfter'));
-    assert(!_parameters.containsKey('startAt'));
-    assert(!_parameters.containsKey('startAfterDocument'));
-    assert(!_parameters.containsKey('startAtDocument'));
+    assert(!parameters.containsKey('startAfter'));
+    assert(!parameters.containsKey('startAt'));
+    assert(!parameters.containsKey('startAfterDocument'));
+    assert(!parameters.containsKey('startAtDocument'));
     assert(
-        List<List<dynamic>>.from(_parameters['orderBy'])
+        List<List<dynamic>>.from(parameters['orderBy'])
             .where((List<dynamic> item) => item[0] == FieldPath.documentId)
             .isEmpty,
         '[startAtDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [startAtDocument].');
-    return _copyWithParameters(<String, dynamic>{
+    return copyWithParameters(<String, dynamic>{
       'startAtDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
         'path': documentSnapshot.reference.path,
@@ -244,11 +237,11 @@ abstract class QueryPlatform {
   /// [endBefore], [endAtDocument] and [endBeforeDocument].
   Query startAfter(List<dynamic> values) {
     assert(values != null);
-    assert(!_parameters.containsKey('startAfter'));
-    assert(!_parameters.containsKey('startAt'));
-    assert(!_parameters.containsKey('startAfterDocument'));
-    assert(!_parameters.containsKey('startAtDocument'));
-    return _copyWithParameters(<String, dynamic>{'startAfter': values});
+    assert(!parameters.containsKey('startAfter'));
+    assert(!parameters.containsKey('startAt'));
+    assert(!parameters.containsKey('startAfterDocument'));
+    assert(!parameters.containsKey('startAtDocument'));
+    return copyWithParameters(<String, dynamic>{'startAfter': values});
   }
 
   /// Takes a list of [values], creates and returns a new [Query] that starts at
@@ -261,11 +254,11 @@ abstract class QueryPlatform {
   /// [endBefore], [endAtDocument] and [endBeforeDocument].
   Query startAt(List<dynamic> values) {
     assert(values != null);
-    assert(!_parameters.containsKey('startAfter'));
-    assert(!_parameters.containsKey('startAt'));
-    assert(!_parameters.containsKey('startAfterDocument'));
-    assert(!_parameters.containsKey('startAtDocument'));
-    return _copyWithParameters(<String, dynamic>{'startAt': values});
+    assert(!parameters.containsKey('startAfter'));
+    assert(!parameters.containsKey('startAt'));
+    assert(!parameters.containsKey('startAfterDocument'));
+    assert(!parameters.containsKey('startAtDocument'));
+    return copyWithParameters(<String, dynamic>{'startAt': values});
   }
 
   /// Creates and returns a new [Query] that ends at the provided document
@@ -284,17 +277,17 @@ abstract class QueryPlatform {
   ///  * [endBeforeDocument] for a query that ends before a document.
   Query endAtDocument(DocumentSnapshot documentSnapshot) {
     assert(documentSnapshot != null);
-    assert(!_parameters.containsKey('endBefore'));
-    assert(!_parameters.containsKey('endAt'));
-    assert(!_parameters.containsKey('endBeforeDocument'));
-    assert(!_parameters.containsKey('endAtDocument'));
+    assert(!parameters.containsKey('endBefore'));
+    assert(!parameters.containsKey('endAt'));
+    assert(!parameters.containsKey('endBeforeDocument'));
+    assert(!parameters.containsKey('endAtDocument'));
     assert(
-        List<List<dynamic>>.from(_parameters['orderBy'])
+        List<List<dynamic>>.from(parameters['orderBy'])
             .where((List<dynamic> item) => item[0] == FieldPath.documentId)
             .isEmpty,
         '[endAtDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [endAtDocument].');
-    return _copyWithParameters(<String, dynamic>{
+    return copyWithParameters(<String, dynamic>{
       'endAtDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
         'path': documentSnapshot.reference.path,
@@ -313,11 +306,11 @@ abstract class QueryPlatform {
   /// [startAfter], [startAtDocument] and [startAfterDocument].
   Query endAt(List<dynamic> values) {
     assert(values != null);
-    assert(!_parameters.containsKey('endBefore'));
-    assert(!_parameters.containsKey('endAt'));
-    assert(!_parameters.containsKey('endBeforeDocument'));
-    assert(!_parameters.containsKey('endAtDocument'));
-    return _copyWithParameters(<String, dynamic>{'endAt': values});
+    assert(!parameters.containsKey('endBefore'));
+    assert(!parameters.containsKey('endAt'));
+    assert(!parameters.containsKey('endBeforeDocument'));
+    assert(!parameters.containsKey('endAtDocument'));
+    return copyWithParameters(<String, dynamic>{'endAt': values});
   }
 
   /// Creates and returns a new [Query] that ends before the provided document
@@ -336,17 +329,17 @@ abstract class QueryPlatform {
   ///  * [endAtDocument] for a query that ends at a document.
   Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
     assert(documentSnapshot != null);
-    assert(!_parameters.containsKey('endBefore'));
-    assert(!_parameters.containsKey('endAt'));
-    assert(!_parameters.containsKey('endBeforeDocument'));
-    assert(!_parameters.containsKey('endAtDocument'));
+    assert(!parameters.containsKey('endBefore'));
+    assert(!parameters.containsKey('endAt'));
+    assert(!parameters.containsKey('endBeforeDocument'));
+    assert(!parameters.containsKey('endAtDocument'));
     assert(
-        List<List<dynamic>>.from(_parameters['orderBy'])
+        List<List<dynamic>>.from(parameters['orderBy'])
             .where((List<dynamic> item) => item[0] == FieldPath.documentId)
             .isEmpty,
         '[endBeforeDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [endBeforeDocument].');
-    return _copyWithParameters(<String, dynamic>{
+    return copyWithParameters(<String, dynamic>{
       'endBeforeDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
         'path': documentSnapshot.reference.path,
@@ -365,17 +358,17 @@ abstract class QueryPlatform {
   /// [startAfter], [startAtDocument] and [startAfterDocument].
   Query endBefore(List<dynamic> values) {
     assert(values != null);
-    assert(!_parameters.containsKey('endBefore'));
-    assert(!_parameters.containsKey('endAt'));
-    assert(!_parameters.containsKey('endBeforeDocument'));
-    assert(!_parameters.containsKey('endAtDocument'));
-    return _copyWithParameters(<String, dynamic>{'endBefore': values});
+    assert(!parameters.containsKey('endBefore'));
+    assert(!parameters.containsKey('endAt'));
+    assert(!parameters.containsKey('endBeforeDocument'));
+    assert(!parameters.containsKey('endAtDocument'));
+    return copyWithParameters(<String, dynamic>{'endBefore': values});
   }
 
   /// Creates and returns a new Query that's additionally limited to only return up
   /// to the specified number of documents.
   Query limit(int length) {
-    assert(!_parameters.containsKey('limit'));
-    return _copyWithParameters(<String, dynamic>{'limit': length});
+    assert(!parameters.containsKey('limit'));
+    return copyWithParameters(<String, dynamic>{'limit': length});
   }
 }

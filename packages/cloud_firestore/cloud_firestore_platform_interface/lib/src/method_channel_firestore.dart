@@ -15,7 +15,7 @@ class MethodChannelFirestore extends FirestorePlatform {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       if (call.method == 'QuerySnapshot') {
-        final QuerySnapshot snapshot = QuerySnapshot._(call.arguments, this);
+        final QuerySnapshot snapshot = QuerySnapshot(call.arguments, this);
         _queryObservers[call.arguments['handle']].add(snapshot);
       } else if (call.method == 'DocumentSnapshot') {
         final DocumentSnapshot snapshot = DocumentSnapshot(
@@ -70,7 +70,7 @@ class MethodChannelFirestore extends FirestorePlatform {
   Query collectionGroup(String path) {
     assert(path != null);
     assert(!path.contains("/"), "Collection IDs must not contain '/'.");
-    return Query(
+    return QueryPlatform(
       firestore: this,
       isCollectionGroup: true,
       pathComponents: path.split('/'),

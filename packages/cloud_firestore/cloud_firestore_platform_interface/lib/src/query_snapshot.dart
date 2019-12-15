@@ -6,7 +6,7 @@ part of cloud_firestore_platform_interface;
 
 /// A QuerySnapshot contains zero or more DocumentSnapshot objects.
 class QuerySnapshot {
-  QuerySnapshot._(Map<dynamic, dynamic> data, FirestorePlatform firestore)
+  QuerySnapshot(Map<dynamic, dynamic> data, FirestorePlatform firestore)
       : documents = List<DocumentSnapshot>.generate(data['documents'].length,
             (int index) {
           return DocumentSnapshot(

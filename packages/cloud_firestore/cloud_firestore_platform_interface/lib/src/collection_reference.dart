@@ -12,7 +12,7 @@ class CollectionReference extends Query {
       : super(firestore: firestore, pathComponents: pathComponents);
 
   /// ID of the referenced collection.
-  String get id => _pathComponents.isEmpty ? null : _pathComponents.last;
+  String get id => pathComponents.isEmpty ? null : pathComponents.last;
 
   /// For subcollections, parent returns the containing [DocumentReference].
   ///
@@ -20,11 +20,7 @@ class CollectionReference extends Query {
   DocumentReference parent() {
     throw UnimplementedError("parent() is not implemented");
   }
-
-  /// A string containing the slash-separated path to this  CollectionReference
-  /// (relative to the root of the database).
-  String get path => _path;
-
+  
   /// Returns a `DocumentReference` with the provided path.
   ///
   /// If no [path] is provided, an auto-generated ID is used.

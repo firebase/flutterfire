@@ -1,6 +1,7 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/collection_reference_web.dart';
 import 'package:cloud_firestore_web/document_reference_web.dart';
+import 'package:cloud_firestore_web/query_web.dart';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/firestore.dart' show Settings;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
@@ -19,7 +20,7 @@ class FirestoreWeb extends FirestorePlatform {
       CollectionReferenceWeb(app, this, path.split('/'));
 
   @override
-  Query collectionGroup(String path) => Query(
+  Query collectionGroup(String path) => QueryWeb(app,
       firestore: this,
       isCollectionGroup: true,
       pathComponents: path.split('/'));

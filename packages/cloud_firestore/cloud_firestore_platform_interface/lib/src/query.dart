@@ -5,14 +5,25 @@
 part of cloud_firestore_platform_interface;
 
 /// Represents a query over the data at a particular location.
-class Query extends QueryPlatform{
-  Query(
+class QueryPlatform extends Query{
+  QueryPlatform(
       {@required FirestorePlatform firestore,
       @required List<String> pathComponents,
       bool isCollectionGroup = false,
       Map<String, dynamic> parameters})
-      :super._(firestore: firestore, pathComponents: pathComponents, isCollectionGroup: isCollectionGroup, parameters: parameters); 
+      :super(firestore: firestore, pathComponents: pathComponents, isCollectionGroup: isCollectionGroup, parameters: parameters);
 
+
+  Query copyWithParameters(Map<String, dynamic> parameters) {
+    return QueryPlatform(
+      firestore: firestore,
+      isCollectionGroup: isCollectionGroup,
+      pathComponents: pathComponents,
+      parameters: Map<String, dynamic>.unmodifiable(
+        Map<String, dynamic>.from(parameters)..addAll(parameters),
+      ),
+    );
+  }
   
   // TODO(jackson): Reduce code duplication with [DocumentReference]
   @override
@@ -28,9 +39,9 @@ class Query extends QueryPlatform{
           'Query#addSnapshotListener',
           <String, dynamic>{
             'app': firestore.appName(),
-            'path': _path,
-            'isCollectionGroup': _isCollectionGroup,
-            'parameters': _parameters,
+            'path': path,
+            'isCollectionGroup': isCollectionGroup,
+            'parameters': parameters,
             'includeMetadataChanges': includeMetadataChanges,
           },
         ).then<int>((dynamic result) => result);
@@ -60,12 +71,12 @@ class Query extends QueryPlatform{
       'Query#getDocuments',
       <String, dynamic>{
         'app': firestore.appName(),
-        'path': _path,
-        'isCollectionGroup': _isCollectionGroup,
-        'parameters': _parameters,
+        'path': path,
+        'isCollectionGroup': isCollectionGroup,
+        'parameters': parameters,
         'source': _getSourceString(source),
       },
     );
-    return QuerySnapshot._(data, firestore);
+    return QuerySnapshot(data, firestore);
   }
 }
