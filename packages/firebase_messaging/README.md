@@ -67,9 +67,11 @@ By default background messaging is not enabled. To handle messages in the backgr
    dependencies {
      // ...
    
-     implementation 'com.google.firebase:firebase-messaging:20.1.0'
+     implementation 'com.google.firebase:firebase-messaging:<latest_version>'
    }
    ```
+   
+   Note: you can find out what the latest version of the plugin is [here ("Cloud Messaging")](https://firebase.google.com/support/release-notes/android#latest_sdk_versions).
 
 1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
 
