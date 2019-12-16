@@ -14,7 +14,7 @@ class MethodChannelQuery extends Query{
       :super(firestore: firestore, pathComponents: pathComponents, isCollectionGroup: isCollectionGroup, parameters: parameters);
 
 
-  Query copyWithParameters(Map<String, dynamic> parameters) {
+  Query _copyWithParameters(Map<String, dynamic> parameters) {
     return MethodChannelQuery(
       firestore: firestore,
       isCollectionGroup: isCollectionGroup,

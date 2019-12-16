@@ -30,7 +30,7 @@ abstract class Query {
 
   String get path => pathComponents.join('/');
 
-  Query copyWithParameters(Map<String, dynamic> parameters) {
+  Query _copyWithParameters(Map<String, dynamic> parameters) {
     throw UnimplementedError("copyWithParameters() is not implemented");
   }
 
@@ -116,7 +116,7 @@ abstract class Query {
       addCondition(field, '==', null);
     }
 
-    return copyWithParameters(<String, dynamic>{'where': conditions});
+    return _copyWithParameters(<String, dynamic>{'where': conditions});
   }
 
   /// Creates and returns a new [Query] that's additionally sorted by the specified
@@ -154,7 +154,7 @@ abstract class Query {
         'Hence, you may not use an order by [FieldPath.documentId] when using any of these methods for a query.');
 
     orders.add(order);
-    return copyWithParameters(<String, dynamic>{'orderBy': orders});
+    return _copyWithParameters(<String, dynamic>{'orderBy': orders});
   }
 
   /// Creates and returns a new [Query] that starts after the provided document
@@ -183,7 +183,7 @@ abstract class Query {
             .isEmpty,
         '[startAfterDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [startAfterDocument].');
-    return copyWithParameters(<String, dynamic>{
+    return _copyWithParameters(<String, dynamic>{
       'startAfterDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
         'path': documentSnapshot.reference.path,
@@ -218,7 +218,7 @@ abstract class Query {
             .isEmpty,
         '[startAtDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [startAtDocument].');
-    return copyWithParameters(<String, dynamic>{
+    return _copyWithParameters(<String, dynamic>{
       'startAtDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
         'path': documentSnapshot.reference.path,
@@ -241,7 +241,7 @@ abstract class Query {
     assert(!parameters.containsKey('startAt'));
     assert(!parameters.containsKey('startAfterDocument'));
     assert(!parameters.containsKey('startAtDocument'));
-    return copyWithParameters(<String, dynamic>{'startAfter': values});
+    return _copyWithParameters(<String, dynamic>{'startAfter': values});
   }
 
   /// Takes a list of [values], creates and returns a new [Query] that starts at
@@ -258,7 +258,7 @@ abstract class Query {
     assert(!parameters.containsKey('startAt'));
     assert(!parameters.containsKey('startAfterDocument'));
     assert(!parameters.containsKey('startAtDocument'));
-    return copyWithParameters(<String, dynamic>{'startAt': values});
+    return _copyWithParameters(<String, dynamic>{'startAt': values});
   }
 
   /// Creates and returns a new [Query] that ends at the provided document
@@ -287,7 +287,7 @@ abstract class Query {
             .isEmpty,
         '[endAtDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [endAtDocument].');
-    return copyWithParameters(<String, dynamic>{
+    return _copyWithParameters(<String, dynamic>{
       'endAtDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
         'path': documentSnapshot.reference.path,
@@ -310,7 +310,7 @@ abstract class Query {
     assert(!parameters.containsKey('endAt'));
     assert(!parameters.containsKey('endBeforeDocument'));
     assert(!parameters.containsKey('endAtDocument'));
-    return copyWithParameters(<String, dynamic>{'endAt': values});
+    return _copyWithParameters(<String, dynamic>{'endAt': values});
   }
 
   /// Creates and returns a new [Query] that ends before the provided document
@@ -339,7 +339,7 @@ abstract class Query {
             .isEmpty,
         '[endBeforeDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [endBeforeDocument].');
-    return copyWithParameters(<String, dynamic>{
+    return _copyWithParameters(<String, dynamic>{
       'endBeforeDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
         'path': documentSnapshot.reference.path,
@@ -362,13 +362,13 @@ abstract class Query {
     assert(!parameters.containsKey('endAt'));
     assert(!parameters.containsKey('endBeforeDocument'));
     assert(!parameters.containsKey('endAtDocument'));
-    return copyWithParameters(<String, dynamic>{'endBefore': values});
+    return _copyWithParameters(<String, dynamic>{'endBefore': values});
   }
 
   /// Creates and returns a new Query that's additionally limited to only return up
   /// to the specified number of documents.
   Query limit(int length) {
     assert(!parameters.containsKey('limit'));
-    return copyWithParameters(<String, dynamic>{'limit': length});
+    return _copyWithParameters(<String, dynamic>{'limit': length});
   }
 }
