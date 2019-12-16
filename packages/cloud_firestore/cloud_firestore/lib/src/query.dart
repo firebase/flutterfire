@@ -6,106 +6,64 @@ part of cloud_firestore;
 
 /// Represents a query over the data at a particular location.
 class Query {
+  final platform.MethodChannelQuery _delegate;
+
   Query._(
-      {@required this.firestore,
-      @required List<String> pathComponents,
+      {this.firestore,
+      List<String> pathComponents,
       bool isCollectionGroup = false,
-      Map<String, dynamic> parameters})
-      : _pathComponents = pathComponents,
-        _isCollectionGroup = isCollectionGroup,
-        _parameters = parameters ??
-            Map<String, dynamic>.unmodifiable(<String, dynamic>{
-              'where': List<List<dynamic>>.unmodifiable(<List<dynamic>>[]),
-              'orderBy': List<List<dynamic>>.unmodifiable(<List<dynamic>>[]),
-            }),
+      Map<String, dynamic> parameters,
+      platform.MethodChannelQuery delegate})
+      : _delegate = delegate ?? platform.MethodChannelQuery(
+            firestore: platform.FirestorePlatform.instance,
+            pathComponents: pathComponents,
+            isCollectionGroup: isCollectionGroup,
+            parameters: parameters),
         assert(firestore != null),
         assert(pathComponents != null);
 
   /// The Firestore instance associated with this query
   final Firestore firestore;
 
-  final List<String> _pathComponents;
-  final Map<String, dynamic> _parameters;
-  final bool _isCollectionGroup;
+  List<String> get _pathComponents => _delegate.pathComponents;
+  Map<String, dynamic> get _parameters => _delegate.parameters;
 
   String get _path => _pathComponents.join('/');
 
   Query _copyWithParameters(Map<String, dynamic> parameters) {
     return Query._(
       firestore: firestore,
-      isCollectionGroup: _isCollectionGroup,
-      pathComponents: _pathComponents,
+      isCollectionGroup: _delegate.isCollectionGroup,
+      pathComponents: _delegate.pathComponents,
       parameters: Map<String, dynamic>.unmodifiable(
-        Map<String, dynamic>.from(_parameters)..addAll(parameters),
+        Map<String, dynamic>.from(_delegate.parameters)..addAll(parameters),
       ),
     );
   }
 
   Map<String, dynamic> buildArguments() {
-    return Map<String, dynamic>.from(_parameters)
-      ..addAll(<String, dynamic>{
-        'path': _path,
-      });
+    return _delegate.buildArguments();
   }
 
   /// Notifies of query results at this location
   // TODO(jackson): Reduce code duplication with [DocumentReference]
-  Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
-    assert(includeMetadataChanges != null);
-    Future<int> _handle;
-    // It's fine to let the StreamController be garbage collected once all the
-    // subscribers have cancelled; this analyzer warning is safe to ignore.
-    StreamController<QuerySnapshot> controller; // ignore: close_sinks
-    controller = StreamController<QuerySnapshot>.broadcast(
-      onListen: () {
-        _handle = Firestore.channel.invokeMethod<int>(
-          'Query#addSnapshotListener',
-          <String, dynamic>{
-            'app': firestore.app.name,
-            'path': _path,
-            'isCollectionGroup': _isCollectionGroup,
-            'parameters': _parameters,
-            'includeMetadataChanges': includeMetadataChanges,
-          },
-        ).then<int>((dynamic result) => result);
-        _handle.then((int handle) {
-          Firestore._queryObservers[handle] = controller;
-        });
-      },
-      onCancel: () {
-        _handle.then((int handle) async {
-          await Firestore.channel.invokeMethod<void>(
-            'removeListener',
-            <String, dynamic>{'handle': handle},
-          );
-          Firestore._queryObservers.remove(handle);
-        });
-      },
-    );
-    return controller.stream;
-  }
+  Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) =>
+  _delegate.snapshots(includeMetadataChanges: includeMetadataChanges).map((item) => QuerySnapshot._(null, firestore, delegate: item));
 
   /// Fetch the documents for this query
   Future<QuerySnapshot> getDocuments(
       {Source source = Source.serverAndCache}) async {
     assert(source != null);
-    final Map<dynamic, dynamic> data =
-        await Firestore.channel.invokeMapMethod<String, dynamic>(
-      'Query#getDocuments',
-      <String, dynamic>{
-        'app': firestore.app.name,
-        'path': _path,
-        'isCollectionGroup': _isCollectionGroup,
-        'parameters': _parameters,
-        'source': _getSourceString(source),
-      },
+    return QuerySnapshot._(
+      null,
+      firestore,
+      delegate: await _delegate.getDocuments(source: PlatformUtils._toPlatformSource(source))
     );
-    return QuerySnapshot._(data, firestore);
   }
 
   /// Obtains a CollectionReference corresponding to this query's location.
   CollectionReference reference() =>
-      CollectionReference._(firestore, _pathComponents);
+      CollectionReference._(firestore, _delegate.pathComponents);
 
   /// Creates and returns a new [Query] with additional filter on specified
   /// [field]. [field] refers to a field in a document.
@@ -135,7 +93,7 @@ class Query {
 
     final ListEquality<dynamic> equality = const ListEquality<dynamic>();
     final List<List<dynamic>> conditions =
-        List<List<dynamic>>.from(_parameters['where']);
+        List<List<dynamic>>.from(_delegate.parameters['where']);
 
     void addCondition(dynamic field, String operator, dynamic value) {
       final List<dynamic> condition = <dynamic>[field, operator, value];

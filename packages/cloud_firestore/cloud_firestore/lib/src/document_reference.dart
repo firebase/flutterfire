@@ -68,25 +68,12 @@ class DocumentReference {
   /// If no document exists, the read will return null.
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
     return DocumentSnapshot._(
-      await _delegate.get(source: _fromPlatformSource(source)),
+      await _delegate.get(source: PlatformUtils._toPlatformSource(source)),
       firestore,
     );
   }
 
-  platform.Source _fromPlatformSource(Source platformSource) {
-    switch(platformSource) {
-      case Source.cache:
-        return platform.Source.cache;
-      case Source.server:
-        return platform.Source.server;
-      case Source.serverAndCache:
-        return platform.Source.serverAndCache;
-      default:
-        throw ArgumentError("Invalid source value");
-
-    }
-  }
-     /// Deletes the document referred to by this [DocumentReference].
+  /// Deletes the document referred to by this [DocumentReference].
   Future<void> delete() => _delegate.delete();
 
   /// Returns the reference of a collection contained inside of this

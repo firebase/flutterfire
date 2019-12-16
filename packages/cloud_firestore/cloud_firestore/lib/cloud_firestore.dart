@@ -22,6 +22,7 @@ export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 part 'src/blob.dart';
 part 'src/collection_reference.dart';
 part 'src/document_change.dart';
+part 'src/utils/PlatformUtils.dart';
 part 'src/document_reference.dart';
 part 'src/document_snapshot.dart';
 part 'src/field_path.dart';

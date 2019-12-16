@@ -8,12 +8,16 @@ typedef Future<dynamic> TransactionHandler(Transaction transaction);
 
 class Transaction {
   @visibleForTesting
-  Transaction(this._transactionId, this._firestore);
+  Transaction(this._transactionId, this._firestore)
+      : _delegate = platform.Transaction(
+            _transactionId, platform.FirestorePlatform.instance);
 
+  platform.Transaction _delegate;
   int _transactionId;
   Firestore _firestore;
   List<Future<dynamic>> _pendingResults = <Future<dynamic>>[];
-  Future<void> _finish() => Future.wait<void>(_pendingResults);
+
+  Future<void> _finish() => _delegate.finish();
 
   /// Reads the document referenced by the provided DocumentReference.
   Future<DocumentSnapshot> get(DocumentReference documentReference) {
@@ -23,19 +27,11 @@ class Transaction {
   }
 
   Future<DocumentSnapshot> _get(DocumentReference documentReference) async {
-    final Map<String, dynamic> result = await Firestore.channel
-        .invokeMapMethod<String, dynamic>('Transaction#get', <String, dynamic>{
-      'app': _firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
-    });
+    final result = await _delegate.get(platform.MethodChannelDocumentReference(
+        platform.FirestorePlatform.instance,
+        documentReference.path.split("/")));
     if (result != null) {
-      return DocumentSnapshot._(
-          documentReference.path,
-          result['data']?.cast<String, dynamic>(),
-          SnapshotMetadata._(result['metadata']['hasPendingWrites'],
-              result['metadata']['isFromCache']),
-          _firestore);
+      return DocumentSnapshot._(result, _firestore);
     } else {
       return null;
     }
@@ -51,14 +47,10 @@ class Transaction {
     return result;
   }
 
-  Future<void> _delete(DocumentReference documentReference) async {
-    return Firestore.channel
-        .invokeMethod<void>('Transaction#delete', <String, dynamic>{
-      'app': _firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
-    });
-  }
+  Future<void> _delete(DocumentReference documentReference) async =>
+      _delegate.delete(platform.MethodChannelDocumentReference(
+          platform.FirestorePlatform.instance,
+          documentReference.path.split("/")));
 
   /// Updates fields in the document referred to by [documentReference].
   /// The update will fail if applied to a document that does not exist.
@@ -72,16 +64,13 @@ class Transaction {
     return result;
   }
 
-  Future<void> _update(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
-    return Firestore.channel
-        .invokeMethod<void>('Transaction#update', <String, dynamic>{
-      'app': _firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
-      'data': data,
-    });
-  }
+  Future<void> _update(DocumentReference documentReference,
+          Map<String, dynamic> data) async =>
+      _delegate.update(
+          platform.MethodChannelDocumentReference(
+              platform.FirestorePlatform.instance,
+              documentReference.path.split("/")),
+          data);
 
   /// Writes to the document referred to by the provided [DocumentReference].
   /// If the document does not exist yet, it will be created. If you pass
@@ -96,14 +85,11 @@ class Transaction {
     return result;
   }
 
-  Future<void> _set(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
-    return Firestore.channel
-        .invokeMethod<void>('Transaction#set', <String, dynamic>{
-      'app': _firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
-      'data': data,
-    });
-  }
+  Future<void> _set(DocumentReference documentReference,
+          Map<String, dynamic> data) async =>
+      _delegate.set(
+          platform.MethodChannelDocumentReference(
+              platform.FirestorePlatform.instance,
+              documentReference.path.split("/")),
+          data);
 }

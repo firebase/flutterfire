@@ -26,8 +26,8 @@ class DocumentChange {
   final platform.MethodChannelDocumentChange _delegate;
   final Firestore _firestore;
 
-  DocumentChange._(Map<dynamic, dynamic> data, this._firestore)
-      : _delegate = platform.MethodChannelDocumentChange(
+  DocumentChange._(Map<dynamic, dynamic> data, this._firestore, {platform.MethodChannelDocumentChange delegate})
+      : _delegate = delegate ?? platform.MethodChannelDocumentChange(
             data, platform.FirestorePlatform.instance);
 
   /// The type of change that occurred (added, modified, or removed).

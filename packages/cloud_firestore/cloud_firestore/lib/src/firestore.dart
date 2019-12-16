@@ -8,51 +8,43 @@ part of cloud_firestore;
 ///
 /// You can get an instance by calling [Firestore.instance].
 class Firestore {
-
   platform.MethodChannelFirestore _platfromFirestore;
 
-  Firestore({FirebaseApp app}): _platfromFirestore = platform.MethodChannelFirestore(app: app);
+  Firestore({FirebaseApp app})
+      : _platfromFirestore = platform.MethodChannelFirestore(app: app);
 
   static MethodChannel get channel => platform.MethodChannelFirestore.channel;
 
-
   String appName() => _platfromFirestore.appName();
 
-
   WriteBatch batch() => WriteBatch._();
-
 
   CollectionReference collection(String path) {
     assert(path != null);
     return CollectionReference._(this, path.split('/'));
   }
 
+  Query collectionGroup(String path) =>
+      Query._(delegate: _platfromFirestore.collectionGroup(path));
 
-  Query collectionGroup(String path) {
-    // TODO: implement collectionGroup
-    return null;
-  }
+  DocumentReference document(String path) =>
+      DocumentReference._(this, path.split("/"));
 
+  Future<void> enablePersistence(bool enable) =>
+      _platfromFirestore.enablePersistence(enable);
 
-  DocumentReference document(String path) {
-    // TODO: implement document
-    return null;
-  }
+  Future<Map<String, dynamic>> runTransaction(transactionHandler,
+          {Duration timeout = const Duration(seconds: 5)}) =>
+      _platfromFirestore.runTransaction(transactionHandler, timeout: timeout);
 
-
-  Future<void> enablePersistence(bool enable) {
-    // TODO: implement enablePersistence
-    return null;
-  }
-
-
-  Future<Map<String, dynamic>> runTransaction(transactionHandler, {Duration timeout = const Duration(seconds: 5)}) {
-    // TODO: implement runTransaction
-    return null;
-  }
-
-  Future<void> settings({bool persistenceEnabled, String host, bool sslEnabled, int cacheSizeBytes}) {
-    // TODO: implement settings
-    return null;
-  }
+  Future<void> settings(
+          {bool persistenceEnabled,
+          String host,
+          bool sslEnabled,
+          int cacheSizeBytes}) =>
+      _platfromFirestore.settings(
+          persistenceEnabled: persistenceEnabled,
+          host: host,
+          sslEnabled: sslEnabled,
+          cacheSizeBytes: cacheSizeBytes);
 }
