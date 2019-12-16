@@ -16,6 +16,8 @@ import '../interfaces.dart';
 /// A method channel implementation of the Firestore platform.
 class MethodChannelFirestore extends FirestorePlatform {
   /// Constructor. Requires a MethodCodec [codec] that can live in userland and have business logic there.
+  /// This class shouldn't be instantiated more than once per lifetime of the app, so we don't end up with
+  /// multiple subscriptions to the different channels!
   MethodChannelFirestore(StandardMessageCodec codec) {
     // Register all other instances...
     MethodChannelFirestore._channel = MethodChannel(

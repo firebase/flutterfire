@@ -4,9 +4,10 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart' show visibleForTesting;
+import 'package:meta/meta.dart' show visibleForTesting, required;
 
 import '../interfaces/query_platform.dart';
+import '../types.dart';
 
 class MethodChannelQuery extends QueryPlatform {
   MethodChannelQuery(StandardMessageCodec codec) {
@@ -31,5 +32,29 @@ class MethodChannelQuery extends QueryPlatform {
   void _handleQuerySnapshot(MethodCall call) {
     final int handle = call.arguments['handle'];
     // Get the documentObserver and broadcast a QuerySnapshot
+  }
+
+
+
+  /// What does this method correspond to in the Firebase API?
+  Future<PlatformQuerySnapshot> getDocuments(
+    String app, {
+    @required String path,
+    bool isCollectionGroup,
+    Map<String, dynamic> parameters,
+    Source source,
+  }) {
+    return channel.invokeMapMethod<String, dynamic>(
+      'Query#getDocuments',
+      <String, dynamic>{
+        'app': app,
+        'path': path,
+        'isCollectionGroup': isCollectionGroup,
+        'parameters': parameters,
+        'source': getSourceString(source),
+      },
+    ).then((Map<String, dynamic> response) {
+      return PlatformQuerySnapshot(data: response);
+    });
   }
 }

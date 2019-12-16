@@ -22,9 +22,9 @@ class MethodChannelTransaction extends TransactionPlatform {
   static MethodChannel get channel => MethodChannelTransaction._channel;
   static MethodChannel _channel;
 
-  final Map<int, PlatformTransactionHandler> _transactionHandlers =
+  static final Map<int, PlatformTransactionHandler> _transactionHandlers =
       <int, PlatformTransactionHandler>{};
-  int _transactionHandlerId = 0;
+  static int _transactionHandlerId = 0;
 
   Future<dynamic> _callHandler(MethodCall call) async {
     switch (call.method) {
