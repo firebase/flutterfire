@@ -23,37 +23,44 @@ enum DocumentChangeType {
 /// It contains the document affected and the type of change that occurred
 /// (added, modified, or removed).
 class DocumentChange {
-  DocumentChange._(Map<dynamic, dynamic> data, Firestore firestore)
-      : oldIndex = data['oldIndex'],
-        newIndex = data['newIndex'],
-        document = DocumentSnapshot._(
-          data['path'],
-          _asStringKeyedMap(data['document']),
-          SnapshotMetadata._(data["metadata"]["hasPendingWrites"],
-              data["metadata"]["isFromCache"]),
-          firestore,
-        ),
-        type = DocumentChangeType.values.firstWhere((DocumentChangeType type) {
-          return type.toString() == data['type'];
-        });
+  final platform.MethodChannelDocumentChange _delegate;
+  final Firestore _firestore;
+
+  DocumentChange._(Map<dynamic, dynamic> data, this._firestore)
+      : _delegate = platform.MethodChannelDocumentChange(
+            data, platform.FirestorePlatform.instance);
 
   /// The type of change that occurred (added, modified, or removed).
-  final DocumentChangeType type;
+  DocumentChangeType get type => _fromPlatform(_delegate.type);
 
   /// The index of the changed document in the result set immediately prior to
   /// this [DocumentChange] (i.e. supposing that all prior DocumentChange objects
   /// have been applied).
   ///
   /// -1 for [DocumentChangeType.added] events.
-  final int oldIndex;
+  int get oldIndex => _delegate.oldIndex;
 
   /// The index of the changed document in the result set immediately after this
   /// DocumentChange (i.e. supposing that all prior [DocumentChange] objects
   /// and the current [DocumentChange] object have been applied).
   ///
   /// -1 for [DocumentChangeType.removed] events.
-  final int newIndex;
+  int get newIndex => _delegate.newIndex;
 
   /// The document affected by this change.
-  final DocumentSnapshot document;
+  DocumentSnapshot get document =>
+      DocumentSnapshot._(_delegate.document, _firestore);
+
+  DocumentChangeType _fromPlatform(platform.DocumentChangeType platformChange) {
+    switch (platformChange) {
+      case platform.DocumentChangeType.added:
+        return DocumentChangeType.added;
+      case platform.DocumentChangeType.modified:
+        return DocumentChangeType.modified;
+      case platform.DocumentChangeType.removed:
+        return DocumentChangeType.removed;
+      default:
+        throw ArgumentError("Invalud change type");
+    }
+  }
 }

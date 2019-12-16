@@ -51,7 +51,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       buffer.putFloat64(value.longitude);
     } else if (value is DocumentReference) {
       buffer.putUint8(_kDocumentReference);
-      final List<int> appName = utf8.encoder.convert(value.firestore.app.name);
+      final List<int> appName = utf8.encoder.convert(value.firestore.appName());
       writeSize(buffer, appName.length);
       buffer.putUint8List(appName);
       final List<int> bytes = utf8.encoder.convert(value.path);

@@ -9,7 +9,7 @@ part of cloud_firestore_platform_interface;
 /// It contains the document affected and the type of change that occurred
 /// (added, modified, or removed).
 class MethodChannelDocumentChange extends DocumentChange {
-  MethodChannelDocumentChange._(
+  MethodChannelDocumentChange(
       Map<dynamic, dynamic> data, FirestorePlatform firestore)
       : super(DocumentChangeType.values.firstWhere((DocumentChangeType type) {
           return type.toString() == data['type'];
