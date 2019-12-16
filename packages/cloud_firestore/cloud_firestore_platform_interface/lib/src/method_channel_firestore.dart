@@ -15,7 +15,7 @@ class MethodChannelFirestore extends FirestorePlatform {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       if (call.method == 'QuerySnapshot') {
-        final QuerySnapshot snapshot = QuerySnapshot(call.arguments, this);
+        final QuerySnapshot snapshot = MethodChannelQuerySnapshot(call.arguments, this);
         _queryObservers[call.arguments['handle']].add(snapshot);
       } else if (call.method == 'DocumentSnapshot') {
         final DocumentSnapshot snapshot = DocumentSnapshot(

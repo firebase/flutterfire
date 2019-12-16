@@ -77,6 +77,6 @@ class QueryPlatform extends Query{
         'source': _getSourceString(source),
       },
     );
-    return QuerySnapshot(data, firestore);
+    return MethodChannelQuerySnapshot(data, firestore);
   }
 }

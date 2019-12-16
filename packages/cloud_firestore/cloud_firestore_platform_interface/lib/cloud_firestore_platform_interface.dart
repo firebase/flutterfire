@@ -43,6 +43,7 @@ part 'src/query.dart';
 part 'src/query_interface.dart';
 
 part 'src/query_snapshot.dart';
+part 'src/method_channel_query_snapshot.dart';
 
 part 'src/snapshot_metadata.dart';
 

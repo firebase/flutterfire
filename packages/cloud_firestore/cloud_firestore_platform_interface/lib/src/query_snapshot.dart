@@ -6,31 +6,8 @@ part of cloud_firestore_platform_interface;
 
 /// A QuerySnapshot contains zero or more DocumentSnapshot objects.
 class QuerySnapshot {
-  QuerySnapshot(Map<dynamic, dynamic> data, FirestorePlatform firestore)
-      : documents = List<DocumentSnapshot>.generate(data['documents'].length,
-            (int index) {
-          return DocumentSnapshot(
-            data['paths'][index],
-            _asStringKeyedMap(data['documents'][index]),
-            SnapshotMetadata(
-              data['metadatas'][index]['hasPendingWrites'],
-              data['metadatas'][index]['isFromCache'],
-            ),
-            firestore,
-          );
-        }),
-        documentChanges = List<DocumentChange>.generate(
-            data['documentChanges'].length, (int index) {
-          return DocumentChange._(
-            data['documentChanges'][index],
-            firestore,
-          );
-        }),
-        metadata = SnapshotMetadata(
-          data['metadata']['hasPendingWrites'],
-          data['metadata']['isFromCache'],
-        );
-
+  
+  QuerySnapshot(this.documents, this.documentChanges, this.metadata);
   /// Gets a list of all the documents included in this snapshot
   final List<DocumentSnapshot> documents;
 
