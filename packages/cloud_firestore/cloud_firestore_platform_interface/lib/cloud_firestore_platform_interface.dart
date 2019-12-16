@@ -19,14 +19,14 @@ part 'src/blob.dart';
 
 part 'src/utils/auto_id_generator.dart';
 
-part 'src/collection_reference.dart';
+part 'src/platform_interface/collection_reference.dart';
 part 'src/method_channel_collection_reference.dart';
 
 part 'src/document_change.dart';
 
-part 'src/document_reference.dart';
+part 'src/method_channel_document_reference.dart';
 
-part 'src/document_reference_interface.dart';
+part 'src/platform_interface/document_reference_interface.dart';
 
 part 'src/document_snapshot.dart';
 
@@ -38,11 +38,11 @@ part 'src/firestore_message_codec.dart';
 
 part 'src/geo_point.dart';
 
-part 'src/query.dart';
+part 'src/method_channel_query.dart';
 
-part 'src/query_interface.dart';
+part 'src/platform_interface/query.dart';
 
-part 'src/query_snapshot.dart';
+part 'src/platform_interface/query_snapshot.dart';
 part 'src/method_channel_query_snapshot.dart';
 
 part 'src/snapshot_metadata.dart';

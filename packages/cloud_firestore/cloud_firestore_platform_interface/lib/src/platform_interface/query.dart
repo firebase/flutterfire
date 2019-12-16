@@ -54,7 +54,7 @@ abstract class Query {
 
   /// Obtains a CollectionReference corresponding to this query's location.
   CollectionReference reference() =>
-      CollectionReference(firestore, pathComponents);
+      firestore.collection(pathComponents.join("/"));
 
   /// Creates and returns a new [Query] with additional filter on specified
   /// [field]. [field] refers to a field in a document.

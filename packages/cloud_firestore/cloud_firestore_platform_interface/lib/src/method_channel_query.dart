@@ -5,8 +5,8 @@
 part of cloud_firestore_platform_interface;
 
 /// Represents a query over the data at a particular location.
-class QueryPlatform extends Query{
-  QueryPlatform(
+class MethodChannelQuery extends Query{
+  MethodChannelQuery(
       {@required FirestorePlatform firestore,
       @required List<String> pathComponents,
       bool isCollectionGroup = false,
@@ -15,7 +15,7 @@ class QueryPlatform extends Query{
 
 
   Query copyWithParameters(Map<String, dynamic> parameters) {
-    return QueryPlatform(
+    return MethodChannelQuery(
       firestore: firestore,
       isCollectionGroup: isCollectionGroup,
       pathComponents: pathComponents,

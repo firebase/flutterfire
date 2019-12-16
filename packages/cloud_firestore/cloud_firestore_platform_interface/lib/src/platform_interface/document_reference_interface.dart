@@ -6,7 +6,7 @@ part of cloud_firestore_platform_interface;
 /// The document at the referenced location may or may not exist.
 /// A [DocumentReference] can also be used to create a [CollectionReference]
 /// to a subcollection.
-class DocumentReference {
+abstract class DocumentReference {
   DocumentReference(this.firestore, this._pathComponents);
   
   /// The Firestore instance associated with this document reference
@@ -22,9 +22,9 @@ class DocumentReference {
 
   /// Parent returns the containing [CollectionReference].
   CollectionReference parent() {
-    return CollectionReference(
-      firestore,
-      (List<String>.from(_pathComponents)..removeLast()),
+    final parentPathComponents = List<String>.from(_pathComponents)..removeLast();
+    return firestore.collection(
+      parentPathComponents.join("/"),
     );
   }
 

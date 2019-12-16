@@ -7,7 +7,7 @@ part of cloud_firestore_platform_interface;
 /// A CollectionReference object can be used for adding documents, getting
 /// document references, and querying for documents (using the methods
 /// inherited from [Query]).
-class CollectionReference extends Query {
+abstract class CollectionReference extends Query {
   CollectionReference(FirestorePlatform firestore, List<String> pathComponents)
       : super(firestore: firestore, pathComponents: pathComponents);
 

@@ -63,14 +63,14 @@ class MethodChannelFirestore extends FirestorePlatform {
   @override
   CollectionReference collection(String path) {
     assert(path != null);
-    return CollectionReference(this, path.split('/'));
+    return MethodChannelCollectionReference(this, path.split('/'));
   }
 
   @override
   Query collectionGroup(String path) {
     assert(path != null);
     assert(!path.contains("/"), "Collection IDs must not contain '/'.");
-    return QueryPlatform(
+    return MethodChannelQuery(
       firestore: this,
       isCollectionGroup: true,
       pathComponents: path.split('/'),
@@ -80,7 +80,7 @@ class MethodChannelFirestore extends FirestorePlatform {
   @override
   DocumentReference document(String path) {
     assert(path != null);
-    return DocumentReference(this, path.split('/'));
+    return MethodChannelDocumentReference(this, path.split('/'));
   }
 
   @override
