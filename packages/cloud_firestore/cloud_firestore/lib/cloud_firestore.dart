@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
 import 'src/utils/auto_id_generator.dart';
+export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 part 'src/blob.dart';
 part 'src/collection_reference.dart';
