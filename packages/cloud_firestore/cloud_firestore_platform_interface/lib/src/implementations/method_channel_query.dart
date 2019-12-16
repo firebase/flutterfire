@@ -6,35 +6,25 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show visibleForTesting, required;
 
+import './multi_method_channel.dart';
+
 import '../interfaces/query_platform.dart';
 import '../types.dart';
 
 class MethodChannelQuery extends QueryPlatform {
-  MethodChannelQuery(StandardMessageCodec codec) {
-    MethodChannelQuery._channel = MethodChannel(
-      'plugins.flutter.io/cloud_firestore',
-      StandardMethodCodec(codec),
-    );
-    MethodChannelQuery._channel.setMethodCallHandler(_callHandler);
+  MethodChannelQuery(MultiMethodChannel channel) {
+    MethodChannelQuery._channel = channel;
+    MethodChannelQuery._channel.addMethodCallHandler('QuerySnapshot', this._handleQuerySnapshot);
   }
 
   @visibleForTesting
-  static MethodChannel get channel => MethodChannelQuery._channel;
-  static MethodChannel _channel;
-
-  Future<dynamic> _callHandler(MethodCall call) async {
-    switch (call.method) {
-      case 'QuerySnapshot':
-        return _handleQuerySnapshot(call);
-    }
-  }
+  static MultiMethodChannel get channel => MethodChannelQuery._channel;
+  static MultiMethodChannel _channel;
 
   void _handleQuerySnapshot(MethodCall call) {
     final int handle = call.arguments['handle'];
-    // Get the documentObserver and broadcast a QuerySnapshot
+    _querySnapshotStreamControllers[handle].add(PlatformQuerySnapshot(data: call.arguments));
   }
-
-
 
   /// What does this method correspond to in the Firebase API?
   Future<PlatformQuerySnapshot> getDocuments(
@@ -56,5 +46,72 @@ class MethodChannelQuery extends QueryPlatform {
     ).then((Map<String, dynamic> response) {
       return PlatformQuerySnapshot(data: response);
     });
+  }
+
+  // Snapshots
+
+  static final Map<int, StreamController<PlatformQuerySnapshot>> _querySnapshotStreamControllers = <int, StreamController<PlatformQuerySnapshot>>{};
+
+  /// A Stream of QuerySnapshots.
+  /// The snapshot stream is never-ending.
+  Stream<PlatformQuerySnapshot> snapshots(
+    String app, {
+    @required String path,
+    bool isCollectionGroup,
+    Map<String, dynamic> parameters,
+    bool includeMetadataChanges,
+  }) {
+    assert(includeMetadataChanges != null);
+    Future<int> _handle;
+    // It's fine to let the StreamController be garbage collected once all the
+    // subscribers have cancelled; this analyzer warning is safe to ignore.
+    StreamController<PlatformQuerySnapshot> controller; // ignore: close_sinks
+    controller = StreamController<PlatformQuerySnapshot>.broadcast(
+      onListen: () {
+        _handle = _addQuerySnapshotListener(
+          app,
+          path: path,
+          isCollectionGroup: isCollectionGroup,
+          parameters: parameters,
+          includeMetadataChanges: includeMetadataChanges,
+        ).then<int>((dynamic result) => result);
+        _handle.then((int handle) {
+          _querySnapshotStreamControllers[handle] = controller;
+        });
+      },
+      onCancel: () {
+        _handle.then((int handle) async {
+          await _removeListener(handle);
+          _querySnapshotStreamControllers.remove(handle);
+        });
+      },
+    );
+    return controller.stream;
+  }
+
+  Future<int> _addQuerySnapshotListener(
+    String app, {
+    @required String path,
+    bool isCollectionGroup,
+    Map<String, dynamic> parameters,
+    bool includeMetadataChanges,
+  }) {
+    return channel.invokeMethod<int>(
+      'Query#addSnapshotListener',
+      <String, dynamic>{
+        'app': app,
+        'path': path,
+        'isCollectionGroup': isCollectionGroup,
+        'parameters': parameters,
+        'includeMetadataChanges': includeMetadataChanges,
+      },
+    );
+  }
+
+  Future<void> _removeListener(int handle) {
+    return channel.invokeMethod<void>(
+      'removeListener',
+      <String, dynamic>{'handle': handle},
+    );
   }
 }

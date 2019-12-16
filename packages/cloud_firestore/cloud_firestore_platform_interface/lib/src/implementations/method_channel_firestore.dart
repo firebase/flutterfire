@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show visibleForTesting;
 
+import './multi_method_channel.dart';
 import './method_channel_document_reference.dart';
 import './method_channel_query.dart';
 import './method_channel_transaction.dart';
@@ -20,15 +21,16 @@ class MethodChannelFirestore extends FirestorePlatform {
   /// multiple subscriptions to the different channels!
   MethodChannelFirestore(StandardMessageCodec codec) {
     // Register all other instances...
-    MethodChannelFirestore._channel = MethodChannel(
+    MultiMethodChannel channel = MultiMethodChannel(
       'plugins.flutter.io/cloud_firestore',
       StandardMethodCodec(codec),
     );
     
-    DocumentReferencePlatform.instance = MethodChannelDocumentReference(codec);
-    QueryPlatform.instance = MethodChannelQuery(codec);
-    TransactionPlatform.instance = MethodChannelTransaction(codec);
-    WriteBatchPlatform.instance = MethodChannelWriteBatch(codec);
+    MethodChannelFirestore._channel = channel;
+    DocumentReferencePlatform.instance = MethodChannelDocumentReference(channel);
+    QueryPlatform.instance = MethodChannelQuery(channel);
+    TransactionPlatform.instance = MethodChannelTransaction(channel);
+    WriteBatchPlatform.instance = MethodChannelWriteBatch(channel);
   }
 
   /// The MethodChannel used to pass messages to the native side.

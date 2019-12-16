@@ -3,24 +3,22 @@
 // found in the LICENSE file.
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show required, visibleForTesting;
+
+import './multi_method_channel.dart';
 
 import '../types.dart';
 import '../interfaces/write_batch_platform.dart';
 
 class MethodChannelWriteBatch extends WriteBatchPlatform {
   /// Constructor
-  MethodChannelWriteBatch(StandardMessageCodec codec) {
-    MethodChannelWriteBatch._channel = MethodChannel(
-      'plugins.flutter.io/cloud_firestore',
-      StandardMethodCodec(codec),
-    );
+  MethodChannelWriteBatch(MultiMethodChannel channel) {
+    MethodChannelWriteBatch._channel = channel;
   }
 
   @visibleForTesting
-  static MethodChannel get channel => MethodChannelWriteBatch._channel;
-  static MethodChannel _channel;
+  static MultiMethodChannel get channel => MethodChannelWriteBatch._channel;
+  static MultiMethodChannel _channel;
 
   /// Creates a new Write Batch
   // Android returns a WriteBatch id int

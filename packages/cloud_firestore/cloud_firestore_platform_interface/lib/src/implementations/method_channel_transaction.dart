@@ -6,32 +6,24 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show required, visibleForTesting;
 
+import './multi_method_channel.dart';
+
 import '../interfaces/transaction_platform.dart';
 import '../types.dart';
 
 class MethodChannelTransaction extends TransactionPlatform {
-  MethodChannelTransaction(StandardMessageCodec codec) {
-    MethodChannelTransaction._channel = MethodChannel(
-      'plugins.flutter.io/cloud_firestore',
-      StandardMethodCodec(codec),
-    );
-    MethodChannelTransaction._channel.setMethodCallHandler(_callHandler);
+  MethodChannelTransaction(MultiMethodChannel channel) {
+    MethodChannelTransaction._channel = channel;
+    MethodChannelTransaction._channel.addMethodCallHandler('DoTransaction', this._handleDoTransaction);
   }
 
   @visibleForTesting
-  static MethodChannel get channel => MethodChannelTransaction._channel;
-  static MethodChannel _channel;
+  static MultiMethodChannel get channel => MethodChannelTransaction._channel;
+  static MultiMethodChannel _channel;
 
   static final Map<int, PlatformTransactionHandler> _transactionHandlers =
       <int, PlatformTransactionHandler>{};
   static int _transactionHandlerId = 0;
-
-  Future<dynamic> _callHandler(MethodCall call) async {
-    switch (call.method) {
-      case 'DoTransaction':
-        return _handleDoTransaction(call);
-    }
-  }
 
   Future<dynamic> _handleDoTransaction(MethodCall call) async {
     final int transactionId = call.arguments['transactionId'];

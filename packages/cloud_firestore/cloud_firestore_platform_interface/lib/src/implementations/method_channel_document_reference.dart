@@ -6,29 +6,20 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show visibleForTesting;
 
+import './multi_method_channel.dart';
 import '../interfaces/document_reference_platform.dart';
 
 class MethodChannelDocumentReference extends DocumentReferencePlatform {
-  MethodChannelDocumentReference(StandardMessageCodec codec) {
-    MethodChannelDocumentReference._channel = MethodChannel(
-      'plugins.flutter.io/cloud_firestore',
-      StandardMethodCodec(codec),
-    );
-    MethodChannelDocumentReference._channel.setMethodCallHandler(_callHandler);
+  MethodChannelDocumentReference(MultiMethodChannel channel) {
+    MethodChannelDocumentReference._channel = channel;
+    MethodChannelDocumentReference._channel.addMethodCallHandler('DocumentSnapshot', this._handleDocumentSnapshot);
   }
 
   @visibleForTesting
-  static MethodChannel get channel => MethodChannelDocumentReference._channel;
-  static MethodChannel _channel;
+  static MultiMethodChannel get channel => MethodChannelDocumentReference._channel;
+  static MultiMethodChannel _channel;
 
-  Future<dynamic> _callHandler(MethodCall call) async {
-    switch (call.method) {
-      case 'DocumentSnapshot':
-        return _handleDocumentSnapshot(call);
-    }
-  }
-
-  void _handleDocumentSnapshot(MethodCall call) {
+  Future<dynamic> _handleDocumentSnapshot(MethodCall call) {
     final int handle = call.arguments['handle'];
     // Get the documentObserver and broadcast a DocumentSnapshot
   }
