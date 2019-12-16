@@ -61,7 +61,7 @@ for more.
 
 By default background messaging is not enabled. To handle messages in the background:
 
-1. Add the `com.google.firebase:firebase-messaging` dependency in your app-level `build.gradle` file that is typically located at `<app-name>/android/app/build.gradle`.
+ 1. Add the `com.google.firebase:firebase-messaging` dependency in your app-level `build.gradle` file that is typically located at `<app-name>/android/app/build.gradle`.
 
 ```gradle
 dependencies {
@@ -71,7 +71,7 @@ dependencies {
 }
 ```
 
-1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
+ 1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
 
 ```java
 package io.flutter.plugins.firebasemessagingexample;
@@ -96,19 +96,19 @@ public class Application extends FlutterApplication implements PluginRegistrantC
 }
 ```
 
-1. In `Application.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
+ 1. In `Application.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
 
 ```java
 package com.domain.myapplication;
 ```
 
-1. Set name property of application in `AndroidManifest.xml`. This is typically found in `<app-name>/android/app/src/main/`.
+ 1. Set name property of application in `AndroidManifest.xml`. This is typically found in `<app-name>/android/app/src/main/`.
 
 ```xml
 <application android:name=".Application" ...>
 ```
 
-1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
+ 1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
 
 ```dart
  Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
@@ -126,10 +126,10 @@ package com.domain.myapplication;
  }
 ```
 
-   Note: the protocol of `data` and `notification` are in line with the
-   fields defined by a [RemoteMessage](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/RemoteMessage). 
+    Note: the protocol of `data` and `notification` are in line with the
+    fields defined by a [RemoteMessage](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/RemoteMessage). 
 
-1. Set `onBackgroundMessage` handler when calling `configure`
+ 1. Set `onBackgroundMessage` handler when calling `configure`
 
 ```dart
 _firebaseMessaging.configure(
@@ -149,9 +149,9 @@ _firebaseMessaging.configure(
     );
 ```
 
-   Note: `configure` should be called early in the lifecycle of your application
-   so that it can be ready to receive messages as early as possible. See the
-   [example app](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/example) for a demonstration.
+    Note: `configure` should be called early in the lifecycle of your application
+    so that it can be ready to receive messages as early as possible. See the
+    [example app](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/example) for a demonstration.
 
 ### iOS Integration
 
