@@ -23,19 +23,7 @@ enum DocumentChangeType {
 /// It contains the document affected and the type of change that occurred
 /// (added, modified, or removed).
 class DocumentChange {
-  DocumentChange._(Map<dynamic, dynamic> data, FirestorePlatform firestore)
-      : oldIndex = data['oldIndex'],
-        newIndex = data['newIndex'],
-        document = DocumentSnapshot(
-          data['path'],
-          _asStringKeyedMap(data['document']),
-          SnapshotMetadata(data["metadata"]["hasPendingWrites"],
-              data["metadata"]["isFromCache"]),
-          firestore,
-        ),
-        type = DocumentChangeType.values.firstWhere((DocumentChangeType type) {
-          return type.toString() == data['type'];
-        });
+  DocumentChange(this.type, this.oldIndex, this.newIndex, this.document);
 
   /// The type of change that occurred (added, modified, or removed).
   final DocumentChangeType type;

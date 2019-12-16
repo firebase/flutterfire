@@ -22,7 +22,8 @@ part 'src/utils/auto_id_generator.dart';
 part 'src/platform_interface/collection_reference.dart';
 part 'src/method_channel_collection_reference.dart';
 
-part 'src/document_change.dart';
+part 'src/method_channel_document_change.dart';
+part 'src/platform_interface/document_change.dart';
 
 part 'src/method_channel_document_reference.dart';
 
