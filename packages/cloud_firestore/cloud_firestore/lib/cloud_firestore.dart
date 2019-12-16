@@ -34,4 +34,3 @@ part 'src/snapshot_metadata.dart';
 part 'src/timestamp.dart';
 part 'src/transaction.dart';
 part 'src/write_batch.dart';
-part 'src/source.dart';
