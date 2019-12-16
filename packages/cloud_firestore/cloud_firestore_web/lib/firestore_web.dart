@@ -17,11 +17,16 @@ class FirestoreWeb extends FirestorePlatform {
 
   @override
   CollectionReference collection(String path) =>
-      CollectionReferenceWeb(app, this, path.split('/'));
+      CollectionReferenceWeb(this, app, path.split('/'));
 
   @override
   Query collectionGroup(String path) {
-    app.collectionGroup(path);
+    return QueryWeb(
+      this,
+      path,
+      isCollectionGroup: true,
+      webQuery: app.collectionGroup(path)
+    );
   }
 
   @override
