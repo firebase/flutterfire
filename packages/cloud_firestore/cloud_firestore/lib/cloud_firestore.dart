@@ -18,6 +18,9 @@ import 'package:meta/meta.dart';
 
 import 'src/utils/auto_id_generator.dart';
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
+  show Source;
+
 part 'src/blob.dart';
 part 'src/collection_reference.dart';
 part 'src/document_change.dart';
