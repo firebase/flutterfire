@@ -78,6 +78,18 @@ class _MyAppState extends State<MyApp> {
                       print(list[100]);
                     });
                   }),
+              FlatButton(
+                  child: const Text('Record Error'),
+                  onPressed: () {
+                    try {
+                      throw 'error_example';
+                    } catch (e, s) {
+                      // "context" will append the word "thrown" in the
+                      // Crashlytics console.
+                      Crashlytics.instance
+                          .recordError(e, s, context: 'as an example');
+                    }
+                  }),
             ],
           ),
         ),
