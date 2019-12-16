@@ -44,7 +44,6 @@ class MethodChannelFirestore extends FirestorePlatform {
 
   static bool _initialized = false;
 
-  @visibleForTesting
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/cloud_firestore',
     StandardMethodCodec(FirestoreMessageCodec()),

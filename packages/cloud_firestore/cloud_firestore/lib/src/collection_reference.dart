@@ -8,8 +8,12 @@ part of cloud_firestore;
 /// document references, and querying for documents (using the methods
 /// inherited from [Query]).
 class CollectionReference extends Query {
+  final platform.MethodChannelCollectionReference _delegate;
+
   CollectionReference._(Firestore firestore, List<String> pathComponents)
-      : super._(firestore: firestore, pathComponents: pathComponents);
+      : _delegate = platform.MethodChannelCollectionReference(
+            platform.FirestorePlatform.instance, pathComponents),
+        super._(firestore: firestore, pathComponents: pathComponents);
 
   /// ID of the referenced collection.
   String get id => _pathComponents.isEmpty ? null : _pathComponents.last;
