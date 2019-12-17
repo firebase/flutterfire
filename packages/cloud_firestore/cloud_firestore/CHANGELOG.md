@@ -1,3 +1,7 @@
+## 0.13.1
+
+* Added support for Flutter Web
+
 ## 0.13.0+1
 
 * Remove the deprecated `author:` field from pubspec.yaml
