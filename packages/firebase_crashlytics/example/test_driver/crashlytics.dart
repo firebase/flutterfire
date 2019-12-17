@@ -32,5 +32,10 @@ void main() {
               DiagnosticsNode.message('testing'),
               DiagnosticsNode.message('information'),
             ]));
+    await crashlytics.recordError(
+      'exception_text',
+      StackTrace.fromString('during testing'),
+      context: 'during testing example',
+    );
   });
 }
