@@ -1,11 +1,16 @@
+library cloud_firestore_web;
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_web/collection_reference_web.dart';
-import 'package:cloud_firestore_web/document_reference_web.dart';
-import 'package:cloud_firestore_web/query_web.dart';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/firestore.dart' show Firestore, Settings;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:firebase/firestore.dart' as web;
+
+part 'collection_reference_web.dart';
+part 'document_reference_web.dart';
+part 'query_web.dart';
+part 'transaction_web.dart';
 
 class FirestoreWeb extends FirestorePlatform {
 
@@ -60,9 +65,14 @@ class FirestoreWeb extends FirestorePlatform {
   }
 
   @override
-  Future<Map<String, dynamic>> runTransaction(transactionHandler,
-      {Duration timeout = const Duration(seconds: 5)}) async {}
+  Future<Map<String, dynamic>> runTransaction(TransactionHandler transactionHandler,
+      {Duration timeout = const Duration(seconds: 5)}) {
+    return webFirestore.runTransaction((transaction) {
+      transactionHandler(TransactionWeb._(transaction, this));
+    });
+  }
 
   @override
   String appName() => app.name;
+
 }

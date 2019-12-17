@@ -1,6 +1,4 @@
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:firebase/firestore.dart' as web;
-import 'package:flutter/cupertino.dart';
+part of cloud_firestore_web;
 
 class QueryWeb implements Query {
   final web.CollectionReference webCollection;

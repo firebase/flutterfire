@@ -7,7 +7,8 @@ part of cloud_firestore_platform_interface;
 class Transaction extends TransactionPlatform {
   @visibleForTesting
   Transaction(int transactionId, FirestorePlatform firestore) : super(transactionId, firestore);
-  
+
+  Future<void> finish() => Future.wait<void>(_pendingResults);
 
   @override
   Future<DocumentSnapshot> _get(DocumentReference documentReference) async {

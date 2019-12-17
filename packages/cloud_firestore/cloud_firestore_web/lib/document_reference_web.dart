@@ -1,35 +1,34 @@
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:firebase/firestore.dart' as web;
+part of cloud_firestore_web;
 
 class DocumentReferenceWeb extends DocumentReference {
-  final web.Firestore firestoreWeb;  
+  final web.Firestore firestoreWeb;
+  final web.DocumentReference delegate;
   DocumentReferenceWeb(this.firestoreWeb,FirestorePlatform firestore, List<String> pathComponents)
-      : super(firestore, pathComponents);
+      : delegate = firestoreWeb.doc(pathComponents.join("/")),super(firestore, pathComponents);
 
   @override
   Future<void> setData(Map<String, dynamic> data, {bool merge = false}) {
-    return firestoreWeb.doc(path).set(data, web.SetOptions(merge: merge));
+    return delegate.set(data, web.SetOptions(merge: merge));
   }
 
   @override
   Future<void> updateData(Map<String, dynamic> data) {
-    return firestoreWeb.doc(path).update(data: data);
+    return delegate.update(data: data);
   }
 
   @override
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
-    return _fromWeb(await firestoreWeb.doc(path).get());
+    return _fromWeb(await delegate.get());
   }
 
   @override
   Future<void> delete() {
-    return firestoreWeb.doc(path).delete();
+    return delegate.delete();
   }
 
   @override
   Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) {
-    return firestoreWeb
-        .doc(path)
+    return delegate
         .onSnapshot
         .map((web.DocumentSnapshot webSnapshot) => _fromWeb(webSnapshot));
   }

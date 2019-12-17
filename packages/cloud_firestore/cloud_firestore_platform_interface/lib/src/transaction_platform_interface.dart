@@ -13,7 +13,6 @@ abstract class TransactionPlatform {
   int _transactionId;
   FirestorePlatform firestore;
   List<Future<dynamic>> _pendingResults = <Future<dynamic>>[];
-  Future<void> finish() => Future.wait<void>(_pendingResults);
 
   /// Reads the document referenced by the provided DocumentReference.
   Future<DocumentSnapshot> get(DocumentReference documentReference) {
