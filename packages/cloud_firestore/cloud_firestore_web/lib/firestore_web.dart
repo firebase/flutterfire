@@ -3,35 +3,39 @@ import 'package:cloud_firestore_web/collection_reference_web.dart';
 import 'package:cloud_firestore_web/document_reference_web.dart';
 import 'package:cloud_firestore_web/query_web.dart';
 import 'package:firebase/firebase.dart' as firebase;
-import 'package:firebase/firestore.dart' show Settings;
-import 'package:flutter/cupertino.dart';
+import 'package:firebase/firestore.dart' show Firestore, Settings;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 class FirestoreWeb extends FirestorePlatform {
+
+  final Firestore webFirestore;
+
   static void registerWith(Registrar registrar) {
     FirestorePlatform.instance = FirestoreWeb();
+
   }
 
-  FirestoreWeb() : super();
+  FirestoreWeb({FirebaseApp app}): webFirestore = firebase.firestore(firebase.app((app ?? FirebaseApp.instance).name)),super(app: app ?? FirebaseApp.instance);
 
-  final app = firebase.firestore();
+  @override
+  FirestorePlatform withApp(FirebaseApp app) => FirestoreWeb(app: app);
 
   @override
   CollectionReference collection(String path) {
-    
-    return CollectionReferenceWeb(this, app, path.split('/'));
+    return CollectionReferenceWeb(
+        this, webFirestore, path.split('/'));
   }
-
 
   @override
   Query collectionGroup(String path) {
     return QueryWeb(this, path,
-        isCollectionGroup: true, webQuery: app.collectionGroup(path));
+        isCollectionGroup: true, webQuery: webFirestore.collectionGroup(path));
   }
 
   @override
   DocumentReference document(String path) =>
-      DocumentReferenceWeb(app, this, path.split('/'));
+      DocumentReferenceWeb(webFirestore, this, path.split('/'));
 
   @override
   WriteBatch batch() => WriteBatch(this);
@@ -39,7 +43,7 @@ class FirestoreWeb extends FirestorePlatform {
   @override
   Future<void> enablePersistence(bool enable) async {
     if (enable) {
-      await app.enablePersistence();
+      await webFirestore.enablePersistence();
     }
   }
 
@@ -50,10 +54,8 @@ class FirestoreWeb extends FirestorePlatform {
       bool sslEnabled,
       int cacheSizeBytes}) async {
     return Future.sync(() {
-      
-      app.settings(
-        Settings(ssl: sslEnabled, cacheSizeBytes: cacheSizeBytes, host: host));
-      
+      webFirestore.settings(Settings(
+          ssl: sslEnabled, cacheSizeBytes: cacheSizeBytes, host: host));
     });
   }
 
@@ -62,5 +64,5 @@ class FirestoreWeb extends FirestorePlatform {
       {Duration timeout = const Duration(seconds: 5)}) async {}
 
   @override
-  String appName() => firebase.app().name;
+  String appName() => app.name;
 }

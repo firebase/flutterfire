@@ -42,10 +42,10 @@ abstract class FirestorePlatform {
 
   final FirebaseApp app;
 
-  FirestorePlatform._(this.app);
+  FirestorePlatform({FirebaseApp app}): app = app ?? FirebaseApp.instance;
 
-  factory FirestorePlatform({FirebaseApp app}) {
-    FirestorePlatform.instance = FirestorePlatform.instance._withApp(app);
+  factory FirestorePlatform.withApp({FirebaseApp app}) {
+    FirestorePlatform.instance = FirestorePlatform.instance.withApp(app);
     return FirestorePlatform.instance;
   }
   /// Only mock implementations should set this to `true`.
@@ -72,7 +72,7 @@ abstract class FirestorePlatform {
     _instance = instance;
   }
 
-  FirestorePlatform _withApp(FirebaseApp app) {
+  FirestorePlatform withApp(FirebaseApp app) {
     throw UnimplementedError("_withApp() not implemented");
   }
 

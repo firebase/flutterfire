@@ -10,7 +10,7 @@ part of cloud_firestore_platform_interface;
 class MethodChannelFirestore extends FirestorePlatform {
 
   MethodChannelFirestore({FirebaseApp app})
-      : super._(app ?? FirebaseApp.instance) {
+      : super(app: app ?? FirebaseApp.instance) {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       if (call.method == 'QuerySnapshot') {
@@ -60,7 +60,7 @@ class MethodChannelFirestore extends FirestorePlatform {
 
 
   @override
-  FirestorePlatform _withApp(FirebaseApp app) =>
+  FirestorePlatform withApp(FirebaseApp app) =>
       MethodChannelFirestore(app: app);
 
   @override
