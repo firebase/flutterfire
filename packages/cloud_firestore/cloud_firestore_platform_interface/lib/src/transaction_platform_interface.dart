@@ -2,29 +2,27 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore;
+part of cloud_firestore_platform_interface;
 
 typedef Future<dynamic> TransactionHandler(Transaction transaction);
 
-class Transaction {
+abstract class TransactionPlatform {
+  @visibleForTesting
+  TransactionPlatform(this._transactionId, this.firestore);
 
-  Transaction._(this._delegate);
-
-  platform.Transaction _delegate;
-
-
-  Future<void> _finish() => _delegate.finish();
+  int _transactionId;
+  FirestorePlatform firestore;
+  List<Future<dynamic>> _pendingResults = <Future<dynamic>>[];
 
   /// Reads the document referenced by the provided DocumentReference.
-  Future<DocumentSnapshot> get(DocumentReference documentReference) async {
-    final result = await _delegate.get(platform.MethodChannelDocumentReference(
-        platform.FirestorePlatform.instance,
-        documentReference.path.split("/")));
-    if (result != null) {
-      return DocumentSnapshot._(result);
-    } else {
-      return null;
-    }
+  Future<DocumentSnapshot> get(DocumentReference documentReference) {
+    final Future<DocumentSnapshot> result = _get(documentReference);
+    _pendingResults.add(result);
+    return result;
+  }
+
+  Future<DocumentSnapshot> _get(DocumentReference documentReference) async {
+    throw UnimplementedError("get() not implemented");
   }
 
   /// Deletes the document referred to by the provided [documentReference].
@@ -32,9 +30,13 @@ class Transaction {
   /// Awaiting the returned [Future] is optional and will be done automatically
   /// when the transaction handler completes.
   Future<void> delete(DocumentReference documentReference) {
-    return _delegate.delete(platform.MethodChannelDocumentReference(
-        platform.FirestorePlatform.instance,
-        documentReference.path.split("/")));
+    final Future<void> result = _delete(documentReference);
+    _pendingResults.add(result);
+    return result;
+  }
+
+  Future<void> _delete(DocumentReference documentReference) async {
+    throw UnimplementedError("delete() not implemented");
   }
 
   /// Updates fields in the document referred to by [documentReference].
@@ -44,11 +46,14 @@ class Transaction {
   /// when the transaction handler completes.
   Future<void> update(
       DocumentReference documentReference, Map<String, dynamic> data) async {
-    return _delegate.update(
-        platform.MethodChannelDocumentReference(
-            platform.FirestorePlatform.instance,
-            documentReference.path.split("/")),
-        data);
+    final Future<void> result = _update(documentReference, data);
+    _pendingResults.add(result);
+    return result;
+  }
+
+  Future<void> _update(
+      DocumentReference documentReference, Map<String, dynamic> data) async {
+    throw UnimplementedError("updated() not implemented");
   }
 
   /// Writes to the document referred to by the provided [DocumentReference].
@@ -59,10 +64,13 @@ class Transaction {
   /// when the transaction handler completes.
   Future<void> set(
       DocumentReference documentReference, Map<String, dynamic> data) {
-    return _delegate.set(
-        platform.MethodChannelDocumentReference(
-            platform.FirestorePlatform.instance,
-            documentReference.path.split("/")),
-        data);
+    final Future<void> result = _set(documentReference, data);
+    _pendingResults.add(result);
+    return result;
+  }
+
+  Future<void> _set(
+      DocumentReference documentReference, Map<String, dynamic> data) async {
+    throw UnimplementedError("set() not implemented");
   }
 }

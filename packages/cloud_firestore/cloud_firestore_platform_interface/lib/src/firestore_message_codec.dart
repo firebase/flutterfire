@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore;
+part of cloud_firestore_platform_interface;
 
 @visibleForTesting
 class FirestoreMessageCodec extends StandardMessageCodec {
@@ -89,7 +89,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
         final String appName =
             utf8.decoder.convert(buffer.getUint8List(appNameLength));
         final FirebaseApp app = FirebaseApp(name: appName);
-        final Firestore firestore = Firestore(app: app);
+        final FirestorePlatform firestore = FirestorePlatform.withApp(app: app);
         final int pathLength = readSize(buffer);
         final String path =
             utf8.decoder.convert(buffer.getUint8List(pathLength));

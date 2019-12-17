@@ -5,7 +5,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,10 +13,10 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('$Firestore', () {
+  group('$MethodChannelFirestore()', () {
     int mockHandleId = 0;
     FirebaseApp app;
-    Firestore firestore;
+    MethodChannelFirestore firestore;
     final List<MethodCall> log = <MethodCall>[];
     CollectionReference collectionReference;
     Query collectionGroupQuery;
@@ -44,11 +44,11 @@ void main() {
           gcmSenderID: '1234567890',
         ),
       );
-      firestore = Firestore(app: app);
+      firestore = MethodChannelFirestore(app: app);
       collectionReference = firestore.collection('foo');
       collectionGroupQuery = firestore.collectionGroup('bar');
       transaction = Transaction(0, firestore);
-      Firestore.channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      MethodChannelFirestore.channel.setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
           case 'Query#addSnapshotListener':
@@ -60,8 +60,8 @@ void main() {
               // https://github.com/flutter/flutter/issues/33446
               // ignore: deprecated_member_use
               BinaryMessages.handlePlatformMessage(
-                Firestore.channel.name,
-                Firestore.channel.codec.encodeMethodCall(
+                MethodChannelFirestore.channel.name,
+                MethodChannelFirestore.channel.codec.encodeMethodCall(
                   MethodCall('QuerySnapshot', <String, dynamic>{
                     'app': app.name,
                     'handle': handle,
@@ -93,8 +93,8 @@ void main() {
               // https://github.com/flutter/flutter/issues/33446
               // ignore: deprecated_member_use
               BinaryMessages.handlePlatformMessage(
-                Firestore.channel.name,
-                Firestore.channel.codec.encodeMethodCall(
+                MethodChannelFirestore.channel.name,
+                MethodChannelFirestore.channel.codec.encodeMethodCall(
                   MethodCall('DocumentSnapshot', <String, dynamic>{
                     'handle': handle,
                     'path': methodCall.arguments['path'],
@@ -172,14 +172,14 @@ void main() {
     });
 
     test('multiple apps', () async {
-      expect(Firestore.instance, equals(Firestore()));
+      expect(FirestorePlatform.instance, equals(MethodChannelFirestore()));
       final FirebaseApp app = FirebaseApp(name: firestore.app.name);
-      expect(firestore, equals(Firestore(app: app)));
+      expect(firestore, equals(MethodChannelFirestore(app: app)));
     });
 
     test('settings', () async {
       final FirebaseApp app = FirebaseApp(name: "testApp2");
-      final Firestore firestoreWithSettings = Firestore(app: app);
+      final MethodChannelFirestore firestoreWithSettings = MethodChannelFirestore(app: app);
       await firestoreWithSettings.settings(
         persistenceEnabled: true,
         host: null,
@@ -384,6 +384,7 @@ void main() {
                     <dynamic>['createdAt', '<', 100],
                   ],
                   'orderBy': <List<dynamic>>[],
+
                 },
                 'includeMetadataChanges': false,
               },
@@ -459,6 +460,7 @@ void main() {
                     ],
                   ],
                   'orderBy': <List<dynamic>>[],
+
                 },
                 'includeMetadataChanges': false,
               },
