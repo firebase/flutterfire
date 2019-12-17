@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' show hashValues, hashList;
 
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart' as platform;
 import 'package:collection/collection.dart';
 import 'package:firebase_core/firebase_core.dart';

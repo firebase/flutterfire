@@ -11,37 +11,31 @@ part of cloud_firestore;
 /// A [DocumentReference] can also be used to create a [CollectionReference]
 /// to a subcollection.
 class DocumentReference {
-  platform.MethodChannelDocumentReference _delegate;
-  DocumentReference._(this.firestore, List<String> pathComponents)
-      : _pathComponents = pathComponents,
-  _delegate = platform.MethodChannelDocumentReference(platform.FirestorePlatform.instance, pathComponents),
-        assert(firestore != null);
+  platform.DocumentReference _delegate;
+  DocumentReference._(this._delegate);
 
   /// The Firestore instance associated with this document reference
-  final Firestore firestore;
-
-  final List<String> _pathComponents;
+  Firestore get firestore => Firestore.instance;
 
   @override
   bool operator ==(dynamic o) =>
       o is DocumentReference && o.firestore == firestore && o.path == path;
 
   @override
-  int get hashCode => hashList(_pathComponents);
+  int get hashCode => hashList(_delegate.path.split("/"));
 
   /// Parent returns the containing [CollectionReference].
   CollectionReference parent() {
     return CollectionReference._(
-      firestore,
-      (List<String>.from(_pathComponents)..removeLast()),
+      _delegate.parent()
     );
   }
 
   /// Slash-delimited path representing the database location of this query.
-  String get path => _pathComponents.join('/');
+  String get path => _delegate.path;
 
   /// This document's given or generated ID in the collection.
-  String get documentID => _pathComponents.last;
+  String get documentID => _delegate.documentID;
 
   /// Writes to the document referred to by this [DocumentReference].
   ///
@@ -68,8 +62,7 @@ class DocumentReference {
   /// If no document exists, the read will return null.
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
     return DocumentSnapshot._(
-      await _delegate.get(source: PlatformUtils._toPlatformSource(source)),
-      firestore,
+      await _delegate.get(source: PlatformUtils._toPlatformSource(source))
     );
   }
 
@@ -87,5 +80,5 @@ class DocumentReference {
   /// Notifies of documents at this location
   Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) =>
       _delegate.snapshots(includeMetadataChanges: includeMetadataChanges)
-      .map((snapshot) => DocumentSnapshot._(snapshot, firestore));
+      .map((snapshot) => DocumentSnapshot._(snapshot));
 }

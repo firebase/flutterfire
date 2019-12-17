@@ -6,21 +6,20 @@ part of cloud_firestore;
 
 /// A QuerySnapshot contains zero or more DocumentSnapshot objects.
 class QuerySnapshot {
-  final platform.MethodChannelQuerySnapshot _delegate;
-  final Firestore _firestore;
+  final platform.QuerySnapshot _delegate;
 
-  QuerySnapshot._(Map<dynamic, dynamic> data, this._firestore, {platform.MethodChannelQuerySnapshot delegate})
-      : _delegate =  delegate ?? platform.MethodChannelQuerySnapshot(
-            data, platform.FirestorePlatform.instance);
+  QuerySnapshot._(this._delegate) {
+
+  }
 
   /// Gets a list of all the documents included in this snapshot
   List<DocumentSnapshot> get documents =>
-      _delegate.documents.map((item) => DocumentSnapshot._(item, _firestore));
+      _delegate.documents.map((item) => DocumentSnapshot._(item)).toList();
 
   /// An array of the documents that changed since the last snapshot. If this
   /// is the first snapshot, all documents will be in the list as Added changes.
   List<DocumentChange> get documentChanges => _delegate.documentChanges
-      .map((item) => DocumentChange._(null, _firestore, delegate: item));
+      .map((item) => DocumentChange._(item)).toList();
 
   SnapshotMetadata get metadata => SnapshotMetadata._(_delegate.metadata);
 }

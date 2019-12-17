@@ -8,13 +8,12 @@ typedef Future<dynamic> TransactionHandler(Transaction transaction);
 
 class Transaction {
   @visibleForTesting
-  Transaction(this._transactionId, this._firestore)
+  Transaction(int transactionId)
       : _delegate = platform.Transaction(
-            _transactionId, platform.FirestorePlatform.instance);
+            transactionId, platform.FirestorePlatform.instance);
 
   platform.Transaction _delegate;
-  int _transactionId;
-  Firestore _firestore;
+
   List<Future<dynamic>> _pendingResults = <Future<dynamic>>[];
 
   Future<void> _finish() => _delegate.finish();
@@ -31,7 +30,7 @@ class Transaction {
         platform.FirestorePlatform.instance,
         documentReference.path.split("/")));
     if (result != null) {
-      return DocumentSnapshot._(result, _firestore);
+      return DocumentSnapshot._(result);
     } else {
       return null;
     }

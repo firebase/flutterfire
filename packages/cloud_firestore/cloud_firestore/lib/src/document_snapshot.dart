@@ -11,8 +11,8 @@ part of cloud_firestore;
 /// syntax to access a specific field.
 class DocumentSnapshot {
   platform.DocumentSnapshot _deletage;
-  Firestore _firestore;
-  DocumentSnapshot._(this._deletage, this._firestore);
+  Firestore _firestore = Firestore.instance;
+  DocumentSnapshot._(this._deletage);
 
 
   /// The reference that produced this snapshot
@@ -33,13 +33,4 @@ class DocumentSnapshot {
 
   /// Returns `true` if the document exists.
   bool get exists => data != null;
-}
-
-Map<String, dynamic> _asStringKeyedMap(Map<dynamic, dynamic> map) {
-  if (map == null) return null;
-  if (map is Map<String, dynamic>) {
-    return map;
-  } else {
-    return Map<String, dynamic>.from(map);
-  }
 }

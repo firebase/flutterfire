@@ -23,12 +23,9 @@ enum DocumentChangeType {
 /// It contains the document affected and the type of change that occurred
 /// (added, modified, or removed).
 class DocumentChange {
-  final platform.MethodChannelDocumentChange _delegate;
-  final Firestore _firestore;
+  final platform.DocumentChange _delegate;
 
-  DocumentChange._(Map<dynamic, dynamic> data, this._firestore, {platform.MethodChannelDocumentChange delegate})
-      : _delegate = delegate ?? platform.MethodChannelDocumentChange(
-            data, platform.FirestorePlatform.instance);
+  DocumentChange._(this._delegate);
 
   /// The type of change that occurred (added, modified, or removed).
   DocumentChangeType get type => _fromPlatform(_delegate.type);
@@ -49,7 +46,7 @@ class DocumentChange {
 
   /// The document affected by this change.
   DocumentSnapshot get document =>
-      DocumentSnapshot._(_delegate.document, _firestore);
+      DocumentSnapshot._(_delegate.document);
 
   DocumentChangeType _fromPlatform(platform.DocumentChangeType platformChange) {
     switch (platformChange) {

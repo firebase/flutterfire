@@ -1,5 +1,6 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase/firestore.dart' as web;
+import 'package:flutter/cupertino.dart';
 
 class QueryWeb implements Query {
   final web.CollectionReference webCollection;
@@ -34,7 +35,6 @@ class QueryWeb implements Query {
     } else if (webCollection != null) {
       webDocuments = await webCollection.get();
     }
-
     return _webQuerySnapshotToQuerySnapshot(webDocuments);
   }
 
@@ -188,27 +188,41 @@ class QueryWeb implements Query {
   }
 
   QuerySnapshot _webQuerySnapshotToQuerySnapshot(
-          web.QuerySnapshot webSnapshot) =>
-      QuerySnapshot(
-          webSnapshot.docs.map(_webDocumentSnapshotToDocumentSnapshot),
-          webSnapshot.docChanges().map(_webChangeToChange),
-          _webMetadataToMetada(webSnapshot.metadata));
+          web.QuerySnapshot webSnapshot) {
+    return QuerySnapshot(
+        webSnapshot.docs.map(_webDocumentSnapshotToDocumentSnapshot).toList(),
+        webSnapshot.docChanges().map(_webChangeToChange).toList(),
+        _webMetadataToMetada(webSnapshot.metadata));
+  }
 
-  DocumentChange _webChangeToChange(web.DocumentChange webChange) =>
-      DocumentChange(
-          DocumentChangeType.values.firstWhere((DocumentChangeType type) {
-        return type.toString() == webChange.type.toLowerCase();
-      }), webChange.oldIndex, webChange.newIndex,
-          _webDocumentSnapshotToDocumentSnapshot(webChange.doc));
+  DocumentChange _webChangeToChange(web.DocumentChange webChange) {
+    return DocumentChange(
+        _fromString(webChange.type), webChange.oldIndex, webChange.newIndex,
+        _webDocumentSnapshotToDocumentSnapshot(webChange.doc));
+  }
+
+  DocumentChangeType _fromString(String item) {
+    switch(item.toLowerCase()) {
+      case "added":
+        return DocumentChangeType.added;
+      case "modified":
+        return DocumentChangeType.modified;
+      case "removed":
+        return DocumentChangeType.removed;
+      default:
+        throw ArgumentError("Invalid type");
+    }
+  }
 
   DocumentSnapshot _webDocumentSnapshotToDocumentSnapshot(
-          web.DocumentSnapshot webSnapshot) =>
-      DocumentSnapshot(
-          webSnapshot.ref.path,
-          webSnapshot.data(),
-          SnapshotMetadata(webSnapshot.metadata.hasPendingWrites,
-              webSnapshot.metadata.fromCache),
-          this._firestore);
+      web.DocumentSnapshot webSnapshot) {
+    return DocumentSnapshot(
+        webSnapshot.ref.path,
+        webSnapshot.data(),
+        SnapshotMetadata(webSnapshot.metadata.hasPendingWrites,
+            webSnapshot.metadata.fromCache),
+        this._firestore);
+  }
 
   web.Query _generateOrderByQuery(DocumentSnapshot webSnapshot) {
     assert(webQuery != null || webCollection != null);
@@ -222,6 +236,8 @@ class QueryWeb implements Query {
     return query.endAt(fieldValues: webSnapshot.data.values);
   }
 
-  SnapshotMetadata _webMetadataToMetada(web.SnapshotMetadata webMetadata) =>
-      SnapshotMetadata(webMetadata.hasPendingWrites, webMetadata.fromCache);
+  SnapshotMetadata _webMetadataToMetada(web.SnapshotMetadata webMetadata) {
+    return SnapshotMetadata(
+        webMetadata.hasPendingWrites, webMetadata.fromCache);
+  }
 }

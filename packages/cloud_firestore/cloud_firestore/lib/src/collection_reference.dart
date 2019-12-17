@@ -8,12 +8,9 @@ part of cloud_firestore;
 /// document references, and querying for documents (using the methods
 /// inherited from [Query]).
 class CollectionReference extends Query {
-  final platform.MethodChannelCollectionReference _delegate;
+  final platform.CollectionReference _delegate;
 
-  CollectionReference._(Firestore firestore, List<String> pathComponents)
-      : _delegate = platform.MethodChannelCollectionReference(
-            platform.FirestorePlatform.instance, pathComponents),
-        super._(firestore: firestore, pathComponents: pathComponents);
+  CollectionReference._(this._delegate): super._(_delegate);
 
   /// ID of the referenced collection.
   String get id => _pathComponents.isEmpty ? null : _pathComponents.last;
@@ -26,8 +23,7 @@ class CollectionReference extends Query {
       return null;
     }
     return DocumentReference._(
-      firestore,
-      (List<String>.from(_pathComponents)..removeLast()),
+      _delegate.parent()
     );
   }
 
@@ -41,16 +37,8 @@ class CollectionReference extends Query {
   ///
   /// The unique key generated is prefixed with a client-generated timestamp
   /// so that the resulting list will be chronologically-sorted.
-  DocumentReference document([String path]) {
-    List<String> childPath;
-    if (path == null) {
-      final String key = AutoIdGenerator.autoId();
-      childPath = List<String>.from(_pathComponents)..add(key);
-    } else {
-      childPath = List<String>.from(_pathComponents)..addAll(path.split(('/')));
-    }
-    return DocumentReference._(firestore, childPath);
-  }
+  DocumentReference document([String path]) =>
+    DocumentReference._(_delegate.document(path));
 
   /// Returns a `DocumentReference` with an auto-generated ID, after
   /// populating it with provided [data].

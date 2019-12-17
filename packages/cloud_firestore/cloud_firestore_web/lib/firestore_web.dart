@@ -4,6 +4,7 @@ import 'package:cloud_firestore_web/document_reference_web.dart';
 import 'package:cloud_firestore_web/query_web.dart';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/firestore.dart' show Settings;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 class FirestoreWeb extends FirestorePlatform {
@@ -16,17 +17,16 @@ class FirestoreWeb extends FirestorePlatform {
   final app = firebase.firestore();
 
   @override
-  CollectionReference collection(String path) =>
-      CollectionReferenceWeb(this, app, path.split('/'));
+  CollectionReference collection(String path) {
+    
+    return CollectionReferenceWeb(this, app, path.split('/'));
+  }
+
 
   @override
   Query collectionGroup(String path) {
-    return QueryWeb(
-      this,
-      path,
-      isCollectionGroup: true,
-      webQuery: app.collectionGroup(path)
-    );
+    return QueryWeb(this, path,
+        isCollectionGroup: true, webQuery: app.collectionGroup(path));
   }
 
   @override
@@ -49,8 +49,12 @@ class FirestoreWeb extends FirestorePlatform {
       String host,
       bool sslEnabled,
       int cacheSizeBytes}) async {
-    return app.settings(
+    return Future.sync(() {
+      
+      app.settings(
         Settings(ssl: sslEnabled, cacheSizeBytes: cacheSizeBytes, host: host));
+      
+    });
   }
 
   @override

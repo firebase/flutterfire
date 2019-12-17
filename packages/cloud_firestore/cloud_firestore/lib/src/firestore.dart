@@ -7,42 +7,45 @@ part of cloud_firestore;
 /// The entry point for accessing a Firestore.
 ///
 /// You can get an instance by calling [Firestore.instance].
-class Firestore {
-  platform.MethodChannelFirestore _platfromFirestore;
+class Firestore  {
+  
+  final platform.FirestorePlatform _delegate;
 
-  Firestore({FirebaseApp app})
-      : _platfromFirestore = platform.MethodChannelFirestore(app: app);
+  Firestore({FirebaseApp app, platform.FirestorePlatform delegate})
+      :  _delegate = delegate ?? platform.FirestorePlatform.instance;
 
   static MethodChannel get channel => platform.MethodChannelFirestore.channel;
 
-  String appName() => _platfromFirestore.appName();
+  static Firestore get instance  => Firestore(delegate: platform.FirestorePlatform.instance);
+
+  String appName() => _delegate.appName();
 
   WriteBatch batch() => WriteBatch._();
 
   CollectionReference collection(String path) {
     assert(path != null);
-    return CollectionReference._(this, path.split('/'));
+    return CollectionReference._(_delegate.collection(path));
   }
 
   Query collectionGroup(String path) =>
-      Query._(delegate: _platfromFirestore.collectionGroup(path));
+      Query._(_delegate.collectionGroup(path));
 
   DocumentReference document(String path) =>
-      DocumentReference._(this, path.split("/"));
+      DocumentReference._(_delegate.document(path));
 
   Future<void> enablePersistence(bool enable) =>
-      _platfromFirestore.enablePersistence(enable);
+      _delegate.enablePersistence(enable);
 
   Future<Map<String, dynamic>> runTransaction(transactionHandler,
           {Duration timeout = const Duration(seconds: 5)}) =>
-      _platfromFirestore.runTransaction(transactionHandler, timeout: timeout);
+      _delegate.runTransaction(transactionHandler, timeout: timeout);
 
   Future<void> settings(
           {bool persistenceEnabled,
           String host,
           bool sslEnabled,
           int cacheSizeBytes}) =>
-      _platfromFirestore.settings(
+      _delegate.settings(
           persistenceEnabled: persistenceEnabled,
           host: host,
           sslEnabled: sslEnabled,
