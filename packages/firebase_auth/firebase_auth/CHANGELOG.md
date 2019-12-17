@@ -1,4 +1,4 @@
-## 0.15.2+1
+## 0.15.3
 
 * Add support for OAuth Authentication for iOS and Android to solve generic providers authentication.
 
