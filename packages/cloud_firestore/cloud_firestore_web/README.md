@@ -1,17 +1,17 @@
-# firebase_auth_web
+# cloud_firestore_web
 
-The web implementation of [`firebase_core`][1].
+The web implementation of [`cloud_firestore`][1].
 
 ## Usage
 
 ### Import the package
 
 To use this plugin in your Flutter app on the web, simply add it as a
-dependency in your `pubspec.yaml` alongside the base `firebase_auth`
+dependency in your `pubspec.yaml` alongside the base `cloud_firestore`
 plugin.
 
 _(This is only temporary: in the future we hope to make this package
-an "endorsed" implementation of `firebase_auth`, so it will automatically
+an "endorsed" implementation of `cloud_firestore`, so it will automatically
 be included in your app when you run your Flutter app on the web.)_
 
 Add this to your `pubspec.yaml`:
@@ -20,8 +20,8 @@ Add this to your `pubspec.yaml`:
 ...
 dependencies:
   ...
-  firebase_auth: ^0.15.1
-  firebase_auth_web: ^0.1.0
+  cloud_firestore: ^0.13.1
+  firebase_auth_web: ^0.0.1
   ...
 ```
 
@@ -37,7 +37,7 @@ In your app directory, edit `web/index.html` to add the line:
     ...
     <body>
         <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-firestore.js"></script>
         <script src="main.dart.js"></script>
     </body>
 </html>
@@ -48,5 +48,5 @@ In your app directory, edit `web/index.html` to add the line:
 Once you have added the `firebase_auth_web` dependency to your pubspec,
 you can use `package:firebase_auth` as normal.
 
-[1]: ../firebase_auth
+[1]: ../cloud_firestore
 [2]: https://github.com/dart-lang/sdk/issues/33979
