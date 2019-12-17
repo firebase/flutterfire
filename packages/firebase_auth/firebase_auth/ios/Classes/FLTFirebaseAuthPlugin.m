@@ -481,6 +481,32 @@ int nextHandle = 0;
     credential = [[FIRPhoneAuthProvider providerWithAuth:[self getAuth:arguments]]
         credentialWithVerificationID:verificationId
                     verificationCode:smsCode];
+  } else if ([provider length] != 0 && data[@"idToken"] != (id)[NSNull null] &&
+             (data[@"accessToken"] != (id)[NSNull null] ||
+              data[@"rawNonce"] != (id)[NSNull null])) {
+    NSString *idToken = data[@"idToken"];
+    NSString *accessToken = data[@"accessToken"];
+    NSString *rawNonce = data[@"rawNonce"];
+
+    if (accessToken != (id)[NSNull null] && rawNonce != (id)[NSNull null] &&
+        [accessToken length] != 0 && [rawNonce length] != 0) {
+      credential = [FIROAuthProvider credentialWithProviderID:provider
+                                                      IDToken:idToken
+                                                     rawNonce:rawNonce
+                                                  accessToken:accessToken];
+    } else if (accessToken != (id)[NSNull null] && [accessToken length] != 0) {
+      credential = [FIROAuthProvider credentialWithProviderID:provider
+                                                      IDToken:idToken
+                                                  accessToken:accessToken];
+    } else if (rawNonce != (id)[NSNull null] && [rawNonce length] != 0) {
+      credential = [FIROAuthProvider credentialWithProviderID:provider
+                                                      IDToken:idToken
+                                                     rawNonce:rawNonce];
+    } else {
+      NSLog(@"To use OAuthProvider you need to provide at least one of the following 'accessToken' "
+            @"or 'rawNonce'.");
+    }
+
   } else {
     NSLog(@"Support for an auth provider with identifier '%@' is not implemented.", provider);
   }
