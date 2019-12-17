@@ -8,61 +8,46 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show required, visibleForTesting;
 
 part 'src/method_channel_firestore.dart';
-
 part 'src/blob.dart';
-
 part 'src/utils/auto_id_generator.dart';
-
 part 'src/platform_interface/collection_reference.dart';
 part 'src/method_channel_collection_reference.dart';
-
 part 'src/method_channel_document_change.dart';
 part 'src/platform_interface/document_change.dart';
-
 part 'src/method_channel_document_reference.dart';
-
 part 'src/platform_interface/document_reference_interface.dart';
-
 part 'src/document_snapshot.dart';
-
 part 'src/field_path.dart';
-
 part 'src/field_value.dart';
-
 part 'src/firestore_message_codec.dart';
-
 part 'src/geo_point.dart';
-
 part 'src/method_channel_query.dart';
-
 part 'src/platform_interface/query.dart';
-
 part 'src/platform_interface/query_snapshot.dart';
 part 'src/method_channel_query_snapshot.dart';
-
 part 'src/snapshot_metadata.dart';
-
 part 'src/source.dart';
-
 part 'src/timestamp.dart';
-
 part 'src/transaction.dart';
-
 part 'src/transaction_platform_interface.dart';
-
 part 'src/write_batch.dart';
-
 part 'src/write_batch_platform_interface.dart';
 
 abstract class FirestorePlatform {
 
-  FirestorePlatform();
+  final FirebaseApp app;
+
+  FirestorePlatform._(this.app);
+
+  factory FirestorePlatform({FirebaseApp app}) {
+    FirestorePlatform.instance = FirestorePlatform.instance._withApp(app);
+    return FirestorePlatform.instance;
+  }
   /// Only mock implementations should set this to `true`.
   ///
   /// Mockito mocks implement this class with `implements` which is forbidden
@@ -75,11 +60,6 @@ abstract class FirestorePlatform {
 
   static FirestorePlatform _instance = MethodChannelFirestore();
 
-  factory FirestorePlatform._withApp(PlatformFirebaseApp app) =>
-      MethodChannelFirestore();
-
-  // TODO(amirh): Extract common platform interface logic.
-  // https://github.com/flutter/flutter/issues/43368
   static set instance(FirestorePlatform instance) {
     if (!instance.isMock) {
       try {
@@ -92,14 +72,18 @@ abstract class FirestorePlatform {
     _instance = instance;
   }
 
+  FirestorePlatform _withApp(FirebaseApp app) {
+    throw UnimplementedError("_withApp() not implemented");
+  }
+
   String appName() {
     throw UnimplementedError("appName() not implemented");
   }
 
-  /// This method ensures that [FirebaseAuthPlatform] isn't implemented with `implements`.
+  /// This method ensures that [FirestorePlatform] isn't implemented with `implements`.
   ///
   /// See class docs for more details on why using `implements` to implement
-  /// [FirebaseAuthPlatform] is forbidden.
+  /// [FirestorePlatform] is forbidden.
   ///
   /// This private method is called by the [instance] setter, which should fail
   /// if the provided instance is a class implemented with `implements`.
@@ -167,4 +151,10 @@ abstract class FirestorePlatform {
     int cacheSizeBytes}) async {
     throw UnimplementedError('settings() is not implemented');
   }
+
+  @override
+  int get hashCode => appName().hashCode;
+
+  @override
+  bool operator ==(dynamic o) => o is FirestorePlatform && o.app == app;
 }

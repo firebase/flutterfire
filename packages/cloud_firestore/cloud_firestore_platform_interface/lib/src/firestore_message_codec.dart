@@ -88,9 +88,8 @@ class FirestoreMessageCodec extends StandardMessageCodec {
         final int appNameLength = readSize(buffer);
         final String appName =
             utf8.decoder.convert(buffer.getUint8List(appNameLength));
-        //TODO(amr): Fix this. AppName should be used
-//        final FirebaseCorePlatform app = FirebaseCorePlatform.instance.appNamed(name: appName);
-        final FirestorePlatform firestore = FirestorePlatform.instance;
+        final FirebaseApp app = FirebaseApp(name: appName);
+        final FirestorePlatform firestore = FirestorePlatform(app: app);
         final int pathLength = readSize(buffer);
         final String path =
             utf8.decoder.convert(buffer.getUint8List(pathLength));

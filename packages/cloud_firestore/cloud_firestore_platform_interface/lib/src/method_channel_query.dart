@@ -5,14 +5,18 @@
 part of cloud_firestore_platform_interface;
 
 /// Represents a query over the data at a particular location.
-class MethodChannelQuery extends Query{
+class MethodChannelQuery extends Query {
   MethodChannelQuery(
       {@required FirestorePlatform firestore,
       @required List<String> pathComponents,
       bool isCollectionGroup = false,
       Map<String, dynamic> parameters})
-      :super(firestore: firestore, pathComponents: pathComponents, isCollectionGroup: isCollectionGroup, parameters: parameters);
-
+      : super(
+          firestore: firestore,
+          pathComponents: pathComponents,
+          isCollectionGroup: isCollectionGroup,
+          parameters: parameters,
+        );
 
   Query _copyWithParameters(Map<String, dynamic> parameters) {
     return MethodChannelQuery(
@@ -20,11 +24,11 @@ class MethodChannelQuery extends Query{
       isCollectionGroup: isCollectionGroup,
       pathComponents: pathComponents,
       parameters: Map<String, dynamic>.unmodifiable(
-        Map<String, dynamic>.from(parameters)..addAll(parameters),
+        Map<String, dynamic>.from(this.parameters)..addAll(parameters),
       ),
     );
   }
-  
+
   // TODO(jackson): Reduce code duplication with [DocumentReference]
   @override
   Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
