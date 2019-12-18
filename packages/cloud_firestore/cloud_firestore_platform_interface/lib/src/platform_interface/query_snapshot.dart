@@ -16,5 +16,6 @@ class QuerySnapshot {
   /// is the first snapshot, all documents will be in the list as Added changes.
   final List<DocumentChange> documentChanges;
 
+  /// Metadata for the document
   final SnapshotMetadata metadata;
 }

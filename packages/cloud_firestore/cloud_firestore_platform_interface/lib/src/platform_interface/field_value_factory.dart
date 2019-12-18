@@ -1,5 +1,7 @@
 part of cloud_firestore_platform_interface;
 
+/// Sentinel values that can be used when writing document fields with set() or
+/// update().
 enum FieldValueType {
   arrayUnion,
   arrayRemove,

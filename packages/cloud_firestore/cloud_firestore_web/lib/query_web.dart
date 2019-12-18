@@ -23,9 +23,7 @@ class QueryWeb implements Query {
   }
 
   @override
-  Map<String, dynamic> buildArguments() {
-    return null;
-  }
+  Map<String, dynamic> buildArguments() => Map();
 
   @override
   Query endAt(List values) => QueryWeb(this._firestore, this._path,
@@ -62,9 +60,6 @@ class QueryWeb implements Query {
         webQuery.orderBy(field, descending ? "desc" : "asc"),
         isCollectionGroup: _isCollectionGroup,
       );
-
-  @override
-  Map<String, dynamic> get parameters => null;
 
   @override
   String get path => this._path;
@@ -208,4 +203,7 @@ class QueryWeb implements Query {
     return SnapshotMetadata(
         webMetadata.hasPendingWrites, webMetadata.fromCache);
   }
+
+  @override
+  Map<String, dynamic> get parameters => Map();
 }

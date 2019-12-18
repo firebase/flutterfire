@@ -4,19 +4,25 @@
 
 part of cloud_firestore_platform_interface;
 
-/// Sentinel values that can be used when writing document fields with set() or
-/// update().
-
+/// A class to define an interface that's required
+/// for building platform-specific implementation
 abstract class FieldValueInterface {
 
+  /// Implementation instance
   FieldValueInterface get instance;
 
+  /// type of the FieldValue
   FieldValueType get type;
 
+  /// value of the FieldValue
   dynamic get value;
 }
 
+/// Mobile platform implementation for [FieldValueInterface]
 class FieldValue implements FieldValueInterface {
+
+  /// Replaces items with type [FieldValueInterface] with implementation type
+  /// such as [FieldValue]
   static Map<String, dynamic> _serverDelegates(Map<String, dynamic> data) {
     Map<String, dynamic> output = Map.from(data);
     output.updateAll((key, value) {
@@ -28,12 +34,15 @@ class FieldValue implements FieldValueInterface {
     });
     return output;
   }
+
   FieldValue._(this.type, this.value);
 
   @override
   FieldValueInterface get instance => this;
 
+  @override
   final FieldValueType type;
 
+  @override
   final dynamic value;
 }
