@@ -62,7 +62,7 @@ class DocumentReference {
   /// If no document exists, the read will return null.
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
     return DocumentSnapshot._(
-      await _delegate.get(source: PlatformUtils._toPlatformSource(source))
+      await _delegate.get(source: _PlatformUtils.toPlatformSource(source))
     );
   }
 

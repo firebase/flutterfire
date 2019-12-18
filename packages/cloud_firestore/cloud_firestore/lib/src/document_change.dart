@@ -28,7 +28,7 @@ class DocumentChange {
   DocumentChange._(this._delegate);
 
   /// The type of change that occurred (added, modified, or removed).
-  DocumentChangeType get type => _fromPlatform(_delegate.type);
+  DocumentChangeType get type => _PlatformUtils.fromPlatform(_delegate.type);
 
   /// The index of the changed document in the result set immediately prior to
   /// this [DocumentChange] (i.e. supposing that all prior DocumentChange objects
@@ -48,16 +48,5 @@ class DocumentChange {
   DocumentSnapshot get document =>
       DocumentSnapshot._(_delegate.document);
 
-  DocumentChangeType _fromPlatform(platform.DocumentChangeType platformChange) {
-    switch (platformChange) {
-      case platform.DocumentChangeType.added:
-        return DocumentChangeType.added;
-      case platform.DocumentChangeType.modified:
-        return DocumentChangeType.modified;
-      case platform.DocumentChangeType.removed:
-        return DocumentChangeType.removed;
-      default:
-        throw ArgumentError("Invalud change type");
-    }
-  }
+
 }

@@ -1,7 +1,20 @@
 part of cloud_firestore;
 
-class PlatformUtils {
-  static platform.Source _toPlatformSource(Source platformSource) {
+class _PlatformUtils {
+  static DocumentChangeType fromPlatform(platform.DocumentChangeType platformChange) {
+    switch (platformChange) {
+      case platform.DocumentChangeType.added:
+        return DocumentChangeType.added;
+      case platform.DocumentChangeType.modified:
+        return DocumentChangeType.modified;
+      case platform.DocumentChangeType.removed:
+        return DocumentChangeType.removed;
+      default:
+        throw ArgumentError("Invalud change type");
+    }
+  }
+
+  static platform.Source toPlatformSource(Source platformSource) {
     switch (platformSource) {
       case Source.cache:
         return platform.Source.cache;
@@ -15,7 +28,7 @@ class PlatformUtils {
     }
   }
 
-  static platform.DocumentSnapshot _toPlatformDocumentSnapshot(
+  static platform.DocumentSnapshot toPlatformDocumentSnapshot(
           DocumentSnapshot documentSnapshot) =>
       platform.DocumentSnapshot(
           documentSnapshot.reference.path,

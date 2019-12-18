@@ -32,14 +32,8 @@ class Query {
   Future<QuerySnapshot> getDocuments(
       {Source source = Source.serverAndCache}) async {
     assert(source != null);
-    try{
-      final docs = await _delegate.getDocuments(source: PlatformUtils._toPlatformSource(source));
-
-      return QuerySnapshot._(docs);
-    }catch(error) {
-
-      throw error;
-    }
+    final docs = await _delegate.getDocuments(source: _PlatformUtils.toPlatformSource(source));
+    return QuerySnapshot._(docs);
   }
 
   /// Obtains a CollectionReference corresponding to this query's location.
@@ -108,7 +102,7 @@ class Query {
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.
   Query startAfterDocument(DocumentSnapshot documentSnapshot) =>
-      Query._(_delegate.startAfterDocument(PlatformUtils._toPlatformDocumentSnapshot(documentSnapshot)));
+      Query._(_delegate.startAfterDocument(_PlatformUtils.toPlatformDocumentSnapshot(documentSnapshot)));
 
   /// Creates and returns a new [Query] that starts at the provided document
   /// (inclusive). The starting position is relative to the order of the query.
@@ -125,7 +119,7 @@ class Query {
   ///  * [endAtDocument] for a query that ends at a document.
   ///  * [endBeforeDocument] for a query that ends before a document.
   Query startAtDocument(DocumentSnapshot documentSnapshot) =>
-      Query._(_delegate.startAtDocument(PlatformUtils._toPlatformDocumentSnapshot(documentSnapshot)));
+      Query._(_delegate.startAtDocument(_PlatformUtils.toPlatformDocumentSnapshot(documentSnapshot)));
 
 
   /// Takes a list of [values], creates and returns a new [Query] that starts
@@ -165,7 +159,7 @@ class Query {
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endBeforeDocument] for a query that ends before a document.
   Query endAtDocument(DocumentSnapshot documentSnapshot) =>
-      Query._(_delegate.endAtDocument(PlatformUtils._toPlatformDocumentSnapshot(documentSnapshot)));
+      Query._(_delegate.endAtDocument(_PlatformUtils.toPlatformDocumentSnapshot(documentSnapshot)));
 
   /// Takes a list of [values], creates and returns a new [Query] that ends at the
   /// provided fields relative to the order of the query.
@@ -193,7 +187,7 @@ class Query {
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.
   Query endBeforeDocument(DocumentSnapshot documentSnapshot) =>
-      Query._(_delegate.endBeforeDocument(PlatformUtils._toPlatformDocumentSnapshot(documentSnapshot)));
+      Query._(_delegate.endBeforeDocument(_PlatformUtils.toPlatformDocumentSnapshot(documentSnapshot)));
 
   /// Takes a list of [values], creates and returns a new [Query] that ends before
   /// the provided fields relative to the order of the query.

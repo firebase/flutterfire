@@ -20,7 +20,7 @@ import 'package:meta/meta.dart';
 part 'src/blob.dart';
 part 'src/collection_reference.dart';
 part 'src/document_change.dart';
-part 'src/utils/PlatformUtils.dart';
+part 'src/utils/platform_utils.dart';
 part 'src/document_reference.dart';
 part 'src/document_snapshot.dart';
 part 'src/field_path.dart';
