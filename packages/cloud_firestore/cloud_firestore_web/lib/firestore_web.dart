@@ -38,8 +38,8 @@ class FirestoreWeb extends FirestorePlatform {
 
   @override
   Query collectionGroup(String path) {
-    return QueryWeb(this, path,
-        isCollectionGroup: true, webQuery: webFirestore.collectionGroup(path));
+    return QueryWeb(this, path,webFirestore.collectionGroup(path),
+        isCollectionGroup: true);
   }
 
   @override
