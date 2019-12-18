@@ -16,7 +16,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
-export 'package:cloud_firestore_web/firestore_web.dart';
+
 part 'src/blob.dart';
 part 'src/collection_reference.dart';
 part 'src/document_change.dart';
