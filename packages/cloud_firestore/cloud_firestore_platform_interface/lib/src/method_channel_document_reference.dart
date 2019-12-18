@@ -15,7 +15,7 @@ class MethodChannelDocumentReference extends DocumentReference {
       <String, dynamic>{
         'app': firestore.appName(),
         'path': path,
-        'data': data,
+        'data': FieldValue._serverDelegates(data),
         'options': <String, bool>{'merge': merge},
       },
     );
@@ -28,7 +28,7 @@ class MethodChannelDocumentReference extends DocumentReference {
       <String, dynamic>{
         'app': firestore.appName(),
         'path': path,
-        'data': data,
+        'data': FieldValue._serverDelegates(data),
       },
     );
   }

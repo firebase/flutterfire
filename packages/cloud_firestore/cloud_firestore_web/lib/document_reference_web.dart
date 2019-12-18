@@ -15,7 +15,7 @@ class DocumentReferenceWeb extends DocumentReference {
 
   @override
   Future<void> updateData(Map<String, dynamic> data) =>
-      delegate.update(data: data);
+      delegate.update(data: FieldValueWeb._serverDelegates(data));
 
   @override
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {

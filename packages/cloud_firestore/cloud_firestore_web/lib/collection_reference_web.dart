@@ -42,7 +42,7 @@ class CollectionReferenceWeb implements CollectionReference {
   @override
   Future<DocumentReference> add(Map<String, dynamic> data) async {
     final DocumentReference newDocument = document();
-    await newDocument.setData(FieldValueWeb._serverDelegates(data));
+    await newDocument.setData(data);
     return newDocument;
   }
 
