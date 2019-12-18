@@ -14,8 +14,8 @@ class _PlatformUtils {
     }
   }
 
-  static platform.Source toPlatformSource(Source platformSource) {
-    switch (platformSource) {
+  static platform.Source toPlatformSource(Source source) {
+    switch (source) {
       case Source.cache:
         return platform.Source.cache;
       case Source.server:
