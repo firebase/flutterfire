@@ -10,26 +10,26 @@ part of cloud_firestore;
 /// The data can be extracted with the data property or by using subscript
 /// syntax to access a specific field.
 class DocumentSnapshot {
-  platform.DocumentSnapshot _deletage;
+  platform.DocumentSnapshot _delegate;
   Firestore _firestore = Firestore.instance;
-  DocumentSnapshot._(this._deletage);
+  DocumentSnapshot._(this._delegate);
 
 
   /// The reference that produced this snapshot
-  DocumentReference get reference => _firestore.document(_deletage.reference.path);
+  DocumentReference get reference => _firestore.document(_delegate.reference.path);
 
   /// Contains all the data of this snapshot
-  Map<String, dynamic> get data => _deletage.data;
+  Map<String, dynamic> get data => _delegate.data;
 
   /// Metadata about this snapshot concerning its source and if it has local
   /// modifications.
-  SnapshotMetadata get metadata=> SnapshotMetadata._(_deletage.metadata);
+  SnapshotMetadata get metadata=> SnapshotMetadata._(_delegate.metadata);
 
   /// Reads individual values from the snapshot
   dynamic operator [](String key) => data[key];
 
   /// Returns the ID of the snapshot's document
-  String get documentID => _deletage.documentID;
+  String get documentID => _delegate.documentID;
 
   /// Returns `true` if the document exists.
   bool get exists => data != null;
