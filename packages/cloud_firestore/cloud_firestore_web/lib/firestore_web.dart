@@ -74,7 +74,7 @@ class FirestoreWeb extends FirestorePlatform {
       {Duration timeout = const Duration(seconds: 5)}) {
     return webFirestore.runTransaction((transaction) {
       transactionHandler(TransactionWeb._(transaction, this));
-    });
+    }).timeout(timeout);
   }
 
   @override
