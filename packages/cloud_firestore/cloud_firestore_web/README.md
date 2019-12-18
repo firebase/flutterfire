@@ -21,7 +21,7 @@ Add this to your `pubspec.yaml`:
 dependencies:
   ...
   cloud_firestore: ^0.13.1
-  firebase_auth_web: ^0.0.1
+  cloud_firestore_web: ^0.1.0
   ...
 ```
 
@@ -45,8 +45,8 @@ In your app directory, edit `web/index.html` to add the line:
 
 ### Using the plugin
 
-Once you have added the `firebase_auth_web` dependency to your pubspec,
-you can use `package:firebase_auth` as normal.
+Once you have added the `cloud_firebase_web` dependency to your pubspec,
+you can use `package:cloud_firebase` as normal.
 
 [1]: ../cloud_firestore
 [2]: https://github.com/dart-lang/sdk/issues/33979
