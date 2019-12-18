@@ -23,15 +23,3 @@ enum Source {
   /// [QuerySnapshot] with no documents.
   cache,
 }
-
-/// Converts [Source] to [String]
-String _getSourceString(Source source) {
-  assert(source != null);
-  if (source == Source.server) {
-    return 'server';
-  }
-  if (source == Source.cache) {
-    return 'cache';
-  }
-  return 'default';
-}

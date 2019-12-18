@@ -31,18 +31,25 @@ class QueryWeb implements Query {
       isCollectionGroup: _isCollectionGroup);
 
   @override
-  Query endAtDocument(DocumentSnapshot documentSnapshot) =>
-      QueryWeb(this._firestore, this._path,
-          _generateOrderByQuery(documentSnapshot).endAt(fieldValues: documentSnapshot.data.values), isCollectionGroup: _isCollectionGroup);
+  Query endAtDocument(DocumentSnapshot documentSnapshot) => QueryWeb(
+      this._firestore,
+      this._path,
+      _generateOrderByQuery(documentSnapshot)
+          .endAt(fieldValues: documentSnapshot.data.values),
+      isCollectionGroup: _isCollectionGroup);
 
   @override
   Query endBefore(List values) => QueryWeb(this._firestore, this._path,
-          webQuery != null ? webQuery.endBefore(fieldValues: values) : null, isCollectionGroup: _isCollectionGroup);
+      webQuery != null ? webQuery.endBefore(fieldValues: values) : null,
+      isCollectionGroup: _isCollectionGroup);
 
   @override
-  Query endBeforeDocument(DocumentSnapshot documentSnapshot) =>
-      QueryWeb(this._firestore, this._path,
-          _generateOrderByQuery(documentSnapshot).endBefore(fieldValues: documentSnapshot.data.values), isCollectionGroup: _isCollectionGroup);
+  Query endBeforeDocument(DocumentSnapshot documentSnapshot) => QueryWeb(
+      this._firestore,
+      this._path,
+      _generateOrderByQuery(documentSnapshot)
+          .endBefore(fieldValues: documentSnapshot.data.values),
+      isCollectionGroup: _isCollectionGroup);
 
   @override
   FirestorePlatform get firestore => _firestore;
@@ -51,7 +58,12 @@ class QueryWeb implements Query {
   bool get isCollectionGroup => _isCollectionGroup;
 
   @override
-  Query limit(int length) => QueryWeb(this._firestore, this._path, webQuery != null ? webQuery.limit(length) : null,isCollectionGroup: _isCollectionGroup,);
+  Query limit(int length) => QueryWeb(
+        this._firestore,
+        this._path,
+        webQuery != null ? webQuery.limit(length) : null,
+        isCollectionGroup: _isCollectionGroup,
+      );
 
   @override
   Query orderBy(field, {bool descending = false}) => QueryWeb(
@@ -72,31 +84,32 @@ class QueryWeb implements Query {
 
   @override
   Query startAfter(List values) => QueryWeb(
-        this._firestore,
-        this._path,
-        webQuery.startAfter(fieldValues: values),
-    isCollectionGroup: _isCollectionGroup
-      );
+      this._firestore, this._path, webQuery.startAfter(fieldValues: values),
+      isCollectionGroup: _isCollectionGroup);
 
   @override
-  Query startAfterDocument(DocumentSnapshot documentSnapshot) =>
-      QueryWeb(this._firestore, this._path,
-          _generateOrderByQuery(documentSnapshot)
-              .startAfter(fieldValues: documentSnapshot.data.values),isCollectionGroup: _isCollectionGroup);
+  Query startAfterDocument(DocumentSnapshot documentSnapshot) => QueryWeb(
+      this._firestore,
+      this._path,
+      _generateOrderByQuery(documentSnapshot)
+          .startAfter(fieldValues: documentSnapshot.data.values),
+      isCollectionGroup: _isCollectionGroup);
 
   @override
   Query startAt(List values) => QueryWeb(
         this._firestore,
         this._path,
-        webQuery.startAt(fieldValues: values) ,
+        webQuery.startAt(fieldValues: values),
         isCollectionGroup: _isCollectionGroup,
       );
 
   @override
-  Query startAtDocument(DocumentSnapshot documentSnapshot) =>
-      QueryWeb(this._firestore, this._path,
-          _generateOrderByQuery(documentSnapshot)
-              .startAt(fieldValues: documentSnapshot.data.values), isCollectionGroup: _isCollectionGroup);
+  Query startAtDocument(DocumentSnapshot documentSnapshot) => QueryWeb(
+      this._firestore,
+      this._path,
+      _generateOrderByQuery(documentSnapshot)
+          .startAt(fieldValues: documentSnapshot.data.values),
+      isCollectionGroup: _isCollectionGroup);
 
   @override
   Query where(field,
@@ -150,7 +163,8 @@ class QueryWeb implements Query {
           'Use isEqualTo to filter on non-null values.');
       query = query.where(field, "==", null);
     }
-    return QueryWeb(this._firestore, this._path, query, isCollectionGroup: _isCollectionGroup);
+    return QueryWeb(this._firestore, this._path, query,
+        isCollectionGroup: _isCollectionGroup);
   }
 
   QuerySnapshot _webQuerySnapshotToQuerySnapshot(

@@ -41,15 +41,15 @@ part 'src/write_batch.dart';
 part 'src/write_batch_platform_interface.dart';
 
 abstract class FirestorePlatform {
-
   final FirebaseApp app;
 
-  FirestorePlatform({FirebaseApp app}): app = app ?? FirebaseApp.instance;
+  FirestorePlatform({FirebaseApp app}) : app = app ?? FirebaseApp.instance;
 
   factory FirestorePlatform.withApp({FirebaseApp app}) {
     FirestorePlatform.instance = FirestorePlatform.instance.withApp(app);
     return FirestorePlatform.instance;
   }
+
   /// Only mock implementations should set this to `true`.
   ///
   /// Mockito mocks implement this class with `implements` which is forbidden
@@ -147,10 +147,11 @@ abstract class FirestorePlatform {
     throw UnimplementedError('enablePersistence() is not implemented');
   }
 
-  Future<void> settings({bool persistenceEnabled,
-    String host,
-    bool sslEnabled,
-    int cacheSizeBytes}) async {
+  Future<void> settings(
+      {bool persistenceEnabled,
+      String host,
+      bool sslEnabled,
+      int cacheSizeBytes}) async {
     throw UnimplementedError('settings() is not implemented');
   }
 

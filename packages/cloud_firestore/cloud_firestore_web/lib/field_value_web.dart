@@ -4,9 +4,9 @@ class FieldValueWeb implements FieldValueInterface, web.FieldValue {
   static Map<String, dynamic> _serverDelegates(Map<String, dynamic> data) {
     Map<String, dynamic> output = Map.from(data);
     output.updateAll((key, value) {
-      if(value is FieldValueInterface && value.instance is FieldValueWeb) {
+      if (value is FieldValueInterface && value.instance is FieldValueWeb) {
         return (value.instance as FieldValueWeb)._delegate;
-      } else{
+      } else {
         return value;
       }
     });

@@ -7,12 +7,11 @@ part of cloud_firestore;
 typedef Future<dynamic> TransactionHandler(Transaction transaction);
 
 class Transaction {
-
   Transaction._(this._delegate);
 
   platform.Transaction _delegate;
 
-
+  // ignore: unused_element
   Future<void> _finish() => _delegate.finish();
 
   /// Reads the document referenced by the provided DocumentReference.

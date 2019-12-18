@@ -15,7 +15,6 @@ class Query {
 
   List<String> get _pathComponents => _delegate.pathComponents;
 
-
   String get _path => _pathComponents.join('/');
 
   Map<String, dynamic> buildArguments() {
@@ -32,7 +31,8 @@ class Query {
   Future<QuerySnapshot> getDocuments(
       {Source source = Source.serverAndCache}) async {
     assert(source != null);
-    final docs = await _delegate.getDocuments(source: _PlatformUtils.toPlatformSource(source));
+    final docs = await _delegate.getDocuments(
+        source: _PlatformUtils.toPlatformSource(source));
     return QuerySnapshot._(docs);
   }
 
@@ -102,7 +102,8 @@ class Query {
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.
   Query startAfterDocument(DocumentSnapshot documentSnapshot) =>
-      Query._(_delegate.startAfterDocument(_PlatformUtils.toPlatformDocumentSnapshot(documentSnapshot)));
+      Query._(_delegate.startAfterDocument(
+          _PlatformUtils.toPlatformDocumentSnapshot(documentSnapshot)));
 
   /// Creates and returns a new [Query] that starts at the provided document
   /// (inclusive). The starting position is relative to the order of the query.
@@ -119,8 +120,8 @@ class Query {
   ///  * [endAtDocument] for a query that ends at a document.
   ///  * [endBeforeDocument] for a query that ends before a document.
   Query startAtDocument(DocumentSnapshot documentSnapshot) =>
-      Query._(_delegate.startAtDocument(_PlatformUtils.toPlatformDocumentSnapshot(documentSnapshot)));
-
+      Query._(_delegate.startAtDocument(
+          _PlatformUtils.toPlatformDocumentSnapshot(documentSnapshot)));
 
   /// Takes a list of [values], creates and returns a new [Query] that starts
   /// after the provided fields relative to the order of the query.
@@ -141,8 +142,7 @@ class Query {
   /// Cannot be used in combination with [startAfter], [startAfterDocument],
   /// or [startAtDocument], but can be used in combination with [endAt],
   /// [endBefore], [endAtDocument] and [endBeforeDocument].
-  Query startAt(List<dynamic> values) =>
-  Query._(_delegate.startAt(values));
+  Query startAt(List<dynamic> values) => Query._(_delegate.startAt(values));
 
   /// Creates and returns a new [Query] that ends at the provided document
   /// (inclusive). The end position is relative to the order of the query.
@@ -159,7 +159,8 @@ class Query {
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endBeforeDocument] for a query that ends before a document.
   Query endAtDocument(DocumentSnapshot documentSnapshot) =>
-      Query._(_delegate.endAtDocument(_PlatformUtils.toPlatformDocumentSnapshot(documentSnapshot)));
+      Query._(_delegate.endAtDocument(
+          _PlatformUtils.toPlatformDocumentSnapshot(documentSnapshot)));
 
   /// Takes a list of [values], creates and returns a new [Query] that ends at the
   /// provided fields relative to the order of the query.
@@ -169,8 +170,7 @@ class Query {
   /// Cannot be used in combination with [endBefore], [endBeforeDocument], or
   /// [endAtDocument], but can be used in combination with [startAt],
   /// [startAfter], [startAtDocument] and [startAfterDocument].
-  Query endAt(List<dynamic> values) =>
-  Query._(_delegate.endAt(values));
+  Query endAt(List<dynamic> values) => Query._(_delegate.endAt(values));
 
   /// Creates and returns a new [Query] that ends before the provided document
   /// (exclusive). The end position is relative to the order of the query.
@@ -187,7 +187,8 @@ class Query {
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.
   Query endBeforeDocument(DocumentSnapshot documentSnapshot) =>
-      Query._(_delegate.endBeforeDocument(_PlatformUtils.toPlatformDocumentSnapshot(documentSnapshot)));
+      Query._(_delegate.endBeforeDocument(
+          _PlatformUtils.toPlatformDocumentSnapshot(documentSnapshot)));
 
   /// Takes a list of [values], creates and returns a new [Query] that ends before
   /// the provided fields relative to the order of the query.
@@ -197,11 +198,9 @@ class Query {
   /// Cannot be used in combination with [endAt], [endBeforeDocument], or
   /// [endBeforeDocument], but can be used in combination with [startAt],
   /// [startAfter], [startAtDocument] and [startAfterDocument].
-  Query endBefore(List<dynamic> values) =>
-  Query._(_delegate.endBefore(values));
+  Query endBefore(List<dynamic> values) => Query._(_delegate.endBefore(values));
 
   /// Creates and returns a new Query that's additionally limited to only return up
   /// to the specified number of documents.
-  Query limit(int length) =>
-      Query._(_delegate.limit(length));
+  Query limit(int length) => Query._(_delegate.limit(length));
 }

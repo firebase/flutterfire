@@ -26,8 +26,10 @@ abstract class Query {
 
   /// Represents the components of the path referenced by `this` [Query]
   final List<String> pathComponents;
+
   /// Map of the parameters used for filtering and sorting documents
   final Map<String, dynamic> parameters;
+
   /// Indicates if `this` [Query] is for a collection group
   final bool isCollectionGroup;
 

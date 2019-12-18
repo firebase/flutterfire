@@ -5,9 +5,11 @@
 part of cloud_firestore_platform_interface;
 
 class MethodChannelDocumentReference extends DocumentReference {
-  MethodChannelDocumentReference(FirestorePlatform firestore, List<String> pathComponents)
-      :assert(firestore != null), super(firestore, pathComponents);
-  
+  MethodChannelDocumentReference(
+      FirestorePlatform firestore, List<String> pathComponents)
+      : assert(firestore != null),
+        super(firestore, pathComponents);
+
   @override
   Future<void> setData(Map<String, dynamic> data, {bool merge = false}) {
     return MethodChannelFirestore.channel.invokeMethod<void>(
@@ -60,7 +62,7 @@ class MethodChannelDocumentReference extends DocumentReference {
       <String, dynamic>{'app': firestore.appName(), 'path': path},
     );
   }
-  
+
   // TODO(jackson): Reduce code duplication with [Query]
   @override
   Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) {

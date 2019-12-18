@@ -8,7 +8,7 @@ part of cloud_firestore_platform_interface;
 /// to a subcollection.
 abstract class DocumentReference {
   DocumentReference(this.firestore, this._pathComponents);
-  
+
   /// The Firestore instance associated with this document reference
   final FirestorePlatform firestore;
   final List<String> _pathComponents;
@@ -22,7 +22,8 @@ abstract class DocumentReference {
 
   /// Parent returns the containing [CollectionReference].
   CollectionReference parent() {
-    final parentPathComponents = List<String>.from(_pathComponents)..removeLast();
+    final parentPathComponents = List<String>.from(_pathComponents)
+      ..removeLast();
     return firestore.collection(
       parentPathComponents.join("/"),
     );
@@ -60,7 +61,7 @@ abstract class DocumentReference {
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
     throw UnimplementedError("get() is not implemented");
   }
-  
+
   /// Deletes the document referred to by this [DocumentReference].
   Future<void> delete() {
     throw UnimplementedError("delete() is not implemented");

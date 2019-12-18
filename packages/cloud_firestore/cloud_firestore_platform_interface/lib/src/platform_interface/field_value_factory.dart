@@ -12,7 +12,6 @@ enum FieldValueType {
 }
 
 abstract class FieldValueFactory {
-
   static FieldValueFactory get instance => _instance;
 
   static FieldValueFactory _instance = MethodChannelFieldValueFactory();

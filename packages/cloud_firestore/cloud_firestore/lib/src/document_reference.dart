@@ -26,9 +26,7 @@ class DocumentReference {
 
   /// Parent returns the containing [CollectionReference].
   CollectionReference parent() {
-    return CollectionReference._(
-      _delegate.parent()
-    );
+    return CollectionReference._(_delegate.parent());
   }
 
   /// Slash-delimited path representing the database location of this query.
@@ -44,7 +42,7 @@ class DocumentReference {
   /// If [merge] is true, the provided data will be merged into an
   /// existing document instead of overwriting.
   Future<void> setData(Map<String, dynamic> data, {bool merge = false}) {
-    return _delegate.setData(data,merge: merge);
+    return _delegate.setData(data, merge: merge);
   }
 
   /// Updates fields in the document referred to by this [DocumentReference].
@@ -62,8 +60,7 @@ class DocumentReference {
   /// If no document exists, the read will return null.
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
     return DocumentSnapshot._(
-      await _delegate.get(source: _PlatformUtils.toPlatformSource(source))
-    );
+        await _delegate.get(source: _PlatformUtils.toPlatformSource(source)));
   }
 
   /// Deletes the document referred to by this [DocumentReference].
@@ -79,6 +76,7 @@ class DocumentReference {
 
   /// Notifies of documents at this location
   Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) =>
-      _delegate.snapshots(includeMetadataChanges: includeMetadataChanges)
-      .map((snapshot) => DocumentSnapshot._(snapshot));
+      _delegate
+          .snapshots(includeMetadataChanges: includeMetadataChanges)
+          .map((snapshot) => DocumentSnapshot._(snapshot));
 }

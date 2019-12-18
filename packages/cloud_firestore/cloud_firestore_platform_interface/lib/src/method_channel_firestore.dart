@@ -8,13 +8,13 @@ part of cloud_firestore_platform_interface;
 ///
 /// You can get an instance by calling [Firestore.instance].
 class MethodChannelFirestore extends FirestorePlatform {
-
   MethodChannelFirestore({FirebaseApp app})
       : super(app: app ?? FirebaseApp.instance) {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       if (call.method == 'QuerySnapshot') {
-        final QuerySnapshot snapshot = MethodChannelQuerySnapshot(call.arguments, this);
+        final QuerySnapshot snapshot =
+            MethodChannelQuerySnapshot(call.arguments, this);
         _queryObservers[call.arguments['handle']].add(snapshot);
       } else if (call.method == 'DocumentSnapshot') {
         final DocumentSnapshot snapshot = DocumentSnapshot(
@@ -57,7 +57,6 @@ class MethodChannelFirestore extends FirestorePlatform {
   static final Map<int, TransactionHandler> _transactionHandlers =
       <int, TransactionHandler>{};
   static int _transactionHandlerId = 0;
-
 
   @override
   FirestorePlatform withApp(FirebaseApp app) =>
@@ -131,7 +130,7 @@ class MethodChannelFirestore extends FirestorePlatform {
       'cacheSizeBytes': cacheSizeBytes,
     });
   }
-  
+
   @override
   String appName() => app.name;
 }

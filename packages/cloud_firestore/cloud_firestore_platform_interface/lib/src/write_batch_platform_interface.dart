@@ -12,8 +12,6 @@ part of cloud_firestore_platform_interface;
 /// nor can it be committed again.
 abstract class WriteBatchPlatform {
   WriteBatchPlatform._();
-  
-  final List<Future<dynamic>> _actions = <Future<dynamic>>[];
 
   /// Indicator to whether or not this [WriteBatch] has been committed.
   bool _committed = false;

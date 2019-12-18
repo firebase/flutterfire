@@ -6,7 +6,7 @@ part of cloud_firestore;
 
 /// Sentinel values that can be used when writing document fields with set() or
 /// update().
-class FieldValue implements platform.FieldValueInterface{
+class FieldValue implements platform.FieldValueInterface {
   platform.FieldValueInterface _delegate;
 
   FieldValue._(this._delegate);

@@ -6,7 +6,6 @@ part of cloud_firestore_platform_interface;
 
 /// A QuerySnapshot contains zero or more DocumentSnapshot objects.
 class QuerySnapshot {
-  
   QuerySnapshot(this.documents, this.documentChanges, this.metadata);
 
   /// Gets a list of all the documents included in this snapshot

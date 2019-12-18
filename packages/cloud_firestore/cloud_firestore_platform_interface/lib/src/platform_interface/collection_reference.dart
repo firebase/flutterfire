@@ -20,7 +20,7 @@ abstract class CollectionReference extends Query {
   DocumentReference parent() {
     throw UnimplementedError("parent() is not implemented");
   }
-  
+
   /// Returns a `DocumentReference` with the provided path.
   ///
   /// If no [path] is provided, an auto-generated ID is used.

@@ -12,20 +12,23 @@ part of cloud_firestore;
 /// nor can it be committed again.
 class WriteBatch implements platform.WriteBatchPlatform {
   platform.WriteBatch _delegate;
-  WriteBatch._(): _delegate = platform.WriteBatch(platform.FirestorePlatform.instance);
+  WriteBatch._()
+      : _delegate = platform.WriteBatch(platform.FirestorePlatform.instance);
 
   @override
   Future<void> commit() => _delegate.commit();
 
   @override
-  void delete(platform.DocumentReference document) => _delegate.delete(document);
+  void delete(platform.DocumentReference document) =>
+      _delegate.delete(document);
 
   @override
-  void setData(platform.DocumentReference document, Map<String, dynamic> data, {bool merge = false}) =>
+  void setData(platform.DocumentReference document, Map<String, dynamic> data,
+          {bool merge = false}) =>
       _delegate.setData(document, data, merge: merge);
 
   @override
-  void updateData(platform.DocumentReference document, Map<String, dynamic> data) =>
+  void updateData(
+          platform.DocumentReference document, Map<String, dynamic> data) =>
       _delegate.updateData(document, data);
-
 }

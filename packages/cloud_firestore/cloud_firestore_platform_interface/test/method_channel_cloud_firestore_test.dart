@@ -48,7 +48,8 @@ void main() {
       collectionReference = firestore.collection('foo');
       collectionGroupQuery = firestore.collectionGroup('bar');
       transaction = Transaction(0, firestore);
-      MethodChannelFirestore.channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      MethodChannelFirestore.channel
+          .setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
           case 'Query#addSnapshotListener':
@@ -179,7 +180,8 @@ void main() {
 
     test('settings', () async {
       final FirebaseApp app = FirebaseApp(name: "testApp2");
-      final MethodChannelFirestore firestoreWithSettings = MethodChannelFirestore(app: app);
+      final MethodChannelFirestore firestoreWithSettings =
+          MethodChannelFirestore(app: app);
       await firestoreWithSettings.settings(
         persistenceEnabled: true,
         host: null,
@@ -384,7 +386,6 @@ void main() {
                     <dynamic>['createdAt', '<', 100],
                   ],
                   'orderBy': <List<dynamic>>[],
-
                 },
                 'includeMetadataChanges': false,
               },
@@ -460,7 +461,6 @@ void main() {
                     ],
                   ],
                   'orderBy': <List<dynamic>>[],
-
                 },
                 'includeMetadataChanges': false,
               },
@@ -1149,12 +1149,17 @@ void main() {
       });
 
       test('encode and decode FieldValue', () {
-        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.arrayUnion(<int>[123]));
-        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.arrayRemove(<int>[123]));
+        _checkEncodeDecode<dynamic>(
+            codec, FieldValueFactory.instance.arrayUnion(<int>[123]));
+        _checkEncodeDecode<dynamic>(
+            codec, FieldValueFactory.instance.arrayRemove(<int>[123]));
         _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.delete());
-        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.serverTimestamp());
-        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.increment(1.0));
-        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.increment(1));
+        _checkEncodeDecode<dynamic>(
+            codec, FieldValueFactory.instance.serverTimestamp());
+        _checkEncodeDecode<dynamic>(
+            codec, FieldValueFactory.instance.increment(1.0));
+        _checkEncodeDecode<dynamic>(
+            codec, FieldValueFactory.instance.increment(1));
       });
 
       test('encode and decode FieldPath', () {

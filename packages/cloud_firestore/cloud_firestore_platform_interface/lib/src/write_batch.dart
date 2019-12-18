@@ -13,7 +13,8 @@ part of cloud_firestore_platform_interface;
 class WriteBatch extends WriteBatchPlatform {
   WriteBatch(this._firestore)
       : _handle = MethodChannelFirestore.channel.invokeMethod<dynamic>(
-            'WriteBatch#create', <String, dynamic>{'app': _firestore.appName()}),
+            'WriteBatch#create',
+            <String, dynamic>{'app': _firestore.appName()}),
         super._();
 
   final FirestorePlatform _firestore;

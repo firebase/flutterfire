@@ -45,8 +45,5 @@ class DocumentChange {
   int get newIndex => _delegate.newIndex;
 
   /// The document affected by this change.
-  DocumentSnapshot get document =>
-      DocumentSnapshot._(_delegate.document);
-
-
+  DocumentSnapshot get document => DocumentSnapshot._(_delegate.document);
 }

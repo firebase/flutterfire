@@ -8,7 +8,7 @@ class Blob {
   @override
   bool operator ==(dynamic other) =>
       other is Blob &&
-          const DeepCollectionEquality().equals(other.bytes, bytes);
+      const DeepCollectionEquality().equals(other.bytes, bytes);
 
   @override
   int get hashCode => hashList(bytes);

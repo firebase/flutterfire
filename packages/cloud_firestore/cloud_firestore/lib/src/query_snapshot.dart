@@ -16,8 +16,8 @@ class QuerySnapshot {
 
   /// An array of the documents that changed since the last snapshot. If this
   /// is the first snapshot, all documents will be in the list as Added changes.
-  List<DocumentChange> get documentChanges => _delegate.documentChanges
-      .map((item) => DocumentChange._(item)).toList();
+  List<DocumentChange> get documentChanges =>
+      _delegate.documentChanges.map((item) => DocumentChange._(item)).toList();
 
   SnapshotMetadata get metadata => SnapshotMetadata._(_delegate.metadata);
 }

@@ -12,7 +12,6 @@ class MethodChannelFieldValueFactory implements FieldValueFactory {
   @override
   FieldValue delete() => FieldValue._(FieldValueType.delete, null);
 
-
   @override
   FieldValue increment(num value) {
     // It is a compile-time error for any type other than int or double to
@@ -29,5 +28,4 @@ class MethodChannelFieldValueFactory implements FieldValueFactory {
   @override
   FieldValue serverTimestamp() =>
       FieldValue._(FieldValueType.serverTimestamp, null);
-
 }

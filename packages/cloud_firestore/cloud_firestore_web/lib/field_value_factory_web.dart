@@ -23,7 +23,12 @@ class FieldValueFactoryWeb implements FieldValueFactory {
   FieldValueInterface increment(num value) {
     assert(num is double || num is int, "value can only be double or int");
     final delegate = web.FieldValue.increment(value);
-    return FieldValueWeb._(delegate, value is double ? FieldValueType.incrementDouble : FieldValueType.incrementDouble, value);
+    return FieldValueWeb._(
+        delegate,
+        value is double
+            ? FieldValueType.incrementDouble
+            : FieldValueType.incrementDouble,
+        value);
   }
 
   @override
@@ -31,5 +36,4 @@ class FieldValueFactoryWeb implements FieldValueFactory {
     final delegate = web.FieldValue.serverTimestamp();
     return FieldValueWeb._(delegate, FieldValueType.serverTimestamp, null);
   }
-
 }

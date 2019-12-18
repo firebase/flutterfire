@@ -7,9 +7,11 @@ part of cloud_firestore_platform_interface;
 /// A CollectionReference object can be used for adding documents, getting
 /// document references, and querying for documents (using the methods
 /// inherited from [Query]).
-class MethodChannelCollectionReference extends MethodChannelQuery  implements CollectionReference {
-  MethodChannelCollectionReference(FirestorePlatform firestore, List<String> pathComponents)
-      : super(firestore: firestore,pathComponents: pathComponents);
+class MethodChannelCollectionReference extends MethodChannelQuery
+    implements CollectionReference {
+  MethodChannelCollectionReference(
+      FirestorePlatform firestore, List<String> pathComponents)
+      : super(firestore: firestore, pathComponents: pathComponents);
 
   /// ID of the referenced collection.
   String get id => pathComponents.isEmpty ? null : pathComponents.last;
@@ -43,5 +45,4 @@ class MethodChannelCollectionReference extends MethodChannelQuery  implements Co
     await newDocument.setData(data);
     return newDocument;
   }
-  
 }

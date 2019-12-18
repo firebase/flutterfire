@@ -11,7 +11,8 @@ class DocumentReferenceWeb extends DocumentReference {
 
   @override
   Future<void> setData(Map<String, dynamic> data, {bool merge = false}) =>
-      delegate.set(FieldValueWeb._serverDelegates(data), web.SetOptions(merge: merge));
+      delegate.set(
+          FieldValueWeb._serverDelegates(data), web.SetOptions(merge: merge));
 
   @override
   Future<void> updateData(Map<String, dynamic> data) =>

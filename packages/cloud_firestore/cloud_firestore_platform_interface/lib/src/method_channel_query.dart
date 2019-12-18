@@ -6,7 +6,6 @@ part of cloud_firestore_platform_interface;
 
 /// Represents a query over the data at a particular location.
 class MethodChannelQuery extends Query {
-
   MethodChannelQuery(
       {@required FirestorePlatform firestore,
       @required List<String> pathComponents,
@@ -86,28 +85,36 @@ class MethodChannelQuery extends Query {
   }
 
   @override
-  Map<String, dynamic> buildArguments() =>
-      Map<String, dynamic>.from(parameters)
-        ..addAll(<String, dynamic>{
-          'path': path,
-        });
+  Map<String, dynamic> buildArguments() => Map<String, dynamic>.from(parameters)
+    ..addAll(<String, dynamic>{
+      'path': path,
+    });
 
   @override
-  Query where(field, {isEqualTo, isLessThan, isLessThanOrEqualTo, isGreaterThan, isGreaterThanOrEqualTo, arrayContains, List arrayContainsAny, List whereIn, bool isNull}) {
+  Query where(field,
+      {isEqualTo,
+      isLessThan,
+      isLessThanOrEqualTo,
+      isGreaterThan,
+      isGreaterThanOrEqualTo,
+      arrayContains,
+      List arrayContainsAny,
+      List whereIn,
+      bool isNull}) {
     assert(field is String || field is FieldPath,
-    'Supported [field] types are [String] and [FieldPath].');
+        'Supported [field] types are [String] and [FieldPath].');
 
     final ListEquality<dynamic> equality = const ListEquality<dynamic>();
     final List<List<dynamic>> conditions =
-    List<List<dynamic>>.from(parameters['where']);
+        List<List<dynamic>>.from(parameters['where']);
 
     void addCondition(dynamic field, String operator, dynamic value) {
       final List<dynamic> condition = <dynamic>[field, operator, value];
       assert(
-      conditions
-          .where((List<dynamic> item) => equality.equals(condition, item))
-          .isEmpty,
-      'Condition $condition already exists in this query.');
+          conditions
+              .where((List<dynamic> item) => equality.equals(condition, item))
+              .isEmpty,
+          'Condition $condition already exists in this query.');
       conditions.add(condition);
     }
 
@@ -125,8 +132,8 @@ class MethodChannelQuery extends Query {
     if (whereIn != null) addCondition(field, 'in', whereIn);
     if (isNull != null) {
       assert(
-      isNull,
-      'isNull can only be set to true. '
+          isNull,
+          'isNull can only be set to true. '
           'Use isEqualTo to filter on non-null values.');
       addCondition(field, '==', null);
     }
@@ -138,14 +145,14 @@ class MethodChannelQuery extends Query {
   Query orderBy(field, {bool descending = false}) {
     assert(field != null && descending != null);
     assert(field is String || field is FieldPath,
-    'Supported [field] types are [String] and [FieldPath].');
+        'Supported [field] types are [String] and [FieldPath].');
 
     final List<List<dynamic>> orders =
-    List<List<dynamic>>.from(parameters['orderBy']);
+        List<List<dynamic>>.from(parameters['orderBy']);
 
     final List<dynamic> order = <dynamic>[field, descending];
     assert(orders.where((List<dynamic> item) => field == item[0]).isEmpty,
-    'OrderBy $field already exists in this query');
+        'OrderBy $field already exists in this query');
 
     assert(() {
       if (field == FieldPath.documentId) {
@@ -156,7 +163,7 @@ class MethodChannelQuery extends Query {
       }
       return true;
     }(),
-    '{start/end}{At/After/Before}Document order by document id themselves. '
+        '{start/end}{At/After/Before}Document order by document id themselves. '
         'Hence, you may not use an order by [FieldPath.documentId] when using any of these methods for a query.');
 
     orders.add(order);
@@ -171,10 +178,10 @@ class MethodChannelQuery extends Query {
     assert(!parameters.containsKey('startAfterDocument'));
     assert(!parameters.containsKey('startAtDocument'));
     assert(
-    List<List<dynamic>>.from(parameters['orderBy'])
-        .where((List<dynamic> item) => item[0] == FieldPath.documentId)
-        .isEmpty,
-    '[startAfterDocument] orders by document id itself. '
+        List<List<dynamic>>.from(parameters['orderBy'])
+            .where((List<dynamic> item) => item[0] == FieldPath.documentId)
+            .isEmpty,
+        '[startAfterDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [startAfterDocument].');
     return _copyWithParameters(<String, dynamic>{
       'startAfterDocument': <String, dynamic>{
@@ -193,10 +200,10 @@ class MethodChannelQuery extends Query {
     assert(!parameters.containsKey('startAfterDocument'));
     assert(!parameters.containsKey('startAtDocument'));
     assert(
-    List<List<dynamic>>.from(parameters['orderBy'])
-        .where((List<dynamic> item) => item[0] == FieldPath.documentId)
-        .isEmpty,
-    '[startAtDocument] orders by document id itself. '
+        List<List<dynamic>>.from(parameters['orderBy'])
+            .where((List<dynamic> item) => item[0] == FieldPath.documentId)
+            .isEmpty,
+        '[startAtDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [startAtDocument].');
     return _copyWithParameters(<String, dynamic>{
       'startAtDocument': <String, dynamic>{
@@ -235,10 +242,10 @@ class MethodChannelQuery extends Query {
     assert(!parameters.containsKey('endBeforeDocument'));
     assert(!parameters.containsKey('endAtDocument'));
     assert(
-    List<List<dynamic>>.from(parameters['orderBy'])
-        .where((List<dynamic> item) => item[0] == FieldPath.documentId)
-        .isEmpty,
-    '[endAtDocument] orders by document id itself. '
+        List<List<dynamic>>.from(parameters['orderBy'])
+            .where((List<dynamic> item) => item[0] == FieldPath.documentId)
+            .isEmpty,
+        '[endAtDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [endAtDocument].');
 
     return _copyWithParameters(<String, dynamic>{
@@ -268,10 +275,10 @@ class MethodChannelQuery extends Query {
     assert(!parameters.containsKey('endBeforeDocument'));
     assert(!parameters.containsKey('endAtDocument'));
     assert(
-    List<List<dynamic>>.from(parameters['orderBy'])
-        .where((List<dynamic> item) => item[0] == FieldPath.documentId)
-        .isEmpty,
-    '[endBeforeDocument] orders by document id itself. '
+        List<List<dynamic>>.from(parameters['orderBy'])
+            .where((List<dynamic> item) => item[0] == FieldPath.documentId)
+            .isEmpty,
+        '[endBeforeDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [endBeforeDocument].');
     return _copyWithParameters(<String, dynamic>{
       'endBeforeDocument': <String, dynamic>{

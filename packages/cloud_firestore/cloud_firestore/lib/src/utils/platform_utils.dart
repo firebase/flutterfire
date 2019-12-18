@@ -1,7 +1,8 @@
 part of cloud_firestore;
 
 class _PlatformUtils {
-  static DocumentChangeType fromPlatform(platform.DocumentChangeType platformChange) {
+  static DocumentChangeType fromPlatform(
+      platform.DocumentChangeType platformChange) {
     switch (platformChange) {
       case platform.DocumentChangeType.added:
         return DocumentChangeType.added;
@@ -23,7 +24,6 @@ class _PlatformUtils {
       case Source.serverAndCache:
         return platform.Source.serverAndCache;
       default:
-
         throw ArgumentError("Invalid source value");
     }
   }

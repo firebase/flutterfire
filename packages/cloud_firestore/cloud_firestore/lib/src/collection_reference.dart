@@ -10,7 +10,7 @@ part of cloud_firestore;
 class CollectionReference extends Query {
   final platform.CollectionReference _delegate;
 
-  CollectionReference._(this._delegate): super._(_delegate);
+  CollectionReference._(this._delegate) : super._(_delegate);
 
   /// ID of the referenced collection.
   String get id => _pathComponents.isEmpty ? null : _pathComponents.last;
@@ -22,9 +22,7 @@ class CollectionReference extends Query {
     if (_pathComponents.length < 2) {
       return null;
     }
-    return DocumentReference._(
-      _delegate.parent()
-    );
+    return DocumentReference._(_delegate.parent());
   }
 
   /// A string containing the slash-separated path to this  CollectionReference
@@ -38,7 +36,7 @@ class CollectionReference extends Query {
   /// The unique key generated is prefixed with a client-generated timestamp
   /// so that the resulting list will be chronologically-sorted.
   DocumentReference document([String path]) =>
-    DocumentReference._(_delegate.document(path));
+      DocumentReference._(_delegate.document(path));
 
   /// Returns a `DocumentReference` with an auto-generated ID, after
   /// populating it with provided [data].

@@ -7,7 +7,6 @@ part of cloud_firestore_platform_interface;
 /// A class to define an interface that's required
 /// for building platform-specific implementation
 abstract class FieldValueInterface {
-
   /// Implementation instance
   FieldValueInterface get instance;
 
@@ -20,15 +19,14 @@ abstract class FieldValueInterface {
 
 /// Mobile platform implementation for [FieldValueInterface]
 class FieldValue implements FieldValueInterface {
-
   /// Replaces items with type [FieldValueInterface] with implementation type
   /// such as [FieldValue]
   static Map<String, dynamic> _serverDelegates(Map<String, dynamic> data) {
     Map<String, dynamic> output = Map.from(data);
     output.updateAll((key, value) {
-      if(value is FieldValueInterface && value.instance is FieldValue) {
+      if (value is FieldValueInterface && value.instance is FieldValue) {
         return value.instance;
-      } else{
+      } else {
         return value;
       }
     });

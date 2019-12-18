@@ -6,7 +6,8 @@ part of cloud_firestore_platform_interface;
 
 class Transaction extends TransactionPlatform {
   @visibleForTesting
-  Transaction(int transactionId, FirestorePlatform firestore) : super(transactionId, firestore);
+  Transaction(int transactionId, FirestorePlatform firestore)
+      : super(transactionId, firestore);
 
   Future<void> finish() => Future.wait<void>(_pendingResults);
 
@@ -29,7 +30,7 @@ class Transaction extends TransactionPlatform {
       return null;
     }
   }
-  
+
   @override
   Future<void> _delete(DocumentReference documentReference) async {
     return MethodChannelFirestore.channel
@@ -39,7 +40,7 @@ class Transaction extends TransactionPlatform {
       'path': documentReference.path,
     });
   }
-  
+
   @override
   Future<void> _update(
       DocumentReference documentReference, Map<String, dynamic> data) async {
@@ -51,7 +52,7 @@ class Transaction extends TransactionPlatform {
       'data': data,
     });
   }
-  
+
   @override
   Future<void> _set(
       DocumentReference documentReference, Map<String, dynamic> data) async {
