@@ -37,10 +37,3 @@ class DocumentSnapshot {
 
 Map<String, dynamic> _asStringKeyedMap(Map<dynamic, dynamic> map) =>
     map?.cast<String, dynamic>();
-//  if (map == null) return null;
-//  if (map is Map<String, dynamic>) {
-//    return map;
-//  } else {
-//    return Map<String, dynamic>.from(map);
-//  }
-//}
