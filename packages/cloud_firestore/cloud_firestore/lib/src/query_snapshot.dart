@@ -8,9 +8,7 @@ part of cloud_firestore;
 class QuerySnapshot {
   final platform.QuerySnapshot _delegate;
 
-  QuerySnapshot._(this._delegate) {
-
-  }
+  QuerySnapshot._(this._delegate);
 
   /// Gets a list of all the documents included in this snapshot
   List<DocumentSnapshot> get documents =>
