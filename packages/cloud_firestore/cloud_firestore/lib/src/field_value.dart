@@ -4,26 +4,21 @@
 
 part of cloud_firestore;
 
-@visibleForTesting
-enum FieldValueType {
-  arrayUnion,
-  arrayRemove,
-  delete,
-  serverTimestamp,
-  incrementDouble,
-  incrementInteger,
-}
-
 /// Sentinel values that can be used when writing document fields with set() or
 /// update().
-class FieldValue {
-  FieldValue._(this.type, this.value);
+class FieldValue implements platform.FieldValueInterface{
+  platform.FieldValueInterface _delegate;
+
+  FieldValue._(this._delegate);
+
+  @override
+  platform.FieldValueInterface get instance => _delegate;
 
   @visibleForTesting
-  final FieldValueType type;
+  platform.FieldValueType get type => _delegate.type;
 
   @visibleForTesting
-  final dynamic value;
+  dynamic get value => _delegate.value;
 
   /// Returns a special value that tells the server to union the given elements
   /// with any array value that already exists on the server.
@@ -33,7 +28,7 @@ class FieldValue {
   /// will be overwritten with an array containing exactly the specified
   /// elements.
   static FieldValue arrayUnion(List<dynamic> elements) =>
-      FieldValue._(FieldValueType.arrayUnion, elements);
+      FieldValue._(platform.FieldValueFactory.instance.arrayUnion(elements));
 
   /// Returns a special value that tells the server to remove the given
   /// elements from any array value that already exists on the server.
@@ -42,27 +37,19 @@ class FieldValue {
   /// If the field being modified is not already an array it will be overwritten
   /// with an empty array.
   static FieldValue arrayRemove(List<dynamic> elements) =>
-      FieldValue._(FieldValueType.arrayRemove, elements);
+      FieldValue._(platform.FieldValueFactory.instance.arrayRemove(elements));
 
   /// Returns a sentinel for use with update() to mark a field for deletion.
-  static FieldValue delete() => FieldValue._(FieldValueType.delete, null);
+  static FieldValue delete() =>
+      FieldValue._(platform.FieldValueFactory.instance.delete());
 
   /// Returns a sentinel for use with set() or update() to include a
   /// server-generated timestamp in the written data.
   static FieldValue serverTimestamp() =>
-      FieldValue._(FieldValueType.serverTimestamp, null);
+      FieldValue._(platform.FieldValueFactory.instance.serverTimestamp());
 
   /// Returns a special value for use with set() or update() that tells the
   /// server to increment the field’s current value by the given value.
-  static FieldValue increment(num value) {
-    // It is a compile-time error for any type other than int or double to
-    // attempt to extend or implement num.
-    assert(value is int || value is double);
-    if (value is double) {
-      return FieldValue._(FieldValueType.incrementDouble, value);
-    } else if (value is int) {
-      return FieldValue._(FieldValueType.incrementInteger, value);
-    }
-    return null;
-  }
+  static FieldValue increment(num value) =>
+      FieldValue._(platform.FieldValueFactory.instance.increment(value));
 }

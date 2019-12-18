@@ -21,14 +21,14 @@ class FirestoreMessageCodec extends StandardMessageCodec {
   static const int _kIncrementInteger = 138;
   static const int _kDocumentId = 139;
 
-  static const Map<FieldValueType, int> _kFieldValueCodes =
-      <FieldValueType, int>{
-    FieldValueType.arrayUnion: _kArrayUnion,
-    FieldValueType.arrayRemove: _kArrayRemove,
-    FieldValueType.delete: _kDelete,
-    FieldValueType.serverTimestamp: _kServerTimestamp,
-    FieldValueType.incrementDouble: _kIncrementDouble,
-    FieldValueType.incrementInteger: _kIncrementInteger,
+  static const Map<platform.FieldValueType, int> _kFieldValueCodes =
+      <platform.FieldValueType, int>{
+        platform.FieldValueType.arrayUnion: _kArrayUnion,
+        platform.FieldValueType.arrayRemove: _kArrayRemove,
+        platform.FieldValueType.delete: _kDelete,
+        platform.FieldValueType.serverTimestamp: _kServerTimestamp,
+        platform.FieldValueType.incrementDouble: _kIncrementDouble,
+        platform.FieldValueType.incrementInteger: _kIncrementInteger,
   };
 
   static const Map<_FieldPathType, int> _kFieldPathCodes =

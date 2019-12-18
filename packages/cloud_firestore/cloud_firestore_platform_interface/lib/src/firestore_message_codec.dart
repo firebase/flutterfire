@@ -100,20 +100,20 @@ class FirestoreMessageCodec extends StandardMessageCodec {
         return Blob(bytes);
       case _kArrayUnion:
         final List<dynamic> value = readValue(buffer);
-        return FieldValue.arrayUnion(value);
+        return FieldValueFactory._instance.arrayUnion(value);
       case _kArrayRemove:
         final List<dynamic> value = readValue(buffer);
-        return FieldValue.arrayRemove(value);
+        return FieldValueFactory._instance.arrayRemove(value);
       case _kDelete:
-        return FieldValue.delete();
+        return FieldValueFactory._instance.delete();
       case _kServerTimestamp:
-        return FieldValue.serverTimestamp();
+        return FieldValueFactory._instance.serverTimestamp();
       case _kIncrementDouble:
         final double value = readValue(buffer);
-        return FieldValue.increment(value);
+        return FieldValueFactory._instance.increment(value);
       case _kIncrementInteger:
         final int value = readValue(buffer);
-        return FieldValue.increment(value);
+        return FieldValueFactory._instance.increment(value);
       case _kDocumentId:
         return FieldPath.documentId;
       default:

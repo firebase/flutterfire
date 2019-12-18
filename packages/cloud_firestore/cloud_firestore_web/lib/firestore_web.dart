@@ -4,32 +4,36 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/firestore.dart' show Firestore, Settings;
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase/firestore.dart' as web;
 
 part 'collection_reference_web.dart';
+part 'field_value_factory_web.dart';
 part 'document_reference_web.dart';
 part 'query_web.dart';
 part 'transaction_web.dart';
+part 'field_value_web.dart';
 
 class FirestoreWeb extends FirestorePlatform {
-
   final Firestore webFirestore;
 
   static void registerWith(Registrar registrar) {
     FirestorePlatform.instance = FirestoreWeb();
-
+    FieldValueFactory.instance = FieldValueFactoryWeb();
   }
 
-  FirestoreWeb({FirebaseApp app}): webFirestore = firebase.firestore(firebase.app((app ?? FirebaseApp.instance).name)),super(app: app ?? FirebaseApp.instance);
+  FirestoreWeb({FirebaseApp app})
+      : webFirestore = firebase
+            .firestore(firebase.app((app ?? FirebaseApp.instance).name)),
+        super(app: app ?? FirebaseApp.instance);
 
   @override
   FirestorePlatform withApp(FirebaseApp app) => FirestoreWeb(app: app);
 
   @override
   CollectionReference collection(String path) {
-    return CollectionReferenceWeb(
-        this, webFirestore, path.split('/'));
+    return CollectionReferenceWeb(this, webFirestore, path.split('/'));
   }
 
   @override
@@ -65,7 +69,8 @@ class FirestoreWeb extends FirestorePlatform {
   }
 
   @override
-  Future<Map<String, dynamic>> runTransaction(TransactionHandler transactionHandler,
+  Future<Map<String, dynamic>> runTransaction(
+      TransactionHandler transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) {
     return webFirestore.runTransaction((transaction) {
       transactionHandler(TransactionWeb._(transaction, this));
@@ -74,5 +79,4 @@ class FirestoreWeb extends FirestorePlatform {
 
   @override
   String appName() => app.name;
-
 }

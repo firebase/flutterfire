@@ -1149,12 +1149,12 @@ void main() {
       });
 
       test('encode and decode FieldValue', () {
-        _checkEncodeDecode<dynamic>(codec, FieldValue.arrayUnion(<int>[123]));
-        _checkEncodeDecode<dynamic>(codec, FieldValue.arrayRemove(<int>[123]));
-        _checkEncodeDecode<dynamic>(codec, FieldValue.delete());
-        _checkEncodeDecode<dynamic>(codec, FieldValue.serverTimestamp());
-        _checkEncodeDecode<dynamic>(codec, FieldValue.increment(1.0));
-        _checkEncodeDecode<dynamic>(codec, FieldValue.increment(1));
+        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.arrayUnion(<int>[123]));
+        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.arrayRemove(<int>[123]));
+        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.delete());
+        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.serverTimestamp());
+        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.increment(1.0));
+        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.increment(1));
       });
 
       test('encode and decode FieldPath', () {

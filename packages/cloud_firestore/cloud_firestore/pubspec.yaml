@@ -22,8 +22,10 @@ dependencies:
   meta: "^1.0.5"
   collection: "^1.14.3"
   firebase_core: "^0.4.0"
-  cloud_firestore_platform_interface: any
-  cloud_firestore_web: any
+  cloud_firestore_platform_interface:
+    path: ../cloud_firestore_platform_interface
+  cloud_firestore_web:
+    path: ../cloud_firestore_web
 
 dev_dependencies:
   flutter_test:
