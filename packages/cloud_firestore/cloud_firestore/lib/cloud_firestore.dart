@@ -26,7 +26,6 @@ part 'src/document_snapshot.dart';
 part 'src/field_path.dart';
 part 'src/field_value.dart';
 part 'src/firestore.dart';
-part 'src/firestore_message_codec.dart';
 part 'src/geo_point.dart';
 part 'src/query.dart';
 part 'src/query_snapshot.dart';
