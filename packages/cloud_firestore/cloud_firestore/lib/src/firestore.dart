@@ -39,8 +39,10 @@ class Firestore {
   Future<Map<String, dynamic>> runTransaction(
       TransactionHandler transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) {
-    return _delegate.runTransaction((platformTransaction) =>
-        transactionHandler(Transaction._(platformTransaction)));
+    return _delegate.runTransaction(
+        (platformTransaction) =>
+            transactionHandler(Transaction._(platformTransaction)),
+        timeout: timeout);
   }
 
   Future<void> settings(
