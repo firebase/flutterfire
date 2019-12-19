@@ -42,7 +42,13 @@ class DocumentReference {
   /// If [merge] is true, the provided data will be merged into an
   /// existing document instead of overwriting.
   Future<void> setData(Map<String, dynamic> data, {bool merge = false}) {
-    return _delegate.setData(data, merge: merge);
+    return _delegate.setData(data..updateAll((key,value) {
+      if(value is DocumentReference) {
+        return value._delegate;
+      } else {
+        return value;
+      }
+    }), merge: merge);
   }
 
   /// Updates fields in the document referred to by this [DocumentReference].

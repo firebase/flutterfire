@@ -10,6 +10,8 @@ class CodecUtility {
         return web.GeoPoint(value.latitude, value.longitude);
       } else if (value is Blob) {
         return web.Blob.fromUint8Array(value.bytes);
+      } else if(value is DocumentReferenceWeb) {
+        return value.delegate;
       } else {
         return value;
       }
@@ -24,6 +26,12 @@ class CodecUtility {
         return GeoPoint(value.latitude, value.longitude);
       } else if (value is web.Blob) {
         return Blob(value.toUint8Array());
+      } else if(value is web.DocumentReference) {
+        return DocumentReferenceWeb(
+            (FirestorePlatform.instance as FirestoreWeb).webFirestore,
+            FirestorePlatform.instance,
+          value.path.split("/")
+        );
       } else {
         return value;
       }
