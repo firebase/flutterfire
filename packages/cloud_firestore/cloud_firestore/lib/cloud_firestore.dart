@@ -26,6 +26,7 @@ part 'src/field_value.dart';
 part 'src/firestore.dart';
 part 'src/query.dart';
 part 'src/query_snapshot.dart';
+part 'src/utils/codec_utility.dart';
 part 'src/snapshot_metadata.dart';
 part 'src/timestamp.dart';
 part 'src/transaction.dart';

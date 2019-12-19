@@ -22,8 +22,11 @@ class WriteBatch {
 
   void setData(DocumentReference document, Map<String, dynamic> data,
           {bool merge = false}) =>
-      _delegate.setData(document._delegate, data, merge: merge);
+      _delegate.setData(document._delegate,
+          _CodecUtility._replaceValueWithDelegatesInMap(data),
+          merge: merge);
 
   void updateData(DocumentReference document, Map<String, dynamic> data) =>
-      _delegate.updateData(document._delegate, data);
+      _delegate.updateData(document._delegate,
+          _CodecUtility._replaceValueWithDelegatesInMap(data));
 }

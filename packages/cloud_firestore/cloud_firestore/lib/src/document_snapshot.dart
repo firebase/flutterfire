@@ -19,7 +19,8 @@ class DocumentSnapshot {
       _firestore.document(_delegate.reference.path);
 
   /// Contains all the data of this snapshot
-  Map<String, dynamic> get data => _delegate.data;
+  Map<String, dynamic> get data =>
+      _CodecUtility._replaceDelegatesWithValueInMap(_delegate.data);
 
   /// Metadata about this snapshot concerning its source and if it has local
   /// modifications.

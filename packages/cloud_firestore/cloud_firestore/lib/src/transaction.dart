@@ -39,7 +39,8 @@ class Transaction {
   /// when the transaction handler completes.
   Future<void> update(
       DocumentReference documentReference, Map<String, dynamic> data) async {
-    return _delegate.update(documentReference._delegate, data);
+    return _delegate.update(documentReference._delegate,
+        _CodecUtility._replaceValueWithDelegatesInMap(data));
   }
 
   /// Writes to the document referred to by the provided [DocumentReference].
@@ -50,6 +51,7 @@ class Transaction {
   /// when the transaction handler completes.
   Future<void> set(
       DocumentReference documentReference, Map<String, dynamic> data) {
-    return _delegate.set(documentReference._delegate, data);
+    return _delegate.set(documentReference._delegate,
+        _CodecUtility._replaceValueWithDelegatesInMap(data));
   }
 }

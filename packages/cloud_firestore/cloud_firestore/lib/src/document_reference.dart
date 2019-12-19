@@ -42,13 +42,9 @@ class DocumentReference {
   /// If [merge] is true, the provided data will be merged into an
   /// existing document instead of overwriting.
   Future<void> setData(Map<String, dynamic> data, {bool merge = false}) {
-    return _delegate.setData(data..updateAll((key,value) {
-      if(value is DocumentReference) {
-        return value._delegate;
-      } else {
-        return value;
-      }
-    }), merge: merge);
+    return _delegate.setData(
+        _CodecUtility._replaceValueWithDelegatesInMap(data),
+        merge: merge);
   }
 
   /// Updates fields in the document referred to by this [DocumentReference].
@@ -58,7 +54,8 @@ class DocumentReference {
   ///
   /// If no document exists yet, the update will fail.
   Future<void> updateData(Map<String, dynamic> data) {
-    return _delegate.updateData(data);
+    return _delegate
+        .updateData(_CodecUtility._replaceValueWithDelegatesInMap(data));
   }
 
   /// Reads the document referenced by this [DocumentReference].
