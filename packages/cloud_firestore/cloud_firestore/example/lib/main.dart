@@ -46,6 +46,10 @@ class MessageList extends StatelessWidget {
             final DocumentSnapshot document = snapshot.data.documents[index];
             final dynamic message = document['message'];
             return ListTile(
+              trailing: IconButton(
+                onPressed: () => document.reference.delete(),
+                icon: Icon(Icons.delete),
+              ),
               title: Text(
                 message != null ? message.toString() : '<No message retrieved>',
               ),
@@ -108,9 +112,11 @@ class MyHomePage extends StatelessWidget {
     final querySnapshot = await firestore
         .collection("messages")
         .orderBy("created_at")
-        .limit(10)
+        .limit(12)
         .getDocuments();
-    querySnapshot.documents.forEach((DocumentSnapshot doc) {
+    querySnapshot.documents
+        .sublist(0, querySnapshot.documents.length - 3)
+        .forEach((DocumentSnapshot doc) {
       batchWrite.updateData(doc.reference, {
         "message": "Batched message",
         "created_at": FieldValue.serverTimestamp()
