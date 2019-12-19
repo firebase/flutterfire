@@ -20,7 +20,7 @@ class Firestore {
 
   String appName() => _delegate.appName();
 
-  WriteBatch batch() => WriteBatch._();
+  WriteBatch batch() => WriteBatch._(_delegate.batch());
 
   CollectionReference collection(String path) {
     assert(path != null);

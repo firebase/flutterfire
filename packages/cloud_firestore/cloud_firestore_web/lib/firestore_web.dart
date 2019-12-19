@@ -13,6 +13,7 @@ part 'document_reference_web.dart';
 part 'query_web.dart';
 part 'transaction_web.dart';
 part 'field_value_web.dart';
+part 'write_batch_web.dart';
 
 class FirestoreWeb extends FirestorePlatform {
   final Firestore webFirestore;
@@ -46,7 +47,7 @@ class FirestoreWeb extends FirestorePlatform {
       DocumentReferenceWeb(webFirestore, this, path.split('/'));
 
   @override
-  WriteBatch batch() => WriteBatch(this);
+  WriteBatch batch() => WriteBatchWeb._(webFirestore.batch());
 
   @override
   Future<void> enablePersistence(bool enable) async {

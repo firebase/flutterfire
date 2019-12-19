@@ -98,13 +98,25 @@ class MyHomePage extends StatelessWidget {
     });
   }
 
+  Future<void> _runBatchWrite() async {
+    final batchWrite = firestore.batch();
+    final querySnapshot = await firestore.collection("messages").orderBy("created_at").limit(10).getDocuments();
+    querySnapshot.documents.forEach((DocumentSnapshot doc){
+      batchWrite.updateData(doc.reference, {"message":"Batched message", "created_at": FieldValue.serverTimestamp()});
+    });
+    batchWrite.setData(firestore.collection("messages").document(), {"message":"Batched message created", "created_at": FieldValue.serverTimestamp()});
+    batchWrite.delete(querySnapshot.documents[querySnapshot.documents.length - 2].reference);
+    batchWrite.delete(querySnapshot.documents.last.reference);
+    await batchWrite.commit();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Firestore Example'),
         actions: <Widget>[
-          FlatButton(onPressed: _runTransaction, child: Text("Run Transaction"),)
+          FlatButton(onPressed: _runTransaction, child: Text("Run Transaction"),),
+          FlatButton(onPressed: _runBatchWrite, child: Text("Batch Write"),)
         ],
       ),
       body: MessageList(firestore: firestore),

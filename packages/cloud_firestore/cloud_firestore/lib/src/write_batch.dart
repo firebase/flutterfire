@@ -10,25 +10,20 @@ part of cloud_firestore;
 ///
 /// Once committed, no further operations can be performed on the [WriteBatch],
 /// nor can it be committed again.
-class WriteBatch implements platform.WriteBatchPlatform {
-  platform.WriteBatch _delegate;
-  WriteBatch._()
-      : _delegate = platform.WriteBatch(platform.FirestorePlatform.instance);
 
-  @override
+class WriteBatch  {
+  final platform.WriteBatch _delegate;
+  WriteBatch._(this._delegate);
+
   Future<void> commit() => _delegate.commit();
 
-  @override
-  void delete(platform.DocumentReference document) =>
-      _delegate.delete(document);
+  void delete(DocumentReference document) =>
+      _delegate.delete(document._delegate);
 
-  @override
-  void setData(platform.DocumentReference document, Map<String, dynamic> data,
+  void setData(DocumentReference document, Map<String, dynamic> data,
           {bool merge = false}) =>
-      _delegate.setData(document, data, merge: merge);
+      _delegate.setData(document._delegate, data, merge: merge);
 
-  @override
-  void updateData(
-          platform.DocumentReference document, Map<String, dynamic> data) =>
-      _delegate.updateData(document, data);
+  void updateData(DocumentReference document, Map<String, dynamic> data) =>
+      _delegate.updateData(document._delegate, data);
 }
