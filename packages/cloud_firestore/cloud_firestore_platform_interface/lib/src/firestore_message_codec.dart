@@ -61,7 +61,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_kBlob);
       writeSize(buffer, value.bytes.length);
       buffer.putUint8List(value.bytes);
-    } else if (value is FieldValue) {
+    } else if (value is FieldValueInterface) {
       final int code = _kFieldValueCodes[value.type];
       assert(code != null);
       buffer.putUint8(code);
