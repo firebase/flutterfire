@@ -42,8 +42,7 @@ class DocumentReference {
   /// If [merge] is true, the provided data will be merged into an
   /// existing document instead of overwriting.
   Future<void> setData(Map<String, dynamic> data, {bool merge = false}) {
-    return _delegate.setData(
-        _CodecUtility._replaceValueWithDelegatesInMap(data),
+    return _delegate.setData(_CodecUtility.replaceValueWithDelegatesInMap(data),
         merge: merge);
   }
 
@@ -55,7 +54,7 @@ class DocumentReference {
   /// If no document exists yet, the update will fail.
   Future<void> updateData(Map<String, dynamic> data) {
     return _delegate
-        .updateData(_CodecUtility._replaceValueWithDelegatesInMap(data));
+        .updateData(_CodecUtility.replaceValueWithDelegatesInMap(data));
   }
 
   /// Reads the document referenced by this [DocumentReference].

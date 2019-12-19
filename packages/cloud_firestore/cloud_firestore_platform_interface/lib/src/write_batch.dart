@@ -23,80 +23,76 @@ class WriteBatch extends WriteBatchPlatform {
 
   @override
   Future<void> commit() async {
-    if (!_committed) {
-      _committed = true;
-      await Future.wait<dynamic>(_actions);
-      await MethodChannelFirestore.channel.invokeMethod<void>(
-          'WriteBatch#commit', <String, dynamic>{'handle': await _handle});
-    } else {
-      throw StateError("This batch has already been committed.");
-    }
+    _assertNotCommitted();
+
+    _committed = true;
+    await Future.wait<dynamic>(_actions);
+    await MethodChannelFirestore.channel.invokeMethod<void>(
+        'WriteBatch#commit', <String, dynamic>{'handle': await _handle});
   }
 
   @override
   void delete(DocumentReference document) {
-    if (!_committed) {
-      _handle.then((dynamic handle) {
-        _actions.add(
-          MethodChannelFirestore.channel.invokeMethod<void>(
-            'WriteBatch#delete',
-            <String, dynamic>{
-              'app': _firestore.appName(),
-              'handle': handle,
-              'path': document.path,
-            },
-          ),
-        );
-      });
-    } else {
-      throw StateError(
-          "This batch has been committed and can no longer be changed.");
-    }
+    _assertNotCommitted();
+
+    _handle.then((dynamic handle) {
+      _actions.add(
+        MethodChannelFirestore.channel.invokeMethod<void>(
+          'WriteBatch#delete',
+          <String, dynamic>{
+            'app': _firestore.appName(),
+            'handle': handle,
+            'path': document.path,
+          },
+        ),
+      );
+    });
   }
 
   @override
   void setData(DocumentReference document, Map<String, dynamic> data,
       {bool merge = false}) {
-    if (!_committed) {
-      _handle.then((dynamic handle) {
-        _actions.add(
-          MethodChannelFirestore.channel.invokeMethod<void>(
-            'WriteBatch#setData',
-            <String, dynamic>{
-              'app': _firestore.appName(),
-              'handle': handle,
-              'path': document.path,
-              'data': data,
-              'options': <String, bool>{'merge': merge},
-            },
-          ),
-        );
-      });
-    } else {
-      throw StateError(
-          "This batch has been committed and can no longer be changed.");
-    }
+    _assertNotCommitted();
+
+    _handle.then((dynamic handle) {
+      _actions.add(
+        MethodChannelFirestore.channel.invokeMethod<void>(
+          'WriteBatch#setData',
+          <String, dynamic>{
+            'app': _firestore.appName(),
+            'handle': handle,
+            'path': document.path,
+            'data': data,
+            'options': <String, bool>{'merge': merge},
+          },
+        ),
+      );
+    });
   }
 
   @override
   void updateData(DocumentReference document, Map<String, dynamic> data) {
-    if (!_committed) {
-      _handle.then((dynamic handle) {
-        _actions.add(
-          MethodChannelFirestore.channel.invokeMethod<void>(
-            'WriteBatch#updateData',
-            <String, dynamic>{
-              'app': _firestore.appName(),
-              'handle': handle,
-              'path': document.path,
-              'data': data,
-            },
-          ),
-        );
-      });
-    } else {
+    _assertNotCommitted();
+
+    _handle.then((dynamic handle) {
+      _actions.add(
+        MethodChannelFirestore.channel.invokeMethod<void>(
+          'WriteBatch#updateData',
+          <String, dynamic>{
+            'app': _firestore.appName(),
+            'handle': handle,
+            'path': document.path,
+            'data': data,
+          },
+        ),
+      );
+    });
+  }
+
+  void _assertNotCommitted() {
+    if (_committed) {
       throw StateError(
-          "This batch has been committed and can no longer be changed.");
+          'This batch has already been committed and can no longer be changed.');
     }
   }
 }

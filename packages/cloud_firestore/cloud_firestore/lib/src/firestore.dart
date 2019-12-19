@@ -53,7 +53,7 @@ class Firestore {
   DocumentReference document(String path) =>
       DocumentReference._(_delegate.document(path));
 
-  @deprecated
+  @Deprecated('Use the persistenceEnabled parameter of the [settings] method')
   Future<void> enablePersistence(bool enable) =>
       _delegate.enablePersistence(enable);
 

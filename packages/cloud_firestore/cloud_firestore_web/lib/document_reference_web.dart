@@ -12,11 +12,11 @@ class DocumentReferenceWeb extends DocumentReference {
   @override
   Future<void> setData(Map<String, dynamic> data, {bool merge = false}) =>
       delegate.set(
-          _CodecUtility._encodeMapData(data), web.SetOptions(merge: merge));
+          _CodecUtility.encodeMapData(data), web.SetOptions(merge: merge));
 
   @override
   Future<void> updateData(Map<String, dynamic> data) =>
-      delegate.update(data: _CodecUtility._encodeMapData(data));
+      delegate.update(data: _CodecUtility.encodeMapData(data));
 
   @override
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
@@ -34,7 +34,7 @@ class DocumentReferenceWeb extends DocumentReference {
   DocumentSnapshot _fromWeb(web.DocumentSnapshot webSnapshot) =>
       DocumentSnapshot(
           webSnapshot.ref.path,
-          _CodecUtility._decodeMapData(webSnapshot.data()),
+          _CodecUtility.decodeMapData(webSnapshot.data()),
           SnapshotMetadata(
             webSnapshot.metadata.hasPendingWrites,
             webSnapshot.metadata.fromCache,

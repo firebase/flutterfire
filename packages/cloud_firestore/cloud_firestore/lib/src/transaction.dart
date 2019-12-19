@@ -4,6 +4,8 @@
 
 part of cloud_firestore;
 
+/// The TransactionHandler may be executed multiple times, it should be able
+/// to handle multiple executions.
 typedef Future<dynamic> TransactionHandler(Transaction transaction);
 
 class Transaction {
@@ -40,7 +42,7 @@ class Transaction {
   Future<void> update(
       DocumentReference documentReference, Map<String, dynamic> data) async {
     return _delegate.update(documentReference._delegate,
-        _CodecUtility._replaceValueWithDelegatesInMap(data));
+        _CodecUtility.replaceValueWithDelegatesInMap(data));
   }
 
   /// Writes to the document referred to by the provided [DocumentReference].
@@ -52,6 +54,6 @@ class Transaction {
   Future<void> set(
       DocumentReference documentReference, Map<String, dynamic> data) {
     return _delegate.set(documentReference._delegate,
-        _CodecUtility._replaceValueWithDelegatesInMap(data));
+        _CodecUtility.replaceValueWithDelegatesInMap(data));
   }
 }

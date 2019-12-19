@@ -20,7 +20,7 @@ class DocumentSnapshot {
 
   /// Contains all the data of this snapshot
   Map<String, dynamic> get data =>
-      _CodecUtility._replaceDelegatesWithValueInMap(_delegate.data);
+      _CodecUtility.replaceDelegatesWithValueInMap(_delegate.data);
 
   /// Metadata about this snapshot concerning its source and if it has local
   /// modifications.

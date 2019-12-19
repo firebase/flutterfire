@@ -1,19 +1,19 @@
 part of cloud_firestore_web;
 
 class _CodecUtility {
-  static Map<String, dynamic> _encodeMapData(Map<String, dynamic> data) {
+  static Map<String, dynamic> encodeMapData(Map<String, dynamic> data) {
     Map<String, dynamic> output = Map.from(data);
-    output.updateAll((key, value) => _valueEncode(value));
+    output.updateAll((key, value) => valueEncode(value));
     return output;
   }
 
-  static List<dynamic> _encodeArrayData(List<dynamic> data) {
+  static List<dynamic> encodeArrayData(List<dynamic> data) {
     List<dynamic> output = List.from(data);
-    output.map(_valueEncode);
+    output.map(valueEncode);
     return output;
   }
 
-  static dynamic _valueEncode(dynamic value) {
+  static dynamic valueEncode(dynamic value) {
     if (value is FieldValueInterface && value.instance is FieldValueWeb) {
       return (value.instance as FieldValueWeb)._delegate;
     } else if (value is GeoPoint) {
@@ -23,26 +23,26 @@ class _CodecUtility {
     } else if (value is DocumentReferenceWeb) {
       return value.delegate;
     } else if (value is Map<String, dynamic>) {
-      return _encodeMapData(value);
+      return encodeMapData(value);
     } else if (value is List<dynamic>) {
-      return _encodeArrayData(value);
+      return encodeArrayData(value);
     }
     return value;
   }
 
-  static Map<String, dynamic> _decodeMapData(Map<String, dynamic> data) {
+  static Map<String, dynamic> decodeMapData(Map<String, dynamic> data) {
     Map<String, dynamic> output = Map.from(data);
-    output.updateAll((key, value) => _valueDecode(value));
+    output.updateAll((key, value) => valueDecode(value));
     return output;
   }
 
-  static List<dynamic> _decodeArrayData(List<dynamic> data) {
+  static List<dynamic> decodeArrayData(List<dynamic> data) {
     List<dynamic> output = List.from(data);
-    output.map(_valueDecode);
+    output.map(valueDecode);
     return output;
   }
 
-  static dynamic _valueDecode(dynamic value) {
+  static dynamic valueDecode(dynamic value) {
     if (value is web.GeoPoint) {
       return GeoPoint(value.latitude, value.longitude);
     } else if (value is web.Blob) {
@@ -53,9 +53,9 @@ class _CodecUtility {
           FirestorePlatform.instance,
           value.path.split("/"));
     } else if (value is Map<String, dynamic>) {
-      return _decodeMapData(value);
+      return decodeMapData(value);
     } else if (value is List<dynamic>) {
-      return _decodeArrayData(value);
+      return decodeArrayData(value);
     }
     return value;
   }

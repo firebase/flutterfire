@@ -6,9 +6,9 @@ class QueryWeb implements Query {
   final bool _isCollectionGroup;
   final String _path;
   final List<dynamic> _orderByKeys;
-  static const _changeTypeAdded = "added";
-  static const _changeTypeModified = "modified";
-  static const _changeTypeRemoved = "removed";
+  static const _kChangeTypeAdded = "added";
+  static const _kChangeTypeModified = "modified";
+  static const _kChangeTypeRemoved = "removed";
 
   QueryWeb(this._firestore, this._path, this.webQuery,
       {bool isCollectionGroup, List<dynamic> orderByKeys})
@@ -159,7 +159,6 @@ class QueryWeb implements Query {
         'Supported [field] types are [String] and [FieldPath].');
     assert(webQuery != null);
     dynamic usableField = field;
-    ;
     if (field == FieldPath.documentId) {
       usableField = web.FieldPath.documentId();
     }
@@ -222,11 +221,11 @@ class QueryWeb implements Query {
 
   DocumentChangeType _fromString(String item) {
     switch (item.toLowerCase()) {
-      case _changeTypeAdded:
+      case _kChangeTypeAdded:
         return DocumentChangeType.added;
-      case _changeTypeModified:
+      case _kChangeTypeModified:
         return DocumentChangeType.modified;
-      case _changeTypeRemoved:
+      case _kChangeTypeRemoved:
         return DocumentChangeType.removed;
       default:
         throw ArgumentError("Invalid type");

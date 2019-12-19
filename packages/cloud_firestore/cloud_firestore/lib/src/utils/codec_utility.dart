@@ -1,46 +1,46 @@
 part of cloud_firestore;
 
 class _CodecUtility {
-  static Map<String, dynamic> _replaceValueWithDelegatesInMap(
+  static Map<String, dynamic> replaceValueWithDelegatesInMap(
       Map<String, dynamic> data) {
     Map<String, dynamic> output = Map.from(data);
-    output.updateAll((_, value) => _valueEncode(value));
+    output.updateAll((_, value) => valueEncode(value));
     return output;
   }
 
-  static List<dynamic> _replaceValueWithDelegatesInArray(List<dynamic> data) {
-    return List.from(data).map((value) => _valueEncode(value));
+  static List<dynamic> replaceValueWithDelegatesInArray(List<dynamic> data) {
+    return List.from(data).map((value) => valueEncode(value));
   }
 
-  static Map<String, dynamic> _replaceDelegatesWithValueInMap(
+  static Map<String, dynamic> replaceDelegatesWithValueInMap(
       Map<String, dynamic> data) {
     Map<String, dynamic> output = Map.from(data);
-    output.updateAll((_, value) => _valueDecode(value));
+    output.updateAll((_, value) => valueDecode(value));
     return output;
   }
 
-  static List<dynamic> _replaceDelegatesWithValueInArray(List<dynamic> data) {
-    return List.from(data).map((value) => _valueDecode(value));
+  static List<dynamic> replaceDelegatesWithValueInArray(List<dynamic> data) {
+    return List.from(data).map((value) => valueDecode(value));
   }
 
-  static dynamic _valueEncode(dynamic value) {
+  static dynamic valueEncode(dynamic value) {
     if (value is DocumentReference) {
       return value._delegate;
     } else if (value is List) {
-      _replaceValueWithDelegatesInArray(value);
+      return replaceValueWithDelegatesInArray(value);
     } else if (value is Map<String, dynamic>) {
-      _replaceValueWithDelegatesInMap(value);
+      return replaceValueWithDelegatesInMap(value);
     }
     return value;
   }
 
-  static dynamic _valueDecode(dynamic value) {
+  static dynamic valueDecode(dynamic value) {
     if (value is platform.DocumentReference) {
       return DocumentReference._(value);
     } else if (value is List) {
-      _replaceDelegatesWithValueInArray(value);
+      return replaceDelegatesWithValueInArray(value);
     } else if (value is Map<String, dynamic>) {
-      _replaceDelegatesWithValueInMap(value);
+      return replaceDelegatesWithValueInMap(value);
     }
     return value;
   }

@@ -22,7 +22,7 @@ class WriteBatchWeb implements WriteBatch {
     assert(document is DocumentReferenceWeb);
     _delegate.set(
         (document as DocumentReferenceWeb).delegate,
-        _CodecUtility._encodeMapData(data),
+        _CodecUtility.encodeMapData(data),
         merge ? web.SetOptions(merge: merge) : null);
   }
 
@@ -30,6 +30,6 @@ class WriteBatchWeb implements WriteBatch {
   void updateData(DocumentReference document, Map<String, dynamic> data) {
     assert(document is DocumentReferenceWeb);
     _delegate.set((document as DocumentReferenceWeb).delegate,
-        _CodecUtility._encodeMapData(data));
+        _CodecUtility.encodeMapData(data));
   }
 }
