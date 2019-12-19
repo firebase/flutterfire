@@ -5,13 +5,15 @@ class QueryWeb implements Query {
   final FirestorePlatform _firestore;
   final bool _isCollectionGroup;
   final String _path;
-
+  final List<dynamic> _orderByKeys;
   static const _changeTypeAdded = "added";
   static const _changeTypeModified = "modified";
   static const _changeTypeRemoved = "removed";
 
-  QueryWeb(this._firestore, this._path, this.webQuery, {bool isCollectionGroup})
-      : this._isCollectionGroup = isCollectionGroup ?? false;
+  QueryWeb(this._firestore, this._path, this.webQuery,
+      {bool isCollectionGroup, List<dynamic> orderByKeys})
+      : this._isCollectionGroup = isCollectionGroup ?? false,
+        this._orderByKeys = orderByKeys ?? [];
 
   @override
   Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
@@ -35,12 +37,16 @@ class QueryWeb implements Query {
       isCollectionGroup: _isCollectionGroup);
 
   @override
-  Query endAtDocument(DocumentSnapshot documentSnapshot) => QueryWeb(
-      this._firestore,
-      this._path,
-      _generateOrderByQuery(documentSnapshot)
-          .endAt(fieldValues: documentSnapshot.data.values),
-      isCollectionGroup: _isCollectionGroup);
+  Query endAtDocument(DocumentSnapshot documentSnapshot) {
+    assert(webQuery != null && _orderByKeys.isNotEmpty);
+    return QueryWeb(
+        this._firestore,
+        this._path,
+        webQuery.endAt(
+            fieldValues:
+                _orderByKeys.map((key) => documentSnapshot.data[key]).toList()),
+        isCollectionGroup: _isCollectionGroup);
+  }
 
   @override
   Query endBefore(List values) => QueryWeb(this._firestore, this._path,
@@ -48,12 +54,16 @@ class QueryWeb implements Query {
       isCollectionGroup: _isCollectionGroup);
 
   @override
-  Query endBeforeDocument(DocumentSnapshot documentSnapshot) => QueryWeb(
-      this._firestore,
-      this._path,
-      _generateOrderByQuery(documentSnapshot)
-          .endBefore(fieldValues: documentSnapshot.data.values),
-      isCollectionGroup: _isCollectionGroup);
+  Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
+    assert(webQuery != null && _orderByKeys.isNotEmpty);
+    return QueryWeb(
+        this._firestore,
+        this._path,
+        webQuery.endBefore(
+            fieldValues:
+                _orderByKeys.map((key) => documentSnapshot.data[key]).toList()),
+        isCollectionGroup: _isCollectionGroup);
+  }
 
   @override
   FirestorePlatform get firestore => _firestore;
@@ -66,16 +76,24 @@ class QueryWeb implements Query {
         this._firestore,
         this._path,
         webQuery != null ? webQuery.limit(length) : null,
+        orderByKeys: _orderByKeys,
         isCollectionGroup: _isCollectionGroup,
       );
 
   @override
-  Query orderBy(field, {bool descending = false}) => QueryWeb(
-        this._firestore,
-        this._path,
-        webQuery.orderBy(field, descending ? "desc" : "asc"),
-        isCollectionGroup: _isCollectionGroup,
-      );
+  Query orderBy(field, {bool descending = false}) {
+    dynamic usableField = field;
+    if (field == FieldPath.documentId) {
+      usableField = web.FieldPath.documentId();
+    }
+    return QueryWeb(
+      this._firestore,
+      this._path,
+      webQuery.orderBy(usableField, descending ? "desc" : "asc"),
+      orderByKeys: _orderByKeys..add(usableField),
+      isCollectionGroup: _isCollectionGroup,
+    );
+  }
 
   @override
   String get path => this._path;
@@ -89,31 +107,42 @@ class QueryWeb implements Query {
   @override
   Query startAfter(List values) => QueryWeb(
       this._firestore, this._path, webQuery.startAfter(fieldValues: values),
-      isCollectionGroup: _isCollectionGroup);
+      orderByKeys: _orderByKeys, isCollectionGroup: _isCollectionGroup);
 
   @override
-  Query startAfterDocument(DocumentSnapshot documentSnapshot) => QueryWeb(
-      this._firestore,
-      this._path,
-      _generateOrderByQuery(documentSnapshot)
-          .startAfter(fieldValues: documentSnapshot.data.values),
-      isCollectionGroup: _isCollectionGroup);
+  Query startAfterDocument(DocumentSnapshot documentSnapshot) {
+    assert(webQuery != null && _orderByKeys.isNotEmpty);
+    return QueryWeb(
+        this._firestore,
+        this._path,
+        webQuery.startAfter(
+            fieldValues:
+                _orderByKeys.map((key) => documentSnapshot.data[key]).toList()),
+        orderByKeys: _orderByKeys,
+        isCollectionGroup: _isCollectionGroup);
+  }
 
   @override
   Query startAt(List values) => QueryWeb(
         this._firestore,
         this._path,
         webQuery.startAt(fieldValues: values),
+        orderByKeys: _orderByKeys,
         isCollectionGroup: _isCollectionGroup,
       );
 
   @override
-  Query startAtDocument(DocumentSnapshot documentSnapshot) => QueryWeb(
-      this._firestore,
-      this._path,
-      _generateOrderByQuery(documentSnapshot)
-          .startAt(fieldValues: documentSnapshot.data.values),
-      isCollectionGroup: _isCollectionGroup);
+  Query startAtDocument(DocumentSnapshot documentSnapshot) {
+    assert(webQuery != null && _orderByKeys.isNotEmpty);
+    return QueryWeb(
+        this._firestore,
+        this._path,
+        webQuery.startAt(
+            fieldValues:
+                _orderByKeys.map((key) => documentSnapshot.data[key]).toList()),
+        orderByKeys: _orderByKeys,
+        isCollectionGroup: _isCollectionGroup);
+  }
 
   @override
   Query where(field,
@@ -129,46 +158,50 @@ class QueryWeb implements Query {
     assert(field is String || field is FieldPath,
         'Supported [field] types are [String] and [FieldPath].');
     assert(webQuery != null);
-
+    dynamic usableField = field;
+    ;
+    if (field == FieldPath.documentId) {
+      usableField = web.FieldPath.documentId();
+    }
     web.Query query = webQuery;
 
     if (isEqualTo != null) {
-      query = query.where(field, "==", isEqualTo);
+      query = query.where(usableField, "==", isEqualTo);
     }
     if (isLessThan != null) {
-      query = query.where(field, "<", isLessThan);
+      query = query.where(usableField, "<", isLessThan);
     }
     if (isLessThanOrEqualTo != null) {
-      query = query.where(field, "<=", isLessThanOrEqualTo);
+      query = query.where(usableField, "<=", isLessThanOrEqualTo);
     }
     if (isGreaterThan != null) {
-      query = query.where(field, ">", isGreaterThan);
+      query = query.where(usableField, ">", isGreaterThan);
     }
     if (isGreaterThanOrEqualTo != null) {
-      query = query.where(field, ">=", isGreaterThanOrEqualTo);
+      query = query.where(usableField, ">=", isGreaterThanOrEqualTo);
     }
     if (arrayContains != null) {
-      query = query.where(field, "array-contains", arrayContains);
+      query = query.where(usableField, "array-contains", arrayContains);
     }
     if (arrayContainsAny != null) {
       assert(arrayContainsAny.length <= 10,
           "array contains can have maximum of 10 items");
-      query = query.where(field, "array-contains-any", arrayContainsAny);
+      query = query.where(usableField, "array-contains-any", arrayContainsAny);
     }
     if (whereIn != null) {
       assert(
           whereIn.length <= 10, "array contains can have maximum of 10 items");
-      query = query.where(field, "in", whereIn);
+      query = query.where(usableField, "in", whereIn);
     }
     if (isNull != null) {
       assert(
           isNull,
           'isNull can only be set to true. '
           'Use isEqualTo to filter on non-null values.');
-      query = query.where(field, "==", null);
+      query = query.where(usableField, "==", null);
     }
     return QueryWeb(this._firestore, this._path, query,
-        isCollectionGroup: _isCollectionGroup);
+        orderByKeys: _orderByKeys, isCollectionGroup: _isCollectionGroup);
   }
 
   QuerySnapshot _webQuerySnapshotToQuerySnapshot(
@@ -208,13 +241,6 @@ class QueryWeb implements Query {
         SnapshotMetadata(webSnapshot.metadata.hasPendingWrites,
             webSnapshot.metadata.fromCache),
         this._firestore);
-  }
-
-  web.Query _generateOrderByQuery(DocumentSnapshot webSnapshot) {
-    assert(webQuery != null);
-    web.Query query = webQuery;
-    webSnapshot.data.keys.forEach((key) => query = query.orderBy(key));
-    return query;
   }
 
   SnapshotMetadata _webMetadataToMetada(web.SnapshotMetadata webMetadata) {

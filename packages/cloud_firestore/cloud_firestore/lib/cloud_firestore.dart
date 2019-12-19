@@ -16,13 +16,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
+export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
+    show FieldPath;
+
 part 'src/blob.dart';
 part 'src/collection_reference.dart';
 part 'src/document_change.dart';
 part 'src/utils/platform_utils.dart';
 part 'src/document_reference.dart';
 part 'src/document_snapshot.dart';
-part 'src/field_path.dart';
 part 'src/field_value.dart';
 part 'src/firestore.dart';
 part 'src/geo_point.dart';

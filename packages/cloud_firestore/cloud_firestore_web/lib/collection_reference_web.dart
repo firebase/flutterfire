@@ -4,7 +4,7 @@ class CollectionReferenceWeb implements CollectionReference {
   final web.Firestore webFirestore;
   final FirestorePlatform _firestorePlatform;
   final List<String> pathComponents;
-  final QueryWeb _queryDelegate;
+  QueryWeb _queryDelegate;
 
   CollectionReferenceWeb(
       this._firestorePlatform, this.webFirestore, this.pathComponents)
@@ -50,18 +50,28 @@ class CollectionReferenceWeb implements CollectionReference {
   Map<String, dynamic> buildArguments() => _queryDelegate.buildArguments();
 
   @override
-  Query endAt(List values) => _queryDelegate.endAt(values);
+  Query endAt(List values) {
+    _resetQueryDelegate();
+    return _queryDelegate.endAt(values);
+  }
 
   @override
-  Query endAtDocument(DocumentSnapshot documentSnapshot) =>
-      _queryDelegate.endAtDocument(documentSnapshot);
+  Query endAtDocument(DocumentSnapshot documentSnapshot) {
+    _resetQueryDelegate();
+    return _queryDelegate.endAtDocument(documentSnapshot);
+  }
 
   @override
-  Query endBefore(List values) => _queryDelegate.endBefore(values);
+  Query endBefore(List values) {
+    _resetQueryDelegate();
+    return _queryDelegate.endBefore(values);
+  }
 
   @override
-  Query endBeforeDocument(DocumentSnapshot documentSnapshot) =>
-      _queryDelegate.endBeforeDocument(documentSnapshot);
+  Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
+    _resetQueryDelegate();
+    return _queryDelegate.endBeforeDocument(documentSnapshot);
+  }
 
   @override
   FirestorePlatform get firestore => _firestorePlatform;
@@ -77,11 +87,16 @@ class CollectionReferenceWeb implements CollectionReference {
   bool get isCollectionGroup => false;
 
   @override
-  Query limit(int length) => _queryDelegate.limit(length);
+  Query limit(int length) {
+    _resetQueryDelegate();
+    return _queryDelegate.limit(length);
+  }
 
   @override
-  Query orderBy(field, {bool descending = false}) =>
-      _queryDelegate.orderBy(field, descending: descending);
+  Query orderBy(field, {bool descending = false}) {
+    _resetQueryDelegate();
+    return _queryDelegate.orderBy(field, descending: descending);
+  }
 
   @override
   Map<String, dynamic> get parameters => _queryDelegate.parameters;
@@ -97,38 +112,55 @@ class CollectionReferenceWeb implements CollectionReference {
       _queryDelegate.snapshots(includeMetadataChanges: includeMetadataChanges);
 
   @override
-  Query startAfter(List values) => _queryDelegate.startAfter(values);
+  Query startAfter(List values) {
+    _resetQueryDelegate();
+    return _queryDelegate.startAfter(values);
+  }
 
   @override
-  Query startAfterDocument(DocumentSnapshot documentSnapshot) =>
-      _queryDelegate.startAfterDocument(documentSnapshot);
+  Query startAfterDocument(DocumentSnapshot documentSnapshot) {
+    _resetQueryDelegate();
+    return _queryDelegate.startAfterDocument(documentSnapshot);
+  }
 
   @override
-  Query startAt(List values) => _queryDelegate.startAt(values);
+  Query startAt(List values) {
+    _resetQueryDelegate();
+    return _queryDelegate.startAt(values);
+  }
 
   @override
-  Query startAtDocument(DocumentSnapshot documentSnapshot) =>
-      _queryDelegate.startAtDocument(documentSnapshot);
+  Query startAtDocument(DocumentSnapshot documentSnapshot) {
+    _resetQueryDelegate();
+    return _queryDelegate.startAtDocument(documentSnapshot);
+  }
 
   @override
   Query where(field,
-          {isEqualTo,
-          isLessThan,
-          isLessThanOrEqualTo,
-          isGreaterThan,
-          isGreaterThanOrEqualTo,
-          arrayContains,
-          List arrayContainsAny,
-          List whereIn,
-          bool isNull}) =>
-      _queryDelegate.where(field,
-          isEqualTo: isEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          arrayContains: arrayContains,
-          arrayContainsAny: arrayContainsAny,
-          whereIn: whereIn,
-          isNull: isNull);
+      {isEqualTo,
+      isLessThan,
+      isLessThanOrEqualTo,
+      isGreaterThan,
+      isGreaterThanOrEqualTo,
+      arrayContains,
+      List arrayContainsAny,
+      List whereIn,
+      bool isNull}) {
+    _resetQueryDelegate();
+    return _queryDelegate.where(field,
+        isEqualTo: isEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        isNull: isNull);
+  }
+
+  void _resetQueryDelegate() {
+    _queryDelegate = QueryWeb(_firestorePlatform, pathComponents.join("/"),
+        webFirestore.collection(pathComponents.join("/")));
+  }
 }

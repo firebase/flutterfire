@@ -86,10 +86,11 @@ class FirestoreWeb extends FirestorePlatform {
   Future<Map<String, dynamic>> runTransaction(
       TransactionHandler transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) async {
+    Map<String, dynamic> result;
     await webFirestore.runTransaction((transaction) async {
-      return await transactionHandler(TransactionWeb._(transaction, this));
+      result = await transactionHandler(TransactionWeb._(transaction, this));
     }).timeout(timeout);
-    return <String, dynamic>{};
+    return result is Map<String, dynamic> ? result : <String, dynamic>{};
   }
 
   @override
