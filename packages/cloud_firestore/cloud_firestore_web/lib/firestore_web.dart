@@ -8,11 +8,17 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase/firestore.dart' as web;
 
 part 'collection_reference_web.dart';
+
 part 'field_value_factory_web.dart';
+
 part 'document_reference_web.dart';
+
 part 'query_web.dart';
+
 part 'transaction_web.dart';
+
 part 'field_value_web.dart';
+
 part 'write_batch_web.dart';
 
 class FirestoreWeb extends FirestorePlatform {
@@ -62,10 +68,18 @@ class FirestoreWeb extends FirestorePlatform {
       String host,
       bool sslEnabled,
       int cacheSizeBytes}) async {
-    return Future.sync(() {
+    if (host != null && sslEnabled != null) {
       webFirestore.settings(Settings(
-          ssl: sslEnabled, cacheSizeBytes: cacheSizeBytes, host: host));
-    });
+          cacheSizeBytes: cacheSizeBytes ?? 40000000,
+          host: host,
+          ssl: sslEnabled));
+    } else {
+      webFirestore
+          .settings(Settings(cacheSizeBytes: cacheSizeBytes ?? 40000000));
+    }
+    if (persistenceEnabled) {
+      await webFirestore.enablePersistence();
+    }
   }
 
   @override
