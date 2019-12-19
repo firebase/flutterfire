@@ -70,10 +70,11 @@ class FirestoreWeb extends FirestorePlatform {
   @override
   Future<Map<String, dynamic>> runTransaction(
       TransactionHandler transactionHandler,
-      {Duration timeout = const Duration(seconds: 5)}) {
-    return webFirestore.runTransaction((transaction) {
-      transactionHandler(TransactionWeb._(transaction, this));
+      {Duration timeout = const Duration(seconds: 5)}) async {
+    await webFirestore.runTransaction((transaction) async {
+      return await transactionHandler(TransactionWeb._(transaction, this));
     }).timeout(timeout);
+    return <String,dynamic>{};
   }
 
   @override

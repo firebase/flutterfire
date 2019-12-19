@@ -16,9 +16,7 @@ class Transaction {
 
   /// Reads the document referenced by the provided DocumentReference.
   Future<DocumentSnapshot> get(DocumentReference documentReference) async {
-    final result = await _delegate.get(platform.MethodChannelDocumentReference(
-        platform.FirestorePlatform.instance,
-        documentReference.path.split("/")));
+    final result = await _delegate.get(documentReference._delegate);
     if (result != null) {
       return DocumentSnapshot._(result);
     } else {
@@ -31,9 +29,7 @@ class Transaction {
   /// Awaiting the returned [Future] is optional and will be done automatically
   /// when the transaction handler completes.
   Future<void> delete(DocumentReference documentReference) {
-    return _delegate.delete(platform.MethodChannelDocumentReference(
-        platform.FirestorePlatform.instance,
-        documentReference.path.split("/")));
+    return _delegate.delete(documentReference._delegate);
   }
 
   /// Updates fields in the document referred to by [documentReference].
@@ -44,9 +40,7 @@ class Transaction {
   Future<void> update(
       DocumentReference documentReference, Map<String, dynamic> data) async {
     return _delegate.update(
-        platform.MethodChannelDocumentReference(
-            platform.FirestorePlatform.instance,
-            documentReference.path.split("/")),
+        documentReference._delegate,
         data);
   }
 
@@ -58,10 +52,7 @@ class Transaction {
   /// when the transaction handler completes.
   Future<void> set(
       DocumentReference documentReference, Map<String, dynamic> data) {
-    return _delegate.set(
-        platform.MethodChannelDocumentReference(
-            platform.FirestorePlatform.instance,
-            documentReference.path.split("/")),
+    return _delegate.set(documentReference._delegate,
         data);
   }
 }
