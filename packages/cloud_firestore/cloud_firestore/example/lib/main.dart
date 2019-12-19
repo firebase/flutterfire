@@ -33,7 +33,7 @@ class MessageList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: firestore.collection('messages').snapshots(),
+      stream: firestore.collection("messages").orderBy("created_at", descending: true).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) return const Text('Loading...');
         final int messageCount = snapshot.data.documents.length;
@@ -69,11 +69,43 @@ class MyHomePage extends StatelessWidget {
     });
   }
 
+  Future<void> _runTransaction() async {
+    firestore.runTransaction((Transaction transaction) async {
+      final allDocs = await firestore.collection("messages").getDocuments();
+      final toBeRetrieved = allDocs.documents.sublist(allDocs.documents.length ~/ 2);
+      final toBeDeleted = allDocs.documents.sublist(0, allDocs.documents.length ~/ 2);
+      await Future.forEach(toBeDeleted, (DocumentSnapshot snapshot) async {
+        await transaction.delete(snapshot.reference);
+      });
+
+      await Future.forEach(toBeRetrieved, (DocumentSnapshot snapshot) async {
+        await transaction.update(snapshot.reference, {
+          "message": "Updated from Transaction",
+          "created_at": FieldValue.serverTimestamp()
+        });
+      });
+    });
+
+    await Future.forEach(List.generate(2, (index) => index), (item) async {
+      await firestore.runTransaction((Transaction transaction) async {
+        await Future.forEach(List.generate(10, (index) => index), (item) async {
+          await transaction.set(firestore.collection("messages").document(), {
+            "message": "Created from Transaction $item",
+            "created_at": FieldValue.serverTimestamp()
+          });
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Firestore Example'),
+        actions: <Widget>[
+          FlatButton(onPressed: _runTransaction, child: Text("Run Transaction"),)
+        ],
       ),
       body: MessageList(firestore: firestore),
       floatingActionButton: FloatingActionButton(
