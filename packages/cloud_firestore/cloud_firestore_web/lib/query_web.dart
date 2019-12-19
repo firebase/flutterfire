@@ -6,6 +6,10 @@ class QueryWeb implements Query {
   final bool _isCollectionGroup;
   final String _path;
 
+  static const _changeTypeAdded = "added";
+  static const _changeTypeModified = "modified";
+  static const _changeTypeRemoved = "removed";
+
   QueryWeb(this._firestore, this._path, this.webQuery, {bool isCollectionGroup})
       : this._isCollectionGroup = isCollectionGroup ?? false;
 
@@ -185,11 +189,11 @@ class QueryWeb implements Query {
 
   DocumentChangeType _fromString(String item) {
     switch (item.toLowerCase()) {
-      case "added":
+      case _changeTypeAdded:
         return DocumentChangeType.added;
-      case "modified":
+      case _changeTypeModified:
         return DocumentChangeType.modified;
-      case "removed":
+      case _changeTypeRemoved:
         return DocumentChangeType.removed;
       default:
         throw ArgumentError("Invalid type");

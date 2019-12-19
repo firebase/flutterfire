@@ -21,7 +21,7 @@ class FieldValueFactoryWeb implements FieldValueFactory {
 
   @override
   FieldValueInterface increment(num value) {
-    assert(num is double || num is int, "value can only be double or int");
+    assert(value is double || value is int, "value can only be double or int");
     final delegate = web.FieldValue.increment(value);
     return FieldValueWeb._(
         delegate,
