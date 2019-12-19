@@ -27,7 +27,8 @@ class TransactionWeb implements Transaction {
       DocumentReference documentReference, Map<String, dynamic> data) async {
     assert(documentReference is DocumentReferenceWeb);
     await _webTransaction.set(
-        (documentReference as DocumentReferenceWeb).delegate, FieldValueWeb._serverDelegates(data));
+        (documentReference as DocumentReferenceWeb).delegate,
+        FieldValueWeb._serverDelegates(data));
   }
 
   @override

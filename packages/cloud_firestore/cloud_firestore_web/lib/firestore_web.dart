@@ -75,7 +75,7 @@ class FirestoreWeb extends FirestorePlatform {
     await webFirestore.runTransaction((transaction) async {
       return await transactionHandler(TransactionWeb._(transaction, this));
     }).timeout(timeout);
-    return <String,dynamic>{};
+    return <String, dynamic>{};
   }
 
   @override

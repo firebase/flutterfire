@@ -11,7 +11,7 @@ part of cloud_firestore;
 /// Once committed, no further operations can be performed on the [WriteBatch],
 /// nor can it be committed again.
 
-class WriteBatch  {
+class WriteBatch {
   final platform.WriteBatch _delegate;
   WriteBatch._(this._delegate);
 
