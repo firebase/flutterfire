@@ -28,7 +28,7 @@ class TransactionWeb implements Transaction {
     assert(documentReference is DocumentReferenceWeb);
     await _webTransaction.set(
         (documentReference as DocumentReferenceWeb).delegate,
-        FieldValueWeb._serverDelegates(data));
+        CodecUtility._encodeMapData(data));
   }
 
   @override
@@ -37,13 +37,13 @@ class TransactionWeb implements Transaction {
     assert(documentReference is DocumentReferenceWeb);
     await _webTransaction.update(
         (documentReference as DocumentReferenceWeb).delegate,
-        data: FieldValueWeb._serverDelegates(data));
+        data: CodecUtility._encodeMapData(data));
   }
 
   DocumentSnapshot _fromWeb(web.DocumentSnapshot webSnapshot) =>
       DocumentSnapshot(
           webSnapshot.ref.path,
-          webSnapshot.data(),
+          CodecUtility._decodeMapData(webSnapshot.data()),
           SnapshotMetadata(
             webSnapshot.metadata.hasPendingWrites,
             webSnapshot.metadata.fromCache,

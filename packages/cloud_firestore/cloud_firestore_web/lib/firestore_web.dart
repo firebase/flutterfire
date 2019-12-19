@@ -9,6 +9,8 @@ import 'package:firebase/firestore.dart' as web;
 
 part 'collection_reference_web.dart';
 
+part 'utils/codec_utility.dart';
+
 part 'field_value_factory_web.dart';
 
 part 'document_reference_web.dart';
