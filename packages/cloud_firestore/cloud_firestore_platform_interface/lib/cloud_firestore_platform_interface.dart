@@ -58,9 +58,14 @@ abstract class FirestorePlatform {
   @visibleForTesting
   bool get isMock => false;
 
-  static FirestorePlatform get instance => _instance;
+  static FirestorePlatform get instance {
+    if (_instance == null) {
+      _instance = MethodChannelFirestore();
+    }
+    return _instance;
+  }
 
-  static FirestorePlatform _instance = MethodChannelFirestore();
+  static FirestorePlatform _instance;
 
   static set instance(FirestorePlatform instance) {
     if (!instance.isMock) {

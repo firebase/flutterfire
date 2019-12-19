@@ -8,10 +8,16 @@ part of cloud_firestore;
 ///
 /// You can get an instance by calling [Firestore.instance].
 class Firestore {
-  final platform.FirestorePlatform _delegate;
+  platform.FirestorePlatform _delegatePackingProperty;
+  platform.FirestorePlatform get _delegate {
+    if (_delegatePackingProperty == null) {
+      _delegatePackingProperty = platform.FirestorePlatform.instance;
+    }
+    return _delegatePackingProperty;
+  }
 
   Firestore({FirebaseApp app, platform.FirestorePlatform delegate})
-      : _delegate = delegate ?? platform.FirestorePlatform.instance;
+      : _delegatePackingProperty = delegate;
 
   static MethodChannel get channel => platform.MethodChannelFirestore.channel;
 
