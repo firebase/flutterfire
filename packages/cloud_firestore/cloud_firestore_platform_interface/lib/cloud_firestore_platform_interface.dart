@@ -44,7 +44,9 @@ part 'src/write_batch_platform_interface.dart';
 abstract class FirestorePlatform extends PlatformInterface {
   final FirebaseApp app;
 
-  FirestorePlatform({FirebaseApp app}) : app = app ?? FirebaseApp.instance, super(token: _token);
+  FirestorePlatform({FirebaseApp app})
+      : app = app ?? FirebaseApp.instance,
+        super(token: _token);
 
   static final Object _token = Object();
 
