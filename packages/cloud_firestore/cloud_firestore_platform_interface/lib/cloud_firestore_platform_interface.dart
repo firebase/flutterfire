@@ -11,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show required, visibleForTesting;
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 part 'src/method_channel_firestore.dart';
 part 'src/blob.dart';
@@ -40,23 +41,17 @@ part 'src/transaction_platform_interface.dart';
 part 'src/write_batch.dart';
 part 'src/write_batch_platform_interface.dart';
 
-abstract class FirestorePlatform {
+abstract class FirestorePlatform extends PlatformInterface {
   final FirebaseApp app;
 
-  FirestorePlatform({FirebaseApp app}) : app = app ?? FirebaseApp.instance;
+  FirestorePlatform({FirebaseApp app}) : app = app ?? FirebaseApp.instance, super(token: _token);
+
+  static final Object _token = Object();
 
   factory FirestorePlatform.withApp({FirebaseApp app}) {
     FirestorePlatform.instance = FirestorePlatform.instance.withApp(app);
     return FirestorePlatform.instance;
   }
-
-  /// Only mock implementations should set this to `true`.
-  ///
-  /// Mockito mocks implement this class with `implements` which is forbidden
-  /// (see class docs). This property provides a backdoor for mocks to skip the
-  /// verification that the class isn't implemented with `implements`.
-  @visibleForTesting
-  bool get isMock => false;
 
   static FirestorePlatform get instance {
     if (_instance == null) {
@@ -68,14 +63,7 @@ abstract class FirestorePlatform {
   static FirestorePlatform _instance;
 
   static set instance(FirestorePlatform instance) {
-    if (!instance.isMock) {
-      try {
-        instance._verifyProvidesDefaultImplementations();
-      } on NoSuchMethodError catch (_) {
-        throw AssertionError(
-            'Platform interfaces must not be implemented with `implements`');
-      }
-    }
+    PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
 
@@ -86,15 +74,6 @@ abstract class FirestorePlatform {
   String appName() {
     throw UnimplementedError("appName() not implemented");
   }
-
-  /// This method ensures that [FirestorePlatform] isn't implemented with `implements`.
-  ///
-  /// See class docs for more details on why using `implements` to implement
-  /// [FirestorePlatform] is forbidden.
-  ///
-  /// This private method is called by the [instance] setter, which should fail
-  /// if the provided instance is a class implemented with `implements`.
-  void _verifyProvidesDefaultImplementations() {}
 
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference collection(String path) {
