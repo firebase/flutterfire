@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -63,6 +65,19 @@ void main() {
       await _documentReference.delete();
       expect(isMethodCalled, isTrue,
           reason: "DocumentReference.delete was not called");
+    });
+
+    test("snapshots", () async {
+      bool isMethodCalled = false;
+      _handleMethodCall((call)  {
+        if(call.method == "DocumentReference#addSnapshotListener") {
+          isMethodCalled = true;
+        }
+        return 0;
+      });
+      _documentReference.snapshots().listen((_){});
+      expect(isMethodCalled, isTrue,
+          reason: "DocumentReference.addSnapshotListener was not called");
     });
   });
 }
