@@ -14,7 +14,7 @@ void main() {
     Firestore firestore;
     Firestore firestoreWithSettings;
 
-    setUp(() async {
+    setUpAll(() async {
       final FirebaseOptions firebaseOptions = const FirebaseOptions(
         googleAppID: '1:79601577497:ios:5f2bcc6ba8cecddd',
         gcmSenderID: '79601577497',
