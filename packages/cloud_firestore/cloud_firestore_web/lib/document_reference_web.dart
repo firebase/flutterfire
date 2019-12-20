@@ -20,7 +20,6 @@ class DocumentReferenceWeb extends DocumentReference {
 
   @override
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
-    //TODO(amr): Honour source by passing it to the delegate
     return _fromWeb(await delegate.get());
   }
 
