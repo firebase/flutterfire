@@ -14,9 +14,7 @@ class _CodecUtility {
     if (data == null) {
       return null;
     }
-    List<dynamic> output = List.from(data);
-    output.map(valueEncode);
-    return output;
+    return List.from(data).map(valueEncode).toList();
   }
 
   static dynamic valueEncode(dynamic value) {
@@ -43,9 +41,7 @@ class _CodecUtility {
   }
 
   static List<dynamic> decodeArrayData(List<dynamic> data) {
-    List<dynamic> output = List.from(data);
-    output.map(valueDecode);
-    return output;
+    return List.from(data).map(valueDecode).toList();
   }
 
   static dynamic valueDecode(dynamic value) {

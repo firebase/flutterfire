@@ -15,7 +15,7 @@ class _CodecUtility {
     if (data == null) {
       return null;
     }
-    return List.from(data).map((value) => valueEncode(value));
+    return List.from(data).map((value) => valueEncode(value)).toList();
   }
 
   static Map<String, dynamic> replaceDelegatesWithValueInMap(
@@ -32,7 +32,7 @@ class _CodecUtility {
     if (data == null) {
       return null;
     }
-    return List.from(data).map((value) => valueDecode(value));
+    return List.from(data).map((value) => valueDecode(value)).toList();
   }
 
   static dynamic valueEncode(dynamic value) {
