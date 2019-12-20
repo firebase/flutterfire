@@ -21,7 +21,11 @@ abstract class FieldValueInterface {
 class FieldValue implements FieldValueInterface {
   /// Replaces items with type [FieldValueInterface] with implementation type
   /// such as [FieldValue]
-  static Map<String, dynamic> _serverDelegates(Map<String, dynamic> data) {
+  @visibleForTesting
+  static Map<String, dynamic> serverDelegates(Map<String, dynamic> data) {
+    if(data == null) {
+      return null;
+    }
     Map<String, dynamic> output = Map.from(data);
     output.updateAll((key, value) {
       if (value is FieldValueInterface && value.instance is FieldValue) {
