@@ -62,7 +62,7 @@ class WriteBatch extends WriteBatchPlatform {
             'app': _firestore.appName(),
             'handle': handle,
             'path': document.path,
-            'data': data,
+            'data': FieldValue.serverDelegates(data),
             'options': <String, bool>{'merge': merge},
           },
         ),
@@ -82,7 +82,7 @@ class WriteBatch extends WriteBatchPlatform {
             'app': _firestore.appName(),
             'handle': handle,
             'path': document.path,
-            'data': data,
+            'data': FieldValue.serverDelegates(data)
           },
         ),
       );
