@@ -9,7 +9,8 @@ const kDocumentId = "document";
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
     MethodChannelFirestore.channel.setMockMethodCallHandler((call) async {
-      expect(call.arguments["app"], equals(FirestorePlatform.instance.appName()));
+      expect(
+          call.arguments["app"], equals(FirestorePlatform.instance.appName()));
       expect(call.arguments["path"], equals("$kCollectionId/$kDocumentId"));
       return await methodCallCallback(call);
     });

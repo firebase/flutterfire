@@ -26,10 +26,11 @@ void main() {
       expect(_testCollection.document(_kDocumentId).path.split("/").last,
           equals(_kDocumentId));
     });
-    test("Add",() async {
+    test("Add", () async {
       bool _methodChannelCalled = false;
-      MethodChannelFirestore.channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        switch(methodCall.method) {
+      MethodChannelFirestore.channel
+          .setMockMethodCallHandler((MethodCall methodCall) async {
+        switch (methodCall.method) {
           case "DocumentReference#setData":
             expect(methodCall.arguments["data"]["test"], equals("test"));
             _methodChannelCalled = true;
@@ -38,8 +39,9 @@ void main() {
             return;
         }
       });
-      await _testCollection.add({"test":"test"});
-      expect(_methodChannelCalled,isTrue, reason: "DocumentReference.setData was not called");
+      await _testCollection.add({"test": "test"});
+      expect(_methodChannelCalled, isTrue,
+          reason: "DocumentReference.setData was not called");
     });
   });
 }

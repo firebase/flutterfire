@@ -3,13 +3,16 @@ import 'package:flutter_test/flutter_test.dart';
 
 const _kCollectionId = "test";
 const _kDocumentId = "document";
+
 class TestDocumentReference extends DocumentReference {
-  TestDocumentReference._(): super(FirestorePlatform.instance, [_kCollectionId,_kDocumentId]);
+  TestDocumentReference._()
+      : super(FirestorePlatform.instance, [_kCollectionId, _kDocumentId]);
 }
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  group("$DocumentReference()", (){
-    test("Parent",(){
+  group("$DocumentReference()", () {
+    test("Parent", () {
       final document = TestDocumentReference._();
       final parent = document.parent();
       final parentPath = parent.path;
@@ -17,19 +20,20 @@ void main() {
       expect(parentPath, equals(_kCollectionId));
     });
 
-    test("documentID",(){
+    test("documentID", () {
       final document = TestDocumentReference._();
       expect(document.documentID, equals(_kDocumentId));
     });
 
-    test("Path",(){
+    test("Path", () {
       final document = TestDocumentReference._();
       expect(document.path, equals("$_kCollectionId/$_kDocumentId"));
     });
 
-    test("Collection",(){
+    test("Collection", () {
       final document = TestDocumentReference._();
-      expect(document.collection("extra").path, equals("$_kCollectionId/$_kDocumentId/extra"));
+      expect(document.collection("extra").path,
+          equals("$_kCollectionId/$_kDocumentId/extra"));
     });
   });
 }

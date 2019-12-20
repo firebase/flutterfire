@@ -14,7 +14,6 @@ enum FieldValueType {
 /// An interface for a factory that is used to build [FieldValue] according to
 /// Platform (web or mobile)
 abstract class FieldValueFactory {
-
   /// Current instance of [FieldValueFactory]
   static FieldValueFactory get instance => _instance;
 

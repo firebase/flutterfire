@@ -23,7 +23,7 @@ class FieldValue implements FieldValueInterface {
   /// such as [FieldValue]
   @visibleForTesting
   static Map<String, dynamic> serverDelegates(Map<String, dynamic> data) {
-    if(data == null) {
+    if (data == null) {
       return null;
     }
     Map<String, dynamic> output = Map.from(data);

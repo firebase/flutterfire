@@ -14,12 +14,12 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final mockFieldValue = MockFiledValue();
 
-  group("$Transaction()", (){
+  group("$Transaction()", () {
     Transaction transaction;
     final mockDocumentReference = MockDocumentReference();
     when(mockDocumentReference.path).thenReturn("$kCollectionId/$kDocumentId");
-    setUp((){
-      transaction = Transaction(_kTransactionId,FirestorePlatform.instance);
+    setUp(() {
+      transaction = Transaction(_kTransactionId, FirestorePlatform.instance);
       reset(mockFieldValue);
       when(mockFieldValue.type).thenReturn(FieldValueType.incrementDouble);
       when(mockFieldValue.value).thenReturn(2.0);
@@ -27,21 +27,20 @@ void main() {
 
     test("get", () async {
       bool isMethodCalled = false;
-      handleMethodCall((call){
-        if(call.method == "Transaction#get") {
+      handleMethodCall((call) {
+        if (call.method == "Transaction#get") {
           isMethodCalled = true;
           expect(call.arguments["transactionId"], equals(_kTransactionId));
         }
       });
       await transaction.get(mockDocumentReference);
-      expect(isMethodCalled, isTrue,
-          reason: "Transaction.get was not called");
+      expect(isMethodCalled, isTrue, reason: "Transaction.get was not called");
     });
 
     test("delete", () async {
       bool isMethodCalled = false;
-      handleMethodCall((call){
-        if(call.method == "Transaction#delete") {
+      handleMethodCall((call) {
+        if (call.method == "Transaction#delete") {
           isMethodCalled = true;
           expect(call.arguments["transactionId"], equals(_kTransactionId));
         }
@@ -64,7 +63,7 @@ void main() {
           expect(call.arguments["data"]["test"], equals(data["test"]));
         }
       });
-      await transaction.update(mockDocumentReference,data);
+      await transaction.update(mockDocumentReference, data);
       verify(mockFieldValue.instance);
       expect(isMethodCalled, isTrue,
           reason: "Transaction#update was not called");
@@ -83,11 +82,9 @@ void main() {
           expect(call.arguments["data"]["test"], equals(data["test"]));
         }
       });
-      await transaction.set(mockDocumentReference,data);
+      await transaction.set(mockDocumentReference, data);
       verify(mockFieldValue.instance);
-      expect(isMethodCalled, isTrue,
-          reason: "Transaction#set was not called");
+      expect(isMethodCalled, isTrue, reason: "Transaction#set was not called");
     });
-
   });
 }
