@@ -249,4 +249,8 @@ class QueryWeb implements Query {
 
   @override
   Map<String, dynamic> get parameters => Map();
+
+  @visibleForTesting
+  QueryWeb resetQueryDelegate() =>
+      QueryWeb(firestore, pathComponents.join("/"), webQuery);
 }

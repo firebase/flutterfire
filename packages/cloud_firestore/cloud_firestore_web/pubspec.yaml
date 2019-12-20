@@ -28,6 +28,7 @@ dev_dependencies:
     sdk: flutter
   firebase_core_platform_interface: ^1.0.0
   firebase_core_web: ^0.1.1
+  mockito: ^4.1.1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

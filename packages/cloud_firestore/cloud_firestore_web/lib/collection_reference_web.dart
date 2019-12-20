@@ -1,14 +1,16 @@
 part of cloud_firestore_web;
 
+/// Web implementation for Firestore [CollectionReference]
 class CollectionReferenceWeb implements CollectionReference {
   final web.Firestore webFirestore;
   final FirestorePlatform _firestorePlatform;
   final List<String> pathComponents;
-  QueryWeb _queryDelegate;
+  @visibleForTesting
+  QueryWeb queryDelegate;
 
   CollectionReferenceWeb(
       this._firestorePlatform, this.webFirestore, this.pathComponents)
-      : _queryDelegate = QueryWeb(_firestorePlatform, pathComponents.join("/"),
+      : queryDelegate = QueryWeb(_firestorePlatform, pathComponents.join("/"),
             webFirestore.collection(pathComponents.join("/")));
 
   @override
@@ -47,30 +49,30 @@ class CollectionReferenceWeb implements CollectionReference {
   }
 
   @override
-  Map<String, dynamic> buildArguments() => _queryDelegate.buildArguments();
+  Map<String, dynamic> buildArguments() => queryDelegate.buildArguments();
 
   @override
   Query endAt(List values) {
     _resetQueryDelegate();
-    return _queryDelegate.endAt(values);
+    return queryDelegate.endAt(values);
   }
 
   @override
   Query endAtDocument(DocumentSnapshot documentSnapshot) {
     _resetQueryDelegate();
-    return _queryDelegate.endAtDocument(documentSnapshot);
+    return queryDelegate.endAtDocument(documentSnapshot);
   }
 
   @override
   Query endBefore(List values) {
     _resetQueryDelegate();
-    return _queryDelegate.endBefore(values);
+    return queryDelegate.endBefore(values);
   }
 
   @override
   Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
     _resetQueryDelegate();
-    return _queryDelegate.endBeforeDocument(documentSnapshot);
+    return queryDelegate.endBeforeDocument(documentSnapshot);
   }
 
   @override
@@ -78,7 +80,7 @@ class CollectionReferenceWeb implements CollectionReference {
 
   @override
   Future<QuerySnapshot> getDocuments({Source source = Source.serverAndCache}) =>
-      _queryDelegate.getDocuments(source: source);
+      queryDelegate.getDocuments(source: source);
 
   @override
   String get id => pathComponents.isEmpty ? null : pathComponents.last;
@@ -89,50 +91,50 @@ class CollectionReferenceWeb implements CollectionReference {
   @override
   Query limit(int length) {
     _resetQueryDelegate();
-    return _queryDelegate.limit(length);
+    return queryDelegate.limit(length);
   }
 
   @override
   Query orderBy(field, {bool descending = false}) {
     _resetQueryDelegate();
-    return _queryDelegate.orderBy(field, descending: descending);
+    return queryDelegate.orderBy(field, descending: descending);
   }
 
   @override
-  Map<String, dynamic> get parameters => _queryDelegate.parameters;
+  Map<String, dynamic> get parameters => queryDelegate.parameters;
 
   @override
   String get path => pathComponents.join("/");
 
   @override
-  CollectionReference reference() => _queryDelegate.reference();
+  CollectionReference reference() => queryDelegate.reference();
 
   @override
   Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) =>
-      _queryDelegate.snapshots(includeMetadataChanges: includeMetadataChanges);
+      queryDelegate.snapshots(includeMetadataChanges: includeMetadataChanges);
 
   @override
   Query startAfter(List values) {
     _resetQueryDelegate();
-    return _queryDelegate.startAfter(values);
+    return queryDelegate.startAfter(values);
   }
 
   @override
   Query startAfterDocument(DocumentSnapshot documentSnapshot) {
     _resetQueryDelegate();
-    return _queryDelegate.startAfterDocument(documentSnapshot);
+    return queryDelegate.startAfterDocument(documentSnapshot);
   }
 
   @override
   Query startAt(List values) {
     _resetQueryDelegate();
-    return _queryDelegate.startAt(values);
+    return queryDelegate.startAt(values);
   }
 
   @override
   Query startAtDocument(DocumentSnapshot documentSnapshot) {
     _resetQueryDelegate();
-    return _queryDelegate.startAtDocument(documentSnapshot);
+    return queryDelegate.startAtDocument(documentSnapshot);
   }
 
   @override
@@ -147,7 +149,7 @@ class CollectionReferenceWeb implements CollectionReference {
       List whereIn,
       bool isNull}) {
     _resetQueryDelegate();
-    return _queryDelegate.where(field,
+    return queryDelegate.where(field,
         isEqualTo: isEqualTo,
         isLessThan: isLessThan,
         isLessThanOrEqualTo: isLessThanOrEqualTo,
@@ -159,8 +161,6 @@ class CollectionReferenceWeb implements CollectionReference {
         isNull: isNull);
   }
 
-  void _resetQueryDelegate() {
-    _queryDelegate = QueryWeb(_firestorePlatform, pathComponents.join("/"),
-        webFirestore.collection(pathComponents.join("/")));
-  }
+  void _resetQueryDelegate() =>
+      queryDelegate = queryDelegate.resetQueryDelegate();
 }

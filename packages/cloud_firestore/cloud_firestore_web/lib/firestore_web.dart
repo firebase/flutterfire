@@ -6,6 +6,7 @@ import 'package:firebase/firestore.dart' show Firestore, Settings;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase/firestore.dart' as web;
+import 'package:meta/meta.dart';
 
 part 'collection_reference_web.dart';
 
