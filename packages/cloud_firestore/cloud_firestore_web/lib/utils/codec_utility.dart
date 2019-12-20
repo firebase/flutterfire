@@ -2,12 +2,18 @@ part of cloud_firestore_web;
 
 class _CodecUtility {
   static Map<String, dynamic> encodeMapData(Map<String, dynamic> data) {
+    if (data == null) {
+      return null;
+    }
     Map<String, dynamic> output = Map.from(data);
     output.updateAll((key, value) => valueEncode(value));
     return output;
   }
 
   static List<dynamic> encodeArrayData(List<dynamic> data) {
+    if (data == null) {
+      return null;
+    }
     List<dynamic> output = List.from(data);
     output.map(valueEncode);
     return output;
