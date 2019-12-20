@@ -49,7 +49,7 @@ class Transaction extends TransactionPlatform {
       'app': firestore.appName(),
       'transactionId': _transactionId,
       'path': documentReference.path,
-      'data': data,
+      'data': FieldValue.serverDelegates(data),
     });
   }
 
@@ -61,7 +61,7 @@ class Transaction extends TransactionPlatform {
       'app': firestore.appName(),
       'transactionId': _transactionId,
       'path': documentReference.path,
-      'data': data,
+      'data': FieldValue.serverDelegates(data),
     });
   }
 }
