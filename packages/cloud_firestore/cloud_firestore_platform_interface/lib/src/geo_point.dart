@@ -4,6 +4,7 @@
 
 part of cloud_firestore_platform_interface;
 
+/// Represents a geographical point by its longitude and latitude
 class GeoPoint {
   const GeoPoint(this.latitude, this.longitude);
 
