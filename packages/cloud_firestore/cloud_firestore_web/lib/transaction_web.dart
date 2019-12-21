@@ -8,6 +8,9 @@ class TransactionWeb implements Transaction {
   TransactionWeb._(this._webTransaction, this.firestore);
 
   @override
+  String get appName => firestore.appName();
+
+  @override
   Future<void> delete(DocumentReference documentReference) async {
     assert(documentReference is DocumentReferenceWeb);
     await _webTransaction

@@ -5,9 +5,10 @@
 part of cloud_firestore_platform_interface;
 
 class Transaction extends TransactionPlatform {
+  final String appName;
   @visibleForTesting
-  Transaction(int transactionId, FirestorePlatform firestore)
-      : super(transactionId, firestore);
+  Transaction(int transactionId, this.appName)
+      : super(transactionId, appName == FirebaseApp.defaultAppName ? FirestorePlatform.instance : FirestorePlatform.withApp(app: FirebaseApp(name: appName)));
 
   Future<void> finish() => Future.wait<void>(_pendingResults);
 

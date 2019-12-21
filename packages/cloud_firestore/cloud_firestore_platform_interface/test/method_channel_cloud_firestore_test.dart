@@ -47,7 +47,7 @@ void main() {
       firestore = MethodChannelFirestore(app: app);
       collectionReference = firestore.collection('foo');
       collectionGroupQuery = firestore.collectionGroup('bar');
-      transaction = Transaction(0, firestore);
+      transaction = Transaction(0, firestore.appName());
       MethodChannelFirestore.channel
           .setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);

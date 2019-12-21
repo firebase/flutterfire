@@ -19,7 +19,7 @@ void main() {
     final mockDocumentReference = MockDocumentReference();
     when(mockDocumentReference.path).thenReturn("$kCollectionId/$kDocumentId");
     setUp(() {
-      transaction = Transaction(_kTransactionId, FirestorePlatform.instance);
+      transaction = Transaction(_kTransactionId, FirestorePlatform.instance.appName());
       reset(mockFieldValue);
       when(mockFieldValue.type).thenReturn(FieldValueType.incrementDouble);
       when(mockFieldValue.value).thenReturn(2.0);
