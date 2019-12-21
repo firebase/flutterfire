@@ -25,26 +25,31 @@ void _check(bool expr, String name, int value) {
 ///
 /// For more information, see [the reference timestamp definition](https://github.com/google/protobuf/blob/master/src/google/protobuf/timestamp.proto)
 class Timestamp implements Comparable<Timestamp> {
+  /// Creates a [Timestamp]
   Timestamp(this._seconds, this._nanoseconds) {
     _validateRange(_seconds, _nanoseconds);
   }
 
+  /// Create a [Timestamp] fromMillisecondsSinceEpoch
   factory Timestamp.fromMillisecondsSinceEpoch(int milliseconds) {
     final int seconds = (milliseconds / _kThousand).floor();
     final int nanoseconds = (milliseconds - seconds * _kThousand) * _kMillion;
     return Timestamp(seconds, nanoseconds);
   }
 
+  /// Create a [Timestamp] fromMicrosecondsSinceEpoch
   factory Timestamp.fromMicrosecondsSinceEpoch(int microseconds) {
     final int seconds = (microseconds / _kMillion).floor();
     final int nanoseconds = (microseconds - seconds * _kMillion) * _kThousand;
     return Timestamp(seconds, nanoseconds);
   }
 
+  /// Create a [Timestamp] from [DateTime] instance
   factory Timestamp.fromDate(DateTime date) {
     return Timestamp.fromMicrosecondsSinceEpoch(date.microsecondsSinceEpoch);
   }
 
+  /// Create a [Timestamp] from [DateTime].now()
   factory Timestamp.now() {
     return Timestamp.fromMicrosecondsSinceEpoch(
         DateTime.now().microsecondsSinceEpoch);
@@ -56,16 +61,21 @@ class Timestamp implements Comparable<Timestamp> {
   static const int _kStartOfTime = -62135596800;
   static const int _kEndOfTime = 253402300800;
 
+  // ignore: public_member_api_docs
   int get seconds => _seconds;
 
+  // ignore: public_member_api_docs
   int get nanoseconds => _nanoseconds;
 
+  // ignore: public_member_api_docs
   int get millisecondsSinceEpoch =>
       (seconds * _kThousand + nanoseconds / _kMillion).floor();
 
+  // ignore: public_member_api_docs
   int get microsecondsSinceEpoch =>
       (seconds * _kMillion + nanoseconds / _kThousand).floor();
 
+  /// Converts [Timestamp] to [DateTime]
   DateTime toDate() {
     return DateTime.fromMicrosecondsSinceEpoch(microsecondsSinceEpoch);
   }

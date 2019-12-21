@@ -9,6 +9,7 @@ part of cloud_firestore_platform_interface;
 /// inherited from [Query]).
 class MethodChannelCollectionReference extends MethodChannelQuery
     implements CollectionReference {
+  /// Create a [MethodChannelCollectionReference] from [pathComponents]
   MethodChannelCollectionReference(
       FirestorePlatform firestore, List<String> pathComponents)
       : super(firestore: firestore, pathComponents: pathComponents);

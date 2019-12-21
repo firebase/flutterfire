@@ -9,6 +9,7 @@ part of cloud_firestore_platform_interface;
 /// It contains the document affected and the type of change that occurred
 /// (added, modified, or removed).
 class MethodChannelDocumentChange extends DocumentChange {
+  /// Create instance of [MethodChannelDocumentChange] using [data]
   MethodChannelDocumentChange(
       Map<dynamic, dynamic> data, FirestorePlatform firestore)
       : super(DocumentChangeType.values.firstWhere((DocumentChangeType type) {
@@ -19,8 +20,8 @@ class MethodChannelDocumentChange extends DocumentChange {
             DocumentSnapshot(
               data['path'],
               _asStringKeyedMap(data['document']),
-              SnapshotMetadata(data["metadata"]["hasPendingWrites"],
-                  data["metadata"]["isFromCache"]),
+              SnapshotMetadata(data['etadata']['hasPendingWrites'],
+                  data['metadata']['isFromCache']),
               firestore,
             ));
 }

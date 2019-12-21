@@ -70,9 +70,7 @@ abstract class DocumentReference {
   /// Returns the reference of a collection contained inside of this
   /// document.
   CollectionReference collection(String collectionPath) {
-    return firestore.collection(
-      <String>[path, collectionPath].join('/'),
-    );
+    return firestore.collection('$path/$collectionPath');
   }
 
   /// Notifies of documents at this location

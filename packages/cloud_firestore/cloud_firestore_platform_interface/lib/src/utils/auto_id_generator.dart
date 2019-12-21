@@ -21,6 +21,7 @@ class AutoIdGenerator {
 
   static final Random _random = Random();
 
+  /// Automatically Generates a random new Id
   static String autoId() {
     final StringBuffer stringBuffer = StringBuffer();
     final int maxRandom = _AUTO_ID_ALPHABET.length;

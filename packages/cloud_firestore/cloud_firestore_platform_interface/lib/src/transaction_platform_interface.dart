@@ -4,13 +4,20 @@
 
 part of cloud_firestore_platform_interface;
 
+/// The TransactionHandler may be executed multiple times, it should be able
+/// to handle multiple executions.
 typedef Future<dynamic> TransactionHandler(Transaction transaction);
 
+/// a [TransactionPlatform] is a set of read and write operations on one or more documents.
 abstract class TransactionPlatform {
+  // disabling lint as it's only visible for testing
+  // ignore: public_member_api_docs
   @visibleForTesting
   TransactionPlatform(this._transactionId, this.firestore);
 
   int _transactionId;
+
+  /// [FirestorePlatform] instance used for this [TransactionPlatform]
   FirestorePlatform firestore;
   List<Future<dynamic>> _pendingResults = <Future<dynamic>>[];
 

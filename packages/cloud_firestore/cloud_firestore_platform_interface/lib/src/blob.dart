@@ -2,6 +2,7 @@ part of cloud_firestore_platform_interface;
 
 /// Represents binary data stored in [Uint8List]
 class Blob {
+  /// Create a [Blob]
   const Blob(this.bytes);
 
   /// Blob Data bytes

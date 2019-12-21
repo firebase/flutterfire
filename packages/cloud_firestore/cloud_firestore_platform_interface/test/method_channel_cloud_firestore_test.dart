@@ -56,6 +56,7 @@ void main() {
             final int handle = mockHandleId++;
             // Wait before sending a message back.
             // Otherwise the first request didn't have the time to finish.
+            // ignore: unawaited_futures
             Future<void>.delayed(Duration.zero).then<void>((_) {
               // TODO(hterkelsen): Remove this when defaultBinaryMessages is in stable.
               // https://github.com/flutter/flutter/issues/33446
@@ -89,6 +90,7 @@ void main() {
             final int handle = mockHandleId++;
             // Wait before sending a message back.
             // Otherwise the first request didn't have the time to finish.
+            // ignore: unawaited_futures
             Future<void>.delayed(Duration.zero).then<void>((_) {
               // TODO(hterkelsen): Remove this when defaultBinaryMessages is in stable.
               // https://github.com/flutter/flutter/issues/33446
@@ -370,7 +372,7 @@ void main() {
                 .where('createdAt', isLessThan: 100)
                 .snapshots()
                 .listen((QuerySnapshot querySnapshot) {});
-        subscription.cancel();
+        subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
           log,
@@ -403,7 +405,7 @@ void main() {
                 .where('country', whereIn: <String>['USA', 'Japan'])
                 .snapshots()
                 .listen((QuerySnapshot querySnapshot) {});
-        subscription.cancel();
+        subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
           log,
@@ -441,7 +443,7 @@ void main() {
                     arrayContainsAny: <String>['west-coast', 'east-coast'])
                 .snapshots()
                 .listen((QuerySnapshot querySnapshot) {});
-        subscription.cancel();
+        subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
           log,
@@ -478,7 +480,7 @@ void main() {
                 .where('profile', isNull: true)
                 .snapshots()
                 .listen((QuerySnapshot querySnapshot) {});
-        subscription.cancel();
+        subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
           log,
@@ -511,7 +513,7 @@ void main() {
                 .orderBy('createdAt')
                 .snapshots()
                 .listen((QuerySnapshot querySnapshot) {});
-        subscription.cancel();
+        subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
           log,
@@ -1387,16 +1389,18 @@ void _checkEncodeDecode<T>(MessageCodec<T> codec, T message) {
 }
 
 bool _deepEquals(dynamic valueA, dynamic valueB) {
-  if (valueA is TypedData)
+  if (valueA is TypedData) {
     return valueB is TypedData && _deepEqualsTypedData(valueA, valueB);
+  }
   if (valueA is List) return valueB is List && _deepEqualsList(valueA, valueB);
   if (valueA is Map) return valueB is Map && _deepEqualsMap(valueA, valueB);
   if (valueA is double && valueA.isNaN) return valueB is double && valueB.isNaN;
   if (valueA is FieldValue) {
     return valueB is FieldValue && _deepEqualsFieldValue(valueA, valueB);
   }
-  if (valueA is FieldPath)
+  if (valueA is FieldPath) {
     return valueB is FieldPath && valueA.type == valueB.type;
+  }
   return valueA == valueB;
 }
 
@@ -1406,14 +1410,18 @@ bool _deepEqualsTypedData(TypedData valueA, TypedData valueB) {
         _deepEqualsList(
             valueA.buffer.asUint8List(), valueB.buffer.asUint8List());
   }
-  if (valueA is Uint8List)
+  if (valueA is Uint8List) {
     return valueB is Uint8List && _deepEqualsList(valueA, valueB);
-  if (valueA is Int32List)
+  }
+  if (valueA is Int32List) {
     return valueB is Int32List && _deepEqualsList(valueA, valueB);
-  if (valueA is Int64List)
+  }
+  if (valueA is Int64List) {
     return valueB is Int64List && _deepEqualsList(valueA, valueB);
-  if (valueA is Float64List)
+  }
+  if (valueA is Float64List) {
     return valueB is Float64List && _deepEqualsList(valueA, valueB);
+  }
   throw 'Unexpected typed data: $valueA';
 }
 
@@ -1429,8 +1437,9 @@ bool _deepEqualsMap(
     Map<dynamic, dynamic> valueA, Map<dynamic, dynamic> valueB) {
   if (valueA.length != valueB.length) return false;
   for (final dynamic key in valueA.keys) {
-    if (!valueB.containsKey(key) || !_deepEquals(valueA[key], valueB[key]))
+    if (!valueB.containsKey(key) || !_deepEquals(valueA[key], valueB[key])) {
       return false;
+    }
   }
   return true;
 }

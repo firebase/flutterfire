@@ -7,7 +7,7 @@ class MockFieldValue extends Mock implements FieldValueInterface {}
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   group("$FieldValue()", () {
-    test("ServeDelegates", () {
+    test("serverDelegates", () {
       expect(FieldValue.serverDelegates(null), isNull);
 
       final mockFieldValue = MockFieldValue();

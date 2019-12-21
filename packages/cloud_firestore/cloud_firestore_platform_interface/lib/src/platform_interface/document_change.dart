@@ -23,6 +23,7 @@ enum DocumentChangeType {
 /// It contains the document affected and the type of change that occurred
 /// (added, modified, or removed).
 class DocumentChange {
+  /// Create a [DocumentChange]
   DocumentChange(this.type, this.oldIndex, this.newIndex, this.document);
 
   /// The type of change that occurred (added, modified, or removed).

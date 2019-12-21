@@ -1,5 +1,7 @@
 part of cloud_firestore_platform_interface;
 
+/// An implementation of [FieldValueFactory] that is suitable to be used
+/// on mobile where communication relies on [MethodChannel]
 class MethodChannelFieldValueFactory implements FieldValueFactory {
   @override
   FieldValue arrayRemove(List elements) =>

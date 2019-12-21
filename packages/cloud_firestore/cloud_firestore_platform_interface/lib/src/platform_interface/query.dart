@@ -6,6 +6,7 @@ part of cloud_firestore_platform_interface;
 
 /// Represents a query over the data at a particular location.
 abstract class Query {
+  /// Create a [Query] instance
   Query(
       {@required this.firestore,
       @required List<String> pathComponents,
