@@ -123,6 +123,12 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         credential.smsCode,
       );
     }
+    if (credential is OAuthCredential) {
+      return firebase.OAuthProvider(credential.providerId).credential(
+        credential.idToken,
+        credential.accessToken,
+      );
+    }
     return null;
   }
 
