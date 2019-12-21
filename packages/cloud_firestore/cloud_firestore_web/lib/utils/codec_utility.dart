@@ -35,12 +35,18 @@ class _CodecUtility {
   }
 
   static Map<String, dynamic> decodeMapData(Map<String, dynamic> data) {
+    if (data == null) {
+      return null;
+    }
     Map<String, dynamic> output = Map.from(data);
     output.updateAll((key, value) => valueDecode(value));
     return output;
   }
 
   static List<dynamic> decodeArrayData(List<dynamic> data) {
+    if (data == null) {
+      return null;
+    }
     return List.from(data).map(valueDecode).toList();
   }
 
