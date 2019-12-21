@@ -1,5 +1,6 @@
 part of cloud_firestore_web;
 
+/// Web implementation for firestore [DocumentReference]
 class DocumentReferenceWeb extends DocumentReference {
   final web.Firestore firestoreWeb;
   final web.DocumentReference delegate;
@@ -12,11 +13,11 @@ class DocumentReferenceWeb extends DocumentReference {
   @override
   Future<void> setData(Map<String, dynamic> data, {bool merge = false}) =>
       delegate.set(
-          _CodecUtility.encodeMapData(data), web.SetOptions(merge: merge));
+          CodecUtility.encodeMapData(data), web.SetOptions(merge: merge));
 
   @override
   Future<void> updateData(Map<String, dynamic> data) =>
-      delegate.update(data: _CodecUtility.encodeMapData(data));
+      delegate.update(data: CodecUtility.encodeMapData(data));
 
   @override
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
@@ -30,10 +31,11 @@ class DocumentReferenceWeb extends DocumentReference {
   Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) =>
       delegate.onSnapshot.map(_fromWeb);
 
+  /// Builds [DocumentSnapshot] instance form web snapshot instance
   DocumentSnapshot _fromWeb(web.DocumentSnapshot webSnapshot) =>
       DocumentSnapshot(
           webSnapshot.ref.path,
-          _CodecUtility.decodeMapData(webSnapshot.data()),
+          CodecUtility.decodeMapData(webSnapshot.data()),
           SnapshotMetadata(
             webSnapshot.metadata.hasPendingWrites,
             webSnapshot.metadata.fromCache,

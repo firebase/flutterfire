@@ -4,12 +4,23 @@
 
 part of cloud_firestore_platform_interface;
 
+/// An implementation of [TransactionPlatform] which uses [MethodChannel] to
+/// communication with native plugin
 class Transaction extends TransactionPlatform {
+  /// [FirebaseApp] name used for this [Transaction]
   final String appName;
+
+  // disabling lint as it's only visible for testing
+  // ignore: public_member_api_docs
   @visibleForTesting
   Transaction(int transactionId, this.appName)
-      : super(transactionId, appName == FirebaseApp.defaultAppName ? FirestorePlatform.instance : FirestorePlatform.withApp(app: FirebaseApp(name: appName)));
+      : super(
+            transactionId,
+            appName == FirebaseApp.defaultAppName
+                ? FirestorePlatform.instance
+                : FirestorePlatform.withApp(app: FirebaseApp(name: appName)));
 
+  /// executes all the pending operations on the transaction
   Future<void> finish() => Future.wait<void>(_pendingResults);
 
   @override

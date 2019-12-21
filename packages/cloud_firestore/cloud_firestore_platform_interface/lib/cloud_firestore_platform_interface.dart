@@ -69,7 +69,7 @@ abstract class FirestorePlatform extends PlatformInterface {
   }
 
   FirestorePlatform withApp(FirebaseApp app) {
-    throw UnimplementedError("_withApp() not implemented");
+    throw UnimplementedError("withApp() not implemented");
   }
 
   String appName() {

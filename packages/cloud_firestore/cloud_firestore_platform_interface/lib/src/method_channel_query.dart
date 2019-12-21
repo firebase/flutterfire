@@ -6,6 +6,7 @@ part of cloud_firestore_platform_interface;
 
 /// Represents a query over the data at a particular location.
 class MethodChannelQuery extends Query {
+  /// Create a [MethodChannelQuery] from [pathComponents]
   MethodChannelQuery(
       {@required FirestorePlatform firestore,
       @required List<String> pathComponents,
@@ -120,15 +121,19 @@ class MethodChannelQuery extends Query {
 
     if (isEqualTo != null) addCondition(field, '==', isEqualTo);
     if (isLessThan != null) addCondition(field, '<', isLessThan);
-    if (isLessThanOrEqualTo != null)
+    if (isLessThanOrEqualTo != null) {
       addCondition(field, '<=', isLessThanOrEqualTo);
+    }
     if (isGreaterThan != null) addCondition(field, '>', isGreaterThan);
-    if (isGreaterThanOrEqualTo != null)
+    if (isGreaterThanOrEqualTo != null) {
       addCondition(field, '>=', isGreaterThanOrEqualTo);
-    if (arrayContains != null)
+    }
+    if (arrayContains != null) {
       addCondition(field, 'array-contains', arrayContains);
-    if (arrayContainsAny != null)
+    }
+    if (arrayContainsAny != null) {
       addCondition(field, 'array-contains-any', arrayContainsAny);
+    }
     if (whereIn != null) addCondition(field, 'in', whereIn);
     if (isNull != null) {
       assert(

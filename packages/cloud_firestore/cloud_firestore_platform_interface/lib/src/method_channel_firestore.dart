@@ -8,6 +8,7 @@ part of cloud_firestore_platform_interface;
 ///
 /// You can get an instance by calling [Firestore.instance].
 class MethodChannelFirestore extends FirestorePlatform {
+  /// Create an instance of [MethodChannelFirestore] with optional [FirebaseApp]
   MethodChannelFirestore({FirebaseApp app})
       : super(app: app ?? FirebaseApp.instance) {
     if (_initialized) return;
@@ -27,7 +28,8 @@ class MethodChannelFirestore extends FirestorePlatform {
         _documentObservers[call.arguments['handle']].add(snapshot);
       } else if (call.method == 'DoTransaction') {
         final int transactionId = call.arguments['transactionId'];
-        final Transaction transaction = Transaction(transactionId, call.arguments["app"]);
+        final Transaction transaction =
+            Transaction(transactionId, call.arguments["app"]);
         final dynamic result =
             await _transactionHandlers[transactionId](transaction);
         await transaction.finish();
@@ -43,6 +45,7 @@ class MethodChannelFirestore extends FirestorePlatform {
 
   static bool _initialized = false;
 
+  /// [MethodChannel] used to communicate with the native plugin
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/cloud_firestore',
     StandardMethodCodec(FirestoreMessageCodec()),

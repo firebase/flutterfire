@@ -8,6 +8,7 @@ part of cloud_firestore_platform_interface;
 /// document references, and querying for documents (using the methods
 /// inherited from [Query]).
 abstract class CollectionReference extends Query {
+  /// Create a [CollectionReference] using [pathComponents]
   CollectionReference(FirestorePlatform firestore, List<String> pathComponents)
       : super(firestore: firestore, pathComponents: pathComponents);
 

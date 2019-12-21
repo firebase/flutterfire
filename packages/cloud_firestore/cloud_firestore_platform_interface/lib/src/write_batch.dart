@@ -11,6 +11,7 @@ part of cloud_firestore_platform_interface;
 /// Once committed, no further operations can be performed on the [WriteBatch],
 /// nor can it be committed again.
 class WriteBatch extends WriteBatchPlatform {
+  /// Create an instance of [WriteBatch]
   WriteBatch(this._firestore)
       : _handle = MethodChannelFirestore.channel.invokeMethod<dynamic>(
             'WriteBatch#create',

@@ -1,6 +1,7 @@
 part of cloud_firestore_web;
 
-class _CodecUtility {
+@visibleForTesting
+class CodecUtility {
   static Map<String, dynamic> encodeMapData(Map<String, dynamic> data) {
     if (data == null) {
       return null;

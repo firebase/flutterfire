@@ -6,6 +6,7 @@ part of cloud_firestore_platform_interface;
 
 /// Metadata about a snapshot, describing the state of the snapshot.
 class SnapshotMetadata {
+  /// Create an instance of [SnapshotMetadata]
   SnapshotMetadata(this.hasPendingWrites, this.isFromCache);
 
   /// Whether the snapshot contains the result of local writes that have not yet
