@@ -63,7 +63,7 @@ void main() {
     });
 
     test("snapshots", () {
-      when(mockWebDocumentReferences.onSnapshot).thenReturn(Stream.empty());
+      when(mockWebDocumentReferences.onSnapshot).thenAnswer((_) => Stream.empty());
       documentRefernce.snapshots();
       verify(mockWebDocumentReferences.onSnapshot);
     });
