@@ -16,14 +16,15 @@ class Firestore {
     return _delegatePackingProperty;
   }
 
-  Firestore({FirebaseApp app, platform.FirestorePlatform delegate})
-      : _delegatePackingProperty = delegate;
+  Firestore({FirebaseApp app})
+      : _delegatePackingProperty = app != null
+            ? platform.FirestorePlatform.withApp(app: app)
+            : platform.FirestorePlatform.instance;
 
   static MethodChannel get channel => platform.MethodChannelFirestore.channel;
 
   /// Gets the instance of Firestore for the default Firebase app.
-  static Firestore get instance =>
-      Firestore(delegate: platform.FirestorePlatform.instance);
+  static Firestore get instance => Firestore();
 
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///

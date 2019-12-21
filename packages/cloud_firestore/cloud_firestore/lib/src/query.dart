@@ -11,7 +11,8 @@ class Query {
   Query._(this._delegate);
 
   /// The Firestore instance associated with this query
-  Firestore get firestore => Firestore.instance;
+  Firestore get firestore =>
+      Firestore(app: FirebaseApp(name: this._delegate.firestore.app.name));
 
   List<String> get _pathComponents => _delegate.pathComponents;
 

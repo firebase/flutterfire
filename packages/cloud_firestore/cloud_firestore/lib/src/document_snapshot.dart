@@ -11,7 +11,8 @@ part of cloud_firestore;
 /// syntax to access a specific field.
 class DocumentSnapshot {
   platform.DocumentSnapshot _delegate;
-  Firestore _firestore = Firestore.instance;
+  Firestore get _firestore =>
+      Firestore(app: FirebaseApp(name: this._delegate.firestore.app.name));
   DocumentSnapshot._(this._delegate);
 
   /// The reference that produced this snapshot
