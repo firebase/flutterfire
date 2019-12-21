@@ -27,7 +27,8 @@ class MethodChannelFirestore extends FirestorePlatform {
         _documentObservers[call.arguments['handle']].add(snapshot);
       } else if (call.method == 'DoTransaction') {
         final int transactionId = call.arguments['transactionId'];
-        final Transaction transaction = Transaction(transactionId, call.arguments["app"]);
+        final Transaction transaction =
+            Transaction(transactionId, call.arguments["app"]);
         final dynamic result =
             await _transactionHandlers[transactionId](transaction);
         await transaction.finish();

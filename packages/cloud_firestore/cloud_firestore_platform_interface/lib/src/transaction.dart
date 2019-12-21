@@ -8,7 +8,11 @@ class Transaction extends TransactionPlatform {
   final String appName;
   @visibleForTesting
   Transaction(int transactionId, this.appName)
-      : super(transactionId, appName == FirebaseApp.defaultAppName ? FirestorePlatform.instance : FirestorePlatform.withApp(app: FirebaseApp(name: appName)));
+      : super(
+            transactionId,
+            appName == FirebaseApp.defaultAppName
+                ? FirestorePlatform.instance
+                : FirestorePlatform.withApp(app: FirebaseApp(name: appName)));
 
   Future<void> finish() => Future.wait<void>(_pendingResults);
 
