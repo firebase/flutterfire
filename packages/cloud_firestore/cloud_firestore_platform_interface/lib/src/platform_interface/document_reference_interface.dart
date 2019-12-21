@@ -7,6 +7,7 @@ part of cloud_firestore_platform_interface;
 /// A [DocumentReference] can also be used to create a [CollectionReference]
 /// to a subcollection.
 abstract class DocumentReference {
+  /// Create instance of [DocumentReference]
   DocumentReference(this.firestore, this._pathComponents);
 
   /// The Firestore instance associated with this document reference
