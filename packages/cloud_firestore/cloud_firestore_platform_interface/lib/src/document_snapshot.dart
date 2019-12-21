@@ -10,13 +10,13 @@ part of cloud_firestore_platform_interface;
 /// The data can be extracted with the data property or by using subscript
 /// syntax to access a specific field.
 class DocumentSnapshot {
-  DocumentSnapshot(this._path, this.data, this.metadata, this._firestore);
+  DocumentSnapshot(this._path, this.data, this.metadata, this.firestore);
 
   final String _path;
-  final FirestorePlatform _firestore;
+  final FirestorePlatform firestore;
 
   /// The reference that produced this snapshot
-  DocumentReference get reference => _firestore.document(_path);
+  DocumentReference get reference => firestore.document(_path);
 
   /// Contains all the data of this snapshot
   final Map<String, dynamic> data;
