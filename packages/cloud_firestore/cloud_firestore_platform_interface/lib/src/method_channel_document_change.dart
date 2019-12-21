@@ -20,7 +20,7 @@ class MethodChannelDocumentChange extends DocumentChange {
             DocumentSnapshot(
               data['path'],
               _asStringKeyedMap(data['document']),
-              SnapshotMetadata(data['etadata']['hasPendingWrites'],
+              SnapshotMetadata(data['metadata']['hasPendingWrites'],
                   data['metadata']['isFromCache']),
               firestore,
             ));
