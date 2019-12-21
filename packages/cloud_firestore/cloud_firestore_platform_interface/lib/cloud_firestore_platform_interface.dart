@@ -41,19 +41,26 @@ part 'src/transaction_platform_interface.dart';
 part 'src/write_batch.dart';
 part 'src/write_batch_platform_interface.dart';
 
+/// Defines an interface to work with [FirestorePlatform] on web and mobile
 abstract class FirestorePlatform extends PlatformInterface {
+  /// [FirebaseApp] used for this firestore instance
   final FirebaseApp app;
 
+  /// Create an instance using [app]
   FirestorePlatform({FirebaseApp app})
       : app = app ?? FirebaseApp.instance,
         super(token: _token);
 
   static final Object _token = Object();
 
+  /// Create an instance using [app] using the existing implementation
   factory FirestorePlatform.withApp({FirebaseApp app}) {
     return FirestorePlatform.instance.withApp(app);
   }
 
+  /// return the current default [FirestorePlatform] instance
+  /// It will always default to [MethodChannelFirestore]
+  /// if no web implementation was provided
   static FirestorePlatform get instance {
     if (_instance == null) {
       _instance = MethodChannelFirestore();
@@ -63,15 +70,18 @@ abstract class FirestorePlatform extends PlatformInterface {
 
   static FirestorePlatform _instance;
 
+  /// Sets the [FirestorePlatform.instance]
   static set instance(FirestorePlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
 
+  /// Create a new [FirestorePlatform] with a [FirebaseApp] instance
   FirestorePlatform withApp(FirebaseApp app) {
     throw UnimplementedError("withApp() not implemented");
   }
 
+  /// Firebase app name
   String appName() {
     throw UnimplementedError("appName() not implemented");
   }
@@ -128,10 +138,15 @@ abstract class FirestorePlatform extends PlatformInterface {
   }
 
   @deprecated
+  // Suppressing due to deprecation
+  // ignore: public_member_api_docs
   Future<void> enablePersistence(bool enable) async {
     throw UnimplementedError('enablePersistence() is not implemented');
   }
 
+  /// Setup [FirestorePlatform] with settings.
+  /// if [sslEnabled] has value the [host] must have non-null value as well
+  /// if [cacheSizeBytes] is null then default values are used.
   Future<void> settings(
       {bool persistenceEnabled,
       String host,
