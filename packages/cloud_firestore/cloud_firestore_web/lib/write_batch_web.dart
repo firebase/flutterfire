@@ -1,5 +1,6 @@
 part of cloud_firestore_web;
 
+/// A web specific for [WriteBatch]
 class WriteBatchWeb implements WriteBatch {
   final web.WriteBatch _delegate;
 

@@ -1,5 +1,6 @@
 part of cloud_firestore_web;
 
+/// A web specific for [Transaction]
 class TransactionWeb implements Transaction {
   final web.Transaction _webTransaction;
   @override

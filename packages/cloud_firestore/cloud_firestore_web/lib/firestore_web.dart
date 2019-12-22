@@ -6,6 +6,7 @@ import 'package:firebase/firestore.dart' show Firestore, Settings;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase/firestore.dart' as web;
+import 'package:js/js_util.dart';
 import 'package:meta/meta.dart';
 
 part 'collection_reference_web.dart';
@@ -24,14 +25,20 @@ part 'field_value_web.dart';
 
 part 'write_batch_web.dart';
 
+/// Web implementation for [FirestorePlatform]
+/// delegates calls to firestore web plugin
 class FirestoreWeb extends FirestorePlatform {
+  /// instance of Firestore from the web plugin
   final Firestore webFirestore;
 
+  /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
     FirestorePlatform.instance = FirestoreWeb();
     FieldValueFactory.instance = FieldValueFactoryWeb();
   }
 
+  /// Builds an instance of [FirestoreWeb] with an optional [FirebaseApp] instance
+  /// If [app] is null then the created instance will use the default [FirebaseApp]
   FirestoreWeb({FirebaseApp app})
       : webFirestore = firebase
             .firestore(firebase.app((app ?? FirebaseApp.instance).name)),

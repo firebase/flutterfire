@@ -2,12 +2,16 @@ part of cloud_firestore_web;
 
 /// Web implementation for Firestore [CollectionReference]
 class CollectionReferenceWeb implements CollectionReference {
+  /// instance of Firestore from the web plugin
   final web.Firestore webFirestore;
   final FirestorePlatform _firestorePlatform;
   final List<String> pathComponents;
+  // disabling lint as it's only visible for testing
   @visibleForTesting
-  QueryWeb queryDelegate;
+  QueryWeb queryDelegate; // ignore: public_member_api_docs
 
+  /// Creates an instance of [CollectionReferenceWeb] which represents path
+  /// at [pathComponents] and uses implementation of [webFirestore]
   CollectionReferenceWeb(
       this._firestorePlatform, this.webFirestore, this.pathComponents)
       : queryDelegate = QueryWeb(_firestorePlatform, pathComponents.join("/"),

@@ -257,7 +257,9 @@ class QueryWeb implements Query {
   @override
   Map<String, dynamic> get parameters => Map();
 
+  // disabling lint as it's only visible for testing
   @visibleForTesting
+  // ignore: public_member_api_docs
   QueryWeb resetQueryDelegate() =>
       QueryWeb(firestore, pathComponents.join("/"), _webQuery);
 }

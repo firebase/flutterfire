@@ -1,5 +1,7 @@
 part of cloud_firestore_web;
 
+/// Implementation of [FieldValue] that is compatible with
+/// firestore web plugin
 class FieldValueWeb implements FieldValueInterface, web.FieldValue {
   web.FieldValue _delegate;
 

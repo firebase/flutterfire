@@ -2,9 +2,14 @@ part of cloud_firestore_web;
 
 /// Web implementation for firestore [DocumentReference]
 class DocumentReferenceWeb extends DocumentReference {
+  /// instance of Firestore from the web plugin
   final web.Firestore firestoreWeb;
+
+  /// instance of DocumentReference from the web plugin
   final web.DocumentReference delegate;
 
+  /// Creates an instance of [CollectionReferenceWeb] which represents path
+  /// at [pathComponents] and uses implementation of [firestoreWeb]
   DocumentReferenceWeb(this.firestoreWeb, FirestorePlatform firestore,
       List<String> pathComponents)
       : delegate = firestoreWeb.doc(pathComponents.join("/")),

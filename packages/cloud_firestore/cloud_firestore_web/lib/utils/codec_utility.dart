@@ -1,6 +1,8 @@
 part of cloud_firestore_web;
 
+// disabling lint as it's only visible for testing
 @visibleForTesting
+// ignore: public_member_api_docs
 class CodecUtility {
   static Map<String, dynamic> encodeMapData(Map<String, dynamic> data) {
     if (data == null) {

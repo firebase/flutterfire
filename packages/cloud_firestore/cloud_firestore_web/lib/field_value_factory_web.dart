@@ -1,5 +1,7 @@
 part of cloud_firestore_web;
 
+/// An implementation of [FieldValueFactory] which builds [FieldValue]
+/// instance that is [jsify] friendly
 class FieldValueFactoryWeb implements FieldValueFactory {
   @override
   FieldValueInterface arrayRemove(List elements) {
