@@ -25,8 +25,8 @@ class FieldValueFactoryWeb implements FieldValueFactory {
     final delegate = web.FieldValue.increment(value);
     return FieldValueWeb._(
         delegate,
-        value is double
-            ? FieldValueType.incrementDouble
+        value is int
+            ? FieldValueType.incrementInteger
             : FieldValueType.incrementDouble,
         value);
   }
