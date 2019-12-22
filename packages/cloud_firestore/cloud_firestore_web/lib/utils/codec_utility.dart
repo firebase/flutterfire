@@ -4,6 +4,9 @@ part of cloud_firestore_web;
 @visibleForTesting
 // ignore: public_member_api_docs
 class CodecUtility {
+  // disabling lint as it's only visible for testing
+  @visibleForTesting
+// ignore: public_member_api_docs
   static Map<String, dynamic> encodeMapData(Map<String, dynamic> data) {
     if (data == null) {
       return null;
@@ -13,6 +16,9 @@ class CodecUtility {
     return output;
   }
 
+  // disabling lint as it's only visible for testing
+  @visibleForTesting
+// ignore: public_member_api_docs
   static List<dynamic> encodeArrayData(List<dynamic> data) {
     if (data == null) {
       return null;
@@ -20,6 +26,9 @@ class CodecUtility {
     return List.from(data).map(valueEncode).toList();
   }
 
+  // disabling lint as it's only visible for testing
+  @visibleForTesting
+// ignore: public_member_api_docs
   static dynamic valueEncode(dynamic value) {
     if (value is FieldValueInterface && value.instance is FieldValueWeb) {
       return (value.instance as FieldValueWeb)._delegate;
@@ -37,6 +46,9 @@ class CodecUtility {
     return value;
   }
 
+  // disabling lint as it's only visible for testing
+  @visibleForTesting
+// ignore: public_member_api_docs
   static Map<String, dynamic> decodeMapData(Map<String, dynamic> data) {
     if (data == null) {
       return null;
@@ -46,6 +58,9 @@ class CodecUtility {
     return output;
   }
 
+  // disabling lint as it's only visible for testing
+  @visibleForTesting
+// ignore: public_member_api_docs
   static List<dynamic> decodeArrayData(List<dynamic> data) {
     if (data == null) {
       return null;
@@ -53,6 +68,9 @@ class CodecUtility {
     return List.from(data).map(valueDecode).toList();
   }
 
+  // disabling lint as it's only visible for testing
+  @visibleForTesting
+// ignore: public_member_api_docs
   static dynamic valueDecode(dynamic value) {
     if (value is web.GeoPoint) {
       return GeoPoint(value.latitude, value.longitude);

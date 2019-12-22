@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'test_common.dart';
 
 void main() {
-  group("TransactionWeb", () {
+  group("$TransactionWeb()", () {
     final mockWebTransaction = MockWebTransaction();
     final mockWebDocumentReference = MockWebDocumentReference();
     final mockDocumentReference = MockDocumentReference();

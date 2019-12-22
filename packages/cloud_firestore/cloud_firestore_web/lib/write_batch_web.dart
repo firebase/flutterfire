@@ -4,7 +4,9 @@ part of cloud_firestore_web;
 class WriteBatchWeb implements WriteBatch {
   final web.WriteBatch _delegate;
 
-  WriteBatchWeb._(this._delegate);
+  // ignore: public_member_api_docs
+  @visibleForTesting
+  WriteBatchWeb(this._delegate);
 
   @override
   Future<void> commit() async {
@@ -30,7 +32,7 @@ class WriteBatchWeb implements WriteBatch {
   @override
   void updateData(DocumentReference document, Map<String, dynamic> data) {
     assert(document is DocumentReferenceWeb);
-    _delegate.set((document as DocumentReferenceWeb).delegate,
-        CodecUtility.encodeMapData(data));
+    _delegate.update((document as DocumentReferenceWeb).delegate,
+        data: CodecUtility.encodeMapData(data));
   }
 }
