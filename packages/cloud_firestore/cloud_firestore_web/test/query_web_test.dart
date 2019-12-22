@@ -1,3 +1,4 @@
+@TestOn("chrome")
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/firestore_web.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -72,6 +73,100 @@ void main() {
 
       when(mockDocumentChange.type).thenReturn("removed");
       expect((await query.getDocuments()).documentChanges.first.type, equals(DocumentChangeType.removed));
+    });
+    
+    test("endAt", (){
+      query.endAt([]);
+      verify(mockWebQuery.endAt(fieldValues: anyNamed("fieldValues")));
+    });
+
+    test("endAtDocument", (){
+      final mockDocumentSnapshot = MockDocumentSnapshot();
+      when(mockDocumentSnapshot.data).thenReturn({
+        'test':1,
+      });
+      query.orderBy("test");
+      query.endAtDocument(mockDocumentSnapshot);
+      verify(mockWebQuery.endAt(fieldValues: argThat(equals([1]),named: "fieldValues")));
+    });
+
+    test("endBefore", (){
+      query.endBefore([]);
+      verify(mockWebQuery.endBefore(fieldValues: anyNamed("fieldValues")));
+    });
+
+    test("endBeforeDocument", (){
+      final mockDocumentSnapshot = MockDocumentSnapshot();
+      when(mockDocumentSnapshot.data).thenReturn({
+        'test':1,
+      });
+      query.orderBy("test");
+      query.endBeforeDocument(mockDocumentSnapshot);
+      verify(mockWebQuery.endBefore(fieldValues: argThat(equals([1]),named: "fieldValues")));
+    });
+
+    test("startAfter", (){
+      query.startAfter([]);
+      verify(mockWebQuery.startAfter(fieldValues: anyNamed("fieldValues")));
+    });
+
+    test("startAfterDocument", (){
+      final mockDocumentSnapshot = MockDocumentSnapshot();
+      when(mockDocumentSnapshot.data).thenReturn({
+        'test':1,
+      });
+      query.orderBy("test");
+      query.startAfterDocument(mockDocumentSnapshot);
+      verify(mockWebQuery.startAfter(fieldValues: argThat(equals([1]),named: "fieldValues")));
+    });
+
+    test("startAt", (){
+      query.startAt([]);
+      verify(mockWebQuery.startAt(fieldValues: anyNamed("fieldValues")));
+    });
+
+    test("startAtDocument", (){
+      final mockDocumentSnapshot = MockDocumentSnapshot();
+      when(mockDocumentSnapshot.data).thenReturn({
+        'test':1,
+      });
+      query.orderBy("test");
+      query.startAtDocument(mockDocumentSnapshot);
+      verify(mockWebQuery.startAt(fieldValues: argThat(equals([1]),named: "fieldValues")));
+    });
+
+    test("limit", (){
+      query.limit(1);
+      verify(mockWebQuery.limit(1));
+    });
+
+    test("where",(){
+      query.where("test",isNull: true);
+      verify(mockWebQuery.where("test", "==", null));
+
+      query.where("test", whereIn: [1,2,3]);
+      verify(mockWebQuery.where("test", "in" , [1,2,3]));
+
+      query.where("test", arrayContainsAny: [1,2,3]);
+      verify(mockWebQuery.where("test", "array-contains-any" , [1,2,3]));
+
+      query.where("test", arrayContains: [1,2,3]);
+      verify(mockWebQuery.where("test", "array-contains" , [1,2,3]));
+
+      query.where("test",isGreaterThanOrEqualTo: 1);
+      verify(mockWebQuery.where("test", ">=" , 1));
+
+      query.where("test",isGreaterThan: 1);
+      verify(mockWebQuery.where("test", ">" , 1));
+
+      query.where("test",isLessThan: 1);
+      verify(mockWebQuery.where("test", "<" , 1));
+
+      query.where("test",isLessThanOrEqualTo: 1);
+      verify(mockWebQuery.where("test", "<=" , 1));
+
+      query.where("test",isEqualTo: 1);
+      verify(mockWebQuery.where("test", "==" , 1));
     });
   });
 }
