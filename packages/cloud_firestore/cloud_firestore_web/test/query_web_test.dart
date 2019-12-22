@@ -8,25 +8,29 @@ import 'document_reference_web_test.dart';
 import 'test_common.dart';
 
 class MockWebQuery extends Mock implements web.Query {}
+
 class MockFirestoreWeb extends Mock implements FirestoreWeb {}
+
 class MockWebQuerySnapshot extends Mock implements web.QuerySnapshot {}
+
 class MockWebSnapshotMetadata extends Mock implements web.SnapshotMetadata {}
+
 class MockWebDocumentChange extends Mock implements web.DocumentChange {}
 
 const _path = "test/query";
 
 void main() {
-  group("$QueryWeb()", (){
+  group("$QueryWeb()", () {
     final firestore = MockFirestoreWeb();
     final MockWebQuery mockWebQuery = MockWebQuery();
     QueryWeb query;
 
-    setUp((){
+    setUp(() {
       reset(mockWebQuery);
       query = QueryWeb(firestore, _path, mockWebQuery);
     });
 
-    test("snapshots", (){
+    test("snapshots", () {
       when(mockWebQuery.onSnapshot).thenAnswer((_) => Stream.empty());
       when(mockWebQuery.onSnapshotMetadata).thenAnswer((_) => Stream.empty());
       query.snapshots();
@@ -38,7 +42,6 @@ void main() {
     });
 
     test("getDocuments", () async {
-
       final mockMetaData = MockWebSnapshotMetadata();
       when(mockMetaData.fromCache).thenReturn(true);
       when(mockMetaData.hasPendingWrites).thenReturn(false);
@@ -48,7 +51,7 @@ void main() {
 
       final mockDocumentSnapshot = MockWebDocumentSnapshot();
       when(mockDocumentSnapshot.ref).thenReturn(mockDocumentReference);
-      when(mockDocumentSnapshot.data()).thenReturn(Map<String,dynamic>());
+      when(mockDocumentSnapshot.data()).thenReturn(Map<String, dynamic>());
       when(mockDocumentSnapshot.metadata).thenReturn(mockMetaData);
 
       final mockDocumentChange = MockWebDocumentChange();
@@ -62,111 +65,118 @@ void main() {
       when(mockQuerySnapshot.docChanges()).thenReturn([mockDocumentChange]);
       when(mockQuerySnapshot.metadata).thenReturn(mockMetaData);
 
-      when(mockWebQuery.get()).thenAnswer((_) => Future.value(mockQuerySnapshot));
+      when(mockWebQuery.get())
+          .thenAnswer((_) => Future.value(mockQuerySnapshot));
       final actual = await query.getDocuments();
       verify(mockWebQuery.get());
-      expect(actual.documentChanges.first.type, equals(DocumentChangeType.added));
-
+      expect(
+          actual.documentChanges.first.type, equals(DocumentChangeType.added));
 
       when(mockDocumentChange.type).thenReturn("modified");
-      expect((await query.getDocuments()).documentChanges.first.type, equals(DocumentChangeType.modified));
+      expect((await query.getDocuments()).documentChanges.first.type,
+          equals(DocumentChangeType.modified));
 
       when(mockDocumentChange.type).thenReturn("removed");
-      expect((await query.getDocuments()).documentChanges.first.type, equals(DocumentChangeType.removed));
+      expect((await query.getDocuments()).documentChanges.first.type,
+          equals(DocumentChangeType.removed));
     });
-    
-    test("endAt", (){
+
+    test("endAt", () {
       query.endAt([]);
       verify(mockWebQuery.endAt(fieldValues: anyNamed("fieldValues")));
     });
 
-    test("endAtDocument", (){
+    test("endAtDocument", () {
       final mockDocumentSnapshot = MockDocumentSnapshot();
       when(mockDocumentSnapshot.data).thenReturn({
-        'test':1,
+        'test': 1,
       });
       query.orderBy("test");
       query.endAtDocument(mockDocumentSnapshot);
-      verify(mockWebQuery.endAt(fieldValues: argThat(equals([1]),named: "fieldValues")));
+      verify(mockWebQuery.endAt(
+          fieldValues: argThat(equals([1]), named: "fieldValues")));
     });
 
-    test("endBefore", (){
+    test("endBefore", () {
       query.endBefore([]);
       verify(mockWebQuery.endBefore(fieldValues: anyNamed("fieldValues")));
     });
 
-    test("endBeforeDocument", (){
+    test("endBeforeDocument", () {
       final mockDocumentSnapshot = MockDocumentSnapshot();
       when(mockDocumentSnapshot.data).thenReturn({
-        'test':1,
+        'test': 1,
       });
       query.orderBy("test");
       query.endBeforeDocument(mockDocumentSnapshot);
-      verify(mockWebQuery.endBefore(fieldValues: argThat(equals([1]),named: "fieldValues")));
+      verify(mockWebQuery.endBefore(
+          fieldValues: argThat(equals([1]), named: "fieldValues")));
     });
 
-    test("startAfter", (){
+    test("startAfter", () {
       query.startAfter([]);
       verify(mockWebQuery.startAfter(fieldValues: anyNamed("fieldValues")));
     });
 
-    test("startAfterDocument", (){
+    test("startAfterDocument", () {
       final mockDocumentSnapshot = MockDocumentSnapshot();
       when(mockDocumentSnapshot.data).thenReturn({
-        'test':1,
+        'test': 1,
       });
       query.orderBy("test");
       query.startAfterDocument(mockDocumentSnapshot);
-      verify(mockWebQuery.startAfter(fieldValues: argThat(equals([1]),named: "fieldValues")));
+      verify(mockWebQuery.startAfter(
+          fieldValues: argThat(equals([1]), named: "fieldValues")));
     });
 
-    test("startAt", (){
+    test("startAt", () {
       query.startAt([]);
       verify(mockWebQuery.startAt(fieldValues: anyNamed("fieldValues")));
     });
 
-    test("startAtDocument", (){
+    test("startAtDocument", () {
       final mockDocumentSnapshot = MockDocumentSnapshot();
       when(mockDocumentSnapshot.data).thenReturn({
-        'test':1,
+        'test': 1,
       });
       query.orderBy("test");
       query.startAtDocument(mockDocumentSnapshot);
-      verify(mockWebQuery.startAt(fieldValues: argThat(equals([1]),named: "fieldValues")));
+      verify(mockWebQuery.startAt(
+          fieldValues: argThat(equals([1]), named: "fieldValues")));
     });
 
-    test("limit", (){
+    test("limit", () {
       query.limit(1);
       verify(mockWebQuery.limit(1));
     });
 
-    test("where",(){
-      query.where("test",isNull: true);
+    test("where", () {
+      query.where("test", isNull: true);
       verify(mockWebQuery.where("test", "==", null));
 
-      query.where("test", whereIn: [1,2,3]);
-      verify(mockWebQuery.where("test", "in" , [1,2,3]));
+      query.where("test", whereIn: [1, 2, 3]);
+      verify(mockWebQuery.where("test", "in", [1, 2, 3]));
 
-      query.where("test", arrayContainsAny: [1,2,3]);
-      verify(mockWebQuery.where("test", "array-contains-any" , [1,2,3]));
+      query.where("test", arrayContainsAny: [1, 2, 3]);
+      verify(mockWebQuery.where("test", "array-contains-any", [1, 2, 3]));
 
-      query.where("test", arrayContains: [1,2,3]);
-      verify(mockWebQuery.where("test", "array-contains" , [1,2,3]));
+      query.where("test", arrayContains: [1, 2, 3]);
+      verify(mockWebQuery.where("test", "array-contains", [1, 2, 3]));
 
-      query.where("test",isGreaterThanOrEqualTo: 1);
-      verify(mockWebQuery.where("test", ">=" , 1));
+      query.where("test", isGreaterThanOrEqualTo: 1);
+      verify(mockWebQuery.where("test", ">=", 1));
 
-      query.where("test",isGreaterThan: 1);
-      verify(mockWebQuery.where("test", ">" , 1));
+      query.where("test", isGreaterThan: 1);
+      verify(mockWebQuery.where("test", ">", 1));
 
-      query.where("test",isLessThan: 1);
-      verify(mockWebQuery.where("test", "<" , 1));
+      query.where("test", isLessThan: 1);
+      verify(mockWebQuery.where("test", "<", 1));
 
-      query.where("test",isLessThanOrEqualTo: 1);
-      verify(mockWebQuery.where("test", "<=" , 1));
+      query.where("test", isLessThanOrEqualTo: 1);
+      verify(mockWebQuery.where("test", "<=", 1));
 
-      query.where("test",isEqualTo: 1);
-      verify(mockWebQuery.where("test", "==" , 1));
+      query.where("test", isEqualTo: 1);
+      verify(mockWebQuery.where("test", "==", 1));
     });
   });
 }

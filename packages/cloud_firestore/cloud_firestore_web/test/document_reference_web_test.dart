@@ -1,3 +1,5 @@
+import 'dart:html';
+
 @TestOn('chrome')
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/firestore_web.dart';
@@ -63,9 +65,16 @@ void main() {
     });
 
     test("snapshots", () {
-      when(mockWebDocumentReferences.onSnapshot).thenAnswer((_) => Stream.empty());
+      when(mockWebDocumentReferences.onSnapshot)
+          .thenAnswer((_) => Stream.empty());
+      when(mockWebDocumentReferences.onMetadataChangesSnapshot)
+          .thenAnswer((_) => Stream.empty());
       documentRefernce.snapshots();
       verify(mockWebDocumentReferences.onSnapshot);
+      documentRefernce.snapshots(includeMetadataChanges: false);
+      verify(mockWebDocumentReferences.onSnapshot);
+      documentRefernce.snapshots(includeMetadataChanges: true);
+      verify(mockWebDocumentReferences.onMetadataChangesSnapshot);
     });
   });
 }

@@ -22,7 +22,7 @@ class QueryWeb implements Query {
   Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
     assert(_webQuery != null);
     Stream<web.QuerySnapshot> querySnapshots = _webQuery.onSnapshot;
-    if(includeMetadataChanges){
+    if (includeMetadataChanges) {
       querySnapshots = _webQuery.onSnapshotMetadata;
     }
     return querySnapshots.map(_webQuerySnapshotToQuerySnapshot);

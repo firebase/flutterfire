@@ -3,28 +3,28 @@ import 'package:cloud_firestore_web/firestore_web.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group("$FieldValueFactoryWeb()", (){
+  group("$FieldValueFactoryWeb()", () {
     final factory = FieldValueFactoryWeb();
 
-    test("arrayRemove", (){
+    test("arrayRemove", () {
       final actual = factory.arrayRemove([]);
       expect(actual, isInstanceOf<FieldValueWeb>());
       expect(actual.type, equals(FieldValueType.arrayRemove));
     });
 
-    test("arrayUnion", (){
+    test("arrayUnion", () {
       final actual = factory.arrayUnion([]);
       expect(actual, isInstanceOf<FieldValueWeb>());
       expect(actual.type, equals(FieldValueType.arrayUnion));
     });
 
-    test("delete", (){
+    test("delete", () {
       final actual = factory.delete();
       expect(actual, isInstanceOf<FieldValueWeb>());
       expect(actual.type, equals(FieldValueType.delete));
     });
 
-    test("increment", (){
+    test("increment", () {
       final actualInt = factory.increment(1);
       expect(actualInt, isInstanceOf<FieldValueWeb>());
       expect(actualInt.type, equals(FieldValueType.incrementInteger));
@@ -34,11 +34,10 @@ void main() {
       expect(actualDouble.type, equals(FieldValueType.incrementDouble));
     });
 
-    test("serverTimestamp", (){
+    test("serverTimestamp", () {
       final actual = factory.serverTimestamp();
       expect(actual, isInstanceOf<FieldValueWeb>());
       expect(actual.type, equals(FieldValueType.serverTimestamp));
     });
-
   });
 }

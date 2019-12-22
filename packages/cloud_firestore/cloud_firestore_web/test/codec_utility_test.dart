@@ -127,11 +127,18 @@ void main() {
           isInstanceOf<GeoPoint>());
 
       //Map
-      expect(CodecUtility.decodeMapData({'test':{'test1': mockWebGeoPoint}})['test']['test1'],
+      expect(
+          CodecUtility.decodeMapData({
+            'test': {'test1': mockWebGeoPoint}
+          })['test']['test1'],
           isInstanceOf<GeoPoint>());
 
       //List
-      expect(CodecUtility.decodeMapData({'test':[mockWebGeoPoint]})['test'].first,
+      expect(
+          CodecUtility.decodeMapData({
+            'test': [mockWebGeoPoint]
+          })['test']
+              .first,
           isInstanceOf<GeoPoint>());
     });
 
@@ -151,11 +158,17 @@ void main() {
           isInstanceOf<GeoPoint>());
 
       //Map
-      expect(CodecUtility.decodeArrayData([{'test1': mockWebGeoPoint}]).first['test1'],
+      expect(
+          CodecUtility.decodeArrayData([
+            {'test1': mockWebGeoPoint}
+          ]).first['test1'],
           isInstanceOf<GeoPoint>());
 
       //List
-      expect(CodecUtility.decodeArrayData([[mockWebGeoPoint]]).first.first,
+      expect(
+          CodecUtility.decodeArrayData([
+            [mockWebGeoPoint]
+          ]).first.first,
           isInstanceOf<GeoPoint>());
     });
   });

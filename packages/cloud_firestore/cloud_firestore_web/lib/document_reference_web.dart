@@ -28,8 +28,13 @@ class DocumentReferenceWeb extends DocumentReference {
   Future<void> delete() => delegate.delete();
 
   @override
-  Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) =>
-      delegate.onSnapshot.map(_fromWeb);
+  Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) {
+    Stream<web.DocumentSnapshot> querySnapshots = delegate.onSnapshot;
+    if (includeMetadataChanges) {
+      querySnapshots = delegate.onMetadataChangesSnapshot;
+    }
+    return querySnapshots.map(_fromWeb);
+  }
 
   /// Builds [DocumentSnapshot] instance form web snapshot instance
   DocumentSnapshot _fromWeb(web.DocumentSnapshot webSnapshot) =>
