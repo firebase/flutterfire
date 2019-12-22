@@ -8,9 +8,19 @@ import 'package:firebase/firestore.dart' as web;
 
 const kCollectionId = "test";
 
+class MockWebDocumentSnapshot extends Mock implements web.DocumentSnapshot {}
+
+class MockWebSnapshotMetaData extends Mock implements web.SnapshotMetadata {}
+
 class MockFirestoreWeb extends Mock implements web.Firestore {}
 
-class MockDocumentReference extends Mock implements web.DocumentReference {}
+class MockWebTransaction extends Mock implements web.Transaction {}
+
+class MockDocumentReference extends Mock implements DocumentReferenceWeb {}
+
+class MockFirestore extends Mock implements FirestoreWeb {}
+
+class MockWebDocumentReference extends Mock implements web.DocumentReference {}
 
 class MockQueryWeb extends Mock implements QueryWeb {}
 

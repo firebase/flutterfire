@@ -9,7 +9,7 @@ import 'test_common.dart';
 
 void main() {
   group("$CollectionReferenceWeb()", () {
-    final mockDocumentReference = MockDocumentReference();
+    final mockDocumentReference = MockWebDocumentReference();
     CollectionReferenceWeb collectionReference;
     setUp(() {
       final mockFirestoreWeb = mockFirestore();

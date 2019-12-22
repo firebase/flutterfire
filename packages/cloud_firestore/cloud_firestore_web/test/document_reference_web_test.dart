@@ -1,5 +1,3 @@
-import 'dart:html';
-
 @TestOn('chrome')
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/firestore_web.dart';
@@ -10,13 +8,9 @@ import 'test_common.dart';
 
 const _kPath = "test/document";
 
-class MockWebDocumentSnapshot extends Mock implements web.DocumentSnapshot {}
-
-class MockWebSnapshotMetaData extends Mock implements web.SnapshotMetadata {}
-
 void main() {
   group("$DocumentReferenceWeb()", () {
-    final mockWebDocumentReferences = MockDocumentReference();
+    final mockWebDocumentReferences = MockWebDocumentReference();
     DocumentReferenceWeb documentRefernce;
     setUp(() {
       final mockWebFirestore = mockFirestore();

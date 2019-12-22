@@ -6,7 +6,9 @@ class TransactionWeb implements Transaction {
   @override
   FirestorePlatform firestore;
 
-  TransactionWeb._(this._webTransaction, this.firestore);
+  // ignore: public_member_api_docs
+  @visibleForTesting
+  TransactionWeb(this._webTransaction, this.firestore);
 
   @override
   String get appName => firestore.appName();

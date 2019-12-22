@@ -46,7 +46,7 @@ void main() {
       when(mockMetaData.fromCache).thenReturn(true);
       when(mockMetaData.hasPendingWrites).thenReturn(false);
 
-      final mockDocumentReference = MockDocumentReference();
+      final mockDocumentReference = MockWebDocumentReference();
       when(mockDocumentReference.path).thenReturn("test/reference");
 
       final mockDocumentSnapshot = MockWebDocumentSnapshot();
