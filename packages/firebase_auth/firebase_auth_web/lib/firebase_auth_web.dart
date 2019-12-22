@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase/firebase.dart' as firebase;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:http_parser/http_parser.dart';
@@ -102,10 +103,12 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     FirebaseAuthPlatform.instance = FirebaseAuthWeb();
   }
 
-  static dynamic _mapFirebaseException(dynamic exception) {
+  @visibleForTesting
+  static dynamic mapFirebaseException(dynamic exception) {
     if (exception is firebase.FirebaseError) {
-      return AuthException(
-          _firebaseJsErrorCodesMapping[exception.code], exception.message);
+      return PlatformException(
+          code: _firebaseJsErrorCodesMapping[exception.code],
+          message: exception.message);
     }
 
     return exception;
@@ -231,7 +234,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           await auth.createUserWithEmailAndPassword(email, password);
       return _fromJsUserCredential(credential);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -242,7 +245,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       final firebase.User user = _getCurrentUserOrThrow(auth);
       await user.delete();
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -264,7 +267,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       }
       return _fromJsUser(currentUser);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -279,7 +282,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           await currentUser.getIdTokenResult(refresh);
       return _fromJsIdTokenResult(idTokenResult);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -303,7 +306,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           await currentUser.linkWithCredential(firebaseCredential);
       return _fromJsUserCredential(userCredential);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -312,7 +315,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     final firebase.Auth auth = _getAuth(app);
     return auth.onAuthStateChanged
         .map<PlatformUser>(_fromJsUser)
-        .handleError((e) => throw _mapFirebaseException(e));
+        .handleError((e) => throw mapFirebaseException(e));
   }
 
   @override
@@ -327,7 +330,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           await currentUser.reauthenticateWithCredential(firebaseCredential);
       return _fromJsUserCredential(userCredential);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -338,7 +341,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       final firebase.User currentUser = _getCurrentUserOrThrow(auth);
       await currentUser.reload();
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -349,7 +352,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       final firebase.User currentUser = _getCurrentUserOrThrow(auth);
       await currentUser.sendEmailVerification();
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -373,7 +376,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       final firebase.Auth auth = _getAuth(app);
       await auth.sendPasswordResetEmail(email);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -391,7 +394,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           await auth.signInAnonymously();
       return _fromJsUserCredential(userCredential);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -406,7 +409,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           await auth.signInWithCredential(firebaseCredential);
       return _fromJsUserCredential(userCredential);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -419,7 +422,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           await auth.signInWithCustomToken(token);
       return _fromJsUserCredential(userCredential);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -437,7 +440,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       final firebase.Auth auth = _getAuth(app);
       await auth.signOut();
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -448,7 +451,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       final firebase.User currentUser = _getCurrentUserOrThrow(auth);
       await currentUser.unlink(provider);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -459,7 +462,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       final firebase.User currentUser = _getCurrentUserOrThrow(auth);
       await currentUser.updateEmail(email);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -470,7 +473,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       final firebase.User currentUser = _getCurrentUserOrThrow(auth);
       await currentUser.updatePassword(password);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -484,7 +487,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           _getCredential(phoneAuthCredential);
       await currentUser.updatePhoneNumber(credential);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
@@ -503,7 +506,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       }
       await currentUser.updateProfile(profile);
     } catch (e) {
-      throw _mapFirebaseException(e);
+      throw mapFirebaseException(e);
     }
   }
 
