@@ -1,3 +1,8 @@
+## 0.1.2+4
+
+* Updated the example with the missing `recordError()` method.
+* Added a `recordError()` integration test.
+
 ## 0.1.2+3
 
 * Remove the deprecated `author:` field from pubspec.yaml

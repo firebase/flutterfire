@@ -1,3 +1,7 @@
+## 0.4.1+6
+
+* Fix analysis failures
+
 ## 0.4.1+5
 
 * Remove the deprecated `author:` field from pubspec.yaml

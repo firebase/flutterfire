@@ -1,5 +1,6 @@
 ## 0.1.1+1
-* Map firebasejs exceptions to unified error codes.
+
+* Add an android/ folder with no-op implementation to workaround https://github.com/flutter/flutter/issues/46898
 
 ## 0.1.1
 
