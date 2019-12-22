@@ -1,7 +1,8 @@
 part of cloud_firestore_web;
 
+/// Web implementation for firestore [Query]
 class QueryWeb implements Query {
-  final web.Query webQuery;
+  final web.Query _webQuery;
   final FirestorePlatform _firestore;
   final bool _isCollectionGroup;
   final String _path;
@@ -10,22 +11,28 @@ class QueryWeb implements Query {
   static const _kChangeTypeModified = "modified";
   static const _kChangeTypeRemoved = "removed";
 
-  QueryWeb(this._firestore, this._path, this.webQuery,
+  /// Builds an instance of [QueryWeb] using [_path] & [_webQuery]
+  /// to delegate queries to underlying firestore web plugin
+  QueryWeb(this._firestore, this._path, this._webQuery,
       {bool isCollectionGroup, List<dynamic> orderByKeys})
       : this._isCollectionGroup = isCollectionGroup ?? false,
         this._orderByKeys = orderByKeys ?? [];
 
   @override
   Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
-    assert(webQuery != null);
-    return webQuery.onSnapshot.map(_webQuerySnapshotToQuerySnapshot);
+    assert(_webQuery != null);
+    Stream<web.QuerySnapshot> querySnapshots = _webQuery.onSnapshot;
+    if(includeMetadataChanges){
+      querySnapshots = _webQuery.onSnapshotMetadata;
+    }
+    return querySnapshots.map(_webQuerySnapshotToQuerySnapshot);
   }
 
   @override
   Future<QuerySnapshot> getDocuments(
       {Source source = Source.serverAndCache}) async {
-    assert(webQuery != null);
-    return _webQuerySnapshotToQuerySnapshot(await webQuery.get());
+    assert(_webQuery != null);
+    return _webQuerySnapshotToQuerySnapshot(await _webQuery.get());
   }
 
   @override
@@ -33,16 +40,16 @@ class QueryWeb implements Query {
 
   @override
   Query endAt(List values) => QueryWeb(this._firestore, this._path,
-      webQuery != null ? webQuery.endAt(fieldValues: values) : null,
+      _webQuery != null ? _webQuery.endAt(fieldValues: values) : null,
       isCollectionGroup: _isCollectionGroup);
 
   @override
   Query endAtDocument(DocumentSnapshot documentSnapshot) {
-    assert(webQuery != null && _orderByKeys.isNotEmpty);
+    assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
         this._path,
-        webQuery.endAt(
+        _webQuery.endAt(
             fieldValues:
                 _orderByKeys.map((key) => documentSnapshot.data[key]).toList()),
         isCollectionGroup: _isCollectionGroup);
@@ -50,16 +57,16 @@ class QueryWeb implements Query {
 
   @override
   Query endBefore(List values) => QueryWeb(this._firestore, this._path,
-      webQuery != null ? webQuery.endBefore(fieldValues: values) : null,
+      _webQuery != null ? _webQuery.endBefore(fieldValues: values) : null,
       isCollectionGroup: _isCollectionGroup);
 
   @override
   Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
-    assert(webQuery != null && _orderByKeys.isNotEmpty);
+    assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
         this._path,
-        webQuery.endBefore(
+        _webQuery.endBefore(
             fieldValues:
                 _orderByKeys.map((key) => documentSnapshot.data[key]).toList()),
         isCollectionGroup: _isCollectionGroup);
@@ -75,7 +82,7 @@ class QueryWeb implements Query {
   Query limit(int length) => QueryWeb(
         this._firestore,
         this._path,
-        webQuery != null ? webQuery.limit(length) : null,
+        _webQuery != null ? _webQuery.limit(length) : null,
         orderByKeys: _orderByKeys,
         isCollectionGroup: _isCollectionGroup,
       );
@@ -89,7 +96,7 @@ class QueryWeb implements Query {
     return QueryWeb(
       this._firestore,
       this._path,
-      webQuery.orderBy(usableField, descending ? "desc" : "asc"),
+      _webQuery.orderBy(usableField, descending ? "desc" : "asc"),
       orderByKeys: _orderByKeys..add(usableField),
       isCollectionGroup: _isCollectionGroup,
     );
@@ -106,16 +113,16 @@ class QueryWeb implements Query {
 
   @override
   Query startAfter(List values) => QueryWeb(
-      this._firestore, this._path, webQuery.startAfter(fieldValues: values),
+      this._firestore, this._path, _webQuery.startAfter(fieldValues: values),
       orderByKeys: _orderByKeys, isCollectionGroup: _isCollectionGroup);
 
   @override
   Query startAfterDocument(DocumentSnapshot documentSnapshot) {
-    assert(webQuery != null && _orderByKeys.isNotEmpty);
+    assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
         this._path,
-        webQuery.startAfter(
+        _webQuery.startAfter(
             fieldValues:
                 _orderByKeys.map((key) => documentSnapshot.data[key]).toList()),
         orderByKeys: _orderByKeys,
@@ -126,18 +133,18 @@ class QueryWeb implements Query {
   Query startAt(List values) => QueryWeb(
         this._firestore,
         this._path,
-        webQuery.startAt(fieldValues: values),
+        _webQuery.startAt(fieldValues: values),
         orderByKeys: _orderByKeys,
         isCollectionGroup: _isCollectionGroup,
       );
 
   @override
   Query startAtDocument(DocumentSnapshot documentSnapshot) {
-    assert(webQuery != null && _orderByKeys.isNotEmpty);
+    assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
         this._path,
-        webQuery.startAt(
+        _webQuery.startAt(
             fieldValues:
                 _orderByKeys.map((key) => documentSnapshot.data[key]).toList()),
         orderByKeys: _orderByKeys,
@@ -157,12 +164,12 @@ class QueryWeb implements Query {
       bool isNull}) {
     assert(field is String || field is FieldPath,
         'Supported [field] types are [String] and [FieldPath].');
-    assert(webQuery != null);
+    assert(_webQuery != null);
     dynamic usableField = field;
     if (field == FieldPath.documentId) {
       usableField = web.FieldPath.documentId();
     }
-    web.Query query = webQuery;
+    web.Query query = _webQuery;
 
     if (isEqualTo != null) {
       query = query.where(usableField, "==", isEqualTo);
@@ -252,5 +259,5 @@ class QueryWeb implements Query {
 
   @visibleForTesting
   QueryWeb resetQueryDelegate() =>
-      QueryWeb(firestore, pathComponents.join("/"), webQuery);
+      QueryWeb(firestore, pathComponents.join("/"), _webQuery);
 }
