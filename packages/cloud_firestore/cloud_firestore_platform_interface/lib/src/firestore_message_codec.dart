@@ -8,6 +8,7 @@ part of cloud_firestore_platform_interface;
 // ignoring lint rule here as it's only visible for testing
 // ignore: public_member_api_docs
 class FirestoreMessageCodec extends StandardMessageCodec {
+  @visibleForTesting
   // ignoring lint rule here as it's only visible for testing
   // ignore: public_member_api_docs
   const FirestoreMessageCodec();
