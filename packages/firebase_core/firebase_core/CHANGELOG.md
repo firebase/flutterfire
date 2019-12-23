@@ -1,3 +1,7 @@
+## 0.4.4
+
+* Add macOS support
+
 ## 0.4.3+1
 
 * Move `Platform.isIOS` check behind a configurable import so that pub.dev registers
