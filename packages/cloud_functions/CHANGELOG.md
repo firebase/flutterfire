@@ -1,3 +1,7 @@
+## 0.4.2
+
+* Add macOS support
+
 ## 0.4.1+6
 
 * Fix analysis failures
