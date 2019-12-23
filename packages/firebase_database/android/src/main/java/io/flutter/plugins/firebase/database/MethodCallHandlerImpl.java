@@ -273,7 +273,7 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
       case "FirebaseDatabase#setPersistenceCacheSizeBytes":
         {
           Object value = call.argument("cacheSize");
-          Long cacheSize = null;
+          Long cacheSize;
 
           // The type of object that comes in is dependant on the size of the
           // value.
