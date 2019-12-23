@@ -69,25 +69,6 @@ int nextHandle = 0;
   return [FIRAuth authWithApp:[FIRApp appNamed:appName]];
 }
 
-//- (bool)application:(UIApplication *)application
-//    didReceiveRemoteNotification:(NSDictionary *)notification
-//          fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
-//  if ([[FIRAuth auth] canHandleNotification:notification]) {
-//    completionHandler(UIBackgroundFetchResultNoData);
-//    return YES;
-//  }
-//  return NO;
-//}
-
-//- (void)application:(UIApplication *)application
-//    didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-//  [[FIRAuth auth] setAPNSToken:deviceToken type:FIRAuthAPNSTokenTypeProd];
-//}
-//
-//- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary *)options {
-//  return [[FIRAuth auth] canHandleURL:url];
-//}
-
 // TODO(jackson): We should use the renamed versions of the following methods
 // when they are available in the Firebase SDK that this plugin is dependent on.
 // * fetchSignInMethodsForEmail:completion:
@@ -265,14 +246,7 @@ int nextHandle = 0;
                                                          forObject:nil
                                                              error:error];
                                                 }];
-//  } else if ([@"updatePhoneNumberCredential" isEqualToString:call.method]) {
-//    FIRPhoneAuthCredential *credential =
-//        (FIRPhoneAuthCredential *)[self getCredential:call.arguments];
-//    [[self getAuth:call.arguments].currentUser
-//        updatePhoneNumberCredential:credential
-//                         completion:^(NSError *_Nullable error) {
-//                           [self sendResult:result forObject:nil error:error];
-//                         }];
+
   } else if ([@"updatePassword" isEqualToString:call.method]) {
     NSString *password = call.arguments[@"password"];
     [[self getAuth:call.arguments].currentUser updatePassword:password
@@ -332,41 +306,6 @@ int nextHandle = 0;
                                                    identifier.intValue]
                 details:nil]);
     }
-//  } else if ([@"verifyPhoneNumber" isEqualToString:call.method]) {
-//    NSString *phoneNumber = call.arguments[@"phoneNumber"];
-//    NSNumber *handle = call.arguments[@"handle"];
-//    [[FIRPhoneAuthProvider provider]
-//        verifyPhoneNumber:phoneNumber
-//               UIDelegate:nil
-//               completion:^(NSString *verificationID, NSError *error) {
-//                 if (error) {
-//                   [self.channel invokeMethod:@"phoneVerificationFailed"
-//                                    arguments:@{
-//                                      @"exception" : [self mapVerifyPhoneError:error],
-//                                      @"handle" : handle
-//                                    }];
-//                 } else {
-//                   [self.channel
-//                       invokeMethod:@"phoneCodeSent"
-//                          arguments:@{@"verificationId" : verificationID, @"handle" : handle}];
-//                 }
-//               }];
-//    result(nil);
-//  } else if ([@"signInWithPhoneNumber" isEqualToString:call.method]) {
-//    NSString *verificationId = call.arguments[@"verificationId"];
-//    NSString *smsCode = call.arguments[@"smsCode"];
-//
-//    FIRPhoneAuthCredential *credential =
-//        [[FIRPhoneAuthProvider provider] credentialWithVerificationID:verificationId
-//                                                     verificationCode:smsCode];
-//    [[self getAuth:call.arguments]
-//        signInAndRetrieveDataWithCredential:credential
-//                                 completion:^(FIRAuthDataResult *authResult,
-//                                              NSError *_Nullable error) {
-//                                   [self sendResult:result
-//                                       forAuthDataResult:authResult
-//                                                   error:error];
-//                                 }];
   } else if ([@"setLanguageCode" isEqualToString:call.method]) {
     NSString *language = call.arguments[@"language"];
     [[self getAuth:call.arguments] setLanguageCode:language];
@@ -475,12 +414,6 @@ int nextHandle = 0;
   } else if ([FIRGitHubAuthProviderID isEqualToString:provider]) {
     NSString *token = data[@"token"];
     credential = [FIRGitHubAuthProvider credentialWithToken:token];
-//  } else if ([FIRPhoneAuthProviderID isEqualToString:provider]) {
-//    NSString *verificationId = data[@"verificationId"];
-//    NSString *smsCode = data[@"smsCode"];
-//    credential = [[FIRPhoneAuthProvider providerWithAuth:[self getAuth:arguments]]
-//        credentialWithVerificationID:verificationId
-//                    verificationCode:smsCode];
   } else {
     NSLog(@"Support for an auth provider with identifier '%@' is not implemented.", provider);
   }
