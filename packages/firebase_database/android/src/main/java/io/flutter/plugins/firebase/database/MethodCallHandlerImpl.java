@@ -287,7 +287,7 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
             cacheSize = (Long) value;
           }
           try {
-            database.setPersistenceCacheSizeBytes(new Long(cacheSize));
+            database.setPersistenceCacheSizeBytes(cacheSize);
             result.success(true);
           } catch (DatabaseException e) {
             // Database is already in use, e.g. after hot reload/restart.
