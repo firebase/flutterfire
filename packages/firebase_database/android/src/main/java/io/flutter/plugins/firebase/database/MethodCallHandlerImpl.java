@@ -272,9 +272,14 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
 
       case "FirebaseDatabase#setPersistenceCacheSizeBytes":
         {
-          Long cacheSize = call.argument("cacheSize");
+          // Let the autoboxing / unboxing help here because the type of object
+          // that comes back depends on the size of the number.  This may be a
+          // Long or an Integer.  The autoboxing / unboxing can broadcast an
+          // Integer to a long, but will trigger a ClassCastException if 
+          // assigned directly to a Long.
+          long cacheSize = call.argument("cacheSize");
           try {
-            database.setPersistenceCacheSizeBytes(cacheSize);
+            database.setPersistenceCacheSizeBytes(new Long(cacheSize));
             result.success(true);
           } catch (DatabaseException e) {
             // Database is already in use, e.g. after hot reload/restart.
