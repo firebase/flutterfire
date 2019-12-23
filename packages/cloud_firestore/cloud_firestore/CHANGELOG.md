@@ -1,3 +1,7 @@
+## 0.13.1
+
+* Add macOS support
+
 ## 0.13.0+1
 
 * Remove the deprecated `author:` field from pubspec.yaml
