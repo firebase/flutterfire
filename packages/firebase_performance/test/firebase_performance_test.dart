@@ -364,6 +364,20 @@ void main() {
         ]);
       });
 
+      test('requestPayloadSizeNullValue', () {
+        testMetric.requestPayloadSize = null;
+
+        expect(httpMetricLog, <Matcher>[
+          isMethodCall(
+            'HttpMetric#requestPayloadSize',
+            arguments: <String, dynamic>{
+              'handle': currentTestMetricHandle,
+              'requestPayloadSize': null,
+            },
+          ),
+        ]);
+      });
+
       test('responseContentType', () {
         testMetric.responseContentType = 'hi';
 
@@ -387,6 +401,20 @@ void main() {
             arguments: <String, dynamic>{
               'handle': currentTestMetricHandle,
               'responsePayloadSize': 12,
+            },
+          ),
+        ]);
+      });
+
+      test('responsePayloadSizeNullValue', () {
+        testMetric.responsePayloadSize = null;
+
+        expect(httpMetricLog, <Matcher>[
+          isMethodCall(
+            'HttpMetric#responsePayloadSize',
+            arguments: <String, dynamic>{
+              'handle': currentTestMetricHandle,
+              'responsePayloadSize': null,
             },
           ),
         ]);
