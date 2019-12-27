@@ -79,23 +79,44 @@ final Uri shortUrl = shortenedLink.shortUrl;
 
 You can receive a Dynamic Link containing a deep link that takes the user to specific content within your app:
 
-1. In the [Firebase Console](https://console.firebase.google.com), open the Dynamic Links section.
+- In the [Firebase Console](https://console.firebase.google.com), open the Dynamic Links section.
   - Accept the terms of service if you are prompted to do so.
   - Take note of your project's Dynamic Links URL prefix, which is displayed at the top of the Dynamic Links page. You need your project's Dynamic Links URL prefix to programmatically create Dynamic Links. A Dynamic Links URL prefix looks like `https://YOUR_SUBDOMAIN.page.link`.
 
-Receiving dynamic links on *iOS* requires a couple more steps than *Android*. If you only want to receive dynamic links on *Android*, skip to step 4. You can also follow a video on the next two steps [here.](https://youtu.be/sFPo296OQqk?t=2m40s)
+### Android specific (optional)
 
-2. In the **Info** tab of your *iOS* app's Xcode project:
+- If you want to let the user open the the dynamic link directly in your app add in your `$YOUR_APP$/android/app/src/main/AndroidManifest.xml`
+
+```
+<intent-filter>
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.DEFAULT" />
+    <category android:name="android.intent.category.BROWSABLE" />
+
+    <!--Change YOUR_HOST with the one you get from the firebase console-->
+    <data
+        android:host="YOUR_HOST"
+        android:scheme="https" />
+</intent-filter>
+```
+
+### IOS specific
+
+- In the **Info** tab of your *iOS* app's Xcode project:
   - Create a new **URL Type** to be used for Dynamic Links.
   - Set the **Identifier** field to a unique value and the **URL Schemes** field to be your bundle identifier, which is the default URL scheme used by Dynamic Links.
 
-3. In the **Capabilities** tab of your app's Xcode project, enable **Associated Domains** and add the following to the **Associated Domains** list:
+- In the **Capabilities** tab of your app's Xcode project, enable **Associated Domains** and add the following to the **Associated Domains** list:
 
 ```
 applinks:YOUR_SUBDOMAIN.page.link
 ```
 
-4. To receive a dynamic link, call the `getInitialLink()` method from `FirebaseDynamicLinks` which gets the link that opened the app (or null if it was not opened via a dynamic link)
+You can also follow a video [here.](https://youtu.be/sFPo296OQqk?t=2m40s)
+
+### Test the implementation
+
+To receive a dynamic link, call the `getInitialLink()` method from `FirebaseDynamicLinks` which gets the link that opened the app (or null if it was not opened via a dynamic link)
 and configure listeners for link callbacks when the application is active or in background calling `onLink`.
 
 ```dart
