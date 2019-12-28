@@ -55,5 +55,5 @@ class HttpsCallable {
   }
 
   /// The timeout to use when calling the function. Defaults to 60 seconds.
-  Duration timeout ;
+  Duration timeout;
 }
