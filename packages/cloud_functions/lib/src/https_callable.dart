@@ -35,7 +35,7 @@ class HttpsCallable {
         'app': _cloudFunctions._app.name,
         'region': _cloudFunctions._region,
         'origin': _cloudFunctions._origin,
-        'timeoutMicroseconds': timeout?.inMicroseconds,
+        'timeoutMilliseconds': timeout?.inMilliseconds,
         'functionName': _functionName,
         'parameters': parameters,
       });
@@ -55,5 +55,5 @@ class HttpsCallable {
   }
 
   /// The timeout to use when calling the function. Defaults to 60 seconds.
-  Duration timeout;
+  Duration timeout ;
 }
