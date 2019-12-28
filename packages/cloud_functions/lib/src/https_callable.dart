@@ -35,7 +35,7 @@ class HttpsCallable {
         'app': _cloudFunctions._app.name,
         'region': _cloudFunctions._region,
         'origin': _cloudFunctions._origin,
-        'timeoutMilliseconds': timeout?.inMilliseconds,
+        'timeoutMicroseconds': timeout?.inMicroseconds,
         'functionName': _functionName,
         'parameters': parameters,
       });
