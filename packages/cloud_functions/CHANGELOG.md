@@ -1,3 +1,7 @@
+## 0.4.1+7
+
+* Fixed timeout parameter discrepancies between `CloudFunctionsPlugin.java` and `https_callable.dart`.
+
 ## 0.4.1+6
 
 * Fix analysis failures
