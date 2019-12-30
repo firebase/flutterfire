@@ -18,11 +18,34 @@ class FirebaseAuth {
   static final FirebaseAuth instance = FirebaseAuth._(FirebaseApp.instance);
 
   final FirebaseApp app;
+  final StreamController _userStreamController =
+      StreamController<FirebaseUser>();
+  FirebaseUser _lastUser;
 
   /// Receive [FirebaseUser] each time the user signIn or signOut
   Stream<FirebaseUser> get onAuthStateChanged {
     return FirebaseAuthPlatform.instance.onAuthStateChanged(app.name).map(
         (PlatformUser user) => user == null ? null : FirebaseUser._(user, app));
+  }
+
+  /// Receive [FirebaseUser] each time [onAuthStateChanged] emits an event, or
+  /// when a call to [currentUser] returns a different [FirebaseUser].
+  ///
+  /// Expected to be used like:
+  ///
+  /// ```dart
+  /// ...
+  /// // reloads data from the server, like isEmailVerified
+  /// user.reload();
+  /// // reloads the actual user with the new data and triggers the stream
+  /// // update
+  /// user.currentUser();
+  /// ...
+  /// ```
+  Stream<FirebaseUser> get onUserUpdated {
+    return StreamGroup.merge<FirebaseUser>(
+            [onAuthStateChanged, _userStreamController.stream])
+        .map((user) => _lastUser = user);
   }
 
   /// Asynchronously creates and becomes an anonymous user.
@@ -311,11 +334,18 @@ class FirebaseAuth {
   }
 
   /// Returns the currently signed-in [FirebaseUser] or [null] if there is none.
+  /// Also updates the [onUserUpdated] stream if the [FirebaseUser] is different
+  /// than the last one emitted by [onUserUpdated].
   Future<FirebaseUser> currentUser() async {
     final PlatformUser data =
         await FirebaseAuthPlatform.instance.getCurrentUser(app.name);
     final FirebaseUser currentUser =
         data == null ? null : FirebaseUser._(data, app);
+
+    if (currentUser != _lastUser) {
+      _userStreamController.add(currentUser);
+    }
+
     return currentUser;
   }
 

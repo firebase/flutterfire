@@ -1,3 +1,7 @@
+## 0.15.4
+
+* Add a `onUserUpdated` `Stream` to emit a `FirebaseUser` each time there's a change in the current user.
+
 ## 0.15.3
 
 * Add support for OAuth Authentication for iOS and Android to solve generic providers authentication.

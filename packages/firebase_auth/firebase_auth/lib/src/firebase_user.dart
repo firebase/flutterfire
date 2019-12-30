@@ -220,4 +220,32 @@ class FirebaseUser extends UserInfo {
   String toString() {
     return '$runtimeType($_data)';
   }
+
+  @override
+  int get hashCode {
+    int result = 17;
+    result = 31 * result + email.hashCode;
+    result = 31 * result + isEmailVerified.hashCode;
+    result = 31 * result + displayName.hashCode;
+    result = 31 * result + isAnonymous.hashCode;
+    result = 31 * result + phoneNumber.hashCode;
+    result = 31 * result + photoUrl.hashCode;
+    result = 31 * result + providerId.hashCode;
+    result = 31 * result + uid.hashCode;
+    return result;
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(other, this)) return true;
+    return other is FirebaseUser &&
+        other.email == email &&
+        other.isEmailVerified == isEmailVerified &&
+        other.displayName == displayName &&
+        other.isAnonymous == isAnonymous &&
+        other.phoneNumber == phoneNumber &&
+        other.photoUrl == photoUrl &&
+        other.providerId == providerId &&
+        other.uid == uid;
+  }
 }
