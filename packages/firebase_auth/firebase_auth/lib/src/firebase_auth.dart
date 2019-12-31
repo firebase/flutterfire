@@ -326,4 +326,9 @@ class FirebaseAuth {
     assert(language != null);
     return FirebaseAuthPlatform.instance.setLanguageCode(app.name, language);
   }
+
+  Future<void> confirmPasswordReset(String oobCode, String newPassword) {
+    return FirebaseAuthPlatform.instance
+        .confirmPasswordReset(oobCode, newPassword);
+  }
 }
