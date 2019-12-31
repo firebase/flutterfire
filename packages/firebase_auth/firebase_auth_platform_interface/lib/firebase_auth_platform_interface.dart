@@ -231,4 +231,8 @@ abstract class FirebaseAuthPlatform {
   }) {
     throw UnimplementedError('verifyPhoneNumber() is not implemented');
   }
+
+  Future<void> confirmPasswordReset(String oobCode, String newPassword) {
+    throw UnimplementedError('confirmPasswordReset() is not implemented');
+  }
 }

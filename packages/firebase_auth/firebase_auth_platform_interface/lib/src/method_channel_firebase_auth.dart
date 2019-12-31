@@ -351,6 +351,14 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
     return channel.invokeMethod<void>('verifyPhoneNumber', params);
   }
+  
+  @override
+  Future<void> confirmPasswordReset(String oobCode, String newPassword) {
+    return channel.invokeMethod('confirmPasswordReset', <String, String>{
+      'oobCode': oobCode,
+      'newPassword': newPassword,
+    });
+  }
 
   Future<void> _callHandler(MethodCall call) async {
     switch (call.method) {
@@ -468,7 +476,7 @@ PlatformIdTokenResult _decodeIdTokenResult(Map<String, dynamic> data) {
   );
 }
 
-/// A utilily class that collects the callbacks for a [verifyPhoneNumber] call.
+/// A utility class that collects the callbacks for a [verifyPhoneNumber] call.
 class _PhoneAuthCallbacks {
   const _PhoneAuthCallbacks(
     this.verificationCompleted,
