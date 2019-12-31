@@ -696,7 +696,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
     result.success(null);
   }
 
-  private void handleConfirmPasswordReset(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleConfirmPasswordReset(
+      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     Map<String, String> arguments = call.arguments();
     String oobCode = arguments.get("oobCode");
     String newPassword = arguments.get("newPassword");
