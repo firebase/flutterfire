@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#import <Firebase/Firebase.h>
 #import <Flutter/Flutter.h>
 
-@interface FirebaseInAppMessagingPlugin : NSObject <FlutterPlugin>
+@interface FirebaseInAppMessagingPlugin : NSObject <FlutterPlugin, FIRInAppMessagingDisplayDelegate>
 @end
