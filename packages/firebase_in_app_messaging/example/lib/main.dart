@@ -12,7 +12,13 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
-  static FirebaseInAppMessaging fiam = FirebaseInAppMessaging();
+  static FirebaseInAppMessaging fiam = FirebaseInAppMessaging()
+    ..configure(
+        onError: (e) async => print(e),
+        onClicked: (data) async =>
+            print('clicked　actionText: ${data.action.actionText}'),
+        onImpression: (data) async =>
+            print('impressed messageID: ${data.messageID}'));
 
   @override
   Widget build(BuildContext context) {
