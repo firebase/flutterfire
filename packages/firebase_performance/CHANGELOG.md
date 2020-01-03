@@ -1,3 +1,7 @@
+## 0.3.1+6
+
+* allow null values for `requestPayloadSize` and `responsePayloadSize`
+
 ## 0.3.1+5
 
 * Remove the deprecated `author:` field from pubspec.yaml
