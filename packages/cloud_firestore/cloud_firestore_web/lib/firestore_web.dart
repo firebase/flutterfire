@@ -13,6 +13,8 @@ part 'collection_reference_web.dart';
 
 part 'utils/codec_utility.dart';
 
+part 'utils/document_reference_utils.dart';
+
 part 'field_value_factory_web.dart';
 
 part 'document_reference_web.dart';

@@ -26,7 +26,8 @@ class DocumentReferenceWeb extends DocumentReference {
 
   @override
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
-    return _fromWeb(await delegate.get());
+    return _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+        await delegate.get(), this.firestore);
   }
 
   @override
@@ -38,17 +39,8 @@ class DocumentReferenceWeb extends DocumentReference {
     if (includeMetadataChanges) {
       querySnapshots = delegate.onMetadataChangesSnapshot;
     }
-    return querySnapshots.map(_fromWeb);
+    return querySnapshots.map((webSnapshot) =>
+        _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+            webSnapshot, this.firestore));
   }
-
-  /// Builds [DocumentSnapshot] instance form web snapshot instance
-  DocumentSnapshot _fromWeb(web.DocumentSnapshot webSnapshot) =>
-      DocumentSnapshot(
-          webSnapshot.ref.path,
-          CodecUtility.decodeMapData(webSnapshot.data()),
-          SnapshotMetadata(
-            webSnapshot.metadata.hasPendingWrites,
-            webSnapshot.metadata.fromCache,
-          ),
-          this.firestore);
 }

@@ -25,7 +25,8 @@ class TransactionWeb implements Transaction {
     assert(documentReference is DocumentReferenceWeb);
     final webSnapshot = await _webTransaction
         .get((documentReference as DocumentReferenceWeb).delegate);
-    return _fromWeb(webSnapshot);
+    return _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+        webSnapshot, this.firestore);
   }
 
   @override
@@ -45,16 +46,6 @@ class TransactionWeb implements Transaction {
         (documentReference as DocumentReferenceWeb).delegate,
         data: CodecUtility.encodeMapData(data));
   }
-
-  DocumentSnapshot _fromWeb(web.DocumentSnapshot webSnapshot) =>
-      DocumentSnapshot(
-          webSnapshot.ref.path,
-          CodecUtility.decodeMapData(webSnapshot.data()),
-          SnapshotMetadata(
-            webSnapshot.metadata.hasPendingWrites,
-            webSnapshot.metadata.fromCache,
-          ),
-          this.firestore);
 
   @override
   Future<void> finish() {

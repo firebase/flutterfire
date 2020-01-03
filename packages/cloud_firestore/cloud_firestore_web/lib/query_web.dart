@@ -213,7 +213,11 @@ class QueryWeb implements Query {
   QuerySnapshot _webQuerySnapshotToQuerySnapshot(
       web.QuerySnapshot webSnapshot) {
     return QuerySnapshot(
-        webSnapshot.docs.map(_webDocumentSnapshotToDocumentSnapshot).toList(),
+        webSnapshot.docs
+            .map((webSnapshot) =>
+                _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+                    webSnapshot, this._firestore))
+            .toList(),
         webSnapshot.docChanges().map(_webChangeToChange).toList(),
         _webMetadataToMetada(webSnapshot.metadata));
   }
@@ -223,7 +227,8 @@ class QueryWeb implements Query {
         _fromString(webChange.type),
         webChange.oldIndex,
         webChange.newIndex,
-        _webDocumentSnapshotToDocumentSnapshot(webChange.doc));
+        _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+            webChange.doc, this._firestore));
   }
 
   DocumentChangeType _fromString(String item) {
@@ -237,16 +242,6 @@ class QueryWeb implements Query {
       default:
         throw ArgumentError("Invalid type");
     }
-  }
-
-  DocumentSnapshot _webDocumentSnapshotToDocumentSnapshot(
-      web.DocumentSnapshot webSnapshot) {
-    return DocumentSnapshot(
-        webSnapshot.ref.path,
-        webSnapshot.data(),
-        SnapshotMetadata(webSnapshot.metadata.hasPendingWrites,
-            webSnapshot.metadata.fromCache),
-        this._firestore);
   }
 
   SnapshotMetadata _webMetadataToMetada(web.SnapshotMetadata webMetadata) {
