@@ -40,6 +40,10 @@ void main() {
       CodecUtility.encodeMapData({'test': mockFieldValueInterface});
       verify(mockFieldValueInterface.instance);
 
+      final timeStamp = Timestamp.now();
+      final result = CodecUtility.encodeMapData({'test': timeStamp});
+      expect(result['test'], isInstanceOf<DateTime>());
+
       //GeoPoint
       final mockGeoPoint = MockGeoPoint();
       CodecUtility.encodeMapData({'test': mockGeoPoint});
@@ -78,6 +82,10 @@ void main() {
       final mockFieldValueInterface = MockFieldValueInterface();
       CodecUtility.encodeArrayData([mockFieldValueInterface]);
       verify(mockFieldValueInterface.instance);
+
+      final timeStamp = Timestamp.now();
+      final result = CodecUtility.encodeArrayData([timeStamp]);
+      expect(result.first, isInstanceOf<DateTime>());
 
       //GeoPoint
       final mockGeoPoint = MockGeoPoint();
@@ -120,6 +128,10 @@ void main() {
           isInstanceOf<Blob>());
       verify(mockWebBlob.toUint8Array());
 
+      final date = DateTime.now();
+      expect(CodecUtility.decodeMapData({'test': date})['test'],
+          isInstanceOf<Timestamp>());
+
       //GeoPoint
       final mockWebGeoPoint = MockWebGeoPoint();
       expect(CodecUtility.decodeMapData({'test': mockWebGeoPoint})['test'],
@@ -150,6 +162,10 @@ void main() {
       expect(CodecUtility.decodeArrayData([mockWebBlob]).first,
           isInstanceOf<Blob>());
       verify(mockWebBlob.toUint8Array());
+
+      final date = DateTime.now();
+      expect(CodecUtility.decodeArrayData([date]).first,
+          isInstanceOf<Timestamp>());
 
       //GeoPoint
       final mockWebGeoPoint = MockWebGeoPoint();
