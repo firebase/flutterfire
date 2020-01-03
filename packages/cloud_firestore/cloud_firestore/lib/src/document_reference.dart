@@ -12,11 +12,11 @@ part of cloud_firestore;
 /// to a subcollection.
 class DocumentReference {
   platform.DocumentReference _delegate;
-  DocumentReference._(this._delegate);
 
   /// The Firestore instance associated with this document reference
-  Firestore get firestore =>
-      Firestore(app: FirebaseApp(name: this._delegate.firestore.app.name));
+  final Firestore firestore;
+
+  DocumentReference._(this._delegate, this.firestore);
 
   @override
   bool operator ==(dynamic o) =>
@@ -27,7 +27,7 @@ class DocumentReference {
 
   /// Parent returns the containing [CollectionReference].
   CollectionReference parent() {
-    return CollectionReference._(_delegate.parent());
+    return CollectionReference._(_delegate.parent(), firestore);
   }
 
   /// Slash-delimited path representing the database location of this query.
@@ -63,7 +63,8 @@ class DocumentReference {
   /// If no document exists, the read will return null.
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
     return DocumentSnapshot._(
-        await _delegate.get(source: _PlatformUtils.toPlatformSource(source)));
+        await _delegate.get(source: _PlatformUtils.toPlatformSource(source)),
+        firestore);
   }
 
   /// Deletes the document referred to by this [DocumentReference].
@@ -81,5 +82,5 @@ class DocumentReference {
   Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) =>
       _delegate
           .snapshots(includeMetadataChanges: includeMetadataChanges)
-          .map((snapshot) => DocumentSnapshot._(snapshot));
+          .map((snapshot) => DocumentSnapshot._(snapshot, firestore));
 }

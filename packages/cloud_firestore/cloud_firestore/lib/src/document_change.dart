@@ -24,8 +24,9 @@ enum DocumentChangeType {
 /// (added, modified, or removed).
 class DocumentChange {
   final platform.DocumentChange _delegate;
+  final Firestore _firestore;
 
-  DocumentChange._(this._delegate);
+  DocumentChange._(this._delegate, this._firestore);
 
   /// The type of change that occurred (added, modified, or removed).
   DocumentChangeType get type => _PlatformUtils.fromPlatform(_delegate.type);
@@ -45,5 +46,6 @@ class DocumentChange {
   int get newIndex => _delegate.newIndex;
 
   /// The document affected by this change.
-  DocumentSnapshot get document => DocumentSnapshot._(_delegate.document);
+  DocumentSnapshot get document =>
+      DocumentSnapshot._(_delegate.document, _firestore);
 }

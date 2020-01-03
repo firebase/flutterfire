@@ -19,20 +19,23 @@ class _CodecUtility {
   }
 
   static Map<String, dynamic> replaceDelegatesWithValueInMap(
-      Map<String, dynamic> data) {
+      Map<String, dynamic> data, Firestore firestore) {
     if (data == null) {
       return null;
     }
     Map<String, dynamic> output = Map.from(data);
-    output.updateAll((_, value) => valueDecode(value));
+    output.updateAll((_, value) => valueDecode(value, firestore));
     return output;
   }
 
-  static List<dynamic> replaceDelegatesWithValueInArray(List<dynamic> data) {
+  static List<dynamic> replaceDelegatesWithValueInArray(
+      List<dynamic> data, Firestore firestore) {
     if (data == null) {
       return null;
     }
-    return List.from(data).map((value) => valueDecode(value)).toList();
+    return List.from(data)
+        .map((value) => valueDecode(value, firestore))
+        .toList();
   }
 
   static dynamic valueEncode(dynamic value) {
@@ -46,13 +49,13 @@ class _CodecUtility {
     return value;
   }
 
-  static dynamic valueDecode(dynamic value) {
+  static dynamic valueDecode(dynamic value, Firestore firestore) {
     if (value is platform.DocumentReference) {
-      return DocumentReference._(value);
+      return DocumentReference._(value, firestore);
     } else if (value is List) {
-      return replaceDelegatesWithValueInArray(value);
+      return replaceDelegatesWithValueInArray(value, firestore);
     } else if (value is Map<String, dynamic>) {
-      return replaceDelegatesWithValueInMap(value);
+      return replaceDelegatesWithValueInMap(value, firestore);
     }
     return value;
   }

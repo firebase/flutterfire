@@ -9,6 +9,7 @@ part of cloud_firestore;
 /// You can get an instance by calling [Firestore.instance].
 class Firestore {
   platform.FirestorePlatform _delegatePackingProperty;
+
   platform.FirestorePlatform get _delegate {
     if (_delegatePackingProperty == null) {
       _delegatePackingProperty = platform.FirestorePlatform.instance;
@@ -43,16 +44,16 @@ class Firestore {
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference collection(String path) {
     assert(path != null);
-    return CollectionReference._(_delegate.collection(path));
+    return CollectionReference._(_delegate.collection(path), this);
   }
 
   /// Gets a [Query] for the specified collection group.
   Query collectionGroup(String path) =>
-      Query._(_delegate.collectionGroup(path));
+      Query._(_delegate.collectionGroup(path), this);
 
   /// Gets a [DocumentReference] for the specified Firestore path.
   DocumentReference document(String path) =>
-      DocumentReference._(_delegate.document(path));
+      DocumentReference._(_delegate.document(path), this);
 
   @Deprecated('Use the persistenceEnabled parameter of the [settings] method')
   Future<void> enablePersistence(bool enable) =>
@@ -84,7 +85,7 @@ class Firestore {
       {Duration timeout = const Duration(seconds: 5)}) {
     return _delegate.runTransaction(
         (platformTransaction) =>
-            transactionHandler(Transaction._(platformTransaction)),
+            transactionHandler(Transaction._(platformTransaction, this)),
         timeout: timeout);
   }
 

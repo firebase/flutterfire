@@ -11,9 +11,9 @@ part of cloud_firestore;
 /// syntax to access a specific field.
 class DocumentSnapshot {
   platform.DocumentSnapshot _delegate;
-  Firestore get _firestore =>
-      Firestore(app: FirebaseApp(name: this._delegate.firestore.app.name));
-  DocumentSnapshot._(this._delegate);
+  final Firestore _firestore;
+
+  DocumentSnapshot._(this._delegate, this._firestore);
 
   /// The reference that produced this snapshot
   DocumentReference get reference =>
@@ -21,7 +21,7 @@ class DocumentSnapshot {
 
   /// Contains all the data of this snapshot
   Map<String, dynamic> get data =>
-      _CodecUtility.replaceDelegatesWithValueInMap(_delegate.data);
+      _CodecUtility.replaceDelegatesWithValueInMap(_delegate.data, _firestore);
 
   /// Metadata about this snapshot concerning its source and if it has local
   /// modifications.

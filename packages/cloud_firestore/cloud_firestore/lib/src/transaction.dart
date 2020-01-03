@@ -9,7 +9,9 @@ part of cloud_firestore;
 typedef Future<dynamic> TransactionHandler(Transaction transaction);
 
 class Transaction {
-  Transaction._(this._delegate);
+  final Firestore _firestore;
+
+  Transaction._(this._delegate, this._firestore);
 
   platform.Transaction _delegate;
 
@@ -20,7 +22,7 @@ class Transaction {
   Future<DocumentSnapshot> get(DocumentReference documentReference) async {
     final result = await _delegate.get(documentReference._delegate);
     if (result != null) {
-      return DocumentSnapshot._(result);
+      return DocumentSnapshot._(result, _firestore);
     } else {
       return null;
     }
