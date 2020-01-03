@@ -5,7 +5,7 @@
 library cloud_firestore;
 
 import 'dart:async';
-import 'dart:ui' show hashValues, hashList;
+import 'dart:ui' show hashList;
 
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
@@ -15,20 +15,32 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
 export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
-    show FieldPath, Blob, GeoPoint;
+    show FieldPath, Blob, GeoPoint, Timestamp;
 
 part 'src/collection_reference.dart';
+
 part 'src/document_change.dart';
+
 part 'src/utils/platform_utils.dart';
+
 part 'src/document_reference.dart';
+
 part 'src/document_snapshot.dart';
+
 part 'src/field_value.dart';
+
 part 'src/firestore.dart';
+
 part 'src/query.dart';
+
 part 'src/query_snapshot.dart';
+
 part 'src/utils/codec_utility.dart';
+
 part 'src/snapshot_metadata.dart';
-part 'src/timestamp.dart';
+
 part 'src/transaction.dart';
+
 part 'src/write_batch.dart';
+
 part 'src/source.dart';
