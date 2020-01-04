@@ -1,3 +1,7 @@
+## 0.1.2
+
+* Add `configure` method to set display callback. 
+
 ## 0.1.1+1
 
 * Remove the deprecated `author:` field from pubspec.yaml
