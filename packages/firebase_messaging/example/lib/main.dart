@@ -3,9 +3,11 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 final Map<String, Item> _items = <String, Item>{};
 Item _itemForMessage(Map<String, dynamic> message) {
@@ -90,6 +92,7 @@ class PushMessagingExample extends StatefulWidget {
 class _PushMessagingExampleState extends State<PushMessagingExample> {
   String _homeScreenText = "Waiting for token...";
   bool _topicButtonsDisabled = false;
+  final String serverToken = '<Server-Token>';
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final TextEditingController _topicController =
@@ -124,6 +127,36 @@ class _PushMessagingExampleState extends State<PushMessagingExample> {
         _navigateToItemDetail(message);
       }
     });
+  }
+
+  Future<void> _sendMessage() async {
+    await _firebaseMessaging.requestNotificationPermissions(
+      const IosNotificationSettings(
+          sound: true, badge: true, alert: true, provisional: false),
+    );
+
+    await http.post(
+      'https://fcm.googleapis.com/fcm/send',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'key=$serverToken',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'notification': <String, dynamic>{
+            'body': 'this is a body',
+            'title': 'this is a title'
+          },
+          'priority': 'high',
+          'data': <String, dynamic>{
+            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+            'id': '1',
+            'status': 'done'
+          },
+          'to': await _firebaseMessaging.getToken(),
+        },
+      ),
+    );
   }
 
   void _navigateToItemDetail(Map<String, dynamic> message) {
@@ -174,22 +207,15 @@ class _PushMessagingExampleState extends State<PushMessagingExample> {
         appBar: AppBar(
           title: const Text('Push Messaging Demo'),
         ),
-        // For testing -- simulate a message being received
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _showItemDialog(<String, dynamic>{
-            "data": <String, String>{
-              "id": "2",
-              "status": "out of stock",
-            },
-          }),
-          tooltip: 'Simulate Message',
-          child: const Icon(Icons.message),
-        ),
         body: Material(
           child: Column(
             children: <Widget>[
               Center(
                 child: Text(_homeScreenText),
+              ),
+              RaisedButton(
+                child: Text('Send Message'),
+                onPressed: _sendMessage,
               ),
               Row(children: <Widget>[
                 Expanded(
