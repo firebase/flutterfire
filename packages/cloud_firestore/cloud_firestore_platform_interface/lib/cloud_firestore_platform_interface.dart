@@ -54,7 +54,7 @@ abstract class FirestorePlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Create an instance using [app] using the existing implementation
-  factory FirestorePlatform.withApp({FirebaseApp app}) {
+  factory FirestorePlatform.instanceFor({FirebaseApp app}) {
     return FirestorePlatform.instance.withApp(app);
   }
 
