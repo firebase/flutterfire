@@ -12,12 +12,12 @@ abstract class CollectionReference extends Query {
   CollectionReference(FirestorePlatform firestore, List<String> pathComponents)
       : super(firestore: firestore, pathComponents: pathComponents);
 
-  /// ID of the referenced collection.
+  /// Identifier of the referenced collection.
   String get id => pathComponents.isEmpty ? null : pathComponents.last;
 
   /// For subcollections, parent returns the containing [DocumentReference].
   ///
-  /// For root collections, null is returned.
+  /// For root collections, `null` is returned.
   DocumentReference parent() {
     throw UnimplementedError("parent() is not implemented");
   }

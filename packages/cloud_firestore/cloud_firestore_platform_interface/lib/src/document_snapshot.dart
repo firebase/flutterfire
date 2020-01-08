@@ -4,34 +4,34 @@
 
 part of cloud_firestore_platform_interface;
 
-/// A DocumentSnapshot contains data read from a document in your Firestore
+/// Contains data read from a document in your Firestore
 /// database.
 ///
-/// The data can be extracted with the data property or by using subscript
+/// The data can be extracted with the [data] property or by using subscript
 /// syntax to access a specific field.
 class DocumentSnapshot {
-  /// Create instance of [DocumentSnapshot]
+  /// Constructs a [DocumentSnapshot] using the provided [FirestorePlatform].
   DocumentSnapshot(this._path, this.data, this.metadata, this.firestore);
 
   final String _path;
 
-  /// instance of the underlying [FirestorePlatform] app used
+  /// The [FirestorePlatform] used to produce this [DocumentSnapshot].
   final FirestorePlatform firestore;
 
-  /// The reference that produced this snapshot
+  /// The reference that produced this snapshot.
   DocumentReference get reference => firestore.document(_path);
 
-  /// Contains all the data of this snapshot
+  /// Contains all the data of this snapshot.
   final Map<String, dynamic> data;
 
   /// Metadata about this snapshot concerning its source and if it has local
   /// modifications.
   final SnapshotMetadata metadata;
 
-  /// Reads individual values from the snapshot
+  /// Reads individual values from the snapshot.
   dynamic operator [](String key) => data[key];
 
-  /// Returns the ID of the snapshot's document
+  /// The database ID of the snapshot's document.
   String get documentID => _path.split('/').last;
 
   /// Returns `true` if the document exists.
