@@ -32,7 +32,7 @@ class MethodChannelFirestore extends FirestorePlatform {
             Transaction(transactionId, call.arguments["app"]);
         final dynamic result =
             await _transactionHandlers[transactionId](transaction);
-        await transaction.finish();
+        await transaction._finish();
         return result;
       }
     });
