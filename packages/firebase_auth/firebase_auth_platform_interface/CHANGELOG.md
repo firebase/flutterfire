@@ -1,6 +1,8 @@
 ## 1.1.4
 
-- Correct support for `confirmPasswordReset`
+- **Breaking change**: Added missing `app` parameter to `confirmPasswordReset`.
+  (This is an exception to the usual policy of avoiding breaking changes since
+  `confirmPasswordReset` is a new API and doesn't have clients yet.)
 
 ## 1.1.3
 
