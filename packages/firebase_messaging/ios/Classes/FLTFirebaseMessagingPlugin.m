@@ -403,14 +403,13 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 
 - (void) invokeMethod:(NSString *) method callbackHandle:(long)handle arguments:(NSDictionary*)arguments {
   NSLog(@"Invoking method: %@", method);
-  //NSArray* args = @[@(handle), arguments];
   
-  NSDictionary *aaa = @{
+  NSDictionary *callbackArguments = @{
     @"handle" : @(handle),
     @"message" : arguments,
   };
 
-  [_backgroundChannel invokeMethod:method arguments:aaa result:^(id  _Nullable result) {
+  [_backgroundChannel invokeMethod:method arguments:callbackArguments result:^(id  _Nullable result) {
     NSLog(@"%@ method completed", method);
     if (self->fetchCompletionHandler!=nil) {
       self->fetchCompletionHandler(UIBackgroundFetchResultNewData);
