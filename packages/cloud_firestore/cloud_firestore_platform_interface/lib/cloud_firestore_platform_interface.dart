@@ -43,7 +43,7 @@ part 'src/write_batch_platform_interface.dart';
 
 /// Defines an interface to work with [FirestorePlatform] on web and mobile
 abstract class FirestorePlatform extends PlatformInterface {
-  /// [FirebaseApp] used for this firestore instance
+  /// The app associated with this Firestore instance.
   final FirebaseApp app;
 
   /// Create an instance using [app]
@@ -58,7 +58,8 @@ abstract class FirestorePlatform extends PlatformInterface {
     return FirestorePlatform.instance.withApp(app);
   }
 
-  /// return the current default [FirestorePlatform] instance
+  /// Returns the current default [FirestorePlatform] instance.
+  ///
   /// It will always default to [MethodChannelFirestore]
   /// if no web implementation was provided
   static FirestorePlatform get instance {
@@ -145,8 +146,10 @@ abstract class FirestorePlatform extends PlatformInterface {
   }
 
   /// Setup [FirestorePlatform] with settings.
-  /// if [sslEnabled] has value the [host] must have non-null value as well
-  /// if [cacheSizeBytes] is null then default values are used.
+  ///
+  /// If [sslEnabled] has a non-null value, the [host] must have non-null value as well.
+  ///
+  /// If [cacheSizeBytes] is `null`, then default values are used.
   Future<void> settings(
       {bool persistenceEnabled,
       String host,
