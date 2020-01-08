@@ -1,3 +1,7 @@
+## 0.1.2+5
+
+* [iOS] Fixed the issue that some data (custom keys/values) were not reported.
+
 ## 0.1.2+4
 
 * Updated the example with the missing `recordError()` method.
