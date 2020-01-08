@@ -375,10 +375,13 @@ int nextHandle = 0;
     NSString *oobCode = call.arguments[@"oobCode"];
     NSString *newPassword = call.arguments[@"newPassword"];
 
-    [[self getAuth:call.arguments] confirmPasswordResetWithCode:oobCode newPassword:newPassword completion:^(NSError *_Nullable error) {
-
-    [self sendResult:result forObject:nil error:error];
-    }];
+    [[self getAuth:call.arguments] confirmPasswordResetWithCode:oobCode
+                                                    newPassword:newPassword
+                                                     completion:^(NSError *_Nullable error) {
+                                                       [self sendResult:result
+                                                              forObject:nil
+                                                                  error:error];
+                                                     }];
 
   } else {
     result(FlutterMethodNotImplemented);
