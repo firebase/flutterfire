@@ -28,6 +28,7 @@ const String kMockVerificationId = '12345';
 const String kMockSmsCode = '123456';
 const String kMockLanguage = 'en';
 const String kMockIdTokenResultSignInProvider = 'password';
+const String kMockOobCode = 'oobcode';
 const Map<dynamic, dynamic> kMockIdTokenResultClaims = <dynamic, dynamic>{
   'claim1': 'value1',
 };
@@ -875,6 +876,11 @@ void main() {
     test('setLanguageCode', () async {
       await auth.setLanguageCode(kMockLanguage);
       verify(mock.setLanguageCode(auth.app.name, kMockLanguage));
+    });
+
+    test('confirmPasswordReset', () async {
+      await auth.confirmPasswordReset(kMockOobCode, kMockPassword);
+      verify(mock.confirmPasswordReset(kMockOobCode, kMockPassword));
     });
   });
 }
