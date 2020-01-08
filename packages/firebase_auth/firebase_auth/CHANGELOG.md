@@ -2,6 +2,10 @@
 
 * Add support for confirmPasswordReset
 
+## 0.15.3+1
+
+* Add integration instructions for the `web` platform.
+
 ## 0.15.3
 
 * Add support for OAuth Authentication for iOS and Android to solve generic providers authentication.

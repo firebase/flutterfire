@@ -1,3 +1,7 @@
+## 1.1.3
+
+- Added support for `confirmPasswordReset`
+
 ## 1.1.2
 
 - Remove the deprecated `author:` field from pubspec.yaml
