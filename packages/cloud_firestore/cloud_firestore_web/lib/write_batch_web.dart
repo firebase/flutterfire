@@ -1,7 +1,7 @@
 part of cloud_firestore_web;
 
 /// A web specific for [WriteBatch]
-class WriteBatchWeb implements WriteBatch {
+class WriteBatchWeb implements WriteBatchPlatform {
   final web.WriteBatch _delegate;
 
   // ignore: public_member_api_docs

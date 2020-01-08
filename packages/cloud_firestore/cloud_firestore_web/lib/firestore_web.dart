@@ -65,7 +65,7 @@ class FirestoreWeb extends FirestorePlatform {
       DocumentReferenceWeb(webFirestore, this, path.split('/'));
 
   @override
-  WriteBatch batch() => WriteBatchWeb(webFirestore.batch());
+  WriteBatchPlatform batch() => WriteBatchWeb(webFirestore.batch());
 
   @override
   Future<void> enablePersistence(bool enable) async {

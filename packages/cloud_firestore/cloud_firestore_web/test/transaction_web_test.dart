@@ -17,11 +17,6 @@ void main() {
       when(mockDocumentReference.delegate).thenReturn(mockWebDocumentReference);
     });
 
-    test("appName", () {
-      expect(transaction.appName, equals("test"));
-      verify(mockFirestore.appName());
-    });
-
     test("delete", () async {
       await transaction.delete(mockDocumentReference);
       verify(mockWebTransaction.delete(mockWebDocumentReference));

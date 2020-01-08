@@ -22,7 +22,7 @@ class Transaction extends TransactionPlatform {
                     app: FirebaseApp(name: appName)));
 
   /// executes all the pending operations on the transaction
-  Future<void> _finish() => Future.wait<void>(_pendingResults);
+  Future<void> finish() => Future.wait<void>(_pendingResults);
 
   @override
   Future<DocumentSnapshot> _get(DocumentReference documentReference) async {

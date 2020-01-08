@@ -19,9 +19,10 @@ class Firestore {
 
   Firestore({FirebaseApp app})
       : _delegatePackingProperty = app != null
-            ? platform.FirestorePlatform.withApp(app: app)
+            ? platform.FirestorePlatform.instanceFor(app: app)
             : platform.FirestorePlatform.instance;
 
+  @visibleForTesting
   static MethodChannel get channel => platform.MethodChannelFirestore.channel;
 
   /// Gets the instance of Firestore for the default Firebase app.

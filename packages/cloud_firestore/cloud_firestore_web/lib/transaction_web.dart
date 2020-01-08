@@ -1,7 +1,7 @@
 part of cloud_firestore_web;
 
 /// A web specific for [Transaction]
-class TransactionWeb implements Transaction {
+class TransactionWeb implements TransactionPlatform {
   final web.Transaction _webTransaction;
   @override
   FirestorePlatform firestore;
@@ -9,9 +9,6 @@ class TransactionWeb implements Transaction {
   // ignore: public_member_api_docs
   @visibleForTesting
   TransactionWeb(this._webTransaction, this.firestore);
-
-  @override
-  String get appName => firestore.appName();
 
   @override
   Future<void> delete(DocumentReference documentReference) async {
@@ -45,10 +42,5 @@ class TransactionWeb implements Transaction {
     await _webTransaction.update(
         (documentReference as DocumentReferenceWeb).delegate,
         data: CodecUtility.encodeMapData(data));
-  }
-
-  @override
-  Future<void> finish() {
-    return Future.value();
   }
 }
