@@ -371,7 +371,16 @@ int nextHandle = 0;
     NSString *language = call.arguments[@"language"];
     [[self getAuth:call.arguments] setLanguageCode:language];
     [self sendResult:result forObject:nil error:nil];
+  } else if () {
+    NSString *oobCode = call.arguments[@"oobCode"];
+    NSString *newPassword = call.arguments[@"newPassword"];
+
+    [[self getAuth:call.arguments] confirmPasswordReset:oobCode
+                                        newPassword:newPassword];
+
+    [self sendResult:result forObject:nil error:nil];
   } else {
+
     result(FlutterMethodNotImplemented);
   }
 }
