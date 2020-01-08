@@ -4,7 +4,7 @@
 
 part of cloud_firestore_platform_interface;
 
-/// A QuerySnapshot contains zero or more DocumentSnapshot objects.
+/// Contains zero or more [DocumentSnapshot] objects.
 class MethodChannelQuerySnapshot extends QuerySnapshot {
   /// Creates a [MethodChannelQuerySnapshot] from the given [data]
   MethodChannelQuerySnapshot(

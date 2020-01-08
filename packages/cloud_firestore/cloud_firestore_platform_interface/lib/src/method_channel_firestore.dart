@@ -45,7 +45,7 @@ class MethodChannelFirestore extends FirestorePlatform {
 
   static bool _initialized = false;
 
-  /// [MethodChannel] used to communicate with the native plugin
+  /// The [MethodChannel] used to communicate with the native plugin
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/cloud_firestore',
     StandardMethodCodec(FirestoreMessageCodec()),

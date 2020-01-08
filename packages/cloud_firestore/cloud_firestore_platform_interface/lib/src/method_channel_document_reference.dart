@@ -7,7 +7,7 @@ part of cloud_firestore_platform_interface;
 /// A [MethodChannelDocumentReference] is an implementation of [DocumentReference]
 /// that uses [MethodChannel] to communicate with Firebase plugins
 class MethodChannelDocumentReference extends DocumentReference {
-  /// Create a [MethodChannelDocumentReference] from [pathComponents]
+  /// Creates a [DocumentReference] that is implemented using [MethodChannel].
   MethodChannelDocumentReference(
       FirestorePlatform firestore, List<String> pathComponents)
       : assert(firestore != null),
