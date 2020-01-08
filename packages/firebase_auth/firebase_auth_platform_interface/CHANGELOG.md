@@ -1,3 +1,7 @@
+## 1.1.4
+
+- Correct support for `confirmPasswordReset`
+
 ## 1.1.3
 
 - Added support for `confirmPasswordReset`
