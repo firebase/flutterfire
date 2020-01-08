@@ -107,7 +107,7 @@ abstract class FirestorePlatform extends PlatformInterface {
   ///
   /// Unlike transactions, write batches are persisted offline and therefore are
   /// preferable when you don’t need to condition your writes on read data.
-  WriteBatch batch() {
+  WriteBatchPlatform batch() {
     throw UnimplementedError('batch() is not implemented');
   }
 

@@ -204,7 +204,7 @@ void main() {
     group('Transaction', () {
       test('runTransaction', () async {
         final Map<String, dynamic> result = await firestore.runTransaction(
-            (Transaction tx) async {},
+            (TransactionPlatform tx) async {},
             timeout: const Duration(seconds: 3));
 
         expect(log, <Matcher>[
