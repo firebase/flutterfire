@@ -702,8 +702,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
     String oobCode = arguments.get("oobCode");
     String newPassword = arguments.get("newPassword");
 
-    firebaseAuth.confirmPasswordReset(oobCode, newPassword);
-    result.success(null);
+    firebaseAuth.confirmPasswordReset(oobCode, newPassword).addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
   private class SignInCompleteListener implements OnCompleteListener<AuthResult> {
