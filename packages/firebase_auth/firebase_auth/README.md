@@ -130,6 +130,14 @@ device you are using you must set the `URL Schemes` to the `REVERSE_CLIENT_ID` f
 
   - When testing you can add test phone numbers and verification codes to the Firebase console.
 
+### Web integration
+
+In addition to the `firebase_auth` dependency, you'll need to modify the `web/index.html` of your app following the Firebase setup instructions:
+
+* [Add Firebase to your JavaScript project](https://firebase.google.com/docs/web/setup#from-the-cdn).
+
+Read more in the [`firebase_auth_web` README](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_auth/firebase_auth_web/README.md).
+
 ## Example
 
 See the [example application](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_auth/firebase_auth/example) source
