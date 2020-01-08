@@ -16,8 +16,8 @@ class MethodChannelFieldValueFactory implements FieldValueFactory {
 
   @override
   FieldValue increment(num value) {
-    // It is a compile-time error for any type other than int or double to
-    // attempt to extend or implement num.
+    // It is a compile-time error for any type other than `int` or `double` to
+    // attempt to extend or implement `num`.
     assert(value is int || value is double);
     if (value is double) {
       return FieldValue._(FieldValueType.incrementDouble, value);

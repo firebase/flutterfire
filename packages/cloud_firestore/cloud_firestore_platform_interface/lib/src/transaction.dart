@@ -18,10 +18,11 @@ class Transaction extends TransactionPlatform {
             transactionId,
             appName == FirebaseApp.defaultAppName
                 ? FirestorePlatform.instance
-                : FirestorePlatform.withApp(app: FirebaseApp(name: appName)));
+                : FirestorePlatform.instanceFor(
+                    app: FirebaseApp(name: appName)));
 
   /// executes all the pending operations on the transaction
-  Future<void> finish() => Future.wait<void>(_pendingResults);
+  Future<void> _finish() => Future.wait<void>(_pendingResults);
 
   @override
   Future<DocumentSnapshot> _get(DocumentReference documentReference) async {

@@ -32,7 +32,7 @@ class MethodChannelFirestore extends FirestorePlatform {
             Transaction(transactionId, call.arguments["app"]);
         final dynamic result =
             await _transactionHandlers[transactionId](transaction);
-        await transaction.finish();
+        await transaction._finish();
         return result;
       }
     });
@@ -45,7 +45,8 @@ class MethodChannelFirestore extends FirestorePlatform {
 
   static bool _initialized = false;
 
-  /// [MethodChannel] used to communicate with the native plugin
+  /// The [MethodChannel] used to communicate with the native plugin
+  @visibleForTesting
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/cloud_firestore',
     StandardMethodCodec(FirestoreMessageCodec()),
