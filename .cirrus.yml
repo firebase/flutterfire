@@ -110,3 +110,28 @@ task:
         - flutter channel $CHANNEL
         - ./script/incremental_build.sh build-examples --ipa
         - ./script/incremental_build.sh drive-examples
+
+task:
+  # don't run on release tags since it creates O(n^2) tasks where n is the number of plugins
+  only_if: $CIRRUS_TAG == ''
+  use_compute_credits: $CIRRUS_USER_COLLABORATOR == 'true'
+  osx_instance:
+    image: mojave-xcode-11.3-flutter
+  setup_script:
+    - pod repo update
+    - flutter config --enable-macos-desktop
+  upgrade_script:
+    - flutter channel master
+    - flutter upgrade
+    - git fetch origin master
+  activate_script: pub global activate flutter_plugin_tools
+  matrix:
+    - name: lint_darwin_plugins
+      script: ./script/lint_darwin_plugins.sh
+    - name: build-apps+drive-examples
+      env:
+        PATH: $PATH:/usr/local/bin
+      build_script:
+        - flutter channel master
+        - ./script/incremental_build.sh build-examples --macos --no-ipa
+        - ./script/incremental_build.sh drive-examples --macos
