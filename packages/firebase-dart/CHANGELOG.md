@@ -1,5 +1,8 @@
 ## 8.0.0
 
+- Added [Remote Config](https://firebase.google.com/docs/remote-config) support.
+  - See the top-level `remoteConfig` function and the related `RemoteConfig`
+    class.
 - Added back `AuthProvider` and made `OAuthProvider` a subtype.
 
 ## 7.1.0
