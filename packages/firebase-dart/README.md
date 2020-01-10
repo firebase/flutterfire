@@ -20,9 +20,8 @@
 
 * Node (via dart2js): [Anatoly Pulyaevskiy](https://github.com/pulyaevskiy) has
   been working on unofficial wrappers.
-  * [package:firebase_admin_interop](https://pub.dev/packages/packages/firebase_admin_interop)
-  * [package:firebase_functions_interop](https://pub.dev/packages/packages/firebase_functions_interop)
-  * [package:firestore_interop](https://pub.dev/packages/packages/firestore_interop)
+  * [package:firebase_admin_interop](https://pub.dev/packages/firebase_admin_interop)
+  * [package:firebase_functions_interop](https://pub.dev/packages/firebase_functions_interop)
 
 ## Firebase Configuration
 You can find more information on how to use Firebase on the
