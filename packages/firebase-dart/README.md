@@ -51,8 +51,8 @@ as well as one or more libraries corresponding to the features you are using.
 For example:
 
 ```html
-<script src="https://www.gstatic.com/firebasejs/7.4.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.4.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-firestore.js"></script>
 ```
 
 The firestore library is available in `firestore.dart`. You can find an
@@ -267,7 +267,7 @@ In order to use Remote Config functionality in your web app, you need to include
 script in your `.html` file, in addition to the other Firebase scripts:
 
 ```html
-<script src="https://www.gstatic.com/firebasejs/7.4.0/firebase-remote-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-remote-config.js"></script>
 ```
 
 Remote config parameters are defined in Firebase console. Three data types are supported by the API:
