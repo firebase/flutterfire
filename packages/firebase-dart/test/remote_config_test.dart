@@ -3,9 +3,9 @@ import 'dart:convert';
 
 import 'package:firebase/firebase.dart';
 import 'package:firebase/src/assets/assets.dart';
-import 'package:test/test.dart';
-import 'package:http/http.dart' as http;
 import 'package:googleapis_auth/auth_io.dart';
+import 'package:http/http.dart' as http;
+import 'package:test/test.dart';
 
 /// Requires service account credentials for the project to be specified in `service_account.json`
 /// in order to publish config parameters for testing.
@@ -177,8 +177,8 @@ class RemoteConfigAdmin {
     };
   }
 
-  String get _endpointUrl =>
-      'https://firebaseremoteconfig.googleapis.com/v1/projects/${_projectId}/remoteConfig';
+  String get _endpointUrl => 'https://firebaseremoteconfig.googleapis.com'
+      '/v1/projects/$_projectId/remoteConfig';
 
   Future<String> _getAccessToken() async {
     if (_creds == null || _creds.accessToken.hasExpired) {

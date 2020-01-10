@@ -97,7 +97,7 @@ class RemoteConfig extends JsObjectWrapper<RemoteConfigJsImpl> {
 
   /// Returns all config values.
   Map<String, RemoteConfigValue> getAll() {
-    final List<String> keys = js_interop.objectKeys(jsObject.getAll());
+    final keys = js_interop.objectKeys(jsObject.getAll());
     final entries = keys.map<MapEntry<String, RemoteConfigValue>>(
         (dynamic k) => MapEntry<String, RemoteConfigValue>(k, getValue(k)));
     return Map<String, RemoteConfigValue>.fromEntries(entries);
