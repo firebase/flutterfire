@@ -1,4 +1,4 @@
-## 8.0.0
+## 7.2.0
 
 - Added [Remote Config](https://firebase.google.com/docs/remote-config) support.
   - See the top-level `remoteConfig` function and the related `RemoteConfig`
