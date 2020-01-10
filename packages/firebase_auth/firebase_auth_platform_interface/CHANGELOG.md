@@ -1,4 +1,4 @@
-## 1.1.3+1
+## 1.1.4
 
 * Fixed typo on private method name.
 
