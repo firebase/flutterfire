@@ -11,6 +11,7 @@ import 'functions.dart';
 import 'interop/firebase_interop.dart' as firebase;
 import 'messaging.dart';
 import 'performance.dart';
+import 'remote_config.dart';
 import 'storage.dart';
 
 export 'interop/firebase_interop.dart' show SDK_VERSION;
@@ -134,6 +135,9 @@ Functions functions([App app]) {
   return Functions.getInstance(jsObject);
 }
 
+/// Accesses the [Messaging] service for the default App or a given app.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.messaging>.
 Messaging messaging([App app]) {
   var jsObject =
       (app != null) ? firebase.messaging(app.jsObject) : firebase.messaging();
@@ -141,6 +145,20 @@ Messaging messaging([App app]) {
   return Messaging.getInstance(jsObject);
 }
 
+/// Accesses the [RemoteConfig] service for the default App or a given app.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.remoteconfig>.
+RemoteConfig remoteConfig([App app]) {
+  var jsObject = (app != null)
+      ? firebase.remoteConfig(app.jsObject)
+      : firebase.remoteConfig();
+
+  return RemoteConfig.getInstance(jsObject);
+}
+
+/// Accesses the [Analytics] service for the default App or a given app.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.analytics>.
 Analytics analytics([App app]) {
   var jsObject =
       (app != null) ? firebase.analytics(app.jsObject) : firebase.analytics();
@@ -148,6 +166,9 @@ Analytics analytics([App app]) {
   return Analytics.getInstance(jsObject);
 }
 
+/// Accesses the [Performance] service for the default App or a given app.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.performance>.
 Performance performance([App app]) {
   var jsObject = (app != null)
       ? firebase.performance(app.jsObject)

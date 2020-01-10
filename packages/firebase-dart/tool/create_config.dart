@@ -28,7 +28,8 @@ void main() {
     'AUTH_DOMAIN',
     'DATABASE_URL',
     'STORAGE_BUCKET',
-    'PROJECT_ID'
+    'PROJECT_ID',
+    'APP_ID',
   ];
 
   var config = <String, String>{};

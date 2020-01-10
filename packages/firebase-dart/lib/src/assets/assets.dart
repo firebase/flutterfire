@@ -11,6 +11,7 @@ String get databaseUrl => _getConfig('DATABASE_URL');
 String get storageBucket => _getConfig('STORAGE_BUCKET');
 String get projectId => _getConfig('PROJECT_ID');
 String get messagingSenderId => _getConfig('MESSAGING_SENDER_ID');
+String get appId => _getConfig('APP_ID');
 String get serverKey => _getConfig('SERVER_KEY');
 String get vapidKey => _getConfig('VAPID_KEY');
 
@@ -43,6 +44,22 @@ Future config() async {
     _configVal = jsonDecode(await response.text());
   } catch (e) {
     print('Error getting `config.json`. Make sure it exists.');
+    rethrow;
+  }
+}
+
+Future<dynamic> readServiceAccountJson() async {
+  try {
+    var response =
+        await sw.fetch('packages/firebase/src/assets/service_account.json');
+    if (response.status > 399) {
+      throw StateError(
+          'Problem with server: ${response.status} ${response.body}');
+    }
+
+    return jsonDecode(await response.text());
+  } catch (e) {
+    print('Error getting `service_account.json`. Make sure it exists.');
     rethrow;
   }
 }

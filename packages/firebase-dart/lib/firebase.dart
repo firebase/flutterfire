@@ -11,5 +11,6 @@ export 'src/database.dart';
 export 'src/functions.dart';
 export 'src/messaging.dart';
 export 'src/performance.dart';
+export 'src/remote_config.dart';
 export 'src/storage.dart';
 export 'src/top_level.dart';

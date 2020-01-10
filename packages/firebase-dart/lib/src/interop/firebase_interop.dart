@@ -3,6 +3,7 @@
 @JS('firebase')
 library firebase.firebase_interop;
 
+import 'package:firebase/src/interop/remote_config_interop.dart';
 import 'package:js/js.dart';
 
 import 'analytics_interop.dart';
@@ -45,6 +46,8 @@ external MessagingJsImpl messaging([AppJsImpl app]);
 external AnalyticsJsImpl analytics([AppJsImpl app]);
 @JS()
 external PerformanceJsImpl performance([AppJsImpl app]);
+@JS()
+external RemoteConfigJsImpl remoteConfig([AppJsImpl app]);
 
 /// https://firebase.google.com/docs/reference/js/firebase.User
 @anonymous

@@ -93,6 +93,7 @@ void main() {
     authDomain: "YourAuthDomain",
     databaseURL: "YourDatabaseUrl",
     projectId: "YourProjectId",
+    appId: "YourAppId",
     storageBucket: "YourStorageBucket");
 
   fs.Firestore store = firestore();
@@ -258,6 +259,64 @@ You *usually* don't want to have this in your production apps.
 You can find more information on how to setup correct storage rules in the 
 official
 [Firebase documentation](https://firebase.google.com/docs/storage/security/). 
+
+
+### Remote Config example
+
+In order to use Remote Config functionality in your web app, you need to include the following
+script in your `.html` file, in addition to the other Firebase scripts:
+
+```html
+<script src="https://www.gstatic.com/firebasejs/7.4.0/firebase-remote-config.js"></script>
+```
+
+Remote config parameters are defined in Firebase console. Three data types are supported by the API:
+String, Number, and Boolean. All values are stored by Firebase as strings. It's your
+responsibility to assure that numbers and booleans are defined appropriately. A boolean
+value can be represented as either of: `0/1`, `true/false`, `t/f`, `yes/no`, `y/n`, `on/off`.
+
+For example:
+```
+title: Welcome
+counter: 2
+flag: true
+```
+
+Below is a simple example of consuming remote config:
+
+```dart
+final rc = firebase.remoteConfig();
+await rc.ensureInitialized();
+rc.defaultConfig = {'title': 'Hello', 'counter': 1, 'flag': false};
+print('title: ${rc.getString("title")}');             // <-- Hello
+print('counter: ${rc.getNumber("counter").toInt()}'); // <-- 1
+print('flag: ${rc.getBoolean("flag")}');              // <-- false
+await rc.fetchAndActivate();
+print('title: ${rc.getString("title")}');             // <-- Welcome
+print('counter: ${rc.getNumber("counter").toInt()}'); // <-- 2
+print('flag: ${rc.getBoolean("flag")}');              // <-- true
+```
+
+Refer to [Remote Config Documentation](https://firebase.google.com/docs/remote-config) for more details.
+
+### Remote Config tests
+
+In order to test remote config, you need to obtain service account credentials
+for your Firebase project. Each Firebase project has a default service account
+that will work for this purpose. The service account can be found in the 
+GCP console by choosing the project, then in the menu: IAM & admin > Service accounts.
+
+Once you have located the service account, choose Actions > Create key. 
+Pick JSON as the format. Put the JSON file in `lib/src/assets/service_account.json`. 
+
+Ensure that the remote config for your project is empty. The unit test will refuse 
+to run with the following message if it detects that the remote config of the project
+is not empty on start: 
+```
+This unit test requires remote config to be empty.
+```
+This is done to avoid overwriting your remote config in case if you run the test
+in a Firebase project that is used for other purposes.
 
 
 ## Bugs
