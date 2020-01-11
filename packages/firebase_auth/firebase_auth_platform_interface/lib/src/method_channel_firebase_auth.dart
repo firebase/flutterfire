@@ -353,8 +353,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> confirmPasswordReset(String oobCode, String newPassword) {
+  Future<void> confirmPasswordReset(
+    String app,
+    String oobCode,
+    String newPassword,
+  ) {
     return channel.invokeMethod('confirmPasswordReset', <String, String>{
+      'app': app,
       'oobCode': oobCode,
       'newPassword': newPassword,
     });

@@ -1338,7 +1338,7 @@ void main() {
     });
 
     test('confirmPasswordReset', () async {
-      await auth.confirmPasswordReset(kMockOobCode, kMockPassword);
+      await auth.confirmPasswordReset(appName, kMockOobCode, kMockPassword);
 
       expect(
         log,
@@ -1346,6 +1346,7 @@ void main() {
           isMethodCall(
             'confirmPasswordReset',
             arguments: <String, String>{
+              'app': appName,
               'oobCode': kMockOobCode,
               'newPassword': kMockPassword,
             },
