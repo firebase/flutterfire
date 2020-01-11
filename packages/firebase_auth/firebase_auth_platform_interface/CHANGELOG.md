@@ -1,3 +1,7 @@
+## 1.1.5
+
+- Fixed typo on private method name.
+
 ## 1.1.4
 
 - **Breaking change**: Added missing `app` parameter to `confirmPasswordReset`.

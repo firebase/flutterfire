@@ -368,7 +368,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<void> _callHandler(MethodCall call) async {
     switch (call.method) {
       case 'onAuthStateChanged':
-        _onAuthStageChangedHandler(call);
+        _onAuthStateChangedHandler(call);
         break;
       case 'phoneVerificationCompleted':
         final int handle = call.arguments['handle'];
@@ -409,7 +409,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
   }
 
-  void _onAuthStageChangedHandler(MethodCall call) {
+  void _onAuthStateChangedHandler(MethodCall call) {
     final Map<dynamic, dynamic> data = call.arguments['user'];
     final int id = call.arguments['id'];
 
