@@ -1,4 +1,4 @@
-## 1.1.4
+## 1.1.5
 
 - Fixed typo on private method name.
 
@@ -18,7 +18,8 @@
 
 ## 1.1.1
 
-- Fixed crash when platform returns an auth result where `additionalUserInfo` is not provided.
+- Fixed crash when platform returns an auth result where `additionalUserInfo`
+  is not provided.
 
 ## 1.1.0
 
