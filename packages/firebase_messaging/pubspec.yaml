@@ -12,6 +12,8 @@ flutter:
         pluginClass: FirebaseMessagingPlugin
       ios:
         pluginClass: FLTFirebaseMessagingPlugin
+      macos:
+        pluginClass: FLTFirebaseMessagingPlugin
 
 dependencies:
   meta: ^1.0.4

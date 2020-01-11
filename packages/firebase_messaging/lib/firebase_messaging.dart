@@ -81,7 +81,7 @@ class FirebaseMessaging {
   FutureOr<bool> requestNotificationPermissions([
     IosNotificationSettings iosSettings = const IosNotificationSettings(),
   ]) {
-    if (!_platform.isIOS) {
+    if (!(_platform.isIOS || _platform.isMacOS)) {
       return null;
     }
     return _channel.invokeMethod<bool>(
