@@ -337,6 +337,6 @@ class FirebaseAuth {
   /// `WEAK_PASSWORD` - if the new password is not strong enough.
   Future<void> confirmPasswordReset(String oobCode, String newPassword) {
     return FirebaseAuthPlatform.instance
-        .confirmPasswordReset(oobCode, newPassword);
+        .confirmPasswordReset(app.name, oobCode, newPassword);
   }
 }

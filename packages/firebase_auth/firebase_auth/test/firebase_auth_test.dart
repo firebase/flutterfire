@@ -880,7 +880,8 @@ void main() {
 
     test('confirmPasswordReset', () async {
       await auth.confirmPasswordReset(kMockOobCode, kMockPassword);
-      verify(mock.confirmPasswordReset(kMockOobCode, kMockPassword));
+      verify(mock.confirmPasswordReset(
+          auth.app.name, kMockOobCode, kMockPassword));
     });
   });
 }
