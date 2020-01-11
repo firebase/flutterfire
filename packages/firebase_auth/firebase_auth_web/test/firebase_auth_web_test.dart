@@ -13,32 +13,30 @@ import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 
+import 'mock/firebase_mock.dart';
+
 void main() {
   group('$FirebaseAuthWeb', () {
+
     setUp(() {
-      final js.JsObject firebaseMock = js.JsObject.jsify(<String, dynamic>{});
-      js.context['firebase'] = firebaseMock;
-      js.context['firebase']['app'] = js.allowInterop((String name) {
-        return js.JsObject.jsify(<String, dynamic>{
-          'name': name,
-          'options': <String, String>{'appId': '123'},
-        });
-      });
-      js.context['firebase']['auth'] = js.allowInterop((dynamic app) {});
+      firebaseMock = FirebaseMock(
+        app: js.allowInterop((String name) => FirebaseAppMock(
+          name: name, 
+          options: FirebaseAppOptionsMock(appId: '123'),
+        ),
+      ));
+
       FirebaseCorePlatform.instance = FirebaseCoreWeb();
       FirebaseAuthPlatform.instance = FirebaseAuthWeb();
     });
 
     test('signInAnonymously calls Firebase APIs', () async {
-      js.context['firebase']['auth'] = js.allowInterop((dynamic app) {
-        return js.JsObject.jsify(
-          <String, dynamic>{
-            'signInAnonymously': js.allowInterop(() {
-              return _jsPromise(_fakeUserCredential());
-            }),
-          },
-        );
-      });
+      firebaseMock.auth = js.allowInterop((_) => FirebaseAuthMock(
+        signInAnonymously: js.allowInterop(() {
+          return _jsPromise(_fakeUserCredential());
+        }),
+      ));
+
       FirebaseAuth auth = FirebaseAuth.instance;
       AuthResult result = await auth.signInAnonymously();
       expect(result, isNotNull);
@@ -46,30 +44,26 @@ void main() {
 
     group('onAuthStateChanged', () {
       final List seenUsers = [];
-      final Completer<js.JsFunction> nextUserCallback =
-          Completer<js.JsFunction>();
+      final Completer<Function> nextUserCallback =
+          Completer<Function>();
 
       final List<dynamic> streamValues = [_fakeRawUser(), null, _fakeRawUser()];
       final List<dynamic> expectedValueMatchers = [
-        isA<FirebaseUser>(),
+        isNotNull,
         isNull,
         isA<FirebaseUser>()
       ];
 
       test('non authenticated user present in stream', () async {
-        js.context['firebase']['auth'] = js.allowInterop((dynamic app) {
-          return js.JsObject.jsify(
-            <String, dynamic>{
-              'onAuthStateChanged': js.allowInterop(
-                  (js.JsFunction nextUserCb, js.JsFunction errorCb) {
-                if (!nextUserCallback.isCompleted) {
-                  nextUserCallback.complete(nextUserCb);
-                }
-                return js.allowInterop(() {});
-              }),
-            },
-          );
-        });
+        firebaseMock.auth = js.allowInterop((_) => FirebaseAuthMock(
+          onAuthStateChanged: js.allowInterop(
+              (Function nextUserCb, Function errorCb) {
+            if (!nextUserCallback.isCompleted) {
+              nextUserCallback.complete(nextUserCb);
+            }
+            return js.allowInterop(() {});
+          }),
+        ));
 
         FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -78,9 +72,9 @@ void main() {
             .listen((FirebaseUser user) => seenUsers.add(user));
 
         // Capture the JS function that lets us push users to the Stream from JS.
-        js.JsFunction nextUser = await nextUserCallback.future;
+        Function nextUser = await nextUserCallback.future;
 
-        streamValues.forEach((streamValue) => nextUser.apply([streamValue]));
+        streamValues.forEach((streamValue) => nextUser(streamValue));
 
         for (int i = 0; i < expectedValueMatchers.length; i++) {
           expect(seenUsers[i], expectedValueMatchers[i]);
@@ -90,35 +84,26 @@ void main() {
   });
 }
 
-js.JsObject _jsPromise(dynamic value) {
-  return js.JsObject.jsify(<String, dynamic>{
-    'then': js.allowInterop((js.JsFunction resolve, js.JsFunction reject) {
-      resolve.apply(<dynamic>[value]);
-    }),
-  });
+Promise _jsPromise(dynamic value) {
+  return Promise(js.allowInterop((void resolve(dynamic result), Function reject) {
+    resolve(value);
+  }));
 }
 
-js.JsObject _fakeUserCredential() {
-  return js.JsObject.jsify(<String, dynamic>{
-    'user': <String, dynamic>{
-      'providerId': 'email',
-      'metadata': <String, dynamic>{
-        'creationTime': 'Wed, 04 Dec 2019 18:19:11 GMT',
-        'lastSignInTime': 'Wed, 04 Dec 2019 18:19:11 GMT',
-      },
-      'providerData': <dynamic>[],
-    },
-    'additionalUserInfo': <String, dynamic>{},
-  });
+MockUserCredential _fakeUserCredential() {
+  return MockUserCredential(
+    user: _fakeRawUser(),
+    additionalUserInfo: MockAdditionalUserInfo(),
+  );
 }
 
-js.JsObject _fakeRawUser() {
-  return js.JsObject.jsify(<String, dynamic>{
-    'providerId': 'email',
-    'metadata': <String, dynamic>{
-      'creationTime': 'Wed, 04 Dec 2019 18:19:11 GMT',
-      'lastSignInTime': 'Wed, 04 Dec 2019 18:19:11 GMT',
-    },
-    'providerData': <dynamic>[],
-  });
+MockUser _fakeRawUser() {
+  return MockUser(
+    providerId: 'email',
+    metadata: MockUserMetadata(
+      creationTime: 'Wed, 04 Dec 2019 18:19:11 GMT',
+      lastSignInTime: 'Wed, 04 Dec 2019 18:19:11 GMT',
+    ),
+    providerData: [],
+  );
 }
