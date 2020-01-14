@@ -4,7 +4,7 @@
 @TestOn('chrome')
 
 import 'dart:async';
-import 'dart:js' as js;
+import 'dart:js' show allowInterop;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,11 +17,11 @@ import 'mock/firebase_mock.dart';
 
 void main() {
   group('$FirebaseAuthWeb', () {
-
     setUp(() {
       firebaseMock = FirebaseMock(
-        app: js.allowInterop((String name) => FirebaseAppMock(
-          name: name, 
+          app: allowInterop(
+        (String name) => FirebaseAppMock(
+          name: name,
           options: FirebaseAppOptionsMock(appId: '123'),
         ),
       ));
@@ -31,11 +31,11 @@ void main() {
     });
 
     test('signInAnonymously calls Firebase APIs', () async {
-      firebaseMock.auth = js.allowInterop((_) => FirebaseAuthMock(
-        signInAnonymously: js.allowInterop(() {
-          return _jsPromise(_fakeUserCredential());
-        }),
-      ));
+      firebaseMock.auth = allowInterop((_) => FirebaseAuthMock(
+            signInAnonymously: allowInterop(() {
+              return _jsPromise(_fakeUserCredential());
+            }),
+          ));
 
       FirebaseAuth auth = FirebaseAuth.instance;
       AuthResult result = await auth.signInAnonymously();
@@ -44,8 +44,7 @@ void main() {
 
     group('onAuthStateChanged', () {
       final List seenUsers = [];
-      final Completer<Function> nextUserCallback =
-          Completer<Function>();
+      final Completer<Function> nextUserCallback = Completer<Function>();
 
       final List<dynamic> streamValues = [_fakeRawUser(), null, _fakeRawUser()];
       final List<dynamic> expectedValueMatchers = [
@@ -55,15 +54,15 @@ void main() {
       ];
 
       test('non authenticated user present in stream', () async {
-        firebaseMock.auth = js.allowInterop((_) => FirebaseAuthMock(
-          onAuthStateChanged: js.allowInterop(
-              (Function nextUserCb, Function errorCb) {
-            if (!nextUserCallback.isCompleted) {
-              nextUserCallback.complete(nextUserCb);
-            }
-            return js.allowInterop(() {});
-          }),
-        ));
+        firebaseMock.auth = allowInterop((_) => FirebaseAuthMock(
+              onAuthStateChanged:
+                  allowInterop((Function nextUserCb, Function errorCb) {
+                if (!nextUserCallback.isCompleted) {
+                  nextUserCallback.complete(nextUserCb);
+                }
+                return allowInterop(() {});
+              }),
+            ));
 
         FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -85,7 +84,7 @@ void main() {
 }
 
 Promise _jsPromise(dynamic value) {
-  return Promise(js.allowInterop((void resolve(dynamic result), Function reject) {
+  return Promise(allowInterop((void resolve(dynamic result), Function reject) {
     resolve(value);
   }));
 }
