@@ -1,3 +1,7 @@
+## 0.1.2
+
+* Prevent `null` users (unauthenticated) from breaking the `onAuthStateChanged` Stream.
+
 ## 0.1.1+3
 
 * Fix the tests on dart2js.
