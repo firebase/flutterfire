@@ -1,4 +1,4 @@
-## 0.1.2
+## 0.1.1+4
 
 * Prevent `null` users (unauthenticated) from breaking the `onAuthStateChanged` Stream.
 * Migrate tests from jsify to package:js.
