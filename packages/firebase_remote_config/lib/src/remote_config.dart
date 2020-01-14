@@ -174,60 +174,76 @@ class RemoteConfig extends ChangeNotifier {
 
   /// Gets the value corresponding to the [key] as a String.
   ///
-  /// If there is no parameter with corresponding [key] then the default
-  /// String value is returned.
-  String getString(String key) {
+  /// If there is no parameter with the corresponding [key],
+  /// then the function argument [orElse] is called, which can
+  /// specify the default value. If [orElse] is not specified,
+  /// a string default value is returned.
+  String getString(String key, {String Function() orElse}) {
     if (_parameters.containsKey(key)) {
       return _parameters[key].asString();
     } else {
-      return defaultValueForString;
+      return orElse?.call() ?? defaultValueForString;
     }
   }
 
   /// Gets the value corresponding to the [key] as an int.
   ///
-  /// If there is no parameter with corresponding [key] then the default
-  /// int value is returned.
-  int getInt(String key) {
+  /// If there is no parameter with the corresponding [key],
+  /// then the function argument [orElse] is called, which can
+  /// specify the default value. If [orElse] is not specified,
+  /// a int default value is returned.
+  int getInt(String key, {int Function() orElse}) {
     if (_parameters.containsKey(key)) {
       return _parameters[key].asInt();
     } else {
-      return defaultValueForInt;
+      return orElse?.call() ?? defaultValueForInt;
     }
   }
 
   /// Gets the value corresponding to the [key] as a double.
   ///
-  /// If there is no parameter with corresponding [key] then the default double
-  /// value is returned.
-  double getDouble(String key) {
+  /// If there is no parameter with the corresponding [key],
+  /// then the function argument [orElse] is called, which can
+  /// specify the default value. If [orElse] is not specified,
+  /// a double default value is returned.
+  double getDouble(String key, {double Function() orElse}) {
     if (_parameters.containsKey(key)) {
       return _parameters[key].asDouble();
     } else {
-      return defaultValueForDouble;
+      return orElse?.call() ?? defaultValueForDouble;
     }
   }
 
   /// Gets the value corresponding to the [key] as a bool.
   ///
-  /// If there is no parameter with corresponding [key] then the default bool
-  /// value is returned.
-  bool getBool(String key) {
+  /// If there is no parameter with the corresponding [key],
+  /// then the function argument [orElse] is called, which can
+  /// specify the default value. If [orElse] is not specified,
+  /// a bool default value is returned.
+  bool getBool(String key, {bool Function() orElse}) {
     if (_parameters.containsKey(key)) {
       return _parameters[key].asBool();
     } else {
-      return defaultValueForBool;
+      return orElse?.call() ?? defaultValueForBool;
     }
   }
 
   /// Gets the [RemoteConfigValue] corresponding to the [key].
   ///
-  /// If there is no parameter with corresponding key then a [RemoteConfigValue]
-  /// with a null value and static source is returned.
-  RemoteConfigValue getValue(String key) {
+  /// If there is no parameter with the corresponding [key],
+  /// then the function argument [orElse] is called, which can
+  /// specify the default value. If [orElse] is not specified,
+  /// a [RemoteConfigValue] with a null value and static source is returned..
+  RemoteConfigValue getValue(
+    String key, {
+    List<int> Function() orElse,
+  }) {
     if (_parameters.containsKey(key)) {
       return _parameters[key];
     } else {
+      if (orElse != null) {
+        return RemoteConfigValue._(orElse(), ValueSource.valueDefault);
+      }
       return RemoteConfigValue._(null, ValueSource.valueStatic);
     }
   }

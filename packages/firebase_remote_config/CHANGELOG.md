@@ -1,3 +1,8 @@
+## 0.4.0
+
+* Added fallback strategy for getting values by optional adding function argument `orElse`  
+in `getString`, `getInt`, `getDouble`, `getBool` and `getValue`
+
 ## 0.3.0+1
 
 * Remove the deprecated `author:` field from pubspec.yaml

@@ -217,6 +217,31 @@ void main() {
       });
     });
 
+    test('fallback', () {
+      final key = 'not_existing_key';
+      // String
+      expect(remoteConfig.getString(key, orElse: () => 'result'), 'result');
+      expect(remoteConfig.getString(key), RemoteConfig.defaultValueForString);
+      // int
+      expect(remoteConfig.getInt(key, orElse: () => 111), 111);
+      expect(remoteConfig.getInt(key), RemoteConfig.defaultValueForInt);
+      // double
+      expect(remoteConfig.getDouble(key, orElse: () => 1.23), 1.23);
+      expect(remoteConfig.getDouble(key), RemoteConfig.defaultValueForDouble);
+      // bool
+      expect(remoteConfig.getBool(key, orElse: () => true), true);
+      expect(remoteConfig.getBool(key), RemoteConfig.defaultValueForBool);
+      // RemoteConfigValue
+      final List<int> aSymbol = [97]; // utf8 encoded "a" character
+      final fallbackValue = remoteConfig.getValue(key, orElse: () => aSymbol);
+      expect(fallbackValue.asString(), 'a');
+      expect(fallbackValue.source, ValueSource.valueDefault);
+
+      final defaultValue = remoteConfig.getValue(key);
+      expect(defaultValue.asString(), RemoteConfig.defaultValueForString);
+      expect(defaultValue.source, ValueSource.valueStatic);
+    });
+
     test('setConfigSettings', () async {
       expect(remoteConfig.remoteConfigSettings.debugMode, true);
       final RemoteConfigSettings remoteConfigSettings =
