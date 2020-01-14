@@ -1,3 +1,7 @@
+## 0.1.1+3
+
+* Fix the tests on dart2js.
+
 ## 0.1.1+2
 
 * Update setup instructions in the README.

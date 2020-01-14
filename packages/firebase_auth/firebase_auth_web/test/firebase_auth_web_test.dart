@@ -32,9 +32,9 @@ void main() {
       js.context['firebase']['auth'] = js.allowInterop((dynamic app) {
         return js.JsObject.jsify(
           <String, dynamic>{
-            'signInAnonymously': () {
+            'signInAnonymously': js.allowInterop(() {
               return _jsPromise(_fakeUserCredential());
-            },
+            }),
           },
         );
       });
@@ -47,9 +47,9 @@ void main() {
 
 js.JsObject _jsPromise(dynamic value) {
   return js.JsObject.jsify(<String, dynamic>{
-    'then': (js.JsFunction f) {
-      f.apply(<dynamic>[value]);
-    },
+    'then': js.allowInterop((js.JsFunction resolve, js.JsFunction reject) {
+      resolve.apply(<dynamic>[value]);
+    }),
   });
 }
 
