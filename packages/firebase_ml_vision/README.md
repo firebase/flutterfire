@@ -18,7 +18,7 @@ android {
     dependencies {
         // ...
 
-        api 'com.google.firebase:firebase-ml-vision-image-label-model:17.0.2'
+        api 'com.google.firebase:firebase-ml-vision-image-label-model:19.0.0'
     }
 }
 ```
@@ -30,7 +30,7 @@ android {
     dependencies {
         // ...
 
-        api 'com.google.firebase:firebase-ml-vision-face-model:17.0.2'
+        api 'com.google.firebase:firebase-ml-vision-face-model:19.0.0'
     }
 }
 ```
