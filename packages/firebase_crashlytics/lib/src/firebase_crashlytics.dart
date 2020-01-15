@@ -175,12 +175,12 @@ class Crashlytics {
 
         final List<String> methodField = lineParts.last.split(".");
 
-        final String className = methodField.first.trim();
-        element['class'] = className;
+        final String methodName = methodField.last.trim();
+        element['method'] = methodName;
 
         if (methodField.length > 1) {
-          final String methodName = methodField.last.trim();
-          element['method'] = methodName;
+          final String className = methodField.first.trim();
+          element['class'] = className;
         }
 
         elements.add(element);
