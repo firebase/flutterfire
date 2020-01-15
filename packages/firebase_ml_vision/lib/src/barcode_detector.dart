@@ -256,6 +256,7 @@ class Barcode {
                 _data['height'],
               )
             : null,
+        rawBytes = _data['rawBytes'],
         rawValue = _data['rawValue'],
         displayValue = _data['displayValue'],
         format = BarcodeFormat._(_data['format']),
@@ -292,6 +293,11 @@ class Barcode {
   ///
   /// Could be null if the bounding rectangle can not be determined.
   final Rect boundingBox;
+
+  /// Barcode bytes as they were encoded in the barcode.
+  ///
+  /// Null if nothing found.
+  final Uint8List rawBytes;
 
   /// Barcode value as it was encoded in the barcode.
   ///

@@ -58,6 +58,7 @@ class BarcodeDetector implements Detector {
                   }
                   barcodeMap.put("points", points);
 
+                  barcodeMap.put("rawBytes", barcode.getRawBytes());
                   barcodeMap.put("rawValue", barcode.getRawValue());
                   barcodeMap.put("displayValue", barcode.getDisplayValue());
                   barcodeMap.put("format", barcode.getFormat());

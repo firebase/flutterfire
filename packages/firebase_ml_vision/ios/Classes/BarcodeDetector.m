@@ -43,6 +43,7 @@ NSDictionary *visionBarcodeToDictionary(FIRVisionBarcode *barcode) {
     [points addObject:@[ @(point.CGPointValue.x), @(point.CGPointValue.y) ]];
   }
   return @{
+    @"rawBytes" : barcode.rawData,
     @"rawValue" : barcode.rawValue,
     @"displayValue" : barcode.displayValue ? barcode.displayValue : [NSNull null],
     @"left" : @(barcode.frame.origin.x),
