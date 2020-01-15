@@ -1,4 +1,4 @@
-## 0.1.0
+## 0.10.0
 
 * **Breaking Change** Update Android firebase-ml-vision dependencies to latest.
 * Add `rawBytes` property to `Barcode`.
