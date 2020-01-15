@@ -1,3 +1,8 @@
+## 0.1.1+4
+
+* Prevent `null` users (unauthenticated) from breaking the `onAuthStateChanged` Stream.
+* Migrate tests from jsify to package:js.
+
 ## 0.1.1+3
 
 * Fix the tests on dart2js.
