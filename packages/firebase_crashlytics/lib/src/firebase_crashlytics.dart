@@ -162,32 +162,25 @@ class Crashlytics {
     for (String line in lines) {
       final List<String> lineParts = line.split(RegExp('\\s+'));
       try {
-        final String fileName = lineParts[0];
-        final String lineNumber = lineParts[1].contains(":")
-            ? lineParts[1].substring(0, lineParts[1].indexOf(":")).trim()
-            : lineParts[1];
+        final String fileName = lineParts.first;
+
+        // Sometimes the trace looks like [<file>,<methodField>] and doesn't contain a line field
+        final String lineNumber =
+            lineParts.length > 2 ? lineParts[1].split(":").first : "0";
 
         final Map<String, String> element = <String, String>{
           'file': fileName,
           'line': lineNumber,
         };
 
-        // The next section would throw an exception in some cases if there was no stop here.
-        if (lineParts.length < 3) {
-          elements.add(element);
-          continue;
-        }
+        final List<String> methodField = lineParts.last.split(".");
 
-        if (lineParts[2].contains(".")) {
-          final String className =
-              lineParts[2].substring(0, lineParts[2].indexOf(".")).trim();
-          final String methodName =
-              lineParts[2].substring(lineParts[2].indexOf(".") + 1).trim();
+        final String className = methodField.first.trim();
+        element['class'] = className;
 
-          element['class'] = className;
+        if (methodField.length > 1) {
+          final String methodName = methodField.last.trim();
           element['method'] = methodName;
-        } else {
-          element['method'] = lineParts[2];
         }
 
         elements.add(element);
