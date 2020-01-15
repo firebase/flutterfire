@@ -1,3 +1,7 @@
+## 0.9.1+1
+
+* Enable custom parameters for rewarded video server-side verification callbacks.
+
 ## 0.9.1
 
 * Support v2 embedding. This will remain compatible with the original embedding and won't require
