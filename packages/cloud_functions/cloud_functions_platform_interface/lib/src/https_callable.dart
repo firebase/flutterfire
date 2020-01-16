@@ -24,6 +24,6 @@ abstract class HttpsCallable {
   /// the user is also automatically included.
   Future<HttpsCallableResult> call([dynamic parameters]);
 
-  /// The timeout to use when calling the function. Defaults to 60 seconds.
-  Duration timeout = Duration(seconds: 60);
+  /// The timeout to use when calling the function.
+  Duration timeout;
 }
