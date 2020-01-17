@@ -198,10 +198,12 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 }
 
 // Received data message on iOS 10 devices while app is in the foreground.
-// Only invoked if method swizzling is disabled and UNUserNotificationCenterDelegate has been registered in AppDelegate
+// Only invoked if method swizzling is disabled and UNUserNotificationCenterDelegate has been
+// registered in AppDelegate
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
        willPresentNotification:(UNNotification *)notification
-         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler NS_AVAILABLE_IOS(10.0) {
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
+    NS_AVAILABLE_IOS(10.0) {
   NSDictionary *userInfo = notification.request.content.userInfo;
   // Check to key to ensure we only handle messages from Firebase
   if (userInfo[kGCMMessageIDKey]) {
@@ -212,8 +214,8 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
-didReceiveNotificationResponse:(UNNotificationResponse *)response
-         withCompletionHandler:(void(^)(void))completionHandler NS_AVAILABLE_IOS(10.0) {
+    didReceiveNotificationResponse:(UNNotificationResponse *)response
+             withCompletionHandler:(void (^)(void))completionHandler NS_AVAILABLE_IOS(10.0) {
   NSDictionary *userInfo = response.notification.request.content.userInfo;
   // Check to key to ensure we only handle messages from Firebase
   if (userInfo[kGCMMessageIDKey]) {
