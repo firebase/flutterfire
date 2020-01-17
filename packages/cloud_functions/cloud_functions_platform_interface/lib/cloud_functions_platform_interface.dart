@@ -9,9 +9,8 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show required, visibleForTesting;
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-part 'src/https_callable.dart';
-part 'src/https_callable_result.dart';
 part 'src/method_channel_cloud_functions.dart';
 
 /// The interface that implementations of `cloud_functions` must extend.
@@ -22,14 +21,12 @@ part 'src/method_channel_cloud_functions.dart';
 /// will get the default implementation, while platform implementations that
 /// `implements` this interface will be broken by newly added
 /// [CloudFunctionsPlatform] methods.
-abstract class CloudFunctionsPlatform {
-  /// Only mock implementations should set this to `true`.
-  ///
-  /// Mockito mocks implement this class with `implements` which is forbidden
-  /// (see class docs). This property provides a backdoor for mocks to skip the
-  /// verification that the class isn't implemented with `implements`.
-  @visibleForTesting
-  bool get isMock => false;
+abstract class CloudFunctionsPlatform extends PlatformInterface {
+
+  static final Object _token = Object();
+
+  /// Constructs a CloudFunctionsPlatform
+  CloudFunctionsPlatform(): super(token: _token);
 
   /// The default instance of [CloudFunctionsPlatform] to use.
   ///
@@ -41,42 +38,39 @@ abstract class CloudFunctionsPlatform {
 
   static CloudFunctionsPlatform _instance = MethodChannelCloudFunctions();
 
+  /// Platform-specific plugins should set this with their own platform-specific
+  /// class that extends [CloudFunctionsPlatform] when they register themselves.
   // TODO(amirh): Extract common platform interface logic.
   // https://github.com/flutter/flutter/issues/43368
   static set instance(CloudFunctionsPlatform instance) {
-    if (!instance.isMock) {
-      try {
-        instance._verifyProvidesDefaultImplementations();
-      } on NoSuchMethodError catch (_) {
-        throw AssertionError(
-            'Platform interfaces must not be implemented with `implements`');
-      }
-    }
+    PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
 
-  /// This method ensures that [CloudFunctionsPlatform] isn't implemented with `implements`.
+  /// Invokes the specified cloud function.
   ///
-  /// See class docs for more details on why using `implements` to implement
-  /// [CloudFunctionsPlatform] is forbidden.
+  /// The data passed into the cloud function can be any of the following types:
   ///
-  /// This private method is called by the [instance] setter, which should fail
-  /// if the provided instance is a class implemented with `implements`.
-  void _verifyProvidesDefaultImplementations() {}
-
-  /// Gets an instance of a Callable HTTPS trigger in Cloud Functions.
+  /// `null`
+  /// `String`
+  /// `num`
+  /// [List], where the contained objects are also one of these types.
+  /// [Map], where the values are also one of these types.
   ///
-  /// Can then be executed by calling `call()` on it.
-  ///
-  /// @param functionName The name of the callable function.
-  HttpsCallable getHttpsCallable({@required String functionName}) {
-    throw UnimplementedError('getHttpsCallable() is not implemented');
-  }
-
-  /// Changes this instance to point to a Cloud Functions emulator running locally.
-  ///
-  /// @param origin The origin of the local emulator, such as "//10.0.2.2:5005".
-  CloudFunctionsPlatform useFunctionsEmulator({@required String origin}) {
-    throw UnimplementedError('useFunctionsEmulator() is not implemented');
+  /// @param appName name of the Firebase application to which the function belongs
+  /// @param functionName the function being called
+  /// @param region the region in which the function will be called. If `null`, defaults to `us-central1`
+  /// @param origin URL base of the function. If set, this can be used to send requests to a local emulator.
+  /// @param timeout Request timeout. Defaults to 60 seconds this parameter is `null`.
+  /// @param parameters The data payload for the function.
+  dynamic callCloudFunction({
+    @required String appName,
+    @required String functionName,
+    String region,
+    String origin,
+    Duration timeout,
+    dynamic parameters,
+  }) {
+    throw UnimplementedError('callCloudFunction() has not been implemented');
   }
 }

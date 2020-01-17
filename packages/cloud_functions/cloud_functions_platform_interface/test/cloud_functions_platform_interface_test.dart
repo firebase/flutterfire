@@ -5,6 +5,7 @@
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -26,15 +27,17 @@ void main() {
     });
 
     test('Can be mocked with `implements`', () {
-      final ImplementsCloudFunctionsPlatform mock =
-          ImplementsCloudFunctionsPlatform();
-      when(mock.isMock).thenReturn(true);
+      final CloudFunctionsPlatform mock = MocksCloudFunctionsPlatform();
       CloudFunctionsPlatform.instance = mock;
     });
   });
 }
 
 class ImplementsCloudFunctionsPlatform extends Mock
+    implements CloudFunctionsPlatform {}
+
+class MocksCloudFunctionsPlatform extends Mock
+    with MockPlatformInterfaceMixin
     implements CloudFunctionsPlatform {}
 
 class ExtendsCloudFunctionsPlatform extends CloudFunctionsPlatform {}

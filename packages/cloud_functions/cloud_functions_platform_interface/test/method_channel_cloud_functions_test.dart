@@ -30,20 +30,25 @@ void main() {
     });
 
     test('call', () async {
+      final String appName = FirebaseApp.instance.name;
       await CloudFunctionsPlatform.instance
-          .getHttpsCallable(functionName: 'baz')
-          .call();
-      final HttpsCallable callable = MethodChannelCloudFunctions(
-              app: FirebaseApp(name: '1337'), region: 'space')
-          .getHttpsCallable(functionName: 'qux')
-            ..timeout = const Duration(days: 300);
-      await callable.call(<String, dynamic>{
-        'quux': 'quuz',
-      });
-      await CloudFunctionsPlatform.instance
-          .useFunctionsEmulator(origin: 'http://localhost:5001')
-          .getHttpsCallable(functionName: 'bez')
-          .call();
+          .callCloudFunction(appName: appName, functionName: 'baz');
+
+      Map<String, String> params = {'quux': 'quuz'};
+      await CloudFunctionsPlatform.instance.callCloudFunction(
+        appName: '1337',
+        functionName: 'qux',
+        region: 'space',
+        timeout: Duration(days: 300),
+        parameters: params,
+      );
+
+      await CloudFunctionsPlatform.instance.callCloudFunction(
+        appName: appName,
+        functionName: 'bez',
+        origin: 'http://localhost:5001',
+      );
+
       expect(
         log,
         <Matcher>[
