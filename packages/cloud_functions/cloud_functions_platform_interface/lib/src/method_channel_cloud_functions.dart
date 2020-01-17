@@ -11,15 +11,16 @@ class CloudFunctionsException implements Exception {
 
   /// Error code reported by the platform
   final String code;
+
   /// Error message reported by the platform
   final String message;
+
   /// Additional info provided by the platform's exception
   final dynamic details;
 }
 
 /// [CloudFunctionsPlatform] implementation that delegates to a [MethodChannel].
 class MethodChannelCloudFunctions extends CloudFunctionsPlatform {
-
   /// The [MethodChannel] to which calls will be delegated.
   @visibleForTesting
   static const MethodChannel channel = MethodChannel(

@@ -19,11 +19,10 @@ part 'src/method_channel_cloud_functions.dart';
 /// `implements` this interface will be broken by newly added
 /// [CloudFunctionsPlatform] methods.
 abstract class CloudFunctionsPlatform extends PlatformInterface {
-
   static final Object _token = Object();
 
   /// Constructs a CloudFunctionsPlatform
-  CloudFunctionsPlatform(): super(token: _token);
+  CloudFunctionsPlatform() : super(token: _token);
 
   /// The default instance of [CloudFunctionsPlatform] to use.
   ///
