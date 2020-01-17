@@ -189,10 +189,38 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 }
 
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+// TODO: include if swizzling is enabled
 // Receive data message on iOS 10 devices while app is in the foreground.
-- (void)applicationReceivedRemoteMessage:(FIRMessagingRemoteMessage *)remoteMessage {
+/*- (void)applicationReceivedRemoteMessage:(FIRMessagingRemoteMessage *)remoteMessage {
   [self didReceiveRemoteNotification:remoteMessage.appData];
+}*/
+
+// TODO: exclude if swizzling is disabled
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler NS_AVAILABLE_IOS(10.0) {
+  NSDictionary *userInfo = notification.request.content.userInfo;
+
+  // With swizzling disabled you must let Messaging know about the message, for Analytics
+  [[FIRMessaging messaging] appDidReceiveMessage:userInfo];
+
+    if (userInfo[kGCMMessageIDKey]) {
+      [_channel invokeMethod:@"onMessage" arguments:userInfo];
+    }
+  // Change this to your preferred presentation option
+  completionHandler(UNNotificationPresentationOptionNone);
 }
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+didReceiveNotificationResponse:(UNNotificationResponse *)response
+         withCompletionHandler:(void(^)(void))completionHandler NS_AVAILABLE_IOS(10.0) {
+  NSDictionary *userInfo = response.notification.request.content.userInfo;
+  if (userInfo[kGCMMessageIDKey]) {
+    [_channel invokeMethod:@"onResume" arguments:userInfo];
+  }
+  completionHandler();
+}
+
 #endif
 
 - (void)didReceiveRemoteNotification:(NSDictionary *)userInfo {
