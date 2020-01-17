@@ -104,6 +104,9 @@ void main() {
         image = FirebaseVisionImage.fromFilePath('empty');
         returnBarcodes = <dynamic>[
           <dynamic, dynamic>{
+            'rawBytes': Uint8List.fromList(
+              [104, 101, 108, 108, 58, 114, 97, 119],
+            ),
             'rawValue': 'hello:raw',
             'displayValue': 'hello:display',
             'format': 0,
@@ -146,6 +149,10 @@ void main() {
         // TODO(jackson): Use const Rect when available in minimum Flutter SDK
         // ignore: prefer_const_constructors
         expect(barcode.boundingBox, Rect.fromLTWH(1.0, 2.0, 3.0, 4.0));
+        expect(
+          barcode.rawBytes,
+          Uint8List.fromList([104, 101, 108, 108, 58, 114, 97, 119]),
+        );
         expect(barcode.rawValue, 'hello:raw');
         expect(barcode.displayValue, 'hello:display');
         expect(barcode.cornerPoints, const <Offset>[
@@ -414,6 +421,9 @@ void main() {
       test('detectInImage no bounding box', () async {
         returnValue = <dynamic>[
           <dynamic, dynamic>{
+            'rawBytes': Uint8List.fromList(
+              [112, 111, 116, 97, 116, 111, 58, 114, 97, 119],
+            ),
             'rawValue': 'potato:raw',
             'displayValue': 'potato:display',
             'valueType': 0,
@@ -429,6 +439,10 @@ void main() {
 
         final Barcode barcode = barcodes[0];
         expect(barcode.boundingBox, null);
+        expect(
+          barcode.rawBytes,
+          Uint8List.fromList([112, 111, 116, 97, 116, 111, 58, 114, 97, 119]),
+        );
         expect(barcode.rawValue, 'potato:raw');
         expect(barcode.displayValue, 'potato:display');
         expect(barcode.cornerPoints, const <Offset>[
