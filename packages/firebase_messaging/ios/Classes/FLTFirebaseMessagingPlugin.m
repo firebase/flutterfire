@@ -202,15 +202,12 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
        willPresentNotification:(UNNotification *)notification
          withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler NS_AVAILABLE_IOS(10.0) {
   NSDictionary *userInfo = notification.request.content.userInfo;
-
-  // With swizzling disabled you must let Messaging know about the message, for Analytics
-  [[FIRMessaging messaging] appDidReceiveMessage:userInfo];
-
-    if (userInfo[kGCMMessageIDKey]) {
-      [_channel invokeMethod:@"onMessage" arguments:userInfo];
-    }
-  // Change this to your preferred presentation option
-  completionHandler(UNNotificationPresentationOptionNone);
+  if (userInfo[kGCMMessageIDKey]) {
+    // With swizzling disabled you must let Messaging know about the message, for Analytics
+    [[FIRMessaging messaging] appDidReceiveMessage:userInfo];
+    [_channel invokeMethod:@"onMessage" arguments:userInfo];
+    completionHandler(UNNotificationPresentationOptionNone);
+  }
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
@@ -219,8 +216,8 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
   NSDictionary *userInfo = response.notification.request.content.userInfo;
   if (userInfo[kGCMMessageIDKey]) {
     [_channel invokeMethod:@"onResume" arguments:userInfo];
+    completionHandler();
   }
-  completionHandler();
 }
 
 #endif
