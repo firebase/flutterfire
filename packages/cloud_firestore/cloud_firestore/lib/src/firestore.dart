@@ -28,7 +28,7 @@ class Firestore {
   /// Gets the instance of Firestore for the default Firebase app.
   static Firestore get instance => Firestore();
 
-  /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
+  /// The [FirebaseApp] instance to which this [Firestore] belongs.
   ///
   /// If null, the default [FirebaseApp] is used.
   FirebaseApp get app => _delegate.app;

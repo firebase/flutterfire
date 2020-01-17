@@ -1,11 +1,11 @@
 part of cloud_firestore_platform_interface;
 
-/// Represents binary data stored in [Uint8List]
+/// Represents binary data stored in [Uint8List].
 class Blob {
-  /// Create a [Blob]
+  /// Create a blob.
   const Blob(this.bytes);
 
-  /// Blob Data bytes
+  /// The bytes that are contained in this blob.
   final Uint8List bytes;
 
   @override

@@ -58,10 +58,10 @@ abstract class FirestorePlatform extends PlatformInterface {
     return FirestorePlatform.instance.withApp(app);
   }
 
-  /// Returns the current default [FirestorePlatform] instance.
+  /// The current default [FirestorePlatform] instance.
   ///
   /// It will always default to [MethodChannelFirestore]
-  /// if no web implementation was provided
+  /// if no web implementation was provided.
   static FirestorePlatform get instance {
     if (_instance == null) {
       _instance = MethodChannelFirestore();
@@ -111,18 +111,18 @@ abstract class FirestorePlatform extends PlatformInterface {
     throw UnimplementedError('batch() is not implemented');
   }
 
-  /// Executes the given TransactionHandler and then attempts to commit the
+  /// Executes the given [TransactionHandler] and then attempts to commit the
   /// changes applied within an atomic transaction.
   ///
-  /// In the TransactionHandler, a set of reads and writes can be performed
-  /// atomically using the Transaction object passed to the TransactionHandler.
-  /// After the TransactionHandler is run, Firestore will attempt to apply the
+  /// In the [TransactionHandler], a set of reads and writes can be performed
+  /// atomically using the [Transaction] object passed to the [TransactionHandler].
+  /// After the [TransactionHandler] is run, Firestore will attempt to apply the
   /// changes to the server. If any of the data read has been modified outside
   /// of this transaction since being read, then the transaction will be
   /// retried by executing the updateBlock again. If the transaction still
   /// fails after 5 retries, then the transaction will fail.
   ///
-  /// The TransactionHandler may be executed multiple times, it should be able
+  /// The [TransactionHandler] may be executed multiple times, it should be able
   /// to handle multiple executions.
   ///
   /// Data accessed with the transaction will not reflect local changes that

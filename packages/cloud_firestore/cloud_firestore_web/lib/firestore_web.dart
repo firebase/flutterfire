@@ -36,7 +36,6 @@ class FirestoreWeb extends FirestorePlatform {
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
     FirestorePlatform.instance = FirestoreWeb();
-    FieldValueFactory.instance = FieldValueFactoryWeb();
   }
 
   /// Builds an instance of [FirestoreWeb] with an optional [FirebaseApp] instance
@@ -44,7 +43,9 @@ class FirestoreWeb extends FirestorePlatform {
   FirestoreWeb({FirebaseApp app})
       : webFirestore = firebase
             .firestore(firebase.app((app ?? FirebaseApp.instance).name)),
-        super(app: app ?? FirebaseApp.instance);
+        super(app: app ?? FirebaseApp.instance) {
+    FieldValueFactory.instance = FieldValueFactoryWeb();
+  }
 
   @override
   FirestorePlatform withApp(FirebaseApp app) => FirestoreWeb(app: app);
