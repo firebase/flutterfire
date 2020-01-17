@@ -1,6 +1,12 @@
-## 6.0.11
+## 6.1.0
 * Update README instructions for iOS on how the plugin can be used with other notification plugins.
 * Fix compatibility issues with other notification plugins.
+* **Breaking change** Applications that need to use `firebase_messaging` with other notification plugins will
+  will need to add the following to their application's `Info.plist` file
+  ```xml
+  <key>FirebaseAppDelegateProxyEnabled</key>
+  <false/>
+  ```
 
 ## 6.0.10
 
