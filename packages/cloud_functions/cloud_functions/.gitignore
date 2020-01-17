@@ -33,3 +33,6 @@ build/
 .flutter-plugins
 
 ios/Classes/UserAgent.h
+
+.flutter-plugins-dependencies
+
