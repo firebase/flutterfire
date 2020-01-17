@@ -4,9 +4,6 @@
 
 library cloud_functions_platform_interface;
 
-import 'dart:async';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show required, visibleForTesting;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
