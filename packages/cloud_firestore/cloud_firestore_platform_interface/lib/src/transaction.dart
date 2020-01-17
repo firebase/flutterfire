@@ -21,9 +21,6 @@ class Transaction extends TransactionPlatform {
                 : FirestorePlatform.instanceFor(
                     app: FirebaseApp(name: appName)));
 
-  /// executes all the pending operations on the transaction
-  Future<void> finish() => Future.wait<void>(_pendingResults);
-
   @override
   Future<DocumentSnapshot> _get(DocumentReference documentReference) async {
     final Map<String, dynamic> result = await MethodChannelFirestore.channel
