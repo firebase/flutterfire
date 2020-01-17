@@ -8,6 +8,9 @@ part of cloud_firestore;
 ///
 /// You can get an instance by calling [Firestore.instance].
 class Firestore {
+  // Cached and lazily loaded instance of [FirestorePlatform] to avoid
+  // creating a [MethodChannelFirestore] when not needed or creating an
+  // instance with the default app before a user specifies an app.
   platform.FirestorePlatform _delegatePackingProperty;
 
   platform.FirestorePlatform get _delegate {
