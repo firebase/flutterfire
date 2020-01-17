@@ -191,19 +191,20 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 }
 
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-// TODO: include if swizzling is enabled
-// Receive data message on iOS 10 devices while app is in the foreground.
-/*- (void)applicationReceivedRemoteMessage:(FIRMessagingRemoteMessage *)remoteMessage {
+// Received data message on iOS 10 devices while app is in the foreground.
+// Only invoked if method swizzling is enabled.
+- (void)applicationReceivedRemoteMessage:(FIRMessagingRemoteMessage *)remoteMessage {
   [self didReceiveRemoteNotification:remoteMessage.appData];
-}*/
+}
 
-// TODO: exclude if swizzling is disabled
+// Received data message on iOS 10 devices while app is in the foreground.
+// Only invoked if method swizzling is disabled and UNUserNotificationCenterDelegate has been registered in AppDelegate
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
        willPresentNotification:(UNNotification *)notification
          withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler NS_AVAILABLE_IOS(10.0) {
   NSDictionary *userInfo = notification.request.content.userInfo;
+  // Check to key to ensure we only handle messages from Firebase
   if (userInfo[kGCMMessageIDKey]) {
-    // With swizzling disabled you must let Messaging know about the message, for Analytics
     [[FIRMessaging messaging] appDidReceiveMessage:userInfo];
     [_channel invokeMethod:@"onMessage" arguments:userInfo];
     completionHandler(UNNotificationPresentationOptionNone);
@@ -214,6 +215,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 didReceiveNotificationResponse:(UNNotificationResponse *)response
          withCompletionHandler:(void(^)(void))completionHandler NS_AVAILABLE_IOS(10.0) {
   NSDictionary *userInfo = response.notification.request.content.userInfo;
+  // Check to key to ensure we only handle messages from Firebase
   if (userInfo[kGCMMessageIDKey]) {
     [_channel invokeMethod:@"onResume" arguments:userInfo];
     completionHandler();
