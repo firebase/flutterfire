@@ -1,3 +1,7 @@
+## 6.0.11
+* Update README instructions for iOS on how the plugin can be used with other notification plugins.
+* Fix compatibility issues with other notification plugins.
+
 ## 6.0.10
 
 * Update README to explain how to correctly implement Android background message handling with the new v2 embedding. 
