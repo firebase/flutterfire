@@ -12,7 +12,8 @@ part of cloud_firestore;
 /// nor can it be committed again.
 
 class WriteBatch {
-  final platform.WriteBatch _delegate;
+  final platform.WriteBatchPlatform _delegate;
+
   WriteBatch._(this._delegate);
 
   Future<void> commit() => _delegate.commit();

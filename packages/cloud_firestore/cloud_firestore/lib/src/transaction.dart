@@ -13,7 +13,7 @@ class Transaction {
 
   Transaction._(this._delegate, this._firestore);
 
-  platform.Transaction _delegate;
+  platform.TransactionPlatform _delegate;
 
   // ignore: unused_element
   Future<void> _finish() => _delegate.finish();

@@ -43,4 +43,9 @@ class TransactionWeb implements TransactionPlatform {
         (documentReference as DocumentReferenceWeb).delegate,
         data: CodecUtility.encodeMapData(data));
   }
+
+  @override
+  Future<void> finish() {
+    return Future.value();
+  }
 }
