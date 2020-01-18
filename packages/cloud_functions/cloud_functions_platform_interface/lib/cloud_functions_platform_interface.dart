@@ -21,7 +21,7 @@ part 'src/method_channel_cloud_functions.dart';
 abstract class CloudFunctionsPlatform extends PlatformInterface {
   static final Object _token = Object();
 
-  /// Constructs a CloudFunctionsPlatform
+  /// Constructs a CloudFunctionsPlatform.
   CloudFunctionsPlatform() : super(token: _token);
 
   /// The default instance of [CloudFunctionsPlatform] to use.
@@ -45,20 +45,23 @@ abstract class CloudFunctionsPlatform extends PlatformInterface {
 
   /// Invokes the specified cloud function.
   ///
-  /// The data passed into the cloud function can be any of the following types:
+  /// The required parameters, [appName] and [functionName], specify which
+  /// cloud function will be called.
+  ///
+  /// The rest of the parameters are optional and used to invoke the function
+  /// with something other than the defaults. [region] defaults to `us-central1`
+  /// and [timeout] defaults to 60 seconds.
+  ///
+  /// The [origin] parameter may be used to provide the base URL for the function.
+  /// This can be used to send requests to a local emulator.
+  ///
+  /// The data passed into the cloud function via [parameters] can be any of the following types:
   ///
   /// `null`
   /// `String`
   /// `num`
   /// [List], where the contained objects are also one of these types.
   /// [Map], where the values are also one of these types.
-  ///
-  /// @param appName name of the Firebase application to which the function belongs
-  /// @param functionName the function being called
-  /// @param region the region in which the function will be called. If `null`, defaults to `us-central1`
-  /// @param origin URL base of the function. If set, this can be used to send requests to a local emulator.
-  /// @param timeout Request timeout. Defaults to 60 seconds this parameter is `null`.
-  /// @param parameters The data payload for the function.
   dynamic callCloudFunction({
     @required String appName,
     @required String functionName,

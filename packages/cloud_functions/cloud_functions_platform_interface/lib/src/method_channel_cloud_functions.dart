@@ -4,21 +4,6 @@
 
 part of cloud_functions_platform_interface;
 
-/// Exception that can be thrown by [MethodChannelCloudFunctions] to report
-/// errors that occurred inside the channel. A convenience wrapper for [PlatformException].
-class CloudFunctionsException implements Exception {
-  CloudFunctionsException._(this.code, this.message, this.details);
-
-  /// Error code reported by the platform
-  final String code;
-
-  /// Error message reported by the platform
-  final String message;
-
-  /// Additional info provided by the platform's exception
-  final dynamic details;
-}
-
 /// [CloudFunctionsPlatform] implementation that delegates to a [MethodChannel].
 class MethodChannelCloudFunctions extends CloudFunctionsPlatform {
   /// The [MethodChannel] to which calls will be delegated.
@@ -27,6 +12,25 @@ class MethodChannelCloudFunctions extends CloudFunctionsPlatform {
     'plugins.flutter.io/cloud_functions',
   );
 
+  /// Invokes the specified cloud function.
+  ///
+  /// The required parameters, [appName] and [functionName], specify which
+  /// cloud function will be called.
+  ///
+  /// The rest of the parameters are optional and used to invoke the function
+  /// with something other than the defaults. [region] defaults to `us-central1`
+  /// and [timeout] defaults to 60 seconds.
+  ///
+  /// The [origin] parameter may be used to provide the base URL for the function.
+  /// This can be used to send requests to a local emulator.
+  ///
+  /// The data passed into the cloud function via [parameters] can be any of the following types:
+  ///
+  /// `null`
+  /// `String`
+  /// `num`
+  /// [List], where the contained objects are also one of these types.
+  /// [Map], where the values are also one of these types.
   @override
   dynamic callCloudFunction({
     @required String appName,
@@ -36,28 +40,15 @@ class MethodChannelCloudFunctions extends CloudFunctionsPlatform {
     Duration timeout,
     dynamic parameters,
   }) async {
-    try {
-      final dynamic response = await channel
-          .invokeMethod<dynamic>('CloudFunctions#call', <String, dynamic>{
-        'app': appName,
-        'region': region,
-        'origin': origin,
-        'timeoutMicroseconds': timeout?.inMicroseconds,
-        'functionName': functionName,
-        'parameters': parameters,
-      });
-      return response;
-    } on PlatformException catch (e) {
-      if (e.code == 'functionsError') {
-        final String code = e.details['code'];
-        final String message = e.details['message'];
-        final dynamic details = e.details['details'];
-        throw CloudFunctionsException._(code, message, details);
-      } else {
-        throw Exception('Unable to call function ' + functionName);
-      }
-    } catch (e) {
-      rethrow;
-    }
+    final dynamic response = await channel
+        .invokeMethod<dynamic>('CloudFunctions#call', <String, dynamic>{
+      'app': appName,
+      'region': region,
+      'origin': origin,
+      'timeoutMicroseconds': timeout?.inMicroseconds,
+      'functionName': functionName,
+      'parameters': parameters,
+    });
+    return response;
   }
 }
