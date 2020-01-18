@@ -1,6 +1,6 @@
 ## 6.1.0
-* Update README instructions for iOS on how the plugin can be used with other notification plugins.
-* Fix compatibility issues with other notification plugins.
+* Implement `UNUserNotificationCenterDelegate` methods to allow plugin to work when method swizzling is disabled
+* **Breaking change** Applications now only need to their iOS project's `AppDelegate` when method swizzling is disabled
 * **Breaking change** Applications that need to use `firebase_messaging` with other notification plugins will
   will need to add the following to their application's `Info.plist` file
   ```xml
