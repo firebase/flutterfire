@@ -1,7 +1,7 @@
-name: cloud_firestore_platform_interface
-description: A common platform interface for the cloud_firestore plugin.
+name: firebase_database_platform_interface
+description: A common platform interface for the firebase_database plugin.
 version: 1.0.0
-homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore_platform_interface
+homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_database/firebase_database_platform_interface
 
 dependencies:
   flutter:
@@ -19,4 +19,3 @@ dev_dependencies:
 environment:
   sdk: ">=2.0.0-dev.28.0 <3.0.0"
   flutter: ">=1.9.1+hotfix.5 <2.0.0"
-
