@@ -11,6 +11,7 @@ import 'package:meta/meta.dart';
 part './database_reference_web.dart';
 part './query_web.dart';
 part './ondisconnect_web.dart';
+part './datasnapshot_web.dart';
 
 class DatabaseWeb extends DatabasePlatform {
   /// Instance of Database from web plugin

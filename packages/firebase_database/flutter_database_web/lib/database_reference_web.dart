@@ -51,7 +51,8 @@ class DatabaseReferenceWeb implements DatabaseReference {
   }
 
   /// Listens for a single value event and then stops listening.
-  Future<DataSnapshot> once() async => (await onValue.first).snapshot;
+  Future<DataSnapshot> once() async =>
+      DataSnapshotWeb(await _webDatabase.ref().child(path).once("value"));
 
   /// Fires when children are added.
   Stream<Event> get onChildAdded => observe(EventType.childAdded);
@@ -158,7 +159,6 @@ class DatabaseReferenceWeb implements DatabaseReference {
 
   @override
   Stream<Event> observe(EventType eventType) {
-    // TODO: implement observe
-    return null;
+    // _webDatabase.ref().child(path).o
   }
 }
