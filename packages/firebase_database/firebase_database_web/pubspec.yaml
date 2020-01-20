@@ -6,8 +6,8 @@ flutter:
   plugin:
     platforms:
       web:
-        pluginClass: FirestoreWeb
-        fileName: firestore_web.dart
+        pluginClass: DatabaseWeb
+        fileName: firebase_database_web.dart
 dependencies:
   flutter:
     sdk: flutter
