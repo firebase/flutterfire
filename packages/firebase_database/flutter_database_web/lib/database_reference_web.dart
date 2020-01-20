@@ -70,7 +70,7 @@ class DatabaseReferenceWeb implements DatabaseReference {
 
   @override
   OnDisconnect onDisconnect() {
-    return _webDatabase.ref(path).onDisconnect();
+    return OnDisconnectWeb(_webDatabase.ref().child(path).onDisconnect());
   }
 
   @override

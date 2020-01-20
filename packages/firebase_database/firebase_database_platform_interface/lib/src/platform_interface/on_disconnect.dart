@@ -5,14 +5,8 @@
 part of firebase_database_platform_interface;
 
 abstract class OnDisconnect {
-  OnDisconnect._(this._database, DatabaseReference reference)
-      : path = reference.path;
-
-  final DatabasePlatform _database;
-  final String path;
-
   Future<void> set(dynamic value, {dynamic priority}) {
-    throw UnimplementedError("update() not implemented");
+    throw UnimplementedError("set() not implemented");
   }
 
   Future<void> remove() => set(null);
