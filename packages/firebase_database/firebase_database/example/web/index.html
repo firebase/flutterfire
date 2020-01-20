@@ -5,6 +5,22 @@
   <title>example</title>
 </head>
 <body>
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-database.js"></script>
+  <script>
+    var firebaseConfig = {
+      appId: '1:79601577497:ios:5f2bcc6ba8cecddd',
+      messagingSenderId: '79601577497',
+      databaseURL: "https://flutter-firestore.firebaseio.com",
+      apiKey: 'AIzaSyArgmRGfB5kiQT6CunAOmKRVKEsxKmy6YI-G72PVU',
+      projectId: 'flutter-firestore',
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
   <script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>

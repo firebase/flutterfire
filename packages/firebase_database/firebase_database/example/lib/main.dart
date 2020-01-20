@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -12,20 +13,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final FirebaseApp app = await FirebaseApp.configure(
-    name: 'db2',
-    options: Platform.isIOS
-        ? const FirebaseOptions(
-            googleAppID: '1:297855924061:ios:c6de2b69b03a5be8',
-            gcmSenderID: '297855924061',
-            databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
-          )
-        : const FirebaseOptions(
-            googleAppID: '1:297855924061:android:669871c998cc21bd',
-            apiKey: 'AIzaSyD_shO5mfO9lhy2TVWhfo1VUmARKlG4suk',
-            databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
-          ),
-  );
+  final FirebaseApp app = await FirebaseApp.instance;
   runApp(MaterialApp(
     title: 'Flutter Database Example',
     home: MyHomePage(app: app),
@@ -67,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
     database.setPersistenceCacheSizeBytes(10000000);
     _counterRef.keepSynced(true);
     _counterSubscription = _counterRef.onValue.listen((Event event) {
+      print(event);
       setState(() {
         _error = null;
         _counter = event.snapshot.value ?? 0;
