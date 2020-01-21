@@ -72,33 +72,11 @@ class DatabaseReference extends Query {
   /// child location will be deleted.
   Future<void> set(dynamic value, {dynamic priority}) {
     return _delegate.set(value, priority: priority);
-    //TODO: Manage this
-    return database._channel.invokeMethod<void>(
-      'DatabaseReference#set',
-      <String, dynamic>{
-        'app': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'value': value,
-        'priority': priority,
-      },
-    );
   }
 
   /// Update the node with the `value`
   Future<void> update(Map<String, dynamic> value) {
     return _delegate.update(value);
-    //TODO: Manage this
-
-    return database._channel.invokeMethod<void>(
-      'DatabaseReference#update',
-      <String, dynamic>{
-        'app': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'value': value,
-      },
-    );
   }
 
   /// Sets a priority for the data at this Firebase Database location.
@@ -126,17 +104,7 @@ class DatabaseReference extends Query {
   /// floating-point numbers. Keys are always stored as strings and are treated
   /// as numbers only when they can be parsed as a 32-bit integer.
   Future<void> setPriority(dynamic priority) async {
-    //TODO: Manage this
     return _delegate.setPriority(priority);
-    return database._channel.invokeMethod<void>(
-      'DatabaseReference#setPriority',
-      <String, dynamic>{
-        'app': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'priority': priority,
-      },
-    );
   }
 
   /// Remove the data at this Firebase Database location. Any data at child
@@ -154,46 +122,16 @@ class DatabaseReference extends Query {
   Future<TransactionResult> runTransaction(
       TransactionHandler transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) async {
-    assert(timeout.inMilliseconds > 0,
-        'Transaction timeout must be more than 0 milliseconds.');
-
-    final Completer<TransactionResult> completer =
-        Completer<TransactionResult>();
-
-    final int transactionKey = FirebaseDatabase._transactions.isEmpty
-        ? 0
-        : FirebaseDatabase._transactions.keys.last + 1;
-
-    FirebaseDatabase._transactions[transactionKey] = transactionHandler;
-
-    TransactionResult toTransactionResult(Map<dynamic, dynamic> map) {
-      final DatabaseError databaseError =
-          map['error'] != null ? DatabaseError._(map['error']) : null;
-      final bool committed = map['committed'];
-      final DataSnapshot dataSnapshot =
-          map['snapshot'] != null ? DataSnapshot._(map['snapshot']) : null;
-
-      FirebaseDatabase._transactions.remove(transactionKey);
-
-      return TransactionResult._(databaseError, committed, dataSnapshot);
-    }
-
-    database._channel.invokeMethod<void>(
-        'DatabaseReference#runTransaction', <String, dynamic>{
-      'app': database.app?.name,
-      'databaseURL': database.databaseURL,
-      'path': path,
-      'transactionKey': transactionKey,
-      'transactionTimeout': timeout.inMilliseconds
-    }).then((dynamic response) {
-      completer.complete(toTransactionResult(response));
-    });
-
-    return completer.future;
+    throw UnsupportedError("runTransaction() is not supported ccurrently.");
+    // platform.TransactionResult result = (await _delegate.runTransaction(
+    //     (platformTransaction) => transactionHandler(Transaction),
+    //     timeout: timeout));
+    // return TransactionResult._(DatabaseError._(result.error), result.committed,
+    //     DataSnapshot._(result.dataSnapshot));
   }
 
   OnDisconnect onDisconnect() {
-    return OnDisconnect._(_delegate, this);
+    return OnDisconnect._(_delegate.onDisconnect());
   }
 }
 

@@ -13,7 +13,6 @@ class QueryWeb implements Query {
         _pathComponents = pathComponents,
         _query = query ??
             databasePlatform.reference().child(pathComponents.join("/"));
-
   @override
   Query endAt(value, {String key}) {
     return QueryWeb(
@@ -105,32 +104,28 @@ class QueryWeb implements Query {
   }
 
   @override
-  // TODO: implement onChildAdded
-  Stream<Event> get onChildAdded => null;
-
-  @override
-  // TODO: implement onChildChanged
-  Stream<Event> get onChildChanged => null;
-
-  @override
-  // TODO: implement onChildMoved
-  Stream<Event> get onChildMoved => null;
-
-  @override
-  // TODO: implement onChildRemoved
-  Stream<Event> get onChildRemoved => null;
-
-  @override
-  // TODO: implement onValue
-  Stream<Event> get onValue => null;
-
-  @override
   Future<DataSnapshot> once() async {
-    return DataSnapshotWeb(await _query.once("value"));
+    firebase.DataSnapshot snapshot = (await _query.once("value")).snapshot;
+    return DataSnapshot(snapshot.key, snapshot.val());
   }
 
   @override
   Map<String, dynamic> buildArguments() {
     throw UnimplementedError();
   }
+
+  @override
+  Stream<Event> get onChildAdded => observe(EventType.childAdded);
+
+  @override
+  Stream<Event> get onChildChanged => observe(EventType.childAdded);
+
+  @override
+  Stream<Event> get onChildMoved => observe(EventType.childMoved);
+
+  @override
+  Stream<Event> get onChildRemoved => observe(EventType.childRemoved);
+
+  @override
+  Stream<Event> get onValue => observe(EventType.value);
 }

@@ -21,16 +21,6 @@ abstract class Event {
   String get previousSiblingKey;
 }
 
-/// A DataSnapshot contains data from a Firebase Database location.
-/// Any time you read Firebase data, you receive the data as a DataSnapshot.
-abstract class DataSnapshot {
-  /// The key of the location that generated this DataSnapshot.
-  String get key;
-
-  /// Returns the contents of this data snapshot as native types.
-  dynamic get value;
-}
-
 class MutableData {
   @visibleForTesting
   MutableData.private(this._data);

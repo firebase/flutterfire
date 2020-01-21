@@ -15,10 +15,12 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 part 'src/platform_interface/database_reference.dart';
 part 'src/method_channel_database.dart';
 part 'src/method_channel_database_reference.dart';
+part 'src/method_channel_on_disconnect.dart';
 part 'src/platform_interface/query.dart';
 part 'src/platform_interface/on_disconnect.dart';
 part 'src/platform_interface/event.dart';
 part 'src/platform_interface/firebase_database.dart';
+part 'src/platform_interface/data_snapshot.dart';
 part 'src/method_channel_query.dart';
 part 'src/utils/push_id_generator.dart';
 

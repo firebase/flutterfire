@@ -1,15 +1,22 @@
 part of firebase_database_platform_interface;
 
 class MethodChannelQuery extends Query {
+  final DatabasePlatform database;
+  final List<String> pathComponents;
+  final Map<String, dynamic> parameters;
+
   MethodChannelQuery({
-    @required List<String> pathComponents,
-    Map<String, dynamic> parameters,
+    this.database,
+    this.pathComponents,
+    this.parameters,
   }) : super(
-          pathComponents: pathComponents,
+          database: database,
           parameters: parameters,
+          pathComponents: pathComponents,
         );
 
-  Stream<Event> _observe(EventType eventType) {
+  @override
+  Stream<Event> observe(EventType eventType) {
     Future<int> _handle;
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
@@ -19,7 +26,7 @@ class MethodChannelQuery extends Query {
         _handle = MethodChannelDatabase.channel.invokeMethod<int>(
           'Query#observe',
           <String, dynamic>{
-            'app': database.app?.name,
+            'app': database.appName(),
             'databaseURL': database.databaseURL,
             'path': path,
             'parameters': _parameters,
@@ -32,10 +39,10 @@ class MethodChannelQuery extends Query {
       },
       onCancel: () {
         _handle.then((int handle) async {
-          await database._channel.invokeMethod<int>(
+          await MethodChannelDatabase.channel.invokeMethod<int>(
             'Query#removeObserver',
             <String, dynamic>{
-              'app': database.app?.name,
+              'app': database.appName(),
               'databaseURL': database.databaseURL,
               'path': path,
               'parameters': _parameters,
@@ -54,10 +61,10 @@ class MethodChannelQuery extends Query {
   /// attached for that location. Additionally, while a location is kept synced,
   /// it will not be evicted from the persistent disk cache.
   Future<void> keepSynced(bool value) {
-    return database._channel.invokeMethod<void>(
+    return MethodChannelDatabase.channel.invokeMethod<void>(
       'Query#keepSynced',
       <String, dynamic>{
-        'app': database.app?.name,
+        'app': database.appName(),
         'databaseURL': database.databaseURL,
         'path': path,
         'parameters': _parameters,

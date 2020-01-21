@@ -50,9 +50,12 @@ class DatabaseReferenceWeb implements DatabaseReference {
         _databasePlatform, _pathComponents, queryDelegate.limitToLast(limit));
   }
 
-  /// Listens for a single value event and then stops listening.
-  Future<DataSnapshot> once() async =>
-      DataSnapshotWeb(await _webDatabase.ref().child(path).once("value"));
+  /// Fetch data on the reference once.
+  Future<DataSnapshot> once() async {
+    firebase.DataSnapshot snapshot =
+        (await _webDatabase.ref().child(path).once("value")).snapshot;
+    return DataSnapshot(snapshot.key, snapshot.val());
+  }
 
   /// Fires when children are added.
   Stream<Event> get onChildAdded => observe(EventType.childAdded);
@@ -71,7 +74,7 @@ class DatabaseReferenceWeb implements DatabaseReference {
 
   @override
   OnDisconnect onDisconnect() {
-    return OnDisconnectWeb(_webDatabase.ref().child(path).onDisconnect());
+    return OnDisconnectWeb._(_webDatabase.ref().child(path).onDisconnect());
   }
 
   @override

@@ -2,7 +2,8 @@ part of firebase_database_web;
 
 class OnDisconnectWeb extends OnDisconnect {
   firebase.OnDisconnect _onDisconnect;
-  OnDisconnectWeb(this._onDisconnect);
+
+  OnDisconnectWeb._(this._onDisconnect);
 
   @override
   Future<void> set(value, {priority}) {

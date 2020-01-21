@@ -6,6 +6,9 @@ part of firebase_database_platform_interface;
 
 /// Represents a query over the data at a particular location.
 abstract class Query {
+  final DatabasePlatform _database;
+  final List<String> _pathComponents;
+  final Map<String, dynamic> _parameters;
   Query({
     @required DatabasePlatform database,
     @required List<String> pathComponents,
@@ -15,10 +18,6 @@ abstract class Query {
         _parameters = parameters ??
             Map<String, dynamic>.unmodifiable(<String, dynamic>{}),
         assert(database != null);
-
-  final DatabasePlatform _database;
-  final List<String> _pathComponents;
-  final Map<String, dynamic> _parameters;
 
   /// Slash-delimited path representing the database location of this query.
   String get path => throw UnimplementedError("path not implemented");

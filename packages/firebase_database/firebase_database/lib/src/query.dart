@@ -23,16 +23,6 @@ class Query {
   /// Slash-delimited path representing the database location of this query.
   String get path => _pathComponents.join('/');
 
-  Query _copyWithParameters(Map<String, dynamic> parameters) {
-    return Query(
-      delegate: delegate,
-      pathComponents: _pathComponents,
-      parameters: Map<String, dynamic>.unmodifiable(
-        Map<String, dynamic>.from(_parameters)..addAll(parameters),
-      ),
-    );
-  }
-
   Map<String, dynamic> buildArguments() {
     return delegate.buildArguments();
   }
@@ -41,26 +31,37 @@ class Query {
   Future<DataSnapshot> once() async => (await onValue.first).snapshot;
 
   /// Fires when children are added.
-  Stream<Event> get onChildAdded => delegate.observe(EventType.childAdded);
+  Stream<Event> get onChildAdded => delegate
+      .observe(platform.EventType.childAdded)
+      .map((item) => Event._(item));
 
   /// Fires when children are removed. `previousChildKey` is null.
-  Stream<Event> get onChildRemoved => delegate.observe(EventType.childRemoved);
+  Stream<Event> get onChildRemoved => delegate
+      .observe(platform.EventType.childRemoved)
+      .map((item) => Event._(item));
 
   /// Fires when children are changed.
-  Stream<Event> get onChildChanged => delegate.observe(EventType.childChanged);
+  Stream<Event> get onChildChanged => delegate
+      .observe(platform.EventType.childChanged)
+      .map((item) => Event._(item));
 
   /// Fires when children are moved.
-  Stream<Event> get onChildMoved => delegate.observe(EventType.childMoved);
+  Stream<Event> get onChildMoved => delegate
+      .observe(platform.EventType.childMoved)
+      .map((item) => Event._(item));
 
   /// Fires when the data at this location is updated. `previousChildKey` is null.
-  Stream<Event> get onValue => delegate.observe(_EventType.value);
+  Stream<Event> get onValue =>
+      delegate.observe(platform.EventType.value).map((item) => Event._(item));
 
   /// Create a query constrained to only return child nodes with a value greater
   /// than or equal to the given value, using the given orderBy directive or
   /// priority as default, and optionally only child nodes with a key greater
   /// than or equal to the given key.
   Query startAt(dynamic value, {String key}) {
-    return Query(delegate: delegate.startAt(value, key: key));
+    return Query(
+        delegate: delegate.startAt(value, key: key),
+        pathComponents: _pathComponents);
   }
 
   /// Create a query constrained to only return child nodes with a value less
@@ -68,15 +69,9 @@ class Query {
   /// priority as default, and optionally only child nodes with a key less
   /// than or equal to the given key.
   Query endAt(dynamic value, {String key}) {
-    assert(!_parameters.containsKey('endAt'));
-    assert(value is String ||
-        value is bool ||
-        value is double ||
-        value is int ||
-        value == null);
-    final Map<String, dynamic> parameters = <String, dynamic>{'endAt': value};
-    if (key != null) parameters['endAtKey'] = key;
-    return _copyWithParameters(parameters);
+    return Query(
+        delegate: delegate.endAt(value, key: key),
+        pathComponents: _pathComponents);
   }
 
   /// Create a query constrained to only return child nodes with the given
@@ -84,27 +79,22 @@ class Query {
   ///
   /// If a key is provided, there is at most one such child as names are unique.
   Query equalTo(dynamic value, {String key}) {
-    assert(!_parameters.containsKey('equalTo'));
-    assert(value is String ||
-        value is bool ||
-        value is double ||
-        value is int ||
-        value == null);
-    final Map<String, dynamic> parameters = <String, dynamic>{'equalTo': value};
-    if (key != null) parameters['equalToKey'] = key;
-    return _copyWithParameters(parameters);
+    return Query(
+        delegate: delegate.equalTo(value, key: key),
+        pathComponents: _pathComponents);
   }
 
   /// Create a query with limit and anchor it to the start of the window.
   Query limitToFirst(int limit) {
-    assert(!_parameters.containsKey('limitToFirst'));
-    return _copyWithParameters(<String, dynamic>{'limitToFirst': limit});
+    return Query(
+        delegate: delegate.limitToFirst(limit),
+        pathComponents: _pathComponents);
   }
 
   /// Create a query with limit and anchor it to the end of the window.
   Query limitToLast(int limit) {
-    assert(!_parameters.containsKey('limitToLast'));
-    return _copyWithParameters(<String, dynamic>{'limitToLast': limit});
+    return Query(
+        delegate: delegate.limitToLast(limit), pathComponents: _pathComponents);
   }
 
   /// Generate a view of the data sorted by values of a particular child key.
@@ -112,11 +102,8 @@ class Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByChild(String key) {
-    assert(key != null);
-    assert(!_parameters.containsKey('orderBy'));
-    return _copyWithParameters(
-      <String, dynamic>{'orderBy': 'child', 'orderByChildKey': key},
-    );
+    return Query(
+        delegate: delegate.orderByChild(key), pathComponents: _pathComponents);
   }
 
   /// Generate a view of the data sorted by key.
@@ -124,8 +111,8 @@ class Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByKey() {
-    assert(!_parameters.containsKey('orderBy'));
-    return _copyWithParameters(<String, dynamic>{'orderBy': 'key'});
+    return Query(
+        delegate: delegate.orderByKey(), pathComponents: _pathComponents);
   }
 
   /// Generate a view of the data sorted by value.
@@ -133,8 +120,8 @@ class Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByValue() {
-    assert(!_parameters.containsKey('orderBy'));
-    return _copyWithParameters(<String, dynamic>{'orderBy': 'value'});
+    return Query(
+        delegate: delegate.orderByValue(), pathComponents: _pathComponents);
   }
 
   /// Generate a view of the data sorted by priority.
@@ -142,11 +129,15 @@ class Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByPriority() {
-    assert(!_parameters.containsKey('orderBy'));
-    return _copyWithParameters(<String, dynamic>{'orderBy': 'priority'});
+    return Query(
+        delegate: delegate.orderByPriority(), pathComponents: _pathComponents);
   }
 
   /// Obtains a DatabaseReference corresponding to this query's location.
   DatabaseReference reference() =>
       DatabaseReference._(delegate, _pathComponents);
+
+  Future<void> keepSynced(bool value) {
+    return delegate.keepSynced(value);
+  }
 }

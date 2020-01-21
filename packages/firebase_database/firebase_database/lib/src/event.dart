@@ -4,37 +4,29 @@
 
 part of firebase_database;
 
-enum _EventType {
-  childAdded,
-  childRemoved,
-  childChanged,
-  childMoved,
-  value,
-}
-
 /// `Event` encapsulates a DataSnapshot and possibly also the key of its
 /// previous sibling, which can be used to order the snapshots.
 class Event {
-  Event._(this._data) : snapshot = DataSnapshot._(_data['snapshot']);
+  final platform.Event _delegate;
+  Event._(this._delegate);
 
-  final DataSnapshot snapshot;
+  DataSnapshot get snapshot => DataSnapshot._(_delegate.snapshot);
   Map<dynamic, dynamic> _data;
 
-  String get previousSiblingKey => _data['previousSiblingKey'];
+  String get previousSiblingKey => _delegate.previousSiblingKey;
 }
 
 /// A DataSnapshot contains data from a Firebase Database location.
 /// Any time you read Firebase data, you receive the data as a DataSnapshot.
 class DataSnapshot {
-  DataSnapshot._(this._data);
-
-  final Map<dynamic, dynamic> _data;
+  final platform.DataSnapshot _delegate;
+  DataSnapshot._(this._delegate);
 
   /// The key of the location that generated this DataSnapshot.
-  String get key => _data['key'];
+  String get key => _delegate.key;
 
   /// Returns the contents of this data snapshot as native types.
-  dynamic get value => _data['value'];
+  dynamic get value => _delegate.value;
 }
 
 class MutableData {
@@ -55,18 +47,17 @@ class MutableData {
 /// Error that results from a transaction operation at a Firebase Database
 /// location.
 class DatabaseError {
-  DatabaseError._(this._data);
-
-  Map<dynamic, dynamic> _data;
+  platform.DatabaseError _delegate;
+  DatabaseError._(this._delegate);
 
   /// One of the defined status codes, depending on the error.
-  int get code => _data['code'];
+  int get code => _delegate.code;
 
   /// A human-readable description of the error.
-  String get message => _data['message'];
+  String get message => _delegate.message;
 
   /// Human-readable details on the error and additional information.
-  String get details => _data['details'];
+  String get details => _delegate.details;
 
   @override
   String toString() => "$runtimeType($code, $message, $details)";
