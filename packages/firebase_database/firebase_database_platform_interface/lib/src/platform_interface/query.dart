@@ -6,11 +6,11 @@ part of firebase_database_platform_interface;
 
 /// Represents a query over the data at a particular location.
 abstract class Query {
-  Query._(
-      {@required DatabasePlatform database,
-      @required List<String> pathComponents,
-      Map<String, dynamic> parameters})
-      : _database = database,
+  Query({
+    @required DatabasePlatform database,
+    @required List<String> pathComponents,
+    Map<String, dynamic> parameters,
+  })  : _database = database,
         _pathComponents = pathComponents,
         _parameters = parameters ??
             Map<String, dynamic>.unmodifiable(<String, dynamic>{}),
@@ -22,6 +22,10 @@ abstract class Query {
 
   /// Slash-delimited path representing the database location of this query.
   String get path => throw UnimplementedError("path not implemented");
+
+  Map<String, dynamic> buildArguments() {
+    throw UnimplementedError("_copyWithParameters() not implemented");
+  }
 
   Stream<Event> observe(EventType eventType) {
     throw UnimplementedError("observe() not implemented");

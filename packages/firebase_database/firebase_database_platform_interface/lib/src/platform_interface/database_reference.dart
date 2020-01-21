@@ -14,7 +14,7 @@ part of firebase_database_platform_interface;
 /// `DatabaseReference`s (ie. `child`).
 abstract class DatabaseReference extends Query {
   DatabaseReference._(DatabasePlatform database, List<String> pathComponents)
-      : super._(database: database, pathComponents: pathComponents);
+      : super(database: database, pathComponents: pathComponents);
 
   /// Gets a DatabaseReference for the location at the specified relative
   /// path. The relative path can either be a simple child key (e.g. ‘fred’) or

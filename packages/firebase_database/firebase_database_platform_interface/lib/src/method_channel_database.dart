@@ -7,7 +7,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   MethodChannelDatabase({FirebaseApp app, String databaseURL})
       : super(app: app ?? FirebaseApp.instance, databaseURL: databaseURL) {
     if (_initialized) return;
-    _channel.setMethodCallHandler((MethodCall call) async {
+    channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
         case 'Event':
           // final Event event = Event._(call.arguments);
@@ -42,9 +42,8 @@ class MethodChannelDatabase extends DatabasePlatform {
 
   static bool _initialized = false;
 
-  final MethodChannel _channel = const MethodChannel(
-    'plugins.flutter.io/firebase_database',
-  );
+  static final MethodChannel channel =
+      const MethodChannel('plugins.flutter.io/firebase_database');
 
   /// Attempts to sets the database persistence to [enabled].
   ///
@@ -65,7 +64,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// thus be available again when the app is restarted (even when there is no
   /// network connectivity at that time).
   Future<bool> setPersistenceEnabled(bool enabled) async {
-    final bool result = await _channel.invokeMethod<bool>(
+    final bool result = await channel.invokeMethod<bool>(
       'FirebaseDatabase#setPersistenceEnabled',
       <String, dynamic>{
         'app': app?.name,
@@ -94,7 +93,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
   Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
-    final bool result = await _channel.invokeMethod<bool>(
+    final bool result = await channel.invokeMethod<bool>(
       'FirebaseDatabase#setPersistenceCacheSizeBytes',
       <String, dynamic>{
         'app': app?.name,
@@ -108,7 +107,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// Resumes our connection to the Firebase Database backend after a previous
   /// [goOffline] call.
   Future<void> goOnline() {
-    return _channel.invokeMethod<void>(
+    return channel.invokeMethod<void>(
       'FirebaseDatabase#goOnline',
       <String, dynamic>{
         'app': app?.name,
@@ -120,7 +119,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// Shuts down our connection to the Firebase Database backend until
   /// [goOnline] is called.
   Future<void> goOffline() {
-    return _channel.invokeMethod<void>(
+    return channel.invokeMethod<void>(
       'FirebaseDatabase#goOffline',
       <String, dynamic>{
         'app': app?.name,
@@ -140,7 +139,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// affected event listeners, and the client will not (re-)send them to the
   /// Firebase Database backend.
   Future<void> purgeOutstandingWrites() {
-    return _channel.invokeMethod<void>(
+    return channel.invokeMethod<void>(
       'FirebaseDatabase#purgeOutstandingWrites',
       <String, dynamic>{
         'app': app?.name,

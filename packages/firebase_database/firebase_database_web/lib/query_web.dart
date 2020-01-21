@@ -125,8 +125,12 @@ class QueryWeb implements Query {
   Stream<Event> get onValue => null;
 
   @override
-  Future<DataSnapshot> once() {
-    // TODO: implement once
-    return null;
+  Future<DataSnapshot> once() async {
+    return DataSnapshotWeb(await _query.once("value"));
+  }
+
+  @override
+  Map<String, dynamic> buildArguments() {
+    throw UnimplementedError();
   }
 }

@@ -161,4 +161,9 @@ class DatabaseReferenceWeb implements DatabaseReference {
   Stream<Event> observe(EventType eventType) {
     // _webDatabase.ref().child(path).o
   }
+
+  @override
+  Map<String, dynamic> buildArguments() {
+    //TODO: Add this is a
+  }
 }

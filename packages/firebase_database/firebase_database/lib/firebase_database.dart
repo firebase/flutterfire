@@ -9,6 +9,8 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import "package:firebase_database_platform_interface/firebase_database_platform_interface.dart"
+    as platform;
 
 import 'src/utils/push_id_generator.dart';
 

@@ -13,14 +13,15 @@ part of firebase_database;
 /// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
 /// `DatabaseReference`s (ie. `child`).
 class DatabaseReference extends Query {
-  DatabaseReference._(FirebaseDatabase database, List<String> pathComponents)
-      : super._(database: database, pathComponents: pathComponents);
+  platform.DatabaseReference _delegate;
+  DatabaseReference._(this._delegate, List<String> pathComponents)
+      : super(delegate: _delegate, pathComponents: pathComponents);
 
   /// Gets a DatabaseReference for the location at the specified relative
   /// path. The relative path can either be a simple child key (e.g. ‘fred’) or
   /// a deeper slash-separated path (e.g. ‘fred/name/first’).
   DatabaseReference child(String path) {
-    return DatabaseReference._(_database,
+    return DatabaseReference._(_delegate,
         (List<String>.from(_pathComponents)..addAll(path.split('/'))));
   }
 
@@ -32,12 +33,12 @@ class DatabaseReference extends Query {
       return null;
     }
     return DatabaseReference._(
-        _database, (List<String>.from(_pathComponents)..removeLast()));
+        _delegate, (List<String>.from(_pathComponents)..removeLast()));
   }
 
   /// Gets a FIRDatabaseReference for the root location.
   DatabaseReference root() {
-    return DatabaseReference._(_database, <String>[]);
+    return DatabaseReference._(_delegate, <String>[]);
   }
 
   /// Gets the last token in a Firebase Database location (e.g. ‘fred’ in
@@ -54,7 +55,7 @@ class DatabaseReference extends Query {
   DatabaseReference push() {
     final String key = PushIdGenerator.generatePushChildName();
     final List<String> childPath = List<String>.from(_pathComponents)..add(key);
-    return DatabaseReference._(_database, childPath);
+    return DatabaseReference._(_delegate, childPath);
   }
 
   /// Write `value` to the location with the specified `priority` if applicable.
@@ -70,11 +71,13 @@ class DatabaseReference extends Query {
   /// Passing null for the new value means all data at this location or any
   /// child location will be deleted.
   Future<void> set(dynamic value, {dynamic priority}) {
-    return _database._channel.invokeMethod<void>(
+    return _delegate.set(value, priority: priority);
+    //TODO: Manage this
+    return database._channel.invokeMethod<void>(
       'DatabaseReference#set',
       <String, dynamic>{
-        'app': _database.app?.name,
-        'databaseURL': _database.databaseURL,
+        'app': database.app?.name,
+        'databaseURL': database.databaseURL,
         'path': path,
         'value': value,
         'priority': priority,
@@ -84,11 +87,14 @@ class DatabaseReference extends Query {
 
   /// Update the node with the `value`
   Future<void> update(Map<String, dynamic> value) {
-    return _database._channel.invokeMethod<void>(
+    return _delegate.update(value);
+    //TODO: Manage this
+
+    return database._channel.invokeMethod<void>(
       'DatabaseReference#update',
       <String, dynamic>{
-        'app': _database.app?.name,
-        'databaseURL': _database.databaseURL,
+        'app': database.app?.name,
+        'databaseURL': database.databaseURL,
         'path': path,
         'value': value,
       },
@@ -120,11 +126,13 @@ class DatabaseReference extends Query {
   /// floating-point numbers. Keys are always stored as strings and are treated
   /// as numbers only when they can be parsed as a 32-bit integer.
   Future<void> setPriority(dynamic priority) async {
-    return _database._channel.invokeMethod<void>(
+    //TODO: Manage this
+    return _delegate.setPriority(priority);
+    return database._channel.invokeMethod<void>(
       'DatabaseReference#setPriority',
       <String, dynamic>{
-        'app': _database.app?.name,
-        'databaseURL': _database.databaseURL,
+        'app': database.app?.name,
+        'databaseURL': database.databaseURL,
         'path': path,
         'priority': priority,
       },
@@ -170,10 +178,10 @@ class DatabaseReference extends Query {
       return TransactionResult._(databaseError, committed, dataSnapshot);
     }
 
-    _database._channel.invokeMethod<void>(
+    database._channel.invokeMethod<void>(
         'DatabaseReference#runTransaction', <String, dynamic>{
-      'app': _database.app?.name,
-      'databaseURL': _database.databaseURL,
+      'app': database.app?.name,
+      'databaseURL': database.databaseURL,
       'path': path,
       'transactionKey': transactionKey,
       'transactionTimeout': timeout.inMilliseconds
@@ -185,7 +193,7 @@ class DatabaseReference extends Query {
   }
 
   OnDisconnect onDisconnect() {
-    return OnDisconnect._(_database, this);
+    return OnDisconnect._(_delegate, this);
   }
 }
 
