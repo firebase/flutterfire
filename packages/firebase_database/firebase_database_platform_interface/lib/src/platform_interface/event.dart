@@ -14,11 +14,11 @@ enum EventType {
 
 /// `Event` encapsulates a DataSnapshot and possibly also the key of its
 /// previous sibling, which can be used to order the snapshots.
-abstract class Event {
+class Event {
+  Event(this.snapshot, this.previousSiblingKey);
   DataSnapshot snapshot;
-  Map<dynamic, dynamic> _data;
 
-  String get previousSiblingKey;
+  String previousSiblingKey;
 }
 
 class MutableData {

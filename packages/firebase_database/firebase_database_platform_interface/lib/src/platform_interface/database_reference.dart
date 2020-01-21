@@ -13,7 +13,7 @@ part of firebase_database_platform_interface;
 /// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
 /// `DatabaseReference`s (ie. `child`).
 abstract class DatabaseReference extends Query {
-  DatabaseReference._(DatabasePlatform database, List<String> pathComponents)
+  DatabaseReference(DatabasePlatform database, List<String> pathComponents)
       : super(database: database, pathComponents: pathComponents);
 
   /// Gets a DatabaseReference for the location at the specified relative

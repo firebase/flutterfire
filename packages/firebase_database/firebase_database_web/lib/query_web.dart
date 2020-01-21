@@ -2,7 +2,7 @@ part of firebase_database_web;
 
 class QueryWeb implements Query {
   final DatabasePlatform _databasePlatform;
-  final firebase.Query _query;
+  final firebase.Query _delegate;
   final List<String> _pathComponents;
 
   QueryWeb(
@@ -11,18 +11,18 @@ class QueryWeb implements Query {
     firebase.Query query,
   )   : _databasePlatform = databasePlatform,
         _pathComponents = pathComponents,
-        _query = query ??
+        _delegate = query ??
             databasePlatform.reference().child(pathComponents.join("/"));
   @override
   Query endAt(value, {String key}) {
     return QueryWeb(
-        _databasePlatform, _pathComponents, _query.endAt(value, key));
+        _databasePlatform, _pathComponents, _delegate.endAt(value, key));
   }
 
   @override
   Query equalTo(value, {String key}) {
     return QueryWeb(
-        _databasePlatform, _pathComponents, _query.equalTo(value, key));
+        _databasePlatform, _pathComponents, _delegate.equalTo(value, key));
   }
 
   @override
@@ -33,13 +33,13 @@ class QueryWeb implements Query {
   @override
   Query limitToFirst(int limit) {
     return QueryWeb(
-        _databasePlatform, _pathComponents, _query.limitToFirst(limit));
+        _databasePlatform, _pathComponents, _delegate.limitToFirst(limit));
   }
 
   @override
   Query limitToLast(int limit) {
     return QueryWeb(
-        _databasePlatform, _pathComponents, _query.limitToLast(limit));
+        _databasePlatform, _pathComponents, _delegate.limitToLast(limit));
   }
 
   @override
@@ -50,7 +50,7 @@ class QueryWeb implements Query {
   /// [equalTo].
   Query orderByChild(String key) {
     return QueryWeb(
-        _databasePlatform, _pathComponents, _query.orderByChild(key));
+        _databasePlatform, _pathComponents, _delegate.orderByChild(key));
   }
 
   @override
@@ -60,7 +60,7 @@ class QueryWeb implements Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByKey() {
-    return QueryWeb(_databasePlatform, _pathComponents, _query.orderByKey());
+    return QueryWeb(_databasePlatform, _pathComponents, _delegate.orderByKey());
   }
 
   @override
@@ -70,7 +70,8 @@ class QueryWeb implements Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByPriority() {
-    return QueryWeb(_databasePlatform, _pathComponents, _query.orderByValue());
+    return QueryWeb(
+        _databasePlatform, _pathComponents, _delegate.orderByValue());
   }
 
   @override
@@ -80,7 +81,8 @@ class QueryWeb implements Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByValue() {
-    return QueryWeb(_databasePlatform, _pathComponents, _query.orderByValue());
+    return QueryWeb(
+        _databasePlatform, _pathComponents, _delegate.orderByValue());
   }
 
   @override
@@ -94,18 +96,43 @@ class QueryWeb implements Query {
   /// than or equal to the given key.
   Query startAt(dynamic value, {String key}) {
     return QueryWeb(
-        _databasePlatform, _pathComponents, _query.startAt(value, key));
+        _databasePlatform, _pathComponents, _delegate.startAt(value, key));
   }
 
   @override
   Stream<Event> observe(EventType eventType) {
-    // TODO: implement observe
-    return null;
+    switch (eventType) {
+      case EventType.childAdded:
+        return _webStreamToPlatformStream(_delegate.onChildAdded);
+        break;
+      case EventType.childChanged:
+        return _webStreamToPlatformStream(_delegate.onChildChanged);
+        break;
+      case EventType.childMoved:
+        return _webStreamToPlatformStream(_delegate.onChildMoved);
+        break;
+      case EventType.childRemoved:
+        return _webStreamToPlatformStream(_delegate.onChildRemoved);
+        break;
+      case EventType.value:
+        return _webStreamToPlatformStream(_delegate.onValue);
+        break;
+      default:
+    }
+  }
+
+  Stream<Event> _webStreamToPlatformStream(Stream<firebase.QueryEvent> stream) {
+    return stream.map(
+      (firebase.QueryEvent event) => Event(
+        DataSnapshot(event.snapshot.key, event.snapshot.val()),
+        event.prevChildKey,
+      ),
+    );
   }
 
   @override
   Future<DataSnapshot> once() async {
-    firebase.DataSnapshot snapshot = (await _query.once("value")).snapshot;
+    firebase.DataSnapshot snapshot = (await _delegate.once("value")).snapshot;
     return DataSnapshot(snapshot.key, snapshot.val());
   }
 

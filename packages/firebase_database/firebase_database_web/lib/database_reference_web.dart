@@ -1,19 +1,23 @@
 part of firebase_database_web;
 
-class DatabaseReferenceWeb implements DatabaseReference {
+class DatabaseReferenceWeb extends DatabaseReference {
+  firebase.DatabaseReference _delegate;
   final firebase.Database _webDatabase;
   final DatabasePlatform _databasePlatform;
   final List<String> _pathComponents;
-  firebase.Query queryDelegate;
 
   DatabaseReferenceWeb(
     this._webDatabase,
     this._databasePlatform,
     this._pathComponents,
-  ) : queryDelegate = _webDatabase.ref(_pathComponents.join("/"));
+  )   : _delegate = _pathComponents.isEmpty
+            ? _webDatabase.ref("as")
+            : _webDatabase.ref("as").child(_pathComponents.join("/")),
+        super(_databasePlatform, _pathComponents);
 
   @override
   DatabaseReference child(String path) {
+    print(path);
     return DatabaseReferenceWeb(_webDatabase, _databasePlatform,
         List<String>.from(_pathComponents)..addAll(path.split("/")));
   }
@@ -21,18 +25,18 @@ class DatabaseReferenceWeb implements DatabaseReference {
   @override
   Query endAt(value, {String key}) {
     return QueryWeb(
-        _databasePlatform, _pathComponents, queryDelegate.endAt(value, key));
+        _databasePlatform, _pathComponents, _delegate.endAt(value, key));
   }
 
   @override
   Query equalTo(value, {String key}) {
     return QueryWeb(
-        _databasePlatform, _pathComponents, queryDelegate.equalTo(value, key));
+        _databasePlatform, _pathComponents, _delegate.equalTo(value, key));
   }
 
   @override
   Future<void> keepSynced(bool value) {
-    throw UnsupportedError("keeySynced() not supported on web");
+    print("keeySynced() not supported on web");
   }
 
   @override
@@ -41,19 +45,22 @@ class DatabaseReferenceWeb implements DatabaseReference {
   @override
   Query limitToFirst(int limit) {
     return QueryWeb(
-        _databasePlatform, _pathComponents, queryDelegate.limitToFirst(limit));
+        _databasePlatform, _pathComponents, _delegate.limitToFirst(limit));
   }
 
   @override
   Query limitToLast(int limit) {
     return QueryWeb(
-        _databasePlatform, _pathComponents, queryDelegate.limitToLast(limit));
+        _databasePlatform, _pathComponents, _delegate.limitToLast(limit));
   }
 
   /// Fetch data on the reference once.
   Future<DataSnapshot> once() async {
-    firebase.DataSnapshot snapshot =
-        (await _webDatabase.ref().child(path).once("value")).snapshot;
+    print("once is called here");
+    print(_delegate.ref);
+    firebase.DataSnapshot snapshot = (await _delegate.once("value")).snapshot;
+    print("once is called here with snapshot");
+    print(snapshot.val());
     return DataSnapshot(snapshot.key, snapshot.val());
   }
 
@@ -74,31 +81,30 @@ class DatabaseReferenceWeb implements DatabaseReference {
 
   @override
   OnDisconnect onDisconnect() {
-    return OnDisconnectWeb._(_webDatabase.ref().child(path).onDisconnect());
+    return OnDisconnectWeb._(_delegate.onDisconnect());
   }
 
   @override
   Query orderByChild(String key) {
     return QueryWeb(
-        _databasePlatform, _pathComponents, queryDelegate.orderByChild(key));
+        _databasePlatform, _pathComponents, _delegate.orderByChild(key));
   }
 
   @override
   Query orderByKey() {
-    return QueryWeb(
-        _databasePlatform, _pathComponents, queryDelegate.orderByKey());
+    return QueryWeb(_databasePlatform, _pathComponents, _delegate.orderByKey());
   }
 
   @override
   Query orderByPriority() {
     return QueryWeb(
-        _databasePlatform, _pathComponents, queryDelegate.orderByPriority());
+        _databasePlatform, _pathComponents, _delegate.orderByPriority());
   }
 
   @override
   Query orderByValue() {
     return QueryWeb(
-        _databasePlatform, _pathComponents, queryDelegate.orderByValue());
+        _databasePlatform, _pathComponents, _delegate.orderByValue());
   }
 
   @override
@@ -137,32 +143,59 @@ class DatabaseReferenceWeb implements DatabaseReference {
 
   @override
   Future<void> set(value, {priority}) {
-    if (priority != null) {
-      return _webDatabase.ref(path).setWithPriority(value, priority);
+    print("set requested" + value);
+    if (priority == null) {
+      return _delegate.set(value);
     } else {
-      return _webDatabase.ref(path).set(value);
+      return _delegate.setWithPriority(value, priority);
     }
   }
 
   @override
   Future<void> setPriority(priority) {
-    return _webDatabase.ref(path).setPriority(priority);
+    return _delegate.setPriority(priority);
   }
 
   @override
   Query startAt(value, {String key}) {
     return QueryWeb(
-        _databasePlatform, _pathComponents, queryDelegate.startAt(value, key));
+        _databasePlatform, _pathComponents, _delegate.startAt(value, key));
   }
 
   @override
   Future<void> update(Map<String, dynamic> value) {
-    return _webDatabase.ref(path).update(value);
+    return _delegate.update(value);
   }
 
   @override
   Stream<Event> observe(EventType eventType) {
-    // _webDatabase.ref().child(path).o
+    switch (eventType) {
+      case EventType.childAdded:
+        return _webStreamToPlatformStream(_delegate.onChildAdded);
+        break;
+      case EventType.childChanged:
+        return _webStreamToPlatformStream(_delegate.onChildChanged);
+        break;
+      case EventType.childMoved:
+        return _webStreamToPlatformStream(_delegate.onChildMoved);
+        break;
+      case EventType.childRemoved:
+        return _webStreamToPlatformStream(_delegate.onChildRemoved);
+        break;
+      case EventType.value:
+        return _webStreamToPlatformStream(_delegate.onValue);
+        break;
+      default:
+    }
+  }
+
+  Stream<Event> _webStreamToPlatformStream(Stream<firebase.QueryEvent> stream) {
+    return stream.map(
+      (firebase.QueryEvent event) => Event(
+        DataSnapshot(event.snapshot.key, event.snapshot.val()),
+        event.prevChildKey,
+      ),
+    );
   }
 
   @override
