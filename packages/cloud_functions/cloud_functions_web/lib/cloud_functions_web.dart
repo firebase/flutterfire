@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter/foundation.dart';
@@ -34,7 +36,7 @@ class CloudFunctionsWeb extends CloudFunctionsPlatform {
   /// [List], where the contained objects are also one of these types.
   /// [Map], where the values are also one of these types.
   @override
-  dynamic callCloudFunction({
+  Future<dynamic> callCloudFunction({
     @required String appName,
     @required String functionName,
     String region,
