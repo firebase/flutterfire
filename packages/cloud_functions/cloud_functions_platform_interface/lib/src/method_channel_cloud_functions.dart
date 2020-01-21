@@ -32,23 +32,20 @@ class MethodChannelCloudFunctions extends CloudFunctionsPlatform {
   /// [List], where the contained objects are also one of these types.
   /// [Map], where the values are also one of these types.
   @override
-  dynamic callCloudFunction({
+  Future<dynamic> callCloudFunction({
     @required String appName,
     @required String functionName,
     String region,
     String origin,
     Duration timeout,
     dynamic parameters,
-  }) async {
-    final dynamic response = await channel
-        .invokeMethod<dynamic>('CloudFunctions#call', <String, dynamic>{
-      'app': appName,
-      'region': region,
-      'origin': origin,
-      'timeoutMicroseconds': timeout?.inMicroseconds,
-      'functionName': functionName,
-      'parameters': parameters,
-    });
-    return response;
-  }
+  }) =>
+      channel.invokeMethod<dynamic>('CloudFunctions#call', <String, dynamic>{
+        'app': appName,
+        'region': region,
+        'origin': origin,
+        'timeoutMicroseconds': timeout?.inMicroseconds,
+        'functionName': functionName,
+        'parameters': parameters,
+      });
 }
