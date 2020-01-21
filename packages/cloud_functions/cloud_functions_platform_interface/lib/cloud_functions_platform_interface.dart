@@ -4,6 +4,8 @@
 
 library cloud_functions_platform_interface;
 
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show required, visibleForTesting;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -62,7 +64,7 @@ abstract class CloudFunctionsPlatform extends PlatformInterface {
   /// `num`
   /// [List], where the contained objects are also one of these types.
   /// [Map], where the values are also one of these types.
-  dynamic callCloudFunction({
+  Future<dynamic> callCloudFunction({
     @required String appName,
     @required String functionName,
     String region,
