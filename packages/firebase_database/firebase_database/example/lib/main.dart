@@ -49,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final FirebaseDatabase database = FirebaseDatabase(app: widget.app);
     _messagesRef = database.reference().child('messages');
     database.reference().child('counter').once().then((DataSnapshot snapshot) {
+      print(snapshot.value);
       print('Connected to second database and read ${snapshot.value}');
     });
     database.setPersistenceEnabled(true);
@@ -84,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _increment() async {
     // Increment counter in transaction.
+    _counterRef.set(_counter);
     final TransactionResult transactionResult =
         await _counterRef.runTransaction((MutableData mutableData) async {
       mutableData.value = (mutableData.value ?? 0) + 1;
