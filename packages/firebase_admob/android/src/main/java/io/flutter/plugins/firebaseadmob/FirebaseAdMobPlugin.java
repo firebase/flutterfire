@@ -36,6 +36,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   // This is always null when not using v2 embedding.
   private FlutterPluginBinding pluginBinding;
   private RewardedVideoAdWrapper rewardedWrapper;
+  private NativeAdFactory nativeAdFactory;
 
   /**
    * Interface used to display a {@link com.google.android.gms.ads.formats.UnifiedNativeAd}.
@@ -75,7 +76,19 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     }
 
     final FirebaseAdMobPlugin plugin = new FirebaseAdMobPlugin();
+    registrar.publish(plugin);
     plugin.initializePlugin(registrar.context(), registrar.activity(), registrar.messenger());
+  }
+
+  /**
+   * Sets this plugin's {@link io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory}
+   * used to create platform {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s.
+   *
+   * @param nativeAdFactory creates {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s
+   *     when Flutter NativeAds are created.
+   */
+  public void setNativeAdFactory(NativeAdFactory nativeAdFactory) {
+    this.nativeAdFactory = nativeAdFactory;
   }
 
   private void initializePlugin(
@@ -105,11 +118,18 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     if (adUnitId == null || adUnitId.isEmpty()) {
       result.error("no_unit_id", "a null or empty adUnitId was provided for ad id=" + id, null);
       return;
+    } else if (nativeAdFactory == null) {
+      result.error(
+          "no_native_ad_factory",
+          "Please set a non-null NativeAdFactory for FirebaseAdMobPlugin.",
+          null);
+      return;
     }
 
     final Map<String, Object> customOptions = call.argument("customOptions");
 
-    final MobileAd.Native nativeAd = MobileAd.createNative(id, activity, channel, customOptions);
+    final MobileAd.Native nativeAd =
+        MobileAd.createNative(id, activity, channel, nativeAdFactory, customOptions);
 
     if (nativeAd.status != MobileAd.Status.CREATED) {
       if (nativeAd.status == MobileAd.Status.FAILED)
