@@ -29,17 +29,16 @@ class HttpsCallable {
   /// the user is also automatically included.
   Future<HttpsCallableResult> call([dynamic parameters]) async {
     try {
-      final MethodChannel channel = CloudFunctions.channel;
-      final dynamic response = await channel
-          .invokeMethod<dynamic>('CloudFunctions#call', <String, dynamic>{
-        'app': _cloudFunctions._app.name,
-        'region': _cloudFunctions._region,
-        'origin': _cloudFunctions._origin,
-        'timeoutMicroseconds': timeout?.inMicroseconds,
-        'functionName': _functionName,
-        'parameters': parameters,
-      });
-      return HttpsCallableResult._(response);
+      return CloudFunctionsPlatform.instance
+          .callCloudFunction(
+            appName: _cloudFunctions._app.name,
+            region: _cloudFunctions._region,
+            origin: _cloudFunctions._origin,
+            timeout: timeout,
+            functionName: _functionName,
+            parameters: parameters,
+          )
+          .then((response) => HttpsCallableResult._(response));
     } on PlatformException catch (e) {
       if (e.code == 'functionsError') {
         final String code = e.details['code'];
