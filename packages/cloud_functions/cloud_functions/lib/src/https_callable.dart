@@ -27,7 +27,7 @@ class HttpsCallable {
   /// automatically includes a Firebase Instance ID token to identify the app
   /// instance. If a user is logged in with Firebase Auth, an auth ID token for
   /// the user is also automatically included.
-  Future<HttpsCallableResult> call([dynamic parameters]) async {
+  Future<HttpsCallableResult> call([dynamic parameters]) {
     try {
       return CloudFunctionsPlatform.instance
           .callCloudFunction(
