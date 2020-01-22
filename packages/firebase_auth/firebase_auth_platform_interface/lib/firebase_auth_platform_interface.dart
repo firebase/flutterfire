@@ -233,7 +233,11 @@ abstract class FirebaseAuthPlatform {
   }
 
   /// Completes the password reset process, given a confirmation code and new password.
-  Future<void> confirmPasswordReset(String oobCode, String newPassword) {
+  Future<void> confirmPasswordReset(
+    String app,
+    String oobCode,
+    String newPassword,
+  ) {
     throw UnimplementedError('confirmPasswordReset() is not implemented');
   }
 }
