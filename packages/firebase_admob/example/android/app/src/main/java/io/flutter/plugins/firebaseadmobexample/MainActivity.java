@@ -13,6 +13,7 @@ import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin;
 import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
+import java.util.Map;
 
 public class MainActivity extends FlutterActivity implements NativeAdFactory {
   // TODO(bparrishMines): Remove this once v2 of GeneratedPluginRegistrant rolls to stable. https://github.com/flutter/flutter/issues/42694
@@ -23,7 +24,8 @@ public class MainActivity extends FlutterActivity implements NativeAdFactory {
   }
 
   @Override
-  public UnifiedNativeAdView createNativeAd(UnifiedNativeAd nativeAd) {
+  public UnifiedNativeAdView createNativeAd(
+      UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
     final UnifiedNativeAdView adView =
         (UnifiedNativeAdView) getLayoutInflater().inflate(R.layout.my_native_ad, null);
     final TextView headlineView = adView.findViewById(R.id.ad_headline);

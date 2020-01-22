@@ -64,9 +64,10 @@ abstract class MobileAd extends AdListener {
     return (ad != null) ? (Interstitial) ad : new Interstitial(id, activity, channel);
   }
 
-  static Native createNative(Integer id, Activity activity, MethodChannel channel) {
+  static Native createNative(
+      Integer id, Activity activity, MethodChannel channel, Map<String, Object> customOptions) {
     MobileAd ad = getAdForId(id);
-    return (ad != null) ? (Native) ad : new Native(id, activity, channel);
+    return (ad != null) ? (Native) ad : new Native(id, activity, channel, customOptions);
   }
 
   static MobileAd getAdForId(Integer id) {
@@ -244,9 +245,12 @@ abstract class MobileAd extends AdListener {
 
   static class Native extends MobileAd {
     private UnifiedNativeAd nativeAd;
+    private final Map<String, Object> customOptions;
 
-    private Native(int id, Activity activity, MethodChannel channel) {
+    private Native(
+        int id, Activity activity, MethodChannel channel, Map<String, Object> customOptions) {
       super(id, activity, channel);
+      this.customOptions = customOptions;
     }
 
     @Override
@@ -285,7 +289,7 @@ abstract class MobileAd extends AdListener {
       }
 
       final NativeAdFactory adFactory = (NativeAdFactory) activity;
-      showAdView(adFactory.createNativeAd(nativeAd));
+      showAdView(adFactory.createNativeAd(nativeAd, customOptions));
     }
 
     @Override

@@ -49,10 +49,12 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
      *
      * @param nativeAd Ad information used to create a {@link
      *     com.google.android.gms.ads.formats.UnifiedNativeAdView}
+     * @param customOptions Used to pass additional custom options to create the {@link
+     *     com.google.android.gms.ads.formats.UnifiedNativeAdView}. Nullable.
      * @return a {@link com.google.android.gms.ads.formats.UnifiedNativeAdView} that is overlaid on
      *     top of the FlutterView.
      */
-    UnifiedNativeAdView createNativeAd(UnifiedNativeAd nativeAd);
+    UnifiedNativeAdView createNativeAd(UnifiedNativeAd nativeAd, Map<String, Object> customOptions);
   }
 
   /**
@@ -105,7 +107,9 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
       return;
     }
 
-    final MobileAd.Native nativeAd = MobileAd.createNative(id, activity, channel);
+    final Map<String, Object> customOptions = call.argument("customOptions");
+
+    final MobileAd.Native nativeAd = MobileAd.createNative(id, activity, channel, customOptions);
 
     if (nativeAd.status != MobileAd.Status.CREATED) {
       if (nativeAd.status == MobileAd.Status.FAILED)

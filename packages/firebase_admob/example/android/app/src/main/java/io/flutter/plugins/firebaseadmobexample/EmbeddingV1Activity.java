@@ -12,6 +12,7 @@ import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
+import java.util.Map;
 
 public class EmbeddingV1Activity extends FlutterActivity implements NativeAdFactory {
   @Override
@@ -21,7 +22,8 @@ public class EmbeddingV1Activity extends FlutterActivity implements NativeAdFact
   }
 
   @Override
-  public UnifiedNativeAdView createNativeAd(UnifiedNativeAd nativeAd) {
+  public UnifiedNativeAdView createNativeAd(
+      UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
     final UnifiedNativeAdView adView =
         (UnifiedNativeAdView) getLayoutInflater().inflate(R.layout.my_native_ad, null);
     final TextView headlineView = adView.findViewById(R.id.ad_headline);
