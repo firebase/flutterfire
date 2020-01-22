@@ -1,7 +1,7 @@
 name: cloud_functions_web
 description: The web implementation of cloud_functions
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_functions/cloud_functions_web
-version: 0.0.1+1
+version: 0.0.1
 
 flutter:
   plugin:
@@ -11,9 +11,7 @@ flutter:
         fileName: cloud_functions_web.dart
 
 dependencies:
-  # TODO(sbeitzel) change this from path to id once the platform interface PR is merged in
-  cloud_functions_platform_interface:
-    path: ../cloud_functions_platform_interface
+  cloud_functions_platform_interface: ^1.0.0
   flutter:
     sdk: flutter
   flutter_web_plugins:
@@ -25,13 +23,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  # TODO(sbeitzel) change this from path to id once the platform interface PR is merged in
-  cloud_functions:
-    path: ../cloud_functions
   firebase_core_platform_interface: ^1.0.0
-  # TODO(sbeitzel) change this from path to id once the platform interface PR is merged in
-  firebase_core_web:
-    path: ../../firebase_core/firebase_core_web
   mockito: ^4.1.1
 
 environment:
