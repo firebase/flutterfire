@@ -7,6 +7,8 @@ part of cloud_functions_platform_interface;
 /// [CloudFunctionsPlatform] implementation that delegates to a [MethodChannel].
 class MethodChannelCloudFunctions extends CloudFunctionsPlatform {
   /// The [MethodChannel] to which calls will be delegated.
+  /// Note that this name must match the name used in the platform (iOS/Android)
+  /// plugin.
   @visibleForTesting
   static const MethodChannel channel = MethodChannel(
     'cloud_functions',
