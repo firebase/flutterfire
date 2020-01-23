@@ -9,7 +9,7 @@ class MethodChannelCloudFunctions extends CloudFunctionsPlatform {
   /// The [MethodChannel] to which calls will be delegated.
   @visibleForTesting
   static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/cloud_functions',
+    'cloud_functions',
   );
 
   /// Invokes the specified cloud function.
