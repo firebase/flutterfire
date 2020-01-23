@@ -1,3 +1,7 @@
+## 3.1.1
+
+* Removed unnecessary debug print statements ("i am working").
+
 ## 3.1.0
 
 * Added error handling to `StorageFileDownloadTask` and added propagation of errors to the Future returned by the `writeToFile` method in `StorageReference`. 

@@ -42,6 +42,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   PlatformUser _fromJsUser(firebase.User user) {
+    if (user == null) {
+      return null;
+    }
     return PlatformUser(
       providerId: user.providerId,
       uid: user.uid,
@@ -154,9 +157,6 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<PlatformUser> getCurrentUser(String app) async {
     final firebase.Auth auth = _getAuth(app);
     final firebase.User currentUser = auth.currentUser;
-    if (currentUser == null) {
-      return null;
-    }
     return _fromJsUser(currentUser);
   }
 
