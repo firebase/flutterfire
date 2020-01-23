@@ -1,4 +1,4 @@
-## 0.4.2
+## 0.4.1+7
 
 * Update to use the platform interface to execute calls.
 * Fix timeout for Android (which had been ignoring explicit timeouts due to unit mismatch).
