@@ -98,6 +98,7 @@ abstract class AuthCredential {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.OAuthCredential>.
 @JS('OAuthCredential')
+@anonymous
 abstract class OAuthCredential extends AuthCredential {
   /// The OAuth access token associated with the credential if it belongs to
   /// an OAuth provider, such as facebook.com, twitter.com, etc.
