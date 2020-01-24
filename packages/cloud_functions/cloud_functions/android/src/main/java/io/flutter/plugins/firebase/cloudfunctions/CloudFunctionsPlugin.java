@@ -25,7 +25,8 @@ import java.util.concurrent.TimeUnit;
 public class CloudFunctionsPlugin implements MethodCallHandler {
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "plugins.flutter.io/cloud_functions");
+    final MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/cloud_functions");
     channel.setMethodCallHandler(new CloudFunctionsPlugin());
   }
 
