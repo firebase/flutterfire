@@ -43,9 +43,8 @@ class CloudFunctionsWeb extends CloudFunctionsPlatform {
     String origin,
     Duration timeout,
     dynamic parameters,
-  }) async {
-    firebase.App jsApp = firebase.app(appName);
-    firebase.Functions functions = firebase.functions(jsApp);
+  }) {
+    firebase.Functions functions = firebase.functions(firebase.app(appName));
     if (origin != null) {
       functions.useFunctionsEmulator(origin);
     }
@@ -56,10 +55,8 @@ class CloudFunctionsWeb extends CloudFunctionsPlatform {
     } else {
       hc = functions.httpsCallable(functionName);
     }
-    final dynamic response =
-        await hc.call(parameters).then((firebase.HttpsCallableResult result) {
+    return hc.call(parameters).then((result) {
       return result.data;
     });
-    return response;
   }
 }

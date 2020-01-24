@@ -1,14 +1,84 @@
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+@TestOn('chrome')
 
+import 'dart:js' show allowInterop;
+
+import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:cloud_functions_web/cloud_functions_web.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:meta/meta.dart';
+
+import 'mock/firebase_mock.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('$CloudFunctionsWeb', () {
-    setUp(() {
+    final List<Map<String, dynamic>> log = <Map<String, dynamic>>[];
+
+    loggingCall(
+        {@required String appName,
+        @required String functionName,
+        dynamic parameters}) {
+      log.add(<String, dynamic>{
+        'appName': appName,
+        'functionName': functionName,
+        'parameters': parameters
+      });
+      return <String, dynamic>{
+        'foo': 'bar',
+      };
+    }
+
+    setUp(() async {
+      firebaseMock = FirebaseMock(
+          app: allowInterop(
+        (String name) => FirebaseAppMock(
+              name: name,
+              options: FirebaseAppOptionsMock(appId: '123'),
+            ),
+      ));
+
+      FirebaseCorePlatform.instance = FirebaseCoreWeb();
+      CloudFunctionsPlatform.instance = CloudFunctionsWeb();
+
+      log.clear();
     });
 
+    test('callCloudFunction calls down to Firebase API', () async {
+      // install loggingCall on the HttpsCallable mock as the thing that gets
+      // executed when its call method is invoked
+      firebaseMock.functions = allowInterop((app) => FirebaseFunctionsMock(
+            httpsCallable:
+                allowInterop((functionName, [options]) => FirebaseHttpsCallableMock(
+                      call: allowInterop(([data]) {
+                        return loggingCall(
+                            appName: app.name,
+                            functionName: functionName,
+                            parameters: data);
+                      }),
+                    )),
+          ));
+
+      await CloudFunctionsPlatform.instance
+          .callCloudFunction(appName: '[DEFAULT]', functionName: 'baz');
+
+      expect(
+        log,
+        <Matcher>[
+          equals(
+          <String, dynamic>{
+            'appName': '[DEFAULT]',
+            'functionName': 'baz',
+            'parameters': null
+          }
+          ),
+        ],
+      );
+    });
   });
 }
