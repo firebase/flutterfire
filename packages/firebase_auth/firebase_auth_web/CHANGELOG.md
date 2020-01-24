@@ -1,6 +1,6 @@
 ## 0.1.2
 
-* Implement `fetchSignInMethodsForEmail`, `isSignInWithEmailLink`, and `sendLinkToEmail`. 
+* Implement `fetchSignInMethodsForEmail`, `isSignInWithEmailLink`, `signInWithEmailAndLink`, and `sendLinkToEmail`. 
 
 ## 0.1.1+4
 
