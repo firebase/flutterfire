@@ -1,3 +1,7 @@
+## 0.4.1+8
+
+* Ensure that integration test failures on iOS turn the build red.
+
 ## 0.4.1+7
 
 * Update to use the platform interface to execute calls.
