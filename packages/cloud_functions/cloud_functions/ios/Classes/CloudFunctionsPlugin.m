@@ -15,7 +15,7 @@
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:@"cloud_functions"
+      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/cloud_functions"
                                   binaryMessenger:[registrar messenger]];
   CloudFunctionsPlugin *instance = [[CloudFunctionsPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
