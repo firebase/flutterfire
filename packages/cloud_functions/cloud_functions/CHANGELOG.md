@@ -1,6 +1,10 @@
-## 0.4.1+8
+## 0.4.1+9
 
 * Ensure that integration test failures on iOS turn the build red.
+
+## 0.4.1+8
+
+* Fixes the `No implementation found for method CloudFunctions#call`
 
 ## 0.4.1+7
 
