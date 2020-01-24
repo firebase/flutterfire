@@ -168,9 +168,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<bool> isSignInWithEmailLink(String app, String link) async {
+  Future<bool> isSignInWithEmailLink(String app, String link) {
     final firebase.Auth auth = _getAuth(app);
-    return auth.isSignInWithEmailLink(link);
+    return Future.value(auth.isSignInWithEmailLink(link));
   }
 
   @override
