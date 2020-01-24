@@ -13,6 +13,7 @@ flutter:
         pluginClass: CloudFunctionsPlugin
 
 dependencies:
+  e2e: ^0.2.1
   meta: ^1.1.6
   flutter:
     sdk: flutter
