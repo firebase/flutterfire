@@ -7,6 +7,7 @@ import 'dart:js' show allowInterop;
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:cloud_functions_web/cloud_functions_web.dart';
+import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,13 +15,17 @@ import 'package:meta/meta.dart';
 
 import 'mock/firebase_mock.dart';
 
+void _debugLog(String message) {
+  print('DBL TEST: $message');
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('$CloudFunctionsWeb', () {
     final List<Map<String, dynamic>> log = <Map<String, dynamic>>[];
 
-    loggingCall(
+    Map<String, dynamic> loggingCall(
         {@required String appName,
         @required String functionName,
         dynamic parameters}) {
@@ -38,9 +43,9 @@ void main() {
       firebaseMock = FirebaseMock(
           app: allowInterop(
         (String name) => FirebaseAppMock(
-              name: name,
-              options: FirebaseAppOptionsMock(appId: '123'),
-            ),
+          name: name,
+          options: FirebaseAppOptionsMock(appId: '123'),
+        ),
       ));
 
       FirebaseCorePlatform.instance = FirebaseCoreWeb();
@@ -52,20 +57,43 @@ void main() {
     test('callCloudFunction calls down to Firebase API', () async {
       // install loggingCall on the HttpsCallable mock as the thing that gets
       // executed when its call method is invoked
-      firebaseMock.functions = allowInterop((app) => FirebaseFunctionsMock(
-            httpsCallable:
-                allowInterop((functionName, [options]) => FirebaseHttpsCallableMock(
+      firebaseMock.functions = allowInterop(([app]) => FirebaseFunctionsMock(
+            httpsCallable: allowInterop(
+                (functionName, [options]) => FirebaseHttpsCallableMock(
                       call: allowInterop(([data]) {
                         return loggingCall(
-                            appName: app.name,
+                            appName: (app == null ? '[DEFAULT]' : app.name),
                             functionName: functionName,
                             parameters: data);
-                      }),
-                    )),
+                      })),
+                    ),
+            useFunctionsEmulator: allowInterop((url) {
+              _debugLog('Unimplemented. Supposed to emulate at $url');
+            }),
           ));
+      _debugLog('Installed ${firebaseMock.functions} on firebaseMock');
+      firebase.Functions fs = firebase.Functions.getInstance(firebaseMock.functions());
+      _debugLog('Fetched functions as $fs');
+      dynamic callable = fs.httpsCallable('foobie');
+      _debugLog('callable is $callable');
+      await callable.call();
+      expect(log, <Matcher>[
+        equals(<String, dynamic>{
+          'appName': '[DEFAULT]',
+          'functionName': 'foobie',
+          'parameters': null,
+        }),
+      ]);
 
-      await CloudFunctionsPlatform.instance
-          .callCloudFunction(appName: '[DEFAULT]', functionName: 'baz');
+      log.clear();
+      _debugLog('calling directly at mock worked');
+
+      CloudFunctionsPlatform cfp = CloudFunctionsPlatform.instance;
+      expect(cfp, isA<CloudFunctionsWeb>());
+      dynamic result = await cfp.callCloudFunction(
+          appName: '[DEFAULT]', functionName: 'baz');
+
+      expect(result, isNotNull);
 
       expect(
         log,

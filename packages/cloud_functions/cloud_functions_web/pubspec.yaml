@@ -11,19 +11,24 @@ flutter:
         fileName: cloud_functions_web.dart
 
 dependencies:
-  cloud_functions_platform_interface: ^1.0.0
+  cloud_functions_platform_interface: # ^1.0.1
+    path: ../cloud_functions_platform_interface
   flutter:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
   firebase: ^7.0.0
+#    path: ../../../../firebase-dart
   http_parser: ^3.1.3
   meta: ^1.1.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  firebase_core_platform_interface: ^1.0.0
+  firebase_core_platform_interface: ^1.0.2
+#    path: ../../firebase_core/firebase_core_platform_interface
+  firebase_core_web: ^0.1.1+2
+#    path: ../../firebase_core/firebase_core_web
   mockito: ^4.1.1
 
 environment:

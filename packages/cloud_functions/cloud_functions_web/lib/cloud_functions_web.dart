@@ -9,6 +9,10 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
+void _debugLog(String message) {
+  print('DBL CFW: $message');
+}
+
 /// Web implementation of [CloudFunctionsPlatform]
 class CloudFunctionsWeb extends CloudFunctionsPlatform {
   /// Create the default instance of the [CloudFunctionsPlatform] as a [CloudFunctionsWeb]
@@ -44,17 +48,24 @@ class CloudFunctionsWeb extends CloudFunctionsPlatform {
     Duration timeout,
     dynamic parameters,
   }) {
-    firebase.Functions functions = firebase.functions(firebase.app(appName));
+    _debugLog('In callCloudFunction of CloudFunctionsWeb');
+    dynamic app = firebase.app(appName);
+    _debugLog('Got app: $app');
+    dynamic functions = firebase.functions(app);
+    _debugLog('got a functions object: ${functions}');
     if (origin != null) {
       functions.useFunctionsEmulator(origin);
     }
     firebase.HttpsCallable hc;
     if (timeout != null) {
+      _debugLog('timeout is not null: ${timeout}');
       hc = functions.httpsCallable(functionName,
           firebase.HttpsCallableOptions(timeout: timeout.inMicroseconds));
     } else {
+      _debugLog('timeout is null');
       hc = functions.httpsCallable(functionName);
     }
+    _debugLog('About to call call() on ${hc}');
     return hc.call(parameters).then((result) {
       return result.data;
     });
