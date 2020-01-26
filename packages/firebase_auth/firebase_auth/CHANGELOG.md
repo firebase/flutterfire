@@ -1,6 +1,6 @@
 ## 0.15.4
 
-* Add support for confirmPasswordReset on android and ios
+* Add support for `confirmPasswordReset` on Android and iOS.
 
 ## 0.15.3+1
 
