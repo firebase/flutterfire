@@ -59,22 +59,34 @@ void main() {
       // executed when its call method is invoked
       firebaseMock.functions = allowInterop(([app]) => FirebaseFunctionsMock(
             httpsCallable: allowInterop(
-                (functionName, [options]) => FirebaseHttpsCallableMock(
-                      call: allowInterop(([data]) {
-                        return loggingCall(
-                            appName: (app == null ? '[DEFAULT]' : app.name),
-                            functionName: functionName,
-                            parameters: data);
-                      })),
+              (functionName, [options]) {
+                _debugLog('FirebaseFunctionsMock getting a callable for app ${app.name} with function name $functionName');
+                return FirebaseHttpsCallableMock(
+                    call: allowInterop(([data]) {
+                      _debugLog('FirebaseHttpsCallableMock \'$functionName\' is being called');
+                      log.add(<String, dynamic>{
+                        'appName': app.name,
+                        'functionName': functionName,
+                        'parameters': data
+                      });
+                      return Future(() => FirebaseHttpsCallableResultMock(data: allowInterop((_) => <String, dynamic>{
+                                              'foo': 'bar',
+                                            })));
+                    }
                     ),
+                );
+              },
+            ),
             useFunctionsEmulator: allowInterop((url) {
               _debugLog('Unimplemented. Supposed to emulate at $url');
             }),
           ));
+      firebase.App app = firebase.app('mock');
+      expect(app.options.appId, equals('123'));
       _debugLog('Installed ${firebaseMock.functions} on firebaseMock');
-      firebase.Functions fs = firebase.Functions.getInstance(firebaseMock.functions());
+      firebase.Functions fs = firebase.functions(app);
       _debugLog('Fetched functions as $fs');
-      dynamic callable = fs.httpsCallable('foobie');
+      firebase.HttpsCallable callable = fs.httpsCallable('foobie');
       _debugLog('callable is $callable');
       await callable.call();
       expect(log, <Matcher>[
@@ -98,13 +110,11 @@ void main() {
       expect(
         log,
         <Matcher>[
-          equals(
-          <String, dynamic>{
+          equals(<String, dynamic>{
             'appName': '[DEFAULT]',
             'functionName': 'baz',
             'parameters': null
-          }
-          ),
+          }),
         ],
       );
     });

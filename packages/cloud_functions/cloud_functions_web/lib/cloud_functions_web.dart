@@ -49,8 +49,8 @@ class CloudFunctionsWeb extends CloudFunctionsPlatform {
     dynamic parameters,
   }) {
     _debugLog('In callCloudFunction of CloudFunctionsWeb');
-    dynamic app = firebase.app(appName);
-    _debugLog('Got app: $app');
+    firebase.App app = firebase.app(appName);
+    _debugLog('Got app: ${app.name} (${app.options.appId})');
     dynamic functions = firebase.functions(app);
     _debugLog('got a functions object: ${functions}');
     if (origin != null) {

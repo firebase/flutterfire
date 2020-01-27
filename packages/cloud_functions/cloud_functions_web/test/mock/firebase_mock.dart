@@ -49,6 +49,14 @@ class FirebaseHttpsCallableMock {
 
 @JS()
 @anonymous
+class FirebaseHttpsCallableResultMock {
+  external factory FirebaseHttpsCallableResultMock({Function data});
+
+  external Function get data;
+}
+
+@JS()
+@anonymous
 class FirebaseMock {
   external factory FirebaseMock({Function app});
   external Function get app;
