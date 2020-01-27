@@ -2,7 +2,23 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore_platform_interface;
+library method_channel_firestore;
+
+import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui';
+import 'dart:math';
+
+import 'package:collection/collection.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:meta/meta.dart' show required, visibleForTesting;
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+import './cloud_firestore_platform_interface.dart';
+import './src/utils/maps.dart';
 
 /// The entry point for accessing a Firestore.
 ///
