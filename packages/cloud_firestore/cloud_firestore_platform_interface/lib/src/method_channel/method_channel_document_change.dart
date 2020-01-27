@@ -19,7 +19,7 @@ class MethodChannelDocumentChange extends DocumentChange {
             data['newIndex'],
             DocumentSnapshot(
               data['path'],
-              _asStringKeyedMap(data['document']),
+              asStringKeyedMap(data['document']),
               SnapshotMetadata(data['metadata']['hasPendingWrites'],
                   data['metadata']['isFromCache']),
               firestore,

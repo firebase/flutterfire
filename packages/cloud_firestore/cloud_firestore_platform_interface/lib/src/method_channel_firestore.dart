@@ -2,23 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library method_channel_firestore;
-
-import 'dart:async';
-import 'dart:convert';
-import 'dart:typed_data';
-import 'dart:ui';
-import 'dart:math';
-
-import 'package:collection/collection.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:meta/meta.dart' show required, visibleForTesting;
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-
-import './cloud_firestore_platform_interface.dart';
-import './src/utils/maps.dart';
+part of cloud_firestore_platform_interface;
 
 /// The entry point for accessing a Firestore.
 ///
@@ -36,7 +20,7 @@ class MethodChannelFirestore extends FirestorePlatform {
       } else if (call.method == 'DocumentSnapshot') {
         final DocumentSnapshot snapshot = DocumentSnapshot(
           call.arguments['path'],
-          _asStringKeyedMap(call.arguments['data']),
+          asStringKeyedMap(call.arguments['data']),
           SnapshotMetadata(call.arguments['metadata']['hasPendingWrites'],
               call.arguments['metadata']['isFromCache']),
           this,

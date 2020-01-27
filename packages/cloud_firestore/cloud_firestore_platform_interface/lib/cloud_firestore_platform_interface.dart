@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
-import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,33 +12,42 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show required, visibleForTesting;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-part 'src/method_channel_firestore.dart';
-part 'src/blob.dart';
-part 'src/utils/auto_id_generator.dart';
-part 'src/method_channel_field_value_factory.dart';
+import 'src/utils/maps.dart';
+import 'src/utils/auto_id_generator.dart';
+
+export 'src/utils/auto_id_generator.dart';
+
+// Platform interface parts
 part 'src/platform_interface/field_value_factory.dart';
 part 'src/platform_interface/collection_reference.dart';
-part 'src/method_channel_collection_reference.dart';
-part 'src/method_channel_document_change.dart';
 part 'src/platform_interface/document_change.dart';
-part 'src/method_channel_document_reference.dart';
 part 'src/platform_interface/document_reference_interface.dart';
+part 'src/platform_interface/transaction.dart';
+part 'src/platform_interface/write_batch.dart';
+
+// Method channel parts
+part 'src/method_channel_firestore.dart';
+part 'src/utils/firestore_message_codec.dart';
+part 'src/method_channel/method_channel_collection_reference.dart';
+part 'src/method_channel/method_channel_document_change.dart';
+part 'src/method_channel/method_channel_document_reference.dart';
+part 'src/method_channel/method_channel_field_value_factory.dart';
+part 'src/method_channel/method_channel_query_snapshot.dart';
+part 'src/method_channel/method_channel_query.dart';
+part 'src/method_channel/method_channel_transaction.dart';
+part 'src/method_channel/method_channel_write_batch.dart';
+
+// Shared types
+part 'src/blob.dart';
 part 'src/document_snapshot.dart';
 part 'src/field_path.dart';
 part 'src/platform_interface/field_value.dart';
-part 'src/firestore_message_codec.dart';
 part 'src/geo_point.dart';
-part 'src/method_channel_query.dart';
 part 'src/platform_interface/query.dart';
 part 'src/platform_interface/query_snapshot.dart';
-part 'src/method_channel_query_snapshot.dart';
 part 'src/snapshot_metadata.dart';
 part 'src/source.dart';
 part 'src/timestamp.dart';
-part 'src/transaction.dart';
-part 'src/transaction_platform_interface.dart';
-part 'src/write_batch.dart';
-part 'src/write_batch_platform_interface.dart';
 
 /// Defines an interface to work with [FirestorePlatform] on web and mobile
 abstract class FirestorePlatform extends PlatformInterface {

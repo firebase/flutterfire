@@ -14,7 +14,7 @@ class MethodChannelQuerySnapshot extends QuerySnapshot {
                 (int index) {
               return DocumentSnapshot(
                 data['paths'][index],
-                _asStringKeyedMap(data['documents'][index]),
+                asStringKeyedMap(data['documents'][index]),
                 SnapshotMetadata(
                   data['metadatas'][index]['hasPendingWrites'],
                   data['metadatas'][index]['isFromCache'],

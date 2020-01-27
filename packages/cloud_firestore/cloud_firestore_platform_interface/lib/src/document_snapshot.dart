@@ -37,6 +37,3 @@ class DocumentSnapshot {
   /// Returns `true` if the document exists.
   bool get exists => data != null;
 }
-
-Map<String, dynamic> _asStringKeyedMap(Map<dynamic, dynamic> map) =>
-    map?.cast<String, dynamic>();

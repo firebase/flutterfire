@@ -12,9 +12,8 @@ enum _FieldPathType {
 class FieldPath {
   const FieldPath._(this.type);
 
-  @visibleForTesting
-  // ignoring lint rule here as it's only visible for testing
-  // ignore: public_member_api_docs
+  /// The type of this FieldPath
+  /// (Used in the [FirestoreMessageCodec])
   final _FieldPathType type;
 
   /// The path to the document id, which can be used in queries.

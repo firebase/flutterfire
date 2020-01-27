@@ -51,7 +51,7 @@ class MethodChannelDocumentReference extends DocumentReference {
     );
     return DocumentSnapshot(
       data['path'],
-      _asStringKeyedMap(data['data']),
+      asStringKeyedMap(data['data']),
       SnapshotMetadata(data['metadata']['hasPendingWrites'],
           data['metadata']['isFromCache']),
       firestore,

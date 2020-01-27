@@ -21,7 +21,6 @@ abstract class FieldValueInterface {
 class FieldValue implements FieldValueInterface {
   /// Replaces items with type [FieldValueInterface] with implementation type
   /// such as [FieldValue]
-  @visibleForTesting
   static Map<String, dynamic> serverDelegates(Map<String, dynamic> data) {
     if (data == null) {
       return null;
