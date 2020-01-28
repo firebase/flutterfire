@@ -15,10 +15,6 @@ import 'package:meta/meta.dart';
 
 import 'mock/firebase_mock.dart';
 
-void _debugLog(String message) {
-  print('DBL TEST: $message');
-}
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -29,11 +25,8 @@ void main() {
         {@required String appName,
         @required String functionName,
         dynamic parameters}) {
-      log.add(<String, dynamic>{
-        'appName': appName,
-        'functionName': functionName,
-        'parameters': parameters
-      });
+      log.add(
+          <String, dynamic>{'appName': appName, 'functionName': functionName});
       return <String, dynamic>{
         'foo': 'bar',
       };
@@ -51,72 +44,64 @@ void main() {
       FirebaseCorePlatform.instance = FirebaseCoreWeb();
       CloudFunctionsPlatform.instance = CloudFunctionsWeb();
 
-      log.clear();
-    });
-
-    test('callCloudFunction calls down to Firebase API', () async {
       // install loggingCall on the HttpsCallable mock as the thing that gets
       // executed when its call method is invoked
       firebaseMock.functions = allowInterop(([app]) => FirebaseFunctionsMock(
-            httpsCallable: allowInterop(
-              (functionName, [options]) {
-                _debugLog('FirebaseFunctionsMock getting a callable for app ${app.name} with function name $functionName');
-                return FirebaseHttpsCallableMock(
-                    call: allowInterop(([data]) {
-                      _debugLog('FirebaseHttpsCallableMock \'$functionName\' is being called');
-                      log.add(<String, dynamic>{
-                        'appName': app.name,
-                        'functionName': functionName,
-                        'parameters': data
-                      });
-                      return Future(() => FirebaseHttpsCallableResultMock(data: allowInterop((_) => <String, dynamic>{
-                                              'foo': 'bar',
-                                            })));
-                    }
-                    ),
-                );
-              },
-            ),
+            httpsCallable: allowInterop((functionName, [options]) {
+              final String appName = app == null ? '[DEFAULT]' : app.name;
+              return allowInterop(([data]) {
+                Map<String, dynamic> result =
+                    loggingCall(appName: appName, functionName: functionName);
+                return _jsPromise(FirebaseHttpsCallableResultMock(
+                    data: allowInterop((_) => result)));
+              });
+            }),
             useFunctionsEmulator: allowInterop((url) {
-              _debugLog('Unimplemented. Supposed to emulate at $url');
+              print('Unimplemented. Supposed to emulate at $url');
             }),
           ));
-      firebase.App app = firebase.app('mock');
+    });
+
+    test('setUp wires up mock objects properly', () async {
+      log.clear();
+
+      firebase.App app = firebase.app('[DEFAULT]');
       expect(app.options.appId, equals('123'));
-      _debugLog('Installed ${firebaseMock.functions} on firebaseMock');
       firebase.Functions fs = firebase.functions(app);
-      _debugLog('Fetched functions as $fs');
       firebase.HttpsCallable callable = fs.httpsCallable('foobie');
-      _debugLog('callable is $callable');
       await callable.call();
       expect(log, <Matcher>[
         equals(<String, dynamic>{
           'appName': '[DEFAULT]',
           'functionName': 'foobie',
-          'parameters': null,
         }),
       ]);
+    });
 
+    test('callCloudFunction calls down to Firebase API', () async {
       log.clear();
-      _debugLog('calling directly at mock worked');
 
       CloudFunctionsPlatform cfp = CloudFunctionsPlatform.instance;
       expect(cfp, isA<CloudFunctionsWeb>());
-      dynamic result = await cfp.callCloudFunction(
-          appName: '[DEFAULT]', functionName: 'baz');
 
-      expect(result, isNotNull);
+      await cfp.callCloudFunction(appName: '[DEFAULT]', functionName: 'baz');
+      await cfp.callCloudFunction(appName: 'mock', functionName: 'mumble');
 
       expect(
         log,
         <Matcher>[
-          equals(<String, dynamic>{
-            'appName': '[DEFAULT]',
-            'functionName': 'baz',
-            'parameters': null
-          }),
+          equals(
+              <String, dynamic>{'appName': '[DEFAULT]', 'functionName': 'baz'}),
+          equals(
+              <String, dynamic>{'appName': 'mock', 'functionName': 'mumble'}),
         ],
       );
     });
   });
+}
+
+Promise _jsPromise(dynamic value) {
+  return Promise(allowInterop((void resolve(dynamic result), Function reject) {
+    resolve(value);
+  }));
 }
