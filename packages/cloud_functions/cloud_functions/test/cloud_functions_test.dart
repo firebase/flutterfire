@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,7 +15,7 @@ void main() {
     final List<MethodCall> log = <MethodCall>[];
 
     setUp(() async {
-      CloudFunctions.channel
+      MethodChannelCloudFunctions.channel
           .setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {

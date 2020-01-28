@@ -20,9 +20,6 @@ class CloudFunctions {
       : _app = app ?? FirebaseApp.instance,
         _region = region;
 
-  @visibleForTesting
-  static const MethodChannel channel = MethodChannel('cloud_functions');
-
   static CloudFunctions _instance = CloudFunctions();
 
   static CloudFunctions get instance => _instance;

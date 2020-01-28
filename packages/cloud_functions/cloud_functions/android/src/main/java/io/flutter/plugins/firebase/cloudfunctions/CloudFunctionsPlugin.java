@@ -25,7 +25,8 @@ import java.util.concurrent.TimeUnit;
 public class CloudFunctionsPlugin implements MethodCallHandler {
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "cloud_functions");
+    final MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/cloud_functions");
     channel.setMethodCallHandler(new CloudFunctionsPlugin());
   }
 
@@ -49,9 +50,9 @@ public class CloudFunctionsPlugin implements MethodCallHandler {
           functions.useFunctionsEmulator(origin);
         }
         HttpsCallableReference httpsCallableReference = functions.getHttpsCallable(functionName);
-        Number timeoutMilliseconds = call.argument("timeoutMilliseconds");
-        if (timeoutMilliseconds != null) {
-          httpsCallableReference.setTimeout(timeoutMilliseconds.longValue(), TimeUnit.MILLISECONDS);
+        Number timeoutMicroseconds = call.argument("timeoutMicroseconds");
+        if (timeoutMicroseconds != null) {
+          httpsCallableReference.setTimeout(timeoutMicroseconds.longValue(), TimeUnit.MICROSECONDS);
         }
         httpsCallableReference
             .call(parameters)

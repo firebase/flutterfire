@@ -1,3 +1,13 @@
+## 0.4.1+8
+
+* Fixes the `No implementation found for method CloudFunctions#call`
+
+## 0.4.1+7
+
+* Update to use the platform interface to execute calls.
+* Fix timeout for Android (which had been ignoring explicit timeouts due to unit mismatch).
+* Update repository location based on platform interface refactoring.
+
 ## 0.4.1+6
 
 * Fix analysis failures
