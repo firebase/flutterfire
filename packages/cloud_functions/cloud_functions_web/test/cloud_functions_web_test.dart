@@ -24,9 +24,13 @@ void main() {
     Map<String, dynamic> loggingCall(
         {@required String appName,
         @required String functionName,
+        String region,
         dynamic parameters}) {
-      log.add(
-          <String, dynamic>{'appName': appName, 'functionName': functionName});
+      log.add(<String, dynamic>{
+        'appName': appName,
+        'functionName': functionName,
+        'region': region
+      });
       return <String, dynamic>{
         'foo': 'bar',
       };
@@ -36,9 +40,24 @@ void main() {
       firebaseMock = FirebaseMock(
           app: allowInterop(
         (String name) => FirebaseAppMock(
-          name: name,
-          options: FirebaseAppOptionsMock(appId: '123'),
-        ),
+            name: name,
+            options: FirebaseAppOptionsMock(appId: '123'),
+            functions: allowInterop(([region]) => FirebaseFunctionsMock(
+                  httpsCallable: allowInterop((functionName, [options]) {
+                    final String appName = name == null ? '[DEFAULT]' : name;
+                    return allowInterop(([data]) {
+                      Map<String, dynamic> result = loggingCall(
+                          appName: appName,
+                          functionName: functionName,
+                          region: region);
+                      return _jsPromise(FirebaseHttpsCallableResultMock(
+                          data: allowInterop((_) => result)));
+                    });
+                  }),
+                  useFunctionsEmulator: allowInterop((url) {
+                    print('Unimplemented. Supposed to emulate at $url');
+                  }),
+                ))),
       ));
 
       FirebaseCorePlatform.instance = FirebaseCoreWeb();
@@ -74,6 +93,7 @@ void main() {
         equals(<String, dynamic>{
           'appName': '[DEFAULT]',
           'functionName': 'foobie',
+          'region': null
         }),
       ]);
     });
@@ -84,16 +104,23 @@ void main() {
       CloudFunctionsPlatform cfp = CloudFunctionsPlatform.instance;
       expect(cfp, isA<CloudFunctionsWeb>());
 
-      await cfp.callCloudFunction(appName: '[DEFAULT]', functionName: 'baz');
+      await cfp.callCloudFunction(
+          appName: '[DEFAULT]', functionName: 'baz', region: 'space');
       await cfp.callCloudFunction(appName: 'mock', functionName: 'mumble');
 
       expect(
         log,
         <Matcher>[
-          equals(
-              <String, dynamic>{'appName': '[DEFAULT]', 'functionName': 'baz'}),
-          equals(
-              <String, dynamic>{'appName': 'mock', 'functionName': 'mumble'}),
+          equals(<String, dynamic>{
+            'appName': '[DEFAULT]',
+            'functionName': 'baz',
+            'region': 'space'
+          }),
+          equals(<String, dynamic>{
+            'appName': 'mock',
+            'functionName': 'mumble',
+            'region': null
+          }),
         ],
       );
     });

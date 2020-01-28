@@ -44,7 +44,8 @@ class CloudFunctionsWeb extends CloudFunctionsPlatform {
     Duration timeout,
     dynamic parameters,
   }) {
-    firebase.Functions functions = firebase.functions(firebase.app(appName));
+    firebase.App app = firebase.app(appName);
+    firebase.Functions functions = app.functions(region);
     if (origin != null) {
       functions.useFunctionsEmulator(origin);
     }

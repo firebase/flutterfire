@@ -20,9 +20,11 @@ class FirebaseAppMock {
   external factory FirebaseAppMock({
     String name,
     FirebaseAppOptionsMock options,
+    Function functions,
   });
   external String get name;
   external FirebaseAppOptionsMock get options;
+  external Function get functions;
 }
 
 @JS()
