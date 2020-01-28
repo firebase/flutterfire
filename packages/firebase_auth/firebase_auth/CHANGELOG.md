@@ -1,3 +1,7 @@
+## 0.15.4+1
+
+* Fix fallthrough bug in Android code.
+
 ## 0.15.4
 
 * Add support for `confirmPasswordReset` on Android and iOS.

@@ -167,6 +167,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
         break;
       case "confirmPasswordReset":
         handleConfirmPasswordReset(call, result, getAuth(call));
+        break;
       default:
         result.notImplemented();
         break;
