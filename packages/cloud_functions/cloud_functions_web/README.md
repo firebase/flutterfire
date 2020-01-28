@@ -6,6 +6,8 @@ The web implementation of [`cloud_functions`][1].
 
 ### Import the package
 
+**TODO(sbeitzel) - update the versions here so that it's correct, once this package actually _is_ an endorsed implementation of `package:cloud_functions`**
+
 This package is the endorsed implementation of `cloud_functions` for the web platform since version `0.0.1`, so it gets automatically added to your dependencies by depending on `cloud_functions: ^0.0.1`.
 
 No modifications to your `pubspec.yaml` should be required in a recent enough version of Flutter (`>=1.12.13+hotfix.4`):

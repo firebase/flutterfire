@@ -9,7 +9,7 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
-/// Web implementation of [CloudFunctionsPlatform]
+/// Web implementation of [CloudFunctionsPlatform].
 class CloudFunctionsWeb extends CloudFunctionsPlatform {
   /// Create the default instance of the [CloudFunctionsPlatform] as a [CloudFunctionsWeb]
   static void registerWith(Registrar registrar) {
