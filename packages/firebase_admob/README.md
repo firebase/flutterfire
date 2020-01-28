@@ -192,7 +192,7 @@ on iOS). Using Flutter widgets to create native ads is NOT supported by
 this.
 
 ### Android
-The Android Admob Plugin requires a class that implements `NativeAdFactory` which calls `createNativeAd(
+The Android Admob Plugin requires a class that implements `NativeAdFactory` which implements `createNativeAd(
 [UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd) nativeAd,
 Map<String, Options> customOptions)` and returns a
 [UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView).
@@ -217,9 +217,12 @@ class NativeAdFactoryExample implements NativeAdFactory {
 }
 ```
  
-After, pass an instance of `NativeAdFactory` to the `FirebaseAdMobPlugin`. This is done differently whether
-you are using the Embedding V1 or Embedding V2. If you're using the Embedding V1, you're `MainActivity.java`
-should look similar to:
+An instance of a `NativeAdFactory` should also be passed to the `FirebaseAdMobPlugin`. This is done
+differently whether you are using the Embedding V1 or Embedding V2.
+
+If you're using the Embedding V1, you need to retrieve the published `FirebaseAdMobPlugin` after
+calling `GeneratedPluginRegistrant.registerWith(this);`. Then, set the `NativeAdFactory`. You're
+`MainActivity.java` should look similar to:
 
 ```java
 package my.app.path;
@@ -242,7 +245,8 @@ public class MainActivity extends FlutterActivity {
 }
 ```
 
-Otherwise, it should look similar to:
+If you're using the Embedding V2, you need to retrieve the published `FirebaseAdMobPlugin` from the
+`FlutterEngine`. Then, set the `NativeAdFactory`. You're `MainActivity.java` should look similar to:
 
 ```java
 package my.app.path;
