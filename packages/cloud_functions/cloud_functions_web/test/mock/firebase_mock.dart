@@ -42,7 +42,7 @@ class FirebaseFunctionsMock {
 class FirebaseHttpsCallableMock {
   external factory FirebaseHttpsCallableMock({
     Function call,
-});
+  });
 
   external Function get call;
 }
