@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 
 #import "FLTRewardedVideoAdWrapper.h"
+#import "FLTFirebaseAdMobPlugin.h"
 #import "FLTRequestFactory.h"
-#import "FirebaseAdMobPlugin.h"
 
 static NSDictionary *rewardedStatusToString = nil;
 

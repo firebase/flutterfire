@@ -25,9 +25,9 @@ To integrate your plugin into the Android part of your app, follow these steps:
 ```
 dependencies {
   // Example existing classpath
-  classpath 'com.android.tools.build:gradle:3.2.1'
+  classpath 'com.android.tools.build:gradle:3.5.3'
   // Add the google services classpath
-  classpath 'com.google.gms:google-services:4.3.0'
+  classpath 'com.google.gms:google-services:4.3.2'
 }
 ```
 3. Add the apply plugin to the `[project]/android/app/build.gradle` file.
@@ -61,73 +61,99 @@ for more.
 
 By default background messaging is not enabled. To handle messages in the background:
 
-1. Add an Application.java class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
+1. Add the `com.google.firebase:firebase-messaging` dependency in your app-level `build.gradle` file that is typically located at `<app-name>/android/app/build.gradle`.
 
-    ```
-    package io.flutter.plugins.firebasemessagingexample;
-    
-    import io.flutter.app.FlutterApplication;
-    import io.flutter.plugin.common.PluginRegistry;
-    import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
-    import io.flutter.plugins.GeneratedPluginRegistrant;
-    import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
-    
-    public class Application extends FlutterApplication implements PluginRegistrantCallback {
-      @Override
-      public void onCreate() {
-        super.onCreate();
-        FlutterFirebaseMessagingService.setPluginRegistrant(this);
-      }
-    
-      @Override
-      public void registerWith(PluginRegistry registry) {
-        GeneratedPluginRegistrant.registerWith(registry);
-      }
-    }
-    ```
+   ```gradle
+   dependencies {
+     // ...
+   
+     implementation 'com.google.firebase:firebase-messaging:<latest_version>'
+   }
+   ```
+   
+   Note: you can find out what the latest version of the plugin is [here ("Cloud Messaging")](https://firebase.google.com/support/release-notes/android#latest_sdk_versions).
+
+1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
+
+   ```java
+   package io.flutter.plugins.firebasemessagingexample;
+   
+   import io.flutter.app.FlutterApplication;
+   import io.flutter.plugin.common.PluginRegistry;
+   import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
+   import io.flutter.plugins.GeneratedPluginRegistrant;
+   import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
+   
+   public class Application extends FlutterApplication implements PluginRegistrantCallback {
+     @Override
+     public void onCreate() {
+       super.onCreate();
+       FlutterFirebaseMessagingService.setPluginRegistrant(this);
+     }
+   
+     @Override
+     public void registerWith(PluginRegistry registry) {
+       GeneratedPluginRegistrant.registerWith(registry);
+     }
+   }
+   ```
+
+1. In `Application.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
+
+   ```java
+   package com.domain.myapplication;
+   ```
+
 1. Set name property of application in `AndroidManifest.xml`. This is typically found in `<app-name>/android/app/src/main/`.
-    ```
-    <application android:name=".Application" ...>
-    ```
+
+   ```xml
+   <application android:name=".Application" ...>
+   ```
+
 1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
-    ```
-    Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
-      if (message.containsKey('data')) {
-        // Handle data message
-        final dynamic data = message['data'];
-      }
-    
-      if (message.containsKey('notification')) {
-        // Handle notification message
-        final dynamic notification = message['notification'];
-      }
-    
-      // Or do other work.
-    }
-    ```
+
+   ```dart
+   Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+     if (message.containsKey('data')) {
+       // Handle data message
+       final dynamic data = message['data'];
+     }
+   
+     if (message.containsKey('notification')) {
+       // Handle notification message
+       final dynamic notification = message['notification'];
+     }
+   
+     // Or do other work.
+   }
+   ```
+
    Note: the protocol of `data` and `notification` are in line with the
    fields defined by a [RemoteMessage](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/RemoteMessage). 
+
 1. Set `onBackgroundMessage` handler when calling `configure`
-    ```
-    _firebaseMessaging.configure(
-          onMessage: (Map<String, dynamic> message) async {
-            print("onMessage: $message");
-            _showItemDialog(message);
-          },
-          onBackgroundMessage: myBackgroundMessageHandler,
-          onLaunch: (Map<String, dynamic> message) async {
-            print("onLaunch: $message");
-            _navigateToItemDetail(message);
-          },
-          onResume: (Map<String, dynamic> message) async {
-            print("onResume: $message");
-            _navigateToItemDetail(message);
-          },
-        );
-    ```
+
+   ```dart
+   _firebaseMessaging.configure(
+         onMessage: (Map<String, dynamic> message) async {
+           print("onMessage: $message");
+           _showItemDialog(message);
+         },
+         onBackgroundMessage: myBackgroundMessageHandler,
+         onLaunch: (Map<String, dynamic> message) async {
+           print("onLaunch: $message");
+           _navigateToItemDetail(message);
+         },
+         onResume: (Map<String, dynamic> message) async {
+           print("onResume: $message");
+           _navigateToItemDetail(message);
+         },
+       );
+   ```
+
    Note: `configure` should be called early in the lifecycle of your application
    so that it can be ready to receive messages as early as possible. See the
-   example app for a demonstration.
+   [example app](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/example) for a demonstration.
 
 ### iOS Integration
 
@@ -221,7 +247,7 @@ final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
 Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
   await firebaseMessaging.requestNotificationPermissions(
-    const IosNotificationSettings(sound: true, badge: true, alert: true),
+    const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false),
   );
 
   await http.post(

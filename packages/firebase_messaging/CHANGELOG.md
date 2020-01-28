@@ -1,3 +1,38 @@
+## 6.0.10
+
+* Update README to explain how to correctly implement Android background message handling with the new v2 embedding. 
+
+## 6.0.9
+
+* Update Android Gradle plugin dependency to 3.5.3, update documentation and example.
+* Update google-services Android gradle plugin to 4.3.2 in documentation and examples.
+
+## 6.0.8
+
+* Support for provisional notifications for iOS version >= 12.
+
+## 6.0.7
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 6.0.6
+
+* Updated README instructions for Android.
+
+## 6.0.5
+
+* Add import for UserNotifications on iOS.
+
+## 6.0.4
+
+* Support the v2 Android embedding.
+
+## 6.0.3
+
+* Fix bug where `onIosSettingsRegistered` wasn't streamed on iOS >= 10.
+
 ## 6.0.2
 
 * Fixed a build warning caused by availability check.

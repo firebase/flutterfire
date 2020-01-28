@@ -352,10 +352,23 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     return channel.invokeMethod<void>('verifyPhoneNumber', params);
   }
 
+  @override
+  Future<void> confirmPasswordReset(
+    String app,
+    String oobCode,
+    String newPassword,
+  ) {
+    return channel.invokeMethod('confirmPasswordReset', <String, String>{
+      'app': app,
+      'oobCode': oobCode,
+      'newPassword': newPassword,
+    });
+  }
+
   Future<void> _callHandler(MethodCall call) async {
     switch (call.method) {
       case 'onAuthStateChanged':
-        _onAuthStageChangedHandler(call);
+        _onAuthStateChangedHandler(call);
         break;
       case 'phoneVerificationCompleted':
         final int handle = call.arguments['handle'];
@@ -396,7 +409,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
   }
 
-  void _onAuthStageChangedHandler(MethodCall call) {
+  void _onAuthStateChangedHandler(MethodCall call) {
     final Map<dynamic, dynamic> data = call.arguments['user'];
     final int id = call.arguments['id'];
 
@@ -446,6 +459,9 @@ PlatformAuthResult _decodeAuthResult(Map<dynamic, dynamic> data) {
 
 PlatformAdditionalUserInfo _decodeAdditionalUserInfo(
     Map<dynamic, dynamic> data) {
+  if (data == null) {
+    return null;
+  }
   return PlatformAdditionalUserInfo(
     isNewUser: data['isNewUser'],
     username: data['username'],
@@ -465,7 +481,7 @@ PlatformIdTokenResult _decodeIdTokenResult(Map<String, dynamic> data) {
   );
 }
 
-/// A utilily class that collects the callbacks for a [verifyPhoneNumber] call.
+/// A utility class that collects the callbacks for a [verifyPhoneNumber] call.
 class _PhoneAuthCallbacks {
   const _PhoneAuthCallbacks(
     this.verificationCompleted,

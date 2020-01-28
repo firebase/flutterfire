@@ -209,20 +209,28 @@ class IosNotificationSettings {
     this.sound = true,
     this.alert = true,
     this.badge = true,
+    this.provisional = false,
   });
 
   IosNotificationSettings._fromMap(Map<String, bool> settings)
       : sound = settings['sound'],
         alert = settings['alert'],
-        badge = settings['badge'];
+        badge = settings['badge'],
+        provisional = settings['provisional'];
 
   final bool sound;
   final bool alert;
   final bool badge;
+  final bool provisional;
 
   @visibleForTesting
   Map<String, dynamic> toMap() {
-    return <String, bool>{'sound': sound, 'alert': alert, 'badge': badge};
+    return <String, bool>{
+      'sound': sound,
+      'alert': alert,
+      'badge': badge,
+      'provisional': provisional
+    };
   }
 
   @override

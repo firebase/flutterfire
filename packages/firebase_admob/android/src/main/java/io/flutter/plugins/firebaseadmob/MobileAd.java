@@ -35,7 +35,7 @@ abstract class MobileAd extends AdListener {
   double horizontalCenterOffset;
   int anchorType;
 
-  enum Status {
+  public enum Status {
     CREATED,
     LOADING,
     FAILED,
@@ -64,9 +64,16 @@ abstract class MobileAd extends AdListener {
     return (ad != null) ? (Interstitial) ad : new Interstitial(id, activity, channel);
   }
 
-  static Native createNative(Integer id, Activity activity, MethodChannel channel) {
+  static Native createNative(
+      Integer id,
+      Activity activity,
+      MethodChannel channel,
+      NativeAdFactory nativeAdFactory,
+      Map<String, Object> customOptions) {
     MobileAd ad = getAdForId(id);
-    return (ad != null) ? (Native) ad : new Native(id, activity, channel);
+    return (ad != null)
+        ? (Native) ad
+        : new Native(id, activity, channel, nativeAdFactory, customOptions);
   }
 
   static MobileAd getAdForId(Integer id) {
@@ -113,6 +120,13 @@ abstract class MobileAd extends AdListener {
 
   void dispose() {
     allAds.remove(id);
+  }
+
+  static void disposeAll() {
+    for (int i = 0; i < allAds.size(); i++) {
+      allAds.valueAt(i).dispose();
+    }
+    allAds.clear();
   }
 
   private Map<String, Object> argumentsMap(Object... args) {
@@ -219,6 +233,8 @@ abstract class MobileAd extends AdListener {
       interstitial.setAdUnitId(adUnitId);
 
       interstitial.setAdListener(this);
+      AdRequestBuilderFactory factory = new AdRequestBuilderFactory(targetingInfo);
+      interstitial.loadAd(factory.createAdRequestBuilder().build());
     }
 
     @Override
@@ -235,9 +251,18 @@ abstract class MobileAd extends AdListener {
 
   static class Native extends MobileAd {
     private UnifiedNativeAd nativeAd;
+    private final Map<String, Object> customOptions;
+    private final NativeAdFactory nativeAdFactory;
 
-    private Native(int id, Activity activity, MethodChannel channel) {
+    private Native(
+        int id,
+        Activity activity,
+        MethodChannel channel,
+        NativeAdFactory nativeAdFactory,
+        Map<String, Object> customOptions) {
       super(id, activity, channel);
+      this.nativeAdFactory = nativeAdFactory;
+      this.customOptions = customOptions;
     }
 
     @Override
@@ -269,14 +294,7 @@ abstract class MobileAd extends AdListener {
         return;
       }
 
-      if (!(activity instanceof NativeAdFactory)) {
-        throw new IllegalStateException(
-            String.format(
-                "Activity does not implement %s.", NativeAdFactory.class.getSimpleName()));
-      }
-
-      final NativeAdFactory adFactory = (NativeAdFactory) activity;
-      showAdView(adFactory.createNativeAd(nativeAd));
+      showAdView(nativeAdFactory.createNativeAd(nativeAd, customOptions));
     }
 
     @Override

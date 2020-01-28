@@ -5,12 +5,17 @@
 package io.flutter.plugins.firebaseadmob;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.Gravity;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.google.firebase.FirebaseApp;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -19,12 +24,19 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import java.util.Locale;
 import java.util.Map;
 
-public class FirebaseAdMobPlugin implements MethodCallHandler {
-
-  private final Registrar registrar;
-  private final MethodChannel channel;
-
-  RewardedVideoAdWrapper rewardedWrapper;
+/**
+ * Flutter plugin accessing Firebase Admob API.
+ *
+ * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
+ */
+public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
+  private Context applicationContext;
+  private MethodChannel channel;
+  private Activity activity;
+  // This is always null when not using v2 embedding.
+  private FlutterPluginBinding pluginBinding;
+  private RewardedVideoAdWrapper rewardedWrapper;
+  private NativeAdFactory nativeAdFactory;
 
   /**
    * Interface used to display a {@link com.google.android.gms.ads.formats.UnifiedNativeAd}.
@@ -38,28 +50,57 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
      *
      * @param nativeAd Ad information used to create a {@link
      *     com.google.android.gms.ads.formats.UnifiedNativeAdView}
+     * @param customOptions Used to pass additional custom options to create the {@link
+     *     com.google.android.gms.ads.formats.UnifiedNativeAdView}. Nullable.
      * @return a {@link com.google.android.gms.ads.formats.UnifiedNativeAdView} that is overlaid on
      *     top of the FlutterView.
      */
-    UnifiedNativeAdView createNativeAd(UnifiedNativeAd nativeAd);
+    UnifiedNativeAdView createNativeAd(UnifiedNativeAd nativeAd, Map<String, Object> customOptions);
   }
 
+  /**
+   * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
+   *
+   * <p>Calling this will register the plugin with the passed registrar. However, plugins
+   * initialized this way won't react to changes in activity or context.
+   *
+   * @param registrar connects this plugin's {@link
+   *     io.flutter.plugin.common.MethodChannel.MethodCallHandler} to its {@link
+   *     io.flutter.plugin.common.BinaryMessenger}.
+   */
   public static void registerWith(Registrar registrar) {
     if (registrar.activity() == null) {
       // If a background Flutter view tries to register the plugin, there will be no activity from the registrar.
       // We stop the registering process immediately because the firebase_admob requires an activity.
       return;
     }
-    final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_admob");
-    channel.setMethodCallHandler(new FirebaseAdMobPlugin(registrar, channel));
+
+    final FirebaseAdMobPlugin plugin = new FirebaseAdMobPlugin();
+    registrar.publish(plugin);
+    plugin.initializePlugin(registrar.context(), registrar.activity(), registrar.messenger());
   }
 
-  private FirebaseAdMobPlugin(Registrar registrar, MethodChannel channel) {
-    this.registrar = registrar;
-    this.channel = channel;
-    FirebaseApp.initializeApp(registrar.context());
-    rewardedWrapper = new RewardedVideoAdWrapper(registrar.activity(), channel);
+  /**
+   * Sets this plugin's {@link io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory}
+   * used to create platform {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s.
+   *
+   * @param nativeAdFactory creates {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s
+   *     when Flutter NativeAds are created.
+   */
+  public void setNativeAdFactory(NativeAdFactory nativeAdFactory) {
+    this.nativeAdFactory = nativeAdFactory;
+  }
+
+  private void initializePlugin(
+      Context applicationContext, Activity activity, BinaryMessenger messenger) {
+    this.activity = activity;
+    this.applicationContext = applicationContext;
+    FirebaseApp.initializeApp(applicationContext);
+
+    this.channel = new MethodChannel(messenger, "plugins.flutter.io/firebase_admob");
+    channel.setMethodCallHandler(this);
+
+    rewardedWrapper = new RewardedVideoAdWrapper(activity, channel);
   }
 
   private void callInitialize(MethodCall call, Result result) {
@@ -68,7 +109,7 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
       result.error("no_app_id", "a null or empty AdMob appId was provided", null);
       return;
     }
-    MobileAds.initialize(registrar.context(), appId);
+    MobileAds.initialize(applicationContext, appId);
     result.success(Boolean.TRUE);
   }
 
@@ -77,9 +118,18 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
     if (adUnitId == null || adUnitId.isEmpty()) {
       result.error("no_unit_id", "a null or empty adUnitId was provided for ad id=" + id, null);
       return;
+    } else if (nativeAdFactory == null) {
+      result.error(
+          "no_native_ad_factory",
+          "Please set a non-null NativeAdFactory for FirebaseAdMobPlugin.",
+          null);
+      return;
     }
 
-    final MobileAd.Native nativeAd = MobileAd.createNative(id, activity, channel);
+    final Map<String, Object> customOptions = call.argument("customOptions");
+
+    final MobileAd.Native nativeAd =
+        MobileAd.createNative(id, activity, channel, nativeAdFactory, customOptions);
 
     if (nativeAd.status != MobileAd.Status.CREATED) {
       if (nativeAd.status == MobileAd.Status.FAILED)
@@ -244,8 +294,45 @@ public class FirebaseAdMobPlugin implements MethodCallHandler {
   }
 
   @Override
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
+    pluginBinding = binding;
+  }
+
+  @Override
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
+    pluginBinding = null;
+  }
+
+  @Override
+  public void onAttachedToActivity(ActivityPluginBinding binding) {
+    initializePlugin(
+        pluginBinding.getApplicationContext(),
+        binding.getActivity(),
+        pluginBinding.getFlutterEngine().getDartExecutor());
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    MobileAd.disposeAll();
+    activity = null;
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
+    initializePlugin(
+        pluginBinding.getApplicationContext(),
+        binding.getActivity(),
+        pluginBinding.getFlutterEngine().getDartExecutor());
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    MobileAd.disposeAll();
+    activity = null;
+  }
+
+  @Override
   public void onMethodCall(MethodCall call, Result result) {
-    Activity activity = registrar.activity();
     if (activity == null) {
       result.error("no_activity", "firebase_admob plugin requires a foreground activity", null);
       return;

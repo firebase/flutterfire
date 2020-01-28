@@ -2,7 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_core;
+import 'dart:async';
+
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:meta/meta.dart';
+
+import 'default_app_name.dart' if (dart.library.io) 'default_app_name_io.dart';
 
 class FirebaseApp {
   // TODO(jackson): We could assert here that an app with this name was configured previously.
@@ -11,8 +16,7 @@ class FirebaseApp {
   /// The name of this app.
   final String name;
 
-  static final String defaultAppName =
-      (!kIsWeb && Platform.isIOS) ? '__FIRAPP_DEFAULT' : '[DEFAULT]';
+  static final String defaultAppName = firebaseDefaultAppName;
 
   /// A copy of the options for this app. These are non-modifiable.
   ///

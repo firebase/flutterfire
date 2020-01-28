@@ -4,37 +4,20 @@
 
 package io.flutter.plugins.firebaseadmobexample;
 
-import android.graphics.Color;
-import android.os.Bundle;
-import android.widget.TextView;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAdView;
-import io.flutter.app.FlutterActivity;
-import io.flutter.plugins.GeneratedPluginRegistrant;
-import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
+import dev.flutter.plugins.e2e.E2EPlugin;
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin;
 
-public class MainActivity extends FlutterActivity implements NativeAdFactory {
+public class MainActivity extends FlutterActivity {
+  // TODO(bparrishMines): Remove this once v2 of GeneratedPluginRegistrant rolls to stable. https://github.com/flutter/flutter/issues/42694
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    GeneratedPluginRegistrant.registerWith(this);
-  }
+  public void configureFlutterEngine(FlutterEngine flutterEngine) {
+    flutterEngine.getPlugins().add(new E2EPlugin());
+    flutterEngine.getPlugins().add(new FirebaseAdMobPlugin());
 
-  @Override
-  public UnifiedNativeAdView createNativeAd(UnifiedNativeAd nativeAd) {
-    final UnifiedNativeAdView adView =
-        (UnifiedNativeAdView) getLayoutInflater().inflate(R.layout.my_native_ad, null);
-    final TextView headlineView = adView.findViewById(R.id.ad_headline);
-    final TextView bodyView = adView.findViewById(R.id.ad_body);
-
-    headlineView.setText(nativeAd.getHeadline());
-    bodyView.setText(nativeAd.getBody());
-
-    adView.setBackgroundColor(Color.YELLOW);
-
-    adView.setNativeAd(nativeAd);
-    adView.setBodyView(bodyView);
-    adView.setHeadlineView(headlineView);
-    return adView;
+    final FirebaseAdMobPlugin adMobPlugin =
+        (FirebaseAdMobPlugin) flutterEngine.getPlugins().get(FirebaseAdMobPlugin.class);
+    adMobPlugin.setNativeAdFactory(new NativeAdFactoryExample(getLayoutInflater()));
   }
 }

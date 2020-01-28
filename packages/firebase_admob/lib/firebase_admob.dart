@@ -31,7 +31,6 @@ enum MobileAdEvent {
   opened,
   leftApplication,
   closed,
-  unifiedNativeAdLoaded,
 }
 
 /// The user's gender for the sake of ad targeting using [MobileAdTargetingInfo].
@@ -323,6 +322,7 @@ class NativeAd extends MobileAd {
     @required String adUnitId,
     MobileAdTargetingInfo targetingInfo,
     MobileAdListener listener,
+    this.customOptions,
   }) : super(
             adUnitId: adUnitId,
             targetingInfo: targetingInfo,
@@ -333,6 +333,11 @@ class NativeAd extends MobileAd {
       );
     }
   }
+
+  /// Optional options used to create the [NativeAd].
+  ///
+  /// These options are passed to the platform's `NativeAdFactory`.
+  final Map<String, dynamic> customOptions;
 
   /// {@macro firebase_admob.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
@@ -345,6 +350,7 @@ class NativeAd extends MobileAd {
       'id': id,
       'targetingInfo': targetingInfo?.toJson(),
       'adUnitId': adUnitId,
+      'customOptions': customOptions,
     });
   }
 }

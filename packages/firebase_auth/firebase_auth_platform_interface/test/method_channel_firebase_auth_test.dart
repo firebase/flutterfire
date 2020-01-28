@@ -25,6 +25,7 @@ const String kMockVerificationId = '12345';
 const String kMockSmsCode = '123456';
 const String kMockLanguage = 'en';
 const String kMockIdTokenResultSignInProvider = 'password';
+const String kMockOobCode = 'oobcode';
 const Map<dynamic, dynamic> kMockIdTokenResultClaims = <dynamic, dynamic>{
   'claim1': 'value1',
 };
@@ -200,6 +201,26 @@ void main() {
     test('signInAnonymously', () async {
       final PlatformAuthResult result = await auth.signInAnonymously(appName);
       verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall('signInAnonymously',
+              arguments: <String, String>{'app': appName}),
+        ],
+      );
+    });
+
+    test('signInAnonymously with null additionalUserInfo', () async {
+      MethodChannelFirebaseAuth.channel
+          .setMockMethodCallHandler((MethodCall call) async {
+        log.add(call);
+        return <String, dynamic>{
+          'user': kMockUser,
+        };
+      });
+      final PlatformAuthResult result = await auth.signInAnonymously(appName);
+      verifyUser(result.user);
+      expect(result.additionalUserInfo, isNull);
       expect(
         log,
         <Matcher>[
@@ -538,6 +559,35 @@ void main() {
       );
     });
 
+    test('PlatformOAuthProvider signInWithCredential', () async {
+      const AuthCredential credential = PlatformOAuthCredential(
+        providerId: "generic_provider.com",
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final PlatformAuthResult result =
+          await auth.signInWithCredential(appName, credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'signInWithCredential',
+            arguments: <String, dynamic>{
+              'app': appName,
+              'provider': 'generic_provider.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+                'providerId': "generic_provider.com",
+                'rawNonce': null
+              },
+            },
+          ),
+        ],
+      );
+    });
+
     test('PhoneAuthProvider signInWithCredential', () async {
       const AuthCredential credential = PhoneAuthCredential(
         verificationId: kMockVerificationId,
@@ -621,6 +671,35 @@ void main() {
               'data': <String, String>{
                 'idToken': kMockIdToken,
                 'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
+    });
+
+    test('PlatformOAuthProvider reauthenticateWithCredential', () async {
+      const AuthCredential credential = PlatformOAuthCredential(
+        providerId: "generic_provider.com",
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final PlatformAuthResult result =
+          await auth.reauthenticateWithCredential(appName, credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'reauthenticateWithCredential',
+            arguments: <String, dynamic>{
+              'app': appName,
+              'provider': 'generic_provider.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+                'providerId': "generic_provider.com",
+                'rawNonce': null
               },
             },
           ),
@@ -721,6 +800,35 @@ void main() {
               'data': <String, String>{
                 'idToken': kMockIdToken,
                 'accessToken': kMockAccessToken,
+              },
+            },
+          ),
+        ],
+      );
+    });
+
+    test('PlatformOAuthProvider linkWithCredential', () async {
+      const AuthCredential credential = PlatformOAuthCredential(
+        providerId: "generic_provider.com",
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final PlatformAuthResult result =
+          await auth.linkWithCredential(appName, credential);
+      verifyAuthResult(result);
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'linkWithCredential',
+            arguments: <String, dynamic>{
+              'app': appName,
+              'provider': 'generic_provider.com',
+              'data': <String, String>{
+                'idToken': kMockIdToken,
+                'accessToken': kMockAccessToken,
+                'providerId': "generic_provider.com",
+                'rawNonce': null
               },
             },
           ),
@@ -1059,6 +1167,24 @@ void main() {
       ]);
     });
 
+    test('PlatformOAuthProvider unlinkFromProvider', () async {
+      const PlatformOAuthCredential oAuthCredential = PlatformOAuthCredential(
+        providerId: "generic_provider.com",
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      await auth.unlinkFromProvider(appName, oAuthCredential.providerId);
+      expect(log, <Matcher>[
+        isMethodCall(
+          'unlinkFromProvider',
+          arguments: <String, String>{
+            'app': appName,
+            'provider': 'generic_provider.com',
+          },
+        ),
+      ]);
+    });
+
     test('FacebookAuthProvider unlinkFromProvider', () async {
       const FacebookAuthCredential facebookCredential =
           FacebookAuthCredential(accessToken: kMockAccessToken);
@@ -1205,6 +1331,24 @@ void main() {
             arguments: <String, String>{
               'language': kMockLanguage,
               'app': appName,
+            },
+          ),
+        ],
+      );
+    });
+
+    test('confirmPasswordReset', () async {
+      await auth.confirmPasswordReset(appName, kMockOobCode, kMockPassword);
+
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'confirmPasswordReset',
+            arguments: <String, String>{
+              'app': appName,
+              'oobCode': kMockOobCode,
+              'newPassword': kMockPassword,
             },
           ),
         ],

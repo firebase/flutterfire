@@ -1,3 +1,22 @@
+## 0.15.3+1
+
+* Add integration instructions for the `web` platform.
+
+## 0.15.3
+
+* Add support for OAuth Authentication for iOS and Android to solve generic providers authentication.
+
+## 0.15.2
+
+* Add web support by default.
+* Require Flutter SDK 1.12.13+hotfix.4 or later.
+
+## 0.15.1+1
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
 ## 0.15.1
 
 * Migrate to use `firebase_auth_platform_interface`.

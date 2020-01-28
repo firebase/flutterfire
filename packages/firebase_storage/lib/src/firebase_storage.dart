@@ -134,17 +134,22 @@ class StorageFileDownloadTask {
   final File _file;
 
   Future<void> _start() async {
-    final int totalByteCount = await FirebaseStorage.channel.invokeMethod<int>(
-      "StorageReference#writeToFile",
-      <String, dynamic>{
-        'app': _firebaseStorage.app?.name,
-        'bucket': _firebaseStorage.storageBucket,
-        'filePath': _file.absolute.path,
-        'path': _path,
-      },
-    );
-    _completer
-        .complete(FileDownloadTaskSnapshot(totalByteCount: totalByteCount));
+    try {
+      final int totalByteCount =
+          await FirebaseStorage.channel.invokeMethod<int>(
+        "StorageReference#writeToFile",
+        <String, dynamic>{
+          'app': _firebaseStorage.app?.name,
+          'bucket': _firebaseStorage.storageBucket,
+          'filePath': _file.absolute.path,
+          'path': _path,
+        },
+      );
+      _completer
+          .complete(FileDownloadTaskSnapshot(totalByteCount: totalByteCount));
+    } catch (e) {
+      _completer.completeError(e);
+    }
   }
 
   Completer<FileDownloadTaskSnapshot> _completer =
