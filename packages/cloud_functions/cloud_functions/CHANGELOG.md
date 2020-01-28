@@ -1,3 +1,7 @@
+## 0.4.1+8
+
+* Fixes the `No implementation found for method CloudFunctions#call`
+
 ## 0.4.1+7
 
 * Update to use the platform interface to execute calls.

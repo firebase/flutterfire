@@ -1,3 +1,7 @@
+## 5.0.10
+
+* Keep a local registrar to get activity for foreground actions for v1 embedder.
+
 ## 5.0.9
 
 * Remove the deprecated `author:` field from pubspec.yaml

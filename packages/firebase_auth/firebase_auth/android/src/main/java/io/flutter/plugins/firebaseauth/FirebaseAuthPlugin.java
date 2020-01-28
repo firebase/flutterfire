@@ -165,6 +165,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
       case "setLanguageCode":
         handleSetLanguageCode(call, result, getAuth(call));
         break;
+      case "confirmPasswordReset":
+        handleConfirmPasswordReset(call, result, getAuth(call));
       default:
         result.notImplemented();
         break;
@@ -692,6 +694,17 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
 
     firebaseAuth.setLanguageCode(language);
     result.success(null);
+  }
+
+  private void handleConfirmPasswordReset(
+      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+    Map<String, String> arguments = call.arguments();
+    String oobCode = arguments.get("oobCode");
+    String newPassword = arguments.get("newPassword");
+
+    firebaseAuth
+        .confirmPasswordReset(oobCode, newPassword)
+        .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
   private class SignInCompleteListener implements OnCompleteListener<AuthResult> {
