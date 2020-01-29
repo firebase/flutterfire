@@ -1,14 +1,14 @@
 part of cloud_firestore_platform_interface;
 
-/// A [DocumentReference] refers to a document location in a Firestore database
+/// A [DocumentReferencePlatform] refers to a document location in a Firestore database
 /// and can be used to write, read, or listen to the location.
 ///
 /// The document at the referenced location may or may not exist.
-/// A [DocumentReference] can also be used to create a [CollectionReference]
+/// A [DocumentReferencePlatform] can also be used to create a [CollectionReferencePlatform]
 /// to a subcollection.
-abstract class DocumentReference {
-  /// Create instance of [DocumentReference]
-  DocumentReference(this.firestore, this._pathComponents);
+abstract class DocumentReferencePlatform {
+  /// Create instance of [DocumentReferencePlatform]
+  DocumentReferencePlatform(this.firestore, this._pathComponents);
 
   /// The Firestore instance associated with this document reference
   final FirestorePlatform firestore;
@@ -16,13 +16,13 @@ abstract class DocumentReference {
 
   @override
   bool operator ==(dynamic o) =>
-      o is DocumentReference && o.firestore == firestore && o.path == path;
+      o is DocumentReferencePlatform && o.firestore == firestore && o.path == path;
 
   @override
   int get hashCode => hashList(_pathComponents);
 
-  /// Parent returns the containing [CollectionReference].
-  CollectionReference parent() {
+  /// Parent returns the containing [CollectionReferencePlatform].
+  CollectionReferencePlatform parent() {
     final parentPathComponents = List<String>.from(_pathComponents)
       ..removeLast();
     return firestore.collection(
@@ -36,7 +36,7 @@ abstract class DocumentReference {
   /// This document's given or generated ID in the collection.
   String get documentID => _pathComponents.last;
 
-  /// Writes to the document referred to by this [DocumentReference].
+  /// Writes to the document referred to by this [DocumentReferencePlatform].
   ///
   /// If the document does not yet exist, it will be created.
   ///
@@ -46,31 +46,31 @@ abstract class DocumentReference {
     throw UnimplementedError("setData() is not implemented");
   }
 
-  /// Updates fields in the document referred to by this [DocumentReference].
+  /// Updates fields in the document referred to by this [DocumentReferencePlatform].
   ///
   /// Values in [data] may be of any supported Firestore type as well as
-  /// special sentinel [FieldValue] type.
+  /// special sentinel [FieldValuePlatform] type.
   ///
   /// If no document exists yet, the update will fail.
   Future<void> updateData(Map<String, dynamic> data) {
     throw UnimplementedError("updateData() is not implemented");
   }
 
-  /// Reads the document referenced by this [DocumentReference].
+  /// Reads the document referenced by this [DocumentReferencePlatform].
   ///
   /// If no document exists, the read will return null.
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
     throw UnimplementedError("get() is not implemented");
   }
 
-  /// Deletes the document referred to by this [DocumentReference].
+  /// Deletes the document referred to by this [DocumentReferencePlatform].
   Future<void> delete() {
     throw UnimplementedError("delete() is not implemented");
   }
 
   /// Returns the reference of a collection contained inside of this
   /// document.
-  CollectionReference collection(String collectionPath) {
+  CollectionReferencePlatform collection(String collectionPath) {
     return firestore.collection('$path/$collectionPath');
   }
 

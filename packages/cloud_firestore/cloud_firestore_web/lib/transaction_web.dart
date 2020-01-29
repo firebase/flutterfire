@@ -11,14 +11,14 @@ class TransactionWeb implements TransactionPlatform {
   TransactionWeb(this._webTransaction, this.firestore);
 
   @override
-  Future<void> delete(DocumentReference documentReference) async {
+  Future<void> delete(DocumentReferencePlatform documentReference) async {
     assert(documentReference is DocumentReferenceWeb);
     await _webTransaction
         .delete((documentReference as DocumentReferenceWeb).delegate);
   }
 
   @override
-  Future<DocumentSnapshot> get(DocumentReference documentReference) async {
+  Future<DocumentSnapshot> get(DocumentReferencePlatform documentReference) async {
     assert(documentReference is DocumentReferenceWeb);
     final webSnapshot = await _webTransaction
         .get((documentReference as DocumentReferenceWeb).delegate);
@@ -28,7 +28,7 @@ class TransactionWeb implements TransactionPlatform {
 
   @override
   Future<void> set(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
+      DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
     assert(documentReference is DocumentReferenceWeb);
     await _webTransaction.set(
         (documentReference as DocumentReferenceWeb).delegate,
@@ -37,7 +37,7 @@ class TransactionWeb implements TransactionPlatform {
 
   @override
   Future<void> update(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
+      DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
     assert(documentReference is DocumentReferenceWeb);
     await _webTransaction.update(
         (documentReference as DocumentReferenceWeb).delegate,

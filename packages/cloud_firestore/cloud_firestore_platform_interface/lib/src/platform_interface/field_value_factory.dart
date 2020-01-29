@@ -22,17 +22,17 @@ enum FieldValueType {
   incrementInteger,
 }
 
-/// An interface for a factory that is used to build [FieldValue] according to
+/// An interface for a factory that is used to build [FieldValuePlatform] according to
 /// Platform (web or mobile)
-abstract class FieldValueFactory {
-  /// Current instance of [FieldValueFactory]
-  static FieldValueFactory get instance => _instance;
+abstract class FieldValueFactoryPlatform {
+  /// Current instance of [FieldValueFactoryPlatform]
+  static FieldValueFactoryPlatform get instance => _instance;
 
-  static FieldValueFactory _instance = MethodChannelFieldValueFactory();
+  static FieldValueFactoryPlatform _instance = MethodChannelFieldValueFactory();
 
-  /// Sets the default instance of [FieldValueFactory] which is used to build
-  /// [FieldValue] items
-  static set instance(FieldValueFactory instance) {
+  /// Sets the default instance of [FieldValueFactoryPlatform] which is used to build
+  /// [FieldValuePlatform] items
+  static set instance(FieldValueFactoryPlatform instance) {
     _instance = instance;
   }
 

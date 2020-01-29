@@ -1,7 +1,7 @@
 part of cloud_firestore_web;
 
-/// Web implementation for Firestore [CollectionReference]
-class CollectionReferenceWeb implements CollectionReference {
+/// Web implementation for Firestore [CollectionReferencePlatform]
+class CollectionReferenceWeb implements CollectionReferencePlatform {
   /// instance of Firestore from the web plugin
   final web.Firestore webFirestore;
   final FirestorePlatform _firestorePlatform;
@@ -18,7 +18,7 @@ class CollectionReferenceWeb implements CollectionReference {
             webFirestore.collection(pathComponents.join("/")));
 
   @override
-  DocumentReference parent() {
+  DocumentReferencePlatform parent() {
     if (pathComponents.length < 2) {
       return null;
     }
@@ -30,7 +30,7 @@ class CollectionReferenceWeb implements CollectionReference {
   }
 
   @override
-  DocumentReference document([String path]) {
+  DocumentReferencePlatform document([String path]) {
     List<String> childPath;
     if (path == null) {
       final String key = AutoIdGenerator.autoId();
@@ -46,8 +46,8 @@ class CollectionReferenceWeb implements CollectionReference {
   }
 
   @override
-  Future<DocumentReference> add(Map<String, dynamic> data) async {
-    final DocumentReference newDocument = document();
+  Future<DocumentReferencePlatform> add(Map<String, dynamic> data) async {
+    final DocumentReferencePlatform newDocument = document();
     await newDocument.setData(data);
     return newDocument;
   }
@@ -56,25 +56,25 @@ class CollectionReferenceWeb implements CollectionReference {
   Map<String, dynamic> buildArguments() => queryDelegate.buildArguments();
 
   @override
-  Query endAt(List values) {
+  QueryPlatform endAt(List values) {
     _resetQueryDelegate();
     return queryDelegate.endAt(values);
   }
 
   @override
-  Query endAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endAtDocument(DocumentSnapshot documentSnapshot) {
     _resetQueryDelegate();
     return queryDelegate.endAtDocument(documentSnapshot);
   }
 
   @override
-  Query endBefore(List values) {
+  QueryPlatform endBefore(List values) {
     _resetQueryDelegate();
     return queryDelegate.endBefore(values);
   }
 
   @override
-  Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endBeforeDocument(DocumentSnapshot documentSnapshot) {
     _resetQueryDelegate();
     return queryDelegate.endBeforeDocument(documentSnapshot);
   }
@@ -83,7 +83,7 @@ class CollectionReferenceWeb implements CollectionReference {
   FirestorePlatform get firestore => _firestorePlatform;
 
   @override
-  Future<QuerySnapshot> getDocuments({Source source = Source.serverAndCache}) =>
+  Future<QuerySnapshotPlatform> getDocuments({Source source = Source.serverAndCache}) =>
       queryDelegate.getDocuments(source: source);
 
   @override
@@ -93,13 +93,13 @@ class CollectionReferenceWeb implements CollectionReference {
   bool get isCollectionGroup => false;
 
   @override
-  Query limit(int length) {
+  QueryPlatform limit(int length) {
     _resetQueryDelegate();
     return queryDelegate.limit(length);
   }
 
   @override
-  Query orderBy(field, {bool descending = false}) {
+  QueryPlatform orderBy(field, {bool descending = false}) {
     _resetQueryDelegate();
     return queryDelegate.orderBy(field, descending: descending);
   }
@@ -111,38 +111,38 @@ class CollectionReferenceWeb implements CollectionReference {
   String get path => pathComponents.join("/");
 
   @override
-  CollectionReference reference() => queryDelegate.reference();
+  CollectionReferencePlatform reference() => queryDelegate.reference();
 
   @override
-  Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) =>
+  Stream<QuerySnapshotPlatform> snapshots({bool includeMetadataChanges = false}) =>
       queryDelegate.snapshots(includeMetadataChanges: includeMetadataChanges);
 
   @override
-  Query startAfter(List values) {
+  QueryPlatform startAfter(List values) {
     _resetQueryDelegate();
     return queryDelegate.startAfter(values);
   }
 
   @override
-  Query startAfterDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAfterDocument(DocumentSnapshot documentSnapshot) {
     _resetQueryDelegate();
     return queryDelegate.startAfterDocument(documentSnapshot);
   }
 
   @override
-  Query startAt(List values) {
+  QueryPlatform startAt(List values) {
     _resetQueryDelegate();
     return queryDelegate.startAt(values);
   }
 
   @override
-  Query startAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAtDocument(DocumentSnapshot documentSnapshot) {
     _resetQueryDelegate();
     return queryDelegate.startAtDocument(documentSnapshot);
   }
 
   @override
-  Query where(field,
+  QueryPlatform where(field,
       {isEqualTo,
       isLessThan,
       isLessThanOrEqualTo,

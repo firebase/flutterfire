@@ -28,7 +28,7 @@ class FieldValue implements platform.FieldValueInterface {
   /// will be overwritten with an array containing exactly the specified
   /// elements.
   static FieldValue arrayUnion(List<dynamic> elements) =>
-      FieldValue._(platform.FieldValueFactory.instance.arrayUnion(elements));
+      FieldValue._(platform.FieldValueFactoryPlatform.instance.arrayUnion(elements));
 
   /// Returns a special value that tells the server to remove the given
   /// elements from any array value that already exists on the server.
@@ -37,19 +37,19 @@ class FieldValue implements platform.FieldValueInterface {
   /// If the field being modified is not already an array it will be overwritten
   /// with an empty array.
   static FieldValue arrayRemove(List<dynamic> elements) =>
-      FieldValue._(platform.FieldValueFactory.instance.arrayRemove(elements));
+      FieldValue._(platform.FieldValueFactoryPlatform.instance.arrayRemove(elements));
 
   /// Returns a sentinel for use with update() to mark a field for deletion.
   static FieldValue delete() =>
-      FieldValue._(platform.FieldValueFactory.instance.delete());
+      FieldValue._(platform.FieldValueFactoryPlatform.instance.delete());
 
   /// Returns a sentinel for use with set() or update() to include a
   /// server-generated timestamp in the written data.
   static FieldValue serverTimestamp() =>
-      FieldValue._(platform.FieldValueFactory.instance.serverTimestamp());
+      FieldValue._(platform.FieldValueFactoryPlatform.instance.serverTimestamp());
 
   /// Returns a special value for use with set() or update() that tells the
   /// server to increment the field’s current value by the given value.
   static FieldValue increment(num value) =>
-      FieldValue._(platform.FieldValueFactory.instance.increment(value));
+      FieldValue._(platform.FieldValueFactoryPlatform.instance.increment(value));
 }

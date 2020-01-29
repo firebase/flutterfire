@@ -25,13 +25,13 @@ abstract class TransactionPlatform {
   Future<void> finish() => Future.wait<void>(_pendingResults);
 
   /// Reads the document referenced by the provided DocumentReference.
-  Future<DocumentSnapshot> get(DocumentReference documentReference) {
+  Future<DocumentSnapshot> get(DocumentReferencePlatform documentReference) {
     final Future<DocumentSnapshot> result = _get(documentReference);
     _pendingResults.add(result);
     return result;
   }
 
-  Future<DocumentSnapshot> _get(DocumentReference documentReference) async {
+  Future<DocumentSnapshot> _get(DocumentReferencePlatform documentReference) async {
     throw UnimplementedError("get() not implemented");
   }
 
@@ -39,13 +39,13 @@ abstract class TransactionPlatform {
   ///
   /// Awaiting the returned [Future] is optional and will be done automatically
   /// when the transaction handler completes.
-  Future<void> delete(DocumentReference documentReference) {
+  Future<void> delete(DocumentReferencePlatform documentReference) {
     final Future<void> result = _delete(documentReference);
     _pendingResults.add(result);
     return result;
   }
 
-  Future<void> _delete(DocumentReference documentReference) async {
+  Future<void> _delete(DocumentReferencePlatform documentReference) async {
     throw UnimplementedError("delete() not implemented");
   }
 
@@ -55,32 +55,32 @@ abstract class TransactionPlatform {
   /// Awaiting the returned [Future] is optional and will be done automatically
   /// when the transaction handler completes.
   Future<void> update(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
+      DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
     final Future<void> result = _update(documentReference, data);
     _pendingResults.add(result);
     return result;
   }
 
   Future<void> _update(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
+      DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
     throw UnimplementedError("updated() not implemented");
   }
 
-  /// Writes to the document referred to by the provided [DocumentReference].
+  /// Writes to the document referred to by the provided [DocumentReferencePlatform].
   /// If the document does not exist yet, it will be created. If you pass
   /// SetOptions, the provided data can be merged into the existing document.
   ///
   /// Awaiting the returned [Future] is optional and will be done automatically
   /// when the transaction handler completes.
   Future<void> set(
-      DocumentReference documentReference, Map<String, dynamic> data) {
+      DocumentReferencePlatform documentReference, Map<String, dynamic> data) {
     final Future<void> result = _set(documentReference, data);
     _pendingResults.add(result);
     return result;
   }
 
   Future<void> _set(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
+      DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
     throw UnimplementedError("set() not implemented");
   }
 }

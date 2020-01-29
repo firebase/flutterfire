@@ -14,13 +14,13 @@ class WriteBatchWeb implements WriteBatchPlatform {
   }
 
   @override
-  void delete(DocumentReference document) {
+  void delete(DocumentReferencePlatform document) {
     assert(document is DocumentReferenceWeb);
     _delegate.delete((document as DocumentReferenceWeb).delegate);
   }
 
   @override
-  void setData(DocumentReference document, Map<String, dynamic> data,
+  void setData(DocumentReferencePlatform document, Map<String, dynamic> data,
       {bool merge = false}) {
     assert(document is DocumentReferenceWeb);
     _delegate.set(
@@ -30,7 +30,7 @@ class WriteBatchWeb implements WriteBatchPlatform {
   }
 
   @override
-  void updateData(DocumentReference document, Map<String, dynamic> data) {
+  void updateData(DocumentReferencePlatform document, Map<String, dynamic> data) {
     assert(document is DocumentReferenceWeb);
     _delegate.update((document as DocumentReferenceWeb).delegate,
         data: CodecUtility.encodeMapData(data));

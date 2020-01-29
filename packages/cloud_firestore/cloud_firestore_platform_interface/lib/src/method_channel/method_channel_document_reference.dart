@@ -4,10 +4,10 @@
 
 part of cloud_firestore_platform_interface;
 
-/// A [MethodChannelDocumentReference] is an implementation of [DocumentReference]
+/// A [MethodChannelDocumentReference] is an implementation of [DocumentReferencePlatform]
 /// that uses [MethodChannel] to communicate with Firebase plugins
-class MethodChannelDocumentReference extends DocumentReference {
-  /// Creates a [DocumentReference] that is implemented using [MethodChannel].
+class MethodChannelDocumentReference extends DocumentReferencePlatform {
+  /// Creates a [DocumentReferencePlatform] that is implemented using [MethodChannel].
   MethodChannelDocumentReference(
       FirestorePlatform firestore, List<String> pathComponents)
       : assert(firestore != null),
@@ -20,7 +20,7 @@ class MethodChannelDocumentReference extends DocumentReference {
       <String, dynamic>{
         'app': firestore.appName(),
         'path': path,
-        'data': FieldValue.serverDelegates(data),
+        'data': FieldValuePlatform.serverDelegates(data),
         'options': <String, bool>{'merge': merge},
       },
     );
@@ -33,7 +33,7 @@ class MethodChannelDocumentReference extends DocumentReference {
       <String, dynamic>{
         'app': firestore.appName(),
         'path': path,
-        'data': FieldValue.serverDelegates(data),
+        'data': FieldValuePlatform.serverDelegates(data),
       },
     );
   }

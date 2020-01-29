@@ -17,17 +17,17 @@ abstract class FieldValueInterface {
   dynamic get value;
 }
 
-/// Mobile platform implementation for [FieldValueInterface]
-class FieldValue implements FieldValueInterface {
+/// Platform Interface of a FieldValue; implementation for [FieldValueInterface]
+class FieldValuePlatform implements FieldValueInterface {
   /// Replaces items with type [FieldValueInterface] with implementation type
-  /// such as [FieldValue]
+  /// such as [FieldValuePlatform]
   static Map<String, dynamic> serverDelegates(Map<String, dynamic> data) {
     if (data == null) {
       return null;
     }
     Map<String, dynamic> output = Map.from(data);
     output.updateAll((key, value) {
-      if (value is FieldValueInterface && value.instance is FieldValue) {
+      if (value is FieldValueInterface && value.instance is FieldValuePlatform) {
         return value.instance;
       } else {
         return value;
@@ -36,7 +36,7 @@ class FieldValue implements FieldValueInterface {
     return output;
   }
 
-  FieldValue._(this.type, this.value);
+  FieldValuePlatform._(this.type, this.value);
 
   @override
   FieldValueInterface get instance => this;

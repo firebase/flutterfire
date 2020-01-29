@@ -54,7 +54,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_kGeoPoint);
       buffer.putFloat64(value.latitude);
       buffer.putFloat64(value.longitude);
-    } else if (value is DocumentReference) {
+    } else if (value is DocumentReferencePlatform) {
       buffer.putUint8(_kDocumentReference);
       final List<int> appName = utf8.encoder.convert(value.firestore.appName());
       writeSize(buffer, appName.length);
@@ -106,20 +106,20 @@ class FirestoreMessageCodec extends StandardMessageCodec {
         return Blob(bytes);
       case _kArrayUnion:
         final List<dynamic> value = readValue(buffer);
-        return FieldValueFactory.instance.arrayUnion(value);
+        return FieldValueFactoryPlatform.instance.arrayUnion(value);
       case _kArrayRemove:
         final List<dynamic> value = readValue(buffer);
-        return FieldValueFactory.instance.arrayRemove(value);
+        return FieldValueFactoryPlatform.instance.arrayRemove(value);
       case _kDelete:
-        return FieldValueFactory.instance.delete();
+        return FieldValueFactoryPlatform.instance.delete();
       case _kServerTimestamp:
-        return FieldValueFactory.instance.serverTimestamp();
+        return FieldValueFactoryPlatform.instance.serverTimestamp();
       case _kIncrementDouble:
         final double value = readValue(buffer);
-        return FieldValueFactory.instance.increment(value);
+        return FieldValueFactoryPlatform.instance.increment(value);
       case _kIncrementInteger:
         final int value = readValue(buffer);
-        return FieldValueFactory.instance.increment(value);
+        return FieldValueFactoryPlatform.instance.increment(value);
       case _kDocumentId:
         return FieldPath.documentId;
       default:

@@ -18,8 +18,8 @@ void main() {
     FirebaseApp app;
     MethodChannelFirestore firestore;
     final List<MethodCall> log = <MethodCall>[];
-    CollectionReference collectionReference;
-    Query collectionGroupQuery;
+    CollectionReferencePlatform collectionReference;
+    QueryPlatform collectionGroupQuery;
     Transaction transaction;
     const Map<String, dynamic> kMockDocumentSnapshotData = <String, dynamic>{
       '1': 2
@@ -218,7 +218,7 @@ void main() {
       });
 
       test('get', () async {
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
         final DocumentSnapshot snapshot =
             await transaction.get(documentReference);
@@ -233,7 +233,7 @@ void main() {
       });
 
       test('get notExists', () async {
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/notExists');
         await transaction.get(documentReference);
         expect(log, <Matcher>[
@@ -246,7 +246,7 @@ void main() {
       });
 
       test('delete', () async {
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
         await transaction.delete(documentReference);
         expect(log, <Matcher>[
@@ -259,7 +259,7 @@ void main() {
       });
 
       test('update', () async {
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
         final DocumentSnapshot documentSnapshot = await documentReference.get();
         final Map<String, dynamic> data = documentSnapshot.data;
@@ -281,7 +281,7 @@ void main() {
       });
 
       test('set', () async {
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
         final DocumentSnapshot documentSnapshot = await documentReference.get();
         final Map<String, dynamic> data = documentSnapshot.data;
@@ -329,7 +329,7 @@ void main() {
         expect(collectionReference.id, equals('foo'));
       });
       test('parent', () async {
-        final DocumentReference docRef = collectionReference.document('bar');
+        final DocumentReferencePlatform docRef = collectionReference.document('bar');
         expect(docRef.parent().id, equals('foo'));
         expect(collectionReference.parent(), isNull);
       });
@@ -337,7 +337,7 @@ void main() {
         expect(collectionReference.path, equals('foo'));
       });
       test('listen', () async {
-        final QuerySnapshot snapshot = await collectionReference
+        final QuerySnapshotPlatform snapshot = await collectionReference
             .snapshots(includeMetadataChanges: true)
             .first;
         final DocumentSnapshot document = snapshot.documents[0];
@@ -367,11 +367,11 @@ void main() {
         ]);
       });
       test('where', () async {
-        final StreamSubscription<QuerySnapshot> subscription =
+        final StreamSubscription<QuerySnapshotPlatform> subscription =
             collectionReference
                 .where('createdAt', isLessThan: 100)
                 .snapshots()
-                .listen((QuerySnapshot querySnapshot) {});
+                .listen((QuerySnapshotPlatform querySnapshot) {});
         subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -400,11 +400,11 @@ void main() {
         );
       });
       test('where in', () async {
-        final StreamSubscription<QuerySnapshot> subscription =
+        final StreamSubscription<QuerySnapshotPlatform> subscription =
             collectionReference
                 .where('country', whereIn: <String>['USA', 'Japan'])
                 .snapshots()
-                .listen((QuerySnapshot querySnapshot) {});
+                .listen((QuerySnapshotPlatform querySnapshot) {});
         subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -437,12 +437,12 @@ void main() {
         );
       });
       test('where array-contains-any', () async {
-        final StreamSubscription<QuerySnapshot> subscription =
+        final StreamSubscription<QuerySnapshotPlatform> subscription =
             collectionReference
                 .where('regions',
                     arrayContainsAny: <String>['west-coast', 'east-coast'])
                 .snapshots()
-                .listen((QuerySnapshot querySnapshot) {});
+                .listen((QuerySnapshotPlatform querySnapshot) {});
         subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -475,11 +475,11 @@ void main() {
         );
       });
       test('where field isNull', () async {
-        final StreamSubscription<QuerySnapshot> subscription =
+        final StreamSubscription<QuerySnapshotPlatform> subscription =
             collectionReference
                 .where('profile', isNull: true)
                 .snapshots()
-                .listen((QuerySnapshot querySnapshot) {});
+                .listen((QuerySnapshotPlatform querySnapshot) {});
         subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -508,11 +508,11 @@ void main() {
         );
       });
       test('orderBy', () async {
-        final StreamSubscription<QuerySnapshot> subscription =
+        final StreamSubscription<QuerySnapshotPlatform> subscription =
             collectionReference
                 .orderBy('createdAt')
                 .snapshots()
-                .listen((QuerySnapshot querySnapshot) {});
+                .listen((QuerySnapshotPlatform querySnapshot) {});
         subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -691,12 +691,12 @@ void main() {
         }
       });
       test('collection', () async {
-        final CollectionReference colRef =
+        final CollectionReferencePlatform colRef =
             collectionReference.document('bar').collection('baz');
         expect(colRef.path, equals('foo/bar/baz'));
       });
       test('parent', () async {
-        final CollectionReference colRef =
+        final CollectionReferencePlatform colRef =
             collectionReference.document('bar').collection('baz');
         expect(colRef.parent().documentID, equals('bar'));
       });
@@ -704,7 +704,7 @@ void main() {
 
     group('Query', () {
       test('getDocumentsFromCollection', () async {
-        QuerySnapshot snapshot =
+        QuerySnapshotPlatform snapshot =
             await collectionReference.getDocuments(source: Source.server);
         expect(snapshot.metadata.hasPendingWrites,
             equals(kMockSnapshotMetadata['hasPendingWrites']));
@@ -876,7 +876,7 @@ void main() {
         );
       });
       test('getDocumentsFromCollectionGroup', () async {
-        QuerySnapshot snapshot = await collectionGroupQuery.getDocuments();
+        QuerySnapshotPlatform snapshot = await collectionGroupQuery.getDocuments();
         expect(snapshot.metadata.hasPendingWrites,
             equals(kMockSnapshotMetadata['hasPendingWrites']));
         expect(snapshot.metadata.isFromCache,
@@ -1092,7 +1092,7 @@ void main() {
         }, throwsAssertionError);
 
         // Cannot order by document id when paginating with documents.
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
         final DocumentSnapshot snapshot = await documentReference.get();
         expect(() {
@@ -1103,10 +1103,10 @@ void main() {
         }, throwsAssertionError);
       });
       test('document pagination FieldPath assertions', () async {
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
         final DocumentSnapshot snapshot = await documentReference.get();
-        final Query query =
+        final QueryPlatform query =
             firestore.collection('foo').orderBy(FieldPath.documentId);
 
         expect(() {
@@ -1152,16 +1152,16 @@ void main() {
 
       test('encode and decode FieldValue', () {
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactory.instance.arrayUnion(<int>[123]));
+            codec, FieldValueFactoryPlatform.instance.arrayUnion(<int>[123]));
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactory.instance.arrayRemove(<int>[123]));
-        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.delete());
+            codec, FieldValueFactoryPlatform.instance.arrayRemove(<int>[123]));
+        _checkEncodeDecode<dynamic>(codec, FieldValueFactoryPlatform.instance.delete());
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactory.instance.serverTimestamp());
+            codec, FieldValueFactoryPlatform.instance.serverTimestamp());
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactory.instance.increment(1.0));
+            codec, FieldValueFactoryPlatform.instance.increment(1.0));
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactory.instance.increment(1));
+            codec, FieldValueFactoryPlatform.instance.increment(1));
       });
 
       test('encode and decode FieldPath', () {
@@ -1395,8 +1395,8 @@ bool _deepEquals(dynamic valueA, dynamic valueB) {
   if (valueA is List) return valueB is List && _deepEqualsList(valueA, valueB);
   if (valueA is Map) return valueB is Map && _deepEqualsMap(valueA, valueB);
   if (valueA is double && valueA.isNaN) return valueB is double && valueB.isNaN;
-  if (valueA is FieldValue) {
-    return valueB is FieldValue && _deepEqualsFieldValue(valueA, valueB);
+  if (valueA is FieldValuePlatform) {
+    return valueB is FieldValuePlatform && _deepEqualsFieldValue(valueA, valueB);
   }
   if (valueA is FieldPath) {
     return valueB is FieldPath && valueA.type == valueB.type;
@@ -1444,7 +1444,7 @@ bool _deepEqualsMap(
   return true;
 }
 
-bool _deepEqualsFieldValue(FieldValue valueA, FieldValue valueB) {
+bool _deepEqualsFieldValue(FieldValuePlatform valueA, FieldValuePlatform valueB) {
   if (valueA.type != valueB.type) return false;
   if (valueA.value == null) return valueB.value == null;
   if (valueA.value is List) return _deepEqualsList(valueA.value, valueB.value);

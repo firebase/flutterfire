@@ -5,7 +5,7 @@
 part of cloud_firestore_platform_interface;
 
 /// Contains zero or more [DocumentSnapshot] objects.
-class MethodChannelQuerySnapshot extends QuerySnapshot {
+class MethodChannelQuerySnapshot extends QuerySnapshotPlatform {
   /// Creates a [MethodChannelQuerySnapshot] from the given [data]
   MethodChannelQuerySnapshot(
       Map<dynamic, dynamic> data, FirestorePlatform firestore)
@@ -22,7 +22,7 @@ class MethodChannelQuerySnapshot extends QuerySnapshot {
                 firestore,
               );
             }),
-            List<DocumentChange>.generate(data['documentChanges'].length,
+            List<DocumentChangePlatform>.generate(data['documentChanges'].length,
                 (int index) {
               return MethodChannelDocumentChange(
                 data['documentChanges'][index],

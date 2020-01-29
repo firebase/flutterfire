@@ -81,7 +81,7 @@ void main() {
   });
 }
 
-void _assertGetMethodCalled(DocumentReference documentReference, Source source,
+void _assertGetMethodCalled(DocumentReferencePlatform documentReference, Source source,
     String expectedSourceString) async {
   bool isMethodCalled = false;
   handleMethodCall((call) {
@@ -104,7 +104,7 @@ void _assertGetMethodCalled(DocumentReference documentReference, Source source,
       reason: "DocumentReference.get was not called");
 }
 
-void _assertSetDataMethodCalled(DocumentReference documentReference,
+void _assertSetDataMethodCalled(DocumentReferencePlatform documentReference,
     bool expectedMergeValue, FieldValueInterface fieldValue) async {
   bool isMethodCalled = false;
   final Map<String, dynamic> data = {"test": "test"};

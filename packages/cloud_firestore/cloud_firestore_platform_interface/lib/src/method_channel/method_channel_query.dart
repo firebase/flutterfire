@@ -5,7 +5,7 @@
 part of cloud_firestore_platform_interface;
 
 /// Represents a query over the data at a particular location.
-class MethodChannelQuery extends Query {
+class MethodChannelQuery extends QueryPlatform {
   /// Create a [MethodChannelQuery] from [pathComponents]
   MethodChannelQuery(
       {@required FirestorePlatform firestore,
@@ -19,7 +19,7 @@ class MethodChannelQuery extends Query {
           parameters: parameters,
         );
 
-  Query _copyWithParameters(Map<String, dynamic> parameters) {
+  QueryPlatform _copyWithParameters(Map<String, dynamic> parameters) {
     return MethodChannelQuery(
       firestore: firestore,
       isCollectionGroup: isCollectionGroup,
@@ -32,13 +32,13 @@ class MethodChannelQuery extends Query {
 
   // TODO(jackson): Reduce code duplication with [DocumentReference]
   @override
-  Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
+  Stream<QuerySnapshotPlatform> snapshots({bool includeMetadataChanges = false}) {
     assert(includeMetadataChanges != null);
     Future<int> _handle;
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
-    StreamController<QuerySnapshot> controller; // ignore: close_sinks
-    controller = StreamController<QuerySnapshot>.broadcast(
+    StreamController<QuerySnapshotPlatform> controller; // ignore: close_sinks
+    controller = StreamController<QuerySnapshotPlatform>.broadcast(
       onListen: () {
         _handle = MethodChannelFirestore.channel.invokeMethod<int>(
           'Query#addSnapshotListener',
@@ -68,7 +68,7 @@ class MethodChannelQuery extends Query {
   }
 
   /// Fetch the documents for this query
-  Future<QuerySnapshot> getDocuments(
+  Future<QuerySnapshotPlatform> getDocuments(
       {Source source = Source.serverAndCache}) async {
     assert(source != null);
     final Map<dynamic, dynamic> data =
@@ -92,7 +92,7 @@ class MethodChannelQuery extends Query {
     });
 
   @override
-  Query where(field,
+  QueryPlatform where(field,
       {isEqualTo,
       isLessThan,
       isLessThanOrEqualTo,
@@ -147,7 +147,7 @@ class MethodChannelQuery extends Query {
   }
 
   @override
-  Query orderBy(field, {bool descending = false}) {
+  QueryPlatform orderBy(field, {bool descending = false}) {
     assert(field != null && descending != null);
     assert(field is String || field is FieldPath,
         'Supported [field] types are [String] and [FieldPath].');
@@ -176,7 +176,7 @@ class MethodChannelQuery extends Query {
   }
 
   @override
-  Query startAfterDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAfterDocument(DocumentSnapshot documentSnapshot) {
     assert(documentSnapshot != null);
     assert(!parameters.containsKey('startAfter'));
     assert(!parameters.containsKey('startAt'));
@@ -198,7 +198,7 @@ class MethodChannelQuery extends Query {
   }
 
   @override
-  Query startAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAtDocument(DocumentSnapshot documentSnapshot) {
     assert(documentSnapshot != null);
     assert(!parameters.containsKey('startAfter'));
     assert(!parameters.containsKey('startAt'));
@@ -220,7 +220,7 @@ class MethodChannelQuery extends Query {
   }
 
   @override
-  Query startAfter(List values) {
+  QueryPlatform startAfter(List values) {
     assert(values != null);
     assert(!parameters.containsKey('startAfter'));
     assert(!parameters.containsKey('startAt'));
@@ -230,7 +230,7 @@ class MethodChannelQuery extends Query {
   }
 
   @override
-  Query startAt(List values) {
+  QueryPlatform startAt(List values) {
     assert(values != null);
     assert(!parameters.containsKey('startAfter'));
     assert(!parameters.containsKey('startAt'));
@@ -240,7 +240,7 @@ class MethodChannelQuery extends Query {
   }
 
   @override
-  Query endAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endAtDocument(DocumentSnapshot documentSnapshot) {
     assert(documentSnapshot != null);
     assert(!parameters.containsKey('endBefore'));
     assert(!parameters.containsKey('endAt'));
@@ -263,7 +263,7 @@ class MethodChannelQuery extends Query {
   }
 
   @override
-  Query endAt(List values) {
+  QueryPlatform endAt(List values) {
     assert(values != null);
     assert(!parameters.containsKey('endBefore'));
     assert(!parameters.containsKey('endAt'));
@@ -273,7 +273,7 @@ class MethodChannelQuery extends Query {
   }
 
   @override
-  Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endBeforeDocument(DocumentSnapshot documentSnapshot) {
     assert(documentSnapshot != null);
     assert(!parameters.containsKey('endBefore'));
     assert(!parameters.containsKey('endAt'));
@@ -295,7 +295,7 @@ class MethodChannelQuery extends Query {
   }
 
   @override
-  Query endBefore(List values) {
+  QueryPlatform endBefore(List values) {
     assert(values != null);
     assert(!parameters.containsKey('endBefore'));
     assert(!parameters.containsKey('endAt'));

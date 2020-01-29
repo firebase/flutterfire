@@ -5,16 +5,16 @@
 part of cloud_firestore_platform_interface;
 
 /// A QuerySnapshot contains zero or more DocumentSnapshot objects.
-class QuerySnapshot {
-  /// Create a [QuerySnapshot]
-  QuerySnapshot(this.documents, this.documentChanges, this.metadata);
+class QuerySnapshotPlatform {
+  /// Create a [QuerySnapshotPlatform]
+  QuerySnapshotPlatform(this.documents, this.documentChanges, this.metadata);
 
   /// Gets a list of all the documents included in this snapshot
   final List<DocumentSnapshot> documents;
 
   /// An array of the documents that changed since the last snapshot. If this
   /// is the first snapshot, all documents will be in the list as Added changes.
-  final List<DocumentChange> documentChanges;
+  final List<DocumentChangePlatform> documentChanges;
 
   /// Metadata for the document
   final SnapshotMetadata metadata;

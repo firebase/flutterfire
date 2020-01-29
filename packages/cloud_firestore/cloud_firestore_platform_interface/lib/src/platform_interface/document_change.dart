@@ -22,23 +22,23 @@ enum DocumentChangeType {
 ///
 /// It contains the document affected and the type of change that occurred
 /// (added, modified, or removed).
-class DocumentChange {
-  /// Create a [DocumentChange]
-  DocumentChange(this.type, this.oldIndex, this.newIndex, this.document);
+class DocumentChangePlatform {
+  /// Create a [DocumentChangePlatform]
+  DocumentChangePlatform(this.type, this.oldIndex, this.newIndex, this.document);
 
   /// The type of change that occurred (added, modified, or removed).
   final DocumentChangeType type;
 
   /// The index of the changed document in the result set immediately prior to
-  /// this [DocumentChange] (i.e. supposing that all prior DocumentChange objects
+  /// this [DocumentChangePlatform] (i.e. supposing that all prior DocumentChange objects
   /// have been applied).
   ///
   /// -1 for [DocumentChangeType.added] events.
   final int oldIndex;
 
   /// The index of the changed document in the result set immediately after this
-  /// DocumentChange (i.e. supposing that all prior [DocumentChange] objects
-  /// and the current [DocumentChange] object have been applied).
+  /// DocumentChange (i.e. supposing that all prior [DocumentChangePlatform] objects
+  /// and the current [DocumentChangePlatform] object have been applied).
   ///
   /// -1 for [DocumentChangeType.removed] events.
   final int newIndex;

@@ -19,7 +19,7 @@ class DocumentSnapshot {
   final FirestorePlatform firestore;
 
   /// The reference that produced this snapshot.
-  DocumentReference get reference => firestore.document(_path);
+  DocumentReferencePlatform get reference => firestore.document(_path);
 
   /// Contains all the data of this snapshot.
   final Map<String, dynamic> data;

@@ -11,7 +11,7 @@ part of cloud_firestore;
 /// A [DocumentReference] can also be used to create a [CollectionReference]
 /// to a subcollection.
 class DocumentReference {
-  platform.DocumentReference _delegate;
+  platform.DocumentReferencePlatform _delegate;
 
   /// The Firestore instance associated with this document reference
   final Firestore firestore;

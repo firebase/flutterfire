@@ -12,7 +12,7 @@ class TestQuery extends MethodChannelQuery {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  group("$Query()", () {
+  group("$QueryPlatform()", () {
     test("parameters", () {
       _hasDefaultParameters(TestQuery._().parameters);
     });
@@ -20,7 +20,7 @@ void main() {
     test("reference", () {
       final testQuery = TestQuery._();
       final actualCollection = testQuery.reference();
-      expect(actualCollection, isInstanceOf<CollectionReference>());
+      expect(actualCollection, isInstanceOf<CollectionReferencePlatform>());
       expect(actualCollection.path, equals(_kQueryPath));
     });
 

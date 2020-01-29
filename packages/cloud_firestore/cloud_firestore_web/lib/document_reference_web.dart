@@ -1,7 +1,7 @@
 part of cloud_firestore_web;
 
-/// Web implementation for firestore [DocumentReference]
-class DocumentReferenceWeb extends DocumentReference {
+/// Web implementation for firestore [DocumentReferencePlatform]
+class DocumentReferenceWeb extends DocumentReferencePlatform {
   /// instance of Firestore from the web plugin
   final web.Firestore firestoreWeb;
 

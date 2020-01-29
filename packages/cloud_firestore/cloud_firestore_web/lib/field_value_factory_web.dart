@@ -1,8 +1,8 @@
 part of cloud_firestore_web;
 
-/// An implementation of [FieldValueFactory] which builds [FieldValue]
+/// An implementation of [FieldValueFactoryPlatform] which builds [FieldValuePlatform]
 /// instance that is [jsify] friendly
-class FieldValueFactoryWeb implements FieldValueFactory {
+class FieldValueFactoryWeb implements FieldValueFactoryPlatform {
   @override
   FieldValueInterface arrayRemove(List elements) {
     final delegate = web.FieldValue.arrayRemove(elements);

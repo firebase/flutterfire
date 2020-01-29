@@ -6,7 +6,7 @@ part of cloud_firestore;
 
 /// Represents a query over the data at a particular location.
 class Query {
-  final platform.Query _delegate;
+  final platform.QueryPlatform _delegate;
 
   /// The Firestore instance associated with this query
   final Firestore firestore;

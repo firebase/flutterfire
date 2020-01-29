@@ -14,7 +14,7 @@ class MethodChannelFirestore extends FirestorePlatform {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       if (call.method == 'QuerySnapshot') {
-        final QuerySnapshot snapshot =
+        final QuerySnapshotPlatform snapshot =
             MethodChannelQuerySnapshot(call.arguments, this);
         _queryObservers[call.arguments['handle']].add(snapshot);
       } else if (call.method == 'DocumentSnapshot') {
@@ -51,8 +51,8 @@ class MethodChannelFirestore extends FirestorePlatform {
     StandardMethodCodec(FirestoreMessageCodec()),
   );
 
-  static final Map<int, StreamController<QuerySnapshot>> _queryObservers =
-      <int, StreamController<QuerySnapshot>>{};
+  static final Map<int, StreamController<QuerySnapshotPlatform>> _queryObservers =
+      <int, StreamController<QuerySnapshotPlatform>>{};
 
   static final Map<int, StreamController<DocumentSnapshot>> _documentObservers =
       <int, StreamController<DocumentSnapshot>>{};
@@ -66,13 +66,13 @@ class MethodChannelFirestore extends FirestorePlatform {
       MethodChannelFirestore(app: app);
 
   @override
-  CollectionReference collection(String path) {
+  CollectionReferencePlatform collection(String path) {
     assert(path != null);
     return MethodChannelCollectionReference(this, path.split('/'));
   }
 
   @override
-  Query collectionGroup(String path) {
+  QueryPlatform collectionGroup(String path) {
     assert(path != null);
     assert(!path.contains("/"), "Collection IDs must not contain '/'.");
     return MethodChannelQuery(
@@ -83,7 +83,7 @@ class MethodChannelFirestore extends FirestorePlatform {
   }
 
   @override
-  DocumentReference document(String path) {
+  DocumentReferencePlatform document(String path) {
     assert(path != null);
     return MethodChannelDocumentReference(this, path.split('/'));
   }

@@ -1,7 +1,7 @@
 part of cloud_firestore_web;
 
-/// Web implementation for firestore [Query]
-class QueryWeb implements Query {
+/// Web implementation for firestore [QueryPlatform]
+class QueryWeb implements QueryPlatform {
   final web.Query _webQuery;
   final FirestorePlatform _firestore;
   final bool _isCollectionGroup;
@@ -19,7 +19,7 @@ class QueryWeb implements Query {
         this._orderByKeys = orderByKeys ?? [];
 
   @override
-  Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
+  Stream<QuerySnapshotPlatform> snapshots({bool includeMetadataChanges = false}) {
     assert(_webQuery != null);
     Stream<web.QuerySnapshot> querySnapshots = _webQuery.onSnapshot;
     if (includeMetadataChanges) {
@@ -29,7 +29,7 @@ class QueryWeb implements Query {
   }
 
   @override
-  Future<QuerySnapshot> getDocuments(
+  Future<QuerySnapshotPlatform> getDocuments(
       {Source source = Source.serverAndCache}) async {
     assert(_webQuery != null);
     return _webQuerySnapshotToQuerySnapshot(await _webQuery.get());
@@ -39,12 +39,12 @@ class QueryWeb implements Query {
   Map<String, dynamic> buildArguments() => Map();
 
   @override
-  Query endAt(List values) => QueryWeb(this._firestore, this._path,
+  QueryPlatform endAt(List values) => QueryWeb(this._firestore, this._path,
       _webQuery != null ? _webQuery.endAt(fieldValues: values) : null,
       isCollectionGroup: _isCollectionGroup);
 
   @override
-  Query endAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endAtDocument(DocumentSnapshot documentSnapshot) {
     assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
@@ -56,12 +56,12 @@ class QueryWeb implements Query {
   }
 
   @override
-  Query endBefore(List values) => QueryWeb(this._firestore, this._path,
+  QueryPlatform endBefore(List values) => QueryWeb(this._firestore, this._path,
       _webQuery != null ? _webQuery.endBefore(fieldValues: values) : null,
       isCollectionGroup: _isCollectionGroup);
 
   @override
-  Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endBeforeDocument(DocumentSnapshot documentSnapshot) {
     assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
@@ -79,7 +79,7 @@ class QueryWeb implements Query {
   bool get isCollectionGroup => _isCollectionGroup;
 
   @override
-  Query limit(int length) => QueryWeb(
+  QueryPlatform limit(int length) => QueryWeb(
         this._firestore,
         this._path,
         _webQuery != null ? _webQuery.limit(length) : null,
@@ -88,7 +88,7 @@ class QueryWeb implements Query {
       );
 
   @override
-  Query orderBy(field, {bool descending = false}) {
+  QueryPlatform orderBy(field, {bool descending = false}) {
     dynamic usableField = field;
     if (field == FieldPath.documentId) {
       usableField = web.FieldPath.documentId();
@@ -109,15 +109,15 @@ class QueryWeb implements Query {
   List<String> get pathComponents => this._path.split("/");
 
   @override
-  CollectionReference reference() => firestore.collection(_path);
+  CollectionReferencePlatform reference() => firestore.collection(_path);
 
   @override
-  Query startAfter(List values) => QueryWeb(
+  QueryPlatform startAfter(List values) => QueryWeb(
       this._firestore, this._path, _webQuery.startAfter(fieldValues: values),
       orderByKeys: _orderByKeys, isCollectionGroup: _isCollectionGroup);
 
   @override
-  Query startAfterDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAfterDocument(DocumentSnapshot documentSnapshot) {
     assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
@@ -130,7 +130,7 @@ class QueryWeb implements Query {
   }
 
   @override
-  Query startAt(List values) => QueryWeb(
+  QueryPlatform startAt(List values) => QueryWeb(
         this._firestore,
         this._path,
         _webQuery.startAt(fieldValues: values),
@@ -139,7 +139,7 @@ class QueryWeb implements Query {
       );
 
   @override
-  Query startAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAtDocument(DocumentSnapshot documentSnapshot) {
     assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
@@ -152,7 +152,7 @@ class QueryWeb implements Query {
   }
 
   @override
-  Query where(field,
+  QueryPlatform where(field,
       {isEqualTo,
       isLessThan,
       isLessThanOrEqualTo,
@@ -210,9 +210,9 @@ class QueryWeb implements Query {
         orderByKeys: _orderByKeys, isCollectionGroup: _isCollectionGroup);
   }
 
-  QuerySnapshot _webQuerySnapshotToQuerySnapshot(
+  QuerySnapshotPlatform _webQuerySnapshotToQuerySnapshot(
       web.QuerySnapshot webSnapshot) {
-    return QuerySnapshot(
+    return QuerySnapshotPlatform(
         webSnapshot.docs
             .map((webSnapshot) =>
                 _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
@@ -222,8 +222,8 @@ class QueryWeb implements Query {
         _webMetadataToMetada(webSnapshot.metadata));
   }
 
-  DocumentChange _webChangeToChange(web.DocumentChange webChange) {
-    return DocumentChange(
+  DocumentChangePlatform _webChangeToChange(web.DocumentChange webChange) {
+    return DocumentChangePlatform(
         _fromString(webChange.type),
         webChange.oldIndex,
         webChange.newIndex,

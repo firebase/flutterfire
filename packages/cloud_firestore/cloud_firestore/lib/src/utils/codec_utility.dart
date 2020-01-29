@@ -50,7 +50,7 @@ class _CodecUtility {
   }
 
   static dynamic valueDecode(dynamic value, Firestore firestore) {
-    if (value is platform.DocumentReference) {
+    if (value is platform.DocumentReferencePlatform) {
       return DocumentReference._(value, firestore);
     } else if (value is List) {
       return replaceDelegatesWithValueInArray(value, firestore);

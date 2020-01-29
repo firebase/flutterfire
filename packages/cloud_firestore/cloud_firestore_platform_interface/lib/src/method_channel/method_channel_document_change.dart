@@ -8,7 +8,7 @@ part of cloud_firestore_platform_interface;
 ///
 /// It contains the document affected and the type of change that occurred
 /// (added, modified, or removed).
-class MethodChannelDocumentChange extends DocumentChange {
+class MethodChannelDocumentChange extends DocumentChangePlatform {
   /// Create instance of [MethodChannelDocumentChange] using [data]
   MethodChannelDocumentChange(
       Map<dynamic, dynamic> data, FirestorePlatform firestore)

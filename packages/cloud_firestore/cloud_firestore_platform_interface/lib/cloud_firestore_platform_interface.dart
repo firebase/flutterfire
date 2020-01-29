@@ -21,7 +21,7 @@ export 'src/utils/auto_id_generator.dart';
 part 'src/platform_interface/field_value_factory.dart';
 part 'src/platform_interface/collection_reference.dart';
 part 'src/platform_interface/document_change.dart';
-part 'src/platform_interface/document_reference_interface.dart';
+part 'src/platform_interface/document_reference.dart';
 part 'src/platform_interface/transaction.dart';
 part 'src/platform_interface/write_batch.dart';
 
@@ -95,18 +95,18 @@ abstract class FirestorePlatform extends PlatformInterface {
     throw UnimplementedError("appName() not implemented");
   }
 
-  /// Gets a [CollectionReference] for the specified Firestore path.
-  CollectionReference collection(String path) {
+  /// Gets a [CollectionReferencePlatform] for the specified Firestore path.
+  CollectionReferencePlatform collection(String path) {
     throw UnimplementedError('collection() is not implemented');
   }
 
-  /// Gets a [Query] for the specified collection group.
-  Query collectionGroup(String path) {
+  /// Gets a [QueryPlatform] for the specified collection group.
+  QueryPlatform collectionGroup(String path) {
     throw UnimplementedError('collectionGroup() is not implemented');
   }
 
-  /// Gets a [DocumentReference] for the specified Firestore path.
-  DocumentReference document(String path) {
+  /// Gets a [DocumentReferencePlatform] for the specified Firestore path.
+  DocumentReferencePlatform document(String path) {
     throw UnimplementedError('document() is not implemented');
   }
 
@@ -123,7 +123,7 @@ abstract class FirestorePlatform extends PlatformInterface {
   /// changes applied within an atomic transaction.
   ///
   /// In the [TransactionHandler], a set of reads and writes can be performed
-  /// atomically using the [Transaction] object passed to the [TransactionHandler].
+  /// atomically using the [MethodChannelTransaction] object passed to the [TransactionHandler].
   /// After the [TransactionHandler] is run, Firestore will attempt to apply the
   /// changes to the server. If any of the data read has been modified outside
   /// of this transaction since being read, then the transaction will be

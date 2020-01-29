@@ -10,21 +10,13 @@ import 'package:js/js_util.dart';
 import 'package:meta/meta.dart';
 
 part 'collection_reference_web.dart';
-
 part 'utils/codec_utility.dart';
-
 part 'utils/document_reference_utils.dart';
-
 part 'field_value_factory_web.dart';
-
 part 'document_reference_web.dart';
-
 part 'query_web.dart';
-
 part 'transaction_web.dart';
-
 part 'field_value_web.dart';
-
 part 'write_batch_web.dart';
 
 /// Web implementation for [FirestorePlatform]
@@ -44,25 +36,25 @@ class FirestoreWeb extends FirestorePlatform {
       : webFirestore = firebase
             .firestore(firebase.app((app ?? FirebaseApp.instance).name)),
         super(app: app ?? FirebaseApp.instance) {
-    FieldValueFactory.instance = FieldValueFactoryWeb();
+    FieldValueFactoryPlatform.instance = FieldValueFactoryWeb();
   }
 
   @override
   FirestorePlatform withApp(FirebaseApp app) => FirestoreWeb(app: app);
 
   @override
-  CollectionReference collection(String path) {
+  CollectionReferencePlatform collection(String path) {
     return CollectionReferenceWeb(this, webFirestore, path.split('/'));
   }
 
   @override
-  Query collectionGroup(String path) {
+  QueryPlatform collectionGroup(String path) {
     return QueryWeb(this, path, webFirestore.collectionGroup(path),
         isCollectionGroup: true);
   }
 
   @override
-  DocumentReference document(String path) =>
+  DocumentReferencePlatform document(String path) =>
       DocumentReferenceWeb(webFirestore, this, path.split('/'));
 
   @override

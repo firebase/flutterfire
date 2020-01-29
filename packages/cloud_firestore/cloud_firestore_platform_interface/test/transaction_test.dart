@@ -4,7 +4,7 @@ import 'package:mockito/mockito.dart';
 
 import 'test_common.dart';
 
-class MockDocumentReference extends Mock implements DocumentReference {}
+class MockDocumentReference extends Mock implements DocumentReferencePlatform {}
 
 class MockFiledValue extends Mock implements FieldValueInterface {}
 

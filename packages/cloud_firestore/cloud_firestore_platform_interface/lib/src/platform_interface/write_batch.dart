@@ -24,7 +24,7 @@ abstract class WriteBatchPlatform {
   }
 
   /// Deletes the document referred to by [document].
-  void delete(DocumentReference document) {
+  void delete(DocumentReferencePlatform document) {
     throw UnimplementedError("commit() not implemented");
   }
 
@@ -34,7 +34,7 @@ abstract class WriteBatchPlatform {
   ///
   /// If [merge] is true, the provided data will be merged into an
   /// existing document instead of overwriting.
-  void setData(DocumentReference document, Map<String, dynamic> data,
+  void setData(DocumentReferencePlatform document, Map<String, dynamic> data,
       {bool merge = false}) {
     throw UnimplementedError("commit() not implemented");
   }
@@ -42,7 +42,7 @@ abstract class WriteBatchPlatform {
   /// Updates fields in the document referred to by [document].
   ///
   /// If the document does not exist, the operation will fail.
-  void updateData(DocumentReference document, Map<String, dynamic> data) {
+  void updateData(DocumentReferencePlatform document, Map<String, dynamic> data) {
     throw UnimplementedError("commit() not implemented");
   }
 }

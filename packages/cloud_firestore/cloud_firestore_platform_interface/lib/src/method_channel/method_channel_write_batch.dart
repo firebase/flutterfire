@@ -33,7 +33,7 @@ class WriteBatch extends WriteBatchPlatform {
   }
 
   @override
-  void delete(DocumentReference document) {
+  void delete(DocumentReferencePlatform document) {
     _assertNotCommitted();
 
     _handle.then((dynamic handle) {
@@ -51,7 +51,7 @@ class WriteBatch extends WriteBatchPlatform {
   }
 
   @override
-  void setData(DocumentReference document, Map<String, dynamic> data,
+  void setData(DocumentReferencePlatform document, Map<String, dynamic> data,
       {bool merge = false}) {
     _assertNotCommitted();
 
@@ -63,7 +63,7 @@ class WriteBatch extends WriteBatchPlatform {
             'app': _firestore.appName(),
             'handle': handle,
             'path': document.path,
-            'data': FieldValue.serverDelegates(data),
+            'data': FieldValuePlatform.serverDelegates(data),
             'options': <String, bool>{'merge': merge},
           },
         ),
@@ -72,7 +72,7 @@ class WriteBatch extends WriteBatchPlatform {
   }
 
   @override
-  void updateData(DocumentReference document, Map<String, dynamic> data) {
+  void updateData(DocumentReferencePlatform document, Map<String, dynamic> data) {
     _assertNotCommitted();
 
     _handle.then((dynamic handle) {
@@ -83,7 +83,7 @@ class WriteBatch extends WriteBatchPlatform {
             'app': _firestore.appName(),
             'handle': handle,
             'path': document.path,
-            'data': FieldValue.serverDelegates(data)
+            'data': FieldValuePlatform.serverDelegates(data)
           },
         ),
       );

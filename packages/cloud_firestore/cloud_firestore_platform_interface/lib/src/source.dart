@@ -20,7 +20,7 @@ enum Source {
   /// (implying that the returned value may be stale with respect to the value on the server). If
   /// there is no data in the cache to satisfy the [get()] or [getDocuments()] call,
   /// [DocumentReference.get()] will return an error and [Query.getDocuments()] will return an empty
-  /// [QuerySnapshot] with no documents.
+  /// [QuerySnapshotPlatform] with no documents.
   cache,
 }
 

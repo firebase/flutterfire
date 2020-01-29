@@ -6,9 +6,9 @@ part of cloud_firestore_platform_interface;
 
 /// A CollectionReference object can be used for adding documents, getting
 /// document references, and querying for documents (using the methods
-/// inherited from [Query]).
+/// inherited from [QueryPlatform]).
 class MethodChannelCollectionReference extends MethodChannelQuery
-    implements CollectionReference {
+    implements CollectionReferencePlatform {
   /// Create a [MethodChannelCollectionReference] from [pathComponents]
   MethodChannelCollectionReference(
       FirestorePlatform firestore, List<String> pathComponents)
@@ -18,7 +18,7 @@ class MethodChannelCollectionReference extends MethodChannelQuery
   String get id => pathComponents.isEmpty ? null : pathComponents.last;
 
   @override
-  DocumentReference parent() {
+  DocumentReferencePlatform parent() {
     if (pathComponents.length < 2) {
       return null;
     }
@@ -29,7 +29,7 @@ class MethodChannelCollectionReference extends MethodChannelQuery
   }
 
   @override
-  DocumentReference document([String path]) {
+  DocumentReferencePlatform document([String path]) {
     List<String> childPath;
     if (path == null) {
       final String key = AutoIdGenerator.autoId();
@@ -41,8 +41,8 @@ class MethodChannelCollectionReference extends MethodChannelQuery
   }
 
   @override
-  Future<DocumentReference> add(Map<String, dynamic> data) async {
-    final DocumentReference newDocument = document();
+  Future<DocumentReferencePlatform> add(Map<String, dynamic> data) async {
+    final DocumentReferencePlatform newDocument = document();
     await newDocument.setData(data);
     return newDocument;
   }
