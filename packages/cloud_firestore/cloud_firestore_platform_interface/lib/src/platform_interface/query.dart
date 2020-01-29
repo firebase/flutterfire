@@ -25,6 +25,15 @@ abstract class QueryPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [QueryPlatform].
+  /// This is used by the app-facing [Query] to ensure that
+  /// the object in which it's going to delegate calls has been
+  /// constructed properly.
+  static verifyExtends(QueryPlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+  }
+
   /// The Firestore instance associated with this query
   final FirestorePlatform firestore;
 

@@ -28,6 +28,15 @@ class DocumentChangePlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [DocumentChangePlatform].
+  /// This is used by the app-facing [DocumentChange] to ensure that
+  /// the object in which it's going to delegate calls has been
+  /// constructed properly.
+  static verifyExtends(DocumentChangePlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+  }
+
   /// The type of change that occurred (added, modified, or removed).
   final DocumentChangeType type;
 

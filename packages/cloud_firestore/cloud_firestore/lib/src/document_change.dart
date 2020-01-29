@@ -26,7 +26,9 @@ class DocumentChange {
   final platform.DocumentChangePlatform _delegate;
   final Firestore _firestore;
 
-  DocumentChange._(this._delegate, this._firestore);
+  DocumentChange._(this._delegate, this._firestore) {
+    platform.DocumentChangePlatform.verifyExtends(_delegate);
+  }
 
   /// The type of change that occurred (added, modified, or removed).
   DocumentChangeType get type => _PlatformUtils.fromPlatform(_delegate.type);

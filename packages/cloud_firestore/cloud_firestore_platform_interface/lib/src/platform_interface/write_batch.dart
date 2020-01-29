@@ -15,6 +15,15 @@ abstract class WriteBatchPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [WriteBatchPlatform].
+  /// This is used by the app-facing [WriteBatch] to ensure that
+  /// the object in which it's going to delegate calls has been
+  /// constructed properly.
+  static verifyExtends(WriteBatchPlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+  }
+
   /// Indicator to whether or not this [WriteBatch] has been committed.
   bool _committed = false;
 

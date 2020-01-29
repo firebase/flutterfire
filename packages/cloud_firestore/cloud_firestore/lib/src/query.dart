@@ -11,7 +11,9 @@ class Query {
   /// The Firestore instance associated with this query
   final Firestore firestore;
 
-  Query._(this._delegate, this.firestore);
+  Query._(this._delegate, this.firestore) {
+    platform.QueryPlatform.verifyExtends(_delegate);
+  }
 
   List<String> get _pathComponents => _delegate.pathComponents;
 

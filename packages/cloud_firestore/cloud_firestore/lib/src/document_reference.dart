@@ -16,7 +16,9 @@ class DocumentReference {
   /// The Firestore instance associated with this document reference
   final Firestore firestore;
 
-  DocumentReference._(this._delegate, this.firestore);
+  DocumentReference._(this._delegate, this.firestore) {
+    platform.DocumentReferencePlatform.verifyExtends(_delegate);
+  }
 
   @override
   bool operator ==(dynamic o) =>

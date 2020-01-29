@@ -14,7 +14,9 @@ part of cloud_firestore;
 class WriteBatch {
   final platform.WriteBatchPlatform _delegate;
 
-  WriteBatch._(this._delegate);
+  WriteBatch._(this._delegate) {
+    platform.WriteBatchPlatform.verifyExtends(_delegate);
+  }
 
   Future<void> commit() => _delegate.commit();
 

@@ -39,6 +39,15 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [FieldValueFactoryPlatform].
+  /// This is used by the app-facing [FieldValueFactory] to ensure that
+  /// the object in which it's going to delegate calls has been
+  /// constructed properly.
+  static verifyExtends(FieldValueFactoryPlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+  }
+
   /// Returns a special value that tells the server to union the given elements
   /// with any array value that already exists on the server.
   ///

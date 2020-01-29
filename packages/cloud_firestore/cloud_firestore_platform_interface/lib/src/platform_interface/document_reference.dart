@@ -12,6 +12,15 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [DocumentReferencePlatform].
+  /// This is used by the app-facing [DocumentReference] to ensure that
+  /// the object in which it's going to delegate calls has been
+  /// constructed properly.
+  static verifyExtends(DocumentReferencePlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+  }
+
   /// The Firestore instance associated with this document reference
   final FirestorePlatform firestore;
   final List<String> _pathComponents;

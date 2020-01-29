@@ -38,6 +38,15 @@ class FieldValuePlatform extends PlatformInterface implements FieldValueInterfac
 
   static final Object _token = Object();
 
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [FieldValuePlatform].
+  /// This is used by the app-facing [FieldValue] to ensure that
+  /// the object in which it's going to delegate calls has been
+  /// constructed properly.
+  static verifyExtends(FieldValuePlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+  }
+
   FieldValuePlatform._(this.type, this.value) : super(token: _token);
 
   @override
