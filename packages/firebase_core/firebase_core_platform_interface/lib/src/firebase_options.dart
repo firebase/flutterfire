@@ -40,7 +40,7 @@ class FirebaseOptions {
   /// "AIzaSyDdVgKwhZl0sTTTLZ7iTmt1r3N2cJLnaDk", used to identify your app to
   /// Google servers.
   ///
-  /// This property is required on Android.
+  /// This property is required on Android and iOS.
   final String apiKey;
 
   /// The iOS bundle ID for the application. Defaults to
