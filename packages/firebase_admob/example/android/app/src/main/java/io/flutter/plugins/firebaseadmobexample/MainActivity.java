@@ -18,6 +18,6 @@ public class MainActivity extends FlutterActivity {
 
     final FirebaseAdMobPlugin adMobPlugin =
         (FirebaseAdMobPlugin) flutterEngine.getPlugins().get(FirebaseAdMobPlugin.class);
-    adMobPlugin.setNativeAdFactory(new NativeAdFactoryExample(getLayoutInflater()));
+    adMobPlugin.addNativeAdFactory("adFactoryExample", new NativeAdFactoryExample(getLayoutInflater()));
   }
 }

@@ -54,6 +54,7 @@ class _MyAppState extends State<MyApp> {
   NativeAd createNativeAd() {
     return NativeAd(
       adUnitId: NativeAd.testAdUnitId,
+      factoryId: 'adFactoryExample',
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
         print("$NativeAd event $event");

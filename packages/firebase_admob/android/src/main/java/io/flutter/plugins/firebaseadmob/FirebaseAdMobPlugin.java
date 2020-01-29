@@ -6,6 +6,7 @@ package io.flutter.plugins.firebaseadmob;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
@@ -21,6 +22,8 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -36,12 +39,13 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   // This is always null when not using v2 embedding.
   private FlutterPluginBinding pluginBinding;
   private RewardedVideoAdWrapper rewardedWrapper;
-  private NativeAdFactory nativeAdFactory;
+  private final Map<String, NativeAdFactory> nativeAdFactories = new HashMap<>();
 
   /**
    * Interface used to display a {@link com.google.android.gms.ads.formats.UnifiedNativeAd}.
    *
-   * <p>Have your activity implement this in order to display Native Ads
+   * <p>Creates {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from Flutter Native Ads
+   * when added to a {@link io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin}.
    */
   public interface NativeAdFactory {
     /**
@@ -81,14 +85,36 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   }
 
   /**
-   * Sets this plugin's {@link io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory}
-   * used to create platform {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s.
+   * Adds a {@link io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory}
+   * used to create a {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from Flutter Native Ads.
    *
+   * @param factoryId a unique identifier for the ad factory. A Flutter Native Ad includes a parameter
+   *                  that refers to this.
    * @param nativeAdFactory creates {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s
    *     when Flutter NativeAds are created.
+   * @return whether the factoryId is unique and the nativeAdFactory was successfully added.
    */
-  public void setNativeAdFactory(NativeAdFactory nativeAdFactory) {
-    this.nativeAdFactory = nativeAdFactory;
+  public boolean addNativeAdFactory(String factoryId, NativeAdFactory nativeAdFactory) {
+    if (nativeAdFactories.containsKey(factoryId)) {
+      final String errorMessage = String.format("A NativeAdFactory with the following factoryId already exists: %s", factoryId);
+      Log.e(FirebaseAdMobPlugin.class.getSimpleName(), errorMessage);
+      return false;
+    }
+
+    nativeAdFactories.put(factoryId, nativeAdFactory);
+    return true;
+  }
+
+  /**
+   * Adds a {@link io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory}
+   * used to create a {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from Flutter Native Ads.
+   *
+   * @param factoryId a unique identifier for the ad factory. A Flutter Native Ad includes a parameter
+   *                  that refers to this.
+   * @return the previous {@link io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory} associated with this factoryId, or null if there was none for this factoryId.
+   */
+  public NativeAdFactory removeNativeAdFactory(String factoryId) {
+    return nativeAdFactories.remove(factoryId);
   }
 
   private void initializePlugin(
@@ -114,14 +140,19 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   }
 
   private void callLoadNativeAd(Integer id, Activity activity, MethodCall call, Result result) {
-    String adUnitId = call.argument("adUnitId");
+    final String adUnitId = call.argument("adUnitId");
+    final String factoryId = call.argument("factoryId");
+
+    final NativeAdFactory nativeAdFactory = nativeAdFactories.get(factoryId);
+
     if (adUnitId == null || adUnitId.isEmpty()) {
       result.error("no_unit_id", "a null or empty adUnitId was provided for ad id=" + id, null);
       return;
     } else if (nativeAdFactory == null) {
+      final String errorMessage = String.format("There is no non-null %s for the following factoryId: %s", NativeAdFactory.class.getSimpleName(), factoryId);
       result.error(
           "no_native_ad_factory",
-          "Please set a non-null NativeAdFactory for FirebaseAdMobPlugin.",
+          errorMessage,
           null);
       return;
     }

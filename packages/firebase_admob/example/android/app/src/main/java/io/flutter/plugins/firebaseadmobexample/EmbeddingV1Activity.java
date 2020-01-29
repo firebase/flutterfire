@@ -17,6 +17,6 @@ public class EmbeddingV1Activity extends FlutterActivity {
 
     final FirebaseAdMobPlugin adMobPlugin =
         valuePublishedByPlugin("io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin");
-    adMobPlugin.setNativeAdFactory(new NativeAdFactoryExample(getLayoutInflater()));
+    adMobPlugin.addNativeAdFactory("adFactoryExample", new NativeAdFactoryExample(getLayoutInflater()));
   }
 }

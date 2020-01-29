@@ -320,6 +320,7 @@ class BannerAd extends MobileAd {
 class NativeAd extends MobileAd {
   NativeAd({
     @required String adUnitId,
+    @required this.factoryId,
     MobileAdTargetingInfo targetingInfo,
     MobileAdListener listener,
     this.customOptions,
@@ -339,6 +340,9 @@ class NativeAd extends MobileAd {
   /// These options are passed to the platform's `NativeAdFactory`.
   final Map<String, dynamic> customOptions;
 
+  /// An identifier for the factory that creates the Platform view.
+  final String factoryId;
+
   /// {@macro firebase_admob.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/2247696110'
@@ -348,6 +352,7 @@ class NativeAd extends MobileAd {
   Future<bool> load() {
     return _invokeBooleanMethod("loadNativeAd", <String, dynamic>{
       'id': id,
+      'factoryId': factoryId,
       'targetingInfo': targetingInfo?.toJson(),
       'adUnitId': adUnitId,
       'customOptions': customOptions,
