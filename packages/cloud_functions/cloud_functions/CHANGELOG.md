@@ -1,3 +1,7 @@
+## 0.4.1+9
+
+* Adds `cloud_functions_web` to dependencies, so that projects importing this plugin will pull in web support.
+
 ## 0.4.1+8
 
 * Fixes the `No implementation found for method CloudFunctions#call`
