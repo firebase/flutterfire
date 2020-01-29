@@ -19,6 +19,7 @@ void main() {
 
     final NativeAd nativeAd = NativeAd(
       adUnitId: NativeAd.testAdUnitId,
+      factoryId: 'adFactoryExample',
       targetingInfo: MobileAdTargetingInfo(
         keywords: <String>['foo', 'bar'],
         contentUrl: 'http://foo.com/bar.html',
