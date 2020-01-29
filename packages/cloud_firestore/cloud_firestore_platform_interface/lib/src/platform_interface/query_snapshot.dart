@@ -5,9 +5,11 @@
 part of cloud_firestore_platform_interface;
 
 /// A QuerySnapshot contains zero or more DocumentSnapshot objects.
-class QuerySnapshotPlatform {
+class QuerySnapshotPlatform extends PlatformInterface {
   /// Create a [QuerySnapshotPlatform]
-  QuerySnapshotPlatform(this.documents, this.documentChanges, this.metadata);
+  QuerySnapshotPlatform(this.documents, this.documentChanges, this.metadata) : super(token: _token);
+
+  static final Object _token = Object();
 
   /// Gets a list of all the documents included in this snapshot
   final List<DocumentSnapshot> documents;

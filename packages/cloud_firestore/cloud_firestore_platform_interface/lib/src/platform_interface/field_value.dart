@@ -18,7 +18,7 @@ abstract class FieldValueInterface {
 }
 
 /// Platform Interface of a FieldValue; implementation for [FieldValueInterface]
-class FieldValuePlatform implements FieldValueInterface {
+class FieldValuePlatform extends PlatformInterface implements FieldValueInterface {
   /// Replaces items with type [FieldValueInterface] with implementation type
   /// such as [FieldValuePlatform]
   static Map<String, dynamic> serverDelegates(Map<String, dynamic> data) {
@@ -36,7 +36,9 @@ class FieldValuePlatform implements FieldValueInterface {
     return output;
   }
 
-  FieldValuePlatform._(this.type, this.value);
+  static final Object _token = Object();
+
+  FieldValuePlatform._(this.type, this.value) : super(token: _token);
 
   @override
   FieldValueInterface get instance => this;

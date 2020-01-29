@@ -6,9 +6,11 @@ part of cloud_firestore_platform_interface;
 /// The document at the referenced location may or may not exist.
 /// A [DocumentReferencePlatform] can also be used to create a [CollectionReferencePlatform]
 /// to a subcollection.
-abstract class DocumentReferencePlatform {
+abstract class DocumentReferencePlatform extends PlatformInterface {
   /// Create instance of [DocumentReferencePlatform]
-  DocumentReferencePlatform(this.firestore, this._pathComponents);
+  DocumentReferencePlatform(this.firestore, this._pathComponents) : super(token: _token);
+
+  static final Object _token = Object();
 
   /// The Firestore instance associated with this document reference
   final FirestorePlatform firestore;

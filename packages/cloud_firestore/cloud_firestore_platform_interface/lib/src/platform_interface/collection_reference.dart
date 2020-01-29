@@ -7,6 +7,7 @@ part of cloud_firestore_platform_interface;
 /// A CollectionReference object can be used for adding documents, getting
 /// document references, and querying for documents (using the methods
 /// inherited from [QueryPlatform]).
+/// Note: QueryPlatform extends PlatformInterface already.
 abstract class CollectionReferencePlatform extends QueryPlatform {
   /// Create a [CollectionReferencePlatform] using [pathComponents]
   CollectionReferencePlatform(FirestorePlatform firestore, List<String> pathComponents)

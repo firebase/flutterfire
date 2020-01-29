@@ -9,11 +9,13 @@ part of cloud_firestore_platform_interface;
 typedef Future<dynamic> TransactionHandler(TransactionPlatform transaction);
 
 /// a [TransactionPlatform] is a set of read and write operations on one or more documents.
-abstract class TransactionPlatform {
+abstract class TransactionPlatform extends PlatformInterface {
   // disabling lint as it's only visible for testing
   // ignore: public_member_api_docs
   @visibleForTesting
-  TransactionPlatform(this._transactionId, this.firestore);
+  TransactionPlatform(this._transactionId, this.firestore) : super(token: _token);
+
+  static final Object _token = Object();
 
   int _transactionId;
 

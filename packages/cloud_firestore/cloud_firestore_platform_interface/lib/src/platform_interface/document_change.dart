@@ -22,9 +22,11 @@ enum DocumentChangeType {
 ///
 /// It contains the document affected and the type of change that occurred
 /// (added, modified, or removed).
-class DocumentChangePlatform {
+class DocumentChangePlatform extends PlatformInterface {
   /// Create a [DocumentChangePlatform]
-  DocumentChangePlatform(this.type, this.oldIndex, this.newIndex, this.document);
+  DocumentChangePlatform(this.type, this.oldIndex, this.newIndex, this.document) : super(token: _token);
+
+  static final Object _token = Object();
 
   /// The type of change that occurred (added, modified, or removed).
   final DocumentChangeType type;

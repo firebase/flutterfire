@@ -5,7 +5,7 @@
 part of cloud_firestore_platform_interface;
 
 /// Represents a query over the data at a particular location.
-abstract class QueryPlatform {
+abstract class QueryPlatform extends PlatformInterface {
   /// Create a [QueryPlatform] instance
   QueryPlatform(
       {@required this.firestore,
@@ -20,7 +20,10 @@ abstract class QueryPlatform {
               'orderBy': List<List<dynamic>>.unmodifiable(<List<dynamic>>[]),
             }),
         assert(firestore != null),
-        assert(pathComponents != null);
+        assert(pathComponents != null), 
+        super(token: _token);
+
+  static final Object _token = Object();
 
   /// The Firestore instance associated with this query
   final FirestorePlatform firestore;

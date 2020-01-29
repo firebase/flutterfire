@@ -24,7 +24,7 @@ enum FieldValueType {
 
 /// An interface for a factory that is used to build [FieldValuePlatform] according to
 /// Platform (web or mobile)
-abstract class FieldValueFactoryPlatform {
+abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// Current instance of [FieldValueFactoryPlatform]
   static FieldValueFactoryPlatform get instance => _instance;
 
@@ -33,8 +33,11 @@ abstract class FieldValueFactoryPlatform {
   /// Sets the default instance of [FieldValueFactoryPlatform] which is used to build
   /// [FieldValuePlatform] items
   static set instance(FieldValueFactoryPlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
+
+  static final Object _token = Object();
 
   /// Returns a special value that tells the server to union the given elements
   /// with any array value that already exists on the server.
@@ -43,7 +46,9 @@ abstract class FieldValueFactoryPlatform {
   /// added to the end. If the field being modified is not already an array it
   /// will be overwritten with an array containing exactly the specified
   /// elements.
-  FieldValueInterface arrayUnion(List<dynamic> elements);
+  FieldValueInterface arrayUnion(List<dynamic> elements) {
+    throw UnimplementedError("arrayUnion() is not implemented");
+  }
 
   /// Returns a special value that tells the server to remove the given
   /// elements from any array value that already exists on the server.
@@ -51,16 +56,24 @@ abstract class FieldValueFactoryPlatform {
   /// All instances of each element specified will be removed from the array.
   /// If the field being modified is not already an array it will be overwritten
   /// with an empty array.
-  FieldValueInterface arrayRemove(List<dynamic> elements);
+  FieldValueInterface arrayRemove(List<dynamic> elements) {
+    throw UnimplementedError("arrayRemove() is not implemented");
+  }
 
   /// Returns a sentinel for use with update() to mark a field for deletion.
-  FieldValueInterface delete();
+  FieldValueInterface delete() {
+    throw UnimplementedError("delete() is not implemented");
+  }
 
   /// Returns a sentinel for use with set() or update() to include a
   /// server-generated timestamp in the written data.
-  FieldValueInterface serverTimestamp();
+  FieldValueInterface serverTimestamp() {
+    throw UnimplementedError("serverTimestamp() is not implemented");
+  }
 
   /// Returns a special value for use with set() or update() that tells the
   /// server to increment the field’s current value by the given value.
-  FieldValueInterface increment(num value);
+  FieldValueInterface increment(num value) {
+    throw UnimplementedError("increment() is not implemented");
+  }
 }
