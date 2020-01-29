@@ -9,7 +9,7 @@ dependencies:
   firebase_core: ^0.4.2+1
 
 dev_dependencies:
-  e2e: ^0.2.1
+  e2e: ^0.2.3
   flutter_driver:
     sdk: flutter
 
