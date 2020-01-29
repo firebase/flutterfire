@@ -217,11 +217,12 @@ class NativeAdFactoryExample implements NativeAdFactory {
 }
 ```
  
-An instance of a `NativeAdFactory` should also be passed to the `FirebaseAdMobPlugin`. This is done
+An instance of a `NativeAdFactory` should also be added to the `FirebaseAdMobPlugin`. This is done
 differently whether you are using the Embedding V1 or Embedding V2.
 
 If you're using the Embedding V1, you need to retrieve the published `FirebaseAdMobPlugin` after
-calling `GeneratedPluginRegistrant.registerWith(this);`. Then, set the `NativeAdFactory`. You're
+calling `GeneratedPluginRegistrant.registerWith(this);`. Then, add the `NativeAdFactory` with a
+unique factory Id. You're
 `MainActivity.java` should look similar to:
 
 ```java
@@ -240,13 +241,14 @@ public class MainActivity extends FlutterActivity {
 
     final FirebaseAdMobPlugin adMobPlugin =
         valuePublishedByPlugin("io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin");
-    adMobPlugin.setNativeAdFactory(new NativeAdFactoryExample());
+    adMobPlugin.addNativeAdFactory("adFactoryExample", new NativeAdFactoryExample());
   }
 }
 ```
 
 If you're using the Embedding V2, you need to retrieve the published `FirebaseAdMobPlugin` from the
-`FlutterEngine`. Then, set the `NativeAdFactory`. You're `MainActivity.java` should look similar to:
+`FlutterEngine`. Then, add the `NativeAdFactory` with a unique factoryId. You're `MainActivity.java`
+should look similar to:
 
 ```java
 package my.app.path;
@@ -262,10 +264,13 @@ public class MainActivity extends FlutterActivity {
 
     final FirebaseAdMobPlugin adMobPlugin =
         (FirebaseAdMobPlugin) flutterEngine.getPlugins().get(FirebaseAdMobPlugin.class);
-    adMobPlugin.setNativeAdFactory(new NativeAdFactoryExample());
+    adMobPlugin.addNativeAdFactory("adFactoryExample", NativeAdFactoryExample());
   }
 }
 ```
+
+When creating the `NativeAd` in Flutter, the `factoryId` parameter should match the one you used to
+add the factory to `FirebaseAdMobPlugin`.
 
 An example of displaying a `UnifiedNativeAd` with a `UnifiedNativeAdView` can be found
 [here](https://developers.google.com/admob/android/native/advanced). The example app also inflates
