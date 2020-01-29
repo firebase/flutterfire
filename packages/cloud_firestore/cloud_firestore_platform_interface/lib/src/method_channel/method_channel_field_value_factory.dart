@@ -2,7 +2,7 @@ part of cloud_firestore_platform_interface;
 
 /// An implementation of [FieldValueFactoryPlatform] that is suitable to be used
 /// on mobile where communication relies on [MethodChannel]
-class MethodChannelFieldValueFactory implements FieldValueFactoryPlatform {
+class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
   @override
   FieldValuePlatform arrayRemove(List elements) =>
       FieldValuePlatform._(FieldValueType.arrayRemove, elements);
