@@ -133,7 +133,4 @@ class MethodChannelFirestore extends FirestorePlatform {
       'cacheSizeBytes': cacheSizeBytes,
     });
   }
-
-  @override
-  String appName() => app.name;
 }

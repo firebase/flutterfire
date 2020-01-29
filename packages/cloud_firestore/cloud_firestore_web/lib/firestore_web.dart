@@ -97,7 +97,4 @@ class FirestoreWeb extends FirestorePlatform {
     }).timeout(timeout);
     return result is Map<String, dynamic> ? result : <String, dynamic>{};
   }
-
-  @override
-  String appName() => app.name;
 }

@@ -15,7 +15,7 @@ class WriteBatch extends WriteBatchPlatform {
   WriteBatch(this._firestore)
       : _handle = MethodChannelFirestore.channel.invokeMethod<dynamic>(
             'WriteBatch#create',
-            <String, dynamic>{'app': _firestore.appName()}),
+            <String, dynamic>{'app': _firestore.app.name}),
         super._();
 
   final FirestorePlatform _firestore;
@@ -41,7 +41,7 @@ class WriteBatch extends WriteBatchPlatform {
         MethodChannelFirestore.channel.invokeMethod<void>(
           'WriteBatch#delete',
           <String, dynamic>{
-            'app': _firestore.appName(),
+            'app': _firestore.app.name,
             'handle': handle,
             'path': document.path,
           },
@@ -60,7 +60,7 @@ class WriteBatch extends WriteBatchPlatform {
         MethodChannelFirestore.channel.invokeMethod<void>(
           'WriteBatch#setData',
           <String, dynamic>{
-            'app': _firestore.appName(),
+            'app': _firestore.app.name,
             'handle': handle,
             'path': document.path,
             'data': FieldValuePlatform.serverDelegates(data),
@@ -80,7 +80,7 @@ class WriteBatch extends WriteBatchPlatform {
         MethodChannelFirestore.channel.invokeMethod<void>(
           'WriteBatch#updateData',
           <String, dynamic>{
-            'app': _firestore.appName(),
+            'app': _firestore.app.name,
             'handle': handle,
             'path': document.path,
             'data': FieldValuePlatform.serverDelegates(data)

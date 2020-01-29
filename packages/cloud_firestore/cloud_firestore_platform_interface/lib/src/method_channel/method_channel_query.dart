@@ -43,7 +43,7 @@ class MethodChannelQuery extends QueryPlatform {
         _handle = MethodChannelFirestore.channel.invokeMethod<int>(
           'Query#addSnapshotListener',
           <String, dynamic>{
-            'app': firestore.appName(),
+            'app': firestore.app.name,
             'path': path,
             'isCollectionGroup': isCollectionGroup,
             'parameters': parameters,
@@ -75,7 +75,7 @@ class MethodChannelQuery extends QueryPlatform {
         await MethodChannelFirestore.channel.invokeMapMethod<String, dynamic>(
       'Query#getDocuments',
       <String, dynamic>{
-        'app': firestore.appName(),
+        'app': firestore.app.name,
         'path': path,
         'isCollectionGroup': isCollectionGroup,
         'parameters': parameters,

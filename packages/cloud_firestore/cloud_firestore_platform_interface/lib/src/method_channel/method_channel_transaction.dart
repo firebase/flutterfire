@@ -25,7 +25,7 @@ class Transaction extends TransactionPlatform {
   Future<DocumentSnapshot> _get(DocumentReferencePlatform documentReference) async {
     final Map<String, dynamic> result = await MethodChannelFirestore.channel
         .invokeMapMethod<String, dynamic>('Transaction#get', <String, dynamic>{
-      'app': firestore.appName(),
+      'app': firestore.app.name,
       'transactionId': _transactionId,
       'path': documentReference.path,
     });
@@ -45,7 +45,7 @@ class Transaction extends TransactionPlatform {
   Future<void> _delete(DocumentReferencePlatform documentReference) async {
     return MethodChannelFirestore.channel
         .invokeMethod<void>('Transaction#delete', <String, dynamic>{
-      'app': firestore.appName(),
+      'app': firestore.app.name,
       'transactionId': _transactionId,
       'path': documentReference.path,
     });
@@ -56,7 +56,7 @@ class Transaction extends TransactionPlatform {
       DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
     return MethodChannelFirestore.channel
         .invokeMethod<void>('Transaction#update', <String, dynamic>{
-      'app': firestore.appName(),
+      'app': firestore.app.name,
       'transactionId': _transactionId,
       'path': documentReference.path,
       'data': FieldValuePlatform.serverDelegates(data),
@@ -68,7 +68,7 @@ class Transaction extends TransactionPlatform {
       DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
     return MethodChannelFirestore.channel
         .invokeMethod<void>('Transaction#set', <String, dynamic>{
-      'app': firestore.appName(),
+      'app': firestore.app.name,
       'transactionId': _transactionId,
       'path': documentReference.path,
       'data': FieldValuePlatform.serverDelegates(data),

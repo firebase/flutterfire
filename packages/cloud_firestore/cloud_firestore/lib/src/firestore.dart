@@ -36,8 +36,6 @@ class Firestore {
   /// If null, the default [FirebaseApp] is used.
   FirebaseApp get app => _delegate.app;
 
-  String appName() => _delegate.appName();
-
   /// Creates a write batch, used for performing multiple writes as a single
   /// atomic operation.
   ///
