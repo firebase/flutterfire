@@ -114,6 +114,7 @@ abstract class OAuthCredential extends AuthCredential {
 }
 
 @JS('AuthProvider')
+@anonymous
 abstract class AuthProviderJsImpl {
   external String get providerId;
 }
