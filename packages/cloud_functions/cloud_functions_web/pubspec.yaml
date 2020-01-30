@@ -1,7 +1,7 @@
 name: cloud_functions_web
 description: The web implementation of cloud_functions
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_functions/cloud_functions_web
-version: 1.0.0
+version: 1.0.0+1
 
 flutter:
   plugin:
