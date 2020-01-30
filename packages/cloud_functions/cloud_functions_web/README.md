@@ -6,9 +6,7 @@ The web implementation of [`cloud_functions`][1].
 
 ### Import the package
 
-**TODO(sbeitzel) - update the versions here so that it's correct, once this package actually _is_ an endorsed implementation of `package:cloud_functions`**
-
-This package is the endorsed implementation of `cloud_functions` for the web platform since version `0.0.1`, so it gets automatically added to your dependencies by depending on `cloud_functions: ^0.0.1`.
+This package is the endorsed implementation of `cloud_functions` for the web platform since version `0.4.1+9`, so it gets automatically added to your dependencies by depending on `cloud_functions: ^0.4.1+9`.
 
 No modifications to your `pubspec.yaml` should be required in a recent enough version of Flutter (`>=1.12.13+hotfix.4`):
 
@@ -16,7 +14,7 @@ No modifications to your `pubspec.yaml` should be required in a recent enough ve
 ...
 dependencies:
   ...
-  cloud_functions: ^0.0.1
+  cloud_functions: ^0.4.1+9
   ...
 ```
 
@@ -52,7 +50,7 @@ Specifically, you'll want to add the following lines to your `web/index.html` fi
   <script>
     // TODO: Replace the following with your app's Firebase project configuration.
     // See: https://support.google.com/firebase/answer/7015592
-    var firebaseConfig = {
+    const firebaseConfig = {
       apiKey: "...",
       authDomain: "[YOUR_PROJECT].firebaseapp.com",
       databaseURL: "https://[YOUR_PROJECT].firebaseio.com",
@@ -77,7 +75,7 @@ Once you have modified your `web/index.html` file you should be able to use `pac
 
 #### Examples
 
-* The `example` app in `package:cloud_functions` has an implementation of this instructions.
+* The `example` app in `package:cloud_functions` has an implementation of these instructions.
 
 [1]: ../cloud_functions
 [2]: https://github.com/dart-lang/sdk/issues/33979
