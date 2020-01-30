@@ -25,6 +25,9 @@ enum FieldValueType {
 /// An interface for a factory that is used to build [FieldValuePlatform] according to
 /// Platform (web or mobile)
 abstract class FieldValueFactoryPlatform extends PlatformInterface {
+  /// Constructor to initialize the PlatformInterface base class
+  FieldValueFactoryPlatform() : super(token: _token);
+
   /// Current instance of [FieldValueFactoryPlatform]
   static FieldValueFactoryPlatform get instance => _instance;
 
@@ -33,7 +36,7 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// Sets the default instance of [FieldValueFactoryPlatform] which is used to build
   /// [FieldValuePlatform] items
   static set instance(FieldValueFactoryPlatform instance) {
-    // PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
 
