@@ -1,6 +1,5 @@
-package com.example.cloud_functions_web
+package io.flutter.plugins.cloud_functions_web
 
-import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -10,7 +9,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 
 /** CloudFunctionsWebPlugin */
 public class CloudFunctionsWebPlugin: FlutterPlugin, MethodCallHandler {
-  override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) { }
+  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) { }
 
   // This static function is optional and equivalent to onAttachedToEngine. It supports the old
   // pre-Flutter-1.12 Android projects. You are encouraged to continue supporting
@@ -26,6 +25,6 @@ public class CloudFunctionsWebPlugin: FlutterPlugin, MethodCallHandler {
     fun registerWith(registrar: Registrar) { }
   }
 
-  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
   }
 }
