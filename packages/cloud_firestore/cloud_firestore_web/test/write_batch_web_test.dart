@@ -10,11 +10,9 @@ void main() {
     final mockWebTransaction = MockWebWriteBatch();
     final mockWebDocumentReference = MockWebDocumentReference();
     final mockDocumentReference = MockDocumentReference();
-    final mockFirestore = MockFirestore();
     final transaction = WriteBatchWeb(mockWebTransaction);
 
     setUp(() {
-      when(mockFirestore.app.name).thenReturn("test");
       when(mockDocumentReference.delegate).thenReturn(mockWebDocumentReference);
     });
 
