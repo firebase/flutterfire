@@ -1,7 +1,7 @@
 part of cloud_firestore_web;
 
 /// Web implementation for firestore [QueryPlatform]
-class QueryWeb implements QueryPlatform {
+class QueryWeb extends QueryPlatform {
   final web.Query _webQuery;
   final FirestorePlatform _firestore;
   final bool _isCollectionGroup;
@@ -16,7 +16,8 @@ class QueryWeb implements QueryPlatform {
   QueryWeb(this._firestore, this._path, this._webQuery,
       {bool isCollectionGroup, List<dynamic> orderByKeys})
       : this._isCollectionGroup = isCollectionGroup ?? false,
-        this._orderByKeys = orderByKeys ?? [];
+        this._orderByKeys = orderByKeys ?? [],
+        super(firestore: _firestore, pathComponents: _path.split('/'), isCollectionGroup: isCollectionGroup,);
 
   @override
   Stream<QuerySnapshotPlatform> snapshots({bool includeMetadataChanges = false}) {

@@ -1,14 +1,16 @@
 part of cloud_firestore_web;
 
 /// A web specific for [Transaction]
-class TransactionWeb implements TransactionPlatform {
+class TransactionWeb extends TransactionPlatform {
   final web.Transaction _webTransaction;
   @override
   FirestorePlatform firestore;
 
+  static int _transactionId = 0;
+
   // ignore: public_member_api_docs
   @visibleForTesting
-  TransactionWeb(this._webTransaction, this.firestore);
+  TransactionWeb(this._webTransaction, this.firestore) : super(_transactionId++, firestore);
 
   @override
   Future<void> delete(DocumentReferencePlatform documentReference) async {

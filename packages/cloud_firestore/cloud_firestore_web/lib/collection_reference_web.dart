@@ -1,7 +1,7 @@
 part of cloud_firestore_web;
 
 /// Web implementation for Firestore [CollectionReferencePlatform]
-class CollectionReferenceWeb implements CollectionReferencePlatform {
+class CollectionReferenceWeb extends CollectionReferencePlatform {
   /// instance of Firestore from the web plugin
   final web.Firestore webFirestore;
   final FirestorePlatform _firestorePlatform;
@@ -15,7 +15,8 @@ class CollectionReferenceWeb implements CollectionReferencePlatform {
   CollectionReferenceWeb(
       this._firestorePlatform, this.webFirestore, this.pathComponents)
       : queryDelegate = QueryWeb(_firestorePlatform, pathComponents.join("/"),
-            webFirestore.collection(pathComponents.join("/")));
+            webFirestore.collection(pathComponents.join("/")),),
+        super(_firestorePlatform, pathComponents);
 
   @override
   DocumentReferencePlatform parent() {

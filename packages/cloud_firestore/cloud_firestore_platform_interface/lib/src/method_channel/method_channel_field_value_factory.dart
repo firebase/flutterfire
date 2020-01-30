@@ -5,14 +5,14 @@ part of cloud_firestore_platform_interface;
 class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
   @override
   FieldValuePlatform arrayRemove(List elements) =>
-      FieldValuePlatform._(FieldValueType.arrayRemove, elements);
+      FieldValuePlatform(FieldValueType.arrayRemove, elements);
 
   @override
   FieldValuePlatform arrayUnion(List elements) =>
-      FieldValuePlatform._(FieldValueType.arrayUnion, elements);
+      FieldValuePlatform(FieldValueType.arrayUnion, elements);
 
   @override
-  FieldValuePlatform delete() => FieldValuePlatform._(FieldValueType.delete, null);
+  FieldValuePlatform delete() => FieldValuePlatform(FieldValueType.delete, null);
 
   @override
   FieldValuePlatform increment(num value) {
@@ -20,14 +20,14 @@ class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
     // attempt to extend or implement `num`.
     assert(value is int || value is double);
     if (value is double) {
-      return FieldValuePlatform._(FieldValueType.incrementDouble, value);
+      return FieldValuePlatform(FieldValueType.incrementDouble, value);
     } else if (value is int) {
-      return FieldValuePlatform._(FieldValueType.incrementInteger, value);
+      return FieldValuePlatform(FieldValueType.incrementInteger, value);
     }
     return null;
   }
 
   @override
   FieldValuePlatform serverTimestamp() =>
-      FieldValuePlatform._(FieldValueType.serverTimestamp, null);
+      FieldValuePlatform(FieldValueType.serverTimestamp, null);
 }

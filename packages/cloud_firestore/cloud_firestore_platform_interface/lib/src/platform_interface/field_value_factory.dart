@@ -33,7 +33,7 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// Sets the default instance of [FieldValueFactoryPlatform] which is used to build
   /// [FieldValuePlatform] items
   static set instance(FieldValueFactoryPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    // PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
 

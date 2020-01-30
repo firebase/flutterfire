@@ -16,7 +16,7 @@ class WriteBatch extends WriteBatchPlatform {
       : _handle = MethodChannelFirestore.channel.invokeMethod<dynamic>(
             'WriteBatch#create',
             <String, dynamic>{'app': _firestore.app.name}),
-        super._();
+        super();
 
   final FirestorePlatform _firestore;
   Future<dynamic> _handle;

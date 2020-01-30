@@ -11,7 +11,8 @@ part of cloud_firestore_platform_interface;
 /// Once committed, no further operations can be performed on the [WriteBatch],
 /// nor can it be committed again.
 abstract class WriteBatchPlatform extends PlatformInterface {
-  WriteBatchPlatform._() : super(token: _token);
+  /// Overridable constructor
+  WriteBatchPlatform() : super(token: _token);
 
   static final Object _token = Object();
 

@@ -31,7 +31,9 @@ abstract class QueryPlatform extends PlatformInterface {
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
   static verifyExtends(QueryPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    if (instance is! CollectionReferencePlatform) {
+      PlatformInterface.verifyToken(instance, _token);
+    }
   }
 
   /// The Firestore instance associated with this query
