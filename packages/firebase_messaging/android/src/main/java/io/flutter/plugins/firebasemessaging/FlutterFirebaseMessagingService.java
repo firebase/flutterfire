@@ -162,6 +162,8 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     FlutterMain.ensureInitializationComplete(context, null);
 
     if (!isBackgroundInitialized.get()) {
+      isBackgroundInitialized.set(true);
+
       String appBundlePath = FlutterMain.findAppBundlePath();
       FlutterCallbackInformation flutterCallback =
         FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
