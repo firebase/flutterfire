@@ -4,7 +4,7 @@ import 'package:mockito/mockito.dart';
 
 import 'test_common.dart';
 
-class MockFiledValue extends Mock implements FieldValueInterface {}
+class MockFiledValue extends Mock implements FieldValuePlatform {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -105,7 +105,7 @@ void _assertGetMethodCalled(DocumentReferencePlatform documentReference, Source 
 }
 
 void _assertSetDataMethodCalled(DocumentReferencePlatform documentReference,
-    bool expectedMergeValue, FieldValueInterface fieldValue) async {
+    bool expectedMergeValue, FieldValuePlatform fieldValue) async {
   bool isMethodCalled = false;
   final Map<String, dynamic> data = {"test": "test"};
   if (fieldValue != null) {

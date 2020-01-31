@@ -14,5 +14,5 @@ class FieldValueWeb extends FieldValuePlatform implements web.FieldValue {
   final dynamic value;
 
   @override
-  FieldValueInterface get instance => this;
+  FieldValuePlatform get instance => this;
 }

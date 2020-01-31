@@ -7,7 +7,7 @@ import 'package:mockito/mockito.dart';
 import 'dart:js' as js;
 import 'package:firebase/firestore.dart' as web;
 
-class MockFieldValueInterface extends Mock implements FieldValueInterface {}
+class MockFieldValue extends Mock implements FieldValuePlatform {}
 
 class MockGeoPoint extends Mock implements GeoPoint {}
 
@@ -35,10 +35,10 @@ void main() {
     test("encodeMapData", () {
       expect(CodecUtility.encodeMapData(null), isNull);
 
-      //FieldValueInterface
-      final mockFieldValueInterface = MockFieldValueInterface();
-      CodecUtility.encodeMapData({'test': mockFieldValueInterface});
-      verify(mockFieldValueInterface.instance);
+      //FieldValuePlatform
+      final mockFieldValue = MockFieldValue();
+      CodecUtility.encodeMapData({'test': mockFieldValue});
+      verify(mockFieldValue.instance);
 
       final timeStamp = Timestamp.now();
       final result = CodecUtility.encodeMapData({'test': timeStamp});
@@ -78,10 +78,10 @@ void main() {
     test("encodeArrayData", () {
       expect(CodecUtility.encodeArrayData(null), isNull);
 
-      //FieldValueInterface
-      final mockFieldValueInterface = MockFieldValueInterface();
-      CodecUtility.encodeArrayData([mockFieldValueInterface]);
-      verify(mockFieldValueInterface.instance);
+      //FieldValuePlatform
+      final mockFieldValue = MockFieldValue();
+      CodecUtility.encodeArrayData([mockFieldValue]);
+      verify(mockFieldValue.instance);
 
       final timeStamp = Timestamp.now();
       final result = CodecUtility.encodeArrayData([timeStamp]);

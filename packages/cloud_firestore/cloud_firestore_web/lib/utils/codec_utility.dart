@@ -30,7 +30,7 @@ class CodecUtility {
   @visibleForTesting
   // ignore: public_member_api_docs
   static dynamic valueEncode(dynamic value) {
-    if (value is FieldValueInterface && value.instance is FieldValueWeb) {
+    if (value is FieldValuePlatform && value.instance is FieldValueWeb) {
       return (value.instance as FieldValueWeb)._delegate;
     } else if (value is Timestamp) {
       return value.toDate();

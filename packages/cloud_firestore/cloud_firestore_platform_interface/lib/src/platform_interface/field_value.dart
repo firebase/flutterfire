@@ -47,10 +47,11 @@ class FieldValuePlatform extends PlatformInterface implements FieldValueInterfac
     PlatformInterface.verifyToken(instance, _token);
   }
 
+  /// Constructor
   FieldValuePlatform(this.type, this.value) : super(token: _token);
 
   @override
-  FieldValueInterface get instance => this;
+  FieldValuePlatform get instance => this;
 
   @override
   final FieldValueType type;

@@ -6,7 +6,7 @@ import 'test_common.dart';
 
 class MockDocumentReference extends Mock implements DocumentReferencePlatform {}
 
-class MockFiledValue extends Mock implements FieldValueInterface {}
+class MockFiledValue extends Mock implements FieldValuePlatform {}
 
 const _kTransactionId = 1022;
 

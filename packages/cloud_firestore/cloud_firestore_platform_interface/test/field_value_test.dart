@@ -2,7 +2,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-class MockFieldValue extends Mock implements FieldValueInterface {}
+class MockFieldValue extends Mock implements FieldValuePlatform {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

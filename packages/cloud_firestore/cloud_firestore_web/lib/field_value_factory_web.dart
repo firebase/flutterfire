@@ -4,25 +4,25 @@ part of cloud_firestore_web;
 /// instance that is [jsify] friendly
 class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
   @override
-  FieldValueInterface arrayRemove(List elements) {
+  FieldValuePlatform arrayRemove(List elements) {
     final delegate = web.FieldValue.arrayRemove(elements);
     return FieldValueWeb._(delegate, FieldValueType.arrayRemove, elements);
   }
 
   @override
-  FieldValueInterface arrayUnion(List elements) {
+  FieldValuePlatform arrayUnion(List elements) {
     final delegate = web.FieldValue.arrayUnion(elements);
     return FieldValueWeb._(delegate, FieldValueType.arrayUnion, elements);
   }
 
   @override
-  FieldValueInterface delete() {
+  FieldValuePlatform delete() {
     final delegate = web.FieldValue.delete();
     return FieldValueWeb._(delegate, FieldValueType.delete, null);
   }
 
   @override
-  FieldValueInterface increment(num value) {
+  FieldValuePlatform increment(num value) {
     assert(value is double || value is int, "value can only be double or int");
     final delegate = web.FieldValue.increment(value);
     return FieldValueWeb._(
@@ -34,7 +34,7 @@ class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
   }
 
   @override
-  FieldValueInterface serverTimestamp() {
+  FieldValuePlatform serverTimestamp() {
     final delegate = web.FieldValue.serverTimestamp();
     return FieldValueWeb._(delegate, FieldValueType.serverTimestamp, null);
   }

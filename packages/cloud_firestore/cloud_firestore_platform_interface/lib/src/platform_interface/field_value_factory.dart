@@ -58,7 +58,7 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// added to the end. If the field being modified is not already an array it
   /// will be overwritten with an array containing exactly the specified
   /// elements.
-  FieldValueInterface arrayUnion(List<dynamic> elements) {
+  FieldValuePlatform arrayUnion(List<dynamic> elements) {
     throw UnimplementedError("arrayUnion() is not implemented");
   }
 
@@ -68,24 +68,24 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// All instances of each element specified will be removed from the array.
   /// If the field being modified is not already an array it will be overwritten
   /// with an empty array.
-  FieldValueInterface arrayRemove(List<dynamic> elements) {
+  FieldValuePlatform arrayRemove(List<dynamic> elements) {
     throw UnimplementedError("arrayRemove() is not implemented");
   }
 
   /// Returns a sentinel for use with update() to mark a field for deletion.
-  FieldValueInterface delete() {
+  FieldValuePlatform delete() {
     throw UnimplementedError("delete() is not implemented");
   }
 
   /// Returns a sentinel for use with set() or update() to include a
   /// server-generated timestamp in the written data.
-  FieldValueInterface serverTimestamp() {
+  FieldValuePlatform serverTimestamp() {
     throw UnimplementedError("serverTimestamp() is not implemented");
   }
 
   /// Returns a special value for use with set() or update() that tells the
   /// server to increment the field’s current value by the given value.
-  FieldValueInterface increment(num value) {
+  FieldValuePlatform increment(num value) {
     throw UnimplementedError("increment() is not implemented");
   }
 }
