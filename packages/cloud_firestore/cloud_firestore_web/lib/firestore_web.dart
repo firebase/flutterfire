@@ -1,23 +1,15 @@
-library cloud_firestore_web;
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/firestore.dart' show Firestore, Settings;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:firebase/firestore.dart' as web;
-import 'package:js/js_util.dart';
-import 'package:meta/meta.dart';
 
-part 'collection_reference_web.dart';
-part 'utils/codec_utility.dart';
-part 'utils/document_reference_utils.dart';
-part 'field_value_factory_web.dart';
-part 'document_reference_web.dart';
-part 'query_web.dart';
-part 'transaction_web.dart';
-part 'field_value_web.dart';
-part 'write_batch_web.dart';
+import 'package:cloud_firestore_web/src/collection_reference_web.dart';
+import 'package:cloud_firestore_web/src/field_value_factory_web.dart';
+import 'package:cloud_firestore_web/src/document_reference_web.dart';
+import 'package:cloud_firestore_web/src/query_web.dart';
+import 'package:cloud_firestore_web/src/transaction_web.dart';
+import 'package:cloud_firestore_web/src/write_batch_web.dart';
 
 /// Web implementation for [FirestorePlatform]
 /// delegates calls to firestore web plugin

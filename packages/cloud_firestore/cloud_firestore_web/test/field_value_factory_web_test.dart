@@ -1,6 +1,7 @@
 @TestOn("chrome")
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_web/firestore_web.dart';
+import 'package:cloud_firestore_web/src/field_value_factory_web.dart';
+import 'package:cloud_firestore_web/src/field_value_web.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

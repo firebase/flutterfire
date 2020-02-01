@@ -1,4 +1,9 @@
-part of cloud_firestore_web;
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase/firestore.dart' as web;
+import 'package:meta/meta.dart';
+
+import 'package:cloud_firestore_web/src/document_reference_web.dart';
+import 'package:cloud_firestore_web/src/query_web.dart';
 
 /// Web implementation for Firestore [CollectionReferencePlatform]
 class CollectionReferenceWeb extends CollectionReferencePlatform {

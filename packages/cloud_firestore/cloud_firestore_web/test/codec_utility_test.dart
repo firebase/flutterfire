@@ -1,11 +1,13 @@
 @TestOn("chrome")
 import 'dart:typed_data';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_web/firestore_web.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'dart:js' as js;
 import 'package:firebase/firestore.dart' as web;
+
+import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
+import 'package:cloud_firestore_web/src/document_reference_web.dart';
 
 class MockFieldValue extends Mock implements FieldValuePlatform {}
 

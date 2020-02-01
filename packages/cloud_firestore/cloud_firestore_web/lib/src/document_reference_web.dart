@@ -1,4 +1,9 @@
-part of cloud_firestore_web;
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase/firestore.dart' as web;
+
+import 'package:cloud_firestore_web/src/collection_reference_web.dart';
+import 'package:cloud_firestore_web/src/utils/document_reference_utils.dart';
+import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
 
 /// Web implementation for firestore [DocumentReferencePlatform]
 class DocumentReferenceWeb extends DocumentReferencePlatform {
@@ -26,7 +31,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
 
   @override
   Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
-    return _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+    return fromWebDocumentSnapshotToPlatformDocumentSnapshot(
         await delegate.get(), this.firestore);
   }
 
@@ -40,7 +45,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
       querySnapshots = delegate.onMetadataChangesSnapshot;
     }
     return querySnapshots.map((webSnapshot) =>
-        _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+        fromWebDocumentSnapshotToPlatformDocumentSnapshot(
             webSnapshot, this.firestore));
   }
 }

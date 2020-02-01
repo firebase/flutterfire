@@ -1,11 +1,13 @@
-part of cloud_firestore_web;
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase/firestore.dart' as web;
+import 'package:meta/meta.dart';
 
-// disabling lint as it's only visible for testing
-@visibleForTesting
+import 'package:cloud_firestore_web/firestore_web.dart';
+import 'package:cloud_firestore_web/src/document_reference_web.dart';
+import 'package:cloud_firestore_web/src/field_value_web.dart';
+
 // ignore: public_member_api_docs
 class CodecUtility {
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
   // ignore: public_member_api_docs
   static Map<String, dynamic> encodeMapData(Map<String, dynamic> data) {
     if (data == null) {
@@ -31,7 +33,7 @@ class CodecUtility {
   // ignore: public_member_api_docs
   static dynamic valueEncode(dynamic value) {
     if (value is FieldValuePlatform && value.instance is FieldValueWeb) {
-      return (value.instance as FieldValueWeb)._delegate;
+      return (value.instance as FieldValueWeb).delegate;
     } else if (value is Timestamp) {
       return value.toDate();
     } else if (value is GeoPoint) {

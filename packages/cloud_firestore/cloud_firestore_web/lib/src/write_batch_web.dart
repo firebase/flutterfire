@@ -1,11 +1,15 @@
-part of cloud_firestore_web;
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase/firestore.dart' as web;
+import 'package:meta/meta.dart';
+
+import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
+import 'package:cloud_firestore_web/src/document_reference_web.dart';
 
 /// A web specific for [WriteBatch]
 class WriteBatchWeb extends WriteBatchPlatform {
   final web.WriteBatch _delegate;
 
-  // ignore: public_member_api_docs
-  @visibleForTesting
+  /// Constructor.
   WriteBatchWeb(this._delegate);
 
   @override

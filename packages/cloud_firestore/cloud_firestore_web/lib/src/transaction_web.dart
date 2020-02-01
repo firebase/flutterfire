@@ -1,4 +1,10 @@
-part of cloud_firestore_web;
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase/firestore.dart' as web;
+import 'package:meta/meta.dart';
+
+import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
+import 'package:cloud_firestore_web/src/utils/document_reference_utils.dart';
+import 'package:cloud_firestore_web/src/document_reference_web.dart';
 
 /// A web specific for [Transaction]
 class TransactionWeb extends TransactionPlatform {
@@ -8,8 +14,7 @@ class TransactionWeb extends TransactionPlatform {
 
   static int _transactionId = 0;
 
-  // ignore: public_member_api_docs
-  @visibleForTesting
+  /// Constructor.
   TransactionWeb(this._webTransaction, this.firestore) : super(_transactionId++, firestore);
 
   @override
@@ -24,7 +29,7 @@ class TransactionWeb extends TransactionPlatform {
     assert(documentReference is DocumentReferenceWeb);
     final webSnapshot = await _webTransaction
         .get((documentReference as DocumentReferenceWeb).delegate);
-    return _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+    return fromWebDocumentSnapshotToPlatformDocumentSnapshot(
         webSnapshot, this.firestore);
   }
 

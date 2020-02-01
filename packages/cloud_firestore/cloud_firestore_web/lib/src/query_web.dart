@@ -1,4 +1,8 @@
-part of cloud_firestore_web;
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase/firestore.dart' as web;
+import 'package:meta/meta.dart';
+
+import 'package:cloud_firestore_web/src/utils/document_reference_utils.dart';
 
 /// Web implementation for firestore [QueryPlatform]
 class QueryWeb extends QueryPlatform {
@@ -216,7 +220,7 @@ class QueryWeb extends QueryPlatform {
     return QuerySnapshotPlatform(
         webSnapshot.docs
             .map((webSnapshot) =>
-                _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+                fromWebDocumentSnapshotToPlatformDocumentSnapshot(
                     webSnapshot, this._firestore))
             .toList(),
         webSnapshot.docChanges().map(_webChangeToChange).toList(),
@@ -228,7 +232,7 @@ class QueryWeb extends QueryPlatform {
         _fromString(webChange.type),
         webChange.oldIndex,
         webChange.newIndex,
-        _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+        fromWebDocumentSnapshotToPlatformDocumentSnapshot(
             webChange.doc, this._firestore));
   }
 

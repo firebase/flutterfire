@@ -4,6 +4,7 @@ import 'package:cloud_firestore_web/firestore_web.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:firebase/firestore.dart' as web;
+import 'package:cloud_firestore_web/src/query_web.dart';
 import 'test_common.dart';
 
 class MockWebQuery extends Mock implements web.Query {}
