@@ -15,7 +15,7 @@ import 'package:cloud_firestore_web/src/write_batch_web.dart';
 /// delegates calls to firestore web plugin
 class FirestoreWeb extends FirestorePlatform {
   /// instance of Firestore from the web plugin
-  final Firestore webFirestore;
+  final Firestore _webFirestore;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -25,7 +25,7 @@ class FirestoreWeb extends FirestorePlatform {
   /// Builds an instance of [FirestoreWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
   FirestoreWeb({FirebaseApp app})
-      : webFirestore = firebase
+      : _webFirestore = firebase
             .firestore(firebase.app((app ?? FirebaseApp.instance).name)),
         super(app: app ?? FirebaseApp.instance) {
     FieldValueFactoryPlatform.instance = FieldValueFactoryWeb();
@@ -36,26 +36,26 @@ class FirestoreWeb extends FirestorePlatform {
 
   @override
   CollectionReferencePlatform collection(String path) {
-    return CollectionReferenceWeb(this, webFirestore, path.split('/'));
+    return CollectionReferenceWeb(this, _webFirestore, path.split('/'));
   }
 
   @override
   QueryPlatform collectionGroup(String path) {
-    return QueryWeb(this, path, webFirestore.collectionGroup(path),
+    return QueryWeb(this, path, _webFirestore.collectionGroup(path),
         isCollectionGroup: true);
   }
 
   @override
   DocumentReferencePlatform document(String path) =>
-      DocumentReferenceWeb(webFirestore, this, path.split('/'));
+      DocumentReferenceWeb(_webFirestore, this, path.split('/'));
 
   @override
-  WriteBatchPlatform batch() => WriteBatchWeb(webFirestore.batch());
+  WriteBatchPlatform batch() => WriteBatchWeb(_webFirestore.batch());
 
   @override
   Future<void> enablePersistence(bool enable) async {
     if (enable) {
-      await webFirestore.enablePersistence();
+      await _webFirestore.enablePersistence();
     }
   }
 
@@ -66,16 +66,16 @@ class FirestoreWeb extends FirestorePlatform {
       bool sslEnabled,
       int cacheSizeBytes}) async {
     if (host != null && sslEnabled != null) {
-      webFirestore.settings(Settings(
+      _webFirestore.settings(Settings(
           cacheSizeBytes: cacheSizeBytes ?? 40000000,
           host: host,
           ssl: sslEnabled));
     } else {
-      webFirestore
+      _webFirestore
           .settings(Settings(cacheSizeBytes: cacheSizeBytes ?? 40000000));
     }
     if (persistenceEnabled) {
-      await webFirestore.enablePersistence();
+      await _webFirestore.enablePersistence();
     }
   }
 
@@ -84,7 +84,7 @@ class FirestoreWeb extends FirestorePlatform {
       TransactionHandler transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) async {
     Map<String, dynamic> result;
-    await webFirestore.runTransaction((transaction) async {
+    await _webFirestore.runTransaction((transaction) async {
       result = await transactionHandler(TransactionWeb(transaction, this));
     }).timeout(timeout);
     return result is Map<String, dynamic> ? result : <String, dynamic>{};
