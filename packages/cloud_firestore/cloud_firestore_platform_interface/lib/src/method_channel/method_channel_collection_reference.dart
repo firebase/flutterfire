@@ -8,12 +8,11 @@ part of cloud_firestore_platform_interface;
 /// document references, and querying for documents (using the methods
 /// inherited from [QueryPlatform]).
 ///
-/// Note that this class *should* extend CollectionReferencePlatform, but
-/// it doesn't because of the extensive changes required to MethodChannelQuery
-/// (which *does* extend its Platform class).
-///
-/// If you changed CollectionReferencePlatform and this class started throwing
-/// compilation errors, now you know why it is.
+/// Note that this class *should* extend [CollectionReferencePlatform], but
+/// it doesn't because of the extensive changes required to [MethodChannelQuery]
+/// (which *does* extend its Platform class). If you changed
+/// [CollectionReferencePlatform] and this class started throwing compilation
+/// errors, now you know why.
 class MethodChannelCollectionReference extends MethodChannelQuery
     implements CollectionReferencePlatform {
   /// Create a [MethodChannelCollectionReference] from [pathComponents]

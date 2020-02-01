@@ -30,6 +30,7 @@ class DocumentChangePlatform extends PlatformInterface {
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [DocumentChangePlatform].
+  ///
   /// This is used by the app-facing [DocumentChange] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.

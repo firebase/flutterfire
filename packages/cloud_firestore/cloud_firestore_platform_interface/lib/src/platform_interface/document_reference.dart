@@ -4,8 +4,8 @@ part of cloud_firestore_platform_interface;
 /// and can be used to write, read, or listen to the location.
 ///
 /// The document at the referenced location may or may not exist.
-/// A [DocumentReferencePlatform] can also be used to create a [CollectionReferencePlatform]
-/// to a subcollection.
+/// A [DocumentReferencePlatform] can also be used to create a
+/// [CollectionReferencePlatform] to a subcollection.
 abstract class DocumentReferencePlatform extends PlatformInterface {
   /// Create instance of [DocumentReferencePlatform]
   DocumentReferencePlatform(this.firestore, this._pathComponents) : super(token: _token);
@@ -14,6 +14,7 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [DocumentReferencePlatform].
+  ///
   /// This is used by the app-facing [DocumentReference] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.

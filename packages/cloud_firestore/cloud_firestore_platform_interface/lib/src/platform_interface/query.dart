@@ -27,6 +27,7 @@ abstract class QueryPlatform extends PlatformInterface {
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [QueryPlatform].
+  ///
   /// This is used by the app-facing [Query] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.

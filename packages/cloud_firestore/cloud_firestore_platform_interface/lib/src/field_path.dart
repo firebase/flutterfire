@@ -12,8 +12,7 @@ enum _FieldPathType {
 class FieldPath {
   const FieldPath._(this.type);
 
-  /// The type of this FieldPath
-  /// (Used in the [FirestoreMessageCodec])
+  /// The type of this field path (used in [FirestoreMessageCodec])
   final _FieldPathType type;
 
   /// The path to the document id, which can be used in queries.
