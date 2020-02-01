@@ -27,7 +27,7 @@ part 'src/platform_interface/write_batch.dart';
 
 // Method channel parts
 part 'src/method_channel_firestore.dart';
-part 'src/utils/firestore_message_codec.dart';
+part 'src/method_channel/utils/firestore_message_codec.dart';
 part 'src/method_channel/method_channel_collection_reference.dart';
 part 'src/method_channel/method_channel_document_change.dart';
 part 'src/method_channel/method_channel_document_reference.dart';
