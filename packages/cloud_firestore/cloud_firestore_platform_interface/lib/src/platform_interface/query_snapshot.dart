@@ -13,6 +13,7 @@ class QuerySnapshotPlatform extends PlatformInterface {
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [QuerySnapshotPlatform].
+  ///
   /// This is used by the app-facing [QuerySnapshot] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.

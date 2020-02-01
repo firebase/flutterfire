@@ -44,6 +44,7 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [FieldValueFactoryPlatform].
+  ///
   /// This is used by the app-facing [FieldValueFactory] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.

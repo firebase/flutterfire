@@ -40,6 +40,7 @@ class FieldValuePlatform extends PlatformInterface implements FieldValueInterfac
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [FieldValuePlatform].
+  ///
   /// This is used by the app-facing [FieldValue] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.

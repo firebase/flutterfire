@@ -19,6 +19,7 @@ abstract class TransactionPlatform extends PlatformInterface {
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [TransactionPlatform].
+  ///
   /// This is used by the app-facing [Transaction] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
