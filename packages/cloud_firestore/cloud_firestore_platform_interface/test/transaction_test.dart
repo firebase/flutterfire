@@ -2,6 +2,8 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_transaction.dart';
+
 import 'test_common.dart';
 
 class MockDocumentReference extends Mock implements DocumentReferencePlatform {}
@@ -14,13 +16,13 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final mockFieldValue = MockFiledValue();
 
-  group("$Transaction()", () {
-    Transaction transaction;
+  group("$MethodChannelTransaction()", () {
+    TransactionPlatform transaction;
     final mockDocumentReference = MockDocumentReference();
     when(mockDocumentReference.path).thenReturn("$kCollectionId/$kDocumentId");
     setUp(() {
       transaction =
-          Transaction(_kTransactionId, FirestorePlatform.instance.app.name);
+          MethodChannelTransaction(_kTransactionId, FirestorePlatform.instance.app.name);
       reset(mockFieldValue);
       when(mockFieldValue.type).thenReturn(FieldValueType.incrementDouble);
       when(mockFieldValue.value).thenReturn(2.0);

@@ -2,7 +2,15 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore_platform_interface;
+import 'dart:async';
+
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart' show required;
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+
+import 'method_channel_firestore.dart';
+import 'method_channel_query_snapshot.dart';
 
 /// Represents a query over the data at a particular location.
 class MethodChannelQuery extends QueryPlatform {
@@ -19,7 +27,8 @@ class MethodChannelQuery extends QueryPlatform {
           parameters: parameters,
         );
 
-  QueryPlatform _copyWithParameters(Map<String, dynamic> parameters) {
+  @override
+  QueryPlatform copyWithParameters(Map<String, dynamic> parameters) {
     return MethodChannelQuery(
       firestore: firestore,
       isCollectionGroup: isCollectionGroup,
@@ -51,7 +60,7 @@ class MethodChannelQuery extends QueryPlatform {
           },
         ).then<int>((dynamic result) => result);
         _handle.then((int handle) {
-          MethodChannelFirestore._queryObservers[handle] = controller;
+          MethodChannelFirestore.queryObservers[handle] = controller;
         });
       },
       onCancel: () {
@@ -60,7 +69,7 @@ class MethodChannelQuery extends QueryPlatform {
             'removeListener',
             <String, dynamic>{'handle': handle},
           );
-          MethodChannelFirestore._queryObservers.remove(handle);
+          MethodChannelFirestore.queryObservers.remove(handle);
         });
       },
     );
@@ -79,7 +88,7 @@ class MethodChannelQuery extends QueryPlatform {
         'path': path,
         'isCollectionGroup': isCollectionGroup,
         'parameters': parameters,
-        'source': _getSourceString(source),
+        'source': getSourceString(source),
       },
     );
     return MethodChannelQuerySnapshot(data, firestore);
@@ -143,7 +152,7 @@ class MethodChannelQuery extends QueryPlatform {
       addCondition(field, '==', null);
     }
 
-    return _copyWithParameters(<String, dynamic>{'where': conditions});
+    return copyWithParameters(<String, dynamic>{'where': conditions});
   }
 
   @override
@@ -172,7 +181,7 @@ class MethodChannelQuery extends QueryPlatform {
         'Hence, you may not use an order by [FieldPath.documentId] when using any of these methods for a query.');
 
     orders.add(order);
-    return _copyWithParameters(<String, dynamic>{'orderBy': orders});
+    return copyWithParameters(<String, dynamic>{'orderBy': orders});
   }
 
   @override
@@ -188,7 +197,7 @@ class MethodChannelQuery extends QueryPlatform {
             .isEmpty,
         '[startAfterDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [startAfterDocument].');
-    return _copyWithParameters(<String, dynamic>{
+    return copyWithParameters(<String, dynamic>{
       'startAfterDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
         'path': documentSnapshot.reference.path,
@@ -210,7 +219,7 @@ class MethodChannelQuery extends QueryPlatform {
             .isEmpty,
         '[startAtDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [startAtDocument].');
-    return _copyWithParameters(<String, dynamic>{
+    return copyWithParameters(<String, dynamic>{
       'startAtDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
         'path': documentSnapshot.reference.path,
@@ -226,7 +235,7 @@ class MethodChannelQuery extends QueryPlatform {
     assert(!parameters.containsKey('startAt'));
     assert(!parameters.containsKey('startAfterDocument'));
     assert(!parameters.containsKey('startAtDocument'));
-    return _copyWithParameters(<String, dynamic>{'startAfter': values});
+    return copyWithParameters(<String, dynamic>{'startAfter': values});
   }
 
   @override
@@ -236,7 +245,7 @@ class MethodChannelQuery extends QueryPlatform {
     assert(!parameters.containsKey('startAt'));
     assert(!parameters.containsKey('startAfterDocument'));
     assert(!parameters.containsKey('startAtDocument'));
-    return _copyWithParameters(<String, dynamic>{'startAt': values});
+    return copyWithParameters(<String, dynamic>{'startAt': values});
   }
 
   @override
@@ -253,7 +262,7 @@ class MethodChannelQuery extends QueryPlatform {
         '[endAtDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [endAtDocument].');
 
-    return _copyWithParameters(<String, dynamic>{
+    return copyWithParameters(<String, dynamic>{
       'endAtDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
         'path': documentSnapshot.reference.path,
@@ -269,7 +278,7 @@ class MethodChannelQuery extends QueryPlatform {
     assert(!parameters.containsKey('endAt'));
     assert(!parameters.containsKey('endBeforeDocument'));
     assert(!parameters.containsKey('endAtDocument'));
-    return _copyWithParameters(<String, dynamic>{'endAt': values});
+    return copyWithParameters(<String, dynamic>{'endAt': values});
   }
 
   @override
@@ -285,7 +294,7 @@ class MethodChannelQuery extends QueryPlatform {
             .isEmpty,
         '[endBeforeDocument] orders by document id itself. '
         'Hence, you may not use an order by [FieldPath.documentId] when using [endBeforeDocument].');
-    return _copyWithParameters(<String, dynamic>{
+    return copyWithParameters(<String, dynamic>{
       'endBeforeDocument': <String, dynamic>{
         'id': documentSnapshot.documentID,
         'path': documentSnapshot.reference.path,
@@ -301,6 +310,6 @@ class MethodChannelQuery extends QueryPlatform {
     assert(!parameters.containsKey('endAt'));
     assert(!parameters.containsKey('endBeforeDocument'));
     assert(!parameters.containsKey('endAtDocument'));
-    return _copyWithParameters(<String, dynamic>{'endBefore': values});
+    return copyWithParameters(<String, dynamic>{'endBefore': values});
   }
 }

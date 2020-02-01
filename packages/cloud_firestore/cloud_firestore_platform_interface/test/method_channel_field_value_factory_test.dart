@@ -1,6 +1,8 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
+
 void main() {
   group("$MethodChannelFieldValueFactory()", () {
     final MethodChannelFieldValueFactory factory =

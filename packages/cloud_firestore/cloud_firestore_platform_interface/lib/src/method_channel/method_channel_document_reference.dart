@@ -1,8 +1,13 @@
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'dart:async';
 
-part of cloud_firestore_platform_interface;
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:flutter/services.dart';
+
+import 'method_channel_firestore.dart';
+import 'utils/maps.dart';
 
 /// A [MethodChannelDocumentReference] is an implementation of
 /// [DocumentReferencePlatform] that uses [MethodChannel] to communicate with
@@ -47,7 +52,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
       <String, dynamic>{
         'app': firestore.app.name,
         'path': path,
-        'source': _getSourceString(source),
+        'source': getSourceString(source),
       },
     );
     return DocumentSnapshot(
@@ -86,7 +91,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           },
         ).then<int>((dynamic result) => result);
         _handle.then((int handle) {
-          MethodChannelFirestore._documentObservers[handle] = controller;
+          MethodChannelFirestore.documentObservers[handle] = controller;
         });
       },
       onCancel: () {
@@ -95,7 +100,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
             'removeListener',
             <String, dynamic>{'handle': handle},
           );
-          MethodChannelFirestore._documentObservers.remove(handle);
+          MethodChannelFirestore.documentObservers.remove(handle);
         });
       },
     );

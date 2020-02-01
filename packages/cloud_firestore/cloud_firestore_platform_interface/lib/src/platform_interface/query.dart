@@ -52,7 +52,8 @@ abstract class QueryPlatform extends PlatformInterface {
   /// Represents the path referenced by `this` [QueryPlatform]
   String get path => pathComponents.join('/');
 
-  QueryPlatform _copyWithParameters(Map<String, dynamic> parameters) {
+  /// Returns a copy of this query, with additional [parameters].
+  QueryPlatform copyWithParameters(Map<String, dynamic> parameters) {
     throw UnimplementedError("copyWithParameters() is not implemented");
   }
 
@@ -240,6 +241,6 @@ abstract class QueryPlatform extends PlatformInterface {
   /// to the specified number of documents.
   QueryPlatform limit(int length) {
     assert(!parameters.containsKey('limit'));
-    return _copyWithParameters(<String, dynamic>{'limit': length});
+    return copyWithParameters(<String, dynamic>{'limit': length});
   }
 }

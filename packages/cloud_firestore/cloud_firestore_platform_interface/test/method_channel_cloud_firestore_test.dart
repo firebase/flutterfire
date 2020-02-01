@@ -1,7 +1,6 @@
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
 import 'dart:async';
 import 'dart:typed_data';
 
@@ -9,6 +8,10 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_transaction.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +23,7 @@ void main() {
     final List<MethodCall> log = <MethodCall>[];
     CollectionReferencePlatform collectionReference;
     QueryPlatform collectionGroupQuery;
-    Transaction transaction;
+    TransactionPlatform transaction;
     const Map<String, dynamic> kMockDocumentSnapshotData = <String, dynamic>{
       '1': 2
     };
@@ -47,7 +50,7 @@ void main() {
       firestore = MethodChannelFirestore(app: app);
       collectionReference = firestore.collection('foo');
       collectionGroupQuery = firestore.collectionGroup('bar');
-      transaction = Transaction(0, firestore.app.name);
+      transaction = MethodChannelTransaction(0, firestore.app.name);
       MethodChannelFirestore.channel
           .setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
@@ -1243,7 +1246,7 @@ void main() {
 
     group('WriteBatch', () {
       test('set', () async {
-        final WriteBatch batch = firestore.batch();
+        final WriteBatchPlatform batch = firestore.batch();
         batch.setData(
           collectionReference.document('bar'),
           <String, String>{'bazKey': 'quxValue'},
@@ -1275,7 +1278,7 @@ void main() {
         );
       });
       test('merge set', () async {
-        final WriteBatch batch = firestore.batch();
+        final WriteBatchPlatform batch = firestore.batch();
         batch.setData(
           collectionReference.document('bar'),
           <String, String>{'bazKey': 'quxValue'},
@@ -1305,7 +1308,7 @@ void main() {
         );
       });
       test('update', () async {
-        final WriteBatch batch = firestore.batch();
+        final WriteBatchPlatform batch = firestore.batch();
         batch.updateData(
           collectionReference.document('bar'),
           <String, String>{'bazKey': 'quxValue'},
@@ -1339,7 +1342,7 @@ void main() {
         );
       });
       test('delete', () async {
-        final WriteBatch batch = firestore.batch();
+        final WriteBatchPlatform batch = firestore.batch();
         batch.delete(collectionReference.document('bar'));
         await batch.commit();
         expect(

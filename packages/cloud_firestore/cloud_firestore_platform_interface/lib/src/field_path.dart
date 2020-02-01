@@ -4,7 +4,9 @@
 
 part of cloud_firestore_platform_interface;
 
-enum _FieldPathType {
+/// The types of field paths supported.
+enum FieldPathType {
+  /// Document ID.
   documentId,
 }
 
@@ -13,9 +15,9 @@ class FieldPath {
   const FieldPath._(this.type);
 
   /// The type of this field path (used in [FirestoreMessageCodec])
-  final _FieldPathType type;
+  final FieldPathType type;
 
   /// The path to the document id, which can be used in queries.
   static FieldPath get documentId =>
-      const FieldPath._(_FieldPathType.documentId);
+      const FieldPath._(FieldPathType.documentId);
 }

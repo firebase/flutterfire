@@ -25,7 +25,7 @@ enum Source {
 }
 
 /// Converts [Source] to [String]
-String _getSourceString(Source source) {
+String getSourceString(Source source) {
   assert(source != null);
   if (source == Source.server) {
     return 'server';

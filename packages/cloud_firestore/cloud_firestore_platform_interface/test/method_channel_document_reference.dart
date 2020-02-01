@@ -2,6 +2,8 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_document_reference.dart';
+
 import 'test_common.dart';
 
 class MockFiledValue extends Mock implements FieldValuePlatform {}

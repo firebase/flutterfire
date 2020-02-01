@@ -2,6 +2,8 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
+
 typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
 
 const kCollectionId = "test";

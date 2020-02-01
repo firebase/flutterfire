@@ -2,6 +2,9 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_collection_reference.dart';
+
 const _kCollectionId = "test";
 const _kDocumentId = "document";
 

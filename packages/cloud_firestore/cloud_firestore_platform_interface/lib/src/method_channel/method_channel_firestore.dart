@@ -1,8 +1,20 @@
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'dart:async';
 
-part of cloud_firestore_platform_interface;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+
+import 'method_channel_collection_reference.dart';
+import 'method_channel_document_reference.dart';
+import 'method_channel_query.dart';
+import 'method_channel_query_snapshot.dart';
+import 'method_channel_transaction.dart';
+import 'method_channel_write_batch.dart';
+import 'utils/firestore_message_codec.dart';
+import 'utils/maps.dart';
 
 /// The entry point for accessing a Firestore.
 ///
@@ -16,7 +28,7 @@ class MethodChannelFirestore extends FirestorePlatform {
       if (call.method == 'QuerySnapshot') {
         final QuerySnapshotPlatform snapshot =
             MethodChannelQuerySnapshot(call.arguments, this);
-        _queryObservers[call.arguments['handle']].add(snapshot);
+        queryObservers[call.arguments['handle']].add(snapshot);
       } else if (call.method == 'DocumentSnapshot') {
         final DocumentSnapshot snapshot = DocumentSnapshot(
           call.arguments['path'],
@@ -25,11 +37,11 @@ class MethodChannelFirestore extends FirestorePlatform {
               call.arguments['metadata']['isFromCache']),
           this,
         );
-        _documentObservers[call.arguments['handle']].add(snapshot);
+        documentObservers[call.arguments['handle']].add(snapshot);
       } else if (call.method == 'DoTransaction') {
         final int transactionId = call.arguments['transactionId'];
-        final Transaction transaction =
-            Transaction(transactionId, call.arguments["app"]);
+        final TransactionPlatform transaction =
+            MethodChannelTransaction(transactionId, call.arguments["app"]);
         final dynamic result =
             await _transactionHandlers[transactionId](transaction);
         await transaction.finish();
@@ -51,10 +63,10 @@ class MethodChannelFirestore extends FirestorePlatform {
     StandardMethodCodec(FirestoreMessageCodec()),
   );
 
-  static final Map<int, StreamController<QuerySnapshotPlatform>> _queryObservers =
+  static final Map<int, StreamController<QuerySnapshotPlatform>> queryObservers =
       <int, StreamController<QuerySnapshotPlatform>>{};
 
-  static final Map<int, StreamController<DocumentSnapshot>> _documentObservers =
+  static final Map<int, StreamController<DocumentSnapshot>> documentObservers =
       <int, StreamController<DocumentSnapshot>>{};
 
   static final Map<int, TransactionHandler> _transactionHandlers =
@@ -89,7 +101,7 @@ class MethodChannelFirestore extends FirestorePlatform {
   }
 
   @override
-  WriteBatch batch() => WriteBatch(this);
+  WriteBatchPlatform batch() => MethodChannelWriteBatch(this);
 
   @override
   Future<Map<String, dynamic>> runTransaction(

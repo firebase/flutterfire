@@ -1,19 +1,17 @@
 library cloud_firestore_platform_interface;
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show required, visibleForTesting;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'src/utils/maps.dart';
-import 'src/utils/auto_id_generator.dart';
+import 'src/method_channel/method_channel_firestore.dart';
+import 'src/method_channel/method_channel_field_value_factory.dart';
 
 export 'src/utils/auto_id_generator.dart';
 
@@ -24,18 +22,6 @@ part 'src/platform_interface/document_change.dart';
 part 'src/platform_interface/document_reference.dart';
 part 'src/platform_interface/transaction.dart';
 part 'src/platform_interface/write_batch.dart';
-
-// Method channel parts
-part 'src/method_channel_firestore.dart';
-part 'src/method_channel/utils/firestore_message_codec.dart';
-part 'src/method_channel/method_channel_collection_reference.dart';
-part 'src/method_channel/method_channel_document_change.dart';
-part 'src/method_channel/method_channel_document_reference.dart';
-part 'src/method_channel/method_channel_field_value_factory.dart';
-part 'src/method_channel/method_channel_query_snapshot.dart';
-part 'src/method_channel/method_channel_query.dart';
-part 'src/method_channel/method_channel_transaction.dart';
-part 'src/method_channel/method_channel_write_batch.dart';
 
 // Shared types
 part 'src/blob.dart';

@@ -1,4 +1,6 @@
-part of cloud_firestore_platform_interface;
+import 'package:flutter/services.dart';
+
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 /// An implementation of [FieldValueFactoryPlatform] that is suitable to be used
 /// on mobile where communication relies on [MethodChannel]

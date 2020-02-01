@@ -25,9 +25,6 @@ abstract class WriteBatchPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
   }
 
-  /// Indicator to whether or not this [WriteBatch] has been committed.
-  bool _committed = false;
-
   /// Commits all of the writes in this write batch as a single atomic unit.
   ///
   /// Calling this method prevents any future operations from being added.

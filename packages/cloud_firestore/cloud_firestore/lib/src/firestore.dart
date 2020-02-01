@@ -25,9 +25,6 @@ class Firestore {
             ? platform.FirestorePlatform.instanceFor(app: app)
             : platform.FirestorePlatform.instance;
 
-  @visibleForTesting
-  static MethodChannel get channel => platform.MethodChannelFirestore.channel;
-
   /// Gets the instance of Firestore for the default Firebase app.
   static Firestore get instance => Firestore();
 

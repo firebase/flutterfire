@@ -1,6 +1,5 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase/firestore.dart' as web;
-import 'package:meta/meta.dart';
 
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
 import 'package:cloud_firestore_web/src/utils/document_reference_utils.dart';
@@ -12,10 +11,8 @@ class TransactionWeb extends TransactionPlatform {
   @override
   FirestorePlatform firestore;
 
-  static int _transactionId = 0;
-
   /// Constructor.
-  TransactionWeb(this._webTransaction, this.firestore) : super(_transactionId++, firestore);
+  TransactionWeb(this._webTransaction, this.firestore) : super(firestore);
 
   @override
   Future<void> delete(DocumentReferencePlatform documentReference) async {

@@ -1,8 +1,13 @@
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'dart:convert';
 
-part of cloud_firestore_platform_interface;
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:meta/meta.dart' show visibleForTesting;
 
 @visibleForTesting
 // ignoring lint rule here as it's only visible for testing
@@ -36,9 +41,9 @@ class FirestoreMessageCodec extends StandardMessageCodec {
     FieldValueType.incrementInteger: _kIncrementInteger,
   };
 
-  static const Map<_FieldPathType, int> _kFieldPathCodes =
-      <_FieldPathType, int>{
-    _FieldPathType.documentId: _kDocumentId,
+  static const Map<FieldPathType, int> _kFieldPathCodes =
+      <FieldPathType, int>{
+    FieldPathType.documentId: _kDocumentId,
   };
 
   @override

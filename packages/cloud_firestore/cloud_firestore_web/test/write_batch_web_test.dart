@@ -1,12 +1,11 @@
 @TestOn("chrome")
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/write_batch_web.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'test_common.dart';
 
 void main() {
-  group("$WriteBatch()", () {
+  group("$WriteBatchWeb()", () {
     final mockWebTransaction = MockWebWriteBatch();
     final mockWebDocumentReference = MockWebDocumentReference();
     final mockDocumentReference = MockDocumentReference();

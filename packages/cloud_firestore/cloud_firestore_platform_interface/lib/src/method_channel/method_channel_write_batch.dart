@@ -2,17 +2,21 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore_platform_interface;
+import 'dart:async';
 
-/// A [WriteBatch] is a series of write operations to be performed as one unit.
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+
+import 'method_channel_firestore.dart';
+
+/// A [MethodChannelWriteBatch] is a series of write operations to be performed as one unit.
 ///
-/// Operations done on a [WriteBatch] do not take effect until you [commit].
+/// Operations done on a [MethodChannelWriteBatch] do not take effect until you [commit].
 ///
-/// Once committed, no further operations can be performed on the [WriteBatch],
+/// Once committed, no further operations can be performed on the [MethodChannelWriteBatch],
 /// nor can it be committed again.
-class WriteBatch extends WriteBatchPlatform {
-  /// Create an instance of [WriteBatch]
-  WriteBatch(this._firestore)
+class MethodChannelWriteBatch extends WriteBatchPlatform {
+  /// Create an instance of [MethodChannelWriteBatch]
+  MethodChannelWriteBatch(this._firestore)
       : _handle = MethodChannelFirestore.channel.invokeMethod<dynamic>(
             'WriteBatch#create',
             <String, dynamic>{'app': _firestore.app.name}),
@@ -21,6 +25,7 @@ class WriteBatch extends WriteBatchPlatform {
   final FirestorePlatform _firestore;
   Future<dynamic> _handle;
   final List<Future<dynamic>> _actions = <Future<dynamic>>[];
+  bool _committed = false;
 
   @override
   Future<void> commit() async {
