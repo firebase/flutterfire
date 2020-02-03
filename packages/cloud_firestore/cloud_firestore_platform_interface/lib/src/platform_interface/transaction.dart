@@ -45,7 +45,9 @@ abstract class TransactionPlatform extends PlatformInterface {
   /// This is here so it can be overridden by implementations that do NOT
   /// handle returned futures automatically, like the [MethodChannelTransaction].
   /// Does not affect the _pendingResults.
-  Future<DocumentSnapshot> doGet(DocumentReferencePlatform documentReference) async {
+  Future<DocumentSnapshot> doGet(
+    DocumentReferencePlatform documentReference,
+  ) async {
     throw UnimplementedError("get() not implemented");
   }
 
@@ -73,7 +75,9 @@ abstract class TransactionPlatform extends PlatformInterface {
   /// Awaiting the returned [Future] is optional and will be done automatically
   /// when the transaction handler completes.
   Future<void> update(
-      DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
+    DocumentReferencePlatform documentReference,
+    Map<String, dynamic> data,
+  ) async {
     final Future<void> result = doUpdate(documentReference, data);
     _pendingResults.add(result);
     return result;
@@ -85,7 +89,9 @@ abstract class TransactionPlatform extends PlatformInterface {
   /// handle returned futures automatically, like the [MethodChannelTransaction].
   /// Does not affect the _pendingResults.
   Future<void> doUpdate(
-      DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
+    DocumentReferencePlatform documentReference,
+    Map<String, dynamic> data,
+  ) async {
     throw UnimplementedError("updated() not implemented");
   }
 
@@ -96,7 +102,9 @@ abstract class TransactionPlatform extends PlatformInterface {
   /// Awaiting the returned [Future] is optional and will be done automatically
   /// when the transaction handler completes.
   Future<void> set(
-      DocumentReferencePlatform documentReference, Map<String, dynamic> data) {
+    DocumentReferencePlatform documentReference,
+    Map<String, dynamic> data,
+  ) {
     final Future<void> result = doSet(documentReference, data);
     _pendingResults.add(result);
     return result;
@@ -109,7 +117,9 @@ abstract class TransactionPlatform extends PlatformInterface {
   /// handle returned futures automatically, like the [MethodChannelTransaction].
   /// Does not affect the _pendingResults.
   Future<void> doSet(
-      DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
+    DocumentReferencePlatform documentReference,
+    Map<String, dynamic> data,
+  ) async {
     throw UnimplementedError("set() not implemented");
   }
 }

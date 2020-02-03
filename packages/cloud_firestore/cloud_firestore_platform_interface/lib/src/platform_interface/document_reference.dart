@@ -8,7 +8,10 @@ part of cloud_firestore_platform_interface;
 /// [CollectionReferencePlatform] to a subcollection.
 abstract class DocumentReferencePlatform extends PlatformInterface {
   /// Create instance of [DocumentReferencePlatform]
-  DocumentReferencePlatform(this.firestore, this._pathComponents) : super(token: _token);
+  DocumentReferencePlatform(
+    this.firestore,
+    this._pathComponents,
+  ) : super(token: _token);
 
   static final Object _token = Object();
 
@@ -28,7 +31,9 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
 
   @override
   bool operator ==(dynamic o) =>
-      o is DocumentReferencePlatform && o.firestore == firestore && o.path == path;
+      o is DocumentReferencePlatform &&
+      o.firestore == firestore &&
+      o.path == path;
 
   @override
   int get hashCode => hashList(_pathComponents);
@@ -54,7 +59,10 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   ///
   /// If [merge] is true, the provided data will be merged into an
   /// existing document instead of overwriting.
-  Future<void> setData(Map<String, dynamic> data, {bool merge = false}) {
+  Future<void> setData(
+    Map<String, dynamic> data, {
+    bool merge = false,
+  }) {
     throw UnimplementedError("setData() is not implemented");
   }
 
@@ -71,7 +79,9 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   /// Reads the document referenced by this [DocumentReferencePlatform].
   ///
   /// If no document exists, the read will return null.
-  Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
+  Future<DocumentSnapshot> get({
+    Source source = Source.serverAndCache,
+  }) async {
     throw UnimplementedError("get() is not implemented");
   }
 

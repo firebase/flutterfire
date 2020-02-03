@@ -43,15 +43,21 @@ abstract class WriteBatchPlatform extends PlatformInterface {
   ///
   /// If [merge] is true, the provided data will be merged into an
   /// existing document instead of overwriting.
-  void setData(DocumentReferencePlatform document, Map<String, dynamic> data,
-      {bool merge = false}) {
+  void setData(
+    DocumentReferencePlatform document,
+    Map<String, dynamic> data, {
+    bool merge = false,
+  }) {
     throw UnimplementedError("commit() not implemented");
   }
 
   /// Updates fields in the document referred to by [document].
   ///
   /// If the document does not exist, the operation will fail.
-  void updateData(DocumentReferencePlatform document, Map<String, dynamic> data) {
+  void updateData(
+    DocumentReferencePlatform document,
+    Map<String, dynamic> data,
+  ) {
     throw UnimplementedError("commit() not implemented");
   }
 }

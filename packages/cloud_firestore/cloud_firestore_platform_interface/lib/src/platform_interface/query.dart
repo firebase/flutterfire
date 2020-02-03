@@ -7,12 +7,12 @@ part of cloud_firestore_platform_interface;
 /// Represents a query over the data at a particular location.
 abstract class QueryPlatform extends PlatformInterface {
   /// Create a [QueryPlatform] instance
-  QueryPlatform(
-      {@required this.firestore,
-      @required List<String> pathComponents,
-      bool isCollectionGroup = false,
-      Map<String, dynamic> parameters})
-      : pathComponents = pathComponents,
+  QueryPlatform({
+    @required this.firestore,
+    @required List<String> pathComponents,
+    bool isCollectionGroup = false,
+    Map<String, dynamic> parameters,
+  })  : pathComponents = pathComponents,
         isCollectionGroup = isCollectionGroup,
         parameters = parameters ??
             Map<String, dynamic>.unmodifiable(<String, dynamic>{
@@ -20,7 +20,7 @@ abstract class QueryPlatform extends PlatformInterface {
               'orderBy': List<List<dynamic>>.unmodifiable(<List<dynamic>>[]),
             }),
         assert(firestore != null),
-        assert(pathComponents != null), 
+        assert(pathComponents != null),
         super(token: _token);
 
   static final Object _token = Object();
@@ -63,13 +63,16 @@ abstract class QueryPlatform extends PlatformInterface {
   }
 
   /// Notifies of query results at this location
-  Stream<QuerySnapshotPlatform> snapshots({bool includeMetadataChanges = false}) {
+  Stream<QuerySnapshotPlatform> snapshots({
+    bool includeMetadataChanges = false,
+  }) {
     throw UnimplementedError("snapshots() is not implemented");
   }
 
   /// Fetch the documents for this query
-  Future<QuerySnapshotPlatform> getDocuments(
-      {Source source = Source.serverAndCache}) async {
+  Future<QuerySnapshotPlatform> getDocuments({
+    Source source = Source.serverAndCache,
+  }) async {
     throw UnimplementedError("getDocuments() is not implemented");
   }
 
@@ -113,7 +116,10 @@ abstract class QueryPlatform extends PlatformInterface {
   /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
-  QueryPlatform orderBy(dynamic field, {bool descending = false}) {
+  QueryPlatform orderBy(
+    dynamic field, {
+    bool descending = false,
+  }) {
     throw UnimplementedError("orderBy() is not implemented");
   }
 

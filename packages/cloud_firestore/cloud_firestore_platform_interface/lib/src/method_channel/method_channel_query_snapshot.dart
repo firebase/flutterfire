@@ -24,8 +24,8 @@ class MethodChannelQuerySnapshot extends QuerySnapshotPlatform {
                 firestore,
               );
             }),
-            List<DocumentChangePlatform>.generate(data['documentChanges'].length,
-                (int index) {
+            List<DocumentChangePlatform>.generate(
+                data['documentChanges'].length, (int index) {
               return MethodChannelDocumentChange(
                 data['documentChanges'][index],
                 firestore,

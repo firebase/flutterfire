@@ -19,8 +19,11 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
   /// at [pathComponents] and uses implementation of [webFirestore]
   CollectionReferenceWeb(
       this._firestorePlatform, this.webFirestore, this.pathComponents)
-      : queryDelegate = QueryWeb(_firestorePlatform, pathComponents.join("/"),
-            webFirestore.collection(pathComponents.join("/")),),
+      : queryDelegate = QueryWeb(
+          _firestorePlatform,
+          pathComponents.join("/"),
+          webFirestore.collection(pathComponents.join("/")),
+        ),
         super(_firestorePlatform, pathComponents);
 
   @override
@@ -89,7 +92,9 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
   FirestorePlatform get firestore => _firestorePlatform;
 
   @override
-  Future<QuerySnapshotPlatform> getDocuments({Source source = Source.serverAndCache}) =>
+  Future<QuerySnapshotPlatform> getDocuments({
+    Source source = Source.serverAndCache,
+  }) =>
       queryDelegate.getDocuments(source: source);
 
   @override
@@ -105,7 +110,10 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
   }
 
   @override
-  QueryPlatform orderBy(field, {bool descending = false}) {
+  QueryPlatform orderBy(
+    field, {
+    bool descending = false,
+  }) {
     _resetQueryDelegate();
     return queryDelegate.orderBy(field, descending: descending);
   }
@@ -120,7 +128,9 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
   CollectionReferencePlatform reference() => queryDelegate.reference();
 
   @override
-  Stream<QuerySnapshotPlatform> snapshots({bool includeMetadataChanges = false}) =>
+  Stream<QuerySnapshotPlatform> snapshots({
+    bool includeMetadataChanges = false,
+  }) =>
       queryDelegate.snapshots(includeMetadataChanges: includeMetadataChanges);
 
   @override
@@ -148,16 +158,18 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
   }
 
   @override
-  QueryPlatform where(field,
-      {isEqualTo,
-      isLessThan,
-      isLessThanOrEqualTo,
-      isGreaterThan,
-      isGreaterThanOrEqualTo,
-      arrayContains,
-      List arrayContainsAny,
-      List whereIn,
-      bool isNull}) {
+  QueryPlatform where(
+    field, {
+    isEqualTo,
+    isLessThan,
+    isLessThanOrEqualTo,
+    isGreaterThan,
+    isGreaterThanOrEqualTo,
+    arrayContains,
+    List arrayContainsAny,
+    List whereIn,
+    bool isNull,
+  }) {
     _resetQueryDelegate();
     return queryDelegate.where(field,
         isEqualTo: isEqualTo,

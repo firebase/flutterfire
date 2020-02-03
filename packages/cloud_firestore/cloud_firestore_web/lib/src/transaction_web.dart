@@ -22,7 +22,9 @@ class TransactionWeb extends TransactionPlatform {
   }
 
   @override
-  Future<DocumentSnapshot> get(DocumentReferencePlatform documentReference) async {
+  Future<DocumentSnapshot> get(
+    DocumentReferencePlatform documentReference,
+  ) async {
     assert(documentReference is DocumentReferenceWeb);
     final webSnapshot = await _webTransaction
         .get((documentReference as DocumentReferenceWeb).delegate);
@@ -32,7 +34,9 @@ class TransactionWeb extends TransactionPlatform {
 
   @override
   Future<void> set(
-      DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
+    DocumentReferencePlatform documentReference,
+    Map<String, dynamic> data,
+  ) async {
     assert(documentReference is DocumentReferenceWeb);
     await _webTransaction.set(
         (documentReference as DocumentReferenceWeb).delegate,
@@ -41,7 +45,9 @@ class TransactionWeb extends TransactionPlatform {
 
   @override
   Future<void> update(
-      DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
+    DocumentReferencePlatform documentReference,
+    Map<String, dynamic> data,
+  ) async {
     assert(documentReference is DocumentReferenceWeb);
     await _webTransaction.update(
         (documentReference as DocumentReferenceWeb).delegate,

@@ -332,7 +332,8 @@ void main() {
         expect(collectionReference.id, equals('foo'));
       });
       test('parent', () async {
-        final DocumentReferencePlatform docRef = collectionReference.document('bar');
+        final DocumentReferencePlatform docRef =
+            collectionReference.document('bar');
         expect(docRef.parent().id, equals('foo'));
         expect(collectionReference.parent(), isNull);
       });
@@ -879,7 +880,8 @@ void main() {
         );
       });
       test('getDocumentsFromCollectionGroup', () async {
-        QuerySnapshotPlatform snapshot = await collectionGroupQuery.getDocuments();
+        QuerySnapshotPlatform snapshot =
+            await collectionGroupQuery.getDocuments();
         expect(snapshot.metadata.hasPendingWrites,
             equals(kMockSnapshotMetadata['hasPendingWrites']));
         expect(snapshot.metadata.isFromCache,
@@ -1158,7 +1160,8 @@ void main() {
             codec, FieldValueFactoryPlatform.instance.arrayUnion(<int>[123]));
         _checkEncodeDecode<dynamic>(
             codec, FieldValueFactoryPlatform.instance.arrayRemove(<int>[123]));
-        _checkEncodeDecode<dynamic>(codec, FieldValueFactoryPlatform.instance.delete());
+        _checkEncodeDecode<dynamic>(
+            codec, FieldValueFactoryPlatform.instance.delete());
         _checkEncodeDecode<dynamic>(
             codec, FieldValueFactoryPlatform.instance.serverTimestamp());
         _checkEncodeDecode<dynamic>(
@@ -1399,7 +1402,8 @@ bool _deepEquals(dynamic valueA, dynamic valueB) {
   if (valueA is Map) return valueB is Map && _deepEqualsMap(valueA, valueB);
   if (valueA is double && valueA.isNaN) return valueB is double && valueB.isNaN;
   if (valueA is FieldValuePlatform) {
-    return valueB is FieldValuePlatform && _deepEqualsFieldValue(valueA, valueB);
+    return valueB is FieldValuePlatform &&
+        _deepEqualsFieldValue(valueA, valueB);
   }
   if (valueA is FieldPath) {
     return valueB is FieldPath && valueA.type == valueB.type;
@@ -1447,7 +1451,8 @@ bool _deepEqualsMap(
   return true;
 }
 
-bool _deepEqualsFieldValue(FieldValuePlatform valueA, FieldValuePlatform valueB) {
+bool _deepEqualsFieldValue(
+    FieldValuePlatform valueA, FieldValuePlatform valueB) {
   if (valueA.type != valueB.type) return false;
   if (valueA.value == null) return valueB.value == null;
   if (valueA.value is List) return _deepEqualsList(valueA.value, valueB.value);

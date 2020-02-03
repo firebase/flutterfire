@@ -41,7 +41,9 @@ class MethodChannelQuery extends QueryPlatform {
 
   // TODO(jackson): Reduce code duplication with [DocumentReference]
   @override
-  Stream<QuerySnapshotPlatform> snapshots({bool includeMetadataChanges = false}) {
+  Stream<QuerySnapshotPlatform> snapshots({
+    bool includeMetadataChanges = false,
+  }) {
     assert(includeMetadataChanges != null);
     Future<int> _handle;
     // It's fine to let the StreamController be garbage collected once all the
@@ -101,16 +103,18 @@ class MethodChannelQuery extends QueryPlatform {
     });
 
   @override
-  QueryPlatform where(field,
-      {isEqualTo,
-      isLessThan,
-      isLessThanOrEqualTo,
-      isGreaterThan,
-      isGreaterThanOrEqualTo,
-      arrayContains,
-      List arrayContainsAny,
-      List whereIn,
-      bool isNull}) {
+  QueryPlatform where(
+    field, {
+    isEqualTo,
+    isLessThan,
+    isLessThanOrEqualTo,
+    isGreaterThan,
+    isGreaterThanOrEqualTo,
+    arrayContains,
+    List arrayContainsAny,
+    List whereIn,
+    bool isNull,
+  }) {
     assert(field is String || field is FieldPath,
         'Supported [field] types are [String] and [FieldPath].');
 
@@ -156,7 +160,10 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform orderBy(field, {bool descending = false}) {
+  QueryPlatform orderBy(
+    field, {
+    bool descending = false,
+  }) {
     assert(field != null && descending != null);
     assert(field is String || field is FieldPath,
         'Supported [field] types are [String] and [FieldPath].');

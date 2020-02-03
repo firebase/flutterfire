@@ -1,14 +1,13 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase/firestore.dart' as web;
-import 'package:meta/meta.dart';
 
 import 'package:cloud_firestore_web/firestore_web.dart';
 import 'package:cloud_firestore_web/src/document_reference_web.dart';
 import 'package:cloud_firestore_web/src/field_value_web.dart';
 
-// ignore: public_member_api_docs
+/// Class containing static utility methods to encode/decode firestore data.
 class CodecUtility {
-  // ignore: public_member_api_docs
+  /// Encodes a Map of values from their proper types to a serialized version.
   static Map<String, dynamic> encodeMapData(Map<String, dynamic> data) {
     if (data == null) {
       return null;
@@ -18,9 +17,7 @@ class CodecUtility {
     return output;
   }
 
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  // ignore: public_member_api_docs
+  /// Encodes an Array of values from their proper types to a serialized version.
   static List<dynamic> encodeArrayData(List<dynamic> data) {
     if (data == null) {
       return null;
@@ -28,9 +25,7 @@ class CodecUtility {
     return List.from(data).map(valueEncode).toList();
   }
 
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  // ignore: public_member_api_docs
+  /// Encodes a value from its proper type to a serialized version.
   static dynamic valueEncode(dynamic value) {
     if (value is FieldValuePlatform && value.instance is FieldValueWeb) {
       return (value.instance as FieldValueWeb).delegate;
@@ -50,9 +45,7 @@ class CodecUtility {
     return value;
   }
 
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  // ignore: public_member_api_docs
+  /// Decodes the values on an incoming Map to their proper types.
   static Map<String, dynamic> decodeMapData(Map<String, dynamic> data) {
     if (data == null) {
       return null;
@@ -62,9 +55,7 @@ class CodecUtility {
     return output;
   }
 
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  // ignore: public_member_api_docs
+  /// Decodes the values on an incoming Array to their proper types.
   static List<dynamic> decodeArrayData(List<dynamic> data) {
     if (data == null) {
       return null;
@@ -72,9 +63,7 @@ class CodecUtility {
     return List.from(data).map(valueDecode).toList();
   }
 
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  // ignore: public_member_api_docs
+  /// Decodes an incoming value to its proper type.
   static dynamic valueDecode(dynamic value) {
     if (value is web.GeoPoint) {
       return GeoPoint(value.latitude, value.longitude);

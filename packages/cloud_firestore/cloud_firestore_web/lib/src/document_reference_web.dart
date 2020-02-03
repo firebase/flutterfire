@@ -15,22 +15,31 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
 
   /// Creates an instance of [CollectionReferenceWeb] which represents path
   /// at [pathComponents] and uses implementation of [firestoreWeb]
-  DocumentReferenceWeb(this.firestoreWeb, FirestorePlatform firestore,
-      List<String> pathComponents)
-      : delegate = firestoreWeb.doc(pathComponents.join("/")),
+  DocumentReferenceWeb(
+    this.firestoreWeb,
+    FirestorePlatform firestore,
+    List<String> pathComponents,
+  )   : delegate = firestoreWeb.doc(pathComponents.join("/")),
         super(firestore, pathComponents);
 
   @override
-  Future<void> setData(Map<String, dynamic> data, {bool merge = false}) =>
+  Future<void> setData(
+    Map<String, dynamic> data, {
+    bool merge = false,
+  }) =>
       delegate.set(
-          CodecUtility.encodeMapData(data), web.SetOptions(merge: merge));
+        CodecUtility.encodeMapData(data),
+        web.SetOptions(merge: merge),
+      );
 
   @override
   Future<void> updateData(Map<String, dynamic> data) =>
       delegate.update(data: CodecUtility.encodeMapData(data));
 
   @override
-  Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
+  Future<DocumentSnapshot> get({
+    Source source = Source.serverAndCache,
+  }) async {
     return fromWebDocumentSnapshotToPlatformDocumentSnapshot(
         await delegate.get(), this.firestore);
   }
@@ -39,7 +48,9 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   Future<void> delete() => delegate.delete();
 
   @override
-  Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) {
+  Stream<DocumentSnapshot> snapshots({
+    bool includeMetadataChanges = false,
+  }) {
     Stream<web.DocumentSnapshot> querySnapshots = delegate.onSnapshot;
     if (includeMetadataChanges) {
       querySnapshots = delegate.onMetadataChangesSnapshot;

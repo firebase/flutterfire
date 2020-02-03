@@ -7,15 +7,11 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart' show visibleForTesting;
 
-@visibleForTesting
-// ignoring lint rule here as it's only visible for testing
-// ignore: public_member_api_docs
+/// The codec utilized to encode data back and forth between
+/// the Dart application and the native platform.
 class FirestoreMessageCodec extends StandardMessageCodec {
-  // ignoring lint rule here as it's only visible for testing
-  // ignore: public_member_api_docs
-  @visibleForTesting
+  /// Constructor.
   const FirestoreMessageCodec();
 
   static const int _kDateTime = 128;
@@ -41,8 +37,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
     FieldValueType.incrementInteger: _kIncrementInteger,
   };
 
-  static const Map<FieldPathType, int> _kFieldPathCodes =
-      <FieldPathType, int>{
+  static const Map<FieldPathType, int> _kFieldPathCodes = <FieldPathType, int>{
     FieldPathType.documentId: _kDocumentId,
   };
 

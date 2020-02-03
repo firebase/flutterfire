@@ -63,9 +63,15 @@ class MethodChannelFirestore extends FirestorePlatform {
     StandardMethodCodec(FirestoreMessageCodec()),
   );
 
-  static final Map<int, StreamController<QuerySnapshotPlatform>> queryObservers =
-      <int, StreamController<QuerySnapshotPlatform>>{};
+  /// A map containing all the pending Query Observers, keyed by their id.
+  /// This is shared amongst all [MethodChannelQuery] objects, and the `QuerySnapshot`
+  /// `MethodCall` handler initialized in the constructor of this class.
+  static final Map<int, StreamController<QuerySnapshotPlatform>>
+      queryObservers = <int, StreamController<QuerySnapshotPlatform>>{};
 
+  /// A map containing all the pending Document Observers, keyed by their id.
+  /// This is shared amongst all [MethodChannelDocumentReference] objects, and the
+  /// `DocumentSnapshot` `MethodCall` handler initialized in the constructor of this class.
   static final Map<int, StreamController<DocumentSnapshot>> documentObservers =
       <int, StreamController<DocumentSnapshot>>{};
 
@@ -105,8 +111,9 @@ class MethodChannelFirestore extends FirestorePlatform {
 
   @override
   Future<Map<String, dynamic>> runTransaction(
-      TransactionHandler transactionHandler,
-      {Duration timeout = const Duration(seconds: 5)}) async {
+    TransactionHandler transactionHandler, {
+    Duration timeout = const Duration(seconds: 5),
+  }) async {
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds');
     final int transactionId = _transactionHandlerId++;
@@ -132,11 +139,12 @@ class MethodChannelFirestore extends FirestorePlatform {
   }
 
   @override
-  Future<void> settings(
-      {bool persistenceEnabled,
-      String host,
-      bool sslEnabled,
-      int cacheSizeBytes}) async {
+  Future<void> settings({
+    bool persistenceEnabled,
+    String host,
+    bool sslEnabled,
+    int cacheSizeBytes,
+  }) async {
     await channel.invokeMethod<void>('Firestore#settings', <String, dynamic>{
       'app': app.name,
       'persistenceEnabled': persistenceEnabled,

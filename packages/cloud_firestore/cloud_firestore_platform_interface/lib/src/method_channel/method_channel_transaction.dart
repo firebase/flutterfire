@@ -5,9 +5,7 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart' show visibleForTesting;
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 import 'method_channel_firestore.dart';
@@ -21,15 +19,15 @@ class MethodChannelTransaction extends TransactionPlatform {
 
   /// Constructor.
   MethodChannelTransaction(int transactionId, this.appName)
-      : _transactionId = transactionId, 
-        super(
-            appName == FirebaseApp.defaultAppName
-                ? FirestorePlatform.instance
-                : FirestorePlatform.instanceFor(
-                    app: FirebaseApp(name: appName)));
+      : _transactionId = transactionId,
+        super(appName == FirebaseApp.defaultAppName
+            ? FirestorePlatform.instance
+            : FirestorePlatform.instanceFor(app: FirebaseApp(name: appName)));
 
   @override
-  Future<DocumentSnapshot> doGet(DocumentReferencePlatform documentReference) async {
+  Future<DocumentSnapshot> doGet(
+    DocumentReferencePlatform documentReference,
+  ) async {
     final Map<String, dynamic> result = await MethodChannelFirestore.channel
         .invokeMapMethod<String, dynamic>('Transaction#get', <String, dynamic>{
       'app': firestore.app.name,
@@ -60,7 +58,9 @@ class MethodChannelTransaction extends TransactionPlatform {
 
   @override
   Future<void> doUpdate(
-      DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
+    DocumentReferencePlatform documentReference,
+    Map<String, dynamic> data,
+  ) async {
     return MethodChannelFirestore.channel
         .invokeMethod<void>('Transaction#update', <String, dynamic>{
       'app': firestore.app.name,
@@ -72,7 +72,9 @@ class MethodChannelTransaction extends TransactionPlatform {
 
   @override
   Future<void> doSet(
-      DocumentReferencePlatform documentReference, Map<String, dynamic> data) async {
+    DocumentReferencePlatform documentReference,
+    Map<String, dynamic> data,
+  ) async {
     return MethodChannelFirestore.channel
         .invokeMethod<void>('Transaction#set', <String, dynamic>{
       'app': firestore.app.name,

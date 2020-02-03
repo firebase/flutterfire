@@ -10,8 +10,10 @@ part of cloud_firestore_platform_interface;
 /// Note: QueryPlatform extends PlatformInterface already.
 abstract class CollectionReferencePlatform extends QueryPlatform {
   /// Create a [CollectionReferencePlatform] using [pathComponents]
-  CollectionReferencePlatform(FirestorePlatform firestore, List<String> pathComponents)
-      : super(firestore: firestore, pathComponents: pathComponents);
+  CollectionReferencePlatform(
+    FirestorePlatform firestore,
+    List<String> pathComponents,
+  ) : super(firestore: firestore, pathComponents: pathComponents);
 
   /// Identifier of the referenced collection.
   String get id => pathComponents.isEmpty ? null : pathComponents.last;

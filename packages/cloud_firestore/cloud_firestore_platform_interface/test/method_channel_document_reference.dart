@@ -83,8 +83,8 @@ void main() {
   });
 }
 
-void _assertGetMethodCalled(DocumentReferencePlatform documentReference, Source source,
-    String expectedSourceString) async {
+void _assertGetMethodCalled(DocumentReferencePlatform documentReference,
+    Source source, String expectedSourceString) async {
   bool isMethodCalled = false;
   handleMethodCall((call) {
     if (call.method == "DocumentReference#get") {

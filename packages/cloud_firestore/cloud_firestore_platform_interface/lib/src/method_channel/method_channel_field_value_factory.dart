@@ -14,7 +14,8 @@ class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
       FieldValuePlatform(FieldValueType.arrayUnion, elements);
 
   @override
-  FieldValuePlatform delete() => FieldValuePlatform(FieldValueType.delete, null);
+  FieldValuePlatform delete() =>
+      FieldValuePlatform(FieldValueType.delete, null);
 
   @override
   FieldValuePlatform increment(num value) {

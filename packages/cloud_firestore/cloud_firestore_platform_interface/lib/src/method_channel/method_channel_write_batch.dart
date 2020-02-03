@@ -18,8 +18,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   /// Create an instance of [MethodChannelWriteBatch]
   MethodChannelWriteBatch(this._firestore)
       : _handle = MethodChannelFirestore.channel.invokeMethod<dynamic>(
-            'WriteBatch#create',
-            <String, dynamic>{'app': _firestore.app.name}),
+            'WriteBatch#create', <String, dynamic>{'app': _firestore.app.name}),
         super();
 
   final FirestorePlatform _firestore;
@@ -56,8 +55,11 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   }
 
   @override
-  void setData(DocumentReferencePlatform document, Map<String, dynamic> data,
-      {bool merge = false}) {
+  void setData(
+    DocumentReferencePlatform document,
+    Map<String, dynamic> data, {
+    bool merge = false,
+  }) {
     _assertNotCommitted();
 
     _handle.then((dynamic handle) {
@@ -77,7 +79,10 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   }
 
   @override
-  void updateData(DocumentReferencePlatform document, Map<String, dynamic> data) {
+  void updateData(
+    DocumentReferencePlatform document,
+    Map<String, dynamic> data,
+  ) {
     _assertNotCommitted();
 
     _handle.then((dynamic handle) {

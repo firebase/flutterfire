@@ -1,6 +1,5 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase/firestore.dart' as web;
-import 'package:meta/meta.dart';
 
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
 import 'package:cloud_firestore_web/src/document_reference_web.dart';
@@ -24,8 +23,11 @@ class WriteBatchWeb extends WriteBatchPlatform {
   }
 
   @override
-  void setData(DocumentReferencePlatform document, Map<String, dynamic> data,
-      {bool merge = false}) {
+  void setData(
+    DocumentReferencePlatform document,
+    Map<String, dynamic> data, {
+    bool merge = false,
+  }) {
     assert(document is DocumentReferenceWeb);
     _delegate.set(
         (document as DocumentReferenceWeb).delegate,
@@ -34,7 +36,10 @@ class WriteBatchWeb extends WriteBatchPlatform {
   }
 
   @override
-  void updateData(DocumentReferencePlatform document, Map<String, dynamic> data) {
+  void updateData(
+    DocumentReferencePlatform document,
+    Map<String, dynamic> data,
+  ) {
     assert(document is DocumentReferenceWeb);
     _delegate.update((document as DocumentReferenceWeb).delegate,
         data: CodecUtility.encodeMapData(data));
