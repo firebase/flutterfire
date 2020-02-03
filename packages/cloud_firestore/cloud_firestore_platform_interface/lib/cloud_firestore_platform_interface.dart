@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart' show required, visibleForTesting;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import 'src/internal/field_path_type.dart';
 import 'src/method_channel/method_channel_firestore.dart';
 import 'src/method_channel/method_channel_field_value_factory.dart';
 

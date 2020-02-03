@@ -8,6 +8,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import 'package:cloud_firestore_platform_interface/src/internal/field_path_type.dart';
+
 /// The codec utilized to encode data back and forth between
 /// the Dart application and the native platform.
 class FirestoreMessageCodec extends StandardMessageCodec {

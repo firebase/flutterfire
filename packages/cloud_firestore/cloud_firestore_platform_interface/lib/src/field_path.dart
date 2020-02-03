@@ -4,12 +4,6 @@
 
 part of cloud_firestore_platform_interface;
 
-/// The types of field paths supported.
-enum FieldPathType {
-  /// Document ID.
-  documentId,
-}
-
 /// A [FieldPath] refers to a field in a document.
 class FieldPath {
   const FieldPath._(this.type);
