@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore_platform_interface;
-
 /// An enumeration of firestore source types.
 enum Source {
   /// Causes Firestore to try to retrieve an up-to-date (server-retrieved) snapshot, but fall back to

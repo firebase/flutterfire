@@ -1,4 +1,7 @@
-part of cloud_firestore_platform_interface;
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 /// Sentinel values that can be used when writing document fields with set() or
 /// update().

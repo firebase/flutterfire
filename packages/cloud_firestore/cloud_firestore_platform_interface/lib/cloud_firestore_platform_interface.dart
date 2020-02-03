@@ -1,40 +1,39 @@
 library cloud_firestore_platform_interface;
 
 import 'dart:async';
-import 'dart:typed_data';
-import 'dart:ui';
 
-import 'package:collection/collection.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
-import 'package:meta/meta.dart' show required, visibleForTesting;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'src/internal/field_path_type.dart';
 import 'src/method_channel/method_channel_firestore.dart';
-import 'src/method_channel/method_channel_field_value_factory.dart';
+
+import 'src/platform_interface/collection_reference.dart';
+import 'src/platform_interface/document_reference.dart';
+import 'src/platform_interface/query.dart';
+import 'src/platform_interface/transaction.dart';
+import 'src/platform_interface/write_batch.dart';
 
 export 'src/utils/auto_id_generator.dart';
 
-// Platform interface parts
-part 'src/platform_interface/field_value_factory.dart';
-part 'src/platform_interface/collection_reference.dart';
-part 'src/platform_interface/document_change.dart';
-part 'src/platform_interface/document_reference.dart';
-part 'src/platform_interface/transaction.dart';
-part 'src/platform_interface/write_batch.dart';
-
 // Shared types
-part 'src/blob.dart';
-part 'src/document_snapshot.dart';
-part 'src/field_path.dart';
-part 'src/platform_interface/field_value.dart';
-part 'src/geo_point.dart';
-part 'src/platform_interface/query.dart';
-part 'src/platform_interface/query_snapshot.dart';
-part 'src/snapshot_metadata.dart';
-part 'src/source.dart';
-part 'src/timestamp.dart';
+export 'src/blob.dart';
+export 'src/document_snapshot.dart';
+export 'src/field_path.dart';
+export 'src/geo_point.dart';
+export 'src/snapshot_metadata.dart';
+export 'src/source.dart';
+export 'src/timestamp.dart';
+
+// Platform interface parts
+export 'src/platform_interface/collection_reference.dart';
+export 'src/platform_interface/document_change.dart';
+export 'src/platform_interface/document_reference.dart';
+export 'src/platform_interface/field_value.dart';
+export 'src/platform_interface/field_value_factory.dart';
+export 'src/platform_interface/query.dart';
+export 'src/platform_interface/query_snapshot.dart';
+export 'src/platform_interface/transaction.dart';
+export 'src/platform_interface/write_batch.dart';
 
 /// Defines an interface to work with [FirestorePlatform] on web and mobile
 abstract class FirestorePlatform extends PlatformInterface {

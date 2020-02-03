@@ -1,8 +1,11 @@
 // Copyright 2018, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'dart:async';
 
-part of cloud_firestore_platform_interface;
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 /// A [WriteBatch] is a series of write operations to be performed as one unit.
 ///

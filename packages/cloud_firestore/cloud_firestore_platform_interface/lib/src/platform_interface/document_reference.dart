@@ -1,4 +1,9 @@
-part of cloud_firestore_platform_interface;
+import 'dart:async';
+import 'dart:ui';
+
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 /// A [DocumentReferencePlatform] refers to a document location in a Firestore database
 /// and can be used to write, read, or listen to the location.

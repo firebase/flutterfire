@@ -1,4 +1,7 @@
-part of cloud_firestore_platform_interface;
+import 'dart:typed_data';
+import 'dart:ui';
+
+import 'package:collection/collection.dart';
 
 /// Represents binary data stored in [Uint8List].
 class Blob {

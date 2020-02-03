@@ -2,7 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore_platform_interface;
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart' show required;
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 /// Represents a query over the data at a particular location.
 abstract class QueryPlatform extends PlatformInterface {
