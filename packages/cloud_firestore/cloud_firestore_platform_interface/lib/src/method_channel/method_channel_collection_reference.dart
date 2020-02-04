@@ -7,6 +7,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 
 import 'method_channel_query.dart';
 import 'method_channel_document_reference.dart';
+import 'utils/auto_id_generator.dart';
 
 /// A CollectionReference object can be used for adding documents, getting
 /// document references, and querying for documents (using the methods

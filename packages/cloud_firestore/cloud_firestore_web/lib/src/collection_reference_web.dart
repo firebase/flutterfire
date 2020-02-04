@@ -46,8 +46,9 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
   DocumentReferencePlatform document([String path]) {
     List<String> childPath;
     if (path == null) {
-      final String key = AutoIdGenerator.autoId();
-      childPath = List<String>.from(pathComponents)..add(key);
+      web.DocumentReference doc =
+          webFirestore.collection(pathComponents.join('/')).doc();
+      childPath = doc.path.split('/');
     } else {
       childPath = List<String>.from(pathComponents)..addAll(path.split(('/')));
     }

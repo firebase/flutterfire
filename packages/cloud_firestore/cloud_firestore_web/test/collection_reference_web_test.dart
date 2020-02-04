@@ -15,6 +15,8 @@ import 'test_common.dart';
 void main() {
   group("$CollectionReferenceWeb()", () {
     final mockDocumentReference = MockWebDocumentReference();
+    final mockCollectionReference = MockWebCollectionReference();
+    final anotherMockDocumentReference = MockWebDocumentReference();
     CollectionReferenceWeb collectionReference;
     setUp(() {
       final mockFirestoreWeb = mockFirestore();
@@ -22,6 +24,16 @@ void main() {
           js.context['firebase']['firestore'](""), [kCollectionId]);
       collectionReference.queryDelegate = MockQueryWeb();
       when(mockFirestoreWeb.doc(any)).thenReturn(mockDocumentReference);
+
+      // Used for document creation...
+      when(mockFirestoreWeb.collection(any))
+          .thenReturn(mockCollectionReference);
+      when(mockCollectionReference.doc(any)).thenReturn(mockDocumentReference);
+      when(mockCollectionReference.doc(null))
+          .thenReturn(anotherMockDocumentReference);
+
+      when(anotherMockDocumentReference.path).thenReturn("test/asdf");
+
       when(collectionReference.queryDelegate.resetQueryDelegate())
           .thenReturn(collectionReference.queryDelegate);
     });

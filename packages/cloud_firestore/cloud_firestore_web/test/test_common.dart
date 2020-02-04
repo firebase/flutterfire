@@ -31,6 +31,9 @@ class MockFirestore extends Mock implements FirestoreWeb {}
 
 class MockWebDocumentReference extends Mock implements web.DocumentReference {}
 
+class MockWebCollectionReference extends Mock
+    implements web.CollectionReference {}
+
 class MockQueryWeb extends Mock implements QueryWeb {}
 
 class MockDocumentSnapshot extends Mock implements DocumentSnapshotPlatform {}

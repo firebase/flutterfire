@@ -17,8 +17,6 @@ import 'src/platform_interface/query.dart';
 import 'src/platform_interface/transaction.dart';
 import 'src/platform_interface/write_batch.dart';
 
-export 'src/utils/auto_id_generator.dart';
-
 // Shared types
 export 'src/blob.dart';
 export 'src/document_snapshot.dart';
