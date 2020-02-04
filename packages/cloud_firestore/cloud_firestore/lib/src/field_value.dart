@@ -6,10 +6,10 @@ part of cloud_firestore;
 
 /// Sentinel values that can be used when writing document fields with set() or
 /// update().
-class FieldValue implements platform.FieldValuePlatform {
+class FieldValue extends platform.FieldValuePlatform {
   platform.FieldValuePlatform _delegate;
 
-  FieldValue._(this._delegate) {
+  FieldValue._(this._delegate) : super(_delegate.type, _delegate.value) {
     platform.FieldValuePlatform.verifyExtends(_delegate);
   }
 
