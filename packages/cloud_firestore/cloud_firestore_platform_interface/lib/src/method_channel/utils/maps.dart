@@ -10,14 +10,14 @@ Map<String, dynamic> asStringKeyedMap(Map<dynamic, dynamic> map) =>
 
 /// Replaces items with type [FieldValueInterface] with implementation type
 /// such as [FieldValuePlatform]
-Map<String, dynamic> unwrapFieldValueInterfaceToPlatformType(Map<String, dynamic> data) {
+Map<String, dynamic> unwrapFieldValueInterfaceToPlatformType(
+    Map<String, dynamic> data) {
   if (data == null) {
     return null;
   }
   Map<String, dynamic> output = Map.from(data);
   output.updateAll((key, value) {
-    if (value is FieldValueInterface &&
-        value.instance is FieldValuePlatform) {
+    if (value is FieldValueInterface && value.instance is FieldValuePlatform) {
       return value.instance;
     } else {
       return value;

@@ -22,7 +22,6 @@ abstract class FieldValueInterface {
 /// Platform Interface of a FieldValue; implementation for [FieldValueInterface]
 class FieldValuePlatform extends PlatformInterface
     implements FieldValueInterface {
-
   static final Object _token = Object();
 
   /// Throws an [AssertionError] if [instance] does not extend
