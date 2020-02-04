@@ -7,14 +7,19 @@ library cloud_firestore;
 import 'dart:async';
 import 'dart:ui' show hashList;
 
-import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     as platform;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:meta/meta.dart';
 
 export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
-    show FieldPath, Blob, GeoPoint, Timestamp, Source, DocumentChangeType;
+    show
+        FieldPath,
+        FieldValuePlatform,
+        Blob,
+        GeoPoint,
+        Timestamp,
+        Source,
+        DocumentChangeType;
 
 part 'src/collection_reference.dart';
 part 'src/document_change.dart';

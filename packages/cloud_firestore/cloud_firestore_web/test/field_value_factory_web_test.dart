@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 @TestOn("chrome")
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase/firestore.dart' as web show FieldValue;
 import 'package:cloud_firestore_web/src/field_value_factory_web.dart';
 import 'package:cloud_firestore_web/src/field_value_web.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,37 +13,40 @@ void main() {
     final factory = FieldValueFactoryWeb();
 
     test("arrayRemove", () {
-      final actual = factory.arrayRemove([]);
-      expect(actual, isInstanceOf<FieldValueWeb>());
-      expect(actual.type, equals(FieldValueType.arrayRemove));
+      final FieldValueWeb actual = factory.arrayRemove([]);
+      expect(actual.data, isInstanceOf<web.FieldValue>());
     });
 
     test("arrayUnion", () {
-      final actual = factory.arrayUnion([]);
-      expect(actual, isInstanceOf<FieldValueWeb>());
-      expect(actual.type, equals(FieldValueType.arrayUnion));
+      final FieldValueWeb actual = factory.arrayUnion([]);
+      expect(actual.data, isInstanceOf<web.FieldValue>());
     });
 
     test("delete", () {
-      final actual = factory.delete();
-      expect(actual, isInstanceOf<FieldValueWeb>());
-      expect(actual.type, equals(FieldValueType.delete));
+      final FieldValueWeb actual = factory.delete();
+      expect(actual.data, isInstanceOf<web.FieldValue>());
     });
 
     test("increment", () {
-      final actualInt = factory.increment(1);
-      expect(actualInt, isInstanceOf<FieldValueWeb>());
-      expect(actualInt.type, equals(FieldValueType.incrementInteger));
+      final FieldValueWeb actualInt = factory.increment(1);
+      expect(actualInt.data, isInstanceOf<web.FieldValue>());
 
-      final actualDouble = factory.increment(1.25);
-      expect(actualDouble, isInstanceOf<FieldValueWeb>());
-      expect(actualDouble.type, equals(FieldValueType.incrementDouble));
+      final FieldValueWeb actualDouble = factory.increment(1.25);
+      expect(actualDouble.data, isInstanceOf<web.FieldValue>());
+    });
+
+    test(
+        "increment throws when attempting to increment something that is not a number",
+        () {
+      expect(() {
+        dynamic malformed = "nope";
+        factory.increment(malformed);
+      }, throwsA(isA<TypeError>()));
     });
 
     test("serverTimestamp", () {
-      final actual = factory.serverTimestamp();
-      expect(actual, isInstanceOf<FieldValueWeb>());
-      expect(actual.type, equals(FieldValueType.serverTimestamp));
+      final FieldValueWeb actual = factory.serverTimestamp();
+      expect(actual.data, isInstanceOf<web.FieldValue>());
     });
   });
 }

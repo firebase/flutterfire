@@ -21,13 +21,16 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         super(firestore, pathComponents);
 
   @override
-  Future<void> setData(Map<String, dynamic> data, {bool merge = false}) {
+  Future<void> setData(
+    Map<String, dynamic> data, {
+    bool merge = false,
+  }) {
     return MethodChannelFirestore.channel.invokeMethod<void>(
       'DocumentReference#setData',
       <String, dynamic>{
         'app': firestore.app.name,
         'path': path,
-        'data': unwrapFieldValueInterfaceToPlatformType(data),
+        'data': data,
         'options': <String, bool>{'merge': merge},
       },
     );
@@ -40,14 +43,15 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
       <String, dynamic>{
         'app': firestore.app.name,
         'path': path,
-        'data': unwrapFieldValueInterfaceToPlatformType(data),
+        'data': data,
       },
     );
   }
 
   @override
-  Future<DocumentSnapshotPlatform> get(
-      {Source source = Source.serverAndCache}) async {
+  Future<DocumentSnapshotPlatform> get({
+    Source source = Source.serverAndCache,
+  }) async {
     final Map<String, dynamic> data =
         await MethodChannelFirestore.channel.invokeMapMethod<String, dynamic>(
       'DocumentReference#get',

@@ -7,18 +7,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_transaction.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
 
 import 'test_common.dart';
 
 class MockDocumentReference extends Mock implements DocumentReferencePlatform {}
 
-class MockFiledValue extends Mock implements FieldValuePlatform {}
-
 const _kTransactionId = 1022;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  final mockFieldValue = MockFiledValue();
+  final MethodChannelFieldValue mockFieldValue =
+      MethodChannelFieldValueFactory().increment(2.0);
 
   group("$MethodChannelTransaction()", () {
     TransactionPlatform transaction;
@@ -27,9 +28,6 @@ void main() {
     setUp(() {
       transaction = MethodChannelTransaction(
           _kTransactionId, FirestorePlatform.instance.app.name);
-      reset(mockFieldValue);
-      when(mockFieldValue.type).thenReturn(FieldValueType.incrementDouble);
-      when(mockFieldValue.value).thenReturn(2.0);
     });
 
     test("get", () async {
@@ -71,7 +69,6 @@ void main() {
         }
       });
       await transaction.update(mockDocumentReference, data);
-      verify(mockFieldValue.instance);
       expect(isMethodCalled, isTrue,
           reason: "Transaction#update was not called");
     });
@@ -90,7 +87,6 @@ void main() {
         }
       });
       await transaction.set(mockDocumentReference, data);
-      verify(mockFieldValue.instance);
       expect(isMethodCalled, isTrue, reason: "Transaction#set was not called");
     });
   });

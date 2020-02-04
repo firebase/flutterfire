@@ -7,23 +7,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_document_reference.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
 
 import 'test_common.dart';
-
-class MockFiledValue extends Mock implements FieldValuePlatform {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group("$MethodChannelDocumentReference()", () {
     MethodChannelDocumentReference _documentReference;
-    final mockFieldValue = MockFiledValue();
+    MethodChannelFieldValue mockFieldValue =
+        MethodChannelFieldValueFactory().increment(2.0);
     setUp(() {
       _documentReference = MethodChannelDocumentReference(
           FirestorePlatform.instance, [kCollectionId, kDocumentId]);
       reset(mockFieldValue);
-      when(mockFieldValue.type).thenReturn(FieldValueType.incrementDouble);
-      when(mockFieldValue.value).thenReturn(2.0);
     });
 
     test("setData", () async {
@@ -31,7 +30,6 @@ void main() {
       _assertSetDataMethodCalled(_documentReference, true, null);
       _assertSetDataMethodCalled(_documentReference, false, null);
       _assertSetDataMethodCalled(_documentReference, false, mockFieldValue);
-      verify(mockFieldValue.instance);
     });
 
     test("updateData", () async {
@@ -47,7 +45,6 @@ void main() {
         }
       });
       await _documentReference.updateData(data);
-      verify(mockFieldValue.instance);
       expect(isMethodCalled, isTrue,
           reason: "DocumentReference.updateData was not called");
     });

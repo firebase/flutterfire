@@ -9,17 +9,8 @@ import 'package:firebase/firestore.dart' as web;
 /// firestore web plugin
 class FieldValueWeb extends FieldValuePlatform {
   /// The js-interop delegate for this [FieldValuePlatform]
-  web.FieldValue delegate;
+  web.FieldValue data;
 
   /// Constructor.
-  FieldValueWeb(this.delegate, this.type, this.value) : super(type, value);
-
-  @override
-  final FieldValueType type;
-
-  @override
-  final dynamic value;
-
-  @override
-  FieldValuePlatform get instance => this;
+  FieldValueWeb(this.data) : super();
 }

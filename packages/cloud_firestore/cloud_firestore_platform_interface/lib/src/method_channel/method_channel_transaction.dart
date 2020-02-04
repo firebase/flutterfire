@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 import 'method_channel_firestore.dart';
-import 'utils/maps.dart';
 
 /// An implementation of [TransactionPlatform] which uses [MethodChannel] to
 /// communication with native plugin
@@ -67,7 +66,7 @@ class MethodChannelTransaction extends TransactionPlatform {
       'app': firestore.app.name,
       'transactionId': _transactionId,
       'path': documentReference.path,
-      'data': unwrapFieldValueInterfaceToPlatformType(data),
+      'data': data,
     });
   }
 
@@ -81,7 +80,7 @@ class MethodChannelTransaction extends TransactionPlatform {
       'app': firestore.app.name,
       'transactionId': _transactionId,
       'path': documentReference.path,
-      'data': unwrapFieldValueInterfaceToPlatformType(data),
+      'data': data,
     });
   }
 }

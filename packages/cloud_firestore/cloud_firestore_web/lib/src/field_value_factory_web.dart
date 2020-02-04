@@ -12,38 +12,21 @@ import 'package:cloud_firestore_web/src/field_value_web.dart';
 /// instance that is [jsify] friendly
 class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
   @override
-  FieldValuePlatform arrayRemove(List elements) {
-    final delegate = web.FieldValue.arrayRemove(elements);
-    return FieldValueWeb(delegate, FieldValueType.arrayRemove, elements);
-  }
+  FieldValuePlatform arrayRemove(List elements) =>
+      FieldValueWeb(web.FieldValue.arrayRemove(elements));
 
   @override
-  FieldValuePlatform arrayUnion(List elements) {
-    final delegate = web.FieldValue.arrayUnion(elements);
-    return FieldValueWeb(delegate, FieldValueType.arrayUnion, elements);
-  }
+  FieldValuePlatform arrayUnion(List elements) =>
+      FieldValueWeb(web.FieldValue.arrayUnion(elements));
 
   @override
-  FieldValuePlatform delete() {
-    final delegate = web.FieldValue.delete();
-    return FieldValueWeb(delegate, FieldValueType.delete, null);
-  }
+  FieldValuePlatform delete() => FieldValueWeb(web.FieldValue.delete());
 
   @override
-  FieldValuePlatform increment(num value) {
-    assert(value is double || value is int, "value can only be double or int");
-    final delegate = web.FieldValue.increment(value);
-    return FieldValueWeb(
-        delegate,
-        value is int
-            ? FieldValueType.incrementInteger
-            : FieldValueType.incrementDouble,
-        value);
-  }
+  FieldValuePlatform increment(num value) =>
+      FieldValueWeb(web.FieldValue.increment(value));
 
   @override
-  FieldValuePlatform serverTimestamp() {
-    final delegate = web.FieldValue.serverTimestamp();
-    return FieldValueWeb(delegate, FieldValueType.serverTimestamp, null);
-  }
+  FieldValuePlatform serverTimestamp() =>
+      FieldValueWeb(web.FieldValue.serverTimestamp());
 }

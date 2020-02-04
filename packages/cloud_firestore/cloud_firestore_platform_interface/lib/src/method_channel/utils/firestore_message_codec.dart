@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'package:cloud_firestore_platform_interface/src/internal/field_path_type.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
 
 /// The codec utilized to encode data back and forth between
 /// the Dart application and the native platform.
@@ -68,7 +69,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_kBlob);
       writeSize(buffer, value.bytes.length);
       buffer.putUint8List(value.bytes);
-    } else if (value is FieldValuePlatform) {
+    } else if (value is MethodChannelFieldValue) {
       final int code = _kFieldValueCodes[value.type];
       assert(code != null);
       buffer.putUint8(code);

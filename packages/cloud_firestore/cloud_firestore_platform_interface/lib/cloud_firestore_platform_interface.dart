@@ -30,7 +30,6 @@ export 'src/timestamp.dart';
 export 'src/platform_interface/collection_reference.dart';
 export 'src/platform_interface/document_change.dart';
 export 'src/platform_interface/document_reference.dart';
-export 'src/platform_interface/field_value.dart';
 export 'src/platform_interface/field_value_factory.dart';
 export 'src/platform_interface/query.dart';
 export 'src/platform_interface/query_snapshot.dart';

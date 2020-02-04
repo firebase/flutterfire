@@ -44,7 +44,6 @@ void main() {
       //FieldValuePlatform
       final mockFieldValue = MockFieldValue();
       CodecUtility.encodeMapData({'test': mockFieldValue});
-      verify(mockFieldValue.instance);
 
       final timeStamp = Timestamp.now();
       final result = CodecUtility.encodeMapData({'test': timeStamp});
@@ -87,7 +86,6 @@ void main() {
       //FieldValuePlatform
       final mockFieldValue = MockFieldValue();
       CodecUtility.encodeArrayData([mockFieldValue]);
-      verify(mockFieldValue.instance);
 
       final timeStamp = Timestamp.now();
       final result = CodecUtility.encodeArrayData([timeStamp]);

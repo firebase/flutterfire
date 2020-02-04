@@ -11,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_transaction.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 
 void main() {
@@ -1403,8 +1404,8 @@ bool _deepEquals(dynamic valueA, dynamic valueB) {
   if (valueA is List) return valueB is List && _deepEqualsList(valueA, valueB);
   if (valueA is Map) return valueB is Map && _deepEqualsMap(valueA, valueB);
   if (valueA is double && valueA.isNaN) return valueB is double && valueB.isNaN;
-  if (valueA is FieldValuePlatform) {
-    return valueB is FieldValuePlatform &&
+  if (valueA is MethodChannelFieldValue) {
+    return valueB is MethodChannelFieldValue &&
         _deepEqualsFieldValue(valueA, valueB);
   }
   if (valueA is FieldPath) {
@@ -1443,7 +1444,9 @@ bool _deepEqualsList(List<dynamic> valueA, List<dynamic> valueB) {
 }
 
 bool _deepEqualsMap(
-    Map<dynamic, dynamic> valueA, Map<dynamic, dynamic> valueB) {
+  Map<dynamic, dynamic> valueA,
+  Map<dynamic, dynamic> valueB,
+) {
   if (valueA.length != valueB.length) return false;
   for (final dynamic key in valueA.keys) {
     if (!valueB.containsKey(key) || !_deepEquals(valueA[key], valueB[key])) {
@@ -1454,7 +1457,9 @@ bool _deepEqualsMap(
 }
 
 bool _deepEqualsFieldValue(
-    FieldValuePlatform valueA, FieldValuePlatform valueB) {
+  MethodChannelFieldValue valueA,
+  MethodChannelFieldValue valueB,
+) {
   if (valueA.type != valueB.type) return false;
   if (valueA.value == null) return valueB.value == null;
   if (valueA.value is List) return _deepEqualsList(valueA.value, valueB.value);

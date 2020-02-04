@@ -6,20 +6,22 @@ import 'package:flutter/services.dart';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
+import 'method_channel_field_value.dart';
+
 /// An implementation of [FieldValueFactoryPlatform] that is suitable to be used
 /// on mobile where communication relies on [MethodChannel]
 class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
   @override
   FieldValuePlatform arrayRemove(List elements) =>
-      FieldValuePlatform(FieldValueType.arrayRemove, elements);
+      MethodChannelFieldValue(FieldValueType.arrayRemove, elements);
 
   @override
   FieldValuePlatform arrayUnion(List elements) =>
-      FieldValuePlatform(FieldValueType.arrayUnion, elements);
+      MethodChannelFieldValue(FieldValueType.arrayUnion, elements);
 
   @override
   FieldValuePlatform delete() =>
-      FieldValuePlatform(FieldValueType.delete, null);
+      MethodChannelFieldValue(FieldValueType.delete, null);
 
   @override
   FieldValuePlatform increment(num value) {
@@ -27,14 +29,14 @@ class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
     // attempt to extend or implement `num`.
     assert(value is int || value is double);
     if (value is double) {
-      return FieldValuePlatform(FieldValueType.incrementDouble, value);
+      return MethodChannelFieldValue(FieldValueType.incrementDouble, value);
     } else if (value is int) {
-      return FieldValuePlatform(FieldValueType.incrementInteger, value);
+      return MethodChannelFieldValue(FieldValueType.incrementInteger, value);
     }
     return null;
   }
 
   @override
   FieldValuePlatform serverTimestamp() =>
-      FieldValuePlatform(FieldValueType.serverTimestamp, null);
+      MethodChannelFieldValue(FieldValueType.serverTimestamp, null);
 }

@@ -5,29 +5,6 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-
-/// Sentinel values that can be used when writing document fields with set() or
-/// update().
-enum FieldValueType {
-  /// adds elements to an array but only elements not already present
-  arrayUnion,
-
-  /// removes all instances of each given element
-  arrayRemove,
-
-  /// deletes field
-  delete,
-
-  /// sets field value to server timestamp
-  serverTimestamp,
-
-  ///  increment or decrement a numeric field value using a double value
-  incrementDouble,
-
-  ///  increment or decrement a numeric field value using an integer value
-  incrementInteger,
-}
 
 /// An interface for a factory that is used to build [FieldValuePlatform] according to
 /// Platform (web or mobile)
@@ -96,4 +73,22 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   FieldValuePlatform increment(num value) {
     throw UnimplementedError("increment() is not implemented");
   }
+}
+
+/// This is a cross-platform representation of a FieldValue.
+///
+/// Each concrete platform implementation will extend this class,
+/// and add any relevant methods or values to it, so it works as
+/// expected for the target platform.
+///
+/// This is exposed to plugin users, so they can correctly type the
+/// results of calling FieldValueFactory instances, but you should
+/// never "peek" inside subclasses of this.
+///
+/// Just treat it as a "black box".
+abstract class FieldValuePlatform extends PlatformInterface {
+  static final Object _token = Object();
+
+  /// Constructor
+  FieldValuePlatform() : super(token: _token);
 }
