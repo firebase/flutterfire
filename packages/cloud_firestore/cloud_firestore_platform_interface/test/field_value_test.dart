@@ -6,16 +6,18 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
+import 'package:cloud_firestore_platform_interface/src/method_channel/utils/maps.dart';
+
 class MockFieldValue extends Mock implements FieldValuePlatform {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  group("$FieldValuePlatform()", () {
-    test("serverDelegates", () {
-      expect(FieldValuePlatform.serverDelegates(null), isNull);
+  group("$unwrapFieldValueInterfaceToPlatformType()", () {
+    test("unwrapFieldValueInterfaces", () {
+      expect(unwrapFieldValueInterfaceToPlatformType(null), isNull);
 
       final mockFieldValue = MockFieldValue();
-      FieldValuePlatform.serverDelegates({"item": mockFieldValue});
+      unwrapFieldValueInterfaceToPlatformType({"item": mockFieldValue});
       verify(mockFieldValue.instance);
     });
   });

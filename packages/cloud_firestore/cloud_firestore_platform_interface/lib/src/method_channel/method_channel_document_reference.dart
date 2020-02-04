@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
 import 'utils/maps.dart';
+import 'utils/source.dart';
 
 /// A [MethodChannelDocumentReference] is an implementation of
 /// [DocumentReferencePlatform] that uses [MethodChannel] to communicate with
@@ -26,7 +27,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
       <String, dynamic>{
         'app': firestore.app.name,
         'path': path,
-        'data': FieldValuePlatform.serverDelegates(data),
+        'data': unwrapFieldValueInterfaceToPlatformType(data),
         'options': <String, bool>{'merge': merge},
       },
     );
@@ -39,7 +40,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
       <String, dynamic>{
         'app': firestore.app.name,
         'path': path,
-        'data': FieldValuePlatform.serverDelegates(data),
+        'data': unwrapFieldValueInterfaceToPlatformType(data),
       },
     );
   }

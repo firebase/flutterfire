@@ -11,6 +11,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 
 import 'method_channel_firestore.dart';
 import 'method_channel_query_snapshot.dart';
+import 'utils/source.dart';
 
 /// Represents a query over the data at a particular location.
 class MethodChannelQuery extends QueryPlatform {

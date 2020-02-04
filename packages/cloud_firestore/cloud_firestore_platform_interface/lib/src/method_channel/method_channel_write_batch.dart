@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 import 'method_channel_firestore.dart';
+import 'utils/maps.dart';
 
 /// A [MethodChannelWriteBatch] is a series of write operations to be performed as one unit.
 ///
@@ -70,7 +71,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
             'app': _firestore.app.name,
             'handle': handle,
             'path': document.path,
-            'data': FieldValuePlatform.serverDelegates(data),
+            'data': unwrapFieldValueInterfaceToPlatformType(data),
             'options': <String, bool>{'merge': merge},
           },
         ),
@@ -93,7 +94,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
             'app': _firestore.app.name,
             'handle': handle,
             'path': document.path,
-            'data': FieldValuePlatform.serverDelegates(data)
+            'data': unwrapFieldValueInterfaceToPlatformType(data)
           },
         ),
       );

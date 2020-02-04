@@ -22,23 +22,6 @@ abstract class FieldValueInterface {
 /// Platform Interface of a FieldValue; implementation for [FieldValueInterface]
 class FieldValuePlatform extends PlatformInterface
     implements FieldValueInterface {
-  /// Replaces items with type [FieldValueInterface] with implementation type
-  /// such as [FieldValuePlatform]
-  static Map<String, dynamic> serverDelegates(Map<String, dynamic> data) {
-    if (data == null) {
-      return null;
-    }
-    Map<String, dynamic> output = Map.from(data);
-    output.updateAll((key, value) {
-      if (value is FieldValueInterface &&
-          value.instance is FieldValuePlatform) {
-        return value.instance;
-      } else {
-        return value;
-      }
-    });
-    return output;
-  }
 
   static final Object _token = Object();
 

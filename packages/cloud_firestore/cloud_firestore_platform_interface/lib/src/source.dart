@@ -21,15 +21,3 @@ enum Source {
   /// [QuerySnapshotPlatform] with no documents.
   cache,
 }
-
-/// Converts [Source] to [String]
-String getSourceString(Source source) {
-  assert(source != null);
-  if (source == Source.server) {
-    return 'server';
-  }
-  if (source == Source.cache) {
-    return 'cache';
-  }
-  return 'default';
-}
