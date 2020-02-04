@@ -80,11 +80,6 @@ abstract class FirestorePlatform extends PlatformInterface {
     throw UnimplementedError("withApp() not implemented");
   }
 
-  /// Firebase app name
-  String appName() {
-    throw UnimplementedError("appName() not implemented");
-  }
-
   /// Gets a [CollectionReferencePlatform] for the specified Firestore path.
   CollectionReferencePlatform collection(String path) {
     throw UnimplementedError('collection() is not implemented');
@@ -157,7 +152,7 @@ abstract class FirestorePlatform extends PlatformInterface {
   }
 
   @override
-  int get hashCode => appName().hashCode;
+  int get hashCode => app.name.hashCode;
 
   @override
   bool operator ==(dynamic o) => o is FirestorePlatform && o.app == app;
