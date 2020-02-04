@@ -63,10 +63,10 @@ class DocumentReference {
   /// Reads the document referenced by this [DocumentReference].
   ///
   /// If no document exists, the read will return null.
-  Future<DocumentSnapshot> get({platform.Source source = platform.Source.serverAndCache,}) async {
-    return DocumentSnapshot._(
-        await _delegate.get(source: source),
-        firestore);
+  Future<DocumentSnapshot> get({
+    platform.Source source = platform.Source.serverAndCache,
+  }) async {
+    return DocumentSnapshot._(await _delegate.get(source: source), firestore);
   }
 
   /// Deletes the document referred to by this [DocumentReference].

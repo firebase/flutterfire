@@ -30,11 +30,11 @@ class Query {
           .map((item) => QuerySnapshot._(item, firestore));
 
   /// Fetch the documents for this query
-  Future<QuerySnapshot> getDocuments(
-      {platform.Source source = platform.Source.serverAndCache,}) async {
+  Future<QuerySnapshot> getDocuments({
+    platform.Source source = platform.Source.serverAndCache,
+  }) async {
     assert(source != null);
-    final docs = await _delegate.getDocuments(
-        source: source);
+    final docs = await _delegate.getDocuments(source: source);
     return QuerySnapshot._(docs, firestore);
   }
 

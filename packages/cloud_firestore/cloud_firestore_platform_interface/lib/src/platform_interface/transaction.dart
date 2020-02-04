@@ -4,8 +4,6 @@
 
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
-import 'package:meta/meta.dart' show visibleForTesting;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -16,9 +14,7 @@ typedef Future<dynamic> TransactionHandler(TransactionPlatform transaction);
 
 /// a [TransactionPlatform] is a set of read and write operations on one or more documents.
 abstract class TransactionPlatform extends PlatformInterface {
-  // disabling lint as it's only visible for testing
-  // ignore: public_member_api_docs
-  @visibleForTesting
+  /// Constructor.
   TransactionPlatform(this.firestore) : super(token: _token);
 
   static final Object _token = Object();
