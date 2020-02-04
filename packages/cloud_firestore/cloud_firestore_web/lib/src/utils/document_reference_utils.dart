@@ -7,13 +7,13 @@ import 'package:firebase/firestore.dart' as web;
 
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
 
-/// Builds [DocumentSnapshot] instance form web snapshot instance
-DocumentSnapshot fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+/// Builds [DocumentSnapshotPlatform] instance form web snapshot instance
+DocumentSnapshotPlatform fromWebDocumentSnapshotToPlatformDocumentSnapshot(
     web.DocumentSnapshot webSnapshot, FirestorePlatform firestore) {
-  return DocumentSnapshot(
+  return DocumentSnapshotPlatform(
       webSnapshot.ref.path,
       CodecUtility.decodeMapData(webSnapshot.data()),
-      SnapshotMetadata(
+      SnapshotMetadataPlatform(
         webSnapshot.metadata.hasPendingWrites,
         webSnapshot.metadata.fromCache,
       ),

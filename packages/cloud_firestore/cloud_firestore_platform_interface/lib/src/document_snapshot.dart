@@ -8,13 +8,14 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 ///
 /// The data can be extracted with the [data] property or by using subscript
 /// syntax to access a specific field.
-class DocumentSnapshot {
-  /// Constructs a [DocumentSnapshot] using the provided [FirestorePlatform].
-  DocumentSnapshot(this._path, this.data, this.metadata, this.firestore);
+class DocumentSnapshotPlatform {
+  /// Constructs a [DocumentSnapshotPlatform] using the provided [FirestorePlatform].
+  DocumentSnapshotPlatform(
+      this._path, this.data, this.metadata, this.firestore);
 
   final String _path;
 
-  /// The [FirestorePlatform] used to produce this [DocumentSnapshot].
+  /// The [FirestorePlatform] used to produce this [DocumentSnapshotPlatform].
   final FirestorePlatform firestore;
 
   /// The reference that produced this snapshot.
@@ -25,7 +26,7 @@ class DocumentSnapshot {
 
   /// Metadata about this snapshot concerning its source and if it has local
   /// modifications.
-  final SnapshotMetadata metadata;
+  final SnapshotMetadataPlatform metadata;
 
   /// Reads individual values from the snapshot.
   dynamic operator [](String key) => data[key];

@@ -31,10 +31,10 @@ class Query {
 
   /// Fetch the documents for this query
   Future<QuerySnapshot> getDocuments(
-      {Source source = Source.serverAndCache}) async {
+      {platform.Source source = platform.Source.serverAndCache,}) async {
     assert(source != null);
     final docs = await _delegate.getDocuments(
-        source: _PlatformUtils.toPlatformSource(source));
+        source: source);
     return QuerySnapshot._(docs, firestore);
   }
 

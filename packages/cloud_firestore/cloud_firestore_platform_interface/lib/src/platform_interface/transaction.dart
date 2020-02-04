@@ -41,8 +41,9 @@ abstract class TransactionPlatform extends PlatformInterface {
   Future<void> finish() => Future.wait<void>(_pendingResults);
 
   /// Reads the document referenced by the provided DocumentReference.
-  Future<DocumentSnapshot> get(DocumentReferencePlatform documentReference) {
-    final Future<DocumentSnapshot> result = doGet(documentReference);
+  Future<DocumentSnapshotPlatform> get(
+      DocumentReferencePlatform documentReference) {
+    final Future<DocumentSnapshotPlatform> result = doGet(documentReference);
     _pendingResults.add(result);
     return result;
   }
@@ -51,7 +52,7 @@ abstract class TransactionPlatform extends PlatformInterface {
   /// This is here so it can be overridden by implementations that do NOT
   /// handle returned futures automatically, like the [MethodChannelTransaction].
   /// Does not affect the _pendingResults.
-  Future<DocumentSnapshot> doGet(
+  Future<DocumentSnapshotPlatform> doGet(
     DocumentReferencePlatform documentReference,
   ) async {
     throw UnimplementedError("get() not implemented");

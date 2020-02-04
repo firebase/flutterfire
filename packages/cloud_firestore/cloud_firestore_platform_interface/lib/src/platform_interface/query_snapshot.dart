@@ -28,12 +28,12 @@ class QuerySnapshotPlatform extends PlatformInterface {
   }
 
   /// Gets a list of all the documents included in this snapshot
-  final List<DocumentSnapshot> documents;
+  final List<DocumentSnapshotPlatform> documents;
 
   /// An array of the documents that changed since the last snapshot. If this
   /// is the first snapshot, all documents will be in the list as Added changes.
   final List<DocumentChangePlatform> documentChanges;
 
   /// Metadata for the document
-  final SnapshotMetadata metadata;
+  final SnapshotMetadataPlatform metadata;
 }

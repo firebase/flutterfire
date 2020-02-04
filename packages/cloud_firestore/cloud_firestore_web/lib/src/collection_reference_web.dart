@@ -75,7 +75,7 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
   }
 
   @override
-  QueryPlatform endAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endAtDocument(DocumentSnapshotPlatform documentSnapshot) {
     _resetQueryDelegate();
     return queryDelegate.endAtDocument(documentSnapshot);
   }
@@ -87,7 +87,7 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
   }
 
   @override
-  QueryPlatform endBeforeDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endBeforeDocument(DocumentSnapshotPlatform documentSnapshot) {
     _resetQueryDelegate();
     return queryDelegate.endBeforeDocument(documentSnapshot);
   }
@@ -144,7 +144,7 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
   }
 
   @override
-  QueryPlatform startAfterDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAfterDocument(DocumentSnapshotPlatform documentSnapshot) {
     _resetQueryDelegate();
     return queryDelegate.startAfterDocument(documentSnapshot);
   }
@@ -156,7 +156,7 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
   }
 
   @override
-  QueryPlatform startAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAtDocument(DocumentSnapshotPlatform documentSnapshot) {
     _resetQueryDelegate();
     return queryDelegate.startAtDocument(documentSnapshot);
   }

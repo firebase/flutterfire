@@ -41,7 +41,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
       delegate.update(data: CodecUtility.encodeMapData(data));
 
   @override
-  Future<DocumentSnapshot> get({
+  Future<DocumentSnapshotPlatform> get({
     Source source = Source.serverAndCache,
   }) async {
     return fromWebDocumentSnapshotToPlatformDocumentSnapshot(
@@ -52,7 +52,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   Future<void> delete() => delegate.delete();
 
   @override
-  Stream<DocumentSnapshot> snapshots({
+  Stream<DocumentSnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
     Stream<web.DocumentSnapshot> querySnapshots = delegate.onSnapshot;

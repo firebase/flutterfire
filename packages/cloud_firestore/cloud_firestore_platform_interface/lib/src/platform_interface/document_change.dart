@@ -62,5 +62,5 @@ class DocumentChangePlatform extends PlatformInterface {
   final int newIndex;
 
   /// The document affected by this change.
-  final DocumentSnapshot document;
+  final DocumentSnapshotPlatform document;
 }

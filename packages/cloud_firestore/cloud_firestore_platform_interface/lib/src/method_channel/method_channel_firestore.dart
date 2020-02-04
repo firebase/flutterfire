@@ -30,10 +30,11 @@ class MethodChannelFirestore extends FirestorePlatform {
             MethodChannelQuerySnapshot(call.arguments, this);
         queryObservers[call.arguments['handle']].add(snapshot);
       } else if (call.method == 'DocumentSnapshot') {
-        final DocumentSnapshot snapshot = DocumentSnapshot(
+        final DocumentSnapshotPlatform snapshot = DocumentSnapshotPlatform(
           call.arguments['path'],
           asStringKeyedMap(call.arguments['data']),
-          SnapshotMetadata(call.arguments['metadata']['hasPendingWrites'],
+          SnapshotMetadataPlatform(
+              call.arguments['metadata']['hasPendingWrites'],
               call.arguments['metadata']['isFromCache']),
           this,
         );
@@ -72,8 +73,8 @@ class MethodChannelFirestore extends FirestorePlatform {
   /// A map containing all the pending Document Observers, keyed by their id.
   /// This is shared amongst all [MethodChannelDocumentReference] objects, and the
   /// `DocumentSnapshot` `MethodCall` handler initialized in the constructor of this class.
-  static final Map<int, StreamController<DocumentSnapshot>> documentObservers =
-      <int, StreamController<DocumentSnapshot>>{};
+  static final Map<int, StreamController<DocumentSnapshotPlatform>>
+      documentObservers = <int, StreamController<DocumentSnapshotPlatform>>{};
 
   static final Map<int, TransactionHandler> _transactionHandlers =
       <int, TransactionHandler>{};

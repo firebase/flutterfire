@@ -26,7 +26,7 @@ class TransactionWeb extends TransactionPlatform {
   }
 
   @override
-  Future<DocumentSnapshot> get(
+  Future<DocumentSnapshotPlatform> get(
     DocumentReferencePlatform documentReference,
   ) async {
     assert(documentReference is DocumentReferenceWeb);

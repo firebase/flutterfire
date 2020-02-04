@@ -26,7 +26,7 @@ class MethodChannelTransaction extends TransactionPlatform {
             : FirestorePlatform.instanceFor(app: FirebaseApp(name: appName)));
 
   @override
-  Future<DocumentSnapshot> doGet(
+  Future<DocumentSnapshotPlatform> doGet(
     DocumentReferencePlatform documentReference,
   ) async {
     final Map<String, dynamic> result = await MethodChannelFirestore.channel
@@ -36,10 +36,10 @@ class MethodChannelTransaction extends TransactionPlatform {
       'path': documentReference.path,
     });
     if (result != null) {
-      return DocumentSnapshot(
+      return DocumentSnapshotPlatform(
           documentReference.path,
           result['data']?.cast<String, dynamic>(),
-          SnapshotMetadata(result['metadata']['hasPendingWrites'],
+          SnapshotMetadataPlatform(result['metadata']['hasPendingWrites'],
               result['metadata']['isFromCache']),
           firestore);
     } else {

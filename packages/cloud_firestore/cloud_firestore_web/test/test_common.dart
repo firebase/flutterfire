@@ -33,7 +33,7 @@ class MockWebDocumentReference extends Mock implements web.DocumentReference {}
 
 class MockQueryWeb extends Mock implements QueryWeb {}
 
-class MockDocumentSnapshot extends Mock implements DocumentSnapshot {}
+class MockDocumentSnapshot extends Mock implements DocumentSnapshotPlatform {}
 
 web.Firestore mockFirestore() {
   final mockFirestoreWeb = MockFirestoreWeb();

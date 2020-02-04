@@ -143,7 +143,7 @@ abstract class QueryPlatform extends PlatformInterface {
   ///  * [endAfterDocument] for a query that ends after a document.
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.
-  QueryPlatform startAfterDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAfterDocument(DocumentSnapshotPlatform documentSnapshot) {
     throw UnimplementedError("startAfterDocument() is not implemented");
   }
 
@@ -161,7 +161,7 @@ abstract class QueryPlatform extends PlatformInterface {
   ///  * [startAfterDocument] for a query that starts after a document.
   ///  * [endAtDocument] for a query that ends at a document.
   ///  * [endBeforeDocument] for a query that ends before a document.
-  QueryPlatform startAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAtDocument(DocumentSnapshotPlatform documentSnapshot) {
     throw UnimplementedError("startAtDocument() is not implemented");
   }
 
@@ -203,7 +203,7 @@ abstract class QueryPlatform extends PlatformInterface {
   ///  * [startAfterDocument] for a query that starts after a document.
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endBeforeDocument] for a query that ends before a document.
-  QueryPlatform endAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endAtDocument(DocumentSnapshotPlatform documentSnapshot) {
     throw UnimplementedError("endAtDocument() is not implemented");
   }
 
@@ -233,7 +233,7 @@ abstract class QueryPlatform extends PlatformInterface {
   ///  * [startAfterDocument] for a query that starts after document.
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.
-  QueryPlatform endBeforeDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endBeforeDocument(DocumentSnapshotPlatform documentSnapshot) {
     throw UnimplementedError("endBeforeDocument() is not implemented");
   }
 

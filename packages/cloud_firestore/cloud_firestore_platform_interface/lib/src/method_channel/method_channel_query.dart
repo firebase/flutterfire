@@ -193,7 +193,7 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform startAfterDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAfterDocument(DocumentSnapshotPlatform documentSnapshot) {
     assert(documentSnapshot != null);
     assert(!parameters.containsKey('startAfter'));
     assert(!parameters.containsKey('startAt'));
@@ -215,7 +215,7 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform startAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAtDocument(DocumentSnapshotPlatform documentSnapshot) {
     assert(documentSnapshot != null);
     assert(!parameters.containsKey('startAfter'));
     assert(!parameters.containsKey('startAt'));
@@ -257,7 +257,7 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform endAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endAtDocument(DocumentSnapshotPlatform documentSnapshot) {
     assert(documentSnapshot != null);
     assert(!parameters.containsKey('endBefore'));
     assert(!parameters.containsKey('endAt'));
@@ -290,7 +290,7 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform endBeforeDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endBeforeDocument(DocumentSnapshotPlatform documentSnapshot) {
     assert(documentSnapshot != null);
     assert(!parameters.containsKey('endBefore'));
     assert(!parameters.containsKey('endAt'));

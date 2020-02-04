@@ -46,7 +46,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   }
 
   @override
-  Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
+  Future<DocumentSnapshotPlatform> get(
+      {Source source = Source.serverAndCache}) async {
     final Map<String, dynamic> data =
         await MethodChannelFirestore.channel.invokeMapMethod<String, dynamic>(
       'DocumentReference#get',
@@ -56,10 +57,10 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         'source': getSourceString(source),
       },
     );
-    return DocumentSnapshot(
+    return DocumentSnapshotPlatform(
       data['path'],
       asStringKeyedMap(data['data']),
-      SnapshotMetadata(data['metadata']['hasPendingWrites'],
+      SnapshotMetadataPlatform(data['metadata']['hasPendingWrites'],
           data['metadata']['isFromCache']),
       firestore,
     );
@@ -75,13 +76,15 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
 
   // TODO(jackson): Reduce code duplication with [Query]
   @override
-  Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) {
+  Stream<DocumentSnapshotPlatform> snapshots(
+      {bool includeMetadataChanges = false}) {
     assert(includeMetadataChanges != null);
     Future<int> _handle;
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
-    StreamController<DocumentSnapshot> controller; // ignore: close_sinks
-    controller = StreamController<DocumentSnapshot>.broadcast(
+    StreamController<DocumentSnapshotPlatform>
+        controller; // ignore: close_sinks
+    controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () {
         _handle = MethodChannelFirestore.channel.invokeMethod<int>(
           'DocumentReference#addSnapshotListener',

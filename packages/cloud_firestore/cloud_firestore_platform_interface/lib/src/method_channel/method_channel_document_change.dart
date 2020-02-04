@@ -18,10 +18,10 @@ class MethodChannelDocumentChange extends DocumentChangePlatform {
         }),
             data['oldIndex'],
             data['newIndex'],
-            DocumentSnapshot(
+            DocumentSnapshotPlatform(
               data['path'],
               asStringKeyedMap(data['document']),
-              SnapshotMetadata(data['metadata']['hasPendingWrites'],
+              SnapshotMetadataPlatform(data['metadata']['hasPendingWrites'],
                   data['metadata']['isFromCache']),
               firestore,
             ));

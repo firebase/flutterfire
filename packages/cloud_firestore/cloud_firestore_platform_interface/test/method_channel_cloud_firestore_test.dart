@@ -223,7 +223,7 @@ void main() {
       test('get', () async {
         final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
-        final DocumentSnapshot snapshot =
+        final DocumentSnapshotPlatform snapshot =
             await transaction.get(documentReference);
         expect(snapshot.reference.firestore, firestore);
         expect(log, <Matcher>[
@@ -264,7 +264,8 @@ void main() {
       test('update', () async {
         final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
-        final DocumentSnapshot documentSnapshot = await documentReference.get();
+        final DocumentSnapshotPlatform documentSnapshot =
+            await documentReference.get();
         final Map<String, dynamic> data = documentSnapshot.data;
         data['key2'] = 'val2';
         await transaction.set(documentReference, data);
@@ -286,7 +287,8 @@ void main() {
       test('set', () async {
         final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
-        final DocumentSnapshot documentSnapshot = await documentReference.get();
+        final DocumentSnapshotPlatform documentSnapshot =
+            await documentReference.get();
         final Map<String, dynamic> data = documentSnapshot.data;
         data['key2'] = 'val2';
         await transaction.set(documentReference, data);
@@ -344,7 +346,7 @@ void main() {
         final QuerySnapshotPlatform snapshot = await collectionReference
             .snapshots(includeMetadataChanges: true)
             .first;
-        final DocumentSnapshot document = snapshot.documents[0];
+        final DocumentSnapshotPlatform document = snapshot.documents[0];
         expect(document.documentID, equals('0'));
         expect(document.reference.path, equals('foo/0'));
         expect(document.data, equals(kMockDocumentSnapshotData));
@@ -548,7 +550,7 @@ void main() {
 
     group('DocumentReference', () {
       test('listen', () async {
-        final DocumentSnapshot snapshot = await firestore
+        final DocumentSnapshotPlatform snapshot = await firestore
             .document('path/to/foo')
             .snapshots(includeMetadataChanges: true)
             .first;
@@ -647,7 +649,7 @@ void main() {
         );
       });
       test('get', () async {
-        final DocumentSnapshot snapshot =
+        final DocumentSnapshotPlatform snapshot =
             await collectionReference.document('bar').get(source: Source.cache);
         expect(snapshot.reference.firestore, firestore);
         expect(
@@ -669,7 +671,7 @@ void main() {
         expect(snapshot.data['key1'], equals('val1'));
         expect(snapshot.exists, isTrue);
 
-        final DocumentSnapshot snapshot2 = await collectionReference
+        final DocumentSnapshotPlatform snapshot2 = await collectionReference
             .document('notExists')
             .get(source: Source.serverAndCache);
         expect(snapshot2.data, isNull);
@@ -714,7 +716,7 @@ void main() {
             equals(kMockSnapshotMetadata['hasPendingWrites']));
         expect(snapshot.metadata.isFromCache,
             equals(kMockSnapshotMetadata['isFromCache']));
-        DocumentSnapshot document = snapshot.documents.first;
+        DocumentSnapshotPlatform document = snapshot.documents.first;
         expect(document.documentID, equals('0'));
         expect(document.reference.path, equals('foo/0'));
         expect(document.data, equals(kMockDocumentSnapshotData));
@@ -886,7 +888,7 @@ void main() {
             equals(kMockSnapshotMetadata['hasPendingWrites']));
         expect(snapshot.metadata.isFromCache,
             equals(kMockSnapshotMetadata['isFromCache']));
-        DocumentSnapshot document = snapshot.documents.first;
+        DocumentSnapshotPlatform document = snapshot.documents.first;
         expect(document.documentID, equals('0'));
         expect(document.reference.path, equals('bar/0'));
         expect(document.data, equals(kMockDocumentSnapshotData));
@@ -1099,7 +1101,7 @@ void main() {
         // Cannot order by document id when paginating with documents.
         final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
-        final DocumentSnapshot snapshot = await documentReference.get();
+        final DocumentSnapshotPlatform snapshot = await documentReference.get();
         expect(() {
           firestore
               .collection('foo')
@@ -1110,7 +1112,7 @@ void main() {
       test('document pagination FieldPath assertions', () async {
         final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
-        final DocumentSnapshot snapshot = await documentReference.get();
+        final DocumentSnapshotPlatform snapshot = await documentReference.get();
         final QueryPlatform query =
             firestore.collection('foo').orderBy(FieldPath.documentId);
 

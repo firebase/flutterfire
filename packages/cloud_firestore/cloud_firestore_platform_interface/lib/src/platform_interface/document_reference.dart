@@ -88,7 +88,7 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   /// Reads the document referenced by this [DocumentReferencePlatform].
   ///
   /// If no document exists, the read will return null.
-  Future<DocumentSnapshot> get({
+  Future<DocumentSnapshotPlatform> get({
     Source source = Source.serverAndCache,
   }) async {
     throw UnimplementedError("get() is not implemented");
@@ -106,7 +106,8 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   }
 
   /// Notifies of documents at this location
-  Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) {
+  Stream<DocumentSnapshotPlatform> snapshots(
+      {bool includeMetadataChanges = false}) {
     throw UnimplementedError("snapshots() is not implemented");
   }
 }

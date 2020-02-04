@@ -66,7 +66,7 @@ class QueryWeb extends QueryPlatform {
       );
 
   @override
-  QueryPlatform endAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endAtDocument(DocumentSnapshotPlatform documentSnapshot) {
     assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
@@ -86,7 +86,7 @@ class QueryWeb extends QueryPlatform {
       );
 
   @override
-  QueryPlatform endBeforeDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endBeforeDocument(DocumentSnapshotPlatform documentSnapshot) {
     assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
@@ -149,7 +149,7 @@ class QueryWeb extends QueryPlatform {
       );
 
   @override
-  QueryPlatform startAfterDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAfterDocument(DocumentSnapshotPlatform documentSnapshot) {
     assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
@@ -171,7 +171,7 @@ class QueryWeb extends QueryPlatform {
       );
 
   @override
-  QueryPlatform startAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAtDocument(DocumentSnapshotPlatform documentSnapshot) {
     assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
       this._firestore,
@@ -281,8 +281,9 @@ class QueryWeb extends QueryPlatform {
     }
   }
 
-  SnapshotMetadata _webMetadataToMetada(web.SnapshotMetadata webMetadata) {
-    return SnapshotMetadata(
+  SnapshotMetadataPlatform _webMetadataToMetada(
+      web.SnapshotMetadata webMetadata) {
+    return SnapshotMetadataPlatform(
       webMetadata.hasPendingWrites,
       webMetadata.fromCache,
     );

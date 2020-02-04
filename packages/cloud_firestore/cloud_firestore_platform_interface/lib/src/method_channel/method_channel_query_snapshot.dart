@@ -6,18 +6,18 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'method_channel_document_change.dart';
 import 'utils/maps.dart';
 
-/// Contains zero or more [DocumentSnapshot] objects.
+/// Contains zero or more [DocumentSnapshotPlatform] objects.
 class MethodChannelQuerySnapshot extends QuerySnapshotPlatform {
   /// Creates a [MethodChannelQuerySnapshot] from the given [data]
   MethodChannelQuerySnapshot(
       Map<dynamic, dynamic> data, FirestorePlatform firestore)
       : super(
-            List<DocumentSnapshot>.generate(data['documents'].length,
+            List<DocumentSnapshotPlatform>.generate(data['documents'].length,
                 (int index) {
-              return DocumentSnapshot(
+              return DocumentSnapshotPlatform(
                 data['paths'][index],
                 asStringKeyedMap(data['documents'][index]),
-                SnapshotMetadata(
+                SnapshotMetadataPlatform(
                   data['metadatas'][index]['hasPendingWrites'],
                   data['metadatas'][index]['isFromCache'],
                 ),
@@ -31,7 +31,7 @@ class MethodChannelQuerySnapshot extends QuerySnapshotPlatform {
                 firestore,
               );
             }),
-            SnapshotMetadata(
+            SnapshotMetadataPlatform(
               data['metadata']['hasPendingWrites'],
               data['metadata']['isFromCache'],
             ));
