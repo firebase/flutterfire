@@ -7,7 +7,7 @@ import 'package:firebase/firestore.dart' as web;
 
 /// Implementation of [FieldValuePlatform] that is compatible with
 /// firestore web plugin
-class FieldValueWeb extends FieldValuePlatform implements web.FieldValue {
+class FieldValueWeb extends FieldValuePlatform {
   /// The js-interop delegate for this [FieldValuePlatform]
   web.FieldValue delegate;
 
