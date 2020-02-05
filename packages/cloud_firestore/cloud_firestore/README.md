@@ -23,7 +23,7 @@ with Xcode, and within Xcode place the file inside ios/Runner. Don't follow the 
 
 ## Building for Android
 
-Due to the large number of classes in this plugin, when building for Android you may encounter "Cannot fit requested classes in a single dex file." Change `minSdkVersion` from 16 to 21 in build.gradle to enable multidex and resolve the error.
+Due to the large number of classes in this plugin, when building for Android you may encounter "Cannot fit requested classes in a single dex file" errors. Change `minSdkVersion` from 16 to 21 in android/app/build.gradle to enable multidex and resolve the error.
 
 ## Usage
 
