@@ -9,11 +9,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_collection_reference.dart';
 
+import 'test_common.dart';
+
 const _kCollectionId = "test";
 const _kDocumentId = "document";
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  initializeMethodChannel();
 
   group("$MethodChannelCollectionReference", () {
     MethodChannelCollectionReference _testCollection;

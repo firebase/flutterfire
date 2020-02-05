@@ -13,7 +13,7 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/method_cha
 import 'test_common.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  initializeMethodChannel();
 
   group("$MethodChannelDocumentReference()", () {
     MethodChannelDocumentReference _documentReference;

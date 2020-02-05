@@ -8,7 +8,6 @@ import 'package:mockito/mockito.dart';
 
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_transaction.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
-import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
 
 import 'test_common.dart';
 
@@ -17,11 +16,12 @@ class MockDocumentReference extends Mock implements DocumentReferencePlatform {}
 const _kTransactionId = 1022;
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-  final MethodChannelFieldValue mockFieldValue =
-      MethodChannelFieldValueFactory().increment(2.0);
+  initializeMethodChannel();
 
-  group("$MethodChannelTransaction()", () {
+  final FieldValuePlatform mockFieldValue =
+      FieldValuePlatform(MethodChannelFieldValueFactory().increment(2.0));
+
+  group("MethodChannelTransaction()", () {
     TransactionPlatform transaction;
     final mockDocumentReference = MockDocumentReference();
     when(mockDocumentReference.path).thenReturn("$kCollectionId/$kDocumentId");

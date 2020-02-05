@@ -12,14 +12,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:firebase_core/firebase_core.dart';
 
 export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
-    show
-        FieldPath,
-        FieldValuePlatform,
-        Blob,
-        GeoPoint,
-        Timestamp,
-        Source,
-        DocumentChangeType;
+    show FieldPath, Blob, GeoPoint, Timestamp, Source, DocumentChangeType;
 
 part 'src/collection_reference.dart';
 part 'src/document_change.dart';

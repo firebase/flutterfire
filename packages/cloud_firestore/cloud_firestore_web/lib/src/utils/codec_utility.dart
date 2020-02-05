@@ -31,8 +31,9 @@ class CodecUtility {
 
   /// Encodes a value from its proper type to a serialized version.
   static dynamic valueEncode(dynamic value) {
-    if (value is FieldValueWeb) {
-      return value.data;
+    if (value is FieldValuePlatform) {
+      FieldValueWeb delegate = FieldValuePlatform.getDelegate(value);
+      return delegate.data;
     } else if (value is Timestamp) {
       return value.toDate();
     } else if (value is GeoPoint) {

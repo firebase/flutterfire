@@ -5,6 +5,8 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'test_common.dart';
+
 const _kCollectionId = "test";
 const _kDocumentId = "document";
 
@@ -14,7 +16,8 @@ class TestDocumentReference extends DocumentReferencePlatform {
 }
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  initializeMethodChannel();
+
   group("$DocumentReferencePlatform()", () {
     test("Parent", () {
       final document = TestDocumentReference._();

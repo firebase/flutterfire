@@ -69,11 +69,12 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_kBlob);
       writeSize(buffer, value.bytes.length);
       buffer.putUint8List(value.bytes);
-    } else if (value is MethodChannelFieldValue) {
-      final int code = _kFieldValueCodes[value.type];
+    } else if (value is FieldValuePlatform) {
+      MethodChannelFieldValue delegate = FieldValuePlatform.getDelegate(value);
+      final int code = _kFieldValueCodes[delegate.type];
       assert(code != null);
       buffer.putUint8(code);
-      if (value.value != null) writeValue(buffer, value.value);
+      if (delegate.value != null) writeValue(buffer, delegate.value);
     } else if (value is FieldPath) {
       final int code = _kFieldPathCodes[value.type];
       assert(code != null);
@@ -107,24 +108,16 @@ class FirestoreMessageCodec extends StandardMessageCodec {
         final int length = readSize(buffer);
         final List<int> bytes = buffer.getUint8List(length);
         return Blob(bytes);
-      case _kArrayUnion:
-        final List<dynamic> value = readValue(buffer);
-        return FieldValueFactoryPlatform.instance.arrayUnion(value);
-      case _kArrayRemove:
-        final List<dynamic> value = readValue(buffer);
-        return FieldValueFactoryPlatform.instance.arrayRemove(value);
-      case _kDelete:
-        return FieldValueFactoryPlatform.instance.delete();
-      case _kServerTimestamp:
-        return FieldValueFactoryPlatform.instance.serverTimestamp();
-      case _kIncrementDouble:
-        final double value = readValue(buffer);
-        return FieldValueFactoryPlatform.instance.increment(value);
-      case _kIncrementInteger:
-        final int value = readValue(buffer);
-        return FieldValueFactoryPlatform.instance.increment(value);
       case _kDocumentId:
         return FieldPath.documentId;
+      case _kArrayUnion:
+      case _kArrayRemove:
+      case _kDelete:
+      case _kServerTimestamp:
+      case _kIncrementDouble:
+      case _kIncrementInteger:
+      // These cases are only needed on tests, and therefore handled
+      // by [TestFirestoreMessageCodec], a subclass of this codec.
       default:
         return super.readValueOfType(type, buffer);
     }

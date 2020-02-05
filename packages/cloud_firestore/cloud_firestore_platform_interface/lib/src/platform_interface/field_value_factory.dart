@@ -86,9 +86,26 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
 /// never "peek" inside subclasses of this.
 ///
 /// Just treat it as a "black box".
-abstract class FieldValuePlatform extends PlatformInterface {
+class FieldValuePlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Constructor
-  FieldValuePlatform() : super(token: _token);
+  FieldValuePlatform([this._delegate]) : super(token: _token);
+
+  final FieldValuePlatform _delegate;
+
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [FieldValuePlatform].
+  ///
+  /// This is used by the app-facing [FieldValue] to ensure that
+  /// the object in which it's going to delegate calls has been
+  /// constructed properly.
+  static verifyExtends(FieldValuePlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+  }
+
+  /// Used by platform implementers to obtain a value suitable for being passed
+  /// through to the underlying implementation.
+  static dynamic getDelegate(FieldValuePlatform fieldValue) =>
+      fieldValue._delegate;
 }

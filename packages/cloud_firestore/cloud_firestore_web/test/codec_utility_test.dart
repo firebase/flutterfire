@@ -12,8 +12,7 @@ import 'package:firebase/firestore.dart' as web;
 
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
 import 'package:cloud_firestore_web/src/document_reference_web.dart';
-
-class MockFieldValue extends Mock implements FieldValuePlatform {}
+import 'package:cloud_firestore_web/src/field_value_factory_web.dart';
 
 class MockGeoPoint extends Mock implements GeoPoint {}
 
@@ -27,6 +26,9 @@ class MockWebBlob extends Mock implements web.Blob {}
 
 void main() {
   group("$CodecUtility()", () {
+    final FieldValuePlatform mockFieldValue =
+        FieldValuePlatform(FieldValueFactoryWeb().increment(2.0));
+
     setUp(() {
       js.context['firebase'] = js.JsObject.jsify(<String, dynamic>{
         'firestore': js.JsObject.jsify(<String, dynamic>{
@@ -38,11 +40,10 @@ void main() {
         })
       });
     });
+
     test("encodeMapData", () {
       expect(CodecUtility.encodeMapData(null), isNull);
-
       //FieldValuePlatform
-      final mockFieldValue = MockFieldValue();
       CodecUtility.encodeMapData({'test': mockFieldValue});
 
       final timeStamp = Timestamp.now();
@@ -84,7 +85,6 @@ void main() {
       expect(CodecUtility.encodeArrayData(null), isNull);
 
       //FieldValuePlatform
-      final mockFieldValue = MockFieldValue();
       CodecUtility.encodeArrayData([mockFieldValue]);
 
       final timeStamp = Timestamp.now();

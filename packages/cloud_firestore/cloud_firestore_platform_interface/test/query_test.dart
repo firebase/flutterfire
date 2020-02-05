@@ -7,6 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
 
+import 'test_common.dart';
+
 const _kQueryPath = "test/collection";
 
 class TestQuery extends MethodChannelQuery {
@@ -17,7 +19,8 @@ class TestQuery extends MethodChannelQuery {
 }
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  initializeMethodChannel();
+
   group("$QueryPlatform()", () {
     test("parameters", () {
       _hasDefaultParameters(TestQuery._().parameters);

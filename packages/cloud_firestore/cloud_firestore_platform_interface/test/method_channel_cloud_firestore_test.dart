@@ -14,10 +14,13 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/method_cha
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 
-void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+import 'test_common.dart';
+import 'test_firestore_message_codec.dart';
 
-  group('$MethodChannelFirestore()', () {
+void main() {
+  initializeMethodChannel();
+
+  group('MethodChannelFirestore()', () {
     int mockHandleId = 0;
     FirebaseApp app;
     MethodChannelFirestore firestore;
@@ -1159,18 +1162,50 @@ void main() {
       });
 
       test('encode and decode FieldValue', () {
+        const MessageCodec<dynamic> decoder = TestFirestoreMessageCodec();
+
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactoryPlatform.instance.arrayUnion(<int>[123]));
+          codec,
+          FieldValuePlatform(
+            FieldValueFactoryPlatform.instance.arrayUnion(<int>[123]),
+          ),
+          decodingCodec: decoder,
+        );
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactoryPlatform.instance.arrayRemove(<int>[123]));
+          codec,
+          FieldValuePlatform(
+            FieldValueFactoryPlatform.instance.arrayRemove(<int>[123]),
+          ),
+          decodingCodec: decoder,
+        );
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactoryPlatform.instance.delete());
+          codec,
+          FieldValuePlatform(
+            FieldValueFactoryPlatform.instance.delete(),
+          ),
+          decodingCodec: decoder,
+        );
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactoryPlatform.instance.serverTimestamp());
+          codec,
+          FieldValuePlatform(
+            FieldValueFactoryPlatform.instance.serverTimestamp(),
+          ),
+          decodingCodec: decoder,
+        );
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactoryPlatform.instance.increment(1.0));
+          codec,
+          FieldValuePlatform(
+            FieldValueFactoryPlatform.instance.increment(1.0),
+          ),
+          decodingCodec: decoder,
+        );
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactoryPlatform.instance.increment(1));
+          codec,
+          FieldValuePlatform(
+            FieldValueFactoryPlatform.instance.increment(1),
+          ),
+          decodingCodec: decoder,
+        );
       });
 
       test('encode and decode FieldPath', () {
@@ -1381,9 +1416,15 @@ void main() {
   });
 }
 
-void _checkEncodeDecode<T>(MessageCodec<T> codec, T message) {
+void _checkEncodeDecode<T>(
+  MessageCodec<T> codec,
+  T message, {
+  MessageCodec<T> decodingCodec,
+}) {
+  MessageCodec<T> decoder = decodingCodec ?? codec;
+
   final ByteData encoded = codec.encodeMessage(message);
-  final T decoded = codec.decodeMessage(encoded);
+  final T decoded = decoder.decodeMessage(encoded);
   if (message == null) {
     expect(encoded, isNull);
     expect(decoded, isNull);
@@ -1404,8 +1445,8 @@ bool _deepEquals(dynamic valueA, dynamic valueB) {
   if (valueA is List) return valueB is List && _deepEqualsList(valueA, valueB);
   if (valueA is Map) return valueB is Map && _deepEqualsMap(valueA, valueB);
   if (valueA is double && valueA.isNaN) return valueB is double && valueB.isNaN;
-  if (valueA is MethodChannelFieldValue) {
-    return valueB is MethodChannelFieldValue &&
+  if (valueA is FieldValuePlatform) {
+    return valueB is FieldValuePlatform &&
         _deepEqualsFieldValue(valueA, valueB);
   }
   if (valueA is FieldPath) {
@@ -1456,10 +1497,10 @@ bool _deepEqualsMap(
   return true;
 }
 
-bool _deepEqualsFieldValue(
-  MethodChannelFieldValue valueA,
-  MethodChannelFieldValue valueB,
-) {
+bool _deepEqualsFieldValue(FieldValuePlatform a, FieldValuePlatform b) {
+  MethodChannelFieldValue valueA = FieldValuePlatform.getDelegate(a);
+  MethodChannelFieldValue valueB = FieldValuePlatform.getDelegate(b);
+
   if (valueA.type != valueB.type) return false;
   if (valueA.value == null) return valueB.value == null;
   if (valueA.value is List) return _deepEqualsList(valueA.value, valueB.value);
