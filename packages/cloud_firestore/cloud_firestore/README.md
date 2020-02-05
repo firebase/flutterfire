@@ -21,6 +21,10 @@ with Xcode, and within Xcode place the file inside ios/Runner. Don't follow the 
 "Add Firebase SDK" and "Add initialization code" in the Firebase assistant.
 1. Add `cloud_firestore` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
+## Building for Android
+
+Due to the large number of classes in this plugin, when building for Android you may encounter "Cannot fit requested classes in a single dex file." Change `minSdkVersion` from 16 to 21 in build.gradle to enable multidex and resolve the error.
+
 ## Usage
 
 ```dart
