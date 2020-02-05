@@ -158,9 +158,6 @@ class StorageReference {
 
   /// Retrieves metadata associated with an object at this [StorageReference].
   Future<StorageMetadata> getMetadata() async {
-    print('i am working');
-    print(_pathComponents);
-    print('i am working');
     return StorageMetadata._fromMap(await FirebaseStorage.channel
         .invokeMapMethod<String, dynamic>(
             "StorageReference#getMetadata", <String, String>{

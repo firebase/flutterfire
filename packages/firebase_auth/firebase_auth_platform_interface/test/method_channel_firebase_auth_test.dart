@@ -25,6 +25,7 @@ const String kMockVerificationId = '12345';
 const String kMockSmsCode = '123456';
 const String kMockLanguage = 'en';
 const String kMockIdTokenResultSignInProvider = 'password';
+const String kMockOobCode = 'oobcode';
 const Map<dynamic, dynamic> kMockIdTokenResultClaims = <dynamic, dynamic>{
   'claim1': 'value1',
 };
@@ -1330,6 +1331,24 @@ void main() {
             arguments: <String, String>{
               'language': kMockLanguage,
               'app': appName,
+            },
+          ),
+        ],
+      );
+    });
+
+    test('confirmPasswordReset', () async {
+      await auth.confirmPasswordReset(appName, kMockOobCode, kMockPassword);
+
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'confirmPasswordReset',
+            arguments: <String, String>{
+              'app': appName,
+              'oobCode': kMockOobCode,
+              'newPassword': kMockPassword,
             },
           ),
         ],

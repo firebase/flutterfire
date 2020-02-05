@@ -1,3 +1,13 @@
+## 0.1.2+5
+
+* Fix overrides a deprecated API.
+* Raise minimum required Flutter SDK version to 1.12.13+hotfix.4
+
+## 0.1.2+4
+
+* Updated the example with the missing `recordError()` method.
+* Added a `recordError()` integration test.
+
 ## 0.1.2+3
 
 * Remove the deprecated `author:` field from pubspec.yaml
