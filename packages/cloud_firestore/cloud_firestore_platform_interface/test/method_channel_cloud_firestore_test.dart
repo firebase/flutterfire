@@ -1,7 +1,6 @@
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
 import 'dart:async';
 import 'dart:typed_data';
 
@@ -10,17 +9,25 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_transaction.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 
-  group('$MethodChannelFirestore()', () {
+import 'test_common.dart';
+import 'test_firestore_message_codec.dart';
+
+void main() {
+  initializeMethodChannel();
+
+  group('MethodChannelFirestore()', () {
     int mockHandleId = 0;
     FirebaseApp app;
     MethodChannelFirestore firestore;
     final List<MethodCall> log = <MethodCall>[];
-    CollectionReference collectionReference;
-    Query collectionGroupQuery;
-    Transaction transaction;
+    CollectionReferencePlatform collectionReference;
+    QueryPlatform collectionGroupQuery;
+    TransactionPlatform transaction;
     const Map<String, dynamic> kMockDocumentSnapshotData = <String, dynamic>{
       '1': 2
     };
@@ -47,7 +54,7 @@ void main() {
       firestore = MethodChannelFirestore(app: app);
       collectionReference = firestore.collection('foo');
       collectionGroupQuery = firestore.collectionGroup('bar');
-      transaction = Transaction(0, firestore.appName());
+      transaction = MethodChannelTransaction(0, firestore.app.name);
       MethodChannelFirestore.channel
           .setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
@@ -218,9 +225,9 @@ void main() {
       });
 
       test('get', () async {
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
-        final DocumentSnapshot snapshot =
+        final DocumentSnapshotPlatform snapshot =
             await transaction.get(documentReference);
         expect(snapshot.reference.firestore, firestore);
         expect(log, <Matcher>[
@@ -233,7 +240,7 @@ void main() {
       });
 
       test('get notExists', () async {
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/notExists');
         await transaction.get(documentReference);
         expect(log, <Matcher>[
@@ -246,7 +253,7 @@ void main() {
       });
 
       test('delete', () async {
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
         await transaction.delete(documentReference);
         expect(log, <Matcher>[
@@ -259,9 +266,10 @@ void main() {
       });
 
       test('update', () async {
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
-        final DocumentSnapshot documentSnapshot = await documentReference.get();
+        final DocumentSnapshotPlatform documentSnapshot =
+            await documentReference.get();
         final Map<String, dynamic> data = documentSnapshot.data;
         data['key2'] = 'val2';
         await transaction.set(documentReference, data);
@@ -281,9 +289,10 @@ void main() {
       });
 
       test('set', () async {
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
-        final DocumentSnapshot documentSnapshot = await documentReference.get();
+        final DocumentSnapshotPlatform documentSnapshot =
+            await documentReference.get();
         final Map<String, dynamic> data = documentSnapshot.data;
         data['key2'] = 'val2';
         await transaction.set(documentReference, data);
@@ -329,7 +338,8 @@ void main() {
         expect(collectionReference.id, equals('foo'));
       });
       test('parent', () async {
-        final DocumentReference docRef = collectionReference.document('bar');
+        final DocumentReferencePlatform docRef =
+            collectionReference.document('bar');
         expect(docRef.parent().id, equals('foo'));
         expect(collectionReference.parent(), isNull);
       });
@@ -337,10 +347,10 @@ void main() {
         expect(collectionReference.path, equals('foo'));
       });
       test('listen', () async {
-        final QuerySnapshot snapshot = await collectionReference
+        final QuerySnapshotPlatform snapshot = await collectionReference
             .snapshots(includeMetadataChanges: true)
             .first;
-        final DocumentSnapshot document = snapshot.documents[0];
+        final DocumentSnapshotPlatform document = snapshot.documents[0];
         expect(document.documentID, equals('0'));
         expect(document.reference.path, equals('foo/0'));
         expect(document.data, equals(kMockDocumentSnapshotData));
@@ -367,11 +377,11 @@ void main() {
         ]);
       });
       test('where', () async {
-        final StreamSubscription<QuerySnapshot> subscription =
+        final StreamSubscription<QuerySnapshotPlatform> subscription =
             collectionReference
                 .where('createdAt', isLessThan: 100)
                 .snapshots()
-                .listen((QuerySnapshot querySnapshot) {});
+                .listen((QuerySnapshotPlatform querySnapshot) {});
         subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -400,11 +410,11 @@ void main() {
         );
       });
       test('where in', () async {
-        final StreamSubscription<QuerySnapshot> subscription =
+        final StreamSubscription<QuerySnapshotPlatform> subscription =
             collectionReference
                 .where('country', whereIn: <String>['USA', 'Japan'])
                 .snapshots()
-                .listen((QuerySnapshot querySnapshot) {});
+                .listen((QuerySnapshotPlatform querySnapshot) {});
         subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -437,12 +447,12 @@ void main() {
         );
       });
       test('where array-contains-any', () async {
-        final StreamSubscription<QuerySnapshot> subscription =
+        final StreamSubscription<QuerySnapshotPlatform> subscription =
             collectionReference
                 .where('regions',
                     arrayContainsAny: <String>['west-coast', 'east-coast'])
                 .snapshots()
-                .listen((QuerySnapshot querySnapshot) {});
+                .listen((QuerySnapshotPlatform querySnapshot) {});
         subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -475,11 +485,11 @@ void main() {
         );
       });
       test('where field isNull', () async {
-        final StreamSubscription<QuerySnapshot> subscription =
+        final StreamSubscription<QuerySnapshotPlatform> subscription =
             collectionReference
                 .where('profile', isNull: true)
                 .snapshots()
-                .listen((QuerySnapshot querySnapshot) {});
+                .listen((QuerySnapshotPlatform querySnapshot) {});
         subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -508,11 +518,11 @@ void main() {
         );
       });
       test('orderBy', () async {
-        final StreamSubscription<QuerySnapshot> subscription =
+        final StreamSubscription<QuerySnapshotPlatform> subscription =
             collectionReference
                 .orderBy('createdAt')
                 .snapshots()
-                .listen((QuerySnapshot querySnapshot) {});
+                .listen((QuerySnapshotPlatform querySnapshot) {});
         subscription.cancel(); // ignore: unawaited_futures
         await Future<void>.delayed(Duration.zero);
         expect(
@@ -544,7 +554,7 @@ void main() {
 
     group('DocumentReference', () {
       test('listen', () async {
-        final DocumentSnapshot snapshot = await firestore
+        final DocumentSnapshotPlatform snapshot = await firestore
             .document('path/to/foo')
             .snapshots(includeMetadataChanges: true)
             .first;
@@ -643,7 +653,7 @@ void main() {
         );
       });
       test('get', () async {
-        final DocumentSnapshot snapshot =
+        final DocumentSnapshotPlatform snapshot =
             await collectionReference.document('bar').get(source: Source.cache);
         expect(snapshot.reference.firestore, firestore);
         expect(
@@ -665,7 +675,7 @@ void main() {
         expect(snapshot.data['key1'], equals('val1'));
         expect(snapshot.exists, isTrue);
 
-        final DocumentSnapshot snapshot2 = await collectionReference
+        final DocumentSnapshotPlatform snapshot2 = await collectionReference
             .document('notExists')
             .get(source: Source.serverAndCache);
         expect(snapshot2.data, isNull);
@@ -691,12 +701,12 @@ void main() {
         }
       });
       test('collection', () async {
-        final CollectionReference colRef =
+        final CollectionReferencePlatform colRef =
             collectionReference.document('bar').collection('baz');
         expect(colRef.path, equals('foo/bar/baz'));
       });
       test('parent', () async {
-        final CollectionReference colRef =
+        final CollectionReferencePlatform colRef =
             collectionReference.document('bar').collection('baz');
         expect(colRef.parent().documentID, equals('bar'));
       });
@@ -704,13 +714,13 @@ void main() {
 
     group('Query', () {
       test('getDocumentsFromCollection', () async {
-        QuerySnapshot snapshot =
+        QuerySnapshotPlatform snapshot =
             await collectionReference.getDocuments(source: Source.server);
         expect(snapshot.metadata.hasPendingWrites,
             equals(kMockSnapshotMetadata['hasPendingWrites']));
         expect(snapshot.metadata.isFromCache,
             equals(kMockSnapshotMetadata['isFromCache']));
-        DocumentSnapshot document = snapshot.documents.first;
+        DocumentSnapshotPlatform document = snapshot.documents.first;
         expect(document.documentID, equals('0'));
         expect(document.reference.path, equals('foo/0'));
         expect(document.data, equals(kMockDocumentSnapshotData));
@@ -876,12 +886,13 @@ void main() {
         );
       });
       test('getDocumentsFromCollectionGroup', () async {
-        QuerySnapshot snapshot = await collectionGroupQuery.getDocuments();
+        QuerySnapshotPlatform snapshot =
+            await collectionGroupQuery.getDocuments();
         expect(snapshot.metadata.hasPendingWrites,
             equals(kMockSnapshotMetadata['hasPendingWrites']));
         expect(snapshot.metadata.isFromCache,
             equals(kMockSnapshotMetadata['isFromCache']));
-        DocumentSnapshot document = snapshot.documents.first;
+        DocumentSnapshotPlatform document = snapshot.documents.first;
         expect(document.documentID, equals('0'));
         expect(document.reference.path, equals('bar/0'));
         expect(document.data, equals(kMockDocumentSnapshotData));
@@ -1092,9 +1103,9 @@ void main() {
         }, throwsAssertionError);
 
         // Cannot order by document id when paginating with documents.
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
-        final DocumentSnapshot snapshot = await documentReference.get();
+        final DocumentSnapshotPlatform snapshot = await documentReference.get();
         expect(() {
           firestore
               .collection('foo')
@@ -1103,10 +1114,10 @@ void main() {
         }, throwsAssertionError);
       });
       test('document pagination FieldPath assertions', () async {
-        final DocumentReference documentReference =
+        final DocumentReferencePlatform documentReference =
             firestore.document('foo/bar');
-        final DocumentSnapshot snapshot = await documentReference.get();
-        final Query query =
+        final DocumentSnapshotPlatform snapshot = await documentReference.get();
+        final QueryPlatform query =
             firestore.collection('foo').orderBy(FieldPath.documentId);
 
         expect(() {
@@ -1151,17 +1162,50 @@ void main() {
       });
 
       test('encode and decode FieldValue', () {
+        const MessageCodec<dynamic> decoder = TestFirestoreMessageCodec();
+
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactory.instance.arrayUnion(<int>[123]));
+          codec,
+          FieldValuePlatform(
+            FieldValueFactoryPlatform.instance.arrayUnion(<int>[123]),
+          ),
+          decodingCodec: decoder,
+        );
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactory.instance.arrayRemove(<int>[123]));
-        _checkEncodeDecode<dynamic>(codec, FieldValueFactory.instance.delete());
+          codec,
+          FieldValuePlatform(
+            FieldValueFactoryPlatform.instance.arrayRemove(<int>[123]),
+          ),
+          decodingCodec: decoder,
+        );
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactory.instance.serverTimestamp());
+          codec,
+          FieldValuePlatform(
+            FieldValueFactoryPlatform.instance.delete(),
+          ),
+          decodingCodec: decoder,
+        );
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactory.instance.increment(1.0));
+          codec,
+          FieldValuePlatform(
+            FieldValueFactoryPlatform.instance.serverTimestamp(),
+          ),
+          decodingCodec: decoder,
+        );
         _checkEncodeDecode<dynamic>(
-            codec, FieldValueFactory.instance.increment(1));
+          codec,
+          FieldValuePlatform(
+            FieldValueFactoryPlatform.instance.increment(1.0),
+          ),
+          decodingCodec: decoder,
+        );
+        _checkEncodeDecode<dynamic>(
+          codec,
+          FieldValuePlatform(
+            FieldValueFactoryPlatform.instance.increment(1),
+          ),
+          decodingCodec: decoder,
+        );
       });
 
       test('encode and decode FieldPath', () {
@@ -1243,7 +1287,7 @@ void main() {
 
     group('WriteBatch', () {
       test('set', () async {
-        final WriteBatch batch = firestore.batch();
+        final WriteBatchPlatform batch = firestore.batch();
         batch.setData(
           collectionReference.document('bar'),
           <String, String>{'bazKey': 'quxValue'},
@@ -1275,7 +1319,7 @@ void main() {
         );
       });
       test('merge set', () async {
-        final WriteBatch batch = firestore.batch();
+        final WriteBatchPlatform batch = firestore.batch();
         batch.setData(
           collectionReference.document('bar'),
           <String, String>{'bazKey': 'quxValue'},
@@ -1305,7 +1349,7 @@ void main() {
         );
       });
       test('update', () async {
-        final WriteBatch batch = firestore.batch();
+        final WriteBatchPlatform batch = firestore.batch();
         batch.updateData(
           collectionReference.document('bar'),
           <String, String>{'bazKey': 'quxValue'},
@@ -1339,7 +1383,7 @@ void main() {
         );
       });
       test('delete', () async {
-        final WriteBatch batch = firestore.batch();
+        final WriteBatchPlatform batch = firestore.batch();
         batch.delete(collectionReference.document('bar'));
         await batch.commit();
         expect(
@@ -1372,9 +1416,15 @@ void main() {
   });
 }
 
-void _checkEncodeDecode<T>(MessageCodec<T> codec, T message) {
+void _checkEncodeDecode<T>(
+  MessageCodec<T> codec,
+  T message, {
+  MessageCodec<T> decodingCodec,
+}) {
+  MessageCodec<T> decoder = decodingCodec ?? codec;
+
   final ByteData encoded = codec.encodeMessage(message);
-  final T decoded = codec.decodeMessage(encoded);
+  final T decoded = decoder.decodeMessage(encoded);
   if (message == null) {
     expect(encoded, isNull);
     expect(decoded, isNull);
@@ -1395,8 +1445,9 @@ bool _deepEquals(dynamic valueA, dynamic valueB) {
   if (valueA is List) return valueB is List && _deepEqualsList(valueA, valueB);
   if (valueA is Map) return valueB is Map && _deepEqualsMap(valueA, valueB);
   if (valueA is double && valueA.isNaN) return valueB is double && valueB.isNaN;
-  if (valueA is FieldValue) {
-    return valueB is FieldValue && _deepEqualsFieldValue(valueA, valueB);
+  if (valueA is FieldValuePlatform) {
+    return valueB is FieldValuePlatform &&
+        _deepEqualsFieldValue(valueA, valueB);
   }
   if (valueA is FieldPath) {
     return valueB is FieldPath && valueA.type == valueB.type;
@@ -1434,7 +1485,9 @@ bool _deepEqualsList(List<dynamic> valueA, List<dynamic> valueB) {
 }
 
 bool _deepEqualsMap(
-    Map<dynamic, dynamic> valueA, Map<dynamic, dynamic> valueB) {
+  Map<dynamic, dynamic> valueA,
+  Map<dynamic, dynamic> valueB,
+) {
   if (valueA.length != valueB.length) return false;
   for (final dynamic key in valueA.keys) {
     if (!valueB.containsKey(key) || !_deepEquals(valueA[key], valueB[key])) {
@@ -1444,7 +1497,10 @@ bool _deepEqualsMap(
   return true;
 }
 
-bool _deepEqualsFieldValue(FieldValue valueA, FieldValue valueB) {
+bool _deepEqualsFieldValue(FieldValuePlatform a, FieldValuePlatform b) {
+  MethodChannelFieldValue valueA = FieldValuePlatform.getDelegate(a);
+  MethodChannelFieldValue valueB = FieldValuePlatform.getDelegate(b);
+
   if (valueA.type != valueB.type) return false;
   if (valueA.value == null) return valueB.value == null;
   if (valueA.value is List) return _deepEqualsList(valueA.value, valueB.value);

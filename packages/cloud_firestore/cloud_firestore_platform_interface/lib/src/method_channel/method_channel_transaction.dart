@@ -2,38 +2,43 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore_platform_interface;
+import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+
+import 'method_channel_firestore.dart';
 
 /// An implementation of [TransactionPlatform] which uses [MethodChannel] to
 /// communication with native plugin
-class Transaction extends TransactionPlatform {
-  /// [FirebaseApp] name used for this [Transaction]
+class MethodChannelTransaction extends TransactionPlatform {
+  /// [FirebaseApp] name used for this [MethodChannelTransaction]
   final String appName;
+  int _transactionId;
 
-  // disabling lint as it's only visible for testing
-  // ignore: public_member_api_docs
-  @visibleForTesting
-  Transaction(int transactionId, this.appName)
-      : super(
-            transactionId,
-            appName == FirebaseApp.defaultAppName
-                ? FirestorePlatform.instance
-                : FirestorePlatform.instanceFor(
-                    app: FirebaseApp(name: appName)));
+  /// Constructor.
+  MethodChannelTransaction(int transactionId, this.appName)
+      : _transactionId = transactionId,
+        super(appName == FirebaseApp.defaultAppName
+            ? FirestorePlatform.instance
+            : FirestorePlatform.instanceFor(app: FirebaseApp(name: appName)));
 
   @override
-  Future<DocumentSnapshot> _get(DocumentReference documentReference) async {
+  Future<DocumentSnapshotPlatform> doGet(
+    DocumentReferencePlatform documentReference,
+  ) async {
     final Map<String, dynamic> result = await MethodChannelFirestore.channel
         .invokeMapMethod<String, dynamic>('Transaction#get', <String, dynamic>{
-      'app': firestore.appName(),
+      'app': firestore.app.name,
       'transactionId': _transactionId,
       'path': documentReference.path,
     });
     if (result != null) {
-      return DocumentSnapshot(
+      return DocumentSnapshotPlatform(
           documentReference.path,
           result['data']?.cast<String, dynamic>(),
-          SnapshotMetadata(result['metadata']['hasPendingWrites'],
+          SnapshotMetadataPlatform(result['metadata']['hasPendingWrites'],
               result['metadata']['isFromCache']),
           firestore);
     } else {
@@ -42,36 +47,40 @@ class Transaction extends TransactionPlatform {
   }
 
   @override
-  Future<void> _delete(DocumentReference documentReference) async {
+  Future<void> doDelete(DocumentReferencePlatform documentReference) async {
     return MethodChannelFirestore.channel
         .invokeMethod<void>('Transaction#delete', <String, dynamic>{
-      'app': firestore.appName(),
+      'app': firestore.app.name,
       'transactionId': _transactionId,
       'path': documentReference.path,
     });
   }
 
   @override
-  Future<void> _update(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
+  Future<void> doUpdate(
+    DocumentReferencePlatform documentReference,
+    Map<String, dynamic> data,
+  ) async {
     return MethodChannelFirestore.channel
         .invokeMethod<void>('Transaction#update', <String, dynamic>{
-      'app': firestore.appName(),
+      'app': firestore.app.name,
       'transactionId': _transactionId,
       'path': documentReference.path,
-      'data': FieldValue.serverDelegates(data),
+      'data': data,
     });
   }
 
   @override
-  Future<void> _set(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
+  Future<void> doSet(
+    DocumentReferencePlatform documentReference,
+    Map<String, dynamic> data,
+  ) async {
     return MethodChannelFirestore.channel
         .invokeMethod<void>('Transaction#set', <String, dynamic>{
-      'app': firestore.appName(),
+      'app': firestore.app.name,
       'transactionId': _transactionId,
       'path': documentReference.path,
-      'data': FieldValue.serverDelegates(data),
+      'data': data,
     });
   }
 }

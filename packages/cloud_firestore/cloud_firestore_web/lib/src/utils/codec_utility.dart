@@ -1,12 +1,17 @@
-part of cloud_firestore_web;
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
-// disabling lint as it's only visible for testing
-@visibleForTesting
-// ignore: public_member_api_docs
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase/firestore.dart' as web;
+
+import 'package:cloud_firestore_web/firestore_web.dart';
+import 'package:cloud_firestore_web/src/document_reference_web.dart';
+import 'package:cloud_firestore_web/src/field_value_web.dart';
+
+/// Class containing static utility methods to encode/decode firestore data.
 class CodecUtility {
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  // ignore: public_member_api_docs
+  /// Encodes a Map of values from their proper types to a serialized version.
   static Map<String, dynamic> encodeMapData(Map<String, dynamic> data) {
     if (data == null) {
       return null;
@@ -16,9 +21,7 @@ class CodecUtility {
     return output;
   }
 
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  // ignore: public_member_api_docs
+  /// Encodes an Array of values from their proper types to a serialized version.
   static List<dynamic> encodeArrayData(List<dynamic> data) {
     if (data == null) {
       return null;
@@ -26,12 +29,11 @@ class CodecUtility {
     return List.from(data).map(valueEncode).toList();
   }
 
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  // ignore: public_member_api_docs
+  /// Encodes a value from its proper type to a serialized version.
   static dynamic valueEncode(dynamic value) {
-    if (value is FieldValueInterface && value.instance is FieldValueWeb) {
-      return (value.instance as FieldValueWeb)._delegate;
+    if (value is FieldValuePlatform) {
+      FieldValueWeb delegate = FieldValuePlatform.getDelegate(value);
+      return delegate.data;
     } else if (value is Timestamp) {
       return value.toDate();
     } else if (value is GeoPoint) {
@@ -48,9 +50,7 @@ class CodecUtility {
     return value;
   }
 
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  // ignore: public_member_api_docs
+  /// Decodes the values on an incoming Map to their proper types.
   static Map<String, dynamic> decodeMapData(Map<String, dynamic> data) {
     if (data == null) {
       return null;
@@ -60,9 +60,7 @@ class CodecUtility {
     return output;
   }
 
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  // ignore: public_member_api_docs
+  /// Decodes the values on an incoming Array to their proper types.
   static List<dynamic> decodeArrayData(List<dynamic> data) {
     if (data == null) {
       return null;
@@ -70,9 +68,7 @@ class CodecUtility {
     return List.from(data).map(valueDecode).toList();
   }
 
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  // ignore: public_member_api_docs
+  /// Decodes an incoming value to its proper type.
   static dynamic valueDecode(dynamic value) {
     if (value is web.GeoPoint) {
       return GeoPoint(value.latitude, value.longitude);
@@ -81,10 +77,7 @@ class CodecUtility {
     } else if (value is web.Blob) {
       return Blob(value.toUint8Array());
     } else if (value is web.DocumentReference) {
-      return DocumentReferenceWeb(
-          (FirestorePlatform.instance as FirestoreWeb).webFirestore,
-          FirestorePlatform.instance,
-          value.path.split("/"));
+      return (FirestorePlatform.instance as FirestoreWeb).document(value.path);
     } else if (value is Map<String, dynamic>) {
       return decodeMapData(value);
     } else if (value is List<dynamic>) {

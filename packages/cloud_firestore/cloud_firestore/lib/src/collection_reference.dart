@@ -8,7 +8,7 @@ part of cloud_firestore;
 /// document references, and querying for documents (using the methods
 /// inherited from [Query]).
 class CollectionReference extends Query {
-  final platform.CollectionReference _delegate;
+  final platform.CollectionReferencePlatform _delegate;
 
   CollectionReference._(this._delegate, Firestore firestore)
       : super._(_delegate, firestore);

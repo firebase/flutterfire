@@ -11,12 +11,14 @@ part of cloud_firestore;
 /// A [DocumentReference] can also be used to create a [CollectionReference]
 /// to a subcollection.
 class DocumentReference {
-  platform.DocumentReference _delegate;
+  platform.DocumentReferencePlatform _delegate;
 
   /// The Firestore instance associated with this document reference
   final Firestore firestore;
 
-  DocumentReference._(this._delegate, this.firestore);
+  DocumentReference._(this._delegate, this.firestore) {
+    platform.DocumentReferencePlatform.verifyExtends(_delegate);
+  }
 
   @override
   bool operator ==(dynamic o) =>
@@ -61,10 +63,10 @@ class DocumentReference {
   /// Reads the document referenced by this [DocumentReference].
   ///
   /// If no document exists, the read will return null.
-  Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
-    return DocumentSnapshot._(
-        await _delegate.get(source: _PlatformUtils.toPlatformSource(source)),
-        firestore);
+  Future<DocumentSnapshot> get({
+    platform.Source source = platform.Source.serverAndCache,
+  }) async {
+    return DocumentSnapshot._(await _delegate.get(source: source), firestore);
   }
 
   /// Deletes the document referred to by this [DocumentReference].

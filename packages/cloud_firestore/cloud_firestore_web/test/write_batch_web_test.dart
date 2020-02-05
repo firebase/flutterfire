@@ -1,20 +1,21 @@
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 @TestOn("chrome")
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_web/firestore_web.dart';
+import 'package:cloud_firestore_web/src/write_batch_web.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'test_common.dart';
 
 void main() {
-  group("$WriteBatch()", () {
+  group("$WriteBatchWeb()", () {
     final mockWebTransaction = MockWebWriteBatch();
     final mockWebDocumentReference = MockWebDocumentReference();
     final mockDocumentReference = MockDocumentReference();
-    final mockFirestore = MockFirestore();
     final transaction = WriteBatchWeb(mockWebTransaction);
 
     setUp(() {
-      when(mockFirestore.appName()).thenReturn("test");
       when(mockDocumentReference.delegate).thenReturn(mockWebDocumentReference);
     });
 

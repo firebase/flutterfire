@@ -1,16 +1,20 @@
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'dart:convert';
 
-part of cloud_firestore_platform_interface;
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
-@visibleForTesting
-// ignoring lint rule here as it's only visible for testing
-// ignore: public_member_api_docs
+import 'package:cloud_firestore_platform_interface/src/internal/field_path_type.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
+
+/// The codec utilized to encode data back and forth between
+/// the Dart application and the native platform.
 class FirestoreMessageCodec extends StandardMessageCodec {
-  // ignoring lint rule here as it's only visible for testing
-  // ignore: public_member_api_docs
-  @visibleForTesting
+  /// Constructor.
   const FirestoreMessageCodec();
 
   static const int _kDateTime = 128;
@@ -36,9 +40,8 @@ class FirestoreMessageCodec extends StandardMessageCodec {
     FieldValueType.incrementInteger: _kIncrementInteger,
   };
 
-  static const Map<_FieldPathType, int> _kFieldPathCodes =
-      <_FieldPathType, int>{
-    _FieldPathType.documentId: _kDocumentId,
+  static const Map<FieldPathType, int> _kFieldPathCodes = <FieldPathType, int>{
+    FieldPathType.documentId: _kDocumentId,
   };
 
   @override
@@ -54,9 +57,9 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_kGeoPoint);
       buffer.putFloat64(value.latitude);
       buffer.putFloat64(value.longitude);
-    } else if (value is DocumentReference) {
+    } else if (value is DocumentReferencePlatform) {
       buffer.putUint8(_kDocumentReference);
-      final List<int> appName = utf8.encoder.convert(value.firestore.appName());
+      final List<int> appName = utf8.encoder.convert(value.firestore.app.name);
       writeSize(buffer, appName.length);
       buffer.putUint8List(appName);
       final List<int> bytes = utf8.encoder.convert(value.path);
@@ -66,11 +69,12 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_kBlob);
       writeSize(buffer, value.bytes.length);
       buffer.putUint8List(value.bytes);
-    } else if (value is FieldValueInterface) {
-      final int code = _kFieldValueCodes[value.type];
+    } else if (value is FieldValuePlatform) {
+      MethodChannelFieldValue delegate = FieldValuePlatform.getDelegate(value);
+      final int code = _kFieldValueCodes[delegate.type];
       assert(code != null);
       buffer.putUint8(code);
-      if (value.value != null) writeValue(buffer, value.value);
+      if (delegate.value != null) writeValue(buffer, delegate.value);
     } else if (value is FieldPath) {
       final int code = _kFieldPathCodes[value.type];
       assert(code != null);
@@ -104,24 +108,16 @@ class FirestoreMessageCodec extends StandardMessageCodec {
         final int length = readSize(buffer);
         final List<int> bytes = buffer.getUint8List(length);
         return Blob(bytes);
-      case _kArrayUnion:
-        final List<dynamic> value = readValue(buffer);
-        return FieldValueFactory._instance.arrayUnion(value);
-      case _kArrayRemove:
-        final List<dynamic> value = readValue(buffer);
-        return FieldValueFactory._instance.arrayRemove(value);
-      case _kDelete:
-        return FieldValueFactory._instance.delete();
-      case _kServerTimestamp:
-        return FieldValueFactory._instance.serverTimestamp();
-      case _kIncrementDouble:
-        final double value = readValue(buffer);
-        return FieldValueFactory._instance.increment(value);
-      case _kIncrementInteger:
-        final int value = readValue(buffer);
-        return FieldValueFactory._instance.increment(value);
       case _kDocumentId:
         return FieldPath.documentId;
+      case _kArrayUnion:
+      case _kArrayRemove:
+      case _kDelete:
+      case _kServerTimestamp:
+      case _kIncrementDouble:
+      case _kIncrementInteger:
+      // These cases are only needed on tests, and therefore handled
+      // by [TestFirestoreMessageCodec], a subclass of this codec.
       default:
         return super.readValueOfType(type, buffer);
     }

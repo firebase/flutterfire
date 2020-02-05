@@ -1,7 +1,14 @@
-part of cloud_firestore_web;
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
-/// Web implementation for firestore [Query]
-class QueryWeb implements Query {
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase/firestore.dart' as web;
+
+import 'package:cloud_firestore_web/src/utils/document_reference_utils.dart';
+
+/// Web implementation for firestore [QueryPlatform]
+class QueryWeb extends QueryPlatform {
   final web.Query _webQuery;
   final FirestorePlatform _firestore;
   final bool _isCollectionGroup;
@@ -13,13 +20,24 @@ class QueryWeb implements Query {
 
   /// Builds an instance of [QueryWeb] using [_path] & [_webQuery]
   /// to delegate queries to underlying firestore web plugin
-  QueryWeb(this._firestore, this._path, this._webQuery,
-      {bool isCollectionGroup, List<dynamic> orderByKeys})
-      : this._isCollectionGroup = isCollectionGroup ?? false,
-        this._orderByKeys = orderByKeys ?? [];
+  QueryWeb(
+    this._firestore,
+    this._path,
+    this._webQuery, {
+    bool isCollectionGroup,
+    List<dynamic> orderByKeys,
+  })  : this._isCollectionGroup = isCollectionGroup ?? false,
+        this._orderByKeys = orderByKeys ?? [],
+        super(
+          firestore: _firestore,
+          pathComponents: _path.split('/'),
+          isCollectionGroup: isCollectionGroup,
+        );
 
   @override
-  Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
+  Stream<QuerySnapshotPlatform> snapshots({
+    bool includeMetadataChanges = false,
+  }) {
     assert(_webQuery != null);
     Stream<web.QuerySnapshot> querySnapshots = _webQuery.onSnapshot;
     if (includeMetadataChanges) {
@@ -29,8 +47,9 @@ class QueryWeb implements Query {
   }
 
   @override
-  Future<QuerySnapshot> getDocuments(
-      {Source source = Source.serverAndCache}) async {
+  Future<QuerySnapshotPlatform> getDocuments({
+    Source source = Source.serverAndCache,
+  }) async {
     assert(_webQuery != null);
     return _webQuerySnapshotToQuerySnapshot(await _webQuery.get());
   }
@@ -39,12 +58,15 @@ class QueryWeb implements Query {
   Map<String, dynamic> buildArguments() => Map();
 
   @override
-  Query endAt(List values) => QueryWeb(this._firestore, this._path,
-      _webQuery != null ? _webQuery.endAt(fieldValues: values) : null,
-      isCollectionGroup: _isCollectionGroup);
+  QueryPlatform endAt(List values) => QueryWeb(
+        this._firestore,
+        this._path,
+        _webQuery != null ? _webQuery.endAt(fieldValues: values) : null,
+        isCollectionGroup: _isCollectionGroup,
+      );
 
   @override
-  Query endAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endAtDocument(DocumentSnapshotPlatform documentSnapshot) {
     assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
@@ -56,12 +78,15 @@ class QueryWeb implements Query {
   }
 
   @override
-  Query endBefore(List values) => QueryWeb(this._firestore, this._path,
-      _webQuery != null ? _webQuery.endBefore(fieldValues: values) : null,
-      isCollectionGroup: _isCollectionGroup);
+  QueryPlatform endBefore(List values) => QueryWeb(
+        this._firestore,
+        this._path,
+        _webQuery != null ? _webQuery.endBefore(fieldValues: values) : null,
+        isCollectionGroup: _isCollectionGroup,
+      );
 
   @override
-  Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endBeforeDocument(DocumentSnapshotPlatform documentSnapshot) {
     assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
@@ -79,7 +104,7 @@ class QueryWeb implements Query {
   bool get isCollectionGroup => _isCollectionGroup;
 
   @override
-  Query limit(int length) => QueryWeb(
+  QueryPlatform limit(int length) => QueryWeb(
         this._firestore,
         this._path,
         _webQuery != null ? _webQuery.limit(length) : null,
@@ -88,7 +113,10 @@ class QueryWeb implements Query {
       );
 
   @override
-  Query orderBy(field, {bool descending = false}) {
+  QueryPlatform orderBy(
+    field, {
+    bool descending = false,
+  }) {
     dynamic usableField = field;
     if (field == FieldPath.documentId) {
       usableField = web.FieldPath.documentId();
@@ -109,15 +137,19 @@ class QueryWeb implements Query {
   List<String> get pathComponents => this._path.split("/");
 
   @override
-  CollectionReference reference() => firestore.collection(_path);
+  CollectionReferencePlatform reference() => firestore.collection(_path);
 
   @override
-  Query startAfter(List values) => QueryWeb(
-      this._firestore, this._path, _webQuery.startAfter(fieldValues: values),
-      orderByKeys: _orderByKeys, isCollectionGroup: _isCollectionGroup);
+  QueryPlatform startAfter(List values) => QueryWeb(
+        this._firestore,
+        this._path,
+        _webQuery.startAfter(fieldValues: values),
+        orderByKeys: _orderByKeys,
+        isCollectionGroup: _isCollectionGroup,
+      );
 
   @override
-  Query startAfterDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAfterDocument(DocumentSnapshotPlatform documentSnapshot) {
     assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
         this._firestore,
@@ -130,7 +162,7 @@ class QueryWeb implements Query {
   }
 
   @override
-  Query startAt(List values) => QueryWeb(
+  QueryPlatform startAt(List values) => QueryWeb(
         this._firestore,
         this._path,
         _webQuery.startAt(fieldValues: values),
@@ -139,29 +171,33 @@ class QueryWeb implements Query {
       );
 
   @override
-  Query startAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAtDocument(DocumentSnapshotPlatform documentSnapshot) {
     assert(_webQuery != null && _orderByKeys.isNotEmpty);
     return QueryWeb(
-        this._firestore,
-        this._path,
-        _webQuery.startAt(
-            fieldValues:
-                _orderByKeys.map((key) => documentSnapshot.data[key]).toList()),
-        orderByKeys: _orderByKeys,
-        isCollectionGroup: _isCollectionGroup);
+      this._firestore,
+      this._path,
+      _webQuery.startAt(
+        fieldValues:
+            _orderByKeys.map((key) => documentSnapshot.data[key]).toList(),
+      ),
+      orderByKeys: _orderByKeys,
+      isCollectionGroup: _isCollectionGroup,
+    );
   }
 
   @override
-  Query where(field,
-      {isEqualTo,
-      isLessThan,
-      isLessThanOrEqualTo,
-      isGreaterThan,
-      isGreaterThanOrEqualTo,
-      arrayContains,
-      List arrayContainsAny,
-      List whereIn,
-      bool isNull}) {
+  QueryPlatform where(
+    field, {
+    isEqualTo,
+    isLessThan,
+    isLessThanOrEqualTo,
+    isGreaterThan,
+    isGreaterThanOrEqualTo,
+    arrayContains,
+    List arrayContainsAny,
+    List whereIn,
+    bool isNull,
+  }) {
     assert(field is String || field is FieldPath,
         'Supported [field] types are [String] and [FieldPath].');
     assert(_webQuery != null);
@@ -210,24 +246,25 @@ class QueryWeb implements Query {
         orderByKeys: _orderByKeys, isCollectionGroup: _isCollectionGroup);
   }
 
-  QuerySnapshot _webQuerySnapshotToQuerySnapshot(
-      web.QuerySnapshot webSnapshot) {
-    return QuerySnapshot(
+  QuerySnapshotPlatform _webQuerySnapshotToQuerySnapshot(
+    web.QuerySnapshot webSnapshot,
+  ) {
+    return QuerySnapshotPlatform(
         webSnapshot.docs
             .map((webSnapshot) =>
-                _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+                fromWebDocumentSnapshotToPlatformDocumentSnapshot(
                     webSnapshot, this._firestore))
             .toList(),
         webSnapshot.docChanges().map(_webChangeToChange).toList(),
         _webMetadataToMetada(webSnapshot.metadata));
   }
 
-  DocumentChange _webChangeToChange(web.DocumentChange webChange) {
-    return DocumentChange(
+  DocumentChangePlatform _webChangeToChange(web.DocumentChange webChange) {
+    return DocumentChangePlatform(
         _fromString(webChange.type),
         webChange.oldIndex,
         webChange.newIndex,
-        _fromWebDocumentSnapshotToPlatformDocumentSnapshot(
+        fromWebDocumentSnapshotToPlatformDocumentSnapshot(
             webChange.doc, this._firestore));
   }
 
@@ -244,17 +281,18 @@ class QueryWeb implements Query {
     }
   }
 
-  SnapshotMetadata _webMetadataToMetada(web.SnapshotMetadata webMetadata) {
-    return SnapshotMetadata(
-        webMetadata.hasPendingWrites, webMetadata.fromCache);
+  SnapshotMetadataPlatform _webMetadataToMetada(
+      web.SnapshotMetadata webMetadata) {
+    return SnapshotMetadataPlatform(
+      webMetadata.hasPendingWrites,
+      webMetadata.fromCache,
+    );
   }
 
   @override
   Map<String, dynamic> get parameters => Map();
 
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  // ignore: public_member_api_docs
+  /// Returns a clean clone of this QueryWeb.
   QueryWeb resetQueryDelegate() =>
       QueryWeb(firestore, pathComponents.join("/"), _webQuery);
 }

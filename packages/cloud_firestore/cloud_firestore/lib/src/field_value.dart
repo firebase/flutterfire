@@ -6,19 +6,17 @@ part of cloud_firestore;
 
 /// Sentinel values that can be used when writing document fields with set() or
 /// update().
-class FieldValue implements platform.FieldValueInterface {
-  platform.FieldValueInterface _delegate;
+///
+/// This class serves as a static factory for FieldValuePlatform instances, but also
+/// as a Facade for the Fieldvalue type, so plugin users don't need to worry about
+/// the actual internal implementation of their Fieldvalues, after they're created.
+class FieldValue extends platform.FieldValuePlatform {
+  static final platform.FieldValueFactoryPlatform _factory =
+      platform.FieldValueFactoryPlatform.instance;
 
-  FieldValue._(this._delegate);
-
-  @override
-  platform.FieldValueInterface get instance => _delegate;
-
-  @visibleForTesting
-  platform.FieldValueType get type => _delegate.type;
-
-  @visibleForTesting
-  dynamic get value => _delegate.value;
+  FieldValue._(platform.FieldValuePlatform delegate) : super(delegate) {
+    platform.FieldValuePlatform.verifyExtends(delegate);
+  }
 
   /// Returns a special value that tells the server to union the given elements
   /// with any array value that already exists on the server.
@@ -28,7 +26,7 @@ class FieldValue implements platform.FieldValueInterface {
   /// will be overwritten with an array containing exactly the specified
   /// elements.
   static FieldValue arrayUnion(List<dynamic> elements) =>
-      FieldValue._(platform.FieldValueFactory.instance.arrayUnion(elements));
+      FieldValue._(_factory.arrayUnion(elements));
 
   /// Returns a special value that tells the server to remove the given
   /// elements from any array value that already exists on the server.
@@ -37,19 +35,18 @@ class FieldValue implements platform.FieldValueInterface {
   /// If the field being modified is not already an array it will be overwritten
   /// with an empty array.
   static FieldValue arrayRemove(List<dynamic> elements) =>
-      FieldValue._(platform.FieldValueFactory.instance.arrayRemove(elements));
+      FieldValue._(_factory.arrayRemove(elements));
 
   /// Returns a sentinel for use with update() to mark a field for deletion.
-  static FieldValue delete() =>
-      FieldValue._(platform.FieldValueFactory.instance.delete());
+  static FieldValue delete() => FieldValue._(_factory.delete());
 
   /// Returns a sentinel for use with set() or update() to include a
   /// server-generated timestamp in the written data.
   static FieldValue serverTimestamp() =>
-      FieldValue._(platform.FieldValueFactory.instance.serverTimestamp());
+      FieldValue._(_factory.serverTimestamp());
 
   /// Returns a special value for use with set() or update() that tells the
   /// server to increment the field’s current value by the given value.
   static FieldValue increment(num value) =>
-      FieldValue._(platform.FieldValueFactory.instance.increment(value));
+      FieldValue._(_factory.increment(value));
 }

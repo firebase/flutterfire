@@ -1,3 +1,7 @@
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 part of cloud_firestore;
 
 class _CodecUtility {
@@ -50,7 +54,7 @@ class _CodecUtility {
   }
 
   static dynamic valueDecode(dynamic value, Firestore firestore) {
-    if (value is platform.DocumentReference) {
+    if (value is platform.DocumentReferencePlatform) {
       return DocumentReference._(value, firestore);
     } else if (value is List) {
       return replaceDelegatesWithValueInArray(value, firestore);

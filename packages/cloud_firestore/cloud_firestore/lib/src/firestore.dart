@@ -25,9 +25,6 @@ class Firestore {
             ? platform.FirestorePlatform.instanceFor(app: app)
             : platform.FirestorePlatform.instance;
 
-  @visibleForTesting
-  static MethodChannel get channel => platform.MethodChannelFirestore.channel;
-
   /// Gets the instance of Firestore for the default Firebase app.
   static Firestore get instance => Firestore();
 
@@ -35,8 +32,6 @@ class Firestore {
   ///
   /// If null, the default [FirebaseApp] is used.
   FirebaseApp get app => _delegate.app;
-
-  String appName() => _delegate.appName();
 
   /// Creates a write batch, used for performing multiple writes as a single
   /// atomic operation.

@@ -1,8 +1,13 @@
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 @TestOn('chrome')
 import 'dart:js' as js;
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_web/firestore_web.dart';
+import 'package:cloud_firestore_web/src/collection_reference_web.dart';
+import 'package:cloud_firestore_web/src/document_reference_web.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'test_common.dart';
@@ -10,6 +15,8 @@ import 'test_common.dart';
 void main() {
   group("$CollectionReferenceWeb()", () {
     final mockDocumentReference = MockWebDocumentReference();
+    final mockCollectionReference = MockWebCollectionReference();
+    final anotherMockDocumentReference = MockWebDocumentReference();
     CollectionReferenceWeb collectionReference;
     setUp(() {
       final mockFirestoreWeb = mockFirestore();
@@ -17,6 +24,16 @@ void main() {
           js.context['firebase']['firestore'](""), [kCollectionId]);
       collectionReference.queryDelegate = MockQueryWeb();
       when(mockFirestoreWeb.doc(any)).thenReturn(mockDocumentReference);
+
+      // Used for document creation...
+      when(mockFirestoreWeb.collection(any))
+          .thenReturn(mockCollectionReference);
+      when(mockCollectionReference.doc(any)).thenReturn(mockDocumentReference);
+      when(mockCollectionReference.doc(null))
+          .thenReturn(anotherMockDocumentReference);
+
+      when(anotherMockDocumentReference.path).thenReturn("test/asdf");
+
       when(collectionReference.queryDelegate.resetQueryDelegate())
           .thenReturn(collectionReference.queryDelegate);
     });

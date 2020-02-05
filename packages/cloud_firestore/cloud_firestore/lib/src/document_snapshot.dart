@@ -10,7 +10,7 @@ part of cloud_firestore;
 /// The data can be extracted with the data property or by using subscript
 /// syntax to access a specific field.
 class DocumentSnapshot {
-  platform.DocumentSnapshot _delegate;
+  platform.DocumentSnapshotPlatform _delegate;
   final Firestore _firestore;
 
   DocumentSnapshot._(this._delegate, this._firestore);

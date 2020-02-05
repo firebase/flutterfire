@@ -6,12 +6,14 @@ part of cloud_firestore;
 
 /// Represents a query over the data at a particular location.
 class Query {
-  final platform.Query _delegate;
+  final platform.QueryPlatform _delegate;
 
   /// The Firestore instance associated with this query
   final Firestore firestore;
 
-  Query._(this._delegate, this.firestore);
+  Query._(this._delegate, this.firestore) {
+    platform.QueryPlatform.verifyExtends(_delegate);
+  }
 
   List<String> get _pathComponents => _delegate.pathComponents;
 
@@ -28,11 +30,11 @@ class Query {
           .map((item) => QuerySnapshot._(item, firestore));
 
   /// Fetch the documents for this query
-  Future<QuerySnapshot> getDocuments(
-      {Source source = Source.serverAndCache}) async {
+  Future<QuerySnapshot> getDocuments({
+    platform.Source source = platform.Source.serverAndCache,
+  }) async {
     assert(source != null);
-    final docs = await _delegate.getDocuments(
-        source: _PlatformUtils.toPlatformSource(source));
+    final docs = await _delegate.getDocuments(source: source);
     return QuerySnapshot._(docs, firestore);
   }
 

@@ -1,8 +1,20 @@
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'dart:async';
 
-part of cloud_firestore_platform_interface;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+
+import 'method_channel_collection_reference.dart';
+import 'method_channel_document_reference.dart';
+import 'method_channel_query.dart';
+import 'method_channel_query_snapshot.dart';
+import 'method_channel_transaction.dart';
+import 'method_channel_write_batch.dart';
+import 'utils/firestore_message_codec.dart';
+import 'utils/maps.dart';
 
 /// The entry point for accessing a Firestore.
 ///
@@ -14,22 +26,23 @@ class MethodChannelFirestore extends FirestorePlatform {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       if (call.method == 'QuerySnapshot') {
-        final QuerySnapshot snapshot =
+        final QuerySnapshotPlatform snapshot =
             MethodChannelQuerySnapshot(call.arguments, this);
-        _queryObservers[call.arguments['handle']].add(snapshot);
+        queryObservers[call.arguments['handle']].add(snapshot);
       } else if (call.method == 'DocumentSnapshot') {
-        final DocumentSnapshot snapshot = DocumentSnapshot(
+        final DocumentSnapshotPlatform snapshot = DocumentSnapshotPlatform(
           call.arguments['path'],
-          _asStringKeyedMap(call.arguments['data']),
-          SnapshotMetadata(call.arguments['metadata']['hasPendingWrites'],
+          asStringKeyedMap(call.arguments['data']),
+          SnapshotMetadataPlatform(
+              call.arguments['metadata']['hasPendingWrites'],
               call.arguments['metadata']['isFromCache']),
           this,
         );
-        _documentObservers[call.arguments['handle']].add(snapshot);
+        documentObservers[call.arguments['handle']].add(snapshot);
       } else if (call.method == 'DoTransaction') {
         final int transactionId = call.arguments['transactionId'];
-        final Transaction transaction =
-            Transaction(transactionId, call.arguments["app"]);
+        final TransactionPlatform transaction =
+            MethodChannelTransaction(transactionId, call.arguments["app"]);
         final dynamic result =
             await _transactionHandlers[transactionId](transaction);
         await transaction.finish();
@@ -46,16 +59,22 @@ class MethodChannelFirestore extends FirestorePlatform {
   static bool _initialized = false;
 
   /// The [MethodChannel] used to communicate with the native plugin
-  static const MethodChannel channel = MethodChannel(
+  static MethodChannel channel = MethodChannel(
     'plugins.flutter.io/cloud_firestore',
     StandardMethodCodec(FirestoreMessageCodec()),
   );
 
-  static final Map<int, StreamController<QuerySnapshot>> _queryObservers =
-      <int, StreamController<QuerySnapshot>>{};
+  /// A map containing all the pending Query Observers, keyed by their id.
+  /// This is shared amongst all [MethodChannelQuery] objects, and the `QuerySnapshot`
+  /// `MethodCall` handler initialized in the constructor of this class.
+  static final Map<int, StreamController<QuerySnapshotPlatform>>
+      queryObservers = <int, StreamController<QuerySnapshotPlatform>>{};
 
-  static final Map<int, StreamController<DocumentSnapshot>> _documentObservers =
-      <int, StreamController<DocumentSnapshot>>{};
+  /// A map containing all the pending Document Observers, keyed by their id.
+  /// This is shared amongst all [MethodChannelDocumentReference] objects, and the
+  /// `DocumentSnapshot` `MethodCall` handler initialized in the constructor of this class.
+  static final Map<int, StreamController<DocumentSnapshotPlatform>>
+      documentObservers = <int, StreamController<DocumentSnapshotPlatform>>{};
 
   static final Map<int, TransactionHandler> _transactionHandlers =
       <int, TransactionHandler>{};
@@ -66,13 +85,13 @@ class MethodChannelFirestore extends FirestorePlatform {
       MethodChannelFirestore(app: app);
 
   @override
-  CollectionReference collection(String path) {
+  CollectionReferencePlatform collection(String path) {
     assert(path != null);
     return MethodChannelCollectionReference(this, path.split('/'));
   }
 
   @override
-  Query collectionGroup(String path) {
+  QueryPlatform collectionGroup(String path) {
     assert(path != null);
     assert(!path.contains("/"), "Collection IDs must not contain '/'.");
     return MethodChannelQuery(
@@ -83,18 +102,19 @@ class MethodChannelFirestore extends FirestorePlatform {
   }
 
   @override
-  DocumentReference document(String path) {
+  DocumentReferencePlatform document(String path) {
     assert(path != null);
     return MethodChannelDocumentReference(this, path.split('/'));
   }
 
   @override
-  WriteBatch batch() => WriteBatch(this);
+  WriteBatchPlatform batch() => MethodChannelWriteBatch(this);
 
   @override
   Future<Map<String, dynamic>> runTransaction(
-      TransactionHandler transactionHandler,
-      {Duration timeout = const Duration(seconds: 5)}) async {
+    TransactionHandler transactionHandler, {
+    Duration timeout = const Duration(seconds: 5),
+  }) async {
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds');
     final int transactionId = _transactionHandlerId++;
@@ -120,11 +140,12 @@ class MethodChannelFirestore extends FirestorePlatform {
   }
 
   @override
-  Future<void> settings(
-      {bool persistenceEnabled,
-      String host,
-      bool sslEnabled,
-      int cacheSizeBytes}) async {
+  Future<void> settings({
+    bool persistenceEnabled,
+    String host,
+    bool sslEnabled,
+    int cacheSizeBytes,
+  }) async {
     await channel.invokeMethod<void>('Firestore#settings', <String, dynamic>{
       'app': app.name,
       'persistenceEnabled': persistenceEnabled,
@@ -133,7 +154,4 @@ class MethodChannelFirestore extends FirestorePlatform {
       'cacheSizeBytes': cacheSizeBytes,
     });
   }
-
-  @override
-  String appName() => app.name;
 }

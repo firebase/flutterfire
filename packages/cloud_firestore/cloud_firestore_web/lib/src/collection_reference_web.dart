@@ -1,7 +1,16 @@
-part of cloud_firestore_web;
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
-/// Web implementation for Firestore [CollectionReference]
-class CollectionReferenceWeb implements CollectionReference {
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase/firestore.dart' as web;
+import 'package:meta/meta.dart';
+
+import 'package:cloud_firestore_web/src/document_reference_web.dart';
+import 'package:cloud_firestore_web/src/query_web.dart';
+
+/// Web implementation for Firestore [CollectionReferencePlatform]
+class CollectionReferenceWeb extends CollectionReferencePlatform {
   /// instance of Firestore from the web plugin
   final web.Firestore webFirestore;
   final FirestorePlatform _firestorePlatform;
@@ -14,11 +23,15 @@ class CollectionReferenceWeb implements CollectionReference {
   /// at [pathComponents] and uses implementation of [webFirestore]
   CollectionReferenceWeb(
       this._firestorePlatform, this.webFirestore, this.pathComponents)
-      : queryDelegate = QueryWeb(_firestorePlatform, pathComponents.join("/"),
-            webFirestore.collection(pathComponents.join("/")));
+      : queryDelegate = QueryWeb(
+          _firestorePlatform,
+          pathComponents.join("/"),
+          webFirestore.collection(pathComponents.join("/")),
+        ),
+        super(_firestorePlatform, pathComponents);
 
   @override
-  DocumentReference parent() {
+  DocumentReferencePlatform parent() {
     if (pathComponents.length < 2) {
       return null;
     }
@@ -30,11 +43,12 @@ class CollectionReferenceWeb implements CollectionReference {
   }
 
   @override
-  DocumentReference document([String path]) {
+  DocumentReferencePlatform document([String path]) {
     List<String> childPath;
     if (path == null) {
-      final String key = AutoIdGenerator.autoId();
-      childPath = List<String>.from(pathComponents)..add(key);
+      web.DocumentReference doc =
+          webFirestore.collection(pathComponents.join('/')).doc();
+      childPath = doc.path.split('/');
     } else {
       childPath = List<String>.from(pathComponents)..addAll(path.split(('/')));
     }
@@ -46,8 +60,8 @@ class CollectionReferenceWeb implements CollectionReference {
   }
 
   @override
-  Future<DocumentReference> add(Map<String, dynamic> data) async {
-    final DocumentReference newDocument = document();
+  Future<DocumentReferencePlatform> add(Map<String, dynamic> data) async {
+    final DocumentReferencePlatform newDocument = document();
     await newDocument.setData(data);
     return newDocument;
   }
@@ -56,25 +70,25 @@ class CollectionReferenceWeb implements CollectionReference {
   Map<String, dynamic> buildArguments() => queryDelegate.buildArguments();
 
   @override
-  Query endAt(List values) {
+  QueryPlatform endAt(List values) {
     _resetQueryDelegate();
     return queryDelegate.endAt(values);
   }
 
   @override
-  Query endAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endAtDocument(DocumentSnapshotPlatform documentSnapshot) {
     _resetQueryDelegate();
     return queryDelegate.endAtDocument(documentSnapshot);
   }
 
   @override
-  Query endBefore(List values) {
+  QueryPlatform endBefore(List values) {
     _resetQueryDelegate();
     return queryDelegate.endBefore(values);
   }
 
   @override
-  Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform endBeforeDocument(DocumentSnapshotPlatform documentSnapshot) {
     _resetQueryDelegate();
     return queryDelegate.endBeforeDocument(documentSnapshot);
   }
@@ -83,7 +97,9 @@ class CollectionReferenceWeb implements CollectionReference {
   FirestorePlatform get firestore => _firestorePlatform;
 
   @override
-  Future<QuerySnapshot> getDocuments({Source source = Source.serverAndCache}) =>
+  Future<QuerySnapshotPlatform> getDocuments({
+    Source source = Source.serverAndCache,
+  }) =>
       queryDelegate.getDocuments(source: source);
 
   @override
@@ -93,13 +109,16 @@ class CollectionReferenceWeb implements CollectionReference {
   bool get isCollectionGroup => false;
 
   @override
-  Query limit(int length) {
+  QueryPlatform limit(int length) {
     _resetQueryDelegate();
     return queryDelegate.limit(length);
   }
 
   @override
-  Query orderBy(field, {bool descending = false}) {
+  QueryPlatform orderBy(
+    field, {
+    bool descending = false,
+  }) {
     _resetQueryDelegate();
     return queryDelegate.orderBy(field, descending: descending);
   }
@@ -111,47 +130,51 @@ class CollectionReferenceWeb implements CollectionReference {
   String get path => pathComponents.join("/");
 
   @override
-  CollectionReference reference() => queryDelegate.reference();
+  CollectionReferencePlatform reference() => queryDelegate.reference();
 
   @override
-  Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) =>
+  Stream<QuerySnapshotPlatform> snapshots({
+    bool includeMetadataChanges = false,
+  }) =>
       queryDelegate.snapshots(includeMetadataChanges: includeMetadataChanges);
 
   @override
-  Query startAfter(List values) {
+  QueryPlatform startAfter(List values) {
     _resetQueryDelegate();
     return queryDelegate.startAfter(values);
   }
 
   @override
-  Query startAfterDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAfterDocument(DocumentSnapshotPlatform documentSnapshot) {
     _resetQueryDelegate();
     return queryDelegate.startAfterDocument(documentSnapshot);
   }
 
   @override
-  Query startAt(List values) {
+  QueryPlatform startAt(List values) {
     _resetQueryDelegate();
     return queryDelegate.startAt(values);
   }
 
   @override
-  Query startAtDocument(DocumentSnapshot documentSnapshot) {
+  QueryPlatform startAtDocument(DocumentSnapshotPlatform documentSnapshot) {
     _resetQueryDelegate();
     return queryDelegate.startAtDocument(documentSnapshot);
   }
 
   @override
-  Query where(field,
-      {isEqualTo,
-      isLessThan,
-      isLessThanOrEqualTo,
-      isGreaterThan,
-      isGreaterThanOrEqualTo,
-      arrayContains,
-      List arrayContainsAny,
-      List whereIn,
-      bool isNull}) {
+  QueryPlatform where(
+    field, {
+    isEqualTo,
+    isLessThan,
+    isLessThanOrEqualTo,
+    isGreaterThan,
+    isGreaterThanOrEqualTo,
+    arrayContains,
+    List arrayContainsAny,
+    List whereIn,
+    bool isNull,
+  }) {
     _resetQueryDelegate();
     return queryDelegate.where(field,
         isEqualTo: isEqualTo,

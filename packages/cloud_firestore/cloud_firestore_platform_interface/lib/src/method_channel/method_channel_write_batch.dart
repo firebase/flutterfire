@@ -2,25 +2,29 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore_platform_interface;
+import 'dart:async';
 
-/// A [WriteBatch] is a series of write operations to be performed as one unit.
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+
+import 'method_channel_firestore.dart';
+
+/// A [MethodChannelWriteBatch] is a series of write operations to be performed as one unit.
 ///
-/// Operations done on a [WriteBatch] do not take effect until you [commit].
+/// Operations done on a [MethodChannelWriteBatch] do not take effect until you [commit].
 ///
-/// Once committed, no further operations can be performed on the [WriteBatch],
+/// Once committed, no further operations can be performed on the [MethodChannelWriteBatch],
 /// nor can it be committed again.
-class WriteBatch extends WriteBatchPlatform {
-  /// Create an instance of [WriteBatch]
-  WriteBatch(this._firestore)
+class MethodChannelWriteBatch extends WriteBatchPlatform {
+  /// Create an instance of [MethodChannelWriteBatch]
+  MethodChannelWriteBatch(this._firestore)
       : _handle = MethodChannelFirestore.channel.invokeMethod<dynamic>(
-            'WriteBatch#create',
-            <String, dynamic>{'app': _firestore.appName()}),
-        super._();
+            'WriteBatch#create', <String, dynamic>{'app': _firestore.app.name}),
+        super();
 
   final FirestorePlatform _firestore;
   Future<dynamic> _handle;
   final List<Future<dynamic>> _actions = <Future<dynamic>>[];
+  bool _committed = false;
 
   @override
   Future<void> commit() async {
@@ -33,7 +37,7 @@ class WriteBatch extends WriteBatchPlatform {
   }
 
   @override
-  void delete(DocumentReference document) {
+  void delete(DocumentReferencePlatform document) {
     _assertNotCommitted();
 
     _handle.then((dynamic handle) {
@@ -41,7 +45,7 @@ class WriteBatch extends WriteBatchPlatform {
         MethodChannelFirestore.channel.invokeMethod<void>(
           'WriteBatch#delete',
           <String, dynamic>{
-            'app': _firestore.appName(),
+            'app': _firestore.app.name,
             'handle': handle,
             'path': document.path,
           },
@@ -51,8 +55,11 @@ class WriteBatch extends WriteBatchPlatform {
   }
 
   @override
-  void setData(DocumentReference document, Map<String, dynamic> data,
-      {bool merge = false}) {
+  void setData(
+    DocumentReferencePlatform document,
+    Map<String, dynamic> data, {
+    bool merge = false,
+  }) {
     _assertNotCommitted();
 
     _handle.then((dynamic handle) {
@@ -60,10 +67,10 @@ class WriteBatch extends WriteBatchPlatform {
         MethodChannelFirestore.channel.invokeMethod<void>(
           'WriteBatch#setData',
           <String, dynamic>{
-            'app': _firestore.appName(),
+            'app': _firestore.app.name,
             'handle': handle,
             'path': document.path,
-            'data': FieldValue.serverDelegates(data),
+            'data': data,
             'options': <String, bool>{'merge': merge},
           },
         ),
@@ -72,7 +79,10 @@ class WriteBatch extends WriteBatchPlatform {
   }
 
   @override
-  void updateData(DocumentReference document, Map<String, dynamic> data) {
+  void updateData(
+    DocumentReferencePlatform document,
+    Map<String, dynamic> data,
+  ) {
     _assertNotCommitted();
 
     _handle.then((dynamic handle) {
@@ -80,10 +90,10 @@ class WriteBatch extends WriteBatchPlatform {
         MethodChannelFirestore.channel.invokeMethod<void>(
           'WriteBatch#updateData',
           <String, dynamic>{
-            'app': _firestore.appName(),
+            'app': _firestore.app.name,
             'handle': handle,
             'path': document.path,
-            'data': FieldValue.serverDelegates(data)
+            'data': data
           },
         ),
       );
