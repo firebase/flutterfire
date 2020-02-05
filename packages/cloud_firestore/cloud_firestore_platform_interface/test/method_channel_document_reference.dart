@@ -1,23 +1,28 @@
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_document_reference.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
+
 import 'test_common.dart';
 
-class MockFiledValue extends Mock implements FieldValueInterface {}
-
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  initializeMethodChannel();
 
   group("$MethodChannelDocumentReference()", () {
     MethodChannelDocumentReference _documentReference;
-    final mockFieldValue = MockFiledValue();
+    MethodChannelFieldValue mockFieldValue =
+        MethodChannelFieldValueFactory().increment(2.0);
     setUp(() {
       _documentReference = MethodChannelDocumentReference(
           FirestorePlatform.instance, [kCollectionId, kDocumentId]);
       reset(mockFieldValue);
-      when(mockFieldValue.type).thenReturn(FieldValueType.incrementDouble);
-      when(mockFieldValue.value).thenReturn(2.0);
     });
 
     test("setData", () async {
@@ -25,7 +30,6 @@ void main() {
       _assertSetDataMethodCalled(_documentReference, true, null);
       _assertSetDataMethodCalled(_documentReference, false, null);
       _assertSetDataMethodCalled(_documentReference, false, mockFieldValue);
-      verify(mockFieldValue.instance);
     });
 
     test("updateData", () async {
@@ -41,7 +45,6 @@ void main() {
         }
       });
       await _documentReference.updateData(data);
-      verify(mockFieldValue.instance);
       expect(isMethodCalled, isTrue,
           reason: "DocumentReference.updateData was not called");
     });
@@ -81,8 +84,8 @@ void main() {
   });
 }
 
-void _assertGetMethodCalled(DocumentReference documentReference, Source source,
-    String expectedSourceString) async {
+void _assertGetMethodCalled(DocumentReferencePlatform documentReference,
+    Source source, String expectedSourceString) async {
   bool isMethodCalled = false;
   handleMethodCall((call) {
     if (call.method == "DocumentReference#get") {
@@ -104,8 +107,8 @@ void _assertGetMethodCalled(DocumentReference documentReference, Source source,
       reason: "DocumentReference.get was not called");
 }
 
-void _assertSetDataMethodCalled(DocumentReference documentReference,
-    bool expectedMergeValue, FieldValueInterface fieldValue) async {
+void _assertSetDataMethodCalled(DocumentReferencePlatform documentReference,
+    bool expectedMergeValue, FieldValuePlatform fieldValue) async {
   bool isMethodCalled = false;
   final Map<String, dynamic> data = {"test": "test"};
   if (fieldValue != null) {

@@ -1,29 +1,33 @@
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_transaction.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
+
 import 'test_common.dart';
 
-class MockDocumentReference extends Mock implements DocumentReference {}
-
-class MockFiledValue extends Mock implements FieldValueInterface {}
+class MockDocumentReference extends Mock implements DocumentReferencePlatform {}
 
 const _kTransactionId = 1022;
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-  final mockFieldValue = MockFiledValue();
+  initializeMethodChannel();
 
-  group("$Transaction()", () {
-    Transaction transaction;
+  final FieldValuePlatform mockFieldValue =
+      FieldValuePlatform(MethodChannelFieldValueFactory().increment(2.0));
+
+  group("MethodChannelTransaction()", () {
+    TransactionPlatform transaction;
     final mockDocumentReference = MockDocumentReference();
     when(mockDocumentReference.path).thenReturn("$kCollectionId/$kDocumentId");
     setUp(() {
-      transaction =
-          Transaction(_kTransactionId, FirestorePlatform.instance.appName());
-      reset(mockFieldValue);
-      when(mockFieldValue.type).thenReturn(FieldValueType.incrementDouble);
-      when(mockFieldValue.value).thenReturn(2.0);
+      transaction = MethodChannelTransaction(
+          _kTransactionId, FirestorePlatform.instance.app.name);
     });
 
     test("get", () async {
@@ -65,7 +69,6 @@ void main() {
         }
       });
       await transaction.update(mockDocumentReference, data);
-      verify(mockFieldValue.instance);
       expect(isMethodCalled, isTrue,
           reason: "Transaction#update was not called");
     });
@@ -84,7 +87,6 @@ void main() {
         }
       });
       await transaction.set(mockDocumentReference, data);
-      verify(mockFieldValue.instance);
       expect(isMethodCalled, isTrue, reason: "Transaction#set was not called");
     });
   });

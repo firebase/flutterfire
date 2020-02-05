@@ -1,24 +1,28 @@
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'dart:async';
 
-part of cloud_firestore_platform_interface;
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 /// A CollectionReference object can be used for adding documents, getting
 /// document references, and querying for documents (using the methods
-/// inherited from [Query]).
-abstract class CollectionReference extends Query {
-  /// Create a [CollectionReference] using [pathComponents]
-  CollectionReference(FirestorePlatform firestore, List<String> pathComponents)
-      : super(firestore: firestore, pathComponents: pathComponents);
+/// inherited from [QueryPlatform]).
+/// Note: QueryPlatform extends PlatformInterface already.
+abstract class CollectionReferencePlatform extends QueryPlatform {
+  /// Create a [CollectionReferencePlatform] using [pathComponents]
+  CollectionReferencePlatform(
+    FirestorePlatform firestore,
+    List<String> pathComponents,
+  ) : super(firestore: firestore, pathComponents: pathComponents);
 
   /// Identifier of the referenced collection.
   String get id => pathComponents.isEmpty ? null : pathComponents.last;
 
-  /// For subcollections, parent returns the containing [DocumentReference].
+  /// For subcollections, parent returns the containing [DocumentReferencePlatform].
   ///
   /// For root collections, `null` is returned.
-  DocumentReference parent() {
+  DocumentReferencePlatform parent() {
     throw UnimplementedError("parent() is not implemented");
   }
 
@@ -28,7 +32,7 @@ abstract class CollectionReference extends Query {
   ///
   /// The unique key generated is prefixed with a client-generated timestamp
   /// so that the resulting list will be chronologically-sorted.
-  DocumentReference document([String path]) {
+  DocumentReferencePlatform document([String path]) {
     throw UnimplementedError("document() is not implemented");
   }
 
@@ -37,7 +41,7 @@ abstract class CollectionReference extends Query {
   ///
   /// The unique key generated is prefixed with a client-generated timestamp
   /// so that the resulting list will be chronologically-sorted.
-  Future<DocumentReference> add(Map<String, dynamic> data) async {
+  Future<DocumentReferencePlatform> add(Map<String, dynamic> data) async {
     throw UnimplementedError("add() is not implemented");
   }
 }

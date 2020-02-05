@@ -1,39 +1,39 @@
-part of cloud_firestore_platform_interface;
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
-/// Sentinel values that can be used when writing document fields with set() or
-/// update().
-enum FieldValueType {
-  /// adds elements to an array but only elements not already present
-  arrayUnion,
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-  /// removes all instances of each given element
-  arrayRemove,
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
 
-  /// deletes field
-  delete,
-
-  /// sets field value to server timestamp
-  serverTimestamp,
-
-  ///  increment or decrement a numeric field value using a double value
-  incrementDouble,
-
-  ///  increment or decrement a numeric field value using an integer value
-  incrementInteger,
-}
-
-/// An interface for a factory that is used to build [FieldValue] according to
+/// An interface for a factory that is used to build [FieldValuePlatform] according to
 /// Platform (web or mobile)
-abstract class FieldValueFactory {
-  /// Current instance of [FieldValueFactory]
-  static FieldValueFactory get instance => _instance;
+abstract class FieldValueFactoryPlatform extends PlatformInterface {
+  /// Constructor to initialize the PlatformInterface base class
+  FieldValueFactoryPlatform() : super(token: _token);
 
-  static FieldValueFactory _instance = MethodChannelFieldValueFactory();
+  /// Current instance of [FieldValueFactoryPlatform]
+  static FieldValueFactoryPlatform get instance => _instance;
 
-  /// Sets the default instance of [FieldValueFactory] which is used to build
-  /// [FieldValue] items
-  static set instance(FieldValueFactory instance) {
+  static FieldValueFactoryPlatform _instance = MethodChannelFieldValueFactory();
+
+  /// Sets the default instance of [FieldValueFactoryPlatform] which is used to build
+  /// [FieldValuePlatform] items
+  static set instance(FieldValueFactoryPlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
+  }
+
+  static final Object _token = Object();
+
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [FieldValueFactoryPlatform].
+  ///
+  /// This is used by the app-facing [FieldValueFactory] to ensure that
+  /// the object in which it's going to delegate calls has been
+  /// constructed properly.
+  static verifyExtends(FieldValueFactoryPlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
   }
 
   /// Returns a special value that tells the server to union the given elements
@@ -43,7 +43,9 @@ abstract class FieldValueFactory {
   /// added to the end. If the field being modified is not already an array it
   /// will be overwritten with an array containing exactly the specified
   /// elements.
-  FieldValueInterface arrayUnion(List<dynamic> elements);
+  FieldValuePlatform arrayUnion(List<dynamic> elements) {
+    throw UnimplementedError("arrayUnion() is not implemented");
+  }
 
   /// Returns a special value that tells the server to remove the given
   /// elements from any array value that already exists on the server.
@@ -51,16 +53,59 @@ abstract class FieldValueFactory {
   /// All instances of each element specified will be removed from the array.
   /// If the field being modified is not already an array it will be overwritten
   /// with an empty array.
-  FieldValueInterface arrayRemove(List<dynamic> elements);
+  FieldValuePlatform arrayRemove(List<dynamic> elements) {
+    throw UnimplementedError("arrayRemove() is not implemented");
+  }
 
   /// Returns a sentinel for use with update() to mark a field for deletion.
-  FieldValueInterface delete();
+  FieldValuePlatform delete() {
+    throw UnimplementedError("delete() is not implemented");
+  }
 
   /// Returns a sentinel for use with set() or update() to include a
   /// server-generated timestamp in the written data.
-  FieldValueInterface serverTimestamp();
+  FieldValuePlatform serverTimestamp() {
+    throw UnimplementedError("serverTimestamp() is not implemented");
+  }
 
   /// Returns a special value for use with set() or update() that tells the
   /// server to increment the field’s current value by the given value.
-  FieldValueInterface increment(num value);
+  FieldValuePlatform increment(num value) {
+    throw UnimplementedError("increment() is not implemented");
+  }
+}
+
+/// This is a cross-platform representation of a FieldValue.
+///
+/// Each concrete platform implementation will extend this class,
+/// and add any relevant methods or values to it, so it works as
+/// expected for the target platform.
+///
+/// This is exposed to plugin users, so they can correctly type the
+/// results of calling FieldValueFactory instances, but you should
+/// never "peek" inside subclasses of this.
+///
+/// Just treat it as a "black box".
+class FieldValuePlatform extends PlatformInterface {
+  static final Object _token = Object();
+
+  /// Constructor
+  FieldValuePlatform([this._delegate]) : super(token: _token);
+
+  final FieldValuePlatform _delegate;
+
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [FieldValuePlatform].
+  ///
+  /// This is used by the app-facing [FieldValue] to ensure that
+  /// the object in which it's going to delegate calls has been
+  /// constructed properly.
+  static verifyExtends(FieldValuePlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+  }
+
+  /// Used by platform implementers to obtain a value suitable for being passed
+  /// through to the underlying implementation.
+  static dynamic getDelegate(FieldValuePlatform fieldValue) =>
+      fieldValue._delegate;
 }

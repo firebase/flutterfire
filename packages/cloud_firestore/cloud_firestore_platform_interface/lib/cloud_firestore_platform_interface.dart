@@ -1,45 +1,40 @@
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 library cloud_firestore_platform_interface;
 
 import 'dart:async';
-import 'dart:convert';
-import 'dart:typed_data';
-import 'dart:ui';
-import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:meta/meta.dart' show required, visibleForTesting;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-part 'src/method_channel_firestore.dart';
-part 'src/blob.dart';
-part 'src/utils/auto_id_generator.dart';
-part 'src/method_channel_field_value_factory.dart';
-part 'src/platform_interface/field_value_factory.dart';
-part 'src/platform_interface/collection_reference.dart';
-part 'src/method_channel_collection_reference.dart';
-part 'src/method_channel_document_change.dart';
-part 'src/platform_interface/document_change.dart';
-part 'src/method_channel_document_reference.dart';
-part 'src/platform_interface/document_reference_interface.dart';
-part 'src/document_snapshot.dart';
-part 'src/field_path.dart';
-part 'src/platform_interface/field_value.dart';
-part 'src/firestore_message_codec.dart';
-part 'src/geo_point.dart';
-part 'src/method_channel_query.dart';
-part 'src/platform_interface/query.dart';
-part 'src/platform_interface/query_snapshot.dart';
-part 'src/method_channel_query_snapshot.dart';
-part 'src/snapshot_metadata.dart';
-part 'src/source.dart';
-part 'src/timestamp.dart';
-part 'src/transaction.dart';
-part 'src/transaction_platform_interface.dart';
-part 'src/write_batch.dart';
-part 'src/write_batch_platform_interface.dart';
+import 'src/method_channel/method_channel_firestore.dart';
+
+import 'src/platform_interface/collection_reference.dart';
+import 'src/platform_interface/document_reference.dart';
+import 'src/platform_interface/query.dart';
+import 'src/platform_interface/transaction.dart';
+import 'src/platform_interface/write_batch.dart';
+
+// Shared types
+export 'src/blob.dart';
+export 'src/document_snapshot.dart';
+export 'src/field_path.dart';
+export 'src/geo_point.dart';
+export 'src/snapshot_metadata.dart';
+export 'src/source.dart';
+export 'src/timestamp.dart';
+
+// Platform interface parts
+export 'src/platform_interface/collection_reference.dart';
+export 'src/platform_interface/document_change.dart';
+export 'src/platform_interface/document_reference.dart';
+export 'src/platform_interface/field_value_factory.dart';
+export 'src/platform_interface/query.dart';
+export 'src/platform_interface/query_snapshot.dart';
+export 'src/platform_interface/transaction.dart';
+export 'src/platform_interface/write_batch.dart';
 
 /// Defines an interface to work with [FirestorePlatform] on web and mobile
 abstract class FirestorePlatform extends PlatformInterface {
@@ -82,23 +77,18 @@ abstract class FirestorePlatform extends PlatformInterface {
     throw UnimplementedError("withApp() not implemented");
   }
 
-  /// Firebase app name
-  String appName() {
-    throw UnimplementedError("appName() not implemented");
-  }
-
-  /// Gets a [CollectionReference] for the specified Firestore path.
-  CollectionReference collection(String path) {
+  /// Gets a [CollectionReferencePlatform] for the specified Firestore path.
+  CollectionReferencePlatform collection(String path) {
     throw UnimplementedError('collection() is not implemented');
   }
 
-  /// Gets a [Query] for the specified collection group.
-  Query collectionGroup(String path) {
+  /// Gets a [QueryPlatform] for the specified collection group.
+  QueryPlatform collectionGroup(String path) {
     throw UnimplementedError('collectionGroup() is not implemented');
   }
 
-  /// Gets a [DocumentReference] for the specified Firestore path.
-  DocumentReference document(String path) {
+  /// Gets a [DocumentReferencePlatform] for the specified Firestore path.
+  DocumentReferencePlatform document(String path) {
     throw UnimplementedError('document() is not implemented');
   }
 
@@ -115,7 +105,7 @@ abstract class FirestorePlatform extends PlatformInterface {
   /// changes applied within an atomic transaction.
   ///
   /// In the [TransactionHandler], a set of reads and writes can be performed
-  /// atomically using the [Transaction] object passed to the [TransactionHandler].
+  /// atomically using the [MethodChannelTransaction] object passed to the [TransactionHandler].
   /// After the [TransactionHandler] is run, Firestore will attempt to apply the
   /// changes to the server. If any of the data read has been modified outside
   /// of this transaction since being read, then the transaction will be
@@ -159,7 +149,7 @@ abstract class FirestorePlatform extends PlatformInterface {
   }
 
   @override
-  int get hashCode => appName().hashCode;
+  int get hashCode => app.name.hashCode;
 
   @override
   bool operator ==(dynamic o) => o is FirestorePlatform && o.app == app;

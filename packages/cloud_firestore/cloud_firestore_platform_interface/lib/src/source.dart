@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore_platform_interface;
-
 /// An enumeration of firestore source types.
 enum Source {
   /// Causes Firestore to try to retrieve an up-to-date (server-retrieved) snapshot, but fall back to
@@ -20,18 +18,6 @@ enum Source {
   /// (implying that the returned value may be stale with respect to the value on the server). If
   /// there is no data in the cache to satisfy the [get()] or [getDocuments()] call,
   /// [DocumentReference.get()] will return an error and [Query.getDocuments()] will return an empty
-  /// [QuerySnapshot] with no documents.
+  /// [QuerySnapshotPlatform] with no documents.
   cache,
-}
-
-/// Converts [Source] to [String]
-String _getSourceString(Source source) {
-  assert(source != null);
-  if (source == Source.server) {
-    return 'server';
-  }
-  if (source == Source.cache) {
-    return 'cache';
-  }
-  return 'default';
 }

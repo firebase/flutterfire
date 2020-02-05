@@ -1,35 +1,37 @@
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
-part of cloud_firestore_platform_interface;
+import 'method_channel_document_change.dart';
+import 'utils/maps.dart';
 
-/// Contains zero or more [DocumentSnapshot] objects.
-class MethodChannelQuerySnapshot extends QuerySnapshot {
+/// Contains zero or more [DocumentSnapshotPlatform] objects.
+class MethodChannelQuerySnapshot extends QuerySnapshotPlatform {
   /// Creates a [MethodChannelQuerySnapshot] from the given [data]
   MethodChannelQuerySnapshot(
       Map<dynamic, dynamic> data, FirestorePlatform firestore)
       : super(
-            List<DocumentSnapshot>.generate(data['documents'].length,
+            List<DocumentSnapshotPlatform>.generate(data['documents'].length,
                 (int index) {
-              return DocumentSnapshot(
+              return DocumentSnapshotPlatform(
                 data['paths'][index],
-                _asStringKeyedMap(data['documents'][index]),
-                SnapshotMetadata(
+                asStringKeyedMap(data['documents'][index]),
+                SnapshotMetadataPlatform(
                   data['metadatas'][index]['hasPendingWrites'],
                   data['metadatas'][index]['isFromCache'],
                 ),
                 firestore,
               );
             }),
-            List<DocumentChange>.generate(data['documentChanges'].length,
-                (int index) {
+            List<DocumentChangePlatform>.generate(
+                data['documentChanges'].length, (int index) {
               return MethodChannelDocumentChange(
                 data['documentChanges'][index],
                 firestore,
               );
             }),
-            SnapshotMetadata(
+            SnapshotMetadataPlatform(
               data['metadata']['hasPendingWrites'],
               data['metadata']['isFromCache'],
             ));
