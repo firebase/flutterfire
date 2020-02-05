@@ -1,3 +1,7 @@
+## 6.0.10
+
+* Update README to explain how to correctly implement Android background message handling with the new v2 embedding. 
+
 ## 6.0.9
 
 * Update Android Gradle plugin dependency to 3.5.3, update documentation and example.

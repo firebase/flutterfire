@@ -2,6 +2,10 @@
 
 * Added support for Flutter Web
 
+## 0.13.0+2
+
+* Fixed `persistenceEnabled`, `sslEnabled`, and `timestampsInSnapshotsEnabled` on iOS.
+
 ## 0.13.0+1
 
 * Remove the deprecated `author:` field from pubspec.yaml
