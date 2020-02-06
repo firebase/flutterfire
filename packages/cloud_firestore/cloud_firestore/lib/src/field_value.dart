@@ -8,7 +8,7 @@ part of cloud_firestore;
 /// update().
 ///
 /// This class serves as a static factory for FieldValuePlatform instances, but also
-/// as a Facade for the Fieldvalue type, so plugin users don't need to worry about
+/// as a facade for the [FieldValue] type, so plugin users don't need to worry about
 /// the actual internal implementation of their [FieldValue]s after they're created.
 class FieldValue extends platform.FieldValuePlatform {
   static final platform.FieldValueFactoryPlatform _factory =
