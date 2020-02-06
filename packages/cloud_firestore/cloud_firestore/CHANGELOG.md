@@ -1,6 +1,6 @@
 ## 0.13.1
 
-* Added support for Flutter Web
+* Migrate to `cloud_firestore_platform_interface`
 
 ## 0.13.0+2
 

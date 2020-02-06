@@ -13,8 +13,6 @@ flutter:
         pluginClass: CloudFirestorePlugin
       ios:
         pluginClass: FLTCloudFirestorePlugin
-      web:
-        default_package: cloud_firestore_web
 
 dependencies:
   flutter:
@@ -22,8 +20,6 @@ dependencies:
   meta: "^1.0.5"
   firebase_core: "^0.4.0"
   cloud_firestore_platform_interface: "^1.0.0"
-  cloud_firestore_web:
-    path: ../cloud_firestore_web
 
 dev_dependencies:
   flutter_test:
