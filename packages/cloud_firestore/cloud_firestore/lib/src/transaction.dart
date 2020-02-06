@@ -4,7 +4,7 @@
 
 part of cloud_firestore;
 
-/// The TransactionHandler may be executed multiple times, it should be able
+/// The [TransactionHandler] may be executed multiple times; it should be able
 /// to handle multiple executions.
 typedef Future<dynamic> TransactionHandler(Transaction transaction);
 
