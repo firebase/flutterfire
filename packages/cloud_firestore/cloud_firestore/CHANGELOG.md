@@ -1,6 +1,6 @@
 ## 0.13.1
 
-* Migrate to `cloud_firestore_platform_interface`
+* Migrate to `cloud_firestore_platform_interface`.
 
 ## 0.13.0+2
 

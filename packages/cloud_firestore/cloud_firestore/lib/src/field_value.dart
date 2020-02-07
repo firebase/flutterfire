@@ -7,9 +7,9 @@ part of cloud_firestore;
 /// Sentinel values that can be used when writing document fields with set() or
 /// update().
 ///
-/// This class serves as a static factory for FieldValuePlatform instances, but also
-/// as a Facade for the Fieldvalue type, so plugin users don't need to worry about
-/// the actual internal implementation of their Fieldvalues, after they're created.
+/// This class serves as a static factory for [FieldValuePlatform] instances, but also
+/// as a facade for the [FieldValue] type, so plugin users don't need to worry about
+/// the actual internal implementation of their [FieldValue]s after they're created.
 class FieldValue extends platform.FieldValuePlatform {
   static final platform.FieldValueFactoryPlatform _factory =
       platform.FieldValueFactoryPlatform.instance;
