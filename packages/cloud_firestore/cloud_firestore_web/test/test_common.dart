@@ -4,7 +4,7 @@
 
 import 'dart:js' as js;
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_web/firestore_web.dart';
+import 'package:cloud_firestore_web/cloud_firestore_web.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:mockito/mockito.dart';
@@ -27,7 +27,7 @@ class MockWebWriteBatch extends Mock implements web.WriteBatch {}
 
 class MockDocumentReference extends Mock implements DocumentReferenceWeb {}
 
-class MockFirestore extends Mock implements FirestoreWeb {}
+class MockFirestore extends Mock implements CloudFirestoreWeb {}
 
 class MockWebDocumentReference extends Mock implements web.DocumentReference {}
 
@@ -51,6 +51,6 @@ web.Firestore mockFirestore() {
   });
   js.context['firebase'] = firebaseMock;
   FirebaseCorePlatform.instance = FirebaseCoreWeb();
-  FirestorePlatform.instance = FirestoreWeb();
+  FirestorePlatform.instance = CloudFirestoreWeb();
   return mockFirestoreWeb;
 }

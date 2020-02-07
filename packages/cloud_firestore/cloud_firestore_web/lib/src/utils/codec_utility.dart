@@ -5,7 +5,7 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase/firestore.dart' as web;
 
-import 'package:cloud_firestore_web/firestore_web.dart';
+import 'package:cloud_firestore_web/cloud_firestore_web.dart';
 import 'package:cloud_firestore_web/src/document_reference_web.dart';
 import 'package:cloud_firestore_web/src/field_value_web.dart';
 
@@ -77,7 +77,8 @@ class CodecUtility {
     } else if (value is web.Blob) {
       return Blob(value.toUint8Array());
     } else if (value is web.DocumentReference) {
-      return (FirestorePlatform.instance as FirestoreWeb).document(value.path);
+      return (FirestorePlatform.instance as CloudFirestoreWeb)
+          .document(value.path);
     } else if (value is Map<String, dynamic>) {
       return decodeMapData(value);
     } else if (value is List<dynamic>) {
