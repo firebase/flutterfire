@@ -18,7 +18,7 @@ class QueryWeb extends QueryPlatform {
   static const _kChangeTypeModified = "modified";
   static const _kChangeTypeRemoved = "removed";
 
-  /// Builds an instance of [QueryWeb] using [_path] & [_webQuery]
+  /// Builds an instance of [QueryWeb] delegating to a package:firebase [Query]
   /// to delegate queries to underlying firestore web plugin
   QueryWeb(
     this._firestore,
