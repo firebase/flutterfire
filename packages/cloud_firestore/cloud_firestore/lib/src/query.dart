@@ -66,15 +66,17 @@ class Query {
     bool isNull,
   }) =>
       Query._(
-          _delegate.where(field,
-              isEqualTo: isEqualTo,
-              isLessThan: isLessThan,
-              isLessThanOrEqualTo: isLessThanOrEqualTo,
-              isGreaterThan: isGreaterThan,
-              isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-              arrayContainsAny: arrayContainsAny,
-              arrayContains: arrayContains,
-              whereIn: whereIn,
+          _delegate.where(_CodecUtility.valueEncode(field),
+              isEqualTo: _CodecUtility.valueEncode(isEqualTo),
+              isLessThan: _CodecUtility.valueEncode(isLessThan),
+              isLessThanOrEqualTo:
+                  _CodecUtility.valueEncode(isLessThanOrEqualTo),
+              isGreaterThan: _CodecUtility.valueEncode(isGreaterThan),
+              isGreaterThanOrEqualTo:
+                  _CodecUtility.valueEncode(isGreaterThanOrEqualTo),
+              arrayContainsAny: _CodecUtility.valueEncode(arrayContainsAny),
+              arrayContains: _CodecUtility.valueEncode(arrayContains),
+              whereIn: _CodecUtility.valueEncode(whereIn),
               isNull: isNull),
           firestore);
 
