@@ -27,7 +27,7 @@ class MockWebWriteBatch extends Mock implements web.WriteBatch {}
 
 class MockDocumentReference extends Mock implements DocumentReferenceWeb {}
 
-class MockFirestore extends Mock implements CloudFirestoreWeb {}
+class MockFirestore extends Mock implements FirestoreWeb {}
 
 class MockWebDocumentReference extends Mock implements web.DocumentReference {}
 
@@ -51,6 +51,6 @@ web.Firestore mockFirestore() {
   });
   js.context['firebase'] = firebaseMock;
   FirebaseCorePlatform.instance = FirebaseCoreWeb();
-  FirestorePlatform.instance = CloudFirestoreWeb();
+  FirestorePlatform.instance = FirestoreWeb();
   return mockFirestoreWeb;
 }

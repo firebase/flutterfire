@@ -13,7 +13,7 @@ import 'test_common.dart';
 
 class MockWebQuery extends Mock implements web.Query {}
 
-class MockFirestoreWeb extends Mock implements CloudFirestoreWeb {}
+class MockFirestoreWeb extends Mock implements FirestoreWeb {}
 
 class MockWebQuerySnapshot extends Mock implements web.QuerySnapshot {}
 

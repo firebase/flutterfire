@@ -209,27 +209,34 @@ class QueryWeb extends QueryPlatform {
     web.Query query = _webQuery;
 
     if (isEqualTo != null) {
-      query = query.where(usableField, "==", CodecUtility.valueEncode(isEqualTo));
+      query =
+          query.where(usableField, "==", CodecUtility.valueEncode(isEqualTo));
     }
     if (isLessThan != null) {
-      query = query.where(usableField, "<", CodecUtility.valueEncode(isLessThan));
+      query =
+          query.where(usableField, "<", CodecUtility.valueEncode(isLessThan));
     }
     if (isLessThanOrEqualTo != null) {
-      query = query.where(usableField, "<=", CodecUtility.valueEncode(isLessThanOrEqualTo));
+      query = query.where(
+          usableField, "<=", CodecUtility.valueEncode(isLessThanOrEqualTo));
     }
     if (isGreaterThan != null) {
-      query = query.where(usableField, ">", CodecUtility.valueEncode(isGreaterThan));
+      query = query.where(
+          usableField, ">", CodecUtility.valueEncode(isGreaterThan));
     }
     if (isGreaterThanOrEqualTo != null) {
-      query = query.where(usableField, ">=", CodecUtility.valueEncode(isGreaterThanOrEqualTo));
+      query = query.where(
+          usableField, ">=", CodecUtility.valueEncode(isGreaterThanOrEqualTo));
     }
     if (arrayContains != null) {
-      query = query.where(usableField, "array-contains", CodecUtility.valueEncode(arrayContains));
+      query = query.where(usableField, "array-contains",
+          CodecUtility.valueEncode(arrayContains));
     }
     if (arrayContainsAny != null) {
       assert(arrayContainsAny.length <= 10,
           "array contains can have maximum of 10 items");
-      query = query.where(usableField, "array-contains-any", CodecUtility.valueEncode(arrayContainsAny));
+      query = query.where(usableField, "array-contains-any",
+          CodecUtility.valueEncode(arrayContainsAny));
     }
     if (whereIn != null) {
       assert(

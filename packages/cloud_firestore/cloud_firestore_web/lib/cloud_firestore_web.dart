@@ -17,18 +17,18 @@ import 'package:cloud_firestore_web/src/write_batch_web.dart';
 
 /// Web implementation for [FirestorePlatform]
 /// delegates calls to firestore web plugin
-class CloudFirestoreWeb extends FirestorePlatform {
+class FirestoreWeb extends FirestorePlatform {
   /// instance of Firestore from the web plugin
   final Firestore _webFirestore;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
-    FirestorePlatform.instance = CloudFirestoreWeb();
+    FirestorePlatform.instance = FirestoreWeb();
   }
 
   /// Builds an instance of [CloudFirestoreWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  CloudFirestoreWeb({FirebaseApp app})
+  FirestoreWeb({FirebaseApp app})
       : _webFirestore = firebase
             .firestore(firebase.app((app ?? FirebaseApp.instance).name)),
         super(app: app ?? FirebaseApp.instance) {
@@ -36,7 +36,7 @@ class CloudFirestoreWeb extends FirestorePlatform {
   }
 
   @override
-  FirestorePlatform withApp(FirebaseApp app) => CloudFirestoreWeb(app: app);
+  FirestorePlatform withApp(FirebaseApp app) => FirestoreWeb(app: app);
 
   @override
   CollectionReferencePlatform collection(String path) {
