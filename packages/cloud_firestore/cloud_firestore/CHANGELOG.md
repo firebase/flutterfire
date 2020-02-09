@@ -1,3 +1,7 @@
+## 0.13.1+1
+
+* Fixed crashes when using `Query#where` with `DocumentReference` objects
+
 ## 0.13.1
 
 * Migrate to `cloud_firestore_platform_interface`.
