@@ -224,7 +224,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
       return;
     }
 
-    ad.dispose();
+    ad.disposeAll();
     result.success(Boolean.TRUE);
   }
 
