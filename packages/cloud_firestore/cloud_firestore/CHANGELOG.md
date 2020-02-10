@@ -2,6 +2,7 @@
 
 * Add web support by default.
 * Require Flutter SDK 1.12.13+hotfix.4 or later
+* Add web support to the example app.
 
 ## 0.13.1+1
 
