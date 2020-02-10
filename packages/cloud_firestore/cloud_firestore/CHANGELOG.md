@@ -1,3 +1,8 @@
+## 0.13.2
+
+* Add web support by default.
+* Require Flutter SDK 1.12.13+hotfix.4 or later
+
 ## 0.13.1+1
 
 * Fixed crashes when using `Query#where` with `DocumentReference` objects
