@@ -11,6 +11,6 @@ class FieldValueWeb extends FieldValuePlatform {
   /// The js-interop delegate for this [FieldValuePlatform]
   web.FieldValue data;
 
-  /// Constructor.
+  /// Constructs a web version of [FieldValuePlatform] wrapping a web [FieldValue].
   FieldValueWeb(this.data) : super();
 }

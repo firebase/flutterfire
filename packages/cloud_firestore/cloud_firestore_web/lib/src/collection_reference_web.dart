@@ -12,9 +12,8 @@ import 'package:cloud_firestore_web/src/query_web.dart';
 /// Web implementation for Firestore [CollectionReferencePlatform]
 class CollectionReferenceWeb extends CollectionReferencePlatform {
   /// instance of Firestore from the web plugin
-  final web.Firestore webFirestore;
+  final web.Firestore _webFirestore;
   final FirestorePlatform _firestorePlatform;
-  final List<String> pathComponents;
   // disabling lint as it's only visible for testing
   @visibleForTesting
   QueryWeb queryDelegate; // ignore: public_member_api_docs
@@ -22,11 +21,11 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
   /// Creates an instance of [CollectionReferenceWeb] which represents path
   /// at [pathComponents] and uses implementation of [webFirestore]
   CollectionReferenceWeb(
-      this._firestorePlatform, this.webFirestore, this.pathComponents)
+      this._firestorePlatform, this._webFirestore, List<String> pathComponents)
       : queryDelegate = QueryWeb(
           _firestorePlatform,
           pathComponents.join("/"),
-          webFirestore.collection(pathComponents.join("/")),
+          _webFirestore.collection(pathComponents.join("/")),
         ),
         super(_firestorePlatform, pathComponents);
 
@@ -36,7 +35,7 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
       return null;
     }
     return DocumentReferenceWeb(
-      webFirestore,
+      _webFirestore,
       firestore,
       (List<String>.from(pathComponents)..removeLast()),
     );
@@ -47,13 +46,13 @@ class CollectionReferenceWeb extends CollectionReferencePlatform {
     List<String> childPath;
     if (path == null) {
       web.DocumentReference doc =
-          webFirestore.collection(pathComponents.join('/')).doc();
+          _webFirestore.collection(pathComponents.join('/')).doc();
       childPath = doc.path.split('/');
     } else {
       childPath = List<String>.from(pathComponents)..addAll(path.split(('/')));
     }
     return DocumentReferenceWeb(
-      webFirestore,
+      _webFirestore,
       firestore,
       childPath,
     );

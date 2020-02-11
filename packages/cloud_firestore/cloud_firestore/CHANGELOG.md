@@ -1,6 +1,14 @@
-## 0.13.1
+## 0.13.2
 
 * Added support for Flutter Web
+
+## 0.13.1+1
+
+* Fixed crashes when using `Query#where` with `DocumentReference` objects
+
+## 0.13.1
+
+* Migrate to `cloud_firestore_platform_interface`.
 
 ## 0.13.0+2
 

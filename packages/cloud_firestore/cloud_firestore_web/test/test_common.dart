@@ -4,7 +4,7 @@
 
 import 'dart:js' as js;
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_web/firestore_web.dart';
+import 'package:cloud_firestore_web/cloud_firestore_web.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:mockito/mockito.dart';
