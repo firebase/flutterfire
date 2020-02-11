@@ -348,7 +348,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                   padding: const EdgeInsets.all(16),
                   child: Text(
                     '1 result found',
-                    style: Theme.of(context).textTheme.body2,
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ),
               ),
@@ -376,12 +376,13 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                                   margin: const EdgeInsets.only(bottom: 4),
                                   child: Text(
                                     'SPAN Reader',
-                                    style: Theme.of(context).textTheme.body2,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
                                   ),
                                 ),
                                 Text(
                                   'Vol. 2',
-                                  style: Theme.of(context).textTheme.body2,
+                                  style: Theme.of(context).textTheme.bodyText1,
                                 ),
                                 Expanded(
                                   child: Column(
