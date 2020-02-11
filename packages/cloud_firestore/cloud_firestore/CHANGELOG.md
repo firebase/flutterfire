@@ -1,3 +1,7 @@
+## 0.13.2+1
+
+* Add Web integration documentation to README.
+
 ## 0.13.2
 
 * Add web support by default.
