@@ -14,7 +14,7 @@ that enable Flutter apps to use [Firebase](https://firebase.google.com/) service
 
 | Plugin | Version | Firebase feature | Source code | Web? |
 |---|---|---|---|---|
-| [cloud_firestore][firestore_pub] | ![pub package][firestore_badge] | [Cloud Firestore][firestore_product] | [`cloud_firestore`][firestore_code] | |
+| [cloud_firestore][firestore_pub] | ![pub package][firestore_badge] | [Cloud Firestore][firestore_product] | [`cloud_firestore`][firestore_code] | <img src="https://user-images.githubusercontent.com/394889/70172910-9174c880-1686-11ea-8e2e-3d8c1cc78cce.png" alt="hummingbird" width="25"> |
 | [cloud_functions][functions_pub] | ![pub package][functions_badge] | [Cloud Functions][functions_product] | [`cloud_functions`][functions_code] | |
 | [firebase_admob][admob_pub] | ![pub package][admob_badge] | [Firebase AdMob][admob_product] | [`firebase_admob`][admob_code] | |
 | [firebase_analytics][analytics_pub] | ![pub package][analytics_badge] | [Firebase Analytics][analytics_product] | [`firebase_analytics`][analytics_code] | |
