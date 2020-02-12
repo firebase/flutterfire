@@ -1,3 +1,7 @@
+## 6.0.15
+
+* Declares Android Firebase Messaging dependency as `api` to allow it to be accessed from the app, and updates documentation.
+
 ## 6.0.14
 
 * Fix for missing UserAgent.h compilation failures.
