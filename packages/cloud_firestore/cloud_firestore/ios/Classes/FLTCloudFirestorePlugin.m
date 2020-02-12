@@ -743,7 +743,7 @@ const UInt8 DOCUMENT_ID = 139;
     [batch commitWithCompletion:defaultCompletionBlock];
     [_batches removeObjectForKey:handle];
   } else if ([@"Firestore#enablePersistence" isEqualToString:call.method]) {
-    bool enable = (bool)call.arguments[@"enable"];
+    bool enable = ((NSNumber *)call.arguments[@"enable"]).boolValue;
     FIRFirestoreSettings *settings = [[FIRFirestoreSettings alloc] init];
     settings.persistenceEnabled = enable;
     FIRFirestore *db = getFirestore(call.arguments);
@@ -752,13 +752,13 @@ const UInt8 DOCUMENT_ID = 139;
   } else if ([@"Firestore#settings" isEqualToString:call.method]) {
     FIRFirestoreSettings *settings = [[FIRFirestoreSettings alloc] init];
     if (![call.arguments[@"persistenceEnabled"] isEqual:[NSNull null]]) {
-      settings.persistenceEnabled = (bool)call.arguments[@"persistenceEnabled"];
+      settings.persistenceEnabled = ((NSNumber *)call.arguments[@"persistenceEnabled"]).boolValue;
     }
     if (![call.arguments[@"host"] isEqual:[NSNull null]]) {
       settings.host = (NSString *)call.arguments[@"host"];
     }
     if (![call.arguments[@"sslEnabled"] isEqual:[NSNull null]]) {
-      settings.sslEnabled = (bool)call.arguments[@"sslEnabled"];
+      settings.sslEnabled = ((NSNumber *)call.arguments[@"sslEnabled"]).boolValue;
     }
     if (![call.arguments[@"cacheSizeBytes"] isEqual:[NSNull null]]) {
       settings.cacheSizeBytes = ((NSNumber *)call.arguments[@"cacheSizeBytes"]).intValue;

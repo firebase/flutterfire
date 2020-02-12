@@ -1,6 +1,29 @@
-## 0.13.1
+## 0.13.3
 
 * Add macOS support
+
+## 0.13.2+1
+
+* Add Web integration documentation to README.
+
+## 0.13.2
+
+* Add web support by default.
+* Require Flutter SDK 1.12.13+hotfix.4 or later
+* Add web support to the example app.
+
+## 0.13.1+1
+
+* Fixed crashes when using `Query#where` with `DocumentReference` objects
+
+## 0.13.1
+
+* Migrate to `cloud_firestore_platform_interface`.
+
+## 0.13.0+2
+
+* Fixed `persistenceEnabled`, `sslEnabled`, and `timestampsInSnapshotsEnabled` on iOS.
+>>>>>>> 424b5d0a5c575d83dfd31f6ec5417208664f5abd
 
 ## 0.13.0+1
 

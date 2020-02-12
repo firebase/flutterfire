@@ -1,3 +1,11 @@
+## 0.4.3+3
+
+* Fix overrides a deprecated API.
+
+## 0.4.3+2
+
+* Add integration instructions for the `web` platform.
+
 ## 0.4.3+1
 
 * Move `Platform.isIOS` check behind a configurable import so that pub.dev registers

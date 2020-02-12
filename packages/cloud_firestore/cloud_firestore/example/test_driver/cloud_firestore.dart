@@ -14,7 +14,7 @@ void main() {
     Firestore firestore;
     Firestore firestoreWithSettings;
 
-    setUp(() async {
+    setUpAll(() async {
       final FirebaseOptions firebaseOptions = const FirebaseOptions(
         googleAppID: '1:79601577497:ios:5f2bcc6ba8cecddd',
         gcmSenderID: '79601577497',
@@ -371,6 +371,68 @@ void main() {
       final DocumentSnapshot snapshot2 = results[1];
       expect(snapshot1.documentID, 'la');
       expect(snapshot2.documentID, 'tokyo');
+    });
+
+    test('Query.whereArrayContainsAny using DocumentReference', () async {
+      final CollectionReference ref = firestore.collection('messages');
+      await ref.document('test-docRef-1').setData({"message": "1"});
+      await ref.document('test-docRef-2').setData({"message": "2"});
+
+      await ref.document('test-docRef').setData(<String, dynamic>{
+        'children': <DocumentReference>[
+          ref.document("test-docRef-1"),
+          ref.document("test-docRef-2")
+        ],
+      });
+
+      final QuerySnapshot snapshot = await ref.where('children',
+          arrayContainsAny: <DocumentReference>[
+            ref.document("test-docRef-1"),
+            ref.document("test-docRef-2")
+          ]).getDocuments();
+      final List<DocumentSnapshot> results = snapshot.documents;
+      expect(results.length, 1);
+      final DocumentSnapshot actual = results[0];
+      expect(actual.documentID, 'test-docRef');
+    });
+
+    test('Query.whereIn using DocumentReference', () async {
+      final CollectionReference ref = firestore.collection('messages');
+      await ref.document('test-docRef-1').setData({"message": "1"});
+      await ref.document('test-docRef-2').setData({"message": "2"});
+
+      final QuerySnapshot snapshot = await ref.where(FieldPath.documentId,
+          whereIn: <DocumentReference>[
+            ref.document("test-docRef-1"),
+            ref.document("test-docRef-2")
+          ]).getDocuments();
+      final List<DocumentSnapshot> results = snapshot.documents;
+      expect(results.length, 2);
+      expect(results.where((item) => item.documentID == "test-docRef-1").length,
+          equals(1));
+      expect(results.where((item) => item.documentID == "test-docRef-2").length,
+          equals(1));
+    });
+
+    test('Query.arrayContains using DocumentReference', () async {
+      final CollectionReference ref = firestore.collection('messages');
+      await ref.document('test-docRef-1').setData({"message": "1"});
+      await ref.document('test-docRef-2').setData({"message": "2"});
+
+      await ref.document('test-docRef').setData(<String, dynamic>{
+        'children': <DocumentReference>[
+          ref.document("test-docRef-1"),
+          ref.document("test-docRef-2")
+        ],
+      });
+
+      final QuerySnapshot snapshot = await ref
+          .where('children', arrayContains: ref.document("test-docRef-1"))
+          .getDocuments();
+      final List<DocumentSnapshot> results = snapshot.documents;
+      expect(results.length, 1);
+      final DocumentSnapshot actual = results[0];
+      expect(actual.documentID, 'test-docRef');
     });
   });
 }
