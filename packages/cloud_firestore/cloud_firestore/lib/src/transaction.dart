@@ -4,38 +4,27 @@
 
 part of cloud_firestore;
 
+/// The [TransactionHandler] may be executed multiple times; it should be able
+/// to handle multiple executions.
 typedef Future<dynamic> TransactionHandler(Transaction transaction);
 
 class Transaction {
-  @visibleForTesting
-  Transaction(this._transactionId, this._firestore);
+  final Firestore _firestore;
 
-  int _transactionId;
-  Firestore _firestore;
-  List<Future<dynamic>> _pendingResults = <Future<dynamic>>[];
-  Future<void> _finish() => Future.wait<void>(_pendingResults);
-
-  /// Reads the document referenced by the provided DocumentReference.
-  Future<DocumentSnapshot> get(DocumentReference documentReference) {
-    final Future<DocumentSnapshot> result = _get(documentReference);
-    _pendingResults.add(result);
-    return result;
+  Transaction._(this._delegate, this._firestore) {
+    platform.TransactionPlatform.verifyExtends(_delegate);
   }
 
-  Future<DocumentSnapshot> _get(DocumentReference documentReference) async {
-    final Map<String, dynamic> result = await Firestore.channel
-        .invokeMapMethod<String, dynamic>('Transaction#get', <String, dynamic>{
-      'app': _firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
-    });
+  platform.TransactionPlatform _delegate;
+
+  // ignore: unused_element
+  Future<void> _finish() => _delegate.finish();
+
+  /// Reads the document referenced by the provided DocumentReference.
+  Future<DocumentSnapshot> get(DocumentReference documentReference) async {
+    final result = await _delegate.get(documentReference._delegate);
     if (result != null) {
-      return DocumentSnapshot._(
-          documentReference.path,
-          result['data']?.cast<String, dynamic>(),
-          SnapshotMetadata._(result['metadata']['hasPendingWrites'],
-              result['metadata']['isFromCache']),
-          _firestore);
+      return DocumentSnapshot._(result, _firestore);
     } else {
       return null;
     }
@@ -46,18 +35,7 @@ class Transaction {
   /// Awaiting the returned [Future] is optional and will be done automatically
   /// when the transaction handler completes.
   Future<void> delete(DocumentReference documentReference) {
-    final Future<void> result = _delete(documentReference);
-    _pendingResults.add(result);
-    return result;
-  }
-
-  Future<void> _delete(DocumentReference documentReference) async {
-    return Firestore.channel
-        .invokeMethod<void>('Transaction#delete', <String, dynamic>{
-      'app': _firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
-    });
+    return _delegate.delete(documentReference._delegate);
   }
 
   /// Updates fields in the document referred to by [documentReference].
@@ -67,20 +45,8 @@ class Transaction {
   /// when the transaction handler completes.
   Future<void> update(
       DocumentReference documentReference, Map<String, dynamic> data) async {
-    final Future<void> result = _update(documentReference, data);
-    _pendingResults.add(result);
-    return result;
-  }
-
-  Future<void> _update(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
-    return Firestore.channel
-        .invokeMethod<void>('Transaction#update', <String, dynamic>{
-      'app': _firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
-      'data': data,
-    });
+    return _delegate.update(documentReference._delegate,
+        _CodecUtility.replaceValueWithDelegatesInMap(data));
   }
 
   /// Writes to the document referred to by the provided [DocumentReference].
@@ -91,19 +57,7 @@ class Transaction {
   /// when the transaction handler completes.
   Future<void> set(
       DocumentReference documentReference, Map<String, dynamic> data) {
-    final Future<void> result = _set(documentReference, data);
-    _pendingResults.add(result);
-    return result;
-  }
-
-  Future<void> _set(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
-    return Firestore.channel
-        .invokeMethod<void>('Transaction#set', <String, dynamic>{
-      'app': _firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
-      'data': data,
-    });
+    return _delegate.set(documentReference._delegate,
+        _CodecUtility.replaceValueWithDelegatesInMap(data));
   }
 }
