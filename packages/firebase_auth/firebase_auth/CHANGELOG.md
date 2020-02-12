@@ -1,6 +1,18 @@
-## 0.15.4
+## 0.15.5
 
 * Add macOS support
+
+## 0.15.4+1
+
+* Fix fallthrough bug in Android code.
+
+## 0.15.4
+
+* Add support for `confirmPasswordReset` on Android and iOS.
+
+## 0.15.3+1
+
+* Add integration instructions for the `web` platform.
 
 ## 0.15.3
 
