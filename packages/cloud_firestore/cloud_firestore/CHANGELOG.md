@@ -23,7 +23,6 @@
 ## 0.13.0+2
 
 * Fixed `persistenceEnabled`, `sslEnabled`, and `timestampsInSnapshotsEnabled` on iOS.
->>>>>>> 424b5d0a5c575d83dfd31f6ec5417208664f5abd
 
 ## 0.13.0+1
 
