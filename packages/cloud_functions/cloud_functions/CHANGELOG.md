@@ -16,7 +16,6 @@
 * Update to use the platform interface to execute calls.
 * Fix timeout for Android (which had been ignoring explicit timeouts due to unit mismatch).
 * Update repository location based on platform interface refactoring.
->>>>>>> 424b5d0a5c575d83dfd31f6ec5417208664f5abd:packages/cloud_functions/cloud_functions/CHANGELOG.md
 
 ## 0.4.1+6
 
