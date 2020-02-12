@@ -6,37 +6,23 @@ part of cloud_firestore;
 
 /// A QuerySnapshot contains zero or more DocumentSnapshot objects.
 class QuerySnapshot {
-  QuerySnapshot._(Map<dynamic, dynamic> data, Firestore firestore)
-      : documents = List<DocumentSnapshot>.generate(data['documents'].length,
-            (int index) {
-          return DocumentSnapshot._(
-            data['paths'][index],
-            _asStringKeyedMap(data['documents'][index]),
-            SnapshotMetadata._(
-              data['metadatas'][index]['hasPendingWrites'],
-              data['metadatas'][index]['isFromCache'],
-            ),
-            firestore,
-          );
-        }),
-        documentChanges = List<DocumentChange>.generate(
-            data['documentChanges'].length, (int index) {
-          return DocumentChange._(
-            data['documentChanges'][index],
-            firestore,
-          );
-        }),
-        metadata = SnapshotMetadata._(
-          data['metadata']['hasPendingWrites'],
-          data['metadata']['isFromCache'],
-        );
+  final platform.QuerySnapshotPlatform _delegate;
+  final Firestore _firestore;
+
+  QuerySnapshot._(this._delegate, this._firestore) {
+    platform.QuerySnapshotPlatform.verifyExtends(_delegate);
+  }
 
   /// Gets a list of all the documents included in this snapshot
-  final List<DocumentSnapshot> documents;
+  List<DocumentSnapshot> get documents => _delegate.documents
+      .map((item) => DocumentSnapshot._(item, _firestore))
+      .toList();
 
   /// An array of the documents that changed since the last snapshot. If this
   /// is the first snapshot, all documents will be in the list as Added changes.
-  final List<DocumentChange> documentChanges;
+  List<DocumentChange> get documentChanges => _delegate.documentChanges
+      .map((item) => DocumentChange._(item, _firestore))
+      .toList();
 
-  final SnapshotMetadata metadata;
+  SnapshotMetadata get metadata => SnapshotMetadata._(_delegate.metadata);
 }
