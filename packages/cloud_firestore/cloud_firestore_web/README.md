@@ -6,31 +6,24 @@ The web implementation of [`cloud_firestore`][1].
 
 ### Import the package
 
-To use this plugin in your Flutter app on the web, simply add it as a
-dependency in your `pubspec.yaml` alongside the base `cloud_firestore`
-plugin.
+This package is the endorsed implementation of `cloud_firestore` for the web platform since version `0.13.2`, so it gets automatically added to your application by depending on `cloud_firestore: ^0.13.2`.
 
-_(This is only temporary: in the future we hope to make this package
-an "endorsed" implementation of `cloud_firestore`, so it will automatically
-be included in your app when you run your Flutter app on the web.)_
-
-Add this to your `pubspec.yaml`:
+No further modifications to your `pubspec.yaml` should be required in a recent enough version of Flutter (`>=1.12.13+hotfix.4`):
 
 ```yaml
 ...
 dependencies:
   ...
-  cloud_firestore: ^0.13.1
-  cloud_firestore_web: ^0.1.0
+  cloud_firestore: ^0.13.2
   ...
 ```
 
-### Updating `index.html`
+### Update `index.html`
 
 Due to [this bug in dartdevc][2], you will need to manually add the Firebase
 JavaScript files to your `index.html` file.
 
-In your app directory, edit `web/index.html` to add the line:
+In your app directory, edit `web/index.html` to add the following:
 
 ```html
 <html>
@@ -38,15 +31,50 @@ In your app directory, edit `web/index.html` to add the line:
     <body>
         <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-firestore.js"></script>
+        <!-- Other firebase SDKs/config here -->
         <script src="main.dart.js"></script>
     </body>
 </html>
 ```
 
-### Using the plugin
+### Initialize Firebase
 
-Once you have added the `cloud_firebase_web` dependency to your pubspec,
-you can use `package:cloud_firebase` as normal.
+If your app is using the "default" Firebase app _(this means that you're not doing any `package:firebase_core` initialization yourself)_,
+you'll need to initialize it now, following the steps in the [Firebase Web Setup][3] docs.
 
-[1]: ../cloud_firestore
+Specifically, you'll want to add the following lines to your `web/index.html` file:
+
+```html
+<body>
+  <!-- Previously loaded Firebase SDKs -->
+
+  <!-- ADD THIS BEFORE YOUR main.dart.js SCRIPT -->
+  <script>
+    // TODO: Replace the following with your app's Firebase project configuration.
+    // See: https://support.google.com/firebase/answer/7015592
+    var firebaseConfig = {
+      apiKey: "...",
+      authDomain: "[YOUR_PROJECT].firebaseapp.com",
+      databaseURL: "https://[YOUR_PROJECT].firebaseio.com",
+      projectId: "[YOUR_PROJECT]",
+      storageBucket: "[YOUR_PROJECT].appspot.com",
+      messagingSenderId: "...",
+      appId: "1:...:web:...",
+      measurementId: "G-..."
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <!-- END OF FIREBASE INIT CODE -->
+
+  <script src="main.dart.js"></script>
+</body>
+```
+
+### Use the plugin
+
+Once you have modified your `web/index.html` file, you should be able to use `package:cloud_firestore` as normal. Refer to the [`cloud_firestore` documentation][1] for more details.
+
+[1]: https://pub.dev/packages/cloud_firestore
 [2]: https://github.com/dart-lang/sdk/issues/33979
+[3]: https://firebase.google.com/docs/web/setup#add-sdks-initialize

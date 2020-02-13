@@ -1,6 +1,16 @@
+## 0.13.3
+
+* Fixed crashes when using `FieldValue.arrayUnion` & `FieldValue.arrayRemove` with `DocumentReference` objects
+
+## 0.13.2+1
+
+* Add Web integration documentation to README.
+
 ## 0.13.2
 
-* Added support for Flutter Web
+* Add web support by default.
+* Require Flutter SDK 1.12.13+hotfix.4 or later
+* Add web support to the example app.
 
 ## 0.13.1+1
 
