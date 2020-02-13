@@ -21,7 +21,7 @@ A new flutter plugin project.
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'FlutterMacOS'
   s.dependency 'Firebase/Core'
-  s.osx.deployment_target = '10.11'
+  s.platform = :osx, '10.11'
   s.static_framework = true
 
   s.prepare_command = <<-CMD
