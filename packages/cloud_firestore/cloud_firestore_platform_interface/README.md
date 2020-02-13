@@ -8,7 +8,7 @@ same interface.
 
 # Usage
 
-To implement a new platform-specific implementation of `cloud_firebase`, extend
+To implement a new platform-specific implementation of `cloud_firestore`, extend
 [`FirestorePlatform`][2] with an implementation that performs the
 platform-specific behavior, and when you register your plugin, set the default
 `FirestorePlatform` by calling
