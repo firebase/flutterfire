@@ -1,4 +1,4 @@
-## 0.13.3
+## 0.13.2+2
 
 * Fixed crashes when using `FieldValue.arrayUnion` & `FieldValue.arrayRemove` with `DocumentReference` objects
 
