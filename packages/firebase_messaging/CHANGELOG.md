@@ -1,3 +1,7 @@
+## 6.0.11
+
+* Add macOS support
+
 ## 6.0.10
 
 * Update README to explain how to correctly implement Android background message handling with the new v2 embedding. 
