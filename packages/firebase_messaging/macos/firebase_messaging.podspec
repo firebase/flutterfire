@@ -23,7 +23,7 @@ Firebase Cloud Messaging plugin for Flutter.
   s.dependency 'Firebase/Core'
   s.dependency 'Firebase/Messaging'
   s.static_framework = true
-  s.osx.deployment_target = '10.11'
+  s.platform = :osx, '10.11'
 
   s.prepare_command = <<-CMD
       echo // Generated file, do not edit > Classes/UserAgent.h
