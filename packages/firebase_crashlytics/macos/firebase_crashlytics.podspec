@@ -19,7 +19,7 @@ A new flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
-  s.osx.deployment_target = '10.11'
+  s.platform = :osx, '10.11'
   s.static_framework = true
   s.dependency 'FlutterMacOS'
   s.dependency 'Fabric'
