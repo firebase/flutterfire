@@ -20,7 +20,7 @@ dependencies:
   meta: ^1.1.6
   flutter:
     sdk: flutter
-  firebase_core: ^0.4.0
+  firebase_core: ^0.4.4
   cloud_functions_platform_interface: ^1.0.0
   cloud_functions_web: ^1.0.2
 
