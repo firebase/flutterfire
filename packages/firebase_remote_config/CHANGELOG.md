@@ -1,3 +1,6 @@
+## 0.3.0+2
+* Handle Server and Client Exception when fetching remote config.
+
 ## 0.3.0+1
 
 * Remove the deprecated `author:` field from pubspec.yaml
