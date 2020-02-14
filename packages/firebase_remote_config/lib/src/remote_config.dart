@@ -127,7 +127,11 @@ class RemoteConfig extends ChangeNotifier {
       _lastFetchTime =
           DateTime.fromMillisecondsSinceEpoch(e.details['lastFetchTime']);
       _lastFetchStatus = _parseLastFetchStatus(e.details['lastFetchStatus']);
-      if (e.code == 'fetchFailedThrottled') {
+      if (e.code == 'fetchConfigServerException') {
+        throw Exception(e.message);
+      } else if (e.code == 'fetchConfigClientException') {
+        throw Exception(e.message);
+      } if (e.code == 'fetchFailedThrottled') {
         final int fetchThrottleEnd = e.details['fetchThrottledEnd'];
         throw FetchThrottledException._(endTimeInMills: fetchThrottleEnd);
       } else {

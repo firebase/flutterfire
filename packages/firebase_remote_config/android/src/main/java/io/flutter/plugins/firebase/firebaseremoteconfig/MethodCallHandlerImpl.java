@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigServerException;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigClientException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigInfo;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
@@ -78,7 +80,17 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
                       if (!task.isSuccessful()) {
                         final Exception exception = task.getException();
 
-                        if (exception instanceof FirebaseRemoteConfigFetchThrottledException) {
+                        if (exception instanceof FirebaseRemoteConfigServerException) {
+                          properties.put(
+                              "fetchErrorHttpStatusCode",
+                              ((FirebaseRemoteConfigServerException) exception)
+                                  .getHttpStatusCode());
+                          String errorMessage = exception.getMessage();
+                          result.error("fetchConfigServerException", errorMessage, properties);
+                        } else if (exception instanceof FirebaseRemoteConfigClientException) {
+                          String errorMessage = exception.getMessage();
+                          result.error("fetchConfigClientException", errorMessage, properties);
+                        } else if (exception instanceof FirebaseRemoteConfigFetchThrottledException) {
                           properties.put(
                               "fetchThrottledEnd",
                               ((FirebaseRemoteConfigFetchThrottledException) exception)
