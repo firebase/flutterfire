@@ -8,10 +8,10 @@ import android.content.SharedPreferences;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigServerException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigClientException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigInfo;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigServerException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
 import io.flutter.plugin.common.MethodCall;
@@ -90,7 +90,8 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
                         } else if (exception instanceof FirebaseRemoteConfigClientException) {
                           String errorMessage = exception.getMessage();
                           result.error("fetchConfigClientException", errorMessage, properties);
-                        } else if (exception instanceof FirebaseRemoteConfigFetchThrottledException) {
+                        } else if (exception
+                            instanceof FirebaseRemoteConfigFetchThrottledException) {
                           properties.put(
                               "fetchThrottledEnd",
                               ((FirebaseRemoteConfigFetchThrottledException) exception)

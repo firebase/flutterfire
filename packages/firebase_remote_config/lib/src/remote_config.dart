@@ -131,7 +131,8 @@ class RemoteConfig extends ChangeNotifier {
         throw Exception(e.message);
       } else if (e.code == 'fetchConfigClientException') {
         throw Exception(e.message);
-      } if (e.code == 'fetchFailedThrottled') {
+      }
+      if (e.code == 'fetchFailedThrottled') {
         final int fetchThrottleEnd = e.details['fetchThrottledEnd'];
         throw FetchThrottledException._(endTimeInMills: fetchThrottleEnd);
       } else {
