@@ -4,8 +4,9 @@
 
 package io.flutter.plugins.firebase.cloudfirestore;
 
-import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.util.SparseArray;
 import androidx.annotation.NonNull;
@@ -38,6 +39,8 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -55,11 +58,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class CloudFirestorePlugin implements MethodCallHandler {
+public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin {
 
   private static final String TAG = "CloudFirestorePlugin";
-  private final MethodChannel channel;
-  private final Activity activity;
+  private MethodChannel channel;
+  private final Handler mainLooperHandler;
 
   // Handles are ints used as indexes into the sparse array of active observers
   private int nextListenerHandle = 0;
@@ -71,18 +74,34 @@ public class CloudFirestorePlugin implements MethodCallHandler {
   private final SparseArray<Transaction> transactions = new SparseArray<>();
   private final SparseArray<TaskCompletionSource> completionTasks = new SparseArray<>();
 
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    final MethodChannel channel =
-        new MethodChannel(
-            registrar.messenger(),
-            "plugins.flutter.io/cloud_firestore",
-            new StandardMethodCodec(FirestoreMessageCodec.INSTANCE));
-    channel.setMethodCallHandler(new CloudFirestorePlugin(channel, registrar.activity()));
+  public CloudFirestorePlugin() {
+    mainLooperHandler = new Handler(Looper.getMainLooper());
   }
 
-  private CloudFirestorePlugin(MethodChannel channel, Activity activity) {
-    this.channel = channel;
-    this.activity = activity;
+  public static void registerWith(PluginRegistry.Registrar registrar) {
+    CloudFirestorePlugin instance = new CloudFirestorePlugin();
+    instance.setupMethodChannel(registrar.messenger());
+  }
+
+  @Override
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
+    setupMethodChannel(binding.getBinaryMessenger());
+  }
+
+  private void setupMethodChannel(BinaryMessenger binaryMessenger) {
+    channel =
+        new MethodChannel(
+            binaryMessenger,
+            "plugins.flutter.io/cloud_firestore",
+            new StandardMethodCodec(FirestoreMessageCodec.INSTANCE));
+
+    channel.setMethodCallHandler(this);
+  }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);
+    channel = null;
   }
 
   private FirebaseFirestore getFirestore(Map<String, Object> arguments) {
@@ -486,7 +505,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                       completionTasks.append(transactionId, transactionTCS);
 
                       // Start operations on Dart side.
-                      activity.runOnUiThread(
+                      mainLooperHandler.post(
                           new Runnable() {
                             @Override
                             public void run() {
@@ -578,7 +597,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                 metadata.put("hasPendingWrites", documentSnapshot.getMetadata().hasPendingWrites());
                 metadata.put("isFromCache", documentSnapshot.getMetadata().isFromCache());
                 snapshotMap.put("metadata", metadata);
-                activity.runOnUiThread(
+                mainLooperHandler.post(
                     new Runnable() {
                       @Override
                       public void run() {
@@ -586,7 +605,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                       }
                     });
               } catch (final Exception e) {
-                activity.runOnUiThread(
+                mainLooperHandler.post(
                     new Runnable() {
                       @Override
                       public void run() {
@@ -610,7 +629,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
               Map<String, Object> data = (Map<String, Object>) arguments.get("data");
               try {
                 transaction.update(getDocumentReference(arguments), data);
-                activity.runOnUiThread(
+                mainLooperHandler.post(
                     new Runnable() {
                       @Override
                       public void run() {
@@ -618,7 +637,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                       }
                     });
               } catch (final Exception e) {
-                activity.runOnUiThread(
+                mainLooperHandler.post(
                     new Runnable() {
                       @Override
                       public void run() {
@@ -642,7 +661,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
               Map<String, Object> data = (Map<String, Object>) arguments.get("data");
               try {
                 transaction.set(getDocumentReference(arguments), data);
-                activity.runOnUiThread(
+                mainLooperHandler.post(
                     new Runnable() {
                       @Override
                       public void run() {
@@ -650,7 +669,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                       }
                     });
               } catch (final Exception e) {
-                activity.runOnUiThread(
+                mainLooperHandler.post(
                     new Runnable() {
                       @Override
                       public void run() {
@@ -672,7 +691,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
             protected Void doInBackground(Void... voids) {
               try {
                 transaction.delete(getDocumentReference(arguments));
-                activity.runOnUiThread(
+                mainLooperHandler.post(
                     new Runnable() {
                       @Override
                       public void run() {
@@ -680,7 +699,7 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                       }
                     });
               } catch (final Exception e) {
-                activity.runOnUiThread(
+                mainLooperHandler.post(
                     new Runnable() {
                       @Override
                       public void run() {
