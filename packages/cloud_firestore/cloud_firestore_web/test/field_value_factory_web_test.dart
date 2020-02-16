@@ -35,15 +35,6 @@ void main() {
       expect(actualDouble.data, isInstanceOf<web.FieldValue>());
     });
 
-    test(
-        "increment throws when attempting to increment something that is not a number",
-        () {
-      expect(() {
-        dynamic malformed = "nope";
-        factory.increment(malformed);
-      }, throwsA(isA<TypeError>()));
-    });
-
     test("serverTimestamp", () {
       final FieldValueWeb actual = factory.serverTimestamp();
       expect(actual.data, isInstanceOf<web.FieldValue>());
