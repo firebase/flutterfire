@@ -434,5 +434,24 @@ void main() {
       final DocumentSnapshot actual = results[0];
       expect(actual.documentID, 'test-docRef');
     });
+
+    test('Decode nested maps with DocumentRefrenceValues', () async {
+      final CollectionReference ref = firestore.collection('messages');
+      await ref.document('test-docRef-1').setData({"message": "1"});
+      await ref.document('test-docRef-2').setData({"message": "2"});
+
+      await ref.document('test-docRef').setData(<String, dynamic>{
+        'children': {
+          'children': <DocumentReference>[
+            ref.document("test-docRef-1"),
+            ref.document("test-docRef-2")
+          ]
+        },
+      });
+
+      final List<dynamic> x = (await ref.document("test-docRef").get())
+          .data['children']['children'];
+      x.forEach((item) => expect(item, isInstanceOf<DocumentReference>()));
+    });
   });
 }

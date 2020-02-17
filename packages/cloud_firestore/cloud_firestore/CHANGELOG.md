@@ -1,5 +1,9 @@
 ## 0.13.2+1
 
+* Fixed decoding & encoding platform interface instances in nested maps
+
+## 0.13.2+1
+
 * Add Web integration documentation to README.
 
 ## 0.13.2
