@@ -451,7 +451,8 @@ void main() {
 
       final List<dynamic> children = (await ref.document("test-docRef").get())
           .data['children']['children'];
-      children.forEach((item) => expect(item, isInstanceOf<DocumentReference>()));
+      children
+          .forEach((item) => expect(item, isInstanceOf<DocumentReference>()));
     });
   });
 }
