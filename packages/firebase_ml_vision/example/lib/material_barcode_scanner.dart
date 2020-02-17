@@ -210,11 +210,11 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
         data.size.height - padding.top - padding.bottom;
 
     // Width & height are flipped from CameraController.previewSize on iOS
-    final double imageHeight = defaultTargetPlatform == TargetPlatform.iOS
-        ? imageSize.height
-        : imageSize.width;
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      imageSize = Size(imageSize.height, imageSize.width);
+    }
 
-    final double imageScale = imageHeight / maxLogicalHeight;
+    final double imageScale = imageSize.height / maxLogicalHeight;
     final double halfWidth = imageScale * widget.validRectangle.width / 2;
     final double halfHeight = imageScale * widget.validRectangle.height / 2;
 
