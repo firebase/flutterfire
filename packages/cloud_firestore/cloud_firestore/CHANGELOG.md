@@ -1,4 +1,4 @@
-## 0.13.2+1
+## 0.13.2+2
 
 * Fixed decoding & encoding platform interface instances in nested maps
 
