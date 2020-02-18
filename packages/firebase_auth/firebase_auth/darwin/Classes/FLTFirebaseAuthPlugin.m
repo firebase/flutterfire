@@ -44,6 +44,8 @@ int nextHandle = 0;
   FLTFirebaseAuthPlugin *instance = [[FLTFirebaseAuthPlugin alloc] init];
   instance.channel = channel;
   instance.authStateChangeListeners = [[NSMutableDictionary alloc] init];
+
+// TODO(cbenhagen): macOS depends on https://github.com/flutter/flutter/issues/41471
 #if TARGET_OS_IPHONE
   [registrar addApplicationDelegate:instance];
 #endif
