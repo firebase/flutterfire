@@ -3,6 +3,10 @@
 * Add support for v2 embedding.
 * Require Flutter SDK 1.12.13+hotfix.6 or later
 
+## 0.13.2+2
+
+* Fixed crashes when using `FieldValue.arrayUnion` & `FieldValue.arrayRemove` with `DocumentReference` objects
+
 ## 0.13.2+1
 
 * Add Web integration documentation to README.
