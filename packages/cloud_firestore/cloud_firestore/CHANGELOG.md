@@ -1,3 +1,7 @@
+## 0.13.2+3
+
+* Fixed decoding & encoding platform interface instances in nested maps
+
 ## 0.13.2+2
 
 * Fixed crashes when using `FieldValue.arrayUnion` & `FieldValue.arrayRemove` with `DocumentReference` objects
