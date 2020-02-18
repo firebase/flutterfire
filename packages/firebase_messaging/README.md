@@ -52,8 +52,39 @@ Note: When you are debugging on Android, use a device or AVD with Google Play se
       <category android:name="android.intent.category.DEFAULT" />
   </intent-filter>
   ```
-#### Optionally handle background messages
 
+### iOS Integration
+
+To integrate your plugin into the iOS part of your app, follow these steps:
+
+1. Generate the certificates required by Apple for receiving push notifications following [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) in the Firebase docs. You can skip the section titled "Create the Provisioning Profile".
+
+1. Using the [Firebase Console](https://console.firebase.google.com/) add an iOS app to your project: Follow the assistant, download the generated `GoogleService-Info.plist` file, open `ios/Runner.xcworkspace` with Xcode, and within Xcode place the file inside `ios/Runner`. **Don't** follow the steps named "Add Firebase SDK" and "Add initialization code" in the Firebase assistant.
+
+1. In Xcode, select `Runner` in the Project Navigator. In the Capabilities Tab turn on `Push Notifications` and `Background Modes`, and enable `Background fetch` and `Remote notifications` under `Background Modes`.
+
+1. Follow the steps in the "[Upload your APNs certificate](https://firebase.google.com/docs/cloud-messaging/ios/client#upload_your_apns_certificate)" section of the Firebase docs.
+
+1. Add the following lines to the `(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions`
+method in the `AppDelegate.m`/`AppDelegate.swift` of your iOS project.
+
+Objective-C:
+```objectivec
+if (@available(iOS 10.0, *)) {
+  [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
+}
+```
+
+Swift:
+```swift
+if #available(iOS 10.0, *) {
+  UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+}
+```
+
+### Handle background messages (Optional)
+
+#### Android configuration
 >Background message handling is intended to be performed quickly. Do not perform
 long running tasks as they may not be allowed to finish by the Android system.
 See [Background Execution Limits](https://developer.android.com/about/versions/oreo/background)
@@ -110,6 +141,16 @@ By default background messaging is not enabled. To handle messages in the backgr
    <application android:name=".Application" ...>
    ```
 
+
+#### iOS configuration (Swift)
+1. In `AppDelegate.swift`, add the following:
+```swift
+  FLTFirebaseMessagingPlugin.setPluginRegistrantCallback({ (registry: FlutterPluginRegistry) -> Void in
+    GeneratedPluginRegistrant.register(with: registry);
+  });
+```
+
+#### Usage in the common Dart code
 1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
 
    ```dart
@@ -154,35 +195,6 @@ By default background messaging is not enabled. To handle messages in the backgr
    Note: `configure` should be called early in the lifecycle of your application
    so that it can be ready to receive messages as early as possible. See the
    [example app](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/example) for a demonstration.
-
-### iOS Integration
-
-To integrate your plugin into the iOS part of your app, follow these steps:
-
-1. Generate the certificates required by Apple for receiving push notifications following [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) in the Firebase docs. You can skip the section titled "Create the Provisioning Profile".
-
-1. Using the [Firebase Console](https://console.firebase.google.com/) add an iOS app to your project: Follow the assistant, download the generated `GoogleService-Info.plist` file, open `ios/Runner.xcworkspace` with Xcode, and within Xcode place the file inside `ios/Runner`. **Don't** follow the steps named "Add Firebase SDK" and "Add initialization code" in the Firebase assistant.
-
-1. In Xcode, select `Runner` in the Project Navigator. In the Capabilities Tab turn on `Push Notifications` and `Background Modes`, and enable `Background fetch` and `Remote notifications` under `Background Modes`.
-
-1. Follow the steps in the "[Upload your APNs certificate](https://firebase.google.com/docs/cloud-messaging/ios/client#upload_your_apns_certificate)" section of the Firebase docs.
-
-1. Add the following lines to the `(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions`
-method in the `AppDelegate.m`/`AppDelegate.swift` of your iOS project.
-
-Objective-C:
-```objectivec
-if (@available(iOS 10.0, *)) {
-  [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
-}
-```
-
-Swift:
-```swift
-if #available(iOS 10.0, *) {
-  UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
-}
-```
 
 ### Dart/Flutter Integration
 
