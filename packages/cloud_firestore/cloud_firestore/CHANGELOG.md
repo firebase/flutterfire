@@ -2,6 +2,14 @@
 
 * Add macOS support
 
+## 0.13.2+3
+
+* Fixed decoding & encoding platform interface instances in nested maps
+
+## 0.13.2+2
+
+* Fixed crashes when using `FieldValue.arrayUnion` & `FieldValue.arrayRemove` with `DocumentReference` objects
+
 ## 0.13.2+1
 
 * Add Web integration documentation to README.
