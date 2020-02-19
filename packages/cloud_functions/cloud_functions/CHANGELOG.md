@@ -1,3 +1,7 @@
+## 0.4.2+1
+
+* Fixes the regression of `No implementation found for method CloudFunctions#call` on iOS
+
 ## 0.4.2
 
 * Add macOS support
