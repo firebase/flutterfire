@@ -1,3 +1,7 @@
+## 0.1.3+1
+
+* Add missing instructions for android installation
+
 ## 0.1.3
 
 * Add macOS support
