@@ -40,7 +40,7 @@ dependencies {
 }
 ```
 
-2. Apply the following plugins in the `[project]/android/app/build.gradle` file.
+3. Apply the following plugins in the `[project]/android/app/build.gradle` file.
 ```gradle
 // ADD THIS AT THE BOTTOM
 apply plugin: 'io.fabric'
@@ -52,6 +52,13 @@ apply plugin: 'com.google.gms.google-services'
 java.lang.IllegalStateException:
 Default FirebaseApp is not initialized in this process [package name].
 Make sure to call FirebaseApp.initializeApp(Context) first.
+```
+
+4. Add the following implementation to the `[project]/android/app/build.gradle` file.
+```gradle
+dependencies {
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+}
 ```
 
 *Note:* When you are debugging on Android, use a device or AVD with Google Play services.
