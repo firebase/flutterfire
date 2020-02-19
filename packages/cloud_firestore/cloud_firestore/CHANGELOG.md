@@ -1,7 +1,15 @@
-## 0.13.3
+## 0.13.4
 
 * Add support for v2 embedding.
 * Require Flutter SDK 1.12.13+hotfix.6 or later
+
+## 0.13.3
+
+* Add macOS support
+
+## 0.13.2+3
+
+* Fixed decoding & encoding platform interface instances in nested maps
 
 ## 0.13.2+2
 

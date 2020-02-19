@@ -13,6 +13,8 @@ flutter:
         pluginClass: CloudFirestorePlugin
       ios:
         pluginClass: FLTCloudFirestorePlugin
+      macos:
+        pluginClass: FLTCloudFirestorePlugin
       web:
         default_package: cloud_firestore_web
 
@@ -20,7 +22,7 @@ dependencies:
   flutter:
     sdk: flutter
   meta: ^1.0.5
-  firebase_core: ^0.4.0
+  firebase_core: ^0.4.4
   cloud_firestore_platform_interface: ^1.0.0
   # The design on https://flutter.dev/go/federated-plugins was to leave
   # this constraint as "any". We cannot do it right now as it fails pub publish
