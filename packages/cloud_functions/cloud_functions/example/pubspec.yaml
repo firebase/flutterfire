@@ -1,6 +1,6 @@
 name: cloud_functions_example
 description: Demonstrates how to use the cloud_functions plugin.
-version: 1.0.0+1
+version: 1.0.1
 author: Flutter Team <flutter-dev@googlegroups.com>
 
 dependencies:
@@ -9,7 +9,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   cloud_functions:
     path: ..
-  firebase_core: ^0.4.0
+  firebase_core: ^0.4.4
 
 dev_dependencies:
   flutter_test:

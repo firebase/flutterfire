@@ -8,94 +8,55 @@ part of cloud_firestore;
 ///
 /// You can get an instance by calling [Firestore.instance].
 class Firestore {
-  Firestore({FirebaseApp app}) : app = app ?? FirebaseApp.instance {
-    if (_initialized) return;
-    channel.setMethodCallHandler((MethodCall call) async {
-      if (call.method == 'QuerySnapshot') {
-        final QuerySnapshot snapshot = QuerySnapshot._(call.arguments, this);
-        _queryObservers[call.arguments['handle']].add(snapshot);
-      } else if (call.method == 'DocumentSnapshot') {
-        final DocumentSnapshot snapshot = DocumentSnapshot._(
-          call.arguments['path'],
-          _asStringKeyedMap(call.arguments['data']),
-          SnapshotMetadata._(call.arguments['metadata']['hasPendingWrites'],
-              call.arguments['metadata']['isFromCache']),
-          this,
-        );
-        _documentObservers[call.arguments['handle']].add(snapshot);
-      } else if (call.method == 'DoTransaction') {
-        final int transactionId = call.arguments['transactionId'];
-        final Transaction transaction = Transaction(transactionId, this);
-        final dynamic result =
-            await _transactionHandlers[transactionId](transaction);
-        await transaction._finish();
-        return result;
-      }
-    });
-    _initialized = true;
+  // Cached and lazily loaded instance of [FirestorePlatform] to avoid
+  // creating a [MethodChannelFirestore] when not needed or creating an
+  // instance with the default app before a user specifies an app.
+  platform.FirestorePlatform _delegatePackingProperty;
+
+  platform.FirestorePlatform get _delegate {
+    if (_delegatePackingProperty == null) {
+      _delegatePackingProperty = platform.FirestorePlatform.instance;
+    }
+    return _delegatePackingProperty;
   }
+
+  Firestore({FirebaseApp app})
+      : _delegatePackingProperty = app != null
+            ? platform.FirestorePlatform.instanceFor(app: app)
+            : platform.FirestorePlatform.instance;
 
   /// Gets the instance of Firestore for the default Firebase app.
-  static final Firestore instance = Firestore();
+  static Firestore get instance => Firestore();
 
-  /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
+  /// The [FirebaseApp] instance to which this [Firestore] belongs.
   ///
   /// If null, the default [FirebaseApp] is used.
-  final FirebaseApp app;
-
-  static bool _initialized = false;
-
-  @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/cloud_firestore',
-    StandardMethodCodec(FirestoreMessageCodec()),
-  );
-
-  static final Map<int, StreamController<QuerySnapshot>> _queryObservers =
-      <int, StreamController<QuerySnapshot>>{};
-
-  static final Map<int, StreamController<DocumentSnapshot>> _documentObservers =
-      <int, StreamController<DocumentSnapshot>>{};
-
-  static final Map<int, TransactionHandler> _transactionHandlers =
-      <int, TransactionHandler>{};
-  static int _transactionHandlerId = 0;
-
-  @override
-  bool operator ==(dynamic o) => o is Firestore && o.app == app;
-
-  @override
-  int get hashCode => app.hashCode;
-
-  /// Gets a [CollectionReference] for the specified Firestore path.
-  CollectionReference collection(String path) {
-    assert(path != null);
-    return CollectionReference._(this, path.split('/'));
-  }
-
-  /// Gets a [Query] for the specified collection group.
-  Query collectionGroup(String path) {
-    assert(path != null);
-    assert(!path.contains("/"), "Collection IDs must not contain '/'.");
-    return Query._(
-      firestore: this,
-      isCollectionGroup: true,
-      pathComponents: path.split('/'),
-    );
-  }
-
-  /// Gets a [DocumentReference] for the specified Firestore path.
-  DocumentReference document(String path) {
-    assert(path != null);
-    return DocumentReference._(this, path.split('/'));
-  }
+  FirebaseApp get app => _delegate.app;
 
   /// Creates a write batch, used for performing multiple writes as a single
   /// atomic operation.
   ///
   /// Unlike transactions, write batches are persisted offline and therefore are
   /// preferable when you don’t need to condition your writes on read data.
-  WriteBatch batch() => WriteBatch._(this);
+  WriteBatch batch() => WriteBatch._(_delegate.batch());
+
+  /// Gets a [CollectionReference] for the specified Firestore path.
+  CollectionReference collection(String path) {
+    assert(path != null);
+    return CollectionReference._(_delegate.collection(path), this);
+  }
+
+  /// Gets a [Query] for the specified collection group.
+  Query collectionGroup(String path) =>
+      Query._(_delegate.collectionGroup(path), this);
+
+  /// Gets a [DocumentReference] for the specified Firestore path.
+  DocumentReference document(String path) =>
+      DocumentReference._(_delegate.document(path), this);
+
+  @Deprecated('Use the persistenceEnabled parameter of the [settings] method')
+  Future<void> enablePersistence(bool enable) =>
+      _delegate.enablePersistence(enable);
 
   /// Executes the given TransactionHandler and then attempts to commit the
   /// changes applied within an atomic transaction.
@@ -120,42 +81,21 @@ class Firestore {
   /// timeout can be adjusted by setting the timeout parameter.
   Future<Map<String, dynamic>> runTransaction(
       TransactionHandler transactionHandler,
-      {Duration timeout = const Duration(seconds: 5)}) async {
-    assert(timeout.inMilliseconds > 0,
-        'Transaction timeout must be more than 0 milliseconds');
-    final int transactionId = _transactionHandlerId++;
-    _transactionHandlers[transactionId] = transactionHandler;
-    final Map<String, dynamic> result = await channel
-        .invokeMapMethod<String, dynamic>(
-            'Firestore#runTransaction', <String, dynamic>{
-      'app': app.name,
-      'transactionId': transactionId,
-      'transactionTimeout': timeout.inMilliseconds
-    });
-    return result ?? <String, dynamic>{};
-  }
-
-  @deprecated
-  Future<void> enablePersistence(bool enable) async {
-    assert(enable != null);
-    await channel
-        .invokeMethod<void>('Firestore#enablePersistence', <String, dynamic>{
-      'app': app.name,
-      'enable': enable,
-    });
+      {Duration timeout = const Duration(seconds: 5)}) {
+    return _delegate.runTransaction(
+        (platformTransaction) =>
+            transactionHandler(Transaction._(platformTransaction, this)),
+        timeout: timeout);
   }
 
   Future<void> settings(
-      {bool persistenceEnabled,
-      String host,
-      bool sslEnabled,
-      int cacheSizeBytes}) async {
-    await channel.invokeMethod<void>('Firestore#settings', <String, dynamic>{
-      'app': app.name,
-      'persistenceEnabled': persistenceEnabled,
-      'host': host,
-      'sslEnabled': sslEnabled,
-      'cacheSizeBytes': cacheSizeBytes,
-    });
-  }
+          {bool persistenceEnabled,
+          String host,
+          bool sslEnabled,
+          int cacheSizeBytes}) =>
+      _delegate.settings(
+          persistenceEnabled: persistenceEnabled,
+          host: host,
+          sslEnabled: sslEnabled,
+          cacheSizeBytes: cacheSizeBytes);
 }

@@ -10,36 +10,29 @@ part of cloud_firestore;
 /// The data can be extracted with the data property or by using subscript
 /// syntax to access a specific field.
 class DocumentSnapshot {
-  DocumentSnapshot._(this._path, this.data, this.metadata, this._firestore);
-
-  final String _path;
+  platform.DocumentSnapshotPlatform _delegate;
   final Firestore _firestore;
 
+  DocumentSnapshot._(this._delegate, this._firestore);
+
   /// The reference that produced this snapshot
-  DocumentReference get reference => _firestore.document(_path);
+  DocumentReference get reference =>
+      _firestore.document(_delegate.reference.path);
 
   /// Contains all the data of this snapshot
-  final Map<String, dynamic> data;
+  Map<String, dynamic> get data =>
+      _CodecUtility.replaceDelegatesWithValueInMap(_delegate.data, _firestore);
 
   /// Metadata about this snapshot concerning its source and if it has local
   /// modifications.
-  final SnapshotMetadata metadata;
+  SnapshotMetadata get metadata => SnapshotMetadata._(_delegate.metadata);
 
   /// Reads individual values from the snapshot
   dynamic operator [](String key) => data[key];
 
   /// Returns the ID of the snapshot's document
-  String get documentID => _path.split('/').last;
+  String get documentID => _delegate.documentID;
 
   /// Returns `true` if the document exists.
   bool get exists => data != null;
-}
-
-Map<String, dynamic> _asStringKeyedMap(Map<dynamic, dynamic> map) {
-  if (map == null) return null;
-  if (map is Map<String, dynamic>) {
-    return map;
-  } else {
-    return Map<String, dynamic>.from(map);
-  }
 }
