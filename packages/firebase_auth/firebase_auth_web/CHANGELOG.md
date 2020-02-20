@@ -1,3 +1,7 @@
+## 0.1.2+1
+
+* Require `firebase_core_web` from hosted
+
 ## 0.1.2
 
 * Implement `fetchSignInMethodsForEmail`, `isSignInWithEmailLink`, `signInWithEmailAndLink`, and `sendLinkToEmail`. 
