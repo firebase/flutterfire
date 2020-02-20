@@ -45,8 +45,8 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   /**
    * Interface used to display a {@link com.google.android.gms.ads.formats.UnifiedNativeAd}.
    *
-   * <p>Creates {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from Flutter Native
-   * Ads when added to a {@link io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin}.
+   * <p>Added to a {@link io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin} and creates {@link
+   * com.google.android.gms.ads.formats.UnifiedNativeAdView}s from Native Ads created in Dart.
    */
   public interface NativeAdFactory {
     /**
@@ -91,7 +91,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
    * created in Dart.
    *
    * @param registry maintains access to a FirebaseAdMobPlugin instance.
-   * @param factoryId a unique identifier for the ad factory. The Native ad created in Dart includes
+   * @param factoryId a unique identifier for the ad factory. The Native Ad created in Dart includes
    *     a parameter that refers to this.
    * @param nativeAdFactory creates {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s
    *     when Flutter NativeAds are created.
@@ -113,7 +113,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
    * created in Dart.
    *
    * @param engine maintains access to a FirebaseAdMobPlugin instance.
-   * @param factoryId a unique identifier for the ad factory. The Native ad created in Dart includes
+   * @param factoryId a unique identifier for the ad factory. The Native Ad created in Dart includes
    *     a parameter that refers to this.
    * @param nativeAdFactory creates {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s
    *     when Flutter NativeAds are created.
