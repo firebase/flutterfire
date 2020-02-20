@@ -34,11 +34,11 @@ void main() {
     );
 
     await nativeAd.load();
-    await Future<void>.delayed(Duration(seconds: 10));
+    await Future<void>.delayed(Duration(seconds: 15));
     expect(adLoaded, isTrue);
 
     await nativeAd.show();
-    await Future<void>.delayed(Duration(seconds: 10));
+    await Future<void>.delayed(Duration(seconds: 15));
     expect(adImpression, isTrue);
   });
 }
