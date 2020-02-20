@@ -18,6 +18,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
 import java.util.HashMap;
@@ -80,6 +81,13 @@ abstract class MobileAd extends AdListener {
     return allAds.get(id);
   }
 
+  static void disposeAll() {
+    for (int i = 0; i < allAds.size(); i++) {
+      allAds.valueAt(i).dispose();
+    }
+    allAds.clear();
+  }
+
   Status getStatus() {
     return status;
   }
@@ -88,45 +96,8 @@ abstract class MobileAd extends AdListener {
 
   abstract void show();
 
-  void showAdView(View view) {
-    if (status == Status.LOADING) {
-      status = Status.PENDING;
-      return;
-    }
-    if (status != Status.LOADED) return;
-
-    if (activity.findViewById(id) == null) {
-      LinearLayout content = new LinearLayout(activity);
-      content.setId(id);
-      content.setOrientation(LinearLayout.VERTICAL);
-      content.setGravity(anchorType);
-      content.addView(view);
-      final float scale = activity.getResources().getDisplayMetrics().density;
-
-      int left = horizontalCenterOffset > 0 ? (int) (horizontalCenterOffset * scale) : 0;
-      int right = horizontalCenterOffset < 0 ? (int) (Math.abs(horizontalCenterOffset) * scale) : 0;
-      if (anchorType == Gravity.BOTTOM) {
-        content.setPadding(left, 0, right, (int) (anchorOffset * scale));
-      } else {
-        content.setPadding(left, (int) (anchorOffset * scale), right, 0);
-      }
-
-      activity.addContentView(
-          content,
-          new ViewGroup.LayoutParams(
-              ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-    }
-  }
-
   void dispose() {
     allAds.remove(id);
-  }
-
-  static void disposeAll() {
-    for (int i = 0; i < allAds.size(); i++) {
-      allAds.valueAt(i).dispose();
-    }
-    allAds.clear();
   }
 
   private Map<String, Object> argumentsMap(Object... args) {
@@ -176,7 +147,58 @@ abstract class MobileAd extends AdListener {
     channel.invokeMethod("onAdClosed", argumentsMap());
   }
 
-  static class Banner extends MobileAd {
+  abstract static class MobileAdWithView extends MobileAd {
+    private MobileAdWithView(int id, Activity activity, MethodChannel channel) {
+      super(id, activity, channel);
+    }
+
+    abstract View getAdView();
+
+    @Override
+    void show() {
+      if (status == Status.LOADING) {
+        status = Status.PENDING;
+        return;
+      }
+      if (status != Status.LOADED) return;
+
+      if (activity.findViewById(id) == null) {
+        LinearLayout content = new LinearLayout(activity);
+        content.setId(id);
+        content.setOrientation(LinearLayout.VERTICAL);
+        content.setGravity(anchorType);
+        content.addView(getAdView());
+        final float scale = activity.getResources().getDisplayMetrics().density;
+
+        int left = horizontalCenterOffset > 0 ? (int) (horizontalCenterOffset * scale) : 0;
+        int right =
+            horizontalCenterOffset < 0 ? (int) (Math.abs(horizontalCenterOffset) * scale) : 0;
+        if (anchorType == Gravity.BOTTOM) {
+          content.setPadding(left, 0, right, (int) (anchorOffset * scale));
+        } else {
+          content.setPadding(left, (int) (anchorOffset * scale), right, 0);
+        }
+
+        activity.addContentView(
+            content,
+            new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+      }
+    }
+
+    @Override
+    void dispose() {
+      super.dispose();
+
+      View contentView = activity.findViewById(id);
+      if (contentView == null || !(contentView.getParent() instanceof ViewGroup)) return;
+
+      ViewGroup contentParent = (ViewGroup) (contentView.getParent());
+      contentParent.removeView(contentView);
+    }
+  }
+
+  static class Banner extends MobileAdWithView {
     private AdView adView;
     private AdSize adSize;
 
@@ -200,21 +222,14 @@ abstract class MobileAd extends AdListener {
     }
 
     @Override
-    void show() {
-      showAdView(adView);
+    View getAdView() {
+      return adView;
     }
 
     @Override
     void dispose() {
-      super.dispose();
-
       adView.destroy();
-
-      View contentView = activity.findViewById(id);
-      if (contentView == null || !(contentView.getParent() instanceof ViewGroup)) return;
-
-      ViewGroup contentParent = (ViewGroup) (contentView.getParent());
-      contentParent.removeView(contentView);
+      super.dispose();
     }
   }
 
@@ -249,10 +264,10 @@ abstract class MobileAd extends AdListener {
     // It is not possible to hide/remove/destroy an AdMob interstitial Ad.
   }
 
-  static class Native extends MobileAd {
-    private UnifiedNativeAd nativeAd;
+  static class Native extends MobileAdWithView {
     private final Map<String, Object> customOptions;
     private final NativeAdFactory nativeAdFactory;
+    private UnifiedNativeAdView adView;
 
     private Native(
         int id,
@@ -275,7 +290,7 @@ abstract class MobileAd extends AdListener {
                   new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
                     @Override
                     public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                      nativeAd = unifiedNativeAd;
+                      adView = nativeAdFactory.createNativeAd(unifiedNativeAd, customOptions);
                       onAdLoaded();
                     }
                   })
@@ -288,24 +303,8 @@ abstract class MobileAd extends AdListener {
     }
 
     @Override
-    void show() {
-      if (status == Status.LOADING) {
-        status = Status.PENDING;
-        return;
-      }
-
-      showAdView(nativeAdFactory.createNativeAd(nativeAd, customOptions));
-    }
-
-    @Override
-    void dispose() {
-      super.dispose();
-
-      View contentView = activity.findViewById(id);
-      if (contentView == null || !(contentView.getParent() instanceof ViewGroup)) return;
-
-      ViewGroup contentParent = (ViewGroup) (contentView.getParent());
-      contentParent.removeView(contentView);
+    View getAdView() {
+      return adView;
     }
   }
 }
