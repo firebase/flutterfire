@@ -218,12 +218,10 @@ class NativeAdFactoryExample implements NativeAdFactory {
 ```
  
 An instance of a `NativeAdFactory` should also be added to the `FirebaseAdMobPlugin`. This is done
-differently whether you are using the Embedding V1 or Embedding V2.
+slightly differently whether you are using the Embedding V1 or Embedding V2.
 
-If you're using the Embedding V1, you need to retrieve the published `FirebaseAdMobPlugin` after
-calling `GeneratedPluginRegistrant.registerWith(this);`. Then, add the `NativeAdFactory` with a
-unique factory Id. You're
-`MainActivity.java` should look similar to:
+If you're using the Embedding V1, you need to register your `NativeAdFactory` after calling
+`GeneratedPluginRegistrant.registerWith(this);`. You're `MainActivity.java` should look similar to:
 
 ```java
 package my.app.path;
@@ -239,16 +237,14 @@ public class MainActivity extends FlutterActivity {
     super.onCreate(savedInstanceState);
     GeneratedPluginRegistrant.registerWith(this);
 
-    final FirebaseAdMobPlugin adMobPlugin =
-        valuePublishedByPlugin("io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin");
-    adMobPlugin.addNativeAdFactory("adFactoryExample", new NativeAdFactoryExample());
+    FirebaseAdMobPlugin.registerNativeAdFactory(this, "adFactoryExample", new NativeAdFactoryExample());
   }
 }
 ```
 
-If you're using the Embedding V2, you need to retrieve the published `FirebaseAdMobPlugin` from the
-`FlutterEngine`. Then, add the `NativeAdFactory` with a unique factoryId. You're `MainActivity.java`
-should look similar to:
+If you're using the Embedding V2, you need to register your `NativeAdFactory` after adding
+the `FirebaseAdMobPlugin` to `FlutterEngine`. (This should be done in a `GeneratedPluginRegistrant`
+in the near future). You're `MainActivity.java` should look similar to:
 
 ```java
 package my.app.path;
@@ -262,9 +258,7 @@ public class MainActivity extends FlutterActivity {
   public void configureFlutterEngine(FlutterEngine flutterEngine) {
     flutterEngine.getPlugins().add(new FirebaseAdMobPlugin());
 
-    final FirebaseAdMobPlugin adMobPlugin =
-        (FirebaseAdMobPlugin) flutterEngine.getPlugins().get(FirebaseAdMobPlugin.class);
-    adMobPlugin.addNativeAdFactory("adFactoryExample", NativeAdFactoryExample());
+    FirebaseAdMobPlugin.registerNativeAdFactory(flutterEngine, "adFactoryExample", NativeAdFactoryExample());
   }
 }
 ```
