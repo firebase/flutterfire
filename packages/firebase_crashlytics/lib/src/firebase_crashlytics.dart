@@ -237,7 +237,8 @@ class Crashlytics {
       // that Flutter developers are used to seeing.
       if (stack != null) print('\n$stack');
     }
-    if (!inDebugMode || enableInDevMode) {
+
+    if (!inDebugMode) {
       // The stack trace can be null. To avoid the following exception:
       // Invalid argument(s): Cannot create a Trace from null.
       // We can check for null and provide an empty stack trace.
