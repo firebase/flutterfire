@@ -1,3 +1,7 @@
+## 0.1.3+1
+
+* Remove redundant check.
+
 ## 0.1.3
 
 * Add macOS support
