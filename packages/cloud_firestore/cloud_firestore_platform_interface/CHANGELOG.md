@@ -1,4 +1,4 @@
-## 1.0.1
+## [1.0.1]
 
 * Make the pedantic dev_dependency explicit.
 
