@@ -1,3 +1,7 @@
+## 0.1.0+4
+
+* Make the pedantic dev_dependency explicit.
+
 ## 0.1.0+3
 
 - Removed unit test that was only testing dart-lang behavior.

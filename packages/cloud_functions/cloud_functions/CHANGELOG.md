@@ -1,3 +1,7 @@
+## 0.4.2+1
+
+* Make the pedantic dev_dependency explicit.
+
 ## 0.4.2
 
 * Add macOS support
