@@ -1,3 +1,7 @@
+## 0.4.2+1
+
+* Fix method channel on darwin
+
 ## 0.4.2
 
 * Add macOS support
