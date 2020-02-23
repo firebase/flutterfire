@@ -1,3 +1,7 @@
+## 3.1.2
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
 ## 3.1.1
 
 * Removed unnecessary debug print statements ("i am working").

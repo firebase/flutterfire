@@ -1,3 +1,7 @@
+## 0.9.3+7
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
 ## 0.9.3+6
 
 * Replace deprecated text theme fields in example app.

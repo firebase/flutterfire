@@ -1,3 +1,7 @@
+## 0.9.1+2
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
 ## 0.9.1+1
 
 * Enable custom parameters for rewarded video server-side verification callbacks.

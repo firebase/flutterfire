@@ -1,3 +1,7 @@
+## 0.3.0+2
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
 ## 0.3.0+1
 
 * Remove the deprecated `author:` field from pubspec.yaml
