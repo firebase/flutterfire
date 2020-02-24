@@ -1,3 +1,7 @@
+## 5.0.12
+
+* Make the pedantic dev_dependency explicit.
+
 ## 5.0.11
 
 * Fix overrides a deprecated API.
