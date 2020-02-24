@@ -3,7 +3,7 @@ description: Flutter plugin for Firebase Auth, enabling Android and iOS
   authentication using passwords, phone numbers and identity providers
   like Google, Facebook and Twitter.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_auth/firebase_auth
-version: 0.15.5
+version: 0.15.5+1
 
 flutter:
   plugin:
@@ -33,6 +33,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
+  pedantic: ^1.8.0
   async: ^2.3.0
   google_sign_in: ^3.0.4
   firebase_dynamic_links: ^0.3.0

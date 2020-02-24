@@ -21,7 +21,8 @@ dependencies:
   firebase_core: ^0.4.2+1
 
 dev_dependencies:
-  e2e: ^0.2.3
+  pedantic: ^1.8.0
+  e2e: ^0.2.1
   flutter_driver:
     sdk: flutter
   mockito: ^3.0.0

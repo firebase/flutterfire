@@ -383,6 +383,20 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     }
   }
 
+  private void callSetRewardedVideoAdUserId(MethodCall call, Result result) {
+    String userId = call.argument("userId");
+
+    rewardedWrapper.setUserId(userId);
+    result.success(Boolean.TRUE);
+  }
+
+  private void callSetRewardedVideoAdCustomData(MethodCall call, Result result) {
+    String customData = call.argument("customData");
+
+    rewardedWrapper.setCustomData(customData);
+    result.success(Boolean.TRUE);
+  }
+
   private void callDisposeAd(Integer id, Result result) {
     MobileAd ad = MobileAd.getAdForId(id);
     if (ad == null) {
@@ -462,6 +476,12 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
         break;
       case "showRewardedVideoAd":
         callShowRewardedVideoAd(result);
+        break;
+      case "setRewardedVideoAdUserId":
+        callSetRewardedVideoAdUserId(call, result);
+        break;
+      case "setRewardedVideoAdCustomData":
+        callSetRewardedVideoAdCustomData(call, result);
         break;
       case "disposeAd":
         callDisposeAd(id, result);
