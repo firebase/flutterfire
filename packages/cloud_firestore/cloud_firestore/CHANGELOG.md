@@ -1,3 +1,7 @@
+## 0.13.4
+
+* Support equality comparison on `FieldValue` instances.
+
 ## 0.13.3+1
 
 * Make the pedantic dev_dependency explicit.

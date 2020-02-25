@@ -1,3 +1,11 @@
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
+import 'dart:ui' show hashValues;
+
+import 'package:collection/collection.dart';
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 /// Sentinel values that can be used when writing document fields with set() or
@@ -23,13 +31,22 @@ enum FieldValueType {
 }
 
 /// MethodChannel implementation of a [FieldValuePlatform].
-class MethodChannelFieldValue extends FieldValuePlatform {
+class MethodChannelFieldValue {
   /// Constructor.
-  MethodChannelFieldValue(this.type, this.value) : super();
+  MethodChannelFieldValue(this.type, this.value);
 
   /// The type of FieldValue.
   final FieldValueType type;
 
   /// The value associated with the FieldValueType above.
   final dynamic value;
+
+  @override
+  bool operator ==(dynamic other) =>
+      other is MethodChannelFieldValue &&
+      other.type == type &&
+      const DeepCollectionEquality().equals(other.value, value);
+
+  @override
+  int get hashCode => hashValues(type, value);
 }

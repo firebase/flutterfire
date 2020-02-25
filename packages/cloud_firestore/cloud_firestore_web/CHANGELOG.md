@@ -1,3 +1,7 @@
+## 0.1.0+5
+
+* Support equality comparison of field values.
+
 ## 0.1.0+4
 
 * Make the pedantic dev_dependency explicit.
