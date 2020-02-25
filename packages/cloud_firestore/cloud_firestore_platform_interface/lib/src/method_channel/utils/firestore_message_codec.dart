@@ -79,6 +79,8 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       final int code = _kFieldPathCodes[value.type];
       assert(code != null);
       buffer.putUint8(code);
+    } else if (value is MethodChannelFieldValue) {
+      assert(false);
     } else {
       super.writeValue(buffer, value);
     }

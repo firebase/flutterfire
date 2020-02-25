@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-
 /// This is a cross-platform representation of a `FieldValue`.
 ///
 /// The wrapped value is not in the app-facing interface, but concrete

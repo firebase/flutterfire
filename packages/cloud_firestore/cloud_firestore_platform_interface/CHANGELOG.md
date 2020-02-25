@@ -1,8 +1,9 @@
 ## [1.1.0]
 
-* Update `FieldValueFactoryPlatform` to produce opaque (`dynamic`) values.
+* Updated `FieldValueFactoryPlatform` to use generics.
 * `FieldValuePlatform` no longer extends `PlatformInterface`.
-* `MethodChannelFieldValue` now supports equality comparison.
+* `MethodChannelFieldValue` no longer extends `FieldValuePlatform` and supports equality comparison.
+* Fixed the file name of a test.
 
 ## [1.0.1]
 

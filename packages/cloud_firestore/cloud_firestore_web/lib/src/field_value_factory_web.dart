@@ -10,7 +10,7 @@ import 'package:cloud_firestore_web/src/field_value_web.dart';
 
 /// An implementation of [FieldValueFactoryPlatform] which builds [FieldValuePlatform]
 /// instance that is [jsify] friendly
-class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
+class FieldValueFactoryWeb extends FieldValueFactoryPlatform<FieldValueWeb> {
   @override
   FieldValueWeb arrayRemove(List elements) =>
       FieldValueWeb(web.FieldValue.arrayRemove(elements));

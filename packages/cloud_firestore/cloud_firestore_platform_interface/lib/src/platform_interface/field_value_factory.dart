@@ -9,7 +9,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 
 /// An interface for a factory that is used to build [FieldValuePlatform] according to
 /// Platform (web or mobile)
-abstract class FieldValueFactoryPlatform extends PlatformInterface {
+abstract class FieldValueFactoryPlatform<T> extends PlatformInterface {
   /// Constructor to initialize the PlatformInterface base class
   FieldValueFactoryPlatform() : super(token: _token);
 
@@ -44,7 +44,7 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// added to the end. If the field being modified is not already an array it
   /// will be overwritten with an array containing exactly the specified
   /// elements.
-  dynamic arrayUnion(List<dynamic> elements) {
+  T arrayUnion(List<dynamic> elements) {
     throw UnimplementedError("arrayUnion() is not implemented");
   }
 
@@ -54,24 +54,24 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// All instances of each element specified will be removed from the array.
   /// If the field being modified is not already an array it will be overwritten
   /// with an empty array.
-  dynamic arrayRemove(List<dynamic> elements) {
+  T arrayRemove(List<dynamic> elements) {
     throw UnimplementedError("arrayRemove() is not implemented");
   }
 
   /// Returns a sentinel for use with update() to mark a field for deletion.
-  dynamic delete() {
+  T delete() {
     throw UnimplementedError("delete() is not implemented");
   }
 
   /// Returns a sentinel for use with set() or update() to include a
   /// server-generated timestamp in the written data.
-  dynamic serverTimestamp() {
+  T serverTimestamp() {
     throw UnimplementedError("serverTimestamp() is not implemented");
   }
 
   /// Returns a special value for use with set() or update() that tells the
   /// server to increment the field’s current value by the given value.
-  dynamic increment(num value) {
+  T increment(num value) {
     throw UnimplementedError("increment() is not implemented");
   }
 }

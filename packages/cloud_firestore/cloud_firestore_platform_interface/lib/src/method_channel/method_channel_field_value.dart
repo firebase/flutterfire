@@ -30,7 +30,7 @@ enum FieldValueType {
   incrementInteger,
 }
 
-/// MethodChannel implementation of a [FieldValuePlatform].
+/// Default, `MethodChannel`-based delegate for a [FieldValuePlatform].
 class MethodChannelFieldValue {
   /// Constructor.
   MethodChannelFieldValue(this.type, this.value);
