@@ -1,3 +1,11 @@
+## 0.4.2+1
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.4.2
+
+* Add macOS support
+
 ## 0.4.1+9
 
 * Depends on `cloud_functions_web` so that projects importing this plugin will get web support.

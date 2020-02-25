@@ -1,5 +1,10 @@
-## 0.3.0+2
+## 0.3.1
+
 * Handle Server and Client Exception when fetching remote config.
+
+## 0.3.0+2
+
+* Make the pedantic dev_dependency explicit.
 
 ## 0.3.0+1
 
