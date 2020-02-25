@@ -8,6 +8,3 @@ targets:
         generate_for:
         - example/**/**.dart
         - test/**.dart
-        options:
-          dart2js_args:
-          - --preview-dart-2
