@@ -18,4 +18,8 @@ class FieldValuePlatform {
   /// through to the underlying implementation.
   static dynamic getDelegate(FieldValuePlatform fieldValue) =>
       fieldValue._delegate;
+
+  @deprecated
+  // This method is no longer in use, but kept in place to avoid a breaking change.
+  static void verifyExtends(FieldValuePlatform instance) {}
 }

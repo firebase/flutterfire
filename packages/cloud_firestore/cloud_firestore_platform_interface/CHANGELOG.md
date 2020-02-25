@@ -1,4 +1,4 @@
-## [1.0.2]
+## [1.1.0]
 
 * Update `FieldValueFactoryPlatform` to produce opaque (`dynamic`) values.
 * `FieldValuePlatform` no longer extends `PlatformInterface`.
