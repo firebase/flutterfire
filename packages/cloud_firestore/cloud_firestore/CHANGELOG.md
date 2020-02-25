@@ -3,6 +3,10 @@
 * Add support for v2 embedding.
 * Require Flutter SDK 1.12.13+hotfix.6 or later
 
+## 0.13.3+1
+
+* Make the pedantic dev_dependency explicit.
+
 ## 0.13.3
 
 * Add macOS support

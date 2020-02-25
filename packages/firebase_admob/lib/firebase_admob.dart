@@ -400,6 +400,31 @@ class RewardedVideoAd {
   /// Callback invoked for events in the rewarded video ad lifecycle.
   RewardedVideoAdListener listener;
 
+  String _userId;
+  String _customData;
+
+  /// The user id used in server-to-server reward callbacks
+  String get userId => _userId;
+
+  /// The custom data included in server-to-server reward callbacks
+  String get customData => _customData;
+
+  /// Sets the user id to be used in server-to-server reward callbacks.
+  set userId(String userId) {
+    _invokeBooleanMethod("setRewardedVideoAdUserId", <String, dynamic>{
+      'userId': userId,
+    });
+    _userId = userId;
+  }
+
+  /// Sets custom data to be included in server-to-server reward callbacks.
+  set customData(String customData) {
+    _invokeBooleanMethod("setRewardedVideoAdCustomData", <String, dynamic>{
+      'customData': customData,
+    });
+    _customData = customData;
+  }
+
   /// Shows a rewarded video ad if one has been loaded.
   Future<bool> show() {
     return _invokeBooleanMethod("showRewardedVideoAd");
