@@ -1,6 +1,10 @@
-## 0.4.2+1
+## 0.4.2+2
 
 * Fixes the regression of `No implementation found for method CloudFunctions#call` on iOS
+
+## 0.4.2+1
+
+* Make the pedantic dev_dependency explicit.
 
 ## 0.4.2
 
