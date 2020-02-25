@@ -10,6 +10,7 @@ dependencies:
   e2e: ^0.2.1
 
 dev_dependencies:
+  pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
   flutter_driver:

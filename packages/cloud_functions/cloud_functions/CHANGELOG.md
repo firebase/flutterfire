@@ -1,6 +1,10 @@
-## 0.4.2+1
+## 0.4.2+2
 
 * Fix method channel on darwin
+
+## 0.4.2+1
+
+* Make the pedantic dev_dependency explicit.
 
 ## 0.4.2
 
