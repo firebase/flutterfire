@@ -14,7 +14,7 @@ class FieldValue extends platform.FieldValuePlatform {
   static final platform.FieldValueFactoryPlatform _factory =
       platform.FieldValueFactoryPlatform.instance;
 
-  FieldValue._(dynamic delegate) : super(delegate);
+  FieldValue._(this._delegate) : super(_delegate);
 
   /// Returns a special value that tells the server to union the given elements
   /// with any array value that already exists on the server.
@@ -48,7 +48,7 @@ class FieldValue extends platform.FieldValuePlatform {
   static FieldValue increment(num value) =>
       FieldValue._(_factory.increment(value));
 
-  dynamic get _delegate => platform.FieldValuePlatform.getDelegate(this);
+  dynamic _delegate;
 
   @override
   String toString() => '$runtimeType($_delegate)';
