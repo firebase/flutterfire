@@ -1,3 +1,7 @@
+## 0.1.1+2
+
+* Make the pedantic dev_dependency explicit.
+
 ## 0.1.1+1
 
 * Remove the deprecated `author:` field from pubspec.yaml

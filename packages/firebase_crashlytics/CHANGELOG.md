@@ -1,3 +1,11 @@
+## 0.1.3+1
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.1.3
+
+* Add macOS support
+
 ## 0.1.2+5
 
 * Fix overrides a deprecated API.

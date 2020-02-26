@@ -14,9 +14,7 @@ class FieldValue extends platform.FieldValuePlatform {
   static final platform.FieldValueFactoryPlatform _factory =
       platform.FieldValueFactoryPlatform.instance;
 
-  FieldValue._(platform.FieldValuePlatform delegate) : super(delegate) {
-    platform.FieldValuePlatform.verifyExtends(delegate);
-  }
+  FieldValue._(this._delegate) : super(_delegate);
 
   /// Returns a special value that tells the server to union the given elements
   /// with any array value that already exists on the server.
@@ -26,7 +24,7 @@ class FieldValue extends platform.FieldValuePlatform {
   /// will be overwritten with an array containing exactly the specified
   /// elements.
   static FieldValue arrayUnion(List<dynamic> elements) =>
-      FieldValue._(_factory.arrayUnion(elements));
+      FieldValue._(_factory.arrayUnion(_CodecUtility.valueEncode(elements)));
 
   /// Returns a special value that tells the server to remove the given
   /// elements from any array value that already exists on the server.
@@ -35,7 +33,7 @@ class FieldValue extends platform.FieldValuePlatform {
   /// If the field being modified is not already an array it will be overwritten
   /// with an empty array.
   static FieldValue arrayRemove(List<dynamic> elements) =>
-      FieldValue._(_factory.arrayRemove(elements));
+      FieldValue._(_factory.arrayRemove(_CodecUtility.valueEncode(elements)));
 
   /// Returns a sentinel for use with update() to mark a field for deletion.
   static FieldValue delete() => FieldValue._(_factory.delete());
@@ -49,4 +47,17 @@ class FieldValue extends platform.FieldValuePlatform {
   /// server to increment the field’s current value by the given value.
   static FieldValue increment(num value) =>
       FieldValue._(_factory.increment(value));
+
+  dynamic _delegate;
+
+  @override
+  String toString() => '$runtimeType($_delegate)';
+
+  @override
+  bool operator ==(Object o) {
+    return o is FieldValue && o._delegate == _delegate;
+  }
+
+  @override
+  int get hashCode => _delegate.hashCode;
 }
