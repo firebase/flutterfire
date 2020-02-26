@@ -7,10 +7,17 @@ import 'package:firebase/firestore.dart' as web;
 
 /// Implementation of [FieldValuePlatform] that is compatible with
 /// firestore web plugin
-class FieldValueWeb extends FieldValuePlatform {
+class FieldValueWeb {
   /// The js-interop delegate for this [FieldValuePlatform]
   web.FieldValue data;
 
   /// Constructs a web version of [FieldValuePlatform] wrapping a web [FieldValue].
-  FieldValueWeb(this.data) : super();
+  FieldValueWeb(this.data);
+
+  @override
+  bool operator ==(dynamic other) =>
+      other is FieldValueWeb && other.data == data;
+
+  @override
+  int get hashCode => data.hashCode;
 }
