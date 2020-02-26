@@ -1,3 +1,8 @@
+## 0.3.0+2
+
+* Fix `Bad state: Future already completed` error when initially 
+  calling `RemoteConfig.instance` multiple times in parallel.
+
 ## 0.3.0+1
 
 * Remove the deprecated `author:` field from pubspec.yaml
