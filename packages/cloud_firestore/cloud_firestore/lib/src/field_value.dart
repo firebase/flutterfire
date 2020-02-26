@@ -48,14 +48,16 @@ class FieldValue extends platform.FieldValuePlatform {
   static FieldValue increment(num value) =>
       FieldValue._(_factory.increment(value));
 
+  dynamic get _delegate => platform.FieldValuePlatform.getDelegate(this);
+
   @override
-  String toString() => '$runtimeType($delegate)';
+  String toString() => '$runtimeType($_delegate)';
 
   @override
   bool operator ==(Object o) {
-    return o is FieldValue && o.delegate == delegate;
+    return o is FieldValue && o._delegate == _delegate;
   }
 
   @override
-  int get hashCode => delegate.hashCode;
+  int get hashCode => _delegate.hashCode;
 }

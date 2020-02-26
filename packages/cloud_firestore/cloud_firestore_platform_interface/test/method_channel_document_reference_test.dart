@@ -17,12 +17,11 @@ void main() {
 
   group("$MethodChannelDocumentReference()", () {
     MethodChannelDocumentReference _documentReference;
-    MethodChannelFieldValue mockFieldValue =
-        MethodChannelFieldValueFactory().increment(2.0);
+    FieldValuePlatform mockFieldValue;
     setUp(() {
       _documentReference = MethodChannelDocumentReference(
           FirestorePlatform.instance, [kCollectionId, kDocumentId]);
-      reset(mockFieldValue);
+      mockFieldValue = FieldValuePlatform(MethodChannelFieldValueFactory().increment(2.0));
     });
 
     test("setData", () async {

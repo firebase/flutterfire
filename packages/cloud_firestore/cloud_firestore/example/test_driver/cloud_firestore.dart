@@ -503,7 +503,7 @@ void main() {
       expect(arrayRemove, isNot(equals(FieldValue.delete())));
       final FieldValue actualInt = FieldValue.increment(1);
       final FieldValue actualDouble = FieldValue.increment(1.0);
-      expect(actualInt, not(equals(FieldValueType.actualDouble));
+      expect(actualInt, isNot(equals(actualDouble)));
     });
   });
 }
