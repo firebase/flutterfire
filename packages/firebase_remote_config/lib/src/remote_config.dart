@@ -39,7 +39,7 @@ class RemoteConfig extends ChangeNotifier {
       try {
         instanceCompleter.complete(await _getRemoteConfigInstance());
       } on StateError catch (error) {
-        if (error.message != "Future already completed") rethrow;
+        if (error.message != 'Future already completed') rethrow;
       }
     }
     return instanceCompleter.future;
