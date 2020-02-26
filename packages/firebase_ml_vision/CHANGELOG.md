@@ -1,3 +1,11 @@
+## 0.9.3+7
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.9.3+6
+
+* Replace deprecated text theme fields in example app.
+
 ## 0.9.3+5
 
 * Remove the deprecated `author:` field from pubspec.yaml
