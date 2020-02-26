@@ -36,11 +36,9 @@ class RemoteConfig extends ChangeNotifier {
   /// Gets the instance of RemoteConfig for the default Firebase app.
   static Future<RemoteConfig> get instance async {
     if (!instanceCompleter.isCompleted) {
+      final _remoteConfigInstance = await _getRemoteConfigInstance();
       if (!instanceCompleter.isCompleted) {
-        final _remoteConfigInstance = await _getRemoteConfigInstance();
-        if (!instanceCompleter.isCompleted) {
-          instanceCompleter.complete(_remoteConfigInstance);
-        }
+        instanceCompleter.complete(_remoteConfigInstance);
       }
     }
     return instanceCompleter.future;
