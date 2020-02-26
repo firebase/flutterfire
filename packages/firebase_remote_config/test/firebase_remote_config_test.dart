@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -40,6 +42,10 @@ void main() {
       });
     });
 
+    tearDown(() {
+      RemoteConfig.instanceCompleter = Completer<RemoteConfig>();
+    });
+
     test('instance', () async {
       final RemoteConfig remoteConfig = await RemoteConfig.instance;
       expect(
@@ -59,10 +65,9 @@ void main() {
         RemoteConfig.instance,
         RemoteConfig.instance,
       ];
-      Future.wait(futures).then((List<RemoteConfig> remoteConfigs) {
-        // Check that both returned Remote Config instances are the same.
-        expect(remoteConfigs[0], remoteConfigs[1]);
-      });
+      final List<RemoteConfig> remoteConfigs = await Future.wait(futures);
+      // Check that both returned Remote Config instances are the same.
+      expect(remoteConfigs[0], remoteConfigs[1]);
     });
   });
 
