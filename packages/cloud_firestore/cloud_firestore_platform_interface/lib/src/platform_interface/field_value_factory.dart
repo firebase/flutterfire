@@ -10,7 +10,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 /// An interface for a factory that is used to build [FieldValuePlatform] according to
 /// Platform (web or mobile)
 ///
-/// This class would make sense as a generic, but not doing so to avoid a breaking change.
+/// This class would make sense as a generic, but is not doing so to avoid a breaking change.
 abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// Constructor to initialize the PlatformInterface base class
   FieldValueFactoryPlatform() : super(token: _token);
