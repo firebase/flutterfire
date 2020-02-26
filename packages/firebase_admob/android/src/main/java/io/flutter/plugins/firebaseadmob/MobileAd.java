@@ -291,7 +291,6 @@ abstract class MobileAd extends AdListener {
                     @Override
                     public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
                       adView = nativeAdFactory.createNativeAd(unifiedNativeAd, customOptions);
-                      onAdLoaded();
                     }
                   })
               .withAdListener(this)
