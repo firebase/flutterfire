@@ -35,10 +35,12 @@ void main() {
 
     await nativeAd.load();
     await Future<void>.delayed(Duration(seconds: 10));
+    print('Finished load wait');
     expect(adLoaded, isTrue);
 
     await nativeAd.show();
     await Future<void>.delayed(Duration(seconds: 10));
+    print('Finished show await');
     expect(adImpression, isTrue);
   });
 }
