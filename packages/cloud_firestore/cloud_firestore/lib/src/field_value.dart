@@ -14,7 +14,9 @@ class FieldValue extends platform.FieldValuePlatform {
   static final platform.FieldValueFactoryPlatform _factory =
       platform.FieldValueFactoryPlatform.instance;
 
-  FieldValue._(this._delegate) : super(_delegate);
+  FieldValue._(platform.FieldValuePlatform delegate) : super(delegate) {
+    platform.FieldValuePlatform.verifyExtends(delegate);
+  }
 
   /// Returns a special value that tells the server to union the given elements
   /// with any array value that already exists on the server.
@@ -47,17 +49,4 @@ class FieldValue extends platform.FieldValuePlatform {
   /// server to increment the field’s current value by the given value.
   static FieldValue increment(num value) =>
       FieldValue._(_factory.increment(value));
-
-  dynamic _delegate;
-
-  @override
-  String toString() => '$runtimeType($_delegate)';
-
-  @override
-  bool operator ==(Object o) {
-    return o is FieldValue && o._delegate == _delegate;
-  }
-
-  @override
-  int get hashCode => _delegate.hashCode;
 }

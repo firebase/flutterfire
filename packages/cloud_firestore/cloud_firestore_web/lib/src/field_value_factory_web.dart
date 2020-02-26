@@ -12,21 +12,21 @@ import 'package:cloud_firestore_web/src/field_value_web.dart';
 /// instance that is [jsify] friendly
 class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
   @override
-  FieldValueWeb arrayRemove(List elements) =>
+  FieldValuePlatform arrayRemove(List elements) =>
       FieldValueWeb(web.FieldValue.arrayRemove(elements));
 
   @override
-  FieldValueWeb arrayUnion(List elements) =>
+  FieldValuePlatform arrayUnion(List elements) =>
       FieldValueWeb(web.FieldValue.arrayUnion(elements));
 
   @override
-  FieldValueWeb delete() => FieldValueWeb(web.FieldValue.delete());
+  FieldValuePlatform delete() => FieldValueWeb(web.FieldValue.delete());
 
   @override
-  FieldValueWeb increment(num value) =>
+  FieldValuePlatform increment(num value) =>
       FieldValueWeb(web.FieldValue.increment(value));
 
   @override
-  FieldValueWeb serverTimestamp() =>
+  FieldValuePlatform serverTimestamp() =>
       FieldValueWeb(web.FieldValue.serverTimestamp());
 }
