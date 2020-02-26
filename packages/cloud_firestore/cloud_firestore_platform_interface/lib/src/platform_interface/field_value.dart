@@ -2,10 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// This is a cross-platform representation of a `FieldValue`.
+/// A representation of a `FieldValue` that lives in the platform interface
+/// and wraps an opaque value.
 ///
 /// The wrapped value is not in the app-facing interface, but concrete
-/// platform implementation can use `getDelegate` to look it up.
+/// platform implementations can use `getDelegate` to look it up.
 class FieldValuePlatform {
   /// Constructor
   FieldValuePlatform(this._delegate);
