@@ -10,8 +10,7 @@ import 'method_channel_field_value.dart';
 
 /// An implementation of [FieldValueFactoryPlatform] that is suitable to be used
 /// on mobile where communication relies on [MethodChannel]
-class MethodChannelFieldValueFactory
-    extends FieldValueFactoryPlatform<MethodChannelFieldValue> {
+class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
   @override
   MethodChannelFieldValue arrayRemove(List elements) =>
       MethodChannelFieldValue(FieldValueType.arrayRemove, elements);

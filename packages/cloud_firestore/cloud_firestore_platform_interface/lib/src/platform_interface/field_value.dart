@@ -19,7 +19,6 @@ class FieldValuePlatform {
       fieldValue._delegate;
 
   @Deprecated('It is no longer necessary to call this method.')
-
   /// No-op method kept in place to avoid a breaking change.
   static void verifyExtends(FieldValuePlatform instance) {}
 }
