@@ -35,10 +35,10 @@ class MethodChannelFieldValue {
   /// Constructor.
   MethodChannelFieldValue(this.type, this.value);
 
-  /// The type of FieldValue.
+  /// The type of the field value.
   final FieldValueType type;
 
-  /// The value associated with the FieldValueType above.
+  /// The data associated with the [FieldValueType] above, if any.
   final dynamic value;
 
   @override
