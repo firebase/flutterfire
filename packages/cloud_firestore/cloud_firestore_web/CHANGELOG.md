@@ -2,6 +2,7 @@
 
 * Support equality comparison of field values.
 * `FieldValueWeb` no longer extends `FieldValuePlatform`.
+* Switch to using a carat for the platform interface dependency.
 
 ## 0.1.0+4
 
