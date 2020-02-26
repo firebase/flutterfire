@@ -44,6 +44,8 @@ void main() {
 
     tearDown(() {
       RemoteConfig.instanceCompleter = Completer<RemoteConfig>();
+      // empty log for next tests
+      log.removeWhere((_) => true);
     });
 
     test('instance', () async {
@@ -68,6 +70,9 @@ void main() {
       final List<RemoteConfig> remoteConfigs = await Future.wait(futures);
       // Check that both returned Remote Config instances are the same.
       expect(remoteConfigs[0], remoteConfigs[1]);
+      // Check that method RemoteConfig#instance was called at least once
+      expect(log.length, isPositive);
+      expect(log[0], isMethodCall('RemoteConfig#instance', arguments: null));
     });
   });
 
