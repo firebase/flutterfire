@@ -16,8 +16,7 @@ class FieldValueWeb {
 
   @override
   bool operator ==(dynamic other) =>
-    other is FieldValueWeb &&
-    other.data == data;
+      other is FieldValueWeb && other.data == data;
 
   @override
   int get hashCode => data.hashCode;
