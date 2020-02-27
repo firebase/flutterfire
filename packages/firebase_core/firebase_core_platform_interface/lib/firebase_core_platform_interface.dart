@@ -4,7 +4,6 @@
 
 import 'dart:async';
 
-import 'package:meta/meta.dart' show visibleForTesting;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'src/firebase_options.dart';

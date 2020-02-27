@@ -1,6 +1,7 @@
 ## 1.0.3+1
 
 * Migrate to package:plugin_platform_interface.
+
 ## 1.0.3
 
 * Make the pedantic dev_dependency explicit.
