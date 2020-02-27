@@ -14,6 +14,7 @@ void main() {
   });
 
   testWidgets('Native Ads', (WidgetTester tester) async {
+    print('TEST START');
     bool adLoaded = false;
     bool adImpression = false;
 
@@ -28,8 +29,14 @@ void main() {
       ),
       listener: (MobileAdEvent event) {
         print('NativeAd event: $event');
-        if (event == MobileAdEvent.loaded) adLoaded = true;
-        if (event == MobileAdEvent.impression) adImpression = true;
+        if (event == MobileAdEvent.loaded) {
+          adLoaded = true;
+        }
+        if (event == MobileAdEvent.impression) {
+          print('Setting adImpression to true');
+          adImpression = true;
+          print('adimpression: $adImpression');
+        }
       },
     );
 
@@ -41,6 +48,8 @@ void main() {
     await nativeAd.show();
     await Future<void>.delayed(Duration(seconds: 10));
     print('Finished show await');
+    print('2adImpression: $adImpression');
     expect(adImpression, isTrue);
+    print('TEST END');
   });
 }
