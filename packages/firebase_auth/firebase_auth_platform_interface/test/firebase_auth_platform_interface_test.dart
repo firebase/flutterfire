@@ -5,6 +5,7 @@
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +18,7 @@ void main() {
     test('Cannot be implemented with `implements`', () {
       expect(() {
         FirebaseAuthPlatform.instance = ImplementsFirebaseAuthPlatform();
-      }, throwsAssertionError);
+      }, throwsNoSuchMethodError);
     });
 
     test('Can be extended', () {
@@ -25,15 +26,18 @@ void main() {
     });
 
     test('Can be mocked with `implements`', () {
-      final ImplementsFirebaseAuthPlatform mock =
-          ImplementsFirebaseAuthPlatform();
-      when(mock.isMock).thenReturn(true);
+      final MockFirebaseAuthPlatform mock = MockFirebaseAuthPlatform();
       FirebaseAuthPlatform.instance = mock;
     });
   });
 }
 
-class ImplementsFirebaseAuthPlatform extends Mock
+class ImplementsFirebaseAuthPlatform implements FirebaseAuthPlatform {
+  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class MockFirebaseAuthPlatform extends Mock
+    with MockPlatformInterfaceMixin
     implements FirebaseAuthPlatform {}
 
 class ExtendsFirebaseAuthPlatform extends FirebaseAuthPlatform {}
