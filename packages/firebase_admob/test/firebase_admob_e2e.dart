@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:e2e/e2e.dart';
 
@@ -16,11 +14,7 @@ void main() {
   });
 
   testWidgets('Native Ads', (WidgetTester tester) async {
-    print('TEST START');
-    final randInt = Random().nextDouble();
-    print('Random: ${randInt}');
     bool adLoaded = false;
-    bool adImpression = false;
 
     final NativeAd nativeAd = NativeAd(
       adUnitId: NativeAd.testAdUnitId,
@@ -33,28 +27,12 @@ void main() {
       ),
       listener: (MobileAdEvent event) {
         print('NativeAd event: $event');
-        if (event == MobileAdEvent.loaded) {
-          adLoaded = true;
-        }
-        if (event == MobileAdEvent.impression) {
-          print('Setting adImpression to true');
-          adImpression = true;
-          print('adimpression: $adImpression');
-        }
+        if (event == MobileAdEvent.loaded) adLoaded = true;
       },
     );
 
     await nativeAd.load();
     await Future<void>.delayed(Duration(seconds: 10));
-    print('Finished load wait');
     expect(adLoaded, isTrue);
-
-    await nativeAd.show();
-    await Future<void>.delayed(Duration(seconds: 10));
-    print('Finished show await');
-    print('2adImpression: $adImpression');
-    print('End Random: ${randInt}');
-    expect(adImpression, isTrue);
-    print('TEST END');
   });
 }
