@@ -18,7 +18,7 @@ flutter:
         default_package: firebase_core_web
 
 dependencies:
-  firebase_core_platform_interface: ^1.0.0
+  firebase_core_platform_interface: ^1.0.4
   flutter:
     sdk: flutter
   meta: "^1.0.5"
@@ -37,6 +37,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1
+  plugin_platform_interface: ^1.0.2
 
 environment:
   sdk: ">=2.0.0-dev.28.0 <3.0.0"
