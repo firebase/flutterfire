@@ -14,8 +14,8 @@
 @end
 #endif
 
-static NSString* backgroundSetupCallback = @"background_setup_callback";
-static NSString* backgroundMessageCallback = @"background_message_callback";
+static NSString *backgroundSetupCallback = @"background_setup_callback";
+static NSString *backgroundMessageCallback = @"background_message_callback";
 static FlutterPluginRegistrantCallback registerPlugins = nil;
 typedef void (^FetchCompletionHandler)(UIBackgroundFetchResult result);
 
@@ -42,7 +42,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 }
 
 + (void)setPluginRegistrantCallback:(FlutterPluginRegistrantCallback)callback {
-    registerPlugins = callback;
+  registerPlugins = callback;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -62,7 +62,8 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
   }
 }
 
-- (instancetype)initWithChannel:(FlutterMethodChannel *)channel registrar:(NSObject<FlutterPluginRegistrar> *)registrar  {
+- (instancetype)initWithChannel:(FlutterMethodChannel *)channel
+                      registrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   self = [super init];
 
   if (self) {
@@ -79,8 +80,12 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
     _userDefaults = [NSUserDefaults standardUserDefaults];
     _eventQueue = [[NSMutableArray alloc] init];
     _registrar = registrar;
-    _headlessRunner = [[FlutterEngine alloc] initWithName:@"firebase_messaging_background" project:nil allowHeadlessExecution:YES];
-    _backgroundChannel = [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_messaging_background" binaryMessenger:[_headlessRunner binaryMessenger]];
+    _headlessRunner = [[FlutterEngine alloc] initWithName:@"firebase_messaging_background"
+                                                  project:nil
+                                   allowHeadlessExecution:YES];
+    _backgroundChannel = [FlutterMethodChannel
+        methodChannelWithName:@"plugins.flutter.io/firebase_messaging_background"
+              binaryMessenger:[_headlessRunner binaryMessenger]];
   }
   return self;
 }
@@ -178,7 +183,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
     @synchronized(self) {
       initialized = YES;
       while ([_eventQueue count] > 0) {
-        NSArray* call = _eventQueue[0];
+        NSArray *call = _eventQueue[0];
         [_eventQueue removeObjectAtIndex:0];
 
         [self invokeMethod:call[0] callbackHandle:[call[1] longLongValue] arguments:call[2]];
@@ -288,15 +293,17 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 
 - (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
-    fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+          fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
   NSLog(@"didReceiveRemoteNotification:completionHandler");
   if (application.applicationState == UIApplicationStateBackground) {
-    //save this handler for later so it can be completed
+    // save this handler for later so it can be completed
     fetchCompletionHandler = completionHandler;
 
-    [self queueMethodCall:@"handleBackgroundMessage" callbackName:backgroundMessageCallback arguments:userInfo];
+    [self queueMethodCall:@"handleBackgroundMessage"
+             callbackName:backgroundMessageCallback
+                arguments:userInfo];
 
-    if (!initialized){
+    if (!initialized) {
       [self startBackgroundRunner];
     }
 
@@ -372,25 +379,24 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
   registerPlugins(_headlessRunner);
 }
 
-- (int64_t)getCallbackHandle:(NSString *) key {
+- (int64_t)getCallbackHandle:(NSString *)key {
   NSLog(@"Getting callback handle for key %@", key);
   id handle = [_userDefaults objectForKey:key];
   if (handle == nil) {
-      return 0;
+    return 0;
   }
   return [handle longLongValue];
 }
 
-- (void)saveCallbackHandle:(NSString *)key
-                    handle:(int64_t)handle {
+- (void)saveCallbackHandle:(NSString *)key handle:(int64_t)handle {
   NSLog(@"Saving callback handle for key %@", key);
 
   [_userDefaults setObject:[NSNumber numberWithLongLong:handle] forKey:key];
 }
 
 - (void)queueMethodCall:(NSString *)method
-           callbackName:(NSString*)callback
-              arguments:(NSDictionary*)arguments {
+           callbackName:(NSString *)callback
+              arguments:(NSDictionary *)arguments {
   NSLog(@"Queuing method call: %@", method);
   int64_t handle = [self getCallbackHandle:callback];
 
@@ -406,9 +412,9 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 
 - (void)invokeMethod:(NSString *)method
       callbackHandle:(long)handle
-           arguments:(NSDictionary*)arguments {
+           arguments:(NSDictionary *)arguments {
   NSLog(@"Invoking method: %@", method);
-  
+
   NSDictionary *callbackArguments = @{
     @"handle" : @(handle),
     @"message" : arguments,
@@ -416,9 +422,9 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 
   [_backgroundChannel invokeMethod:method
                          arguments:callbackArguments
-                            result:^(id  _Nullable result) {
+                            result:^(id _Nullable result) {
                               NSLog(@"%@ method completed", method);
-                              if (self->fetchCompletionHandler!=nil) {
+                              if (self->fetchCompletionHandler != nil) {
                                 self->fetchCompletionHandler(UIBackgroundFetchResultNewData);
                                 self->fetchCompletionHandler = nil;
                               }
