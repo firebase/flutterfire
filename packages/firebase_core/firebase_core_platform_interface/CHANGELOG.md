@@ -1,4 +1,4 @@
-## 1.0.3+1
+## 1.0.4
 
 * Migrate to package:plugin_platform_interface.
 
