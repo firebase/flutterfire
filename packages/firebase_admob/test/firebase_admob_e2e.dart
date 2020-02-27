@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:e2e/e2e.dart';
 
@@ -15,6 +17,8 @@ void main() {
 
   testWidgets('Native Ads', (WidgetTester tester) async {
     print('TEST START');
+    final randInt = Random().nextDouble();
+    print('Random: ${randInt}');
     bool adLoaded = false;
     bool adImpression = false;
 
@@ -49,6 +53,7 @@ void main() {
     await Future<void>.delayed(Duration(seconds: 10));
     print('Finished show await');
     print('2adImpression: $adImpression');
+    print('End Random: ${randInt}');
     expect(adImpression, isTrue);
     print('TEST END');
   });
