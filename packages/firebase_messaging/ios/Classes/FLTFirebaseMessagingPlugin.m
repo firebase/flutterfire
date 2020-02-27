@@ -381,13 +381,16 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
   return [handle longLongValue];
 }
 
-- (void) saveCallbackHandle:(NSString *)key handle:(int64_t)handle {
+- (void)saveCallbackHandle:(NSString *)key
+                    handle:(int64_t)handle {
   NSLog(@"Saving callback handle for key %@", key);
 
   [_userDefaults setObject:[NSNumber numberWithLongLong:handle] forKey:key];
 }
 
-- (void) queueMethodCall:(NSString *) method callbackName:(NSString*)callback arguments:(NSDictionary*)arguments {
+- (void)queueMethodCall:(NSString *)method
+           callbackName:(NSString*)callback
+              arguments:(NSDictionary*)arguments {
   NSLog(@"Queuing method call: %@", method);
   int64_t handle = [self getCallbackHandle:callback];
 
@@ -395,13 +398,15 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
     if (initialized) {
       [self invokeMethod:method callbackHandle:handle arguments:arguments];
     } else {
-      NSArray *call = @[method, @(handle), arguments];
+      NSArray *call = @[ method, @(handle), arguments ];
       [_eventQueue addObject:call];
     }
   }
 }
 
-- (void) invokeMethod:(NSString *) method callbackHandle:(long)handle arguments:(NSDictionary*)arguments {
+- (void)invokeMethod:(NSString *)method
+      callbackHandle:(long)handle
+           arguments:(NSDictionary*)arguments {
   NSLog(@"Invoking method: %@", method);
   
   NSDictionary *callbackArguments = @{
@@ -409,13 +414,15 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
     @"message" : arguments,
   };
 
-  [_backgroundChannel invokeMethod:method arguments:callbackArguments result:^(id  _Nullable result) {
-    NSLog(@"%@ method completed", method);
-    if (self->fetchCompletionHandler!=nil) {
-      self->fetchCompletionHandler(UIBackgroundFetchResultNewData);
-      self->fetchCompletionHandler = nil;
-    }
-  }];
+  [_backgroundChannel invokeMethod:method
+                         arguments:callbackArguments
+                            result:^(id  _Nullable result) {
+                              NSLog(@"%@ method completed", method);
+                              if (self->fetchCompletionHandler!=nil) {
+                                self->fetchCompletionHandler(UIBackgroundFetchResultNewData);
+                                self->fetchCompletionHandler = nil;
+                              }
+                            }];
 }
 
 @end
