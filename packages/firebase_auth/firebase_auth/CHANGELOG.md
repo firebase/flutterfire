@@ -1,6 +1,6 @@
 ## 0.15.5+2
 
-* Update the platform interface dependency to 1.1.7.
+* Update the platform interface dependency to 1.1.7 and update tests.
 
 ## 0.15.5+1
 
