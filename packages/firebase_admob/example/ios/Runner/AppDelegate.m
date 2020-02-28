@@ -6,12 +6,24 @@
 #include "GeneratedPluginRegistrant.h"
 #import "FLTFirebaseAdMobPlugin.h"
 
-@implementation AppDelegate
+@interface NativeAdFactoryExample : NSObject<FLTNativeAdFactory>
+@end
 
+@implementation NativeAdFactoryExample
+- (GADUnifiedNativeAdView *)createNativeAd:(GADUnifiedNativeAd *)nativeAd customOptions:(NSDictionary *)customOptions {
+  return [[GADUnifiedNativeAdView alloc] init];
+}
+@end
+
+@implementation AppDelegate
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [GeneratedPluginRegistrant registerWithRegistry:self];
-  [FLTFirebaseAdMobPlugin registerNativeAdFactory:self factoryId:@"example" nativeAdFactory:nil];
+  
+  NativeAdFactoryExample *nativeAdFactory = [[NativeAdFactoryExample alloc] init];
+  [FLTFirebaseAdMobPlugin registerNativeAdFactory:self
+                                         factoryId:@"adFactoryExample"
+                                   nativeAdFactory:nativeAdFactory];
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 

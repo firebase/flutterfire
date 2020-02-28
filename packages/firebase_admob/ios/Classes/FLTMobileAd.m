@@ -104,10 +104,16 @@ int _anchorType;
 @implementation FLTMobileAdWithView
 - (UIView *)adView {
   // TODO: Throw error if not subclassed
+  @throw [NSException exceptionWithName:NSGenericException reason:nil userInfo:nil];
   return nil;
 }
 
 - (void)show {
+  if (_status == LOADING) {
+    _status = PENDING;
+    return;
+  }
+  
   UIView *screen = [FLTMobileAd rootViewController].view;
   [screen addSubview:self.adView];
 
@@ -120,7 +126,6 @@ int _anchorType;
   }
   self.adView.frame = (CGRect){{x, y}, self.adView.frame.size};
 
-  #if defined(__IPHONE_11_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0)
   if (@available(ios 11.0, *)) {
     UILayoutGuide *guide = screen.safeAreaLayoutGuide;
     [NSLayoutConstraint activateConstraints:@[
@@ -131,9 +136,6 @@ int _anchorType;
                          constant:_anchorOffset]
     ]];
   }
-  #else
-  [screen addSubview:view];
-  #endif
 }
 
 - (void)dispose {
