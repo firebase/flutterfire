@@ -47,10 +47,12 @@
   self.channel = nil;
 }
 
-- (BOOL)registerNativeAdFactory:(NSString *)factoryId nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory {
++ (BOOL)registerNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
+                      factoryId:(NSString *)factoryId
+                nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory {
   // TODO: throw exception if key exits.
-  //[nativeAdFactories setValue:nativeAdFactory forKey:factoryId];
-
+  FLTFirebaseAdMobPlugin *adMobPlugin = (FLTFirebaseAdMobPlugin *)[registry valuePublishedByPlugin:@"FLTFirebaseAdMobPlugin"];
+  [adMobPlugin registerNativeAdFactory:factoryId nativeAdFactory:nativeAdFactory];
   return YES;
 }
 
@@ -176,7 +178,7 @@
 
   NSDictionary *customOptions = (NSDictionary *)call.arguments[@"customOptions"];
   NSString *factoryId = (NSString *)call.arguments[@"factoryId"];
-                          
+
   FLTNativeAd *nativeAd = [FLTNativeAd withId:id channel:self.channel nativeAdFactory:nativeAdFactories[factoryId] customOptions:customOptions];
 
   if (nativeAd.status != CREATED) {

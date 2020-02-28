@@ -14,5 +14,7 @@
 @end
 
 @interface FLTFirebaseAdMobPlugin : NSObject <FlutterPlugin>
-- (BOOL)registerNativeAdFactory:(NSString *)factoryId nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory;
++ (BOOL)registerNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
+                      factoryId:(NSString *)factoryId
+                nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory;
 @end
