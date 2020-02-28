@@ -294,6 +294,50 @@ void main() {
       await doc2.delete();
     });
 
+    test('pagination with DocumentReference (#2044)', () async {
+      // Populate the database with two test documents
+      final CollectionReference messages = firestore.collection('messages');
+      final DocumentReference doc1 = messages.document();
+      // Use document ID as a unique identifier to ensure that we don't
+      // collide with other tests running against this database.
+      final String testRun = doc1.documentID;
+      await doc1.setData(<String, dynamic>{
+        'message': 'pagination testing1',
+        'test_run': testRun,
+        'created_at': FieldValue.serverTimestamp(),
+      });
+      final DocumentSnapshot snapshot1 = await doc1.get();
+      final DocumentReference doc2 = messages.document();
+      await doc2.setData(<String, dynamic>{
+        'message': 'pagination testing2',
+        'test_run': testRun,
+        'created_at': FieldValue.serverTimestamp(),
+        'reference': doc1,
+      });
+      final DocumentSnapshot snapshot2 = await doc2.get();
+
+      QuerySnapshot snapshot;
+      List<DocumentSnapshot> results;
+
+      // startAtDocument with the Snapshot of a doc that contains a DocumentReference.
+      snapshot = await messages
+          .orderBy('created_at', descending: true)
+          .where('test_run', isEqualTo: testRun)
+          .startAtDocument(snapshot2)
+          .getDocuments();
+
+      // TODO(ditman): The above should crash, ensure the expects below work after fixing the issue.
+      results = snapshot.documents;
+      expect(results.length, 2);
+      expect(results[0].data['message'], 'pagination testing1');
+      expect(results[1].data['message'], 'pagination testing2');
+
+
+      // Clean up
+      await doc2.delete();
+      await doc1.delete();
+    });
+
     test('FieldPath.documentId', () async {
       // Populate the database with two test documents.
       final CollectionReference messages = firestore.collection('messages');
