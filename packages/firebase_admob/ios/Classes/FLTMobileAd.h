@@ -4,6 +4,7 @@
 
 #import <Flutter/Flutter.h>
 #import "GoogleMobileAds/GoogleMobileAds.h"
+#import "FLTFirebaseAdMobPlugin.h"
 
 typedef enum : NSUInteger {
   CREATED,
@@ -25,12 +26,23 @@ typedef enum : NSUInteger {
 - (void)dispose;
 @end
 
-@interface FLTBannerAd : FLTMobileAd <GADBannerViewDelegate>
+@interface FLTMobileAdWithView : FLTMobileAd
+- (UIView *)adView;
+@end
+
+@interface FLTBannerAd : FLTMobileAdWithView<GADBannerViewDelegate>
 + (instancetype)withId:(NSNumber *)mobileAdId
                 adSize:(GADAdSize)adSize
                channel:(FlutterMethodChannel *)channel;
 @end
 
-@interface FLTInterstitialAd : FLTMobileAd <GADInterstitialDelegate>
+@interface FLTInterstitialAd : FLTMobileAd<GADInterstitialDelegate>
 + (instancetype)withId:(NSNumber *)mobileAdId channel:(FlutterMethodChannel *)channel;
+@end
+
+@interface FLTNativeAd : FLTMobileAdWithView<GADUnifiedNativeAdLoaderDelegate, GADUnifiedNativeAdDelegate>
++ (instancetype)withId:(NSNumber *)mobileAdId
+               channel:(FlutterMethodChannel *)channel
+       nativeAdFactory:(id<FLTNativeAdFactory>)nativeAdFactory
+         customOptions:(NSDictionary *)customOptions;
 @end

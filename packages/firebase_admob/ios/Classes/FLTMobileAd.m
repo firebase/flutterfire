@@ -101,6 +101,51 @@ int _anchorType;
 }
 @end
 
+@implementation FLTMobileAdWithView
+- (UIView *)adView {
+  // TODO: Throw error if not subclassed
+  return nil;
+}
+
+- (void)show {
+  UIView *screen = [FLTMobileAd rootViewController].view;
+  [screen addSubview:self.adView];
+
+  CGFloat x = screen.frame.size.width / 2 - self.adView.frame.size.width / 2 + _horizontalCenterOffset;
+  CGFloat y;
+  if (_anchorType == 0) {
+    y = screen.frame.size.height - self.adView.frame.size.height + _anchorOffset;
+  } else {
+    y = _anchorOffset;
+  }
+  self.adView.frame = (CGRect){{x, y}, self.adView.frame.size};
+
+  #if defined(__IPHONE_11_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0)
+  if (@available(ios 11.0, *)) {
+    UILayoutGuide *guide = screen.safeAreaLayoutGuide;
+    [NSLayoutConstraint activateConstraints:@[
+      [self.adView.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor
+                                            constant:_horizontalCenterOffset],
+      [self.adView.bottomAnchor
+          constraintEqualToAnchor:_anchorType == 0 ? guide.bottomAnchor : guide.topAnchor
+                         constant:_anchorOffset]
+    ]];
+  }
+  #else
+  [screen addSubview:view];
+  #endif
+}
+
+- (void)dispose {
+  if (self.adView.superview) [self.adView removeFromSuperview];
+  [super dispose];
+}
+
+- (NSString *)description {
+  return [NSString stringWithFormat:@"%@ for: %@", super.description, self.adView];
+}
+@end
+
 @implementation FLTBannerAd
 GADBannerView *_banner;
 GADAdSize _adSize;
@@ -125,6 +170,10 @@ GADAdSize _adSize;
   return nil;
 }
 
+- (UIView *)adView {
+  return _banner;
+}
+
 - (void)loadWithAdUnitId:(NSString *)adUnitId targetingInfo:(NSDictionary *)targetingInfo {
   if (_status != CREATED) return;
   _status = LOADING;
@@ -134,56 +183,6 @@ GADAdSize _adSize;
   _banner.rootViewController = [FLTMobileAd rootViewController];
   FLTRequestFactory *factory = [[FLTRequestFactory alloc] initWithTargetingInfo:targetingInfo];
   [_banner loadRequest:[factory createRequest]];
-}
-
-- (void)show {
-  if (_status == LOADING) {
-    _status = PENDING;
-    return;
-  }
-
-  if (_status != LOADED) return;
-
-  _banner.translatesAutoresizingMaskIntoConstraints = NO;
-  UIView *screen = [FLTMobileAd rootViewController].view;
-  [screen addSubview:_banner];
-
-#if defined(__IPHONE_11_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0)
-  if (@available(ios 11.0, *)) {
-    UILayoutGuide *guide = screen.safeAreaLayoutGuide;
-    [NSLayoutConstraint activateConstraints:@[
-      [_banner.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor
-                                            constant:_horizontalCenterOffset],
-      [_banner.bottomAnchor
-          constraintEqualToAnchor:_anchorType == 0 ? guide.bottomAnchor : guide.topAnchor
-                         constant:_anchorOffset]
-    ]];
-  } else {
-    [self placeBannerPreIos11];
-  }
-#else
-  [self placeBannerPreIos11];
-#endif
-}
-
-- (void)placeBannerPreIos11 {
-  UIView *screen = [FLTMobileAd rootViewController].view;
-  CGFloat x = screen.frame.size.width / 2 - _banner.frame.size.width / 2 + _horizontalCenterOffset;
-  CGFloat y;
-  if (_anchorType == 0) {
-    y = screen.frame.size.height - _banner.frame.size.height + _anchorOffset;
-  } else {
-    y = _anchorOffset;
-  }
-  _banner.frame = (CGRect){{x, y}, _banner.frame.size};
-  [screen addSubview:_banner];
-}
-
-- (void)adViewDidReceiveAd:(GADBannerView *)adView {
-  bool statusWasPending = _status == PENDING;
-  _status = LOADED;
-  [_channel invokeMethod:@"onAdLoaded" arguments:[self argumentsMap]];
-  if (statusWasPending) [self show];
 }
 
 - (void)adView:(GADBannerView *)adView didFailToReceiveAdWithError:(GADRequestError *)error {
@@ -206,16 +205,6 @@ GADAdSize _adSize;
 
 - (void)adViewWillLeaveApplication:(GADBannerView *)adView {
   [_channel invokeMethod:@"onAdLeftApplication" arguments:[self argumentsMap]];
-}
-
-- (void)dispose {
-  if (_banner.superview) [_banner removeFromSuperview];
-  _banner = nil;
-  [super dispose];
-}
-
-- (NSString *)description {
-  return [NSString stringWithFormat:@"%@ for: %@", super.description, _banner];
 }
 @end
 
@@ -285,5 +274,84 @@ GADInterstitial *_interstitial;
 
 - (NSString *)description {
   return [NSString stringWithFormat:@"%@ for: %@", super.description, _interstitial];
+}
+@end
+
+@implementation FLTNativeAd {
+  GADAdLoader *_adLoader;
+  GADUnifiedNativeAdView *_nativeAd;
+  id<FLTNativeAdFactory> _nativeAdFactory;
+  NSDictionary *_customOptions;
+}
+
++ (instancetype)withId:(NSNumber *)mobileAdId
+               channel:(FlutterMethodChannel *)channel
+       nativeAdFactory:(id<FLTNativeAdFactory>)nativeAdFactory
+        customOptions:(NSDictionary *)customOptions {
+  FLTMobileAd *ad = [FLTMobileAd getAdForId:mobileAdId];
+  return ad != nil ? (FLTNativeAd *)ad
+         : [[FLTNativeAd alloc] initWithId:mobileAdId channel:channel nativeAdFactory:nativeAdFactory customOptions:customOptions];
+}
+
+- (instancetype)initWithId:mobileAdId
+                   channel:(FlutterMethodChannel *)channel
+           nativeAdFactory:(id<FLTNativeAdFactory>)nativeAdFactory
+             customOptions:(NSDictionary *)customOptions {
+  self = [super initWithId:mobileAdId channel:channel];
+  if (self) {
+    _nativeAdFactory = nativeAdFactory;
+    _customOptions = customOptions;
+  }
+  return self;
+}
+
+- (UIView *)adView {
+  return _nativeAd;
+}
+
+- (void)loadWithAdUnitId:(NSString *)adUnitId targetingInfo:(NSDictionary *)targetingInfo {
+  if (_status != CREATED) return;
+  _status = LOADING;
+
+  _adLoader = [[GADAdLoader alloc]
+        initWithAdUnitID:adUnitId
+      rootViewController:[FLTMobileAd rootViewController]
+                 adTypes:@[kGADAdLoaderAdTypeUnifiedNative]
+                 options:@[]];
+  _adLoader.delegate = self;
+
+  FLTRequestFactory *factory = [[FLTRequestFactory alloc] initWithTargetingInfo:targetingInfo];
+  [_adLoader loadRequest:[factory createRequest]];
+}
+
+- (void)adLoader:(nonnull GADAdLoader *)adLoader didFailToReceiveAdWithError:(nonnull GADRequestError *)error {
+  FLTLogWarning(@"adLoader:didFailToReceiveAdWithError: %@ (MobileAd %@)",
+                [error localizedDescription], self);
+  [_channel invokeMethod:@"onAdFailedToLoad" arguments:[self argumentsMap]];
+}
+
+- (void)adLoader:(nonnull GADAdLoader *)adLoader didReceiveUnifiedNativeAd:(nonnull GADUnifiedNativeAd *)nativeAd {
+  _nativeAd = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
+
+  bool statusWasPending = _status == PENDING;
+  _status = LOADED;
+  [_channel invokeMethod:@"onAdLoaded" arguments:[self argumentsMap]];
+  if (statusWasPending) [self show];
+}
+
+- (void)nativeAdWillPresentScreen:(GADUnifiedNativeAd *)nativeAd {
+  [_channel invokeMethod:@"onAdClicked" arguments:[self argumentsMap]];
+}
+
+- (void)nativeAdWillDismissScreen:(GADUnifiedNativeAd *)nativeAd {
+  [_channel invokeMethod:@"onAdImpression" arguments:[self argumentsMap]];
+}
+
+- (void)nativeAdDidDismissScreen:(GADUnifiedNativeAd *)nativeAd {
+  [_channel invokeMethod:@"onAdClosed" arguments:[self argumentsMap]];
+}
+
+- (void)nativeAdWillLeaveApplication:(GADUnifiedNativeAd *)nativeAd {
+  [_channel invokeMethod:@"onAdLeftApplication" arguments:[self argumentsMap]];
 }
 @end

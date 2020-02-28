@@ -4,7 +4,15 @@
 
 #import <Flutter/Flutter.h>
 
+#import "Firebase/Firebase.h"
+
 #define FLTLogWarning(format, ...) NSLog((@"FirebaseAdMobPlugin <warning> " format), ##__VA_ARGS__)
 
+@protocol FLTNativeAdFactory
+@required
+- (GADUnifiedNativeAdView *)createNativeAd:(GADUnifiedNativeAd *)nativeAd customOptions:(NSDictionary *)customOptions;
+@end
+
 @interface FLTFirebaseAdMobPlugin : NSObject <FlutterPlugin>
+- (BOOL)registerNativeAdFactory:(NSString *)factoryId nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory;
 @end
