@@ -333,6 +333,7 @@ GADInterstitial *_interstitial;
 }
 
 - (void)adLoader:(nonnull GADAdLoader *)adLoader didReceiveUnifiedNativeAd:(nonnull GADUnifiedNativeAd *)nativeAd {
+  nativeAd.delegate = self;
   _nativeAd = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
 
   bool statusWasPending = _status == PENDING;
