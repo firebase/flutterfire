@@ -286,6 +286,58 @@ Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
 }
 ```
 
+## Advanced usage
+
+### Dynamic firebase configuration
+If you need to configure firebase at runtime (instead of using `google-service.json` / `GoogleService-Info.plist`) 
+you can pass an options object to the configure call:
+```dart
+import 'dart:io' show Platform;
+final firebase = FirebaseMessaging();
+
+var options = Platform.isIOS
+    ? FirebaseOptions( // iOS options
+              clientId: "...",
+              apiKey: "...",
+              gcmSenderId: "...",
+              bundleId: "...",
+              projectId: "...",
+              storageBucket: "...",
+              googleAppId: "...",
+              databaseUrl: "...",
+    )
+    : FirebaseOptions( // Android options
+                clientId: "...",
+                apiKey: "...",
+                gcmSenderId: "...",
+                projectId: "...",
+                storageBucket: "...",
+                googleAppId: "...",
+                databaseUrl: "...",
+      );
+
+firebase.configure(
+    options: options,
+);
+```
+
+### On Android:
+You need to disable the `FirebaseInitProvider`.
+To do this, put this into your `AndroidManifest.xml` inside the `<application>` tag:
+```xml
+<provider
+    android:name="com.google.firebase.provider.FirebaseInitProvider"
+    android:authorities="${applicationId}.firebaseinitprovider"
+    tools:node="remove" />
+```
+
+To hide the error message `Missing google_app_id. Firebase Analytics disabled.` put the following lines into your `res/strings.xml` of your app:
+```xml
+<!-- Fake ID to hide the Firebase Analytics Error Message -->
+<string name="google_app_id">1:0000000000000:android:0000000000000000</string> 
+```
+
+
 ## Issues and feedback
 
 Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).

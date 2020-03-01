@@ -54,7 +54,6 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
 
   private void onAttachedToEngine(Context context, BinaryMessenger binaryMessenger) {
     this.applicationContext = context;
-    FirebaseApp.initializeApp(applicationContext);
     channel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging");
     final MethodChannel backgroundCallbackChannel =
         new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging_background");
@@ -182,6 +181,34 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
       FlutterFirebaseMessagingService.onInitialized();
       result.success(true);
     } else if ("configure".equals(call.method)) {
+      if(call.arguments instanceof Map)
+      {
+        @SuppressWarnings("unchecked")
+        Map<String, String> arguments = ((Map<String, String>) call.arguments);
+
+        String apiKey, googleAppId;
+        if ((apiKey = arguments.get("apiKey")) == null) {
+          result.error("apiKey", "apiKey must not be empty!", null);
+          return;
+        }
+        if ((googleAppId = arguments.get("googleAppId")) == null) {
+          result.error("googleAppId", "googleAppId must not be empty!", null);
+          return;
+        }
+
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setApiKey(apiKey)
+                .setGcmSenderId(arguments.get("gcmSenderId"))
+                .setProjectId(arguments.get("projectId"))
+                .setStorageBucket(arguments.get("storageBucket"))
+                .setApplicationId(googleAppId)
+                .setDatabaseUrl(arguments.get("databaseUrl"))
+                .setGaTrackingId(arguments.get("gaTrackingId"))
+                .build();
+         FirebaseApp.initializeApp(applicationContext, options);
+      } else {
+         FirebaseApp.initializeApp(applicationContext);
+      }
       FirebaseInstanceId.getInstance()
           .getInstanceId()
           .addOnCompleteListener(

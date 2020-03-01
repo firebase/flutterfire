@@ -68,6 +68,22 @@ void main() {
     verify(mockChannel.invokeMethod<void>('configure'));
   });
 
+  test('configure with options', () {
+    var firebaseOptions = FirebaseOptions(
+        clientId: "1",
+        apiKey: "2",
+        gcmSenderId: "3",
+        bundleId: "4",
+        projectId: "5",
+        storageBucket: "6",
+        googleAppId: "7",
+        databaseUrl: "8",
+    );
+    firebaseMessaging.configure(options: firebaseOptions);
+    verify(mockChannel.setMethodCallHandler(any));
+    verify(mockChannel.invokeMethod<void>('configure', firebaseOptions.asMap()));
+  });
+
   test('incoming token', () async {
     firebaseMessaging.configure();
     final dynamic handler =

@@ -73,6 +73,7 @@ class FirebaseMessaging {
   MessageHandler _onBackgroundMessage;
   MessageHandler _onLaunch;
   MessageHandler _onResume;
+  FirebaseOptions _options;
 
   /// On iOS, prompts the user for notification permissions the first time
   /// it is called.
@@ -106,12 +107,14 @@ class FirebaseMessaging {
     MessageHandler onBackgroundMessage,
     MessageHandler onLaunch,
     MessageHandler onResume,
+    FirebaseOptions options,
   }) {
     _onMessage = onMessage;
     _onLaunch = onLaunch;
     _onResume = onResume;
+    _options = options;
     _channel.setMethodCallHandler(_handleMethod);
-    _channel.invokeMethod<void>('configure');
+    _channel.invokeMethod<void>('configure', _options?.asMap());
     if (onBackgroundMessage != null) {
       _onBackgroundMessage = onBackgroundMessage;
       final CallbackHandle backgroundSetupHandle =
@@ -235,4 +238,41 @@ class IosNotificationSettings {
 
   @override
   String toString() => 'PushNotificationSettings ${toMap()}';
+}
+
+class FirebaseOptions {
+  final String clientId;
+  final String apiKey;
+  final String gcmSenderId;
+  final String bundleId;
+  final String projectId;
+  final String storageBucket;
+  final String googleAppId;
+  final String databaseUrl;
+
+  /// Creates a new [FirebaseOptions] object
+  FirebaseOptions({
+    this.clientId,
+    this.apiKey,
+    this.gcmSenderId,
+    this.bundleId,
+    this.projectId,
+    this.storageBucket,
+    this.googleAppId,
+    this.databaseUrl,
+  });
+
+  /// Converts the options to a map for passing it through the platform channel
+  Map<String, String> asMap() {
+    return {
+      "clientId": clientId,
+      "apiKey": apiKey,
+      "gcmSenderId": gcmSenderId,
+      "bundleId": bundleId,
+      "projectId": projectId,
+      "storageBucket": storageBucket,
+      "googleAppId": googleAppId,
+      "databaseUrl": databaseUrl,
+    };
+  }
 }
