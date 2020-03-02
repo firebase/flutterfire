@@ -15,21 +15,21 @@
     // Create and place ad in view hierarchy.
     GADUnifiedNativeAdView *adView =
         [[NSBundle mainBundle] loadNibNamed:@"UnifiedNativeAdView" owner:nil options:nil].firstObject;
+  
+    CGRect newFrame = adView.frame;
+    newFrame.size.height = 333.3;
+    [adView setFrame:newFrame];
 
     // Associate the native ad view with the native ad object. This is
     // required to make the ad clickable.
     adView.nativeAd = nativeAd;
 
-    // Set the mediaContent on the GADMediaView to populate it with available
-    // video/image asset.
-    //_adView.mediaView.mediaContent = nativeAd.mediaContent;
-
     // Populate the native ad view with the native ad assets.
     // The headline is guaranteed to be present in every native ad.
     ((UILabel *)adView.headlineView).text = nativeAd.headline;
 
-  //   These assets are not guaranteed to be present. Check that they are before
-  //   showing or hiding them.
+    // These assets are not guaranteed to be present. Check that they are before
+    // showing or hiding them.
     ((UILabel *)adView.bodyView).text = nativeAd.body;
     adView.bodyView.hidden = nativeAd.body ? NO : YES;
 
@@ -37,7 +37,7 @@
                                                 forState:UIControlStateNormal];
     adView.callToActionView.hidden = nativeAd.callToAction ? NO : YES;
 
-      ((UIImageView *)adView.iconView).image = nativeAd.icon.image;
+    ((UIImageView *)adView.iconView).image = nativeAd.icon.image;
     adView.iconView.hidden = nativeAd.icon ? NO : YES;
 
     ((UILabel *)adView.storeView).text = nativeAd.store;
