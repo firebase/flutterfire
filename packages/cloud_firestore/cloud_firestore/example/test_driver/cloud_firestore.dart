@@ -307,7 +307,6 @@ void main() {
         'test_run': testRun,
         'some_order': 1,
       });
-      final DocumentSnapshot snapshot1 = await doc1.get();
       final DocumentReference doc2 = messages.document();
       await doc2.setData(<String, dynamic>{
         'message': 'pagination testing2',
