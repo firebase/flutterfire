@@ -1,4 +1,4 @@
-## 6.1.11
+## 6.1.0
 
 * Add the `FirebaseOptions options` parameter to the `FirebaseMessaging.configure()` call to set the firebase configuration at runtime.
 
