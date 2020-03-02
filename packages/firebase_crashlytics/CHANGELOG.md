@@ -1,3 +1,7 @@
+## 0.1.3+2
+
+* Fix for missing UserAgent.h compliation failures.
+
 ## 0.1.3+1
 
 * Make the pedantic dev_dependency explicit.
