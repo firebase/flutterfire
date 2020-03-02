@@ -1,7 +1,11 @@
-## 0.3.0+3
+## 0.3.0+4
 
 * Fix `Bad state: Future already completed` error when initially 
   calling `RemoteConfig.instance` multiple times in parallel.
+
+## 0.3.0+3
+
+* Replace deprecated `getFlutterEngine` call on Android.
 
 ## 0.3.0+2
 
