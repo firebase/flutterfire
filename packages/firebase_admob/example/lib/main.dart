@@ -140,7 +140,7 @@ class _MyAppState extends State<MyApp> {
                     _nativeAd ??= createNativeAd();
                     _nativeAd
                       ..load()
-                      ..show(anchorType: AnchorType.top);
+                      ..show(anchorType: AnchorType.top, anchorOffset: 150);
                   },
                 ),
                 RaisedButton(
