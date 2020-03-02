@@ -1,6 +1,6 @@
 ## 0.4.4+3
 
-* Fix for missing UserAgent.h compliation failures.
+* Fix for missing UserAgent.h compilation failures.
 
 ## 0.4.4+2
 
