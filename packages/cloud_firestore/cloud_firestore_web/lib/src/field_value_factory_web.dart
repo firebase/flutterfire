@@ -13,12 +13,12 @@ import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
 /// instance that is [jsify] friendly
 class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
   @override
-  FieldValueWeb arrayRemove(List elements) =>
-      FieldValueWeb(web.FieldValue.arrayRemove(CodecUtility.valueEncode(elements)));
+  FieldValueWeb arrayRemove(List elements) => FieldValueWeb(
+      web.FieldValue.arrayRemove(CodecUtility.valueEncode(elements)));
 
   @override
-  FieldValueWeb arrayUnion(List elements) =>
-      FieldValueWeb(web.FieldValue.arrayUnion(CodecUtility.valueEncode(elements)));
+  FieldValueWeb arrayUnion(List elements) => FieldValueWeb(
+      web.FieldValue.arrayUnion(CodecUtility.valueEncode(elements)));
 
   @override
   FieldValueWeb delete() => FieldValueWeb(web.FieldValue.delete());
