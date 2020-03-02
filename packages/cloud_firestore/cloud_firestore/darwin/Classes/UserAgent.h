@@ -1,3 +1,3 @@
 // Generated file, do not edit
-#define LIBRARY_VERSION @"0.13.4-1"
+#define LIBRARY_VERSION @"unknown"
 #define LIBRARY_NAME @"flutter-fire-fst"
