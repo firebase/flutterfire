@@ -4,8 +4,8 @@
 
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
 import 'package:mockito/mockito.dart';
 import 'package:platform/platform.dart';
@@ -70,18 +70,20 @@ void main() {
 
   test('configure with options', () {
     var firebaseOptions = FirebaseOptions(
-        clientId: "1",
-        apiKey: "2",
-        gcmSenderId: "3",
-        bundleId: "4",
-        projectId: "5",
-        storageBucket: "6",
-        googleAppId: "7",
-        databaseUrl: "8",
+      clientId: "1",
+      apiKey: "2",
+      gcmSenderId: "3",
+      bundleId: "4",
+      projectId: "5",
+      storageBucket: "6",
+      googleAppId: "7",
+      databaseUrl: "8",
     );
     firebaseMessaging.configure(options: firebaseOptions);
     verify(mockChannel.setMethodCallHandler(any));
-    verify(mockChannel.invokeMethod<void>('configure', firebaseOptions.asMap()));
+    verify(
+      mockChannel.invokeMethod<void>('configure', firebaseOptions.asMap()),
+    );
   });
 
   test('incoming token', () async {

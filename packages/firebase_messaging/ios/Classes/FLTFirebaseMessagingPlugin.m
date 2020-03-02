@@ -132,55 +132,47 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
     }
   } else if ([@"configure" isEqualToString:method]) {
     if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
-        NSLog(@"Configuring the default Firebase app...");
-        
-        if(call.arguments != nil && [call.arguments isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *arguments = call.arguments;
-            NSString
-            *googleAppId,
-            *gcmSenderId,
-            *clientId,
-            *apiKey,
-            *bundleId,
-            *projectId,
-            *storageBucket,
-            *databaseUrl;
-            
-            if((googleAppId = [arguments objectForKey:@"googleAppId"]) == nil) {
-                result([FlutterError errorWithCode:@"googleAppId" message:@"googleAppId must not be empty" details:nil]);
-                return;
-            }
-            if((gcmSenderId = [arguments objectForKey:@"gcmSenderId"]) == nil) {
-                result([FlutterError errorWithCode:@"gcmSenderId" message:@"gcmSenderId must not be empty" details:nil]);
-                return;
-            }
-            
-            FIROptions *options = [[FIROptions alloc] initWithGoogleAppID:googleAppId GCMSenderID:gcmSenderId];
-            
-            if((clientId = [arguments objectForKey:@"clientId"]) == nil) {
-                [options setClientID:clientId];
-            }
-            if((apiKey = [arguments objectForKey:@"apiKey"]) != nil) {
-                [options setAPIKey:apiKey];
-            }
-            if((bundleId = [arguments objectForKey:@"bundleId"]) != nil) {
-                [options setBundleID:bundleId];
-            }
-            if((projectId = [arguments objectForKey:@"projectId"]) != nil) {
-                [options setProjectID:projectId];
-            }
-            if((storageBucket = [arguments objectForKey:@"storageBucket"]) != nil) {
-                [options setStorageBucket:storageBucket];
-            }
-            if((databaseUrl = [arguments objectForKey:@"databaseUrl"]) != nil) {
-                [options setDatabaseURL:databaseUrl];
-            }
-            [FIRApp configureWithOptions:options];
-        } else {
-            [FIRApp configure];
+      NSLog(@"Configuring the default Firebase app...");
+
+      if(call.arguments != nil && [call.arguments isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *arguments = call.arguments;
+        NSString *googleAppId, *gcmSenderId, *clientId, *apiKey, *bundleId, *projectId, *storageBucket, *databaseUrl;
+
+        if((googleAppId = [arguments objectForKey:@"googleAppId"]) == nil) {
+          result([FlutterError errorWithCode:@"googleAppId" message:@"googleAppId must not be empty" details:nil]);
+          return;
         }
-        [FIRMessaging messaging].delegate = self;
-        NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
+        if((gcmSenderId = [arguments objectForKey:@"gcmSenderId"]) == nil) {
+          result([FlutterError errorWithCode:@"gcmSenderId" message:@"gcmSenderId must not be empty" details:nil]);
+          return;
+        }
+
+        FIROptions *options = [[FIROptions alloc] initWithGoogleAppID:googleAppId GCMSenderID:gcmSenderId];
+
+        if((clientId = [arguments objectForKey:@"clientId"]) == nil) {
+          [options setClientID:clientId];
+        }
+        if((apiKey = [arguments objectForKey:@"apiKey"]) != nil) {
+          [options setAPIKey:apiKey];
+        }
+        if((bundleId = [arguments objectForKey:@"bundleId"]) != nil) {
+          [options setBundleID:bundleId];
+        }
+        if((projectId = [arguments objectForKey:@"projectId"]) != nil) {
+          [options setProjectID:projectId];
+        }
+        if((storageBucket = [arguments objectForKey:@"storageBucket"]) != nil) {
+          [options setStorageBucket:storageBucket];
+        }
+        if((databaseUrl = [arguments objectForKey:@"databaseUrl"]) != nil) {
+          [options setDatabaseURL:databaseUrl];
+        }
+        [FIRApp configureWithOptions:options];
+      } else {
+        [FIRApp configure];
+      }
+      [FIRMessaging messaging].delegate = self;
+      NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
     }
 
     [FIRMessaging messaging].shouldEstablishDirectChannel = true;
