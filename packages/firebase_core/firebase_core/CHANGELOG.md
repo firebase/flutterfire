@@ -1,3 +1,7 @@
+## 0.4.4+3
+
+* Fix for missing UserAgent.h compliation failures.
+
 ## 0.4.4+2
 
 * Update dependency on firebase_core_platform_interface to 1.0.4.
