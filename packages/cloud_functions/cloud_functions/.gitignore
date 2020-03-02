@@ -32,7 +32,7 @@ GeneratedPluginRegistrant.java
 build/
 .flutter-plugins
 
-ios/Classes/UserAgent.h
+**/UserAgent.h
 
 .flutter-plugins-dependencies
 
