@@ -2,6 +2,10 @@
 
 * Add basic Native Ads support for Android.
 
+## 0.9.1+3
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
 ## 0.9.1+2
 
 * Make the pedantic dev_dependency explicit.

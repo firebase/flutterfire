@@ -493,5 +493,17 @@ void main() {
       children
           .forEach((item) => expect(item, isInstanceOf<DocumentReference>()));
     });
+
+    test('Equality comparison on FieldValues', () async {
+      final FieldValue arrayRemove = FieldValue.arrayRemove([1]);
+      expect(arrayRemove, equals(FieldValue.arrayRemove([1])));
+      expect(arrayRemove, isNot(equals(FieldValue.arrayRemove([2]))));
+      final FieldValue delete = FieldValue.delete();
+      expect(delete, equals(FieldValue.delete()));
+      expect(arrayRemove, isNot(equals(FieldValue.delete())));
+      final FieldValue actualInt = FieldValue.increment(1);
+      final FieldValue actualDouble = FieldValue.increment(1.0);
+      expect(actualInt, isNot(equals(actualDouble)));
+    });
   });
 }

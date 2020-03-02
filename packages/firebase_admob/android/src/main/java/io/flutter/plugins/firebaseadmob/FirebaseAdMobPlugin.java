@@ -431,7 +431,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     initializePlugin(
         pluginBinding.getApplicationContext(),
         binding.getActivity(),
-        pluginBinding.getFlutterEngine().getDartExecutor());
+        pluginBinding.getBinaryMessenger());
   }
 
   @Override
@@ -445,7 +445,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     initializePlugin(
         pluginBinding.getApplicationContext(),
         binding.getActivity(),
-        pluginBinding.getFlutterEngine().getDartExecutor());
+        pluginBinding.getBinaryMessenger());
   }
 
   @Override
