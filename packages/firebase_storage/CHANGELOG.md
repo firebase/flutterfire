@@ -1,6 +1,10 @@
-## 3.1.3
+## 3.1.4
 
 * Add macOS support
+
+## 3.1.3
+
+* Replace deprecated `getFlutterEngine` call on Android.
 
 ## 3.1.2
 
