@@ -4,7 +4,6 @@
 #include <TargetConditionals.h>
 
 #import "FLTFirebaseAuthPlugin.h"
-#import "UserAgent.h"
 
 #import "Firebase/Firebase.h"
 

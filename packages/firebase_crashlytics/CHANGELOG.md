@@ -1,3 +1,7 @@
+## 0.1.3+3
+
+* Fix for missing UserAgent.h compilation failures.
+
 ## 0.1.3+2
 
 * Fix Cirrus build by removing WorkspaceSettings.xcsettings file in the iOS example app.

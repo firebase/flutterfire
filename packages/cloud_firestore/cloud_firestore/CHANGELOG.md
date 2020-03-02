@@ -1,3 +1,7 @@
+## 0.13.4+2
+
+* Fix for missing UserAgent.h compilation failures.
+
 ## 0.13.4+1
 
 * Fix crash with pagination with `DocumentReference` (#2044)
@@ -54,7 +58,7 @@
 
 ## 0.13.0
 
-* **Breaking change** Remove use of [deprecated](https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/FirebaseFirestoreSettings.Builder.html#setTimestampsInSnapshotsEnabled(boolean)) 
+* **Breaking change** Remove use of [deprecated](https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/FirebaseFirestoreSettings.Builder.html#setTimestampsInSnapshotsEnabled(boolean))
   setting `setTimestampsInSnapshotsEnabled`. If you are already setting it to true, just remove the setting. If you are
   setting it to false, you should update your code to expect Timestamps.
 
