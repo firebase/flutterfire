@@ -1,3 +1,7 @@
+## 0.4.2+3
+
+* Fix for missing UserAgent.h compliation failures.
+
 ## 0.4.2+2
 
 * Fix method channel on darwin
