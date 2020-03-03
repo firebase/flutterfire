@@ -2,6 +2,10 @@
 
 * Add the `FirebaseOptions options` parameter to the `FirebaseMessaging.configure()` call to set the firebase configuration at runtime.
 
+## 6.0.12
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
 ## 6.0.11
 
 * Make the pedantic dev_dependency explicit.
