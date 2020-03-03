@@ -138,7 +138,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
         NSDictionary *arguments = call.arguments;
         NSString *googleAppId, *gcmSenderId, *clientId, *apiKey, *bundleId, *projectId,
             *storageBucket, *databaseUrl;
-        
+
         if ((googleAppId = [arguments objectForKey:@"googleAppId"]) == nil) {
           result([FlutterError errorWithCode:@"googleAppId"
                                      message:@"googleAppId must not be empty"
