@@ -22,7 +22,7 @@ class DocumentReference {
 
   @override
   bool operator ==(dynamic o) =>
-      o is DocumentReference && o.firestore == firestore && o.path == path;
+      o is DocumentReference && o.path == path;
 
   @override
   int get hashCode => hashList(_delegate.path.split("/"));
