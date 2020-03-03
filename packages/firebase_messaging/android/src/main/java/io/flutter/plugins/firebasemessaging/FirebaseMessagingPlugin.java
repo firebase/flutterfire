@@ -182,10 +182,8 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
       FlutterFirebaseMessagingService.onInitialized();
       result.success(true);
     } else if ("configure".equals(call.method)) {
-      if (!isInitialized)
-      {
-        if (call.arguments instanceof Map)
-        {
+      if (!isInitialized) {
+        if (call.arguments instanceof Map) {
           @SuppressWarnings("unchecked")
           Map<String, String> arguments = ((Map<String, String>) call.arguments);
 

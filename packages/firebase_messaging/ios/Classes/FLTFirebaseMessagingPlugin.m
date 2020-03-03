@@ -136,15 +136,8 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 
       if (call.arguments != nil && [call.arguments isKindOfClass:[NSDictionary class]]) {
         NSDictionary *arguments = call.arguments;
-        NSString
-          *googleAppId,
-          *gcmSenderId,
-          *clientId,
-          *apiKey,
-          *bundleId,
-          *projectId,
-          *storageBucket,
-          *databaseUrl;
+        NSString *googleAppId, *gcmSenderId, *clientId, *apiKey, *bundleId, *projectId,
+            *storageBucket, *databaseUrl;
         
         if ((googleAppId = [arguments objectForKey:@"googleAppId"]) == nil) {
           result([FlutterError errorWithCode:@"googleAppId"
@@ -158,10 +151,10 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
                                      details:nil]);
           return;
         }
-        
+
         FIROptions *options = [[FIROptions alloc] initWithGoogleAppID:googleAppId
                                                           GCMSenderID:gcmSenderId];
-        
+
         if ((clientId = [arguments objectForKey:@"clientId"]) == nil) {
           [options setClientID:clientId];
         }
