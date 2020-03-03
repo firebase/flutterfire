@@ -45,6 +45,7 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   private MethodChannel channel;
   private Context applicationContext;
   private Activity mainActivity;
+  private boolean isInitialized = false;
 
   public static void registerWith(Registrar registrar) {
     FirebaseMessagingPlugin instance = new FirebaseMessagingPlugin();
@@ -182,33 +183,38 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
       FlutterFirebaseMessagingService.onInitialized();
       result.success(true);
     } else if ("configure".equals(call.method)) {
-      if(call.arguments instanceof Map)
+      if (!isInitialized)
       {
-        @SuppressWarnings("unchecked")
-        Map<String, String> arguments = ((Map<String, String>) call.arguments);
+        if (call.arguments instanceof Map)
+        {
+          @SuppressWarnings("unchecked")
+          Map<String, String> arguments = ((Map<String, String>) call.arguments);
 
-        String apiKey, googleAppId;
-        if ((apiKey = arguments.get("apiKey")) == null) {
-          result.error("apiKey", "apiKey must not be empty!", null);
-          return;
-        }
-        if ((googleAppId = arguments.get("googleAppId")) == null) {
-          result.error("googleAppId", "googleAppId must not be empty!", null);
-          return;
-        }
+          String apiKey, googleAppId;
+          if ((apiKey = arguments.get("apiKey")) == null) {
+            result.error("apiKey", "apiKey must not be empty!", null);
+            return;
+          }
+          if ((googleAppId = arguments.get("googleAppId")) == null) {
+            result.error("googleAppId", "googleAppId must not be empty!", null);
+            return;
+          }
 
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setApiKey(apiKey)
-                .setGcmSenderId(arguments.get("gcmSenderId"))
-                .setProjectId(arguments.get("projectId"))
-                .setStorageBucket(arguments.get("storageBucket"))
-                .setApplicationId(googleAppId)
-                .setDatabaseUrl(arguments.get("databaseUrl"))
-                .setGaTrackingId(arguments.get("gaTrackingId"))
-                .build();
-         FirebaseApp.initializeApp(applicationContext, options);
-      } else {
-         FirebaseApp.initializeApp(applicationContext);
+          FirebaseOptions options =
+              new FirebaseOptions.Builder()
+                  .setApiKey(apiKey)
+                  .setGcmSenderId(arguments.get("gcmSenderId"))
+                  .setProjectId(arguments.get("projectId"))
+                  .setStorageBucket(arguments.get("storageBucket"))
+                  .setApplicationId(googleAppId)
+                  .setDatabaseUrl(arguments.get("databaseUrl"))
+                  .setGaTrackingId(arguments.get("gaTrackingId"))
+                  .build();
+          FirebaseApp.initializeApp(applicationContext, options);
+        } else {
+          FirebaseApp.initializeApp(applicationContext);
+        }
+        isInitialized = true;
       }
       FirebaseInstanceId.getInstance()
           .getInstanceId()
