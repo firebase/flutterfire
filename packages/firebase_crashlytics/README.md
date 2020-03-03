@@ -18,12 +18,15 @@ Enable the Google services by configuring the Gradle scripts as such:
 
 1. Add the Fabric repository to the `[project]/android/build.gradle` file.
 ```
-repositories {
-  google()
-  jcenter()
-  // Additional repository for fabric resources
-  maven {
-    url 'https://maven.fabric.io/public'
+buildscript {
+  ...
+  repositories {
+    google()
+    jcenter()
+    // Additional repository for fabric resources
+    maven {
+      url 'https://maven.fabric.io/public'
+    }
   }
 }
 ```
