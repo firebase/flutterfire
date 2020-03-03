@@ -1,3 +1,7 @@
+## 0.13.4+1
+
+* Fix equality comparison for `DocumentReference` instances to only use the `path` instance variable.
+
 ## 0.13.4
 
 * Support equality comparison on `FieldValue` instances.
