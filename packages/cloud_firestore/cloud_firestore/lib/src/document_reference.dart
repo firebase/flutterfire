@@ -21,8 +21,7 @@ class DocumentReference {
   }
 
   @override
-  bool operator ==(dynamic o) =>
-      o is DocumentReference && o.path == path;
+  bool operator ==(dynamic o) => o is DocumentReference && o.path == path;
 
   @override
   int get hashCode => hashList(_delegate.path.split("/"));
