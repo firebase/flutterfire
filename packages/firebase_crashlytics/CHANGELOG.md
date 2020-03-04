@@ -1,6 +1,6 @@
 ## 0.1.3+2
 
-* Make android configuration documentation clearer
+* Make Android configuration documentation clearer
 
 ## 0.1.3+1
 
