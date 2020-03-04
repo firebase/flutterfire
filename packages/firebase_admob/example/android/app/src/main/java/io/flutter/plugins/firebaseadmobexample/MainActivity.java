@@ -11,13 +11,18 @@ import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin;
 import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
 
 public class MainActivity extends FlutterActivity {
-  // TODO(bparrishMines): Remove this once v2 of GeneratedPluginRegistrant rolls to stable. https://github.com/flutter/flutter/issues/42694
   @Override
   public void configureFlutterEngine(FlutterEngine flutterEngine) {
+    // TODO(bparrishMines): Remove this once v2 of GeneratedPluginRegistrant rolls to stable. https://github.com/flutter/flutter/issues/42694
     flutterEngine.getPlugins().add(new E2EPlugin());
     flutterEngine.getPlugins().add(new FirebaseAdMobPlugin());
 
     final NativeAdFactory factory = new NativeAdFactoryExample(getLayoutInflater());
     FirebaseAdMobPlugin.registerNativeAdFactory(flutterEngine, "adFactoryExample", factory);
+  }
+
+  @Override
+  public void cleanUpFlutterEngine(FlutterEngine flutterEngine) {
+    FirebaseAdMobPlugin.unregisterNativeAdFactory(flutterEngine, "adFactoryExample");
   }
 }

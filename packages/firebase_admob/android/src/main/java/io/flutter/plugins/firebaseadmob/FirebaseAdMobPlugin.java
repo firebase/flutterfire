@@ -36,7 +36,8 @@ import java.util.Map;
 public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
   // This the plugin key used in the Embedding V1 generated GeneratedRegistrant.java. This key is
   // used when this plugin publishes it's self in registerWith(registrar).
-  private static final String GENERATED_PLUGIN_KEY = "io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin";
+  private static final String GENERATED_PLUGIN_KEY =
+      "io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin";
 
   private Context applicationContext;
   private MethodChannel channel;
@@ -103,8 +104,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
    */
   public static boolean registerNativeAdFactory(
       PluginRegistry registry, String factoryId, NativeAdFactory nativeAdFactory) {
-    final FirebaseAdMobPlugin adMobPlugin =
-        registry.valuePublishedByPlugin(GENERATED_PLUGIN_KEY);
+    final FirebaseAdMobPlugin adMobPlugin = registry.valuePublishedByPlugin(GENERATED_PLUGIN_KEY);
     return registerNativeAdFactory(adMobPlugin, factoryId, nativeAdFactory);
   }
 
@@ -152,7 +152,8 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
    *     io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory} associated with this
    *     factoryId, or null if there was none for this factoryId.
    */
-  public static NativeAdFactory unregisterNativeAdFactory(PluginRegistry registry, String factoryId) {
+  public static NativeAdFactory unregisterNativeAdFactory(
+      PluginRegistry registry, String factoryId) {
     final FirebaseAdMobPlugin adMobPlugin = registry.valuePublishedByPlugin(GENERATED_PLUGIN_KEY);
     if (adMobPlugin != null) adMobPlugin.removeNativeAdFactory(factoryId);
 
