@@ -1,3 +1,35 @@
+## 0.1.3+1
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.1.3
+
+* Add macOS support
+
+## 0.1.2+5
+
+* Fix overrides a deprecated API.
+* Raise minimum required Flutter SDK version to 1.12.13+hotfix.4
+
+## 0.1.2+4
+
+* Updated the example with the missing `recordError()` method.
+* Added a `recordError()` integration test.
+
+## 0.1.2+3
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 0.1.2+2
+
+* Removed the `async` from the `runZoned()` in the example, as there's no `await` to be executed.
+
+## 0.1.2+1
+
+* Updated a confusing comment.
+
 ## 0.1.2
 
 * Updated to use the v2 plugin API.

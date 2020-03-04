@@ -1,3 +1,17 @@
+## 3.1.3
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 3.1.2
+
+* Make the pedantic dev_dependency explicit.
+
+## 3.1.1
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
 ## 3.1.0
 
 * Support Android V2 embedding.

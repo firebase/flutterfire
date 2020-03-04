@@ -1,3 +1,74 @@
+## 6.0.12
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 6.0.11
+
+* Make the pedantic dev_dependency explicit.
+
+## 6.0.10
+
+* Update README to explain how to correctly implement Android background message handling with the new v2 embedding. 
+
+## 6.0.9
+
+* Update Android Gradle plugin dependency to 3.5.3, update documentation and example.
+* Update google-services Android gradle plugin to 4.3.2 in documentation and examples.
+
+## 6.0.8
+
+* Support for provisional notifications for iOS version >= 12.
+
+## 6.0.7
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 6.0.6
+
+* Updated README instructions for Android.
+
+## 6.0.5
+
+* Add import for UserNotifications on iOS.
+
+## 6.0.4
+
+* Support the v2 Android embedding.
+
+## 6.0.3
+
+* Fix bug where `onIosSettingsRegistered` wasn't streamed on iOS >= 10.
+
+## 6.0.2
+
+* Fixed a build warning caused by availability check.
+
+## 6.0.1
+
+* `FirebaseMessaging.configure` will throw an `ArgumentError` when `onBackgroundMessage` parameter
+is not a top-level or static function.
+
+## 6.0.0
+
+* Use `UNUserNotificationCenter` to receive messages on iOS version >= 10.
+* **Breaking Change** For iOS versions >= 10, this will cause any other plugin that specifies a
+  `UNUserNotificationCenterDelegate` to `[UNUserNotificationCenter currentNotificationCenter]` to
+  stop receiving notifications. To have this plugin work with plugins that specify their own
+  `UNUserNotificationCenterDelegate`, you can remove the line
+  ```objectivec
+  [UNUserNotificationCenter currentNotificationCenter].delegate = // plugin specified delegate
+  ```
+
+  and add this line to your iOS project `AppDelegate.m`
+
+  ```swift
+  if (@available(iOS 10.0, *)) {
+    [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
+  }
+  ```
+
 ## 5.1.9
 
 * Fix strict compilation errors.

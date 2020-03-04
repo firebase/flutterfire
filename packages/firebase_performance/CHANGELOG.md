@@ -1,3 +1,17 @@
+## 0.3.1+7
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 0.3.1+6
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.3.1+5
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
 ## 0.3.1+4
 
 * Skip flaky driver tests.

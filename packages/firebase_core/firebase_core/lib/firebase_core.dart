@@ -2,14 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-library firebase_core;
+export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show FirebaseOptions;
 
-import 'dart:async';
-import 'dart:io' show Platform;
-import 'dart:ui' show hashValues;
-
-import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
-
-part 'src/firebase_app.dart';
-part 'src/firebase_options.dart';
+export 'src/firebase_app.dart';

@@ -28,6 +28,8 @@ void main() {
           case 'loadRewardedVideoAd':
           case 'showAd':
           case 'showRewardedVideoAd':
+          case 'setRewardedVideoAdUserId':
+          case 'setRewardedVideoAdCustomData':
           case 'disposeAd':
             return Future<bool>.value(true);
           default:
@@ -128,6 +130,9 @@ void main() {
               targetingInfo: const MobileAdTargetingInfo()),
           true);
 
+      RewardedVideoAd.instance.userId = "user-id";
+      RewardedVideoAd.instance.customData = "custom-data";
+
       expect(await RewardedVideoAd.instance.show(), true);
 
       expect(log, <Matcher>[
@@ -135,6 +140,13 @@ void main() {
           'adUnitId': RewardedVideoAd.testAdUnitId,
           'targetingInfo': <String, String>{'requestAgent': 'flutter-alpha'},
         }),
+        isMethodCall('setRewardedVideoAdUserId', arguments: <String, dynamic>{
+          'userId': "user-id",
+        }),
+        isMethodCall('setRewardedVideoAdCustomData',
+            arguments: <String, dynamic>{
+              'customData': "custom-data",
+            }),
         isMethodCall('showRewardedVideoAd', arguments: null),
       ]);
     });

@@ -52,7 +52,7 @@ public class FirebaseCorePlugin implements FlutterPlugin, MethodChannel.MethodCa
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
     applicationContext = binding.getApplicationContext();
-    channel = new MethodChannel(binding.getFlutterEngine().getDartExecutor(), CHANNEL_NAME);
+    channel = new MethodChannel(binding.getBinaryMessenger(), CHANNEL_NAME);
     channel.setMethodCallHandler(this);
   }
 

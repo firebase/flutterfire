@@ -1,0 +1,43 @@
+group 'io.flutter.plugins.firebase.cloudfirestore'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.3.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenLocal()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+    dependencies {
+        api 'com.google.firebase:firebase-firestore:21.3.0'
+        implementation 'com.google.firebase:firebase-common:19.3.0'
+        implementation 'androidx.annotation:annotation:1.1.0'
+    }
+}
+
+apply from: file("./user-agent.gradle")

@@ -3,14 +3,15 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('$FirebaseApp', () {
-    final List<MethodCall> log = <MethodCall>[];
     final FirebaseApp testApp = FirebaseApp(
       name: 'testApp',
     );
@@ -27,41 +28,35 @@ void main() {
       deepLinkURLScheme: 'testDeepLinkURLScheme',
       storageBucket: 'testStorageBucket',
     );
+    MockFirebaseCore mock;
 
     setUp(() async {
-      FirebaseApp.channel
-          .setMockMethodCallHandler((MethodCall methodCall) async {
-        log.add(methodCall);
-        switch (methodCall.method) {
-          case 'FirebaseApp#appNamed':
-            if (methodCall.arguments != 'testApp') return null;
-            return <dynamic, dynamic>{
-              'name': 'testApp',
-              'options': <dynamic, dynamic>{
-                'APIKey': 'testAPIKey',
-                'bundleID': 'testBundleID',
-                'clientID': 'testClientID',
-                'trackingID': 'testTrackingID',
-                'GCMSenderID': 'testGCMSenderID',
-                'projectID': 'testProjectID',
-                'androidClientID': 'testAndroidClientID',
-                'googleAppID': 'testGoogleAppID',
-                'databaseURL': 'testDatabaseURL',
-                'deepLinkURLScheme': 'testDeepLinkURLScheme',
-                'storageBucket': 'testStorageBucket',
-              },
-            };
-          case 'FirebaseApp#allApps':
-            return <Map<dynamic, dynamic>>[
-              <dynamic, dynamic>{
-                'name': 'testApp',
-              },
-            ];
-          default:
-            return null;
-        }
+      mock = MockFirebaseCore();
+      FirebaseCorePlatform.instance = mock;
+
+      final PlatformFirebaseApp app = PlatformFirebaseApp(
+        'testApp',
+        const FirebaseOptions(
+          apiKey: 'testAPIKey',
+          bundleID: 'testBundleID',
+          clientID: 'testClientID',
+          trackingID: 'testTrackingID',
+          gcmSenderID: 'testGCMSenderID',
+          projectID: 'testProjectID',
+          androidClientID: 'testAndroidClientID',
+          googleAppID: 'testGoogleAppID',
+          databaseURL: 'testDatabaseURL',
+          deepLinkURLScheme: 'testDeepLinkURLScheme',
+          storageBucket: 'testStorageBucket',
+        ),
+      );
+
+      when(mock.appNamed('testApp')).thenAnswer((_) {
+        return Future<PlatformFirebaseApp>.value(app);
       });
-      log.clear();
+
+      when(mock.allApps()).thenAnswer((_) =>
+          Future<List<PlatformFirebaseApp>>.value(<PlatformFirebaseApp>[app]));
     });
 
     test('configure', () async {
@@ -75,26 +70,13 @@ void main() {
         options: testOptions,
       );
       expect(newApp.name, equals('newApp'));
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'FirebaseApp#appNamed',
-            arguments: 'testApp',
-          ),
-          isMethodCall(
-            'FirebaseApp#appNamed',
-            arguments: 'newApp',
-          ),
-          isMethodCall(
-            'FirebaseApp#configure',
-            arguments: <String, dynamic>{
-              'name': 'newApp',
-              'options': testOptions.asMap,
-            },
-          ),
-        ],
-      );
+      // It's ugly to specify mockito verification types
+      // ignore: always_specify_types
+      verifyInOrder([
+        mock.appNamed('testApp'),
+        mock.appNamed('newApp'),
+        mock.configure('newApp', testOptions),
+      ]);
     });
 
     test('appNamed', () async {
@@ -103,37 +85,23 @@ void main() {
       expect((await existingApp.options), equals(testOptions));
       final FirebaseApp missingApp = await FirebaseApp.appNamed('missingApp');
       expect(missingApp, isNull);
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'FirebaseApp#appNamed',
-            arguments: 'testApp',
-          ),
-          isMethodCall(
-            'FirebaseApp#appNamed',
-            arguments: 'testApp',
-          ),
-          isMethodCall(
-            'FirebaseApp#appNamed',
-            arguments: 'missingApp',
-          ),
-        ],
-      );
+      // It's ugly to specify mockito verification types
+      // ignore: always_specify_types
+      verifyInOrder([
+        mock.appNamed('testApp'),
+        mock.appNamed('testApp'),
+        mock.appNamed('missingApp'),
+      ]);
     });
 
     test('allApps', () async {
       final List<FirebaseApp> allApps = await FirebaseApp.allApps();
       expect(allApps, equals(<FirebaseApp>[testApp]));
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'FirebaseApp#allApps',
-            arguments: null,
-          ),
-        ],
-      );
+      verify(mock.allApps());
     });
   });
 }
+
+class MockFirebaseCore extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseCorePlatform {}

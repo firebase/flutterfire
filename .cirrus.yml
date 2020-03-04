@@ -1,4 +1,6 @@
 task:
+  # don't run on release tags since it creates O(n^2) tasks where n is the number of plugins
+  only_if: $CIRRUS_TAG == ''
   use_compute_credits: $CIRRUS_USER_COLLABORATOR == 'true' && $CIRRUS_PR == ''
   container:
     dockerfile: .ci/Dockerfile
@@ -29,6 +31,9 @@ task:
           CHANNEL: "master"
           CHANNEL: "stable"
       test_script:
+        # TODO(jackson): Allow web plugins once supported on stable
+        # https://github.com/flutter/flutter/issues/42864
+        - if [[ "$CHANNEL" -eq "stable" ]]; then find . | grep _web$ | xargs rm -rf; fi
         - flutter channel $CHANNEL
         - ./script/incremental_build.sh test
     - name: analyze
@@ -43,6 +48,9 @@ task:
           CHANNEL: "stable"
         GCLOUD_FIREBASE_TESTLAB_KEY: ENCRYPTED[fd81ffb7c44af2f8a1ae55e470c69690c1ec7e90aba49d18635fa4f3c72b6807034287e9e697f64e37ab836a66ba9eab]
       script:
+        # TODO(jackson): Allow web plugins once supported on stable
+        # https://github.com/flutter/flutter/issues/42864
+        - if [[ "$CHANNEL" -eq "stable" ]]; then find . | grep _web$ | xargs rm -rf; fi
         - flutter channel $CHANNEL
         # Unsetting CIRRUS_CHANGE_MESSAGE and CIRRUS_COMMIT_MESSAGE as they
         # might include non-ASCII characters which makes Gradle crash.
@@ -66,6 +74,8 @@ task:
         - export CIRRUS_COMMIT_MESSAGE=`cat /tmp/cirrus_commit_message.txt`
 
 task:
+  # don't run on release tags since it creates O(n^2) tasks where n is the number of plugins
+  only_if: $CIRRUS_TAG == ''
   use_compute_credits: $CIRRUS_USER_COLLABORATOR == 'true'
   osx_instance:
     image: mojave-xcode-11.2.1-flutter
@@ -80,7 +90,7 @@ task:
   activate_script: pub global activate flutter_plugin_tools
   create_simulator_script:
     - xcrun simctl list
-    - xcrun simctl create Flutter-iPhone com.apple.CoreSimulator.SimDeviceType.iPhone-X com.apple.CoreSimulator.SimRuntime.iOS-13-2 | xargs xcrun simctl boot
+    - xcrun simctl create Flutter-iPhone com.apple.CoreSimulator.SimDeviceType.iPhone-X com.apple.CoreSimulator.SimRuntime.iOS-13-3 | xargs xcrun simctl boot
   matrix:
     - name: build-ipas+drive-examples
       env:
@@ -94,6 +104,34 @@ task:
           CHANNEL: "master"
           CHANNEL: "stable"
       build_script:
+        # TODO(jackson): Allow web plugins once supported on stable
+        # https://github.com/flutter/flutter/issues/42864
+        - if [[ "$CHANNEL" -eq "stable" ]]; then find . | grep _web$ | xargs rm -rf; fi
         - flutter channel $CHANNEL
         - ./script/incremental_build.sh build-examples --ipa
         - ./script/incremental_build.sh drive-examples
+
+task:
+  # don't run on release tags since it creates O(n^2) tasks where n is the number of plugins
+  only_if: $CIRRUS_TAG == ''
+  use_compute_credits: $CIRRUS_USER_COLLABORATOR == 'true'
+  osx_instance:
+    image: mojave-xcode-11.3-flutter
+  setup_script:
+    - pod repo update
+    - flutter config --enable-macos-desktop
+  upgrade_script:
+    - flutter channel master
+    - flutter upgrade
+    - git fetch origin master
+  activate_script: pub global activate flutter_plugin_tools
+  matrix:
+    - name: lint_darwin_plugins
+      script: ./script/lint_darwin_plugins.sh
+    - name: build-apps+drive-examples
+      env:
+        PATH: $PATH:/usr/local/bin
+      build_script:
+        - flutter channel master
+        - ./script/incremental_build.sh build-examples --macos --no-ipa
+        - ./script/incremental_build.sh drive-examples --macos

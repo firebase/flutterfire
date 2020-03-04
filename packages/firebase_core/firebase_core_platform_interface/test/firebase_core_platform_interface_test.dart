@@ -5,6 +5,7 @@
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 void main() {
   group('$FirebaseCorePlatform', () {
@@ -15,7 +16,7 @@ void main() {
     test('Cannot be implemented with `implements`', () {
       expect(() {
         FirebaseCorePlatform.instance = ImplementsFirebaseCorePlatform();
-      }, throwsAssertionError);
+      }, throwsNoSuchMethodError);
     });
 
     test('Can be extended', () {
@@ -23,15 +24,25 @@ void main() {
     });
 
     test('Can be mocked with `implements`', () {
-      final ImplementsFirebaseCorePlatform mock =
-          ImplementsFirebaseCorePlatform();
-      when(mock.isMock).thenReturn(true);
+      final FirebaseCoreMockPlatform mock = FirebaseCoreMockPlatform();
       FirebaseCorePlatform.instance = mock;
     });
   });
 }
 
-class ImplementsFirebaseCorePlatform extends Mock
-    implements FirebaseCorePlatform {}
+class ImplementsFirebaseCorePlatform implements FirebaseCorePlatform {
+  @override
+  Future<List<PlatformFirebaseApp>> allApps() => null;
+
+  @override
+  Future<PlatformFirebaseApp> appNamed(String name) => null;
+
+  @override
+  Future<void> configure(String name, FirebaseOptions options) => null;
+}
 
 class ExtendsFirebaseCorePlatform extends FirebaseCorePlatform {}
+
+class FirebaseCoreMockPlatform extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseCorePlatform {}

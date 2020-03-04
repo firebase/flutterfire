@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 
 #import "FLTRewardedVideoAdWrapper.h"
+#import "FLTFirebaseAdMobPlugin.h"
 #import "FLTRequestFactory.h"
-#import "FirebaseAdMobPlugin.h"
 
 static NSDictionary *rewardedStatusToString = nil;
 
@@ -60,6 +60,14 @@ FLTRewardedVideoAdStatus _rewardedStatus;
 - (void)show {
   [[GADRewardBasedVideoAd sharedInstance]
       presentFromRootViewController:[FLTRewardedVideoAdWrapper rootViewController]];
+}
+
+- (void)setUserIdentifier:(NSString *)userIdentifier {
+  [[GADRewardBasedVideoAd sharedInstance] setUserIdentifier:userIdentifier];
+}
+
+- (void)setCustomRewardString:(NSString *)customRewardString {
+  [[GADRewardBasedVideoAd sharedInstance] setCustomRewardString:customRewardString];
 }
 
 - (NSString *)description {

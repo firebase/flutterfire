@@ -4,6 +4,14 @@
 
 // ignore_for_file: deprecated_member_use_from_same_package
 
+// These are temporary ignores to allow us to land a new set of linter rules in
+// a series of manageable patches instead of one gigantic PR. It disables some
+// of the new lints that are already failing on this plugin, for this plugin. It
+// should be deleted and the failing lints addressed as soon as possible.
+//
+// ignore_for_file: public_member_api_docs
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'dart:async';
 import 'dart:io' show Platform;
 
@@ -391,6 +399,31 @@ class RewardedVideoAd {
 
   /// Callback invoked for events in the rewarded video ad lifecycle.
   RewardedVideoAdListener listener;
+
+  String _userId;
+  String _customData;
+
+  /// The user id used in server-to-server reward callbacks
+  String get userId => _userId;
+
+  /// The custom data included in server-to-server reward callbacks
+  String get customData => _customData;
+
+  /// Sets the user id to be used in server-to-server reward callbacks.
+  set userId(String userId) {
+    _invokeBooleanMethod("setRewardedVideoAdUserId", <String, dynamic>{
+      'userId': userId,
+    });
+    _userId = userId;
+  }
+
+  /// Sets custom data to be included in server-to-server reward callbacks.
+  set customData(String customData) {
+    _invokeBooleanMethod("setRewardedVideoAdCustomData", <String, dynamic>{
+      'customData': customData,
+    });
+    _customData = customData;
+  }
 
   /// Shows a rewarded video ad if one has been loaded.
   Future<bool> show() {
