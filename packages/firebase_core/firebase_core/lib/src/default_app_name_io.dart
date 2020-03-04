@@ -6,4 +6,4 @@ import 'dart:io';
 
 /// The default app name.
 final String firebaseDefaultAppName =
-    Platform.isIOS ? '__FIRAPP_DEFAULT' : '[DEFAULT]';
+    Platform.isIOS || Platform.isMacOS ? '__FIRAPP_DEFAULT' : '[DEFAULT]';

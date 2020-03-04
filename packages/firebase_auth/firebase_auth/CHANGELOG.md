@@ -1,3 +1,23 @@
+## 0.15.5+2
+
+* Update the platform interface dependency to 1.1.7 and update tests.
+
+## 0.15.5+1
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.15.5
+
+* Add macOS support
+
+## 0.15.4+1
+
+* Fix fallthrough bug in Android code.
+
+## 0.15.4
+
+* Add support for `confirmPasswordReset` on Android and iOS.
+
 ## 0.15.3+1
 
 * Add integration instructions for the `web` platform.
