@@ -1,3 +1,7 @@
+## 0.4.4+2
+
+* Update dependency on firebase_core_platform_interface to 1.0.4.
+
 ## 0.4.4+1
 
 * Make the pedantic dev_dependency explicit.

@@ -1,7 +1,12 @@
-## 0.13.4
+## 0.13.5
 
 * Add support for v2 embedding.
 * Require Flutter SDK 1.12.13+hotfix.6 or later
+
+## 0.13.4
+
+* Support equality comparison on `FieldValue` instances.
+* Updated version of endorsed web implementation.
 
 ## 0.13.3+1
 

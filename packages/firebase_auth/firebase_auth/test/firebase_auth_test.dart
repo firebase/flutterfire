@@ -10,6 +10,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 const String kMockProviderId = 'firebase';
 const String kMockUid = '12345';
@@ -88,7 +89,6 @@ void main() {
 
     setUp(() {
       mock = MockFirebaseAuth();
-      when(mock.isMock).thenReturn(true);
       when(mock.getIdToken(any, any)).thenAnswer(
           (_) => Future<PlatformIdTokenResult>.value(kMockIdTokenResult));
       when(mock.isSignInWithEmailLink(any, any))
@@ -886,4 +886,6 @@ void main() {
   });
 }
 
-class MockFirebaseAuth extends Mock implements FirebaseAuthPlatform {}
+class MockFirebaseAuth extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseAuthPlatform {}
