@@ -1,6 +1,6 @@
 ## 5.1.0
 
-* Update Firebase Analytics dependency on Android to 17.2.1
+* Update Firebase Analytics dependency on Android to 17.2.2
 * Updates Android gradle plugin dependency to 3.6.1
 * Bumps Google Services Gradle Plugin in example to 4.3.3
 
