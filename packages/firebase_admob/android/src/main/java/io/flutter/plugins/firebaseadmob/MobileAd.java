@@ -228,6 +228,7 @@ abstract class MobileAd extends AdListener {
 
     @Override
     void dispose() {
+      // TODO(bmparr): Remove or move to an Activity lifecycle handler once we better understand whether we should be calling this. https://github.com/FirebaseExtended/flutterfire/issues/2124
       adView.destroy();
       super.dispose();
     }
