@@ -73,6 +73,8 @@ Starting in version 7.42.0, you are required to add your AdMob app ID in your **
 
 Failure to add this tag will result in the app crashing at app launch with a message including *"GADVerifyApplicationID."*
 
+You are also required to create an "App" in firebase and generate a GoogleService-info.plist file. This file needs to be embedded in the projects "Runner/Runner" folder using Xcode. If this step isn't done, the app will crash on startup.
+
 ## Using banners and interstitials
 Banner and interstitial ads can be configured with target information.
 And in the example below, the ads are given test ad unit IDs for a quick start.
