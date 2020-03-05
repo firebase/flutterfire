@@ -182,6 +182,140 @@ RewardedVideoAd.instance.listener =
 Because `RewardedVideoAd` is a singleton object, it does not offer a `dispose`
 method.
 
+## Using native ads
+
+Native Ads are presented to users via UI components that
+are native to the platform. (e.g. A
+[View](https://developer.android.com/reference/android/view/View) on Android or a
+[UIView](https://developer.apple.com/documentation/uikit/uiview?language=objc)
+on iOS). Using Flutter widgets to create native ads is NOT supported by
+this.
+
+Since Native Ads require UI components native to a platform, this feature requires additional setup
+for Android and iOS:
+
+### Android
+The Android Admob Plugin requires a class that implements `NativeAdFactory` which implements `createNativeAd(
+[UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd) nativeAd,
+Map<String, Options> customOptions)` and returns a
+[UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView).
+
+You can implement this in your `MainActivity.java` or create a separate class in the same directory
+as `MainActivity.java` as seen below:
+
+```java
+package my.app.path;
+
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
+import java.util.Map;
+
+class NativeAdFactoryExample implements NativeAdFactory {
+  @Override
+  public UnifiedNativeAdView createNativeAd(
+      UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
+    // Create UnifiedNativeAdView
+  }
+}
+```
+
+An instance of a `NativeAdFactory` should also be added to the `FirebaseAdMobPlugin`. This is done
+slightly differently depending on whether you are using Embedding V1 or Embedding V2.
+
+If you're using the Embedding V1, you need to register your `NativeAdFactory` with a unique `String`
+identifier after calling `GeneratedPluginRegistrant.registerWith(this);`.
+
+You're `MainActivity.java` should look similar to:
+
+```java
+package my.app.path;
+
+import android.os.Bundle;
+import io.flutter.app.FlutterActivity;
+import io.flutter.plugins.GeneratedPluginRegistrant;
+import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin;
+
+public class MainActivity extends FlutterActivity {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    GeneratedPluginRegistrant.registerWith(this);
+
+    FirebaseAdMobPlugin.registerNativeAdFactory(this, "adFactoryExample", new NativeAdFactoryExample());
+  }
+}
+```
+
+If you're using Embedding V2, you need to register your `NativeAdFactory` with a unique `String`
+identifier after adding the `FirebaseAdMobPlugin` to the `FlutterEngine`. (Adding the
+`FirebaseAdMobPlugin` to `FlutterEngine` should be done in a `GeneratedPluginRegistrant` in the near
+future, so you may not see it being added here). You should also unregister the factory in
+`cleanUpFlutterEngine(engine)`.
+
+You're `MainActivity.java` should look similar to:
+
+```java
+package my.app.path;
+
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin;
+
+public class MainActivity extends FlutterActivity {
+  @Override
+  public void configureFlutterEngine(FlutterEngine flutterEngine) {
+    flutterEngine.getPlugins().add(new FirebaseAdMobPlugin());
+
+    FirebaseAdMobPlugin.registerNativeAdFactory(flutterEngine, "adFactoryExample", NativeAdFactoryExample());
+  }
+
+  @Override
+  public void cleanUpFlutterEngine(FlutterEngine flutterEngine) {
+    FirebaseAdMobPlugin.unregisterNativeAdFactory(flutterEngine, "adFactoryExample");
+  }
+}
+```
+
+When creating the `NativeAd` in Flutter, the `factoryId` parameter should match the one you used to
+add the factory to `FirebaseAdMobPlugin`.
+
+An example of displaying a `UnifiedNativeAd` with a `UnifiedNativeAdView` can be found
+[here](https://developers.google.com/admob/android/native/advanced). The example app also inflates
+a custom layout and displays the test Native ad.
+
+### iOS
+
+Currently unsupported.
+
+### Dart Example
+
+When creating a Native Ad in Dart, setup is similar to Banners and Interstitials. You can use
+`MobileAdTargetingInfo` to target ads, create a listener to respond to `MobileAdEvent`s, and test
+with a test ad unit id. Your `factoryId` should match the id used to register the `NativeAdFactory`
+in Java/Kotlin/Obj-C/Swift. An example of this implementation is seen below:
+
+```dart
+MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+  keywords: <String>['flutterio', 'beautiful apps'],
+  contentUrl: 'https://flutter.io',
+  birthday: DateTime.now(),
+  childDirected: false,
+  designedForFamilies: false,
+  gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
+  testDevices: <String>[], // Android emulators are considered test devices
+);
+
+final NativeAd nativeAd = NativeAd(
+  adUnitId: NativeAd.testAdUnitId,
+  factoryId: 'adFactoryExample',
+  targetingInfo: targetingInfo,
+  listener: (MobileAdEvent event) {
+    print("$NativeAd event $event");
+  },
+);
+```
+
 ## Limitations
 
 This plugin currently has some limitations:

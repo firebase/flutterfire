@@ -26,6 +26,7 @@ class _MyAppState extends State<MyApp> {
   );
 
   BannerAd _bannerAd;
+  NativeAd _nativeAd;
   InterstitialAd _interstitialAd;
   int _coins = 0;
 
@@ -50,6 +51,17 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  NativeAd createNativeAd() {
+    return NativeAd(
+      adUnitId: NativeAd.testAdUnitId,
+      factoryId: 'adFactoryExample',
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        print("$NativeAd event $event");
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -69,6 +81,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     _bannerAd?.dispose();
+    _nativeAd?.dispose();
     _interstitialAd?.dispose();
     super.dispose();
   }
@@ -119,6 +132,22 @@ class _MyAppState extends State<MyApp> {
                   child: const Text('SHOW INTERSTITIAL'),
                   onPressed: () {
                     _interstitialAd?.show();
+                  },
+                ),
+                RaisedButton(
+                  child: const Text('SHOW NATIVE'),
+                  onPressed: () {
+                    _nativeAd ??= createNativeAd();
+                    _nativeAd
+                      ..load()
+                      ..show();
+                  },
+                ),
+                RaisedButton(
+                  child: const Text('REMOVE NATIVE'),
+                  onPressed: () {
+                    _nativeAd?.dispose();
+                    _nativeAd = null;
                   },
                 ),
                 RaisedButton(
