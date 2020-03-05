@@ -224,8 +224,9 @@ An instance of a `NativeAdFactory` should also be added to the `FirebaseAdMobPlu
 slightly differently depending on whether you are using Embedding V1 or Embedding V2.
 
 If you're using the Embedding V1, you need to register your `NativeAdFactory` with a unique `String`
-identifier after calling `GeneratedPluginRegistrant.registerWith(this);`. You're `MainActivity.java`
-should look similar to:
+identifier after calling `GeneratedPluginRegistrant.registerWith(this);`.
+
+You're `MainActivity.java` should look similar to:
 
 ```java
 package my.app.path;
@@ -246,9 +247,13 @@ public class MainActivity extends FlutterActivity {
 }
 ```
 
-If you're using the Embedding V2, you need to register your `NativeAdFactory` with a unique `String`
-identifier after adding the `FirebaseAdMobPlugin` to `FlutterEngine`. (This should be done in a `GeneratedPluginRegistrant`
-in the near future). You're `MainActivity.java` should look similar to:
+If you're using Embedding V2, you need to register your `NativeAdFactory` with a unique `String`
+identifier after adding the `FirebaseAdMobPlugin` to the `FlutterEngine`. (Adding the
+`FirebaseAdMobPlugin` to `FlutterEngine` should be done in a `GeneratedPluginRegistrant` in the near
+future, so you may not see it being added here). You should also unregister the factory in
+`cleanUpFlutterEngine(engine)`.
+
+You're `MainActivity.java` should look similar to:
 
 ```java
 package my.app.path;
@@ -263,6 +268,11 @@ public class MainActivity extends FlutterActivity {
     flutterEngine.getPlugins().add(new FirebaseAdMobPlugin());
 
     FirebaseAdMobPlugin.registerNativeAdFactory(flutterEngine, "adFactoryExample", NativeAdFactoryExample());
+  }
+
+  @Override
+  public void cleanUpFlutterEngine(FlutterEngine flutterEngine) {
+    FirebaseAdMobPlugin.unregisterNativeAdFactory(flutterEngine, "adFactoryExample");
   }
 }
 ```
@@ -281,7 +291,7 @@ Currently unsupported.
 ### Dart Example
 
 When creating a Native Ad in Dart, setup is similar to Banners and Interstitials. You can use
-`MobileAdTargetingInfo` to target ads, create a listener to respond to `MobileAdEvent`s and test
+`MobileAdTargetingInfo` to target ads, create a listener to respond to `MobileAdEvent`s, and test
 with a test ad unit id. Your `factoryId` should match the id used to register the `NativeAdFactory`
 in Java/Kotlin/Obj-C/Swift. An example of this implementation is seen below:
 

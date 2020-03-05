@@ -34,6 +34,11 @@ import java.util.Map;
  * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
  */
 public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
+  // This the plugin key used in the Embedding V1 generated GeneratedRegistrant.java. This key is
+  // used when this plugin publishes it's self in registerWith(registrar).
+  private static final String GENERATED_PLUGIN_KEY =
+      "io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin";
+
   private Context applicationContext;
   private MethodChannel channel;
   private Activity activity;
@@ -95,16 +100,12 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
    *     a parameter that refers to this.
    * @param nativeAdFactory creates {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s
    *     when Flutter NativeAds are created.
-   * @return whether a FirebaseAdMob instance was found, whether the factoryId is unique, and the
-   *     nativeAdFactory was successfully added.
+   * @return whether the factoryId is unique and the nativeAdFactory was successfully added.
    */
   public static boolean registerNativeAdFactory(
       PluginRegistry registry, String factoryId, NativeAdFactory nativeAdFactory) {
-    final FirebaseAdMobPlugin adMobPlugin =
-        registry.valuePublishedByPlugin("io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin");
-
-    if (adMobPlugin != null) return adMobPlugin.addNativeAdFactory(factoryId, nativeAdFactory);
-    return false;
+    final FirebaseAdMobPlugin adMobPlugin = registry.valuePublishedByPlugin(GENERATED_PLUGIN_KEY);
+    return registerNativeAdFactory(adMobPlugin, factoryId, nativeAdFactory);
   }
 
   /**
@@ -117,16 +118,26 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
    *     a parameter that refers to this.
    * @param nativeAdFactory creates {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s
    *     when Flutter NativeAds are created.
-   * @return whether a FirebaseAdMob instance was found, whether the factoryId is unique, and the
-   *     nativeAdFactory was successfully added.
+   * @return whether the factoryId is unique and the nativeAdFactory was successfully added.
    */
   public static boolean registerNativeAdFactory(
       FlutterEngine engine, String factoryId, NativeAdFactory nativeAdFactory) {
     final FirebaseAdMobPlugin adMobPlugin =
         (FirebaseAdMobPlugin) engine.getPlugins().get(FirebaseAdMobPlugin.class);
+    return registerNativeAdFactory(adMobPlugin, factoryId, nativeAdFactory);
+  }
 
-    if (adMobPlugin != null) return adMobPlugin.addNativeAdFactory(factoryId, nativeAdFactory);
-    return false;
+  private static boolean registerNativeAdFactory(
+      FirebaseAdMobPlugin plugin, String factoryId, NativeAdFactory nativeAdFactory) {
+    if (plugin == null) {
+      final String message =
+          String.format(
+              "Could not find a %s instance. The plugin may have not been registered.",
+              FirebaseAdMobPlugin.class.getSimpleName());
+      throw new IllegalStateException(message);
+    }
+
+    return plugin.addNativeAdFactory(factoryId, nativeAdFactory);
   }
 
   /**
@@ -143,10 +154,9 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
    */
   public static NativeAdFactory unregisterNativeAdFactory(
       PluginRegistry registry, String factoryId) {
-    final FirebaseAdMobPlugin adMobPlugin =
-        registry.valuePublishedByPlugin("io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin");
-
+    final FirebaseAdMobPlugin adMobPlugin = registry.valuePublishedByPlugin(GENERATED_PLUGIN_KEY);
     if (adMobPlugin != null) adMobPlugin.removeNativeAdFactory(factoryId);
+
     return null;
   }
 
@@ -163,10 +173,11 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
    *     factoryId, or null if there was none for this factoryId.
    */
   public static NativeAdFactory unregisterNativeAdFactory(FlutterEngine engine, String factoryId) {
-    final FirebaseAdMobPlugin adMobPlugin =
-        (FirebaseAdMobPlugin) engine.getPlugins().get(FirebaseAdMobPlugin.class);
+    final FlutterPlugin adMobPlugin = engine.getPlugins().get(FirebaseAdMobPlugin.class);
+    if (adMobPlugin != null) {
+      return ((FirebaseAdMobPlugin) adMobPlugin).removeNativeAdFactory(factoryId);
+    }
 
-    if (adMobPlugin != null) return adMobPlugin.removeNativeAdFactory(factoryId);
     return null;
   }
 
@@ -423,7 +434,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     initializePlugin(
         pluginBinding.getApplicationContext(),
         binding.getActivity(),
-        pluginBinding.getFlutterEngine().getDartExecutor());
+        pluginBinding.getBinaryMessenger());
   }
 
   @Override
@@ -437,7 +448,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     initializePlugin(
         pluginBinding.getApplicationContext(),
         binding.getActivity(),
-        pluginBinding.getFlutterEngine().getDartExecutor());
+        pluginBinding.getBinaryMessenger());
   }
 
   @Override
