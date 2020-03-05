@@ -83,7 +83,7 @@ int _anchorType;
 }
 
 - (void)show {
-  // Implemented by the Banner and Interstitial subclasses
+  // Implemented by the FLTMobileAdWithView and Interstitial subclasses
 }
 
 - (void)dispose {
@@ -117,6 +117,31 @@ int _anchorType;
   UIView *screen = [FLTMobileAd rootViewController].view;
   [screen addSubview:self.adView];
 
+  #if defined(__IPHONE_11_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0)
+  if (@available(ios 11.0, *)) {
+    self.adView.translatesAutoresizingMaskIntoConstraints = NO;
+
+    UILayoutGuide *guide = screen.safeAreaLayoutGuide;
+    [NSLayoutConstraint activateConstraints:@[
+      [self.adView.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor
+                                            constant:_horizontalCenterOffset],
+
+      [self.adView.leftAnchor constraintGreaterThanOrEqualToAnchor:guide.leftAnchor],
+      [self.adView.rightAnchor constraintLessThanOrEqualToAnchor:guide.rightAnchor],
+    ]];
+
+    if (_anchorType == 0) {
+      [NSLayoutConstraint activateConstraints:@[
+        [self.adView.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor constant:_anchorOffset],
+      ]];
+    } else {
+      [NSLayoutConstraint activateConstraints:@[
+        [self.adView.topAnchor constraintEqualToAnchor:guide.topAnchor constant:_anchorOffset],
+      ]];
+    }
+  }
+  #endif
+
   CGFloat x = screen.frame.size.width / 2 - self.adView.frame.size.width / 2 + _horizontalCenterOffset;
   CGFloat y;
   if (_anchorType == 0) {
@@ -124,18 +149,7 @@ int _anchorType;
   } else {
     y = _anchorOffset;
   }
-  self.adView.frame = (CGRect){{x, y}, self.adView.frame.size};
-
-  if (@available(ios 11.0, *)) {
-    UILayoutGuide *guide = screen.safeAreaLayoutGuide;
-    [NSLayoutConstraint activateConstraints:@[
-      [self.adView.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor
-                                            constant:_horizontalCenterOffset],
-      [self.adView.bottomAnchor
-          constraintEqualToAnchor:_anchorType == 0 ? guide.bottomAnchor : guide.topAnchor
-                         constant:_anchorOffset]
-    ]];
-  }
+  self.adView.frame = (CGRect){{x, self.adView.frame.origin.y}, self.adView.frame.size};
 }
 
 - (void)dispose {

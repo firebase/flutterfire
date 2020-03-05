@@ -15,10 +15,6 @@
     // Create and place ad in view hierarchy.
     GADUnifiedNativeAdView *adView =
         [[NSBundle mainBundle] loadNibNamed:@"UnifiedNativeAdView" owner:nil options:nil].firstObject;
-  
-    CGRect newFrame = adView.frame;
-    newFrame.size.height = 333.3;
-    [adView setFrame:newFrame];
 
     // Associate the native ad view with the native ad object. This is
     // required to make the ad clickable.
