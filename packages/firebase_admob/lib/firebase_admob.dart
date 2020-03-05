@@ -325,15 +325,10 @@ class NativeAd extends MobileAd {
     MobileAdListener listener,
     this.customOptions,
   }) : super(
-            adUnitId: adUnitId,
-            targetingInfo: targetingInfo,
-            listener: listener) {
-    if (!Platform.isAndroid) {
-      throw UnimplementedError(
-        '$NativeAd is currently only available for Android',
-      );
-    }
-  }
+          adUnitId: adUnitId,
+          targetingInfo: targetingInfo,
+          listener: listener,
+        );
 
   /// Optional options used to create the [NativeAd].
   ///

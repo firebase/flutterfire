@@ -12,12 +12,10 @@
 @interface FLTFirebaseAdMobPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @property(nonatomic, strong) FLTRewardedVideoAdWrapper *rewardedWrapper;
+@property NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *nativeAdFactories;
 @end
 
-@implementation FLTFirebaseAdMobPlugin {
-  NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *nativeAdFactories;
-}
-
+@implementation FLTFirebaseAdMobPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FLTFirebaseAdMobPlugin *instance = [[FLTFirebaseAdMobPlugin alloc] init];
   [registrar publish:instance];
@@ -38,7 +36,7 @@
     NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
   }
 
-  if (self) nativeAdFactories = [NSMutableDictionary dictionary];
+  if (self) _nativeAdFactories = [NSMutableDictionary dictionary];
   return self;
 }
 
@@ -52,7 +50,7 @@
                 nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory {
   // TODO: throw exception if key exits.
   FLTFirebaseAdMobPlugin *adMobPlugin = (FLTFirebaseAdMobPlugin *)[registry valuePublishedByPlugin:@"FLTFirebaseAdMobPlugin"];
-  [adMobPlugin registerNativeAdFactory:factoryId nativeAdFactory:nativeAdFactory];
+  [adMobPlugin.nativeAdFactories setValue:nativeAdFactory forKey:factoryId];
   return YES;
 }
 
@@ -179,7 +177,7 @@
   NSDictionary *customOptions = (NSDictionary *)call.arguments[@"customOptions"];
   NSString *factoryId = (NSString *)call.arguments[@"factoryId"];
 
-  FLTNativeAd *nativeAd = [FLTNativeAd withId:id channel:self.channel nativeAdFactory:nativeAdFactories[factoryId] customOptions:customOptions];
+  FLTNativeAd *nativeAd = [FLTNativeAd withId:id channel:self.channel nativeAdFactory:_nativeAdFactories[factoryId] customOptions:customOptions];
 
   if (nativeAd.status != CREATED) {
     if (nativeAd.status == FAILED) {
