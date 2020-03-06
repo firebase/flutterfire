@@ -1,3 +1,8 @@
+## 0.13.4+1
+
+* Fix crash with pagination with `DocumentReference` (#2044)
+* Minor tweaks to integ tests.
+
 ## 0.13.4
 
 * Support equality comparison on `FieldValue` instances.
