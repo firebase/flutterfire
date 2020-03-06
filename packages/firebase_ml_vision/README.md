@@ -13,7 +13,7 @@ To use this plugin, add `firebase_ml_vision` as a [dependency in your pubspec.ya
 ### Android
 If you're using the on-device `ImageLabeler`, include the latest matching [ML Kit: Image Labeling](https://firebase.google.com/support/release-notes/android) dependency in your app-level build.gradle file.
 
-```xml
+```gradle
 android {
     dependencies {
         // ...
@@ -25,7 +25,7 @@ android {
 
 If you're using the on-device `Face Contour Detection`, include the latest matching [ML Kit: Face Detection Model](https://firebase.google.com/support/release-notes/android) dependency in your app-level build.gradle file.
 
-```
+```gradle
 android {
     dependencies {
         // ...
