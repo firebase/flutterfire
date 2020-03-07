@@ -24,5 +24,5 @@ Firestore plugin for Flutter.
   s.dependency 'Firebase/Firestore', '~> 6.0'
   s.static_framework = true
 
-  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LIBRARY_VERSION=@\"unknown\" LIBRARY_NAME=@\"flutter-fire-fst\"' }
+  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LIBRARY_VERSION=@\"' + libraryVersion + '\" LIBRARY_NAME=@\"flutter-fire-fst\"' }
 end
