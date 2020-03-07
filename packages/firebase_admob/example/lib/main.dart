@@ -143,10 +143,10 @@ class _MyAppState extends State<MyApp> {
                     _nativeAd
                       ..load()
                       ..show(
-                          anchorType: Platform.isAndroid
-                              ? AnchorType.bottom
-                              : AnchorType.top,
-                          anchorOffset: 0);
+                        anchorType: Platform.isAndroid
+                            ? AnchorType.bottom
+                            : AnchorType.top,
+                      );
                   },
                 ),
                 RaisedButton(
