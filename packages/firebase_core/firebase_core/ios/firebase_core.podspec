@@ -24,5 +24,5 @@ A new flutter plugin project.
   s.ios.deployment_target = '8.0'
   s.static_framework = true
 
-  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LIBRARY_VERSION=@\\"#{libraryVersion}\\ LIBRARY_NAME=@\"flutter-fire-core\"' }
+  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LIBRARY_VERSION=@\"' + libraryVersion + '\" LIBRARY_NAME=@\"flutter-fire-fst\"' }
 end
