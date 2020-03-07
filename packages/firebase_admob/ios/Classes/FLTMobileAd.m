@@ -103,8 +103,7 @@ int _anchorType;
 
 @implementation FLTMobileAdWithView
 - (UIView *)adView {
-  // TODO: Throw error if not subclassed
-  @throw [NSException exceptionWithName:NSGenericException reason:nil userInfo:nil];
+  [self doesNotRecognizeSelector:_cmd];
   return nil;
 }
 
