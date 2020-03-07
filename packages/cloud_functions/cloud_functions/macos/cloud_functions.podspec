@@ -25,6 +25,6 @@ A new flutter plugin project.
   s.dependency 'Firebase/Functions', '~> 6.0'
   s.static_framework = true
 
-  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LIBRARY_VERSION=\@\"unknown\" LIBRARY_NAME=\@\"flutter-fire-fn\"' }
+  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LIBRARY_VERSION=@\"unknown\" LIBRARY_NAME=@\"flutter-fire-fn\"' }
 end
 

@@ -24,5 +24,5 @@ A new flutter plugin project.
   s.platform = :osx, '10.11'
   s.static_framework = true
 
-  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LIBRARY_VERSION=\@\"unknown\" LIBRARY_NAME=\@\"flutter-fire-core\"' }
+  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LIBRARY_VERSION=@\"unknown\" LIBRARY_NAME=@\"flutter-fire-core\"' }
 end
