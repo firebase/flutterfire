@@ -25,5 +25,9 @@ Firebase Analytics plugin for Flutter.
   s.dependency 'Firebase/Analytics', '~> 6.0'
   s.static_framework = true
 
-  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LIBRARY_VERSION=\@\"unknown\" LIBRARY_NAME=\@\"flutter-fire-analytics\"' }
+  s.prepare_command = <<-CMD
+      echo // Generated file, do not edit > Classes/UserAgent.h
+      echo "#define LIBRARY_VERSION @\\"#{libraryVersion}\\"" >> Classes/UserAgent.h
+      echo "#define LIBRARY_NAME @\\"flutter-fire-analytics\\"" >> Classes/UserAgent.h
+    CMD
 end
