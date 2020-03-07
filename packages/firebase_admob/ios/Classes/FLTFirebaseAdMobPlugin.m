@@ -48,10 +48,29 @@
 + (BOOL)registerNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
                       factoryId:(NSString *)factoryId
                 nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory {
-  // TODO: throw exception if key exits.
-  FLTFirebaseAdMobPlugin *adMobPlugin = (FLTFirebaseAdMobPlugin *)[registry valuePublishedByPlugin:@"FLTFirebaseAdMobPlugin"];
+  NSString *pluginClassName = NSStringFromClass([FLTFirebaseAdMobPlugin class]);
+  FLTFirebaseAdMobPlugin *adMobPlugin = (FLTFirebaseAdMobPlugin *)[registry valuePublishedByPlugin:pluginClassName];
+  if (!adMobPlugin) {
+    NSString *reason = [NSString stringWithFormat:@"Could not find a %@ instance. The plugin may have not been registered.", pluginClassName];
+    [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
+  }
+  
+  if (adMobPlugin.nativeAdFactories[factoryId]) {
+    NSLog(@"A NativeAdFactory with the following factoryId already exists: %@", factoryId);
+    return NO;
+  }
+  
   [adMobPlugin.nativeAdFactories setValue:nativeAdFactory forKey:factoryId];
   return YES;
+}
+
++ (id<FLTNativeAdFactory>)unregisterNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
+                                          factoryId:(NSString *)factoryId {
+  FLTFirebaseAdMobPlugin *adMobPlugin = (FLTFirebaseAdMobPlugin *)[registry valuePublishedByPlugin:NSStringFromClass([FLTFirebaseAdMobPlugin class])];
+  
+  id<FLTNativeAdFactory> factory = adMobPlugin.nativeAdFactories[factoryId];
+  if (factory) [adMobPlugin.nativeAdFactories removeObjectForKey:factoryId];
+  return factory;
 }
 
 - (void)callInitialize:(FlutterMethodCall *)call result:(FlutterResult)result {
