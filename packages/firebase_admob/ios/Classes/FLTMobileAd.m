@@ -103,6 +103,7 @@ int _anchorType;
 
 @implementation FLTMobileAdWithView
 - (UIView *)adView {
+  // We cause a crash if this method is not overriden by subclasses.
   [self doesNotRecognizeSelector:_cmd];
   return nil;
 }
