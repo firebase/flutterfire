@@ -1,3 +1,7 @@
+## 0.1.1+1
+
+* Ensure FieldValueFactoryWeb correctly encodes parameters for arrayRemove/arrayUnion FieldValues.
+
 ## 0.1.1
 
 * Support equality comparison of field values.

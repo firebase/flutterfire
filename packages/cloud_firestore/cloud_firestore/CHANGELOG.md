@@ -1,6 +1,11 @@
-## 0.13.4+1
+## 0.13.4+2
 
 * Fix equality comparison for `DocumentReference` instances to only use the `path` instance variable.
+
+## 0.13.4+1
+
+* Fix crash with pagination with `DocumentReference` (#2044)
+* Minor tweaks to integ tests.
 
 ## 0.13.4
 
