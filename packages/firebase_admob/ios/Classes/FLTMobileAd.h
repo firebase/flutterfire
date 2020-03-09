@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 
 #import <Flutter/Flutter.h>
-#import "GoogleMobileAds/GoogleMobileAds.h"
 #import "FLTFirebaseAdMobPlugin.h"
+#import "GoogleMobileAds/GoogleMobileAds.h"
 
 typedef enum : NSUInteger {
   CREATED,
@@ -40,7 +40,8 @@ typedef enum : NSUInteger {
 + (instancetype)withId:(NSNumber *)mobileAdId channel:(FlutterMethodChannel *)channel;
 @end
 
-@interface FLTNativeAd : FLTMobileAdWithView<GADUnifiedNativeAdLoaderDelegate, GADUnifiedNativeAdDelegate>
+@interface FLTNativeAd
+    : FLTMobileAdWithView<GADUnifiedNativeAdLoaderDelegate, GADUnifiedNativeAdDelegate>
 + (instancetype)withId:(NSNumber *)mobileAdId
                channel:(FlutterMethodChannel *)channel
        nativeAdFactory:(id<FLTNativeAdFactory>)nativeAdFactory

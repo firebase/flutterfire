@@ -113,20 +113,20 @@ int _anchorType;
     _status = PENDING;
     return;
   }
-  
+
   if (_status != LOADED) return;
-  
+
   UIView *screen = [FLTMobileAd rootViewController].view;
   [screen addSubview:self.adView];
 
-  #if defined(__IPHONE_11_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0)
+#if defined(__IPHONE_11_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0)
   if (@available(ios 11.0, *)) {
     self.adView.translatesAutoresizingMaskIntoConstraints = NO;
 
     UILayoutGuide *guide = screen.safeAreaLayoutGuide;
     [NSLayoutConstraint activateConstraints:@[
       [self.adView.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor
-                                            constant:_horizontalCenterOffset],
+                                                constant:_horizontalCenterOffset],
 
       [self.adView.leftAnchor constraintGreaterThanOrEqualToAnchor:guide.leftAnchor],
       [self.adView.rightAnchor constraintLessThanOrEqualToAnchor:guide.rightAnchor],
@@ -134,7 +134,8 @@ int _anchorType;
 
     if (_anchorType == 0) {
       [NSLayoutConstraint activateConstraints:@[
-        [self.adView.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor constant:_anchorOffset],
+        [self.adView.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor
+                                                 constant:_anchorOffset],
       ]];
     } else {
       [NSLayoutConstraint activateConstraints:@[
@@ -142,9 +143,10 @@ int _anchorType;
       ]];
     }
   }
-  #endif
+#endif
 
-  CGFloat x = screen.frame.size.width / 2 - self.adView.frame.size.width / 2 + _horizontalCenterOffset;
+  CGFloat x =
+      screen.frame.size.width / 2 - self.adView.frame.size.width / 2 + _horizontalCenterOffset;
   CGFloat y;
   if (_anchorType == 0) {
     y = screen.frame.size.height - self.adView.frame.size.height + _anchorOffset;
@@ -312,10 +314,13 @@ GADInterstitial *_interstitial;
 + (instancetype)withId:(NSNumber *)mobileAdId
                channel:(FlutterMethodChannel *)channel
        nativeAdFactory:(id<FLTNativeAdFactory>)nativeAdFactory
-        customOptions:(NSDictionary *)customOptions {
+         customOptions:(NSDictionary *)customOptions {
   FLTMobileAd *ad = [FLTMobileAd getAdForId:mobileAdId];
   return ad != nil ? (FLTNativeAd *)ad
-         : [[FLTNativeAd alloc] initWithId:mobileAdId channel:channel nativeAdFactory:nativeAdFactory customOptions:customOptions];
+                   : [[FLTNativeAd alloc] initWithId:mobileAdId
+                                             channel:channel
+                                     nativeAdFactory:nativeAdFactory
+                                       customOptions:customOptions];
 }
 
 - (instancetype)initWithId:mobileAdId
@@ -338,24 +343,25 @@ GADInterstitial *_interstitial;
   if (_status != CREATED) return;
   _status = LOADING;
 
-  _adLoader = [[GADAdLoader alloc]
-        initWithAdUnitID:adUnitId
-      rootViewController:[FLTMobileAd rootViewController]
-                 adTypes:@[kGADAdLoaderAdTypeUnifiedNative]
-                 options:@[]];
+  _adLoader = [[GADAdLoader alloc] initWithAdUnitID:adUnitId
+                                 rootViewController:[FLTMobileAd rootViewController]
+                                            adTypes:@[ kGADAdLoaderAdTypeUnifiedNative ]
+                                            options:@[]];
   _adLoader.delegate = self;
 
   FLTRequestFactory *factory = [[FLTRequestFactory alloc] initWithTargetingInfo:targetingInfo];
   [_adLoader loadRequest:[factory createRequest]];
 }
 
-- (void)adLoader:(nonnull GADAdLoader *)adLoader didFailToReceiveAdWithError:(nonnull GADRequestError *)error {
+- (void)adLoader:(nonnull GADAdLoader *)adLoader
+    didFailToReceiveAdWithError:(nonnull GADRequestError *)error {
   FLTLogWarning(@"adLoader:didFailToReceiveAdWithError: %@ (MobileAd %@)",
                 [error localizedDescription], self);
   [_channel invokeMethod:@"onAdFailedToLoad" arguments:[self argumentsMap]];
 }
 
-- (void)adLoader:(nonnull GADAdLoader *)adLoader didReceiveUnifiedNativeAd:(nonnull GADUnifiedNativeAd *)nativeAd {
+- (void)adLoader:(nonnull GADAdLoader *)adLoader
+    didReceiveUnifiedNativeAd:(nonnull GADUnifiedNativeAd *)nativeAd {
   nativeAd.delegate = self;
   _nativeAd = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
 

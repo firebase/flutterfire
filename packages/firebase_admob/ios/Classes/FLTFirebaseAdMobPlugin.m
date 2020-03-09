@@ -49,25 +49,29 @@
                       factoryId:(NSString *)factoryId
                 nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory {
   NSString *pluginClassName = NSStringFromClass([FLTFirebaseAdMobPlugin class]);
-  FLTFirebaseAdMobPlugin *adMobPlugin = (FLTFirebaseAdMobPlugin *)[registry valuePublishedByPlugin:pluginClassName];
+  FLTFirebaseAdMobPlugin *adMobPlugin =
+      (FLTFirebaseAdMobPlugin *)[registry valuePublishedByPlugin:pluginClassName];
   if (!adMobPlugin) {
-    NSString *reason = [NSString stringWithFormat:@"Could not find a %@ instance. The plugin may have not been registered.", pluginClassName];
+    NSString *reason = [NSString
+        stringWithFormat:@"Could not find a %@ instance. The plugin may have not been registered.",
+                         pluginClassName];
     [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
   }
-  
+
   if (adMobPlugin.nativeAdFactories[factoryId]) {
     NSLog(@"A NativeAdFactory with the following factoryId already exists: %@", factoryId);
     return NO;
   }
-  
+
   [adMobPlugin.nativeAdFactories setValue:nativeAdFactory forKey:factoryId];
   return YES;
 }
 
 + (id<FLTNativeAdFactory>)unregisterNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
                                           factoryId:(NSString *)factoryId {
-  FLTFirebaseAdMobPlugin *adMobPlugin = (FLTFirebaseAdMobPlugin *)[registry valuePublishedByPlugin:NSStringFromClass([FLTFirebaseAdMobPlugin class])];
-  
+  FLTFirebaseAdMobPlugin *adMobPlugin = (FLTFirebaseAdMobPlugin *)[registry
+      valuePublishedByPlugin:NSStringFromClass([FLTFirebaseAdMobPlugin class])];
+
   id<FLTNativeAdFactory> factory = adMobPlugin.nativeAdFactories[factoryId];
   if (factory) [adMobPlugin.nativeAdFactories removeObjectForKey:factoryId];
   return factory;
@@ -196,7 +200,10 @@
   NSDictionary *customOptions = (NSDictionary *)call.arguments[@"customOptions"];
   NSString *factoryId = (NSString *)call.arguments[@"factoryId"];
 
-  FLTNativeAd *nativeAd = [FLTNativeAd withId:id channel:self.channel nativeAdFactory:_nativeAdFactories[factoryId] customOptions:customOptions];
+  FLTNativeAd *nativeAd = [FLTNativeAd withId:id
+                                      channel:self.channel
+                              nativeAdFactory:_nativeAdFactories[factoryId]
+                                customOptions:customOptions];
 
   if (nativeAd.status != CREATED) {
     if (nativeAd.status == FAILED) {
@@ -352,9 +359,10 @@
 
   NSNumber *mobileAdId = (NSNumber *)call.arguments[@"id"];
   if (mobileAdId == nil) {
-    NSString *message = @"FirebaseAdMobPlugin method calls for banners and "
-                        @"interstitials must specify an "
-                        @"integer mobile ad id";
+    NSString *message =
+        @"FirebaseAdMobPlugin method calls for banners and "
+        @"interstitials must specify an "
+        @"integer mobile ad id";
     result([FlutterError errorWithCode:@"no_id" message:message details:nil]);
     return;
   }
