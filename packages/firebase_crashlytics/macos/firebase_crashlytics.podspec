@@ -26,5 +26,5 @@ A new flutter plugin project.
   s.dependency 'Crashlytics'
   s.dependency 'Firebase/Core'
 
-  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LIBRARY_VERSION=@\"' + libraryVersion + '\" LIBRARY_NAME=@\"flutter-fire-cls\"' }
+  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{libraryVersion}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-cls\\\"" }
 end

@@ -25,5 +25,5 @@ Firebase Auth plugin for Flutter.
   s.dependency 'Firebase/Core'
   s.static_framework = true
 
-  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) LIBRARY_VERSION=@\"' + libraryVersion + '\" LIBRARY_NAME=@\"flutter-fire-auth\"' }
+  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{libraryVersion}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-auth\\\"" }
 end
