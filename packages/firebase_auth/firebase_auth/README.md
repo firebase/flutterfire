@@ -12,6 +12,12 @@ The Google Sign-in plugin is required to use the firebase_auth plugin for Google
 
 If you're using Google Sign-in with Firebase auth, be sure to include all required fields in the [OAuth consent screen](https://console.developers.google.com/apis/credentials/consent). If you don't, you may encounter an `ApiException`.
 
+### Configure the flutter_facebook_login plugin
+Use flutter_facebook_login plugin to authenticate using Facebook. Follow the [flutter_facebook_login plugin installation instructions](https://pub.dev/packages/flutter_facebook_login).
+
+### Configure the flutter_twitter plugin
+You can use flutter_twitter plugin to authenticate using Twitter. Follow the [flutter_twitter plugin installation instructions](https://pub.dev/packages/flutter_twitter).
+
 ### Import the firebase_auth plugin
 To use the firebase_auth plugin, follow the [plugin installation instructions](https://pub.dartlang.org/packages/firebase_auth#pub-pkg-tab-installing).
 
@@ -51,6 +57,7 @@ Add the following imports to your Dart code:
 ```dart
 import 'package:firebase_auth/firebase_auth.dart';
 ```
+#### Google Authentication
 
 Initialize `GoogleSignIn` and `FirebaseAuth`:
 ```dart
@@ -81,6 +88,56 @@ callback for both the `FirebaseUser` and possible exception.
 _handleSignIn()
     .then((FirebaseUser user) => print(user))
     .catchError((e) => print(e));
+```
+#### Facebook Authentication 
+
+Import `flutter_facebook_login` and initialize `FirebaseAuth`:
+```dart 
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+final FirebaseAuth _auth = FirebaseAuth.instance;
+```
+You can now use `flutter_facebook_login` to authenticate in your Dart code, e.g.
+```dart
+Future<void> facebookSignin(BuildContext context) async {
+    try {
+      final facebookLogin = FacebookLogin();
+      FacebookLoginResult result = await facebookLogin.logIn(['email']);
+
+      AuthCredential credential = FacebookAuthProvider.getCredential(
+          accessToken: result.accessToken.token);
+      await _auth.signInWithCredential(credential);
+    } catch (e) {
+      print(e);
+    }
+  }
+```
+
+#### Twitter Authentication 
+
+Import `flutter_twitter_login` and initialize `FirebaseAuth`:
+```dart 
+import 'package:flutter_twitter_login/flutter_twitter_login.dart';
+final FirebaseAuth _auth = FirebaseAuth.instance;
+```
+You can now use `flutter_twitter_login` to authenticate in your Dart code, e.g.
+```dart
+  Future<void> twitterSignin() async {
+    try {
+      var twitterLogin = TwitterLogin(
+        consumerKey: '<your consumer key>',
+        consumerSecret: '<your consumer secret>',
+      );
+      TwitterLoginResult twitterLoginResult = await twitterLogin.authorize();
+      TwitterSession currentUserTwitterSession = twitterLoginResult.session;
+
+      AuthCredential authCredential = TwitterAuthProvider.getCredential(
+          authToken: currentUserTwitterSession?.token ?? '',
+          authTokenSecret: currentUserTwitterSession?.secret ?? '');
+      await _auth.signInWithCredential(authCredential);
+    } catch (e) {
+      handleExceptions(e);
+    }
+  }
 ```
 
 ### Register a user
