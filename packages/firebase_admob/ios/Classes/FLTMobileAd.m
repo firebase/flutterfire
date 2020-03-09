@@ -114,6 +114,8 @@ int _anchorType;
     return;
   }
   
+  if (_status != LOADED) return;
+  
   UIView *screen = [FLTMobileAd rootViewController].view;
   [screen addSubview:self.adView];
 
@@ -221,6 +223,13 @@ GADAdSize _adSize;
 
 - (void)adViewWillLeaveApplication:(GADBannerView *)adView {
   [_channel invokeMethod:@"onAdLeftApplication" arguments:[self argumentsMap]];
+}
+
+- (void)adViewDidReceiveAd:(GADBannerView *)adView {
+  bool statusWasPending = _status == PENDING;
+  _status = LOADED;
+  [_channel invokeMethod:@"onAdLoaded" arguments:[self argumentsMap]];
+  if (statusWasPending) [self show];
 }
 @end
 
