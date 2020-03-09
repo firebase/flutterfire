@@ -32,7 +32,7 @@
 /**
  * Flutter plugin providing access to the Firebase Admob API.
  */
-@interface FLTFirebaseAdMobPlugin : NSObject<FlutterPlugin>
+@interface FLTFirebaseAdMobPlugin : NSObject <FlutterPlugin>
 /**
  * Adds a `FLTNativeAdFactory` used to create a `GADUnifiedNativeAdView`s from a Native Ad created
  * in Dart.

@@ -92,8 +92,8 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
 
   /**
    * Adds a {@link io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory} used to
-   * create {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from a Native Ad
-   * created in Dart.
+   * create {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from a Native Ad created
+   * in Dart.
    *
    * @param registry maintains access to a FirebaseAdMobPlugin instance.
    * @param factoryId a unique identifier for the ad factory. The Native Ad created in Dart includes

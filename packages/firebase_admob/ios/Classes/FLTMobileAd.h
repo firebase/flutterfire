@@ -30,18 +30,18 @@ typedef enum : NSUInteger {
 - (UIView *)adView;
 @end
 
-@interface FLTBannerAd : FLTMobileAdWithView<GADBannerViewDelegate>
+@interface FLTBannerAd : FLTMobileAdWithView <GADBannerViewDelegate>
 + (instancetype)withId:(NSNumber *)mobileAdId
                 adSize:(GADAdSize)adSize
                channel:(FlutterMethodChannel *)channel;
 @end
 
-@interface FLTInterstitialAd : FLTMobileAd<GADInterstitialDelegate>
+@interface FLTInterstitialAd : FLTMobileAd <GADInterstitialDelegate>
 + (instancetype)withId:(NSNumber *)mobileAdId channel:(FlutterMethodChannel *)channel;
 @end
 
 @interface FLTNativeAd
-    : FLTMobileAdWithView<GADUnifiedNativeAdLoaderDelegate, GADUnifiedNativeAdDelegate>
+    : FLTMobileAdWithView <GADUnifiedNativeAdLoaderDelegate, GADUnifiedNativeAdDelegate>
 + (instancetype)withId:(NSNumber *)mobileAdId
                channel:(FlutterMethodChannel *)channel
        nativeAdFactory:(id<FLTNativeAdFactory>)nativeAdFactory

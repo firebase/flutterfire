@@ -6,7 +6,7 @@
 #import "FLTFirebaseAdMobPlugin.h"
 #include "GeneratedPluginRegistrant.h"
 
-@interface NativeAdFactoryExample : NSObject<FLTNativeAdFactory>
+@interface NativeAdFactoryExample : NSObject <FLTNativeAdFactory>
 @end
 
 @implementation NativeAdFactoryExample
