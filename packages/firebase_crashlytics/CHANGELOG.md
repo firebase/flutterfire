@@ -1,3 +1,7 @@
+## 0.1.3+2
+
+* Fix Cirrus build by removing WorkspaceSettings.xcsettings file in the iOS example app.
+
 ## 0.1.3+1
 
 * Make the pedantic dev_dependency explicit.
