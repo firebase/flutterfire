@@ -1,6 +1,6 @@
 ## 0.1.3+2
 
-* Remove WorkspaceSettings.xcsettings file in the Mac example app.
+* Fix Cirrus build by removing WorkspaceSettings.xcsettings file in the iOS example app.
 
 ## 0.1.3+1
 
