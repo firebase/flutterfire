@@ -1,3 +1,7 @@
+## 0.1.3+2
+
+* Remove WorkspaceSettings.xcsettings file in the Mac example app.
+
 ## 0.1.3+1
 
 * Make the pedantic dev_dependency explicit.
