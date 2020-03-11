@@ -73,6 +73,22 @@ Starting in version 7.42.0, you are required to add your AdMob app ID in your **
 
 Failure to add this tag will result in the app crashing at app launch with a message including *"GADVerifyApplicationID."*
 
+## Firebase related changes
+
+You are also required to ensure that you have Google Service file from Firebase inside your project.
+
+### iOS
+
+Create an "App" in firebase and generate a GoogleService-info.plist file. This file needs to be embedded in the projects "Runner/Runner" folder using Xcode. 
+
+https://firebase.google.com/docs/ios/setup#create-firebase-project -> Steps 1-3
+
+### Android
+
+Create an "App" in firebase and generate a google-service.json file. This file needs to be embedded in you projects "android/app" folder. 
+
+https://firebase.google.com/docs/android/setup#create-firebase-project -> Steps 1-3.1
+
 ## Using banners and interstitials
 Banner and interstitial ads can be configured with target information.
 And in the example below, the ads are given test ad unit IDs for a quick start.
