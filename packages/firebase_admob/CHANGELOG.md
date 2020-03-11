@@ -1,3 +1,7 @@
+## 0.9.2+1
+
+* Added note about required Google Service config files.
+
 ## 0.9.2
 
 * Add basic Native Ads support for Android.
