@@ -119,6 +119,7 @@ int _anchorType;
   UIView *screen = [FLTMobileAd rootViewController].view;
   [screen addSubview:self.adView];
 
+// UIView.safeAreaLayoutGuide is only available on iOS 11.0+
 #if defined(__IPHONE_11_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0)
   if (@available(ios 11.0, *)) {
     self.adView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -145,8 +146,10 @@ int _anchorType;
   }
 #endif
 
+  // We find the left most point that aligns the view to the horizontal center.
   CGFloat x =
       screen.frame.size.width / 2 - self.adView.frame.size.width / 2 + _horizontalCenterOffset;
+  // We find the top point that anchors the view to the top/bottom depending on anchorType.
   CGFloat y;
   if (_anchorType == 0) {
     y = screen.frame.size.height - self.adView.frame.size.height + _anchorOffset;

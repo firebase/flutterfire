@@ -212,6 +212,7 @@
     } else {
       result([NSNumber numberWithBool:YES]);  // The ad was already loaded.
     }
+    return;
   }
 
   NSDictionary *targetingInfo = (NSDictionary *)call.arguments[@"targetingInfo"];
