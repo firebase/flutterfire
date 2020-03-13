@@ -86,67 +86,79 @@ void main() {
     });
 
     test("endAt", () {
-      query.endAt([]);
-      verify(mockWebQuery.endAt(fieldValues: anyNamed("fieldValues")));
+      query.endAt([Timestamp.now()]);
+      verify(mockWebQuery.endAt(
+          fieldValues:
+              argThat(contains(isA<DateTime>()), named: "fieldValues")));
     });
 
     test("endAtDocument", () {
+      final DateTime date = DateTime.now();
       final mockDocumentSnapshot = MockDocumentSnapshot();
       when(mockDocumentSnapshot.data).thenReturn({
-        'test': 1,
+        'test': Timestamp.fromDate(date),
       });
       query.orderBy("test");
       query.endAtDocument(mockDocumentSnapshot);
       verify(mockWebQuery.endAt(
-          fieldValues: argThat(equals([1]), named: "fieldValues")));
+          fieldValues: argThat(equals([date]), named: "fieldValues")));
     });
 
     test("endBefore", () {
-      query.endBefore([]);
-      verify(mockWebQuery.endBefore(fieldValues: anyNamed("fieldValues")));
+      query.endBefore([Timestamp.now()]);
+      verify(mockWebQuery.endBefore(
+          fieldValues:
+              argThat(contains(isA<DateTime>()), named: "fieldValues")));
     });
 
     test("endBeforeDocument", () {
+      final DateTime date = DateTime.now();
       final mockDocumentSnapshot = MockDocumentSnapshot();
       when(mockDocumentSnapshot.data).thenReturn({
-        'test': 1,
+        'test': Timestamp.fromDate(date),
       });
       query.orderBy("test");
       query.endBeforeDocument(mockDocumentSnapshot);
       verify(mockWebQuery.endBefore(
-          fieldValues: argThat(equals([1]), named: "fieldValues")));
+          fieldValues: argThat(equals([date]), named: "fieldValues")));
     });
 
     test("startAfter", () {
-      query.startAfter([]);
-      verify(mockWebQuery.startAfter(fieldValues: anyNamed("fieldValues")));
+      query.startAfter([Timestamp.now()]);
+      verify(mockWebQuery.startAfter(
+          fieldValues:
+              argThat(contains(isA<DateTime>()), named: "fieldValues")));
     });
 
     test("startAfterDocument", () {
+      final DateTime date = DateTime.now();
       final mockDocumentSnapshot = MockDocumentSnapshot();
       when(mockDocumentSnapshot.data).thenReturn({
-        'test': 1,
+        'test': Timestamp.fromDate(date),
       });
       query.orderBy("test");
       query.startAfterDocument(mockDocumentSnapshot);
       verify(mockWebQuery.startAfter(
-          fieldValues: argThat(equals([1]), named: "fieldValues")));
+          fieldValues: argThat(equals([date]), named: "fieldValues")));
     });
 
     test("startAt", () {
-      query.startAt([]);
-      verify(mockWebQuery.startAt(fieldValues: anyNamed("fieldValues")));
+      query.startAt([Timestamp.now()]);
+      verify(mockWebQuery.startAt(
+          fieldValues:
+              argThat(contains(isA<DateTime>()), named: "fieldValues")));
     });
 
     test("startAtDocument", () {
+      final DateTime date = DateTime.now();
       final mockDocumentSnapshot = MockDocumentSnapshot();
       when(mockDocumentSnapshot.data).thenReturn({
-        'test': 1,
+        'test': Timestamp.fromDate(date),
       });
       query.orderBy("test");
       query.startAtDocument(mockDocumentSnapshot);
       verify(mockWebQuery.startAt(
-          fieldValues: argThat(equals([1]), named: "fieldValues")));
+          fieldValues: argThat(equals([date]), named: "fieldValues")));
     });
 
     test("limit", () {
