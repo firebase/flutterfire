@@ -9,6 +9,8 @@
 @interface NativeAdFactoryExample : NSObject <FLTNativeAdFactory>
 @end
 
+// The UnifiedNativeAdView.xib and example GADUnifiedNativeAdView is provided and
+// explained by https://developers.google.com/admob/ios/native/advanced.
 @implementation NativeAdFactoryExample
 - (GADUnifiedNativeAdView *)createNativeAd:(GADUnifiedNativeAd *)nativeAd
                              customOptions:(NSDictionary *)customOptions {
