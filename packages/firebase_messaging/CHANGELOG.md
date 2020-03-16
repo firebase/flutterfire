@@ -1,6 +1,7 @@
 ## 6.0.15
 
-* Fix error invoking `configure` with `onBackgroundMessage` on iOS.
+* During the `configure` method, only invoke `FcmDartService#start` for the Android platform, since 
+background message notification isn't working on iOS
 
 ## 6.0.14
 
