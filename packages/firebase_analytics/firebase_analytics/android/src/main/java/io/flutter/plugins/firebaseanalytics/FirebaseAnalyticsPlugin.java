@@ -25,18 +25,25 @@ import java.util.Map;
 public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
   private FirebaseAnalytics firebaseAnalytics;
   private MethodChannel methodChannel;
+  // Only set registrar for v1 embedder.
+  private PluginRegistry.Registrar registrar;
+  // Only set activity for v2 embedder. Always access activity from getActivity() method.
   private Activity activity;
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
     FirebaseAnalyticsPlugin instance = new FirebaseAnalyticsPlugin();
-    instance.setActivity(registrar.activity());
+    instance.registrar = registrar;
     instance.onAttachedToEngine(registrar.context(), registrar.messenger());
+  }
+
+  // Only access activity with this method.
+  private Activity getActivity() {
+    return registrar != null ? registrar.activity() : activity;
   }
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-    onAttachedToEngine(
-        binding.getApplicationContext(), binding.getFlutterEngine().getDartExecutor());
+    onAttachedToEngine(binding.getApplicationContext(), binding.getBinaryMessenger());
   }
 
   private void onAttachedToEngine(Context applicationContext, BinaryMessenger binaryMessenger) {
@@ -120,7 +127,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   }
 
   private void handleSetCurrentScreen(MethodCall call, Result result) {
-    if (activity == null) {
+    if (getActivity() == null) {
       result.error("no_activity", "handleSetCurrentScreen requires a foreground activity", null);
       return;
     }
@@ -128,7 +135,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
     final String screenName = call.argument("screenName");
     final String screenClassOverride = call.argument("screenClassOverride");
 
-    firebaseAnalytics.setCurrentScreen(activity, screenName, screenClassOverride);
+    firebaseAnalytics.setCurrentScreen(getActivity(), screenName, screenClassOverride);
     result.success(null);
   }
 

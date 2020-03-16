@@ -1,3 +1,11 @@
+## 6.0.12
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 6.0.11
+
+* Make the pedantic dev_dependency explicit.
+
 ## 6.0.10
 
 * Update README to explain how to correctly implement Android background message handling with the new v2 embedding. 

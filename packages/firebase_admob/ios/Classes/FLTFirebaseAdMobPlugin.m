@@ -220,6 +220,20 @@
   }
 }
 
+- (void)callSetRewardedVideoAdUserId:(FlutterMethodCall *)call result:(FlutterResult)result {
+  NSString *userId = (NSString *)call.arguments[@"userId"];
+
+  [self.rewardedWrapper setUserIdentifier:userId];
+  result([NSNumber numberWithBool:YES]);
+}
+
+- (void)callSetRewardedVideoAdCustomData:(FlutterMethodCall *)call result:(FlutterResult)result {
+  NSString *customData = (NSString *)call.arguments[@"customData"];
+
+  [self.rewardedWrapper setCustomRewardString:customData];
+  result([NSNumber numberWithBool:YES]);
+}
+
 - (void)callShowRewardedVideoAd:(FlutterMethodCall *)call result:(FlutterResult)result {
   if (self.rewardedWrapper.status != FLTRewardedVideoAdStatusLoaded) {
     result([FlutterError errorWithCode:@"ad_not_loaded"
@@ -254,6 +268,16 @@
 
   if ([call.method isEqualToString:@"loadRewardedVideoAd"]) {
     [self callLoadRewardedVideoAd:call result:result];
+    return;
+  }
+
+  if ([call.method isEqualToString:@"setRewardedVideoAdUserId"]) {
+    [self callSetRewardedVideoAdUserId:call result:result];
+    return;
+  }
+
+  if ([call.method isEqualToString:@"setRewardedVideoAdCustomData"]) {
+    [self callSetRewardedVideoAdCustomData:call result:result];
     return;
   }
 

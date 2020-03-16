@@ -1,3 +1,23 @@
+## 0.9.2+1
+
+* Added note about required Google Service config files.
+
+## 0.9.2
+
+* Add basic Native Ads support for Android.
+
+## 0.9.1+3
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 0.9.1+2
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.9.1+1
+
+* Enable custom parameters for rewarded video server-side verification callbacks.
+
 ## 0.9.1
 
 * Support v2 embedding. This will remain compatible with the original embedding and won't require

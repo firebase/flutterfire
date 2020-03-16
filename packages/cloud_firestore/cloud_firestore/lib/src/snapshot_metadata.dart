@@ -6,7 +6,8 @@ part of cloud_firestore;
 
 /// Metadata about a snapshot, describing the state of the snapshot.
 class SnapshotMetadata {
-  SnapshotMetadata._(this.hasPendingWrites, this.isFromCache);
+  platform.SnapshotMetadataPlatform _delegate;
+  SnapshotMetadata._(this._delegate);
 
   /// Whether the snapshot contains the result of local writes that have not yet
   /// been committed to the backend.
@@ -15,7 +16,7 @@ class SnapshotMetadata {
   /// `includeMetadataChanges` parameter set to `true` you will receive another
   /// snapshot with `hasPendingWrites` equal to `false` once the writes have been
   /// committed to the backend.
-  final bool hasPendingWrites;
+  bool get hasPendingWrites => _delegate.hasPendingWrites;
 
   /// Whether the snapshot was created from cached data rather than guaranteed
   /// up-to-date server data.
@@ -24,5 +25,5 @@ class SnapshotMetadata {
   /// `includeMetadataChanges` parameter set to `true` you will receive another
   /// snapshot with `isFomCache` equal to `false` once the client has received
   /// up-to-date data from the backend.
-  final bool isFromCache;
+  bool get isFromCache => _delegate.isFromCache;
 }

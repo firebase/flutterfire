@@ -326,4 +326,17 @@ class FirebaseAuth {
     assert(language != null);
     return FirebaseAuthPlatform.instance.setLanguageCode(app.name, language);
   }
+
+  /// Completes the password reset process, given a confirmation code and new password.
+  ///
+  /// Errors:
+  /// `EXPIRED_ACTION_CODE` - if the password reset code has expired.
+  /// `INVALID_ACTION_CODE` - if the password reset code is invalid. This can happen if the code is malformed or has already been used.
+  /// `USER_DISABLED` - if the user corresponding to the given password reset code has been disabled.
+  /// `USER_NOT_FOUND` - if there is no user corresponding to the password reset code. This may have happened if the user was deleted between when the code was issued and when this method was called.
+  /// `WEAK_PASSWORD` - if the new password is not strong enough.
+  Future<void> confirmPasswordReset(String oobCode, String newPassword) {
+    return FirebaseAuthPlatform.instance
+        .confirmPasswordReset(app.name, oobCode, newPassword);
+  }
 }

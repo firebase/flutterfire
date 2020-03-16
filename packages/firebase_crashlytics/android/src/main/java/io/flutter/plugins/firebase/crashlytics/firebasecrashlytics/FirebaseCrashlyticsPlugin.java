@@ -26,7 +26,7 @@ public class FirebaseCrashlyticsPlugin implements FlutterPlugin, MethodCallHandl
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    BinaryMessenger binaryMessenger = binding.getFlutterEngine().getDartExecutor();
+    BinaryMessenger binaryMessenger = binding.getBinaryMessenger();
     channel = setup(binaryMessenger, binding.getApplicationContext());
   }
 
