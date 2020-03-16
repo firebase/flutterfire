@@ -4,12 +4,14 @@
 
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
 import 'package:mockito/mockito.dart';
 import 'package:platform/platform.dart';
 import 'package:test/test.dart';
+
+const fcmDartServiceStart = 'FcmDartService#start';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +21,8 @@ void main() {
 
   setUp(() {
     mockChannel = MockMethodChannel();
+    when(mockChannel.invokeMethod<bool>(fcmDartServiceStart, any))
+        .thenAnswer((_) => Future.value(true));
     firebaseMessaging = FirebaseMessaging.private(
         mockChannel, FakePlatform(operatingSystem: 'ios'));
   });
@@ -182,13 +186,46 @@ void main() {
     verify(mockChannel.invokeMethod<void>('setAutoInitEnabled', false));
   });
 
-  test('configure bad onBackgroundMessage', () {
+  test('configure bad onBackgroundMessage iOS', () async {
     expect(
-      () => firebaseMessaging.configure(
+      firebaseMessaging.configure(
         onBackgroundMessage: (dynamic message) => Future<dynamic>.value(),
       ),
       throwsArgumentError,
     );
+    // Even with the bad arg, configure still should have been called
+    verify(mockChannel.invokeMethod("configure"));
+  });
+
+  test('configure bad onBackgroundMessage android', () async {
+    final firebaseMessaging = FirebaseMessaging.private(
+        mockChannel, FakePlatform(operatingSystem: 'android'));
+    expect(
+      firebaseMessaging.configure(
+        onBackgroundMessage: (dynamic message) => Future<dynamic>.value(),
+      ),
+      throwsArgumentError,
+    );
+    // Even though there was an error, configure still should have been called.
+    verify(mockChannel.invokeMethod("configure"));
+  });
+
+  test('configure onBackgroundMessage android', () async {
+    final firebaseMessaging = FirebaseMessaging.private(
+        mockChannel, FakePlatform(operatingSystem: 'android'));
+    final result = await firebaseMessaging.configure(
+        onBackgroundMessage: validOnBackgroundMessage);
+    expect(result, isTrue);
+    verify(mockChannel.invokeMethod<void>("configure"));
+    verify(mockChannel.invokeMethod<bool>(fcmDartServiceStart, any));
+  });
+
+  test('configure onBackgroundMessage ios', () async {
+    final result = await firebaseMessaging.configure(
+        onBackgroundMessage: validOnBackgroundMessage);
+    expect(result, isFalse);
+    verify(mockChannel.invokeMethod("configure"));
+    verifyNever(mockChannel.invokeMethod(fcmDartServiceStart, any));
   });
 }
 

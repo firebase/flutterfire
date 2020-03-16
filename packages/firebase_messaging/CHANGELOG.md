@@ -1,3 +1,7 @@
+## 6.0.15
+
+* Fix error invoking `configure` with `onBackgroundMessage` on iOS.
+
 ## 6.0.14
 
 * Fix for missing UserAgent.h compilation failures.

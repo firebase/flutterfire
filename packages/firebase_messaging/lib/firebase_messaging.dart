@@ -101,17 +101,23 @@ class FirebaseMessaging {
   }
 
   /// Sets up [MessageHandler] for incoming messages.
-  void configure({
+  ///
+  /// @param onBackgroundMessage This callback must be a top-level or static function, otherwise an [ArgumentError] will
+  /// be raised
+  ///
+  /// @returns true if a background handler was configured, false otherwise
+  /// @throws ArgumentError is onBackgroundMessage is invalid
+  Future<bool> configure({
     MessageHandler onMessage,
     MessageHandler onBackgroundMessage,
     MessageHandler onLaunch,
     MessageHandler onResume,
-  }) {
+  }) async {
     _onMessage = onMessage;
     _onLaunch = onLaunch;
     _onResume = onResume;
     _channel.setMethodCallHandler(_handleMethod);
-    _channel.invokeMethod<void>('configure');
+    await _channel.invokeMethod<void>('configure');
     if (onBackgroundMessage != null) {
       _onBackgroundMessage = onBackgroundMessage;
       final CallbackHandle backgroundSetupHandle =
@@ -127,14 +133,17 @@ class FirebaseMessaging {
         );
       }
 
-      _channel.invokeMethod<bool>(
-        'FcmDartService#start',
-        <String, dynamic>{
-          'setupHandle': backgroundSetupHandle.toRawHandle(),
-          'backgroundHandle': backgroundMessageHandle.toRawHandle()
-        },
-      );
+      if (_platform.isAndroid) {
+        return await _channel.invokeMethod<bool>(
+          'FcmDartService#start',
+          <String, dynamic>{
+            'setupHandle': backgroundSetupHandle.toRawHandle(),
+            'backgroundHandle': backgroundMessageHandle.toRawHandle()
+          },
+        );
+      }
     }
+    return false;
   }
 
   final StreamController<String> _tokenStreamController =
