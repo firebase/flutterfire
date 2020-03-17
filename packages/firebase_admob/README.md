@@ -211,9 +211,10 @@ Since Native Ads require UI components native to a platform, this feature requir
 for Android and iOS:
 
 ### Android
-The Android Admob Plugin requires a class that implements `NativeAdFactory` which implements `createNativeAd(
-[UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd) nativeAd,
-Map<String, Options> customOptions)` and returns a
+The Android Admob Plugin requires a class that implements `NativeAdFactory` which contains a method
+that takes a
+[UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd)
+and custom options and returns a
 [UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView).
 
 You can implement this in your `MainActivity.java` or create a separate class in the same directory
@@ -301,8 +302,53 @@ An example of displaying a `UnifiedNativeAd` with a `UnifiedNativeAdView` can be
 a custom layout and displays the test Native ad.
 
 ### iOS
+Native Ads for iOS require a class that implements the protocol `FLTNativeAdFactory` which has a
+single method `createNativeAd:customOptions:`.
 
-Currently unsupported.
+You can have your `AppDelegate` implement this protocol or create a separate class as seen below:
+
+```objectivec
+/* AppDelegate.m */
+
+#import "FLTFirebaseAdMobPlugin.h"
+
+@interface NativeAdFactoryExample : NSObject<FLTNativeAdFactory>
+@end
+
+@implementation NativeAdFactoryExample
+- (GADUnifiedNativeAdView *)createNativeAd:(GADUnifiedNativeAd *)nativeAd
+                             customOptions:(NSDictionary *)customOptions {
+  // Create GADUnifiedNativeAdView
+}
+@end
+```
+
+Once there is an implementation of `FLTNativeAdFactory`, it must be added to the
+`FLTFirebaseAdMobPlugin`. This is done by importing `FLTFirebaseAdMobPlugin.h` and calling
+`registerNativeAdFactory:factoryId:nativeAdFactory:` with a `FlutterPluginRegistry`, a unique
+identifier for the factory, and the factory itself. The factory also *MUST* be added after
+`[GeneratedPluginRegistrant registerWithRegistry:self];` has been called.
+
+If this is done in `AppDelegate.m`, it should look similar to:
+
+```objectivec
+#import "FLTFirebaseAdMobPlugin.h"
+
+@implementation AppDelegate
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [GeneratedPluginRegistrant registerWithRegistry:self];
+
+  NativeAdFactoryExample *nativeAdFactory = [[NativeAdFactoryExample alloc] init];
+  [FLTFirebaseAdMobPlugin registerNativeAdFactory:self
+                                        factoryId:@"adFactoryExample"
+                                  nativeAdFactory:nativeAdFactory];
+
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+
+@end
+```
 
 ### Dart Example
 
