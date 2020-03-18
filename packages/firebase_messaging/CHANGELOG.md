@@ -1,9 +1,9 @@
-## 6.1.0
+## 6.0.13
 
-* Implement `UNUserNotificationCenterDelegate` methods to allow plugin to work when method swizzling is disabled
-* **Breaking change** Applications now only need to their iOS project's `AppDelegate` when method swizzling is disabled
-* **Breaking change** Applications that need to use `firebase_messaging` with other notification plugins will
-  will need to add the following to their iOS project's `Info.plist` file
+* Implement `UNUserNotificationCenterDelegate` methods to allow plugin to work when method swizzling is disabled.
+* Applications now only need to update their iOS project's `AppDelegate` when method swizzling is disabled.
+* Applications that need to use `firebase_messaging` with other notification plugins will need to
+  add the following to their iOS project's `Info.plist` file:
   ```xml
   <key>FirebaseAppDelegateProxyEnabled</key>
   <false/>
