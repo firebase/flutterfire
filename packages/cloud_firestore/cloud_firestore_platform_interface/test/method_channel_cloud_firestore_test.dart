@@ -1018,7 +1018,6 @@ void main() {
                   'app': app.name,
                   'path': 'bar',
                   'isCollectionGroup': true,
-                  'source': 'default',
                   'parameters': <String, dynamic>{
                     'where': <List<dynamic>>[],
                     'orderBy': <List<dynamic>>[],
@@ -1036,7 +1035,6 @@ void main() {
                   'app': app.name,
                   'path': 'bar',
                   'isCollectionGroup': true,
-                  'source': 'default',
                   'parameters': <String, dynamic>{
                     'where': <List<dynamic>>[],
                     'orderBy': <List<dynamic>>[],

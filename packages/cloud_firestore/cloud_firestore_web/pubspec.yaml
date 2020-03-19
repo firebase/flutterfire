@@ -1,7 +1,7 @@
 name: cloud_firestore_web
 description: The web implementation of cloud_firestore
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore_web
-version: 0.1.1+1
+version: 0.1.1+2
 
 flutter:
   plugin:
