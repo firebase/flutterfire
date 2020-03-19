@@ -1028,7 +1028,6 @@ void main() {
                       'data': kMockDocumentSnapshotData,
                     },
                   },
-                  'source': 'default',
                 },
               ),
               isMethodCall(
@@ -1052,7 +1051,6 @@ void main() {
                       'data': kMockDocumentSnapshotData,
                     },
                   },
-                  'source': 'default',
                 },
               ),
             ],

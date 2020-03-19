@@ -7,17 +7,18 @@ import 'package:firebase/firestore.dart' as web;
 import 'package:js/js_util.dart';
 
 import 'package:cloud_firestore_web/src/field_value_web.dart';
+import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
 
 /// An implementation of [FieldValueFactoryPlatform] which builds [FieldValuePlatform]
 /// instance that is [jsify] friendly
 class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
   @override
-  FieldValueWeb arrayRemove(List elements) =>
-      FieldValueWeb(web.FieldValue.arrayRemove(elements));
+  FieldValueWeb arrayRemove(List elements) => FieldValueWeb(
+      web.FieldValue.arrayRemove(CodecUtility.valueEncode(elements)));
 
   @override
-  FieldValueWeb arrayUnion(List elements) =>
-      FieldValueWeb(web.FieldValue.arrayUnion(elements));
+  FieldValueWeb arrayUnion(List elements) => FieldValueWeb(
+      web.FieldValue.arrayUnion(CodecUtility.valueEncode(elements)));
 
   @override
   FieldValueWeb delete() => FieldValueWeb(web.FieldValue.delete());
