@@ -1,3 +1,7 @@
+## 0.9.3+1
+
+* Modified README to reflect supporting Native Ads.
+
 ## 0.9.3
 
 * Support Native Ads on iOS.
