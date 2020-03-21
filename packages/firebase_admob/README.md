@@ -384,7 +384,6 @@ This plugin currently has some limitations:
 
 - Banner ads cannot be animated into view.
 - It's not possible to specify a banner ad's size.
-- There's no support for native ads.
 - The existing tests are fairly rudimentary.
 - There is no API doc.
 - The example should demonstrate how to show gate a route push with an
