@@ -1,4 +1,4 @@
-## 3.1.3+1
+## 3.1.4
 
 * Fix for missing UserAgent.h compilation failures.
 
