@@ -1,4 +1,4 @@
-## 5.0.12+1
+## 5.0.13
 
 * Fix for missing UserAgent.h compilation failures.
 
