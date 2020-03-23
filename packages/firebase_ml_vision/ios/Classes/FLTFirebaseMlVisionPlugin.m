@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 #import "FLTFirebaseMlVisionPlugin.h"
-#import "UserAgent.h"
 
 static FlutterError *getFlutterError(NSError *error) {
   return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %d", (int)error.code]
