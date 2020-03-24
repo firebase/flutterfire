@@ -2,6 +2,10 @@
 
 * Add the `FirebaseOptions options` parameter to the `FirebaseMessaging.configure()` call to set the firebase configuration at runtime.
 
+## 6.0.14
+
+* Fix for missing UserAgent.h compilation failures.
+
 ## 6.0.13
 
 * Implement `UNUserNotificationCenterDelegate` methods to allow plugin to work when method swizzling is disabled.
