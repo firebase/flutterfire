@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 #import "FLTFirebasePerformancePlugin+Internal.h"
-#import "UserAgent.h"
 
 @implementation FLTFirebasePerformancePlugin
 static NSMutableDictionary<NSNumber *, id<MethodCallHandler>> *methodHandlers;
