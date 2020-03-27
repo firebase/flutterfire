@@ -1,3 +1,27 @@
+## 0.9.3+1
+
+* Modified README to reflect supporting Native Ads.
+
+## 0.9.3
+
+* Support Native Ads on iOS.
+
+## 0.9.2+1
+
+* Added note about required Google Service config files.
+
+## 0.9.2
+
+* Add basic Native Ads support for Android.
+
+## 0.9.1+3
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 0.9.1+2
+
+* Make the pedantic dev_dependency explicit.
+
 ## 0.9.1+1
 
 * Enable custom parameters for rewarded video server-side verification callbacks.

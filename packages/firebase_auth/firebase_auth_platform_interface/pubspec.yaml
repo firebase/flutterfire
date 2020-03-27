@@ -3,14 +3,16 @@ description: A common platform interface for the firebase_auth plugin.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_auth/firebase_auth_platform_interface
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
 # less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
-version: 1.1.5
+version: 1.1.7
 
 dependencies:
   flutter:
     sdk: flutter
   meta: ^1.0.5
+  plugin_platform_interface: ^1.0.2
 
 dev_dependencies:
+  pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1

@@ -24,7 +24,7 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
   @override
   dynamic readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      // The following cases are only used by Unit Tests, and not by actual application
+      // The following cases are only used by unit tests, and not by actual application
       // code paths.
       case _kArrayUnion:
         final List<dynamic> value = readValue(buffer);

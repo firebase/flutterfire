@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 #import "FirebaseCrashlyticsPlugin.h"
-#import "UserAgent.h"
 
 #import <Firebase/Firebase.h>
 

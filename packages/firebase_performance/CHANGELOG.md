@@ -1,3 +1,15 @@
+## 0.3.1+8
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.3.1+7
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 0.3.1+6
+
+* Make the pedantic dev_dependency explicit.
+
 ## 0.3.1+5
 
 * Remove the deprecated `author:` field from pubspec.yaml

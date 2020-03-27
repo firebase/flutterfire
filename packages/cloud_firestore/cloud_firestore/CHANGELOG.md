@@ -1,3 +1,21 @@
+## 0.13.4+2
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.13.4+1
+
+* Fix crash with pagination with `DocumentReference` (#2044)
+* Minor tweaks to integ tests.
+
+## 0.13.4
+
+* Support equality comparison on `FieldValue` instances.
+* Updated version of endorsed web implementation.
+
+## 0.13.3+1
+
+* Make the pedantic dev_dependency explicit.
+
 ## 0.13.3
 
 * Add macOS support
@@ -40,7 +58,7 @@
 
 ## 0.13.0
 
-* **Breaking change** Remove use of [deprecated](https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/FirebaseFirestoreSettings.Builder.html#setTimestampsInSnapshotsEnabled(boolean)) 
+* **Breaking change** Remove use of [deprecated](https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/FirebaseFirestoreSettings.Builder.html#setTimestampsInSnapshotsEnabled(boolean))
   setting `setTimestampsInSnapshotsEnabled`. If you are already setting it to true, just remove the setting. If you are
   setting it to false, you should update your code to expect Timestamps.
 

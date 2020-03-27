@@ -26,9 +26,5 @@ An SDK that brings Google's machine learning expertise to Android and iOS apps i
   s.ios.deployment_target = '9.0'
   s.static_framework = true
 
-  s.prepare_command = <<-CMD
-      echo // Generated file, do not edit > Classes/UserAgent.h
-      echo "#define LIBRARY_VERSION @\\"#{libraryVersion}\\"" >> Classes/UserAgent.h
-      echo "#define LIBRARY_NAME @\\"flutter-fire-ml-vis\\"" >> Classes/UserAgent.h
-    CMD
+  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{libraryVersion}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-ml-vis\\\"" }
 end

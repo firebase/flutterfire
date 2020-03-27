@@ -1,3 +1,11 @@
+## 1.1.7
+
+* Use package:plugin_platform_interface
+
+## 1.1.6
+
+* Make the pedantic dev_dependency explicit.
+
 ## 1.1.5
 
 - Fixed typo on private method name.
