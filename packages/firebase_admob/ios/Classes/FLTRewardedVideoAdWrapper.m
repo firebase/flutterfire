@@ -62,6 +62,14 @@ FLTRewardedVideoAdStatus _rewardedStatus;
       presentFromRootViewController:[FLTRewardedVideoAdWrapper rootViewController]];
 }
 
+- (void)setUserIdentifier:(NSString *)userIdentifier {
+  [[GADRewardBasedVideoAd sharedInstance] setUserIdentifier:userIdentifier];
+}
+
+- (void)setCustomRewardString:(NSString *)customRewardString {
+  [[GADRewardBasedVideoAd sharedInstance] setCustomRewardString:customRewardString];
+}
+
 - (NSString *)description {
   NSString *statusString =
       (NSString *)rewardedStatusToString[[NSNumber numberWithInt:_rewardedStatus]];

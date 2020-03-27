@@ -3,7 +3,7 @@ description: Flutter plugin for Firebase Auth, enabling Android and iOS
   authentication using passwords, phone numbers and identity providers
   like Google, Facebook and Twitter.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_auth/firebase_auth
-version: 0.15.4+1
+version: 0.15.5+3
 
 flutter:
   plugin:
@@ -13,13 +13,15 @@ flutter:
         pluginClass: FirebaseAuthPlugin
       ios:
         pluginClass: FLTFirebaseAuthPlugin
+      macos:
+        pluginClass: FLTFirebaseAuthPlugin
       web:
         default_package: firebase_auth_web
 
 dependencies:
   meta: ^1.0.4
-  firebase_core: ^0.4.0
-  firebase_auth_platform_interface: ^1.1.1
+  firebase_core: ^0.4.4
+  firebase_auth_platform_interface: ^1.1.7
   # The design on https://flutter.dev/go/federated-plugins was to leave
   # this constraint as "any". We cannot do it right now as it fails pub publish
   # validation, so we set a ^ constraint.
@@ -31,6 +33,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
+  pedantic: ^1.8.0
   async: ^2.3.0
   google_sign_in: ^3.0.4
   firebase_dynamic_links: ^0.3.0
@@ -41,6 +44,7 @@ dev_dependencies:
     sdk: flutter
   flutter_driver:
     sdk: flutter
+  plugin_platform_interface: ^1.0.2
 
 environment:
   sdk: ">=2.0.0-dev.28.0 <3.0.0"

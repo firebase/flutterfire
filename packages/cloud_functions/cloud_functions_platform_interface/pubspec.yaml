@@ -3,7 +3,7 @@ description: A common platform interface for the cloud_functions plugin.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_functions/cloud_functions_platform_interface
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
 # less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
-version: 1.0.0
+version: 1.0.1
 
 dependencies:
   flutter:
@@ -13,6 +13,7 @@ dependencies:
   plugin_platform_interface: ^1.0.1
 
 dev_dependencies:
+  pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1

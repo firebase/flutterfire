@@ -7,11 +7,12 @@ dependencies:
     sdk: flutter
   firebase_storage:
     path: ../
-  firebase_core: ^0.4.0
+  firebase_core: ^0.4.4+2
   uuid: ^1.0.0
   http: ^0.12.0
 
 dev_dependencies:
+  pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
   flutter_driver:

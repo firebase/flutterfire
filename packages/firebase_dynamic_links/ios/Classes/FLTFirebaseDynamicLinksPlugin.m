@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 #import "FLTFirebaseDynamicLinksPlugin.h"
-#import "UserAgent.h"
 
 #import "Firebase/Firebase.h"
 
