@@ -52,8 +52,46 @@ Note: When you are debugging on Android, use a device or AVD with Google Play se
       <category android:name="android.intent.category.DEFAULT" />
   </intent-filter>
   ```
-#### Optionally handle background messages
 
+### iOS Integration
+
+To integrate your plugin into the iOS part of your app, follow these steps:
+
+1. Generate the certificates required by Apple for receiving push notifications following [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) in the Firebase docs. You can skip the section titled "Create the Provisioning Profile".
+
+1. Using the [Firebase Console](https://console.firebase.google.com/) add an iOS app to your project: Follow the assistant, download the generated `GoogleService-Info.plist` file, open `ios/Runner.xcworkspace` with Xcode, and within Xcode place the file inside `ios/Runner`. **Don't** follow the steps named "Add Firebase SDK" and "Add initialization code" in the Firebase assistant.
+
+1. In Xcode, select `Runner` in the Project Navigator. In the Capabilities Tab turn on `Push Notifications` and `Background Modes`, and enable `Background fetch` and `Remote notifications` under `Background Modes`.
+
+1. Follow the steps in the "[Upload your APNs certificate](https://firebase.google.com/docs/cloud-messaging/ios/client#upload_your_apns_certificate)" section of the Firebase docs.
+
+1. If you need to disable the method swizzling done by the FCM iOS SDK (e.g. so that you can use this plugin with other notification plugins) then add the following to your application's `Info.plist` file.
+
+```xml
+<key>FirebaseAppDelegateProxyEnabled</key>
+<false/>
+```
+
+After that, add the following lines to the `(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions`
+method in the `AppDelegate.m`/`AppDelegate.swift` of your iOS project.
+
+Objective-C:
+```objectivec
+if (@available(iOS 10.0, *)) {
+  [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
+}
+```
+
+Swift:
+```swift
+if #available(iOS 10.0, *) {
+  UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+}
+```
+
+### Handle background messages (Optional)
+
+#### Android configuration
 >Background message handling is intended to be performed quickly. Do not perform
 long running tasks as they may not be allowed to finish by the Android system.
 See [Background Execution Limits](https://developer.android.com/about/versions/oreo/background)
@@ -110,6 +148,15 @@ By default background messaging is not enabled. To handle messages in the backgr
    <application android:name=".Application" ...>
    ```
 
+#### iOS configuration (Swift)
+1. In `AppDelegate.swift`, add the following:
+```swift
+  FLTFirebaseMessagingPlugin.setPluginRegistrantCallback({ (registry: FlutterPluginRegistry) -> Void in
+    GeneratedPluginRegistrant.register(with: registry);
+  });
+```
+
+#### Usage in the common Dart code
 1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
 
    ```dart
@@ -155,41 +202,6 @@ By default background messaging is not enabled. To handle messages in the backgr
    so that it can be ready to receive messages as early as possible. See the
    [example app](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/example) for a demonstration.
 
-### iOS Integration
-
-To integrate your plugin into the iOS part of your app, follow these steps:
-
-1. Generate the certificates required by Apple for receiving push notifications following [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) in the Firebase docs. You can skip the section titled "Create the Provisioning Profile".
-
-1. Using the [Firebase Console](https://console.firebase.google.com/) add an iOS app to your project: Follow the assistant, download the generated `GoogleService-Info.plist` file, open `ios/Runner.xcworkspace` with Xcode, and within Xcode place the file inside `ios/Runner`. **Don't** follow the steps named "Add Firebase SDK" and "Add initialization code" in the Firebase assistant.
-
-1. In Xcode, select `Runner` in the Project Navigator. In the Capabilities Tab turn on `Push Notifications` and `Background Modes`, and enable `Background fetch` and `Remote notifications` under `Background Modes`.
-
-1. Follow the steps in the "[Upload your APNs certificate](https://firebase.google.com/docs/cloud-messaging/ios/client#upload_your_apns_certificate)" section of the Firebase docs.
-
-1. If you need to disable the method swizzling done by the FCM iOS SDK (e.g. so that you can use this plugin with other notification plugins) then add the following to your application's `Info.plist` file.
-
-```xml
-<key>FirebaseAppDelegateProxyEnabled</key>
-<false/>
-```
-
-After that, add the following lines to the `(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions`
-method in the `AppDelegate.m`/`AppDelegate.swift` of your iOS project.
-
-Objective-C:
-```objectivec
-if (@available(iOS 10.0, *)) {
-  [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
-}
-```
-
-Swift:
-```swift
-if #available(iOS 10.0, *) {
-  UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
-}
-```
 
 ### Dart/Flutter Integration
 
@@ -207,12 +219,12 @@ Next, you should probably request permissions for receiving Push Notifications. 
 
 Messages are sent to your Flutter app via the `onMessage`, `onLaunch`, and `onResume` callbacks that you configured with the plugin during setup. Here is how different message types are delivered on the supported platforms:
 
-|                             | App in Foreground | App in Background | App Terminated |
-| --------------------------: | ----------------- | ----------------- | -------------- |
-| **Notification on Android** | `onMessage` | Notification is delivered to system tray. When the user clicks on it to open app `onResume` fires if `click_action: FLUTTER_NOTIFICATION_CLICK` is set (see below). | Notification is delivered to system tray. When the user clicks on it to open app `onLaunch` fires if `click_action: FLUTTER_NOTIFICATION_CLICK` is set (see below). |
-| **Notification on iOS** | `onMessage` | Notification is delivered to system tray. When the user clicks on it to open app `onResume` fires. | Notification is delivered to system tray. When the user clicks on it to open app `onLaunch` fires. |
-| **Data Message on Android** | `onMessage` | `onMessage` while app stays in the background. | *not supported by plugin, message is lost* |
-| **Data Message on iOS**     | `onMessage` | Message is stored by FCM and delivered to app via `onMessage` when the app is brought back to foreground. | Message is stored by FCM and delivered to app via `onMessage` when the app is brought back to foreground. |
+|                             | App in Foreground | App in Background                                                                                                                                                   | App Terminated                                                                                                                                                      |
+| --------------------------: | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Notification on Android** | `onMessage`       | Notification is delivered to system tray. When the user clicks on it to open app `onResume` fires if `click_action: FLUTTER_NOTIFICATION_CLICK` is set (see below). | Notification is delivered to system tray. When the user clicks on it to open app `onLaunch` fires if `click_action: FLUTTER_NOTIFICATION_CLICK` is set (see below). |
+|     **Notification on iOS** | `onMessage`       | Notification is delivered to system tray. When the user clicks on it to open app `onResume` fires.                                                                  | Notification is delivered to system tray. When the user clicks on it to open app `onLaunch` fires.                                                                  |
+| **Data Message on Android** | `onMessage`       | `onMessage` while app stays in the background.                                                                                                                      | *not supported by plugin, message is lost*                                                                                                                          |
+|     **Data Message on iOS** | `onMessage`       | Message is stored by FCM and delivered to app via `onMessage` when the app is brought back to foreground.                                                           | Message is stored by FCM and delivered to app via `onMessage` when the app is brought back to foreground.                                                           |
 
 Additional reading: Firebase's [About FCM Messages](https://firebase.google.com/docs/cloud-messaging/concept-options).
 
