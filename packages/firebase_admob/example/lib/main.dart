@@ -4,6 +4,8 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 
@@ -140,7 +142,11 @@ class _MyAppState extends State<MyApp> {
                     _nativeAd ??= createNativeAd();
                     _nativeAd
                       ..load()
-                      ..show();
+                      ..show(
+                        anchorType: Platform.isAndroid
+                            ? AnchorType.bottom
+                            : AnchorType.top,
+                      );
                   },
                 ),
                 RaisedButton(

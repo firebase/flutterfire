@@ -28,7 +28,7 @@ that enable Flutter apps to use [Firebase](https://firebase.google.com/) service
 | [firebase_ml_vision][ml_vision_pub] | ![pub package][ml_vision_badge] | [Firebase ML Kit][ml_vision_product] | [`firebase_ml_vision`][ml_vision_code] | | |
 | [firebase_performance][performance_pub] | ![pub package][performance_badge] | [Firebase Performance Monitoring][performance_product] | [`firebase_performance`][performance_code] | | |
 | [firebase_remote_config][remote_config_pub] | ![pub package][remote_config_badge] | [Firebase Remote Config][remote_config_product] | [`firebase_remote_config`][remote_config_code] | | |
-| [firebase_storage][storage_pub] | ![pub package][storage_badge] | [Firebase Cloud Storage][storage_product] | [`firebase_storage`][storage_code] | | |
+| [firebase_storage][storage_pub] | ![pub package][storage_badge] | [Firebase Cloud Storage][storage_product] | [`firebase_storage`][storage_code] | | macOS |
 
 [admob_pub]: https://pub.dartlang.org/packages/firebase_admob
 [admob_product]: https://firebase.google.com/docs/admob/
