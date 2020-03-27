@@ -1,3 +1,7 @@
+## 6.0.15
+
+* Added iOS support for background message handling.
+
 ## 6.0.14
 
 * Fix for missing UserAgent.h compilation failures.
