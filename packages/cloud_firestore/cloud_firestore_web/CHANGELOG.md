@@ -1,3 +1,11 @@
+## 0.1.1+2
+
+* Ensure QueryWeb correctly encodes values passed in to `[start|end][At|Before](Document?)` methods.
+
+## 0.1.1+1
+
+* Ensure FieldValueFactoryWeb correctly encodes parameters for arrayRemove/arrayUnion FieldValues.
+
 ## 0.1.1
 
 * Support equality comparison of field values.

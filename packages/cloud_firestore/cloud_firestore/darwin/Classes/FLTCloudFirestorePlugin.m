@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 #import "FLTCloudFirestorePlugin.h"
-#import "UserAgent.h"
 
 #import <Firebase/Firebase.h>
 

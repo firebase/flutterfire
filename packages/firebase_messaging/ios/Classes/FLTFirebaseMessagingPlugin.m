@@ -5,9 +5,10 @@
 #import <UserNotifications/UserNotifications.h>
 
 #import "FLTFirebaseMessagingPlugin.h"
-#import "UserAgent.h"
 
 #import "Firebase/Firebase.h"
+
+NSString *const kGCMMessageIDKey = @"gcm.message_id";
 
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 @interface FLTFirebaseMessagingPlugin () <FIRMessagingDelegate>
@@ -139,7 +140,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
   } else if ([@"configure" isEqualToString:method]) {
     [FIRMessaging messaging].shouldEstablishDirectChannel = true;
     [[UIApplication sharedApplication] registerForRemoteNotifications];
-    if (_launchNotification != nil) {
+    if (_launchNotification != nil && _launchNotification[kGCMMessageIDKey]) {
       [_channel invokeMethod:@"onLaunch" arguments:_launchNotification];
     }
     result(nil);
@@ -189,10 +190,39 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 }
 
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-// Receive data message on iOS 10 devices while app is in the foreground.
+// Received data message on iOS 10 devices while app is in the foreground.
+// Only invoked if method swizzling is enabled.
 - (void)applicationReceivedRemoteMessage:(FIRMessagingRemoteMessage *)remoteMessage {
   [self didReceiveRemoteNotification:remoteMessage.appData];
 }
+
+// Received data message on iOS 10 devices while app is in the foreground.
+// Only invoked if method swizzling is disabled and UNUserNotificationCenterDelegate has been
+// registered in AppDelegate
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
+    NS_AVAILABLE_IOS(10.0) {
+  NSDictionary *userInfo = notification.request.content.userInfo;
+  // Check to key to ensure we only handle messages from Firebase
+  if (userInfo[kGCMMessageIDKey]) {
+    [[FIRMessaging messaging] appDidReceiveMessage:userInfo];
+    [_channel invokeMethod:@"onMessage" arguments:userInfo];
+    completionHandler(UNNotificationPresentationOptionNone);
+  }
+}
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+    didReceiveNotificationResponse:(UNNotificationResponse *)response
+             withCompletionHandler:(void (^)(void))completionHandler NS_AVAILABLE_IOS(10.0) {
+  NSDictionary *userInfo = response.notification.request.content.userInfo;
+  // Check to key to ensure we only handle messages from Firebase
+  if (userInfo[kGCMMessageIDKey]) {
+    [_channel invokeMethod:@"onResume" arguments:userInfo];
+    completionHandler();
+  }
+}
+
 #endif
 
 - (void)didReceiveRemoteNotification:(NSDictionary *)userInfo {

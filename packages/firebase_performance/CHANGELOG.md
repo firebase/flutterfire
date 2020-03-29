@@ -1,3 +1,7 @@
+## 0.3.1+8
+
+* Fix for missing UserAgent.h compilation failures.
+
 ## 0.3.1+7
 
 * Replace deprecated `getFlutterEngine` call on Android.

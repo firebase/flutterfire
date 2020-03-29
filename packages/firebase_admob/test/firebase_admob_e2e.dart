@@ -12,4 +12,27 @@ void main() {
       completion(isTrue),
     );
   });
+
+  testWidgets('Native Ads', (WidgetTester tester) async {
+    bool adLoaded = false;
+
+    final NativeAd nativeAd = NativeAd(
+      adUnitId: NativeAd.testAdUnitId,
+      factoryId: 'adFactoryExample',
+      targetingInfo: MobileAdTargetingInfo(
+        keywords: <String>['foo', 'bar'],
+        contentUrl: 'http://foo.com/bar.html',
+        childDirected: true,
+        nonPersonalizedAds: true,
+      ),
+      listener: (MobileAdEvent event) {
+        print('NativeAd event: $event');
+        if (event == MobileAdEvent.loaded) adLoaded = true;
+      },
+    );
+
+    await nativeAd.load();
+    await Future<void>.delayed(Duration(seconds: 10));
+    expect(adLoaded, isTrue);
+  });
 }
