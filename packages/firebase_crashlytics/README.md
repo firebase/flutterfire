@@ -65,8 +65,33 @@ Add the Crashlytics run scripts:
 1. Select the `Build Phases` tab.
 1. Click `+ Add a new build phase`, and select `New Run Script Phase`.
 1. Add `${PODS_ROOT}/Fabric/run` to the `Type a script...` text box.
-1. If you are using Xcode 10, add the location of `Info.plist`, built by your app, to the `Build Phase's Input Files` field.  
+1. If you are using Xcode 10, add the location of `Info.plist`, built by your app, to the `Build Phase's Input Files` field.
    E.g.: `$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)`
+
+### Add-to-app
+
+If you're using Crashlytics in an add-to-app scenario (whether to use Crashlytics
+in your Flutter module or to share the Crashlytics library between your native
+host app and your Flutter module), the same Android and iOS instructions apply.
+
+Add the `firebase_crashlytics` dependency on your Flutter module's `pubspec.yaml`.
+Then perform the setup steps on your host application rather than the `.android` or
+`.ios` folders of your Flutter module.
+
+#### Version resolution
+
+In add-to-app, it's possible that both your host application and your Flutter
+module (indirectly via a plugin) will specify a dependency on a version of the
+Crashlytics library. For instance on Android, this happens in:
+
+1. `[your host application]/build.gradle`
+1. `[your Flutter module]/pubspec.yaml` -> `firebase_crashlytics/android/build.gradle`
+
+The specified versions may not be the same version. Both Gradle and CocoaPods
+will attempt to do version resolution such that your application only bundles
+one instance of the Crashlytics library. However, if 2 very different versions
+are depended on, such as 2 different major versions, compile or runtime
+errors can occur.
 
 ### Use the plugin
 
@@ -86,20 +111,20 @@ void main() {
 
   // Pass all uncaught errors from the framework to Crashlytics.
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  
+
   runApp(MyApp());
 }
 ```
 
-Overriding `FlutterError.onError` with `Crashlytics.instance.recordFlutterError`  will automatically catch all 
-errors that are thrown from within the Flutter framework.  
-If you want to catch errors that occur in `runZoned`, 
+Overriding `FlutterError.onError` with `Crashlytics.instance.recordFlutterError`  will automatically catch all
+errors that are thrown from within the Flutter framework.
+If you want to catch errors that occur in `runZoned`,
 you can supply `Crashlytics.instance.recordError` to the `onError` parameter:
 ```dart
 runZoned<Future<void>>(() async {
     // ...
   }, onError: Crashlytics.instance.recordError);
-``` 
+```
 
 ## Result
 
