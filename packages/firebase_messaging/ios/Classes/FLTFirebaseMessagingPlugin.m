@@ -217,7 +217,7 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
              withCompletionHandler:(void (^)(void))completionHandler NS_AVAILABLE_IOS(10.0) {
   NSDictionary *userInfo = response.notification.request.content.userInfo;
   // Check to key to ensure we only handle messages from Firebase
-  if (userInfo[kGCMMessageIDKey]) {
+  if (userInfo[kGCMMessageIDKey] && _launchNotification == nil) {
     [_channel invokeMethod:@"onResume" arguments:userInfo];
     completionHandler();
   }
