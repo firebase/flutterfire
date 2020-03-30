@@ -1,3 +1,7 @@
+## 0.13.4+3
+
+* Migrate cloud_firestore to android v2 embedding.
+
 ## 0.13.4+2
 
 * Fix for missing UserAgent.h compilation failures.

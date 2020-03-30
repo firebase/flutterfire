@@ -38,6 +38,10 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -55,11 +59,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class CloudFirestorePlugin implements MethodCallHandler {
+public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
 
   private static final String TAG = "CloudFirestorePlugin";
-  private final MethodChannel channel;
-  private final Activity activity;
+  private MethodChannel channel;
+  private Activity activity;
+  private ActivityPluginBinding activityPluginBinding;
 
   // Handles are ints used as indexes into the sparse array of active observers
   private int nextListenerHandle = 0;
@@ -72,17 +77,22 @@ public class CloudFirestorePlugin implements MethodCallHandler {
   private final SparseArray<TaskCompletionSource> completionTasks = new SparseArray<>();
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
-    final MethodChannel channel =
-        new MethodChannel(
-            registrar.messenger(),
-            "plugins.flutter.io/cloud_firestore",
-            new StandardMethodCodec(FirestoreMessageCodec.INSTANCE));
-    channel.setMethodCallHandler(new CloudFirestorePlugin(channel, registrar.activity()));
+    CloudFirestorePlugin instance = new CloudFirestorePlugin();
+    instance.activity = registrar.activity();
+    instance.initInstance(registrar.messenger());
   }
 
-  private CloudFirestorePlugin(MethodChannel channel, Activity activity) {
-    this.channel = channel;
-    this.activity = activity;
+  private void initInstance(BinaryMessenger messenger) {
+    channel =
+        new MethodChannel(
+            messenger,
+            "plugins.flutter.io/cloud_firestore",
+            new StandardMethodCodec(FirestoreMessageCodec.INSTANCE));
+    channel.setMethodCallHandler(this);
+  }
+
+  private Activity activity() {
+    return activityPluginBinding != null ? activityPluginBinding.getActivity() : activity;
   }
 
   private FirebaseFirestore getFirestore(Map<String, Object> arguments) {
@@ -465,6 +475,45 @@ public class CloudFirestorePlugin implements MethodCallHandler {
   }
 
   @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    initInstance(binding.getBinaryMessenger());
+  }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);
+    channel = null;
+  }
+
+  private void attachToActivity(ActivityPluginBinding activityPluginBinding) {
+    this.activityPluginBinding = activityPluginBinding;
+  }
+
+  private void detachToActivity() {
+    this.activityPluginBinding = null;
+  }
+
+  @Override
+  public void onAttachedToActivity(ActivityPluginBinding activityPluginBinding) {
+    attachToActivity(activityPluginBinding);
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    detachToActivity();
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding activityPluginBinding) {
+    attachToActivity(activityPluginBinding);
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    detachToActivity();
+  }
+
+  @Override
   public void onMethodCall(MethodCall call, final Result result) {
     switch (call.method) {
       case "Firestore#runTransaction":
@@ -486,38 +535,40 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                       completionTasks.append(transactionId, transactionTCS);
 
                       // Start operations on Dart side.
-                      activity.runOnUiThread(
-                          new Runnable() {
-                            @Override
-                            public void run() {
-                              channel.invokeMethod(
-                                  "DoTransaction",
-                                  arguments,
-                                  new Result() {
-                                    @SuppressWarnings("unchecked")
-                                    @Override
-                                    public void success(Object doTransactionResult) {
-                                      transactionTCS.trySetResult(
-                                          (Map<String, Object>) doTransactionResult);
-                                    }
+                      activity()
+                          .runOnUiThread(
+                              new Runnable() {
+                                @Override
+                                public void run() {
+                                  channel.invokeMethod(
+                                      "DoTransaction",
+                                      arguments,
+                                      new Result() {
+                                        @SuppressWarnings("unchecked")
+                                        @Override
+                                        public void success(Object doTransactionResult) {
+                                          transactionTCS.trySetResult(
+                                              (Map<String, Object>) doTransactionResult);
+                                        }
 
-                                    @Override
-                                    public void error(
-                                        String errorCode,
-                                        String errorMessage,
-                                        Object errorDetails) {
-                                      transactionTCS.trySetException(
-                                          new Exception("DoTransaction failed: " + errorMessage));
-                                    }
+                                        @Override
+                                        public void error(
+                                            String errorCode,
+                                            String errorMessage,
+                                            Object errorDetails) {
+                                          transactionTCS.trySetException(
+                                              new Exception(
+                                                  "DoTransaction failed: " + errorMessage));
+                                        }
 
-                                    @Override
-                                    public void notImplemented() {
-                                      transactionTCS.trySetException(
-                                          new Exception("DoTransaction not implemented"));
-                                    }
-                                  });
-                            }
-                          });
+                                        @Override
+                                        public void notImplemented() {
+                                          transactionTCS.trySetException(
+                                              new Exception("DoTransaction not implemented"));
+                                        }
+                                      });
+                                }
+                              });
 
                       // Wait till transaction is complete.
                       try {
@@ -578,21 +629,23 @@ public class CloudFirestorePlugin implements MethodCallHandler {
                 metadata.put("hasPendingWrites", documentSnapshot.getMetadata().hasPendingWrites());
                 metadata.put("isFromCache", documentSnapshot.getMetadata().isFromCache());
                 snapshotMap.put("metadata", metadata);
-                activity.runOnUiThread(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        result.success(snapshotMap);
-                      }
-                    });
+                activity()
+                    .runOnUiThread(
+                        new Runnable() {
+                          @Override
+                          public void run() {
+                            result.success(snapshotMap);
+                          }
+                        });
               } catch (final Exception e) {
-                activity.runOnUiThread(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        result.error("Error performing Transaction#get", e.getMessage(), null);
-                      }
-                    });
+                activity()
+                    .runOnUiThread(
+                        new Runnable() {
+                          @Override
+                          public void run() {
+                            result.error("Error performing Transaction#get", e.getMessage(), null);
+                          }
+                        });
               }
               return null;
             }
@@ -610,21 +663,24 @@ public class CloudFirestorePlugin implements MethodCallHandler {
               Map<String, Object> data = (Map<String, Object>) arguments.get("data");
               try {
                 transaction.update(getDocumentReference(arguments), data);
-                activity.runOnUiThread(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        result.success(null);
-                      }
-                    });
+                activity()
+                    .runOnUiThread(
+                        new Runnable() {
+                          @Override
+                          public void run() {
+                            result.success(null);
+                          }
+                        });
               } catch (final Exception e) {
-                activity.runOnUiThread(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        result.error("Error performing Transaction#update", e.getMessage(), null);
-                      }
-                    });
+                activity()
+                    .runOnUiThread(
+                        new Runnable() {
+                          @Override
+                          public void run() {
+                            result.error(
+                                "Error performing Transaction#update", e.getMessage(), null);
+                          }
+                        });
               }
               return null;
             }
@@ -642,21 +698,23 @@ public class CloudFirestorePlugin implements MethodCallHandler {
               Map<String, Object> data = (Map<String, Object>) arguments.get("data");
               try {
                 transaction.set(getDocumentReference(arguments), data);
-                activity.runOnUiThread(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        result.success(null);
-                      }
-                    });
+                activity()
+                    .runOnUiThread(
+                        new Runnable() {
+                          @Override
+                          public void run() {
+                            result.success(null);
+                          }
+                        });
               } catch (final Exception e) {
-                activity.runOnUiThread(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        result.error("Error performing Transaction#set", e.getMessage(), null);
-                      }
-                    });
+                activity()
+                    .runOnUiThread(
+                        new Runnable() {
+                          @Override
+                          public void run() {
+                            result.error("Error performing Transaction#set", e.getMessage(), null);
+                          }
+                        });
               }
               return null;
             }
@@ -672,21 +730,24 @@ public class CloudFirestorePlugin implements MethodCallHandler {
             protected Void doInBackground(Void... voids) {
               try {
                 transaction.delete(getDocumentReference(arguments));
-                activity.runOnUiThread(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        result.success(null);
-                      }
-                    });
+                activity()
+                    .runOnUiThread(
+                        new Runnable() {
+                          @Override
+                          public void run() {
+                            result.success(null);
+                          }
+                        });
               } catch (final Exception e) {
-                activity.runOnUiThread(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        result.error("Error performing Transaction#delete", e.getMessage(), null);
-                      }
-                    });
+                activity()
+                    .runOnUiThread(
+                        new Runnable() {
+                          @Override
+                          public void run() {
+                            result.error(
+                                "Error performing Transaction#delete", e.getMessage(), null);
+                          }
+                        });
               }
               return null;
             }
