@@ -5,6 +5,7 @@
 package io.flutter.plugins.firebaseauth;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.util.SparseArray;
 import androidx.annotation.NonNull;
@@ -71,8 +72,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   private int nextHandle = 0;
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
-    this.registrar = registrar;
     FirebaseAuthPlugin instance = new FirebaseAuthPlugin();
+    instance.registrar = registrar;
     instance.initInstance(registrar.messenger(), registrar.context());
   }
 
