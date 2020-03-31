@@ -16,9 +16,9 @@ void main() {
   testWidgets('Rewarded Video Ads', (WidgetTester tester) async {
     bool adLoaded = false;
 
-    RewardedVideoAd.instance.listener = 
-      (RewardedVideoAdEvent event, {int rewardAmount, String rewardType}) {
-        if (event == RewardedVideoAdEvent.loaded) adLoaded = true;
+    RewardedVideoAd.instance.listener =
+        (RewardedVideoAdEvent event, {int rewardAmount, String rewardType}) {
+      if (event == RewardedVideoAdEvent.loaded) adLoaded = true;
     };
 
     // Request without a targeting info
@@ -30,7 +30,7 @@ void main() {
 
     // Request with a targeting info
     await RewardedVideoAd.instance.load(
-      adUnitId: RewardedVideoAd.testAdUnitId, 
+      adUnitId: RewardedVideoAd.testAdUnitId,
       targetingInfo: MobileAdTargetingInfo(
         keywords: <String>['foo', 'bar'],
         contentUrl: 'http://foo.com/bar.html',
