@@ -2,15 +2,13 @@
 
 **NOTE:** This package provides three libraries:
 
-* Browser-based applications:
+* For browser-based applications:
   [`package:firebase/firebase.dart` and `package:firebase/firestore.dart`](#using-this-package-for-browser-applications)
+  are wrappers over the [Firebase JS API](https://firebase.google.com/docs/reference/js/).
 
-  A wrapper over the [Firebase JS API](https://firebase.google.com/docs/reference/js/).
-
-* Dart VM and Fuchsia:
+* For the Dart VM and Fuchsia:
   [`package:firebase/firebase_io.dart`](#using-this-package-with-the-dart-vm-and-fuchsia)
-  
-  A lightly maintained wrapper over the
+  is a lightly maintained wrapper over the
   [Firebase Database REST API](https://firebase.google.com/docs/reference/rest/database/).
   *Contributions to expand support to the other REST APIs are appreciated!* 
 
@@ -317,9 +315,3 @@ This unit test requires remote config to be empty.
 ```
 This is done to avoid overwriting your remote config in case if you run the test
 in a Firebase project that is used for other purposes.
-
-
-## Bugs
-
-If you find a bug, please file an
-[issue](https://github.com/FirebaseExtended/firebase-dart/issues).
