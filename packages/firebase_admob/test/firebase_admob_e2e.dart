@@ -13,6 +13,35 @@ void main() {
     );
   });
 
+  testWidgets('Rewarded Video Ads', (WidgetTester tester) async {
+    bool adLoaded = false;
+
+    RewardedVideoAd.instance.listener = 
+      (RewardedVideoAdEvent event, {int rewardAmount, String rewardType}) {
+        if (event == RewardedVideoAdEvent.loaded) adLoaded = true;
+    };
+
+    // Request without a targeting info
+    await RewardedVideoAd.instance.load(adUnitId: RewardedVideoAd.testAdUnitId);
+    await Future<void>.delayed(Duration(seconds: 10));
+    expect(adLoaded, isTrue);
+
+    adLoaded = false;
+
+    // Request with a targeting info
+    await RewardedVideoAd.instance.load(
+      adUnitId: RewardedVideoAd.testAdUnitId, 
+      targetingInfo: MobileAdTargetingInfo(
+        keywords: <String>['foo', 'bar'],
+        contentUrl: 'http://foo.com/bar.html',
+        childDirected: true,
+        nonPersonalizedAds: true,
+      ),
+    );
+    await Future<void>.delayed(Duration(seconds: 10));
+    expect(adLoaded, isTrue);
+  });
+
   testWidgets('Native Ads', (WidgetTester tester) async {
     bool adLoaded = false;
 
