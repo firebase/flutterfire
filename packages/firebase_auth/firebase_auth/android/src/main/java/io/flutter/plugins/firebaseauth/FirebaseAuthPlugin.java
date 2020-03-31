@@ -77,8 +77,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   }
 
   private void initInstance(BinaryMessenger messenger, Context context) {
-    channel =
-        new MethodChannel(messenger, "plugins.flutter.io/firebase_auth");
+    channel = new MethodChannel(messenger, "plugins.flutter.io/firebase_auth");
     FirebaseApp.initializeApp(context);
     channel.setMethodCallHandler(this);
     authStateListeners = new SparseArray<>();
@@ -296,11 +295,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     } else {
       PhoneAuthProvider.getInstance()
           .verifyPhoneNumber(
-              phoneNumber,
-              timeout,
-              TimeUnit.MILLISECONDS,
-              getActivity(),
-              verificationCallbacks);
+              phoneNumber, timeout, TimeUnit.MILLISECONDS, getActivity(), verificationCallbacks);
     }
 
     result.success(null);
