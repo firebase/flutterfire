@@ -767,6 +767,14 @@ void main() {
           expect(metadata.fromCache, isTrue);
           return;
         case 2:
+          printOnFailure([
+            'debugging failure',
+            changes
+                .map((e) => [e.toString(), e.newIndex, e.oldIndex])
+                .join(','),
+            metadata.hasPendingWrites,
+            metadata.fromCache
+          ].join('\n'));
           expect(changes, isEmpty);
           expect(metadata.hasPendingWrites, isTrue);
           expect(metadata.fromCache, isFalse);
