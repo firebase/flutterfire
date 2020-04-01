@@ -7,7 +7,6 @@ package io.flutter.plugins.firebaseauthexample;
 import android.os.Bundle;
 import io.flutter.app.FlutterFragmentActivity;
 import io.flutter.plugins.googlesignin.GoogleSignInPlugin;
-import io.flutter.view.FlutterMain;
 
 public class EmbeddingV1Activity extends FlutterFragmentActivity {
   @Override
