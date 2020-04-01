@@ -12,6 +12,6 @@ public class EmbeddingV1Activity extends FlutterFragmentActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    GeneratedPluginRegistrant.registerWith(this);
+    GeneratedPluginRegistrant.registerWith(registrarFor("io.flutter.plugins.firebaseauth"));
   }
 }
