@@ -44,12 +44,12 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     }
   }
 
-  void setUserProperties(CustomParams properties,
+  void setUserProperties(Map<String, String> properties,
       [AnalyticsCallOptions options]) {
     if (options != null) {
-      jsObject.setUserProperties(properties.jsObject, options.jsObject);
+      jsObject.setUserProperties(jsify(properties), options.jsObject);
     } else {
-      jsObject.setUserProperties(properties.jsObject);
+      jsObject.setUserProperties(jsify(properties));
     }
   }
 }
@@ -64,10 +64,4 @@ class AnalyticsCallOptions
   set global(bool t) {
     jsObject.global = t;
   }
-}
-
-class CustomParams
-    extends JsObjectWrapper<analytics_interop.CustomParamsJsImpl> {
-  CustomParams._fromJsObject(analytics_interop.CustomParamsJsImpl jsObject)
-      : super.fromJsObject(jsObject);
 }

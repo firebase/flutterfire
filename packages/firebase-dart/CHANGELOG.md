@@ -1,3 +1,8 @@
+## 7.2.2-dev
+
+- Enabled sending of user properties in analytics with `setUserProperties`.
+- Removed unused (and unusable) `CustomParams` class.
+
 ## 7.2.1
 
 - Mark intereop types `AuthProvider` and `OAuthCredential` anonymous. 

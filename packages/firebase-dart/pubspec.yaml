@@ -1,6 +1,6 @@
 name: firebase
 description: Firebase libraries for Dart on the web and server
-version: 7.2.1
+version: 7.2.2-dev
 homepage: https://github.com/FirebaseExtended/firebase-dart
 
 environment:
