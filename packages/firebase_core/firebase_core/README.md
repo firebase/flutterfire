@@ -10,6 +10,14 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 To use this plugin, add `firebase_core` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
+### Web integration
+
+In addition to the `firebase_core` dependency, you'll need to modify the `web/index.html` of your app following the Firebase setup instructions:
+
+* [Add Firebase to your JavaScript project](https://firebase.google.com/docs/web/setup#from-the-cdn).
+
+Read more in the [`firebase_core_web` README](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_core/firebase_core_web/README.md).
+
 ## Getting Started
 
 See the `example` directory for a complete sample app using Firebase Core.

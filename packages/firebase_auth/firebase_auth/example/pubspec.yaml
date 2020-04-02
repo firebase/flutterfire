@@ -8,11 +8,12 @@ dependencies:
   firebase_auth:
     path: ../
   google_sign_in: ^4.0.0
-  firebase_core: ^0.4.0+8
+  firebase_core: ^0.4.4
   firebase_dynamic_links: ^0.3.0
   uuid: ^2.0.2
 
 dev_dependencies:
+  pedantic: ^1.8.0
   flutter_driver:
     sdk: flutter
   test: any

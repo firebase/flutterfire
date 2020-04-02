@@ -19,7 +19,7 @@ void main() async {
   final FirebaseApp app = await FirebaseApp.configure(
     name: 'test',
     options: FirebaseOptions(
-      googleAppID: Platform.isIOS
+      googleAppID: (Platform.isIOS || Platform.isMacOS)
           ? '1:159623150305:ios:4a213ef3dbd8997b'
           : '1:159623150305:android:ef48439a0cc0263d',
       gcmSenderID: '159623150305',

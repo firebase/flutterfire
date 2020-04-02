@@ -141,6 +141,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   PlatformUser _fromJsUser(firebase.User user) {
+    if (user == null) {
+      return null;
+    }
     return PlatformUser(
       providerId: user.providerId,
       uid: user.uid,
@@ -251,10 +254,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<List<String>> fetchSignInMethodsForEmail(String app, String email) {
-    // TODO(hterkelsen): Use `fetchSignInMethodsForEmail` once
-    // https://github.com/FirebaseExtended/firebase-dart/issues/272
-    // is resolved.
-    throw UnimplementedError('fetchSignInMethodsForEmail');
+    final firebase.Auth auth = _getAuth(app);
+    return auth.fetchSignInMethodsForEmail(email);
   }
 
   @override
@@ -262,9 +263,6 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       final firebase.Auth auth = _getAuth(app);
       final firebase.User currentUser = auth.currentUser;
-      if (currentUser == null) {
-        return null;
-      }
       return _fromJsUser(currentUser);
     } catch (e) {
       throw mapFirebaseException(e);
@@ -273,13 +271,11 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<PlatformIdTokenResult> getIdToken(String app, bool refresh) async {
-    // TODO(hterkelsen): `package:firebase` added `getIdTokenResult` in
-    // version 7.0.0. Use it here once that is published.
     try {
       final firebase.Auth auth = _getAuth(app);
       final firebase.User currentUser = auth.currentUser;
       final firebase.IdTokenResult idTokenResult =
-          await currentUser.getIdTokenResult(refresh);
+        await currentUser.getIdTokenResult(refresh);
       return _fromJsIdTokenResult(idTokenResult);
     } catch (e) {
       throw mapFirebaseException(e);
@@ -288,10 +284,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<bool> isSignInWithEmailLink(String app, String link) {
-    // TODO(hterkelsen): Implement this once
-    // https://github.com/FirebaseExtended/firebase-dart/issues/273
-    // is resolved.
-    throw UnimplementedError('isSignInWithEmailLink');
+    final firebase.Auth auth = _getAuth(app);
+    return Future.value(auth.isSignInWithEmailLink(link));
   }
 
   @override
@@ -365,9 +359,20 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       String androidPackageName,
       bool androidInstallIfNotAvailable,
       String androidMinimumVersion}) {
-    // TODO(hterkelsen): File issue with `package:firebase` to show
-    // `sendSignInLinkToEmail`.
-    throw UnimplementedError('sendLinkToEmail');
+    final firebase.Auth auth = _getAuth(app);
+    final actionCodeSettings = firebase.ActionCodeSettings(
+      url: url,
+      handleCodeInApp: handleCodeInApp,
+      iOS: firebase.IosSettings(
+        bundleId: iOSBundleID,
+      ),
+      android: firebase.AndroidSettings(
+        packageName: androidPackageName,
+        installApp: androidInstallIfNotAvailable,
+        minimumVersion: androidMinimumVersion,
+      ),
+    );
+    return auth.sendSignInLinkToEmail(email, actionCodeSettings);
   }
 
   @override
@@ -429,9 +434,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<PlatformAuthResult> signInWithEmailAndLink(
       String app, String email, String link) async {
-    // TODO(hterkelsen): Use signInWithEmailLink once 7.0.0 of package:firebase
-    // is released.
-    throw UnimplementedError('signInWithEmailAndLink');
+    final firebase.Auth auth = _getAuth(app);
+    final firebase.UserCredential userCredential =
+        await auth.signInWithEmailLink(email, link);
+    return _fromJsUserCredential(userCredential);
   }
 
   @override

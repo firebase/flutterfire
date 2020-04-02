@@ -11,35 +11,32 @@ part of cloud_firestore;
 /// A [DocumentReference] can also be used to create a [CollectionReference]
 /// to a subcollection.
 class DocumentReference {
-  DocumentReference._(this.firestore, List<String> pathComponents)
-      : _pathComponents = pathComponents,
-        assert(firestore != null);
+  platform.DocumentReferencePlatform _delegate;
 
   /// The Firestore instance associated with this document reference
   final Firestore firestore;
 
-  final List<String> _pathComponents;
+  DocumentReference._(this._delegate, this.firestore) {
+    platform.DocumentReferencePlatform.verifyExtends(_delegate);
+  }
 
   @override
   bool operator ==(dynamic o) =>
       o is DocumentReference && o.firestore == firestore && o.path == path;
 
   @override
-  int get hashCode => hashList(_pathComponents);
+  int get hashCode => hashList(_delegate.path.split("/"));
 
   /// Parent returns the containing [CollectionReference].
   CollectionReference parent() {
-    return CollectionReference._(
-      firestore,
-      (List<String>.from(_pathComponents)..removeLast()),
-    );
+    return CollectionReference._(_delegate.parent(), firestore);
   }
 
   /// Slash-delimited path representing the database location of this query.
-  String get path => _pathComponents.join('/');
+  String get path => _delegate.path;
 
   /// This document's given or generated ID in the collection.
-  String get documentID => _pathComponents.last;
+  String get documentID => _delegate.documentID;
 
   /// Writes to the document referred to by this [DocumentReference].
   ///
@@ -48,15 +45,8 @@ class DocumentReference {
   /// If [merge] is true, the provided data will be merged into an
   /// existing document instead of overwriting.
   Future<void> setData(Map<String, dynamic> data, {bool merge = false}) {
-    return Firestore.channel.invokeMethod<void>(
-      'DocumentReference#setData',
-      <String, dynamic>{
-        'app': firestore.app.name,
-        'path': path,
-        'data': data,
-        'options': <String, bool>{'merge': merge},
-      },
-    );
+    return _delegate.setData(_CodecUtility.replaceValueWithDelegatesInMap(data),
+        merge: merge);
   }
 
   /// Updates fields in the document referred to by this [DocumentReference].
@@ -66,45 +56,21 @@ class DocumentReference {
   ///
   /// If no document exists yet, the update will fail.
   Future<void> updateData(Map<String, dynamic> data) {
-    return Firestore.channel.invokeMethod<void>(
-      'DocumentReference#updateData',
-      <String, dynamic>{
-        'app': firestore.app.name,
-        'path': path,
-        'data': data,
-      },
-    );
+    return _delegate
+        .updateData(_CodecUtility.replaceValueWithDelegatesInMap(data));
   }
 
   /// Reads the document referenced by this [DocumentReference].
   ///
   /// If no document exists, the read will return null.
-  Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
-    final Map<String, dynamic> data =
-        await Firestore.channel.invokeMapMethod<String, dynamic>(
-      'DocumentReference#get',
-      <String, dynamic>{
-        'app': firestore.app.name,
-        'path': path,
-        'source': _getSourceString(source),
-      },
-    );
-    return DocumentSnapshot._(
-      data['path'],
-      _asStringKeyedMap(data['data']),
-      SnapshotMetadata._(data['metadata']['hasPendingWrites'],
-          data['metadata']['isFromCache']),
-      firestore,
-    );
+  Future<DocumentSnapshot> get({
+    platform.Source source = platform.Source.serverAndCache,
+  }) async {
+    return DocumentSnapshot._(await _delegate.get(source: source), firestore);
   }
 
   /// Deletes the document referred to by this [DocumentReference].
-  Future<void> delete() {
-    return Firestore.channel.invokeMethod<void>(
-      'DocumentReference#delete',
-      <String, dynamic>{'app': firestore.app.name, 'path': path},
-    );
-  }
+  Future<void> delete() => _delegate.delete();
 
   /// Returns the reference of a collection contained inside of this
   /// document.
@@ -115,37 +81,8 @@ class DocumentReference {
   }
 
   /// Notifies of documents at this location
-  // TODO(jackson): Reduce code duplication with [Query]
-  Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) {
-    assert(includeMetadataChanges != null);
-    Future<int> _handle;
-    // It's fine to let the StreamController be garbage collected once all the
-    // subscribers have cancelled; this analyzer warning is safe to ignore.
-    StreamController<DocumentSnapshot> controller; // ignore: close_sinks
-    controller = StreamController<DocumentSnapshot>.broadcast(
-      onListen: () {
-        _handle = Firestore.channel.invokeMethod<int>(
-          'DocumentReference#addSnapshotListener',
-          <String, dynamic>{
-            'app': firestore.app.name,
-            'path': path,
-            'includeMetadataChanges': includeMetadataChanges,
-          },
-        ).then<int>((dynamic result) => result);
-        _handle.then((int handle) {
-          Firestore._documentObservers[handle] = controller;
-        });
-      },
-      onCancel: () {
-        _handle.then((int handle) async {
-          await Firestore.channel.invokeMethod<void>(
-            'removeListener',
-            <String, dynamic>{'handle': handle},
-          );
-          Firestore._documentObservers.remove(handle);
-        });
-      },
-    );
-    return controller.stream;
-  }
+  Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) =>
+      _delegate
+          .snapshots(includeMetadataChanges: includeMetadataChanges)
+          .map((snapshot) => DocumentSnapshot._(snapshot, firestore));
 }
