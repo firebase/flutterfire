@@ -275,7 +275,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       final firebase.Auth auth = _getAuth(app);
       final firebase.User currentUser = auth.currentUser;
       final firebase.IdTokenResult idTokenResult =
-        await currentUser.getIdTokenResult(refresh);
+          await currentUser.getIdTokenResult(refresh);
       return _fromJsIdTokenResult(idTokenResult);
     } catch (e) {
       throw mapFirebaseException(e);
