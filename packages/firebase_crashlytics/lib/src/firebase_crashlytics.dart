@@ -54,21 +54,6 @@ class Crashlytics {
     throw StateError('Error thrown by Crashlytics plugin');
   }
 
-  /// Reports the global value for debug mode.
-  /// TODO(kroikie): Clarify what this means in context of both Android and iOS.
-  Future<bool> isDebuggable() async {
-    final bool result =
-        await channel.invokeMethod<bool>('Crashlytics#isDebuggable');
-    return result;
-  }
-
-  /// Returns Crashlytics SDK version.
-  Future<String> getVersion() async {
-    final String result =
-        await channel.invokeMethod<String>('Crashlytics#getVersion');
-    return result;
-  }
-
   /// Add text logging that will be sent with your next report. `msg` will be
   /// printed to the console when in debug mode. Each report has a rolling max
   /// of 64k of logs, older logs are removed to allow newer logs to fit within
@@ -110,25 +95,11 @@ class Crashlytics {
     _setValue(key, value);
   }
 
-  /// Optionally set a end-user's name or username for display within the
-  /// Crashlytics UI. Please be mindful of end-user's privacy.
-  Future<void> setUserEmail(String email) async {
-    await channel.invokeMethod<void>(
-        'Crashlytics#setUserEmail', <String, dynamic>{'email': email});
-  }
-
   /// Specify a user identifier which will be visible in the Crashlytics UI.
   /// Please be mindful of end-user's privacy.
   Future<void> setUserIdentifier(String identifier) async {
     await channel.invokeMethod<void>('Crashlytics#setUserIdentifier',
         <String, dynamic>{'identifier': identifier});
-  }
-
-  /// Specify a user name which will be visible in the Crashlytics UI. Please
-  /// be mindful of end-user's privacy.
-  Future<void> setUserName(String name) async {
-    await channel.invokeMethod<void>(
-        'Crashlytics#setUserName', <String, dynamic>{'name': name});
   }
 
   List<Map<String, dynamic>> _prepareKeys() {

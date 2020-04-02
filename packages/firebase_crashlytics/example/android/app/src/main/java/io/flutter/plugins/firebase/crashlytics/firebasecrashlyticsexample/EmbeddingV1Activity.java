@@ -1,4 +1,3 @@
-
 package io.flutter.plugins.firebase.crashlytics.firebasecrashlyticsexample;
 
 import android.os.Bundle;

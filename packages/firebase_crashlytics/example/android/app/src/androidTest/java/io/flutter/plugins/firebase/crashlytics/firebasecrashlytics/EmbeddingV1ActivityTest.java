@@ -1,4 +1,3 @@
-
 package io.flutter.plugins.firebase.crashlytics.firebasecrashlytics;
 
 import androidx.test.rule.ActivityTestRule;

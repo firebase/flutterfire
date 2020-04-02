@@ -1,3 +1,12 @@
+## 0.2.0
+
+* **Breaking**: Migration to the new Firebase Crashlytics SDK. Follow the [migration guide](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=android) to update your app.
+* **Breaking**: the following methods have been removed:
+  * `setUserEmail`
+  * `setUserName`
+  * `getVersion`
+  * `isDebuggable`
+
 ## 0.1.3+3
 
 * Fix for missing UserAgent.h compilation failures.

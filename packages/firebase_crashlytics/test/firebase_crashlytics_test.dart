@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('$Crashlytics', () {
+  group('Crashlytics', () {
     final List<MethodCall> log = <MethodCall>[];
 
     final Crashlytics crashlytics = Crashlytics.instance;
@@ -24,16 +24,8 @@ void main() {
         switch (methodCall.method) {
           case 'Crashlytics#onError':
             return 'Error reported to Crashlytics.';
-          case 'Crashlytics#isDebuggable':
-            return true;
-          case 'Crashlytics#setUserEmail':
-            return true;
           case 'Crashlytics#setUserIdentifier':
             return true;
-          case 'Crashlytics#setUserName':
-            return true;
-          case 'Crashlytics#getVersion':
-            return '0.0.0+1';
           default:
             return false;
         }
@@ -103,35 +95,8 @@ void main() {
       expect(log[0].arguments['keys'][3]['type'], 'string');
     });
 
-    test('isDebuggable', () async {
-      expect(await crashlytics.isDebuggable(), true);
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'Crashlytics#isDebuggable',
-            arguments: null,
-          )
-        ],
-      );
-    });
-
     test('crash', () {
       expect(() => crashlytics.crash(), throwsStateError);
-    });
-
-    test('getVersion', () async {
-      await crashlytics.getVersion();
-      expect(log,
-          <Matcher>[isMethodCall('Crashlytics#getVersion', arguments: null)]);
-    });
-
-    test('setUserEmail', () async {
-      await crashlytics.setUserEmail('foo');
-      expect(log, <Matcher>[
-        isMethodCall('Crashlytics#setUserEmail',
-            arguments: <String, dynamic>{'email': 'foo'})
-      ]);
     });
 
     test('setUserIdentifier', () async {
@@ -139,14 +104,6 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('Crashlytics#setUserIdentifier',
             arguments: <String, dynamic>{'identifier': 'foo'})
-      ]);
-    });
-
-    test('setUserName', () async {
-      await crashlytics.setUserName('foo');
-      expect(log, <Matcher>[
-        isMethodCall('Crashlytics#setUserName',
-            arguments: <String, dynamic>{'name': 'foo'})
       ]);
     });
 

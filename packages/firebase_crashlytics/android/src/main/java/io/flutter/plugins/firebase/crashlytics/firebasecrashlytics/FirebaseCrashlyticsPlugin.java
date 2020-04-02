@@ -6,8 +6,7 @@ package io.flutter.plugins.firebase.crashlytics.firebasecrashlytics;
 
 import android.content.Context;
 import android.util.Log;
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -42,11 +41,6 @@ public class FirebaseCrashlyticsPlugin implements FlutterPlugin, MethodCallHandl
     final MethodChannel channel =
         new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_crashlytics");
     channel.setMethodCallHandler(new FirebaseCrashlyticsPlugin());
-
-    if (!Fabric.isInitialized()) {
-      Fabric.with(context, new Crashlytics());
-    }
-
     return channel;
   }
 
@@ -57,11 +51,12 @@ public class FirebaseCrashlyticsPlugin implements FlutterPlugin, MethodCallHandl
 
   @Override
   public void onMethodCall(MethodCall call, Result result) {
+    final FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
     if (call.method.equals("Crashlytics#onError")) {
       // Add logs.
       List<String> logs = call.argument("logs");
       for (String log : logs) {
-        Crashlytics.log(log);
+        crashlytics.log(log);
       }
 
       // Set keys.
@@ -69,16 +64,16 @@ public class FirebaseCrashlyticsPlugin implements FlutterPlugin, MethodCallHandl
       for (Map<String, Object> key : keys) {
         switch ((String) key.get("type")) {
           case "int":
-            Crashlytics.setInt((String) key.get("key"), (int) key.get("value"));
+            crashlytics.setCustomKey((String) key.get("key"), (int) key.get("value"));
             break;
           case "double":
-            Crashlytics.setDouble((String) key.get("key"), (double) key.get("value"));
+            crashlytics.setCustomKey((String) key.get("key"), (double) key.get("value"));
             break;
           case "string":
-            Crashlytics.setString((String) key.get("key"), (String) key.get("value"));
+            crashlytics.setCustomKey((String) key.get("key"), (String) key.get("value"));
             break;
           case "boolean":
-            Crashlytics.setBool((String) key.get("key"), (boolean) key.get("value"));
+            crashlytics.setCustomKey((String) key.get("key"), (boolean) key.get("value"));
             break;
         }
       }
@@ -96,30 +91,20 @@ public class FirebaseCrashlyticsPlugin implements FlutterPlugin, MethodCallHandl
       }
       exception.setStackTrace(elements.toArray(new StackTraceElement[elements.size()]));
 
-      Crashlytics.setString("exception", (String) call.argument("exception"));
+      crashlytics.setCustomKey("exception", (String) call.argument("exception"));
 
       // Set a "reason" (to match iOS) to show where the exception was thrown.
       final String context = call.argument("context");
-      if (context != null) Crashlytics.setString("reason", "thrown " + context);
+      if (context != null) crashlytics.setCustomKey("reason", "thrown " + context);
 
       // Log information.
       final String information = call.argument("information");
-      if (information != null && !information.isEmpty()) Crashlytics.log(information);
+      if (information != null && !information.isEmpty()) crashlytics.log(information);
 
-      Crashlytics.logException(exception);
+      crashlytics.recordException(exception);
       result.success("Error reported to Crashlytics.");
-    } else if (call.method.equals("Crashlytics#isDebuggable")) {
-      result.success(Fabric.isDebuggable());
-    } else if (call.method.equals("Crashlytics#getVersion")) {
-      result.success(Crashlytics.getInstance().getVersion());
-    } else if (call.method.equals("Crashlytics#setUserEmail")) {
-      Crashlytics.setUserEmail((String) call.argument("email"));
-      result.success(null);
     } else if (call.method.equals("Crashlytics#setUserIdentifier")) {
-      Crashlytics.setUserIdentifier((String) call.argument("identifier"));
-      result.success(null);
-    } else if (call.method.equals("Crashlytics#setUserName")) {
-      Crashlytics.setUserName((String) call.argument("name"));
+      crashlytics.setUserId((String) call.argument("identifier"));
       result.success(null);
     } else {
       result.notImplemented();

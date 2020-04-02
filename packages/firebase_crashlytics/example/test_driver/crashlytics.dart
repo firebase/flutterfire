@@ -17,7 +17,6 @@ void main() {
   test('recordFlutterError', () async {
     // This is currently only testing that we can log errors without crashing.
     final Crashlytics crashlytics = Crashlytics.instance;
-    await crashlytics.setUserName('testing');
     await crashlytics.setUserIdentifier('hello');
     crashlytics.setBool('testBool', true);
     crashlytics.setInt('testInt', 42);

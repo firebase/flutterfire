@@ -64,5 +64,5 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
 }
 
-apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
