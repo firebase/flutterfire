@@ -1,3 +1,8 @@
+## 0.9.3+2
+
+* Provide a default `MobileAdTargetingInfo` for `RewardedVideoAd.load()`. `RewardedVideoAd.load()`
+would inadvertently cause a crash if `MobileAdTargetingInfo` was excluded.
+
 ## 0.9.3+1
 
 * Modified README to reflect supporting Native Ads.
