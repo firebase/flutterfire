@@ -1,3 +1,7 @@
+## 0.4.2+4
+
+* Update firebase-functions android library  
+
 ## 0.4.2+3
 
 * Fix for missing UserAgent.h compilation failures.
