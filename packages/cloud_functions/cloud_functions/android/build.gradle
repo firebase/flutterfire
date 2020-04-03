@@ -32,7 +32,7 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-        api 'com.google.firebase:firebase-functions:17.0.0'
+        api 'com.google.firebase:firebase-functions:19.0.2'
         implementation 'com.google.firebase:firebase-common:16.1.0'
         implementation 'androidx.annotation:annotation:1.0.0'
     }
