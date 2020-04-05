@@ -640,7 +640,8 @@ const UInt8 DOCUMENT_ID = 139;
                                              listener:^(FIRQuerySnapshot *_Nullable snapshot,
                                                         NSError *_Nullable error) {
                                                if (snapshot == nil) {
-                                                 result(getFlutterError(error));
+                                                 // TODO: send error
+                                                 NSLog(@"%@", error);
                                                  return;
                                                }
                                                NSMutableDictionary *arguments =
@@ -660,7 +661,8 @@ const UInt8 DOCUMENT_ID = 139;
                                              listener:^(FIRDocumentSnapshot *snapshot,
                                                         NSError *_Nullable error) {
                                                if (snapshot == nil) {
-                                                 result(getFlutterError(error));
+                                                 // TODO: send error
+                                                 NSLog(@"%@", error);
                                                  return;
                                                }
                                                [weakSelf.channel
