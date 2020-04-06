@@ -1,3 +1,28 @@
+## 0.1.2+2
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.1.2+1
+
+* Require `firebase_core_web` from hosted
+
+## 0.1.2
+
+* Implement `fetchSignInMethodsForEmail`, `isSignInWithEmailLink`, `signInWithEmailAndLink`, and `sendLinkToEmail`. 
+
+## 0.1.1+4
+
+* Prevent `null` users (unauthenticated) from breaking the `onAuthStateChanged` Stream.
+* Migrate tests from jsify to package:js.
+
+## 0.1.1+3
+
+* Fix the tests on dart2js.
+
+## 0.1.1+2
+
+* Update setup instructions in the README.
+
 ## 0.1.1+1
 
 * Add an android/ folder with no-op implementation to workaround https://github.com/flutter/flutter/issues/46898

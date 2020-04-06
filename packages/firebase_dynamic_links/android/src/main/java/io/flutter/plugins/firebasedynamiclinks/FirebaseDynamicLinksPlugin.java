@@ -106,7 +106,7 @@ public class FirebaseDynamicLinksPlugin
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    channel = createChannel(binding.getFlutterEngine().getDartExecutor());
+    channel = createChannel(binding.getBinaryMessenger());
     channel.setMethodCallHandler(this);
   }
 
