@@ -1,3 +1,7 @@
+## 7.3
+
+- added additional options to interop 'Settings' to Fix Timestamp Error.
+
 ## 7.2.2-dev
 
 - Enabled sending of user properties in analytics with `setUserProperties`.

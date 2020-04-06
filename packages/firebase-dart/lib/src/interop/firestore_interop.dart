@@ -329,11 +329,13 @@ abstract class Settings {
   external set cacheSizeBytes(int i);
   external set host(String h);
   external set ssl(bool v);
+  external set timestampsInSnapshots(bool v);
 
   external factory Settings({
     int cacheSizeBytes,
     String host,
     bool ssl,
+    bool timestampsInSnapshots
   });
 }
 
