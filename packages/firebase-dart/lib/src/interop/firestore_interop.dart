@@ -27,25 +27,38 @@ external void setLogLevel(String logLevel);
 @JS('Firestore')
 abstract class FirestoreJsImpl {
   external AppJsImpl get app;
+
   external set app(AppJsImpl a);
+
   external WriteBatchJsImpl batch();
+
   external CollectionReferenceJsImpl collection(String collectionPath);
+
   external QueryJsImpl collectionGroup(String collectionId);
+
   external DocumentReferenceJsImpl doc(String documentPath);
+
   external PromiseJsImpl<Null> enablePersistence();
+
   external PromiseJsImpl<void> runTransaction(
       Func1<TransactionJsImpl, PromiseJsImpl> updateFunction);
+
   external void settings(Settings settings);
+
   external PromiseJsImpl<Null> disableNetwork();
+
   external PromiseJsImpl<Null> enableNetwork();
 }
 
 @JS('WriteBatch')
 abstract class WriteBatchJsImpl {
   external PromiseJsImpl<Null> commit();
+
   external WriteBatchJsImpl delete(DocumentReferenceJsImpl documentRef);
+
   external WriteBatchJsImpl set(DocumentReferenceJsImpl documentRef, data,
       [SetOptions options]);
+
   external WriteBatchJsImpl update(
       DocumentReferenceJsImpl documentRef, dataOrFieldsAndValues);
 }
@@ -53,15 +66,23 @@ abstract class WriteBatchJsImpl {
 @JS('CollectionReference')
 class CollectionReferenceJsImpl extends QueryJsImpl {
   external String get id;
+
   external set id(String v);
+
   external DocumentReferenceJsImpl get parent;
+
   external set parent(DocumentReferenceJsImpl d);
+
   external String get path;
+
   external set path(String v);
 
   external factory CollectionReferenceJsImpl();
+
   external PromiseJsImpl<DocumentReferenceJsImpl> add(data);
+
   external DocumentReferenceJsImpl doc([String documentPath]);
+
   external bool isEqual(CollectionReferenceJsImpl other);
 }
 
@@ -122,8 +143,11 @@ class GeoPoint {
 @anonymous
 abstract class Blob {
   external static Blob fromBase64String(String base64);
+
   external static Blob fromUint8Array(Uint8List list);
+
   external String toBase64();
+
   external Uint8List toUint8Array();
 
   /// Returns `true` if this [Blob] is equal to the provided [other].
@@ -134,49 +158,77 @@ abstract class Blob {
 @JS()
 abstract class DocumentChangeJsImpl {
   external String /*'added'|'removed'|'modified'*/ get type;
+
   external set type(String /*'added'|'removed'|'modified'*/ v);
+
   external DocumentSnapshotJsImpl get doc;
+
   external set doc(DocumentSnapshotJsImpl v);
+
   external num get oldIndex;
+
   external set oldIndex(num v);
+
   external num get newIndex;
+
   external set newIndex(num v);
 }
 
 @JS('DocumentReference')
 abstract class DocumentReferenceJsImpl {
   external FirestoreJsImpl get firestore;
+
   external set firestore(FirestoreJsImpl f);
+
   external String get id;
+
   external set id(String s);
+
   external CollectionReferenceJsImpl get parent;
+
   external set parent(CollectionReferenceJsImpl c);
+
   external String get path;
+
   external set path(String v);
 
   external CollectionReferenceJsImpl collection(String collectionPath);
+
   external PromiseJsImpl<Null> delete();
+
   external PromiseJsImpl<DocumentSnapshotJsImpl> get();
+
   external void Function() onSnapshot(
     optionsOrObserverOrOnNext,
     observerOrOnNextOrOnError, [
     Func1<FirebaseError, dynamic> onError,
   ]);
+
   external PromiseJsImpl<Null> set(data, [SetOptions options]);
+
   external PromiseJsImpl<Null> update(dataOrFieldsAndValues);
 }
 
 @JS('DocumentSnapshot')
 abstract class DocumentSnapshotJsImpl {
   external bool get exists;
+
   external set exists(bool v);
+
   external String get id;
+
   external set id(String v);
+
   external SnapshotMetadata get metadata;
+
   external set metadata(SnapshotMetadata v);
+
   external DocumentReferenceJsImpl get ref;
+
   external set ref(DocumentReferenceJsImpl v);
+
   external dynamic data();
+
   external dynamic get(/*String|FieldPath*/ fieldPath);
 
   /// Returns [true] if this [DocumentSnapshotJsImpl] is equal to the provided one.
@@ -210,23 +262,37 @@ external dynamic get fieldValues;
 @JS('Query')
 abstract class QueryJsImpl {
   external FirestoreJsImpl get firestore;
+
   external set firestore(FirestoreJsImpl f);
+
   external QueryJsImpl endAt(
-      /*DocumentSnapshot|List<dynamic>*/ snapshotOrFieldValues);
+      /*DocumentSnapshot|List<dynamic>*/
+      snapshotOrFieldValues);
+
   external QueryJsImpl endBefore(
-      /*DocumentSnapshot|List<dynamic>*/ snapshotOrFieldValues);
+      /*DocumentSnapshot|List<dynamic>*/
+      snapshotOrFieldValues);
+
   external PromiseJsImpl<QuerySnapshotJsImpl> get();
+
   external QueryJsImpl limit(num limit);
+
   external void Function() onSnapshot(
       SnapshotListenOptions options,
       void Function(QuerySnapshotJsImpl) onNext,
       Func1<FirebaseError, dynamic> onError);
+
   external QueryJsImpl orderBy(/*String|FieldPath*/ fieldPath,
       [String /*'desc'|'asc'*/ directionStr]);
+
   external QueryJsImpl startAfter(
-      /*DocumentSnapshot|List<dynamic>*/ snapshotOrFieldValues);
+      /*DocumentSnapshot|List<dynamic>*/
+      snapshotOrFieldValues);
+
   external QueryJsImpl startAt(
-      /*DocumentSnapshot|List<dynamic>*/ snapshotOrFieldValues);
+      /*DocumentSnapshot|List<dynamic>*/
+      snapshotOrFieldValues);
+
   external QueryJsImpl where(/*String|FieldPath*/ fieldPath,
       String /*'<'|'<='|'=='|'>='|'>'*/ opStr, value);
 }
@@ -235,30 +301,45 @@ abstract class QueryJsImpl {
 abstract class QuerySnapshotJsImpl {
   // TODO: [SnapshotOptions options]
   external List<DocumentChangeJsImpl> docChanges();
+
   external List<DocumentSnapshotJsImpl> get docs;
+
   external set docs(List<DocumentSnapshotJsImpl> v);
+
   external bool get empty;
+
   external set empty(bool v);
+
   external SnapshotMetadata get metadata;
+
   external set metadata(SnapshotMetadata v);
+
   external QueryJsImpl get query;
+
   external set query(QueryJsImpl v);
+
   external num get size;
+
   external set size(num v);
+
   external void forEach(
     void Function(DocumentSnapshotJsImpl) callback, [
     thisArg,
   ]);
+
   external bool isEqual(QuerySnapshotJsImpl other);
 }
 
 @JS('Transaction')
 abstract class TransactionJsImpl {
   external TransactionJsImpl delete(DocumentReferenceJsImpl documentRef);
+
   external PromiseJsImpl<DocumentSnapshotJsImpl> get(
       DocumentReferenceJsImpl documentRef);
+
   external TransactionJsImpl set(DocumentReferenceJsImpl documentRef, data,
       [SetOptions options]);
+
   external TransactionJsImpl update(
       DocumentReferenceJsImpl documentRef, dataOrFieldsAndValues);
 }
@@ -266,6 +347,7 @@ abstract class TransactionJsImpl {
 @JS('Timestamp')
 abstract class TimestampJsImpl {
   external int get seconds;
+
   external int get nanoseconds;
 
   external factory TimestampJsImpl(int seconds, int nanoseconds);
@@ -279,6 +361,7 @@ abstract class TimestampJsImpl {
   external static TimestampJsImpl fromMillis(int milliseconds);
 
   external bool isEqual(TimestampJsImpl other);
+
   @override
   external String toString();
 }
@@ -291,14 +374,23 @@ abstract class TimestampJsImpl {
 @JS()
 abstract class FirestoreError {
   external dynamic /*|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/ get code;
+
   external set code(
-      /*|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/ v);
+      /*|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/
+      v);
+
   external String get message;
+
   external set message(String v);
+
   external String get name;
+
   external set name(String v);
+
   external String get stack;
+
   external set stack(String v);
+
   external factory FirestoreError(
       {/*|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/ code,
       String message,
@@ -315,7 +407,9 @@ abstract class SnapshotListenOptions {
   ///
   /// Default is `false`.
   external bool get includeMetadataChanges;
+
   external set includeMetadataChanges(bool value);
+
   external factory SnapshotListenOptions({bool includeMetadataChanges});
 }
 
@@ -327,15 +421,28 @@ abstract class SnapshotListenOptions {
 @JS()
 abstract class Settings {
   external set cacheSizeBytes(int i);
+
   external set host(String h);
+
   external set ssl(bool v);
+
+  @Deprecated(
+    'This setting will be removed in a future release. You should update '
+    'your code to expect Timestamp objects and stop using the '
+    'timestampsInSnapshots setting.',
+  )
   external set timestampsInSnapshots(bool v);
 
   external factory Settings({
     int cacheSizeBytes,
     String host,
     bool ssl,
-    bool timestampsInSnapshots
+    @Deprecated(
+      'This setting will be removed in a future release. You should update '
+      'your code to expect Timestamp objects and stop using the '
+      'timestampsInSnapshots setting.',
+    )
+        bool timestampsInSnapshots,
   });
 }
 
@@ -351,6 +458,7 @@ abstract class SnapshotMetadata {
   /// you receive another snapshot with [hasPendingWrites]
   /// set to [:false:] once the writes have been committed to the backend.
   external bool get hasPendingWrites;
+
   external set hasPendingWrites(bool v);
 
   /// [:true:] if the snapshot was created from cached data rather than guaranteed
@@ -359,6 +467,7 @@ abstract class SnapshotMetadata {
   /// you will receive another snapshot with [fromCache] set to [:false:] once
   /// the client has received up-to-date data from the backend.
   external bool get fromCache;
+
   external set fromCache(bool v);
 
   /// Returns [true] if this [SnapshotMetadata] is equal to the provided one.
@@ -373,7 +482,9 @@ abstract class DocumentListenOptions {
   /// Raise an event even if only metadata of the document changed. Default is
   /// [:false:].
   external bool get includeMetadataChanges;
+
   external set includeMetadataChanges(bool v);
+
   external factory DocumentListenOptions({bool includeMetadataChanges});
 }
 
@@ -386,6 +497,8 @@ abstract class SetOptions {
   /// Set to true to replace only the values from the new data.
   /// Fields omitted will remain untouched.
   external bool get merge;
+
   external set merge(bool v);
+
   external factory SetOptions({bool merge});
 }
