@@ -1,4 +1,4 @@
-## 7.3
+## 7.3.0
 
 - added additional options to interop 'Settings' to Fix Timestamp Error.
 
