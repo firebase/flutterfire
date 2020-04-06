@@ -1,3 +1,4 @@
+[![Pub Package](https://img.shields.io/pub/v/firebase.svg)](https://pub.dev/packages/firebase)
 [![Build Status](https://travis-ci.org/FirebaseExtended/firebase-dart.svg?branch=master)](https://travis-ci.org/FirebaseExtended/firebase-dart)
 
 **NOTE:** This package provides three libraries:
