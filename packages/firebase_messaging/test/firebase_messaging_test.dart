@@ -151,6 +151,11 @@ void main() {
     verify(mockChannel.invokeMethod<void>('unsubscribeFromTopic', myTopic));
   });
 
+  test('getId', () {
+    firebaseMessaging.getId();
+    verify(mockChannel.invokeMethod<String>('getInstanceID'));
+  });
+
   test('getToken', () {
     firebaseMessaging.getToken();
     verify(mockChannel.invokeMethod<String>('getToken'));
