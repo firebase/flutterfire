@@ -22,9 +22,8 @@ A new flutter plugin project.
   s.platform = :osx, '10.11'
   s.static_framework = true
   s.dependency 'FlutterMacOS'
-  s.dependency 'Fabric'
-  s.dependency 'Crashlytics'
-  s.dependency 'Firebase/Core'
+  s.dependency 'Firebase/Crashlytics'
+  s.dependency 'Firebase/Analytics'
 
   s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{libraryVersion}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-cls\\\"" }
 end

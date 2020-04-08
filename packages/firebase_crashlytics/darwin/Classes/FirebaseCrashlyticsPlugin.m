@@ -18,7 +18,7 @@
   FirebaseCrashlyticsPlugin *instance = [[FirebaseCrashlyticsPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
 
-  [Fabric with:@[ [Crashlytics self] ]];
+  [FIRApp configure];
 
   SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");
   if ([FIRApp respondsToSelector:sel]) {
@@ -41,29 +41,24 @@
     // Add logs.
     NSArray *logs = call.arguments[@"logs"];
     for (NSString *log in logs) {
-      // Here and below, use CLSLog instead of CLS_LOG to try and avoid
-      // automatic inclusion of the current code location. It also ensures that
-      // the log is only written to Crashlytics and not also to the offline log
-      // as explained here:
-      // https://support.crashlytics.com/knowledgebase/articles/92519-how-do-i-use-logging
-      CLSLog(@"%@", log);
+      [[FIRCrashlytics crashlytics] logWithFormat:@"%@", log];
     }
 
     // Set keys.
     NSArray *keys = call.arguments[@"keys"];
     for (NSDictionary *key in keys) {
       if ([@"int" isEqualToString:key[@"type"]]) {
-        [[Crashlytics sharedInstance] setIntValue:(int)call.arguments[@"value"]
-                                           forKey:call.arguments[@"key"]];
+        [[FIRCrashlytics crashlytics] setCustomValue:(int)call.arguments[@"value"]
+                                              forKey:call.arguments[@"key"]];
       } else if ([@"double" isEqualToString:key[@"type"]]) {
-        [[Crashlytics sharedInstance] setFloatValue:[call.arguments[@"value"] floatValue]
-                                             forKey:call.arguments[@"key"]];
+        [[FIRCrashlytics crashlytics] setCustomValue:[call.arguments[@"value"] floatValue]
+                                              forKey:call.arguments[@"key"]];
       } else if ([@"string" isEqualToString:key[@"type"]]) {
-        [[Crashlytics sharedInstance] setObjectValue:call.arguments[@"value"]
+        [[FIRCrashlytics crashlytics] setCustomValue:call.arguments[@"value"]
                                               forKey:call.arguments[@"key"]];
       } else if ([@"boolean" isEqualToString:key[@"type"]]) {
-        [[Crashlytics sharedInstance] setBoolValue:[call.arguments[@"value"] boolValue]
-                                            forKey:call.arguments[@"key"]];
+        [[FIRCrashlytics crashlytics] setCustomValue:[call.arguments[@"value"] boolValue]
+                                              forKey:call.arguments[@"key"]];
       }
     }
 
@@ -71,7 +66,7 @@
     // Crashlytics.
     NSString *information = call.arguments[@"information"];
     if ([information length] != 0) {
-      CLSLog(@"%@", information);
+      [[FIRCrashlytics crashlytics] logWithFormat:@"%@", information];
     }
 
     // Report crash.
@@ -86,23 +81,23 @@
     if (context != nil) {
       reason = [NSString stringWithFormat:@"thrown %@", context];
     }
+    NSDictionary *stack = @{
+            @"stackTrace" : frames
+    };
 
-    [[Crashlytics sharedInstance] recordCustomExceptionName:call.arguments[@"exception"]
-                                                     reason:reason
-                                                 frameArray:frames];
+    NSException *exception = [NSException
+                              exceptionWithName:call.arguments["@exception"]
+                              reason:reason
+                              userInfo:stack]
+
+    [[FIRCrashlytics crashlytics] recordError:exception]
     result(@"Error reported to Crashlytics.");
   } else if ([@"Crashlytics#isDebuggable" isEqualToString:call.method]) {
-    result([NSNumber numberWithBool:[Crashlytics sharedInstance].debugMode]);
+    result([NSNumber numberWithBool:[FIRCrashlytics crashlytics].debugMode]);
   } else if ([@"Crashlytics#getVersion" isEqualToString:call.method]) {
-    result([Crashlytics sharedInstance].version);
-  } else if ([@"Crashlytics#setUserEmail" isEqualToString:call.method]) {
-    [[Crashlytics sharedInstance] setUserEmail:call.arguments[@"email"]];
-    result(nil);
-  } else if ([@"Crashlytics#setUserName" isEqualToString:call.method]) {
-    [[Crashlytics sharedInstance] setUserName:call.arguments[@"name"]];
-    result(nil);
+    result([FIRCrashlytics crashlytics].version);
   } else if ([@"Crashlytics#setUserIdentifier" isEqualToString:call.method]) {
-    [[Crashlytics sharedInstance] setUserIdentifier:call.arguments[@"identifier"]];
+    [[FIRCrashlytics crashlytics] setUserID:call.arguments[@"identifier"]];
     result(nil);
   } else {
     result(FlutterMethodNotImplemented);

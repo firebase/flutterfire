@@ -22,9 +22,8 @@ A new flutter plugin project.
   s.ios.deployment_target = '8.0'
   s.static_framework = true
   s.dependency 'Flutter'
-  s.dependency 'Fabric'
-  s.dependency 'Crashlytics'
-  s.dependency 'Firebase/Core'
-
+  s.dependency 'Firebase/Crashlytics'
+  s.dependency 'Firebase/Analytics'
+  
   s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{libraryVersion}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-cls\\\"" }
 end
