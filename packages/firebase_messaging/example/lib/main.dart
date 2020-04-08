@@ -88,7 +88,8 @@ class PushMessagingExample extends StatefulWidget {
 }
 
 class _PushMessagingExampleState extends State<PushMessagingExample> {
-  String _homeScreenText = "Waiting for token...";
+  String _idStatusText = "Waiting for ID...";
+  String _tokenStatusText = "Waiting for token...";
   bool _topicButtonsDisabled = false;
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -159,12 +160,19 @@ class _PushMessagingExampleState extends State<PushMessagingExample> {
         .listen((IosNotificationSettings settings) {
       print("Settings registered: $settings");
     });
+    _firebaseMessaging.getId().then((id) {
+      assert(id != null);
+      setState(() {
+        _idStatusText = "Instance ID: $id";
+      });
+      print(_idStatusText);
+    });
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
       setState(() {
-        _homeScreenText = "Push Messaging token: $token";
+        _tokenStatusText = "Push Messaging token: $token";
       });
-      print(_homeScreenText);
+      print(_tokenStatusText);
     });
   }
 
@@ -189,7 +197,10 @@ class _PushMessagingExampleState extends State<PushMessagingExample> {
           child: Column(
             children: <Widget>[
               Center(
-                child: Text(_homeScreenText),
+                child: Text(_idStatusText),
+              ),
+              Center(
+                child: Text(_tokenStatusText),
               ),
               Row(children: <Widget>[
                 Expanded(
