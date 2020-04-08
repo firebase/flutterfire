@@ -167,6 +167,17 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
             result(instanceIDResult.token);
           }
         }];
+  } else if ([@"getInstanceID" isEqualToString:method]) {
+    [[FIRInstanceID instanceID]
+        instanceIDWithHandler:^(FIRInstanceIDResult *_Nullable instanceIDResult,
+                                NSError *_Nullable error) {
+          if (error != nil) {
+            NSLog(@"getInstanceID, error fetching instanceID: %@", error);
+            result(nil);
+          } else {
+            result(instanceIDResult.instanceID);
+          }
+        }];
   } else if ([@"deleteInstanceID" isEqualToString:method]) {
     [[FIRInstanceID instanceID] deleteIDWithHandler:^void(NSError *_Nullable error) {
       if (error.code != 0) {

@@ -150,6 +150,11 @@ class FirebaseMessaging {
     return await _channel.invokeMethod<String>('getToken');
   }
 
+  /// Returns the FCM stable ID.
+  Future<String> getId() async {
+    return await _channel.invokeMethod<String>('getInstanceID');
+  }
+
   /// Subscribe to topic in background.
   ///
   /// [topic] must match the following regular expression:
