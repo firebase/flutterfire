@@ -14,22 +14,14 @@ void main() {
   });
 
   testWidgets('Rewarded Video Ads', (WidgetTester tester) async {
-    bool adLoaded = false;
-
-    RewardedVideoAd.instance.listener =
-        (RewardedVideoAdEvent event, {int rewardAmount, String rewardType}) {
-      if (event == RewardedVideoAdEvent.loaded) adLoaded = true;
-    };
-
     // Request without a targeting info
-    await RewardedVideoAd.instance.load(adUnitId: RewardedVideoAd.testAdUnitId);
-    await Future<void>.delayed(Duration(seconds: 10));
-    expect(adLoaded, isTrue);
-
-    adLoaded = false;
+    bool hasStartedLoading = await RewardedVideoAd.instance.load(
+      adUnitId: RewardedVideoAd.testAdUnitId,
+    );
+    expect(hasStartedLoading, isTrue);
 
     // Request with a targeting info
-    await RewardedVideoAd.instance.load(
+    hasStartedLoading = await RewardedVideoAd.instance.load(
       adUnitId: RewardedVideoAd.testAdUnitId,
       targetingInfo: MobileAdTargetingInfo(
         keywords: <String>['foo', 'bar'],
@@ -38,8 +30,7 @@ void main() {
         nonPersonalizedAds: true,
       ),
     );
-    await Future<void>.delayed(Duration(seconds: 10));
-    expect(adLoaded, isTrue);
+    expect(hasStartedLoading, isTrue);
   });
 
   testWidgets('Native Ads', (WidgetTester tester) async {
