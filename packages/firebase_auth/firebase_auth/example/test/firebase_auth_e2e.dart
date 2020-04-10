@@ -121,12 +121,13 @@ void main() {
     });
   });
 
-  group('App', (){
-    testWidgets('FirebaseAuth example widget test', (WidgetTester tester) async {
-    await tester.pumpWidget(MyApp());
-    await tester.tap(find.text('Test registration'));
-    await tester.pumpAndSettle();
-    expect(find.text('Registration'), findsOneWidget);
-  });
+  group('App', () {
+    testWidgets('FirebaseAuth example widget test',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(MyApp());
+      await tester.tap(find.text('Test registration'));
+      await tester.pumpAndSettle();
+      expect(find.text('Registration'), findsOneWidget);
+    });
   });
 }
