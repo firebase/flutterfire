@@ -10,16 +10,28 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 To use this plugin:
 
-1. Using the [Firebase Console](http://console.firebase.google.com/), add an Android app to your project:
-Follow the assistant, download the generated google-services.json file and place it inside android/app. Next,
-modify the android/build.gradle file and the android/app/build.gradle file to add the Google services plugin
-as described by the Firebase assistant. Ensure that your `android/build.gradle` file contains the
+1. Add `cloud_firestore` as a [dependency in your pubspec.yaml file](https://flutter.dev/docs/development/packages-and-plugins/using-packages).
+
+### Android
+
+1. Using the [Firebase Console](http://console.firebase.google.com/), add an Android app to your project.
+2. Follow the assistant, and download the generated `google-services.json` file and place it inside `android/app`.
+3. Modify the `android/build.gradle` file and the `android/app/build.gradle` file to add the Google services plugin as described by the Firebase assistant. Ensure that your `android/build.gradle` file contains the
 `maven.google.com` as [described here](https://firebase.google.com/docs/android/setup#add_the_sdk).
-1. Using the [Firebase Console](http://console.firebase.google.com/), add an iOS app to your project:
-Follow the assistant, download the generated GoogleService-Info.plist file, open ios/Runner.xcworkspace
-with Xcode, and within Xcode place the file inside ios/Runner. Don't follow the steps named
-"Add Firebase SDK" and "Add initialization code" in the Firebase assistant.
-1. Add `cloud_firestore` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
+
+### iOS
+
+1. Using the [Firebase Console](http://console.firebase.google.com/), add an iOS app to your project.
+2. Follow the assistant, download the generated `GoogleService-Info.plist` file. Do **NOT** follow the steps named _"Add Firebase SDK"_ and _"Add initialization code"_ in the Firebase assistant.
+3. Open `ios/Runner.xcworkspace` with Xcode, and **within Xcode** place the `GoogleService-Info.plist` file inside `ios/Runner`.
+
+### Web
+
+In addition to the `cloud_firestore` dependency, you'll need to modify the `web/index.html` of your app following the Firebase setup instructions:
+
+* [Add Firebase to your JavaScript project](https://firebase.google.com/docs/web/setup#from-the-cdn).
+
+Read more in the [`cloud_firestore_web` README](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/cloud_firestore/cloud_firestore_web/README.md).
 
 ## Usage
 

@@ -1,3 +1,35 @@
+## 0.15.5+3
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.15.5+2
+
+* Update the platform interface dependency to 1.1.7 and update tests.
+
+## 0.15.5+1
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.15.5
+
+* Add macOS support
+
+## 0.15.4+1
+
+* Fix fallthrough bug in Android code.
+
+## 0.15.4
+
+* Add support for `confirmPasswordReset` on Android and iOS.
+
+## 0.15.3+1
+
+* Add integration instructions for the `web` platform.
+
+## 0.15.3
+
+* Add support for OAuth Authentication for iOS and Android to solve generic providers authentication.
+
 ## 0.15.2
 
 * Add web support by default.

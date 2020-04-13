@@ -1,6 +1,22 @@
-## 0.9.3+6
+## 0.9.3+10
 
 * Added NSNull validation to driverLicenseDictionary to prevent errors when NSArray:addObject is called
+
+## 0.9.3+9
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.9.3+8
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 0.9.3+7
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.9.3+6
+
+* Replace deprecated text theme fields in example app.
 
 ## 0.9.3+5
 

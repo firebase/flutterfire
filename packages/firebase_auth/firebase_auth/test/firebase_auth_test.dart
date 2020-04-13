@@ -10,6 +10,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 const String kMockProviderId = 'firebase';
 const String kMockUid = '12345';
@@ -28,6 +29,7 @@ const String kMockVerificationId = '12345';
 const String kMockSmsCode = '123456';
 const String kMockLanguage = 'en';
 const String kMockIdTokenResultSignInProvider = 'password';
+const String kMockOobCode = 'oobcode';
 const Map<dynamic, dynamic> kMockIdTokenResultClaims = <dynamic, dynamic>{
   'claim1': 'value1',
 };
@@ -87,7 +89,6 @@ void main() {
 
     setUp(() {
       mock = MockFirebaseAuth();
-      when(mock.isMock).thenReturn(true);
       when(mock.getIdToken(any, any)).thenAnswer(
           (_) => Future<PlatformIdTokenResult>.value(kMockIdTokenResult));
       when(mock.isSignInWithEmailLink(any, any))
@@ -406,6 +407,23 @@ void main() {
       expect(captured.accessToken, equals(kMockAccessToken));
     });
 
+    test('OAuthProvider signInWithCredential for Apple', () async {
+      OAuthProvider oAuthProvider = OAuthProvider(providerId: "apple.com");
+      final AuthCredential credential = oAuthProvider.getCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final AuthResult result = await auth.signInWithCredential(credential);
+      verifyAuthResult(result);
+      final OAuthCredential captured =
+          verify(mock.signInWithCredential(auth.app.name, captureAny))
+              .captured
+              .single;
+      expect(captured.providerId, equals('apple.com'));
+      expect(captured.idToken, equals(kMockIdToken));
+      expect(captured.accessToken, equals(kMockAccessToken));
+    });
+
     test('PhoneAuthProvider signInWithCredential', () async {
       final AuthCredential credential = PhoneAuthProvider.getCredential(
         verificationId: kMockVerificationId,
@@ -483,6 +501,26 @@ void main() {
       expect(captured.accessToken, equals(kMockAccessToken));
     });
 
+    test('OAuthProvider reauthenticateWithCredential for Apple', () async {
+      final FirebaseUser user = await auth.currentUser();
+      OAuthProvider oAuthProvider = OAuthProvider(providerId: "apple.com");
+      final AuthCredential credential = oAuthProvider.getCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final AuthResult result =
+          await user.reauthenticateWithCredential(credential);
+      verifyAuthResult(result);
+      verify(mock.getCurrentUser(auth.app.name));
+      final OAuthCredential captured =
+          verify(mock.reauthenticateWithCredential(auth.app.name, captureAny))
+              .captured
+              .single;
+      expect(captured.providerId, equals('apple.com'));
+      expect(captured.idToken, equals(kMockIdToken));
+      expect(captured.accessToken, equals(kMockAccessToken));
+    });
+
     test('FacebookAuthProvider reauthenticateWithCredential', () async {
       final FirebaseUser user = await auth.currentUser();
       final AuthCredential credential = FacebookAuthProvider.getCredential(
@@ -550,6 +588,25 @@ void main() {
               .captured
               .single;
       expect(captured.providerId, equals('google.com'));
+      expect(captured.idToken, equals(kMockIdToken));
+      expect(captured.accessToken, equals(kMockAccessToken));
+    });
+
+    test('OAuthProvider linkWithCredential for Apple', () async {
+      OAuthProvider oAuthProvider = OAuthProvider(providerId: "apple.com");
+      final AuthCredential credential = oAuthProvider.getCredential(
+        idToken: kMockIdToken,
+        accessToken: kMockAccessToken,
+      );
+      final FirebaseUser user = await auth.currentUser();
+      final AuthResult result = await user.linkWithCredential(credential);
+      verifyAuthResult(result);
+      verify(mock.getCurrentUser(auth.app.name));
+      final OAuthCredential captured =
+          verify(mock.linkWithCredential(auth.app.name, captureAny))
+              .captured
+              .single;
+      expect(captured.providerId, equals('apple.com'));
       expect(captured.idToken, equals(kMockIdToken));
       expect(captured.accessToken, equals(kMockAccessToken));
     });
@@ -757,6 +814,14 @@ void main() {
       verify(mock.unlinkFromProvider(auth.app.name, 'google.com'));
     });
 
+    test('OAuthProvider unlinkFromProvider for Apple', () async {
+      final FirebaseUser user = await auth.currentUser();
+      OAuthProvider oAuthProvider = OAuthProvider(providerId: "apple.com");
+      await user.unlinkFromProvider(oAuthProvider.providerId);
+      verify(mock.getCurrentUser(auth.app.name));
+      verify(mock.unlinkFromProvider(auth.app.name, 'apple.com'));
+    });
+
     test('FacebookAuthProvider unlinkFromProvider', () async {
       final FirebaseUser user = await auth.currentUser();
       await user.unlinkFromProvider(FacebookAuthProvider.providerId);
@@ -812,7 +877,15 @@ void main() {
       await auth.setLanguageCode(kMockLanguage);
       verify(mock.setLanguageCode(auth.app.name, kMockLanguage));
     });
+
+    test('confirmPasswordReset', () async {
+      await auth.confirmPasswordReset(kMockOobCode, kMockPassword);
+      verify(mock.confirmPasswordReset(
+          auth.app.name, kMockOobCode, kMockPassword));
+    });
   });
 }
 
-class MockFirebaseAuth extends Mock implements FirebaseAuthPlatform {}
+class MockFirebaseAuth extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseAuthPlatform {}

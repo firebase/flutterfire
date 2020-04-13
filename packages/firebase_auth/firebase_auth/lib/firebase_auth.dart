@@ -25,6 +25,7 @@ part 'src/auth_provider/github_auth_provider.dart';
 part 'src/auth_provider/google_auth_provider.dart';
 part 'src/auth_provider/phone_auth_provider.dart';
 part 'src/auth_provider/twitter_auth_provider.dart';
+part 'src/auth_provider/oauth_auth_provider.dart';
 part 'src/additional_user_info.dart';
 part 'src/auth_result.dart';
 part 'src/firebase_auth.dart';

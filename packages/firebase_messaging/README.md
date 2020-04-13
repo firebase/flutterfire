@@ -61,77 +61,99 @@ for more.
 
 By default background messaging is not enabled. To handle messages in the background:
 
+1. Add the `com.google.firebase:firebase-messaging` dependency in your app-level `build.gradle` file that is typically located at `<app-name>/android/app/build.gradle`.
+
+   ```gradle
+   dependencies {
+     // ...
+   
+     implementation 'com.google.firebase:firebase-messaging:<latest_version>'
+   }
+   ```
+   
+   Note: you can find out what the latest version of the plugin is [here ("Cloud Messaging")](https://firebase.google.com/support/release-notes/android#latest_sdk_versions).
+
 1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
 
-    ```
-    package io.flutter.plugins.firebasemessagingexample;
-    
-    import io.flutter.app.FlutterApplication;
-    import io.flutter.plugin.common.PluginRegistry;
-    import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
-    import io.flutter.plugins.GeneratedPluginRegistrant;
-    import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
-    
-    public class Application extends FlutterApplication implements PluginRegistrantCallback {
-      @Override
-      public void onCreate() {
-        super.onCreate();
-        FlutterFirebaseMessagingService.setPluginRegistrant(this);
-      }
-    
-      @Override
-      public void registerWith(PluginRegistry registry) {
-        GeneratedPluginRegistrant.registerWith(registry);
-      }
-    }
-    ```
+   ```java
+   package io.flutter.plugins.firebasemessagingexample;
+   
+   import io.flutter.app.FlutterApplication;
+   import io.flutter.plugin.common.PluginRegistry;
+   import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
+   import io.flutter.plugins.GeneratedPluginRegistrant;
+   import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
+   
+   public class Application extends FlutterApplication implements PluginRegistrantCallback {
+     @Override
+     public void onCreate() {
+       super.onCreate();
+       FlutterFirebaseMessagingService.setPluginRegistrant(this);
+     }
+   
+     @Override
+     public void registerWith(PluginRegistry registry) {
+       GeneratedPluginRegistrant.registerWith(registry);
+     }
+   }
+   ```
+
 1. In `Application.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
-    ```
-    package com.domain.myapplication;
-    ```
+
+   ```java
+   package com.domain.myapplication;
+   ```
+
 1. Set name property of application in `AndroidManifest.xml`. This is typically found in `<app-name>/android/app/src/main/`.
-    ```
-    <application android:name=".Application" ...>
-    ```
+
+   ```xml
+   <application android:name=".Application" ...>
+   ```
+
 1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
-    ```
-    Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
-      if (message.containsKey('data')) {
-        // Handle data message
-        final dynamic data = message['data'];
-      }
-    
-      if (message.containsKey('notification')) {
-        // Handle notification message
-        final dynamic notification = message['notification'];
-      }
-    
-      // Or do other work.
-    }
-    ```
+
+   ```dart
+   Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+     if (message.containsKey('data')) {
+       // Handle data message
+       final dynamic data = message['data'];
+     }
+   
+     if (message.containsKey('notification')) {
+       // Handle notification message
+       final dynamic notification = message['notification'];
+     }
+   
+     // Or do other work.
+   }
+   ```
+
    Note: the protocol of `data` and `notification` are in line with the
    fields defined by a [RemoteMessage](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/RemoteMessage). 
+
 1. Set `onBackgroundMessage` handler when calling `configure`
-    ```
-    _firebaseMessaging.configure(
-          onMessage: (Map<String, dynamic> message) async {
-            print("onMessage: $message");
-            _showItemDialog(message);
-          },
-          onBackgroundMessage: myBackgroundMessageHandler,
-          onLaunch: (Map<String, dynamic> message) async {
-            print("onLaunch: $message");
-            _navigateToItemDetail(message);
-          },
-          onResume: (Map<String, dynamic> message) async {
-            print("onResume: $message");
-            _navigateToItemDetail(message);
-          },
-        );
-    ```
+
+   ```dart
+   _firebaseMessaging.configure(
+         onMessage: (Map<String, dynamic> message) async {
+           print("onMessage: $message");
+           _showItemDialog(message);
+         },
+         onBackgroundMessage: myBackgroundMessageHandler,
+         onLaunch: (Map<String, dynamic> message) async {
+           print("onLaunch: $message");
+           _navigateToItemDetail(message);
+         },
+         onResume: (Map<String, dynamic> message) async {
+           print("onResume: $message");
+           _navigateToItemDetail(message);
+         },
+       );
+   ```
+
    Note: `configure` should be called early in the lifecycle of your application
    so that it can be ready to receive messages as early as possible. See the
-   example app for a demonstration.
+   [example app](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/example) for a demonstration.
 
 ### iOS Integration
 
@@ -145,7 +167,14 @@ To integrate your plugin into the iOS part of your app, follow these steps:
 
 1. Follow the steps in the "[Upload your APNs certificate](https://firebase.google.com/docs/cloud-messaging/ios/client#upload_your_apns_certificate)" section of the Firebase docs.
 
-1. Add the following lines to the `(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions`
+1. If you need to disable the method swizzling done by the FCM iOS SDK (e.g. so that you can use this plugin with other notification plugins) then add the following to your application's `Info.plist` file.
+
+```xml
+<key>FirebaseAppDelegateProxyEnabled</key>
+<false/>
+```
+
+After that, add the following lines to the `(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions`
 method in the `AppDelegate.m`/`AppDelegate.swift` of your iOS project.
 
 Objective-C:

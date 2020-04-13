@@ -1,3 +1,23 @@
+## 3.1.5
+
+* Add macOS support
+
+## 3.1.4
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 3.1.3
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 3.1.2
+
+* Make the pedantic dev_dependency explicit.
+
+## 3.1.1
+
+* Removed unnecessary debug print statements ("i am working").
+
 ## 3.1.0
 
 * Added error handling to `StorageFileDownloadTask` and added propagation of errors to the Future returned by the `writeToFile` method in `StorageReference`. 

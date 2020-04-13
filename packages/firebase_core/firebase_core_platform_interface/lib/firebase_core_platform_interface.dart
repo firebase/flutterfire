@@ -4,7 +4,7 @@
 
 import 'dart:async';
 
-import 'package:meta/meta.dart' show visibleForTesting;
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'src/firebase_options.dart';
 import 'src/method_channel_firebase_core.dart';
@@ -22,14 +22,10 @@ export 'src/platform_firebase_app.dart';
 /// will get the default implementation, while platform implementations that
 /// `implements` this interface will be broken by newly added
 /// [FirebaseCorePlatform] methods.
-abstract class FirebaseCorePlatform {
-  /// Only mock implementations should set this to `true`.
-  ///
-  /// Mockito mocks implement this class with `implements` which is forbidden
-  /// (see class docs). This property provides a backdoor for mocks to skip the
-  /// verification that the class isn't implemented with `implements`.
-  @visibleForTesting
-  bool get isMock => false;
+abstract class FirebaseCorePlatform extends PlatformInterface {
+  FirebaseCorePlatform() : super(token: _token);
+
+  static final Object _token = Object();
 
   /// The default instance of [FirebaseCorePlatform] to use.
   ///
@@ -44,25 +40,9 @@ abstract class FirebaseCorePlatform {
   // TODO(amirh): Extract common platform interface logic.
   // https://github.com/flutter/flutter/issues/43368
   static set instance(FirebaseCorePlatform instance) {
-    if (!instance.isMock) {
-      try {
-        instance._verifyProvidesDefaultImplementations();
-      } on NoSuchMethodError catch (_) {
-        throw AssertionError(
-            'Platform interfaces must not be implemented with `implements`');
-      }
-    }
+    PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
-
-  /// This method ensures that [FirebaseCorePlatform] isn't implemented with `implements`.
-  ///
-  /// See class docs for more details on why using `implements` to implement
-  /// [FirebaseCorePlatform] is forbidden.
-  ///
-  /// This private method is called by the [instance] setter, which should fail
-  /// if the provided instance is a class implemented with `implements`.
-  void _verifyProvidesDefaultImplementations() {}
 
   /// Returns the data for the Firebase app with the given [name].
   ///

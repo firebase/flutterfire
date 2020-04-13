@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +32,6 @@ void main() {
 
     setUp(() async {
       mock = MockFirebaseCore();
-      when(mock.isMock).thenReturn(true);
       FirebaseCorePlatform.instance = mock;
 
       final PlatformFirebaseApp app = PlatformFirebaseApp(
@@ -102,4 +102,6 @@ void main() {
   });
 }
 
-class MockFirebaseCore extends Mock implements FirebaseCorePlatform {}
+class MockFirebaseCore extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseCorePlatform {}
