@@ -99,7 +99,19 @@ you can supply `Crashlytics.instance.recordError` to the `onError` parameter:
 runZoned<Future<void>>(() async {
     // ...
   }, onError: Crashlytics.instance.recordError);
-``` 
+```
+
+*Note:* Starting with Flutter `v1.17.0` and Dart `2.8.0` the `onError` property of `runZoned` is deprecated, use `runZonedGuarded` instead: 
+```dart
+runZonedGuarded<Future<void>>(() async {
+// ...
+}, (Object error, StackTrace stack) {
+  Crashlytics.instance.recordError(error, stack);
+});
+```
+
+
+
 
 ## Result
 
