@@ -81,16 +81,14 @@
     if (context != nil) {
       reason = [NSString stringWithFormat:@"thrown %@", context];
     }
-    NSDictionary *stack = @{
-            @"stackTrace" : frames
-    };
 
-    NSException *exception = [NSException
-                              exceptionWithName:call.arguments[@"exception"]
-                              reason:reason
-                              userInfo:stack];
+    FIRExceptionModel *exception = [FIRExceptionModel
+                                    exceptionModelWithName:call.arguments[@"exception"]
+                                    reason:reason];
+    
+    exception.stackTrace = frames;
 
-    [[FIRCrashlytics crashlytics] recordError:exception];
+    [[FIRCrashlytics crashlytics] recordExceptionModel:exception];
     result(@"Error reported to Crashlytics.");
   } else if ([@"Crashlytics#setUserIdentifier" isEqualToString:call.method]) {
     [[FIRCrashlytics crashlytics] setUserID:call.arguments[@"identifier"]];
