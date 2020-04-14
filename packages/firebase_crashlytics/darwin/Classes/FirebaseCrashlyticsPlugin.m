@@ -92,10 +92,6 @@
 
     [[FIRCrashlytics crashlytics] recordError:exception]
     result(@"Error reported to Crashlytics.");
-  } else if ([@"Crashlytics#isDebuggable" isEqualToString:call.method]) {
-    result([NSNumber numberWithBool:[FIRCrashlytics crashlytics].debugMode]);
-  } else if ([@"Crashlytics#getVersion" isEqualToString:call.method]) {
-    result([FIRCrashlytics crashlytics].version);
   } else if ([@"Crashlytics#setUserIdentifier" isEqualToString:call.method]) {
     [[FIRCrashlytics crashlytics] setUserID:call.arguments[@"identifier"]];
     result(nil);
