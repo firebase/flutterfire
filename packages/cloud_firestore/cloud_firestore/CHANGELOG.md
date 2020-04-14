@@ -1,4 +1,4 @@
-## 0.13.4+3
+## 0.13.5
 
 * Migrate cloud_firestore to android v2 embedding.
 
