@@ -1,3 +1,7 @@
+## 0.13.5+1
+
+* Convert tests to use e2e test.
+
 ## 0.13.5
 
 * Migrate cloud_firestore to android v2 embedding.
