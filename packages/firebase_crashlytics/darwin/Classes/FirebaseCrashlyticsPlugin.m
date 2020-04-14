@@ -48,16 +48,16 @@
     NSArray *keys = call.arguments[@"keys"];
     for (NSDictionary *key in keys) {
       if ([@"int" isEqualToString:key[@"type"]]) {
-        [[FIRCrashlytics crashlytics] setCustomValue:(int)call.arguments[@"value"]
+        [[FIRCrashlytics crashlytics] setCustomValue:call.arguments[@"value"]
                                               forKey:call.arguments[@"key"]];
       } else if ([@"double" isEqualToString:key[@"type"]]) {
-        [[FIRCrashlytics crashlytics] setCustomValue:[call.arguments[@"value"] floatValue]
+        [[FIRCrashlytics crashlytics] setCustomValue:call.arguments[@"value"]
                                               forKey:call.arguments[@"key"]];
       } else if ([@"string" isEqualToString:key[@"type"]]) {
         [[FIRCrashlytics crashlytics] setCustomValue:call.arguments[@"value"]
                                               forKey:call.arguments[@"key"]];
       } else if ([@"boolean" isEqualToString:key[@"type"]]) {
-        [[FIRCrashlytics crashlytics] setCustomValue:[call.arguments[@"value"] boolValue]
+        [[FIRCrashlytics crashlytics] setCustomValue:call.arguments[@"value"]
                                               forKey:call.arguments[@"key"]];
       }
     }
@@ -86,7 +86,7 @@
     };
 
     NSException *exception = [NSException
-                              exceptionWithName:call.arguments["@exception"]
+                              exceptionWithName:call.arguments[@"exception"]
                               reason:reason
                               userInfo:stack]
 
