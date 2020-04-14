@@ -88,9 +88,9 @@
     NSException *exception = [NSException
                               exceptionWithName:call.arguments[@"exception"]
                               reason:reason
-                              userInfo:stack]
+                              userInfo:stack];
 
-    [[FIRCrashlytics crashlytics] recordError:exception]
+    [[FIRCrashlytics crashlytics] recordError:exception];
     result(@"Error reported to Crashlytics.");
   } else if ([@"Crashlytics#setUserIdentifier" isEqualToString:call.method]) {
     [[FIRCrashlytics crashlytics] setUserID:call.arguments[@"identifier"]];
