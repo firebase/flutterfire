@@ -104,14 +104,11 @@
   }
 }
 
-- (CLSStackFrame *)generateFrame:(NSDictionary *)errorElement {
-  CLSStackFrame *frame = [CLSStackFrame stackFrame];
-
-  frame.library = [errorElement valueForKey:@"class"];
-  frame.symbol = [errorElement valueForKey:@"method"];
-  frame.fileName = [errorElement valueForKey:@"file"];
-  frame.lineNumber = [[errorElement valueForKey:@"line"] intValue];
-
+- (FIRStackFrame *)generateFrame:(NSDictionary *)errorElement {
+  FIRStackFrame *frame = [FIRStackFrame
+                          stackFrameWithSymbol:[errorElement valueForKey:@"method"]
+                                          file:[errorElement valueForKey:@"file"]
+                                          line:[[errorElement valueForKey:@"line"] intValue]];
   return frame;
 }
 
