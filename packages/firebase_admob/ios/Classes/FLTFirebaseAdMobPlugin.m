@@ -38,14 +38,24 @@
 - (void)showAdWithRefernceId:(NSNumber *)referenceId parameters:(NSArray<id> *)parameters {
   id<FLTAd> ad = [_ads adForReferenceId:referenceId];
   
+  NSLog(@"SHOW");
   if ([ad.class conformsToProtocol:@protocol(FLTPlatformViewAd)]) {
     id<FLTPlatformViewAd> platformViewAd = (id<FLTPlatformViewAd>) ad;
     [platformViewAd show:parameters[0] horizontalCenterOffset:parameters[1] anchorType:parameters[2]];
+  } else if ([ad.class conformsToProtocol:@protocol(FLTFullscreenAd)]) {
+    id<FLTFullscreenAd> fullscreenAd = (id<FLTFullscreenAd>) ad;
+    [fullscreenAd show];
+  } else {
+    NSLog(@"Failed to show ad.");
   }
 }
 
 - (void)disposeAdWithReferenceId:(NSNumber *)referenceId {
-  [[_ads adForReferenceId:referenceId] dispose];
+  id<FLTAd> ad = [_ads adForReferenceId:referenceId];
+  if ([ad.class conformsToProtocol:@protocol(FLTPlatformViewAd)]) {
+    id<FLTPlatformViewAd> platformViewAd = (id<FLTPlatformViewAd>) ad;
+    [platformViewAd dispose];
+  }
   [_ads removeAdWithReferenceId:referenceId];
 }
 
@@ -55,8 +65,12 @@
                                          request:parameters[1]
                                           adSize:parameters[2]
                                  callbackHandler:self];
+  } else if ([className isEqual:@"InterstitialAd"]) {
+    return [[FLTInterstitialAd alloc] initWithAdUnitId:parameters[0] request:parameters[1] callbackHandler:self];
+  } else {
+    NSLog(@"Failed to create ad.");
+    return nil;
   }
-  return nil;
 }
 
 - (void)onAdLoaded:(id<FLTAd>)ad {

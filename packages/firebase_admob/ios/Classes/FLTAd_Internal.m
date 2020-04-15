@@ -126,7 +126,7 @@ rootViewController:(UIViewController *)rootViewController
   [_bannerView loadRequest:_request];
 }
 
-- (nonnull UIView *)view {
+- (UIView *)view {
   return _bannerView;
 }
 
@@ -142,3 +142,66 @@ rootViewController:(UIViewController *)rootViewController
   [_callbackHandler onAdLoaded:self];
 }
 @end
+
+@implementation FLTInterstitialAd {
+  GADInterstitial *_interstitial;
+  GADRequest *_request;
+  __weak id<FLTAdListenerCallbackHandler> _callbackHandler;
+}
+
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                                  request:(FLTAdRequest *_Nonnull)request
+                          callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler {
+  self = [super init];
+  if (self) {
+    _interstitial = [[GADInterstitial alloc] initWithAdUnitID:adUnitId];
+    _interstitial.delegate = self;
+    _callbackHandler = callbackHandler;
+  }
+  return self;
+}
+
+- (void)load {
+  [_interstitial loadRequest:_request];
+}
+
+- (void)show {
+  [_interstitial presentFromRootViewController:[ViewHelper rootViewController]];
+}
+
+/// Tells the delegate an ad request succeeded.
+- (void)interstitialDidReceiveAd:(GADInterstitial *)ad {
+  NSLog(@"interstitialDidReceiveAd");
+  [_callbackHandler onAdLoaded:self];
+}
+
+/// Tells the delegate an ad request failed.
+- (void)interstitial:(GADInterstitial *)ad
+    didFailToReceiveAdWithError:(GADRequestError *)error {
+  NSLog(@"interstitial:didFailToReceiveAdWithError: %@", [error localizedDescription]);
+}
+
+/// Tells the delegate that an interstitial will be presented.
+- (void)interstitialWillPresentScreen:(GADInterstitial *)ad {
+  NSLog(@"interstitialWillPresentScreen");
+}
+
+/// Tells the delegate the interstitial is to be animated off the screen.
+- (void)interstitialWillDismissScreen:(GADInterstitial *)ad {
+  NSLog(@"interstitialWillDismissScreen");
+}
+
+/// Tells the delegate the interstitial had been animated off the screen.
+- (void)interstitialDidDismissScreen:(GADInterstitial *)ad {
+  NSLog(@"interstitialDidDismissScreen");
+}
+
+/// Tells the delegate that a user click will open another app
+/// (such as the App Store), backgrounding the current app.
+- (void)interstitialWillLeaveApplication:(GADInterstitial *)ad {
+  NSLog(@"interstitialWillLeaveApplication");
+}
+
+@end
+
+

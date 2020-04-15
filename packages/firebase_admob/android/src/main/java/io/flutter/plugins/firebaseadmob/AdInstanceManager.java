@@ -37,6 +37,8 @@ class AdInstanceManager implements Ad.AdListenerCallbackHandler {
     if (ad instanceof Ad.PlatformViewAd) {
       ((Ad.PlatformViewAd) ad).show((Double) parameters.get(0), (Double) parameters.get(1), (AnchorType) parameters.get(2));
       return;
+    } else if (ad instanceof Ad.InterstitialAd) {
+      ((Ad.InterstitialAd) ad).show();
     }
 
     throw new IllegalStateException();
@@ -52,7 +54,7 @@ class AdInstanceManager implements Ad.AdListenerCallbackHandler {
   void disposeAdWithReferenceId(final int referenceId) {
     final Ad ad = referenceIdToAdMap.get(referenceId);
     if (ad == null) return;
-    ad.dispose();
+    if (ad instanceof Ad.PlatformViewAd) ((Ad.PlatformViewAd) ad).dispose();
     referenceIdToAdMap.remove(referenceId);
   }
 
@@ -65,6 +67,13 @@ class AdInstanceManager implements Ad.AdListenerCallbackHandler {
             (AdSize) parameters.get(2),
             (Activity) context,
             this);
+      case "InterstitialAd":
+        return new Ad.InterstitialAd(
+            (String) parameters.get(0),
+            (AdRequest) parameters.get(1),
+            (Activity) context,
+            this
+        );
     }
     throw new IllegalArgumentException();
   }

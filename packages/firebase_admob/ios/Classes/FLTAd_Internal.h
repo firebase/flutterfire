@@ -7,7 +7,6 @@
 @protocol FLTAd <NSObject>
 @required
 - (void)load;
-- (void)dispose;
 @end
 
 @interface FLTAnchorType : NSObject
@@ -20,6 +19,12 @@
 @required
 - (void)show:(NSNumber *_Nonnull)anchorOffset horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
 anchorType:(FLTAnchorType *_Nonnull)anchorType;
+- (void)dispose;
+@end
+
+@protocol FLTFullscreenAd <FLTAd>
+@required
+- (void)show;
 @end
 
 @protocol FLTAdListenerCallbackHandler <NSObject>
@@ -39,5 +44,11 @@ anchorType:(FLTAnchorType *_Nonnull)anchorType;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
                           adSize:(FLTAdSize *_Nonnull)adSize
+                 callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler;
+@end
+
+@interface FLTInterstitialAd : NSObject<FLTFullscreenAd, GADInterstitialDelegate>
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                         request:(FLTAdRequest *_Nonnull)request
                  callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler;
 @end

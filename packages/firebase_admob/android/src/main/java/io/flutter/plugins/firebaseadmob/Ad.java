@@ -8,10 +8,12 @@ import android.widget.LinearLayout;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdView;
 
-import io.flutter.Log;
 import io.flutter.plugin.platform.PlatformView;
 
 abstract class Ad {
+  final com.google.android.gms.ads.AdRequest request;
+  final Activity activity;
+
   interface AdListenerCallbackHandler {
     void onAdLoaded(Ad ad);
   }
@@ -19,7 +21,8 @@ abstract class Ad {
   static abstract class PlatformViewAd extends Ad implements PlatformView {
     private final int viewId;
 
-    PlatformViewAd() {
+    PlatformViewAd(final AdRequest request, final Activity activity) {
+      super(request, activity);
       this.viewId = hashCode();
     }
 
@@ -61,6 +64,14 @@ abstract class Ad {
       }
   }
 
+  static abstract class FullScreenAd extends Ad {
+    FullScreenAd(final AdRequest request, final Activity activity) {
+      super(request, activity);
+    }
+
+    abstract void show();
+  }
+
   static class BannerAd extends PlatformViewAd {
     private final AdView bannerView;
     private final com.google.android.gms.ads.AdRequest request;
@@ -72,6 +83,7 @@ abstract class Ad {
         final AdSize adSize,
         final Activity activity,
         final AdListenerCallbackHandler callbackHandler) {
+      super(request, activity);
       bannerView = new AdView(activity);
       bannerView.setAdUnitId(adUnitId);
       bannerView.setAdSize(adSize.adSize);
@@ -96,6 +108,31 @@ abstract class Ad {
     }
   }
 
+  static class InterstitialAd extends FullScreenAd {
+    private final com.google.android.gms.ads.InterstitialAd interstitialAd;
+
+    InterstitialAd(
+        final String adUnitId,
+        final AdRequest request,
+        final Activity activity,
+        final AdListenerCallbackHandler callbackHandler) {
+      super(request, activity);
+      interstitialAd = new com.google.android.gms.ads.InterstitialAd(activity);
+      interstitialAd.setAdUnitId(adUnitId);
+      interstitialAd.setAdListener(createAdListener(callbackHandler, this));
+    }
+
+    @Override
+    void load() {
+      interstitialAd.loadAd(request);
+    }
+
+    @Override
+    void show() {
+      interstitialAd.show();
+    }
+  }
+
   private static AdListener createAdListener(
       final AdListenerCallbackHandler callbackHandler, final Ad ad) {
     return new AdListener() {
@@ -106,6 +143,10 @@ abstract class Ad {
     };
   }
 
+  Ad(final AdRequest request, final Activity activity) {
+    this.request = request.request;
+    this.activity = activity;
+  }
+
   abstract void load();
-  abstract void dispose();
 }

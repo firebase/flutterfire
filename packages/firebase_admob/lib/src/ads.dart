@@ -46,12 +46,18 @@ mixin PlatformViewAd {
     double horizontalCenterOffset = 0.0,
     AnchorType anchorType = AnchorType.bottom,
   }) {
-    return AdInstanceManager.instance.show(
-      (this as Ad),
+    return AdInstanceManager.instance.showPlatformViewAd(
+      this,
       anchorOffset: anchorOffset,
       horizontalCenterOffset: horizontalCenterOffset,
       anchorType: anchorType,
     );
+  }
+}
+
+mixin FullscreenAd {
+  Future<void> show() {
+    return AdInstanceManager.instance.showFullscreenAd(this);
   }
 }
 
@@ -78,4 +84,16 @@ class BannerAd extends Ad with PlatformViewAd {
       : 'ca-app-pub-3940256099942544/2934735716';
 
   final AdSize size;
+}
+
+class InterstitialAd extends Ad with FullscreenAd {
+  const InterstitialAd({
+    @required String adUnitId,
+    AdRequest request,
+    AdListener listener,
+  }) : super(adUnitId: adUnitId, request: request, listener: listener);
+
+  static final String testAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/1033173712'
+      : 'ca-app-pub-3940256099942544/4411468910';
 }

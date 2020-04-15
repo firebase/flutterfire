@@ -29,6 +29,8 @@ class AdInstanceManager {
   List<dynamic> getAdParameters(Ad ad) {
     if (ad is BannerAd) {
       return <dynamic>[ad.adUnitId, ad.request, ad.size];
+    } else if (ad is InterstitialAd) {
+      return <dynamic>[ad.adUnitId, ad.request];
     }
     throw ArgumentError();
   }
@@ -48,19 +50,27 @@ class AdInstanceManager {
     );
   }
 
-  Future<void> show(
-    Ad ad, {
+  Future<void> showPlatformViewAd(
+    PlatformViewAd ad, {
     double anchorOffset,
     double horizontalCenterOffset,
     AnchorType anchorType,
   }) {
-    assert(referenceIdFor(ad) != null);
+    assert(referenceIdFor(ad as Ad) != null);
     return channel.invokeMethod<void>(
       'SHOW',
       <dynamic>[
-        referenceIdFor(ad),
+        referenceIdFor(ad as Ad),
         <dynamic>[anchorOffset, horizontalCenterOffset, anchorType],
       ],
+    );
+  }
+
+  Future<void> showFullscreenAd(FullscreenAd ad) {
+    assert(referenceIdFor(ad as Ad) != null);
+    return channel.invokeMethod<void>(
+      'SHOW',
+      <dynamic>[referenceIdFor(ad as Ad), <dynamic>[]],
     );
   }
 

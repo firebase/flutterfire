@@ -19,21 +19,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with AdListener {
-//  static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-//    testDevices: testDevice != null ? <String>[testDevice] : null,
-//    keywords: <String>['foo', 'bar'],
-//    contentUrl: 'http://foo.com/bar.html',
-//    childDirected: true,
-//    nonPersonalizedAds: true,
-//  );
-
   BannerAd _bannerAd;
   BannerAd _offsetBannerAd;
+  InterstitialAd _interstitialAd;
 //  NativeAd _nativeAd;
-//  InterstitialAd _interstitialAd;
   int _coins = 0;
 
-  BannerAd createBannerAd() {
+  BannerAd _createBannerAd() {
     return BannerAd(
       adUnitId: BannerAd.testAdUnitId,
       size: AdSize.banner,
@@ -41,15 +33,12 @@ class _MyAppState extends State<MyApp> with AdListener {
     );
   }
 
-//  InterstitialAd createInterstitialAd() {
-//    return InterstitialAd(
-//      adUnitId: InterstitialAd.testAdUnitId,
-//      targetingInfo: targetingInfo,
-//      listener: (MobileAdEvent event) {
-//        print("InterstitialAd event $event");
-//      },
-//    );
-//  }
+  InterstitialAd _createInterstitialAd() {
+    return InterstitialAd(
+      adUnitId: InterstitialAd.testAdUnitId,
+      listener: this,
+    );
+  }
 //
 //  NativeAd createNativeAd() {
 //    return NativeAd(
@@ -71,8 +60,8 @@ class _MyAppState extends State<MyApp> with AdListener {
   @override
   void dispose() {
     _bannerAd?.dispose();
+    _interstitialAd?.dispose();
 //    _nativeAd?.dispose();
-//    _interstitialAd?.dispose();
     super.dispose();
   }
 
@@ -92,7 +81,7 @@ class _MyAppState extends State<MyApp> with AdListener {
                 RaisedButton(
                     child: const Text('SHOW BANNER'),
                     onPressed: () {
-                      _bannerAd ??= createBannerAd()..load();
+                      _bannerAd ??= _createBannerAd()..load();
                       //..show();
                     }),
                 RaisedButton(
@@ -104,7 +93,7 @@ class _MyAppState extends State<MyApp> with AdListener {
                 RaisedButton(
                     child: const Text('SHOW BANNER WITH OFFSET'),
                     onPressed: () {
-                      _offsetBannerAd ??= createBannerAd()..load();
+                      _offsetBannerAd ??= _createBannerAd()..load();
                       //..show(horizontalCenterOffset: -50, anchorOffset: 100);
                     }),
                 RaisedButton(
@@ -113,19 +102,13 @@ class _MyAppState extends State<MyApp> with AdListener {
                       _offsetBannerAd?.dispose();
                       _offsetBannerAd = null;
                     }),
-//                RaisedButton(
-//                  child: const Text('LOAD INTERSTITIAL'),
-//                  onPressed: () {
-//                    _interstitialAd?.dispose();
-//                    _interstitialAd = createInterstitialAd()..load();
-//                  },
-//                ),
-//                RaisedButton(
-//                  child: const Text('SHOW INTERSTITIAL'),
-//                  onPressed: () {
-//                    _interstitialAd?.show();
-//                  },
-//                ),
+                RaisedButton(
+                  child: const Text('SHOW INTERSTITIAL'),
+                  onPressed: () {
+                    _interstitialAd?.dispose();
+                    _interstitialAd = _createInterstitialAd()..load();
+                  },
+                ),
 //                RaisedButton(
 //                  child: const Text('SHOW NATIVE'),
 //                  onPressed: () {
@@ -176,16 +159,18 @@ class _MyAppState extends State<MyApp> with AdListener {
 
   @override
   void onAdLoaded(Ad ad) {
+    print('Ad loaded');
     if (ad == _bannerAd) {
-      (ad as PlatformViewAd).show();
+      _bannerAd.show();
     } else if (ad == _offsetBannerAd) {
-      (ad as PlatformViewAd).show(
+      _offsetBannerAd?.show(
         anchorOffset: 20,
         horizontalCenterOffset: 20,
         anchorType: AnchorType.top,
       );
+    } else if (ad == _interstitialAd) {
+      _interstitialAd.show();
     }
-    print('Ad loaded');
   }
 }
 
