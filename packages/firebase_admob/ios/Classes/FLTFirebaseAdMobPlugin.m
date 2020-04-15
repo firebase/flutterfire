@@ -4,41 +4,10 @@
 
 #import "FLTFirebaseAdMobPlugin.h"
 
-@interface FLTAdReferenceManager : NSObject<FLTAdListenerCallbackHandler>
+@interface FLTAdInstanceManager : NSObject<FLTAdListenerCallbackHandler>
 @end
 
-@interface FLTFirebaseAdMobReaderWriter : FlutterStandardReaderWriter
-@end
-
-@interface FLTFirebaseAdMobReader : FlutterStandardReader
-@end
-
-typedef NS_ENUM(NSInteger, FirebaseAdMobField) {
-  FirebaseAdMobFieldAdRequest = 128,
-  FirebaseAdMobFieldAdSize = 129,
-};
-
-@implementation FLTFirebaseAdMobReaderWriter
-- (FlutterStandardReader *)readerWithData:(NSData *)data {
-  return [[FLTFirebaseAdMobReader alloc] initWithData:data];
-}
-@end
-
-@implementation FLTFirebaseAdMobReader
-- (id)readValueOfType:(UInt8)type {
-  FirebaseAdMobField field = (FirebaseAdMobField)type;
-  switch(field) {
-    case FirebaseAdMobFieldAdRequest:
-      return [[FLTAdRequest alloc] init];
-    case FirebaseAdMobFieldAdSize:
-      return [[FLTAdSize alloc] initWithWidth:[self readValueOfType:[self readByte]]
-                                       height:[self readValueOfType:[self readByte]]];
-  }
-  return [super readValueOfType:type];
-}
-@end
-
-@implementation FLTAdReferenceManager {
+@implementation FLTAdInstanceManager {
   NSLock *dictionaryLock;
   NSMutableDictionary<NSNumber *, id<FLTAd>> *referenceIdToAd;
   FlutterMethodChannel *callbackChannel;
@@ -116,7 +85,7 @@ typedef NS_ENUM(NSInteger, FirebaseAdMobField) {
 @end
 
 @implementation FLTFirebaseAdMobPlugin {
-  FLTAdReferenceManager *referenceManager;
+  FLTAdInstanceManager *instanceManager;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -126,9 +95,9 @@ typedef NS_ENUM(NSInteger, FirebaseAdMobField) {
                                   binaryMessenger:[registrar messenger]
                                             codec:[FlutterStandardMethodCodec codecWithReaderWriter:readerWriter]];
   
-  FLTAdReferenceManager *referenceManager = [[FLTAdReferenceManager alloc] initWithChannel:channel];
+  FLTAdInstanceManager *referenceManager = [[FLTAdInstanceManager alloc] initWithChannel:channel];
   
-  FLTFirebaseAdMobPlugin *plugin = [[FLTFirebaseAdMobPlugin alloc] initWithReferenceManager:referenceManager];
+  FLTFirebaseAdMobPlugin *plugin = [[FLTFirebaseAdMobPlugin alloc] initWithInstanceManager:referenceManager];
   [registrar addMethodCallDelegate:plugin channel:channel];
   [registrar publish:plugin];
 
@@ -136,13 +105,13 @@ typedef NS_ENUM(NSInteger, FirebaseAdMobField) {
 //  [registrar registerViewFactory:viewFactory withId:@"plugins.flutter.io/firebase_admob/ad_widget"];
 }
 
-- (instancetype)initWithReferenceManager:(FLTAdReferenceManager *)manager {
+- (instancetype)initWithInstanceManager:(FLTAdInstanceManager *)instanceManager {
   self = [super init];
   if (self && ![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
     NSLog(@"Configuring the default Firebase app...");
     [FIRApp configure];
     NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    referenceManager = manager;
+    self->instanceManager = instanceManager;
   }
   
   return self;
@@ -153,17 +122,17 @@ typedef NS_ENUM(NSInteger, FirebaseAdMobField) {
     [[GADMobileAds sharedInstance] startWithCompletionHandler:nil];
     result(nil);
   } else if ([call.method isEqual:@"LOAD"]) {
-    [referenceManager loadAdWithRefernceId:call.arguments[0]
+    [instanceManager loadAdWithRefernceId:call.arguments[0]
                                  className:call.arguments[1]
                                 parameters:call.arguments[2]];
     result(nil);
   } else if ([call.method isEqual:@"METHOD"]) {
-    [referenceManager receiveMethodCall:call.arguments[0]
+    [instanceManager receiveMethodCall:call.arguments[0]
                              methodName:call.arguments[1]
                               arguments:call.arguments[2]];
     result(nil);
   } else if ([call.method isEqual:@"DISPOSE"]) {
-    [referenceManager disposeAdWithReferenceId:call.arguments];
+    [instanceManager disposeAdWithReferenceId:call.arguments];
     result(nil);
   } else {
     result(FlutterMethodNotImplemented);

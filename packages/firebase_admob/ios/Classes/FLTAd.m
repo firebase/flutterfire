@@ -1,5 +1,4 @@
 #import "FLTAd.h"
-#import "GoogleMobileAds/GoogleMobileAds.h"
 
 @implementation FLTAdSize
 - (instancetype)initWithWidth:(NSNumber *)width height:(NSNumber *)height {
