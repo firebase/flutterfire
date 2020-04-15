@@ -3,11 +3,13 @@
 // found in the LICENSE file.
 
 #import <Flutter/Flutter.h>
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "FLTAd.h"
+#import "FLTAd_Internal.h"
 #import "FLTFirebaseAdMobReaderWriter_Internal.h"
 #import "Firebase/Firebase.h"
 #import "GoogleMobileAds/GoogleMobileAds.h"
+#import "FLTAdCollection_Internal.h"
 
 #define FLTLogWarning(format, ...) NSLog((@"FirebaseAdMobPlugin <warning> " format), ##__VA_ARGS__)
 
@@ -20,46 +22,46 @@
  */
 @protocol FLTNativeAdFactory
 @required
-///**
-// * Creates a `GADUnifiedNativeAdView` with a `GADUnifiedNativeAd`.
-// *
-// * @param nativeAd Ad information used to create a `GADUnifiedNativeAdView`
-// * @param customOptions Used to pass additional custom options to create the
-// * `GADUnifiedNativeAdView`. Nullable.
-// * @return a `GADUnifiedNativeAdView` that is overlaid on top of the FlutterView.
-// */
-//- (GADUnifiedNativeAdView *)createNativeAd:(GADUnifiedNativeAd *)nativeAd
-//                             customOptions:(NSDictionary *)customOptions;
+/**
+ * Creates a `GADUnifiedNativeAdView` with a `GADUnifiedNativeAd`.
+ *
+ * @param nativeAd Ad information used to create a `GADUnifiedNativeAdView`
+ * @param customOptions Used to pass additional custom options to create the
+ * `GADUnifiedNativeAdView`. Nullable.
+ * @return a `GADUnifiedNativeAdView` that is overlaid on top of the FlutterView.
+ */
+- (GADUnifiedNativeAdView *_Nonnull)createNativeAd:(GADUnifiedNativeAd *_Nonnull)nativeAd
+                             customOptions:(NSDictionary *_Nullable)customOptions;
 @end
-//
-///**
-// * Flutter plugin providing access to the Firebase Admob API.
-// */
+
+/**
+ * Flutter plugin providing access to the Firebase Admob API.
+ */
 @interface FLTFirebaseAdMobPlugin : NSObject <FlutterPlugin>
-///**
-// * Adds a `FLTNativeAdFactory` used to create a `GADUnifiedNativeAdView`s from a Native Ad created
-// * in Dart.
-// *
-// * @param registry maintains access to a `FLTFirebaseAdMobPlugin`` instance.
-// * @param factoryId a unique identifier for the ad factory. The Native Ad created in Dart includes
-// *     a parameter that refers to this.
-// * @param nativeAdFactory creates `GADUnifiedNativeAdView`s when a Native Ad is created in Dart.
-// * @return whether the factoryId is unique and the nativeAdFactory was successfully added.
-// */
-//+ (BOOL)registerNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
-//                      factoryId:(NSString *)factoryId
-//                nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory;
-//
-///**
-// * Unregisters a `FLTNativeAdFactory` used to create `GADUnifiedNativeAdView`s from a Native Ad
-// * created in Dart.
-// *
-// * @param registry maintains access to a `FLTFirebaseAdMobPlugin `instance.
-// * @param factoryId a unique identifier for the ad factory. The Native Ad created in Dart includes
-// *     a parameter that refers to this.
-// * @return the previous `FLTNativeAdFactory` associated with this factoryId, or null if there was
-// * none for this factoryId.
-// */
-//+ (id<FLTNativeAdFactory>)unregisterNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
-//                                          factoryId:(NSString *)factoryId;
+/**
+ * Adds a `FLTNativeAdFactory` used to create a `GADUnifiedNativeAdView`s from a Native Ad created
+ * in Dart.
+ *
+ * @param registry maintains access to a `FLTFirebaseAdMobPlugin`` instance.
+ * @param factoryId a unique identifier for the ad factory. The Native Ad created in Dart includes
+ *     a parameter that refers to this.
+ * @param nativeAdFactory creates `GADUnifiedNativeAdView`s when a Native Ad is created in Dart.
+ * @return whether the factoryId is unique and the nativeAdFactory was successfully added.
+ */
++ (BOOL)registerNativeAdFactory:(NSObject<FlutterPluginRegistry> *_Nonnull)registry
+                      factoryId:(NSString *_Nonnull)factoryId
+                nativeAdFactory:(NSObject<FLTNativeAdFactory> *_Nonnull)nativeAdFactory;
+
+/**
+ * Unregisters a `FLTNativeAdFactory` used to create `GADUnifiedNativeAdView`s from a Native Ad
+ * created in Dart.
+ *
+ * @param registry maintains access to a `FLTFirebaseAdMobPlugin `instance.
+ * @param factoryId a unique identifier for the ad factory. The Native Ad created in Dart includes
+ *     a parameter that refers to this.
+ * @return the previous `FLTNativeAdFactory` associated with this factoryId, or null if there was
+ * none for this factoryId.
+ */
++ (id<FLTNativeAdFactory>)unregisterNativeAdFactory:(NSObject<FlutterPluginRegistry> *_Nonnull)registry
+                                          factoryId:(NSString *_Nonnull)factoryId;
 @end

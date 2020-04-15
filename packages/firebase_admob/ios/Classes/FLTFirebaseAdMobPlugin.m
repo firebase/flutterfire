@@ -8,19 +8,15 @@
 @end
 
 @implementation FLTAdInstanceManager {
-  NSLock *dictionaryLock;
-  NSMutableDictionary<NSNumber *, id<FLTAd>> *referenceIdToAd;
-  FlutterMethodChannel *callbackChannel;
-  __weak UIViewController *rootViewController;
+  FLTAdCollection *_ads;
+  FlutterMethodChannel *_callbackChannel;
 }
 
 - (instancetype)initWithChannel:(FlutterMethodChannel *)channel {
   self = [super init];
   if (self) {
-    dictionaryLock = [[NSLock alloc] init];
-    referenceIdToAd = [NSMutableDictionary dictionary];
-    callbackChannel = channel;
-    rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+    _ads = [[FLTAdCollection alloc] init];
+    _callbackChannel = channel;
   }
   return self;
 }
@@ -29,20 +25,18 @@
                    className:(NSString *)className
                   parameters:(NSArray<id> *)parameters {
   id<FLTAd> ad = [self createAd:className parameters:parameters];
-  [dictionaryLock lock];
-  [referenceIdToAd setObject:ad forKey:referenceId];
-  [dictionaryLock unlock];
+  [_ads addAd:ad forReferenceId:referenceId];
   [ad load];
 }
 
 - (void)sendMethodCall:(id<FLTAd>)ad
             methodName:(NSString *)methodName
              arguments:(NSArray<id> *)arguments {
-  [callbackChannel invokeMethod:methodName arguments:@[ [self referenceIdForAd:ad], arguments ]];
+  [_callbackChannel invokeMethod:methodName arguments:@[ [_ads referenceIdForAd:ad], arguments ]];
 }
 
 - (void)showAdWithRefernceId:(NSNumber *)referenceId parameters:(NSArray<id> *)parameters {
-  id<FLTAd> ad = [self adForReferenceId:referenceId];
+  id<FLTAd> ad = [_ads adForReferenceId:referenceId];
   
   if ([ad.class conformsToProtocol:@protocol(FLTPlatformViewAd)]) {
     id<FLTPlatformViewAd> platformViewAd = (id<FLTPlatformViewAd>) ad;
@@ -51,26 +45,8 @@
 }
 
 - (void)disposeAdWithReferenceId:(NSNumber *)referenceId {
-  id<FLTAd> ad = [self adForReferenceId:referenceId];
-  [ad dispose];
-
-  [dictionaryLock lock];
-  [referenceIdToAd removeObjectForKey:referenceId];
-  [dictionaryLock unlock];
-}
-
-- (id<FLTAd>)adForReferenceId:(NSNumber *)referenceId {
-  [dictionaryLock lock];
-  id<FLTAd> ad = [referenceIdToAd objectForKey:referenceId];
-  [dictionaryLock unlock];
-  return ad;
-}
-
-- (NSNumber *)referenceIdForAd:(id<FLTAd>)ad {
-  [dictionaryLock lock];
-  NSNumber *referenceId = [referenceIdToAd allKeysForObject:ad][0];
-  [dictionaryLock unlock];
-  return referenceId;
+  [[_ads adForReferenceId:referenceId] dispose];
+  [_ads removeAdWithReferenceId:referenceId];
 }
 
 - (id<FLTAd>)createAd:(NSString *)className parameters:(NSArray<id> *)parameters {
@@ -78,7 +54,6 @@
     return [[FLTBannerAd alloc] initWithAdUnitId:parameters[0]
                                          request:parameters[1]
                                           adSize:parameters[2]
-                              rootViewController:rootViewController
                                  callbackHandler:self];
   }
   return nil;

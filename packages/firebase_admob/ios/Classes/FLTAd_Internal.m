@@ -1,10 +1,6 @@
-#import "FLTAd.h"
+#import "FLTAd_Internal.h"
 
 @interface ViewHelper : NSObject
-+ (void)show:(NSNumber *)anchorOffset horizontalCenterOffset:(NSNumber *)horizontalCenterOffset
-  anchorType:(FLTAnchorType *)anchorType
-rootViewController:(UIViewController *)rootViewController
-        view:(UIView *)view;
 @end
 
 @implementation FLTAdSize
@@ -94,54 +90,55 @@ rootViewController:(UIViewController *)rootViewController
                                        constant:horizontalCenterOffset.doubleValue],
   ]];
 }
+
++ (UIViewController *_Nonnull)rootViewController {
+  return [UIApplication sharedApplication].delegate.window.rootViewController;
+}
 @end
 
 @implementation FLTBannerAd {
-  GADBannerView *bannerView;
-  GADRequest *request;
-  __weak UIViewController *rootViewController;
-  __weak id<FLTAdListenerCallbackHandler> callbackHandler;
+  GADBannerView *_bannerView;
+  GADRequest *_request;
+  __weak id<FLTAdListenerCallbackHandler> _callbackHandler;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *)adUnitId
                          request:(FLTAdRequest *)request
                           adSize:(FLTAdSize *)adSize
-              rootViewController:(UIViewController *)rootViewController
                  callbackHandler:(id<FLTAdListenerCallbackHandler>)callbackHandler {
   self = [super init];
   if (self) {
-    self->request = request.request;
-    self->callbackHandler = callbackHandler;
-    self->rootViewController = rootViewController;
-    bannerView = [[GADBannerView alloc] initWithAdSize:adSize.adSize];
-    bannerView.adUnitID = adUnitId;
-    bannerView.rootViewController = rootViewController;
-    bannerView.delegate = self;
+    _request = request.request;
+    _callbackHandler = callbackHandler;
+    _bannerView = [[GADBannerView alloc] initWithAdSize:adSize.adSize];
+    _bannerView.adUnitID = adUnitId;
+    _bannerView.rootViewController = [ViewHelper rootViewController];
+    _bannerView.delegate = self;
   }
   return self;
 }
 
 - (void)dispose {
-  if (bannerView.superview) [bannerView removeFromSuperview];
+  if (_bannerView.superview) [_bannerView removeFromSuperview];
 }
 
 - (void)load {
-  [bannerView loadRequest:request];
+  [_bannerView loadRequest:_request];
 }
 
 - (nonnull UIView *)view {
-  return bannerView;
+  return _bannerView;
 }
 
 - (void)show:(NSNumber *)anchorOffset horizontalCenterOffset:(NSNumber *)horizontalCenterOffset anchorType:(FLTAnchorType *)anchorType {
   [self dispose];
   
   [ViewHelper show:anchorOffset horizontalCenterOffset:horizontalCenterOffset
-        anchorType:anchorType rootViewController:rootViewController
-              view:[self view]];
+        anchorType:anchorType rootViewController:[ViewHelper rootViewController]
+              view:_bannerView];
 }
 
 - (void)adViewDidReceiveAd:(GADBannerView *)adView {
-  [callbackHandler onAdLoaded:self];
+  [_callbackHandler onAdLoaded:self];
 }
 @end
