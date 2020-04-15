@@ -15,15 +15,16 @@
 @end
 
 @interface FLTAdSize : NSObject
-@property (readonly) GADAdSize adSize;
+@property(readonly) GADAdSize adSize;
 - (instancetype)initWithWidth:(NSNumber *)width height:(NSNumber *)height;
 @end
 
-@interface FLTAdRequest : NSObject;
-@property (readonly) GADRequest *request;
+@interface FLTAdRequest : NSObject
+;
+@property(readonly) GADRequest *request;
 @end
 
-@interface FLTBannerAd : NSObject<FLTAd, GADBannerViewDelegate, FlutterPlatformView>
+@interface FLTBannerAd : NSObject <FLTAd, GADBannerViewDelegate, FlutterPlatformView>
 - (instancetype)initWithAdUnitId:(NSString *)adUnitId
                          request:(FLTAdRequest *)request
                           adSize:(FLTAdSize *)adSize

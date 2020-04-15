@@ -4,7 +4,7 @@
 
 #import "FLTFirebaseAdMobPlugin.h"
 
-@interface FLTAdInstanceManager : NSObject<FLTAdListenerCallbackHandler>
+@interface FLTAdInstanceManager : NSObject <FLTAdListenerCallbackHandler>
 @end
 
 @implementation FLTAdInstanceManager {
@@ -35,8 +35,10 @@
   [ad load];
 }
 
-- (void)sendMethodCall:(id<FLTAd>)ad methodName:(NSString *)methodName arguments:(NSArray<id> *)arguments {
-  [callbackChannel invokeMethod:methodName arguments:@[[self referenceIdForAd:ad], arguments]];
+- (void)sendMethodCall:(id<FLTAd>)ad
+            methodName:(NSString *)methodName
+             arguments:(NSArray<id> *)arguments {
+  [callbackChannel invokeMethod:methodName arguments:@[ [self referenceIdForAd:ad], arguments ]];
 }
 
 - (void)receiveMethodCall:(NSNumber *)referenceId
@@ -48,7 +50,7 @@
 - (void)disposeAdWithReferenceId:(NSNumber *)referenceId {
   id<FLTAd> ad = [self adForReferenceId:referenceId];
   [ad dispose];
-  
+
   [dictionaryLock lock];
   [referenceIdToAd removeObjectForKey:referenceId];
   [dictionaryLock unlock];
@@ -90,19 +92,21 @@
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FLTFirebaseAdMobReaderWriter *readerWriter = [[FLTFirebaseAdMobReaderWriter alloc] init];
-  FlutterMethodChannel*channel =
-      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_admob"
-                                  binaryMessenger:[registrar messenger]
-                                            codec:[FlutterStandardMethodCodec codecWithReaderWriter:readerWriter]];
-  
+  FlutterMethodChannel *channel = [FlutterMethodChannel
+      methodChannelWithName:@"plugins.flutter.io/firebase_admob"
+            binaryMessenger:[registrar messenger]
+                      codec:[FlutterStandardMethodCodec codecWithReaderWriter:readerWriter]];
+
   FLTAdInstanceManager *referenceManager = [[FLTAdInstanceManager alloc] initWithChannel:channel];
-  
-  FLTFirebaseAdMobPlugin *plugin = [[FLTFirebaseAdMobPlugin alloc] initWithInstanceManager:referenceManager];
+
+  FLTFirebaseAdMobPlugin *plugin =
+      [[FLTFirebaseAdMobPlugin alloc] initWithInstanceManager:referenceManager];
   [registrar addMethodCallDelegate:plugin channel:channel];
   [registrar publish:plugin];
 
-//  FLTFirebaseAdMobViewFactory *viewFactory = [[FLTFirebaseAdMobViewFactory alloc] init];
-//  [registrar registerViewFactory:viewFactory withId:@"plugins.flutter.io/firebase_admob/ad_widget"];
+  //  FLTFirebaseAdMobViewFactory *viewFactory = [[FLTFirebaseAdMobViewFactory alloc] init];
+  //  [registrar registerViewFactory:viewFactory
+  //  withId:@"plugins.flutter.io/firebase_admob/ad_widget"];
 }
 
 - (instancetype)initWithInstanceManager:(FLTAdInstanceManager *)instanceManager {
@@ -113,7 +117,7 @@
     NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
     self->instanceManager = instanceManager;
   }
-  
+
   return self;
 }
 
@@ -123,13 +127,13 @@
     result(nil);
   } else if ([call.method isEqual:@"LOAD"]) {
     [instanceManager loadAdWithRefernceId:call.arguments[0]
-                                 className:call.arguments[1]
-                                parameters:call.arguments[2]];
+                                className:call.arguments[1]
+                               parameters:call.arguments[2]];
     result(nil);
   } else if ([call.method isEqual:@"METHOD"]) {
     [instanceManager receiveMethodCall:call.arguments[0]
-                             methodName:call.arguments[1]
-                              arguments:call.arguments[2]];
+                            methodName:call.arguments[1]
+                             arguments:call.arguments[2]];
     result(nil);
   } else if ([call.method isEqual:@"DISPOSE"]) {
     [instanceManager disposeAdWithReferenceId:call.arguments];

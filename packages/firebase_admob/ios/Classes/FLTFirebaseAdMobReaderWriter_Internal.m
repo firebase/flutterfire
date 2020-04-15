@@ -14,7 +14,7 @@ typedef NS_ENUM(NSInteger, FirebaseAdMobField) {
 @implementation FLTFirebaseAdMobReader
 - (id)readValueOfType:(UInt8)type {
   FirebaseAdMobField field = (FirebaseAdMobField)type;
-  switch(field) {
+  switch (field) {
     case FirebaseAdMobFieldAdRequest:
       return [[FLTAdRequest alloc] init];
     case FirebaseAdMobFieldAdSize:

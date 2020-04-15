@@ -16,7 +16,8 @@
 //                             customOptions:(NSDictionary *)customOptions {
 //  // Create and place ad in view hierarchy.
 //  GADUnifiedNativeAdView *adView =
-//      [[NSBundle mainBundle] loadNibNamed:@"UnifiedNativeAdView" owner:nil options:nil].firstObject;
+//      [[NSBundle mainBundle] loadNibNamed:@"UnifiedNativeAdView" owner:nil
+//      options:nil].firstObject;
 //
 //  // Associate the native ad view with the native ad object. This is
 //  // required to make the ad clickable.
@@ -60,10 +61,10 @@
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [GeneratedPluginRegistrant registerWithRegistry:self];
 
-//  NativeAdFactoryExample *nativeAdFactory = [[NativeAdFactoryExample alloc] init];
-//  [FLTFirebaseAdMobPlugin registerNativeAdFactory:self
-//                                        factoryId:@"adFactoryExample"
-//                                  nativeAdFactory:nativeAdFactory];
+  //  NativeAdFactoryExample *nativeAdFactory = [[NativeAdFactoryExample alloc] init];
+  //  [FLTFirebaseAdMobPlugin registerNativeAdFactory:self
+  //                                        factoryId:@"adFactoryExample"
+  //                                  nativeAdFactory:nativeAdFactory];
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 

@@ -1,11 +1,11 @@
 package io.flutter.plugins.firebaseadmob;
 
 import android.content.Context;
+import io.flutter.plugin.common.MethodChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import io.flutter.plugin.common.MethodChannel;
 
 class AdInstanceManager implements Ad.AdListenerCallbackHandler {
   private Context context;
@@ -45,9 +45,10 @@ class AdInstanceManager implements Ad.AdListenerCallbackHandler {
   }
 
   private Ad createAd(final String className, final List<Object> parameters) {
-    switch(className) {
+    switch (className) {
       case "BannerAd":
-        return new Ad.BannerAd((String) parameters.get(0),
+        return new Ad.BannerAd(
+            (String) parameters.get(0),
             (AdRequest) parameters.get(1),
             (AdSize) parameters.get(2),
             context,

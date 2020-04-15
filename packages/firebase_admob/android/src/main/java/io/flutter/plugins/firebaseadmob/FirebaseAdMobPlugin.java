@@ -25,7 +25,6 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.common.StandardMethodCodec;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -199,14 +198,17 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     return nativeAdFactories.remove(factoryId);
   }
 
-  private void initializePlugin(final Context applicationContext, final Activity activity, final BinaryMessenger messenger) {
+  private void initializePlugin(
+      final Context applicationContext, final Activity activity, final BinaryMessenger messenger) {
     FirebaseApp.initializeApp(applicationContext);
     this.applicationContext = applicationContext;
     this.activity = activity;
 
-    final MethodChannel channel = new MethodChannel(messenger,
-        "plugins.flutter.io/firebase_admob",
-        new StandardMethodCodec(new FirebaseAdMobMessageCodec()));
+    final MethodChannel channel =
+        new MethodChannel(
+            messenger,
+            "plugins.flutter.io/firebase_admob",
+            new StandardMethodCodec(new FirebaseAdMobMessageCodec()));
     instanceManager = new AdInstanceManager(channel, activity);
 
     channel.setMethodCallHandler(this);
@@ -257,18 +259,19 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
 
     switch (call.method) {
       case "INITIALIZE":
-        MobileAds.initialize(applicationContext, new OnInitializationCompleteListener() {
-          @Override
-          public void onInitializationComplete(InitializationStatus initializationStatus) {
-            result.success(null);
-          }
-        });
+        MobileAds.initialize(
+            applicationContext,
+            new OnInitializationCompleteListener() {
+              @Override
+              public void onInitializationComplete(InitializationStatus initializationStatus) {
+                result.success(null);
+              }
+            });
         break;
       case "LOAD":
         final List<Object> arguments = (List<Object>) call.arguments;
-        instanceManager.loadAd((Integer) arguments.get(0),
-            (String) arguments.get(1),
-            (List<Object>) arguments.get(2));
+        instanceManager.loadAd(
+            (Integer) arguments.get(0), (String) arguments.get(1), (List<Object>) arguments.get(2));
         result.success(null);
         break;
       case "DISPOSE":

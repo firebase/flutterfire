@@ -13,11 +13,12 @@ abstract class Ad {
     private final AdView bannerView;
     private final com.google.android.gms.ads.AdRequest request;
 
-    BannerAd(final String adUnitId,
-             final AdRequest request,
-             final AdSize adSize,
-             final Context context,
-             final AdListenerCallbackHandler callbackHandler) {
+    BannerAd(
+        final String adUnitId,
+        final AdRequest request,
+        final AdSize adSize,
+        final Context context,
+        final AdListenerCallbackHandler callbackHandler) {
       bannerView = new AdView(context);
       bannerView.setAdUnitId(adUnitId);
       bannerView.setAdSize(adSize.adSize);
@@ -31,13 +32,11 @@ abstract class Ad {
     }
 
     @Override
-    void dispose() {
-
-    }
+    void dispose() {}
   }
 
-  private static AdListener createAdListener(final AdListenerCallbackHandler callbackHandler,
-                                             final Ad ad) {
+  private static AdListener createAdListener(
+      final AdListenerCallbackHandler callbackHandler, final Ad ad) {
     return new AdListener() {
       @Override
       public void onAdLoaded() {
@@ -47,5 +46,6 @@ abstract class Ad {
   }
 
   abstract void load();
+
   abstract void dispose();
 }
