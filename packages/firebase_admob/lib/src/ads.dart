@@ -38,6 +38,23 @@ mixin AdListener {
   void onAdLoaded(Ad ad);
 }
 
+enum AnchorType { bottom, top }
+
+mixin PlatformViewAd {
+  Future<void> show({
+    double anchorOffset = 0.0,
+    double horizontalCenterOffset = 0.0,
+    AnchorType anchorType = AnchorType.bottom,
+  }) {
+    return AdInstanceManager.instance.show(
+      (this as Ad),
+      anchorOffset: anchorOffset,
+      horizontalCenterOffset: horizontalCenterOffset,
+      anchorType: anchorType,
+    );
+  }
+}
+
 class AdSize {
   const AdSize(this.width, this.height);
 
@@ -47,7 +64,7 @@ class AdSize {
   static final AdSize banner = AdSize(320, 50);
 }
 
-class BannerAd extends Ad {
+class BannerAd extends Ad with PlatformViewAd {
   const BannerAd({
     @required String adUnitId,
     @required this.size,

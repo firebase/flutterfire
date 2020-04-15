@@ -41,10 +41,13 @@
   [callbackChannel invokeMethod:methodName arguments:@[ [self referenceIdForAd:ad], arguments ]];
 }
 
-- (void)receiveMethodCall:(NSNumber *)referenceId
-               methodName:(NSString *)methodName
-                arguments:(NSArray<id> *)arguments {
-  // TODO: implement
+- (void)showAdWithRefernceId:(NSNumber *)referenceId parameters:(NSArray<id> *)parameters {
+  id<FLTAd> ad = [self adForReferenceId:referenceId];
+  
+  if ([ad.class conformsToProtocol:@protocol(FLTPlatformViewAd)]) {
+    id<FLTPlatformViewAd> platformViewAd = (id<FLTPlatformViewAd>) ad;
+    [platformViewAd show:parameters[0] horizontalCenterOffset:parameters[1] anchorType:parameters[2]];
+  }
 }
 
 - (void)disposeAdWithReferenceId:(NSNumber *)referenceId {
@@ -130,10 +133,8 @@
                                 className:call.arguments[1]
                                parameters:call.arguments[2]];
     result(nil);
-  } else if ([call.method isEqual:@"METHOD"]) {
-    [instanceManager receiveMethodCall:call.arguments[0]
-                            methodName:call.arguments[1]
-                             arguments:call.arguments[2]];
+  } else if ([call.method isEqual:@"SHOW"]) {
+    [instanceManager showAdWithRefernceId:call.arguments[0] parameters:call.arguments[1]];
     result(nil);
   } else if ([call.method isEqual:@"DISPOSE"]) {
     [instanceManager disposeAdWithReferenceId:call.arguments];

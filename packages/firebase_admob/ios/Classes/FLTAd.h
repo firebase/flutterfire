@@ -7,7 +7,20 @@
 @protocol FLTAd <NSObject>
 @required
 - (void)load;
+@optional
 - (void)dispose;
+@end
+
+@interface FLTAnchorType : NSObject
++ (FLTAnchorType *)typeWithName:(NSString *)name;
++ (FLTAnchorType *)top;
++ (FLTAnchorType *)bottom;
+@end
+
+@protocol FLTPlatformViewAd <FLTAd>
+@required
+- (void)show:(NSNumber *)anchorOffset horizontalCenterOffset:(NSNumber *)horizontalCenterOffset
+anchorType:(FLTAnchorType *)anchorType;
 @end
 
 @protocol FLTAdListenerCallbackHandler <NSObject>
@@ -20,11 +33,10 @@
 @end
 
 @interface FLTAdRequest : NSObject
-;
 @property(readonly) GADRequest *request;
 @end
 
-@interface FLTBannerAd : NSObject <FLTAd, GADBannerViewDelegate, FlutterPlatformView>
+@interface FLTBannerAd : NSObject<FLTPlatformViewAd, GADBannerViewDelegate, FlutterPlatformView>
 - (instancetype)initWithAdUnitId:(NSString *)adUnitId
                          request:(FLTAdRequest *)request
                           adSize:(FLTAdSize *)adSize

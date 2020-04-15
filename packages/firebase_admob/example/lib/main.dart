@@ -171,6 +171,9 @@ class _MyAppState extends State<MyApp> with AdListener {
 
   @override
   void onAdLoaded(Ad ad) {
+    if (ad is PlatformViewAd) {
+      (ad as PlatformViewAd).show();
+    }
     print('Ad loaded');
   }
 }

@@ -49,15 +49,19 @@ class AdInstanceManager {
     );
   }
 
-  Future<dynamic> sendMethodCall(
-    Ad ad,
-    String methodName,
-    List<dynamic> arguments,
-  ) {
+  Future<void> show(
+    Ad ad, {
+    double anchorOffset,
+    double horizontalCenterOffset,
+    AnchorType anchorType,
+  }) {
     assert(referenceIdFor(ad) != null);
-    return channel.invokeMethod<dynamic>(
-      'METHOD',
-      <dynamic>[referenceIdFor(ad), methodName, arguments ?? <dynamic>[]],
+    return channel.invokeMethod<void>(
+      'SHOW',
+      <dynamic>[
+        referenceIdFor(ad),
+        <dynamic>[anchorOffset, horizontalCenterOffset, anchorType],
+      ],
     );
   }
 
@@ -69,7 +73,7 @@ class AdInstanceManager {
     final Ad ad = adFor(referenceId);
     switch (methodName) {
       case 'AdListener#onAdLoaded':
-        ad.listener?.onAdLoaded(ad);
+        ad?.listener?.onAdLoaded(ad);
         return;
     }
   }
@@ -95,6 +99,7 @@ class FirebaseAdMobMessageCodec extends StandardMessageCodec {
 
   static const int _valueAdRequest = 128;
   static const int _valueAdSize = 129;
+  static const int _valueAnchorType = 130;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -104,6 +109,9 @@ class FirebaseAdMobMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueAdSize);
       writeValue(buffer, value.width);
       writeValue(buffer, value.height);
+    } else if (value is AnchorType) {
+      buffer.putUint8(_valueAnchorType);
+      writeValue(buffer, value.toString());
     } else {
       super.writeValue(buffer, value);
     }
