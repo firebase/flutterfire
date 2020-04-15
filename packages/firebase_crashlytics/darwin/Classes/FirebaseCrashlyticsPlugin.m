@@ -80,10 +80,9 @@
       reason = [NSString stringWithFormat:@"thrown %@", context];
     }
 
-    FIRExceptionModel *exception = [FIRExceptionModel
-                                    exceptionModelWithName:call.arguments[@"exception"]
-                                    reason:reason];
-    
+    FIRExceptionModel *exception =
+        [FIRExceptionModel exceptionModelWithName:call.arguments[@"exception"] reason:reason];
+
     exception.stackTrace = frames;
 
     [[FIRCrashlytics crashlytics] recordExceptionModel:exception];
@@ -97,10 +96,10 @@
 }
 
 - (FIRStackFrame *)generateFrame:(NSDictionary *)errorElement {
-  FIRStackFrame *frame = [FIRStackFrame
-                          stackFrameWithSymbol:[errorElement valueForKey:@"method"]
-                                          file:[errorElement valueForKey:@"file"]
-                                          line:[[errorElement valueForKey:@"line"] intValue]];
+  FIRStackFrame *frame =
+      [FIRStackFrame stackFrameWithSymbol:[errorElement valueForKey:@"method"]
+                                     file:[errorElement valueForKey:@"file"]
+                                     line:[[errorElement valueForKey:@"line"] intValue]];
   return frame;
 }
 
