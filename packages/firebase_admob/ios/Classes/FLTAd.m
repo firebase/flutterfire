@@ -122,7 +122,7 @@ rootViewController:(UIViewController *)rootViewController
 }
 
 - (void)dispose {
-  // TODO: Pass to add view
+  if (bannerView.superview) [bannerView removeFromSuperview];
 }
 
 - (void)load {
@@ -134,6 +134,8 @@ rootViewController:(UIViewController *)rootViewController
 }
 
 - (void)show:(NSNumber *)anchorOffset horizontalCenterOffset:(NSNumber *)horizontalCenterOffset anchorType:(FLTAnchorType *)anchorType {
+  [self dispose];
+  
   [ViewHelper show:anchorOffset horizontalCenterOffset:horizontalCenterOffset
         anchorType:anchorType rootViewController:rootViewController
               view:[self view]];

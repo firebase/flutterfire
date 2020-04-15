@@ -7,7 +7,6 @@
 @protocol FLTAd <NSObject>
 @required
 - (void)load;
-@optional
 - (void)dispose;
 @end
 

@@ -268,12 +268,18 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
               }
             });
         break;
-      case "LOAD":
+      case "LOAD": {
         final List<Object> arguments = (List<Object>) call.arguments;
         instanceManager.loadAd(
             (Integer) arguments.get(0), (String) arguments.get(1), (List<Object>) arguments.get(2));
         result.success(null);
         break;
+      }
+      case "SHOW": {
+        final List<Object> arguments = (List<Object>) call.arguments;
+        instanceManager.showAd((Integer) arguments.get(0), (List<Object>) arguments.get(1));
+        break;
+      }
       case "DISPOSE":
         instanceManager.disposeAdWithReferenceId((Integer) call.arguments);
         result.success(null);

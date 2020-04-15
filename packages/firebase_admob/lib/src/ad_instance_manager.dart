@@ -21,7 +21,6 @@ class AdInstanceManager {
       StandardMethodCodec(const FirebaseAdMobMessageCodec()));
 
   final BiMap<Ad, int> _adToReferenceId = BiMap<Ad, int>();
-  int _nextReferenceId = 0;
 
   int referenceIdFor(Ad ad) => _adToReferenceId[ad];
 
@@ -41,7 +40,7 @@ class AdInstanceManager {
   void load(Ad ad) {
     if (referenceIdFor(ad) != null) return;
 
-    final int referenceId = _nextReferenceId++;
+    final int referenceId = ad.hashCode;
     _adToReferenceId[ad] = referenceId;
     channel.invokeMethod<void>(
       'LOAD',

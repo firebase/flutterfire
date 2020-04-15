@@ -28,6 +28,7 @@ class _MyAppState extends State<MyApp> with AdListener {
 //  );
 
   BannerAd _bannerAd;
+  BannerAd _offsetBannerAd;
 //  NativeAd _nativeAd;
 //  InterstitialAd _interstitialAd;
   int _coins = 0;
@@ -91,22 +92,26 @@ class _MyAppState extends State<MyApp> with AdListener {
                 RaisedButton(
                     child: const Text('SHOW BANNER'),
                     onPressed: () {
-                      _bannerAd ??= createBannerAd();
-                      _bannerAd..load();
+                      _bannerAd ??= createBannerAd()..load();
                       //..show();
-                    }),
-                RaisedButton(
-                    child: const Text('SHOW BANNER WITH OFFSET'),
-                    onPressed: () {
-                      _bannerAd ??= createBannerAd();
-                      _bannerAd..load();
-                      //..show(horizontalCenterOffset: -50, anchorOffset: 100);
                     }),
                 RaisedButton(
                     child: const Text('REMOVE BANNER'),
                     onPressed: () {
                       _bannerAd?.dispose();
                       _bannerAd = null;
+                    }),
+                RaisedButton(
+                    child: const Text('SHOW BANNER WITH OFFSET'),
+                    onPressed: () {
+                      _offsetBannerAd ??= createBannerAd()..load();
+                      //..show(horizontalCenterOffset: -50, anchorOffset: 100);
+                    }),
+                RaisedButton(
+                    child: const Text('REMOVE OFFSET BANNER'),
+                    onPressed: () {
+                      _offsetBannerAd?.dispose();
+                      _offsetBannerAd = null;
                     }),
 //                RaisedButton(
 //                  child: const Text('LOAD INTERSTITIAL'),
@@ -171,8 +176,14 @@ class _MyAppState extends State<MyApp> with AdListener {
 
   @override
   void onAdLoaded(Ad ad) {
-    if (ad is PlatformViewAd) {
+    if (ad == _bannerAd) {
       (ad as PlatformViewAd).show();
+    } else if (ad == _offsetBannerAd) {
+      (ad as PlatformViewAd).show(
+        anchorOffset: 20,
+        horizontalCenterOffset: 20,
+        anchorType: AnchorType.top,
+      );
     }
     print('Ad loaded');
   }

@@ -1,5 +1,6 @@
 package io.flutter.plugins.firebaseadmob;
 
+import android.app.Activity;
 import android.content.Context;
 import io.flutter.plugin.common.MethodChannel;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.Map;
 class AdInstanceManager implements Ad.AdListenerCallbackHandler {
   private Context context;
   private final Map<Integer, Ad> referenceIdToAdMap = new HashMap<>();
-  final MethodChannel callbackChannel;
+  private final MethodChannel callbackChannel;
 
   AdInstanceManager(final MethodChannel callbackChannel, final Context context) {
     this.callbackChannel = callbackChannel;
@@ -23,14 +24,25 @@ class AdInstanceManager implements Ad.AdListenerCallbackHandler {
     ad.load();
   }
 
-  void sendMethodCall(final Ad ad, final String methodName, final List<Object> arguments) {
+  private void sendMethodCall(final Ad ad, final String methodName, final List<Object> arguments) {
     final List<Object> methodCallArgs = new ArrayList<>();
     methodCallArgs.add(referenceIdForAd(ad));
     methodCallArgs.add(arguments);
     callbackChannel.invokeMethod(methodName, methodCallArgs);
   }
 
-  int referenceIdForAd(Ad ad) {
+  void showAd(final int referenceId, final List<Object> parameters) {
+    final Ad ad = referenceIdToAdMap.get(referenceId);
+
+    if (ad instanceof Ad.PlatformViewAd) {
+      ((Ad.PlatformViewAd) ad).show((Double) parameters.get(0), (Double) parameters.get(1), (AnchorType) parameters.get(2));
+      return;
+    }
+
+    throw new IllegalStateException();
+  }
+
+  private int referenceIdForAd(Ad ad) {
     for (final int referenceId : referenceIdToAdMap.keySet()) {
       if (referenceIdToAdMap.get(referenceId) == ad) return referenceId;
     }
@@ -51,7 +63,7 @@ class AdInstanceManager implements Ad.AdListenerCallbackHandler {
             (String) parameters.get(0),
             (AdRequest) parameters.get(1),
             (AdSize) parameters.get(2),
-            context,
+            (Activity) context,
             this);
     }
     throw new IllegalArgumentException();
