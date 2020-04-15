@@ -4,386 +4,169 @@
 
 #import "FLTFirebaseAdMobPlugin.h"
 
-#import <UIKit/UIKit.h>
-
-#import "FLTMobileAd.h"
-#import "FLTRewardedVideoAdWrapper.h"
-
-@interface FLTFirebaseAdMobPlugin ()
-@property(nonatomic, retain) FlutterMethodChannel *channel;
-@property(nonatomic, strong) FLTRewardedVideoAdWrapper *rewardedWrapper;
-@property NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *nativeAdFactories;
+@interface FLTAdReferenceManager : NSObject<FLTAdListenerCallbackHandler>
 @end
 
-@implementation FLTFirebaseAdMobPlugin
-+ (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FLTFirebaseAdMobPlugin *instance = [[FLTFirebaseAdMobPlugin alloc] init];
-  [registrar publish:instance];
+@interface FLTFirebaseAdMobReaderWriter : FlutterStandardReaderWriter
+@end
 
-  instance.channel =
-      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_admob"
-                                  binaryMessenger:[registrar messenger]];
-  instance.rewardedWrapper = [[FLTRewardedVideoAdWrapper alloc] initWithChannel:instance.channel];
+@interface FLTFirebaseAdMobReader : FlutterStandardReader
+@end
 
-  [registrar addMethodCallDelegate:instance channel:instance.channel];
+typedef NS_ENUM(NSInteger, FirebaseAdMobField) {
+  FirebaseAdMobFieldAdRequest = 128,
+  FirebaseAdMobFieldAdSize = 129,
+};
+
+@implementation FLTFirebaseAdMobReaderWriter
+- (FlutterStandardReader *)readerWithData:(NSData *)data {
+  return [[FLTFirebaseAdMobReader alloc] initWithData:data];
+}
+@end
+
+@implementation FLTFirebaseAdMobReader
+- (id)readValueOfType:(UInt8)type {
+  FirebaseAdMobField field = (FirebaseAdMobField)type;
+  switch(field) {
+    case FirebaseAdMobFieldAdRequest:
+      return [[FLTAdRequest alloc] init];
+    case FirebaseAdMobFieldAdSize:
+      return [[FLTAdSize alloc] initWithWidth:[self readValueOfType:[self readByte]]
+                                       height:[self readValueOfType:[self readByte]]];
+  }
+  return [super readValueOfType:type];
+}
+@end
+
+@implementation FLTAdReferenceManager {
+  NSLock *dictionaryLock;
+  NSMutableDictionary<NSNumber *, id<FLTAd>> *referenceIdToAd;
+  FlutterMethodChannel *callbackChannel;
+  __weak UIViewController *rootViewController;
 }
 
-- (instancetype)init {
+- (instancetype)initWithChannel:(FlutterMethodChannel *)channel {
+  self = [super init];
+  if (self) {
+    dictionaryLock = [[NSLock alloc] init];
+    referenceIdToAd = [NSMutableDictionary dictionary];
+    callbackChannel = channel;
+    rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+  }
+  return self;
+}
+
+- (void)loadAdWithRefernceId:(NSNumber *)referenceId
+                   className:(NSString *)className
+                  parameters:(NSArray<id> *)parameters {
+  id<FLTAd> ad = [self createAd:className parameters:parameters];
+  [dictionaryLock lock];
+  [referenceIdToAd setObject:ad forKey:referenceId];
+  [dictionaryLock unlock];
+  [ad load];
+}
+
+- (void)sendMethodCall:(id<FLTAd>)ad methodName:(NSString *)methodName arguments:(NSArray<id> *)arguments {
+  [callbackChannel invokeMethod:methodName arguments:@[[self referenceIdForAd:ad], arguments]];
+}
+
+- (void)receiveMethodCall:(NSNumber *)referenceId
+               methodName:(NSString *)methodName
+                arguments:(NSArray<id> *)arguments {
+  // TODO: implement
+}
+
+- (void)disposeAdWithReferenceId:(NSNumber *)referenceId {
+  id<FLTAd> ad = [self adForReferenceId:referenceId];
+  [ad dispose];
+  
+  [dictionaryLock lock];
+  [referenceIdToAd removeObjectForKey:referenceId];
+  [dictionaryLock unlock];
+}
+
+- (id<FLTAd>)adForReferenceId:(NSNumber *)referenceId {
+  [dictionaryLock lock];
+  id<FLTAd> ad = [referenceIdToAd objectForKey:referenceId];
+  [dictionaryLock unlock];
+  return ad;
+}
+
+- (NSNumber *)referenceIdForAd:(id<FLTAd>)ad {
+  [dictionaryLock lock];
+  NSNumber *referenceId = [referenceIdToAd allKeysForObject:ad][0];
+  [dictionaryLock unlock];
+  return referenceId;
+}
+
+- (id<FLTAd>)createAd:(NSString *)className parameters:(NSArray<id> *)parameters {
+  if ([className isEqual:@"BannerAd"]) {
+    return [[FLTBannerAd alloc] initWithAdUnitId:parameters[0]
+                                         request:parameters[1]
+                                          adSize:parameters[2]
+                              rootViewController:rootViewController
+                                 callbackHandler:self];
+  }
+  return nil;
+}
+
+- (void)onAdLoaded:(id<FLTAd>)ad {
+  [self sendMethodCall:ad methodName:@"AdListener#onAdLoaded" arguments:@[]];
+}
+@end
+
+@implementation FLTFirebaseAdMobPlugin {
+  FLTAdReferenceManager *referenceManager;
+}
+
++ (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+  FLTFirebaseAdMobReaderWriter *readerWriter = [[FLTFirebaseAdMobReaderWriter alloc] init];
+  FlutterMethodChannel*channel =
+      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_admob"
+                                  binaryMessenger:[registrar messenger]
+                                            codec:[FlutterStandardMethodCodec codecWithReaderWriter:readerWriter]];
+  
+  FLTAdReferenceManager *referenceManager = [[FLTAdReferenceManager alloc] initWithChannel:channel];
+  
+  FLTFirebaseAdMobPlugin *plugin = [[FLTFirebaseAdMobPlugin alloc] initWithReferenceManager:referenceManager];
+  [registrar addMethodCallDelegate:plugin channel:channel];
+  [registrar publish:plugin];
+
+//  FLTFirebaseAdMobViewFactory *viewFactory = [[FLTFirebaseAdMobViewFactory alloc] init];
+//  [registrar registerViewFactory:viewFactory withId:@"plugins.flutter.io/firebase_admob/ad_widget"];
+}
+
+- (instancetype)initWithReferenceManager:(FLTAdReferenceManager *)manager {
   self = [super init];
   if (self && ![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
     NSLog(@"Configuring the default Firebase app...");
     [FIRApp configure];
     NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
+    referenceManager = manager;
   }
-
-  if (self) _nativeAdFactories = [NSMutableDictionary dictionary];
+  
   return self;
 }
 
-- (void)dealloc {
-  [self.channel setMethodCallHandler:nil];
-  self.channel = nil;
-}
-
-+ (BOOL)registerNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
-                      factoryId:(NSString *)factoryId
-                nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory {
-  NSString *pluginClassName = NSStringFromClass([FLTFirebaseAdMobPlugin class]);
-  FLTFirebaseAdMobPlugin *adMobPlugin =
-      (FLTFirebaseAdMobPlugin *)[registry valuePublishedByPlugin:pluginClassName];
-  if (!adMobPlugin) {
-    NSString *reason = [NSString
-        stringWithFormat:@"Could not find a %@ instance. The plugin may have not been registered.",
-                         pluginClassName];
-    [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
-  }
-
-  if (adMobPlugin.nativeAdFactories[factoryId]) {
-    NSLog(@"A NativeAdFactory with the following factoryId already exists: %@", factoryId);
-    return NO;
-  }
-
-  [adMobPlugin.nativeAdFactories setValue:nativeAdFactory forKey:factoryId];
-  return YES;
-}
-
-+ (id<FLTNativeAdFactory>)unregisterNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
-                                          factoryId:(NSString *)factoryId {
-  FLTFirebaseAdMobPlugin *adMobPlugin = (FLTFirebaseAdMobPlugin *)[registry
-      valuePublishedByPlugin:NSStringFromClass([FLTFirebaseAdMobPlugin class])];
-
-  id<FLTNativeAdFactory> factory = adMobPlugin.nativeAdFactories[factoryId];
-  if (factory) [adMobPlugin.nativeAdFactories removeObjectForKey:factoryId];
-  return factory;
-}
-
-- (void)callInitialize:(FlutterMethodCall *)call result:(FlutterResult)result {
-  NSString *appId = (NSString *)call.arguments[@"appId"];
-  if (appId == nil || [appId length] == 0) {
-    result([FlutterError errorWithCode:@"no_app_id"
-                               message:@"a non-empty AdMob appId was not provided"
-                               details:nil]);
-    return;
-  }
-  [FLTMobileAd configureWithAppId:appId];
-  result([NSNumber numberWithBool:YES]);
-}
-
-- (void)callLoadBannerAdWithId:(NSNumber *)id
-                       channel:(FlutterMethodChannel *)channel
-                          call:(FlutterMethodCall *)call
-                        result:(FlutterResult)result {
-  NSString *adUnitId = (NSString *)call.arguments[@"adUnitId"];
-  if (adUnitId == nil || [adUnitId length] == 0) {
-    NSString *message =
-        [NSString stringWithFormat:@"a null or empty adUnitId was provided for %@", id];
-    result([FlutterError errorWithCode:@"no_adunit_id" message:message details:nil]);
-    return;
-  }
-
-  NSNumber *widthArg = (NSNumber *)call.arguments[@"width"];
-  NSNumber *heightArg = (NSNumber *)call.arguments[@"height"];
-
-  if (widthArg == nil || heightArg == nil) {
-    NSString *message =
-        [NSString stringWithFormat:@"a null height or width was provided for banner id=%@", id];
-    result([FlutterError errorWithCode:@"invalid_adsize" message:message details:nil]);
-    return;
-  }
-
-  NSString *adSizeTypeArg = (NSString *)call.arguments[@"adSizeType"];
-  FLTLogWarning(@"Size Type: %@", adSizeTypeArg);
-  if (adSizeTypeArg == nil || (![adSizeTypeArg isEqualToString:@"AdSizeType.SmartBanner"] &&
-                               ![adSizeTypeArg isEqualToString:@"AdSizeType.WidthAndHeight"])) {
-    NSString *message = [NSString
-        stringWithFormat:@"a null or invalid ad size type was provided for banner id=%@", id];
-    result([FlutterError errorWithCode:@"invalid_adsizetype" message:message details:nil]);
-    return;
-  }
-
-  int width = [widthArg intValue];
-  int height = [heightArg intValue];
-
-  if ([adSizeTypeArg isEqualToString:@"AdSizeType.WidthAndHeight"] && (width <= 0 || height <= 0)) {
-    NSString *message =
-        [NSString stringWithFormat:@"an invalid AdSize (%d, %d) was provided for banner id=%@",
-                                   width, height, id];
-    result([FlutterError errorWithCode:@"invalid_adsize" message:message details:nil]);
-    return;
-  }
-
-  GADAdSize adSize;
-  if ([adSizeTypeArg isEqualToString:@"AdSizeType.SmartBanner"]) {
-    if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
-      adSize = kGADAdSizeSmartBannerPortrait;
-    } else {
-      adSize = kGADAdSizeSmartBannerLandscape;
-    }
-  } else {
-    adSize = GADAdSizeFromCGSize(CGSizeMake(width, height));
-  }
-
-  FLTBannerAd *banner = [FLTBannerAd withId:id adSize:adSize channel:self.channel];
-
-  if (banner.status != CREATED) {
-    if (banner.status == FAILED) {
-      NSString *message = [NSString stringWithFormat:@"cannot reload a failed ad=%@", banner];
-      result([FlutterError errorWithCode:@"load_failed_ad" message:message details:nil]);
-    } else {
-      result([NSNumber numberWithBool:YES]);  // The ad was already loaded.
-    }
-  }
-
-  NSDictionary *targetingInfo = (NSDictionary *)call.arguments[@"targetingInfo"];
-  [banner loadWithAdUnitId:adUnitId targetingInfo:targetingInfo];
-  result([NSNumber numberWithBool:YES]);
-}
-
-- (void)callLoadInterstitialAd:(FLTMobileAd *)ad
-                          call:(FlutterMethodCall *)call
-                        result:(FlutterResult)result {
-  if (ad.status != CREATED) {
-    if (ad.status == FAILED) {
-      NSString *message = [NSString stringWithFormat:@"cannot reload a failed ad=%@", ad];
-      result([FlutterError errorWithCode:@"load_failed_ad" message:message details:nil]);
-    } else {
-      result([NSNumber numberWithBool:YES]);  // The ad was already loaded.
-    }
-  }
-
-  NSString *adUnitId = (NSString *)call.arguments[@"adUnitId"];
-  if (adUnitId == nil || [adUnitId length] == 0) {
-    NSString *message =
-        [NSString stringWithFormat:@"a null or emtpy adUnitId was provided for %@", ad];
-    result([FlutterError errorWithCode:@"no_adunit_id" message:message details:nil]);
-    return;
-  }
-
-  NSDictionary *targetingInfo = (NSDictionary *)call.arguments[@"targetingInfo"];
-  [ad loadWithAdUnitId:adUnitId targetingInfo:targetingInfo];
-  result([NSNumber numberWithBool:YES]);
-}
-
-- (void)callLoadNativeAdWithId:(NSNumber *)id
-                       channel:(FlutterMethodChannel *)channel
-                          call:(FlutterMethodCall *)call
-                        result:(FlutterResult)result {
-  NSString *adUnitId = (NSString *)call.arguments[@"adUnitId"];
-
-  if (adUnitId == nil || [adUnitId length] == 0) {
-    NSString *message =
-        [NSString stringWithFormat:@"a null or empty adUnitId was provided for %@", id];
-    result([FlutterError errorWithCode:@"no_adunit_id" message:message details:nil]);
-    return;
-  }
-
-  NSDictionary *customOptions = (NSDictionary *)call.arguments[@"customOptions"];
-  NSString *factoryId = (NSString *)call.arguments[@"factoryId"];
-
-  FLTNativeAd *nativeAd = [FLTNativeAd withId:id
-                                      channel:self.channel
-                              nativeAdFactory:_nativeAdFactories[factoryId]
-                                customOptions:customOptions];
-
-  if (nativeAd.status != CREATED) {
-    if (nativeAd.status == FAILED) {
-      NSString *message = [NSString stringWithFormat:@"cannot reload a failed ad=%@", nativeAd];
-      result([FlutterError errorWithCode:@"load_failed_ad" message:message details:nil]);
-    } else {
-      result([NSNumber numberWithBool:YES]);  // The ad was already loaded.
-    }
-    return;
-  }
-
-  NSDictionary *targetingInfo = (NSDictionary *)call.arguments[@"targetingInfo"];
-  [nativeAd loadWithAdUnitId:adUnitId targetingInfo:targetingInfo];
-  result([NSNumber numberWithBool:YES]);
-}
-
-- (void)callLoadRewardedVideoAd:(FlutterMethodCall *)call result:(FlutterResult)result {
-  if (self.rewardedWrapper.status == FLTRewardedVideoAdStatusLoading ||
-      self.rewardedWrapper.status == FLTRewardedVideoAdStatusLoaded) {
-    result([NSNumber numberWithBool:YES]);  // The ad is loaded or about to be.
-  }
-
-  NSString *adUnitId = (NSString *)call.arguments[@"adUnitId"];
-  if (adUnitId == nil || [adUnitId length] == 0) {
-    result([FlutterError errorWithCode:@"no_ad_unit_id"
-                               message:@"a non-empty adUnitId was not provided for rewarded video."
-                               details:nil]);
-    return;
-  }
-
-  NSDictionary *targetingInfo = (NSDictionary *)call.arguments[@"targetingInfo"];
-  if (targetingInfo == nil) {
-    result([FlutterError
-        errorWithCode:@"no_targeting_info"
-              message:@"a null targetingInfo object was provided for rewarded video."
-              details:nil]);
-    return;
-  }
-
-  [self.rewardedWrapper loadWithAdUnitId:adUnitId targetingInfo:targetingInfo];
-  result([NSNumber numberWithBool:YES]);
-}
-
-- (void)callShowAd:(NSNumber *)mobileAdId
-              call:(FlutterMethodCall *)call
-            result:(FlutterResult)result {
-  FLTMobileAd *ad = [FLTMobileAd getAdForId:mobileAdId];
-  if (ad == nil) {
-    NSString *message =
-        [NSString stringWithFormat:@"show failed, the specified ad was not loaded id=%d",
-                                   mobileAdId.intValue];
-    result([FlutterError errorWithCode:@"ad_not_loaded" message:message details:nil]);
-  }
-
-  double offset = 0.0;
-  double horizontalCenterOffset = 0.0;
-  int type = 0;
-  if (call.arguments[@"anchorOffset"] != nil) {
-    offset = [call.arguments[@"anchorOffset"] doubleValue];
-  }
-  if (call.arguments[@"horizontalCenterOffset"] != nil) {
-    horizontalCenterOffset = [call.arguments[@"horizontalCenterOffset"] doubleValue];
-  }
-  if (call.arguments[@"anchorType"] != nil) {
-    type = [call.arguments[@"anchorType"] isEqualToString:@"bottom"] ? 0 : 1;
-  }
-
-  [ad showAtOffset:offset hCenterOffset:horizontalCenterOffset fromAnchor:type];
-  result([NSNumber numberWithBool:YES]);
-}
-
-- (void)callIsAdLoaded:(NSNumber *)mobileAdId
-                  call:(FlutterMethodCall *)call
-                result:(FlutterResult)result {
-  FLTMobileAd *ad = [FLTMobileAd getAdForId:mobileAdId];
-  if (ad == nil) {
-    NSString *message = [NSString
-        stringWithFormat:@"isAdLoaded failed, no ad exists for id=%d", mobileAdId.intValue];
-    result([FlutterError errorWithCode:@"no_ad_for_id" message:message details:nil]);
-    return;
-  }
-  if (ad.status == LOADED) {
-    result([NSNumber numberWithBool:YES]);
-  } else {
-    result([NSNumber numberWithBool:NO]);
-  }
-}
-
-- (void)callSetRewardedVideoAdUserId:(FlutterMethodCall *)call result:(FlutterResult)result {
-  NSString *userId = (NSString *)call.arguments[@"userId"];
-
-  [self.rewardedWrapper setUserIdentifier:userId];
-  result([NSNumber numberWithBool:YES]);
-}
-
-- (void)callSetRewardedVideoAdCustomData:(FlutterMethodCall *)call result:(FlutterResult)result {
-  NSString *customData = (NSString *)call.arguments[@"customData"];
-
-  [self.rewardedWrapper setCustomRewardString:customData];
-  result([NSNumber numberWithBool:YES]);
-}
-
-- (void)callShowRewardedVideoAd:(FlutterMethodCall *)call result:(FlutterResult)result {
-  if (self.rewardedWrapper.status != FLTRewardedVideoAdStatusLoaded) {
-    result([FlutterError errorWithCode:@"ad_not_loaded"
-                               message:@"show failed for rewarded video, no ad was loaded"
-                               details:nil]);
-    return;
-  }
-
-  [self.rewardedWrapper show];
-  result([NSNumber numberWithBool:YES]);
-}
-
-- (void)callDisposeAd:(NSNumber *)mobileAdId
-                 call:(FlutterMethodCall *)call
-               result:(FlutterResult)result {
-  FLTMobileAd *ad = [FLTMobileAd getAdForId:mobileAdId];
-  if (ad == nil) {
-    NSString *message =
-        [NSString stringWithFormat:@"dispose failed, no ad exists for id=%d", mobileAdId.intValue];
-    result([FlutterError errorWithCode:@"no_ad_for_id" message:message details:nil]);
-  }
-
-  [ad dispose];
-  result([NSNumber numberWithBool:YES]);
-}
-
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
-  if ([call.method isEqualToString:@"initialize"]) {
-    [self callInitialize:call result:result];
-    return;
-  }
-
-  if ([call.method isEqualToString:@"loadRewardedVideoAd"]) {
-    [self callLoadRewardedVideoAd:call result:result];
-    return;
-  }
-
-  if ([call.method isEqualToString:@"setRewardedVideoAdUserId"]) {
-    [self callSetRewardedVideoAdUserId:call result:result];
-    return;
-  }
-
-  if ([call.method isEqualToString:@"setRewardedVideoAdCustomData"]) {
-    [self callSetRewardedVideoAdCustomData:call result:result];
-    return;
-  }
-
-  if ([call.method isEqualToString:@"showRewardedVideoAd"]) {
-    [self callShowRewardedVideoAd:call result:result];
-    return;
-  }
-
-  NSNumber *mobileAdId = (NSNumber *)call.arguments[@"id"];
-  if (mobileAdId == nil) {
-    NSString *message = @"FirebaseAdMobPlugin method calls for banners and "
-                        @"interstitials must specify an "
-                        @"integer mobile ad id";
-    result([FlutterError errorWithCode:@"no_id" message:message details:nil]);
-    return;
-  }
-
-  if ([call.method isEqualToString:@"loadBannerAd"]) {
-    [self callLoadBannerAdWithId:mobileAdId channel:self.channel call:call result:result];
-  } else if ([call.method isEqualToString:@"loadInterstitialAd"]) {
-    [self callLoadInterstitialAd:[FLTInterstitialAd withId:mobileAdId channel:self.channel]
-                            call:call
-                          result:result];
-  } else if ([call.method isEqualToString:@"loadNativeAd"]) {
-    [self callLoadNativeAdWithId:mobileAdId channel:self.channel call:call result:result];
-  } else if ([call.method isEqualToString:@"showAd"]) {
-    [self callShowAd:mobileAdId call:call result:result];
-  } else if ([call.method isEqualToString:@"isAdLoaded"]) {
-    [self callIsAdLoaded:mobileAdId call:call result:result];
-  } else if ([call.method isEqualToString:@"disposeAd"]) {
-    [self callDisposeAd:mobileAdId call:call result:result];
+  if ([call.method isEqual:@"INITIALIZE"]) {
+    [[GADMobileAds sharedInstance] startWithCompletionHandler:nil];
+    result(nil);
+  } else if ([call.method isEqual:@"LOAD"]) {
+    [referenceManager loadAdWithRefernceId:call.arguments[0]
+                                 className:call.arguments[1]
+                                parameters:call.arguments[2]];
+    result(nil);
+  } else if ([call.method isEqual:@"METHOD"]) {
+    [referenceManager receiveMethodCall:call.arguments[0]
+                             methodName:call.arguments[1]
+                              arguments:call.arguments[2]];
+    result(nil);
+  } else if ([call.method isEqual:@"DISPOSE"]) {
+    [referenceManager disposeAdWithReferenceId:call.arguments];
+    result(nil);
   } else {
     result(FlutterMethodNotImplemented);
   }
 }
-
 @end
