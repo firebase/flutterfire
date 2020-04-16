@@ -10,13 +10,13 @@ typedef NS_ENUM(NSInteger, FirebaseAdMobField) {
 @end
 
 @implementation FLTFirebaseAdMobReaderWriter
-- (FlutterStandardReader *)readerWithData:(NSData *)data {
+- (FlutterStandardReader *_Nonnull)readerWithData:(NSData *_Nonnull)data {
   return [[FLTFirebaseAdMobReader alloc] initWithData:data];
 }
 @end
 
 @implementation FLTFirebaseAdMobReader
-- (id)readValueOfType:(UInt8)type {
+- (id _Nullable)readValueOfType:(UInt8)type {
   FirebaseAdMobField field = (FirebaseAdMobField)type;
   switch (field) {
     case FirebaseAdMobFieldAdRequest:

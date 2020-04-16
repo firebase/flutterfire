@@ -5,7 +5,7 @@
   dispatch_queue_t _lockQueue;
 }
 
-- (nonnull instancetype)init {
+- (instancetype _Nonnull)init {
   self = [super init];
   if (self) {
     _ads = [[NSMutableDictionary alloc] init];
