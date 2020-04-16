@@ -213,36 +213,8 @@
   [_interstitial presentFromRootViewController:[ViewHelper rootViewController]];
 }
 
-/// Tells the delegate an ad request succeeded.
 - (void)interstitialDidReceiveAd:(GADInterstitial *)ad {
-  NSLog(@"interstitialDidReceiveAd");
   [_callbackHandler onAdLoaded:self];
-}
-
-/// Tells the delegate an ad request failed.
-- (void)interstitial:(GADInterstitial *)ad didFailToReceiveAdWithError:(GADRequestError *)error {
-  NSLog(@"interstitial:didFailToReceiveAdWithError: %@", [error localizedDescription]);
-}
-
-/// Tells the delegate that an interstitial will be presented.
-- (void)interstitialWillPresentScreen:(GADInterstitial *)ad {
-  NSLog(@"interstitialWillPresentScreen");
-}
-
-/// Tells the delegate the interstitial is to be animated off the screen.
-- (void)interstitialWillDismissScreen:(GADInterstitial *)ad {
-  NSLog(@"interstitialWillDismissScreen");
-}
-
-/// Tells the delegate the interstitial had been animated off the screen.
-- (void)interstitialDidDismissScreen:(GADInterstitial *)ad {
-  NSLog(@"interstitialDidDismissScreen");
-}
-
-/// Tells the delegate that a user click will open another app
-/// (such as the App Store), backgrounding the current app.
-- (void)interstitialWillLeaveApplication:(GADInterstitial *)ad {
-  NSLog(@"interstitialWillLeaveApplication");
 }
 @end
 
@@ -304,10 +276,6 @@
   nativeAd.delegate = self;
   [_callbackHandler onAdLoaded:self];
 }
-
-- (void)adLoaderDidFinishLoading:(GADAdLoader *)adLoader {
-  // The adLoader has finished loading ads, and a new request can be sent.
-}
 @end
 
 @implementation FLTRewardedAd {
@@ -338,26 +306,5 @@
 
 - (void)show {
   [_rewardedAd presentFromRootViewController:[ViewHelper rootViewController] delegate:self];
-}
-
-/// Tells the delegate that the user earned a reward.
-- (void)rewardedAd:(GADRewardedAd *)rewardedAd userDidEarnReward:(GADAdReward *)reward {
-  // TODO: Reward the user.
-  NSLog(@"rewardedAd:userDidEarnReward:");
-}
-
-/// Tells the delegate that the rewarded ad was presented.
-- (void)rewardedAdDidPresent:(GADRewardedAd *)rewardedAd {
-  NSLog(@"rewardedAdDidPresent:");
-}
-
-/// Tells the delegate that the rewarded ad failed to present.
-- (void)rewardedAd:(GADRewardedAd *)rewardedAd didFailToPresentWithError:(NSError *)error {
-  NSLog(@"rewardedAd:didFailToPresentWithError");
-}
-
-/// Tells the delegate that the rewarded ad was dismissed.
-- (void)rewardedAdDidDismiss:(GADRewardedAd *)rewardedAd {
-  NSLog(@"rewardedAdDidDismiss:");
 }
 @end
