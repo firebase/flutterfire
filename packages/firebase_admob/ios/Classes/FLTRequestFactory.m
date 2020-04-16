@@ -8,7 +8,7 @@
 #import "GoogleMobileAds/GoogleMobileAds.h"
 
 @implementation FLTRequestFactory {
-NSDictionary *_targetingInfo;
+  NSDictionary *_targetingInfo;
 }
 
 - (instancetype)initWithTargetingInfo:(NSDictionary *)targetingInfo {

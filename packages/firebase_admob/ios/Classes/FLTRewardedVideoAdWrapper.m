@@ -12,8 +12,8 @@ static NSDictionary *rewardedStatusToString = nil;
 @end
 
 @implementation FLTRewardedVideoAdWrapper {
-FlutterMethodChannel *_rewardedChannel;
-FLTRewardedVideoAdStatus _rewardedStatus;
+  FlutterMethodChannel *_rewardedChannel;
+  FLTRewardedVideoAdStatus _rewardedStatus;
 }
 
 + (void)initialize {
@@ -79,10 +79,8 @@ FLTRewardedVideoAdStatus _rewardedStatus;
 
 - (void)rewardBasedVideoAd:(nonnull GADRewardBasedVideoAd *)rewardBasedVideoAd
     didRewardUserWithReward:(nonnull GADAdReward *)reward {
-  NSDictionary *arguments = @{
-    @"rewardAmount" : @(reward.amount.intValue),
-    @"rewardType" : reward.type
-  };
+  NSDictionary *arguments =
+      @{@"rewardAmount" : @(reward.amount.intValue), @"rewardType" : reward.type};
   [_rewardedChannel invokeMethod:@"onRewarded" arguments:arguments];
 }
 
