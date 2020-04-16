@@ -5,20 +5,20 @@
 #import "FLTFirebaseAdMobPlugin.h"
 
 @interface FLTAdInstanceManager : NSObject <FLTAdListenerCallbackHandler>
-@property NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *_Nonnull nativeAdFactories;
+@property FLTFirebaseAdMobCollection<NSString *, id<FLTNativeAdFactory>> *_Nonnull nativeAdFactories;
 @end
 
 @implementation FLTAdInstanceManager {
-  FLTAdCollection *_ads;
+  FLTFirebaseAdMobCollection<NSNumber *, id<FLTAd>> *_ads;
   FlutterMethodChannel *_callbackChannel;
 }
 
 - (instancetype _Nonnull)initWithChannel:(FlutterMethodChannel *_Nonnull)channel {
   self = [super init];
   if (self) {
-    _ads = [[FLTAdCollection alloc] init];
+    _ads = [[FLTFirebaseAdMobCollection alloc] init];
     _callbackChannel = channel;
-    _nativeAdFactories = [NSMutableDictionary dictionary];
+    _nativeAdFactories = [[FLTFirebaseAdMobCollection alloc] init];
   }
   return self;
 }
@@ -27,18 +27,18 @@
                     className:(NSString *_Nonnull)className
                    parameters:(NSArray<id> *_Nonnull)parameters {
   id<FLTAd> ad = [self createAd:className parameters:parameters];
-  [_ads addAd:ad forReferenceId:referenceId];
+  [_ads addObject:ad forKey:referenceId];
   [ad load];
 }
 
 - (void)sendMethodCall:(id<FLTAd> _Nonnull)ad
             methodName:(NSString *_Nonnull)methodName
              arguments:(NSArray<id> *_Nonnull)arguments {
-  [_callbackChannel invokeMethod:methodName arguments:@[ [_ads referenceIdForAd:ad], arguments ]];
+  [_callbackChannel invokeMethod:methodName arguments:@[ [_ads allKeysForObject:ad][0], arguments ]];
 }
 
 - (void)showAdWithReferenceId:(NSNumber *_Nonnull)referenceId parameters:(NSArray<id> *_Nonnull)parameters {
-  id<FLTAd> ad = [_ads adForReferenceId:referenceId];
+  id<FLTAd> ad = [_ads objectForKey:referenceId];
 
   if ([ad.class conformsToProtocol:@protocol(FLTPlatformViewAd)]) {
     id<FLTPlatformViewAd> platformViewAd = (id<FLTPlatformViewAd>)ad;
@@ -54,12 +54,12 @@
 }
 
 - (void)disposeAdWithReferenceId:(NSNumber *_Nonnull)referenceId {
-  id<FLTAd> ad = [_ads adForReferenceId:referenceId];
+  id<FLTAd> ad = [_ads objectForKey:referenceId];
   if ([ad.class conformsToProtocol:@protocol(FLTPlatformViewAd)]) {
     id<FLTPlatformViewAd> platformViewAd = (id<FLTPlatformViewAd>)ad;
     [platformViewAd dispose];
   }
-  [_ads removeAdWithReferenceId:referenceId];
+  [_ads objectForKey:referenceId];
 }
 
 - (id<FLTAd> _Nullable)createAd:(NSString *_Nonnull)className parameters:(NSArray<id> *_Nonnull)parameters {
@@ -75,7 +75,7 @@
   } else if ([className isEqual:@"NativeAd"]) {
     return [[FLTNativeAd alloc] initWithAdUnitId:parameters[0]
                                          request:parameters[1]
-                                 nativeAdFactory:_nativeAdFactories[parameters[2]]
+                                 nativeAdFactory:[_nativeAdFactories objectForKey:parameters[2]]
                                    customOptions:parameters[3]
                                  callbackHandler:self];
   } else if ([className isEqual:@"RewardedAd"]) {
@@ -113,12 +113,12 @@
     return NO;
   }
 
-  if (adMobPlugin->_instanceManager.nativeAdFactories[factoryId]) {
+  if ([adMobPlugin->_instanceManager.nativeAdFactories objectForKey:factoryId]) {
     NSLog(@"A NativeAdFactory with the following factoryId already exists: %@", factoryId);
     return NO;
   }
 
-  [adMobPlugin->_instanceManager.nativeAdFactories setObject:nativeAdFactory forKey:factoryId];
+  [adMobPlugin->_instanceManager.nativeAdFactories addObject:nativeAdFactory forKey:factoryId];
   return YES;
 }
 
@@ -126,7 +126,7 @@
                                           factoryId:(NSString *_Nonnull)factoryId {
   FLTFirebaseAdMobPlugin *adMobPlugin = [self adMobPluginFromRegistry:registry];
 
-  id<FLTNativeAdFactory> factory = adMobPlugin->_instanceManager.nativeAdFactories[factoryId];
+  id<FLTNativeAdFactory> factory = [adMobPlugin->_instanceManager.nativeAdFactories objectForKey:factoryId];
   if (factory) [adMobPlugin->_instanceManager.nativeAdFactories removeObjectForKey:factoryId];
   return factory;
 }
