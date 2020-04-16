@@ -1,3 +1,3 @@
 library firebase_admob;
 
-export 'src/ads.dart';
+export 'src/ad.dart';
