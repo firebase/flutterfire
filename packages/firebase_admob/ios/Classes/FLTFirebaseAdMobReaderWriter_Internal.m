@@ -6,6 +6,9 @@ typedef NS_ENUM(NSInteger, FirebaseAdMobField) {
   FirebaseAdMobFieldAnchorType = 130,
 };
 
+@interface FLTFirebaseAdMobReader : FlutterStandardReader
+@end
+
 @implementation FLTFirebaseAdMobReaderWriter
 - (FlutterStandardReader *)readerWithData:(NSData *)data {
   return [[FLTFirebaseAdMobReader alloc] initWithData:data];

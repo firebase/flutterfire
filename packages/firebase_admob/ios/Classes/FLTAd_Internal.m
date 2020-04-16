@@ -238,7 +238,60 @@ rootViewController:(UIViewController *)rootViewController
 - (void)interstitialWillLeaveApplication:(GADInterstitial *)ad {
   NSLog(@"interstitialWillLeaveApplication");
 }
-
 @end
 
+@implementation FLTNativeAd {
+  GADAdLoader *_adLoader;
+  GADUnifiedNativeAdView *_nativeAdView;
+  NSDictionary<NSString *, id> *_customOptions;
+  id<FLTNativeAdFactory> _nativeAdFactory;
+  GADRequest *_request;
+  __weak id<FLTAdListenerCallbackHandler> _callbackHandler;
+}
 
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                                  request:(FLTAdRequest *_Nonnull)request
+                          nativeAdFactory:(id<FLTNativeAdFactory> _Nonnull)nativeAdFactory
+                            customOptions:(NSDictionary<NSString *, id> *_Nonnull)customOptions
+                          callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler {
+  if (self) {
+    _adLoader = [[GADAdLoader alloc] initWithAdUnitID:adUnitId
+                                   rootViewController:[ViewHelper rootViewController]
+                                              adTypes:@[kGADAdLoaderAdTypeUnifiedNative]
+                                              options:@[]];
+    _adLoader.delegate = self;
+    _request = request.request;
+    _nativeAdFactory = nativeAdFactory;
+    _customOptions = customOptions;
+    _callbackHandler = callbackHandler;
+  }
+  return self;
+}
+
+- (void)load {
+  [_adLoader loadRequest:_request];
+}
+
+- (void)dispose {
+  if ([_nativeAdView superview]) [_nativeAdView removeFromSuperview];
+}
+
+- (void)show:(NSNumber * _Nonnull)anchorOffset horizontalCenterOffset:(NSNumber * _Nonnull)horizontalCenterOffset
+  anchorType:(FLTAnchorType * _Nonnull)anchorType {
+  [self dispose];
+  
+  [ViewHelper show:anchorOffset horizontalCenterOffset:horizontalCenterOffset
+        anchorType:anchorType rootViewController:[ViewHelper rootViewController]
+              view:_nativeAdView];
+}
+
+- (nonnull UIView *)view {
+  return _nativeAdView;
+}
+
+- (void)adLoader:(GADAdLoader *)adLoader didReceiveNativeAd:(GADUnifiedNativeAd *)nativeAd {
+  _nativeAdView = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
+  nativeAd.delegate = self;
+  [_callbackHandler onAdLoaded:self];
+}
+@end

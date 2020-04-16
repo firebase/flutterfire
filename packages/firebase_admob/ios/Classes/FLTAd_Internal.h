@@ -1,8 +1,9 @@
 #import <Flutter/Flutter.h>
 #import "Firebase/Firebase.h"
 #import "GoogleMobileAds/GoogleMobileAds.h"
+#import "FLTFirebaseAdMobPlugin.h"
 
-@protocol FLTAdListenerCallbackHandler;
+@protocol FLTNativeAdFactory;
 
 @protocol FLTAd <NSObject>
 @required
@@ -50,5 +51,13 @@ anchorType:(FLTAnchorType *_Nonnull)anchorType;
 @interface FLTInterstitialAd : NSObject<FLTFullscreenAd, GADInterstitialDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
+                 callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler;
+@end
+
+@interface FLTNativeAd : NSObject<FLTPlatformViewAd, GADUnifiedNativeAdDelegate, GADAdLoaderDelegate, GADUnifiedNativeAdLoaderDelegate, GADNativeAdDelegate, FlutterPlatformView>
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                         request:(FLTAdRequest *_Nonnull)request
+                          nativeAdFactory:(id<FLTNativeAdFactory> _Nonnull)nativeAdFactory
+                      customOptions:(NSDictionary<NSString *, id> *_Nonnull)customOptions
                  callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler;
 @end

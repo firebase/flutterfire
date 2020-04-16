@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "FLTAd_Internal.h"
 
-@class FLTMobileAd;
+@protocol FLTAd;
 
 /// Collection of FLTMobileAd subclass instances.
 @interface FLTAdCollection : NSObject

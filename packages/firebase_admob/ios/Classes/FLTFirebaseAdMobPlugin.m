@@ -5,6 +5,7 @@
 #import "FLTFirebaseAdMobPlugin.h"
 
 @interface FLTAdInstanceManager : NSObject <FLTAdListenerCallbackHandler>
+@property NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *nativeAdFactories;
 @end
 
 @implementation FLTAdInstanceManager {
@@ -17,6 +18,7 @@
   if (self) {
     _ads = [[FLTAdCollection alloc] init];
     _callbackChannel = channel;
+    _nativeAdFactories = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -66,6 +68,12 @@
                                  callbackHandler:self];
   } else if ([className isEqual:@"InterstitialAd"]) {
     return [[FLTInterstitialAd alloc] initWithAdUnitId:parameters[0] request:parameters[1] callbackHandler:self];
+  } else if ([className isEqual:@"NativeAd"]){
+    return [[FLTNativeAd alloc] initWithAdUnitId:parameters[0]
+                                         request:parameters[1]
+                                 nativeAdFactory:_nativeAdFactories[parameters[2]]
+                                   customOptions:parameters[3]
+                                 callbackHandler:self];
   } else {
     NSLog(@"Failed to create ad.");
     return nil;
@@ -79,7 +87,6 @@
 
 @implementation FLTFirebaseAdMobPlugin {
   FLTAdInstanceManager *_instanceManager;
-  NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *_nativeAdFactories;
 }
 
 /// Returns the AdMob plugin from the registry or nil if the plugin wasn't registered.
@@ -98,12 +105,12 @@
     return NO;
   }
   
-  if (adMobPlugin->_nativeAdFactories[factoryId]) {
+  if (adMobPlugin->_instanceManager.nativeAdFactories[factoryId]) {
     NSLog(@"A NativeAdFactory with the following factoryId already exists: %@", factoryId);
     return NO;
   }
 
-  [adMobPlugin->_nativeAdFactories setValue:nativeAdFactory forKey:factoryId];
+  [adMobPlugin->_instanceManager.nativeAdFactories setValue:nativeAdFactory forKey:factoryId];
   return YES;
 }
 
@@ -111,8 +118,8 @@
                                           factoryId:(NSString *)factoryId {
   FLTFirebaseAdMobPlugin *adMobPlugin = [self adMobPluginFromRegistry:registry];
 
-  id<FLTNativeAdFactory> factory = adMobPlugin->_nativeAdFactories[factoryId];
-  if (factory) [adMobPlugin->_nativeAdFactories removeObjectForKey:factoryId];
+  id<FLTNativeAdFactory> factory = adMobPlugin->_instanceManager.nativeAdFactories[factoryId];
+  if (factory) [adMobPlugin->_instanceManager.nativeAdFactories removeObjectForKey:factoryId];
   return factory;
 }
 
@@ -141,7 +148,6 @@
 
   if (self) {
     _instanceManager = instanceManager;
-    _nativeAdFactories = [NSMutableDictionary dictionary];
   }
 
   return self;

@@ -3,6 +3,3 @@
 
 @interface FLTFirebaseAdMobReaderWriter : FlutterStandardReaderWriter
 @end
-
-@interface FLTFirebaseAdMobReader : FlutterStandardReader
-@end
