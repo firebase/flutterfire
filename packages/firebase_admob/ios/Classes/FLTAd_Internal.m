@@ -4,7 +4,7 @@
 @end
 
 @implementation FLTAdSize
-- (instancetype)initWithWidth:(NSNumber *)width height:(NSNumber *)height {
+- (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width height:(NSNumber *_Nonnull)height {
   self = [super init];
   if (self) {
     _adSize = GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, height.doubleValue));
@@ -14,7 +14,7 @@
 @end
 
 @implementation FLTAdRequest
-- (instancetype)init {
+- (instancetype _Nonnull)init {
   self = [super init];
   if (self) {
     _request = [GADRequest request];
@@ -27,7 +27,7 @@
   NSString *name;
 }
 
-- (instancetype)initWithName:(NSString *)name {
+- (instancetype _Nonnull)initWithName:(NSString *_Nonnull)name {
   self = [super init];
   if (self) {
     self->name = name;
@@ -35,7 +35,7 @@
   return self;
 }
 
-+ (FLTAnchorType *)typeWithName:(NSString *)name {
++ (FLTAnchorType *_Nullable)typeWithName:(NSString *_Nonnull)name {
   if ([FLTAnchorType.top->name isEqual:name]) {
     return FLTAnchorType.top;
   } else if ([FLTAnchorType.bottom->name isEqual:name]) {
@@ -44,25 +44,25 @@
   return nil;
 }
 
-+ (FLTAnchorType *)top {
++ (FLTAnchorType *_Nonnull)top {
   return [[FLTAnchorType alloc] initWithName:@"AnchorType.top"];
 }
 
-+ (FLTAnchorType *)bottom {
++ (FLTAnchorType *_Nonnull)bottom {
   return [[FLTAnchorType alloc] initWithName:@"AnchorType.bottom"];
 }
 
-- (BOOL)isEqualToAnchorType:(FLTAnchorType *)type {
+- (BOOL)isEqualToAnchorType:(FLTAnchorType *_Nonnull)type {
   return [name isEqual:type->name];
 }
 @end
 
 @implementation ViewHelper
-+ (void)show:(NSNumber *)anchorOffset
-    horizontalCenterOffset:(NSNumber *)horizontalCenterOffset
-                anchorType:(FLTAnchorType *)anchorType
-        rootViewController:(UIViewController *)rootViewController
-                      view:(UIView *)view {
++ (void)show:(NSNumber *_Nonnull)anchorOffset
+    horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
+                anchorType:(FLTAnchorType *_Nonnull)anchorType
+        rootViewController:(UIViewController *_Nonnull)rootViewController
+                      view:(UIView *_Nonnull)view {
   UIView *parentView = rootViewController.view;
   [parentView addSubview:view];
 
@@ -107,11 +107,11 @@
   }
 }
 
-+ (void)activateConstraintForView:(UIView *)view
-                      layoutGuide:(UILayoutGuide *)layoutGuide
-                     anchorOffset:(NSNumber *)anchorOffset
-           horizontalCenterOffset:(NSNumber *)horizontalCenterOffset
-                       anchorType:(FLTAnchorType *)anchorType API_AVAILABLE(ios(9.0)) {
++ (void)activateConstraintForView:(UIView *_Nonnull)view
+                      layoutGuide:(UILayoutGuide *_Nonnull)layoutGuide
+                     anchorOffset:(NSNumber *_Nonnull)anchorOffset
+           horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
+                       anchorType:(FLTAnchorType *_Nonnull)anchorType API_AVAILABLE(ios(9.0)) {
   view.translatesAutoresizingMaskIntoConstraints = NO;
 
   NSLayoutConstraint *verticalConstraint = nil;
@@ -141,10 +141,10 @@
   __weak id<FLTAdListenerCallbackHandler> _callbackHandler;
 }
 
-- (instancetype)initWithAdUnitId:(NSString *)adUnitId
-                         request:(FLTAdRequest *)request
-                          adSize:(FLTAdSize *)adSize
-                 callbackHandler:(id<FLTAdListenerCallbackHandler>)callbackHandler {
+- (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                         request:(FLTAdRequest *_Nonnull)request
+                          adSize:(FLTAdSize *_Nonnull)adSize
+                 callbackHandler:(id<FLTAdListenerCallbackHandler> _Nonnull)callbackHandler {
   self = [super init];
   if (self) {
     _request = request.request;
@@ -169,9 +169,9 @@
   return _bannerView;
 }
 
-- (void)show:(NSNumber *)anchorOffset
-    horizontalCenterOffset:(NSNumber *)horizontalCenterOffset
-                anchorType:(FLTAnchorType *)anchorType {
+- (void)show:(NSNumber *_Nonnull)anchorOffset
+    horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
+                anchorType:(FLTAnchorType *_Nonnull)anchorType {
   [self dispose];
 
   [ViewHelper show:anchorOffset
@@ -181,7 +181,7 @@
                         view:_bannerView];
 }
 
-- (void)adViewDidReceiveAd:(GADBannerView *)adView {
+- (void)adViewDidReceiveAd:(GADBannerView *_Nonnull)adView {
   [_callbackHandler onAdLoaded:self];
 }
 @end
@@ -213,7 +213,7 @@
   [_interstitial presentFromRootViewController:[ViewHelper rootViewController]];
 }
 
-- (void)interstitialDidReceiveAd:(GADInterstitial *)ad {
+- (void)interstitialDidReceiveAd:(GADInterstitial *_Nonnull)ad {
   [_callbackHandler onAdLoaded:self];
 }
 @end
@@ -267,11 +267,11 @@
                         view:_nativeAdView];
 }
 
-- (nonnull UIView *)view {
+- (UIView *_Nonnull)view {
   return _nativeAdView;
 }
 
-- (void)adLoader:(GADAdLoader *)adLoader didReceiveUnifiedNativeAd:(GADUnifiedNativeAd *)nativeAd {
+- (void)adLoader:(GADAdLoader *_Nonnull)adLoader didReceiveUnifiedNativeAd:(GADUnifiedNativeAd *_Nonnull)nativeAd {
   _nativeAdView = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
   nativeAd.delegate = self;
   [_callbackHandler onAdLoaded:self];

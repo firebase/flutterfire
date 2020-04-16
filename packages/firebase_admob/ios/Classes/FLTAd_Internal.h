@@ -11,7 +11,7 @@
 @end
 
 @interface FLTAnchorType : NSObject
-+ (FLTAnchorType *_Nonnull)typeWithName:(NSString *_Nonnull)name;
++ (FLTAnchorType *_Nullable)typeWithName:(NSString *_Nonnull)name;
 + (FLTAnchorType *_Nonnull)top;
 + (FLTAnchorType *_Nonnull)bottom;
 @end
