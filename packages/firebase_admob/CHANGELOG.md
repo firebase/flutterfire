@@ -1,7 +1,6 @@
 ## 0.9.3+2
 
-* Fixed bug where loading multiple ads simultaneously could corrupt targeting info and/or flags on
-iOS.
+* Fixed bug related to simultaneous ad loading behavior on iOS.
 
 ## 0.9.3+1
 
