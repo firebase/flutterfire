@@ -1,7 +1,8 @@
 package io.flutter.plugins.firebaseadmob;
 
 enum AnchorType {
-  TOP("AnchorType.top"), BOTTOM("AnchorType.bottom");
+  TOP("AnchorType.top"),
+  BOTTOM("AnchorType.bottom");
 
   private String name;
 

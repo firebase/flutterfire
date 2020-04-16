@@ -6,6 +6,8 @@ import 'package:meta/meta.dart';
 
 // ignore_for_file: public_member_api_docs
 
+typedef AdListenerCallback = void Function(Ad ad);
+
 abstract class FirebaseAdMob {
   static Future<void> initialize() {
     return AdInstanceManager.instance.initialize();
@@ -34,10 +36,10 @@ class AdRequest {
   const AdRequest();
 }
 
-mixin AdListener {
-  void onAdLoaded(Ad ad);
-  //void onNativeAdClicked(NativeAd ad);
+class AdListener {
+  const AdListener({@required this.onAdLoaded});
 
+  final AdListenerCallback onAdLoaded;
 }
 
 enum AnchorType { bottom, top }

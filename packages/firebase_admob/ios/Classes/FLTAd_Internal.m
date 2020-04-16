@@ -58,10 +58,11 @@
 @end
 
 @implementation ViewHelper
-+ (void)show:(NSNumber *)anchorOffset horizontalCenterOffset:(NSNumber *)horizontalCenterOffset
-  anchorType:(FLTAnchorType *)anchorType
-rootViewController:(UIViewController *)rootViewController
-        view:(UIView *)view {
++ (void)show:(NSNumber *)anchorOffset
+    horizontalCenterOffset:(NSNumber *)horizontalCenterOffset
+                anchorType:(FLTAnchorType *)anchorType
+        rootViewController:(UIViewController *)rootViewController
+                      view:(UIView *)view {
   UIView *parentView = rootViewController.view;
   [parentView addSubview:view];
 
@@ -75,33 +76,34 @@ rootViewController:(UIViewController *)rootViewController
                                anchorType:anchorType];
   } else if (@available(ios 9.0, *)) {
     [ViewHelper activateConstraintForView:view
-               layoutGuide:parentView.layoutMarginsGuide
-              anchorOffset:anchorOffset
-    horizontalCenterOffset:horizontalCenterOffset
-                anchorType:anchorType];
+                              layoutGuide:parentView.layoutMarginsGuide
+                             anchorOffset:anchorOffset
+                   horizontalCenterOffset:horizontalCenterOffset
+                               anchorType:anchorType];
   } else {
     // TODO: Make work with offsets
     [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
-                                                          attribute:NSLayoutAttributeLeading
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:parentView
-                                                          attribute:NSLayoutAttributeLeading
-                                                         multiplier:1
-                                                           constant:0]];
+                                                           attribute:NSLayoutAttributeLeading
+                                                           relatedBy:NSLayoutRelationEqual
+                                                              toItem:parentView
+                                                           attribute:NSLayoutAttributeLeading
+                                                          multiplier:1
+                                                            constant:0]];
     [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
-                                                          attribute:NSLayoutAttributeTrailing
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:parentView
-                                                          attribute:NSLayoutAttributeTrailing
-                                                         multiplier:1
-                                                           constant:0]];
-    [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
-                                                          attribute:NSLayoutAttributeBottom
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:rootViewController.bottomLayoutGuide
-                                                          attribute:NSLayoutAttributeTop
-                                                         multiplier:1
-                                                           constant:0]];
+                                                           attribute:NSLayoutAttributeTrailing
+                                                           relatedBy:NSLayoutRelationEqual
+                                                              toItem:parentView
+                                                           attribute:NSLayoutAttributeTrailing
+                                                          multiplier:1
+                                                            constant:0]];
+    [parentView
+        addConstraint:[NSLayoutConstraint constraintWithItem:view
+                                                   attribute:NSLayoutAttributeBottom
+                                                   relatedBy:NSLayoutRelationEqual
+                                                      toItem:rootViewController.bottomLayoutGuide
+                                                   attribute:NSLayoutAttributeTop
+                                                  multiplier:1
+                                                    constant:0]];
   }
 }
 
@@ -167,12 +169,16 @@ rootViewController:(UIViewController *)rootViewController
   return _bannerView;
 }
 
-- (void)show:(NSNumber *)anchorOffset horizontalCenterOffset:(NSNumber *)horizontalCenterOffset anchorType:(FLTAnchorType *)anchorType {
+- (void)show:(NSNumber *)anchorOffset
+    horizontalCenterOffset:(NSNumber *)horizontalCenterOffset
+                anchorType:(FLTAnchorType *)anchorType {
   [self dispose];
-  
-  [ViewHelper show:anchorOffset horizontalCenterOffset:horizontalCenterOffset
-        anchorType:anchorType rootViewController:[ViewHelper rootViewController]
-              view:_bannerView];
+
+  [ViewHelper show:anchorOffset
+      horizontalCenterOffset:horizontalCenterOffset
+                  anchorType:anchorType
+          rootViewController:[ViewHelper rootViewController]
+                        view:_bannerView];
 }
 
 - (void)adViewDidReceiveAd:(GADBannerView *)adView {
@@ -188,7 +194,8 @@ rootViewController:(UIViewController *)rootViewController
 
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                          callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler {
+                          callbackHandler:
+                              (id<FLTAdListenerCallbackHandler> _Nonnull)callbackHandler {
   self = [super init];
   if (self) {
     _interstitial = [[GADInterstitial alloc] initWithAdUnitID:adUnitId];
@@ -213,8 +220,7 @@ rootViewController:(UIViewController *)rootViewController
 }
 
 /// Tells the delegate an ad request failed.
-- (void)interstitial:(GADInterstitial *)ad
-    didFailToReceiveAdWithError:(GADRequestError *)error {
+- (void)interstitial:(GADInterstitial *)ad didFailToReceiveAdWithError:(GADRequestError *)error {
   NSLog(@"interstitial:didFailToReceiveAdWithError: %@", [error localizedDescription]);
 }
 
@@ -253,11 +259,12 @@ rootViewController:(UIViewController *)rootViewController
                                   request:(FLTAdRequest *_Nonnull)request
                           nativeAdFactory:(id<FLTNativeAdFactory> _Nonnull)nativeAdFactory
                             customOptions:(NSDictionary<NSString *, id> *_Nonnull)customOptions
-                          callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler {
+                          callbackHandler:
+                              (id<FLTAdListenerCallbackHandler> _Nonnull)callbackHandler {
   if (self) {
     _adLoader = [[GADAdLoader alloc] initWithAdUnitID:adUnitId
                                    rootViewController:[ViewHelper rootViewController]
-                                              adTypes:@[kGADAdLoaderAdTypeUnifiedNative]
+                                              adTypes:@[ kGADAdLoaderAdTypeUnifiedNative ]
                                               options:@[]];
     _adLoader.delegate = self;
     _request = request.request;
@@ -276,13 +283,16 @@ rootViewController:(UIViewController *)rootViewController
   if ([_nativeAdView superview]) [_nativeAdView removeFromSuperview];
 }
 
-- (void)show:(NSNumber * _Nonnull)anchorOffset horizontalCenterOffset:(NSNumber * _Nonnull)horizontalCenterOffset
-  anchorType:(FLTAnchorType * _Nonnull)anchorType {
+- (void)show:(NSNumber *_Nonnull)anchorOffset
+    horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
+                anchorType:(FLTAnchorType *_Nonnull)anchorType {
   [self dispose];
-  
-  [ViewHelper show:anchorOffset horizontalCenterOffset:horizontalCenterOffset
-        anchorType:anchorType rootViewController:[ViewHelper rootViewController]
-              view:_nativeAdView];
+
+  [ViewHelper show:anchorOffset
+      horizontalCenterOffset:horizontalCenterOffset
+                  anchorType:anchorType
+          rootViewController:[ViewHelper rootViewController]
+                        view:_nativeAdView];
 }
 
 - (nonnull UIView *)view {
@@ -290,12 +300,12 @@ rootViewController:(UIViewController *)rootViewController
 }
 
 - (void)adLoader:(GADAdLoader *)adLoader didReceiveUnifiedNativeAd:(GADUnifiedNativeAd *)nativeAd {
-   _nativeAdView = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
-   nativeAd.delegate = self;
-   [_callbackHandler onAdLoaded:self];
+  _nativeAdView = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
+  nativeAd.delegate = self;
+  [_callbackHandler onAdLoaded:self];
 }
 
-- (void)adLoaderDidFinishLoading:(GADAdLoader *) adLoader {
+- (void)adLoaderDidFinishLoading:(GADAdLoader *)adLoader {
   // The adLoader has finished loading ads, and a new request can be sent.
 }
 @end
@@ -308,7 +318,8 @@ rootViewController:(UIViewController *)rootViewController
 
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                          callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler {
+                          callbackHandler:
+                              (id<FLTAdListenerCallbackHandler> _Nonnull)callbackHandler {
   self = [super init];
   if (self) {
     _rewardedAd = [[GADRewardedAd alloc] initWithAdUnitID:adUnitId];
@@ -319,9 +330,10 @@ rootViewController:(UIViewController *)rootViewController
 }
 
 - (void)load {
-  [_rewardedAd loadRequest:_request completionHandler:^(GADRequestError * _Nullable error) {
-    if (!error) [self->_callbackHandler onAdLoaded:self];
-  }];
+  [_rewardedAd loadRequest:_request
+         completionHandler:^(GADRequestError *_Nullable error) {
+           if (!error) [self->_callbackHandler onAdLoaded:self];
+         }];
 }
 
 - (void)show {

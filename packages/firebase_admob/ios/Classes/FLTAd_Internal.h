@@ -1,7 +1,7 @@
 #import <Flutter/Flutter.h>
+#import "FLTFirebaseAdMobPlugin.h"
 #import "Firebase/Firebase.h"
 #import "GoogleMobileAds/GoogleMobileAds.h"
-#import "FLTFirebaseAdMobPlugin.h"
 
 @protocol FLTNativeAdFactory;
 
@@ -18,8 +18,9 @@
 
 @protocol FLTPlatformViewAd <FLTAd>
 @required
-- (void)show:(NSNumber *_Nonnull)anchorOffset horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
-anchorType:(FLTAnchorType *_Nonnull)anchorType;
+- (void)show:(NSNumber *_Nonnull)anchorOffset
+    horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
+                anchorType:(FLTAnchorType *_Nonnull)anchorType;
 - (void)dispose;
 @end
 
@@ -29,7 +30,7 @@ anchorType:(FLTAnchorType *_Nonnull)anchorType;
 @end
 
 @protocol FLTAdListenerCallbackHandler <NSObject>
-- (void)onAdLoaded:(id<FLTAd>_Nonnull)ad;
+- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad;
 @end
 
 @interface FLTAdSize : NSObject
@@ -41,29 +42,37 @@ anchorType:(FLTAnchorType *_Nonnull)anchorType;
 @property(readonly) GADRequest *_Nonnull request;
 @end
 
-@interface FLTBannerAd : NSObject<FLTPlatformViewAd, GADBannerViewDelegate, FlutterPlatformView>
+@interface FLTBannerAd : NSObject <FLTPlatformViewAd, GADBannerViewDelegate, FlutterPlatformView>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                         request:(FLTAdRequest *_Nonnull)request
-                          adSize:(FLTAdSize *_Nonnull)adSize
-                 callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler;
+                                  request:(FLTAdRequest *_Nonnull)request
+                                   adSize:(FLTAdSize *_Nonnull)adSize
+                          callbackHandler:
+                              (id<FLTAdListenerCallbackHandler> _Nonnull)callbackHandler;
 @end
 
-@interface FLTInterstitialAd : NSObject<FLTFullscreenAd, GADInterstitialDelegate>
+@interface FLTInterstitialAd : NSObject <FLTFullscreenAd, GADInterstitialDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                         request:(FLTAdRequest *_Nonnull)request
-                 callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler;
+                                  request:(FLTAdRequest *_Nonnull)request
+                          callbackHandler:
+                              (id<FLTAdListenerCallbackHandler> _Nonnull)callbackHandler;
 @end
 
-@interface FLTNativeAd : NSObject<FLTPlatformViewAd, GADUnifiedNativeAdDelegate, GADAdLoaderDelegate, GADUnifiedNativeAdLoaderDelegate, FlutterPlatformView>
+@interface FLTNativeAd : NSObject <FLTPlatformViewAd,
+                                   GADUnifiedNativeAdDelegate,
+                                   GADAdLoaderDelegate,
+                                   GADUnifiedNativeAdLoaderDelegate,
+                                   FlutterPlatformView>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                         request:(FLTAdRequest *_Nonnull)request
+                                  request:(FLTAdRequest *_Nonnull)request
                           nativeAdFactory:(id<FLTNativeAdFactory> _Nonnull)nativeAdFactory
-                      customOptions:(NSDictionary<NSString *, id> *_Nonnull)customOptions
-                 callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler;
+                            customOptions:(NSDictionary<NSString *, id> *_Nonnull)customOptions
+                          callbackHandler:
+                              (id<FLTAdListenerCallbackHandler> _Nonnull)callbackHandler;
 @end
 
-@interface FLTRewardedAd : NSObject<FLTFullscreenAd, GADRewardedAdDelegate>
+@interface FLTRewardedAd : NSObject <FLTFullscreenAd, GADRewardedAdDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                         request:(FLTAdRequest *_Nonnull)request
-                 callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler;
+                                  request:(FLTAdRequest *_Nonnull)request
+                          callbackHandler:
+                              (id<FLTAdListenerCallbackHandler> _Nonnull)callbackHandler;
 @end

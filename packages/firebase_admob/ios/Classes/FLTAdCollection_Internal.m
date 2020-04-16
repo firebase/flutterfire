@@ -39,7 +39,7 @@
 }
 
 - (NSNumber *_Nullable)referenceIdForAd:(id<FLTAd> _Nonnull)ad {
-  NSNumber * __block referenceId = nil;
+  NSNumber *__block referenceId = nil;
   dispatch_sync(_lockQueue, ^{
     referenceId = [_ads allKeysForObject:ad][0];
   });

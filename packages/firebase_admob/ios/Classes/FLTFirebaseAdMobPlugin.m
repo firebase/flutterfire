@@ -24,8 +24,8 @@
 }
 
 - (void)loadAdWithReferenceId:(NSNumber *)referenceId
-                   className:(NSString *)className
-                  parameters:(NSArray<id> *)parameters {
+                    className:(NSString *)className
+                   parameters:(NSArray<id> *)parameters {
   id<FLTAd> ad = [self createAd:className parameters:parameters];
   [_ads addAd:ad forReferenceId:referenceId];
   [ad load];
@@ -41,10 +41,12 @@
   id<FLTAd> ad = [_ads adForReferenceId:referenceId];
 
   if ([ad.class conformsToProtocol:@protocol(FLTPlatformViewAd)]) {
-    id<FLTPlatformViewAd> platformViewAd = (id<FLTPlatformViewAd>) ad;
-    [platformViewAd show:parameters[0] horizontalCenterOffset:parameters[1] anchorType:parameters[2]];
+    id<FLTPlatformViewAd> platformViewAd = (id<FLTPlatformViewAd>)ad;
+    [platformViewAd show:parameters[0]
+        horizontalCenterOffset:parameters[1]
+                    anchorType:parameters[2]];
   } else if ([ad.class conformsToProtocol:@protocol(FLTFullscreenAd)]) {
-    id<FLTFullscreenAd> fullscreenAd = (id<FLTFullscreenAd>) ad;
+    id<FLTFullscreenAd> fullscreenAd = (id<FLTFullscreenAd>)ad;
     [fullscreenAd show];
   } else {
     NSLog(@"Failed to show ad.");
@@ -54,7 +56,7 @@
 - (void)disposeAdWithReferenceId:(NSNumber *)referenceId {
   id<FLTAd> ad = [_ads adForReferenceId:referenceId];
   if ([ad.class conformsToProtocol:@protocol(FLTPlatformViewAd)]) {
-    id<FLTPlatformViewAd> platformViewAd = (id<FLTPlatformViewAd>) ad;
+    id<FLTPlatformViewAd> platformViewAd = (id<FLTPlatformViewAd>)ad;
     [platformViewAd dispose];
   }
   [_ads removeAdWithReferenceId:referenceId];
@@ -67,8 +69,10 @@
                                           adSize:parameters[2]
                                  callbackHandler:self];
   } else if ([className isEqual:@"InterstitialAd"]) {
-    return [[FLTInterstitialAd alloc] initWithAdUnitId:parameters[0] request:parameters[1] callbackHandler:self];
-  } else if ([className isEqual:@"NativeAd"]){
+    return [[FLTInterstitialAd alloc] initWithAdUnitId:parameters[0]
+                                               request:parameters[1]
+                                       callbackHandler:self];
+  } else if ([className isEqual:@"NativeAd"]) {
     return [[FLTNativeAd alloc] initWithAdUnitId:parameters[0]
                                          request:parameters[1]
                                  nativeAdFactory:_nativeAdFactories[parameters[2]]
@@ -108,7 +112,7 @@
           NSStringFromClass([self class]));
     return NO;
   }
-  
+
   if (adMobPlugin->_instanceManager.nativeAdFactories[factoryId]) {
     NSLog(@"A NativeAdFactory with the following factoryId already exists: %@", factoryId);
     return NO;
@@ -163,8 +167,8 @@
     result(nil);
   } else if ([call.method isEqual:@"LOAD"]) {
     [_instanceManager loadAdWithReferenceId:call.arguments[0]
-                                className:call.arguments[1]
-                               parameters:call.arguments[2]];
+                                  className:call.arguments[1]
+                                 parameters:call.arguments[2]];
     result(nil);
   } else if ([call.method isEqual:@"SHOW"]) {
     [_instanceManager showAdWithReferenceId:call.arguments[0] parameters:call.arguments[1]];

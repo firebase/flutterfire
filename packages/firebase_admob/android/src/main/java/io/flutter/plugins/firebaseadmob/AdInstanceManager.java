@@ -36,7 +36,11 @@ class AdInstanceManager implements Ad.AdListenerCallbackHandler {
     final Ad ad = referenceIdToAdMap.get(referenceId);
 
     if (ad instanceof Ad.PlatformViewAd) {
-      ((Ad.PlatformViewAd) ad).show((Double) parameters.get(0), (Double) parameters.get(1), (AnchorType) parameters.get(2));
+      ((Ad.PlatformViewAd) ad)
+          .show(
+              (Double) parameters.get(0),
+              (Double) parameters.get(1),
+              (AnchorType) parameters.get(2));
       return;
     } else if (ad instanceof Ad.FullScreenAd) {
       ((Ad.FullScreenAd) ad).show();
@@ -71,11 +75,7 @@ class AdInstanceManager implements Ad.AdListenerCallbackHandler {
             this);
       case "InterstitialAd":
         return new Ad.InterstitialAd(
-            (String) parameters.get(0),
-            (AdRequest) parameters.get(1),
-            (Activity) context,
-            this
-        );
+            (String) parameters.get(0), (AdRequest) parameters.get(1), (Activity) context, this);
       case "NativeAd":
         return new Ad.NativeAd(
             (String) parameters.get(0),
@@ -83,15 +83,10 @@ class AdInstanceManager implements Ad.AdListenerCallbackHandler {
             (Activity) context,
             nativeAdFactories.get(parameters.get(2)),
             (Map<String, Object>) parameters.get(3),
-            this
-        );
+            this);
       case "RewardedAd":
         return new Ad.RewardedAd(
-            (String) parameters.get(0),
-            (AdRequest) parameters.get(1),
-            (Activity) context,
-            this
-        );
+            (String) parameters.get(0), (AdRequest) parameters.get(1), (Activity) context, this);
     }
     throw new IllegalArgumentException();
   }

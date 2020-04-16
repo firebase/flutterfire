@@ -22,26 +22,27 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with AdListener {
+class _MyAppState extends State<MyApp> {
   BannerAd _bannerAd;
   BannerAd _offsetBannerAd;
   InterstitialAd _interstitialAd;
   NativeAd _nativeAd;
   RewardedAd _rewardedAd;
   int _coins = 0;
+  AdListener _adListener;
 
   BannerAd _createBannerAd() {
     return BannerAd(
       adUnitId: BannerAd.testAdUnitId,
       size: AdSize.banner,
-      listener: this,
+      listener: _adListener,
     );
   }
 
   InterstitialAd _createInterstitialAd() {
     return InterstitialAd(
       adUnitId: InterstitialAd.testAdUnitId,
-      listener: this,
+      listener: _adListener,
     );
   }
 
@@ -49,14 +50,14 @@ class _MyAppState extends State<MyApp> with AdListener {
     return NativeAd(
       adUnitId: NativeAd.testAdUnitId,
       factoryId: 'adFactoryExample',
-      listener: this,
+      listener: _adListener,
     );
   }
 
   RewardedAd _createRewardedAd() {
     return RewardedAd(
       adUnitId: RewardedAd.testAdUnitId,
-      listener: this,
+      listener: _adListener,
     );
   }
 
@@ -64,6 +65,26 @@ class _MyAppState extends State<MyApp> with AdListener {
   void initState() {
     super.initState();
     FirebaseAdMob.initialize();
+    _adListener = AdListener(onAdLoaded: _onAdLoaded);
+  }
+
+  void _onAdLoaded(Ad ad) {
+    print('Ad loaded');
+    if (ad == _bannerAd) {
+      _bannerAd.show();
+    } else if (ad == _offsetBannerAd) {
+      _offsetBannerAd.show(
+        anchorOffset: 20,
+        horizontalCenterOffset: 20,
+        anchorType: AnchorType.top,
+      );
+    } else if (ad == _interstitialAd) {
+      _interstitialAd.show();
+    } else if (ad == _nativeAd) {
+      _nativeAd.show(anchorType: AnchorType.top);
+    } else if (ad == _rewardedAd) {
+      _rewardedAd.show();
+    }
   }
 
   @override
@@ -149,25 +170,5 @@ class _MyAppState extends State<MyApp> with AdListener {
         ),
       ),
     );
-  }
-
-  @override
-  void onAdLoaded(Ad ad) {
-    print('Ad loaded');
-    if (ad == _bannerAd) {
-      _bannerAd.show();
-    } else if (ad == _offsetBannerAd) {
-      _offsetBannerAd.show(
-        anchorOffset: 20,
-        horizontalCenterOffset: 20,
-        anchorType: AnchorType.top,
-      );
-    } else if (ad == _interstitialAd) {
-      _interstitialAd.show();
-    } else if (ad == _nativeAd) {
-      _nativeAd.show(anchorType: AnchorType.top);
-    } else if (ad == _rewardedAd) {
-      _rewardedAd.show();
-    }
   }
 }

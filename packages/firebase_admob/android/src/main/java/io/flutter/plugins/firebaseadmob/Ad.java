@@ -5,9 +5,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdView;
@@ -16,10 +14,8 @@ import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
-
-import java.util.Map;
-
 import io.flutter.plugin.platform.PlatformView;
+import java.util.Map;
 
 abstract class Ad {
   final com.google.android.gms.ads.AdRequest request;
@@ -29,7 +25,7 @@ abstract class Ad {
     void onAdLoaded(Ad ad);
   }
 
-  static abstract class PlatformViewAd extends Ad implements PlatformView {
+  abstract static class PlatformViewAd extends Ad implements PlatformView {
     private final int viewId;
 
     PlatformViewAd(final AdRequest request, final Activity activity) {
@@ -40,41 +36,40 @@ abstract class Ad {
     void show(double anchorOffset, double horizontalCenterOffset, final AnchorType anchorType) {
       dispose();
 
-        final LinearLayout adViewParent = new LinearLayout(activity);
-        adViewParent.setId(viewId);
-        adViewParent.setOrientation(LinearLayout.VERTICAL);
-        adViewParent.addView(getView());
-        final float scale = activity.getResources().getDisplayMetrics().density;
+      final LinearLayout adViewParent = new LinearLayout(activity);
+      adViewParent.setId(viewId);
+      adViewParent.setOrientation(LinearLayout.VERTICAL);
+      adViewParent.addView(getView());
+      final float scale = activity.getResources().getDisplayMetrics().density;
 
-        int left = horizontalCenterOffset > 0 ? (int) (horizontalCenterOffset * scale) : 0;
-        int right =
-            horizontalCenterOffset < 0 ? (int) (Math.abs(horizontalCenterOffset) * scale) : 0;
-        if (anchorType == AnchorType.BOTTOM) {
-          adViewParent.setPadding(left, 0, right, (int) (anchorOffset * scale));
-          adViewParent.setGravity(Gravity.BOTTOM);
-        } else {
-          adViewParent.setPadding(left, (int) (anchorOffset * scale), right, 0);
-          adViewParent.setGravity(Gravity.TOP);
-        }
+      int left = horizontalCenterOffset > 0 ? (int) (horizontalCenterOffset * scale) : 0;
+      int right = horizontalCenterOffset < 0 ? (int) (Math.abs(horizontalCenterOffset) * scale) : 0;
+      if (anchorType == AnchorType.BOTTOM) {
+        adViewParent.setPadding(left, 0, right, (int) (anchorOffset * scale));
+        adViewParent.setGravity(Gravity.BOTTOM);
+      } else {
+        adViewParent.setPadding(left, (int) (anchorOffset * scale), right, 0);
+        adViewParent.setGravity(Gravity.TOP);
+      }
 
-        activity.addContentView(
-            adViewParent,
-            new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+      activity.addContentView(
+          adViewParent,
+          new ViewGroup.LayoutParams(
+              ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
-      @Override
-      public void dispose() {
-        final LinearLayout adViewParent = activity.findViewById(viewId);
-        if (adViewParent == null) return;
+    @Override
+    public void dispose() {
+      final LinearLayout adViewParent = activity.findViewById(viewId);
+      if (adViewParent == null) return;
 
-        final ViewGroup rootView = (ViewGroup) adViewParent.getParent();
-        rootView.removeView(adViewParent);
-        adViewParent.removeView(getView());
-      }
+      final ViewGroup rootView = (ViewGroup) adViewParent.getParent();
+      rootView.removeView(adViewParent);
+      adViewParent.removeView(getView());
+    }
   }
 
-  static abstract class FullScreenAd extends Ad {
+  abstract static class FullScreenAd extends Ad {
     FullScreenAd(final AdRequest request, final Activity activity) {
       super(request, activity);
     }
@@ -138,7 +133,8 @@ abstract class Ad {
     }
   }
 
-  static class NativeAd extends PlatformViewAd implements UnifiedNativeAd.OnUnifiedNativeAdLoadedListener {
+  static class NativeAd extends PlatformViewAd
+      implements UnifiedNativeAd.OnUnifiedNativeAdLoadedListener {
     private final AdLoader adLoader;
     private final FirebaseAdMobPlugin.NativeAdFactory nativeAdFactory;
     private final Map<String, Object> customOptions;
@@ -152,10 +148,11 @@ abstract class Ad {
         final Map<String, Object> customOptions,
         final AdListenerCallbackHandler callbackHandler) {
       super(request, activity);
-      adLoader = new AdLoader.Builder(activity, adUnitId)
-          .forUnifiedNativeAd(this)
-          .withAdListener(Ad.createAdListener(callbackHandler, this))
-          .build();
+      adLoader =
+          new AdLoader.Builder(activity, adUnitId)
+              .forUnifiedNativeAd(this)
+              .withAdListener(Ad.createAdListener(callbackHandler, this))
+              .build();
       this.nativeAdFactory = nativeAdFactory;
       this.customOptions = customOptions;
     }
@@ -192,39 +189,42 @@ abstract class Ad {
 
     @Override
     void load() {
-      rewardedAd.loadAd(request, new RewardedAdLoadCallback() {
-        public void onRewardedAdLoaded() {
-          callbackHandler.onAdLoaded(RewardedAd.this);
-        }
+      rewardedAd.loadAd(
+          request,
+          new RewardedAdLoadCallback() {
+            public void onRewardedAdLoaded() {
+              callbackHandler.onAdLoaded(RewardedAd.this);
+            }
 
-        public void onRewardedAdFailedToLoad(int errorCode) {
-        }
-      });
+            public void onRewardedAdFailedToLoad(int errorCode) {}
+          });
     }
 
     @Override
     void show() {
-      rewardedAd.show(activity, new RewardedAdCallback() {
-        @Override
-        public void onRewardedAdOpened() {
-          // Ad opened.
-        }
+      rewardedAd.show(
+          activity,
+          new RewardedAdCallback() {
+            @Override
+            public void onRewardedAdOpened() {
+              // Ad opened.
+            }
 
-        @Override
-        public void onRewardedAdClosed() {
-          // Ad closed.
-        }
+            @Override
+            public void onRewardedAdClosed() {
+              // Ad closed.
+            }
 
-        @Override
-        public void onUserEarnedReward(@NonNull RewardItem reward) {
-          // User earned reward.
-        }
+            @Override
+            public void onUserEarnedReward(@NonNull RewardItem reward) {
+              // User earned reward.
+            }
 
-        @Override
-        public void onRewardedAdFailedToShow(int errorCode) {
-          // Ad failed to display.
-        }
-      });
+            @Override
+            public void onRewardedAdFailedToShow(int errorCode) {
+              // Ad failed to display.
+            }
+          });
     }
   }
 

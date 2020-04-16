@@ -5,11 +5,11 @@
 #import <Flutter/Flutter.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "FLTAdCollection_Internal.h"
 #import "FLTAd_Internal.h"
 #import "FLTFirebaseAdMobReaderWriter_Internal.h"
 #import "Firebase/Firebase.h"
 #import "GoogleMobileAds/GoogleMobileAds.h"
-#import "FLTAdCollection_Internal.h"
 
 #define FLTLogWarning(format, ...) NSLog((@"FirebaseAdMobPlugin <warning> " format), ##__VA_ARGS__)
 
@@ -31,7 +31,8 @@
  * @return a `GADUnifiedNativeAdView` that is overlaid on top of the FlutterView.
  */
 - (GADUnifiedNativeAdView *_Nonnull)createNativeAd:(GADUnifiedNativeAd *_Nonnull)nativeAd
-                             customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions;
+                                     customOptions:
+                                         (NSDictionary<NSString *, id> *_Nullable)customOptions;
 @end
 
 /**
@@ -62,6 +63,7 @@
  * @return the previous `FLTNativeAdFactory` associated with this factoryId, or null if there was
  * none for this factoryId.
  */
-+ (id<FLTNativeAdFactory> _Nullable)unregisterNativeAdFactory:(NSObject<FlutterPluginRegistry> *_Nonnull)registry
-                                          factoryId:(NSString *_Nonnull)factoryId;
++ (id<FLTNativeAdFactory> _Nullable)unregisterNativeAdFactory:
+                                        (NSObject<FlutterPluginRegistry> *_Nonnull)registry
+                                                    factoryId:(NSString *_Nonnull)factoryId;
 @end
