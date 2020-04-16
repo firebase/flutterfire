@@ -6,7 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+
+import java.util.Map;
 
 import io.flutter.plugin.platform.PlatformView;
 
@@ -26,41 +31,40 @@ abstract class Ad {
       this.viewId = hashCode();
     }
 
-    abstract Activity getActivity();
-
     void show(double anchorOffset, double horizontalCenterOffset, final AnchorType anchorType) {
       dispose();
 
-        final LinearLayout content = new LinearLayout(getActivity());
-        content.setId(viewId);
-        content.setOrientation(LinearLayout.VERTICAL);
-        content.addView(getView());
-        final float scale = getActivity().getResources().getDisplayMetrics().density;
+        final LinearLayout adViewParent = new LinearLayout(activity);
+        adViewParent.setId(viewId);
+        adViewParent.setOrientation(LinearLayout.VERTICAL);
+        adViewParent.addView(getView());
+        final float scale = activity.getResources().getDisplayMetrics().density;
 
         int left = horizontalCenterOffset > 0 ? (int) (horizontalCenterOffset * scale) : 0;
         int right =
             horizontalCenterOffset < 0 ? (int) (Math.abs(horizontalCenterOffset) * scale) : 0;
         if (anchorType == AnchorType.BOTTOM) {
-          content.setPadding(left, 0, right, (int) (anchorOffset * scale));
-          content.setGravity(Gravity.BOTTOM);
+          adViewParent.setPadding(left, 0, right, (int) (anchorOffset * scale));
+          adViewParent.setGravity(Gravity.BOTTOM);
         } else {
-          content.setPadding(left, (int) (anchorOffset * scale), right, 0);
-          content.setGravity(Gravity.TOP);
+          adViewParent.setPadding(left, (int) (anchorOffset * scale), right, 0);
+          adViewParent.setGravity(Gravity.TOP);
         }
 
-        getActivity().addContentView(
-            content,
+        activity.addContentView(
+            adViewParent,
             new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
       @Override
       public void dispose() {
-        final View contentView = getActivity().findViewById(viewId);
-        if (contentView == null || !(contentView.getParent() instanceof ViewGroup)) return;
+        final LinearLayout adViewParent = activity.findViewById(viewId);
+        if (adViewParent == null) return;
 
-        final ViewGroup contentParent = (ViewGroup) contentView.getParent();
-        contentParent.removeView(contentView);
+        final ViewGroup rootView = (ViewGroup) adViewParent.getParent();
+        rootView.removeView(adViewParent);
+        adViewParent.removeView(getView());
       }
   }
 
@@ -101,11 +105,6 @@ abstract class Ad {
     public View getView() {
       return bannerView;
     }
-
-    @Override
-    Activity getActivity() {
-      return activity;
-    }
   }
 
   static class InterstitialAd extends FullScreenAd {
@@ -130,6 +129,46 @@ abstract class Ad {
     @Override
     void show() {
       interstitialAd.show();
+    }
+  }
+
+  static class NativeAd extends PlatformViewAd implements UnifiedNativeAd.OnUnifiedNativeAdLoadedListener {
+    private final AdLoader adLoader;
+    private final FirebaseAdMobPlugin.NativeAdFactory nativeAdFactory;
+    private final Map<String, Object> customOptions;
+    private final AdListenerCallbackHandler callbackHandler;
+    private UnifiedNativeAdView adView;
+
+    NativeAd(
+        final String adUnitId,
+        final AdRequest request,
+        final Activity activity,
+        final FirebaseAdMobPlugin.NativeAdFactory nativeAdFactory,
+        final Map<String, Object> customOptions,
+        final AdListenerCallbackHandler callbackHandler) {
+      super(request, activity);
+      adLoader = new AdLoader.Builder(activity, adUnitId)
+          .forUnifiedNativeAd(this)
+          .withAdListener(Ad.createAdListener(callbackHandler, this))
+          .build();
+      this.nativeAdFactory = nativeAdFactory;
+      this.customOptions = customOptions;
+      this.callbackHandler = callbackHandler;
+    }
+
+    @Override
+    void load() {
+      adLoader.loadAd(request);
+    }
+
+    @Override
+    public View getView() {
+      return adView;
+    }
+
+    @Override
+    public void onUnifiedNativeAdLoaded(final UnifiedNativeAd unifiedNativeAd) {
+      adView = nativeAdFactory.createNativeAd(unifiedNativeAd, customOptions);
     }
   }
 

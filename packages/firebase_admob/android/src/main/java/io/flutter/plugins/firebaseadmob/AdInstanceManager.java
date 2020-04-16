@@ -11,6 +11,7 @@ import java.util.Map;
 class AdInstanceManager implements Ad.AdListenerCallbackHandler {
   private Context context;
   private final Map<Integer, Ad> referenceIdToAdMap = new HashMap<>();
+  public final Map<String, FirebaseAdMobPlugin.NativeAdFactory> nativeAdFactories = new HashMap<>();
   private final MethodChannel callbackChannel;
 
   AdInstanceManager(final MethodChannel callbackChannel, final Context context) {
@@ -72,6 +73,15 @@ class AdInstanceManager implements Ad.AdListenerCallbackHandler {
             (String) parameters.get(0),
             (AdRequest) parameters.get(1),
             (Activity) context,
+            this
+        );
+      case "NativeAd":
+        return new Ad.NativeAd(
+            (String) parameters.get(0),
+            (AdRequest) parameters.get(1),
+            (Activity) context,
+            nativeAdFactories.get(parameters.get(2)),
+            (Map<String, Object>) parameters.get(3),
             this
         );
     }

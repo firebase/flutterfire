@@ -45,7 +45,6 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   private Activity activity;
   // This is always null when not using v2 embedding.
   private FlutterPluginBinding pluginBinding;
-  private final Map<String, NativeAdFactory> nativeAdFactories = new HashMap<>();
 
   /**
    * Interface used to display a {@link com.google.android.gms.ads.formats.UnifiedNativeAd}.
@@ -182,7 +181,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   }
 
   private boolean addNativeAdFactory(String factoryId, NativeAdFactory nativeAdFactory) {
-    if (nativeAdFactories.containsKey(factoryId)) {
+    if (instanceManager.nativeAdFactories.containsKey(factoryId)) {
       final String errorMessage =
           String.format(
               "A NativeAdFactory with the following factoryId already exists: %s", factoryId);
@@ -190,12 +189,12 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
       return false;
     }
 
-    nativeAdFactories.put(factoryId, nativeAdFactory);
+    instanceManager.nativeAdFactories.put(factoryId, nativeAdFactory);
     return true;
   }
 
   private NativeAdFactory removeNativeAdFactory(String factoryId) {
-    return nativeAdFactories.remove(factoryId);
+    return instanceManager.nativeAdFactories.remove(factoryId);
   }
 
   private void initializePlugin(
