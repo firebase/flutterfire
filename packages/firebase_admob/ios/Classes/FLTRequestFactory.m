@@ -7,9 +7,9 @@
 #import "GoogleMobileAds/GADExtras.h"
 #import "GoogleMobileAds/GoogleMobileAds.h"
 
-@implementation FLTRequestFactory
-
+@implementation FLTRequestFactory {
 NSDictionary *_targetingInfo;
+}
 
 - (instancetype)initWithTargetingInfo:(NSDictionary *)targetingInfo {
   self = [super init];

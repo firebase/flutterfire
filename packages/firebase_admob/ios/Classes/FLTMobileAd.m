@@ -9,21 +9,20 @@
 static NSMutableDictionary *allAds = nil;
 static NSDictionary *statusToString = nil;
 
-@implementation FLTMobileAd
+@implementation FLTMobileAd {
 NSNumber *_mobileAdId;
+@protected
 FlutterMethodChannel *_channel;
 FLTMobileAdStatus _status;
 double _anchorOffset;
 double _horizontalCenterOffset;
 int _anchorType;
+}
 
 + (void)initialize {
   if (allAds == nil) {
     allAds = [[NSMutableDictionary alloc] init];
   }
-  _anchorType = 0;
-  _anchorOffset = 0;
-  _horizontalCenterOffset = 0;
 
   if (statusToString == nil) {
     statusToString = @{
@@ -54,10 +53,10 @@ int _anchorType;
     _mobileAdId = mobileAdId;
     _channel = channel;
     _status = CREATED;
-    _anchorOffset = 0;
-    _horizontalCenterOffset = 0;
-    _anchorType = 0;
-    allAds[mobileAdId] = self;
+        _anchorOffset = 0;
+        _horizontalCenterOffset = 0;
+        _anchorType = 0;
+       allAds[mobileAdId] = self;
   }
   return self;
 }
@@ -169,9 +168,10 @@ int _anchorType;
 }
 @end
 
-@implementation FLTBannerAd
+@implementation FLTBannerAd {
 GADBannerView *_banner;
 GADAdSize _adSize;
+}
 
 + (instancetype)withId:(NSNumber *)mobileAdId
                 adSize:(GADAdSize)adSize
@@ -238,8 +238,9 @@ GADAdSize _adSize;
 }
 @end
 
-@implementation FLTInterstitialAd
+@implementation FLTInterstitialAd {
 GADInterstitial *_interstitial;
+}
 
 + (instancetype)withId:(NSNumber *)mobileAdId channel:(FlutterMethodChannel *)channel {
   FLTMobileAd *ad = [FLTMobileAd getAdForId:mobileAdId];
