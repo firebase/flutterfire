@@ -156,7 +156,7 @@ class _MyAppState extends State<MyApp> with AdListener {
     if (ad == _bannerAd) {
       _bannerAd.show();
     } else if (ad == _offsetBannerAd) {
-      _offsetBannerAd?.show(
+      _offsetBannerAd.show(
         anchorOffset: 20,
         horizontalCenterOffset: 20,
         anchorType: AnchorType.top,
@@ -164,7 +164,7 @@ class _MyAppState extends State<MyApp> with AdListener {
     } else if (ad == _interstitialAd) {
       _interstitialAd.show();
     } else if (ad == _nativeAd) {
-      _nativeAd.show();
+      _nativeAd.show(anchorType: AnchorType.top);
     }
   }
 }

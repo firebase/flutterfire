@@ -54,7 +54,7 @@ anchorType:(FLTAnchorType *_Nonnull)anchorType;
                  callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler;
 @end
 
-@interface FLTNativeAd : NSObject<FLTPlatformViewAd, GADUnifiedNativeAdDelegate, GADAdLoaderDelegate, GADUnifiedNativeAdLoaderDelegate, GADNativeAdDelegate, FlutterPlatformView>
+@interface FLTNativeAd : NSObject<FLTPlatformViewAd, GADUnifiedNativeAdDelegate, GADAdLoaderDelegate, GADUnifiedNativeAdLoaderDelegate, FlutterPlatformView>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
                           nativeAdFactory:(id<FLTNativeAdFactory> _Nonnull)nativeAdFactory

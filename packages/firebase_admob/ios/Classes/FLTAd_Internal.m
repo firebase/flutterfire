@@ -289,9 +289,13 @@ rootViewController:(UIViewController *)rootViewController
   return _nativeAdView;
 }
 
-- (void)adLoader:(GADAdLoader *)adLoader didReceiveNativeAd:(GADUnifiedNativeAd *)nativeAd {
-  _nativeAdView = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
-  nativeAd.delegate = self;
-  [_callbackHandler onAdLoaded:self];
+- (void)adLoader:(GADAdLoader *)adLoader didReceiveUnifiedNativeAd:(GADUnifiedNativeAd *)nativeAd {
+   _nativeAdView = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
+   nativeAd.delegate = self;
+   [_callbackHandler onAdLoaded:self];
+}
+
+- (void)adLoaderDidFinishLoading:(GADAdLoader *) adLoader {
+  // The adLoader has finished loading ads, and a new request can be sent.
 }
 @end

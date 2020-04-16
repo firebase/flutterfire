@@ -110,7 +110,7 @@
     return NO;
   }
 
-  [adMobPlugin->_instanceManager.nativeAdFactories setValue:nativeAdFactory forKey:factoryId];
+  [adMobPlugin->_instanceManager.nativeAdFactories setObject:nativeAdFactory forKey:factoryId];
   return YES;
 }
 
