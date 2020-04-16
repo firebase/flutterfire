@@ -62,6 +62,6 @@
  * @return the previous `FLTNativeAdFactory` associated with this factoryId, or null if there was
  * none for this factoryId.
  */
-+ (id<FLTNativeAdFactory>)unregisterNativeAdFactory:(NSObject<FlutterPluginRegistry> *_Nonnull)registry
++ (id<FLTNativeAdFactory> _Nullable)unregisterNativeAdFactory:(NSObject<FlutterPluginRegistry> *_Nonnull)registry
                                           factoryId:(NSString *_Nonnull)factoryId;
 @end

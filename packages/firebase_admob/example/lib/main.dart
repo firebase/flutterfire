@@ -13,6 +13,10 @@ import 'package:firebase_admob/firebase_admob.dart';
 // test device. Check the logs for your device's ID value.
 const String testDevice = 'YOUR_DEVICE_ID';
 
+void main() {
+  runApp(MyApp());
+}
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -22,7 +26,7 @@ class _MyAppState extends State<MyApp> with AdListener {
   BannerAd _bannerAd;
   BannerAd _offsetBannerAd;
   InterstitialAd _interstitialAd;
-//  NativeAd _nativeAd;
+  NativeAd _nativeAd;
   int _coins = 0;
 
   BannerAd _createBannerAd() {
@@ -39,17 +43,14 @@ class _MyAppState extends State<MyApp> with AdListener {
       listener: this,
     );
   }
-//
-//  NativeAd createNativeAd() {
-//    return NativeAd(
-//      adUnitId: NativeAd.testAdUnitId,
-//      factoryId: 'adFactoryExample',
-//      targetingInfo: targetingInfo,
-//      listener: (MobileAdEvent event) {
-//        print("$NativeAd event $event");
-//      },
-//    );
-//  }
+
+  NativeAd _createNativeAd() {
+    return NativeAd(
+      adUnitId: NativeAd.testAdUnitId,
+      factoryId: 'adFactoryExample',
+      listener: this,
+    );
+  }
 
   @override
   void initState() {
@@ -61,7 +62,7 @@ class _MyAppState extends State<MyApp> with AdListener {
   void dispose() {
     _bannerAd?.dispose();
     _interstitialAd?.dispose();
-//    _nativeAd?.dispose();
+    _nativeAd?.dispose();
     super.dispose();
   }
 
@@ -91,10 +92,9 @@ class _MyAppState extends State<MyApp> with AdListener {
                       _bannerAd = null;
                     }),
                 RaisedButton(
-                    child: const Text('SHOW BANNER WITH OFFSET'),
+                    child: const Text('SHOW OFFSET BANNER'),
                     onPressed: () {
                       _offsetBannerAd ??= _createBannerAd()..load();
-                      //..show(horizontalCenterOffset: -50, anchorOffset: 100);
                     }),
                 RaisedButton(
                     child: const Text('REMOVE OFFSET BANNER'),
@@ -109,26 +109,19 @@ class _MyAppState extends State<MyApp> with AdListener {
                     _interstitialAd = _createInterstitialAd()..load();
                   },
                 ),
-//                RaisedButton(
-//                  child: const Text('SHOW NATIVE'),
-//                  onPressed: () {
-//                    _nativeAd ??= createNativeAd();
-//                    _nativeAd
-//                      ..load()
-//                      ..show(
-//                        anchorType: Platform.isAndroid
-//                            ? AnchorType.bottom
-//                            : AnchorType.top,
-//                      );
-//                  },
-//                ),
-//                RaisedButton(
-//                  child: const Text('REMOVE NATIVE'),
-//                  onPressed: () {
-//                    _nativeAd?.dispose();
-//                    _nativeAd = null;
-//                  },
-//                ),
+                RaisedButton(
+                  child: const Text('SHOW NATIVE'),
+                  onPressed: () {
+                    _nativeAd ??= _createNativeAd()..load();
+                  },
+                ),
+                RaisedButton(
+                  child: const Text('REMOVE NATIVE'),
+                  onPressed: () {
+                    _nativeAd?.dispose();
+                    _nativeAd = null;
+                  },
+                ),
 //                RaisedButton(
 //                  child: const Text('LOAD REWARDED VIDEO'),
 //                  onPressed: () {
@@ -170,10 +163,8 @@ class _MyAppState extends State<MyApp> with AdListener {
       );
     } else if (ad == _interstitialAd) {
       _interstitialAd.show();
+    } else if (ad == _nativeAd) {
+      _nativeAd.show();
     }
   }
-}
-
-void main() {
-  runApp(MyApp());
 }

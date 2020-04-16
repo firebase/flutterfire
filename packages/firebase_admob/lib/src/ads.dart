@@ -36,6 +36,8 @@ class AdRequest {
 
 mixin AdListener {
   void onAdLoaded(Ad ad);
+  //void onNativeAdClicked(NativeAd ad);
+
 }
 
 enum AnchorType { bottom, top }
@@ -96,4 +98,26 @@ class InterstitialAd extends Ad with FullscreenAd {
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/1033173712'
       : 'ca-app-pub-3940256099942544/4411468910';
+}
+
+class NativeAd extends Ad with PlatformViewAd {
+  const NativeAd({
+    @required String adUnitId,
+    @required this.factoryId,
+    AdRequest request,
+    AdListener listener,
+    this.customOptions,
+  }) : super(adUnitId: adUnitId, request: request, listener: listener);
+
+  /// Optional options used to create the [NativeAd].
+  ///
+  /// These options are passed to the platform's `NativeAdFactory`.
+  final Map<String, dynamic> customOptions;
+
+  /// An identifier for the factory that creates the Platform view.
+  final String factoryId;
+
+  static final String testAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/2247696110'
+      : 'ca-app-pub-3940256099942544/3986624511';
 }

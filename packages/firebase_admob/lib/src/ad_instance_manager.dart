@@ -31,6 +31,8 @@ class AdInstanceManager {
       return <dynamic>[ad.adUnitId, ad.request, ad.size];
     } else if (ad is InterstitialAd) {
       return <dynamic>[ad.adUnitId, ad.request];
+    } else if (ad is NativeAd) {
+      return <dynamic>[ad.adUnitId, ad.request, ad.factoryId, ad.customOptions];
     }
     throw ArgumentError();
   }

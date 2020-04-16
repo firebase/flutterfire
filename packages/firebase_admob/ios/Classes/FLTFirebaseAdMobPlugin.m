@@ -21,7 +21,7 @@
   return self;
 }
 
-- (void)loadAdWithRefernceId:(NSNumber *)referenceId
+- (void)loadAdWithReferenceId:(NSNumber *)referenceId
                    className:(NSString *)className
                   parameters:(NSArray<id> *)parameters {
   id<FLTAd> ad = [self createAd:className parameters:parameters];
@@ -35,10 +35,9 @@
   [_callbackChannel invokeMethod:methodName arguments:@[ [_ads referenceIdForAd:ad], arguments ]];
 }
 
-- (void)showAdWithRefernceId:(NSNumber *)referenceId parameters:(NSArray<id> *)parameters {
+- (void)showAdWithReferenceId:(NSNumber *)referenceId parameters:(NSArray<id> *)parameters {
   id<FLTAd> ad = [_ads adForReferenceId:referenceId];
-  
-  NSLog(@"SHOW");
+
   if ([ad.class conformsToProtocol:@protocol(FLTPlatformViewAd)]) {
     id<FLTPlatformViewAd> platformViewAd = (id<FLTPlatformViewAd>) ad;
     [platformViewAd show:parameters[0] horizontalCenterOffset:parameters[1] anchorType:parameters[2]];
@@ -79,7 +78,42 @@
 @end
 
 @implementation FLTFirebaseAdMobPlugin {
-  FLTAdInstanceManager *instanceManager;
+  FLTAdInstanceManager *_instanceManager;
+  NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *_nativeAdFactories;
+}
+
+/// Returns the AdMob plugin from the registry or nil if the plugin wasn't registered.
++ (FLTFirebaseAdMobPlugin *)adMobPluginFromRegistry:(NSObject<FlutterPluginRegistry> *)registry {
+  NSString *pluginClassName = NSStringFromClass([FLTFirebaseAdMobPlugin class]);
+  return (FLTFirebaseAdMobPlugin *)[registry valuePublishedByPlugin:pluginClassName];
+}
+
++ (BOOL)registerNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
+                      factoryId:(NSString *)factoryId
+                nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory {
+  FLTFirebaseAdMobPlugin *adMobPlugin = [self adMobPluginFromRegistry:registry];
+  if (!adMobPlugin) {
+    NSLog(@"Could not find a %@ instance. The plugin may have not been registered.",
+          NSStringFromClass([self class]));
+    return NO;
+  }
+  
+  if (adMobPlugin->_nativeAdFactories[factoryId]) {
+    NSLog(@"A NativeAdFactory with the following factoryId already exists: %@", factoryId);
+    return NO;
+  }
+
+  [adMobPlugin->_nativeAdFactories setValue:nativeAdFactory forKey:factoryId];
+  return YES;
+}
+
++ (id<FLTNativeAdFactory>)unregisterNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
+                                          factoryId:(NSString *)factoryId {
+  FLTFirebaseAdMobPlugin *adMobPlugin = [self adMobPluginFromRegistry:registry];
+
+  id<FLTNativeAdFactory> factory = adMobPlugin->_nativeAdFactories[factoryId];
+  if (factory) [adMobPlugin->_nativeAdFactories removeObjectForKey:factoryId];
+  return factory;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -95,10 +129,6 @@
       [[FLTFirebaseAdMobPlugin alloc] initWithInstanceManager:referenceManager];
   [registrar addMethodCallDelegate:plugin channel:channel];
   [registrar publish:plugin];
-
-  //  FLTFirebaseAdMobViewFactory *viewFactory = [[FLTFirebaseAdMobViewFactory alloc] init];
-  //  [registrar registerViewFactory:viewFactory
-  //  withId:@"plugins.flutter.io/firebase_admob/ad_widget"];
 }
 
 - (instancetype)initWithInstanceManager:(FLTAdInstanceManager *)instanceManager {
@@ -107,7 +137,11 @@
     NSLog(@"Configuring the default Firebase app...");
     [FIRApp configure];
     NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    self->instanceManager = instanceManager;
+  }
+
+  if (self) {
+    _instanceManager = instanceManager;
+    _nativeAdFactories = [NSMutableDictionary dictionary];
   }
 
   return self;
@@ -118,15 +152,15 @@
     [[GADMobileAds sharedInstance] startWithCompletionHandler:nil];
     result(nil);
   } else if ([call.method isEqual:@"LOAD"]) {
-    [instanceManager loadAdWithRefernceId:call.arguments[0]
+    [_instanceManager loadAdWithReferenceId:call.arguments[0]
                                 className:call.arguments[1]
                                parameters:call.arguments[2]];
     result(nil);
   } else if ([call.method isEqual:@"SHOW"]) {
-    [instanceManager showAdWithRefernceId:call.arguments[0] parameters:call.arguments[1]];
+    [_instanceManager showAdWithReferenceId:call.arguments[0] parameters:call.arguments[1]];
     result(nil);
   } else if ([call.method isEqual:@"DISPOSE"]) {
-    [instanceManager disposeAdWithReferenceId:call.arguments];
+    [_instanceManager disposeAdWithReferenceId:call.arguments];
     result(nil);
   } else {
     result(FlutterMethodNotImplemented);

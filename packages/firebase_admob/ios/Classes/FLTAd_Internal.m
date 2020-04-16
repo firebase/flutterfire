@@ -67,13 +67,50 @@ rootViewController:(UIViewController *)rootViewController
 
   view.translatesAutoresizingMaskIntoConstraints = NO;
 
-  // TODO: code for < 9.0
-  UILayoutGuide *layoutGuide = nil;
   if (@available(ios 11.0, *)) {
-    layoutGuide = parentView.safeAreaLayoutGuide;
+    [ViewHelper activateConstraintForView:view
+                              layoutGuide:parentView.safeAreaLayoutGuide
+                             anchorOffset:anchorOffset
+                   horizontalCenterOffset:horizontalCenterOffset
+                               anchorType:anchorType];
+  } else if (@available(ios 9.0, *)) {
+    [ViewHelper activateConstraintForView:view
+               layoutGuide:parentView.layoutMarginsGuide
+              anchorOffset:anchorOffset
+    horizontalCenterOffset:horizontalCenterOffset
+                anchorType:anchorType];
   } else {
-    layoutGuide = parentView.layoutMarginsGuide;
+    // TODO: Make work with offsets
+    [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
+                                                          attribute:NSLayoutAttributeLeading
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:parentView
+                                                          attribute:NSLayoutAttributeLeading
+                                                         multiplier:1
+                                                           constant:0]];
+    [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
+                                                          attribute:NSLayoutAttributeTrailing
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:parentView
+                                                          attribute:NSLayoutAttributeTrailing
+                                                         multiplier:1
+                                                           constant:0]];
+    [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
+                                                          attribute:NSLayoutAttributeBottom
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:rootViewController.bottomLayoutGuide
+                                                          attribute:NSLayoutAttributeTop
+                                                         multiplier:1
+                                                           constant:0]];
   }
+}
+
++ (void)activateConstraintForView:(UIView *)view
+                      layoutGuide:(UILayoutGuide *)layoutGuide
+                     anchorOffset:(NSNumber *)anchorOffset
+           horizontalCenterOffset:(NSNumber *)horizontalCenterOffset
+                       anchorType:(FLTAnchorType *)anchorType API_AVAILABLE(ios(9.0)) {
+  view.translatesAutoresizingMaskIntoConstraints = NO;
 
   NSLayoutConstraint *verticalConstraint = nil;
   if ([anchorType isEqualToAnchorType:FLTAnchorType.bottom]) {
