@@ -82,10 +82,10 @@
     return [[FLTRewardedAd alloc] initWithAdUnitId:parameters[0]
                                            request:parameters[1]
                                    callbackHandler:self];
-  } else {
-    NSLog(@"Failed to create ad.");
-    return nil;
   }
+  
+  NSLog(@"Failed to create ad.");
+  return nil;
 }
 
 - (void)onAdLoaded:(id<FLTAd>)ad {

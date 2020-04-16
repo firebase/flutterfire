@@ -74,37 +74,32 @@
                              anchorOffset:anchorOffset
                    horizontalCenterOffset:horizontalCenterOffset
                                anchorType:anchorType];
+    return;
   } else if (@available(ios 9.0, *)) {
     [ViewHelper activateConstraintForView:view
                               layoutGuide:parentView.layoutMarginsGuide
                              anchorOffset:anchorOffset
                    horizontalCenterOffset:horizontalCenterOffset
                                anchorType:anchorType];
-  } else {
-    // TODO: Make work with offsets
-    [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
-                                                           attribute:NSLayoutAttributeLeading
-                                                           relatedBy:NSLayoutRelationEqual
-                                                              toItem:parentView
-                                                           attribute:NSLayoutAttributeLeading
-                                                          multiplier:1
-                                                            constant:0]];
-    [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
-                                                           attribute:NSLayoutAttributeTrailing
-                                                           relatedBy:NSLayoutRelationEqual
-                                                              toItem:parentView
-                                                           attribute:NSLayoutAttributeTrailing
-                                                          multiplier:1
-                                                            constant:0]];
-    [parentView
-        addConstraint:[NSLayoutConstraint constraintWithItem:view
-                                                   attribute:NSLayoutAttributeBottom
-                                                   relatedBy:NSLayoutRelationEqual
-                                                      toItem:rootViewController.bottomLayoutGuide
-                                                   attribute:NSLayoutAttributeTop
-                                                  multiplier:1
-                                                    constant:0]];
+    return;
   }
+  
+  NSLayoutAttribute verticalAttribute = 0;
+  CGFloat anchorConstant = 0.0;
+  if ([anchorType isEqualToAnchorType:FLTAnchorType.bottom]) {
+    verticalAttribute = NSLayoutAttributeBottom;
+    anchorConstant = -anchorOffset.doubleValue;
+  } else if ([anchorType isEqualToAnchorType:FLTAnchorType.top]) {
+    verticalAttribute = NSLayoutAttributeTop;
+    anchorConstant = anchorOffset.doubleValue;
+  }
+  
+  [ViewHelper activateConstraintForView:view
+                             parentView:parentView
+                      verticalAttribute:verticalAttribute
+                            anchorConstant:anchorConstant
+                  horizontalCenterOffset:horizontalCenterOffset
+                              anchorType:anchorType];
 }
 
 + (void)activateConstraintForView:(UIView *_Nonnull)view
@@ -122,12 +117,53 @@
     verticalConstraint = [view.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor
                                                         constant:anchorOffset.doubleValue];
   }
+  
 
   [NSLayoutConstraint activateConstraints:@[
     verticalConstraint,
     [view.centerXAnchor constraintEqualToAnchor:layoutGuide.centerXAnchor
                                        constant:horizontalCenterOffset.doubleValue],
+    [view.leftAnchor constraintGreaterThanOrEqualToAnchor:layoutGuide.leftAnchor],
+    [view.rightAnchor constraintLessThanOrEqualToAnchor:layoutGuide.rightAnchor],
   ]];
+}
+
++ (void)activateConstraintForView:(UIView *_Nonnull)view
+                       parentView:(UIView *_Nonnull)parentView
+           verticalAttribute:(NSLayoutAttribute)verticalAttribute
+          anchorConstant:(CGFloat)anchorConstant
+horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
+            anchorType:(FLTAnchorType *_Nonnull)anchorType {
+  [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
+                                                         attribute:NSLayoutAttributeLeft
+                                                         relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                            toItem:parentView
+                                                         attribute:NSLayoutAttributeLeft
+                                                        multiplier:1
+                                                          constant:0]];
+  [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
+                                                         attribute:NSLayoutAttributeRight
+                                                         relatedBy:NSLayoutRelationLessThanOrEqual
+                                                            toItem:parentView
+                                                         attribute:NSLayoutAttributeRight
+                                                        multiplier:1
+                                                          constant:0]];
+  [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
+   attribute:NSLayoutAttributeCenterX
+   relatedBy:NSLayoutRelationEqual
+      toItem:parentView
+   attribute:NSLayoutAttributeCenterX
+  multiplier:1
+    constant:horizontalCenterOffset.doubleValue]];
+  
+  [parentView
+      addConstraint:[NSLayoutConstraint constraintWithItem:view
+                                                 attribute:verticalAttribute
+                                                 relatedBy:NSLayoutRelationEqual
+                                                    toItem:parentView
+                                                 attribute:verticalAttribute
+                                                multiplier:1
+                                                  constant:anchorConstant]];
 }
 
 + (UIViewController *_Nonnull)rootViewController {
