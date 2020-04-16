@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:e2e/e2e.dart';
 
@@ -34,5 +36,33 @@ void main() {
     await nativeAd.load();
     await Future<void>.delayed(Duration(seconds: 10));
     expect(adLoaded, isTrue);
+  });
+
+  // ignore: missing_return
+  testWidgets('Load two Ads Simultaneously', (WidgetTester tester) {
+    final Completer<void> adCompleter1 = Completer<void>();
+    final Completer<void> adCompleter2 = Completer<void>();
+
+    final BannerAd bannerAd1 = BannerAd(
+      adUnitId: NativeAd.testAdUnitId,
+      size: AdSize.banner,
+      listener: (MobileAdEvent event) {
+        if (event == MobileAdEvent.loaded) adCompleter1.complete();
+      },
+    );
+
+    final BannerAd bannerAd2 = BannerAd(
+      adUnitId: NativeAd.testAdUnitId,
+      size: AdSize.banner,
+      listener: (MobileAdEvent event) {
+        if (event == MobileAdEvent.loaded) adCompleter1.complete();
+      },
+    );
+
+    bannerAd1.load();
+    bannerAd2.load();
+
+    expect(adCompleter1.future, completes);
+    expect(adCompleter2.future, completes);
   });
 }
