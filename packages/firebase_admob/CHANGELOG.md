@@ -1,3 +1,7 @@
+## 0.9.3+2
+
+* Fixed bug where loading multiple ads simultaneously could corrupt targeting info on iOS.
+
 ## 0.9.3+1
 
 * Modified README to reflect supporting Native Ads.
