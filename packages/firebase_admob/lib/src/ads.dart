@@ -121,3 +121,15 @@ class NativeAd extends Ad with PlatformViewAd {
       ? 'ca-app-pub-3940256099942544/2247696110'
       : 'ca-app-pub-3940256099942544/3986624511';
 }
+
+class RewardedAd extends Ad with FullscreenAd {
+  const RewardedAd({
+    @required String adUnitId,
+    AdRequest request,
+    AdListener listener,
+  }) : super(adUnitId: adUnitId, request: request, listener: listener);
+
+  static final String testAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/5224354917'
+      : 'ca-app-pub-3940256099942544/1712485313';
+}

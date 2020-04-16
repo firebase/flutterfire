@@ -74,6 +74,10 @@
                                  nativeAdFactory:_nativeAdFactories[parameters[2]]
                                    customOptions:parameters[3]
                                  callbackHandler:self];
+  } else if ([className isEqual:@"RewardedAd"]) {
+    return [[FLTRewardedAd alloc] initWithAdUnitId:parameters[0]
+                                           request:parameters[1]
+                                   callbackHandler:self];
   } else {
     NSLog(@"Failed to create ad.");
     return nil;

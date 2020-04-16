@@ -299,3 +299,53 @@ rootViewController:(UIViewController *)rootViewController
   // The adLoader has finished loading ads, and a new request can be sent.
 }
 @end
+
+@implementation FLTRewardedAd {
+  GADRewardedAd *_rewardedAd;
+  GADRequest *_request;
+  __weak id<FLTAdListenerCallbackHandler> _callbackHandler;
+}
+
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                                  request:(FLTAdRequest *_Nonnull)request
+                          callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler {
+  self = [super init];
+  if (self) {
+    _rewardedAd = [[GADRewardedAd alloc] initWithAdUnitID:adUnitId];
+    _request = request.request;
+    _callbackHandler = callbackHandler;
+  }
+  return self;
+}
+
+- (void)load {
+  [_rewardedAd loadRequest:_request completionHandler:^(GADRequestError * _Nullable error) {
+    if (!error) [self->_callbackHandler onAdLoaded:self];
+  }];
+}
+
+- (void)show {
+  [_rewardedAd presentFromRootViewController:[ViewHelper rootViewController] delegate:self];
+}
+
+/// Tells the delegate that the user earned a reward.
+- (void)rewardedAd:(GADRewardedAd *)rewardedAd userDidEarnReward:(GADAdReward *)reward {
+  // TODO: Reward the user.
+  NSLog(@"rewardedAd:userDidEarnReward:");
+}
+
+/// Tells the delegate that the rewarded ad was presented.
+- (void)rewardedAdDidPresent:(GADRewardedAd *)rewardedAd {
+  NSLog(@"rewardedAdDidPresent:");
+}
+
+/// Tells the delegate that the rewarded ad failed to present.
+- (void)rewardedAd:(GADRewardedAd *)rewardedAd didFailToPresentWithError:(NSError *)error {
+  NSLog(@"rewardedAd:didFailToPresentWithError");
+}
+
+/// Tells the delegate that the rewarded ad was dismissed.
+- (void)rewardedAdDidDismiss:(GADRewardedAd *)rewardedAd {
+  NSLog(@"rewardedAdDidDismiss:");
+}
+@end

@@ -27,6 +27,7 @@ class _MyAppState extends State<MyApp> with AdListener {
   BannerAd _offsetBannerAd;
   InterstitialAd _interstitialAd;
   NativeAd _nativeAd;
+  RewardedAd _rewardedAd;
   int _coins = 0;
 
   BannerAd _createBannerAd() {
@@ -48,6 +49,13 @@ class _MyAppState extends State<MyApp> with AdListener {
     return NativeAd(
       adUnitId: NativeAd.testAdUnitId,
       factoryId: 'adFactoryExample',
+      listener: this,
+    );
+  }
+
+  RewardedAd _createRewardedAd() {
+    return RewardedAd(
+      adUnitId: RewardedAd.testAdUnitId,
       listener: this,
     );
   }
@@ -122,20 +130,13 @@ class _MyAppState extends State<MyApp> with AdListener {
                     _nativeAd = null;
                   },
                 ),
-//                RaisedButton(
-//                  child: const Text('LOAD REWARDED VIDEO'),
-//                  onPressed: () {
-//                    RewardedVideoAd.instance.load(
-//                        adUnitId: RewardedVideoAd.testAdUnitId,
-//                        targetingInfo: targetingInfo);
-//                  },
-//                ),
-//                RaisedButton(
-//                  child: const Text('SHOW REWARDED VIDEO'),
-//                  onPressed: () {
-//                    RewardedVideoAd.instance.show();
-//                  },
-//                ),
+                RaisedButton(
+                  child: const Text('SHOW REWARDED VIDEO'),
+                  onPressed: () {
+                    _rewardedAd?.dispose();
+                    _rewardedAd = _createRewardedAd()..load();
+                  },
+                ),
                 Text("You have $_coins coins."),
               ].map((Widget button) {
                 return Padding(
@@ -165,6 +166,8 @@ class _MyAppState extends State<MyApp> with AdListener {
       _interstitialAd.show();
     } else if (ad == _nativeAd) {
       _nativeAd.show(anchorType: AnchorType.top);
+    } else if (ad == _rewardedAd) {
+      _rewardedAd.show();
     }
   }
 }

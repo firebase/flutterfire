@@ -5,11 +5,17 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
 import java.util.Map;
 
@@ -136,7 +142,6 @@ abstract class Ad {
     private final AdLoader adLoader;
     private final FirebaseAdMobPlugin.NativeAdFactory nativeAdFactory;
     private final Map<String, Object> customOptions;
-    private final AdListenerCallbackHandler callbackHandler;
     private UnifiedNativeAdView adView;
 
     NativeAd(
@@ -153,7 +158,6 @@ abstract class Ad {
           .build();
       this.nativeAdFactory = nativeAdFactory;
       this.customOptions = customOptions;
-      this.callbackHandler = callbackHandler;
     }
 
     @Override
@@ -169,6 +173,58 @@ abstract class Ad {
     @Override
     public void onUnifiedNativeAdLoaded(final UnifiedNativeAd unifiedNativeAd) {
       adView = nativeAdFactory.createNativeAd(unifiedNativeAd, customOptions);
+    }
+  }
+
+  static class RewardedAd extends FullScreenAd {
+    private final com.google.android.gms.ads.rewarded.RewardedAd rewardedAd;
+    private final AdListenerCallbackHandler callbackHandler;
+
+    RewardedAd(
+        final String adUnitId,
+        final AdRequest request,
+        final Activity activity,
+        final AdListenerCallbackHandler callbackHandler) {
+      super(request, activity);
+      rewardedAd = new com.google.android.gms.ads.rewarded.RewardedAd(activity, adUnitId);
+      this.callbackHandler = callbackHandler;
+    }
+
+    @Override
+    void load() {
+      rewardedAd.loadAd(request, new RewardedAdLoadCallback() {
+        public void onRewardedAdLoaded() {
+          callbackHandler.onAdLoaded(RewardedAd.this);
+        }
+
+        public void onRewardedAdFailedToLoad(int errorCode) {
+        }
+      });
+    }
+
+    @Override
+    void show() {
+      rewardedAd.show(activity, new RewardedAdCallback() {
+        @Override
+        public void onRewardedAdOpened() {
+          // Ad opened.
+        }
+
+        @Override
+        public void onRewardedAdClosed() {
+          // Ad closed.
+        }
+
+        @Override
+        public void onUserEarnedReward(@NonNull RewardItem reward) {
+          // User earned reward.
+        }
+
+        @Override
+        public void onRewardedAdFailedToShow(int errorCode) {
+          // Ad failed to display.
+        }
+      });
     }
   }
 

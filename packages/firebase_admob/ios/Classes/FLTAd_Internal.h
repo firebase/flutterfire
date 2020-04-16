@@ -61,3 +61,9 @@ anchorType:(FLTAnchorType *_Nonnull)anchorType;
                       customOptions:(NSDictionary<NSString *, id> *_Nonnull)customOptions
                  callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler;
 @end
+
+@interface FLTRewardedAd : NSObject<FLTFullscreenAd, GADRewardedAdDelegate>
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                         request:(FLTAdRequest *_Nonnull)request
+                 callbackHandler:(id<FLTAdListenerCallbackHandler>_Nonnull)callbackHandler;
+@end

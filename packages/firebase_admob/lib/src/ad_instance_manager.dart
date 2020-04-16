@@ -33,6 +33,8 @@ class AdInstanceManager {
       return <dynamic>[ad.adUnitId, ad.request];
     } else if (ad is NativeAd) {
       return <dynamic>[ad.adUnitId, ad.request, ad.factoryId, ad.customOptions];
+    } else if (ad is RewardedAd) {
+      return <dynamic>[ad.adUnitId, ad.request];
     }
     throw ArgumentError();
   }

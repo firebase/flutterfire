@@ -38,8 +38,9 @@ class AdInstanceManager implements Ad.AdListenerCallbackHandler {
     if (ad instanceof Ad.PlatformViewAd) {
       ((Ad.PlatformViewAd) ad).show((Double) parameters.get(0), (Double) parameters.get(1), (AnchorType) parameters.get(2));
       return;
-    } else if (ad instanceof Ad.InterstitialAd) {
-      ((Ad.InterstitialAd) ad).show();
+    } else if (ad instanceof Ad.FullScreenAd) {
+      ((Ad.FullScreenAd) ad).show();
+      return;
     }
 
     throw new IllegalStateException();
@@ -82,6 +83,13 @@ class AdInstanceManager implements Ad.AdListenerCallbackHandler {
             (Activity) context,
             nativeAdFactories.get(parameters.get(2)),
             (Map<String, Object>) parameters.get(3),
+            this
+        );
+      case "RewardedAd":
+        return new Ad.RewardedAd(
+            (String) parameters.get(0),
+            (AdRequest) parameters.get(1),
+            (Activity) context,
             this
         );
     }
