@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:e2e/e2e.dart';
@@ -64,5 +65,5 @@ void main() {
 
     expect(adCompleter1.future, completes);
     expect(adCompleter2.future, completes);
-  });
+  }, skip: Platform.isAndroid);
 }
