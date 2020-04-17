@@ -39,6 +39,8 @@ void main() {
     expect(adLoaded, isTrue);
   });
 
+  // TODO(bparrishMines): Unskip on Android once tests work on Firebase TestLab.
+  // See https://github.com/FirebaseExtended/flutterfire/issues/2384
   // ignore: missing_return
   testWidgets('Load two Ads Simultaneously', (WidgetTester tester) {
     final Completer<void> adCompleter1 = Completer<void>();
