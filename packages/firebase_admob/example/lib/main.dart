@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _onAdLoaded(Ad ad) {
-    print('Ad loaded');
+    print('Ad loaded.');
     if (ad == _bannerAd) {
       _bannerAd.show();
     } else if (ad == _offsetBannerAd) {
@@ -81,9 +81,13 @@ class _MyAppState extends State<MyApp> {
     } else if (ad == _interstitialAd) {
       _interstitialAd.show();
     } else if (ad == _nativeAd) {
-      _nativeAd.show(anchorType: AnchorType.top);
+      _nativeAd.show(
+        anchorType: Platform.isIOS ? AnchorType.top : AnchorType.bottom,
+      );
     } else if (ad == _rewardedAd) {
       _rewardedAd.show();
+    } else {
+      print('Ad not recognized.');
     }
   }
 
