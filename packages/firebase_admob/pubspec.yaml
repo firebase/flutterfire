@@ -15,7 +15,7 @@ flutter:
         pluginClass: FLTFirebaseAdMobPlugin
 
 dependencies:
-  quiver: ^2.1.3
+  quiver: ^2.0.5
   meta: ^1.0.4
   platform: ^2.0.0
   flutter:
