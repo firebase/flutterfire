@@ -1,7 +1,7 @@
 #import <Flutter/Flutter.h>
+#import <GoogleMobileAds/GoogleMobileAds.h>
 #import "FLTFirebaseAdMobPlugin.h"
 #import "Firebase/Firebase.h"
-#import <GoogleMobileAds/GoogleMobileAds.h>
 
 @protocol FLTNativeAdFactory;
 

@@ -83,7 +83,7 @@
                                anchorType:anchorType];
     return;
   }
-  
+
   NSLayoutAttribute verticalAttribute = 0;
   CGFloat anchorConstant = 0.0;
   if ([anchorType isEqualToAnchorType:FLTAnchorType.bottom]) {
@@ -93,13 +93,13 @@
     verticalAttribute = NSLayoutAttributeTop;
     anchorConstant = anchorOffset.doubleValue;
   }
-  
+
   [ViewHelper activateConstraintForView:view
                              parentView:parentView
                       verticalAttribute:verticalAttribute
-                            anchorConstant:anchorConstant
-                  horizontalCenterOffset:horizontalCenterOffset
-                              anchorType:anchorType];
+                         anchorConstant:anchorConstant
+                 horizontalCenterOffset:horizontalCenterOffset
+                             anchorType:anchorType];
 }
 
 + (void)activateConstraintForView:(UIView *_Nonnull)view
@@ -117,7 +117,6 @@
     verticalConstraint = [view.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor
                                                         constant:anchorOffset.doubleValue];
   }
-  
 
   [NSLayoutConstraint activateConstraints:@[
     verticalConstraint,
@@ -130,17 +129,18 @@
 
 + (void)activateConstraintForView:(UIView *_Nonnull)view
                        parentView:(UIView *_Nonnull)parentView
-           verticalAttribute:(NSLayoutAttribute)verticalAttribute
-          anchorConstant:(CGFloat)anchorConstant
-horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
-            anchorType:(FLTAnchorType *_Nonnull)anchorType {
-  [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
-                                                         attribute:NSLayoutAttributeLeft
-                                                         relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                                            toItem:parentView
-                                                         attribute:NSLayoutAttributeLeft
-                                                        multiplier:1
-                                                          constant:0]];
+                verticalAttribute:(NSLayoutAttribute)verticalAttribute
+                   anchorConstant:(CGFloat)anchorConstant
+           horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
+                       anchorType:(FLTAnchorType *_Nonnull)anchorType {
+  [parentView
+      addConstraint:[NSLayoutConstraint constraintWithItem:view
+                                                 attribute:NSLayoutAttributeLeft
+                                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                    toItem:parentView
+                                                 attribute:NSLayoutAttributeLeft
+                                                multiplier:1
+                                                  constant:0]];
   [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                          attribute:NSLayoutAttributeRight
                                                          relatedBy:NSLayoutRelationLessThanOrEqual
@@ -148,22 +148,22 @@ horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
                                                          attribute:NSLayoutAttributeRight
                                                         multiplier:1
                                                           constant:0]];
-  [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
-   attribute:NSLayoutAttributeCenterX
-   relatedBy:NSLayoutRelationEqual
-      toItem:parentView
-   attribute:NSLayoutAttributeCenterX
-  multiplier:1
-    constant:horizontalCenterOffset.doubleValue]];
-  
   [parentView
       addConstraint:[NSLayoutConstraint constraintWithItem:view
-                                                 attribute:verticalAttribute
+                                                 attribute:NSLayoutAttributeCenterX
                                                  relatedBy:NSLayoutRelationEqual
                                                     toItem:parentView
-                                                 attribute:verticalAttribute
+                                                 attribute:NSLayoutAttributeCenterX
                                                 multiplier:1
-                                                  constant:anchorConstant]];
+                                                  constant:horizontalCenterOffset.doubleValue]];
+
+  [parentView addConstraint:[NSLayoutConstraint constraintWithItem:view
+                                                         attribute:verticalAttribute
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:parentView
+                                                         attribute:verticalAttribute
+                                                        multiplier:1
+                                                          constant:anchorConstant]];
 }
 
 + (UIViewController *_Nonnull)rootViewController {
@@ -307,7 +307,8 @@ horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
   return _nativeAdView;
 }
 
-- (void)adLoader:(GADAdLoader *_Nonnull)adLoader didReceiveUnifiedNativeAd:(GADUnifiedNativeAd *_Nonnull)nativeAd {
+- (void)adLoader:(GADAdLoader *_Nonnull)adLoader
+    didReceiveUnifiedNativeAd:(GADUnifiedNativeAd *_Nonnull)nativeAd {
   _nativeAdView = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
   nativeAd.delegate = self;
   [_callbackHandler onAdLoaded:self];

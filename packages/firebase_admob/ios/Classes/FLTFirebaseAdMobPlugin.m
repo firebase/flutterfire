@@ -5,7 +5,8 @@
 #import "FLTFirebaseAdMobPlugin.h"
 
 @interface FLTAdInstanceManager : NSObject <FLTAdListenerCallbackHandler>
-@property FLTFirebaseAdMobCollection<NSString *, id<FLTNativeAdFactory>> *_Nonnull nativeAdFactories;
+@property FLTFirebaseAdMobCollection<NSString *, id<FLTNativeAdFactory>>
+    *_Nonnull nativeAdFactories;
 @end
 
 @implementation FLTAdInstanceManager {
@@ -34,10 +35,12 @@
 - (void)sendMethodCall:(id<FLTAd> _Nonnull)ad
             methodName:(NSString *_Nonnull)methodName
              arguments:(NSArray<id> *_Nonnull)arguments {
-  [_callbackChannel invokeMethod:methodName arguments:@[ [_ads allKeysForObject:ad][0], arguments ]];
+  [_callbackChannel invokeMethod:methodName
+                       arguments:@[ [_ads allKeysForObject:ad][0], arguments ]];
 }
 
-- (void)showAdWithReferenceId:(NSNumber *_Nonnull)referenceId parameters:(NSArray<id> *_Nonnull)parameters {
+- (void)showAdWithReferenceId:(NSNumber *_Nonnull)referenceId
+                   parameters:(NSArray<id> *_Nonnull)parameters {
   id<FLTAd> ad = [_ads objectForKey:referenceId];
 
   if ([ad.class conformsToProtocol:@protocol(FLTPlatformViewAd)]) {
@@ -62,7 +65,8 @@
   [_ads objectForKey:referenceId];
 }
 
-- (id<FLTAd> _Nullable)createAd:(NSString *_Nonnull)className parameters:(NSArray<id> *_Nonnull)parameters {
+- (id<FLTAd> _Nullable)createAd:(NSString *_Nonnull)className
+                     parameters:(NSArray<id> *_Nonnull)parameters {
   if ([className isEqual:@"BannerAd"]) {
     return [[FLTBannerAd alloc] initWithAdUnitId:parameters[0]
                                          request:parameters[1]
@@ -83,12 +87,12 @@
                                            request:parameters[1]
                                    callbackHandler:self];
   }
-  
+
   NSLog(@"Failed to create ad.");
   return nil;
 }
 
-- (void)onAdLoaded:(id<FLTAd>_Nonnull)ad {
+- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad {
   [self sendMethodCall:ad methodName:@"AdListener#onAdLoaded" arguments:@[]];
 }
 @end
@@ -98,7 +102,8 @@
 }
 
 /// Returns the AdMob plugin from the registry or nil if the plugin wasn't registered.
-+ (FLTFirebaseAdMobPlugin *_Nullable)adMobPluginFromRegistry:(NSObject<FlutterPluginRegistry> *)registry {
++ (FLTFirebaseAdMobPlugin *_Nullable)adMobPluginFromRegistry:
+    (NSObject<FlutterPluginRegistry> *)registry {
   NSString *pluginClassName = NSStringFromClass([FLTFirebaseAdMobPlugin class]);
   return (FLTFirebaseAdMobPlugin *)[registry valuePublishedByPlugin:pluginClassName];
 }
@@ -122,11 +127,13 @@
   return YES;
 }
 
-+ (id<FLTNativeAdFactory> _Nullable)unregisterNativeAdFactory:(NSObject<FlutterPluginRegistry> *_Nonnull)registry
-                                          factoryId:(NSString *_Nonnull)factoryId {
++ (id<FLTNativeAdFactory> _Nullable)unregisterNativeAdFactory:
+                                        (NSObject<FlutterPluginRegistry> *_Nonnull)registry
+                                                    factoryId:(NSString *_Nonnull)factoryId {
   FLTFirebaseAdMobPlugin *adMobPlugin = [self adMobPluginFromRegistry:registry];
 
-  id<FLTNativeAdFactory> factory = [adMobPlugin->_instanceManager.nativeAdFactories objectForKey:factoryId];
+  id<FLTNativeAdFactory> factory =
+      [adMobPlugin->_instanceManager.nativeAdFactories objectForKey:factoryId];
   if (factory) [adMobPlugin->_instanceManager.nativeAdFactories removeObjectForKey:factoryId];
   return factory;
 }

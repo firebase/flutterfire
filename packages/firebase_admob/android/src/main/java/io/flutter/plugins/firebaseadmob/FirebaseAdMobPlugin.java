@@ -39,6 +39,8 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   private static final String GENERATED_PLUGIN_KEY =
       "io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin";
 
+  private static final String TAG = FirebaseAdMobPlugin.class.getSimpleName();
+
   private AdInstanceManager instanceManager;
   private Context applicationContext;
   private Activity activity;
@@ -128,11 +130,11 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   private static boolean registerNativeAdFactory(
       FirebaseAdMobPlugin plugin, String factoryId, NativeAdFactory nativeAdFactory) {
     if (plugin == null) {
-      final String message =
+      final String errorMessage =
           String.format(
-              "Could not find a %s instance. The plugin may have not been registered.",
-              FirebaseAdMobPlugin.class.getSimpleName());
-      throw new IllegalStateException(message);
+              "Could not find a %s instance. The plugin may have not been registered.", TAG);
+      Log.e(TAG, errorMessage);
+      return false;
     }
 
     return plugin.addNativeAdFactory(factoryId, nativeAdFactory);
@@ -184,7 +186,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
       final String errorMessage =
           String.format(
               "A NativeAdFactory with the following factoryId already exists: %s", factoryId);
-      Log.e(FirebaseAdMobPlugin.class.getSimpleName(), errorMessage);
+      Log.e(TAG, errorMessage);
       return false;
     }
 
