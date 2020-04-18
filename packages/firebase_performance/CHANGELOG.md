@@ -12,7 +12,7 @@
 
 ## 0.3.1+5
 
-* Remove the deprecated `author:` field from pubspec.yaml
+* Remove the deprecated `author:` field from `pubspec.yaml`
 * Migrate the plugin to the pubspec platforms manifest.
 * Bump the minimum Flutter version to 1.10.0.
 
@@ -26,7 +26,7 @@
 
 ## 0.3.1+2
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 0.3.1+1
 
@@ -44,7 +44,7 @@ app migration.
 
 ## 0.3.0+4
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 0.3.0+3
 
@@ -107,11 +107,11 @@ app migration.
 
 ## 0.0.8
 
-* Set http version to be compatible with flutter_test.
+* Set HTTP version to be compatible with flutter_test.
 
 ## 0.0.7
 
-* Added missing http package dependency.
+* Added missing HTTP package dependency.
 
 ## 0.0.6
 

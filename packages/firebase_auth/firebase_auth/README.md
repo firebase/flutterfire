@@ -75,7 +75,7 @@ Future<FirebaseUser> _handleSignIn() async {
 }
 ```
 
-Then from the sign in button onPress, call the `_handleSignIn` method using a future
+Then from the sign in button `onPress`, call the `_handleSignIn` method using a future
 callback for both the `FirebaseUser` and possible exception.
 ```dart
 _handleSignIn()
@@ -145,9 +145,9 @@ for a complete sample app using the Firebase authentication.
 
 ## Issues and feedback
 
-Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
-Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+Plugin issues that are not specific to FlutterFire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),

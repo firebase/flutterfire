@@ -43,7 +43,7 @@
 
 ## 0.9.0+9
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 0.9.0+8
 
@@ -51,7 +51,7 @@
 
 ## 0.9.0+7
 
-* Update Android gradle plugin, gradle, and Admob versions.
+* Update Android Gradle plugin, gradle, and AdMob versions.
 * Improvements to the Android implementation, fixing warnings about a possible null pointer exception.
 * Fixed an issue where an advertisement could incorrectly remain displayed when transitioning to another screen.
 
@@ -65,11 +65,11 @@
 
 ## 0.9.0+4
 
-* Add the ability to horizontally adjust the ads banner location by specifying a pixel offset from the centre.
+* Add the ability to horizontally adjust the ads banner location by specifying a pixel offset from the center.
 
 ## 0.9.0+3
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 0.9.0+2
 
@@ -113,14 +113,14 @@
 ## 0.7.0
 
 * Mark Dart code as deprecated where the newer version AdMob deprecates features (Birthday, Gender, and Family targeting).
-* Update gradle dependencies.
+* Update Gradle dependencies.
 * Add documentation for new AndroidManifest requirements.
 
 ## 0.6.1+1
 
 * Bump Android dependencies to latest.
 * __THIS WAS AN UNINTENTIONAL BREAKING CHANGE__. Users should consume 0.6.1 instead if they need the old API, or 0.7.0 for the bumped version.
-* Guide how to fix crash with admob version 17.0.0 in README
+* Guide how to fix crash with AdMob version 17.0.0 in README
 
 ## 0.6.1
 
@@ -133,7 +133,7 @@
 
 ## 0.5.7
 
-* Bumped mockito dependency to pick up Dart 2 support.
+* Bumped Mockito dependency to pick up Dart 2 support.
 
 ## 0.5.6
 
@@ -158,7 +158,7 @@
 
 ## 0.5.2
 
-* Simplified podspec for Cocoapods 1.5.0, avoiding link issues in app archives.
+* Simplified podspec for CocoaPods 1.5.0, avoiding link issues in app archives.
 
 ## 0.5.1
 
@@ -187,7 +187,7 @@
 
 * Added support for rewarded video ads.
 * **Breaking change**. The properties and parameters named "unitId" in BannerAd
-  and InterstitialAd have been renamed to "adUnitId" to better match AdMob's
+  and InterstitialAd have been renamed to "adUnitId" to better match the AdMob
   documentation and UI.
 
 ## 0.2.3

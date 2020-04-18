@@ -1,0 +1,29 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**/*.md'
+  pull_request:
+    paths:
+      - '**/*.md'
+
+jobs:
+  spelling:
+    name: 'Spelling & Grammar'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Dependencies
+        run: sudo npm install --global spellchecker-cli
+      - name: Spell Checker
+        run: |
+          spellchecker \
+            --quiet -f '**/*.md' \
+            --ignore='[a-z]+[-_]{1}[a-z_-]+' \
+            --ignore='[vV]+[0-9]+.*'  \
+            --ignore='[A-Za-z]{1}[a-z]+[A-Z]+[A-Za-z]+' \
+            --dictionaries="./.github/workflows/dictionary.txt" \
+            --plugins spell indefinite-article repeated-words syntax-mentions syntax-urls frontmatter

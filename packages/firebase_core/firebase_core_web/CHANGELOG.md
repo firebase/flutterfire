@@ -26,7 +26,7 @@
 
 ## 0.1.0+1
 
-* Use `package:firebase` for firebase functionality.
+* Use `package:firebase` for Firebase functionality.
 
 ## 0.1.0
 

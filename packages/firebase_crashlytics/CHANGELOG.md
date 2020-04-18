@@ -51,7 +51,7 @@
 
 ## 0.1.1+1
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 0.1.1
 
@@ -93,7 +93,7 @@
 
 ## 0.0.4+12
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 0.0.4+11
 
@@ -158,7 +158,7 @@
 ## 0.0.2
 
 * Updated the iOS podspec to a static framework to support compatibility with Swift plugins.
-* Updated the Android gradle dependencies to prevent build errors.
+* Updated the Android Gradle dependencies to prevent build errors.
 
 ## 0.0.1
 

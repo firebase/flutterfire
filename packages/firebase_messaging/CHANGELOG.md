@@ -28,7 +28,7 @@
 ## 6.0.9
 
 * Update Android Gradle plugin dependency to 3.5.3, update documentation and example.
-* Update google-services Android gradle plugin to 4.3.2 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.2 in documentation and examples.
 
 ## 6.0.8
 
@@ -90,7 +90,7 @@ is not a top-level or static function.
 
 ## 5.1.8
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 5.1.7
 
@@ -111,7 +111,7 @@ is not a top-level or static function.
 
 ## 5.1.3
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 5.1.2
 
@@ -237,7 +237,7 @@ is not a top-level or static function.
 
 ## 1.0.5
 
-* Bumped test and mockito versions to pick up Dart 2 support.
+* Bumped test and Mockito versions to pick up Dart 2 support.
 
 ## 1.0.4
 
@@ -273,7 +273,7 @@ is not a top-level or static function.
 
 ## 0.2.2
 
-* Simplified podspec for Cocoapods 1.5.0, avoiding link issues in app archives.
+* Simplified podspec for CocoaPods 1.5.0, avoiding link issues in app archives.
 
 ## 0.2.1
 
@@ -293,7 +293,7 @@ is not a top-level or static function.
 
 ## 0.2.2
 
-* Fix for APNS not being correctly registered on iOS when reinstalling application.
+* Fix for APNs not being correctly registered on iOS when reinstalling application.
 
 ## 0.1.1
 
@@ -315,11 +315,11 @@ is not a top-level or static function.
 
 ## 0.0.7
 
-In FirebaseMessagingPlugin.m:
-* moved logic from 'tokenRefreshNotification' to 'didRefreshRegistrationToken'
-* removed 'tokenRefreshNotification' as well as observer registration
-* removed 'connectToFcm' method and related calls
-* removed unnecessary FIRMessaging disconnect
+In `FirebaseMessagingPlugin.m`:
+* moved logic from `tokenRefreshNotification` to `didRefreshRegistrationToken`
+* removed `tokenRefreshNotification` as well as observer registration
+* removed `connectToFcm` method and related calls
+* removed unnecessary `FIRMessaging` disconnect
 
 ## 0.0.6
 
@@ -361,7 +361,7 @@ In FirebaseMessagingPlugin.m:
 
 ## 0.0.2.2
 
-* Downgraded gradle dependency for example app to make `flutter run` happy
+* Downgraded Gradle dependency for example app to make `flutter run` happy
 
 ## 0.0.1+1
 

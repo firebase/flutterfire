@@ -31,7 +31,7 @@
 
 ## 5.0.6
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 5.0.5
 
@@ -61,12 +61,12 @@
 * **Breaking change**. Remove deprecated method `setMinimumSessionDuration`.
 * **Breaking change**. Removed `FirebaseAnalyticsAndroid.setAnalyticsCollectionEnabled`. Use 
   `FirebaseAnalytics.setAnalyticsCollectionEnabled` instead.
-* Update Android gradle plugin and gradle version.
+* Update Android Gradle plugin and Gradle version.
 * Remove redundant casts on Android.
 
 ## 4.0.2
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 4.0.1
 
@@ -194,7 +194,7 @@
 
 ## 1.0.3
 
-* Updated test and mockito dependencies to pick up Dart 2 support
+* Updated test and Mockito dependencies to pick up Dart 2 support
 
 ## 1.0.2
 
@@ -218,7 +218,7 @@
 
 ## 0.3.1
 
-* Simplified podspec for Cocoapods 1.5.0, avoiding link issues in app archives.
+* Simplified podspec for CocoaPods 1.5.0, avoiding link issues in app archives.
 
 ## 0.3.0
 

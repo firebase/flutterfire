@@ -1,6 +1,6 @@
 # firestore_example
 
-Demonstrates how to use the firestore plugin.
+Demonstrates how to use the Firestore plugin.
 
 ## Getting Started
 

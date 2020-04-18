@@ -20,7 +20,7 @@ dependencies:
 
 ### Updating `index.html`
 
-Due to [this bug in dartdevc][2], you will need to manually add the Firebase JavaScript file to your `index.html` file.
+Due to [this bug in `dartdevc`][2], you will need to manually add the Firebase JavaScript file to your `index.html` file.
 
 In your app directory, edit `web/index.html` to add the line:
 
@@ -30,7 +30,7 @@ In your app directory, edit `web/index.html` to add the line:
     <body>
         <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-functions.js"></script>
-        <!-- Other firebase SDKs/config here -->
+        <!-- Other Firebase SDKs/config here -->
         <script src="main.dart.js"></script>
     </body>
 </html>

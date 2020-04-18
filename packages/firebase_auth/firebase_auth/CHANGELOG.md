@@ -73,7 +73,7 @@
 
 ## 0.14.0+8
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 0.14.0+7
 
@@ -122,7 +122,7 @@
 * Fixed a crash on iOS when sign-in fails.
 * Additional integration testing.
 * Updated documentation for `FirebaseUser.delete()` to include error codes.
-* Updated Firebase project to match other Flutterfire apps.
+* Updated Firebase project to match other FlutterFire apps.
 
 ## 0.13.0
 
@@ -145,7 +145,7 @@
 
 ## 0.11.1+12
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 0.11.1+11
 
@@ -327,7 +327,7 @@
 
 ## 0.6.4
 
-* Added support for Github signin and linking Github accounts to existing users.
+* Added support for GitHub signin and linking GitHub accounts to existing users.
 
 ## 0.6.3
 
@@ -404,7 +404,7 @@ Collections.unmodifiableList() and Collections.unmodifiableMap().
 
 ## 0.5.8
 
-* Added support to reload firebase user
+* Added support to reload Firebase user
 
 ## 0.5.7
 
@@ -420,7 +420,7 @@ Collections.unmodifiableList() and Collections.unmodifiableMap().
 
 ## 0.5.4
 
-* Simplified podspec for Cocoapods 1.5.0, avoiding link issues in app archives.
+* Simplified podspec for CocoaPods 1.5.0, avoiding link issues in app archives.
 
 ## 0.5.3
 

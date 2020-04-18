@@ -4,7 +4,7 @@
 
 ## 0.4.2+2
 
-* Fix method channel on darwin
+* Fix method channel on Darwin
 
 ## 0.4.2+1
 
@@ -41,7 +41,7 @@
 
 ## 0.4.1+4
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 0.4.1+3
 
@@ -62,7 +62,7 @@
 
 ## 0.4.0+3
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 0.4.0+2
 
@@ -74,7 +74,7 @@
 
 ## 0.4.0
 
-* Removed unused `parameters` param from `getHttpsCallable`.
+* Removed unused `parameters` parameter from `getHttpsCallable`.
 
 ## 0.3.0+1
 

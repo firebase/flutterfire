@@ -8,7 +8,7 @@
 
 ## 0.1.1+1
 
-* Remove the deprecated `author:` field from pubspec.yaml
+* Remove the deprecated `author:` field from `pubspec.yaml`
 * Migrate the plugin to the pubspec platforms manifest.
 * Bump the minimum Flutter version to 1.10.0.
 
@@ -18,7 +18,7 @@
 
 ## 0.1.0
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 0.0.1+4
 
@@ -26,7 +26,7 @@
 
 ## 0.0.1+3
 
-* Update AGP, gradle and inappmessaging-display versions on Android.
+* Update Android Gradle plugin, Gradle and `inappmessaging-display` versions on Android.
 
 ## 0.0.1+2
 
@@ -34,7 +34,7 @@
 
 ## 0.0.1+1
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 0.0.1
 

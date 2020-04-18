@@ -26,7 +26,7 @@
 
 ## 0.9.3+3
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 0.9.3+2
 
@@ -62,7 +62,7 @@ require app migration.
 
 ## 0.9.1+1
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 0.9.1
 
@@ -123,7 +123,7 @@ You should now call `detector.close()` when a detector will no longer be used.
 ## 0.6.0+2
 
 * Update README.md
-* Fix crash when receiving barcode urls on iOS.
+* Fix crash when receiving barcode URLs on iOS.
 
 ## 0.6.0+1
 
@@ -195,7 +195,7 @@ Bump Android dependencies to latest.
 
 ## 0.2.0
 
-* **Breaking Change** Update TextDetector to TextRecognizer for android mlkit '17.0.0' and
+* **Breaking Change** Update TextDetector to TextRecognizer for android MLKit '17.0.0' and
 firebase-ios-sdk '5.6.0'.
 * Added CloudLabelDetector.
 
@@ -205,7 +205,7 @@ firebase-ios-sdk '5.6.0'.
 
 ## 0.1.1
 
-* Set pod version of Firebase/MLVision to avoid breaking changes.
+* Set pod version of `Firebase/MLVision` to avoid breaking changes.
 
 ## 0.1.0
 

@@ -40,7 +40,7 @@
 
 ## 3.0.8
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 3.0.7
 
@@ -61,7 +61,7 @@
 
 ## 3.0.4
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 3.0.3
 
@@ -153,11 +153,11 @@
 
 * Added monitoring of StorageUploadTask via `events` stream.
 * Added support for StorageUploadTask functions: `pause`, `resume`, `cancel`.
-* Set http version to be compatible with flutter_test.
+* Set HTTP version to be compatible with flutter_test.
 
 ## 1.0.2
 
-* Added missing http package dependency.
+* Added missing HTTP package dependency.
 
 ## 1.0.1
 
@@ -220,7 +220,7 @@
 
 ## 0.2.2
 
-* Simplified podspec for Cocoapods 1.5.0, avoiding link issues in app archives.
+* Simplified podspec for CocoaPods 1.5.0, avoiding link issues in app archives.
 
 ## 0.2.1
 

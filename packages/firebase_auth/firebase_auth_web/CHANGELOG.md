@@ -1,6 +1,6 @@
 ## 0.1.2+2
 
-* Make the pedantic dev_dependency explicit.
+* Make the pedantic `dev_dependency` explicit.
 
 ## 0.1.2+1
 
@@ -13,11 +13,11 @@
 ## 0.1.1+4
 
 * Prevent `null` users (unauthenticated) from breaking the `onAuthStateChanged` Stream.
-* Migrate tests from jsify to package:js.
+* Migrate tests from `jsify` to `package:js`.
 
 ## 0.1.1+3
 
-* Fix the tests on dart2js.
+* Fix the tests on `dart2js`.
 
 ## 0.1.1+2
 

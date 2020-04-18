@@ -4,12 +4,12 @@
 
 ## 0.13.4+2
 
-* Fix for missing UserAgent.h compilation failures.
+* Fix for missing `UserAgent.h` compilation failures.
 
 ## 0.13.4+1
 
 * Fix crash with pagination with `DocumentReference` (#2044)
-* Minor tweaks to integ tests.
+* Minor tweaks to integration tests.
 
 ## 0.13.4
 
@@ -97,7 +97,7 @@
 
 ## 0.12.9+8
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 0.12.9+7
 
@@ -105,7 +105,7 @@
 
 ## 0.12.9+6
 
-* Cast error.code to long to avoid using NSInteger as %ld format warnings.
+* Cast `error.code` to long to avoid using `NSInteger` as `%ld` format warnings.
 
 ## 0.12.9+5
 
@@ -146,7 +146,7 @@
 
 ## 0.12.7+1
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 0.12.7
 
@@ -408,7 +408,7 @@ To update iOS SDK in existing projects run `pod update Firebase/Firestore`.
 
 ## 0.6.1
 
-* Simplified podspec for Cocoapods 1.5.0, avoiding link issues in app archives.
+* Simplified podspec for CocoaPods 1.5.0, avoiding link issues in app archives.
 
 ## 0.6.0
 
@@ -457,7 +457,7 @@ To update iOS SDK in existing projects run `pod update Firebase/Firestore`.
 * Fix Dart 2 type errors.
 
 ## 0.2.9
-* Relax sdk upper bound constraint to  '<2.0.0' to allow 'edge' dart sdk use.
+* Relax SDK upper bound constraint to  '<2.0.0' to allow 'edge' Dart SDK use.
 
 ## 0.2.8
 * Support for Query.getDocuments

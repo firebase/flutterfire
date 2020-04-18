@@ -1,6 +1,6 @@
 ## 0.5.0+12
 
-* Fix for missing UserAgent.h compilation failures.
+* Fix for missing `UserAgent.h` compilation failures.
 
 ## 0.5.0+11
 
@@ -12,7 +12,7 @@
 
 ## 0.5.0+9
 
-* Remove the deprecated `author:` field from pubspec.yaml
+* Remove the deprecated `author:` field from `pubspec.yaml`
 * Migrate the plugin to the pubspec platforms manifest.
 * Bump the minimum Flutter version to 1.10.0.
 
@@ -26,7 +26,7 @@
 
 ## 0.5.0+6
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 0.5.0+5
 
@@ -34,7 +34,7 @@
 
 ## 0.5.0+4
 
-* Fix example app build by updating version of `url_launcher` that is compatible with androidx apps.
+* Fix example app build by updating version of `url_launcher` that is compatible with AndroidX apps.
 
 ## 0.5.0+3
 
@@ -59,7 +59,7 @@ the dynamic link which opened the app and links clicked during app execution (ac
 
 ## 0.4.0+6
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 0.4.0+5
 
@@ -160,4 +160,4 @@ the dynamic link which opened the app and links clicked during app execution (ac
 
 ## 0.0.1
 
-* Initial release with api to create long or short dynamic links.
+* Initial release with API to create long or short dynamic links.

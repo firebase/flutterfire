@@ -8,12 +8,12 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 ## Usage
 
-To use this plugin, add `firebase_ml_vision` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). You must also configure Firebase for each platform project: Android and iOS (see the example folder or https://codelabs.developers.google.com/codelabs/flutter-firebase/#4 for step by step details).
+To use this plugin, add `firebase_ml_vision` as a [dependency in your `pubspec.yaml` file](https://flutter.io/platform-plugins/). You must also configure Firebase for each platform project: Android and iOS (see the example folder or https://codelabs.developers.google.com/codelabs/flutter-firebase/#4 for step by step details).
 
 ### Android
-If you're using the on-device `ImageLabeler`, include the latest matching [ML Kit: Image Labeling](https://firebase.google.com/support/release-notes/android) dependency in your app-level build.gradle file.
+If you're using the on-device `ImageLabeler`, include the latest matching [ML Kit: Image Labeling](https://firebase.google.com/support/release-notes/android) dependency in your app-level `build.gradle` file.
 
-```xml
+```
 android {
     dependencies {
         // ...
@@ -23,7 +23,7 @@ android {
 }
 ```
 
-If you're using the on-device `Face Contour Detection`, include the latest matching [ML Kit: Face Detection Model](https://firebase.google.com/support/release-notes/android) dependency in your app-level build.gradle file.
+If you're using the on-device `Face Contour Detection`, include the latest matching [ML Kit: Face Detection Model](https://firebase.google.com/support/release-notes/android) dependency in your app-level `build.gradle` file.
 
 ```
 android {
@@ -107,7 +107,7 @@ final VisionText visionText = await textRecognizer.processImage(visionImage);
 
 ### 4. Extract data.
 
-a. Extract barcodes.
+a. Extract barcodes:
 
 ```dart
 for (Barcode barcode in barcodes) {
@@ -133,7 +133,7 @@ for (Barcode barcode in barcodes) {
 }
 ```
 
-b. Extract faces.
+b. Extract faces:
 
 ```dart
 for (Face face in faces) {
@@ -161,7 +161,7 @@ for (Face face in faces) {
 }
 ```
 
-c. Extract labels.
+c. Extract labels:
 
 ```dart
 for (ImageLabel label in labels) {
@@ -171,7 +171,7 @@ for (ImageLabel label in labels) {
 }
 ```
 
-d. Extract text.
+d. Extract text:
 
 ```dart
 String text = visionText.text;
@@ -206,9 +206,9 @@ See the `example` directory for a complete sample app using ML Kit Vision for Fi
 
 ## Issues and feedback
 
-Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
-Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+Plugin issues that are not specific to FlutterFire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),

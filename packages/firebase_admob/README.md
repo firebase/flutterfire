@@ -25,7 +25,7 @@ and setting up your App ID.
 
 ## Info.plist changes
 
-Admob 7.42.0 requires the App ID to be included in `Info.plist`. Failure to do so will result in a crash on launch of your app. The lines should look like:
+AdMob 7.42.0 requires the App ID to be included in `Info.plist`. Failure to do so will result in a crash on launch of your app. The lines should look like:
 
 ```xml
 <key>GADApplicationIdentifier</key>
@@ -79,13 +79,13 @@ You are also required to ensure that you have Google Service file from Firebase 
 
 ### iOS
 
-Create an "App" in firebase and generate a GoogleService-info.plist file. This file needs to be embedded in the projects "Runner/Runner" folder using Xcode. 
+Create an "App" in Firebase and generate a `GoogleService-info.plist` file. This file needs to be embedded in the projects "Runner/Runner" folder using Xcode. 
 
 https://firebase.google.com/docs/ios/setup#create-firebase-project -> Steps 1-3
 
 ### Android
 
-Create an "App" in firebase and generate a google-service.json file. This file needs to be embedded in you projects "android/app" folder. 
+Create an "App" in Firebase and generate a `google-service.json` file. This file needs to be embedded in you projects "android/app" folder. 
 
 https://firebase.google.com/docs/android/setup#create-firebase-project -> Steps 1-3.1
 
@@ -202,8 +202,8 @@ method.
 
 Native Ads are presented to users via UI components that
 are native to the platform. (e.g. A
-[View](https://developer.android.com/reference/android/view/View) on Android or a
-[UIView](https://developer.apple.com/documentation/uikit/uiview?language=objc)
+[`View`](https://developer.android.com/reference/android/view/View) on Android or a
+[`UIView`](https://developer.apple.com/documentation/uikit/uiview?language=objc)
 on iOS). Using Flutter widgets to create native ads is NOT supported by
 this.
 
@@ -211,7 +211,7 @@ Since Native Ads require UI components native to a platform, this feature requir
 for Android and iOS:
 
 ### Android
-The Android Admob Plugin requires a class that implements `NativeAdFactory` which contains a method
+The Android AdMob Plugin requires a class that implements `NativeAdFactory` which contains a method
 that takes a
 [UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd)
 and custom options and returns a
@@ -391,9 +391,9 @@ This plugin currently has some limitations:
 
 ## Issues and feedback
 
-Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
-Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+Plugin issues that are not specific to FlutterFire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),

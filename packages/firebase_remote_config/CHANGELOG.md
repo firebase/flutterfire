@@ -12,7 +12,7 @@
 
 ## 0.3.0+1
 
-* Remove the deprecated `author:` field from pubspec.yaml
+* Remove the deprecated `author:` field from `pubspec.yaml`
 * Migrate the plugin to the pubspec platforms manifest.
 * Bump the minimum Flutter version to 1.10.0.
 
@@ -20,7 +20,7 @@
 
 * Update Android Firebase Remote Config dependency to 19.0.3.
 * Resolve an Android compiler warning due to deprecated API usage.
-* Bump Gradle, AGP & Google Services plugin versions.
+* Bump Gradle, Android Gradle plugin & Google Services plugin versions.
 
 ## 0.2.1
 
@@ -29,7 +29,7 @@
 
 ## 0.2.0+9
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 0.2.0+8
 
@@ -47,7 +47,7 @@
 
 ## 0.2.0+5
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 0.2.0+4
 

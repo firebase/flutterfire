@@ -12,7 +12,7 @@
 
 ## 3.1.1
 
-* Remove the deprecated `author:` field from pubspec.yaml
+* Remove the deprecated `author:` field from `pubspec.yaml`
 * Migrate the plugin to the pubspec platforms manifest.
 * Bump the minimum Flutter version to 1.10.0.
 
@@ -23,7 +23,7 @@
 
 ## 3.0.9
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 3.0.8
 
@@ -41,7 +41,7 @@
 
 ## 3.0.5
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 3.0.4
 
@@ -131,7 +131,7 @@
 
 ## 1.0.4
 
-* Bumped test and mockito versions to pick up Dart 2 support.
+* Bumped test and Mockito versions to pick up Dart 2 support.
 
 ## 1.0.3
 
@@ -163,7 +163,7 @@
 
 ## 0.4.3
 
-* Simplified podspec for Cocoapods 1.5.0, avoiding link issues in app archives.
+* Simplified podspec for CocoaPods 1.5.0, avoiding link issues in app archives.
 
 ## 0.4.2
 

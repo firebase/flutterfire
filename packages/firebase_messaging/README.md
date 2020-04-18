@@ -245,10 +245,10 @@ curl https://fcm.googleapis.com/fcm/send -H "Content-Type:application/json" -X P
 
 Remove the `notification` property in `DATA` to send a data message.
 
-You could also test this from within Flutter using the [http](https://pub.dev/packages/http) package:
+You could also test this from within Flutter using the [`http`](https://pub.dev/packages/http) package:
 
 ```dart
-// Replace with server token from firebase console settings.
+// Replace with server token from Firebase console settings.
 final String serverToken = '<Server-Token>';
 final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
@@ -295,9 +295,9 @@ Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
 
 ## Issues and feedback
 
-Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
-Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+Plugin issues that are not specific to FlutterFire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),

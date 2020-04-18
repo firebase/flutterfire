@@ -60,7 +60,7 @@
 
 ## 0.4.1+3
 
-* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+* Updated README instructions for contributing for consistency with other FlutterFire plugins.
 
 ## 0.4.1+2
 
@@ -82,7 +82,7 @@
 
 ## 0.4.0+8
 
-* Update google-services Android gradle plugin to 4.3.0 in documentation and examples.
+* Update google-services Android Gradle plugin to 4.3.0 in documentation and examples.
 
 ## 0.4.0+7
 
@@ -121,7 +121,7 @@
 
 ## 0.3.4
 
-* Updates Android firebase-core dependency to a version that is compatible with other Flutterfire plugins.
+* Updates Android firebase-core dependency to a version that is compatible with other FlutterFire plugins.
 
 ## 0.3.3
 
@@ -129,7 +129,7 @@
 
 ## 0.3.2
 
-* Move Android dependency to Gradle BoM to help maintain compatability
+* Move Android dependency to Gradle BoM to help maintain compatibility
   with other FlutterFire plugins.
 
 ## 0.3.1+1
@@ -175,7 +175,7 @@
 
 ## 0.2.2
 
-* Simplified podspec for Cocoapods 1.5.0, avoiding link issues in app archives.
+* Simplified podspec for CocoaPods 1.5.0, avoiding link issues in app archives.
 
 ## 0.2.1
 

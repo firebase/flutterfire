@@ -8,7 +8,7 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
 
  * Linux, Mac OS X, or Windows.
  * git (used for source version control).
- * An ssh client (used to authenticate with GitHub).
+ * A ssh client (used to authenticate with GitHub).
 
 ## Getting the code and configuring your environment
 
@@ -18,7 +18,7 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
    you already have a fork, and are now installing a development environment on
    a new machine, make sure you've updated your fork so that you don't use stale
    configuration options from long ago.
- * If you haven't configured your machine with an SSH key that's known to github, then
+ * If you haven't configured your machine with an SSH key that's known to GitHub, then
    follow [GitHub's directions](https://help.github.com/articles/generating-ssh-keys/)
    to generate an SSH key.
  * `git clone git@github.com:<your_name_here>/flutterfire.git`
@@ -88,7 +88,7 @@ To send us a pull request:
 
 Please make sure all your checkins have detailed commit messages explaining the patch.
 
-For pull requests that affect only one Flutterfire plugin, use a title that starts
+For pull requests that affect only one FlutterFire plugin, use a title that starts
 with the name of the plugin in brackets (e.g. [cloud_firestore]).
 
 Plugins tests are run automatically on contributions using Cirrus CI. However, due to
