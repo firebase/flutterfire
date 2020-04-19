@@ -12,43 +12,59 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 To use the `firebase_crashlytics` plugin, follow the [plugin installation instructions](https://pub.dartlang.org/packages/firebase_crashlytics#pub-pkg-tab-installing).
 
+The following instructions are from [the official installation page](https://firebase.google.com/docs/crashlytics/get-started-new-sdk).
+
 ### Android integration
 
 Enable the Google services by configuring the Gradle scripts as such:
 
-1. Add the Fabric repository to the `[project]/android/build.gradle` file.
-```
-repositories {
-  google()
-  jcenter()
-  // Additional repository for fabric resources
-  maven {
-    url 'https://maven.fabric.io/public'
+1. Check that you have Google's Maven repository in your **project-level** `build.gradle` file (`[project]/android/build.gradle`).
+
+```gradle
+buildscript {
+  repositories {
+    // Add this
+    google()
+
+    // ... you may have other repositories
+  }
+}
+allprojects {
+  repositories {
+    // and this
+    google()
+
+    // ...
   }
 }
 ```
 
-2. Add the following classpaths to the `[project]/android/build.gradle` file.
+2. Add the following classpaths to your **project-level** `build.gradle` file (`[project]/android/build.gradle`).
+
 ```gradle
-dependencies {
-  // Example existing classpath
-  classpath 'com.android.tools.build:gradle:3.2.1'
-  // Add the google services classpath
-  classpath 'com.google.gms:google-services:4.3.0'
-  // Add fabric classpath
-  classpath 'io.fabric.tools:gradle:1.26.1'
+buildscript {
+  dependencies {
+    // Check that you have the Google Services Gradle plugin v4.3.2 or later (if not, add it).
+    classpath 'com.google.gms:google-services:4.3.3'
+    // Add the Crashlytics Gradle plugin.
+    classpath 'com.google.firebase:firebase-crashlytics-gradle:2.0.0-beta04'
+
+    // ... you may have other classpaths
+  }
 }
 ```
 
-2. Apply the following plugins in the `[project]/android/app/build.gradle` file.
+3. Apply the following plugins in your **app-level** `build.gradle` file (`[project]/android/app/build.gradle`).
+
 ```gradle
 // ADD THIS AT THE BOTTOM
-apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 ```
 
 *Note:* If this section is not completed, you will get an error like this:
-```
+
+```console
 java.lang.IllegalStateException:
 Default FirebaseApp is not initialized in this process [package name].
 Make sure to call FirebaseApp.initializeApp(Context) first.
@@ -64,18 +80,20 @@ Add the Crashlytics run scripts:
 1. From Xcode select `Runner` from the project navigation.
 1. Select the `Build Phases` tab.
 1. Click `+ Add a new build phase`, and select `New Run Script Phase`.
-1. Add `${PODS_ROOT}/Fabric/run` to the `Type a script...` text box.
+1. Add `${PODS_ROOT}/FirebaseCrashlytics/run` to the `Type a script...` text box.
 1. If you are using Xcode 10, add the location of `Info.plist`, built by your app, to the `Build Phase's Input Files` field.  
    E.g.: `$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)`
 
 ### Use the plugin
 
 Add the following imports to your Dart code:
+
 ```dart
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 ```
 
 Setup `Crashlytics`:
+
 ```dart
 void main() {
   // Set `enableInDevMode` to true to see reports while in debug mode
@@ -91,20 +109,21 @@ void main() {
 }
 ```
 
-Overriding `FlutterError.onError` with `Crashlytics.instance.recordFlutterError`  will automatically catch all 
-errors that are thrown from within the Flutter framework.  
-If you want to catch errors that occur in `runZoned`, 
-you can supply `Crashlytics.instance.recordError` to the `onError` parameter:
+Overriding `FlutterError.onError` with `Crashlytics.instance.recordFlutterError`  will automatically catch all errors that are thrown from within the Flutter framework.
+
+If you want to catch errors that occur in `runZoned`, you can supply `Crashlytics.instance.recordError` to the `onError` parameter:
+
 ```dart
 runZoned<Future<void>>(() async {
     // ...
   }, onError: Crashlytics.instance.recordError);
-``` 
+```
 
 ## Result
 
 If an error is caught, you should see the following messages in your logs:
-```
+
+```shell
 flutter: Flutter error caught by Crashlytics plugin:
 // OR if you use recordError for runZoned:
 flutter: Error caught by Crashlytics plugin <recordError>:
