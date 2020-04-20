@@ -123,7 +123,7 @@ runZoned<Future<void>>(() async {
 
 If an error is caught, you should see the following messages in your logs:
 
-```shell
+```console
 flutter: Flutter error caught by Crashlytics plugin:
 // OR if you use recordError for runZoned:
 flutter: Error caught by Crashlytics plugin <recordError>:
