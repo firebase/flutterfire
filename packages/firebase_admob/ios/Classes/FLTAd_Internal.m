@@ -23,44 +23,10 @@
 }
 @end
 
-@implementation FLTAnchorType {
-  NSString *name;
-}
-
-- (instancetype _Nonnull)initWithName:(NSString *_Nonnull)name {
-  self = [super init];
-  if (self) {
-    self->name = name;
-  }
-  return self;
-}
-
-+ (FLTAnchorType *_Nullable)typeWithName:(NSString *_Nonnull)name {
-  if ([FLTAnchorType.top->name isEqual:name]) {
-    return FLTAnchorType.top;
-  } else if ([FLTAnchorType.bottom->name isEqual:name]) {
-    return FLTAnchorType.bottom;
-  }
-  return nil;
-}
-
-+ (FLTAnchorType *_Nonnull)top {
-  return [[FLTAnchorType alloc] initWithName:@"AnchorType.top"];
-}
-
-+ (FLTAnchorType *_Nonnull)bottom {
-  return [[FLTAnchorType alloc] initWithName:@"AnchorType.bottom"];
-}
-
-- (BOOL)isEqualToAnchorType:(FLTAnchorType *_Nonnull)type {
-  return [name isEqual:type->name];
-}
-@end
-
 @implementation ViewHelper
 + (void)show:(NSNumber *_Nonnull)anchorOffset
     horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
-                anchorType:(FLTAnchorType *_Nonnull)anchorType
+                anchorType:(FLTAnchorType)anchorType
         rootViewController:(UIViewController *_Nonnull)rootViewController
                       view:(UIView *_Nonnull)view {
   UIView *parentView = rootViewController.view;
@@ -86,10 +52,10 @@
 
   NSLayoutAttribute verticalAttribute = 0;
   CGFloat anchorConstant = 0.0;
-  if ([anchorType isEqualToAnchorType:FLTAnchorType.bottom]) {
+  if (anchorType == FLTAnchorTypeBottom) {
     verticalAttribute = NSLayoutAttributeBottom;
     anchorConstant = -anchorOffset.doubleValue;
-  } else if ([anchorType isEqualToAnchorType:FLTAnchorType.top]) {
+  } else if (anchorType == FLTAnchorTypeTop) {
     verticalAttribute = NSLayoutAttributeTop;
     anchorConstant = anchorOffset.doubleValue;
   }
@@ -106,14 +72,14 @@
                       layoutGuide:(UILayoutGuide *_Nonnull)layoutGuide
                      anchorOffset:(NSNumber *_Nonnull)anchorOffset
            horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
-                       anchorType:(FLTAnchorType *_Nonnull)anchorType API_AVAILABLE(ios(9.0)) {
+                       anchorType:(FLTAnchorType)anchorType API_AVAILABLE(ios(9.0)) {
   view.translatesAutoresizingMaskIntoConstraints = NO;
 
   NSLayoutConstraint *verticalConstraint = nil;
-  if ([anchorType isEqualToAnchorType:FLTAnchorType.bottom]) {
+  if (anchorType == FLTAnchorTypeBottom) {
     verticalConstraint = [view.bottomAnchor constraintEqualToAnchor:layoutGuide.bottomAnchor
                                                            constant:-anchorOffset.doubleValue];
-  } else if ([anchorType isEqualToAnchorType:FLTAnchorType.top]) {
+  } else if (anchorType == FLTAnchorTypeTop) {
     verticalConstraint = [view.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor
                                                         constant:anchorOffset.doubleValue];
   }
@@ -132,7 +98,7 @@
                 verticalAttribute:(NSLayoutAttribute)verticalAttribute
                    anchorConstant:(CGFloat)anchorConstant
            horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
-                       anchorType:(FLTAnchorType *_Nonnull)anchorType {
+                       anchorType:(FLTAnchorType)anchorType {
   [parentView
       addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                  attribute:NSLayoutAttributeLeft
@@ -207,7 +173,7 @@
 
 - (void)show:(NSNumber *_Nonnull)anchorOffset
     horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
-                anchorType:(FLTAnchorType *_Nonnull)anchorType {
+                anchorType:(FLTAnchorType)anchorType {
   [self dispose];
 
   [ViewHelper show:anchorOffset
@@ -293,7 +259,7 @@
 
 - (void)show:(NSNumber *_Nonnull)anchorOffset
     horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
-                anchorType:(FLTAnchorType *_Nonnull)anchorType {
+                anchorType:(FLTAnchorType)anchorType {
   [self dispose];
 
   [ViewHelper show:anchorOffset

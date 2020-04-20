@@ -47,7 +47,7 @@
     id<FLTPlatformViewAd> platformViewAd = (id<FLTPlatformViewAd>)ad;
     [platformViewAd show:parameters[0]
         horizontalCenterOffset:parameters[1]
-                    anchorType:parameters[2]];
+                    anchorType:FLTAdAnchorTypeFromString(parameters[2])];
   } else if ([ad.class conformsToProtocol:@protocol(FLTFullscreenAd)]) {
     id<FLTFullscreenAd> fullscreenAd = (id<FLTFullscreenAd>)ad;
     [fullscreenAd show];

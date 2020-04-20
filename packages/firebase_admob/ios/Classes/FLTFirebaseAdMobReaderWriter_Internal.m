@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, FirebaseAdMobField) {
       return [[FLTAdSize alloc] initWithWidth:[self readValueOfType:[self readByte]]
                                        height:[self readValueOfType:[self readByte]]];
     case FirebaseAdMobFieldAnchorType:
-      return [FLTAnchorType typeWithName:[self readValueOfType:[self readByte]]];
+      return [self readValueOfType:[self readByte]];
   }
   return [super readValueOfType:type];
 }

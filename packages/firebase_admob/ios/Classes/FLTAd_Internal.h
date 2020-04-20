@@ -5,22 +5,30 @@
 
 @protocol FLTNativeAdFactory;
 
+typedef NS_ENUM(NSInteger, FLTAnchorType) {
+  FLTAnchorTypeBottom,
+  FLTAnchorTypeTop,
+};
+
+static FLTAnchorType FLTAdAnchorTypeFromString(NSString *_Nonnull str) {
+  if ([str isEqual:@"AnchorType.top"]) {
+    return FLTAnchorTypeTop;
+  } else if ([str isEqual:@"AnchorType.bottom"]) {
+    return FLTAnchorTypeBottom;
+  }
+  return -1;
+}
+
 @protocol FLTAd <NSObject>
 @required
 - (void)load;
-@end
-
-@interface FLTAnchorType : NSObject
-+ (FLTAnchorType *_Nullable)typeWithName:(NSString *_Nonnull)name;
-+ (FLTAnchorType *_Nonnull)top;
-+ (FLTAnchorType *_Nonnull)bottom;
 @end
 
 @protocol FLTPlatformViewAd <FLTAd>
 @required
 - (void)show:(NSNumber *_Nonnull)anchorOffset
     horizontalCenterOffset:(NSNumber *_Nonnull)horizontalCenterOffset
-                anchorType:(FLTAnchorType *_Nonnull)anchorType;
+                anchorType:(FLTAnchorType)anchorType;
 - (void)dispose;
 @end
 
