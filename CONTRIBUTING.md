@@ -8,7 +8,7 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
 
  * Linux, Mac OS X, or Windows.
  * git (used for source version control).
- * A ssh client (used to authenticate with GitHub).
+ * An SSH client (used to authenticate with GitHub).
 
 ## Getting the code and configuring your environment
 
