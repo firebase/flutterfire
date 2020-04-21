@@ -16,15 +16,15 @@ Future<void> main() async {
     name: 'db2',
     options: Platform.isIOS
         ? const FirebaseOptions(
-            googleAppID: '1:297855924061:ios:c6de2b69b03a5be8',
-            gcmSenderID: '297855924061',
-            databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
-          )
+      googleAppID: '1:297855924061:ios:c6de2b69b03a5be8',
+      gcmSenderID: '297855924061',
+      databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
+    )
         : const FirebaseOptions(
-            googleAppID: '1:297855924061:android:669871c998cc21bd',
-            apiKey: 'AIzaSyD_shO5mfO9lhy2TVWhfo1VUmARKlG4suk',
-            databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
-          ),
+      googleAppID: '1:297855924061:android:669871c998cc21bd',
+      apiKey: 'AIzaSyD_shO5mfO9lhy2TVWhfo1VUmARKlG4suk',
+      databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
+    ),
   );
   runApp(MaterialApp(
     title: 'Flutter Database Example',
@@ -79,11 +79,11 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     _messagesSubscription =
         _messagesRef.limitToLast(10).onChildAdded.listen((Event event) {
-      print('Child added: ${event.snapshot.value}');
-    }, onError: (Object o) {
-      final DatabaseError error = o;
-      print('Error: ${error.code} ${error.message}');
-    });
+          print('Child added: ${event.snapshot.value}');
+        }, onError: (Object o) {
+          final DatabaseError error = o;
+          print('Error: ${error.code} ${error.message}');
+        });
   }
 
   @override
@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _increment() async {
     // Increment counter in transaction.
     final TransactionResult transactionResult =
-        await _counterRef.runTransaction((MutableData mutableData) async {
+    await _counterRef.runTransaction((MutableData mutableData) async {
       mutableData.value = (mutableData.value ?? 0) + 1;
       return mutableData;
     });
@@ -125,12 +125,12 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Center(
               child: _error == null
                   ? Text(
-                      'Button tapped $_counter time${_counter == 1 ? '' : 's'}.\n\n'
-                      'This includes all devices, ever.',
-                    )
+                'Button tapped $_counter time${_counter == 1 ? '' : 's'}.\n\n'
+                    'This includes all devices, ever.',
+              )
                   : Text(
-                      'Error retrieving button tap count:\n${_error.message}',
-                    ),
+                'Error retrieving button tap count:\n${_error.message}',
+              ),
             ),
           ),
           ListTile(
@@ -156,7 +156,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   Animation<double> animation, int index) {
                 return SizeTransition(
                   sizeFactor: animation,
-                  child: Text("$index: ${snapshot.value.toString()}"),
+                  child:ListTile(
+                    trailing: IconButton(
+                      onPressed: () => _messagesRef.child(snapshot.key).remove(),
+                      icon: Icon(Icons.delete),
+                    ),
+                    title: Text(
+                      "$index: ${snapshot.value.toString()}",
+                    ),
+                  ),
                 );
               },
             ),
