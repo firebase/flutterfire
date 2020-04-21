@@ -156,9 +156,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   Animation<double> animation, int index) {
                 return SizeTransition(
                   sizeFactor: animation,
-                  child:ListTile(
+                  child: ListTile(
                     trailing: IconButton(
-                      onPressed: () => _messagesRef.child(snapshot.key).remove(),
+                      onPressed: () =>
+                          _messagesRef.child(snapshot.key).remove(),
                       icon: Icon(Icons.delete),
                     ),
                     title: Text(
