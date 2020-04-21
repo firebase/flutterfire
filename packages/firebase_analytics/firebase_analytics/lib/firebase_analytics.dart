@@ -13,6 +13,9 @@ const MethodChannel firebaseChannel =
 
 /// Firebase Analytics API.
 class FirebaseAnalytics {
+  FirebaseAnalytics._();
+  static final instance = FirebaseAnalytics._();
+    
   final MethodChannel _channel = firebaseChannel;
 
   /// Namespace for analytics API available on Android only.
