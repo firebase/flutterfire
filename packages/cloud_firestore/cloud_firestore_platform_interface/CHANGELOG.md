@@ -1,6 +1,17 @@
+## 1.1.0+1
+
+* Fixed formatting in the CHANGELOG.
+
+## 1.1.0
+
+* Updated `FieldValueFactoryPlatform` to use generics.
+* `FieldValuePlatform` no longer extends `PlatformInterface`.
+* `MethodChannelFieldValue` no longer extends `FieldValuePlatform` and supports equality comparison.
+* Fixed the file name of a test.
+
 ## 1.0.1
 
-* Fixed a typo in the README.
+* Make the pedantic dev_dependency explicit.
 
 ## 1.0.0
 

@@ -1,3 +1,19 @@
+## 0.4.4+3
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.4.4+2
+
+* Update dependency on firebase_core_platform_interface to 1.0.4.
+
+## 0.4.4+1
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.4.4
+
+* Add macOS support
+
 ## 0.4.3+3
 
 * Fix overrides a deprecated API.

@@ -1,3 +1,19 @@
+## 0.4.2+3
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.4.2+2
+
+* Fix method channel on darwin
+
+## 0.4.2+1
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.4.2
+
+* Add macOS support
+
 ## 0.4.1+9
 
 * Depends on `cloud_functions_web` so that projects importing this plugin will get web support.
