@@ -125,11 +125,11 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Center(
               child: _error == null
                   ? Text(
-                'Button tapped $_counter time${_counter == 1 ? '' : 's'}.\n\n'
+                    'Button tapped $_counter time${_counter == 1 ? '' : 's'}.\n\n'
                     'This includes all devices, ever.',
               )
                   : Text(
-                'Error retrieving button tap count:\n${_error.message}',
+                    'Error retrieving button tap count:\n${_error.message}',
               ),
             ),
           ),
