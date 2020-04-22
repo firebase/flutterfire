@@ -62,6 +62,18 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 ```
 
+4. Add the SDK dependencies in your **app-level** `build.gradle` file (`[project]/android/app/build.gradle`).
+
+```gradle
+dependencies {
+  // Recommended: Add the Firebase SDK for Google Analytics.
+  implementation 'com.google.firebase:firebase-analytics:17.3.0'
+
+  // Add the Firebase SDK for Crashlytics.
+  implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta04'
+}
+```
+
 *Note:* If this section is not completed, you will get an error like this:
 
 ```console
