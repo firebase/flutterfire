@@ -26,8 +26,7 @@ typedef enum : NSUInteger {
 - (void)dispose;
 @end
 
-@interface FLTMobileAdWithView : FLTMobileAd
-- (UIView *)adView;
+@interface FLTMobileAdWithView : FLTMobileAd <FlutterPlatformView>
 @end
 
 @interface FLTBannerAd : FLTMobileAdWithView <GADBannerViewDelegate>

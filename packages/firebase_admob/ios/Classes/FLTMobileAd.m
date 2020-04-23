@@ -101,70 +101,110 @@ static NSDictionary *statusToString = nil;
 @end
 
 @implementation FLTMobileAdWithView
-- (UIView *)adView {
-  // We cause a crash if this method is not overriden by subclasses.
-  [self doesNotRecognizeSelector:_cmd];
-  return nil;
-}
-
 - (void)show {
   if (_status == LOADING) {
     _status = PENDING;
     return;
   }
-
   if (_status != LOADED) return;
 
-  UIView *screen = [FLTMobileAd rootViewController].view;
-  [screen addSubview:self.adView];
+  UIView *parentView = [FLTMobileAd rootViewController].view;
+  [parentView addSubview:self.view];
 
-// UIView.safeAreaLayoutGuide is only available on iOS 11.0+
-#if defined(__IPHONE_11_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0)
+  self.view.translatesAutoresizingMaskIntoConstraints = NO;
+
   if (@available(ios 11.0, *)) {
-    self.adView.translatesAutoresizingMaskIntoConstraints = NO;
-
-    UILayoutGuide *guide = screen.safeAreaLayoutGuide;
-    [NSLayoutConstraint activateConstraints:@[
-      [self.adView.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor
-                                                constant:_horizontalCenterOffset],
-
-      [self.adView.leftAnchor constraintGreaterThanOrEqualToAnchor:guide.leftAnchor],
-      [self.adView.rightAnchor constraintLessThanOrEqualToAnchor:guide.rightAnchor],
-    ]];
-
-    if (_anchorType == 0) {
-      [NSLayoutConstraint activateConstraints:@[
-        [self.adView.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor
-                                                 constant:_anchorOffset],
-      ]];
-    } else {
-      [NSLayoutConstraint activateConstraints:@[
-        [self.adView.topAnchor constraintEqualToAnchor:guide.topAnchor constant:_anchorOffset],
-      ]];
-    }
+    [self activateConstraintForLayoutGuide:parentView.safeAreaLayoutGuide];
+    return;
+  } else if (@available(ios 9.0, *)) {
+    [self activateConstraintForLayoutGuide:parentView.layoutMarginsGuide];
+    return;
   }
-#endif
 
-  // We find the left most point that aligns the view to the horizontal center.
-  CGFloat x =
-      screen.frame.size.width / 2 - self.adView.frame.size.width / 2 + _horizontalCenterOffset;
-  // We find the top point that anchors the view to the top/bottom depending on anchorType.
-  CGFloat y;
+  NSLayoutAttribute verticalAttribute = 0;
+  CGFloat anchorConstant = 0.0;
   if (_anchorType == 0) {
-    y = screen.frame.size.height - self.adView.frame.size.height + _anchorOffset;
-  } else {
-    y = _anchorOffset;
+    verticalAttribute = NSLayoutAttributeBottom;
+    anchorConstant = -_anchorOffset;
+  } else if (_anchorType == 1) {
+    verticalAttribute = NSLayoutAttributeTop;
+    anchorConstant = _anchorOffset;
   }
-  self.adView.frame = (CGRect){{x, self.adView.frame.origin.y}, self.adView.frame.size};
+
+  [self activateConstraintParentView:parentView
+                   verticalAttribute:verticalAttribute
+                      anchorConstant:anchorConstant];
+}
+
+- (void)activateConstraintForLayoutGuide:(UILayoutGuide *_Nonnull)layoutGuide
+    API_AVAILABLE(ios(9.0)) {
+  self.view.translatesAutoresizingMaskIntoConstraints = NO;
+
+  NSLayoutConstraint *verticalConstraint = nil;
+  if (_anchorType == 0) {
+    verticalConstraint = [self.view.bottomAnchor constraintEqualToAnchor:layoutGuide.bottomAnchor
+                                                                constant:_anchorOffset];
+  } else {
+    verticalConstraint = [self.view.topAnchor constraintEqualToAnchor:layoutGuide.topAnchor
+                                                             constant:_anchorOffset];
+  }
+
+  [NSLayoutConstraint activateConstraints:@[
+    verticalConstraint,
+    [self.view.centerXAnchor constraintEqualToAnchor:layoutGuide.centerXAnchor
+                                            constant:_horizontalCenterOffset],
+    [self.view.leftAnchor constraintGreaterThanOrEqualToAnchor:layoutGuide.leftAnchor],
+    [self.view.rightAnchor constraintLessThanOrEqualToAnchor:layoutGuide.rightAnchor],
+  ]];
+}
+
+- (void)activateConstraintParentView:(UIView *_Nonnull)parentView
+                   verticalAttribute:(NSLayoutAttribute)verticalAttribute {
+  [parentView
+      addConstraint:[NSLayoutConstraint constraintWithItem:self.view
+                                                 attribute:NSLayoutAttributeLeft
+                                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                    toItem:parentView
+                                                 attribute:NSLayoutAttributeLeft
+                                                multiplier:1
+                                                  constant:0]];
+  [parentView addConstraint:[NSLayoutConstraint constraintWithItem:self.view
+                                                         attribute:NSLayoutAttributeRight
+                                                         relatedBy:NSLayoutRelationLessThanOrEqual
+                                                            toItem:parentView
+                                                         attribute:NSLayoutAttributeRight
+                                                        multiplier:1
+                                                          constant:0]];
+  [parentView addConstraint:[NSLayoutConstraint constraintWithItem:self.view
+                                                         attribute:NSLayoutAttributeCenterX
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:parentView
+                                                         attribute:NSLayoutAttributeCenterX
+                                                        multiplier:1
+                                                          constant:_horizontalCenterOffset]];
+
+  [parentView addConstraint:[NSLayoutConstraint constraintWithItem:self.view
+                                                         attribute:verticalAttribute
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:parentView
+                                                         attribute:verticalAttribute
+                                                        multiplier:1
+                                                          constant:anchorConstant]];
 }
 
 - (void)dispose {
-  if (self.adView.superview) [self.adView removeFromSuperview];
+  if (self.view.superview) [self.view removeFromSuperview];
   [super dispose];
 }
 
 - (NSString *)description {
-  return [NSString stringWithFormat:@"%@ for: %@", super.description, self.adView];
+  return [NSString stringWithFormat:@"%@ for: %@", super.description, self.view];
+}
+
+// Must be overridden by sub classes
+- (UIView *_Nonnull)view {
+  [self doesNotRecognizeSelector:_cmd];
+  return nil;
 }
 @end
 
@@ -193,7 +233,7 @@ static NSDictionary *statusToString = nil;
   return nil;
 }
 
-- (UIView *)adView {
+- (UIView *)view {
   return _banner;
 }
 
@@ -339,7 +379,7 @@ static NSDictionary *statusToString = nil;
   return self;
 }
 
-- (UIView *)adView {
+- (UIView *)view {
   return _nativeAd;
 }
 
