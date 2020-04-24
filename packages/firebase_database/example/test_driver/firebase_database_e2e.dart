@@ -21,11 +21,13 @@ void main() {
       expect(transactionResult.dataSnapshot.value > value, true);
     });
 
-    testWidgets('setPersistenceCacheSizeBytes Integer', (WidgetTester tester) async {
+    testWidgets('setPersistenceCacheSizeBytes Integer',
+        (WidgetTester tester) async {
       await database.setPersistenceCacheSizeBytes(2147483647);
     });
 
-    testWidgets('setPersistenceCacheSizeBytes Long', (WidgetTester tester) async {
+    testWidgets('setPersistenceCacheSizeBytes Long',
+        (WidgetTester tester) async {
       await database.setPersistenceCacheSizeBytes(2147483648);
     });
   });
