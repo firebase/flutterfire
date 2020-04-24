@@ -1,6 +1,6 @@
 ## 0.2.0
 
-* **Breaking**: Migration to the new Firebase Crashlytics SDK. Follow the [migration guide](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=android) to update your app.
+* **Breaking**: Migration to the new Firebase Crashlytics SDK. Follow the [migration guide](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=android) (steps 1 and 2) to update your app.
 * **Breaking**: the following methods have been removed:
   * `setUserEmail`
   * `setUserName`
