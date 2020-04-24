@@ -1,3 +1,7 @@
+## 0.9.3+4
+
+* Fix how iOS display views on iOS < 10.
+
 ## 0.9.3+3
 
 * Provide a default `MobileAdTargetingInfo` for `RewardedVideoAd.load()`. `RewardedVideoAd.load()`
