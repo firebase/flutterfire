@@ -1,4 +1,4 @@
-## 3.1.4+1
+## 3.1.5
 
 * Fix (#81) Android setPersistenceCacheSizeBytes crash when Long value was provided.
 
