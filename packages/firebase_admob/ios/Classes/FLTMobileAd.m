@@ -131,9 +131,7 @@ static NSDictionary *statusToString = nil;
     anchorConstant = _anchorOffset;
   }
 
-  [self activateConstraintParentView:parentView
-                   verticalAttribute:verticalAttribute
-                      anchorConstant:anchorConstant];
+  [self activateConstraintParentView:parentView verticalAttribute:verticalAttribute];
 }
 
 - (void)activateConstraintForLayoutGuide:(UILayoutGuide *_Nonnull)layoutGuide
@@ -189,7 +187,7 @@ static NSDictionary *statusToString = nil;
                                                             toItem:parentView
                                                          attribute:verticalAttribute
                                                         multiplier:1
-                                                          constant:anchorConstant]];
+                                                          constant:_anchorOffset]];
 }
 
 - (void)dispose {
