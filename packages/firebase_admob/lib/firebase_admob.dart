@@ -26,10 +26,10 @@ import 'package:meta/meta.dart';
 enum MobileAdEvent {
   loaded,
   failedToLoad,
-  clicked,
-  impression,
+  nativeAdClicked,
+  nativeAdImpression,
   opened,
-  leftApplication,
+  onApplicationExit,
   closed,
 }
 
@@ -545,10 +545,10 @@ class FirebaseAdMob {
       <String, MobileAdEvent>{
     'onAdLoaded': MobileAdEvent.loaded,
     'onAdFailedToLoad': MobileAdEvent.failedToLoad,
-    'onAdClicked': MobileAdEvent.clicked,
-    'onAdImpression': MobileAdEvent.impression,
+    'onNativeAdClicked': MobileAdEvent.nativeAdClicked,
+    'onNativeAdImpression': MobileAdEvent.nativeAdImpression,
     'onAdOpened': MobileAdEvent.opened,
-    'onAdLeftApplication': MobileAdEvent.leftApplication,
+    'onApplicationExit': MobileAdEvent.onApplicationExit,
     'onAdClosed': MobileAdEvent.closed,
   };
 

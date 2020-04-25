@@ -215,11 +215,7 @@ static NSDictionary *statusToString = nil;
 }
 
 - (void)adViewWillPresentScreen:(GADBannerView *)adView {
-  [_channel invokeMethod:@"onAdClicked" arguments:[self argumentsMap]];
-}
-
-- (void)adViewWillDismissScreen:(GADBannerView *)adView {
-  [_channel invokeMethod:@"onAdImpression" arguments:[self argumentsMap]];
+  [_channel invokeMethod:@"onAdOpened" arguments:[self argumentsMap]];
 }
 
 - (void)adViewDidDismissScreen:(GADBannerView *)adView {
@@ -227,7 +223,7 @@ static NSDictionary *statusToString = nil;
 }
 
 - (void)adViewWillLeaveApplication:(GADBannerView *)adView {
-  [_channel invokeMethod:@"onAdLeftApplication" arguments:[self argumentsMap]];
+  [_channel invokeMethod:@"onApplicationExit" arguments:[self argumentsMap]];
 }
 
 - (void)adViewDidReceiveAd:(GADBannerView *)adView {
@@ -282,11 +278,7 @@ static NSDictionary *statusToString = nil;
 }
 
 - (void)interstitialWillPresentScreen:(GADInterstitial *)ad {
-  [_channel invokeMethod:@"onAdClicked" arguments:[self argumentsMap]];
-}
-
-- (void)interstitialWillDismissScreen:(GADInterstitial *)ad {
-  [_channel invokeMethod:@"onAdImpression" arguments:[self argumentsMap]];
+  [_channel invokeMethod:@"onAdOpended" arguments:[self argumentsMap]];
 }
 
 - (void)interstitialDidDismissScreen:(GADInterstitial *)ad {
@@ -294,7 +286,7 @@ static NSDictionary *statusToString = nil;
 }
 
 - (void)interstitialWillLeaveApplication:(GADInterstitial *)ad {
-  [_channel invokeMethod:@"onAdLeftApplication" arguments:[self argumentsMap]];
+  [_channel invokeMethod:@"onApplicationExit" arguments:[self argumentsMap]];
 }
 
 - (void)dispose {
@@ -376,11 +368,7 @@ static NSDictionary *statusToString = nil;
 }
 
 - (void)nativeAdWillPresentScreen:(GADUnifiedNativeAd *)nativeAd {
-  [_channel invokeMethod:@"onAdClicked" arguments:[self argumentsMap]];
-}
-
-- (void)nativeAdWillDismissScreen:(GADUnifiedNativeAd *)nativeAd {
-  [_channel invokeMethod:@"onAdImpression" arguments:[self argumentsMap]];
+  [_channel invokeMethod:@"onAdOpened" arguments:[self argumentsMap]];
 }
 
 - (void)nativeAdDidDismissScreen:(GADUnifiedNativeAd *)nativeAd {
@@ -388,6 +376,14 @@ static NSDictionary *statusToString = nil;
 }
 
 - (void)nativeAdWillLeaveApplication:(GADUnifiedNativeAd *)nativeAd {
-  [_channel invokeMethod:@"onAdLeftApplication" arguments:[self argumentsMap]];
+  [_channel invokeMethod:@"onApplicationExit" arguments:[self argumentsMap]];
+}
+
+- (void)nativeAdDidRecordImpression:(nonnull GADUnifiedNativeAd *)nativeAd {
+  [_channel invokeMethod:@"onNativeAdImpression" arguments:[self argumentsMap]];
+}
+
+- (void)nativeAdDidRecordClick:(nonnull GADUnifiedNativeAd *)nativeAd {
+  [_channel invokeMethod:@"onNativeAdClicked" arguments:[self argumentsMap]];
 }
 @end
