@@ -129,17 +129,17 @@ abstract class MobileAd extends AdListener {
 
   @Override
   public void onAdClicked() {
-    channel.invokeMethod("onAdClicked", argumentsMap());
+    channel.invokeMethod("onNativeAdClicked", argumentsMap());
   }
 
   @Override
   public void onAdImpression() {
-    channel.invokeMethod("onAdImpression", argumentsMap());
+    channel.invokeMethod("onNativeAdImpression", argumentsMap());
   }
 
   @Override
   public void onAdLeftApplication() {
-    channel.invokeMethod("onAdLeftApplication", argumentsMap());
+    channel.invokeMethod("onApplicationExit", argumentsMap());
   }
 
   @Override
