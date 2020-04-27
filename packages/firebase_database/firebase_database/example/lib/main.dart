@@ -135,23 +135,23 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             title: const Text('Anchor to bottom'),
           ),
-          Flexible(
-            child: FirebaseAnimatedList(
-              key: ValueKey<bool>(_anchorToBottom),
-              query: _messagesRef,
-              reverse: _anchorToBottom,
-              sort: _anchorToBottom
-                  ? (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key)
-                  : null,
-              itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                  Animation<double> animation, int index) {
-                return SizeTransition(
-                  sizeFactor: animation,
-                  child: Text("$index: ${snapshot.value.toString()}"),
-                );
-              },
-            ),
-          ),
+          // Flexible(
+          //   child: FirebaseAnimatedList(
+          //     key: ValueKey<bool>(_anchorToBottom),
+          //     query: _messagesRef,
+          //     reverse: _anchorToBottom,
+          //     sort: _anchorToBottom
+          //         ? (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key)
+          //         : null,
+          //     itemBuilder: (BuildContext context, DataSnapshot snapshot,
+          //         Animation<double> animation, int index) {
+          //       return SizeTransition(
+          //         sizeFactor: animation,
+          //         child: Text("$index: ${snapshot.value.toString()}"),
+          //       );
+          //     },
+          //   ),
+          // ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
