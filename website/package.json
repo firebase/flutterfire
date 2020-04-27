@@ -1,0 +1,39 @@
+{
+  "name": "website",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy",
+    "format": "prettier --write \"**/*.{js,jsx,json,md,mdx}\""
+  },
+  "dependencies": {
+    "@docusaurus/core": "^2.0.0-alpha.51",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.51",
+    "classnames": "^2.2.6",
+    "docusaurus-plugin-sass": "^0.1.8",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-react": "^7.19.0",
+    "prettier": "^2.0.5"
+  }
+}
