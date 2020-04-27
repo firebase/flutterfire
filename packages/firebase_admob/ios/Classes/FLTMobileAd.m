@@ -278,7 +278,7 @@ static NSDictionary *statusToString = nil;
 }
 
 - (void)interstitialWillPresentScreen:(GADInterstitial *)ad {
-  [_channel invokeMethod:@"onAdOpended" arguments:[self argumentsMap]];
+  [_channel invokeMethod:@"onAdOpened" arguments:[self argumentsMap]];
 }
 
 - (void)interstitialDidDismissScreen:(GADInterstitial *)ad {
