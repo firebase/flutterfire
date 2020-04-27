@@ -2,7 +2,7 @@ module.exports = {
   title: 'FlutterFire',
   tagline: 'The official Firebase plugins for Flutter',
   url: 'http://firebaseextended.github.io/flutterfire',
-  baseUrl: '/',
+  baseUrl: '/flutterfire/',
   favicon: 'img/favicon.ico',
   organizationName: 'FirebaseExtended',
   projectName: 'flutterfire',

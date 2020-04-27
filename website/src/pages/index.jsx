@@ -54,7 +54,7 @@ function Home() {
           <h1>{siteConfig.title}</h1>
           <h2>{siteConfig.tagline}</h2>
           <div className={styles.actions}>
-            <Link to="/docs">Get Started &raquo;</Link>
+            <Link to="/flutterfire/docs">Get Started &raquo;</Link>
             <Link to="https://github.com/firebaseextended/flutterfire">GitHub &raquo;</Link>
           </div>
         </div>
