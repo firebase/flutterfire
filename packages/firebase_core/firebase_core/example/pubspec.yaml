@@ -24,7 +24,7 @@ dependency_overrides:
     path: ../../../cloud_firestore/cloud_firestore_platform_interface
 
 dev_dependencies:
-  e2e: ^0.4.0
+  e2e: ^0.4.2
   flutter_driver:
     sdk: flutter
   flutter_test:
