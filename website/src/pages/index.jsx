@@ -1,0 +1,131 @@
+import React from 'react';
+import cx from 'classnames';
+import Layout from '@theme/Layout';
+
+import Link from '@docusaurus/Link';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import styles from './styles.module.scss';
+
+import { Triangle } from '../components/Triangle';
+import plugins from '../plugins';
+
+function Home() {
+  const context = useDocusaurusContext();
+  const { siteConfig = {} } = context;
+
+  return (
+    <Layout title={siteConfig.title} description={siteConfig.tagline}>
+      <section className={cx(styles.hero, 'bg-firebase-blue')}>
+        {/** Left **/}
+        <Triangle
+          zIndex={1}
+          color="firebase-yellow"
+          style={{
+            left: -150,
+          }}
+        />
+        <Triangle
+          color="firebase-gray"
+          style={{
+            left: 0,
+          }}
+          rotate={-90}
+        />
+
+        {/** Right **/}
+        <Triangle
+          zIndex={1}
+          color="firebase-coral"
+          style={{
+            right: 0,
+            bottom: -150,
+          }}
+          rotate={180}
+        />
+        <Triangle
+          color="firebase-gray"
+          style={{
+            right: -150,
+          }}
+          rotate={90}
+        />
+        <div className={cx(styles.content, 'text-white')}>
+          <h1>{siteConfig.title}</h1>
+          <h2>{siteConfig.tagline}</h2>
+          <div className={styles.actions}>
+            <Link to="/docs">Get Started &raquo;</Link>
+            <Link to="https://github.com/firebaseextended/flutterfire">GitHub &raquo;</Link>
+          </div>
+        </div>
+      </section>
+      <main>
+        <div className={styles.plugins}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Plugin</th>
+                <th>Version</th>
+                <th>pub.dev</th>
+                <th>Firebase</th>
+                <th>View Source</th>
+                <th>Mobile</th>
+                <th>Web</th>
+              </tr>
+            </thead>
+            <tbody>
+              {plugins.map(plugin => (
+                <tr key={plugin.pub}>
+                  <td>
+                    <strong>{plugin.name}</strong>
+                  </td>
+                  <td style={{ minWidth: 150 }}>
+                    <img
+                      src={`https://img.shields.io/pub/v/${plugin.pub}.svg`}
+                      alt={`${plugin.name} Badge`}
+                    />
+                  </td>
+                  <td>
+                    <a href={`https://pub.dartlang.org/packages/${plugin.pub}`}>
+                      <img width={25} src={useBaseUrl('img/dart-logo.png')} alt="Pub" />
+                    </a>
+                  </td>
+                  <td>
+                    <a
+                      href={
+                        plugin.firebase
+                          ? `https://firebase.google.com/products/${plugin.firebase}`
+                          : 'https://firebase.google.com'
+                      }
+                    >
+                      <img width={25} src={useBaseUrl('img/firebase-logo.png')} alt="Firebase" />
+                    </a>
+                  </td>
+                  <td>
+                    <a
+                      href={`https://github.com/FirebaseExtended/flutterfire/tree/next/packages/${plugin.pub}`}
+                    >
+                      <code>{plugin.pub}</code>
+                    </a>
+                  </td>
+                  <td className="icon">{plugin.support.mobile ? <Check /> : <Cross />}</td>
+                  <td>{plugin.support.web ? <Check /> : <Cross />}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </Layout>
+  );
+}
+
+function Check() {
+  return <span style={{ color: '#4caf50', fontSize: '1.5rem' }}>&#10003;</span>;
+}
+
+function Cross() {
+  return <span style={{ color: '#f44336', fontSize: '1.7rem' }}>&#65794;</span>;
+}
+
+export default Home;
