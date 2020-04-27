@@ -11,13 +11,12 @@ class DatabaseReferenceWeb extends DatabaseReference {
     this._databasePlatform,
     this._pathComponents,
   )   : _delegate = _pathComponents.isEmpty
-            ? _webDatabase.ref("as")
-            : _webDatabase.ref("as").child(_pathComponents.join("/")),
+            ? _webDatabase.ref("/")
+            : _webDatabase.ref(_pathComponents.join("/")),
         super(_databasePlatform, _pathComponents);
 
   @override
   DatabaseReference child(String path) {
-    print(path);
     return DatabaseReferenceWeb(_webDatabase, _databasePlatform,
         List<String>.from(_pathComponents)..addAll(path.split("/")));
   }
@@ -56,11 +55,7 @@ class DatabaseReferenceWeb extends DatabaseReference {
 
   /// Fetch data on the reference once.
   Future<DataSnapshot> once() async {
-    print("once is called here");
-    print(_delegate.ref);
     firebase.DataSnapshot snapshot = (await _delegate.once("value")).snapshot;
-    print("once is called here with snapshot");
-    print(snapshot.val());
     return DataSnapshot(snapshot.key, snapshot.val());
   }
 
@@ -143,7 +138,6 @@ class DatabaseReferenceWeb extends DatabaseReference {
 
   @override
   Future<void> set(value, {priority}) {
-    print("set requested" + value);
     if (priority == null) {
       return _delegate.set(value);
     } else {

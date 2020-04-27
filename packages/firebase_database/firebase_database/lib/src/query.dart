@@ -28,7 +28,9 @@ class Query {
   }
 
   /// Listens for a single value event and then stops listening.
-  Future<DataSnapshot> once() async => DataSnapshot._(await delegate.once());
+  Future<DataSnapshot> once() async {
+    return DataSnapshot._(await delegate.once());
+  }
 
   /// Fires when children are added.
   Stream<Event> get onChildAdded => delegate

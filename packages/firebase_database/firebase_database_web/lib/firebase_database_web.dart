@@ -6,7 +6,6 @@ import "package:firebase/firebase.dart" as firebase;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:meta/meta.dart';
 
 part './database_reference_web.dart';
 part './query_web.dart';

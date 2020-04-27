@@ -21,7 +21,7 @@ class DatabaseReference extends Query {
   /// path. The relative path can either be a simple child key (e.g. ‘fred’) or
   /// a deeper slash-separated path (e.g. ‘fred/name/first’).
   DatabaseReference child(String path) {
-    return DatabaseReference._(_delegate,
+    return DatabaseReference._(_delegate.child(path),
         (List<String>.from(_pathComponents)..addAll(path.split('/'))));
   }
 
