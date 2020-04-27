@@ -46,8 +46,9 @@ buildscript {
   dependencies {
     // Check that you have the Google Services Gradle plugin v4.3.2 or later (if not, add it).
     classpath 'com.google.gms:google-services:4.3.3'
+    
     // Add the Crashlytics Gradle plugin.
-    classpath 'com.google.firebase:firebase-crashlytics-gradle:2.0.0-beta04'
+    classpath 'com.google.firebase:firebase-crashlytics-gradle:2.0.0'
 
     // ... you may have other classpaths
   }
@@ -66,11 +67,11 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 ```gradle
 dependencies {
-  // Recommended: Add the Firebase SDK for Google Analytics.
-  implementation 'com.google.firebase:firebase-analytics:17.3.0'
+  // Optional but recommended: Add the Firebase SDK for Google Analytics.
+  implementation 'com.google.firebase:firebase-analytics:17.4.0'
 
   // Add the Firebase SDK for Crashlytics.
-  implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta04'
+  implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
 }
 ```
 
