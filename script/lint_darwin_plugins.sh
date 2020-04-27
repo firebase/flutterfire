@@ -36,7 +36,7 @@ function lint_package() {
       "${podspec}"
       --allow-warnings
       --fail-fast
-      --silent
+      --verbose
     )
     if [[ ! "${skip_analysis_packages[*]}" =~ "${podspecBasename}" ]]; then
       lint_args+=(--analyze)

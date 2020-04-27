@@ -14,7 +14,7 @@ void main() {
     Firestore firestore;
     Firestore firestoreWithSettings;
 
-    setUp(() async {
+    setUpAll(() async {
       final FirebaseOptions firebaseOptions = const FirebaseOptions(
         googleAppID: '1:79601577497:ios:5f2bcc6ba8cecddd',
         gcmSenderID: '79601577497',
@@ -131,6 +131,7 @@ void main() {
           snapshot.metadata.hasPendingWrites || snapshot.metadata.isFromCache) {
         snapshot = await snapshotsWithMetadataChanges.take(1).first;
       }
+      // At this point, the test is a flake...
       expect(snapshot.data['hello'], 'world');
 
       await ref.delete();
@@ -294,6 +295,49 @@ void main() {
       await doc2.delete();
     });
 
+    test('pagination with DocumentReference (#2044)', () async {
+      // Populate the database with two test documents
+      final CollectionReference messages = firestore.collection('messages');
+      final DocumentReference doc1 = messages.document();
+      // Use document ID as a unique identifier to ensure that we don't
+      // collide with other tests running against this database.
+      final String testRun = doc1.documentID;
+      await doc1.setData(<String, dynamic>{
+        'message': 'pagination testing1',
+        'test_run': testRun,
+        'some_order': 1,
+      });
+      final DocumentReference doc2 = messages.document();
+      await doc2.setData(<String, dynamic>{
+        'message': 'pagination testing2',
+        'test_run': testRun,
+        'some_order': 2,
+        'reference': doc1,
+      });
+      final DocumentSnapshot snapshot2 = await doc2.get();
+
+      QuerySnapshot snapshot;
+      List<DocumentSnapshot> results;
+
+      // startAtDocument with the Snapshot of a doc that contains a DocumentReference.
+      snapshot = await messages
+          .orderBy('some_order', descending: true)
+          .where('test_run', isEqualTo: testRun)
+          .startAtDocument(snapshot2)
+          .getDocuments();
+
+      results = snapshot.documents;
+      expect(results.length, 2);
+
+      // Results are expected in descending order.
+      expect(results[0].data['message'], 'pagination testing2');
+      expect(results[1].data['message'], 'pagination testing1');
+
+      // Clean up
+      await doc2.delete();
+      await doc1.delete();
+    });
+
     test('FieldPath.documentId', () async {
       // Populate the database with two test documents.
       final CollectionReference messages = firestore.collection('messages');
@@ -339,16 +383,14 @@ void main() {
       await ref.document('maputo').setData(<String, dynamic>{
         'country': 'Mozambique',
       });
-      final QuerySnapshot snapshot = await ref
-          .where('country', whereIn: <String>['USA', 'Mozambique'])
-          .orderBy('country')
-          .getDocuments();
+      final QuerySnapshot snapshot = await ref.where('country',
+          whereIn: <String>['USA', 'Mozambique']).getDocuments();
       final List<DocumentSnapshot> results = snapshot.documents;
       expect(results.length, 2);
       final DocumentSnapshot snapshot1 = results[0];
       final DocumentSnapshot snapshot2 = results[1];
-      expect(snapshot1.documentID, 'maputo');
-      expect(snapshot2.documentID, 'la');
+      expect(snapshot1.documentID, 'la');
+      expect(snapshot2.documentID, 'maputo');
     });
 
     test('Query.whereArrayContainsAny', () async {
@@ -369,8 +411,141 @@ void main() {
       expect(results.length, 2);
       final DocumentSnapshot snapshot1 = results[0];
       final DocumentSnapshot snapshot2 = results[1];
-      expect(snapshot1.documentID, 'la');
-      expect(snapshot2.documentID, 'tokyo');
+      expect(snapshot1.documentID, 'tokyo');
+      expect(snapshot2.documentID, 'la');
+    });
+
+    test('Query.whereArrayContainsAny using DocumentReference', () async {
+      final CollectionReference ref = firestore.collection('messages');
+      await ref.document('test-docRef-1').setData({"message": "1"});
+      await ref.document('test-docRef-2').setData({"message": "2"});
+
+      await ref.document('test-docRef').setData(<String, dynamic>{
+        'children': <DocumentReference>[
+          ref.document("test-docRef-1"),
+          ref.document("test-docRef-2")
+        ],
+      });
+
+      final QuerySnapshot snapshot = await ref.where('children',
+          arrayContainsAny: <DocumentReference>[
+            ref.document("test-docRef-1"),
+            ref.document("test-docRef-2")
+          ]).getDocuments();
+      final List<DocumentSnapshot> results = snapshot.documents;
+      expect(results.length, 1);
+      final DocumentSnapshot actual = results[0];
+      expect(actual.documentID, 'test-docRef');
+    });
+
+    test('Query.whereIn using DocumentReference', () async {
+      final CollectionReference ref = firestore.collection('messages');
+      await ref.document('test-docRef-1').setData({"message": "1"});
+      await ref.document('test-docRef-2').setData({"message": "2"});
+
+      final QuerySnapshot snapshot = await ref.where(FieldPath.documentId,
+          whereIn: <DocumentReference>[
+            ref.document("test-docRef-1"),
+            ref.document("test-docRef-2")
+          ]).getDocuments();
+      final List<DocumentSnapshot> results = snapshot.documents;
+      expect(results.length, 2);
+      expect(results.where((item) => item.documentID == "test-docRef-1").length,
+          equals(1));
+      expect(results.where((item) => item.documentID == "test-docRef-2").length,
+          equals(1));
+    });
+
+    test('Query.arrayContains using DocumentReference', () async {
+      final CollectionReference ref = firestore.collection('messages');
+      await ref.document('test-docRef-1').setData({"message": "1"});
+      await ref.document('test-docRef-2').setData({"message": "2"});
+
+      await ref.document('test-docRef').setData(<String, dynamic>{
+        'children': <DocumentReference>[
+          ref.document("test-docRef-1"),
+          ref.document("test-docRef-2")
+        ],
+      });
+
+      final QuerySnapshot snapshot = await ref
+          .where('children', arrayContains: ref.document("test-docRef-1"))
+          .getDocuments();
+      final List<DocumentSnapshot> results = snapshot.documents;
+      expect(results.length, 1);
+      final DocumentSnapshot actual = results[0];
+      expect(actual.documentID, 'test-docRef');
+    });
+
+    test('FieldValue.arrayUnion with DocumentRefrence', () async {
+      final CollectionReference ref = firestore.collection('messages');
+      await ref.document('test-docRef-1').setData({"message": "1"});
+      await ref.document('test-docRef-2').setData({"message": "2"});
+
+      await ref.document('test-docRef').setData(<String, dynamic>{
+        'children': <DocumentReference>[
+          ref.document("test-docRef-1"),
+        ],
+      });
+
+      await ref.document("test-docRef").updateData({
+        'children': FieldValue.arrayUnion([ref.document('test-docRef-2')])
+      });
+
+      final DocumentSnapshot snapshot = await ref.document("test-docRef").get();
+      expect(snapshot.data['children'].length, equals(2));
+    });
+
+    test('FieldValue.arrayRemove with DocumentReference', () async {
+      final CollectionReference ref = firestore.collection('messages');
+      await ref.document('test-docRef-1').setData({"message": "1"});
+      await ref.document('test-docRef-2').setData({"message": "2"});
+
+      await ref.document('test-docRef').setData(<String, dynamic>{
+        'children': <DocumentReference>[
+          ref.document("test-docRef-1"),
+          ref.document("test-docRef-2"),
+        ],
+      });
+
+      await ref.document("test-docRef").updateData({
+        'children': FieldValue.arrayRemove([ref.document('test-docRef-2')])
+      });
+
+      final DocumentSnapshot snapshot = await ref.document("test-docRef").get();
+      expect(snapshot.data['children'].length, equals(1));
+    });
+
+    test('Decode nested maps with DocumentRefrenceValues', () async {
+      final CollectionReference ref = firestore.collection('messages');
+      await ref.document('test-docRef-1').setData({"message": "1"});
+      await ref.document('test-docRef-2').setData({"message": "2"});
+
+      await ref.document('test-docRef').setData(<String, dynamic>{
+        'children': {
+          'children': <DocumentReference>[
+            ref.document("test-docRef-1"),
+            ref.document("test-docRef-2")
+          ]
+        },
+      });
+
+      final List<dynamic> children = (await ref.document("test-docRef").get())
+          .data['children']['children'];
+      children
+          .forEach((item) => expect(item, isInstanceOf<DocumentReference>()));
+    });
+
+    test('Equality comparison on FieldValues', () async {
+      final FieldValue arrayRemove = FieldValue.arrayRemove([1]);
+      expect(arrayRemove, equals(FieldValue.arrayRemove([1])));
+      expect(arrayRemove, isNot(equals(FieldValue.arrayRemove([2]))));
+      final FieldValue delete = FieldValue.delete();
+      expect(delete, equals(FieldValue.delete()));
+      expect(arrayRemove, isNot(equals(FieldValue.delete())));
+      final FieldValue actualInt = FieldValue.increment(1);
+      final FieldValue actualDouble = FieldValue.increment(1.0);
+      expect(actualInt, isNot(equals(actualDouble)));
     });
   });
 }

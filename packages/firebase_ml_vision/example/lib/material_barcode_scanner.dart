@@ -348,6 +348,8 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                   padding: const EdgeInsets.all(16),
                   child: Text(
                     '1 result found',
+                    // TODO(bmparr): Switch body2 -> bodyText1 once https://github.com/flutter/flutter/pull/48547 makes it to stable.
+                    // ignore: deprecated_member_use
                     style: Theme.of(context).textTheme.body2,
                   ),
                 ),
@@ -376,11 +378,15 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                                   margin: const EdgeInsets.only(bottom: 4),
                                   child: Text(
                                     'SPAN Reader',
+                                    // TODO(bmparr): Switch body2 -> bodyText1 once https://github.com/flutter/flutter/pull/48547 makes it to stable.
+                                    // ignore: deprecated_member_use
                                     style: Theme.of(context).textTheme.body2,
                                   ),
                                 ),
                                 Text(
                                   'Vol. 2',
+                                  // TODO(bmparr): Switch body2 -> bodyText1 once https://github.com/flutter/flutter/pull/48547 makes it to stable.
+                                  // ignore: deprecated_member_use
                                   style: Theme.of(context).textTheme.body2,
                                 ),
                                 Expanded(

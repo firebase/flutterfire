@@ -38,6 +38,10 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -55,11 +59,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class CloudFirestorePlugin implements MethodCallHandler {
+public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
 
   private static final String TAG = "CloudFirestorePlugin";
-  private final MethodChannel channel;
-  private final Activity activity;
+  private MethodChannel channel;
+  private Activity activity;
 
   // Handles are ints used as indexes into the sparse array of active observers
   private int nextListenerHandle = 0;
@@ -72,17 +76,18 @@ public class CloudFirestorePlugin implements MethodCallHandler {
   private final SparseArray<TaskCompletionSource> completionTasks = new SparseArray<>();
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
-    final MethodChannel channel =
-        new MethodChannel(
-            registrar.messenger(),
-            "plugins.flutter.io/cloud_firestore",
-            new StandardMethodCodec(FirestoreMessageCodec.INSTANCE));
-    channel.setMethodCallHandler(new CloudFirestorePlugin(channel, registrar.activity()));
+    CloudFirestorePlugin instance = new CloudFirestorePlugin();
+    instance.activity = registrar.activity();
+    instance.initInstance(registrar.messenger());
   }
 
-  private CloudFirestorePlugin(MethodChannel channel, Activity activity) {
-    this.channel = channel;
-    this.activity = activity;
+  private void initInstance(BinaryMessenger messenger) {
+    channel =
+        new MethodChannel(
+            messenger,
+            "plugins.flutter.io/cloud_firestore",
+            new StandardMethodCodec(FirestoreMessageCodec.INSTANCE));
+    channel.setMethodCallHandler(this);
   }
 
   private FirebaseFirestore getFirestore(Map<String, Object> arguments) {
@@ -462,6 +467,45 @@ public class CloudFirestorePlugin implements MethodCallHandler {
             result.error("Error performing " + description, e.getMessage(), null);
           }
         });
+  }
+
+  @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    initInstance(binding.getBinaryMessenger());
+  }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);
+    channel = null;
+  }
+
+  private void attachToActivity(ActivityPluginBinding activityPluginBinding) {
+    this.activity = activityPluginBinding.getActivity();
+  }
+
+  private void detachToActivity() {
+    this.activity = null;
+  }
+
+  @Override
+  public void onAttachedToActivity(ActivityPluginBinding activityPluginBinding) {
+    attachToActivity(activityPluginBinding);
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    detachToActivity();
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding activityPluginBinding) {
+    attachToActivity(activityPluginBinding);
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    detachToActivity();
   }
 
   @Override
