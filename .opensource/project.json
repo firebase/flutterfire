@@ -15,7 +15,7 @@
     "packages/firebase_crashlytics/README.md": "Crashlytics",
     "packages/firebase_database/README.md": "Realtime Database",
     "packages/firebase_dynamic_links/README.md": "Dynamic Links",
-    "packages/firebase_messaging/README.md": "Cloud Messaging",
+    "packages/firebase_messaging/firebase_messaging/README.md": "Cloud Messaging",
     "packages/firebase_ml_vision/README.md": "ML Kit: Vision",
     "packages/firebase_performance/README.md": "Performance Monitoring",
     "packages/firebase_remote_config/README.md": "Remote Config",

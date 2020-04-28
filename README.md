@@ -24,7 +24,7 @@ that enable Flutter apps to use [Firebase](https://firebase.google.com/) service
 | [firebase_database][database_pub] | ![pub package][database_badge] | [Firebase Realtime Database][database_product] | [`firebase_database`][database_code] | | |
 | [firebase_dynamic_links][dynamic_links_pub] | ![pub package][dynamic_links_badge] | [Firebase Dynamic Links][dynamic_links_product] | [`firebase_dynamic_links`][dynamic_links_code] | | |
 | [firebase_in_app_messaging][in_app_messaging_pub] | ![pub package][in_app_messaging_badge] | [Firebase In-App Messaging][in_app_messaging_product] | [`firebase_in_app_messaging`][in_app_messaging_code] | | |
-| [firebase_messaging][messaging_pub] | ![pub package][messaging_badge] | [Firebase Cloud Messaging][messaging_product] | [`firebase_messaging`][messaging_code] | | |
+| [firebase_messaging][messaging_pub] | ![pub package][messaging_badge] | [Firebase Cloud Messaging][messaging_product] | [`firebase_messaging`][messaging_code] | <img src="https://user-images.githubusercontent.com/394889/70172910-9174c880-1686-11ea-8e2e-3d8c1cc78cce.png" alt="hummingbird" width="25">  | |
 | [firebase_ml_vision][ml_vision_pub] | ![pub package][ml_vision_badge] | [Firebase ML Kit][ml_vision_product] | [`firebase_ml_vision`][ml_vision_code] | | |
 | [firebase_performance][performance_pub] | ![pub package][performance_badge] | [Firebase Performance Monitoring][performance_product] | [`firebase_performance`][performance_code] | | |
 | [firebase_remote_config][remote_config_pub] | ![pub package][remote_config_badge] | [Firebase Remote Config][remote_config_product] | [`firebase_remote_config`][remote_config_code] | | |
