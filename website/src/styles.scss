@@ -2,25 +2,25 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
+// Create root variables for each theme color
 $theme: (
-  'flutter-yellow' #ffc108,
-  'flutter-blue-primary' #0175c2,
-  'flutter-blue-primary-dark' #02569b,
-  'flutter-blue-primary-light' #13b9fd,
-  'google-gray-primary' #60646b,
-  'google-gray-primary-dark' #202124,
-  'google-gray-primary-light' #d5d7da,
-  'firebase-yellow' #ffca28,
-  'firebase-amber' #ffa000,
-  'firebase-orange' #f57c00,
-  'firebase-blue' #039be5,
-  'firebase-navy' #2c384a,
-  'firebase-coral' #ff8a65,
-  'firebase-gray' #eceff1,
-  'white' #ffffff
+  "flutter-yellow" #FFC108,
+  "flutter-blue-primary" #0175C2,
+  "flutter-blue-primary-dark" #02569B,
+  "flutter-blue-primary-light" #13B9FD,
+  "google-gray-primary" #60646B,
+  "google-gray-primary-dark" #202124,
+  "google-gray-primary-light" #D5D7DA,
+  "firebase-yellow" #FFCA28,
+  "firebase-amber" #FFA000,
+  "firebase-orange" #F57C00,
+  "firebase-blue" #039BE5,
+  "firebase-navy" #2C384A,
+  "firebase-coral" #FF8A65,
+  "firebase-gray" #ECEFF1,
+  "white" #FFFFFF,
 );
 
-// Create root variables for each theme color
 @each $name, $color in $theme {
   :root {
     --#{$name}: $color;
