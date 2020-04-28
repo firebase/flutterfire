@@ -26,19 +26,25 @@ import 'package:meta/meta.dart';
 enum MobileAdEvent {
   /// Called when an ad is successfully received.
   loaded,
+
   /// Called when an ad request failed.
   failedToLoad,
+
   /// Called when a click is recorded for a [NativeAd].
   nativeAdClicked,
+
   /// Called when an impression is recorded for a [NativeAd].
   nativeAdImpression,
+
   /// Called when an ad opens an overlay that covers the screen.
   opened,
+
   /// Called when an ad is in the process of leaving the application.
   ///
   /// On iOS this is guaranteed to be called before the ad is sent to the
   /// background.
   onApplicationExit,
+
   /// Called when the user is about to return to the application after clicking on an ad.
   closed,
 }
