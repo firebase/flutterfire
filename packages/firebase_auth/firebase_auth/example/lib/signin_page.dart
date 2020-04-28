@@ -195,7 +195,7 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      final Uri link = await _retrieveDynamicLink();
+      final Uri link = await _getInitialLink();
 
       if (link != null) {
         final FirebaseUser user = (await _auth.signInWithEmailAndLink(
@@ -218,9 +218,9 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection>
     }
   }
 
-  Future<Uri> _retrieveDynamicLink() async {
+  Future<Uri> _getInitialLink() async {
     final PendingDynamicLinkData data =
-        await FirebaseDynamicLinks.instance.retrieveDynamicLink();
+        await FirebaseDynamicLinks.instance.getInitialLink();
     return data?.link;
   }
 
