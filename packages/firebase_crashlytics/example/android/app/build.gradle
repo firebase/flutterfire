@@ -27,15 +27,20 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     compileSdkVersion 28
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     lintOptions {
         disable 'InvalidPackage'
     }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "io.flutter.plugins.firebase.crashlytics.firebasecrashlyticsexample"
-        minSdkVersion 16
-        targetSdkVersion 27
+        applicationId "io.flutter.plugins.firebasecrashlyticsexample"
+        minSdkVersion 21
+        targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -55,14 +60,7 @@ flutter {
 }
 
 dependencies {
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation "android.arch.lifecycle:runtime:1.1.1"
-    implementation "android.arch.lifecycle:common:1.1.1"
-    implementation "android.arch.lifecycle:common-java8:1.1.1"
-    implementation "android.arch.lifecycle:extensions:1.1.1"
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
-
-apply plugin: 'io.fabric'
-apply plugin: 'com.google.gms.google-services'

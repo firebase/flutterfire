@@ -1,24 +1,24 @@
 name: firebase_crashlytics_example
 description: Demonstrates how to use the firebase_crashlytics plugin.
 
+version: 1.0.0+1
+
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-
-  cupertino_icons: ^0.1.2
-
   firebase_crashlytics:
     path: ../
+  cupertino_icons: ^0.1.2
 
 dev_dependencies:
   pedantic: ^1.8.0
-  e2e: ^0.2.1
-  flutter_test:
-    sdk: flutter
+  e2e: ^0.4.0
   flutter_driver:
+    sdk: flutter
+  flutter_test:
     sdk: flutter
 
 flutter:

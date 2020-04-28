@@ -17,21 +17,21 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>io.flutter.plugins.firebase.crashlytics.firebaseCrashlyticsExample</string>
+	<string>io.flutter.plugins.firebasecrashlyticsexample</string>
 	<key>PROJECT_ID</key>
 	<string>firebase-for-flutter-xry</string>
 	<key>STORAGE_BUCKET</key>
 	<string>firebase-for-flutter-xry.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:380450695418:ios:2693ad5ab6a23cde</string>
 	<key>DATABASE_URL</key>

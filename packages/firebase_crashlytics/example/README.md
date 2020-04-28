@@ -4,14 +4,13 @@ Demonstrates how to use the firebase_crashlytics plugin.
 
 ## Getting Started
 
-### Add your own Firebase project
+This project is a starting point for a Flutter application.
 
-This example initially uses a default project for CI purposes. You must
-replace the default project with your own so that you can review the error
-reports submitted to the Firebase console.
+A few resources to get you started if this is your first Flutter project:
 
-See [docs](https://firebase.google.com/docs/flutter/setup) for how to add
-Firebase to a Flutter project.
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For further help getting started with Flutter, view our online
-[documentation](http://flutter.io/).
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
