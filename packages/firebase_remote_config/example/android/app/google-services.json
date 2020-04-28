@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:297855924061:android:669871c998cc21bd",
         "android_client_info": {
-          "package_name": "com.yourcompany.firebaseauth.example"
+          "package_name": "io.flutter.plugins.firebaseremoteconfigexample"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "297855924061-r1u58cnh4p6l1ghpkteil46erlkfll62.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.yourcompany.firebaseauth.example",
+            "package_name": "io.flutter.plugins.firebaseremoteconfigexample",
             "certificate_hash": "c3adef7e7773e40e777d5c236dbba7461cbea5f0"
           }
         },
@@ -26,7 +26,7 @@
           "client_id": "297855924061-col4in4uubarifm60nbq8id01ec3ss4c.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.yourcompany.firebaseauth.example",
+            "package_name": "io.flutter.plugins.firebaseremoteconfigexample",
             "certificate_hash": "8a4e194f5bfc3fb1075e7daae8dcddd526fde207"
           }
         },

@@ -32,8 +32,9 @@ android {
     }
 
     defaultConfig {
-        applicationId "io.flutter.plugins.firebase.firebaseremoteconfigexample"
-        minSdkVersion 16
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "io.flutter.plugins.firebaseremoteconfigexample"
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
