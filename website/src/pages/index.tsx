@@ -1,32 +1,33 @@
 import React from 'react';
 import cx from 'classnames';
 import Layout from '@theme/Layout';
-
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-import styles from './styles.module.scss';
 
+import styles from './styles.module.scss';
 import { Triangle } from '../components/Triangle';
 import plugins from '../plugins';
 
 function Home() {
   const context = useDocusaurusContext();
-  const { siteConfig = {} } = context;
+  const { siteConfig } = context;
 
   return (
     <Layout title={siteConfig.title} description={siteConfig.tagline}>
-      <section className={cx(styles.hero, 'bg-firebase-blue')}>
+      <section className={cx(styles.hero, 'bg-firebase-blue dark-bg-flutter-blue-primary-dark')}>
         {/** Left **/}
         <Triangle
           zIndex={1}
-          color="firebase-yellow"
+          light="firebase-yellow"
+          dark="firebase-amber"
           style={{
             left: -150,
           }}
         />
         <Triangle
-          color="firebase-gray"
+          light="firebase-gray"
+          dark="firebase-navy"
           style={{
             left: 0,
           }}
@@ -36,7 +37,8 @@ function Home() {
         {/** Right **/}
         <Triangle
           zIndex={1}
-          color="firebase-coral"
+          light="firebase-coral"
+          dark="firebase-orange"
           style={{
             right: 0,
             bottom: -150,
@@ -44,7 +46,8 @@ function Home() {
           rotate={180}
         />
         <Triangle
-          color="firebase-gray"
+          light="firebase-gray"
+          dark="firebase-navy"
           style={{
             right: -150,
           }}
@@ -54,7 +57,7 @@ function Home() {
           <h1>{siteConfig.title}</h1>
           <h2>{siteConfig.tagline}</h2>
           <div className={styles.actions}>
-            <Link to="/flutterfire/docs">Get Started &raquo;</Link>
+            <Link to={`${siteConfig.baseUrl}docs`}>Get Started &raquo;</Link>
             <Link to="https://github.com/firebaseextended/flutterfire">GitHub &raquo;</Link>
           </div>
         </div>

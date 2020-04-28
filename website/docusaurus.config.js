@@ -14,7 +14,7 @@ module.exports = {
           to: 'docs/overview',
           activeBasePath: 'docs',
           label: 'Docs',
-          position: 'left',
+          position: 'right',
         },
         {
           href: 'https://github.com/firebaseextended/flutterfire',

@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
-function Triangle({ zIndex = 0, color, style = {}, rotate = 0 }) {
+type Props = {
+  zIndex?: number;
+  light: string;
+  dark: string;
+  style?: CSSProperties;
+  rotate?: number;
+};
+
+function Triangle({ zIndex = 0, light, dark, style = {}, rotate = 0 }: Props) {
   return (
     <svg
       width={500}
       height={500}
       xmlns="http://www.w3.org/2000/svg"
-      className={`text-${color}`}
+      className={`text-${light} dark-text-${dark}`}
       style={{
         position: 'absolute',
         zIndex,

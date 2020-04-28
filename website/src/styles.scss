@@ -3,34 +3,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
 $theme: (
-  "flutter-yellow" #FFC108,
-  "flutter-blue-primary" #0175C2,
-  "flutter-blue-primary-dark" #02569B,
-  "flutter-blue-primary-light" #13B9FD,
-  "google-gray-primary" #60646B,
-  "google-gray-primary-dark" #202124,
-  "google-gray-primary-light" #D5D7DA,
-  "firebase-yellow" #FFCA28,
-  "firebase-amber" #FFA000,
-  "firebase-orange" #F57C00,
-  "firebase-blue" #039BE5,
-  "firebase-navy" #2C384A,
-  "firebase-coral" #FF8A65,
-  "firebase-gray" #ECEFF1,
-  "white" #FFFFFF,
+  'flutter-yellow' #ffc108,
+  'flutter-blue-primary' #0175c2,
+  'flutter-blue-primary-dark' #02569b,
+  'flutter-blue-primary-light' #13b9fd,
+  'google-gray-primary' #60646b,
+  'google-gray-primary-dark' #202124,
+  'google-gray-primary-light' #d5d7da,
+  'firebase-yellow' #ffca28,
+  'firebase-amber' #ffa000,
+  'firebase-orange' #f57c00,
+  'firebase-blue' #039be5,
+  'firebase-navy' #2c384a,
+  'firebase-coral' #ff8a65,
+  'firebase-gray' #eceff1,
+  'white' #ffffff
 );
 
+// Create root variables for each theme color
 @each $name, $color in $theme {
   :root {
     --#{$name}: $color;
   }
+}
 
+// Create theme helper classes for text color & background color
+@each $name, $color in $theme {
   .text-#{$name} {
     color: $color;
   }
 
   .bg-#{$name} {
     background-color: $color;
+  }
+}
+
+// Create dark-mode helper classes for text color & background color
+@each $name, $color in $theme {
+  html[data-theme='dark'] {
+    .dark-text-#{$name} {
+      color: $color;
+    }
+
+    .dark-bg-#{$name} {
+      background-color: $color;
+    }
   }
 }
 
@@ -51,7 +68,12 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 300;
 }
 
@@ -62,3 +84,17 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0 var(--ifm-pre-padding);
 }
 
+// Adds an icon to any external links on the menu
+li.menu__list-item > a[target="_blank"] {
+  position: relative;
+
+  &:before {
+    content: url("/flutterfire/img/link-icon.svg");
+    position: absolute;
+    right: 18px;
+    top: 8px;
+    width: 15px;
+    height: 15px;
+    color: var(--ifm-menu-color);
+  }
+}
