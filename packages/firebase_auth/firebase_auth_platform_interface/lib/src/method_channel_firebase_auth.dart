@@ -435,6 +435,7 @@ PlatformUser _decodeUser(Map<dynamic, dynamic> data) {
     isEmailVerified: data['isEmailVerified'],
     creationTimestamp: data['creationTimestamp'],
     lastSignInTimestamp: data['lastSignInTimestamp'],
+    refreshToken: data['refreshToken'],
     providerData: providerData,
   );
 }

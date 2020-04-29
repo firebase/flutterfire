@@ -45,6 +45,7 @@ class PlatformUser extends PlatformUserInfo {
     this.lastSignInTimestamp,
     @required this.isAnonymous,
     @required this.isEmailVerified,
+    @required this.refreshToken,
     @required this.providerData,
   }) : super(
           providerId: providerId,
@@ -59,6 +60,7 @@ class PlatformUser extends PlatformUserInfo {
   final int lastSignInTimestamp;
   final bool isAnonymous;
   final bool isEmailVerified;
+  final String refreshToken;
   final List<PlatformUserInfo> providerData;
 }
 

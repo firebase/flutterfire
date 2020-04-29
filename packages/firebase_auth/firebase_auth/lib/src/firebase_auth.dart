@@ -339,4 +339,16 @@ class FirebaseAuth {
     return FirebaseAuthPlatform.instance
         .confirmPasswordReset(app.name, oobCode, newPassword);
   }
+
+  Future<void> useUserAccessGroup({
+    @required String accessGroup,
+    String appName
+  }) {
+    final args = <String, dynamic>{
+      'group': accessGroup,
+      'app': appName ?? FirebaseApp.instance.name,
+    };
+    return MethodChannelFirebaseAuth.channel
+      .invokeMethod<void>('useUserAccessGroup', args);
+  }
 }

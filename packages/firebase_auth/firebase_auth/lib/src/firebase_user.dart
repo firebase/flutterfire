@@ -28,6 +28,9 @@ class FirebaseUser extends UserInfo {
   /// Returns true if the user's email is verified.
   bool get isEmailVerified => _userData.isEmailVerified;
 
+  // Returns user's refresh token.
+  String get refreshToken => _userData.refreshToken;
+
   /// Obtains the id token result for the current user, forcing a [refresh] if desired.
   ///
   /// Useful when authenticating against your own backend. Use our server

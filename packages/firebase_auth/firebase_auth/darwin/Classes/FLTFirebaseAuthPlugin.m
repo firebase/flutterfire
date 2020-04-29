@@ -396,7 +396,16 @@ int nextHandle = 0;
                                                               forObject:nil
                                                                   error:error];
                                                      }];
-
+  } else if ([@"useUserAccessGroup" isEqualToString:call.method]) {
+    NSString *group = call.arguments[@"group"];
+    NSError *err;
+    BOOL status = [[self getAuth:call.arguments] useUserAccessGroup:group
+                                                              error:&err];
+    if (!status) {
+      [self sendResult:result forObject:nil error:err];
+    } else {
+      [self sendResult:result forObject:nil error:nil];
+    }
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -417,6 +426,7 @@ int nextHandle = 0;
   userData[@"lastSignInTimestamp"] = [NSNumber numberWithLong:lastSignInDate];
   userData[@"isAnonymous"] = [NSNumber numberWithBool:user.isAnonymous];
   userData[@"isEmailVerified"] = [NSNumber numberWithBool:user.isEmailVerified];
+  userData[@"refreshToken"] = user.refreshToken;
   userData[@"providerData"] = providerData;
   return userData;
 }
