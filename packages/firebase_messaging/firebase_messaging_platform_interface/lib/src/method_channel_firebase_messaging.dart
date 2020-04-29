@@ -39,10 +39,15 @@ void _fcmSetupBackgroundChannel({
 }
 
 class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
+  factory MethodChannelFirebaseMessaging() => MethodChannelFirebaseMessaging.private(
+        const MethodChannel('plugins.flutter.io/firebase_messaging'),
+      );
+
   @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_messaging',
-  );
+  MethodChannelFirebaseMessaging.private(this.channel);
+
+  @visibleForTesting
+  final MethodChannel channel;
 
   MessageHandler _onMessage;
   MessageHandler _onBackgroundMessage;
