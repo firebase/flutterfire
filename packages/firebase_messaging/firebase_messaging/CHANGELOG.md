@@ -1,3 +1,8 @@
+## 6.0.15
+
+* Migrate to use `firebase_messaging_platform_interface`.
+* Update homepage since this package was moved.
+
 ## 6.0.14
 
 * Fix for missing UserAgent.h compilation failures.
