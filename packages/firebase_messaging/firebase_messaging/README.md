@@ -191,6 +191,14 @@ if #available(iOS 10.0, *) {
 }
 ```
 
+### Web integration
+
+In addition to the `firebase_messaging` dependency, you'll need to modify the `web/index.html` of your app following the Firebase setup instructions:
+
+* [Add Firebase to your JavaScript project](https://firebase.google.com/docs/web/setup#from-the-cdn).
+
+Read more in the [`firebase_messaging_web` README](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging_web/README.md).
+
 ### Dart/Flutter Integration
 
 From your Dart code, you need to import the plugin and instantiate it:

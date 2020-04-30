@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Firebase Messaging Example</title>
+</head>
+
+<body>
+  <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-messaging.js"></script>
+  <!-- ADD THIS BEFORE YOUR main.dart.js SCRIPT -->
+  <script>
+    // TODO: Replace the following with your app's Firebase project configuration.
+    // See: https://support.google.com/firebase/answer/7015592
+    var firebaseConfig = {
+      apiKey: "...",
+      authDomain: "[YOUR_PROJECT].firebaseapp.com",
+      databaseURL: "https://[YOUR_PROJECT].firebaseio.com",
+      projectId: "[YOUR_PROJECT]",
+      storageBucket: "[YOUR_PROJECT].appspot.com",
+      messagingSenderId: "...",
+      appId: "1:...:web:...",
+      measurementId: "G-..."
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <!-- END OF FIREBASE INIT CODE -->
+  <script src="main.dart.js" type="application/javascript"></script>
+</body>
+</html>
