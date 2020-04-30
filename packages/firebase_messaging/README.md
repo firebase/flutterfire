@@ -61,59 +61,10 @@ for more.
 
 By default background messaging is not enabled. To handle messages in the background:
 
-1. Add the `com.google.firebase:firebase-messaging` dependency in your app-level `build.gradle` file that is typically located at `<app-name>/android/app/build.gradle`.
-
-   ```gradle
-   dependencies {
-     // ...
-   
-     implementation 'com.google.firebase:firebase-messaging:<latest_version>'
-   }
-   ```
-   
-   Note: you can find out what the latest version of the plugin is [here ("Cloud Messaging")](https://firebase.google.com/support/release-notes/android#latest_sdk_versions).
-
-1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
-
-   ```java
-   package io.flutter.plugins.firebasemessagingexample;
-   
-   import io.flutter.app.FlutterApplication;
-   import io.flutter.plugin.common.PluginRegistry;
-   import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
-   import io.flutter.plugins.GeneratedPluginRegistrant;
-   import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
-   
-   public class Application extends FlutterApplication implements PluginRegistrantCallback {
-     @Override
-     public void onCreate() {
-       super.onCreate();
-       FlutterFirebaseMessagingService.setPluginRegistrant(this);
-     }
-   
-     @Override
-     public void registerWith(PluginRegistry registry) {
-       GeneratedPluginRegistrant.registerWith(registry);
-     }
-   }
-   ```
-
-1. In `Application.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
-
-   ```java
-   package com.domain.myapplication;
-   ```
-
-1. Set name property of application in `AndroidManifest.xml`. This is typically found in `<app-name>/android/app/src/main/`.
-
-   ```xml
-   <application android:name=".Application" ...>
-   ```
-
 1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
 
    ```dart
-   Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+   Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
      if (message.containsKey('data')) {
        // Handle data message
        final dynamic data = message['data'];
