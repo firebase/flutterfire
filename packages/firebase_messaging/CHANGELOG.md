@@ -1,3 +1,9 @@
+## 6.1.0
+
+* Refactors the Android portion for background messages. It is now using a
+  `FlutterEngine` internally, which does removes the requirement to manually
+  register a plugin registrant or include FCM dependencies in the host App.
+
 ## 6.0.14
 
 * Fix for missing UserAgent.h compilation failures.
