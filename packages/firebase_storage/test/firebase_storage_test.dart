@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -14,7 +15,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('FirebaseStorage', () {
-    final FirebaseApp app = const FirebaseApp(
+    final FirebaseApp app = FirebaseApp(
       name: 'testApp',
     );
     final String storageBucket = 'gs://fake-storage-bucket-url.com';
@@ -526,6 +527,62 @@ void main() {
 
       test('returns correct result', () async {
         expect(await ref.getPath(), 'avatars/large/image.jpg');
+      });
+    });
+
+    group('writeToFile', () {
+      final List<MethodCall> log = <MethodCall>[];
+
+      StorageReference ref;
+      String exceptionCode;
+
+      setUp(() {
+        FirebaseStorage.channel
+            .setMockMethodCallHandler((MethodCall methodCall) async {
+          log.add(methodCall);
+          if (methodCall.arguments['path'].contains('_bad')) {
+            throw PlatformException(code: "42");
+          } else {
+            return 4711;
+          }
+        });
+      });
+
+      test('invokes correct method', () async {
+        ref = storage.ref().child('image.jpg');
+        final StorageFileDownloadTask task = ref.writeToFile(File('image.jpg'));
+        await task.future;
+
+        expect(log, <Matcher>[
+          isMethodCall(
+            'StorageReference#writeToFile',
+            arguments: <String, dynamic>{
+              'app': 'testApp',
+              'bucket': 'gs://fake-storage-bucket-url.com',
+              'filePath': File('image.jpg').absolute.path,
+              'path': 'image.jpg',
+            },
+          ),
+        ]);
+      });
+
+      test('returns correct result', () async {
+        ref = storage.ref().child('image.jpg');
+        final StorageFileDownloadTask task = ref.writeToFile(File('image.jpg'));
+        final FileDownloadTaskSnapshot snapshot = await task.future;
+        expect(snapshot.totalByteCount, 4711);
+      });
+
+      test('propagates exception', () async {
+        ref = storage.ref().child('image_bad.jpg');
+        final StorageFileDownloadTask task = ref.writeToFile(File('image.jpg'));
+        try {
+          await task.future;
+        } on PlatformException catch (e) {
+          exceptionCode = e.code;
+        }
+
+        expect(exceptionCode, equals('42'));
       });
     });
   });

@@ -4,9 +4,12 @@
 
 package io.flutter.plugins.firebase.crashlytics.firebasecrashlytics;
 
+import android.content.Context;
 import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -17,19 +20,39 @@ import java.util.List;
 import java.util.Map;
 
 /** FirebaseCrashlyticsPlugin */
-public class FirebaseCrashlyticsPlugin implements MethodCallHandler {
-
+public class FirebaseCrashlyticsPlugin implements FlutterPlugin, MethodCallHandler {
   public static final String TAG = "CrashlyticsPlugin";
+  private MethodChannel channel;
 
-  /** Plugin registration. */
-  public static void registerWith(Registrar registrar) {
+  @Override
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
+    BinaryMessenger binaryMessenger = binding.getBinaryMessenger();
+    channel = setup(binaryMessenger, binding.getApplicationContext());
+  }
+
+  @Override
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
+    if (channel != null) {
+      channel.setMethodCallHandler(null);
+      channel = null;
+    }
+  }
+
+  private static MethodChannel setup(BinaryMessenger binaryMessenger, Context context) {
     final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_crashlytics");
+        new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_crashlytics");
     channel.setMethodCallHandler(new FirebaseCrashlyticsPlugin());
 
     if (!Fabric.isInitialized()) {
-      Fabric.with(registrar.context(), new Crashlytics());
+      Fabric.with(context, new Crashlytics());
     }
+
+    return channel;
+  }
+
+  /** Plugin registration. */
+  public static void registerWith(Registrar registrar) {
+    setup(registrar.messenger(), registrar.context());
   }
 
   @Override

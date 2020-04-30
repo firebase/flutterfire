@@ -4,6 +4,7 @@
 
 package io.flutter.plugins.firebasemessaging;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,10 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -33,44 +38,75 @@ import java.util.Map;
 
 /** FirebaseMessagingPlugin */
 public class FirebaseMessagingPlugin extends BroadcastReceiver
-    implements MethodCallHandler, NewIntentListener {
-  private final Registrar registrar;
-  private final MethodChannel channel;
+    implements MethodCallHandler, NewIntentListener, FlutterPlugin, ActivityAware {
 
   private static final String CLICK_ACTION_VALUE = "FLUTTER_NOTIFICATION_CLICK";
   private static final String TAG = "FirebaseMessagingPlugin";
 
+  private MethodChannel channel;
+  private Context applicationContext;
+  private Activity mainActivity;
+
   public static void registerWith(Registrar registrar) {
-    final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_messaging");
-    final FirebaseMessagingPlugin plugin = new FirebaseMessagingPlugin(registrar, channel);
-    registrar.addNewIntentListener(plugin);
-    channel.setMethodCallHandler(plugin);
-    registrar.addViewDestroyListener(
-        new ViewDestroyListener() {
-          @Override
-          public boolean onViewDestroy(FlutterNativeView view) {
-            plugin.release();
-            return false;
-          }
-        });
+    FirebaseMessagingPlugin instance = new FirebaseMessagingPlugin();
+    instance.setActivity(registrar.activity());
+    registrar.addNewIntentListener(instance);
+    instance.onAttachedToEngine(registrar.context(), registrar.messenger());
   }
 
-  private FirebaseMessagingPlugin(Registrar registrar, MethodChannel channel) {
-    this.registrar = registrar;
-    this.channel = channel;
-    FirebaseApp.initializeApp(registrar.context());
+  private void onAttachedToEngine(Context context, BinaryMessenger binaryMessenger) {
+    this.applicationContext = context;
+    FirebaseApp.initializeApp(applicationContext);
+    channel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging");
+    final MethodChannel backgroundCallbackChannel =
+        new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging_background");
 
+    channel.setMethodCallHandler(this);
+    backgroundCallbackChannel.setMethodCallHandler(this);
+    FlutterFirebaseMessagingService.setBackgroundChannel(backgroundCallbackChannel);
+
+    // Register broadcast receiver
     IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(FlutterFirebaseMessagingService.ACTION_TOKEN);
     intentFilter.addAction(FlutterFirebaseMessagingService.ACTION_REMOTE_MESSAGE);
-    LocalBroadcastManager manager = LocalBroadcastManager.getInstance(registrar.context());
+    LocalBroadcastManager manager = LocalBroadcastManager.getInstance(applicationContext);
     manager.registerReceiver(this, intentFilter);
   }
 
-  private void release() {
-    LocalBroadcastManager manager = LocalBroadcastManager.getInstance(registrar.context());
-    manager.unregisterReceiver(this);
+  private void setActivity(Activity flutterActivity) {
+    this.mainActivity = flutterActivity;
+  }
+
+  @Override
+  public void onAttachedToEngine(FlutterPluginBinding binding) {
+    onAttachedToEngine(binding.getApplicationContext(), binding.getBinaryMessenger());
+  }
+
+  @Override
+  public void onDetachedFromEngine(FlutterPluginBinding binding) {
+    LocalBroadcastManager.getInstance(binding.getApplicationContext()).unregisterReceiver(this);
+  }
+
+  @Override
+  public void onAttachedToActivity(ActivityPluginBinding binding) {
+    binding.addOnNewIntentListener(this);
+    this.mainActivity = binding.getActivity();
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    this.mainActivity = null;
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
+    binding.addOnNewIntentListener(this);
+    this.mainActivity = binding.getActivity();
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    this.mainActivity = null;
   }
 
   // BroadcastReceiver implementation.
@@ -138,12 +174,10 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
         Log.e(TAG, "There was an exception when getting callback handle from Dart side");
         e.printStackTrace();
       }
-      FlutterFirebaseMessagingService.setBackgroundSetupHandle(
-          this.registrar.context(), setupCallbackHandle);
-      FlutterFirebaseMessagingService.startBackgroundIsolate(
-          this.registrar.context(), setupCallbackHandle);
+      FlutterFirebaseMessagingService.setBackgroundSetupHandle(mainActivity, setupCallbackHandle);
+      FlutterFirebaseMessagingService.startBackgroundIsolate(mainActivity, setupCallbackHandle);
       FlutterFirebaseMessagingService.setBackgroundMessageHandle(
-          this.registrar.context(), backgroundMessageHandle);
+          mainActivity, backgroundMessageHandle);
       result.success(true);
     } else if ("configure".equals(call.method)) {
       FirebaseInstanceId.getInstance()
@@ -159,8 +193,8 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
                   channel.invokeMethod("onToken", task.getResult().getToken());
                 }
               });
-      if (registrar.activity() != null) {
-        sendMessageFromIntent("onLaunch", registrar.activity().getIntent());
+      if (mainActivity != null) {
+        sendMessageFromIntent("onLaunch", mainActivity.getIntent());
       }
       result.success(null);
     } else if ("subscribeToTopic".equals(call.method)) {
@@ -220,29 +254,25 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
                 public void run() {
                   try {
                     FirebaseInstanceId.getInstance().deleteInstanceId();
-                    if (registrar.activity() != null) {
-                      registrar
-                          .activity()
-                          .runOnUiThread(
-                              new Runnable() {
-                                @Override
-                                public void run() {
-                                  result.success(true);
-                                }
-                              });
+                    if (mainActivity != null) {
+                      mainActivity.runOnUiThread(
+                          new Runnable() {
+                            @Override
+                            public void run() {
+                              result.success(true);
+                            }
+                          });
                     }
                   } catch (IOException ex) {
                     Log.e(TAG, "deleteInstanceID, error:", ex);
-                    if (registrar.activity() != null) {
-                      registrar
-                          .activity()
-                          .runOnUiThread(
-                              new Runnable() {
-                                @Override
-                                public void run() {
-                                  result.success(false);
-                                }
-                              });
+                    if (mainActivity != null) {
+                      mainActivity.runOnUiThread(
+                          new Runnable() {
+                            @Override
+                            public void run() {
+                              result.success(false);
+                            }
+                          });
                     }
                   }
                 }
@@ -262,8 +292,8 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   @Override
   public boolean onNewIntent(Intent intent) {
     boolean res = sendMessageFromIntent("onResume", intent);
-    if (res && registrar.activity() != null) {
-      registrar.activity().setIntent(intent);
+    if (res && mainActivity != null) {
+      mainActivity.setIntent(intent);
     }
     return res;
   }

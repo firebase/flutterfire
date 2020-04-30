@@ -25,15 +25,25 @@ void main() {
 
   test('requestNotificationPermissions on ios with default permissions', () {
     firebaseMessaging.requestNotificationPermissions();
-    verify(mockChannel.invokeMethod<void>('requestNotificationPermissions',
-        <String, bool>{'sound': true, 'badge': true, 'alert': true}));
+    verify(mockChannel.invokeMethod<void>(
+        'requestNotificationPermissions', <String, bool>{
+      'sound': true,
+      'badge': true,
+      'alert': true,
+      'provisional': false
+    }));
   });
 
   test('requestNotificationPermissions on ios with custom permissions', () {
     firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: false));
-    verify(mockChannel.invokeMethod<void>('requestNotificationPermissions',
-        <String, bool>{'sound': false, 'badge': true, 'alert': true}));
+        const IosNotificationSettings(sound: false, provisional: true));
+    verify(mockChannel.invokeMethod<void>(
+        'requestNotificationPermissions', <String, bool>{
+      'sound': false,
+      'badge': true,
+      'alert': true,
+      'provisional': true
+    }));
   });
 
   test('requestNotificationPermissions on android', () {
@@ -97,13 +107,18 @@ void main() {
     final Completer<dynamic> onLaunch = Completer<dynamic>();
     final Completer<dynamic> onResume = Completer<dynamic>();
 
-    firebaseMessaging.configure(onMessage: (dynamic m) async {
-      onMessage.complete(m);
-    }, onLaunch: (dynamic m) async {
-      onLaunch.complete(m);
-    }, onResume: (dynamic m) async {
-      onResume.complete(m);
-    });
+    firebaseMessaging.configure(
+      onMessage: (dynamic m) async {
+        onMessage.complete(m);
+      },
+      onLaunch: (dynamic m) async {
+        onLaunch.complete(m);
+      },
+      onResume: (dynamic m) async {
+        onResume.complete(m);
+      },
+      onBackgroundMessage: validOnBackgroundMessage,
+    );
     final dynamic handler =
         verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
 
@@ -166,6 +181,17 @@ void main() {
 
     verify(mockChannel.invokeMethod<void>('setAutoInitEnabled', false));
   });
+
+  test('configure bad onBackgroundMessage', () {
+    expect(
+      () => firebaseMessaging.configure(
+        onBackgroundMessage: (dynamic message) => Future<dynamic>.value(),
+      ),
+      throwsArgumentError,
+    );
+  });
 }
+
+Future<dynamic> validOnBackgroundMessage(Map<String, dynamic> message) async {}
 
 class MockMethodChannel extends Mock implements MethodChannel {}

@@ -1,3 +1,40 @@
+## 0.3.0+4
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.3.0+3
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 0.3.0+2
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.3.0+1
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 0.3.0
+
+* Update Android Firebase Remote Config dependency to 19.0.3.
+* Resolve an Android compiler warning due to deprecated API usage.
+* Bump Gradle, AGP & Google Services plugin versions.
+
+## 0.2.1
+
+* Support Android V2 embedding.
+* Migrate to using the new e2e test binding.
+
+## 0.2.0+9
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.2.0+8
+
+* Remove AndroidX warning.
+
 ## 0.2.0+7
 
 * Fix `Bad state: Future already completed` error when initially

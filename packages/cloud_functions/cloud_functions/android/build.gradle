@@ -1,0 +1,41 @@
+group 'io.flutter.plugins.firebase.cloudfunctions'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.3.0'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+    dependencies {
+        api 'com.google.firebase:firebase-functions:17.0.0'
+        implementation 'com.google.firebase:firebase-common:16.1.0'
+        implementation 'androidx.annotation:annotation:1.0.0'
+    }
+}
+
+apply from: file("./user-agent.gradle")

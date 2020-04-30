@@ -1,3 +1,38 @@
+## 3.1.5
+
+* Fix (#81) Android setPersistenceCacheSizeBytes crash when Long value was provided.
+
+## 3.1.4
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 3.1.3
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 3.1.2
+
+* Make the pedantic dev_dependency explicit.
+
+## 3.1.1
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 3.1.0
+
+* Support Android V2 embedding.
+* Migrate to using the new e2e test binding.
+
+## 3.0.9
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 3.0.8
+
+* Remove AndroidX warning.
+
 ## 3.0.7
 
 * Fix possible NullPointerException when plugin is registered without a valid Activity.

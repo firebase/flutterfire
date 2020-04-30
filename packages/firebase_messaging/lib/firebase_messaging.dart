@@ -77,14 +77,17 @@ class FirebaseMessaging {
   /// On iOS, prompts the user for notification permissions the first time
   /// it is called.
   ///
-  /// Does nothing on Android.
-  void requestNotificationPermissions(
-      [IosNotificationSettings iosSettings = const IosNotificationSettings()]) {
+  /// Does nothing and returns null on Android.
+  FutureOr<bool> requestNotificationPermissions([
+    IosNotificationSettings iosSettings = const IosNotificationSettings(),
+  ]) {
     if (!_platform.isIOS) {
-      return;
+      return null;
     }
-    _channel.invokeMethod<void>(
-        'requestNotificationPermissions', iosSettings.toMap());
+    return _channel.invokeMethod<bool>(
+      'requestNotificationPermissions',
+      iosSettings.toMap(),
+    );
   }
 
   final StreamController<IosNotificationSettings> _iosSettingsStreamController =
@@ -115,6 +118,15 @@ class FirebaseMessaging {
           PluginUtilities.getCallbackHandle(_fcmSetupBackgroundChannel);
       final CallbackHandle backgroundMessageHandle =
           PluginUtilities.getCallbackHandle(_onBackgroundMessage);
+
+      if (backgroundMessageHandle == null) {
+        throw ArgumentError(
+          '''Failed to setup background message handler! `onBackgroundMessage`
+          should be a TOP-LEVEL OR STATIC FUNCTION and should NOT be tied to a
+          class or an anonymous function.''',
+        );
+      }
+
       _channel.invokeMethod<bool>(
         'FcmDartService#start',
         <String, dynamic>{
@@ -197,20 +209,28 @@ class IosNotificationSettings {
     this.sound = true,
     this.alert = true,
     this.badge = true,
+    this.provisional = false,
   });
 
   IosNotificationSettings._fromMap(Map<String, bool> settings)
       : sound = settings['sound'],
         alert = settings['alert'],
-        badge = settings['badge'];
+        badge = settings['badge'],
+        provisional = settings['provisional'];
 
   final bool sound;
   final bool alert;
   final bool badge;
+  final bool provisional;
 
   @visibleForTesting
   Map<String, dynamic> toMap() {
-    return <String, bool>{'sound': sound, 'alert': alert, 'badge': badge};
+    return <String, bool>{
+      'sound': sound,
+      'alert': alert,
+      'badge': badge,
+      'provisional': provisional
+    };
   }
 
   @override

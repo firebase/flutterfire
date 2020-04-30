@@ -1,3 +1,52 @@
+## 0.9.3+9
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.9.3+8
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 0.9.3+7
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.9.3+6
+
+* Replace deprecated text theme fields in example app.
+
+## 0.9.3+5
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 0.9.3+4
+
+* Formatted member documentations.
+
+## 0.9.3+3
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.9.3+2
+
+* Remove AndroidX warning.
+
+## 0.9.3+1
+
+* Skip e2e test on Android.
+
+## 0.9.3
+
+* Support v2 embedding. This plugin will remain compatible with the original embedding and won't
+require app migration.
+
+
+## 0.9.2+3
+
+* Use `BoxDecoration` `const` constructor in example app.
+* Use a clearer test image for contact QR barcode.
+
 ## 0.9.2+2
 
 * Update deployment target of iOS example app to 9.0.

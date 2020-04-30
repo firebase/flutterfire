@@ -3,13 +3,13 @@
 // found in the LICENSE file.
 
 #import "FLTRequestFactory.h"
-#import "FirebaseAdMobPlugin.h"
+#import "FLTFirebaseAdMobPlugin.h"
 #import "GoogleMobileAds/GADExtras.h"
 #import "GoogleMobileAds/GoogleMobileAds.h"
 
-@implementation FLTRequestFactory
-
-NSDictionary *_targetingInfo;
+@implementation FLTRequestFactory {
+  NSDictionary *_targetingInfo;
+}
 
 - (instancetype)initWithTargetingInfo:(NSDictionary *)targetingInfo {
   self = [super init];

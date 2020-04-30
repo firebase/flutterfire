@@ -1,3 +1,63 @@
+## 0.1.3+3
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.1.3+2
+
+* Fix Cirrus build by removing WorkspaceSettings.xcsettings file in the iOS example app.
+
+## 0.1.3+1
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.1.3
+
+* Add macOS support
+
+## 0.1.2+5
+
+* Fix overrides a deprecated API.
+* Raise minimum required Flutter SDK version to 1.12.13+hotfix.4
+
+## 0.1.2+4
+
+* Updated the example with the missing `recordError()` method.
+* Added a `recordError()` integration test.
+
+## 0.1.2+3
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 0.1.2+2
+
+* Removed the `async` from the `runZoned()` in the example, as there's no `await` to be executed.
+
+## 0.1.2+1
+
+* Updated a confusing comment.
+
+## 0.1.2
+
+* Updated to use the v2 plugin API.
+
+## 0.1.1+2
+
+* When reporting to Crashlytics on iOS, and printing supplied logs, do not
+  prepend each line with "FirebaseCrashlyticsPlugin.m line 44".
+* Prepend `firebase_crashlytics: ` to the final answer from Crashlytics
+  plugin in the log to realize where it's coming from.
+
+## 0.1.1+1
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.1.1
+
+* Log FlutterErrorDetails using Flutter's standard `FlutterError.dumpErrorToConsole`.
+* In debug mode, always log errors.
+
 ## 0.1.0+5
 
 * Fix example app `support-compat` crash by setting `compileSdkVersion` to 28.

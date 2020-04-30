@@ -1,3 +1,42 @@
+## 0.3.1+8
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.3.1+7
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 0.3.1+6
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.3.1+5
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 0.3.1+4
+
+* Skip flaky driver tests.
+
+## 0.3.1+3
+
+* Fixed analyzer warnings about unused fields.
+
+## 0.3.1+2
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.3.1+1
+
+* Remove AndroidX warning.
+
+## 0.3.1
+
+* Support v2 embedding. This will remain compatible with the original embedding and won't require
+app migration.
+
 ## 0.3.0+5
 
 * Update documentation to reflect new repository location.

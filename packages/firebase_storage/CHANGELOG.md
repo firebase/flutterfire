@@ -1,3 +1,51 @@
+## 3.1.5
+
+* Add macOS support
+
+## 3.1.4
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 3.1.3
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 3.1.2
+
+* Make the pedantic dev_dependency explicit.
+
+## 3.1.1
+
+* Removed unnecessary debug print statements ("i am working").
+
+## 3.1.0
+
+* Added error handling to `StorageFileDownloadTask` and added propagation of errors to the Future returned by the `writeToFile` method in `StorageReference`. 
+* Added unit tests for writeToFile. 
+* Updated integration test in example to use proper error handling.
+
+## 3.0.11
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 3.0.10
+
+* Fix example app by adding a call to `ensureInitialized`.
+
+## 3.0.9
+
+* Support the v2 Android embedding.
+
+## 3.0.8
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 3.0.7
+
+* Remove AndroidX warning.
+
 ## 3.0.6
 
 * Update documentation to reflect new repository location.
