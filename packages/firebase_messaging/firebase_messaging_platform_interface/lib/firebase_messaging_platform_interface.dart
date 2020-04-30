@@ -53,14 +53,18 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   FutureOr<bool> requestNotificationPermissions([
     IosNotificationSettings iosSettings = const IosNotificationSettings(),
   ]) {
-    throw UnimplementedError('requestNotificationPermissions() has not been implemented');
+    throw UnimplementedError(
+      'requestNotificationPermissions() has not been implemented',
+    );
   }
 
   /// Stream that fires when the user changes their notification settings.
   ///
   /// Only fires on iOS.
   Stream<IosNotificationSettings> get onIosSettingsRegistered {
-    throw UnimplementedError('onIosSettingsRegistered has not been implemented');
+    throw UnimplementedError(
+      'onIosSettingsRegistered has not been implemented',
+    );
   }
 
   /// Sets up [MessageHandler] for incoming messages.

@@ -12,7 +12,8 @@ part of firebase_messaging_platform_interface;
 /// Your app should never call this method directly, this is only for use
 /// by the firebase_messaging plugin to setup background message handling.
 void _fcmSetupBackgroundChannel({
-  MethodChannel backgroundChannel = const MethodChannel('plugins.flutter.io/firebase_messaging_background'),
+  MethodChannel backgroundChannel =
+      const MethodChannel('plugins.flutter.io/firebase_messaging_background'),
 }) async {
   // Setup Flutter state needed for MethodChannels.
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,10 +22,14 @@ void _fcmSetupBackgroundChannel({
   // native portion of the plugin.
   backgroundChannel.setMethodCallHandler((MethodCall call) async {
     if (call.method == 'handleBackgroundMessage') {
-      final CallbackHandle handle = CallbackHandle.fromRawHandle(call.arguments['handle']);
-      final Function handlerFunction = PluginUtilities.getCallbackFromHandle(handle);
+      final CallbackHandle handle = CallbackHandle.fromRawHandle(
+        call.arguments['handle'],
+      );
+      final Function handlerFunction =
+          PluginUtilities.getCallbackFromHandle(handle);
       try {
-        await handlerFunction(Map<String, dynamic>.from(call.arguments['message']));
+        await handlerFunction(
+            Map<String, dynamic>.from(call.arguments['message']));
       } catch (e) {
         print('Unable to handle incoming background message.');
         print(e);
@@ -39,7 +44,8 @@ void _fcmSetupBackgroundChannel({
 }
 
 class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
-  factory MethodChannelFirebaseMessaging() => MethodChannelFirebaseMessaging.private(
+  factory MethodChannelFirebaseMessaging() =>
+      MethodChannelFirebaseMessaging.private(
         const MethodChannel('plugins.flutter.io/firebase_messaging'),
       );
 
@@ -91,8 +97,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     channel.invokeMethod<void>('configure');
     if (onBackgroundMessage != null) {
       _onBackgroundMessage = onBackgroundMessage;
-      final CallbackHandle backgroundSetupHandle = PluginUtilities.getCallbackHandle(_fcmSetupBackgroundChannel);
-      final CallbackHandle backgroundMessageHandle = PluginUtilities.getCallbackHandle(_onBackgroundMessage);
+      final CallbackHandle backgroundSetupHandle =
+          PluginUtilities.getCallbackHandle(_fcmSetupBackgroundChannel);
+      final CallbackHandle backgroundMessageHandle =
+          PluginUtilities.getCallbackHandle(_onBackgroundMessage);
 
       if (backgroundMessageHandle == null) {
         throw ArgumentError(
@@ -112,7 +120,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     }
   }
 
-  final StreamController<String> _tokenStreamController = StreamController<String>.broadcast();
+  final StreamController<String> _tokenStreamController =
+      StreamController<String>.broadcast();
 
   /// Fires when a new FCM token is generated.
   Stream<String> get onTokenRefresh {
@@ -163,7 +172,9 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         _tokenStreamController.add(token);
         return null;
       case 'onIosSettingsRegistered':
-        _iosSettingsStreamController.add(IosNotificationSettings._fromMap(call.arguments.cast<String, bool>()));
+        _iosSettingsStreamController.add(
+          IosNotificationSettings._fromMap(call.arguments.cast<String, bool>()),
+        );
         return null;
       case 'onMessage':
         return _onMessage(call.arguments.cast<String, dynamic>());

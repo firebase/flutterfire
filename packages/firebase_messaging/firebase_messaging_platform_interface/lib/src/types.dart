@@ -27,7 +27,12 @@ class IosNotificationSettings {
 
   @visibleForTesting
   Map<String, dynamic> toMap() {
-    return <String, bool>{'sound': sound, 'alert': alert, 'badge': badge, 'provisional': provisional};
+    return <String, bool>{
+      'sound': sound,
+      'alert': alert,
+      'badge': badge,
+      'provisional': provisional,
+    };
   }
 
   @override

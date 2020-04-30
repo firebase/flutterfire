@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
@@ -22,7 +21,8 @@ void main() {
     FirebaseMessaging firebaseMessaging;
 
     setUp(() {
-      firebaseMessaging = FirebaseMessaging.private(FakePlatform(operatingSystem: 'ios'));
+      firebaseMessaging =
+          FirebaseMessaging.private(FakePlatform(operatingSystem: 'ios'));
       mock = MockFirebaseMessaging();
       FirebaseMessagingPlatform.instance = mock;
     });
@@ -33,12 +33,15 @@ void main() {
     });
 
     test('requestNotificationPermissions on ios with custom permissions', () {
-      firebaseMessaging.requestNotificationPermissions(const IosNotificationSettings(sound: false, provisional: true));
-      verify(mock.requestNotificationPermissions(const IosNotificationSettings(sound: false, provisional: true)));
+      firebaseMessaging.requestNotificationPermissions(
+          const IosNotificationSettings(sound: false, provisional: true));
+      verify(mock.requestNotificationPermissions(
+          const IosNotificationSettings(sound: false, provisional: true)));
     });
 
     test('requestNotificationPermissions on android', () {
-      firebaseMessaging = FirebaseMessaging.private(FakePlatform(operatingSystem: 'android'));
+      firebaseMessaging =
+          FirebaseMessaging.private(FakePlatform(operatingSystem: 'android'));
 
       firebaseMessaging.requestNotificationPermissions();
       verifyZeroInteractions(mock);
@@ -53,7 +56,8 @@ void main() {
       firebaseMessaging.configure();
       final String token1 = 'I am a super secret token';
       final String token2 = 'I am the new token in town';
-      when(mock.onTokenRefresh).thenAnswer((_) => Stream<String>.fromIterable([token1, token2]));
+      when(mock.onTokenRefresh)
+          .thenAnswer((_) => Stream<String>.fromIterable([token1, token2]));
 
       final changes = StreamQueue<String>(firebaseMessaging.onTokenRefresh);
       expect(await changes.next, token1);
@@ -67,10 +71,12 @@ void main() {
       final iosSettings1 = const IosNotificationSettings();
       final iosSettings2 = const IosNotificationSettings(sound: false);
 
-      when(mock.onIosSettingsRegistered)
-          .thenAnswer((_) => Stream<IosNotificationSettings>.fromIterable([iosSettings1, iosSettings2]));
+      when(mock.onIosSettingsRegistered).thenAnswer((_) =>
+          Stream<IosNotificationSettings>.fromIterable(
+              [iosSettings1, iosSettings2]));
 
-      final changes = StreamQueue<IosNotificationSettings>(firebaseMessaging.onIosSettingsRegistered);
+      final changes = StreamQueue<IosNotificationSettings>(
+          firebaseMessaging.onIosSettingsRegistered);
       expect((await changes.next).toMap(), iosSettings1.toMap());
       expect((await changes.next).toMap(), iosSettings2.toMap());
 
@@ -171,4 +177,6 @@ void main() {
 
 Future<dynamic> validOnBackgroundMessage(Map<String, dynamic> message) async {}
 
-class MockFirebaseMessaging extends Mock with MockPlatformInterfaceMixin implements FirebaseMessagingPlatform {}
+class MockFirebaseMessaging extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseMessagingPlatform {}

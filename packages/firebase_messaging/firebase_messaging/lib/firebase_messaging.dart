@@ -27,7 +27,8 @@ class FirebaseMessaging {
   @visibleForTesting
   FirebaseMessaging.private(Platform platform) : _platform = platform;
 
-  static final FirebaseMessaging _instance = FirebaseMessaging.private(platform);
+  static final FirebaseMessaging _instance =
+      FirebaseMessaging.private(platform);
 
   final Platform _platform;
 
@@ -41,7 +42,8 @@ class FirebaseMessaging {
     if (_platform.isAndroid) {
       return null;
     }
-    return FirebaseMessagingPlatform.instance.requestNotificationPermissions(iosSettings);
+    return FirebaseMessagingPlatform.instance
+        .requestNotificationPermissions(iosSettings);
   }
 
   /// Stream that fires when the user changes their notification settings.
@@ -59,7 +61,8 @@ class FirebaseMessaging {
     MessageHandler onResume,
   }) {
     if (onBackgroundMessage != null) {
-      CallbackHandle backgroundMessageHandle = PluginUtilities.getCallbackHandle(onBackgroundMessage);
+      CallbackHandle backgroundMessageHandle =
+          PluginUtilities.getCallbackHandle(onBackgroundMessage);
 
       if (backgroundMessageHandle == null) {
         throw ArgumentError(

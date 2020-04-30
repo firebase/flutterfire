@@ -13,12 +13,16 @@ void main() {
 
   group('$FirebaseMessagingPlatform()', () {
     test('$MethodChannelFirebaseMessaging is the default instance', () {
-      expect(FirebaseMessagingPlatform.instance, isA<MethodChannelFirebaseMessaging>());
+      expect(
+        FirebaseMessagingPlatform.instance,
+        isA<MethodChannelFirebaseMessaging>(),
+      );
     });
 
     test('Cannot be implemented with `implements`', () {
       expect(() {
-        FirebaseMessagingPlatform.instance = ImplementsFirebaseMessagingPlatform();
+        FirebaseMessagingPlatform.instance =
+            ImplementsFirebaseMessagingPlatform();
       }, throwsAssertionError);
     });
 
@@ -33,9 +37,11 @@ void main() {
   });
 }
 
-class ImplementsFirebaseMessagingPlatform extends Mock implements FirebaseMessagingPlatform {}
+class ImplementsFirebaseMessagingPlatform extends Mock
+    implements FirebaseMessagingPlatform {}
 
-class MocksFirebaseMessagingPlatform extends Mock with MockPlatformInterfaceMixin implements FirebaseMessagingPlatform {
-}
+class MocksFirebaseMessagingPlatform extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseMessagingPlatform {}
 
 class ExtendsFirebaseMessagingPlatform extends FirebaseMessagingPlatform {}

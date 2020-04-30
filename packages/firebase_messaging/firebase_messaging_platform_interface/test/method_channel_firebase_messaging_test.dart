@@ -22,14 +22,25 @@ void main() {
 
   test('requestNotificationPermissions on ios with default permissions', () {
     channelPlatform.requestNotificationPermissions();
-    verify(mockChannel.invokeMethod<void>('requestNotificationPermissions',
-        <String, bool>{'sound': true, 'badge': true, 'alert': true, 'provisional': false}));
+    verify(mockChannel
+        .invokeMethod<void>('requestNotificationPermissions', <String, bool>{
+      'sound': true,
+      'badge': true,
+      'alert': true,
+      'provisional': false,
+    }));
   });
 
   test('requestNotificationPermissions on ios with custom permissions', () {
-    channelPlatform.requestNotificationPermissions(const IosNotificationSettings(sound: false, provisional: true));
-    verify(mockChannel.invokeMethod<void>('requestNotificationPermissions',
-        <String, bool>{'sound': false, 'badge': true, 'alert': true, 'provisional': true}));
+    channelPlatform.requestNotificationPermissions(
+        const IosNotificationSettings(sound: false, provisional: true));
+    verify(mockChannel
+        .invokeMethod<void>('requestNotificationPermissions', <String, bool>{
+      'sound': false,
+      'badge': true,
+      'alert': true,
+      'provisional': true,
+    }));
   });
 
   test('configure', () {
@@ -40,7 +51,9 @@ void main() {
 
   test('incoming token', () async {
     channelPlatform.configure();
-    final dynamic handler = verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
+    final dynamic handler = verify(
+      mockChannel.setMethodCallHandler(captureAny),
+    ).captured.single;
     final String token1 = 'I am a super secret token';
     final String token2 = 'I am the new token in town';
     Future<String> tokenFromStream = channelPlatform.onTokenRefresh.first;
@@ -56,10 +69,12 @@ void main() {
 
   test('incoming iOS settings', () async {
     channelPlatform.configure();
-    final dynamic handler = verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
+    final dynamic handler =
+        verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
     IosNotificationSettings iosSettings = const IosNotificationSettings();
 
-    Future<IosNotificationSettings> iosSettingsFromStream = channelPlatform.onIosSettingsRegistered.first;
+    Future<IosNotificationSettings> iosSettingsFromStream =
+        channelPlatform.onIosSettingsRegistered.first;
     await handler(MethodCall('onIosSettingsRegistered', iosSettings.toMap()));
     expect((await iosSettingsFromStream).toMap(), iosSettings.toMap());
 
@@ -86,7 +101,8 @@ void main() {
       },
       onBackgroundMessage: validOnBackgroundMessage,
     );
-    final dynamic handler = verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
+    final dynamic handler =
+        verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
 
     final Map<String, dynamic> onMessageMessage = <String, dynamic>{};
     final Map<String, dynamic> onLaunchMessage = <String, dynamic>{};

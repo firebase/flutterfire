@@ -29,7 +29,8 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   final StreamController<IosNotificationSettings> _iosSettingsStreamController =
       StreamController<IosNotificationSettings>.broadcast();
-  final StreamController<String> _tokenStreamController = StreamController<String>.broadcast();
+  final StreamController<String> _tokenStreamController =
+      StreamController<String>.broadcast();
 
   Future<fb.Messaging> _getMessaging() async {
     return _messagingCompleter.future;
@@ -59,8 +60,10 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   /// it is called.
   ///
   /// Does nothing and returns null on Android.
-  // ignore: invalid_override_different_default_values_positional
-  FutureOr<bool> requestNotificationPermissions([IosNotificationSettings iosSettings]) async {
+  FutureOr<bool> requestNotificationPermissions([
+    // ignore: invalid_override_different_default_values_positional
+    IosNotificationSettings iosSettings,
+  ]) async {
     try {
       final messaging = await _getMessaging();
       await messaging.requestPermission();
