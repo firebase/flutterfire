@@ -10,12 +10,12 @@ module.exports = {
     navbar: {
       title: 'FlutterFire',
       links: [
-        {
-          to: 'docs/overview',
-          activeBasePath: 'docs',
-          label: 'Docs',
-          position: 'right',
-        },
+        // {
+        //   to: 'docs/overview',
+        //   activeBasePath: 'docs',
+        //   label: 'Docs',
+        //   position: 'right',
+        // },
         {
           href: 'https://github.com/firebaseextended/flutterfire',
           label: 'GitHub',
@@ -30,17 +30,17 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Overview',
-              to: 'docs/',
+              label: 'Coming soon',
+              to: '#',
             },
-            {
-              label: 'Android Installation',
-              to: 'docs/install/android',
-            },
-            {
-              label: 'iOS Installation',
-              to: 'docs/install/ios',
-            },
+            // {
+            //   label: 'Android Installation',
+            //   to: 'docs/install/android',
+            // },
+            // {
+            //   label: 'iOS Installation',
+            //   to: 'docs/install/ios',
+            // },
           ],
         },
         {
@@ -49,6 +49,14 @@ module.exports = {
             {
               label: 'Stack Overflow',
               href: 'https://stackoverflow.com/questions/tagged/flutterfire',
+            },
+            {
+              label: 'Flutter',
+              href: 'https://flutter.dev/',
+            },
+            {
+              label: 'pub.dev',
+              href: 'https://pub.dev/',
             },
           ],
         },
@@ -65,9 +73,7 @@ module.exports = {
       copyright: `<div style="margin-top: 3rem"><small>Except as otherwise noted, this work is licensed under a Creative Commons Attribution 4.0 International License, and code samples are licensed under the BSD License.</small></div>`,
     },
   },
-  plugins: [
-    'docusaurus-plugin-sass'
-  ],
+  plugins: ['docusaurus-plugin-sass'],
   presets: [
     [
       '@docusaurus/preset-classic',
@@ -75,8 +81,7 @@ module.exports = {
         docs: {
           path: '../docs',
           sidebarPath: require.resolve('../docs/sidebars.js'),
-          editUrl:
-            'https://github.com/FirebaseExtended/flutterfire/edit/next/docs/',
+          editUrl: 'https://github.com/FirebaseExtended/flutterfire/edit/next/docs/',
         },
         theme: {
           customCss: require.resolve('./src/styles.scss'),
