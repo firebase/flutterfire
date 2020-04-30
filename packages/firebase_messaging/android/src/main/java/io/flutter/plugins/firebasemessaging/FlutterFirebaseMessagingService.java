@@ -17,19 +17,17 @@ import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.embedding.engine.dart.DartExecutor;
+import io.flutter.embedding.engine.dart.DartExecutor.DartCallback;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.view.FlutterCallbackInformation;
 import io.flutter.view.FlutterMain;
-import io.flutter.view.FlutterNativeView;
-import io.flutter.view.FlutterRunArguments;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -50,49 +48,43 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   private static final String BACKGROUND_MESSAGE_CALLBACK_HANDLE_KEY =
       "background_message_callback";
 
-  // TODO(kroikie): make isIsolateRunning per-instance, not static.
-  private static AtomicBoolean isIsolateRunning = new AtomicBoolean(false);
-
   /** Background Dart execution context. */
-  private static FlutterNativeView backgroundFlutterView;
+  @Nullable private FlutterEngine backgroundEngine;
 
-  @Nullable private static MethodChannel backgroundChannel;
+  @Nullable private MethodChannel backgroundChannel;
 
   private static Long backgroundMessageHandle;
 
-  private static List<RemoteMessage> backgroundMessageQueue =
+  private AtomicBoolean isIsolateRunning = new AtomicBoolean(false);
+  private final List<RemoteMessage> backgroundMessageQueue =
       Collections.synchronizedList(new LinkedList<RemoteMessage>());
 
-  private static PluginRegistry.PluginRegistrantCallback pluginRegistrantCallback;
-
   private static final String TAG = "FlutterFcmService";
-
-  private static Context backgroundContext;
 
   @Override
   public void onCreate() {
     super.onCreate();
 
-    backgroundContext = getApplicationContext();
-    FlutterMain.ensureInitializationComplete(backgroundContext, null);
+    FlutterMain.ensureInitializationComplete(this, null);
 
     // If background isolate is not running start it.
-    if (!isIsolateRunning.get()) {
-      SharedPreferences p = backgroundContext.getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
-      long callbackHandle = p.getLong(BACKGROUND_SETUP_CALLBACK_HANDLE_KEY, 0);
-      startBackgroundIsolate(backgroundContext, callbackHandle);
-    }
+    SharedPreferences p = getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
+    long callbackHandle = p.getLong(BACKGROUND_SETUP_CALLBACK_HANDLE_KEY, 0);
+    startBackgroundIsolate(this, callbackHandle);
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
 
-    if (isIsolateRunning.getAndSet(false)) {
+    if (backgroundChannel != null) {
+      backgroundChannel.setMethodCallHandler(null);
       backgroundChannel = null;
+    }
 
-      backgroundFlutterView.destroy();
-      backgroundFlutterView = null;
+    if (backgroundEngine != null) {
+      backgroundEngine.destroy();
+      backgroundEngine = null;
     }
   }
 
@@ -156,79 +148,55 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
    * @param callbackHandle Handle used to retrieve the Dart function that sets up background
    *     handling on the dart side.
    */
-  public static void startBackgroundIsolate(Context context, long callbackHandle) {
+  public void startBackgroundIsolate(Context context, long callbackHandle) {
     FlutterMain.ensureInitializationComplete(context, null);
     String appBundlePath = FlutterMain.findAppBundlePath();
     FlutterCallbackInformation flutterCallback =
         FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
-    if (flutterCallback == null) {
-      Log.e(TAG, "Fatal: failed to find callback");
-      return;
-    }
 
     // Note that we're passing `true` as the second argument to our
     // FlutterNativeView constructor. This specifies the FlutterNativeView
     // as a background view and does not create a drawing surface.
-    backgroundFlutterView = new FlutterNativeView(context, true);
-    if (appBundlePath != null && !isIsolateRunning.get()) {
-      if (pluginRegistrantCallback == null) {
-        throw new RuntimeException("PluginRegistrantCallback is not set.");
-      }
-      FlutterRunArguments args = new FlutterRunArguments();
-      args.bundlePath = appBundlePath;
-      args.entrypoint = flutterCallback.callbackName;
-      args.libraryPath = flutterCallback.callbackLibraryPath;
-      backgroundFlutterView.runFromBundle(args);
-      pluginRegistrantCallback.registerWith(backgroundFlutterView.getPluginRegistry());
+    backgroundEngine = new FlutterEngine(context);
 
-      BinaryMessenger messenger =
-          backgroundFlutterView
-              .getPluginRegistry()
-              .registrarFor("io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService")
-              .messenger();
-      final MethodChannel backgroundCallbackChannel =
-          new MethodChannel(messenger, "plugins.flutter.io/firebase_messaging_background");
-      backgroundCallbackChannel.setMethodCallHandler(
-          new MethodCallHandler() {
-            @Override
-            public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-              if ("FcmDartService#initialized".equals(call.method)) {
-                FlutterFirebaseMessagingService.onInitialized();
-                result.success(true);
-              } else {
-                result.notImplemented();
-              }
+    final DartExecutor executor = backgroundEngine.getDartExecutor();
+
+    backgroundChannel =
+        new MethodChannel(executor, "plugins.flutter.io/firebase_messaging_background");
+    backgroundChannel.setMethodCallHandler(
+        new MethodCallHandler() {
+          @Override
+          public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+            if ("FcmDartService#initialized".equals(call.method)) {
+              onInitialized();
+              result.success(true);
+            } else {
+              result.notImplemented();
             }
-          });
-      setBackgroundChannel(backgroundCallbackChannel);
-    }
+          }
+        });
+
+    final DartCallback dartCallback =
+        new DartExecutor.DartCallback(getAssets(), appBundlePath, flutterCallback);
+
+    executor.executeDartCallback(dartCallback);
   }
 
   /**
    * Acknowledge that background message handling on the Dart side is ready. This is called by the
    * Dart side once all background initialization is complete via `FcmDartService#initialized`.
    */
-  public static void onInitialized() {
+  public void onInitialized() {
     isIsolateRunning.set(true);
+
     synchronized (backgroundMessageQueue) {
       // Handle all the messages received before the Dart isolate was
       // initialized, then clear the queue.
-      Iterator<RemoteMessage> i = backgroundMessageQueue.iterator();
-      while (i.hasNext()) {
-        executeDartCallbackInBackgroundIsolate(backgroundContext, i.next(), null);
+      for (RemoteMessage remoteMessage : backgroundMessageQueue) {
+        executeDartCallbackInBackgroundIsolate(this, remoteMessage, null);
       }
       backgroundMessageQueue.clear();
     }
-  }
-
-  /**
-   * Set the method channel that is used for handling background messages. This method is only
-   * called when the plugin registers.
-   *
-   * @param channel Background method channel.
-   */
-  public static void setBackgroundChannel(@NonNull MethodChannel channel) {
-    backgroundChannel = channel;
   }
 
   /**
@@ -292,7 +260,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
    * @param latch If set will count down when the Dart side message processing is complete. Allowing
    *     any waiting threads to continue.
    */
-  private static void executeDartCallbackInBackgroundIsolate(
+  private void executeDartCallbackInBackgroundIsolate(
       Context context, RemoteMessage remoteMessage, final CountDownLatch latch) {
     if (backgroundChannel == null) {
       throw new RuntimeException(
@@ -321,16 +289,6 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     args.put("message", messageData);
 
     backgroundChannel.invokeMethod("handleBackgroundMessage", args, result);
-  }
-
-  /**
-   * Set the registrant callback. This is called by the app's Application class if background
-   * message handling is enabled.
-   *
-   * @param callback Application class which implements PluginRegistrantCallback.
-   */
-  public static void setPluginRegistrant(PluginRegistry.PluginRegistrantCallback callback) {
-    pluginRegistrantCallback = callback;
   }
 
   /**

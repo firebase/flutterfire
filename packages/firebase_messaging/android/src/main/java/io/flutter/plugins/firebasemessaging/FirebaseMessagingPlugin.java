@@ -30,8 +30,6 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.NewIntentListener;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
-import io.flutter.plugin.common.PluginRegistry.ViewDestroyListener;
-import io.flutter.view.FlutterNativeView;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +42,6 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   private static final String TAG = "FirebaseMessagingPlugin";
 
   private MethodChannel channel;
-  private Context applicationContext;
   private Activity mainActivity;
 
   public static void registerWith(Registrar registrar) {
@@ -55,21 +52,16 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   }
 
   private void onAttachedToEngine(Context context, BinaryMessenger binaryMessenger) {
-    this.applicationContext = context;
-    FirebaseApp.initializeApp(applicationContext);
+    FirebaseApp.initializeApp(context);
     channel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging");
-    final MethodChannel backgroundCallbackChannel =
-        new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging_background");
 
     channel.setMethodCallHandler(this);
-    backgroundCallbackChannel.setMethodCallHandler(this);
-    FlutterFirebaseMessagingService.setBackgroundChannel(backgroundCallbackChannel);
 
     // Register broadcast receiver
     IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(FlutterFirebaseMessagingService.ACTION_TOKEN);
     intentFilter.addAction(FlutterFirebaseMessagingService.ACTION_REMOTE_MESSAGE);
-    LocalBroadcastManager manager = LocalBroadcastManager.getInstance(applicationContext);
+    LocalBroadcastManager manager = LocalBroadcastManager.getInstance(context);
     manager.registerReceiver(this, intentFilter);
   }
 
@@ -153,14 +145,10 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     /*  Even when the app is not active the `FirebaseMessagingService` extended by
      *  `FlutterFirebaseMessagingService` allows incoming FCM messages to be handled.
      *
-     *  `FcmDartService#start` and `FcmDartService#initialized` are the two methods used
-     *  to optionally setup handling messages received while the app is not active.
+     *  `FcmDartService#start` is setup to handle messages received while the app is not active.
      *
      *  `FcmDartService#start` sets up the plumbing that allows messages received while
      *  the app is not active to be handled by a background isolate.
-     *
-     *  `FcmDartService#initialized` is called by the Dart side when the plumbing for
-     *  background message handling is complete.
      */
     if ("FcmDartService#start".equals(call.method)) {
       long setupCallbackHandle = 0;
@@ -175,9 +163,10 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
         e.printStackTrace();
       }
       FlutterFirebaseMessagingService.setBackgroundSetupHandle(mainActivity, setupCallbackHandle);
-      FlutterFirebaseMessagingService.startBackgroundIsolate(mainActivity, setupCallbackHandle);
       FlutterFirebaseMessagingService.setBackgroundMessageHandle(
           mainActivity, backgroundMessageHandle);
+      mainActivity.startService(new Intent(mainActivity, FlutterFirebaseMessagingService.class));
+
       result.success(true);
     } else if ("configure".equals(call.method)) {
       FirebaseInstanceId.getInstance()
