@@ -21,13 +21,17 @@ flutter:
 dependencies:
   meta: ^1.0.4
   firebase_core: ^0.4.4
-  firebase_auth_platform_interface: ^1.1.7
+  #firebase_auth_platform_interface: ^1.1.7
+  firebase_auth_platform_interface:
+    path: ../firebase_auth_platform_interface
   # The design on https://flutter.dev/go/federated-plugins was to leave
   # this constraint as "any". We cannot do it right now as it fails pub publish
   # validation, so we set a ^ constraint.
   # TODO(amirh): Revisit this (either update this part in the  design or the pub tool).
   # https://github.com/flutter/flutter/issues/46264
-  firebase_auth_web: ^0.1.1
+  #firebase_auth_web: ^0.1.1
+  firebase_auth_web:
+    path: ../firebase_auth_web
 
   flutter:
     sdk: flutter
