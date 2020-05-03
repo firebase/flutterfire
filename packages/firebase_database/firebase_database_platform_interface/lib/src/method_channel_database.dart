@@ -10,7 +10,7 @@ class MethodChannelDatabase extends DatabasePlatform {
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
         case 'Event':
-          final Event event = MethodChannelEvent(call.arguments);
+          final MethodChannelEvent event = MethodChannelEvent(call.arguments);
           _observers[call.arguments['handle']].add(event);
           return null;
         case 'Error':
