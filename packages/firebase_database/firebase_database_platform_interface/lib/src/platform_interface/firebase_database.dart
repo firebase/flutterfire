@@ -13,48 +13,12 @@ class FirebaseDatabase {
   /// If [app] is specified, its options should include a [databaseURL].
   ///
 
-  FirebaseDatabase({this.app, this.databaseURL}) {
-    if (_initialized) return;
-    _channel.setMethodCallHandler((MethodCall call) async {
-      switch (call.method) {
-        case 'Event':
-          //TODO: handle this too
-          // final Event event = Event._(call.arguments);
-          // _observers[call.arguments['handle']].add(event);
-          return null;
-        case 'Error':
-          // final DatabaseError error = DatabaseError._(call.arguments['error']);
-          // _observers[call.arguments['handle']].addError(error);
-          return null;
-        case 'DoTransaction':
-          final MutableData mutableData =
-              MutableData.private(call.arguments['snapshot']);
-          final MutableData updated =
-              await _transactions[call.arguments['transactionKey']](
-                  mutableData);
-          return <String, dynamic>{'value': updated.value};
-        default:
-          throw MissingPluginException(
-            '${call.method} method not implemented on the Dart side.',
-          );
-      }
-    });
-    _initialized = true;
-  }
-
-  static final Map<int, StreamController<Event>> _observers =
-      <int, StreamController<Event>>{};
+  FirebaseDatabase({this.app, this.databaseURL});
 
   static final Map<int, TransactionHandler> _transactions =
       <int, TransactionHandler>{};
 
-  static bool _initialized = false;
-
   static FirebaseDatabase _instance = FirebaseDatabase();
-
-  final MethodChannel _channel = const MethodChannel(
-    'plugins.flutter.io/firebase_database',
-  );
 
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
@@ -91,15 +55,7 @@ class FirebaseDatabase {
   /// thus be available again when the app is restarted (even when there is no
   /// network connectivity at that time).
   Future<bool> setPersistenceEnabled(bool enabled) async {
-    final bool result = await _channel.invokeMethod<bool>(
-      'FirebaseDatabase#setPersistenceEnabled',
-      <String, dynamic>{
-        'app': app?.name,
-        'databaseURL': databaseURL,
-        'enabled': enabled,
-      },
-    );
-    return result;
+    throw UnimplementedError("setPersistenceEnabled() not implemented");
   }
 
   /// Attempts to set the size of the persistence cache.
@@ -120,39 +76,19 @@ class FirebaseDatabase {
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
   Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
-    final bool result = await _channel.invokeMethod<bool>(
-      'FirebaseDatabase#setPersistenceCacheSizeBytes',
-      <String, dynamic>{
-        'app': app?.name,
-        'databaseURL': databaseURL,
-        'cacheSize': cacheSize,
-      },
-    );
-    return result;
+    throw UnimplementedError("setPersistenceCacheSizeBytes() not implemented");
   }
 
   /// Resumes our connection to the Firebase Database backend after a previous
   /// [goOffline] call.
   Future<void> goOnline() {
-    return _channel.invokeMethod<void>(
-      'FirebaseDatabase#goOnline',
-      <String, dynamic>{
-        'app': app?.name,
-        'databaseURL': databaseURL,
-      },
-    );
+    throw UnimplementedError("goOnline() not implemented");
   }
 
   /// Shuts down our connection to the Firebase Database backend until
   /// [goOnline] is called.
   Future<void> goOffline() {
-    return _channel.invokeMethod<void>(
-      'FirebaseDatabase#goOffline',
-      <String, dynamic>{
-        'app': app?.name,
-        'databaseURL': databaseURL,
-      },
-    );
+    throw UnimplementedError("goOffline() not implemented");
   }
 
   /// The Firebase Database client automatically queues writes and sends them to
@@ -166,12 +102,6 @@ class FirebaseDatabase {
   /// affected event listeners, and the client will not (re-)send them to the
   /// Firebase Database backend.
   Future<void> purgeOutstandingWrites() {
-    return _channel.invokeMethod<void>(
-      'FirebaseDatabase#purgeOutstandingWrites',
-      <String, dynamic>{
-        'app': app?.name,
-        'databaseURL': databaseURL,
-      },
-    );
+    throw UnimplementedError("purgeOutstandingWrites() not implemented");
   }
 }

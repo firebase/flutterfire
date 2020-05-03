@@ -1,1 +1,0 @@
-part of firebase_database_platform_interface;

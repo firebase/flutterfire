@@ -114,11 +114,11 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
 
     TransactionResult toTransactionResult(Map<dynamic, dynamic> map) {
       final DatabaseError databaseError = map['error'] != null
-          ? MethodChannelDatabaseError._(map['error'])
+          ? MethodChannelDatabaseError(map['error'])
           : null;
       final bool committed = map['committed'];
       final DataSnapshot dataSnapshot = map['snapshot'] != null
-          ? MethodChannelDataSnapshot._(map['snapshot'])
+          ? MethodChannelDataSnapshot(map['snapshot'])
           : null;
 
       FirebaseDatabase._transactions.remove(transactionKey);

@@ -119,16 +119,17 @@ class QueryWeb extends Query {
         return _webStreamToPlatformStream(_delegate.onValue);
         break;
       default:
+        throw Exception("Invalid event type");
     }
   }
 
   Stream<Event> _webStreamToPlatformStream(Stream<firebase.QueryEvent> stream) {
-    return stream.map((firebase.QueryEvent event) => EventWeb._(event));
+    return stream.map((firebase.QueryEvent event) => EventWeb(event));
   }
 
   @override
   Future<DataSnapshot> once() async {
-    return DataSnapshotWeb._((await _delegate.once("value")).snapshot);
+    return DataSnapshotWeb((await _delegate.once("value")).snapshot);
   }
 
   @override

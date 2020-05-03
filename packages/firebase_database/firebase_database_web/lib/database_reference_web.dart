@@ -34,7 +34,7 @@ class DatabaseReferenceWeb extends DatabaseReference {
   }
 
   @override
-  Future<void> keepSynced(bool value) {
+  Future<void> keepSynced(bool value) async {
     print("keeySynced() not supported on web");
   }
 
@@ -55,7 +55,7 @@ class DatabaseReferenceWeb extends DatabaseReference {
 
   /// Fetch data on the reference once.
   Future<DataSnapshot> once() async {
-    return DataSnapshotWeb._((await _delegate.once("value")).snapshot);
+    return DataSnapshotWeb((await _delegate.once("value")).snapshot);
   }
 
   /// Fires when children are added.
@@ -179,12 +179,13 @@ class DatabaseReferenceWeb extends DatabaseReference {
         return _webStreamToPlatformStream(_delegate.onValue);
         break;
       default:
+        throw Exception("Invalid event type");
     }
   }
 
   Stream<Event> _webStreamToPlatformStream(Stream<firebase.QueryEvent> stream) {
     return stream.map(
-      (firebase.QueryEvent event) => EventWeb._(event),
+      (firebase.QueryEvent event) => EventWeb(event),
     );
   }
 }

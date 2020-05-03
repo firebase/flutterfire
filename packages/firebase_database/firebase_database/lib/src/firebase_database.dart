@@ -32,16 +32,6 @@ class FirebaseDatabase {
 
   static FirebaseDatabase instance = FirebaseDatabase();
 
-  static final Map<int, StreamController<Event>> _observers =
-      <int, StreamController<Event>>{};
-
-  static final Map<int, TransactionHandler> _transactions =
-      <int, TransactionHandler>{};
-
-  final MethodChannel _channel = const MethodChannel(
-    'plugins.flutter.io/firebase_database',
-  );
-
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
   /// If null, the default [FirebaseApp] is used.

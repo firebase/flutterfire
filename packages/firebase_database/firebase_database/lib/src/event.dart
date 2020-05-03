@@ -11,7 +11,6 @@ class Event {
   Event._(this._delegate);
 
   DataSnapshot get snapshot => DataSnapshot._(_delegate.snapshot);
-  Map<dynamic, dynamic> _data;
 
   String get previousSiblingKey => _delegate.previousSiblingKey;
 }

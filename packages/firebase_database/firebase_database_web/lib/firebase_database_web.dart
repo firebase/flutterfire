@@ -31,22 +31,22 @@ class DatabaseWeb extends DatabasePlatform {
   @override
   String appName() => app.name;
   @override
-  Future<bool> setPersistenceEnabled(bool enabled) {
-    print("setPersistenceEnabled() is not supported for web");
+  Future<bool> setPersistenceEnabled(bool enabled) async {
+    throw Exception("setPersistenceEnabled() is not supported for web");
   }
 
   @override
-  Future<bool> setPersistenceCacheSizeBytes(double cacheSize) {
-    print("setPersistenceCacheSizeBytes() is not supported for web");
+  Future<bool> setPersistenceCacheSizeBytes(double cacheSize) async {
+    throw Exception("setPersistenceCacheSizeBytes() is not supported for web");
   }
 
   @override
-  Future<void> goOffline() {
+  Future<void> goOffline() async {
     webDatabase.goOffline();
   }
 
   @override
-  Future<void> goOnline() {
+  Future<void> goOnline() async {
     webDatabase.goOnline();
   }
 
@@ -56,7 +56,7 @@ class DatabaseWeb extends DatabasePlatform {
   }
 
   @override
-  Future<void> purgeOutstandingWrites() {
+  Future<void> purgeOutstandingWrites() async {
     print("purgeOutstandingWrites() is not supported for web");
   }
 }

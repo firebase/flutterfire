@@ -11,14 +11,10 @@ class Query {
   Query({
     this.delegate,
     @required List<String> pathComponents,
-    Map<String, dynamic> parameters,
   })  : _pathComponents = pathComponents,
-        _parameters = parameters ??
-            Map<String, dynamic>.unmodifiable(<String, dynamic>{}),
         assert(delegate != null);
 
   final List<String> _pathComponents;
-  final Map<String, dynamic> _parameters;
 
   /// Slash-delimited path representing the database location of this query.
   String get path => _pathComponents.join('/');
