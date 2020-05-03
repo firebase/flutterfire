@@ -129,7 +129,6 @@ class FirebaseAuth {
       androidInstallIfNotAvailable: androidInstallIfNotAvailable,
       androidMinimumVersion: androidMinimumVersion,
       dynamicLinkDomain: dynamicLinkDomain,
-        'dynamicLinkDomain': dynamicLinkDomain
     );
   }
 
