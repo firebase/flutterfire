@@ -9,6 +9,7 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 part './database_reference_web.dart';
 part './query_web.dart';
+part './event_web.dart';
 part './ondisconnect_web.dart';
 
 class DatabaseWeb extends DatabasePlatform {
@@ -35,7 +36,7 @@ class DatabaseWeb extends DatabasePlatform {
   }
 
   @override
-  Future<bool> setPersistenceCacheSizeBytes(int cacheSize) {
+  Future<bool> setPersistenceCacheSizeBytes(double cacheSize) {
     print("setPersistenceCacheSizeBytes() is not supported for web");
   }
 

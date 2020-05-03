@@ -10,12 +10,11 @@ class MethodChannelDatabase extends DatabasePlatform {
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
         case 'Event':
-          // final Event event = Event._(call.arguments);
-          // _observers[call.arguments['handle']].add(event);
+          final Event event = MethodChannelEvent._(call.arguments);
+          _observers[call.arguments['handle']].add(event);
           return null;
         case 'Error':
-          //TODO: handle Error
-          // final DatabaseError error = DatabaseError._(call.arguments['error']);
+          // final DatabaseError error = DatabaseError(DatabaseError._(call.arguments['error']));
           // _observers[call.arguments['handle']].addError(error);
           return null;
         case 'DoTransaction':
@@ -33,6 +32,11 @@ class MethodChannelDatabase extends DatabasePlatform {
     });
     _initialized = true;
   }
+
+  DatabasePlatform withApp(FirebaseApp app) => MethodChannelDatabase(app: app);
+
+  @override
+  String appName() => app.name;
 
   static final Map<int, StreamController<Event>> _observers =
       <int, StreamController<Event>>{};
@@ -75,6 +79,11 @@ class MethodChannelDatabase extends DatabasePlatform {
     return result;
   }
 
+  DatabaseReference reference() {
+    return MethodChannelDatabaseReference(
+        database: this, pathComponents: <String>[]);
+  }
+
   /// Attempts to set the size of the persistence cache.
   ///
   /// By default the Firebase Database client will use up to 10MB of disk space
@@ -92,7 +101,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// Note that the specified cache size is only an approximation and the size
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
-  Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
+  Future<bool> setPersistenceCacheSizeBytes(double cacheSize) async {
     final bool result = await channel.invokeMethod<bool>(
       'FirebaseDatabase#setPersistenceCacheSizeBytes',
       <String, dynamic>{

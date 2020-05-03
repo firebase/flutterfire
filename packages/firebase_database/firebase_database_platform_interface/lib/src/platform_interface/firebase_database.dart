@@ -70,8 +70,7 @@ class FirebaseDatabase {
   static FirebaseDatabase get instance => _instance;
 
   /// Gets a DatabaseReference for the root of your Firebase Database.
-  /// TODO: this is remaiaing to be sorted
-  // DatabaseReference reference() => DatabaseReference.(this, <String>[]);
+  DatabaseReference reference() => MethodChannelDatabaseReference();
 
   /// Attempts to sets the database persistence to [enabled].
   ///

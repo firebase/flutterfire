@@ -55,8 +55,7 @@ class DatabaseReferenceWeb extends DatabaseReference {
 
   /// Fetch data on the reference once.
   Future<DataSnapshot> once() async {
-    firebase.DataSnapshot snapshot = (await _delegate.once("value")).snapshot;
-    return DataSnapshot(snapshot.key, snapshot.val());
+    return DataSnapshotWeb._((await _delegate.once("value")).snapshot);
   }
 
   /// Fires when children are added.
@@ -185,15 +184,7 @@ class DatabaseReferenceWeb extends DatabaseReference {
 
   Stream<Event> _webStreamToPlatformStream(Stream<firebase.QueryEvent> stream) {
     return stream.map(
-      (firebase.QueryEvent event) => Event(
-        DataSnapshot(event.snapshot.key, event.snapshot.val()),
-        event.prevChildKey,
-      ),
+      (firebase.QueryEvent event) => EventWeb._(event),
     );
-  }
-
-  @override
-  Map<String, dynamic> buildArguments() {
-    //TODO: Add this is a
   }
 }

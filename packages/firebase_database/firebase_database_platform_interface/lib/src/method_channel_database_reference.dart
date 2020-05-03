@@ -100,43 +100,44 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   Future<TransactionResult> runTransaction(
       TransactionHandler transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) async {
-    //TODO: Transaction
-    // assert(timeout.inMilliseconds > 0,
-    //     'Transaction timeout must be more than 0 milliseconds.');
+    assert(timeout.inMilliseconds > 0,
+        'Transaction timeout must be more than 0 milliseconds.');
 
-    // final Completer<TransactionResult> completer =
-    //     Completer<TransactionResult>();
+    final Completer<TransactionResult> completer =
+        Completer<TransactionResult>();
 
-    // final int transactionKey = FirebaseDatabase._transactions.isEmpty
-    //     ? 0
-    //     : FirebaseDatabase._transactions.keys.last + 1;
+    final int transactionKey = FirebaseDatabase._transactions.isEmpty
+        ? 0
+        : FirebaseDatabase._transactions.keys.last + 1;
 
-    // FirebaseDatabase._transactions[transactionKey] = transactionHandler;
+    FirebaseDatabase._transactions[transactionKey] = transactionHandler;
 
-    // TransactionResult toTransactionResult(Map<dynamic, dynamic> map) {
-    //   final DatabaseError databaseError =
-    //       map['error'] != null ? DatabaseError._(map['error']) : null;
-    //   final bool committed = map['committed'];
-    //   final DataSnapshot dataSnapshot =
-    //       map['snapshot'] != null ? DataSnapshot._(map['snapshot']) : null;
+    TransactionResult toTransactionResult(Map<dynamic, dynamic> map) {
+      final DatabaseError databaseError = map['error'] != null
+          ? MethodChannelDatabaseError._(map['error'])
+          : null;
+      final bool committed = map['committed'];
+      final DataSnapshot dataSnapshot = map['snapshot'] != null
+          ? MethodChannelDataSnapshot._(map['snapshot'])
+          : null;
 
-    //   FirebaseDatabase._transactions.remove(transactionKey);
+      FirebaseDatabase._transactions.remove(transactionKey);
 
-    //   return TransactionResult._(databaseError, committed, dataSnapshot);
-    // }
+      return TransactionResult._(databaseError, committed, dataSnapshot);
+    }
 
-    // database._channel.invokeMethod<void>(
-    //     'DatabaseReference#runTransaction', <String, dynamic>{
-    //   'app': database.app?.name,
-    //   'databaseURL': database.databaseURL,
-    //   'path': path,
-    //   'transactionKey': transactionKey,
-    //   'transactionTimeout': timeout.inMilliseconds
-    // }).then((dynamic response) {
-    //   completer.complete(toTransactionResult(response));
-    // });
+    await MethodChannelDatabase.channel.invokeMethod<void>(
+        'DatabaseReference#runTransaction', <String, dynamic>{
+      'app': database.app?.name,
+      'databaseURL': database.databaseURL,
+      'path': path,
+      'transactionKey': transactionKey,
+      'transactionTimeout': timeout.inMilliseconds
+    }).then((dynamic response) {
+      completer.complete(toTransactionResult(response));
+    });
 
-    // return completer.future;
+    return completer.future;
   }
 
   @override

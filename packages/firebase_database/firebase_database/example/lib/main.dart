@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
       print('Connected to second database and read ${snapshot.value}');
     });
     database.setPersistenceEnabled(true);
-    database.setPersistenceCacheSizeBytes(10000000);
+    // database.setPersistenceCacheSizeBytes(10000000);
     _counterRef.keepSynced(true);
     _counterSubscription = _counterRef.onValue.listen((Event event) {
       print(event);

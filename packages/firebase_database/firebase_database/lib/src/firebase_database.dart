@@ -90,7 +90,7 @@ class FirebaseDatabase {
   /// Note that the specified cache size is only an approximation and the size
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
-  Future<bool> setPersistenceCacheSizeBytes(int cacheSize) =>
+  Future<bool> setPersistenceCacheSizeBytes(double cacheSize) =>
       _delegate.setPersistenceCacheSizeBytes(cacheSize);
 
   /// Resumes our connection to the Firebase Database backend after a previous

@@ -14,11 +14,20 @@ enum EventType {
 
 /// `Event` encapsulates a DataSnapshot and possibly also the key of its
 /// previous sibling, which can be used to order the snapshots.
-class Event {
-  Event(this.snapshot, this.previousSiblingKey);
+abstract class Event {
   DataSnapshot snapshot;
 
   String previousSiblingKey;
+}
+
+/// A DataSnapshot contains data from a Firebase Database location.
+/// Any time you read Firebase data, you receive the data as a DataSnapshot.
+abstract class DataSnapshot {
+  /// The key of the location that generated this DataSnapshot.
+  String key;
+
+  /// Returns the contents of this data snapshot as native types.
+  dynamic value;
 }
 
 class MutableData {
@@ -39,18 +48,14 @@ class MutableData {
 /// Error that results from a transaction operation at a Firebase Database
 /// location.
 abstract class DatabaseError {
-  DatabaseError._(this._data);
-
-  Map<dynamic, dynamic> _data;
-
   /// One of the defined status codes, depending on the error.
-  int get code => _data['code'];
+  int code;
 
   /// A human-readable description of the error.
-  String get message => _data['message'];
+  String message;
 
   /// Human-readable details on the error and additional information.
-  String get details => _data['details'];
+  String details;
 
   @override
   String toString() => "$runtimeType($code, $message, $details)";

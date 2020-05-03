@@ -15,6 +15,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 part 'src/platform_interface/database_reference.dart';
 part 'src/method_channel_database.dart';
 part 'src/method_channel_database_reference.dart';
+part 'src/method_channel_event.dart';
 part 'src/method_channel_on_disconnect.dart';
 part 'src/platform_interface/query.dart';
 part 'src/platform_interface/on_disconnect.dart';
@@ -43,6 +44,7 @@ abstract class DatabasePlatform extends PlatformInterface {
   factory DatabasePlatform.instanceFor({FirebaseApp app}) {
     return DatabasePlatform.instance.withApp(app);
   }
+
   static DatabasePlatform get instance {
     if (_instance == null) {
       _instance = MethodChannelDatabase();
@@ -113,7 +115,7 @@ abstract class DatabasePlatform extends PlatformInterface {
   /// Note that the specified cache size is only an approximation and the size
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
-  Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
+  Future<bool> setPersistenceCacheSizeBytes(double cacheSize) async {
     throw UnimplementedError("setPersistenceCacheSizeBytes() not implemented");
   }
 

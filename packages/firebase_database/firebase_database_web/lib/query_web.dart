@@ -1,6 +1,6 @@
 part of firebase_database_web;
 
-class QueryWeb implements Query {
+class QueryWeb extends Query {
   final DatabasePlatform _databasePlatform;
   final firebase.Query _delegate;
   final List<String> _pathComponents;
@@ -13,6 +13,16 @@ class QueryWeb implements Query {
         _pathComponents = pathComponents,
         _delegate = query ??
             databasePlatform.reference().child(pathComponents.join("/"));
+
+  /// Create a query constrained to only return child nodes with a value greater
+  /// than or equal to the given value, using the given orderBy directive or
+  /// priority as default, and optionally only child nodes with a key greater
+  /// than or equal to the given key.
+  Query startAt(dynamic value, {String key}) {
+    return QueryWeb(
+        _databasePlatform, _pathComponents, _delegate.startAt(value, key));
+  }
+
   @override
   Query endAt(value, {String key}) {
     return QueryWeb(
@@ -90,15 +100,6 @@ class QueryWeb implements Query {
   /// Slash-delimited path representing the database location of this query.
   String get path => _pathComponents.join('/');
 
-  /// Create a query constrained to only return child nodes with a value greater
-  /// than or equal to the given value, using the given orderBy directive or
-  /// priority as default, and optionally only child nodes with a key greater
-  /// than or equal to the given key.
-  Query startAt(dynamic value, {String key}) {
-    return QueryWeb(
-        _databasePlatform, _pathComponents, _delegate.startAt(value, key));
-  }
-
   @override
   Stream<Event> observe(EventType eventType) {
     switch (eventType) {
@@ -122,37 +123,16 @@ class QueryWeb implements Query {
   }
 
   Stream<Event> _webStreamToPlatformStream(Stream<firebase.QueryEvent> stream) {
-    return stream.map(
-      (firebase.QueryEvent event) => Event(
-        DataSnapshot(event.snapshot.key, event.snapshot.val()),
-        event.prevChildKey,
-      ),
-    );
+    return stream.map((firebase.QueryEvent event) => EventWeb._(event));
   }
 
   @override
   Future<DataSnapshot> once() async {
-    firebase.DataSnapshot snapshot = (await _delegate.once("value")).snapshot;
-    return DataSnapshot(snapshot.key, snapshot.val());
+    return DataSnapshotWeb._((await _delegate.once("value")).snapshot);
   }
 
   @override
   Map<String, dynamic> buildArguments() {
     throw UnimplementedError();
   }
-
-  @override
-  Stream<Event> get onChildAdded => observe(EventType.childAdded);
-
-  @override
-  Stream<Event> get onChildChanged => observe(EventType.childAdded);
-
-  @override
-  Stream<Event> get onChildMoved => observe(EventType.childMoved);
-
-  @override
-  Stream<Event> get onChildRemoved => observe(EventType.childRemoved);
-
-  @override
-  Stream<Event> get onValue => observe(EventType.value);
 }
