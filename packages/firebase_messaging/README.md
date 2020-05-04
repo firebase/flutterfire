@@ -66,31 +66,31 @@ By default background messaging is not enabled. To handle messages in the backgr
    ```gradle
    dependencies {
      // ...
-   
+
      implementation 'com.google.firebase:firebase-messaging:<latest_version>'
    }
    ```
-   
+
    Note: you can find out what the latest version of the plugin is [here ("Cloud Messaging")](https://firebase.google.com/support/release-notes/android#latest_sdk_versions).
 
 1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
 
    ```java
    package io.flutter.plugins.firebasemessagingexample;
-   
+
    import io.flutter.app.FlutterApplication;
    import io.flutter.plugin.common.PluginRegistry;
    import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
    import io.flutter.plugins.GeneratedPluginRegistrant;
    import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
-   
+
    public class Application extends FlutterApplication implements PluginRegistrantCallback {
      @Override
      public void onCreate() {
        super.onCreate();
        FlutterFirebaseMessagingService.setPluginRegistrant(this);
      }
-   
+
      @Override
      public void registerWith(PluginRegistry registry) {
        GeneratedPluginRegistrant.registerWith(registry);
@@ -118,18 +118,18 @@ By default background messaging is not enabled. To handle messages in the backgr
        // Handle data message
        final dynamic data = message['data'];
      }
-   
+
      if (message.containsKey('notification')) {
        // Handle notification message
        final dynamic notification = message['notification'];
      }
-   
+
      // Or do other work.
    }
    ```
 
    Note: the protocol of `data` and `notification` are in line with the
-   fields defined by a [RemoteMessage](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/RemoteMessage). 
+   fields defined by a [RemoteMessage](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/RemoteMessage).
 
 1. Set `onBackgroundMessage` handler when calling `configure`
 
@@ -154,6 +154,60 @@ By default background messaging is not enabled. To handle messages in the backgr
    Note: `configure` should be called early in the lifecycle of your application
    so that it can be ready to receive messages as early as possible. See the
    [example app](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/example) for a demonstration.
+
+<details>
+<summary>Optionally display "heads up" notifications</summary>
+
+
+Following these steps will ensure that notifications received on Android will "pop down" and display a banner, similar to how they appear on iOS out of the box.
+The full docs can be seen [here](https://developer.android.com/training/notify-user/channels).
+
+1. Add the following to your `strings.xml`. Of course you'll want to customise these for your own app, and be aware that the channel name and channel description are what the user will see in their notification settings.
+```xml
+<string name="notification_channel_id" translatable="false">my_unique_fcm_id</string>
+<string name="notification_channel_name">The name of this notification</string>
+<string name="notification_channel_desc">A description of the notification.</string>
+```
+
+2. Register the new notification channel by adding the following code to your app (Java version [here](https://developer.android.com/training/notify-user/build-notification#Priority)). This should be done as early as possible, for example, after calling `super.onCreate` in `MainActivity.kt` (or `.java`).
+```kotlin
+// Create the NotificationChannel, but only on API 26+ because
+// the NotificationChannel class is new and not in the support library
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    val channelID = getString(R.string.notification_channel_id)
+    val name = getString(R.string.notification_channel_name)
+    val descriptionText = getString(R.string.notification_channel_desc)
+    val importance = NotificationManager.IMPORTANCE_HIGH
+    val channel = NotificationChannel(channelID, name, importance).apply {
+         description = descriptionText
+     }
+     // Register the channel with the system
+     val notificationManager: NotificationManager =
+          getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+     notificationManager.createNotificationChannel(channel)
+}
+```
+
+Pay attention to the line which sets the importance, as this is what causes notifications sent on this channel to appear as a "Heads Up" notification. (See the docs [here](https://developer.android.com/training/notify-user/channels#importance))
+```kotlin
+val importance = NotificationManager.IMPORTANCE_HIGH
+```
+
+3. Add the following to your `AndroidManifest.xml` under the `<application>` tag. This will ensure that any FCM's sent _without_ a notification channel set in their payload will use this one.
+
+```xml
+<meta-data
+   android:name="com.google.firebase.messaging.default_notification_channel_id"
+   android:value="@string/notification_channel_id" />
+```
+
+4. Clean and rebuild, then launch the application on a device so that the channel is registered.
+
+5. Send a test FCM, it should use your newly created channel by default and be displayed as a "Heads Up" notification.
+
+You can repeat these steps to set up more notification channels for each type of notification you plan on sending. Just make sure each has a _unique_ ID, and that you bundle the channel ID with the notification payload when you send it.
+
+</details>
 
 ### iOS Integration
 
