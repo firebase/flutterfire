@@ -1,5 +1,5 @@
-#import "AppDelegate.h"
-#import "GeneratedPluginRegistrant.h"
+#include "AppDelegate.h"
+#include "GeneratedPluginRegistrant.h"
 
 @implementation AppDelegate
 
