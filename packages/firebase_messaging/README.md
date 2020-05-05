@@ -93,7 +93,7 @@ By default background messaging is not enabled. To handle messages in the backgr
    
      @Override
      public void registerWith(PluginRegistry registry) {
-       GeneratedPluginRegistrant.registerWith(registry);
+       GeneratedPluginRegistrant.registerWith((FlutterEngine) registry);
      }
    }
    ```
