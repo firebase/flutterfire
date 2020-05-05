@@ -1,3 +1,7 @@
+## 0.13.5+1
+
+* Declare API stability and compatibility with `1.0.0` (more details at: https://github.com/flutter/flutter/wiki/Package-migration-to-1.0.0).
+
 ## 0.13.5
 
 * Migrate cloud_firestore to android v2 embedding.

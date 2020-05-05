@@ -1,3 +1,7 @@
+## 0.9.3+10
+
+* Declare API stability and compatibility with `1.0.0` (more details at: https://github.com/flutter/flutter/wiki/Package-migration-to-1.0.0).
+
 ## 0.9.3+9
 
 * Fix for missing UserAgent.h compilation failures.

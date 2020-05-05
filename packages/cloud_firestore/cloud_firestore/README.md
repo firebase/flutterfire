@@ -6,6 +6,13 @@ A Flutter plugin to use the [Cloud Firestore API](https://firebase.google.com/do
 
 For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
+**Please set your constraint to `cloud_firestore: '>=0.13.y+x <2.0.0'`**
+
+## Backward compatible 1.0.0 version is coming
+The plugin has reached a stable API, we guarantee that version `1.0.0` will be backward compatible with `0.13.y+z`.
+Please use `cloud_firestore: '>=0.13.y+x <2.0.0'` as your dependency constraint to allow a smoother ecosystem migration.
+For more details see: https://github.com/flutter/flutter/wiki/Package-migration-to-1.0.0
+
 ## Setup
 
 To use this plugin:
