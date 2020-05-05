@@ -141,6 +141,39 @@ void main() {
       await pumpEventQueue();
       expect(passedException, thrownException);
     });
+
+    test('runs onError with StackTrace', () async {
+      PlatformException passedException;
+      StackTrace passedStackTrace;
+
+      final void Function(PlatformException, StackTrace) handleError =
+          (PlatformException error, StackTrace stackTrace) {
+        passedException = error;
+        passedStackTrace = stackTrace;
+      };
+
+      observer = FirebaseAnalyticsObserver(
+        analytics: analytics,
+        nameExtractor: (RouteSettings settings) => 'foo',
+        onError: handleError,
+      );
+
+      final PageRoute<dynamic> route = MockPageRoute();
+      final PageRoute<dynamic> previousRoute = MockPageRoute();
+
+      final PlatformException thrownException = PlatformException(code: 'b');
+      final StackTrace thrownStackTrace = StackTrace.current;
+      Future<void> throwPlatformException() => Future.error(thrownException, thrownStackTrace);
+
+      when(analytics.setCurrentScreen(screenName: anyNamed('screenName')))
+          .thenAnswer((Invocation invocation) => throwPlatformException());
+
+      observer.didPush(route, previousRoute);
+
+      await pumpEventQueue();
+      expect(passedException, thrownException);
+      expect(passedStackTrace, thrownStackTrace);
+    });
   });
 }
 

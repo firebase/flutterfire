@@ -64,25 +64,34 @@ class FirebaseAnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
   /// active route to [analytics], `onError` will be called with the
   /// exception. If `onError` is omitted, the exception will be printed using
   /// `debugPrint()`.
+  ///
+  /// The `Function` below stands for one of two types:
+  /// - Function(PlatformException)
+  /// - Function(PlatformException, StackTrace)
   FirebaseAnalyticsObserver({
     @required this.analytics,
     this.nameExtractor = defaultNameExtractor,
-    Function(PlatformException error) onError,
+    Function onError,
   }) : _onError = onError;
 
   final FirebaseAnalytics analytics;
   final ScreenNameExtractor nameExtractor;
-  final void Function(PlatformException error) _onError;
+  final Function _onError;
 
   void _sendScreenView(PageRoute<dynamic> route) {
     final String screenName = nameExtractor(route.settings);
     if (screenName != null) {
       analytics.setCurrentScreen(screenName: screenName).catchError(
-        (Object error) {
+        (Object error, StackTrace stackTrace) {
           if (_onError == null) {
             debugPrint('$FirebaseAnalyticsObserver: $error');
           } else {
-            _onError(error);
+            if (_onError is Function(PlatformException, StackTrace)) {
+              _onError(error, stackTrace);
+            } else {
+              assert(_onError is Function(PlatformException));
+              _onError(error);
+            }
           }
         },
         test: (Object error) => error is PlatformException,
