@@ -1,3 +1,7 @@
+## 5.0.14
+
+* Add optional StackTrace argument in `FirebaseAnalyticsObserver.onError` callback 
+
 ## 5.0.13
 
 * Fix for missing UserAgent.h compilation failures.
