@@ -163,7 +163,8 @@ void main() {
 
       final PlatformException thrownException = PlatformException(code: 'b');
       final StackTrace thrownStackTrace = StackTrace.current;
-      Future<void> throwPlatformException() => Future.error(thrownException, thrownStackTrace);
+      Future<void> throwPlatformException() =>
+          Future.error(thrownException, thrownStackTrace);
 
       when(analytics.setCurrentScreen(screenName: anyNamed('screenName')))
           .thenAnswer((Invocation invocation) => throwPlatformException());
