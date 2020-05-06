@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.version          = '0.0.1'
   s.summary          = 'Firebase Admob plugin for Flutter.'
   s.description      = <<-DESC
-Firebase Admob plugin for Flutter.
+Firebase AdMob plugin for Flutter.
                        DESC
   s.homepage         = 'https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_admob'
   s.license          = { :file => '../LICENSE' }
@@ -15,10 +15,9 @@ Firebase Admob plugin for Flutter.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'Firebase/Core'
-  s.dependency 'Firebase/AdMob'
-
+  s.dependency 'Firebase/Analytics'
+  s.dependency 'Google-Mobile-Ads-SDK'
   s.ios.deployment_target = '8.0'
-
+  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
   s.static_framework = true
 end

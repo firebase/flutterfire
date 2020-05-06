@@ -122,13 +122,10 @@ static NSDictionary *statusToString = nil;
   }
 
   NSLayoutAttribute verticalAttribute = 0;
-  CGFloat anchorConstant = 0.0;
   if (_anchorType == 0) {
     verticalAttribute = NSLayoutAttributeBottom;
-    anchorConstant = -_anchorOffset;
   } else if (_anchorType == 1) {
     verticalAttribute = NSLayoutAttributeTop;
-    anchorConstant = _anchorOffset;
   }
 
   [self activateConstraintParentView:parentView verticalAttribute:verticalAttribute];
