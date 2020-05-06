@@ -155,6 +155,9 @@ static NSDictionary *statusToString = nil;
 
 - (void)activateConstraintParentView:(UIView *_Nonnull)parentView
                    verticalAttribute:(NSLayoutAttribute)verticalAttribute {
+  NSAssert(
+      verticalAttribute == NSLayoutAttributeBottom || verticalAttribute == NSLayoutAttributeTop,
+      @"Vertical attribute should either be `NSLayoutAttributeBottom` or `NSLayoutAttributeTop`");
   [parentView
       addConstraint:[NSLayoutConstraint constraintWithItem:self.view
                                                  attribute:NSLayoutAttributeLeft
@@ -163,6 +166,7 @@ static NSDictionary *statusToString = nil;
                                                  attribute:NSLayoutAttributeLeft
                                                 multiplier:1
                                                   constant:0]];
+
   [parentView addConstraint:[NSLayoutConstraint constraintWithItem:self.view
                                                          attribute:NSLayoutAttributeRight
                                                          relatedBy:NSLayoutRelationLessThanOrEqual
@@ -170,6 +174,7 @@ static NSDictionary *statusToString = nil;
                                                          attribute:NSLayoutAttributeRight
                                                         multiplier:1
                                                           constant:0]];
+
   [parentView addConstraint:[NSLayoutConstraint constraintWithItem:self.view
                                                          attribute:NSLayoutAttributeCenterX
                                                          relatedBy:NSLayoutRelationEqual
