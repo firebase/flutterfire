@@ -127,7 +127,7 @@ Overriding `FlutterError.onError` with `Crashlytics.instance.recordFlutterError`
 If you want to catch errors that occur in `runZoned`, you can supply `Crashlytics.instance.recordError` to the `onError` parameter:
 
 ```dart
-runZoned<Future<void>>(() async {
+runZonedGuarded<Future<void>>(() async {
     // ...
   }, onError: Crashlytics.instance.recordError);
 ```
