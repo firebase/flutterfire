@@ -122,12 +122,20 @@ class DatabaseReference extends Query {
   Future<TransactionResult> runTransaction(
       TransactionHandler transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) async {
-    throw UnsupportedError("runTransaction() is not supported ccurrently.");
-    // platform.TransactionResult result = (await _delegate.runTransaction(
-    //     (platformTransaction) => transactionHandler(Transaction),
-    //     timeout: timeout));
-    // return TransactionResult._(DatabaseError._(result.error), result.committed,
-    //     DataSnapshot._(result.dataSnapshot));
+    TransactionResult transactionResult = await _delegate.runTransaction(
+      (platformTransaction) {
+        return transactionHandler(
+          MutableData._(platformTransaction.value),
+        );
+      },
+      timeout: timeout,
+    );
+    return TransactionResult._(
+        DatabaseError._(transactionResult.error),
+        transactionResult.committed,
+        DataSnapshot._(transactionResult.dataSnapshot));
+
+    //
   }
 
   OnDisconnect onDisconnect() {

@@ -32,6 +32,12 @@ class MutableData {
   @visibleForTesting
   MutableData.private(this._data);
 
+  MutableData._(platform.MutableData delegate)
+      : _data = {
+          "key": delegate.key,
+          "value": delegate.value,
+        };
+
   final Map<dynamic, dynamic> _data;
 
   /// The key of the location that generated this MutableData.

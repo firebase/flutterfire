@@ -14,18 +14,18 @@ enum EventType {
 
 /// `Event` encapsulates a DataSnapshot and possibly also the key of its
 /// previous sibling, which can be used to order the snapshots.
-abstract class Event {
-  Event(this.snapshot, this.previousSiblingKey);
+class EventPlatform {
+  EventPlatform(this.snapshot, this.previousSiblingKey);
 
-  final DataSnapshot snapshot;
+  final DataSnapshotPlatform snapshot;
 
   final String previousSiblingKey;
 }
 
 /// A DataSnapshot contains data from a Firebase Database location.
 /// Any time you read Firebase data, you receive the data as a DataSnapshot.
-abstract class DataSnapshot {
-  DataSnapshot(this.key, this.value);
+class DataSnapshotPlatform {
+  DataSnapshotPlatform(this.key, this.value);
 
   /// The key of the location that generated this DataSnapshot.
   final String key;
@@ -34,9 +34,9 @@ abstract class DataSnapshot {
   final dynamic value;
 }
 
-class MutableData {
+class MutableDataPlatform {
   @visibleForTesting
-  MutableData.private(this._data);
+  MutableDataPlatform(this._data);
 
   final Map<dynamic, dynamic> _data;
 
@@ -51,7 +51,7 @@ class MutableData {
 /// A DatabaseError contains code, message and details of a Firebase Database
 /// Error that results from a transaction operation at a Firebase Database
 /// location.
-abstract class DatabaseError {
+class DatabaseError {
   DatabaseError(this.code, this.message, this.details);
 
   /// One of the defined status codes, depending on the error.

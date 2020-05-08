@@ -1,11 +1,14 @@
 part of firebase_database_web;
 
+/// Web implementation for firebase [DatabaseReference]
 class DatabaseReferenceWeb extends DatabaseReference {
   web.DatabaseReference _delegate;
   final web.Database _webDatabase;
   final DatabasePlatform _databasePlatform;
   final List<String> _pathComponents;
 
+  /// Builds an instance of [DatabaseReferenceWeb] delegating to a package:firebase [DatabaseReference]
+  /// to delegate queries to underlying firebase web plugin
   DatabaseReferenceWeb(
     this._webDatabase,
     this._databasePlatform,
@@ -131,8 +134,7 @@ class DatabaseReferenceWeb extends DatabaseReference {
   @override
   Future<TransactionResult> runTransaction(transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) {
-    // TODO: implement runTransaction
-    return null;
+    throw Exception("runTransaction() is not supported on web");
   }
 
   @override

@@ -1,7 +1,8 @@
 part of firebase_database_web;
 
+/// Web implementation for firebase [OnDisconnect]
 class OnDisconnectWeb extends OnDisconnect {
-  firebase.OnDisconnect _onDisconnect;
+  web.OnDisconnect _onDisconnect;
 
   OnDisconnectWeb._(this._onDisconnect);
 

@@ -7,10 +7,10 @@ The web implementation of [`flutter_database`][1].
 ### Import the package
 
 To use this plugin in your Flutter app on the web, simply add it as a
-dependency in your `pubspec.yaml` alongside the base `flutter_database`
+dependency in your `pubspec.yaml` alongside the base `firebase_database`
 plugin.
 _(This is only temporary: in the future we hope to make this package
-an "endorsed" implementation of `flutter_database`, so it will automatically
+an "endorsed" implementation of `firebase_database`, so it will automatically
 be included in your app when you run your Flutter app on the web.)_
 Add this to your `pubspec.yaml`:
 
@@ -18,8 +18,8 @@ Add this to your `pubspec.yaml`:
 ...
 dependencies:
   ...
-  flutter_database: ^0.13.1
-  flutter_database_web: ^0.1.0
+  firebase_database: ^0.13.1
+  firebase_database_web: ^0.1.0
   ...
 ```
 
@@ -42,7 +42,7 @@ In your app directory, edit `web/index.html` to add the line:
 
 ### Using the plugin
 
-Once you have added the `cloud_firebase_web` dependency to your pubspec,
-you can use `package:cloud_firebase` as normal.
+Once you have added the `flutter_database_web` dependency to your pubspec,
+you can use `package:flutter_database` as normal.
 [1]: ../flutter_database
 [2]: https://github.com/dart-lang/sdk/issues/33979

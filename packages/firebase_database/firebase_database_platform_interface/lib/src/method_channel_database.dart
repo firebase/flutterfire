@@ -10,16 +10,19 @@ class MethodChannelDatabase extends DatabasePlatform {
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
         case 'Event':
-          final MethodChannelEvent event = MethodChannelEvent(call.arguments);
+          MethodChannelEvent event = MethodChannelEvent(call.arguments);
+          print(event.snapshot.value);
           _observers[call.arguments['handle']].add(event);
           return null;
         case 'Error':
-          // final DatabaseError error = DatabaseError(DatabaseError._(call.arguments['error']));
-          // _observers[call.arguments['handle']].addError(error);
+          Map errorData = call.arguments['error'];
+          final DatabaseError error = DatabaseError._(
+              errorData["code"], errorData["message"], errorData["details"]);
+          _observers[call.arguments['handle']].addError(error);
           return null;
         case 'DoTransaction':
           final MutableData mutableData =
-              MutableData.private(call.arguments['snapshot']);
+              MutableData._(call.arguments['snapshot']);
           final MutableData updated =
               await _transactions[call.arguments['transactionKey']](
                   mutableData);

@@ -1,10 +1,13 @@
 part of firebase_database_web;
 
+/// Web implementation for firebase [Query]
 class QueryWeb extends Query {
   final DatabasePlatform _databasePlatform;
   final web.Query _delegate;
   final List<String> _pathComponents;
 
+  /// Builds an instance of [QueryWeb] delegating to a package:firebase [Query]
+  /// to delegate queries to underlying firebase web plugin
   QueryWeb(
     DatabasePlatform databasePlatform,
     List<String> pathComponents,
@@ -132,11 +135,6 @@ class QueryWeb extends Query {
   @override
   Future<EventPlatform> once() async {
     return _fromWebEventToPlatformEvent((await _delegate.once("value")));
-  }
-
-  @override
-  Map<String, dynamic> buildArguments() {
-    throw UnimplementedError();
   }
 
   /// Builds [EventPlatform] instance form web event instance
