@@ -1,14 +1,12 @@
 part of firebase_database_platform_interface;
 
+/// Represents a query over the data at a particular location.
 class MethodChannelQuery extends Query {
-  final DatabasePlatform database;
-  final List<String> pathComponents;
-  final Map<String, dynamic> parameters;
-
+  /// Create a [MethodChannelQuery] from [pathComponents]
   MethodChannelQuery({
-    this.database,
-    this.pathComponents,
-    this.parameters,
+    @required DatabasePlatform database,
+    @required List<String> pathComponents,
+    Map<String, dynamic> parameters,
   }) : super(
           database: database,
           parameters: parameters,
@@ -16,12 +14,12 @@ class MethodChannelQuery extends Query {
         );
 
   @override
-  Stream<Event> observe(EventType eventType) {
+  Stream<EventPlatform> observe(EventType eventType) {
     Future<int> _handle;
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
-    StreamController<Event> controller; // ignore: close_sinks
-    controller = StreamController<Event>.broadcast(
+    StreamController<EventPlatform> controller; // ignore: close_sinks
+    controller = StreamController<EventPlatform>.broadcast(
       onListen: () {
         _handle = MethodChannelDatabase.channel.invokeMethod<int>(
           'Query#observe',
@@ -29,7 +27,7 @@ class MethodChannelQuery extends Query {
             'app': database.appName(),
             'databaseURL': database.databaseURL,
             'path': path,
-            'parameters': _parameters,
+            'parameters': parameters,
             'eventType': eventType.toString(),
           },
         ).then<int>((dynamic result) => result);
@@ -45,7 +43,7 @@ class MethodChannelQuery extends Query {
               'app': database.appName(),
               'databaseURL': database.databaseURL,
               'path': path,
-              'parameters': _parameters,
+              'parameters': parameters,
               'handle': handle,
             },
           );
@@ -57,14 +55,14 @@ class MethodChannelQuery extends Query {
   }
 
   /// Slash-delimited path representing the database location of this query.
-  String get path => _pathComponents.join('/');
+  String get path => pathComponents.join('/');
 
   /// Create a query constrained to only return child nodes with a value greater
   /// than or equal to the given value, using the given orderBy directive or
   /// priority as default, and optionally only child nodes with a key greater
   /// than or equal to the given key.
   Query startAt(dynamic value, {String key}) {
-    assert(!_parameters.containsKey('startAt'));
+    assert(!this.parameters.containsKey('startAt'));
     assert(value is String ||
         value is bool ||
         value is double ||
@@ -80,7 +78,7 @@ class MethodChannelQuery extends Query {
   /// priority as default, and optionally only child nodes with a key less
   /// than or equal to the given key.
   Query endAt(dynamic value, {String key}) {
-    assert(!_parameters.containsKey('endAt'));
+    assert(!this.parameters.containsKey('endAt'));
     assert(value is String ||
         value is bool ||
         value is double ||
@@ -96,7 +94,7 @@ class MethodChannelQuery extends Query {
   ///
   /// If a key is provided, there is at most one such child as names are unique.
   Query equalTo(dynamic value, {String key}) {
-    assert(!_parameters.containsKey('equalTo'));
+    assert(!this.parameters.containsKey('equalTo'));
     assert(value is String ||
         value is bool ||
         value is double ||
@@ -109,13 +107,13 @@ class MethodChannelQuery extends Query {
 
   /// Create a query with limit and anchor it to the start of the window.
   Query limitToFirst(int limit) {
-    assert(!_parameters.containsKey('limitToFirst'));
+    assert(!parameters.containsKey('limitToFirst'));
     return _copyWithParameters(<String, dynamic>{'limitToFirst': limit});
   }
 
   /// Create a query with limit and anchor it to the end of the window.
   Query limitToLast(int limit) {
-    assert(!_parameters.containsKey('limitToLast'));
+    assert(!parameters.containsKey('limitToLast'));
     return _copyWithParameters(<String, dynamic>{'limitToLast': limit});
   }
 
@@ -125,7 +123,7 @@ class MethodChannelQuery extends Query {
   /// [equalTo].
   Query orderByChild(String key) {
     assert(key != null);
-    assert(!_parameters.containsKey('orderBy'));
+    assert(!parameters.containsKey('orderBy'));
     return _copyWithParameters(
       <String, dynamic>{'orderBy': 'child', 'orderByChildKey': key},
     );
@@ -136,7 +134,7 @@ class MethodChannelQuery extends Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByKey() {
-    assert(!_parameters.containsKey('orderBy'));
+    assert(!parameters.containsKey('orderBy'));
     return _copyWithParameters(<String, dynamic>{'orderBy': 'key'});
   }
 
@@ -145,7 +143,7 @@ class MethodChannelQuery extends Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByValue() {
-    assert(!_parameters.containsKey('orderBy'));
+    assert(!parameters.containsKey('orderBy'));
     return _copyWithParameters(<String, dynamic>{'orderBy': 'value'});
   }
 
@@ -154,7 +152,7 @@ class MethodChannelQuery extends Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByPriority() {
-    assert(!_parameters.containsKey('orderBy'));
+    assert(!parameters.containsKey('orderBy'));
     return _copyWithParameters(<String, dynamic>{'orderBy': 'priority'});
   }
 
@@ -169,7 +167,7 @@ class MethodChannelQuery extends Query {
         'app': database.appName(),
         'databaseURL': database.databaseURL,
         'path': path,
-        'parameters': _parameters,
+        'parameters': parameters,
         'value': value
       },
     );
@@ -177,10 +175,10 @@ class MethodChannelQuery extends Query {
 
   MethodChannelQuery _copyWithParameters(Map<String, dynamic> parameters) {
     return MethodChannelQuery(
-      database: _database,
-      pathComponents: _pathComponents,
+      database: database,
+      pathComponents: pathComponents,
       parameters: Map<String, dynamic>.unmodifiable(
-        Map<String, dynamic>.from(_parameters)..addAll(parameters),
+        Map<String, dynamic>.from(this.parameters)..addAll(parameters),
       ),
     );
   }

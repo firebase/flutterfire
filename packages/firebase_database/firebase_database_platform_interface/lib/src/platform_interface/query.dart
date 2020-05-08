@@ -5,48 +5,52 @@
 part of firebase_database_platform_interface;
 
 /// Represents a query over the data at a particular location.
-abstract class Query {
-  final DatabasePlatform _database;
-  final List<String> _pathComponents;
-  final Map<String, dynamic> _parameters;
+abstract class Query extends PlatformInterface {
+  /// The Database instance associated with this query
+  final DatabasePlatform database;
+
+  /// The pathComponents associated with this query
+  final List<String> pathComponents;
+
+  /// The parameters associated with this query
+  final Map<String, dynamic> parameters;
+
+  /// Create a [Query] instance
   Query({
     @required DatabasePlatform database,
     @required List<String> pathComponents,
     Map<String, dynamic> parameters,
-  })  : _database = database,
-        _pathComponents = pathComponents,
-        _parameters = parameters ??
+  })  : database = database,
+        pathComponents = pathComponents,
+        parameters = parameters ??
             Map<String, dynamic>.unmodifiable(<String, dynamic>{}),
         assert(database != null);
 
   /// Slash-delimited path representing the database location of this query.
   String get path => throw UnimplementedError("path not implemented");
 
-  Map<String, dynamic> buildArguments() {
-    throw UnimplementedError("_copyWithParameters() not implemented");
-  }
-
-  Stream<Event> observe(EventType eventType) {
+  /// Assigns the proper event type to a stream for [EventPlatform]
+  Stream<EventPlatform> observe(EventType eventType) {
     throw UnimplementedError("observe() not implemented");
   }
 
   /// Listens for a single value event and then stops listening.
-  Future<DataSnapshot> once() async => (await onValue.first).snapshot;
+  Future<DataSnapshotPlatform> once() async => (await onValue.first).snapshot;
 
   /// Fires when children are added.
-  Stream<Event> get onChildAdded => observe(EventType.childAdded);
+  Stream<EventPlatform> get onChildAdded => observe(EventType.childAdded);
 
   /// Fires when children are removed. `previousChildKey` is null.
-  Stream<Event> get onChildRemoved => observe(EventType.childRemoved);
+  Stream<EventPlatform> get onChildRemoved => observe(EventType.childRemoved);
 
   /// Fires when children are changed.
-  Stream<Event> get onChildChanged => observe(EventType.childChanged);
+  Stream<EventPlatform> get onChildChanged => observe(EventType.childChanged);
 
   /// Fires when children are moved.
-  Stream<Event> get onChildMoved => observe(EventType.childMoved);
+  Stream<EventPlatform> get onChildMoved => observe(EventType.childMoved);
 
   /// Fires when the data at this location is updated. `previousChildKey` is null.
-  Stream<Event> get onValue => observe(EventType.value);
+  Stream<EventPlatform> get onValue => observe(EventType.value);
 
   /// Create a query constrained to only return child nodes with a value greater
   /// than or equal to the given value, using the given orderBy directive or

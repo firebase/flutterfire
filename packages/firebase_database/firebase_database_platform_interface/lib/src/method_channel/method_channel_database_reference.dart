@@ -1,7 +1,16 @@
 part of firebase_database_platform_interface;
 
+/// DatabaseReference represents a particular location in your Firebase
+/// Database and can be used for reading or writing data to that location.
+///
+/// This class is the starting point for all Firebase Database operations.
+/// After you’ve obtained your first DatabaseReference via
+/// `FirebaseDatabase.reference()`, you can use it to read data
+/// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
+/// `DatabaseReference`s (ie. `child`).
 class MethodChannelDatabaseReference extends MethodChannelQuery
     implements DatabaseReference {
+  /// Create a [MethodChannelDatabaseReference] from [pathComponents]
   MethodChannelDatabaseReference({
     DatabasePlatform database,
     List<String> pathComponents,
@@ -97,33 +106,33 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
 
   /// Performs an optimistic-concurrency transactional update to the data at
   /// this Firebase Database location.
-  Future<TransactionResult> runTransaction(
-      TransactionHandler transactionHandler,
+  Future<TransactionResultPlatform> runTransaction(
+      TransactionHandlerPlatform transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) async {
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds.');
 
-    final Completer<TransactionResult> completer =
-        Completer<TransactionResult>();
+    final Completer<TransactionResultPlatform> completer =
+        Completer<TransactionResultPlatform>();
 
-    final int transactionKey = FirebaseDatabase._transactions.isEmpty
+    final int transactionKey = MethodChannelDatabase._transactions.isEmpty
         ? 0
-        : FirebaseDatabase._transactions.keys.last + 1;
+        : MethodChannelDatabase._transactions.keys.last + 1;
 
-    FirebaseDatabase._transactions[transactionKey] = transactionHandler;
+    MethodChannelDatabase._transactions[transactionKey] = transactionHandler;
 
-    TransactionResult toTransactionResult(Map<dynamic, dynamic> map) {
-      final DatabaseError databaseError = map['error'] != null
-          ? MethodChannelDatabaseError(map['error'])
+    TransactionResultPlatform toTransactionResult(Map<dynamic, dynamic> map) {
+      final DatabaseErrorPlatform databaseError = map['error'] != null
+          ? _fromMapToPlatformDatabaseError(map['error'])
           : null;
       final bool committed = map['committed'];
-      final DataSnapshot dataSnapshot = map['snapshot'] != null
-          ? MethodChannelDataSnapshot(map['snapshot'])
+      final DataSnapshotPlatform dataSnapshot = map['snapshot'] != null
+          ? _fromMapToPlatformSnapShot(map['snapshot'])
           : null;
 
-      FirebaseDatabase._transactions.remove(transactionKey);
+      MethodChannelDatabase._transactions.remove(transactionKey);
 
-      return TransactionResult._(databaseError, committed, dataSnapshot);
+      return TransactionResultPlatform(databaseError, committed, dataSnapshot);
     }
 
     await MethodChannelDatabase.channel.invokeMethod<void>(

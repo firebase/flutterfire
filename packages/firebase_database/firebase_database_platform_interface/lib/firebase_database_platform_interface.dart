@@ -13,17 +13,17 @@ import 'package:flutter/services.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 part 'src/platform_interface/database_reference.dart';
-part 'src/method_channel_database.dart';
-part 'src/method_channel_database_reference.dart';
-part 'src/method_channel_event.dart';
-part 'src/method_channel_on_disconnect.dart';
+part 'src/method_channel/method_channel_database.dart';
+part 'src/method_channel/method_channel_database_reference.dart';
+part 'src/method_channel/method_channel_on_disconnect.dart';
 part 'src/platform_interface/query.dart';
 part 'src/platform_interface/on_disconnect.dart';
 part 'src/platform_interface/event.dart';
-part 'src/platform_interface/firebase_database.dart';
-part 'src/method_channel_query.dart';
-part 'src/utils/push_id_generator.dart';
+part 'src/method_channel/method_channel_query.dart';
+part 'src/method_channel/utils/push_id_generator.dart';
+part 'src/method_channel/utils/event_utils.dart';
 
+/// Defines an interface to work with [FirebaseDatabase] on web and mobile
 abstract class DatabasePlatform extends PlatformInterface {
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
@@ -40,10 +40,15 @@ abstract class DatabasePlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
+  /// Create an instance using [app] using the existing implementation
   factory DatabasePlatform.instanceFor({FirebaseApp app}) {
     return DatabasePlatform.instance.withApp(app);
   }
 
+  /// The current default [DatabasePlatform] instance.
+  ///
+  /// It will always default to [MethodChannelDatabase]
+  /// if no web implementation was provided.
   static DatabasePlatform get instance {
     if (_instance == null) {
       _instance = MethodChannelDatabase();
@@ -57,10 +62,12 @@ abstract class DatabasePlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  /// Create a new [DatabasePlatform] with a [FirebaseApp] instance
   DatabasePlatform withApp(FirebaseApp app) {
     throw UnimplementedError("withApp() not implemented");
   }
 
+  ///
   String appName() {
     throw UnimplementedError("appName() not implemented");
   }

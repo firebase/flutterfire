@@ -19,10 +19,6 @@ class Query {
   /// Slash-delimited path representing the database location of this query.
   String get path => _pathComponents.join('/');
 
-  Map<String, dynamic> buildArguments() {
-    return delegate.buildArguments();
-  }
-
   /// Listens for a single value event and then stops listening.
   Future<DataSnapshot> once() async {
     return DataSnapshot._(await delegate.once());

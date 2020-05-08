@@ -1,3 +1,7 @@
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 part of firebase_database_web;
 
 /// Web implementation for firebase [DatabaseReference]
@@ -57,8 +61,9 @@ class DatabaseReferenceWeb extends DatabaseReference {
   }
 
   /// Fetch data on the reference once.
-  Future<EventPlatform> once() async {
-    return fromWebEventToPlatformEvent((await _delegate.once("value")));
+  Future<DataSnapshotPlatform> once() async {
+    return fromWebSnapshotToPlatformSnapShot(
+        (await _delegate.once("value")).snapshot);
   }
 
   /// Fires when children are added.
@@ -132,7 +137,7 @@ class DatabaseReferenceWeb extends DatabaseReference {
   }
 
   @override
-  Future<TransactionResult> runTransaction(transactionHandler,
+  Future<TransactionResultPlatform> runTransaction(transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) {
     throw Exception("runTransaction() is not supported on web");
   }

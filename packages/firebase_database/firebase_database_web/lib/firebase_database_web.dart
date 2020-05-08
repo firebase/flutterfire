@@ -1,3 +1,7 @@
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 library firebase_database_web;
 
 import 'dart:async';
@@ -5,12 +9,12 @@ import 'dart:async';
 import "package:firebase/firebase.dart" as web;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
-import 'package:firebase_database_web/src/utils/event_utils.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 part './src/database_reference_web.dart';
 part './src/query_web.dart';
 part './src/ondisconnect_web.dart';
+part './src/utils/snapshot_utils.dart';
 
 /// Web implementation for [DatabasePlatform]
 /// delegates calls to firebase web plugin

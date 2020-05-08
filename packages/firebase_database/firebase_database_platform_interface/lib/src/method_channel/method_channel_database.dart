@@ -1,5 +1,8 @@
 part of firebase_database_platform_interface;
 
+/// The entry point for accessing a FirebaseDatabase.
+///
+/// You can get an instance by calling [FirebaseDatabase.instance].
 class MethodChannelDatabase extends DatabasePlatform {
   /// Gets an instance of [FirebaseDatabase].
   ///
@@ -10,20 +13,19 @@ class MethodChannelDatabase extends DatabasePlatform {
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
         case 'Event':
-          MethodChannelEvent event = MethodChannelEvent(call.arguments);
-          print(event.snapshot.value);
+          EventPlatform event = _fromMapToPlatformEvent(call.arguments);
           _observers[call.arguments['handle']].add(event);
           return null;
         case 'Error':
           Map errorData = call.arguments['error'];
-          final DatabaseError error = DatabaseError._(
-              errorData["code"], errorData["message"], errorData["details"]);
+          final DatabaseErrorPlatform error =
+              _fromMapToPlatformDatabaseError(errorData);
           _observers[call.arguments['handle']].addError(error);
           return null;
         case 'DoTransaction':
-          final MutableData mutableData =
-              MutableData._(call.arguments['snapshot']);
-          final MutableData updated =
+          final MutableDataPlatform mutableData =
+              MutableDataPlatform(call.arguments['snapshot']);
+          final MutableDataPlatform updated =
               await _transactions[call.arguments['transactionKey']](
                   mutableData);
           return <String, dynamic>{'value': updated.value};
@@ -41,14 +43,15 @@ class MethodChannelDatabase extends DatabasePlatform {
   @override
   String appName() => app.name;
 
-  static final Map<int, StreamController<Event>> _observers =
-      <int, StreamController<Event>>{};
+  static final Map<int, StreamController<EventPlatform>> _observers =
+      <int, StreamController<EventPlatform>>{};
 
-  static final Map<int, TransactionHandler> _transactions =
-      <int, TransactionHandler>{};
+  static final Map<int, TransactionHandlerPlatform> _transactions =
+      <int, TransactionHandlerPlatform>{};
 
   static bool _initialized = false;
 
+  /// The [MethodChannel] used to communicate with the native plugin
   static final MethodChannel channel =
       const MethodChannel('plugins.flutter.io/firebase_database');
 

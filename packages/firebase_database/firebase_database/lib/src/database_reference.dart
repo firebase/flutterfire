@@ -122,20 +122,16 @@ class DatabaseReference extends Query {
   Future<TransactionResult> runTransaction(
       TransactionHandler transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) async {
-    TransactionResult transactionResult = await _delegate.runTransaction(
-      (platformTransaction) {
-        return transactionHandler(
-          MutableData._(platformTransaction.value),
-        );
-      },
+    platform.TransactionResultPlatform transactionResult =
+        await _delegate.runTransaction(
+      (platformTransaction) async => platformTransaction,
       timeout: timeout,
     );
     return TransactionResult._(
-        DatabaseError._(transactionResult.error),
-        transactionResult.committed,
-        DataSnapshot._(transactionResult.dataSnapshot));
-
-    //
+      DatabaseError._(transactionResult.error),
+      transactionResult.committed,
+      DataSnapshot._(transactionResult.dataSnapshot),
+    );
   }
 
   OnDisconnect onDisconnect() {

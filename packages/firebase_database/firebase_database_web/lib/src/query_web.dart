@@ -1,3 +1,7 @@
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 part of firebase_database_web;
 
 /// Web implementation for firebase [Query]
@@ -129,23 +133,12 @@ class QueryWeb extends Query {
   Stream<EventPlatform> _webStreamToPlatformStream(
       Stream<web.QueryEvent> stream) {
     return stream
-        .map((web.QueryEvent event) => _fromWebEventToPlatformEvent(event));
+        .map((web.QueryEvent event) => fromWebEventToPlatformEvent(event));
   }
 
   @override
-  Future<EventPlatform> once() async {
-    return _fromWebEventToPlatformEvent((await _delegate.once("value")));
-  }
-
-  /// Builds [EventPlatform] instance form web event instance
-  EventPlatform _fromWebEventToPlatformEvent(web.QueryEvent event) {
-    return EventPlatform(
-        _fromWebSnapshotToPlatformSnapShot(event.snapshot), event.prevChildKey);
-  }
-
-  /// Builds [DataSnapshotPlatform] instance form web snapshot instance
-  DataSnapshotPlatform _fromWebSnapshotToPlatformSnapShot(
-      web.DataSnapshot snapshot) {
-    return DataSnapshotPlatform(snapshot.key, snapshot.val());
+  Future<DataSnapshotPlatform> once() async {
+    return fromWebSnapshotToPlatformSnapShot(
+        (await _delegate.once("value")).snapshot);
   }
 }

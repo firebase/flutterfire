@@ -12,7 +12,9 @@ part of firebase_database_platform_interface;
 /// `FirebaseDatabase.reference()`, you can use it to read data
 /// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
 /// `DatabaseReference`s (ie. `child`).
+/// Note: [Query] extends PlatformInterface already.
 abstract class DatabaseReference extends Query {
+  /// Create a [DatabaseReference] using [pathComponents]
   DatabaseReference(DatabasePlatform database, List<String> pathComponents)
       : super(database: database, pathComponents: pathComponents);
 
@@ -37,7 +39,7 @@ abstract class DatabaseReference extends Query {
 
   /// Gets the last token in a Firebase Database location (e.g. ‘fred’ in
   /// https://SampleChat.firebaseIO-demo.com/users/fred)
-  String get key => _pathComponents.last;
+  String get key => pathComponents.last;
 
   /// Generates a new child location using a unique key and returns a
   /// DatabaseReference to it. This is useful when the children of a Firebase
@@ -111,28 +113,34 @@ abstract class DatabaseReference extends Query {
 
   /// Performs an optimistic-concurrency transactional update to the data at
   /// this Firebase Database location.
-  Future<TransactionResult> runTransaction(
-      TransactionHandler transactionHandler,
+  Future<TransactionResultPlatform> runTransaction(
+      TransactionHandlerPlatform transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) async {
     throw UnimplementedError("runTransaction() not implemented");
   }
 
+  /// Returns an [OnDisconnect] object
   OnDisconnect onDisconnect() {
     throw UnimplementedError("onDisconnect() not implemented");
   }
 }
 
-class ServerValue {
-  static const Map<String, String> timestamp = <String, String>{
-    '.sv': 'timestamp'
-  };
-}
+/// Interface for [TransactionHandlerPlatform]
+typedef Future<MutableDataPlatform> TransactionHandlerPlatform(
+    MutableDataPlatform mutableData);
 
-typedef Future<MutableData> TransactionHandler(MutableData mutableData);
+/// Interface for [TransactionResultPlatform]
+class TransactionResultPlatform extends PlatformInterface {
+  /// Constructor for [TransactionResultPlatform]
+  TransactionResultPlatform(this.error, this.committed, this.dataSnapshot);
 
-class TransactionResult {
-  const TransactionResult._(this.error, this.committed, this.dataSnapshot);
-  final DatabaseError error;
+  /// [DatabaseErrorPlatform] associated to this transaction result
+  final DatabaseErrorPlatform error;
+
+  /// [committed] status associated to this transaction result
   final bool committed;
-  final DataSnapshot dataSnapshot;
+
+  /// [DataSnapshotPlatform] status associated to this transaction result
+
+  final DataSnapshotPlatform dataSnapshot;
 }

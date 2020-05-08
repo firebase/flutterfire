@@ -1,10 +1,11 @@
 part of firebase_database_platform_interface;
 
-class MethodChannelOnDisconnect implements OnDisconnect {
-  DatabasePlatform database;
-  DatabaseReference reference;
-
-  MethodChannelOnDisconnect({this.database, this.reference});
+/// Represents a query over the data at a particular location.
+class MethodChannelOnDisconnect extends OnDisconnect {
+  /// Create a [MethodChannelQuery] from [DatabaseReference]
+  MethodChannelOnDisconnect(
+      {DatabasePlatform database, DatabaseReference reference})
+      : super(database: database, reference: reference);
 
   Future<void> set(dynamic value, {dynamic priority}) {
     return MethodChannelDatabase.channel.invokeMethod<void>(

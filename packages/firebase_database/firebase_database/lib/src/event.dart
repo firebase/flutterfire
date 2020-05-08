@@ -7,7 +7,7 @@ part of firebase_database;
 /// `Event` encapsulates a DataSnapshot and possibly also the key of its
 /// previous sibling, which can be used to order the snapshots.
 class Event {
-  final platform.Event _delegate;
+  final platform.EventPlatform _delegate;
   Event._(this._delegate);
 
   DataSnapshot get snapshot => DataSnapshot._(_delegate.snapshot);
@@ -18,7 +18,7 @@ class Event {
 /// A DataSnapshot contains data from a Firebase Database location.
 /// Any time you read Firebase data, you receive the data as a DataSnapshot.
 class DataSnapshot {
-  final platform.DataSnapshot _delegate;
+  final platform.DataSnapshotPlatform _delegate;
   DataSnapshot._(this._delegate);
 
   /// The key of the location that generated this DataSnapshot.
@@ -31,12 +31,6 @@ class DataSnapshot {
 class MutableData {
   @visibleForTesting
   MutableData.private(this._data);
-
-  MutableData._(platform.MutableData delegate)
-      : _data = {
-          "key": delegate.key,
-          "value": delegate.value,
-        };
 
   final Map<dynamic, dynamic> _data;
 
@@ -52,7 +46,7 @@ class MutableData {
 /// Error that results from a transaction operation at a Firebase Database
 /// location.
 class DatabaseError {
-  platform.DatabaseError _delegate;
+  platform.DatabaseErrorPlatform _delegate;
   DatabaseError._(this._delegate);
 
   /// One of the defined status codes, depending on the error.
