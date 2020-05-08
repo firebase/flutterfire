@@ -1,3 +1,7 @@
+## 3.2.0
+
+* Added support for web
+
 ## 3.1.5
 
 * Fix (#81) Android setPersistenceCacheSizeBytes crash when Long value was provided.
