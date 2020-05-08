@@ -4,6 +4,12 @@
 
 part of firebase_database_web;
 
+/// Builds [EventPlatform] instance form web event instance
+EventPlatform fromWebEventToPlatformEvent(web.QueryEvent event) {
+  return EventPlatform(
+      fromWebSnapshotToPlatformSnapShot(event.snapshot), event.prevChildKey);
+}
+
 /// Builds [DataSnapshotPlatform] instance form web snapshot instance
 DataSnapshotPlatform fromWebSnapshotToPlatformSnapShot(
     web.DataSnapshot snapshot) {
