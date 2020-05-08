@@ -1,66 +1,39 @@
 {
   "project_info": {
-    "project_number": "231501639077",
-    "firebase_url": "https://attendance-system-cd8b5.firebaseio.com",
-    "project_id": "attendance-system-cd8b5",
-    "storage_bucket": "attendance-system-cd8b5.appspot.com"
+    "project_number": "159623150305",
+    "firebase_url": "https://flutter-firebase-plugins.firebaseio.com",
+    "project_id": "flutter-firebase-plugins",
+    "storage_bucket": "flutter-firebase-plugins.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:231501639077:android:7578c060ce51371e2e4c4c",
-        "android_client_info": {
-          "package_name": "com.brainants.attendance"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "231501639077-s0qpg1ghm1i48s4c9clcp38bbljb5cuf.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDOvLaS4Wu3h21sV9cBdDTWzo7v4Bys1VQ"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "231501639077-s0qpg1ghm1i48s4c9clcp38bbljb5cuf.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:231501639077:android:cee4a837e653015e2e4c4c",
+        "mobilesdk_app_id": "1:159623150305:android:c68d3ad04a4046db",
         "android_client_info": {
           "package_name": "io.flutter.plugins.firebasedatabaseexample"
         }
       },
       "oauth_client": [
         {
-          "client_id": "231501639077-s0qpg1ghm1i48s4c9clcp38bbljb5cuf.apps.googleusercontent.com",
+          "client_id": "159623150305-q05bbbtsutr02abhips3suj7hujfk4bg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDOvLaS4Wu3h21sV9cBdDTWzo7v4Bys1VQ"
+          "current_key": "AIzaSyChk3KEG7QYrs4kQPLP1tjJNxBTbfCAdgg"
         }
       ],
       "services": {
+        "analytics_service": {
+          "status": 1
+        },
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "231501639077-s0qpg1ghm1i48s4c9clcp38bbljb5cuf.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
         }
       }
     }
