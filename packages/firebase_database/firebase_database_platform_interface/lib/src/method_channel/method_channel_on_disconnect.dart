@@ -1,10 +1,10 @@
 part of firebase_database_platform_interface;
 
 /// Represents a query over the data at a particular location.
-class MethodChannelOnDisconnect extends OnDisconnect {
-  /// Create a [MethodChannelQuery] from [DatabaseReference]
+class MethodChannelOnDisconnect extends OnDisconnectPlatform {
+  /// Create a [MethodChannelQuery] from [DatabaseReferencePlatform]
   MethodChannelOnDisconnect(
-      {DatabasePlatform database, DatabaseReference reference})
+      {DatabasePlatform database, DatabaseReferencePlatform reference})
       : super(database: database, reference: reference);
 
   Future<void> set(dynamic value, {dynamic priority}) {

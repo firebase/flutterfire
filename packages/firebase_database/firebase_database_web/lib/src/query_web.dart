@@ -4,13 +4,13 @@
 
 part of firebase_database_web;
 
-/// Web implementation for firebase [Query]
-class QueryWeb extends Query {
+/// Web implementation for firebase [QueryPlatform]
+class QueryWeb extends QueryPlatform {
   final DatabasePlatform _databasePlatform;
   final web.Query _delegate;
   final List<String> _pathComponents;
 
-  /// Builds an instance of [QueryWeb] delegating to a package:firebase [Query]
+  /// Builds an instance of [QueryWeb] delegating to a package:firebase [QueryPlatform]
   /// to delegate queries to underlying firebase web plugin
   QueryWeb(
     DatabasePlatform databasePlatform,
@@ -25,19 +25,19 @@ class QueryWeb extends Query {
   /// than or equal to the given value, using the given orderBy directive or
   /// priority as default, and optionally only child nodes with a key greater
   /// than or equal to the given key.
-  Query startAt(dynamic value, {String key}) {
+  QueryPlatform startAt(dynamic value, {String key}) {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.startAt(value, key));
   }
 
   @override
-  Query endAt(value, {String key}) {
+  QueryPlatform endAt(value, {String key}) {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.endAt(value, key));
   }
 
   @override
-  Query equalTo(value, {String key}) {
+  QueryPlatform equalTo(value, {String key}) {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.equalTo(value, key));
   }
@@ -48,13 +48,13 @@ class QueryWeb extends Query {
   }
 
   @override
-  Query limitToFirst(int limit) {
+  QueryPlatform limitToFirst(int limit) {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.limitToFirst(limit));
   }
 
   @override
-  Query limitToLast(int limit) {
+  QueryPlatform limitToLast(int limit) {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.limitToLast(limit));
   }
@@ -65,7 +65,7 @@ class QueryWeb extends Query {
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByChild(String key) {
+  QueryPlatform orderByChild(String key) {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.orderByChild(key));
   }
@@ -76,7 +76,7 @@ class QueryWeb extends Query {
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByKey() {
+  QueryPlatform orderByKey() {
     return QueryWeb(_databasePlatform, _pathComponents, _delegate.orderByKey());
   }
 
@@ -86,7 +86,7 @@ class QueryWeb extends Query {
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByPriority() {
+  QueryPlatform orderByPriority() {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.orderByValue());
   }
@@ -97,7 +97,7 @@ class QueryWeb extends Query {
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByValue() {
+  QueryPlatform orderByValue() {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.orderByValue());
   }

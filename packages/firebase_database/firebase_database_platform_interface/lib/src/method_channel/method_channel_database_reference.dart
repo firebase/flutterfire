@@ -9,7 +9,7 @@ part of firebase_database_platform_interface;
 /// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
 /// `DatabaseReference`s (ie. `child`).
 class MethodChannelDatabaseReference extends MethodChannelQuery
-    implements DatabaseReference {
+    implements DatabaseReferencePlatform {
   /// Create a [MethodChannelDatabaseReference] from [pathComponents]
   MethodChannelDatabaseReference({
     DatabasePlatform database,
@@ -150,7 +150,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   }
 
   @override
-  DatabaseReference child(String path) {
+  DatabaseReferencePlatform child(String path) {
     return MethodChannelDatabaseReference(
         database: database,
         pathComponents: pathComponents..addAll(path.split("/")));
@@ -160,7 +160,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   String get key => pathComponents.isEmpty ? null : pathComponents.last;
 
   @override
-  OnDisconnect onDisconnect() {
+  OnDisconnectPlatform onDisconnect() {
     return MethodChannelOnDisconnect(
       database: database,
       reference: this,
@@ -168,7 +168,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   }
 
   @override
-  DatabaseReference parent() {
+  DatabaseReferencePlatform parent() {
     if (pathComponents.length < 2) {
       return null;
     }
@@ -179,7 +179,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   }
 
   @override
-  DatabaseReference push() {
+  DatabaseReferencePlatform push() {
     return MethodChannelDatabaseReference(
       database: database,
       pathComponents: List<String>.from(pathComponents)
@@ -188,7 +188,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   }
 
   @override
-  DatabaseReference root() {
+  DatabaseReferencePlatform root() {
     return MethodChannelDatabaseReference(
       database: database,
       pathComponents: [],

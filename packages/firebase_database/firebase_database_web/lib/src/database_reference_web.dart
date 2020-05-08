@@ -4,14 +4,14 @@
 
 part of firebase_database_web;
 
-/// Web implementation for firebase [DatabaseReference]
-class DatabaseReferenceWeb extends DatabaseReference {
+/// Web implementation for firebase [DatabaseReferencePlatform]
+class DatabaseReferenceWeb extends DatabaseReferencePlatform {
   web.DatabaseReference _delegate;
   final web.Database _webDatabase;
   final DatabasePlatform _databasePlatform;
   final List<String> _pathComponents;
 
-  /// Builds an instance of [DatabaseReferenceWeb] delegating to a package:firebase [DatabaseReference]
+  /// Builds an instance of [DatabaseReferenceWeb] delegating to a package:firebase [DatabaseReferencePlatform]
   /// to delegate queries to underlying firebase web plugin
   DatabaseReferenceWeb(
     this._webDatabase,
@@ -23,19 +23,19 @@ class DatabaseReferenceWeb extends DatabaseReference {
         super(_databasePlatform, _pathComponents);
 
   @override
-  DatabaseReference child(String path) {
+  DatabaseReferencePlatform child(String path) {
     return DatabaseReferenceWeb(_webDatabase, _databasePlatform,
         List<String>.from(_pathComponents)..addAll(path.split("/")));
   }
 
   @override
-  Query endAt(value, {String key}) {
+  QueryPlatform endAt(value, {String key}) {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.endAt(value, key));
   }
 
   @override
-  Query equalTo(value, {String key}) {
+  QueryPlatform equalTo(value, {String key}) {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.equalTo(value, key));
   }
@@ -49,13 +49,13 @@ class DatabaseReferenceWeb extends DatabaseReference {
   String get key => _pathComponents.last;
 
   @override
-  Query limitToFirst(int limit) {
+  QueryPlatform limitToFirst(int limit) {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.limitToFirst(limit));
   }
 
   @override
-  Query limitToLast(int limit) {
+  QueryPlatform limitToLast(int limit) {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.limitToLast(limit));
   }
@@ -82,35 +82,35 @@ class DatabaseReferenceWeb extends DatabaseReference {
   Stream<EventPlatform> get onValue => observe(EventType.value);
 
   @override
-  OnDisconnect onDisconnect() {
+  OnDisconnectPlatform onDisconnect() {
     return OnDisconnectWeb._(_delegate.onDisconnect());
   }
 
   @override
-  Query orderByChild(String key) {
+  QueryPlatform orderByChild(String key) {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.orderByChild(key));
   }
 
   @override
-  Query orderByKey() {
+  QueryPlatform orderByKey() {
     return QueryWeb(_databasePlatform, _pathComponents, _delegate.orderByKey());
   }
 
   @override
-  Query orderByPriority() {
+  QueryPlatform orderByPriority() {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.orderByPriority());
   }
 
   @override
-  Query orderByValue() {
+  QueryPlatform orderByValue() {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.orderByValue());
   }
 
   @override
-  DatabaseReference parent() {
+  DatabaseReferencePlatform parent() {
     if (_pathComponents.isEmpty) return null;
     return DatabaseReferenceWeb(_webDatabase, _databasePlatform,
         List<String>.from(_pathComponents)..removeLast());
@@ -120,7 +120,7 @@ class DatabaseReferenceWeb extends DatabaseReference {
   String get path => _pathComponents.join("/");
 
   @override
-  DatabaseReference push() {
+  DatabaseReferencePlatform push() {
     final String key = PushIdGenerator.generatePushChildName();
     final List<String> childPath = List<String>.from(_pathComponents)..add(key);
     return DatabaseReferenceWeb(_webDatabase, _databasePlatform, childPath);
@@ -132,7 +132,7 @@ class DatabaseReferenceWeb extends DatabaseReference {
   }
 
   @override
-  DatabaseReference root() {
+  DatabaseReferencePlatform root() {
     return DatabaseReferenceWeb(_webDatabase, _databasePlatform, <String>[]);
   }
 
@@ -157,7 +157,7 @@ class DatabaseReferenceWeb extends DatabaseReference {
   }
 
   @override
-  Query startAt(value, {String key}) {
+  QueryPlatform startAt(value, {String key}) {
     return QueryWeb(
         _databasePlatform, _pathComponents, _delegate.startAt(value, key));
   }

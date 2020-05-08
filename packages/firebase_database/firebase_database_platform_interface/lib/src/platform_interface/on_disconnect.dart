@@ -6,15 +6,15 @@ part of firebase_database_platform_interface;
 
 /// The [onDisconnect] class allows you to write or clear data when your client disconnects from the Database server.
 /// These updates occur whether your client disconnects cleanly or not, so you can rely on them to clean up data even if a connection is dropped or a client crashes.
-abstract class OnDisconnect extends PlatformInterface {
-  /// Create a [OnDisconnect] instance
-  OnDisconnect({this.database, this.reference});
+abstract class OnDisconnectPlatform extends PlatformInterface {
+  /// Create a [OnDisconnectPlatform] instance
+  OnDisconnectPlatform({this.database, this.reference});
 
-  /// The Database instance associated with this [OnDisconnect] class
+  /// The Database instance associated with this [OnDisconnectPlatform] class
   final DatabasePlatform database;
 
-  /// The DatabaseReference instance associated with this [OnDisconnect] class
-  final DatabaseReference reference;
+  /// The DatabaseReference instance associated with this [OnDisconnectPlatform] class
+  final DatabaseReferencePlatform reference;
 
   /// Ensures the data at this location is set to the specified value when the client is disconnected
   Future<void> set(dynamic value, {dynamic priority}) {

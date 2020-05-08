@@ -5,7 +5,7 @@
 part of firebase_database_platform_interface;
 
 /// Represents a query over the data at a particular location.
-abstract class Query extends PlatformInterface {
+abstract class QueryPlatform extends PlatformInterface {
   /// The Database instance associated with this query
   final DatabasePlatform database;
 
@@ -15,8 +15,8 @@ abstract class Query extends PlatformInterface {
   /// The parameters associated with this query
   final Map<String, dynamic> parameters;
 
-  /// Create a [Query] instance
-  Query({
+  /// Create a [QueryPlatform] instance
+  QueryPlatform({
     @required DatabasePlatform database,
     @required List<String> pathComponents,
     Map<String, dynamic> parameters,
@@ -56,7 +56,7 @@ abstract class Query extends PlatformInterface {
   /// than or equal to the given value, using the given orderBy directive or
   /// priority as default, and optionally only child nodes with a key greater
   /// than or equal to the given key.
-  Query startAt(dynamic value, {String key}) {
+  QueryPlatform startAt(dynamic value, {String key}) {
     throw UnimplementedError("startAt() not implemented");
   }
 
@@ -64,7 +64,7 @@ abstract class Query extends PlatformInterface {
   /// than or equal to the given value, using the given orderBy directive or
   /// priority as default, and optionally only child nodes with a key less
   /// than or equal to the given key.
-  Query endAt(dynamic value, {String key}) {
+  QueryPlatform endAt(dynamic value, {String key}) {
     throw UnimplementedError("endAt() not implemented");
   }
 
@@ -72,17 +72,17 @@ abstract class Query extends PlatformInterface {
   /// `value` (and `key`, if provided).
   ///
   /// If a key is provided, there is at most one such child as names are unique.
-  Query equalTo(dynamic value, {String key}) {
+  QueryPlatform equalTo(dynamic value, {String key}) {
     throw UnimplementedError("equalTo() not implemented");
   }
 
   /// Create a query with limit and anchor it to the start of the window.
-  Query limitToFirst(int limit) {
+  QueryPlatform limitToFirst(int limit) {
     throw UnimplementedError("limitToFirst() not implemented");
   }
 
   /// Create a query with limit and anchor it to the end of the window.
-  Query limitToLast(int limit) {
+  QueryPlatform limitToLast(int limit) {
     throw UnimplementedError("limitToLast() not implemented");
   }
 
@@ -90,7 +90,7 @@ abstract class Query extends PlatformInterface {
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByChild(String key) {
+  QueryPlatform orderByChild(String key) {
     throw UnimplementedError("orderByChild() not implemented");
   }
 
@@ -98,7 +98,7 @@ abstract class Query extends PlatformInterface {
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByKey() {
+  QueryPlatform orderByKey() {
     throw UnimplementedError("orderByKey() not implemented");
   }
 
@@ -106,7 +106,7 @@ abstract class Query extends PlatformInterface {
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByValue() {
+  QueryPlatform orderByValue() {
     throw UnimplementedError("orderByValue() not implemented");
   }
 
@@ -114,7 +114,7 @@ abstract class Query extends PlatformInterface {
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByPriority() {
+  QueryPlatform orderByPriority() {
     throw UnimplementedError("orderByPriority() not implemented");
   }
 

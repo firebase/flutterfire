@@ -1,7 +1,7 @@
 part of firebase_database_platform_interface;
 
 /// Represents a query over the data at a particular location.
-class MethodChannelQuery extends Query {
+class MethodChannelQuery extends QueryPlatform {
   /// Create a [MethodChannelQuery] from [pathComponents]
   MethodChannelQuery({
     @required DatabasePlatform database,
@@ -61,7 +61,7 @@ class MethodChannelQuery extends Query {
   /// than or equal to the given value, using the given orderBy directive or
   /// priority as default, and optionally only child nodes with a key greater
   /// than or equal to the given key.
-  Query startAt(dynamic value, {String key}) {
+  QueryPlatform startAt(dynamic value, {String key}) {
     assert(!this.parameters.containsKey('startAt'));
     assert(value is String ||
         value is bool ||
@@ -77,7 +77,7 @@ class MethodChannelQuery extends Query {
   /// than or equal to the given value, using the given orderBy directive or
   /// priority as default, and optionally only child nodes with a key less
   /// than or equal to the given key.
-  Query endAt(dynamic value, {String key}) {
+  QueryPlatform endAt(dynamic value, {String key}) {
     assert(!this.parameters.containsKey('endAt'));
     assert(value is String ||
         value is bool ||
@@ -93,7 +93,7 @@ class MethodChannelQuery extends Query {
   /// `value` (and `key`, if provided).
   ///
   /// If a key is provided, there is at most one such child as names are unique.
-  Query equalTo(dynamic value, {String key}) {
+  QueryPlatform equalTo(dynamic value, {String key}) {
     assert(!this.parameters.containsKey('equalTo'));
     assert(value is String ||
         value is bool ||
@@ -106,13 +106,13 @@ class MethodChannelQuery extends Query {
   }
 
   /// Create a query with limit and anchor it to the start of the window.
-  Query limitToFirst(int limit) {
+  QueryPlatform limitToFirst(int limit) {
     assert(!parameters.containsKey('limitToFirst'));
     return _copyWithParameters(<String, dynamic>{'limitToFirst': limit});
   }
 
   /// Create a query with limit and anchor it to the end of the window.
-  Query limitToLast(int limit) {
+  QueryPlatform limitToLast(int limit) {
     assert(!parameters.containsKey('limitToLast'));
     return _copyWithParameters(<String, dynamic>{'limitToLast': limit});
   }
@@ -121,7 +121,7 @@ class MethodChannelQuery extends Query {
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByChild(String key) {
+  QueryPlatform orderByChild(String key) {
     assert(key != null);
     assert(!parameters.containsKey('orderBy'));
     return _copyWithParameters(
@@ -133,7 +133,7 @@ class MethodChannelQuery extends Query {
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByKey() {
+  QueryPlatform orderByKey() {
     assert(!parameters.containsKey('orderBy'));
     return _copyWithParameters(<String, dynamic>{'orderBy': 'key'});
   }
@@ -142,7 +142,7 @@ class MethodChannelQuery extends Query {
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByValue() {
+  QueryPlatform orderByValue() {
     assert(!parameters.containsKey('orderBy'));
     return _copyWithParameters(<String, dynamic>{'orderBy': 'value'});
   }
@@ -151,7 +151,7 @@ class MethodChannelQuery extends Query {
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByPriority() {
+  QueryPlatform orderByPriority() {
     assert(!parameters.containsKey('orderBy'));
     return _copyWithParameters(<String, dynamic>{'orderBy': 'priority'});
   }

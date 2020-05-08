@@ -85,7 +85,7 @@ class MethodChannelDatabase extends DatabasePlatform {
     return result;
   }
 
-  DatabaseReference reference() {
+  DatabaseReferencePlatform reference() {
     return MethodChannelDatabaseReference(
         database: this, pathComponents: <String>[]);
   }

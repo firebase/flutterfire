@@ -60,7 +60,7 @@ class DatabaseWeb extends DatabasePlatform {
   }
 
   @override
-  DatabaseReference reference() {
+  DatabaseReferencePlatform reference() {
     return DatabaseReferenceWeb(webDatabase, this, <String>[]);
   }
 

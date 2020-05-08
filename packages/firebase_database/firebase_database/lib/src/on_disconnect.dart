@@ -5,7 +5,7 @@
 part of firebase_database;
 
 class OnDisconnect {
-  platform.OnDisconnect _delegate;
+  platform.OnDisconnectPlatform _delegate;
   OnDisconnect._(this._delegate);
 
   Future<void> set(dynamic value, {dynamic priority}) {

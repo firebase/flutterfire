@@ -6,7 +6,7 @@ part of firebase_database;
 
 /// Represents a query over the data at a particular location.
 class Query {
-  final platform.Query delegate;
+  final platform.QueryPlatform delegate;
 
   Query({
     this.delegate,

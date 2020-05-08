@@ -13,7 +13,7 @@ part of firebase_database;
 /// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
 /// `DatabaseReference`s (ie. `child`).
 class DatabaseReference extends Query {
-  platform.DatabaseReference _delegate;
+  platform.DatabaseReferencePlatform _delegate;
   DatabaseReference._(this._delegate, List<String> pathComponents)
       : super(delegate: _delegate, pathComponents: pathComponents);
 
