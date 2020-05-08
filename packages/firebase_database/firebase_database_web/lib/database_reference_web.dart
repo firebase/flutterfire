@@ -1,8 +1,8 @@
 part of firebase_database_web;
 
 class DatabaseReferenceWeb extends DatabaseReference {
-  firebase.DatabaseReference _delegate;
-  final firebase.Database _webDatabase;
+  web.DatabaseReference _delegate;
+  final web.Database _webDatabase;
   final DatabasePlatform _databasePlatform;
   final List<String> _pathComponents;
 
@@ -54,24 +54,24 @@ class DatabaseReferenceWeb extends DatabaseReference {
   }
 
   /// Fetch data on the reference once.
-  Future<DataSnapshot> once() async {
-    return DataSnapshotWeb((await _delegate.once("value")).snapshot);
+  Future<EventPlatform> once() async {
+    return fromWebEventToPlatformEvent((await _delegate.once("value")));
   }
 
   /// Fires when children are added.
-  Stream<Event> get onChildAdded => observe(EventType.childAdded);
+  Stream<EventPlatform> get onChildAdded => observe(EventType.childAdded);
 
   /// Fires when children are removed. `previousChildKey` is null.
-  Stream<Event> get onChildRemoved => observe(EventType.childRemoved);
+  Stream<EventPlatform> get onChildRemoved => observe(EventType.childRemoved);
 
   /// Fires when children are changed.
-  Stream<Event> get onChildChanged => observe(EventType.childChanged);
+  Stream<EventPlatform> get onChildChanged => observe(EventType.childChanged);
 
   /// Fires when children are moved.
-  Stream<Event> get onChildMoved => observe(EventType.childMoved);
+  Stream<EventPlatform> get onChildMoved => observe(EventType.childMoved);
 
   /// Fires when the data at this location is updated. `previousChildKey` is null.
-  Stream<Event> get onValue => observe(EventType.value);
+  Stream<EventPlatform> get onValue => observe(EventType.value);
 
   @override
   OnDisconnect onDisconnect() {
@@ -161,7 +161,7 @@ class DatabaseReferenceWeb extends DatabaseReference {
   }
 
   @override
-  Stream<Event> observe(EventType eventType) {
+  Stream<EventPlatform> observe(EventType eventType) {
     switch (eventType) {
       case EventType.childAdded:
         return _webStreamToPlatformStream(_delegate.onChildAdded);
@@ -183,9 +183,10 @@ class DatabaseReferenceWeb extends DatabaseReference {
     }
   }
 
-  Stream<Event> _webStreamToPlatformStream(Stream<firebase.QueryEvent> stream) {
+  Stream<EventPlatform> _webStreamToPlatformStream(
+      Stream<web.QueryEvent> stream) {
     return stream.map(
-      (firebase.QueryEvent event) => EventWeb(event),
+      (web.QueryEvent event) => fromWebEventToPlatformEvent(event),
     );
   }
 }

@@ -2,13 +2,13 @@ part of firebase_database_web;
 
 class QueryWeb extends Query {
   final DatabasePlatform _databasePlatform;
-  final firebase.Query _delegate;
+  final web.Query _delegate;
   final List<String> _pathComponents;
 
   QueryWeb(
     DatabasePlatform databasePlatform,
     List<String> pathComponents,
-    firebase.Query query,
+    web.Query query,
   )   : _databasePlatform = databasePlatform,
         _pathComponents = pathComponents,
         _delegate = query ??
@@ -101,7 +101,7 @@ class QueryWeb extends Query {
   String get path => _pathComponents.join('/');
 
   @override
-  Stream<Event> observe(EventType eventType) {
+  Stream<EventPlatform> observe(EventType eventType) {
     switch (eventType) {
       case EventType.childAdded:
         return _webStreamToPlatformStream(_delegate.onChildAdded);
@@ -123,17 +123,31 @@ class QueryWeb extends Query {
     }
   }
 
-  Stream<Event> _webStreamToPlatformStream(Stream<firebase.QueryEvent> stream) {
-    return stream.map((firebase.QueryEvent event) => EventWeb(event));
+  Stream<EventPlatform> _webStreamToPlatformStream(
+      Stream<web.QueryEvent> stream) {
+    return stream
+        .map((web.QueryEvent event) => _fromWebEventToPlatformEvent(event));
   }
 
   @override
-  Future<DataSnapshot> once() async {
-    return DataSnapshotWeb((await _delegate.once("value")).snapshot);
+  Future<EventPlatform> once() async {
+    return _fromWebEventToPlatformEvent((await _delegate.once("value")));
   }
 
   @override
   Map<String, dynamic> buildArguments() {
     throw UnimplementedError();
+  }
+
+  /// Builds [EventPlatform] instance form web event instance
+  EventPlatform _fromWebEventToPlatformEvent(web.QueryEvent event) {
+    return EventPlatform(
+        _fromWebSnapshotToPlatformSnapShot(event.snapshot), event.prevChildKey);
+  }
+
+  /// Builds [DataSnapshotPlatform] instance form web snapshot instance
+  DataSnapshotPlatform _fromWebSnapshotToPlatformSnapShot(
+      web.DataSnapshot snapshot) {
+    return DataSnapshotPlatform(snapshot.key, snapshot.val());
   }
 }

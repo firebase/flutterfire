@@ -2,27 +2,25 @@ library firebase_database_web;
 
 import 'dart:async';
 
-import "package:firebase/firebase.dart" as firebase;
+import "package:firebase/firebase.dart" as web;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 part './database_reference_web.dart';
 part './query_web.dart';
-part './event_web.dart';
 part './ondisconnect_web.dart';
 
 class DatabaseWeb extends DatabasePlatform {
   /// Instance of Database from web plugin
-  firebase.Database webDatabase;
+  web.Database webDatabase;
 
   static void registerWith(Registrar registrar) {
     DatabasePlatform.instance = DatabaseWeb();
   }
 
   DatabaseWeb({FirebaseApp app, String databaseUrl})
-      : webDatabase =
-            firebase.database(firebase.app((app ?? FirebaseApp.instance).name)),
+      : webDatabase = web.database(web.app((app ?? FirebaseApp.instance).name)),
         super(app: app ?? FirebaseApp.instance, databaseURL: databaseUrl);
 
   @override
