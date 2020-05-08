@@ -66,6 +66,6 @@ class DatabaseWeb extends DatabasePlatform {
 
   @override
   Future<void> purgeOutstandingWrites() async {
-    print("purgeOutstandingWrites() is not supported for web");
+    throw Exception("purgeOutstandingWrites() is not supported for web");
   }
 }
