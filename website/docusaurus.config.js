@@ -7,6 +7,20 @@ module.exports = {
   organizationName: 'FirebaseExtended',
   projectName: 'flutterfire',
   themeConfig: {
+    prism: {
+      additionalLanguages: [
+        'dart',
+        'bash',
+        'java',
+        'kotlin',
+        'objectivec',
+        'swift',
+        'groovy',
+        'ruby',
+        'json',
+        'yaml',
+      ],
+    },
     navbar: {
       title: 'FlutterFire',
       links: [

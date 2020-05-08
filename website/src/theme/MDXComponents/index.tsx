@@ -2,6 +2,8 @@ import React, { HTMLProps } from 'react';
 import Link from '@docusaurus/Link';
 import CodeBlock from '@theme/CodeBlock';
 import Heading from '@theme/Heading';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 import styles from './styles.module.scss';
 import { getVersion } from '../../utils';
@@ -29,6 +31,9 @@ export default {
   h4: Heading('h4'),
   h5: Heading('h5'),
   h6: Heading('h6'),
+
+  Tabs,
+  TabItem,
 
   blockquote: (props: HTMLProps<HTMLElement>) => (
     <blockquote className={styles.blockquote} {...props} />
