@@ -12,7 +12,9 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 public class FlutterDatabaseWebPlugin implements FlutterPlugin, MethodCallHandler {
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    final MethodChannel channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "flutter_database_web");
+    final MethodChannel channel =
+        new MethodChannel(
+            flutterPluginBinding.getFlutterEngine().getDartExecutor(), "flutter_database_web");
     channel.setMethodCallHandler(new FlutterDatabaseWebPlugin());
   }
 
@@ -40,6 +42,5 @@ public class FlutterDatabaseWebPlugin implements FlutterPlugin, MethodCallHandle
   }
 
   @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-  }
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {}
 }
