@@ -124,12 +124,15 @@ void main() {
 
 Overriding `FlutterError.onError` with `Crashlytics.instance.recordFlutterError`  will automatically catch all errors that are thrown from within the Flutter framework.
 
-If you want to catch errors that occur in `runZoned`, you can supply `Crashlytics.instance.recordError` to the `onError` parameter:
+If you want to catch errors that occur in [`runZonedGuarded`](https://api.dart.dev/stable/dart-async/runZonedGuarded.html), you can supply `Crashlytics.instance.recordError` to the `onError` positioned parameter:
 
 ```dart
-runZonedGuarded<Future<void>>(() async {
+runZonedGuarded<Future<void>>(
+  () async {
     // ...
-  }, onError: Crashlytics.instance.recordError);
+  },
+  Crashlytics.instance.recordError,
+);
 ```
 
 ## Result
@@ -138,7 +141,7 @@ If an error is caught, you should see the following messages in your logs:
 
 ```console
 flutter: Flutter error caught by Crashlytics plugin:
-// OR if you use recordError for runZoned:
+// OR if you use recordError for runZonedGuarded:
 flutter: Error caught by Crashlytics plugin <recordError>:
 // Exception, context, information, and stack trace in debug mode
 // OR if not in debug mode:

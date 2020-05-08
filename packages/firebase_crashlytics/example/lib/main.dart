@@ -17,9 +17,12 @@ void main() {
   // Pass all uncaught errors to Crashlytics.
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
-  runZoned(() {
-    runApp(MyApp());
-  }, onError: Crashlytics.instance.recordError);
+  runZonedGuarded(
+    () {
+      runApp(MyApp());
+    },
+    Crashlytics.instance.recordError,
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -72,7 +75,7 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () {
                     // Example of an exception that does not get caught
                     // by `FlutterError.onError` but is caught by the `onError` handler of
-                    // `runZoned`.
+                    // `runZonedGuarded`.
                     Future<void>.delayed(const Duration(seconds: 2), () {
                       final List<int> list = <int>[];
                       print(list[100]);
