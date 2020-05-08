@@ -42,7 +42,7 @@ class DatabaseReferenceWeb extends DatabaseReferencePlatform {
 
   @override
   Future<void> keepSynced(bool value) async {
-    print("keeySynced() not supported on web");
+    throw Exception("keeySynced() not supported on web");
   }
 
   @override
