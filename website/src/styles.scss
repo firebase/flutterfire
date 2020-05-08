@@ -23,7 +23,7 @@ $theme: (
 
 @each $name, $color in $theme {
   :root {
-    --#{$name}: $color;
+    --#{$name}: #{$color};
   }
 }
 
