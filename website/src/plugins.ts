@@ -6,6 +6,7 @@ export default [
     support: {
       web: false,
       mobile: true,
+      macos: false,
     },
   },
   {
@@ -15,6 +16,7 @@ export default [
     support: {
       web: true,
       mobile: true,
+      macos: false,
     },
   },
   {
@@ -24,6 +26,7 @@ export default [
     support: {
       web: true,
       mobile: true,
+      macos: true,
     },
   },
   {
@@ -33,6 +36,7 @@ export default [
     support: {
       web: true,
       mobile: true,
+      macos: true,
     },
   },
   {
@@ -42,6 +46,7 @@ export default [
     support: {
       web: true,
       mobile: true,
+      macos: true,
     },
   },
   {
@@ -51,6 +56,7 @@ export default [
     support: {
       web: false,
       mobile: true,
+      macos: false,
     },
   },
   {
@@ -60,6 +66,7 @@ export default [
     support: {
       web: false,
       mobile: true,
+      macos: true,
     },
   },
   {
@@ -69,6 +76,7 @@ export default [
     support: {
       web: true,
       mobile: true,
+      macos: true,
     },
   },
   {
@@ -78,6 +86,7 @@ export default [
     support: {
       web: false,
       mobile: true,
+      macos: true,
     },
   },
   {
@@ -87,6 +96,7 @@ export default [
     support: {
       web: false,
       mobile: true,
+      macos: false,
     },
   },
   {
@@ -96,6 +106,7 @@ export default [
     support: {
       web: false,
       mobile: true,
+      macos: false,
     },
   },
   {
@@ -105,6 +116,7 @@ export default [
     support: {
       web: false,
       mobile: false,
+      macos: false,
     },
   },
   {
@@ -114,6 +126,7 @@ export default [
     support: {
       web: false,
       mobile: true,
+      macos: false,
     },
   },
   {
@@ -123,6 +136,7 @@ export default [
     support: {
       web: false,
       mobile: false,
+      macos: false,
     },
   },
   {
@@ -132,6 +146,7 @@ export default [
     support: {
       web: false,
       mobile: true,
+      macos: false,
     },
   },
   {
@@ -141,6 +156,7 @@ export default [
     support: {
       web: false,
       mobile: true,
+      macos: false,
     },
   },
   {
@@ -150,6 +166,7 @@ export default [
     support: {
       web: false,
       mobile: true,
+      macos: false,
     },
   },
 ];

@@ -76,6 +76,7 @@ function Home() {
                 <th>View Source</th>
                 <th>Mobile</th>
                 <th>Web</th>
+                <th>MacOS</th>
               </tr>
             </thead>
             <tbody>
@@ -114,6 +115,7 @@ function Home() {
                     </a>
                   </td>
                   <td className="icon">{plugin.support.mobile ? <Check /> : <Cross />}</td>
+                  <td>{plugin.support.web ? <Check /> : <Cross />}</td>
                   <td>{plugin.support.web ? <Check /> : <Cross />}</td>
                 </tr>
               ))}
