@@ -88,15 +88,15 @@ FIRDatabaseQuery *getDatabaseQuery(FIRDatabase *database, NSDictionary *argument
 }
 
 FIRDataEventType parseEventType(NSString *eventTypeString) {
-  if ([@"_EventType.childAdded" isEqual:eventTypeString]) {
+  if ([@"EventType.childAdded" isEqual:eventTypeString]) {
     return FIRDataEventTypeChildAdded;
-  } else if ([@"_EventType.childRemoved" isEqual:eventTypeString]) {
+  } else if ([@"EventType.childRemoved" isEqual:eventTypeString]) {
     return FIRDataEventTypeChildRemoved;
-  } else if ([@"_EventType.childChanged" isEqual:eventTypeString]) {
+  } else if ([@"EventType.childChanged" isEqual:eventTypeString]) {
     return FIRDataEventTypeChildChanged;
-  } else if ([@"_EventType.childMoved" isEqual:eventTypeString]) {
+  } else if ([@"EventType.childMoved" isEqual:eventTypeString]) {
     return FIRDataEventTypeChildMoved;
-  } else if ([@"_EventType.value" isEqual:eventTypeString]) {
+  } else if ([@"EventType.value" isEqual:eventTypeString]) {
     return FIRDataEventTypeValue;
   }
   assert(false);
