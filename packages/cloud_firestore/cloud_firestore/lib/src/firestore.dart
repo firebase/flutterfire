@@ -25,8 +25,11 @@ class Firestore {
             ? platform.FirestorePlatform.instanceFor(app: app)
             : platform.FirestorePlatform.instance;
 
+  // Cache single instance
+  static Firestore _instance;
+
   /// Gets the instance of Firestore for the default Firebase app.
-  static Firestore get instance => Firestore();
+  static Firestore get instance => _instance ??= Firestore();
 
   /// The [FirebaseApp] instance to which this [Firestore] belongs.
   ///
@@ -98,4 +101,14 @@ class Firestore {
           host: host,
           sslEnabled: sslEnabled,
           cacheSizeBytes: cacheSizeBytes);
+
+  @override
+  int get hashCode => _delegate.app.name.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Firestore &&
+          runtimeType == other.runtimeType &&
+          _delegate.app == other._delegate.app;
 }
