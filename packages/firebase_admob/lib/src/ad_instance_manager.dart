@@ -11,13 +11,13 @@ class AdInstanceManager {
   AdInstanceManager(this.channel);
 
   static int _nextAdId = 0;
-  final BiMap<MobileAd, int> _adToAdIdMap = BiMap<MobileAd, int>();
+  final BiMap<MobileAd, int> _loadedAds = BiMap<MobileAd, int>();
 
   final MethodChannel channel;
 
-  int adIdFor(MobileAd ad) => _adToAdIdMap[ad];
+  int adIdFor(MobileAd ad) => _loadedAds[ad];
 
-  MobileAd adFor(int adId) => _adToAdIdMap.inverse[adId];
+  MobileAd adFor(int adId) => _loadedAds.inverse[adId];
 
   Future<void> initialize() {
     return channel.invokeMethod<void>('initialize');
@@ -27,7 +27,7 @@ class AdInstanceManager {
     if (adIdFor(ad) != null) return;
 
     final int adId = _nextAdId++;
-    _adToAdIdMap[ad] = adId;
+    _loadedAds[ad] = adId;
     channel.invokeMethod<void>(
       'loadBannerAd',
       <dynamic, dynamic>{
@@ -38,7 +38,7 @@ class AdInstanceManager {
   }
 
   void disposeAd(MobileAd ad) {
-    final int adId = _adToAdIdMap.remove(ad);
+    final int adId = _loadedAds.remove(ad);
     if (adId == null) return;
     channel.invokeMethod<void>('disposeAd', adId);
   }
