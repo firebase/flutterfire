@@ -19,6 +19,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
+import 'src/ad_instance_manager.dart';
+
+@visibleForTesting
+AdInstanceManager adInstanceManager;
+
 /// [MobileAd] status changes reported to [MobileAdListener]s.
 ///
 /// Applications can wait until an ad is [MobileAdEvent.loaded] before showing
@@ -246,6 +251,10 @@ abstract class MobileAd {
   /// Disposing a banner ad that's been shown removes it from the screen.
   /// Interstitial ads can't be programmatically removed from view.
   Future<bool> dispose() {
+    // Does nothing until redesign is finished.
+    // See https://github.com/FirebaseExtended/flutterfire/issues/2521
+    adInstanceManager?.disposeAd(this);
+
     assert(_allAds[id] != null);
     _allAds[id] = null;
     return _invokeBooleanMethod("disposeAd", <String, dynamic>{'id': id});
@@ -287,6 +296,10 @@ class BannerAd extends MobileAd {
 
   @override
   Future<bool> load() {
+    // Does nothing until redesign is finished.
+    // See https://github.com/FirebaseExtended/flutterfire/issues/2521
+    adInstanceManager?.loadBannerAd(this);
+
     return _invokeBooleanMethod("loadBannerAd", <String, dynamic>{
       'id': id,
       'adUnitId': adUnitId,
@@ -569,6 +582,10 @@ class FirebaseAdMob {
       {@required String appId,
       String trackingId,
       bool analyticsEnabled = false}) {
+    // Does nothing until redesign is finished.
+    // See https://github.com/FirebaseExtended/flutterfire/issues/2521
+    adInstanceManager?.initialize();
+
     assert(appId != null && appId.isNotEmpty);
     assert(analyticsEnabled != null);
     return _invokeBooleanMethod("initialize", <String, dynamic>{

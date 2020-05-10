@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:firebase_admob/src/ad_instance_manager.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,8 +13,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('FirebaseAdMob', () {
-    const MethodChannel channel =
-        MethodChannel('plugins.flutter.io/firebase_admob');
+    const MethodChannel channel = MethodChannel(
+      'plugins.flutter.io/firebase_admob',
+    );
 
     final List<MethodCall> log = <MethodCall>[];
     final FirebaseAdMob admob = FirebaseAdMob.private(channel);
@@ -149,6 +151,55 @@ void main() {
             }),
         isMethodCall('showRewardedVideoAd', arguments: null),
       ]);
+    });
+  });
+
+  group('$AdInstanceManager', () {
+    final List<MethodCall> methodCallLog = <MethodCall>[];
+
+    setUp(() {
+      adInstanceManager = AdInstanceManager(MethodChannel('test_channel'));
+      adInstanceManager.channel.setMockMethodCallHandler(
+        (MethodCall methodCall) async {
+          methodCallLog.add(methodCall);
+          return null;
+        },
+      );
+    });
+
+    tearDown(() {
+      methodCallLog.clear();
+    });
+
+    test('initialize', () {
+      FirebaseAdMob.instance.initialize(appId: 'testAppId');
+      expect(methodCallLog, <Matcher>[
+        isMethodCall(
+          'initialize',
+          arguments: null,
+        ),
+      ]);
+    });
+
+    test('loadBannerAd', () {
+      final BannerAd ad = BannerAd(adUnitId: 'testId', size: AdSize.banner);
+
+      ad.load();
+      ad.load();
+      expect(adInstanceManager.adFor(0), equals(ad));
+      expect(methodCallLog, <Matcher>[
+        isMethodCall(
+          'loadBannerAd',
+          arguments: <dynamic, dynamic>{
+            'adId': 0,
+            'adUnitId': 'testId',
+          },
+        )
+      ]);
+
+      final BannerAd ad2 = BannerAd(adUnitId: 'testId2', size: AdSize.banner);
+      ad2.load();
+      expect(adInstanceManager.adFor(1), equals(ad2));
     });
   });
 }
