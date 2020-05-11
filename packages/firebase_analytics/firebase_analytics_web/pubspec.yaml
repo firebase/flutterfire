@@ -13,6 +13,9 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  firebase: ^7.3.0
   firebase_analytics_platform_interface: ^1.0.1
 
 dev_dependencies:

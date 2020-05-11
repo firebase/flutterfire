@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
+import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 
 const MethodChannel firebaseChannel =
     MethodChannel('plugins.flutter.io/firebase_analytics');
@@ -128,11 +129,8 @@ class FirebaseAnalytics {
 
     if (name.startsWith('firebase_'))
       throw ArgumentError.value(name, 'name', '"firebase_" prefix is reserved');
-
-    await _channel.invokeMethod<void>('setUserProperty', <String, String>{
-      'name': name,
-      'value': value,
-    });
+    await FirebaseAnalyticsPlatform.instance
+        .setUserProperty(name: name, value: value);
   }
 
   /// Clears all analytics data for this app from the device and resets the app instance id.

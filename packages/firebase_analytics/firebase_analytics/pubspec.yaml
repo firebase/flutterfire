@@ -20,7 +20,9 @@ dependencies:
   meta: ^1.0.4
   flutter:
     sdk: flutter
-  firebase_analytics_web: ^0.0.1
+  firebase_analytics_platform_interface: ^1.0.1
+  firebase_analytics_web:
+    path: ../firebase_analytics_web
 
 dev_dependencies:
   pedantic: ^1.8.0
