@@ -25,7 +25,7 @@ plugin, which is responsible for connecting your application to Firebase. Add th
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: { { plugins.firebase_core } }
+  firebase_core: {{ plugins.firebase_core }}
 ```
 
 Install the plugin by running the following command from the project root:
@@ -48,16 +48,65 @@ Before any of the Firebase services can be used, FlutterFire needs to be initial
 FlutterFire "bootstrapping" itself). The initialization step is asynchronous, meaning you'll need to prevent any FlutterFire
 related usage until the initialization is completed.
 
-One way of achieving this is preventing your application from showing until initialization has completed using
-[State](https://api.flutter.dev/flutter/widgets/State-class.html). To initialize FlutterFire, call the `initializeApp`
-method on the `FirebaseCore` instance:
+To initialize FlutterFire, call the `initializeApp` method on the `FirebaseCore` instance:
 
 ```dart
 await FirebaseCore.instance.initializeApp();
 ```
 
-The example below shows how to build this into a stateful Widget which prevents rendering until FlutterFire is
-initialized:
+The method is asynchronous and returns a [`Future`](https://api.flutter.dev/flutter/dart-async/Future-class.html), so
+you need to ensure it has completed before displaying your main application. The examples below show how this can be
+achieved with a [`FutureBuilder`](https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html) or
+a [`StatefulWidget`](https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html):
+
+<Tabs
+  defaultValue="future"
+  values={[
+    { label: 'FutureBuilder', value: 'future', },
+    { label: 'StatefulWidget', value: 'state', },
+  ]
+}>
+<TabItem value="future">
+
+```dart title="lib/main.dart"
+import 'package:flutter/material.dart';
+
+// Import the firebase_core plugin
+import 'package:firebase_core/firebase_core.dart';
+
+void main() {
+  runApp(App());
+}
+
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      // Initialize FlutterFire
+      future: FirebaseCore.instance.initializeApp(),
+      builder: (context, snapshot) {
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MyAwesomeApp();
+        } else
+        // Show something whilst waiting for initialization to complete
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Loading();
+        } else
+        // Handle any errors
+        if (snapshot.hasError) {
+          return SomethingWentWrong();
+        }
+
+        return null;
+      },
+    );
+  }
+}
+```
+
+</TabItem>
+<TabItem value="state">
 
 ```dart title="lib/main.dart"
 import 'package:flutter/material.dart';
@@ -95,21 +144,18 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    // Show nothing until FlutterFire is initialized
+    // Show a loader until FlutterFire is initialized
     if (!_initialized) {
-      return null;
+      return Loading();
     }
 
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('FlutterFire Initialized!'),
-        ),
-      ),
-    );
+    return MyAwesomeApp();
   }
 }
 ```
+
+</TabItem>
+</Tabs>
 
 Once initialized, you're ready to get started using FlutterFire!
 
