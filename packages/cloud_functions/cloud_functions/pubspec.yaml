@@ -21,8 +21,8 @@ dependencies:
   flutter:
     sdk: flutter
   firebase_core: ^0.4.4
-  cloud_functions_platform_interface: ^1.0.0
-  cloud_functions_web: ^1.0.2
+  cloud_functions_platform_interface: ^1.1.0
+  cloud_functions_web: ^1.1.0
 
 dev_dependencies:
   pedantic: ^1.8.0
