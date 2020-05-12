@@ -1,6 +1,6 @@
 ## 6.0.15
 
-* Register pluginRegistrantCallback every FcmDartService#start.
+* Fix - register `pluginRegistrantCallback` on every `FcmDartService#start` call.
 
 ## 6.0.14
 
