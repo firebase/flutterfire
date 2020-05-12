@@ -1,3 +1,7 @@
+## 0.16.1
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 0.16.0
 
 * Migrate to Android v2 embedding.
