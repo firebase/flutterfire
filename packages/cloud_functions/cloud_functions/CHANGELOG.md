@@ -1,6 +1,7 @@
-## 0.4.2+4
+## 0.5.0
 
 * Fix example app build failure.
+* Change environment SDK requirement from `>=2.0.0-dev.28.0` to `>=2.0.0`
 
 ## 0.4.2+3
 
