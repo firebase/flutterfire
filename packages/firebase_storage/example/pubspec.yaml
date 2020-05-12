@@ -1,6 +1,7 @@
 name: firebase_storage_example
 description: Demonstrates how to use the firebase_storage plugin.
 author: Flutter Team <flutter-dev@googlegroups.com>
+version: 0.1.0
 
 dependencies:
   flutter:
