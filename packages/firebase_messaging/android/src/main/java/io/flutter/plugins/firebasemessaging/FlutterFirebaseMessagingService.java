@@ -152,7 +152,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     // FlutterNativeView constructor. This specifies the FlutterNativeView
     // as a background view and does not create a drawing surface.
     backgroundFlutterView = new FlutterNativeView(context, true);
-    if (appBundlePath != null && !isIsolateRunning.get()) {
+    if (appBundlePath != null) {
       if (pluginRegistrantCallback == null) {
         throw new RuntimeException("PluginRegistrantCallback is not set.");
       }
