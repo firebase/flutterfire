@@ -18,5 +18,8 @@ export default {
     firebase_performance: '0.3.1+8',
     firebase_remote_config: '0.3.0+3',
     google_sign_in: '^4.4.4'
+  },
+  android: {
+    google_services: '4.3.3', // com.google.gms:google-services
   }
 }
