@@ -4,6 +4,7 @@ import CodeBlock from '@theme/CodeBlock';
 import Heading from '@theme/Heading';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import IdealImage from '@theme/IdealImage';
 
 import styles from './styles.module.scss';
 import { getVersion } from '../../utils';
@@ -14,6 +15,26 @@ export default {
       return <a {...props} />;
     }
     return <Link {...props} />;
+  },
+
+  img: (props: HTMLProps<HTMLImageElement>) => {
+    let alt = props.alt || '';
+
+    // Prefix any alt tags with "hide:" to not show them as a caption
+    if (alt.startsWith('hide:')) {
+      alt = alt.replace('hide:', '');
+    }
+
+    return (
+      <figure className={styles.figure}>
+        <IdealImage
+          img={require(`../../../../docs/_assets/${props.src ?? ''}`)}
+          alt={alt}
+          quality={100}
+        />
+        {alt === props.alt && <figcaption>{alt}</figcaption>}
+      </figure>
+    );
   },
 
   pre: (props: HTMLProps<HTMLDivElement>) => <div className={styles.mdxCodeBlock} {...props} />,

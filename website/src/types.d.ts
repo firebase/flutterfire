@@ -14,3 +14,8 @@ declare module '*/docs/versions' {
 
   export default versions;
 }
+
+declare module '*.png' {
+  const image: any;
+  export default image;
+}

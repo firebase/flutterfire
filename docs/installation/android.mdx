@@ -10,12 +10,12 @@ On the [Firebase Console](https://console.firebase.google.com/project/_/overview
 existing Android app for your Firebase project.
 
 The "Android package name" must match your local projects package name which was created when you started the
-Flutter project. To view the package name, it can be found in the `manifest` tag within the projects
+Flutter project. The current package name can be found in the `manifest` tag within the projects
 `/android/app/src/main/AndroidManifest.xml` file.
 
-> The "debug signing certificate SHA-1" is optional, however is required for Dynamic Links & Phone Authentication. To generate
-  a certificate run `cd android && ./gradlew signingReport` and copy the SHA1 from the `debug` key. This generates two
-  variant keys. You can copy the 'SHA1' that belongs to the `debugAndroidTest` variant key option.
+> When creating a new Android app "debug signing certificate SHA-1" is optional, however is required for Dynamic Links
+> & Phone Authentication. To generate a certificate run `cd android && ./gradlew signingReport` and copy the SHA1 from
+> the `debug` key. This generates two variant keys. You can copy the 'SHA1' that belongs to the `debugAndroidTest` variant key option.
 
 Once your Android app has been registered, download the credential file from the Firebase Console (the file is called
 `google-services.json`). Add this file into the `android/app` directory within your Flutter project.
@@ -27,7 +27,7 @@ modification to two files in the `android/` directory.
 
 First, add the 'google-services' plugin as a dependency inside of the `android/build.gradle` file:
 
-```java title="android/build.gradle"
+```java {4} title="android/build.gradle"
 buildscript {
   dependencies {
     // ... other dependencies

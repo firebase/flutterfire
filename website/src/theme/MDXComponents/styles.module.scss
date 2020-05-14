@@ -43,7 +43,6 @@
   border: none;
   color: var(--white);
   padding: 2rem 2rem;
-  font-size: 1.2rem;
 
   a {
     color: var(--white);
@@ -53,5 +52,16 @@
     &:hover {
       border-bottom: 1px solid var(--white);
     }
+  }
+}
+
+.figure {
+  text-align: center;
+  margin: 2rem 0;
+
+  figcaption {
+    margin-top: 1rem;
+    font-size: .9rem;
+    font-style: italic;
   }
 }
