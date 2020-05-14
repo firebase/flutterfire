@@ -1,3 +1,7 @@
+## 0.5.1
+
+* Fix for throwing `PlatformException` and `CloudFunctionsException`.
+
 ## 0.5.0
 
 * Fix example app build failure on CI (missing AndroidX Gradle properties).
