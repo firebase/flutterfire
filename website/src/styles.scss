@@ -19,11 +19,12 @@ $theme: (
   "firebase-coral" #FF8A65,
   "firebase-gray" #ECEFF1,
   "white" #FFFFFF,
+  "black" #000000,
 );
 
 @each $name, $color in $theme {
   :root {
-    --#{$name}: $color;
+    --#{$name}: #{$color};
   }
 }
 
@@ -77,8 +78,12 @@ h6 {
   font-weight: 300;
 }
 
+table {
+  display: table;
+}
+
 .docusaurus-highlight-code-line {
-  background-color: var(--google-gray-primary-light);
+  background-color: var(--black);
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);

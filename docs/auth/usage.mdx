@@ -1,6 +1,70 @@
 ---
-title: Authentication
+title: Using Firebase Authentication
 sidebar_label: Usage
 ---
 
-Authentication usage
+Once installed, you can access the `firebase_auth` plugin by importing it in your Dart code:
+
+```dart
+import 'package:firebase_auth/firebase_auth.dart';
+```
+
+## Listening to authentication state
+
+<Highlight>
+  <li>Introduction Text</li>
+  <li>Add code example</li>
+</Highlight>
+
+## Persisting authentication state
+
+<Highlight>
+  <li>Introduction Text</li>
+  <li>Add code example</li>
+</Highlight>
+
+## Anonymous sign-in
+
+<Highlight>
+  <li>Introduction Text</li>
+  <li>Add code example</li>
+</Highlight>
+
+## Email/Password sign-in
+
+<Highlight>
+  <li>Introduction Text</li>
+  <li>Add code example</li>
+</Highlight>
+
+## Signing Out
+
+<Highlight>
+  <li>Introduction Text</li>
+  <li>Add code example</li>
+</Highlight>
+
+## Other sign-in methods
+
+Firebase also supports authenticating with external provides. To learn more, view the documentation for your authentication method:
+
+- Apple Sign-In.
+- Facebook Sign-In.
+- Twitter Sign-In.
+- Google Sign-In.
+- Phone Number Sign-In.
+
+## Using secondary apps
+
+Firebase Authentication supports using [secondary Firebase apps](core/usage#secondary-firebase-apps), allowing you to
+authenticate users with multiple Firebase projects at once.
+
+To use a secondary app, pass the `FirebaseApp` instance to the `instanceFor` method:
+
+```dart
+FirebaseApp secondaryApp = FirebaseCore.instance.app('SecondayApp');
+
+FirebaseAuth auth = FirebaseAuth.instanceFor(
+  app: secondaryApp
+);
+```

@@ -7,6 +7,27 @@ module.exports = {
   organizationName: 'FirebaseExtended',
   projectName: 'flutterfire',
   themeConfig: {
+    announcementBar: {
+      id: 'wip',
+      content:
+        'The FlutterFire documentation hub is currently a <b>work in progress</b>. Some documentation may be missing or incomplete.',
+      backgroundColor: '#13B9FD',
+      textColor: '#fff',
+    },
+    prism: {
+      additionalLanguages: [
+        'dart',
+        'bash',
+        'java',
+        'kotlin',
+        'objectivec',
+        'swift',
+        'groovy',
+        'ruby',
+        'json',
+        'yaml',
+      ],
+    },
     navbar: {
       title: 'FlutterFire',
       links: [
@@ -73,7 +94,7 @@ module.exports = {
       copyright: `<div style="margin-top: 3rem"><small>Except as otherwise noted, this work is licensed under a Creative Commons Attribution 4.0 International License, and code samples are licensed under the BSD License.</small></div>`,
     },
   },
-  plugins: ['docusaurus-plugin-sass'],
+  plugins: ['docusaurus-plugin-sass', '@docusaurus/plugin-ideal-image'],
   presets: [
     [
       '@docusaurus/preset-classic',
