@@ -84,5 +84,40 @@ void main() {
         ],
       );
     });
+
+    group('exception', () {
+      test('$CloudFunctionsException', () {
+        MethodChannelCloudFunctions.channel
+            .setMockMethodCallHandler((MethodCall methodCall) async {
+          throw PlatformException(
+              code: 'functionsError',
+              message: 'Cloud function failed with exception.',
+              details: {
+                'code': 'INTERNAL',
+                'details': null,
+                'message': 'Error: foo bar...'
+              });
+        });
+
+        expect(() async {
+          await CloudFunctions.instance
+              .getHttpsCallable(functionName: 'function-causes-error')
+              .call();
+        }, throwsA(isA<CloudFunctionsException>()));
+      });
+
+      test('Exception', () {
+        MethodChannelCloudFunctions.channel
+            .setMockMethodCallHandler((MethodCall methodCall) async {
+          throw PlatformException(code: 'something wrong');
+        });
+
+        expect(() async {
+          await CloudFunctions.instance
+              .getHttpsCallable(functionName: 'function-causes-error')
+              .call();
+        }, throwsA(isA<Exception>()));
+      });
+    });
   });
 }
