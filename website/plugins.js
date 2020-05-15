@@ -1,4 +1,4 @@
-export default [
+module.exports = [
   {
     name: 'AdMob',
     pub: 'firebase_admob',
