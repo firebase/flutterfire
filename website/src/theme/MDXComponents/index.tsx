@@ -5,8 +5,11 @@ import Heading from '@theme/Heading';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import IdealImage from '@theme/IdealImage';
+import Zoom from 'react-medium-image-zoom';
 
 import styles from './styles.module.scss';
+import 'react-medium-image-zoom/dist/styles.css';
+
 import { getVersion } from '../../utils';
 
 export default {
@@ -27,11 +30,13 @@ export default {
 
     return (
       <figure className={styles.figure}>
-        <IdealImage
-          img={require(`../../../../docs/_assets/${props.src ?? ''}`)}
-          alt={alt}
-          quality={100}
-        />
+        <Zoom>
+          <IdealImage
+            img={require(`../../../../docs/_assets/${props.src ?? ''}`)}
+            alt={alt}
+            quality={100}
+          />
+        </Zoom>
         {alt === props.alt && <figcaption>{alt}</figcaption>}
       </figure>
     );
