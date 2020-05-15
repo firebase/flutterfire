@@ -2,7 +2,6 @@ package io.flutter.plugins.firebase.messaging;
 
 import androidx.test.rule.ActivityTestRule;
 import dev.flutter.plugins.e2e.FlutterRunner;
-import io.flutter.plugins.firebasemessagingexample.MainActivity;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 

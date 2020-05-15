@@ -7,6 +7,12 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
+Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) async {
+  print('Firebase Messaging in Background: $message');
+
+  return null;
+}
+
 final Map<String, Item> _items = <String, Item>{};
 Item _itemForMessage(Map<String, dynamic> message) {
   final dynamic data = message['data'] ?? message;
@@ -139,6 +145,7 @@ class _PushMessagingExampleState extends State<PushMessagingExample> {
   void initState() {
     super.initState();
     _firebaseMessaging.configure(
+      onBackgroundMessage: _backgroundMessageHandler,
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         _showItemDialog(message);

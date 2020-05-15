@@ -55,7 +55,6 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
 
   private static Long backgroundMessageHandle;
 
-  private AtomicBoolean isIsolateRunning = new AtomicBoolean(false);
   private final List<RemoteMessage> backgroundMessageQueue =
       Collections.synchronizedList(new LinkedList<RemoteMessage>());
 
@@ -67,10 +66,9 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
 
     FlutterMain.ensureInitializationComplete(this, null);
 
-    // If background isolate is not running start it.
-    SharedPreferences p = getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
-    long callbackHandle = p.getLong(BACKGROUND_SETUP_CALLBACK_HANDLE_KEY, 0);
-    startBackgroundIsolate(this, callbackHandle);
+    if (maybeStartIsolate()) {
+      Log.d(TAG, "Background isolate has been started.");
+    }
   }
 
   @Override
@@ -104,8 +102,10 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     } else {
       // If background isolate is not running yet, put message in queue and it will be handled
       // when the isolate starts.
-      if (!isIsolateRunning.get()) {
+      if (backgroundEngine == null) {
         backgroundMessageQueue.add(remoteMessage);
+
+        maybeStartIsolate();
       } else {
         final CountDownLatch latch = new CountDownLatch(1);
         new Handler(getMainLooper())
@@ -140,6 +140,27 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   }
 
   /**
+   * Only start the isolate if we have background details.
+   *
+   * @return Whether the isolate has been start or is running already.
+   */
+  private boolean maybeStartIsolate() {
+    // If background isolate is not running start it.
+    SharedPreferences p = getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
+    long callbackHandle = p.getLong(BACKGROUND_SETUP_CALLBACK_HANDLE_KEY, 0);
+
+    if (backgroundEngine != null) {
+      return true;
+    }
+    if (callbackHandle != 0) {
+      startBackgroundIsolate(this, callbackHandle);
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
    * Setup the background isolate that would allow background messages to be handled on the Dart
    * side. Called either by the plugin when the app is starting up or when the app receives a
    * message while it is inactive.
@@ -148,15 +169,12 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
    * @param callbackHandle Handle used to retrieve the Dart function that sets up background
    *     handling on the dart side.
    */
-  public void startBackgroundIsolate(Context context, long callbackHandle) {
+  private void startBackgroundIsolate(Context context, long callbackHandle) {
     FlutterMain.ensureInitializationComplete(context, null);
     String appBundlePath = FlutterMain.findAppBundlePath();
     FlutterCallbackInformation flutterCallback =
         FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
 
-    // Note that we're passing `true` as the second argument to our
-    // FlutterNativeView constructor. This specifies the FlutterNativeView
-    // as a background view and does not create a drawing surface.
     backgroundEngine = new FlutterEngine(context);
 
     final DartExecutor executor = backgroundEngine.getDartExecutor();
@@ -187,8 +205,6 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
    * Dart side once all background initialization is complete via `FcmDartService#initialized`.
    */
   public void onInitialized() {
-    isIsolateRunning.set(true);
-
     synchronized (backgroundMessageQueue) {
       // Handle all the messages received before the Dart isolate was
       // initialized, then clear the queue.
