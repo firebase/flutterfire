@@ -4,6 +4,10 @@
   `FlutterEngine` internally, which does removes the requirement to manually
   register a plugin registrant or include FCM dependencies in the host App.
 
+## 6.0.15
+
+* Fix - register `pluginRegistrantCallback` on every `FcmDartService#start` call.
+
 ## 6.0.14
 
 * Fix for missing UserAgent.h compilation failures.
