@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   title: 'FlutterFire',
   tagline: 'The official Firebase plugins for Flutter',
@@ -94,7 +96,11 @@ module.exports = {
       copyright: `<div style="margin-top: 3rem"><small>Except as otherwise noted, this work is licensed under a Creative Commons Attribution 4.0 International License, and code samples are licensed under the BSD License.</small></div>`,
     },
   },
-  plugins: ['docusaurus-plugin-sass', '@docusaurus/plugin-ideal-image'],
+  plugins: [
+    'docusaurus-plugin-sass',
+    '@docusaurus/plugin-ideal-image',
+    path.resolve(__dirname, './docusaurus-plugins/source-versions'),
+  ],
   presets: [
     [
       '@docusaurus/preset-classic',

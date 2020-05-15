@@ -7,7 +7,20 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 import styles from './styles.module.scss';
 import { Triangle } from '../components/Triangle';
+
+// @ts-ignore
 import plugins from '../plugins';
+
+interface Plugin {
+  name: string;
+  pub: string;
+  firebase: string;
+  support: {
+    web: boolean;
+    mobile: boolean;
+    macos: boolean;
+  };
+}
 
 function Home() {
   const context = useDocusaurusContext();
@@ -80,7 +93,7 @@ function Home() {
               </tr>
             </thead>
             <tbody>
-              {plugins.map(plugin => (
+              {plugins.map((plugin: Plugin) => (
                 <tr key={plugin.pub}>
                   <td>
                     <strong>{plugin.name}</strong>
