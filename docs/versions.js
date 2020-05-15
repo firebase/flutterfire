@@ -1,4 +1,5 @@
 export default {
+  // TODO(ehesp): Update versions to latest pre-releases
   plugins: {
     firebase_admob: '0.9.3+2',
     firebase_analytics: '5.0.11',
@@ -7,7 +8,7 @@ export default {
     cloud_functions: ' 0.4.2+3',
     firebase_messaging: '6.0.13',
     firebase_storage: '3.1.5',
-    firebase_core: '0.4.4+3',
+    firebase_core: '1.0.0-1.0.pre',
     firebase_crashlytics: '0.1.3+3',
     firebase_database: '3.1.5',
     firebase_dynamic_links: '0.5.0+11',

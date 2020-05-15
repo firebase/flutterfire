@@ -22,7 +22,8 @@
     "docusaurus-plugin-sass": "^0.1.8",
     "lodash.get": "^4.4.2",
     "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "react-medium-image-zoom": "^4.3.0"
   },
   "browserslist": {
     "production": [
