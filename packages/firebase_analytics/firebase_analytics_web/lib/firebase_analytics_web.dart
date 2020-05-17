@@ -17,25 +17,26 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String name,
     Map<String, dynamic> parameters,
   }) {
-    //_analytics.logEvent(name, parameters);
+    _analytics.logEvent(name, parameters);
   }
 
   @override
   Future<void> setAnalyticsCollectionEnabled(bool enabled) {
-    //_analytics.setAnalyticsCollectionEnabled(enabled);
+    _analytics.setAnalyticsCollectionEnabled(enabled);
   }
 
   @override
   Future<void> setUserId(String id) {
-    //_analytics.setUserId(id);
+    _analytics.setUserId(id);
   }
 
   @override
   Future<void> setCurrentScreen({
     String screenName,
-    String screenClassOverride,
+    // TODO(tugorez): Determine what this parameter can be used for in Web.
+    // String screenClassOverride,
   }) {
-    //_analytics.setCurrentScreen(screenName); //, screenClassOverride);
+    _analytics.setCurrentScreen(screenName);
   }
 
   @override
@@ -43,16 +44,16 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String name,
     String value,
   }) {
-    //_analytics.setUserProperty(name, value);
+    _analytics.setUserProperties({name: value});
   }
 
   @override
   Future<void> resetAnalyticsData() {
-    //_analytics.resetAnalyticsData();
+    // TODO(tugorez): Determine what is this used for.
   }
 
   @override
   Future<void> setSessionTimeoutDuration(int milliseconds) {
-    //_analytics.setSessionTimeoutDuration(milliseconds);
+    // TODO(tugorez): Determine what is this used for.
   }
 }
