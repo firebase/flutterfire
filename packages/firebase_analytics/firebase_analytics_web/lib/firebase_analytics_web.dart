@@ -34,7 +34,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   Future<void> setCurrentScreen({
     String screenName,
     // TODO(tugorez): Determine what this parameter can be used for in Web.
-    // String screenClassOverride,
+    String screenClassOverride,
   }) {
     _analytics.setCurrentScreen(screenName);
   }
