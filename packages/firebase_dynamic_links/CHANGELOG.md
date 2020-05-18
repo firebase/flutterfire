@@ -1,3 +1,7 @@
+## 0.5.0+13
+
+- Fix for possible race condition in `getInitialLink` (iOS only).
+
 ## 0.5.0+12
 
 * Fix for missing UserAgent.h compilation failures.
