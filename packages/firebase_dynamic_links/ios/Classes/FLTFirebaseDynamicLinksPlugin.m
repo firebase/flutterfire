@@ -43,7 +43,7 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
 @interface FLTFirebaseDynamicLinksPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @property(nonatomic, retain) FIRDynamicLink *initialLink;
-@property(nonatomic, assign) BOOL resolvingInitialLink;
+@property(nonatomic, assign) BOOL isResolvingInitialLink;
 @property(nonatomic, retain) FlutterError *flutterError;
 @property(nonatomic) BOOL initiated;
 @end
@@ -68,7 +68,7 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
   self = [super init];
   if (self) {
     _initiated = NO;
-    _resolvingInitialLink = NO;
+    _isResolvingInitialLink = NO;
     _channel = channel;
     if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
       NSLog(@"Configuring the default Firebase app...");
@@ -112,7 +112,7 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
 }
 
 - (void)continueGetInitialLinkWithResult:(FlutterResult)result {
-    if (_resolvingInitialLink == YES) {
+    if (_isResolvingInitialLink == YES) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self continueGetInitialLinkWithResult:result];
         });
@@ -169,7 +169,7 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
 }
 
 - (BOOL)onInitialLink:(NSUserActivity *)userActivity {
-  self.resolvingInitialLink = YES;
+  self.isResolvingInitialLink = YES;
   BOOL handled = [[FIRDynamicLinks dynamicLinks]
       handleUniversalLink:userActivity.webpageURL
                completion:^(FIRDynamicLink *_Nullable dynamicLink, NSError *_Nullable error) {
@@ -177,7 +177,7 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
                    self.flutterError = getFlutterError(error);
                  }
                  self.initialLink = dynamicLink;
-                 self.resolvingInitialLink = NO;
+                 self.isResolvingInitialLink = NO;
                }];
   return handled;
 }
