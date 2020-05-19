@@ -9,11 +9,11 @@ Before using FlutterFire on Android, you must first connect to your Firebase pro
 On the [Firebase Console](https://console.firebase.google.com/project/_/overview), add a new Android app or select an
 existing Android app for your Firebase project.
 
-The "Android package name" must match your local projects package name which was created when you started the
-Flutter project. The current package name can be found in the `manifest` tag within the projects
+The "Android package name" must match your local project's package name that was created when you started the
+Flutter project. The current package name can be found in the `manifest` tag within the project's
 `/android/app/src/main/AndroidManifest.xml` file.
 
-> When creating a new Android app "debug signing certificate SHA-1" is optional, however is required for Dynamic Links
+> When creating a new Android app "debug signing certificate SHA-1" is optional, however, it is required for Dynamic Links
 > & Phone Authentication. To generate a certificate run `cd android && ./gradlew signingReport` and copy the SHA1 from
 > the `debug` key. This generates two variant keys. You can copy the 'SHA1' that belongs to the `debugAndroidTest` variant key option.
 
