@@ -7,12 +7,12 @@ The `firebase_core` plugin is responsible for connecting your Flutter app to you
 installed and initialized before the usage of any other FlutterFire plugins. It provides basic functionality such
 as:
 
-- [Initializing FlutterFire](overview#initializing-flutterfire).
-- Creating [Secondary Firebase App Instances](usage#installation).
+- [Initializing FlutterFire](../overview.mdx#initializing-flutterfire).
+- Creating [Secondary Firebase App Instances](#secondary-firebase-apps).
 
 ## Installation
 
-The `firebase_core` plugin can be installed by following the [Getting Started](overview.mdx) documentation. Once installed,
+The `firebase_core` plugin can be installed by following the [Getting Started](../overview.mdx) documentation. Once installed,
 import the plugin:
 
 ```dart
@@ -22,10 +22,10 @@ import 'package:firebase_core/firebase_core.dart';
 ## Default Firebase app
 
 FlutterFire requires a default Firebase app to be present before initialization, otherwise an exception will be thrown.
-The steps for setting up a default app for your platform can be found in the [Getting Started](overview.mdx) documentation.
+The steps for setting up a default app for your platform can be found in the [Getting Started](../overview.mdx) documentation.
 
 Some plugins such as Analytics & Performance Monitoring are only compatible with the default Firebase app, however,
-plugins such as Authentication can take advantage of [Secondary Firebase Apps](usage#secondary-firebase-apps),
+plugins such as Authentication can take advantage of [Secondary Firebase Apps](#secondary-firebase-apps),
 allowing you to use multiple Firebase projects at once.
 
 To access the default app, call the `initializeApp` or `app` method on `FirebaseCore`:
