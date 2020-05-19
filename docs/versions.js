@@ -25,6 +25,6 @@ export default {
     google_services: "4.3.3", // com.google.gms:google-services
   },
   web: {
-    firebase_cdn: "7.14.3", // https://firebase.google.com/docs/web/setup#expandable-8-label
+    firebase_cdn: "7.14.4", // https://firebase.google.com/docs/web/setup#expandable-8-label
   },
 };

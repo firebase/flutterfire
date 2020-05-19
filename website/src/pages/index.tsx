@@ -141,11 +141,11 @@ function Home() {
 }
 
 function Check() {
-  return <span style={{ color: '#4caf50', fontSize: '1.5rem' }}>&#10003;</span>;
+  return <span style={{ color: '#4caf50', fontSize: '1.5rem' }}>&#10004;</span>;
 }
 
 function Cross() {
-  return <span style={{ color: '#f44336', fontSize: '1.7rem' }}>&#65794;</span>;
+  return <span style={{ color: '#f44336', fontSize: '2.1rem' }}>&#10799;</span>;
 }
 
 export default Home;

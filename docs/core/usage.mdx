@@ -132,7 +132,9 @@ firestore
 If you no longer need a secondary app, you can delete by calling the `delete` method on the `FirebaseApp` instance:
 
 ```dart
-await FirebaseCore.instance.app('SecondApp').delete();
+FirebaseApp secondaryApp = FirebaseCore.instance.app('SecondaryApp');
+
+await secondaryApp.delete();
 ```
 
 Any plugin usage attempting to use a deleted app will throw an exception. The default app cannot be deleted and will
