@@ -8,6 +8,7 @@
   * `setUserName`
   * `getVersion`
   * `isDebuggable`
+* Fixes a bug that prevented keys from being set on iOs devices.
 
 ## 0.1.3+3
 

@@ -46,17 +46,13 @@
     NSArray *keys = call.arguments[@"keys"];
     for (NSDictionary *key in keys) {
       if ([@"int" isEqualToString:key[@"type"]]) {
-        [[FIRCrashlytics crashlytics] setCustomValue:call.arguments[@"value"]
-                                              forKey:call.arguments[@"key"]];
+        [[FIRCrashlytics crashlytics] setCustomValue:key[@"value"] forKey:key[@"key"]];
       } else if ([@"double" isEqualToString:key[@"type"]]) {
-        [[FIRCrashlytics crashlytics] setCustomValue:call.arguments[@"value"]
-                                              forKey:call.arguments[@"key"]];
+        [[FIRCrashlytics crashlytics] setCustomValue:key[@"value"] forKey:key[@"key"]];
       } else if ([@"string" isEqualToString:key[@"type"]]) {
-        [[FIRCrashlytics crashlytics] setCustomValue:call.arguments[@"value"]
-                                              forKey:call.arguments[@"key"]];
+        [[FIRCrashlytics crashlytics] setCustomValue:key[@"value"] forKey:key[@"key"]];
       } else if ([@"boolean" isEqualToString:key[@"type"]]) {
-        [[FIRCrashlytics crashlytics] setCustomValue:call.arguments[@"value"]
-                                              forKey:call.arguments[@"key"]];
+        [[FIRCrashlytics crashlytics] setCustomValue:key[@"value"] forKey:key[@"key"]];
       }
     }
 
