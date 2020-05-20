@@ -4,15 +4,15 @@ sidebar_label: Usage
 ---
 
 The `firebase_core` plugin is responsible for connecting your Flutter app to your Firebase project. The plugin must be
-installed and initialized before any usage with any other FlutterFire plugins. It provides basic functionality such
+installed and initialized before the usage of any other FlutterFire plugins. It provides basic functionality such
 as:
 
-- [Initializing FlutterFire](overview#initializing-flutterfire).
-- Creating [Secondary Firebase App Instances](usage#installation).
+- [Initializing FlutterFire](../overview.mdx#initializing-flutterfire).
+- Creating [Secondary Firebase App Instances](#secondary-firebase-apps).
 
 ## Installation
 
-The `firebase_core` plugin can be installed by following the [Getting Started](overview.mdx) documentation. Once installed,
+The `firebase_core` plugin can be installed by following the [Getting Started](../overview.mdx) documentation. Once installed,
 import the plugin:
 
 ```dart
@@ -22,11 +22,11 @@ import 'package:firebase_core/firebase_core.dart';
 ## Default Firebase app
 
 FlutterFire requires a default Firebase app to be present before initialization, otherwise an exception will be thrown.
-The steps for setting up a default app for your platform can be found in the [Getting Started](overview.mdx) documentation.
+The steps for setting up a default app for your platform can be found in the [Getting Started](../overview.mdx) documentation.
 
-Some plugins such as Analytics & Performance Monitoring are only compatible with the default Firebase app, however
-plugins such as Authentication can take advantage of [Secondary Firebase Apps](usage#secondary-firebase-apps),
-allowing you to multiple Firebase projects at once.
+Some plugins such as Analytics & Performance Monitoring are only compatible with the default Firebase app, however,
+plugins such as Authentication can take advantage of [Secondary Firebase Apps](#secondary-firebase-apps),
+allowing you to use multiple Firebase projects at once.
 
 To access the default app, call the `initializeApp` or `app` method on `FirebaseCore`:
 
@@ -38,13 +38,13 @@ FirebaseApp defaultApp = await FirebaseCore.instance.app();
 
 ## Secondary Firebase apps
 
-Some FlutterFire plugins allow usage of secondary Firebase apps, letting you interchange which project the
+Some FlutterFire plugins allow the usage of secondary Firebase apps, letting you interchange the project the
 plugin uses. Currently, the Firebase SDKs provide functionality for using secondary apps with the following services:
 
 - Authentication.
 - Realtime Database.
 - Cloud Firestore.
-- Cloud Functions
+- Cloud Functions.
 - Cloud Storage.
 - Instance ID.
 - ML Kit Natural Language.
@@ -53,7 +53,7 @@ plugin uses. Currently, the Firebase SDKs provide functionality for using second
 
 ### Initializing secondary apps
 
-To initialize a secondary app, call the `initalizeApp` method with a name and options:
+To initialize a secondary app, call the `initializeApp` method with a name and options:
 
 ```dart
 await FirebaseCore.instance.initializeApp(
@@ -79,7 +79,7 @@ Once initialized, secondary apps can be accessed via the `app` method on `Fireba
 FirebaseApp secondaryApp = FirebaseCore.instance.app('SecondaryApp');
 ```
 
-Attempting to access an app which does not exist will throw an exception.
+Attempting to access an app that does not exist will throw an exception.
 
 It is also possible to fetch all existing apps at once via the `apps` property on `FirebaseCore`:
 
@@ -129,7 +129,7 @@ firestore
 
 ### Deleting instances
 
-If you no longer need a secondary app, you can delete by calling the `delete` method on the `FirebaseApp` instance:
+If you no longer need a secondary app, you can delete it by calling the `delete` method on the `FirebaseApp` instance:
 
 ```dart
 FirebaseApp secondaryApp = FirebaseCore.instance.app('SecondaryApp');

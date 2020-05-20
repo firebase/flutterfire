@@ -99,7 +99,7 @@ exists or not and more.
 #### QuerySnapshot
 
 A `QuerySnapshot` is returned from a collection query, and allows you to inspect the collection, such as how many documents
-exist within it, gives access to the documents within the collection, see any changes since the last query and more.document
+exist within it, gives access to the documents within the collection, see any changes since the last query and more.
 
 To access the documents within a `QuerySnapshot`, call the `forEach` method:
 
@@ -119,7 +119,7 @@ about a document (see below).
 #### DocumentSnapshot
 
 A `DocumentSnapShot` is returned from a query or as part of the documents returned via a `QuerySnapshot`.  The snapshot
-provides the ability to view a documents data, metadata and whether the document actually exists.snapshot
+provides the ability to view a documents data, metadata and whether the document actually exists.
 
 To view a documents data, call the `data` method on the snapshot:
 
@@ -156,7 +156,7 @@ Firestore.instance
     });
 ```
 
-Cloud Firestore also supports array queries.  For example, to filter users who speak English(en) or Italian (it), use
+Cloud Firestore also supports array queries.  For example, to filter users who speak English (en) or Italian (it), use
 the `arrayContainsAny` filter:
 
 ```dart
@@ -202,12 +202,12 @@ To order the documents by a specific value, use the `orderBy` method:
         });
 ```
 
-The above example both limits the documents returned to 20 and orders all the users in the snapshot page age ascending order
+The above example both limits the documents returned to 20 and orders all the users in the snapshot page by age ascending order.
 
 #### Start/End
 
 To start and/or end a query at a specific point within a collection, you can pass a value to the `startAt`, `endAt`,
-`startAfter` or `endBefore` methods.  You must specific an order to use pointers, for example:
+`startAfter` or `endBefore` methods.  You must specify an order to use pointers, for example:
 
 ```dart
 Firestore.instance
@@ -248,9 +248,9 @@ Firestore.instance
 Cloud Firestore does not support the following types of queries:
 
 - Queries with range filters on different fields, as described in the previous section.
-- Logical OR queries.  In this case, you should create a separate query for each OR condition and merge the query results
+- Logical OR queries. In this case, you should create a separate query for each OR condition and merge the query results
 in your app.
-- Queries with a != clause.  In this cause, you should split the query into a greater-than query and a less-than query.
+- Queries with a != clause. In this cause, you should split the query into a greater-than query and a less-than query.
 For example, the query clause `where("age", isNotEqualTo: 30)` is not supported, however you can get the same result set
 by combining two queries, one with the clause `where("age", isLessThan: 30)` and one with the clause
 `where("age", isGreaterThan: 30)`
@@ -293,7 +293,7 @@ Firestore.instance
 ```
 ### Updating documents
 
-The `setData` method above replaces any existing data on a given `DocumentReference`.  If you'd like to update a document
+The `setData` method above replaces any existing data on a given `DocumentReference`. If you'd like to update a document
 instead, use the `update` method:
 
 ```dart
@@ -444,7 +444,7 @@ Please follow the Firebase Firestore documentation on [security](https://firebas
 
 Firestore provides out of the box support for offline capabilities.  When reading and writing data, Firestore uses a
 local database which automatically synchronizes with the server. Cloud Firestore functionality continues when users are
-offline, and automatically handles data migration when they regain connectivity.capabilities
+offline, and automatically handles data migration when they regain connectivity.
 
 This functionality is enabled by default, however it can be disabled if needed.  The `settings` method must be called
 before any Firestore interaction is performed:
