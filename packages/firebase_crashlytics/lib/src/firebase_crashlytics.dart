@@ -7,18 +7,18 @@ part of firebase_crashlytics;
 ///
 /// You can get an instance by calling `Crashlytics.instance`.
 class Crashlytics {
-  static final Crashlytics instance = Crashlytics();
+  static final instance = Crashlytics();
 
   /// Set to true to have errors sent to Crashlytics while in debug mode. By
   /// default this is false.
-  bool enableInDevMode = false;
+  var enableInDevMode = false;
 
   /// Keys to be included with report.
-  final Map<String, dynamic> _keys = <String, dynamic>{};
+  final _keys = <String, String>{};
 
   /// Logs to be included with report.
-  final ListQueue<String> _logs = ListQueue<String>(15);
-  int _logSize = 0;
+  final _logs = ListQueue<String>(15);
+  var _logSize = 0;
 
   @visibleForTesting
   static const MethodChannel channel =
@@ -68,31 +68,14 @@ class Crashlytics {
     }
   }
 
-  void _setValue(String key, dynamic value) {
+  /// Sets a [value] to be associated with a given [key] for your crash data.
+  ///
+  /// The [value] will be converted to a string by calling [toString] on it.
+  void setCustomKey(String key, dynamic value) {
     // Check that only 64 keys are set.
     if (_keys.containsKey(key) || _keys.length <= 64) {
-      _keys[key] = value;
+      _keys[key] = value.toString();
     }
-  }
-
-  /// Sets a value to be associated with a given key for your crash data.
-  void setBool(String key, bool value) {
-    _setValue(key, value);
-  }
-
-  /// Sets a value to be associated with a given key for your crash data.
-  void setDouble(String key, double value) {
-    _setValue(key, value);
-  }
-
-  /// Sets a value to be associated with a given key for your crash data.
-  void setInt(String key, int value) {
-    _setValue(key, value);
-  }
-
-  /// Sets a value to be associated with a given key for your crash data.
-  void setString(String key, String value) {
-    _setValue(key, value);
   }
 
   /// Specify a user identifier which will be visible in the Crashlytics UI.
@@ -100,31 +83,6 @@ class Crashlytics {
   Future<void> setUserIdentifier(String identifier) async {
     await channel.invokeMethod<void>('Crashlytics#setUserIdentifier',
         <String, dynamic>{'identifier': identifier});
-  }
-
-  List<Map<String, dynamic>> _prepareKeys() {
-    final List<Map<String, dynamic>> crashlyticsKeys = <Map<String, dynamic>>[];
-    for (String key in _keys.keys) {
-      final dynamic value = _keys[key];
-
-      final Map<String, dynamic> crashlyticsKey = <String, dynamic>{
-        'key': key,
-        'value': value
-      };
-
-      if (value is int) {
-        crashlyticsKey['type'] = 'int';
-      } else if (value is double) {
-        crashlyticsKey['type'] = 'double';
-      } else if (value is String) {
-        crashlyticsKey['type'] = 'string';
-      } else if (value is bool) {
-        crashlyticsKey['type'] = 'boolean';
-      }
-      crashlyticsKeys.add(crashlyticsKey);
-    }
-
-    return crashlyticsKeys;
   }
 
   @visibleForTesting
@@ -231,7 +189,7 @@ class Crashlytics {
         'information': _information,
         'stackTraceElements': stackTraceElements,
         'logs': _logs.toList(),
-        'keys': _prepareKeys(),
+        'keys': _keys,
       });
 
       // Print result.

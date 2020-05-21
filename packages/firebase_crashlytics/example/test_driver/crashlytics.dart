@@ -18,11 +18,12 @@ void main() {
     // This is currently only testing that we can log errors without crashing.
     final Crashlytics crashlytics = Crashlytics.instance;
     await crashlytics.setUserIdentifier('hello');
-    crashlytics.setBool('testBool', true);
-    crashlytics.setInt('testInt', 42);
-    crashlytics.setDouble('testDouble', 42.0);
-    crashlytics.setString('testString', 'bar');
-    Crashlytics.instance.log('testing');
+    crashlytics
+      ..setCustomKey('testBool', true)
+      ..setCustomKey('testInt', 42)
+      ..setCustomKey('testDouble', 42.0)
+      ..setCustomKey('testString', 'bar')
+      ..log('testing');
     await crashlytics.recordFlutterError(FlutterErrorDetails(
         exception: 'testing',
         stack: StackTrace.fromString(''),

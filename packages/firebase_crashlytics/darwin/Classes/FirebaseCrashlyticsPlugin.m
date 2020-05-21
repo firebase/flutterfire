@@ -43,17 +43,9 @@
     }
 
     // Set keys.
-    NSArray *keys = call.arguments[@"keys"];
-    for (NSDictionary *key in keys) {
-      if ([@"int" isEqualToString:key[@"type"]]) {
-        [[FIRCrashlytics crashlytics] setCustomValue:key[@"value"] forKey:key[@"key"]];
-      } else if ([@"double" isEqualToString:key[@"type"]]) {
-        [[FIRCrashlytics crashlytics] setCustomValue:key[@"value"] forKey:key[@"key"]];
-      } else if ([@"string" isEqualToString:key[@"type"]]) {
-        [[FIRCrashlytics crashlytics] setCustomValue:key[@"value"] forKey:key[@"key"]];
-      } else if ([@"boolean" isEqualToString:key[@"type"]]) {
-        [[FIRCrashlytics crashlytics] setCustomValue:key[@"value"] forKey:key[@"key"]];
-      }
+    NSDictionary *keys = call.arguments[@"keys"];
+    for (NSString *key in keys) {
+      [[FIRCrashlytics crashlytics] setCustomValue:keys[key] forKey:key];
     }
 
     // Add additional information from the Flutter framework to the exception reported in

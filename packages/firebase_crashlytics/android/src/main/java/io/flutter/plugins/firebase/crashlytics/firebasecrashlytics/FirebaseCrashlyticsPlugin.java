@@ -54,37 +54,24 @@ public class FirebaseCrashlyticsPlugin implements FlutterPlugin, MethodCallHandl
     final FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
     if (call.method.equals("Crashlytics#onError")) {
       // Add logs.
-      List<String> logs = call.argument("logs");
-      for (String log : logs) {
-        crashlytics.log(log);
+      final List<String> logs = call.argument("logs");
+      for (String l : logs) {
+        crashlytics.log(l);
       }
 
       // Set keys.
-      List<Map<String, Object>> keys = call.argument("keys");
-      for (Map<String, Object> key : keys) {
-        switch ((String) key.get("type")) {
-          case "int":
-            crashlytics.setCustomKey((String) key.get("key"), (int) key.get("value"));
-            break;
-          case "double":
-            crashlytics.setCustomKey((String) key.get("key"), (double) key.get("value"));
-            break;
-          case "string":
-            crashlytics.setCustomKey((String) key.get("key"), (String) key.get("value"));
-            break;
-          case "boolean":
-            crashlytics.setCustomKey((String) key.get("key"), (boolean) key.get("value"));
-            break;
-        }
+      final Map<String, Object> keys = call.argument("keys");
+      for (String key : keys.keySet()) {
+        crashlytics.setCustomKey(key, (String) keys.get(key));
       }
 
       // Report crash.
-      String dartExceptionMessage = (String) call.argument("exception");
-      Exception exception = new Exception(dartExceptionMessage);
-      List<Map<String, String>> errorElements = call.argument("stackTraceElements");
-      List<StackTraceElement> elements = new ArrayList<>();
+      final String dartExceptionMessage = (String) call.argument("exception");
+      final Exception exception = new Exception(dartExceptionMessage);
+      final List<Map<String, String>> errorElements = call.argument("stackTraceElements");
+      final List<StackTraceElement> elements = new ArrayList<>();
       for (Map<String, String> errorElement : errorElements) {
-        StackTraceElement stackTraceElement = generateStackTraceElement(errorElement);
+        final StackTraceElement stackTraceElement = generateStackTraceElement(errorElement);
         if (stackTraceElement != null) {
           elements.add(stackTraceElement);
         }
