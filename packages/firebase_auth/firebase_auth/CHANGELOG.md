@@ -1,3 +1,6 @@
+## 0.16.0+1
+* Clean up listener when detached and channel is null
+
 ## 0.16.0
 
 * Migrate to Android v2 embedding.
