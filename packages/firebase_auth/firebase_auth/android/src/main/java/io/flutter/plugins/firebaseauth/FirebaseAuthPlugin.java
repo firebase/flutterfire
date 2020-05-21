@@ -700,6 +700,12 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
         new FirebaseAuth.AuthStateListener() {
           @Override
           public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            if (channel == null) {
+              // If detached and therefore channel is null, remove the current listener (this).
+              firebaseAuth.removeAuthStateListener(this);
+              return;
+            }
+
             FirebaseUser user = firebaseAuth.getCurrentUser();
             Map<String, Object> userMap = mapFromUser(user);
             Map<String, Object> map = new HashMap<>();
