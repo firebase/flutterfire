@@ -7,6 +7,8 @@ dependencies:
   firebase_admob:
     path: ../
   firebase_core: ^0.4.2+1
+  flutter_webview_plugin: ^0.3.11
+  webview_flutter: ^0.3.14+1
 
 dev_dependencies:
   pedantic: ^1.8.0
