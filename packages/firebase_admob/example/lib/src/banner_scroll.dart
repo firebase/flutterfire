@@ -3,6 +3,7 @@ import '../src/banner.dart';
 
 void main() => runApp(BannerScroll());
 
+/// Top-level banner ad scroll view class
 class BannerScroll extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -17,6 +18,7 @@ class BannerScroll extends StatelessWidget {
   }
 }
 
+/// Display banner ad in scroll view
 class BannerScrollView extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();

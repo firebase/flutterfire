@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+/// Article URL
 final String article =
     'https://medium.com/flutter/announcing-flutter-1-17-4182d8af7f8e';
 
 void main() => runApp(AdBanner());
 
+/// Top-level banner ad class
 class AdBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,6 +18,7 @@ class AdBanner extends StatelessWidget {
   }
 }
 
+/// Display banner ad
 class BannerAdPage extends StatefulWidget {
   @override
   _BannerAdPageState createState() => _BannerAdPageState();
@@ -68,6 +71,7 @@ class _BannerAdPageState extends State<BannerAdPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(),
       body: Center(
