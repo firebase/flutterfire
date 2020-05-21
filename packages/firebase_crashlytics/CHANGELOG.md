@@ -9,7 +9,7 @@
   * `getVersion`
   * `isDebuggable`
 * **Breaking**: the methods `setInt`, `setDouble`, `setString` and `setBool` have been replaced by `setCustomKey`.
-* Fixes a bug that prevented keys from being set on iOs devices.
+* Fixes a bug that prevented keys from being set on iOS devices.
 
 ## 0.1.3+3
 
