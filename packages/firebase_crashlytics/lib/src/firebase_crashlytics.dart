@@ -71,7 +71,9 @@ class Crashlytics {
   /// Sets a [value] to be associated with a given [key] for your crash data.
   ///
   /// The [value] will be converted to a string by calling [toString] on it.
+  /// An error will be thrown if it is null.
   void setCustomKey(String key, dynamic value) {
+    ArgumentError.checkNotNull(value, 'value');
     // Check that only 64 keys are set.
     if (_keys.containsKey(key) || _keys.length <= 64) {
       _keys[key] = value.toString();
