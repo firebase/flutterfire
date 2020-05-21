@@ -8,7 +8,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_admob/firebase_admob.dart';
-
 import 'src/banner_scroll.dart';
 
 // You can also test with your own ad unit IDs by registering your device as a
