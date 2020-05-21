@@ -1,6 +1,10 @@
-## 0.9.3.+4
+## 0.9.3+5
 
 * Added banner ad in custom scroll view example.
+
+## 0.9.3+4
+
+* Bump Dart version requirement.
 
 ## 0.9.3+3
 
