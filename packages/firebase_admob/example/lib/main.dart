@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_admob/firebase_admob.dart';
+import 'src/banner_scroll.dart';
 
 // You can also test with your own ad unit IDs by registering your device as a
 // test device. Check the logs for your device's ID value.
@@ -118,6 +119,12 @@ class _MyAppState extends State<MyApp> {
                         ..show(horizontalCenterOffset: -50, anchorOffset: 100);
                     }),
                 RaisedButton(
+                    child: const Text('SHOW BANNER IN SCROLL VIEW'),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => BannerScroll()));
+                    }),
+                RaisedButton(
                     child: const Text('REMOVE BANNER'),
                     onPressed: () {
                       _bannerAd?.dispose();
@@ -185,6 +192,7 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MaterialApp(
+  title: 'Example',
+  home: MyApp(),
+));
