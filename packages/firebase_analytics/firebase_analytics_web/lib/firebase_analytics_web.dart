@@ -18,16 +18,19 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     Map<String, dynamic> parameters,
   }) {
     _analytics.logEvent(name, parameters);
+    return Future<void>.value();
   }
 
   @override
   Future<void> setAnalyticsCollectionEnabled(bool enabled) {
     _analytics.setAnalyticsCollectionEnabled(enabled);
+    return Future<void>.value();
   }
 
   @override
   Future<void> setUserId(String id) {
     _analytics.setUserId(id);
+    return Future<void>.value();
   }
 
   @override
@@ -36,6 +39,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String screenClassOverride,
   }) {
     _analytics.setCurrentScreen(screenName);
+    return Future<void>.value();
   }
 
   @override
@@ -44,5 +48,6 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String value,
   }) {
     _analytics.setUserProperties({name: value});
+    return Future<void>.value();
   }
 }
