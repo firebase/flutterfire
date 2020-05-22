@@ -1,6 +1,6 @@
 ## 5.0.14
 
-* Update lower bound of dart dependency to 2.0.0.
+* Use the platform interface.
 
 ## 5.0.13
 
