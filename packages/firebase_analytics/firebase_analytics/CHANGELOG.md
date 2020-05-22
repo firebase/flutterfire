@@ -1,7 +1,3 @@
-## 5.0.13+1
-
-* Use the platform interface.
-
 ## 5.0.13
 
 * Fix for missing UserAgent.h compilation failures.
