@@ -33,7 +33,6 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   @override
   Future<void> setCurrentScreen({
     String screenName,
-    // TODO(tugorez): Determine what this parameter can be used for in Web.
     String screenClassOverride,
   }) {
     _analytics.setCurrentScreen(screenName);
@@ -45,15 +44,5 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String value,
   }) {
     _analytics.setUserProperties({name: value});
-  }
-
-  @override
-  Future<void> resetAnalyticsData() {
-    // TODO(tugorez): Determine what is this used for.
-  }
-
-  @override
-  Future<void> setSessionTimeoutDuration(int milliseconds) {
-    // TODO(tugorez): Determine what is this used for.
   }
 }
