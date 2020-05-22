@@ -3,16 +3,14 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 
-final _platformInstance = FirebaseAnalyticsPlatform.instance;
-
 /// Firebase Analytics API.
 class FirebaseAnalytics {
+  final _platformInstance = FirebaseAnalyticsPlatform.instance;
+
   /// Namespace for analytics API available on Android only.
   ///
   /// The value of this field is `null` on non-Android platforms. If you are
@@ -24,7 +22,7 @@ class FirebaseAnalytics {
   ///     FirebaseAnalytics analytics = FirebaseAnalytics();
   ///     analytics.android?.setSessionTimeoutDuration(true);
   final FirebaseAnalyticsAndroid android =
-      defaultTargetPlatform == TargetPlatform.android
+      defaultTargetPlatform == TargetPlatform.android && !kIsWeb
           ? FirebaseAnalyticsAndroid()
           : null;
 
@@ -860,6 +858,8 @@ class FirebaseAnalytics {
 
 /// Android-specific analytics API.
 class FirebaseAnalyticsAndroid {
+  final _platformInstance = FirebaseAnalyticsPlatform.instance;
+
   /// Sets the duration of inactivity that terminates the current session.
   ///
   /// The default value is 1800000 (30 minutes).
