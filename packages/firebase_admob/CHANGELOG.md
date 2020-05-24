@@ -1,6 +1,6 @@
-## 0.9.4
+## 0.9.3+4
 
-* Update lower bound of dart dependency to 2.0.0.
+* Bump Dart version requirement.
 
 ## 0.9.3+3
 
