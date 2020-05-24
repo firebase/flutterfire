@@ -178,6 +178,25 @@ class AdSize {
     height: 0,
     adSizeType: AdSizeType.SmartBanner,
   );
+
+  /// The adaptive banner size. Adaptive banners are the next generation of
+  /// responsive ads, maximizing performance by optimizing ad size for each
+  /// device. Improving on smart banners, which only supported fixed heights,
+  /// adaptive banners let developers specify the ad-width and use this to
+  /// determine the optimal ad size.For more info see the
+  /// [Android](https://developers.google.com/admob/android/banner) and
+  /// [iOS](https://developers.google.com/admob/ios/banner) banner ad guides.
+  static Future<AdSize> getAdaptiveBannerAdSize(int width) async {
+    final Map<String, dynamic> result =
+        await _invokeMapMethod("getAdaptiveBannerAdSize", <String, dynamic>{
+      'width': width,
+    });
+    return AdSize._(
+      width: result['width'],
+      height: result['height'],
+      adSizeType: AdSizeType.WidthAndHeight,
+    );
+  }
 }
 
 /// A mobile [BannerAd] or [InterstitialAd] for the [FirebaseAdMobPlugin].
@@ -614,4 +633,14 @@ Future<bool> _invokeBooleanMethod(String method, [dynamic arguments]) async {
     arguments,
   );
   return result;
+}
+
+Future<Map<String, dynamic>> _invokeMapMethod(String method,
+    [dynamic arguments]) async {
+  final Map<dynamic, dynamic> result =
+      await FirebaseAdMob.instance._channel.invokeMethod<Map<dynamic, dynamic>>(
+    method,
+    arguments,
+  );
+  return Map<String, dynamic>.from(result);
 }

@@ -247,6 +247,26 @@
   result([NSNumber numberWithBool:YES]);
 }
 
+- (void)callGetAdaptiveBannerAdSize:(FlutterMethodCall *)call result:(FlutterResult)result {
+  NSNumber *widthArg = (NSNumber *)call.arguments[@"width"];
+
+  if (widthArg == nil) {
+    NSString *message =
+        [NSString stringWithFormat:@"a null width was provided for adaptive banner"];
+    result([FlutterError errorWithCode:@"invalid_width" message:message details:nil]);
+    return;
+  }
+
+  CGFloat width = [widthArg doubleValue];
+
+  GADAdSize adSize = GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(width);
+  NSDictionary *dictionary = @{
+    @"width" : [NSNumber numberWithInt:adSize.size.width],
+    @"height" : [NSNumber numberWithInt:adSize.size.height],
+  };
+  result(dictionary);
+}
+
 - (void)callShowAd:(NSNumber *)mobileAdId
               call:(FlutterMethodCall *)call
             result:(FlutterResult)result {
@@ -355,6 +375,11 @@
 
   if ([call.method isEqualToString:@"showRewardedVideoAd"]) {
     [self callShowRewardedVideoAd:call result:result];
+    return;
+  }
+
+  if ([call.method isEqualToString:@"getAdaptiveBannerAdSize"]) {
+    [self callGetAdaptiveBannerAdSize:call result:result];
     return;
   }
 

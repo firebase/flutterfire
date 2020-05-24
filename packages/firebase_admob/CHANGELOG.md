@@ -1,3 +1,7 @@
+## 0.9.4
+
+* Support Adaptive Banner.
+
 ## 0.9.3+4
 
 * Bump Dart version requirement.

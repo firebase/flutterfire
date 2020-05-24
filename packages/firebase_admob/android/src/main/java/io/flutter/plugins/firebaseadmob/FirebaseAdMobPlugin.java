@@ -353,6 +353,21 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     result.success(Boolean.TRUE);
   }
 
+  private void callGetAdaptiveBannerAdSize(Activity activity, MethodCall call, Result result) {
+    final Integer width = call.argument("width");
+    if (width <= 0) {
+      String errMsg =
+          String.format(
+              Locale.ENGLISH, "an invalid with %d was provided for adaptive banner", width);
+      result.error("invalid_width", errMsg, null);
+    }
+    final AdSize adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, width);
+    final Map<String, Integer> map = new HashMap<String, Integer>();
+    map.put("width", adSize.getWidth());
+    map.put("height", adSize.getHeight());
+    result.success(map);
+  }
+
   private void callShowAd(Integer id, MethodCall call, Result result) {
     MobileAd ad = MobileAd.getAdForId(id);
     if (ad == null) {
@@ -481,6 +496,9 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
         break;
       case "loadNativeAd":
         callLoadNativeAd(id, activity, call, result);
+        break;
+      case "getAdaptiveBannerAdSize":
+        callGetAdaptiveBannerAdSize(activity, call, result);
         break;
       case "showAd":
         callShowAd(id, call, result);

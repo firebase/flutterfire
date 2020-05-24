@@ -32,6 +32,11 @@ void main() {
           case 'setRewardedVideoAdCustomData':
           case 'disposeAd':
             return Future<bool>.value(true);
+          case 'getAdaptiveBannerAdSize':
+            return Future<Map<String, dynamic>>.value(<String, dynamic>{
+              'width': AdSize.banner.width,
+              'height': AdSize.banner.height,
+            });
           default:
             assert(false);
             return null;
@@ -148,6 +153,21 @@ void main() {
               'customData': "custom-data",
             }),
         isMethodCall('showRewardedVideoAd', arguments: null),
+      ]);
+    });
+
+    test('getAdaptiveBannerAdSize', () async {
+      log.clear();
+
+      expect(
+          await AdSize.getAdaptiveBannerAdSize(320)
+              .then((AdSize adSize) => adSize.height),
+          AdSize.banner.height);
+
+      expect(log, <Matcher>[
+        isMethodCall('getAdaptiveBannerAdSize', arguments: <String, dynamic>{
+          'width': 320,
+        }),
       ]);
     });
   });
