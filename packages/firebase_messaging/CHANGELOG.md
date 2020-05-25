@@ -1,3 +1,7 @@
+## 6.0.15
+
+* Fix - register `pluginRegistrantCallback` on every `FcmDartService#start` call.
+
 ## 6.0.14
 
 * Fix for missing UserAgent.h compilation failures.
