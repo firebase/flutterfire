@@ -20,18 +20,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Create a CollectionReference called users that references the firestore collection
-CollectionReference get users => firestore.collection('users');
+CollectionReference users = Firestore.instance.collection('users');
 
-// Call the _addNewUser function to add a new user
-Future<void> _addNewUser() async {
-    await users.add(<String, dynamic>{
-      'first_name': 'John',
-      'last_name': ' Smith',
-      'created_at': FieldValue.serverTimestamp(),
-    });
-}
+// Call the users CollectionReference to add a new user
+await users.add({
+  'first_name': 'John',
+  'last_name': 'Doe'
+});
 ```
-
 
 
 ## Read Data
