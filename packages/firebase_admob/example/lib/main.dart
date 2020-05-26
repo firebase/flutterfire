@@ -121,8 +121,10 @@ class _MyAppState extends State<MyApp> {
                 RaisedButton(
                     child: const Text('SHOW BANNER IN SCROLL VIEW'),
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => BannerScroll()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BannerScroll()));
                     }),
                 RaisedButton(
                     child: const Text('REMOVE BANNER'),
@@ -193,6 +195,6 @@ class _MyAppState extends State<MyApp> {
 }
 
 void main() => runApp(MaterialApp(
-  title: 'Example',
-  home: MyApp(),
-));
+      title: 'Example',
+      home: MyApp(),
+    ));

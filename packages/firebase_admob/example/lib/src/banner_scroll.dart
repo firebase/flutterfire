@@ -48,10 +48,9 @@ class _MyHomePageState extends State<BannerScrollView> {
                 IconButton(
                   icon: const Icon(Icons.add_circle),
                   tooltip: 'button',
-                  onPressed: () { },
+                  onPressed: () {},
                 ),
-              ]
-          ),
+              ]),
           SliverFillRemaining(
             child: AdBanner(),
           ),
