@@ -476,8 +476,23 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    observers.clear();
+    documentObservers.clear();
+    batches.clear();
+    transactions.clear();
+    completionTasks.clear();
+    clearListeners();
     channel.setMethodCallHandler(null);
     channel = null;
+  }
+
+  private void clearListeners() {
+    for(int i = 0; i < listenerRegistrations.size(); i++) {
+      int key = listenerRegistrations.keyAt(i);
+      ListenerRegistration listener = listenerRegistrations.get(key);
+      listener.remove();
+    }
+    listenerRegistrations.clear();
   }
 
   private void attachToActivity(ActivityPluginBinding activityPluginBinding) {
