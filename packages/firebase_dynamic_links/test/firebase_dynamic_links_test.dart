@@ -52,7 +52,7 @@ void main() {
 
     test('retrieveDynamicLink', () async {
       final PendingDynamicLinkData data =
-          await FirebaseDynamicLinks.instance.retrieveDynamicLink();
+          await FirebaseDynamicLinks.instance.getInitialLink();
 
       expect(data.link, Uri.parse('https://google.com'));
 
