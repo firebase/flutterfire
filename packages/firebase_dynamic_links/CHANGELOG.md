@@ -1,6 +1,6 @@
 ## 0.6.0
 
-* Reverted 0.5.0 change that used `getInitialLink()` - a method not available in the Android SDK - back to `retrieveDynamicLink()` while leaving `onLink()`
+* Reverted 0.5.0 change that used `getInitialLink()` - a method not available in the Android SDK - back to `retrieveDynamicLink()` specifically for Android
 
 ## 0.5.1
 
