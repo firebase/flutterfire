@@ -28,7 +28,7 @@ void main() {
             return returnUrl;
           case 'DynamicLinkParameters#shortenUrl':
             return returnUrl;
-          case 'FirebaseDynamicLinks#retrieveDynamicLink':
+          case 'FirebaseDynamicLinks#getInitialLink':
             return <dynamic, dynamic>{
               'link': 'https://google.com',
               'android': <dynamic, dynamic>{
@@ -50,7 +50,7 @@ void main() {
       log.clear();
     });
 
-    test('retrieveDynamicLink', () async {
+    test('getInitialLink', () async {
       final PendingDynamicLinkData data =
           await FirebaseDynamicLinks.instance.getInitialLink();
 
@@ -63,7 +63,7 @@ void main() {
 
       expect(log, <Matcher>[
         isMethodCall(
-          'FirebaseDynamicLinks#retrieveDynamicLink',
+          'FirebaseDynamicLinks#getInitialLink',
           arguments: null,
         )
       ]);

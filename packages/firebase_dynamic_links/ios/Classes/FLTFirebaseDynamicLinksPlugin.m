@@ -90,7 +90,7 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
     [FIRDynamicLinkComponents shortenURL:url
                                  options:options
                               completion:[self createShortLinkCompletion:result]];
-  } else if ([@"FirebaseDynamicLinks#retrieveDynamicLink" isEqualToString:call.method]) {
+  } else if ([@"FirebaseDynamicLinks#getInitialLink" isEqualToString:call.method]) {
     _initiated = YES;
     NSMutableDictionary *dict = [self getInitialLink];
     if (dict == nil && self.flutterError) {

@@ -33,7 +33,7 @@ class FirebaseDynamicLinks {
   Future<PendingDynamicLinkData> getInitialLink() async {
     final Map<String, dynamic> linkData =
         await channel.invokeMapMethod<String, dynamic>(
-            'FirebaseDynamicLinks#retrieveDynamicLink');
+            'FirebaseDynamicLinks#getInitialLink');
     return getPendingDynamicLinkDataFromMap(linkData);
   }
 
