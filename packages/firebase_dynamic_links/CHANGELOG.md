@@ -1,3 +1,7 @@
+## 0.5.2
+
+* Reverted 0.5.0 change that used `getInitialLink()` - a method not available in the Android SDK - back to `retrieveDynamicLink()` while leaving `onLink()`
+
 ## 0.5.1
 
 * Update lower bound of dart dependency to 2.0.0.
