@@ -158,7 +158,7 @@ public class FirebaseDynamicLinksPlugin
       case "FirebaseDynamicLinks#getDynamicLink":
         handleGetDynamicLink(result, Uri.parse((String) call.argument("url")));
         break;
-      case "FirebaseDynamicLinks#getInitialLink":
+      case "FirebaseDynamicLinks#retrieveDynamicLink":
         handleGetInitialDynamicLink(result);
         break;
       default:
