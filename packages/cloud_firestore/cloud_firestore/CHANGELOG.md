@@ -1,3 +1,7 @@
+## 0.13.5+1
+
+* Fix crash where listeners are not removed when app quits.
+
 ## 0.13.5
 
 * Migrate cloud_firestore to android v2 embedding.
