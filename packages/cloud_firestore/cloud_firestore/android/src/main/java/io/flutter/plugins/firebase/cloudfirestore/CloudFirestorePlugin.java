@@ -487,7 +487,7 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
   }
 
   private void clearListeners() {
-    for(int i = 0; i < listenerRegistrations.size(); i++) {
+    for (int i = 0; i < listenerRegistrations.size(); i++) {
       int key = listenerRegistrations.keyAt(i);
       ListenerRegistration listener = listenerRegistrations.get(key);
       listener.remove();
