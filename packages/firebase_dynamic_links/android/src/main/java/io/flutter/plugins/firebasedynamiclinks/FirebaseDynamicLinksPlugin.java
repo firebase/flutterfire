@@ -159,7 +159,7 @@ public class FirebaseDynamicLinksPlugin
         handleGetDynamicLink(result, Uri.parse((String) call.argument("url")));
         break;
       case "FirebaseDynamicLinks#retrieveDynamicLink":
-        handleGetInitialDynamicLink(result);
+        handleRetrieveDynamicLink(result);
         break;
       default:
         result.notImplemented();
@@ -207,7 +207,7 @@ public class FirebaseDynamicLinksPlugin
     addDynamicLinkListener(FirebaseDynamicLinks.getInstance().getDynamicLink(uri), result);
   }
 
-  private void handleGetInitialDynamicLink(final Result result) {
+  private void handleRetrieveDynamicLink(final Result result) {
     // If there's no activity, then there's no initial dynamic link.
     if (activity == null) {
       result.success(null);
