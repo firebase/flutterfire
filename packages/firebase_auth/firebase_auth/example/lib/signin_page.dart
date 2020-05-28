@@ -192,21 +192,21 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection>
     super.dispose();
   }
 
- @override
+  @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
       final PendingDynamicLinkData data =
-      await FirebaseDynamicLinks.instance.getInitialLink();
-      if( data?.link != null ) {
+          await FirebaseDynamicLinks.instance.getInitialLink();
+      if (data?.link != null) {
         handleLink(data?.link);
       }
 
       FirebaseDynamicLinks.instance.onLink(
           onSuccess: (PendingDynamicLinkData dynamicLink) async {
-            final Uri deepLink = dynamicLink?.link;
+        final Uri deepLink = dynamicLink?.link;
 
-            handleLink(deepLink);
-          }, onError: (OnLinkErrorException e) async {
+        handleLink(deepLink);
+      }, onError: (OnLinkErrorException e) async {
         print('onLinkError');
         print(e.message);
       });
