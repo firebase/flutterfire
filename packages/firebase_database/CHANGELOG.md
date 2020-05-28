@@ -1,3 +1,23 @@
+## 3.1.6
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 3.1.5
+
+* Fix (#81) Android setPersistenceCacheSizeBytes crash when Long value was provided.
+
+## 3.1.4
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 3.1.3
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 3.1.2
+
+* Make the pedantic dev_dependency explicit.
+
 ## 3.1.1
 
 * Remove the deprecated `author:` field from pubspec.yaml

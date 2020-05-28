@@ -13,6 +13,7 @@ dependencies:
   firebase_core: ^0.4.1
 
 dev_dependencies:
+  pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
   flutter_driver:
@@ -21,6 +22,6 @@ dev_dependencies:
   e2e: ^0.2.0
 
 environment:
-  sdk: ">=2.0.0-dev.28.0 <3.0.0"
+  sdk: ">=2.0.0 <3.0.0"
   flutter: ">=1.9.1+hotfix.2 <2.0.0"
 

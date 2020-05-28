@@ -1,3 +1,19 @@
+## 0.5.1
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 0.5.0+12
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.5.0+11
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 0.5.0+10
+
+* Make the pedantic dev_dependency explicit.
+
 ## 0.5.0+9
 
 * Remove the deprecated `author:` field from pubspec.yaml

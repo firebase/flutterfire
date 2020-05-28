@@ -1,3 +1,34 @@
+## 6.0.16
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 6.0.15
+
+* Fix - register `pluginRegistrantCallback` on every `FcmDartService#start` call.
+
+## 6.0.14
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 6.0.13
+
+* Implement `UNUserNotificationCenterDelegate` methods to allow plugin to work when method swizzling is disabled.
+* Applications now only need to update their iOS project's `AppDelegate` when method swizzling is disabled.
+* Applications that need to use `firebase_messaging` with other notification plugins will need to
+  add the following to their iOS project's `Info.plist` file:
+  ```xml
+  <key>FirebaseAppDelegateProxyEnabled</key>
+  <false/>
+  ```
+
+## 6.0.12
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 6.0.11
+
+* Make the pedantic dev_dependency explicit.
+
 ## 6.0.10
 
 * Update README to explain how to correctly implement Android background message handling with the new v2 embedding. 

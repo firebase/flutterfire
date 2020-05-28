@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 #import "FirebaseRemoteConfigPlugin.h"
-#import "UserAgent.h"
 
 #import <Firebase/Firebase.h>
 
