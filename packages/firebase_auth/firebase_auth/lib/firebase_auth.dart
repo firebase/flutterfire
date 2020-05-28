@@ -7,7 +7,7 @@ library firebase_auth;
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/src/firebase_app.dart';
 import 'package:meta/meta.dart';
 
 export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'

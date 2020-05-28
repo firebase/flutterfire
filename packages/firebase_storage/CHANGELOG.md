@@ -1,3 +1,7 @@
+## 3.1.7
+
+* Change import for firebase_core.
+
 ## 3.1.6
 
 * Update lower bound of dart dependency to 2.0.0.

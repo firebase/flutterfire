@@ -9,7 +9,7 @@ import 'dart:ui' show hashList;
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     as platform;
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/src/firebase_app.dart';
 
 export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     show FieldPath, Blob, GeoPoint, Timestamp, Source, DocumentChangeType;
