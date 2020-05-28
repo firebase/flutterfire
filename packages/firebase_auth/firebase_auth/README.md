@@ -153,7 +153,7 @@ To contribute a change to this plugin,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
 and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
 
-## 0.4.x to 0.5.x Firebase Dynamic Links migration tip
+## 0.4.x to 0.5.x Firebase Dynamic Links Android migration tip
 
 When upgrading from an older version of the Dynamic Links library, passwordless (email link) sign-in will break, and the link will return null if you simply replace `FirebaseDynamicLinks.instance.retrieveDynamicLink()` with `FirebaseDynamicLinks.instance.getInitialLink()`. Instead you need to update your code to something similar to 
 
