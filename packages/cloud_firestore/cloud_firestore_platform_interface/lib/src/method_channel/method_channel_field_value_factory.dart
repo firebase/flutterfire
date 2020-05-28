@@ -12,19 +12,19 @@ import 'method_channel_field_value.dart';
 /// on mobile where communication relies on [MethodChannel]
 class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
   @override
-  FieldValuePlatform arrayRemove(List elements) =>
+  MethodChannelFieldValue arrayRemove(List elements) =>
       MethodChannelFieldValue(FieldValueType.arrayRemove, elements);
 
   @override
-  FieldValuePlatform arrayUnion(List elements) =>
+  MethodChannelFieldValue arrayUnion(List elements) =>
       MethodChannelFieldValue(FieldValueType.arrayUnion, elements);
 
   @override
-  FieldValuePlatform delete() =>
+  MethodChannelFieldValue delete() =>
       MethodChannelFieldValue(FieldValueType.delete, null);
 
   @override
-  FieldValuePlatform increment(num value) {
+  MethodChannelFieldValue increment(num value) {
     // It is a compile-time error for any type other than `int` or `double` to
     // attempt to extend or implement `num`.
     assert(value is int || value is double);
@@ -37,6 +37,6 @@ class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
   }
 
   @override
-  FieldValuePlatform serverTimestamp() =>
+  MethodChannelFieldValue serverTimestamp() =>
       MethodChannelFieldValue(FieldValueType.serverTimestamp, null);
 }

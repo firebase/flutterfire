@@ -1,3 +1,51 @@
+## 0.13.6
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 0.13.5
+
+* Migrate cloud_firestore to android v2 embedding.
+
+## 0.13.4+2
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.13.4+1
+
+* Fix crash with pagination with `DocumentReference` (#2044)
+* Minor tweaks to integ tests.
+
+## 0.13.4
+
+* Support equality comparison on `FieldValue` instances.
+* Updated version of endorsed web implementation.
+
+## 0.13.3+1
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.13.3
+
+* Add macOS support
+
+## 0.13.2+3
+
+* Fixed decoding & encoding platform interface instances in nested maps
+
+## 0.13.2+2
+
+* Fixed crashes when using `FieldValue.arrayUnion` & `FieldValue.arrayRemove` with `DocumentReference` objects
+
+## 0.13.2+1
+
+* Add Web integration documentation to README.
+
+## 0.13.2
+
+* Add web support by default.
+* Require Flutter SDK 1.12.13+hotfix.4 or later
+* Add web support to the example app.
+
 ## 0.13.1+1
 
 * Fixed crashes when using `Query#where` with `DocumentReference` objects
@@ -18,7 +66,7 @@
 
 ## 0.13.0
 
-* **Breaking change** Remove use of [deprecated](https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/FirebaseFirestoreSettings.Builder.html#setTimestampsInSnapshotsEnabled(boolean)) 
+* **Breaking change** Remove use of [deprecated](https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/FirebaseFirestoreSettings.Builder.html#setTimestampsInSnapshotsEnabled(boolean))
   setting `setTimestampsInSnapshotsEnabled`. If you are already setting it to true, just remove the setting. If you are
   setting it to false, you should update your code to expect Timestamps.
 
