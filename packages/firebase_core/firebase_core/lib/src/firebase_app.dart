@@ -13,7 +13,7 @@ class FirebaseApp {
   // TODO(jackson): We could assert here that an app with this name was configured previously.
   FirebaseApp({@required this.name}) : assert(name != null);
 
-  /// The name of this app.
+  /// The name of this app. App name can only contain alphanumeric, hyphen (-), and underscore (_) characters.
   final String name;
 
   static final String defaultAppName = firebaseDefaultAppName;
