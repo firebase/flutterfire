@@ -1,3 +1,32 @@
+## 0.9.3+4
+
+* Bump Dart version requirement.
+
+## 0.9.3+3
+
+* Provide a default `MobileAdTargetingInfo` for `RewardedVideoAd.load()`. `RewardedVideoAd.load()`
+would inadvertently cause a crash if `MobileAdTargetingInfo` was excluded.
+
+## 0.9.3+2
+
+* Fixed bug related to simultaneous ad loading behavior on iOS.
+
+## 0.9.3+1
+
+* Modified README to reflect supporting Native Ads.
+
+## 0.9.3
+
+* Support Native Ads on iOS.
+
+## 0.9.2+1
+
+* Added note about required Google Service config files.
+
+## 0.9.2
+
+* Add basic Native Ads support for Android.
+
 ## 0.9.1+3
 
 * Replace deprecated `getFlutterEngine` call on Android.

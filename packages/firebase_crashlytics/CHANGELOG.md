@@ -1,6 +1,18 @@
-## 0.1.3+2
+## 0.1.5
 
 * Make Android configuration documentation clearer
+
+## 0.1.4
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 0.1.3+3
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.1.3+2
+
+* Fix Cirrus build by removing WorkspaceSettings.xcsettings file in the iOS example app.
 
 ## 0.1.3+1
 

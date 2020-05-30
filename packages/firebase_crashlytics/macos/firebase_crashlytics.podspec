@@ -26,9 +26,5 @@ A new flutter plugin project.
   s.dependency 'Crashlytics'
   s.dependency 'Firebase/Core'
 
-  s.prepare_command = <<-CMD
-      echo // Generated file, do not edit > Classes/UserAgent.h
-      echo "#define LIBRARY_VERSION @\\"#{libraryVersion}\\"" >> Classes/UserAgent.h
-      echo "#define LIBRARY_NAME @\\"flutter-fire-cls\\"" >> Classes/UserAgent.h
-    CMD
+  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{libraryVersion}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-cls\\\"" }
 end

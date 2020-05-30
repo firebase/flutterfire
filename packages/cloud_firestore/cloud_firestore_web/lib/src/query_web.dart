@@ -62,7 +62,9 @@ class QueryWeb extends QueryPlatform {
   QueryPlatform endAt(List values) => QueryWeb(
         this._firestore,
         this._path,
-        _webQuery != null ? _webQuery.endAt(fieldValues: values) : null,
+        _webQuery != null
+            ? _webQuery.endAt(fieldValues: CodecUtility.valueEncode(values))
+            : null,
         isCollectionGroup: _isCollectionGroup,
       );
 
@@ -73,8 +75,10 @@ class QueryWeb extends QueryPlatform {
         this._firestore,
         this._path,
         _webQuery.endAt(
-            fieldValues:
-                _orderByKeys.map((key) => documentSnapshot.data[key]).toList()),
+          fieldValues: CodecUtility.valueEncode(
+            _orderByKeys.map((key) => documentSnapshot.data[key]).toList(),
+          ),
+        ),
         isCollectionGroup: _isCollectionGroup);
   }
 
@@ -82,7 +86,9 @@ class QueryWeb extends QueryPlatform {
   QueryPlatform endBefore(List values) => QueryWeb(
         this._firestore,
         this._path,
-        _webQuery != null ? _webQuery.endBefore(fieldValues: values) : null,
+        _webQuery != null
+            ? _webQuery.endBefore(fieldValues: CodecUtility.valueEncode(values))
+            : null,
         isCollectionGroup: _isCollectionGroup,
       );
 
@@ -93,8 +99,10 @@ class QueryWeb extends QueryPlatform {
         this._firestore,
         this._path,
         _webQuery.endBefore(
-            fieldValues:
-                _orderByKeys.map((key) => documentSnapshot.data[key]).toList()),
+          fieldValues: CodecUtility.valueEncode(
+            _orderByKeys.map((key) => documentSnapshot.data[key]).toList(),
+          ),
+        ),
         isCollectionGroup: _isCollectionGroup);
   }
 
@@ -144,7 +152,7 @@ class QueryWeb extends QueryPlatform {
   QueryPlatform startAfter(List values) => QueryWeb(
         this._firestore,
         this._path,
-        _webQuery.startAfter(fieldValues: values),
+        _webQuery.startAfter(fieldValues: CodecUtility.valueEncode(values)),
         orderByKeys: _orderByKeys,
         isCollectionGroup: _isCollectionGroup,
       );
@@ -156,8 +164,10 @@ class QueryWeb extends QueryPlatform {
         this._firestore,
         this._path,
         _webQuery.startAfter(
-            fieldValues:
-                _orderByKeys.map((key) => documentSnapshot.data[key]).toList()),
+          fieldValues: CodecUtility.valueEncode(
+            _orderByKeys.map((key) => documentSnapshot.data[key]).toList(),
+          ),
+        ),
         orderByKeys: _orderByKeys,
         isCollectionGroup: _isCollectionGroup);
   }
@@ -166,7 +176,7 @@ class QueryWeb extends QueryPlatform {
   QueryPlatform startAt(List values) => QueryWeb(
         this._firestore,
         this._path,
-        _webQuery.startAt(fieldValues: values),
+        _webQuery.startAt(fieldValues: CodecUtility.valueEncode(values)),
         orderByKeys: _orderByKeys,
         isCollectionGroup: _isCollectionGroup,
       );
@@ -178,8 +188,9 @@ class QueryWeb extends QueryPlatform {
       this._firestore,
       this._path,
       _webQuery.startAt(
-        fieldValues:
-            _orderByKeys.map((key) => documentSnapshot.data[key]).toList(),
+        fieldValues: CodecUtility.valueEncode(
+          _orderByKeys.map((key) => documentSnapshot.data[key]).toList(),
+        ),
       ),
       orderByKeys: _orderByKeys,
       isCollectionGroup: _isCollectionGroup,
