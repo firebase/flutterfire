@@ -1,6 +1,6 @@
 ## 0.1.1
 
-* Fixed 'No podspec found'
+* Update lower bound of dart dependency to 2.0.0.
 
 ## 0.1.0
 
