@@ -1,4 +1,8 @@
-## 0.10.0
+## 0.1.1
+
+* Fixed 'No podspec found'
+
+## 0.1.0
 
 * **Breaking Change** Update Android firebase-ml-vision dependencies to latest.
 * Add `rawBytes` property to `Barcode`.

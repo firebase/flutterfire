@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-library firebase_ml_vision;
+library firebase_ml_vision_raw_bytes;
 
 import 'dart:async';
 import 'dart:io';

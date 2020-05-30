@@ -1,3 +1,9 @@
+# NOTE: This is a temporary package
+ This plugin should only be used as a replacement for [firebase_ml_vision](https://pub.dev/packages/firebase_ml_vision)
+ when needing to acquire the raw bytes from a barcode. [This pull request](https://github.com/FirebaseExtended/flutterfire/pull/2368)
+ on the main [firebase_ml_vision](https://pub.dev/packages/firebase_ml_vision) plugin reflects the changes exposed by 
+ this temporary plugin. After the Pull Request referred to above has been merge, this plugin is no longer of use.
+
 # ML Kit Vision for Firebase
 
 [![pub package](https://img.shields.io/pub/v/firebase_ml_vision.svg)](https://pub.dartlang.org/packages/firebase_ml_vision)

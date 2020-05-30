@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:firebase_ml_vision_raw_bytes/firebase_ml_vision_raw_bytes.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
