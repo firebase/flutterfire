@@ -9,24 +9,49 @@ sidebar_label: Usage
 
 Cloud Firestore stores data within "documents", which are contained within "collections".  Documents can also contain
 nested collections.  For example, our users would each have their own "document" stored inside the "Users" collection.
-The `collection` method allows us to reference a collection within our code.  In the below example, we can reference
-the collection `users`, and create a new user document:
+The `collection` method allows us to reference a collection within our code.
 
-```dart title="lib/main.dart"
+In the below example, we can reference the collection `users`, and create a new user document when a button is pressed:
+
+```dart
 import 'package:flutter/material.dart';
 
 // Import the firebase_core and cloud_firestore plugin
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// Create a CollectionReference called users that references the firestore collection
-CollectionReference users = Firestore.instance.collection('users');
+class AddUser extends StatelessWidget {
+  final String fullName;
+  final String company;
+  final int age;
 
-// Call the users CollectionReference to add a new user
-await users.add({
-  'first_name': 'John',
-  'last_name': 'Doe'
-});
+  AddUser(this.fullName, this.company, this.age);
+
+  @override
+  Widget build(BuildContext context) {
+    // Create a CollectionReference called users that references the firestore collection
+    CollectionReference users = Firestore.instance.collection('users');
+
+    Future<void> addUser() {
+      // Call the users CollectionReference to add a new user
+      return users
+          .add({
+            'full_name': fullName, // John Doe
+            'company': company, // Stokes and Sons
+            'age': age // 42
+          })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+    }
+
+    return FlatButton(
+      onPressed: addUser,
+      child: Text(
+        "Add User",
+      ),
+    );
+  }
+}
 ```
 
 
@@ -37,56 +62,79 @@ provided by realtime updates when the data within a query changes.
 
 ### One-time Read
 
-To read a collection or document once, call the `getDocuments` method on a `CollectionReference` or `DocumentReference`
+To read a collection or document once, call the `get` method on a `CollectionReference` or `DocumentReference`. In the
+below example we use a `FutureBuilder`:
 
-```dart
-Firestore.instance
-    .collection('users')
-    .document(userId)
-    .getDocuments();
-```
+```dart highlight={11}
+class GetUser extends StatelessWidget {
+  final String documentId;
 
-### Realtime changes
+  GetUser(this.documentId);
 
-
-> Check code <br/>
-  Snapshot doesn't error on permission error
-
-
-```dart
-class UserList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot> (
-      stream: Firestore.instance.collection('users').snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if(snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}', textDirection: TextDirection.ltr);
+    CollectionReference users = Firestore.instance.collection('users');
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: users.document(documentId).get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) return Text("Something went wrong");
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Text(snapshot.data['full_name']);
         }
-
-        if(snapshot.connectionState == ConnectionState.active) {
-          return new ListView(
-            children: snapshot.data.documents.map((DocumentSnapshot document) {
-              return new ListTile(
-                title: new Text(document['first_name'], ),
-                subtitle: new Text(document['last_name'])
-              );
-            }).toList(),
-          );
-        }
-
-        return Padding(
-          padding: const EdgeInsets.all(50.0),
-          child: new Text('Loading Data', textDirection: TextDirection.ltr),
-        );
-
+        return Text("loading");
       },
     );
   }
 }
 ```
 
-### Snapshots
+### Realtime changes
+
+To setup a listener to react to any changes to a query, you use a `StreamBuilder` with the `snapshots()` method.
+The below example watches the entire "users" collection, and when any of the documents change (deleted, added or
+modified), the ListView is updated:
+
+```dart
+class UserInformation extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    CollectionReference users = Firestore.instance.collection('users');
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: users.snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) return Text('Error: $snapshot, error}');
+
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Text("Loading");
+
+        return new ListView(
+          children: snapshot.data.documents.map((DocumentSnapshot document) {
+            return new ListTile(
+              title: new Text(document['full_name']),
+              subtitle: new Text(document['company']),
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+}
+```
+
+By default, listeners do not update if there is a change that only affects the metadata.  If you want to receive events
+when the document or query metadata changes, you can pass `includeMetadataChanges` to the `snapshots` method:
+
+```dart
+Firestore.instance
+  .collection('users')
+  .snapshots(includeMetadataChanges: true)
+```
+
+
+### Document & Query Snapshots
 
 When making a Firestore Query, Firestore returns either a `QuerySnapshot` for collection queries, or a `DocumentSnapShot`
 for document queries.  These snapshots provide the ability to view the data, view query metadata, whether the document
@@ -102,9 +150,9 @@ To access the documents within a `QuerySnapshot`, call the `forEach` method:
 ```dart
 Firestore.instance
     .collection('users')
-    .snapshots()
-    .listen((QuerySnapshot) => {
-        QuerySnapshot.documents.forEach((doc) {
+    .get()
+    .then((QuerySnapshot querySnapshot) => {
+        querySnapshot.documents.forEach((doc) {
             print(doc["first_name"]);
         });
     });
@@ -140,30 +188,72 @@ Cloud Firestore offers advanced capabilities for querying collections.
 #### Filtering
 
 To filter documents within a collection, the `where` method can be chained onto a collection reference.  Filtering supports
-equality checks and "in" queries.  For example, for filter users where their age is greater than 30:
+equality checks and "in" queries.  For example, for filter users where their age is greater than 20:
+
+<Tabs
+  defaultValue="stream"
+  values={[
+    { label: 'Realtime Changes', value: 'stream', },
+    { label: 'One-time Read', value: 'future', },
+  ]
+}>
+<TabItem value="stream">
 
 ```dart
 Firestore.instance
-    .collection('users')
-    .where('age', isGreaterThan: 30)
-    .snapshots()
-    .listen((QuerySnapshot) => {
-        /* ... */
-    });
+  .collection('users')
+  .where('age', isGreaterThan: 20).snapshots(),
 ```
+
+</TabItem>
+
+<TabItem value="future">
+
+```dart
+Firestore.instance
+  .collection('users')
+  .where('age', isGreaterThan: 20).get(),
+```
+
+</TabItem>
+</Tabs>
+
+
 
 Cloud Firestore also supports array queries.  For example, to filter users who speak English (en) or Italian (it), use
 the `arrayContainsAny` filter:
 
+<Tabs
+  defaultValue="stream"
+  values={[
+    { label: 'Realtime Changes', value: 'stream', },
+    { label: 'One-time Read', value: 'future', },
+  ]
+}>
+<TabItem value="stream">
+
 ```dart
 Firestore.instance
-    .collection('users')
-    .where('languages', arrayContainsAny: ['en', 'it'])
-    .snapshots()
-    .listen((QuerySnapshot) => {
-        /* ... */
-    });
+  .collection('users')
+  .where('language', arrayContainsAny: ['en', 'it'])
+  .snapshots(),
 ```
+
+</TabItem>
+
+<TabItem value="future">
+
+```dart
+Firestore.instance
+  .collection('users')
+  .where('language', arrayContainsAny: ['en', 'it'])
+  .get(),
+```
+
+</TabItem>
+</Tabs>
+
+
 
 To learn more about all of the querying capabilities Cloud Firestore has to offer, view the
 [Firebase documentation](https://firebase.google.com/docs/firestore/query-data/queries).
@@ -173,30 +263,72 @@ To learn more about all of the querying capabilities Cloud Firestore has to offe
 
 To limit the number of documents returned from a query, use the `limit` method on a collection reference:
 
+<Tabs
+  defaultValue="stream"
+  values={[
+    { label: 'Realtime Changes', value: 'stream', },
+    { label: 'One-time Read', value: 'future', },
+  ]
+}>
+<TabItem value="stream">
+
 ```dart
-    Firestore.instance
-        .collection('users')
-        .limit(2)
-        .snapshots()
-        .listen((QuerySnapshot) => {
-            /* ... */
-        });
+Firestore.instance
+  .collection('users')
+  .limit(2).snapshots(),
 ```
+
+</TabItem>
+
+<TabItem value="future">
+
+```dart
+Firestore.instance
+  .collection('users')
+  .limit(2).get(),
+```
+
+</TabItem>
+</Tabs>
+
+
 
 #### Ordering
 
 To order the documents by a specific value, use the `orderBy` method:
 
+<Tabs
+  defaultValue="stream"
+  values={[
+    { label: 'Realtime Changes', value: 'stream', },
+    { label: 'One-time Read', value: 'future', },
+  ]
+}>
+<TabItem value="stream">
+
 ```dart
-    Firestore.instance
-        .collection('users')
-        .limit(20)
-        .orderBy('age', descending: false)
-        .snapshots()
-        .listen((QuerySnapshot) => {
-            /* ... */
-        });
+Firestore.instance
+  .collection('users')
+  .limit(20)
+  .orderBy('age', descending: false)
+  .snapshots()
 ```
+
+</TabItem>
+
+<TabItem value="future">
+
+```dart
+Firestore.instance
+  .collection('users')
+  .limit(20)
+  .orderBy('age', descending: false)
+  .get()
+```
+
+</TabItem>
+</Tabs>
+
 
 The above example both limits the documents returned to 20 and orders all the users in the snapshot page by age ascending order.
 
@@ -205,33 +337,52 @@ The above example both limits the documents returned to 20 and orders all the us
 To start and/or end a query at a specific point within a collection, you can pass a value to the `startAt`, `endAt`,
 `startAfter` or `endBefore` methods.  You must specify an order to use pointers, for example:
 
+<Tabs
+  defaultValue="stream"
+  values={[
+    { label: 'Realtime Changes', value: 'stream', },
+    { label: 'One-time Read', value: 'future', },
+  ]
+}>
+<TabItem value="stream">
+
 ```dart
 Firestore.instance
-    .collection('users')
-    .orderBy('age', descending: false)
-    .startAt([19])
-    .endAt([40])
-    .snapshots()
-    .listen((QuerySnapshot) => {
-        /* ... */
-    });
+  .collection('users')
+  .orderBy('age')
+  .orderBy('company')
+  .startAt([20, 'Swift - Harber'])
+  .endAt([50, 'Wiza Group'])
+  .snapshots()
 ```
 
-The above query orders users by age in ascending order, but only returns users whose age is between 19 and 40.
+</TabItem>
+
+<TabItem value="future">
+
+```dart
+Firestore.instance
+  .collection('users')
+  .orderBy('age')
+  .orderBy('company')
+  .startAt([20, 'Swift - Harber'])
+  .endAt([50, 'Wiza Group'])
+  .get()
+```
+
+</TabItem>
+</Tabs>
+
+
 
 You can further specify a `DocumentSnapShot` instead of a specific value, by passing it to the `startAfterDocument`,
 `startAtDocument`, `endAtDocument` or `endBeforeDocument` methods.  For example:
 
 ```dart
-var userDocumentSnapshot = await Firestore.instance
-    .collection('users')
-    .document(userId)
-    .get();
-
 Firestore.instance
     .collection('users')
     .orderBy('age')
-    .startAfterDocument(userDocumentSnapshot)
+    .startAfterDocument(documentSnapshot)
     .snapshots()
     .listen((QuerySnapshot) => {
         /* ... */
@@ -264,109 +415,162 @@ For more information on what is possible when writing data to Firestore, please 
 To add a new document to a collection, use the `add` method on a `CollectionReference`:
 
 ```dart
-Firestore.instance
-    .collection('users')
-    .add({
-        'first_name': 'Ben',
-        'last_name': 'Jones',
-        'age': 26
-    })
-    .then(() => print('User Added'));
+class AddUser extends StatelessWidget {
+  final String fullName;
+  final String company;
+  final int age;
+
+
+  AddUser(this.fullName, this.company, this.age);
+
+  @override
+  Widget build(BuildContext context) {
+    // Create a CollectionReference called users that references the firestore collection
+    CollectionReference users = Firestore.instance.collection('users');
+
+    Future<void> addUser() {
+      // Call the users CollectionReference to add a new user
+      return users
+          .add({
+            'full_name': fullName, // John Doe
+            'company': company, // Stokes and Sons
+            'age': age // 42
+          })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+    }
+
+    return FlatButton(
+      onPressed: addUser,
+      child: Text(
+        "Add User",
+      ),
+    );
+  }
+}
 ```
 
 The `add` method adds the new document to your collection with a unique auto-generated ID. If you'd like to specify your
-own ID, call the `setData` method on a `DocumentReference` instead:
+own ID, call the `setData` method on a `DocumentReference` instead.
 
-```dart
-Firestore.instance
-    .collection('users')
+
+```dart highlight={6-8}
+CollectionReference users = Firestore.instance.collection('users');
+
+Future<void> addUser() {
+  return users
     .document('ABC123')
     .setData({
-        'first_name': 'Steve',
-        'last_name': 'Austin',
-        'age': 52
-    });
+      'full_name': "Mary Jane",
+      'age': 18
+    })
+    .then((value) => print("User Added"))
+    .catchError((error) => print("Failed to add user: $error"));
+}
 ```
+
+> **Note**:  If you call setData with a documentId that already exists, it will replace all the document data
+
+
 ### Updating documents
 
 The `setData` method above replaces any existing data on a given `DocumentReference`. If you'd like to update a document
-instead, use the `update` method:
+instead, use the `updateData` method:
 
-```dart
-Firestore.instance
-    .collection('users')
+```dart highlight={6}
+CollectionReference users = Firestore.instance.collection('users');
+
+Future<void> updateUser() {
+  return users
     .document('ABC123')
-    .updateData({
-        'age': 25
-    });
+    .updateData({'company': 'Stokes and Sons'})
+    .then((value) => print("User Updated"))
+    .catchError((error) => print("Failed to update user: $error"));
+}
 ```
 
 The method also provides support for updating deeply nested values via dot-notation:
 
-```dart
-Firestore.instance
-    .collection('users')
+```dart highlight={6}
+CollectionReference users = Firestore.instance.collection('users');
+
+Future<void> updateUser() {
+  return users
     .document('ABC123')
-    .updateData({
-        'info.address.zipcode': 90210
-    });
+    .updateData({'info.address.zipcode': 90210})
+    .then((value) => print("User Updated"))
+    .catchError((error) => print("Failed to update user: $error"));
+}
 ```
 
 #### Field values
 
 Cloud Firestore supports storing and manipulating values on your database, such as Timestamps, GeoPoints, Blobs and
-array management.document
+array management.
 
 To store `GeoPoint` values, provide the latitude and longitude to the GeoPoint class:
 
-```dart
-Firestore.instance
-    .collection('users')
+```dart highlight={6}
+CollectionReference users = Firestore.instance.collection('users');
+
+Future<void> updateUser() {
+  return users
     .document('ABC123')
-    .updateData({
-        'info.address.location': GeoPoint(53.483959, -2.244644)
-    });
+    .updateData({'info.address.location': GeoPoint(53.483959, -2.244644)})
+    .then((value) => print("User Updated"))
+    .catchError((error) => print("Failed to update user: $error"));
+}
 ```
 
-To store a Blob such as an image, provide a `Uint8List`.  The below example shows how to get a remote image as a `Uint8List`
-and nest it within a `document`:
+To store a Blob such as an image, provide a `Uint8List`.  The below example shows how to get an image from your `assets`
+directory and nest it in the `info` object in Firestore.
 
-```dart
-Uint8List data =
-  (await NetworkAssetBundle(Uri.parse('https://i.imgur.com'))
-    .load("/HTm48iG.jpg"))
-    .buffer
-    .asUint8List();
+```dart highlight={4-11}
+CollectionReference users = Firestore.instance.collection('users');
 
-Firestore.instance
-  .collection('users')
-  .document('ABC123')
-  .updateData({
-    'info.avatar': Blob(data)
-  });
+Future<void> updateUser() {
+  return rootBundle
+    .load('assets/images/sample.jpg')
+    .then((bytes) => bytes.buffer.asUint8List())
+    .then((avatar) {
+      return users
+        .document('ABC123')
+         .updateData({'info.avatar': Blob(avatar)});
+      })
+    .then((value) => print("User Updated"))
+    .catchError((error) => print("Failed to update user: $error"));
+}
 ```
 
 ## Removing Data
 
 To delete documents with Cloud Firestore, you can use the `delete` method on a `DocumentReference`:
 
-```dart
-Firestore.instance
-  .collection('users')
-  .document('ABC123')
-  .delete()
+```dart highlight={6}
+CollectionReference users = Firestore.instance.collection('users');
+
+Future<void> deleteUser() {
+  return users
+    .document('ABC123')
+    .delete()
+    .then((value) => print("User Deleted"))
+    .catchError((error) => print("Failed to delete user: $error"));
+}
 ```
 
 If you need to remove specific properties from within a document rather than the document itself, you can use the `delete`
 method on the `FieldValue` class:
 
-```dart
-Firestore.instance
-  .collection('users')
-  .document('ABC123')
-  .updateData({
-    'age': FieldValue.delete()
-  });
+```dart highlight={6}
+CollectionReference users = Firestore.instance.collection('users');
+
+Future<void> deleteField() {
+  return users
+    .document('ABC123')
+    .updateData({'age': FieldValue.delete()})
+    .then((value) => print("User Deleted"))
+    .catchError((error) => print("Failed to delete user: $error"));
+}
 ```
 
 ## Transactions
@@ -396,39 +600,43 @@ is executing, it will retry, ensuring the value on the server is used, rather th
 To execute a transaction, call the `runTransaction` method:
 
 ```dart
-DocumentReference docRef = Firestore.instance.document('users/ABC123');
+CollectionReference users = Firestore.instance.collection('users');
+DocumentReference documentReference = users.document(documentId);
 
-Firestore.instance.runTransaction(( Transaction transaction) async {
-  DocumentSnapshot docSnap = await transaction.get(docRef);
-
-  transaction.update(docRef, {
-    'subscribers':docSnap.data['subscribers'] + 1
+Future<void> updateUser() {
+  return Firestore.instance.runTransaction((transaction) async {
+    DocumentSnapshot documentSnapshot = await transaction.get(documentReference);
+    transaction.update(documentReference,
+      {'followers': documentSnapshot.data()['followers'] + 1});
   })
-  .whenComplete(() => print("Subscriber count updated"));
-});
+  .then((value) => print("Followers updated"))
+  .catchError((error) => print("Failed to update user followers: $error"));
+}
 ```
 
 
 ## Batch write
 
-Firestore lets you execute multiple write operations as a single batch that can contain any combination of `set`, `update`,
-or `delete` operations.
+Firestore lets you execute multiple write operations as a single batch that can contain any combination of `setData`,
+`updateData`, or `delete` operations.
 
 First, create a new batch instance via the `batch` method, then perform the operations on the batch, and then commit it
 once ready.  The below example shows how to delete all documents in a collection in a single operation:
 
 ```dart
-QuerySnapshot userQs = await Firestore.instance
-  .collection('users')
-  .getDocuments();
+CollectionReference users = Firestore.instance.collection('users');
 
-var batch = Firestore.instance.batch();
+Future<void> batchDelete() {
+  var batch = Firestore.instance.batch();
 
-userQs.documents.forEach((doc) {
-  batch.delete(doc.reference);
-});
+  return users.get().then((querySnapshot) {
+    querySnapshot.documents.forEach((document) {
+      batch.delete(document.reference);
+    });
 
-return batch.commit();
+    return batch.commit();
+  });
+}
 ```
 
 ## Data Security
@@ -436,7 +644,9 @@ return batch.commit();
 It is important that you understand how to write rules in your Firebase console to ensure that your data is secure.
 Please follow the Firebase Firestore documentation on [security](https://firebase.google.com/docs/firestore/security/get-started).
 
-## Offline Capabilities
+## Access Data Offline
+
+### Configure Offline Persistence
 
 Firestore provides out of the box support for offline capabilities.  When reading and writing data, Firestore uses a
 local database which automatically synchronizes with the server. Cloud Firestore functionality continues when users are
@@ -447,9 +657,61 @@ before any Firestore interaction is performed:
 
 ```dart
 await Firestore.instance.settings(
-  persistenceEnabled: false
+  Settings(persistenceEnabled: false)
 );
 ```
+
+If you want to clear any persisted data, you can call the `clearPersistence()` method.
+
+```dart
+await Firestore.instance.clearPersistence();
+```
+
+### Configure Cache Size
+
+When persistence is enabled, Firestore caches every document for offline access.  After exceeding the cache size, Firestore
+will attempt to remove older, unused data.  You can configure different cache sizes, or disable the removal process:
+
+```dart
+// The default value is 40 MB. The threshold must be set to at least 1 MB,
+// and can be set to Settings.CACHE_SIZE_UNLIMITED to disable garbage collection.
+
+await Firestore.instance.settings(
+  Settings(
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED
+  ));
+```
+
+### Disable and Enable Network Access
+
+It is possible to disable network access for your Firestore client.  While network access is disabled, all Firestore requests
+retrieve results from the cache.  Any write operations are queued until network access is re-enabled.
+
+```dart
+await Firestore.instance.disableNetwork()
+```
+
+To re-enabled network access, call the `enableNetwork()` method:
+
+```dart
+await Firestore.instance.enableNetwork()
+```
+
+## Emulator Usage
+
+If you are using the local Firestore emulators, then it is possible to connect to these by passing a `host` parameter to
+the `Settings` method, immediately after initializing Firebase.
+
+The IP address `10.0.2.2` is a special alias to your host loopback interface (`127.0.0.1` on your development machine). Ensure
+you pass the correct port on which the Firebase emulator is running on.
+
+```dart
+await FirebaseCore.instance.initializeApp();
+await Firestore.instance
+  .settings(Settings(host: "10.0.2.2:8080", sslEnabled: false));
+```
+
+
 
 
 
