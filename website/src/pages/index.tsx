@@ -9,7 +9,7 @@ import styles from './styles.module.scss';
 import { Triangle } from '../components/Triangle';
 
 // @ts-ignore
-import plugins from '../plugins';
+import plugins from '../../plugins';
 
 interface Plugin {
   name: string;
