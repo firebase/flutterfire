@@ -1,25 +1,12 @@
-const https = require('https');
+const axios = require('axios');
 const webpack = require('webpack');
 const plugins = require('../plugins');
-
-// HTTP GET wrapper
-async function getRequest(url) {
-  return new Promise((resolve, reject) => {
-    https
-      .get(url, resp => {
-        let data = '';
-        resp.on('data', chunk => (data += chunk));
-        resp.on('end', () => resolve(JSON.parse(data)));
-      })
-      .on('error', reject);
-  });
-}
 
 // Fetch the plugins latest version from the pub API
 async function fetchPluginVersion(plugin) {
   try {
-    const response = await getRequest(`https://pub.dartlang.org/api/packages/${plugin}/metrics`);
-    return response.scorecard.packageVersion;
+    const response = await axios.get(`https://pub.dartlang.org/api/packages/${plugin}/metrics`);
+    return response.data.scorecard.packageVersion;
   } catch (e) {
     console.log(`Failed to load version for plugin "${plugin}".`);
     return '';

@@ -100,6 +100,7 @@ module.exports = {
     require.resolve('docusaurus-plugin-sass'),
     require.resolve('@docusaurus/plugin-ideal-image'),
     path.resolve(__dirname, './docusaurus-plugins/source-versions'),
+    path.resolve(__dirname, './docusaurus-plugins/source-api-reference'),
   ],
   presets: [
     [

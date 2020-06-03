@@ -18,6 +18,7 @@
     "@types/lodash.get": "^4.4.6",
     "@types/react": "^16.9.35",
     "@types/react-router-dom": "^5.1.5",
+    "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "docusaurus-plugin-sass": "^0.1.8",
     "dotenv": "^8.2.0",

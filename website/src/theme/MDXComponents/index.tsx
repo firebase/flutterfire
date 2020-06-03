@@ -12,8 +12,28 @@ import 'react-medium-image-zoom/dist/styles.css';
 
 import { getVersion } from '../../utils';
 
+// @ts-ignore
+const reference = REFERENCE_API;
+
 export default {
   a: (props: HTMLProps<HTMLAnchorElement>) => {
+    if (props.href && props.href.startsWith('!')) {
+      const name = props.href.replace('!', '');
+      const entity = reference[name];
+
+      if (entity) {
+        return (
+          <a
+            {...props}
+            target="_blank"
+            href={`https://pub.dev/documentation/${entity.plugin}/latest/${entity.href}`}
+          />
+        );
+      } else {
+        return <span>{props.children}</span>;
+      }
+    }
+
     if (/\.[^./]+$/.test(props.href || '')) {
       return <a {...props} />;
     }
