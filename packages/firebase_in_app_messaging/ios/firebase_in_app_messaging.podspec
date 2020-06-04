@@ -16,7 +16,7 @@ Flutter plugin for Firebase In-App Messaging.
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
   s.dependency 'Firebase'
-  s.dependency 'Firebase/InAppMessagingDisplay'
+  s.dependency 'Firebase/InAppMessaging'
   s.static_framework = true
 
   s.ios.deployment_target = '8.0'
