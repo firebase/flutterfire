@@ -1,3 +1,7 @@
+## 0.1.2+1
+
+* replace deprecated InAppMessagingDisplay ios dependency with InAppMessaging.
+
 ## 0.1.2
 
 * Update lower bound of dart dependency to 2.0.0.
