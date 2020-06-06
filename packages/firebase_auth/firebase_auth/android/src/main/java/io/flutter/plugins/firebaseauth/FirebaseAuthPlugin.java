@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.util.SparseArray;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApiNotAvailableException;
@@ -62,7 +64,7 @@ import java.util.concurrent.TimeUnit;
 public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
   // Only set registrar for v1 embedder.
   private PluginRegistry.Registrar registrar;
-  private SparseArray<AuthStateListener> authStateListeners;
+  SparseArray<PluginAuthStateListener> authStateListeners;
   private SparseArray<ForceResendingToken> forceResendingTokens;
   private MethodChannel channel;
   // Only set activity for v2 embedder. Always access activity from getActivity() method.
@@ -72,9 +74,22 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   private int nextHandle = 0;
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
-    FirebaseAuthPlugin instance = new FirebaseAuthPlugin();
-    instance.registrar = registrar;
-    instance.initInstance(registrar.messenger(), registrar.context());
+    // Create and initialize FirebaseAuthPlugin
+    new FirebaseAuthPlugin(registrar);
+  }
+
+  /**
+   * Default constructor for the plugin.
+   *
+   * <p>Use this constructor for production code.
+   */
+  // See also: * {@link #FirebaseAuth(PluginRegistry.Registrar)} for testing.
+  public FirebaseAuthPlugin() {}
+
+  @VisibleForTesting
+  FirebaseAuthPlugin(PluginRegistry.Registrar registrar) {
+    this.registrar = registrar;
+    initInstance(registrar.messenger(), registrar.context());
   }
 
   private void initInstance(BinaryMessenger messenger, Context context) {
@@ -97,10 +112,25 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    clearAuthStateListeners();
     authStateListeners = null;
     forceResendingTokens = null;
     channel.setMethodCallHandler(null);
     channel = null;
+  }
+
+  private void clearAuthStateListeners() {
+    if (authStateListeners == null) {
+      return;
+    }
+
+    for (int i = 0; i < authStateListeners.size(); i++) {
+      int key = authStateListeners.keyAt(i);
+      PluginAuthStateListener listener = authStateListeners.get(key);
+      listener.remove();
+    }
+
+    authStateListeners.clear();
   }
 
   @Override
@@ -696,26 +726,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   private void handleStartListeningAuthState(
       @SuppressWarnings("unused") MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     final int handle = nextHandle++;
-    FirebaseAuth.AuthStateListener listener =
-        new FirebaseAuth.AuthStateListener() {
-          @Override
-          public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-            if (channel == null) {
-              // If detached and therefore channel is null, remove the current listener (this).
-              firebaseAuth.removeAuthStateListener(this);
-              return;
-            }
-
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            Map<String, Object> userMap = mapFromUser(user);
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", handle);
-            if (userMap != null) {
-              map.put("user", userMap);
-            }
-            channel.invokeMethod("onAuthStateChanged", Collections.unmodifiableMap(map));
-          }
-        };
+    PluginAuthStateListener listener = new PluginAuthStateListener(handle, channel, firebaseAuth);
     firebaseAuth.addAuthStateListener(listener);
     authStateListeners.append(handle, listener);
     result.success(handle);
@@ -893,6 +904,41 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
       }
     } else {
       result.error("ERROR_UNKNOWN", "An unknown error occurred.", null);
+    }
+  }
+
+  class PluginAuthStateListener implements AuthStateListener {
+    private int handle;
+    private MethodChannel channel;
+    private FirebaseAuth firebaseAuthInstance;
+    private Boolean isRemoved = false;
+
+    PluginAuthStateListener(
+        int handle, @NonNull MethodChannel channel, @NonNull FirebaseAuth firebaseAuthInstance) {
+      this.handle = handle;
+      this.channel = channel;
+      this.firebaseAuthInstance = firebaseAuthInstance;
+    }
+
+    void remove() {
+      this.firebaseAuthInstance.removeAuthStateListener(this);
+      isRemoved = true;
+    }
+
+    Boolean getIsRemoved() {
+      return isRemoved;
+    }
+
+    @Override
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+      FirebaseUser user = firebaseAuth.getCurrentUser();
+      Map<String, Object> userMap = mapFromUser(user);
+      Map<String, Object> map = new HashMap<>();
+      map.put("id", handle);
+      if (userMap != null) {
+        map.put("user", userMap);
+      }
+      channel.invokeMethod("onAuthStateChanged", Collections.unmodifiableMap(map));
     }
   }
 }
