@@ -497,6 +497,13 @@ class RewardedVideoAd {
       'targetingInfo': targetingInfo?.toJson(),
     });
   }
+  
+  Future<bool> setAppMuted(bool mute) {
+    return _invokeBooleanMethod("setAppMuted", <String, dynamic>{
+      'mute': mute
+    });
+  }
+  
 }
 
 /// Support for Google AdMob mobile ads.
