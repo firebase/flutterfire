@@ -558,10 +558,6 @@ void main() {
             isMethodCall(
               'Query#removeObserver',
               arguments: <String, dynamic>{
-                'app': app.name,
-                'databaseURL': databaseURL,
-                'path': path,
-                'parameters': <String, dynamic>{},
                 'handle': 87,
               },
             ),
