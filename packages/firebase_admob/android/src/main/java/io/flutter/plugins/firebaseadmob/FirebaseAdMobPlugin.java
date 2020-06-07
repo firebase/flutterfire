@@ -333,6 +333,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     if (rewardedWrapper.getStatus() != RewardedVideoAdWrapper.Status.CREATED
         && rewardedWrapper.getStatus() != RewardedVideoAdWrapper.Status.FAILED) {
       result.success(Boolean.TRUE); // The ad was already loading or loaded.
+      rewardedWrapper.onRewardedVideoAdLoaded();
       return;
     }
 
