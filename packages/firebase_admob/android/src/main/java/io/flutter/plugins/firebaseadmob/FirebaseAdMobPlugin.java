@@ -8,17 +8,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.Gravity;
-
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.google.firebase.FirebaseApp;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -30,6 +24,9 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Flutter plugin accessing Firebase Admob API.
