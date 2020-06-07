@@ -1,3 +1,8 @@
+## 0.16.2
+
+* Android: Remove memory leaks when plugin is destroyed with active auth state 
+  listeners.
+
 ## 0.16.1
 
 * Update lower bound of dart dependency to 2.0.0.
