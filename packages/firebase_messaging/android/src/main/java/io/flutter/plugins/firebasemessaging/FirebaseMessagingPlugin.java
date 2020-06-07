@@ -30,6 +30,8 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.NewIntentListener;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.plugin.common.PluginRegistry.ViewDestroyListener;
+import io.flutter.view.FlutterNativeView;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,11 +46,19 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   private MethodChannel channel;
   private Activity mainActivity;
 
-  public static void registerWith(Registrar registrar) {
-    FirebaseMessagingPlugin instance = new FirebaseMessagingPlugin();
+  public static void registerWith(final Registrar registrar) {
+    final FirebaseMessagingPlugin instance = new FirebaseMessagingPlugin();
     instance.setActivity(registrar.activity());
     registrar.addNewIntentListener(instance);
     instance.onAttachedToEngine(registrar.context(), registrar.messenger());
+    registrar.addViewDestroyListener(
+        new ViewDestroyListener() {
+          @Override
+          public boolean onViewDestroy(FlutterNativeView view) {
+            instance.onDetachedFromEngine(registrar.context());
+            return false;
+          }
+        });
   }
 
   private void onAttachedToEngine(Context context, BinaryMessenger binaryMessenger) {
@@ -76,7 +86,11 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
 
   @Override
   public void onDetachedFromEngine(FlutterPluginBinding binding) {
-    LocalBroadcastManager.getInstance(binding.getApplicationContext()).unregisterReceiver(this);
+    onDetachedFromEngine(binding.getApplicationContext());
+  }
+
+  private void onDetachedFromEngine(Context applicationContext) {
+    LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(this);
   }
 
   @Override
