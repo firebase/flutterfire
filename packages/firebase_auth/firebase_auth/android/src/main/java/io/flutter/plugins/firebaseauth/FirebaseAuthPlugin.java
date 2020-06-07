@@ -24,7 +24,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuth.AuthStateListener;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,6 +49,8 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.plugin.common.PluginRegistry.ViewDestroyListener;
+import io.flutter.view.FlutterNativeView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,9 +61,10 @@ import java.util.concurrent.TimeUnit;
 
 /** Flutter plugin for Firebase Auth. */
 public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
+
   // Only set registrar for v1 embedder.
   private PluginRegistry.Registrar registrar;
-  private SparseArray<AuthStateListener> authStateListeners;
+  private SparseArray<LinkedAuthStateListener> authStateListeners;
   private SparseArray<ForceResendingToken> forceResendingTokens;
   private MethodChannel channel;
   // Only set activity for v2 embedder. Always access activity from getActivity() method.
@@ -72,9 +74,17 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   private int nextHandle = 0;
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
-    FirebaseAuthPlugin instance = new FirebaseAuthPlugin();
+    final FirebaseAuthPlugin instance = new FirebaseAuthPlugin();
     instance.registrar = registrar;
     instance.initInstance(registrar.messenger(), registrar.context());
+    registrar.addViewDestroyListener(
+        new ViewDestroyListener() {
+          @Override
+          public boolean onViewDestroy(FlutterNativeView view) {
+            instance.onDetachedFromEngine();
+            return false;
+          }
+        });
   }
 
   private void initInstance(BinaryMessenger messenger, Context context) {
@@ -97,7 +107,18 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    onDetachedFromEngine();
+  }
+
+  private void onDetachedFromEngine() {
+    final int size = authStateListeners.size();
+    for (int i = 0; i < size; i++) {
+      LinkedAuthStateListener listener = authStateListeners.valueAt(i);
+      listener.getAuth().removeAuthStateListener(listener);
+    }
+    authStateListeners.clear();
     authStateListeners = null;
+
     forceResendingTokens = null;
     channel.setMethodCallHandler(null);
     channel = null;
@@ -203,7 +224,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
         handleStartListeningAuthState(call, result, getAuth(call));
         break;
       case "stopListeningAuthState":
-        handleStopListeningAuthState(call, result, getAuth(call));
+        handleStopListeningAuthState(call, result);
         break;
       case "verifyPhoneNumber":
         handleVerifyPhoneNumber(call, result, getAuth(call));
@@ -696,8 +717,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   private void handleStartListeningAuthState(
       @SuppressWarnings("unused") MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     final int handle = nextHandle++;
-    FirebaseAuth.AuthStateListener listener =
-        new FirebaseAuth.AuthStateListener() {
+    LinkedAuthStateListener listener =
+        new LinkedAuthStateListener(firebaseAuth) {
           @Override
           public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
             FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -715,14 +736,13 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     result.success(handle);
   }
 
-  private void handleStopListeningAuthState(
-      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleStopListeningAuthState(MethodCall call, Result result) {
     Map<String, Integer> arguments = call.arguments();
     Integer id = arguments.get("id");
 
-    FirebaseAuth.AuthStateListener listener = authStateListeners.get(id);
+    LinkedAuthStateListener listener = authStateListeners.get(id);
     if (listener != null) {
-      firebaseAuth.removeAuthStateListener(listener);
+      listener.getAuth().removeAuthStateListener(listener);
       authStateListeners.remove(id);
       result.success(null);
     } else {
@@ -754,6 +774,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   }
 
   private class SignInCompleteListener implements OnCompleteListener<AuthResult> {
+
     private final Result result;
 
     SignInCompleteListener(Result result) {
@@ -779,6 +800,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   }
 
   private class TaskVoidCompleteListener implements OnCompleteListener<Void> {
+
     private final Result result;
 
     TaskVoidCompleteListener(Result result) {
@@ -797,6 +819,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
 
   private class GetSignInMethodsCompleteListener
       implements OnCompleteListener<SignInMethodQueryResult> {
+
     private final Result result;
 
     GetSignInMethodsCompleteListener(Result result) {
