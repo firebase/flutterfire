@@ -5,6 +5,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  // TODO(awazgyawalu): Write test for firestore web
+  // TODO(awazgyawali): Write test for firestore web
   TestWidgetsFlutterBinding.ensureInitialized();
 }

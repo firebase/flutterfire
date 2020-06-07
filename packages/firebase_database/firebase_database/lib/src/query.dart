@@ -27,26 +27,32 @@ class Query {
   /// Fires when children are added.
   Stream<Event> get onChildAdded => delegate
       .observe(platform.EventType.childAdded)
+      .handleError((error) => DatabaseError._(error))
       .map((item) => Event._(item));
 
   /// Fires when children are removed. `previousChildKey` is null.
   Stream<Event> get onChildRemoved => delegate
       .observe(platform.EventType.childRemoved)
+      .handleError((error) => DatabaseError._(error))
       .map((item) => Event._(item));
 
   /// Fires when children are changed.
   Stream<Event> get onChildChanged => delegate
       .observe(platform.EventType.childChanged)
+      .handleError((error) => DatabaseError._(error))
       .map((item) => Event._(item));
 
   /// Fires when children are moved.
   Stream<Event> get onChildMoved => delegate
       .observe(platform.EventType.childMoved)
+      .handleError((error) => DatabaseError._(error))
       .map((item) => Event._(item));
 
   /// Fires when the data at this location is updated. `previousChildKey` is null.
-  Stream<Event> get onValue =>
-      delegate.observe(platform.EventType.value).map((item) => Event._(item));
+  Stream<Event> get onValue => delegate
+      .observe(platform.EventType.value)
+      .handleError((error) => DatabaseError._(error))
+      .map((item) => Event._(item));
 
   /// Create a query constrained to only return child nodes with a value greater
   /// than or equal to the given value, using the given orderBy directive or
