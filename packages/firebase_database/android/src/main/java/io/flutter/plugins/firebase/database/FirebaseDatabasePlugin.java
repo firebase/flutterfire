@@ -21,13 +21,14 @@ public class FirebaseDatabasePlugin implements FlutterPlugin {
     final FirebaseDatabasePlugin plugin = new FirebaseDatabasePlugin();
     plugin.setupMethodChannel(registrar.messenger());
 
-    registrar.addViewDestroyListener(new ViewDestroyListener() {
-      @Override
-      public boolean onViewDestroy(FlutterNativeView view) {
-        plugin.cleanup();
-        return false;
-      }
-    });
+    registrar.addViewDestroyListener(
+        new ViewDestroyListener() {
+          @Override
+          public boolean onViewDestroy(FlutterNativeView view) {
+            plugin.cleanup();
+            return false;
+          }
+        });
   }
 
   private void setupMethodChannel(BinaryMessenger messenger) {
