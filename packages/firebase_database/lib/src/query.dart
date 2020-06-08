@@ -66,6 +66,10 @@ class Query {
           await _database._channel.invokeMethod<int>(
             'Query#removeObserver',
             <String, dynamic>{
+              'app': _database.app?.name,
+              'databaseURL': _database.databaseURL,
+              'path': path,
+              'parameters': _parameters,
               'handle': handle,
             },
           );
