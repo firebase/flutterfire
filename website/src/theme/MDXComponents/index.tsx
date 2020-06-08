@@ -48,11 +48,23 @@ export default {
       alt = alt.replace('hide:', '');
     }
 
+    // Windows Workaround
+    if (!props.src) return null;
+    let imgSrc;
+    try {
+      imgSrc = require(`../../../../docs/_assets/${props.src}`);
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+
+    if (!imgSrc) return null;
+
     return (
       <figure className={styles.figure}>
         <Zoom>
           <IdealImage
-            img={require(`../../../../docs/_assets/${props.src ?? ''}`)}
+            img={imgSrc}
             alt={alt}
             quality={100}
           />
@@ -62,7 +74,7 @@ export default {
     );
   },
 
-  pre: (props: HTMLProps<HTMLDivElement>) => <div className={styles.mdxCodeBlock} {...props} />,
+  //pre: (props: HTMLProps<HTMLDivElement>) => <div className={styles.mdxCodeBlock} {...props} />,
   code: (props: HTMLProps<HTMLElement>) => {
     const { children } = props;
     if (typeof children === 'string') {
@@ -85,7 +97,7 @@ export default {
     <blockquote className={styles.blockquote} {...props} />
   ),
 
-  // Enables global usage of <YouTube id="xxxx" /> within MDX files
+  //Enables global usage of <YouTube id="xxxx" /> within MDX files
   YouTube: ({ id }: { id: string }) => {
     return (
       <div className={styles.youtube}>

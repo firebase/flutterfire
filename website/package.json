@@ -22,6 +22,7 @@
     "classnames": "^2.2.6",
     "docusaurus-plugin-sass": "^0.1.8",
     "dotenv": "^8.2.0",
+    "fast-chunk-string": "^1.0.1",
     "lodash.get": "^4.4.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
