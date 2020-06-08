@@ -51,7 +51,7 @@ Before any of the Firebase services can be used, FlutterFire needs to be initial
 FlutterFire "bootstrapping" itself). The initialization step is asynchronous, meaning you'll need to prevent any FlutterFire
 related usage until the initialization is completed.
 
-To initialize FlutterFire, call the `initializeApp` method on the `FirebaseCore` instance:
+To initialize FlutterFire, call the [`initializeApp`](!firebase_core.instance.initializeApp) method on the [`FirebaseCore`](!firebase_core) instance:
 
 ```dart
 await FirebaseCore.instance.initializeApp();
@@ -175,7 +175,7 @@ Once initialized, you're ready to get started using FlutterFire!
 
 ## Next Steps
 
-On its own the `firebase_core` plugin provides basic functionality for usage with Firebase. FlutterFire is broken down
+On its own the [`firebase_core`](!firebase_core) plugin provides basic functionality for usage with Firebase. FlutterFire is broken down
 into several individual installable plugins that allow you to integrate with a specific Firebase service.
 
 The table below lists all of the currently supported plugins. You can follow the documentation for each plugin to

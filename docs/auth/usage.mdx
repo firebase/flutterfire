@@ -3,7 +3,9 @@ title: Using Firebase Authentication
 sidebar_label: Usage
 ---
 
-Once installed, you can access the `firebase_auth` plugin by importing it in your Dart code:
+> This documentation is a work in progress
+
+Once installed, you can access the [`firebase_auth`](!firebase_auth) plugin by importing it in your Dart code:
 
 ```dart
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,10 +13,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 ## Listening to authentication state
 
-<Highlight>
-  <li>Introduction Text</li>
-  <li>Add code example</li>
-</Highlight>
+The FirebaseAuth module provides a method called `onAuthStateChanged` which allows you to subscribe to the users current
+authentication state, and receive an event whenever the state changes.
+
 
 ## Persisting authentication state
 
@@ -25,28 +26,46 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 ## Anonymous sign-in
 
-<Highlight>
-  <li>Introduction Text</li>
-  <li>Add code example</li>
-</Highlight>
+Sometimes you may not want to require authentication, however still want to be identify what users are doing throughout
+your application. If connecting to an external API, it can also be used to add an extra layer of security by ensuring the
+users request is from the app.  This can be achieved by using the `signInAnonymously` method which creates a new
+persistent anonymous user. This allows you to integrate into other services such as Analytics, by provided a user ID.authentication
 
-## Email/Password sign-in
+Ensure the "Anonymous" sign in provide is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
 
-<Highlight>
-  <li>Introduction Text</li>
-  <li>Add code example</li>
-</Highlight>
+```dart title="NEEDS UPDATING/VALIDATING"
+final FirebaseUser user = (await FirebaseAuth.instance.signInAnonymously()).user;
+```
+
+## Email/Password Registration & Sign-in
+
+Email/Password is a common user sign in method for most applications.  This requires the user to provide an email address
+and secure password. Users can register with a method called `createUserWithEmailAndPassword` or sign in to an existing
+account with `signInWithEmailAndPassword`
+
+Ensure the "Email/Password" sign in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers)
+
+The `createUserWithEmailAndPassword` method performs two operations. It first creates the user if they do not already
+exist, and then signs them in:
+
+```dart title="NEEDS UPDATING/VALIDATING"
+final FirebaseUser user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  email: 'clark.kent@example.com',
+  password:'SuperSecretPassword!',
+)).user;
+```
 
 ## Signing Out
 
-<Highlight>
-  <li>Introduction Text</li>
-  <li>Add code example</li>
-</Highlight>
+To sign a user out of their current authentication state, call the `signOut` method:
+
+```dart title="NEEDS UPDATING/VALIDATING"
+await FirebaseAuth.instance.signOut();
+```
 
 ## Other sign-in methods
 
-Firebase also supports authenticating with external providers. To learn more, view the documentation for your authentication method:
+Firebase also supports authenticating with external provides. To learn more, view the documentation for your authentication method:
 
 - Apple Sign-In.
 - Facebook Sign-In.
@@ -56,7 +75,7 @@ Firebase also supports authenticating with external providers. To learn more, vi
 
 ## Using secondary apps
 
-Firebase Authentication supports using [secondary Firebase apps](../core/usage.mdx#secondary-firebase-apps), allowing you to
+Firebase Authentication supports using [secondary Firebase apps](core/usage#secondary-firebase-apps), allowing you to
 authenticate users with multiple Firebase projects at once.
 
 To use a secondary app, pass the `FirebaseApp` instance to the `instanceFor` method:

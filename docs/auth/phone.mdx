@@ -3,85 +3,109 @@ title: Phone Authentication
 sidebar_label: Phone Auth
 ---
 
-Sign-in users with their phone number.
+> This documentation is a work in progress.
 
-## Installation
+Phone authentication allows users to sign in to Firebase using their phone as the authenticator.  An SMS message is sent
+to the user via their phone number containing a unique code. Once the code has been authorized, the user is able to sign
+into Firebase.
 
-### 1. Add dependency.
+Phone numbers that end users provide for authentication will be sent and stored by Google to improve spam and abuse
+prevention across Google service, including to, but not limited to Firebase. Developers should ensure they have the
+appropriate end-user conset prior to using the Firebase Authentication phone number sign-in service.authentication
 
-Add the [`firebase_auth`](https://pub.dartlang.org/packages/firebase_auth) dependency to your projects `pubspec.yaml` file:
+> Firebase Phone Authentication is not supported in all countries. Please see their [FAQs](https://firebase.google.com/support/faq/#develop) for more information
 
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "{{ plugins.firebase_core }}"
-  firebase_auth: "{{ plugins.firebase_auth }}"
-```
-
-### 2. Download dependency.
-
-Download the dependency by running the following command in your project:
-
-```bash
-$ flutter pub get
-```
-
-### 3. (Web Only) Add the SDK.
-
-If using FlutterFire on the web, add the `firebase-auth` JavaScript SDK to your `index.html` file:
-
-```html {5} title="web/index.html"
-<html>
-  ...
-  <body>
-    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-auth.js"></script>
-  </body>
-</html>
-```
-
-### 4. Rebuild your app
-
-Once complete, rebuild your Flutter application:
-
-```bash
-$ flutter run
-```
-
-
-### Android
+## Android
 
   1. Enable Phone as a Sign-In method in the [Firebase console](https://console.firebase.google.com/u/0/project/_/authentication/providers)
 
   > **Note:**  When testing you can add test phone numbers and verification codes to the Firebase console.
 
-### iOS
+## iOS
 
   1. Enable Phone as a Sign-In method in the [Firebase console](https://console.firebase.google.com/u/0/project/_/authentication/providers)
-  2. [Enable App verification](https://console.firebase.google.com/u/0/project/_/authentication/providers)
+  2. [Enable App verification](https://firebase.google.com/docs/auth/ios/phone-auth#enable-app-verification)
 
-  > **Note:**  App verification may use APNs, if using a simulator (where APNs do not work) or APNs are not set up on the device you are using you must set the URL Schemes to the REVERSE_CLIENT_ID from the GoogleServices-Info.plist file.
-
-### Web
-
-In addition to the `firebase_auth` dependency, you'll need to modify the `web/index.html` of your app following the Firebase setup instructions:
-
-- [Add Firebase to your JavaScript project](https://firebase.google.com/docs/web/setup#from-the-cdn)
-
+  > **Note:**  App verification may use APNs, if using a simulator (where APNs does not work) or APNs is not setup on the device you are using you must set the URL Schemes to the REVERSE_CLIENT_ID from the GoogleServices-Info.plist file.
 
 
 ## Usage
 
 ### Sign In
 
-<Highlight>
-<li>Intro Text</li>
-<li>Code Sample</li>
-</Highlight>
+```dart title="NEEDS UPDATING/VALIDATING"
+  void _verifyPhoneNumber() async {
+    setState(() {
+      _message = '';
+    });
+    final PhoneVerificationCompleted verificationCompleted =
+        (AuthCredential phoneAuthCredential) {
+      _auth.signInWithCredential(phoneAuthCredential);
+      setState(() {
+        _message = 'Received phone auth credential: $phoneAuthCredential';
+      });
+    };
+
+    final PhoneVerificationFailed verificationFailed =
+        (AuthException authException) {
+      setState(() {
+        _message =
+            'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
+      });
+    };
+
+    final PhoneCodeSent codeSent =
+        (String verificationId, [int forceResendingToken]) async {
+      widget._scaffold.showSnackBar(const SnackBar(
+        content: Text('Please check your phone for the verification code.'),
+      ));
+      _verificationId = verificationId;
+    };
+
+    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {
+      _verificationId = verificationId;
+    };
+
+    await _auth.verifyPhoneNumber(
+        phoneNumber: _phoneNumberController.text,
+        timeout: const Duration(seconds: 5),
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+  }
+
+  // Example code of how to sign in with phone.
+  void _signInWithPhoneNumber() async {
+    final AuthCredential credential = PhoneAuthProvider.getCredential(
+      verificationId: _verificationId,
+      smsCode: _smsController.text,
+    );
+    final FirebaseUser user =
+        (await _auth.signInWithCredential(credential)).user;
+    final FirebaseUser currentUser = await _auth.currentUser();
+    assert(user.uid == currentUser.uid);
+    setState(() {
+      if (user != null) {
+        _message = 'Successfully signed in, uid: ' + user.uid;
+      } else {
+        _message = 'Sign in failed';
+      }
+    });
+  }
+}
+```
 
 ### Testing
 
-<Highlight>
-<li>Intro Text</li>
-</Highlight>
+Firebase provides support for locally testing phone numbers. For local testing to work, you must have ensured your local
+machine SHA1 debug key was added whilst creating your application on the Firebase Console. View the Getting Started
+guide on how to set this up.
+
+On the Firebase Console, select the "Phone" authentication provider and click on the "Phone numbers for testing" dropdown.
+
+Enter a new phone number (e.g. +44 7444 555666) and a test code (e.g. 123456).
+
+Once added, the number can be used with the signInWithPhoneNumber method, and entering the code specified will
+cause a successful sign-in.

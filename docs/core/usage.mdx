@@ -3,7 +3,7 @@ title: Core
 sidebar_label: Usage
 ---
 
-The `firebase_core` plugin is responsible for connecting your Flutter app to your Firebase project. The plugin must be
+The [`firebase_core`](!firebase_core) plugin is responsible for connecting your Flutter app to your Firebase project. The plugin must be
 installed and initialized before the usage of any other FlutterFire plugins. It provides basic functionality such
 as:
 
@@ -12,7 +12,7 @@ as:
 
 ## Installation
 
-The `firebase_core` plugin can be installed by following the [Getting Started](../overview.mdx) documentation. Once installed,
+The [`firebase_core`](!firebase_core) plugin can be installed by following the [Getting Started](../overview.mdx) documentation. Once installed,
 import the plugin:
 
 ```dart
@@ -28,7 +28,7 @@ Some plugins such as Analytics & Performance Monitoring are only compatible with
 plugins such as Authentication can take advantage of [Secondary Firebase Apps](#secondary-firebase-apps),
 allowing you to use multiple Firebase projects at once.
 
-To access the default app, call the `initializeApp` or `app` method on `FirebaseCore`:
+To access the default app, call the [`initializeApp`](!firebase_core.FirebaseApp.initializeApp) or [`app`](!firebase_core.FirebaseApp.app) method on [`FirebaseCore`](!firebase_core):
 
 ```dart
 FirebaseApp defaultApp = await FirebaseCore.instance.initializeApp();
@@ -53,7 +53,7 @@ plugin uses. Currently, the Firebase SDKs provide functionality for using second
 
 ### Initializing secondary apps
 
-To initialize a secondary app, call the `initializeApp` method with a name and options:
+To initialize a secondary app, call the [`initializeApp`](!firebase_core.FirebaseApp.initializeApp) method with a name and options:
 
 ```dart
 await FirebaseCore.instance.initializeApp(
@@ -68,12 +68,11 @@ await FirebaseCore.instance.initializeApp(
 ```
 
 At a minimum, you must provide the `appId`, `apiKey`, `messagingSenderId` and `projectId`. Although the other options
-are not required, it is recommended you view the [`FirebaseOptions`](https://pub.dev/documentation/firebase_core_platform_interface/latest/firebase_core_platform_interface/FirebaseOptions-class.html)
-reference API for the full list of options available.
+are not required, it is recommended you view the [`FirebaseOptions`](!firebase_core_platform_interface.FirebaseOptions) reference API for the full list of options available.
 
 ### Accessing secondary apps
 
-Once initialized, secondary apps can be accessed via the `app` method on `FirebaseCore`:
+Once initialized, secondary apps can be accessed via the [`app`](!firebase_core.FirebaseApp) method on [`FirebaseCore`](!firebase_core):
 
 ```dart
 FirebaseApp secondaryApp = FirebaseCore.instance.app('SecondaryApp');
@@ -81,7 +80,7 @@ FirebaseApp secondaryApp = FirebaseCore.instance.app('SecondaryApp');
 
 Attempting to access an app that does not exist will throw an exception.
 
-It is also possible to fetch all existing apps at once via the `apps` property on `FirebaseCore`:
+It is also possible to fetch all existing apps at once via the [`apps`](!firebase_core.FirebaseApp.apps) property on [`FirebaseCore`](!firebase_core):
 
 ```dart
 List<FirebaseApp> apps = FirebaseCore.instance.apps;
@@ -94,7 +93,7 @@ apps.forEach((app) {
 ### Using app instances
 
 Each FlutterFire plugin provides a streamlined approach for using the default app as well as secondary apps (if applicable).
-The convenient way to use the default app is by accessing the `instance` variable on each plugin base class. For example
+The convenient way to use the default app is by accessing the [`instance`](!firebase_core.FirebaseApp.instance) variable on each plugin base class. For example
 if using Cloud Firestore:
 
 ```dart
@@ -109,7 +108,7 @@ firestore
   });
 ```
 
-If instead you'd like to use a secondary app, pass it to the `instanceFor` static method on each plugin base class. For
+If instead you'd like to use a secondary app, pass it to the [`instanceFor`](!firebase_core.FirebaseApp.instanceFor) static method on each plugin base class. For
 example if using Cloud Firestore:
 
 ```dart
@@ -129,7 +128,7 @@ firestore
 
 ### Deleting instances
 
-If you no longer need a secondary app, you can delete it by calling the `delete` method on the `FirebaseApp` instance:
+If you no longer need a secondary app, you can delete it by calling the [`delete`](!firebase_core.FirebaseApp.delete) method on the `FirebaseApp` instance:
 
 ```dart
 FirebaseApp secondaryApp = FirebaseCore.instance.app('SecondaryApp');
