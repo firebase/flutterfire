@@ -45,7 +45,7 @@ Optional but recommended: If you use the on-device API, configure your app to au
   <meta-data
     android:name="com.google.firebase.ml.vision.DEPENDENCIES"
     android:value="ocr" />
-  <!-- To use multiple models: android:value="ocr,label,barcode,face" -->
+  <!-- To use multiple models: android:value="ocr,label,barcode,face,object" -->
 </application>
 ```
 
@@ -85,6 +85,7 @@ final ImageLabeler cloudLabeler = FirebaseVision.instance.cloudImageLabeler();
 final FaceDetector faceDetector = FirebaseVision.instance.faceDetector();
 final ImageLabeler labeler = FirebaseVision.instance.imageLabeler();
 final TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
+final ObjectDetector objectDetector = FirebaseVision.instance.objectDetector();
 ```
 
 You can also configure all detectors, except `TextRecognizer`, with desired options.

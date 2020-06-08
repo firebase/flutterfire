@@ -90,6 +90,14 @@ class FirebaseVision {
       handle: nextHandle++,
     );
   }
+
+  /// Creates an instance of [ObjectDetector].
+  ObjectDetector objectDetector([ObjectDetectorOptions options]) {
+    return ObjectDetector._(
+      options ?? const ObjectDetectorOptions(),
+      nextHandle++,
+    );
+  }
 }
 
 /// Represents an image object used for both on-device and cloud API detectors.
