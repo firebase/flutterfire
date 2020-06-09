@@ -45,6 +45,7 @@ public class ObjectDetector implements Detector {
                   }
 
                   retrieveCategory(detectedObj, detectedObjData);
+                  objects.add(detectedObjData);
                 }
                 result.success(objects);
               }
