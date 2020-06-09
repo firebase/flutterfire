@@ -1,3 +1,7 @@
+## 0.9.5
+
+* `Android` - added support for the Object Detection in firebase_ml_vision package 
+
 ## 0.9.4
 
 * Update lower bound of dart dependency to 2.0.0.
