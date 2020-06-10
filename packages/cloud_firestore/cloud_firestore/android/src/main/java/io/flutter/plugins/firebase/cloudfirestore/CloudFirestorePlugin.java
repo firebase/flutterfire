@@ -821,7 +821,8 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
                   : MetadataChanges.EXCLUDE;
           listenerRegistrations.put(
               handle,
-              getDocumentReference(arguments).addSnapshotListener(activity, metadataChanges, observer));
+              getDocumentReference(arguments)
+                  .addSnapshotListener(activity, metadataChanges, observer));
           result.success(handle);
           break;
         }
