@@ -74,7 +74,7 @@ export default {
     );
   },
 
-  //pre: (props: HTMLProps<HTMLDivElement>) => <div className={styles.mdxCodeBlock} {...props} />,
+  pre: (props: HTMLProps<HTMLDivElement>) => <div className={styles.mdxCodeBlock} {...props} />,
   code: (props: HTMLProps<HTMLElement>) => {
     const { children } = props;
     if (typeof children === 'string') {
