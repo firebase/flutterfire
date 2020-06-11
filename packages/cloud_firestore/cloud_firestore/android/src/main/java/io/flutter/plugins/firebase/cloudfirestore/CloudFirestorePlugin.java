@@ -50,7 +50,6 @@ import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.view.FlutterNativeView;
-
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -81,13 +80,14 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
     final CloudFirestorePlugin instance = new CloudFirestorePlugin();
     instance.activity = registrar.activity();
     instance.initInstance(registrar.messenger());
-    registrar.addViewDestroyListener(new PluginRegistry.ViewDestroyListener() {
-      @Override
-      public boolean onViewDestroy(FlutterNativeView view) {
-        instance.removeSnapshotListeners();
-        return false;
-      }
-    });
+    registrar.addViewDestroyListener(
+        new PluginRegistry.ViewDestroyListener() {
+          @Override
+          public boolean onViewDestroy(FlutterNativeView view) {
+            instance.removeSnapshotListeners();
+            return false;
+          }
+        });
   }
 
   private void initInstance(BinaryMessenger messenger) {
@@ -831,8 +831,7 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
                   : MetadataChanges.EXCLUDE;
           listenerRegistrations.put(
               handle,
-              getDocumentReference(arguments)
-                  .addSnapshotListener(metadataChanges, observer));
+              getDocumentReference(arguments).addSnapshotListener(metadataChanges, observer));
           result.success(handle);
           break;
         }
