@@ -1000,6 +1000,7 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
     for (int i = 0; i < listenerRegistrations.size(); i++) {
       listenerRegistrations.get(i).remove();
     }
+    listenerRegistrations.clear();
   }
 }
 
