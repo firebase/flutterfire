@@ -7,7 +7,20 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 import styles from './styles.module.scss';
 import { Triangle } from '../components/Triangle';
-import plugins from '../plugins';
+
+// @ts-ignore
+import plugins from '../../plugins';
+
+interface Plugin {
+  name: string;
+  pub: string;
+  firebase: string;
+  support: {
+    web: boolean;
+    mobile: boolean;
+    macos: boolean;
+  };
+}
 
 function Home() {
   const context = useDocusaurusContext();
@@ -80,7 +93,7 @@ function Home() {
               </tr>
             </thead>
             <tbody>
-              {plugins.map(plugin => (
+              {plugins.map((plugin: Plugin) => (
                 <tr key={plugin.pub}>
                   <td>
                     <strong>{plugin.name}</strong>
@@ -128,11 +141,11 @@ function Home() {
 }
 
 function Check() {
-  return <span style={{ color: '#4caf50', fontSize: '1.5rem' }}>&#10003;</span>;
+  return <span style={{ color: '#4caf50', fontSize: '1.5rem' }}>&#10004;</span>;
 }
 
 function Cross() {
-  return <span style={{ color: '#f44336', fontSize: '1.7rem' }}>&#65794;</span>;
+  return <span style={{ color: '#f44336', fontSize: '2.1rem' }}>&#10799;</span>;
 }
 
 export default Home;
