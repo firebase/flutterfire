@@ -84,7 +84,7 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
         new PluginRegistry.ViewDestroyListener() {
           @Override
           public boolean onViewDestroy(FlutterNativeView view) {
-            instance.removeSnapshotListeners();
+            instance.onDetachedFromEngine();
             return false;
           }
         });
@@ -485,6 +485,10 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    onDetachedFromEngine();
+  }
+
+  private void onDetachedFromEngine() {
     removeSnapshotListeners();
     channel.setMethodCallHandler(null);
     channel = null;
