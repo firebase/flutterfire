@@ -63,11 +63,7 @@ export default {
     return (
       <figure className={styles.figure}>
         <Zoom>
-          <IdealImage
-            img={imgSrc}
-            alt={alt}
-            quality={100}
-          />
+          <IdealImage img={imgSrc} alt={alt} quality={100} />
         </Zoom>
         {alt === props.alt && <figcaption>{alt}</figcaption>}
       </figure>
