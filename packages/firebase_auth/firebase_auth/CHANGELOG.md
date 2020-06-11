@@ -1,3 +1,11 @@
+## 0.16.1
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 0.16.0
+
+* Migrate to Android v2 embedding.
+
 ## 0.15.5+3
 
 * Fix for missing UserAgent.h compilation failures.

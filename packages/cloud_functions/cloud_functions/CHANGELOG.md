@@ -1,6 +1,11 @@
-## 0.4.2+4
+## 0.5.0+1
 
-* Update firebase-functions android library  
+* Update firebase-functions android library
+
+## 0.5.0
+
+* Fix example app build failure on CI (missing AndroidX Gradle properties).
+* Change environment SDK requirement from `>=2.0.0-dev.28.0` to `>=2.0.0` to fix 'publishable' CI stage.
 
 ## 0.4.2+3
 

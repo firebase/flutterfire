@@ -1,19 +1,16 @@
-// Copyright 2019, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:e2e/e2e.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter_driver/driver_extension.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../lib/main.dart';
 
 void main() {
-  final Completer<String> completer = Completer<String>();
-  enableFlutterDriverExtension(handler: (_) => completer.future);
-  tearDownAll(() => completer.complete(null));
+  E2EWidgetsFlutterBinding.ensureInitialized();
 
   group('$FirebaseAuth', () {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -121,6 +118,16 @@ void main() {
           await auth.fetchSignInMethodsForEmail(email: testEmail);
       expect(methods, isNotNull);
       expect(methods.length, 0);
+    });
+  });
+
+  group('App', () {
+    testWidgets('FirebaseAuth example widget test',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(MyApp());
+      await tester.tap(find.text('Test registration'));
+      await tester.pumpAndSettle();
+      expect(find.text('Registration'), findsOneWidget);
     });
   });
 }
