@@ -21,7 +21,7 @@ By default, this allows you to interact with Firestore using the default Firebas
 platform. If however you'd like to use Firestore with a secondary Firebase App, use the [`instanceFor`](!cloud_firestore.Firestore.instanceFor) method:
 
 ```dart
-FirebaseApp secondaryApp = FirebaseCore.instance.app('SecondayApp');
+FirebaseApp secondaryApp = Firebase.app('SecondayApp');
 Firestore firestore = Firestore.instanceFor(app: secondaryApp);
 ```
 
@@ -96,7 +96,7 @@ class GetUserName extends StatelessWidget {
     CollectionReference users = Firestore.instance.collection('users');
 
     return FutureBuilder<DocumentSnapshot>(
-      future: users.document(documentId).get(),
+      future: users.doc(documentId).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 
@@ -129,7 +129,7 @@ a `snapshots()` method which returns a [`Stream`](https://api.dart.dev/stable/2.
 
 ```dart
 Stream collectionStream = Firestore.instance.collection('users').snapshots();
-Stream documentStream = Firestore.instance.collection('users').document('ABC123').snapshots();
+Stream documentStream = Firestore.instance.collection('users').doc('ABC123').snapshots();
 ```
 
 Once returned, you can subscribe to updates via the `listen()` method. The below example uses a [`StreamBuilder`](https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html)
@@ -184,7 +184,7 @@ When perfoming a query, Firestore returns either a [`QuerySnapshot`](!cloud_fire
 A [`QuerySnapshot`](!cloud_firestore.QuerySnapshot) is returned from a collection query, and allows you to inspect the collection, such as how many documents
 exist within it, gives access to the documents within the collection, see any changes since the last query and more.
 
-To access the documents within a [`QuerySnapshot`](!cloud_firestore.QuerySnapshot), call the [`documents`](!cloud_firestore.QuerySnapshot.documents) property,
+To access the documents within a [`QuerySnapshot`](!cloud_firestore.QuerySnapshot), call the [`docs`](!cloud_firestore.QuerySnapshot.docs) property,
 which returns a `List` containing [`DocumentSnapshot`](!cloud_firestore.DocumentSnapshot) classes.
 
 ```dart
@@ -192,7 +192,7 @@ Firestore.instance
     .collection('users')
     .get()
     .then((QuerySnapshot querySnapshot) => {
-        querySnapshot.documents.forEach((doc) {
+        querySnapshot.docs.forEach((doc) {
             print(doc["first_name"]);
         });
     });
@@ -223,7 +223,7 @@ method, which returns a `Map<String, dynamic>`, or `null` if it does not exist:
 ```dart
 Firestore.instance
     .collection('users')
-    .document(userId)
+    .doc(userId)
     .get()
     .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
@@ -262,7 +262,8 @@ users where their age is greater than 20:
 Firestore.instance
   .collection('users')
   .where('age', isGreaterThan: 20)
-  .get(),
+  .get()
+  .then(...);
 ```
 
 Firestore also supports array queries. For example, to filter users who speak English (en) or Italian (it), use
@@ -404,7 +405,7 @@ class AddUser extends StatelessWidget {
 ```
 
 The [`add`](!cloud_firestore.CollectionReference.add) method adds the new document to your collection with a
-unique auto-generated ID. If you'd like to specify your own ID, call the [`setData`](!cloud_firestore.DocumentReference.setData)
+unique auto-generated ID. If you'd like to specify your own ID, call the [`set`](!cloud_firestore.DocumentReference.set)
 method on a [`DocumentReference`](!cloud_firestore.DocumentReference) instead:
 
 ```dart highlight={6-8}
@@ -412,8 +413,8 @@ CollectionReference users = Firestore.instance.collection('users');
 
 Future<void> addUser() {
   return users
-    .document('ABC123')
-    .setData({
+    .doc('ABC123')
+    .set({
       'full_name': "Mary Jane",
       'age': 18
     })
@@ -422,21 +423,21 @@ Future<void> addUser() {
 }
 ```
 
-Calling [`setData`](!cloud_firestore.DocumentReference.setData) with a documentId that already exists, it will replace all the document data
+Calling [`set`](!cloud_firestore.DocumentReference.set) with a id that already exists on the collection will replace all the document data.
 
 ### Updating documents
 
-Sometimes you may wish to update a document, rather than replacing all of the data. The [`setData`](!cloud_firestore.DocumentReference.setData)
+Sometimes you may wish to update a document, rather than replacing all of the data. The [`set`](!cloud_firestore.DocumentReference.set)
 method above replaces any existing data on a given [`DocumentReference`](!cloud_firestore.DocumentReference).
-If you'd like to update a document instead, use the [`updateData`](!cloud_firestore.DocumentReference.updateData) method:
+If you'd like to update a document instead, use the [`update`](!cloud_firestore.DocumentReference.update) method:
 
 ```dart highlight={6}
 CollectionReference users = Firestore.instance.collection('users');
 
 Future<void> updateUser() {
   return users
-    .document('ABC123')
-    .updateData({'company': 'Stokes and Sons'})
+    .doc('ABC123')
+    .update({'company': 'Stokes and Sons'})
     .then((value) => print("User Updated"))
     .catchError((error) => print("Failed to update user: $error"));
 }
@@ -449,8 +450,8 @@ CollectionReference users = Firestore.instance.collection('users');
 
 Future<void> updateUser() {
   return users
-    .document('ABC123')
-    .updateData({'info.address.zipcode': 90210})
+    .doc('ABC123')
+    .update({'info.address.zipcode': 90210})
     .then((value) => print("User Updated"))
     .catchError((error) => print("Failed to update user: $error"));
 }
@@ -469,8 +470,8 @@ CollectionReference users = Firestore.instance.collection('users');
 
 Future<void> updateUser() {
   return users
-    .document('ABC123')
-    .updateData({'info.address.location': GeoPoint(53.483959, -2.244644)})
+    .doc('ABC123')
+    .update({'info.address.location': GeoPoint(53.483959, -2.244644)})
     .then((value) => print("User Updated"))
     .catchError((error) => print("Failed to update user: $error"));
 }
@@ -488,8 +489,8 @@ Future<void> updateUser() {
     .then((bytes) => bytes.buffer.asUint8List())
     .then((avatar) {
       return users
-        .document('ABC123')
-        .updateData({'info.avatar': Blob(avatar)});
+        .doc('ABC123')
+        .update({'info.avatar': Blob(avatar)});
       })
     .then((value) => print("User Updated"))
     .catchError((error) => print("Failed to update user: $error"));
@@ -506,7 +507,7 @@ CollectionReference users = Firestore.instance.collection('users');
 
 Future<void> deleteUser() {
   return users
-    .document('ABC123')
+    .doc('ABC123')
     .delete()
     .then((value) => print("User Deleted"))
     .catchError((error) => print("Failed to delete user: $error"));
@@ -522,8 +523,8 @@ CollectionReference users = Firestore.instance.collection('users');
 
 Future<void> deleteField() {
   return users
-    .document('ABC123')
-    .updateData({'age': FieldValue.delete()})
+    .doc('ABC123')
+    .update({'age': FieldValue.delete()})
     .then((value) => print("User Deleted"))
     .catchError((error) => print("Failed to delete user: $error"));
 }
@@ -559,7 +560,7 @@ To execute a transaction, call the [`runTransaction`](!cloud_firestore.Firestore
 // Create a reference to the document the transaction will use
 DocumentReference documentReference = Firestore.instance
   .collection('users')
-  .document(documentId);
+  .doc(documentId);
 
 return Firestore.instance.runTransaction((transaction) async {
   // Get the document
@@ -594,7 +595,7 @@ If an exception is thrown within the handler, the entire transaction will be abo
 ## Batch write
 
 Firestore lets you execute multiple write operations as a single batch that can contain any
-combination of [`setData`](!cloud_firestore.WriteBatch.setData), [`updateData`](!cloud_firestore.WriteBatch.updateData),
+combination of [`set`](!cloud_firestore.WriteBatch.set), [`update`](!cloud_firestore.WriteBatch.update),
 or [`delete`](!cloud_firestore.WriteBatch.delete) operations.
 
 First, create a new batch instance via the [`batch`](!cloud_firestore.Firestore.batch) method, then perform
