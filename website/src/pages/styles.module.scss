@@ -38,12 +38,12 @@
         border: 1px solid #fff;
         border-radius: 3px;
         font-size: 1.2rem;
-        margin: 0 .3rem 1rem .3rem;
+        margin: 0 0.3rem 1rem 0.3rem;
         padding: 0.5rem 1rem;
         text-decoration: none;
 
         &:hover {
-          background-color: rgba(255, 255, 255, .1);
+          background-color: rgba(255, 255, 255, 0.1);
         }
       }
     }
@@ -66,7 +66,8 @@
 .table {
   width: initial;
 
-  th, td {
+  th,
+  td {
     text-align: center;
   }
 
