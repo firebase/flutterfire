@@ -8,7 +8,7 @@ Welcome to FlutterFire! 🔥
 
 FlutterFire is a set of Flutter plugins which connect your Flutter application to [Firebase](https://firebase.com).
 
-> FlutterFire is currently work in progress as we work towards a stable release. Plugins & documentation may be incomplete
+> FlutterFire is currently a work in progress as we work towards a stable release. Plugins & documentation may be incomplete
 > or missing functionality.
 
 ## Prerequisites
@@ -51,10 +51,10 @@ Before any of the Firebase services can be used, FlutterFire needs to be initial
 FlutterFire "bootstrapping" itself). The initialization step is asynchronous, meaning you'll need to prevent any FlutterFire
 related usage until the initialization is completed.
 
-To initialize FlutterFire, call the `initializeApp` method on the `FirebaseCore` instance:
+To initialize FlutterFire, call the [`initializeApp`](!firebase_core.Firebase.initializeApp) method on the [`Firebase`](!firebase_core.Firebase) class:
 
 ```dart
-await FirebaseCore.instance.initializeApp();
+await Firebase.initializeApp();
 ```
 
 The method is asynchronous and returns a [`Future`](https://api.flutter.dev/flutter/dart-async/Future-class.html), so
@@ -86,7 +86,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       // Initialize FlutterFire
-      future: FirebaseCore.instance.initializeApp(),
+      future: Firebase.initializeApp(),
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
@@ -99,7 +99,7 @@ class App extends StatelessWidget {
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
-         return Loading();
+        return Loading();
       },
     );
   }
@@ -132,7 +132,7 @@ class _AppState extends State<App> {
   void initializeFlutterFire() async {
     try {
       // Wait for Firebase to initialize and set `_initialized` state to true
-      await FirebaseCore.instance.initializeApp();
+      await Firebase.initializeApp();
       setState(() {
         _initialized = true;
       });
@@ -174,14 +174,14 @@ Once initialized, you're ready to get started using FlutterFire!
 
 ## Next Steps
 
-On it's own the `firebase_core` plugin provides basic functionality for usage with Firebase. FlutterFire is broken down
-into a number of individual installable plugins which allow you to integrate with a specific Firebase service.
+On its own the [`firebase_core`](!firebase_core) plugin provides basic functionality for usage with Firebase. FlutterFire is broken down
+into several individual installable plugins that allow you to integrate with a specific Firebase service.
 
 The table below lists all of the currently supported plugins. You can follow the documentation for each plugin to
 get started:
 
-|      Firebase       | Description                                                                                                                                                                                                                                                                                                                          | FlutterFire Plugin                                                   |
-| :-----------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------: |
-| **Authentication**  | Using Firebase Authentication you can authenticate users to your app using a number of methods such as passwords, phone numbers and popular federated provides like Google, Facebook and more. <br /><br /> [View documentation &raquo;](auth/overview.mdx)                                                                             | [firebase_auth](https://pub.dartlang.org/packages/firebase_auth)     |
+|      Firebase       | Description                                                                                                                                                                                                                                                                                                                             |                          FlutterFire Plugin                          |
+| :-----------------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------: |
+| **Authentication**  | Using Firebase Authentication you can authenticate users to your app using several methods such as passwords, phone numbers, and popular federated providers like Google, Facebook, and more. <br /><br /> [View documentation &raquo;](auth/overview.mdx)                                                                              |   [firebase_auth](https://pub.dartlang.org/packages/firebase_auth)   |
 | **Cloud Firestore** | Cloud Firestore is a flexible, scalable database for mobile, web, and server development from Firebase and Google Cloud Platform. Cloud Firestore also offers seamless integration with other Firebase and Google Cloud Platform products, including Cloud Functions. <br /><br /> [View documentation &raquo;](firestore/overview.mdx) | [cloud_firestore](https://pub.dartlang.org/packages/cloud_firestore) |
-|      **Core**       | The `firebase_core` plugin is used to initialize FlutterFire and connect your application with multiple Firebase projects. <br /><br /> [View documentation &raquo;](core/usage.mdx)                                                                                                                                                 | [firebase_core](https://pub.dartlang.org/packages/firebase_core)     |
+|      **Core**       | The `firebase_core` plugin is used to initialize FlutterFire and connect your application with multiple Firebase projects. <br /><br /> [View documentation &raquo;](core/usage.mdx)                                                                                                                                                    |   [firebase_core](https://pub.dartlang.org/packages/firebase_core)   |

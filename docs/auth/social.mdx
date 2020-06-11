@@ -4,3 +4,75 @@ sidebar_label: Social Auth
 ---
 
 > This documentation is a work in progress.
+
+## Social Providers
+
+### Apple
+
+Apple has [announced](https://developer.apple.com/news/?id=09122019b) that any applications using 3rd party login
+services (such as Facebook, Twitter, Google etc) must have an Apple Sign-In method.Authentication
+
+> To Do
+
+```dart title="NEEDS UPDATING/VALIDATING"
+// Apple credentials
+final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+```
+
+### Facebook
+
+Before getting started, ensure you have installed the library, [configured your Android & iOS applications](https://developers.facebook.com/docs/android/getting-started/)
+and setup your [Facebook Developer Account](https://github.com/facebook/react-native-fbsdk#3-configure-projects) to enable Facebook Login.
+
+Ensure the "Facebook" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
+
+```dart title="NEEDS UPDATING/VALIDATING"
+final AuthCredential credential = FacebookAuthProvider.getCredential(
+  accessToken: 'abc123'
+);
+
+final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+```
+
+### Twitter
+
+Ensure the "Twitter" sign-in provider is enabled on the Firebase Console.
+
+```dart title="NEEDS UPDATING/VALIDATING"
+final AuthCredential credential = TwitterAuthProvider.getCredential(
+  authToken: 'abc123',
+  authTokenSecret: 'SuperSecretToken'
+);
+
+final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+```
+
+### Google
+
+Most configuration is already setup when using Google Sign-In with Firebase, however you need to ensure your machines
+SHA1 key has been configured for use with Android. You can see view how to generate the key on the
+[Getting Started](overview) documentation.
+
+Ensure the "Google" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
+
+```dart title="NEEDS UPDATING/VALIDATING"
+final AuthCredential credential = GoogleAuthProvider.getCredential(
+  idToken: 'ABC123',
+  accessToken: 'AccessToken'
+);
+
+final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+```
+
+
+### GitHub
+
+Ensure the "GitHub" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
+
+```dart title="NEEDS UPDATING/VALIDATING"
+final AuthCredential credential = GithubAuthProvider.getCredential(
+  token: 'ABC123',
+);
+
+final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+```
