@@ -256,6 +256,12 @@ abstract class MobileAd {
       'id': id,
     });
   }
+
+  Future<bool> setMute() {
+    return _invokeBooleanMethod('setMute', <String, dynamic>{
+      'id': id,
+    });
+  }
 }
 
 /// A banner ad for the [FirebaseAdMobPlugin].

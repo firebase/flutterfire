@@ -89,6 +89,10 @@ static NSDictionary *statusToString = nil;
   [allAds removeObjectForKey:_mobileAdId];
 }
 
+- (void)setAppMuted:(bool)mute {
+  [GADMobileAds applicationMuted:mute];
+}
+
 - (NSDictionary *)argumentsMap {
   return @{@"id" : _mobileAdId};
 }
@@ -161,6 +165,10 @@ static NSDictionary *statusToString = nil;
 - (void)dispose {
   if (self.adView.superview) [self.adView removeFromSuperview];
   [super dispose];
+}
+
+- (void)setAppMuted:(bool)mute {
+  [super setAppMuted:mute];
 }
 
 - (NSString *)description {
@@ -301,6 +309,10 @@ static NSDictionary *statusToString = nil;
   // It is not possible to hide/remove/destroy an AdMob interstitial Ad.
   _interstitial = nil;
   [super dispose];
+}
+
+- (void)setAppMuted:(bool)mute {
+  [super setAppMuted:mute];
 }
 
 - (NSString *)description {

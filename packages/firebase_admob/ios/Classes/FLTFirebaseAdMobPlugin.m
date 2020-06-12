@@ -332,6 +332,15 @@
   result([NSNumber numberWithBool:YES]);
 }
 
+- (void)callMuteAd:(NSNumber *)mobileAdId
+                 call:(FlutterMethodCall *)call
+               result:(FlutterResult)result {
+  FLTMobileAd *ad = [FLTMobileAd getAdForId:mobileAdId];
+
+  [ad setAppMuted];
+  result([NSNumber numberWithBool:YES]);
+}
+
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
   if ([call.method isEqualToString:@"initialize"]) {
     [self callInitialize:call result:result];
@@ -381,6 +390,8 @@
     [self callIsAdLoaded:mobileAdId call:call result:result];
   } else if ([call.method isEqualToString:@"disposeAd"]) {
     [self callDisposeAd:mobileAdId call:call result:result];
+  } else if ([call.method isEqualToString:@"muteAd"]) {
+    [self callMuteAd:mobileAdId call:call result:result];
   } else {
     result(FlutterMethodNotImplemented);
   }

@@ -24,6 +24,7 @@ typedef enum : NSUInteger {
        hCenterOffset:(double)horizontalCenterOffset
           fromAnchor:(int)anchorType;
 - (void)dispose;
+- (void)setAppMuted;
 @end
 
 @interface FLTMobileAdWithView : FLTMobileAd

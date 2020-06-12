@@ -419,6 +419,11 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     result.success(Boolean.TRUE);
   }
 
+  private void callMuteAd(boolean mute, Result result) {
+    MobileAds.setAppMuted(mute)
+    result.success(Boolean.TRUE);
+  }
+
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
     pluginBinding = binding;
@@ -465,6 +470,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     }
 
     Integer id = call.argument("id");
+    boolean mute = call.argument("mute");
 
     switch (call.method) {
       case "initialize":
@@ -496,6 +502,9 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
         break;
       case "disposeAd":
         callDisposeAd(id, result);
+        break;
+      case "muteAd":
+        callMuteAd(mute, result);
         break;
       case "isAdLoaded":
         callIsAdLoaded(id, result);
