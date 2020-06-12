@@ -1,3 +1,7 @@
+## 0.4.5
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 0.4.4+3
 
 * Fix for missing UserAgent.h compilation failures.
