@@ -21,38 +21,33 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   Future<void> logEvent({
     String name,
     Map<String, dynamic> parameters,
-  }) {
+  }) async {
     _analytics.logEvent(name, parameters);
-    return Future<void>.value();
   }
 
   @override
-  Future<void> setAnalyticsCollectionEnabled(bool enabled) {
+  Future<void> setAnalyticsCollectionEnabled(bool enabled) async {
     _analytics.setAnalyticsCollectionEnabled(enabled);
-    return Future<void>.value();
   }
 
   @override
-  Future<void> setUserId(String id) {
+  Future<void> setUserId(String id) async {
     _analytics.setUserId(id);
-    return Future<void>.value();
   }
 
   @override
   Future<void> setCurrentScreen({
     String screenName,
     String screenClassOverride,
-  }) {
+  }) async {
     _analytics.setCurrentScreen(screenName);
-    return Future<void>.value();
   }
 
   @override
   Future<void> setUserProperty({
     String name,
     String value,
-  }) {
+  }) async {
     _analytics.setUserProperties({name: value});
-    return Future<void>.value();
   }
 }
