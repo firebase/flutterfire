@@ -1,6 +1,6 @@
 ## 0.13.7
 
-* Scope Android listener's to app's Activity.
+* Clean up snapshot listeners when Android Activity is destroyed.
 
 ## 0.13.6
 
