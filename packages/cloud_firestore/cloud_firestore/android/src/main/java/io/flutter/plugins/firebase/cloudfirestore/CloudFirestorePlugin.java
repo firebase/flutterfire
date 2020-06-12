@@ -1002,7 +1002,7 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
 
   private void removeSnapshotListeners() {
     for (int i = 0; i < listenerRegistrations.size(); i++) {
-      listenerRegistrations.get(i).remove();
+      listenerRegistrations.valueAt(i).remove();
     }
     listenerRegistrations.clear();
   }
