@@ -6,7 +6,7 @@ The web implementation of [firebase_analytics][1]
 
 ### Import the package
 
-This package is the endorsed implementation of `firebase_analytics` for the web platform since version `5.0.15`, so it gets automatically added to your application by depending on `firebase_analytics: ^5.0.15`.
+This package is the endorsed implementation of `firebase_analytics` for the web platform since version `5.0.16`, so it gets automatically added to your application by depending on `firebase_analytics: ^5.0.16`.
 
 No further modifications to your `pubspec.yaml` should be required in a recent enough version of Flutter (`>=1.12.13+hotfix.4`):
 
@@ -14,7 +14,7 @@ No further modifications to your `pubspec.yaml` should be required in a recent e
 ...
 dependencies:
   ...
-  firebase_analytics: ^5.0.15
+  firebase_analytics: ^5.0.16
   ...
 ```
 
