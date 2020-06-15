@@ -55,7 +55,7 @@ If you do get this error, we suggest enabling Multidex for Android.
 Open the `/android/app/build.gradle` file.  Under `dependencies` you need to add the multidex module, and enable it within
 the `defaultConfig`:
 
-```java highlight={3,8}
+```groovy highlight={3,8}
 android {
     defaultConfig {
         multiDexEnabled true
