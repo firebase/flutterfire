@@ -219,8 +219,14 @@ void main() {
 
     test('setConfigSettings', () async {
       expect(remoteConfig.remoteConfigSettings.debugMode, true);
-      final RemoteConfigSettings remoteConfigSettings =
-          RemoteConfigSettings(debugMode: false);
+      expect(
+        remoteConfig.remoteConfigSettings.fetchTimeout,
+        Duration(minutes: 1),
+      );
+      final RemoteConfigSettings remoteConfigSettings = RemoteConfigSettings(
+        debugMode: false,
+        fetchTimeout: Duration(seconds: 5),
+      );
       await remoteConfig.setConfigSettings(remoteConfigSettings);
       expect(
         log,
@@ -229,6 +235,7 @@ void main() {
             'RemoteConfig#setConfigSettings',
             arguments: <String, dynamic>{
               'debugMode': false,
+              'fetchTimeout': 5,
             },
           ),
         ],

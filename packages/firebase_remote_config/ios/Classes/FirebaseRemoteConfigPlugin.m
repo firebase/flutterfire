@@ -56,8 +56,10 @@
   } else if ([@"RemoteConfig#setConfigSettings" isEqualToString:call.method]) {
     FIRRemoteConfig *remoteConfig = [FIRRemoteConfig remoteConfig];
     bool debugMode = (bool)call.arguments[@"debugMode"];
+    long fetchTimeout = (long)call.arguments[@"fetchTimeout"];
     FIRRemoteConfigSettings *remoteConfigSettings =
         [[FIRRemoteConfigSettings alloc] initWithDeveloperModeEnabled:debugMode];
+    remoteConfigSettings.fetchTimeout = fetchTimeout;
     [remoteConfig setConfigSettings:remoteConfigSettings];
     result(nil);
   } else if ([@"RemoteConfig#fetch" isEqualToString:call.method]) {

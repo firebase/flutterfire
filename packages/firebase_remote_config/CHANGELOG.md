@@ -1,3 +1,7 @@
+## 0.3.2
+
+* Add `fetchTimeout` config settings
+
 ## 0.3.1
 
 * Update lower bound of dart dependency to 2.0.0.

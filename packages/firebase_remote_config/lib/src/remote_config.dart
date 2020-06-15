@@ -105,6 +105,7 @@ class RemoteConfig extends ChangeNotifier {
     await channel
         .invokeMethod<void>('RemoteConfig#setConfigSettings', <String, dynamic>{
       'debugMode': remoteConfigSettings.debugMode,
+      'fetchTimeout': remoteConfigSettings.fetchTimeout.inSeconds,
     });
     _remoteConfigSettings = remoteConfigSettings;
   }

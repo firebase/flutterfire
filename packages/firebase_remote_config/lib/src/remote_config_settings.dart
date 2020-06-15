@@ -6,7 +6,10 @@ part of firebase_remote_config;
 
 /// RemoteConfigSettings can be used to configure how Remote Config operates.
 class RemoteConfigSettings {
-  RemoteConfigSettings({this.debugMode = false});
+  RemoteConfigSettings({
+    this.debugMode = false,
+    this.fetchTimeout = const Duration(minutes: 1),
+  });
 
   /// Enable or disable developer mode for Remote Config.
   ///
@@ -15,4 +18,8 @@ class RemoteConfigSettings {
   /// relaxed to allow many more fetch calls per hour to the remote server than
   /// the 5 per hour that is enforced when developer mode is disabled.
   final bool debugMode;
+
+  /// Indicates the default value to abandon a pending fetch request made to
+  /// the backend.
+  final Duration fetchTimeout;
 }
