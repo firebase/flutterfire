@@ -43,6 +43,31 @@ the `/android/app/build.gradle` file:
 apply plugin: 'com.google.gms.google-services'
 ```
 
+## Building for Android
+
+Due to the large number of classes in some FlutterFire plugins, it may bump you over the 64k method limit on the Android
+ build system and you will get an error stating `Cannot fit requested classes in a single dex file`.
+
+If do get this error, we suggest enabling Multidex for Android.
+
+### Enabling Multidex
+
+Open the `/android/app/build.gradle` file.  Under `dependencies` you need to add the multidex module, and enable it within
+the `defaultConfig`:
+
+```java highlight={3,8}
+android {
+    defaultConfig {
+        multiDexEnabled true
+    }
+}
+
+dependencies {
+  implementation 'com.android.support:multidex:1.0.3'
+}
+```
+
+
 ## Initializing FlutterFire
 
 Once complete follow the instructions on [Initializing FlutterFire](../overview.mdx#initializing-flutterfire).
