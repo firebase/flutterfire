@@ -1,3 +1,7 @@
+## 0.1.2
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 0.1.1+3
 
 * Replace deprecated `getFlutterEngine` call on Android.

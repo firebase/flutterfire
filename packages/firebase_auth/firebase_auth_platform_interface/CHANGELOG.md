@@ -1,3 +1,7 @@
+## 1.1.8
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 1.1.7
 
 * Use package:plugin_platform_interface
