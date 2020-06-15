@@ -1,8 +1,7 @@
 name: firebase_ml
-description: A new Flutter plugin.
+description: Flutter plugin for Firebase Custom Model support.
 version: 0.0.1
-author:
-homepage:
+homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_ml
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

@@ -2,9 +2,9 @@
 
 @implementation FirebaseMLPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  FlutterMethodChannel* channel = [FlutterMethodChannel
-      methodChannelWithName:@"plugins.flutter.io/firebase_ml"
-            binaryMessenger:[registrar messenger]];
+  FlutterMethodChannel* channel =
+      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_ml"
+                                  binaryMessenger:[registrar messenger]];
   FirebaseMLPlugin* instance = [[FirebaseMLPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
 }

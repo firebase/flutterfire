@@ -1,6 +1,23 @@
-# firebaseml
-
-A new Flutter plugin.
+# Firebase Machine Learning
+  
+New Firebase ML plugin will support cloud apis for custom models.  
+Currently under development.  
+  
+## Usage of classes:  
+### FirebaseRemoteModel  
+```
+   FirebaseCustomRemoteModel conditions = (  
+        FirebaseCustomRemoteModelBuilder("myModelName")  
+   ).build(); 
+   ``` 
+### FirebaseModelDownloadConditions  
+```
+ FirebaseModelDownloadConditions conditions = (  
+     FirebaseModelDownloadConditionsBuilder()  
+       ..requireWifi()  
+       ..requireDeviceIdle()  
+ ).build();  
+```
 
 ## Getting Started
 

@@ -6,10 +6,11 @@ class FirebaseModelDownloadConditions {
   final bool _requiredDeviceIdle;
   final bool _requiredCharging;
 
-  FirebaseModelDownloadConditions._builder(FirebaseModelDownloadConditionsBuilder builder) :
-    _requiredWifi = builder._requiredWifi,
-    _requiredDeviceIdle = builder._requiredDeviceIdle,
-    _requiredCharging = builder._requiredCharging;
+  FirebaseModelDownloadConditions._builder(
+      FirebaseModelDownloadConditionsBuilder builder)
+      : _requiredWifi = builder._requiredWifi,
+        _requiredDeviceIdle = builder._requiredDeviceIdle,
+        _requiredCharging = builder._requiredCharging;
 
   /// Returns true if charging is required for download.
   bool isChargingRequired() => _requiredWifi;
@@ -48,9 +49,3 @@ class FirebaseModelDownloadConditionsBuilder {
   }
 }
 
-// Used as
-// FirebaseModelDownloadConditions conditions = (
-//     FirebaseModelDownloadConditionsBuilder()
-//       ..requireWifi()
-//       ..requireDeviceIdle()
-// ).build();

@@ -9,7 +9,9 @@ part of firebase_ml;
 /// Defines the download conditions of the model,
 /// whether or not to download updated versions of the model,
 /// and the model's name specified by the developer in the cloud console.
-/// https://firebase.google.com/docs/reference/android/com/google/firebase/ml/common/modeldownload/FirebaseRemoteModel
+///
+/// https://firebase.google.com/docs/reference/android/com/google/
+/// firebase/ml/common/modeldownload/FirebaseRemoteModel
 class FirebaseRemoteModel {
   String _modelName;
 
@@ -18,10 +20,12 @@ class FirebaseRemoteModel {
 }
 
 /// Describes a remote model to be downloaded to the device.
-/// Create a remote model object with the model's name specified by the developer in the cloud console.
-/// https://firebase.google.com/docs/reference/android/com/google/firebase/ml/custom/FirebaseCustomRemoteModel
-class FirebaseCustomRemoteModel extends FirebaseRemoteModel{
-
+/// Create a remote model object with the model's name
+/// specified by the developer in the cloud console.
+///
+/// https://firebase.google.com/docs/reference/android/com/google/
+/// firebase/ml/custom/FirebaseCustomRemoteModel
+class FirebaseCustomRemoteModel extends FirebaseRemoteModel {
   FirebaseCustomRemoteModel._builder(FirebaseCustomRemoteModelBuilder builder) {
     this._modelName = builder._modelName;
   }
@@ -31,15 +35,11 @@ class FirebaseCustomRemoteModel extends FirebaseRemoteModel{
 class FirebaseCustomRemoteModelBuilder {
   String _modelName;
 
-  /// Constructor for [FirebaseCustomRemoteModelBuilder] that takes in model's name specified by the developer in the cloud console.
+  /// Constructor for [FirebaseCustomRemoteModelBuilder]
+  /// that takes in model's name specified by the developer in the console.
   FirebaseCustomRemoteModelBuilder(this._modelName);
 
-  /// Builds [FirebaseCustomRemoteModel].
-  FirebaseCustomRemoteModel build() =>
-      FirebaseCustomRemoteModel._builder(this);
+  /// Builds [FirebaseCustomRemoteModel] with a specified model name.
+  FirebaseCustomRemoteModel build() => FirebaseCustomRemoteModel._builder(this);
 }
 
-// Used as
-// FirebaseCustomRemoteModel conditions = (
-//     FirebaseCustomRemoteModelBuilder("myModelName")
-// ).build();

@@ -8,13 +8,13 @@ part of firebase_ml;
 ///
 /// You can get an instance by calling [FirebaseML.instance]
 class FirebaseML {
-
   FirebaseML._();
+
   /// Singleton of [FirebaseML].
   static final FirebaseML instance = FirebaseML._();
 
   static const MethodChannel _channel =
-  const MethodChannel('plugins.flutter.io/firebase_ml');
+      const MethodChannel('plugins.flutter.io/firebase_ml');
 
   /// Example call across channel
   static Future<String> get doSomething async {
