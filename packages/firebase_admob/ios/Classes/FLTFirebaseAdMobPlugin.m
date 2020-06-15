@@ -333,8 +333,8 @@
 }
 
 - (void)callMuteAd:(NSNumber *)mobileAdId
-                 call:(FlutterMethodCall *)call
-               result:(FlutterResult)result {
+              call:(FlutterMethodCall *)call
+            result:(FlutterResult)result {
   FLTMobileAd *ad = [FLTMobileAd getAdForId:mobileAdId];
 
   [ad mute];
