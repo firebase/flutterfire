@@ -256,12 +256,6 @@ abstract class MobileAd {
       'id': id,
     });
   }
-
-  Future<bool> setMute() {
-    return _invokeBooleanMethod('setMute', <String, dynamic>{
-      'id': id,
-    });
-  }
 }
 
 /// A banner ad for the [FirebaseAdMobPlugin].
@@ -491,6 +485,11 @@ class RewardedVideoAd {
   /// Shows a rewarded video ad if one has been loaded.
   Future<bool> show() {
     return _invokeBooleanMethod("showRewardedVideoAd");
+  }
+
+  /// Mutes a rewarded video ad if one is playing.
+  Future<bool> mute() {
+    return _invokeBooleanMethod("muteAd");
   }
 
   /// Loads a rewarded video ad using the provided ad unit ID.

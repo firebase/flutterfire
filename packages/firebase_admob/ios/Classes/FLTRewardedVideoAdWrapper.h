@@ -19,4 +19,5 @@ typedef enum : NSUInteger {
 - (void)show;
 - (void)setUserIdentifier:(NSString *)userIdentifier;
 - (void)setCustomRewardString:(NSString *)customRewardString;
+- (void)setMuteAd:(bool)mute;
 @end

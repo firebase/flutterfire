@@ -31,6 +31,7 @@ void main() {
           case 'setRewardedVideoAdUserId':
           case 'setRewardedVideoAdCustomData':
           case 'disposeAd':
+          case 'muteAd':
             return Future<bool>.value(true);
           default:
             assert(false);
@@ -134,6 +135,7 @@ void main() {
       RewardedVideoAd.instance.customData = "custom-data";
 
       expect(await RewardedVideoAd.instance.show(), true);
+      expect(await RewardedVideoAd.instance.mute(), true);
 
       expect(log, <Matcher>[
         isMethodCall('loadRewardedVideoAd', arguments: <String, dynamic>{
@@ -148,6 +150,7 @@ void main() {
               'customData': "custom-data",
             }),
         isMethodCall('showRewardedVideoAd', arguments: null),
+        isMethodCall('muteAd', arguments: null)
       ]);
     });
   });

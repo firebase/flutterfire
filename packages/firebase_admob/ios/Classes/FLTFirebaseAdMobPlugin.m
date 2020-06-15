@@ -337,7 +337,7 @@
                result:(FlutterResult)result {
   FLTMobileAd *ad = [FLTMobileAd getAdForId:mobileAdId];
 
-  [ad setAppMuted];
+  [ad mute];
   result([NSNumber numberWithBool:YES]);
 }
 

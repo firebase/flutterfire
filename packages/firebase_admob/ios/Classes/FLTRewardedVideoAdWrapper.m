@@ -62,6 +62,10 @@ static NSDictionary *rewardedStatusToString = nil;
       presentFromRootViewController:[FLTRewardedVideoAdWrapper rootViewController]];
 }
 
+- (void)setMuteAd:(bool)mute {
+  [GADMobileAds applicationMuted:mute];
+}
+
 - (void)setUserIdentifier:(NSString *)userIdentifier {
   [[GADRewardBasedVideoAd sharedInstance] setUserIdentifier:userIdentifier];
 }
