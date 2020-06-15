@@ -1,3 +1,11 @@
+## 0.9.3+5
+
+* Enable `RewardedVideoAds` to be muted.
+
+## 0.9.3+4
+
+* Bump Dart version requirement.
+
 ## 0.9.3+3
 
 * Provide a default `MobileAdTargetingInfo` for `RewardedVideoAd.load()`. `RewardedVideoAd.load()`

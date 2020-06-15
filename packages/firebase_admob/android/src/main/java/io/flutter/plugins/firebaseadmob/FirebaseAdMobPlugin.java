@@ -420,7 +420,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   }
 
   private void callMuteAd(boolean mute, Result result) {
-    MobileAds.setAppMuted(mute)
+    MobileAds.setAppMuted(mute);
     result.success(Boolean.TRUE);
   }
 
