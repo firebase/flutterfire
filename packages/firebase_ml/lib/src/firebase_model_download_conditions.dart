@@ -2,50 +2,20 @@ part of firebase_ml;
 
 /// Conditions to download remote models.
 class FirebaseModelDownloadConditions {
-  final bool _requiredWifi;
-  final bool _requiredDeviceIdle;
-  final bool _requiredCharging;
+  /// Boolean value that indicates if wifi is required.
+  final bool requireWifi;
 
-  FirebaseModelDownloadConditions._builder(
-      FirebaseModelDownloadConditionsBuilder builder)
-      : _requiredWifi = builder._requiredWifi,
-        _requiredDeviceIdle = builder._requiredDeviceIdle,
-        _requiredCharging = builder._requiredCharging;
+  /// Boolean value that indicates if device idle is required.
+  final bool requireDeviceIdle;
 
-  /// Returns true if charging is required for download.
-  bool isChargingRequired() => _requiredWifi;
+  /// Boolean value that indicates if charging is required.
+  final bool requireCharging;
 
-  /// Returns true if device idle is required for download.
-  bool isDeviceIdleRequired() => _requiredDeviceIdle;
-
-  /// Returns true if wifi is required for download.
-  bool isWifiRequired() => _requiredCharging;
+  /// Constructor for the download conditions that takes optional parameters
+  /// requireWifi, requireDeviceIdle and requireCharging and defaults them to
+  /// false if none given.
+  FirebaseModelDownloadConditions(
+      {this.requireWifi = false,
+      this.requireDeviceIdle = false,
+      this.requireCharging = false});
 }
-
-/// Builder of [FirebaseModelDownloadConditions].
-class FirebaseModelDownloadConditionsBuilder {
-  bool _requiredWifi = false;
-  bool _requiredDeviceIdle = false;
-  bool _requiredCharging = false;
-
-  /// Sets whether wifi is required.
-  void requireWifi() {
-    this._requiredWifi = true;
-  }
-
-  /// Sets whether device idle is required.
-  void requireDeviceIdle() {
-    this._requiredDeviceIdle = true;
-  }
-
-  /// Sets whether charging is required.
-  void requireCharging() {
-    this._requiredCharging = true;
-  }
-
-  /// Builds [FirebaseModelDownloadConditions].
-  FirebaseModelDownloadConditions build() {
-    return FirebaseModelDownloadConditions._builder(this);
-  }
-}
-

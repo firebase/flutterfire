@@ -4,19 +4,17 @@ New Firebase ML plugin will support cloud apis for custom models.
 Currently under development.  
   
 ## Usage of classes:  
-### FirebaseRemoteModel  
+### FirebaseRemoteModel
+FirebaseRemoteModel cannot be constructed on its own. Construct FirebaseCustomRemoteModel, which is an extension of FirebaseRemoteModel.
 ```
-   FirebaseCustomRemoteModel conditions = (  
-        FirebaseCustomRemoteModelBuilder("myModelName")  
-   ).build(); 
-   ``` 
-### FirebaseModelDownloadConditions  
+FirebaseCustomRemoteModel remoteModel = FirebaseCustomRemoteModel('myModelName');
+print(remoteModel.modelName);
 ```
- FirebaseModelDownloadConditions conditions = (  
-     FirebaseModelDownloadConditionsBuilder()  
-       ..requireWifi()  
-       ..requireDeviceIdle()  
- ).build();  
+### FirebaseModelDownloadConditions
+Parameters requireCharging, requireDeviceIdle and requireWifi are optional and default to false.
+```
+FirebaseModelDownloadConditions conditions = FirebaseModelDownloadConditions(requireCharging: true);
+print(conditions.requireCharging);
 ```
 
 ## Getting Started

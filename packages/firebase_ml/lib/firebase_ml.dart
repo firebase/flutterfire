@@ -7,7 +7,6 @@ library firebase_ml;
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
-//import 'package:flutter/foundation.dart';
 
 part 'src/firebase_ml.dart';
 part 'src/firebase_model_manager.dart';
