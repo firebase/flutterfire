@@ -12,13 +12,23 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
-/** FirebaseMLPlugin */
+/** A flutter plugin for accessing the FirebaseML API. */
 public class FirebaseMLPlugin implements FlutterPlugin, MethodCallHandler {
 
   private static final String CHANNEL_NAME = "plugins.flutter.io/firebase_ml";
 
   private MethodChannel channel;
 
+  /**
+   * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
+   *
+   * <p>Calling this will register the plugin with the passed registrar. However, plugins
+   * initialized this way won't react to changes in activity or context.
+   *
+   * @param registrar connects this plugin's {@link
+   *     io.flutter.plugin.common.MethodChannel.MethodCallHandler} to its {@link
+   *     io.flutter.plugin.common.BinaryMessenger}.
+   */
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
     channel.setMethodCallHandler(new FirebaseMLPlugin());
@@ -33,7 +43,7 @@ public class FirebaseMLPlugin implements FlutterPlugin, MethodCallHandler {
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("downloadRemoteModel")) {
-      result.success("I reach all the way here");
+      result.success("Testing call. Will be removed shortly");
     } else if (call.method.equals("deleteDownloadedModels")) {
       result.notImplemented();
     } else if (call.method.equals("getDownloadedModels")) {
