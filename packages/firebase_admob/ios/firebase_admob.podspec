@@ -18,7 +18,7 @@ Firebase Admob plugin for Flutter.
   s.dependency 'Firebase/Core'
   s.dependency 'Firebase/AdMob'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '4.3'
 
   s.static_framework = true
 end
