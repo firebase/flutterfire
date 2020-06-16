@@ -19,15 +19,15 @@ public class FirebaseMLPlugin implements FlutterPlugin, MethodCallHandler {
 
   private MethodChannel channel;
 
+  public static void registerWith(Registrar registrar) {
+    final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
+    channel.setMethodCallHandler(new FirebaseMLPlugin());
+  }
+
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), CHANNEL_NAME);
     channel.setMethodCallHandler(this);
-  }
-
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
-    channel.setMethodCallHandler(new FirebaseMLPlugin());
   }
 
   @Override
