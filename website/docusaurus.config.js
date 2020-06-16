@@ -3,8 +3,8 @@ const path = require('path');
 module.exports = {
   title: 'FlutterFire',
   tagline: 'The official Firebase plugins for Flutter',
-  url: 'http://firebaseextended.github.io/flutterfire',
-  baseUrl: '/flutterfire/',
+  url: 'https://firebase.flutter.dev',
+  baseUrl: '/',
   favicon: 'img/favicon.ico',
   organizationName: 'FirebaseExtended',
   projectName: 'flutterfire',
