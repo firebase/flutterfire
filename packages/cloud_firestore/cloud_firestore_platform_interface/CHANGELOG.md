@@ -1,3 +1,7 @@
+## 1.1.2
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 1.1.1
 
 * Fixed formatting in the CHANGELOG.
