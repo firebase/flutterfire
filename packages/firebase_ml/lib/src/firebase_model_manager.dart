@@ -20,7 +20,7 @@ class FirebaseModelManager {
   FirebaseModelManager._();
 
   /// Singleton of [FirebaseModelManager].
-  static FirebaseModelManager instance = FirebaseModelManager._();
+  static final FirebaseModelManager instance = FirebaseModelManager._();
 
   /// Initiates the download of remoteModel if the download hasn't begun.
   Future<void> download(FirebaseRemoteModel model,
