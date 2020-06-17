@@ -85,6 +85,7 @@ final ImageLabeler cloudLabeler = FirebaseVision.instance.cloudImageLabeler();
 final FaceDetector faceDetector = FirebaseVision.instance.faceDetector();
 final ImageLabeler labeler = FirebaseVision.instance.imageLabeler();
 final TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
+final LandmarkDetector landmarkDetector = FirebaseVision.instance.landmarkDetector();
 ```
 
 You can also configure all detectors, except `TextRecognizer`, with desired options.
@@ -103,6 +104,7 @@ final List<ImageLabel> cloudLabels = await cloudLabeler.processImage(visionImage
 final List<Face> faces = await faceDetector.processImage(visionImage);
 final List<ImageLabel> labels = await labeler.processImage(visionImage);
 final VisionText visionText = await textRecognizer.processImage(visionImage);
+final List<Landmark> landmarks = await LandmarkDetector.processImage(visionImage);
 ```
 
 ### 4. Extract data.
@@ -190,6 +192,19 @@ for (TextBlock block in visionText.blocks) {
 }
 ```
 
+3. Extract landmarks.
+
+```dart
+final String landmarkName = landmark.landmark;
+final Rect boundingBox = landmark.boundingBox;
+final double confidence = landmark.confidence;
+final String landmarkEntityId = landmark.entityId;
+for (LandmarkLocation location in landmark.getLocations()) {
+  final double lat = location.lat;
+  final double lng = location.lng;
+}
+```
+
 ### 5. Release resources with `close()`.
 
 ```dart
@@ -198,6 +213,7 @@ cloudLabeler.close();
 faceDetector.close();
 labeler.close();
 textRecognizer.close();
+landmarkDetector.close();
 ```
 
 ## Getting Started
