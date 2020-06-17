@@ -149,12 +149,19 @@ By default background messaging is not enabled. To handle messages in the backgr
    ```
 
 #### iOS configuration (Swift)
-1. In `AppDelegate.swift`, add the following:
-```swift
-  FLTFirebaseMessagingPlugin.setPluginRegistrantCallback({ (registry: FlutterPluginRegistry) -> Void in
-    GeneratedPluginRegistrant.register(with: registry);
-  });
-```
+1. In the top of `AppDelegate.swift`, add the import of firebase_messaging:
+   
+   ```swift
+    import firebase_messaging
+   ```
+
+1. Then add the following code to `AppDelegate.swift`:
+
+   ```swift
+    FLTFirebaseMessagingPlugin.setPluginRegistrantCallback({ (registry: FlutterPluginRegistry) -> Void in
+      GeneratedPluginRegistrant.register(with: registry);
+    });
+   ```
 
 #### Usage in the common Dart code
 1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
