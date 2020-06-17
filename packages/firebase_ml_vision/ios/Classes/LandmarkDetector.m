@@ -18,46 +18,45 @@
 }
 
 - (void)handleDetection:(FIRVisionImage *)image result:(FlutterResult)result {
-  [_detector
-      detectInImage:image
-        completion:^(NSArray<FIRVisionCloudLandmark *> *_Nullable landmarks, NSError *_Nullable error) {
-          if (error) {
-            [FLTFirebaseMlVisionPlugin handleError:error result:result];
-            return;
-          } else if (!landmarks) {
-            result(@[]);
-            return;
-          }
+  [_detector detectInImage:image
+                completion:^(NSArray<FIRVisionCloudLandmark *> *_Nullable landmarks,
+                             NSError *_Nullable error) {
+                  if (error) {
+                    [FLTFirebaseMlVisionPlugin handleError:error result:result];
+                    return;
+                  } else if (!landmarks) {
+                    result(@[]);
+                    return;
+                  }
 
-          NSMutableArray *landmarkData = [NSMutableArray array];
-          for (FIRVisionCloudLandmark *landmark in landmarks) {
-            NSArray<FIRVisionLatitudeLongitude *> *visionLocations = landmark.locations;
-            NSMutableArray *locations = [[NSMutableArray alloc] initWithCapacity:[visionLocations count]];
-            for (int i = 0; i < [visionLocations count]; i++) {
-              FIRVisionLatitudeLongitude *location = [visionLocations objectAtIndex:i];
-              NSDictionary *locationDictionary = @{
-                @"lat" : location.latitude,
-                @"lng" : location.longitude
-              };
-              [locations insertObject:locationDictionary atIndex:i];
-            }
+                  NSMutableArray *landmarkData = [NSMutableArray array];
+                  for (FIRVisionCloudLandmark *landmark in landmarks) {
+                    NSArray<FIRVisionLatitudeLongitude *> *visionLocations = landmark.locations;
+                    NSMutableArray *locations =
+                        [[NSMutableArray alloc] initWithCapacity:[visionLocations count]];
+                    for (int i = 0; i < [visionLocations count]; i++) {
+                      FIRVisionLatitudeLongitude *location = [visionLocations objectAtIndex:i];
+                      NSDictionary *locationDictionary =
+                          @{@"lat" : location.latitude, @"lng" : location.longitude};
+                      [locations insertObject:locationDictionary atIndex:i];
+                    }
 
-            NSDictionary *data = @{
-              @"left" : @(landmark.frame.origin.x),
-              @"top" : @(landmark.frame.origin.y),
-              @"width" : @(landmark.frame.size.width),
-              @"height" : @(landmark.frame.size.height),
-              @"confidence" : landmark.confidence,
-              @"entityId" : landmark.entityId,
-              @"landmark" : landmark.landmark,
-              @"locations" : locations
-            };
+                    NSDictionary *data = @{
+                      @"left" : @(landmark.frame.origin.x),
+                      @"top" : @(landmark.frame.origin.y),
+                      @"width" : @(landmark.frame.size.width),
+                      @"height" : @(landmark.frame.size.height),
+                      @"confidence" : landmark.confidence,
+                      @"entityId" : landmark.entityId,
+                      @"landmark" : landmark.landmark,
+                      @"locations" : locations
+                    };
 
-            [landmarkData addObject:data];
-          }
+                    [landmarkData addObject:data];
+                  }
 
-          result(landmarkData);
-        }];
+                  result(landmarkData);
+                }];
 }
 
 + (FIRVisionCloudDetectorOptions *)parseOptions:(NSDictionary *)optionsData {
