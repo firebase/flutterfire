@@ -4,8 +4,7 @@
 
 part of firebase_ml;
 
-/// Before using a remote model,
-/// the user downloads it with [FirebaseModelManager].
+/// The user downloads a remote model with [FirebaseModelManager].
 ///
 /// The model name is the key for a model,
 /// and should be consistent with the name of the model
