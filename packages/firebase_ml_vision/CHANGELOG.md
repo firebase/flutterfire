@@ -1,3 +1,7 @@
+## 0.9.3+10
+
+* Added support for Landmark detection
+
 ## 0.9.3+9
 
 * Fix for missing UserAgent.h compilation failures.
