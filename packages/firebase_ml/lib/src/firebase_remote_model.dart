@@ -9,7 +9,6 @@ part of firebase_ml;
 /// https://firebase.google.com/docs/reference/android/com/google/
 /// firebase/ml/common/modeldownload/FirebaseRemoteModel
 abstract class FirebaseRemoteModel {
-  /// Model's name specified by the developer in the Firebase console.
   final String modelName;
 
   /// Constructor for [FirebaseRemoteModel] that requires
@@ -18,6 +17,7 @@ abstract class FirebaseRemoteModel {
 }
 
 /// Describes a custom remote model to be downloaded to the device.
+///
 /// Create a remote model object with the model's name
 /// specified by the developer in the cloud console.
 ///
