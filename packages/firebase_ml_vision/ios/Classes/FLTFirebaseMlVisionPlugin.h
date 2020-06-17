@@ -28,3 +28,6 @@
 
 @interface TextRecognizer : NSObject <Detector>
 @end
+
+@interface LandmarkDetector : NSObject <Detector>
+@end

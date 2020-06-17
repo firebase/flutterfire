@@ -31,6 +31,8 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
   final TextRecognizer _recognizer = FirebaseVision.instance.textRecognizer();
   final TextRecognizer _cloudRecognizer =
       FirebaseVision.instance.cloudTextRecognizer();
+  final LandmarkDetector _landmarkDetector =
+      FirebaseVision.instance.landmarkDetector();
 
   @override
   void initState() {
@@ -84,6 +86,8 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
         return _cloudImageLabeler.processImage;
       case Detector.face:
         return _faceDetector.processImage;
+      case Detector.landmark:
+        return _landmarkDetector.processImage;
     }
 
     return null;
@@ -121,6 +125,10 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
       case Detector.cloudLabel:
         if (_scanResults is! List<ImageLabel>) return noResultsText;
         painter = LabelDetectorPainter(imageSize, _scanResults);
+        break;
+      case Detector.landmark:
+        if (_scanResults is! List<Landmark>) return noResultsText;
+        painter = LandmarkDetectorPainter(imageSize, _scanResults);
         break;
       default:
         assert(_currentDetector == Detector.text ||
@@ -209,6 +217,10 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
                 child: Text('Detect Cloud Text'),
                 value: Detector.cloudText,
               ),
+              const PopupMenuItem<Detector>(
+                child: Text('Detect Landmark'),
+                value: Detector.landmark,
+              ),
             ],
           ),
         ],
@@ -232,6 +244,7 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
       _cloudImageLabeler.close();
       _recognizer.close();
       _cloudRecognizer.close();
+      _landmarkDetector.close();
     });
 
     _currentDetector = null;

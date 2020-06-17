@@ -90,6 +90,14 @@ class FirebaseVision {
       handle: nextHandle++,
     );
   }
+
+  /// Creates an instance of [LandmarkDetector].
+  LandmarkDetector landmarkDetector([LandmarkDetectorOptions options]) {
+    return LandmarkDetector._(
+      options ?? const LandmarkDetectorOptions(),
+      nextHandle++,
+    );
+  }
 }
 
 /// Represents an image object used for both on-device and cloud API detectors.

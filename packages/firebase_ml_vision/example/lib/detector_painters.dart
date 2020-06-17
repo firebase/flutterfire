@@ -7,7 +7,7 @@ import 'dart:ui' as ui;
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 
-enum Detector { barcode, face, label, cloudLabel, text, cloudText }
+enum Detector { barcode, face, label, cloudLabel, text, cloudText, landmark }
 
 class BarcodeDetectorPainter extends CustomPainter {
   BarcodeDetectorPainter(this.absoluteImageSize, this.barcodeLocations);
@@ -165,5 +165,61 @@ class TextDetectorPainter extends CustomPainter {
   bool shouldRepaint(TextDetectorPainter oldDelegate) {
     return oldDelegate.absoluteImageSize != absoluteImageSize ||
         oldDelegate.visionText != visionText;
+  }
+}
+
+class LandmarkDetectorPainter extends CustomPainter {
+  LandmarkDetectorPainter(this.absoluteImageSize, this.landmarks);
+
+  final Size absoluteImageSize;
+  final List<Landmark> landmarks;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+      ui.ParagraphStyle(
+          textAlign: TextAlign.left,
+          fontSize: 23.0,
+          textDirection: TextDirection.ltr),
+    );
+
+    builder.pushStyle(ui.TextStyle(color: Colors.green));
+
+    final double scaleX = size.width / absoluteImageSize.width;
+    final double scaleY = size.height / absoluteImageSize.height;
+
+    final Paint paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..color = Colors.red;
+
+    for (Landmark landmark in landmarks) {
+      canvas.drawRect(
+        Rect.fromLTRB(
+          landmark.boundingBox.left * scaleX,
+          landmark.boundingBox.top * scaleY,
+          landmark.boundingBox.right * scaleX,
+          landmark.boundingBox.bottom * scaleY,
+        ),
+        paint,
+      );
+      builder.addText('Landmark: ${landmark.landmark}, \n');
+    }
+
+    builder.pop();
+
+    canvas.drawParagraph(
+      builder.build()
+        ..layout(ui.ParagraphConstraints(
+          width: size.width,
+        )),
+      const Offset(0.0, 0.0),
+    );
+  }
+
+  @override
+  bool shouldRepaint(LandmarkDetectorPainter oldDelegate) {
+    return oldDelegate.absoluteImageSize != absoluteImageSize ||
+        oldDelegate.landmarks != landmarks;
   }
 }

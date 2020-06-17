@@ -28,6 +28,8 @@ void main() {
             return returnValue;
           case 'TextRecognizer#processImage':
             return returnValue;
+          case 'LandmarkDetector#processImage':
+            return returnValue;
           default:
             return null;
         }
@@ -1290,6 +1292,77 @@ void main() {
 
         final TextBlock block = text.blocks[0];
         expect(block.boundingBox, null);
+      });
+    });
+
+    group('$LandmarkDetector', () {
+      List<dynamic> testLandmarks;
+
+      setUp(() {
+        testLandmarks = <dynamic>[
+          <dynamic, dynamic>{
+            'left': 0.0,
+            'top': 1.0,
+            'width': 2.0,
+            'height': 3.0,
+            'confidence': 4.0,
+            'entityId': 'eid',
+            'landmark': 'lm',
+            'locations': <dynamic>[
+              <dynamic, dynamic>{
+                'lat': 0.1,
+                'lng': 1.1,
+              }
+            ],
+          },
+        ];
+      });
+
+      test('processImage', () async {
+        returnValue = testLandmarks;
+
+        final LandmarkDetector detector =
+            FirebaseVision.instance.landmarkDetector(
+          const LandmarkDetectorOptions(
+            maxResults: 10,
+            modelType: LandmarkModelType.stable_model,
+          ),
+        );
+
+        final FirebaseVisionImage image = FirebaseVisionImage.fromFilePath(
+          'empty',
+        );
+
+        final List<Landmark> landmarks = await detector.processImage(image);
+
+        /*expect(log, <Matcher>[
+          isMethodCall(
+            'LandmarkDetector#processImage',
+            arguments: <String, dynamic>{
+              'handle': 0,
+              'type': 'file',
+              'path': 'empty',
+              'bytes': null,
+              'metadata': null,
+              'options': <String, dynamic>{
+                'maxResults': 10,
+                'modelType': 'stable_model',
+              },
+            },
+          ),
+        ]);
+
+        final Landmark landmark = landmarks[0];
+        print(landmark);
+        expect(landmark.boundingBox, Rect.fromLTWH(0.0, 1.0, 2.0, 3.0));
+        expect(landmark.confidence, 4.0);
+        expect(landmark.entityId, 'eid');
+        expect(landmark.landmark, 'lm');
+
+        for (LandmarkLocation location in landmark.getLocations()) {
+          expect(location.lat, 0.1);
+          expect(location.lng, 1.1);
+        }*/
       });
     });
   });
