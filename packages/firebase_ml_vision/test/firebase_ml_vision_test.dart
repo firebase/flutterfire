@@ -1335,7 +1335,7 @@ void main() {
 
         final List<Landmark> landmarks = await detector.processImage(image);
 
-        /*expect(log, <Matcher>[
+        expect(log, <Matcher>[
           isMethodCall(
             'LandmarkDetector#processImage',
             arguments: <String, dynamic>{
@@ -1362,7 +1362,7 @@ void main() {
         for (LandmarkLocation location in landmark.getLocations()) {
           expect(location.lat, 0.1);
           expect(location.lng, 1.1);
-        }*/
+        }
       });
     });
   });

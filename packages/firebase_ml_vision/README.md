@@ -192,7 +192,7 @@ for (TextBlock block in visionText.blocks) {
 }
 ```
 
-3. Extract landmarks.
+e. Extract landmarks (since version 0.9.4)
 
 ```dart
 final String landmarkName = landmark.landmark;
