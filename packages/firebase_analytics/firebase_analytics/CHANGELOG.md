@@ -1,3 +1,8 @@
+## 5.0.16
+
+* Endorse `firebase_analytics_web`.
+* Add web support to the example app.
+
 ## 5.0.15
 
 * Use the platform interface.
