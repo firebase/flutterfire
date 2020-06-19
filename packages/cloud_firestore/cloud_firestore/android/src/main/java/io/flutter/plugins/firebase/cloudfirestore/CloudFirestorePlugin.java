@@ -49,6 +49,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugin.common.StandardMethodCodec;
+import io.flutter.view.FlutterNativeView;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -76,9 +77,17 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
   private final SparseArray<TaskCompletionSource> completionTasks = new SparseArray<>();
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
-    CloudFirestorePlugin instance = new CloudFirestorePlugin();
+    final CloudFirestorePlugin instance = new CloudFirestorePlugin();
     instance.activity = registrar.activity();
     instance.initInstance(registrar.messenger());
+    registrar.addViewDestroyListener(
+        new PluginRegistry.ViewDestroyListener() {
+          @Override
+          public boolean onViewDestroy(FlutterNativeView view) {
+            instance.onDetachedFromEngine();
+            return false;
+          }
+        });
   }
 
   private void initInstance(BinaryMessenger messenger) {
@@ -476,6 +485,11 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    onDetachedFromEngine();
+  }
+
+  private void onDetachedFromEngine() {
+    removeSnapshotListeners();
     channel.setMethodCallHandler(null);
     channel = null;
   }
@@ -984,6 +998,13 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
       this.result = result;
       this.exception = null;
     }
+  }
+
+  private void removeSnapshotListeners() {
+    for (int i = 0; i < listenerRegistrations.size(); i++) {
+      listenerRegistrations.valueAt(i).remove();
+    }
+    listenerRegistrations.clear();
   }
 }
 
