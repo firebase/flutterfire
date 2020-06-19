@@ -4,7 +4,6 @@
 
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/services.dart';
@@ -125,7 +124,7 @@ void main() {
           arguments: 234,
         ),
       );
-    }, skip: defaultTargetPlatform == TargetPlatform.android);
+    });
 
     test('resetAnalyticsData', () async {
       await analytics.resetAnalyticsData();
