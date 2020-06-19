@@ -1,5 +1,3 @@
-part of firebase_ml;
-
 /// Conditions to download remote models.
 class FirebaseModelDownloadConditions {
   /// Boolean value that indicates if wifi is required.

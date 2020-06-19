@@ -42,20 +42,16 @@ public class FirebaseMLPlugin implements FlutterPlugin, MethodCallHandler {
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    if (call.method.equals("downloadRemoteModel")) {
-      result.success("Testing call. Will be removed shortly");
-    } else if (call.method.equals("deleteDownloadedModels")) {
-      result.notImplemented();
-    } else if (call.method.equals("getDownloadedModels")) {
-      result.notImplemented();
-    } else if (call.method.equals("getLatestModelFile")) {
-      result.notImplemented();
-    } else if (call.method.equals("isModelDownloaded")) {
-      result.notImplemented();
-    } else if (call.method.equals("runInterpreter")) {
-      result.notImplemented();
-    } else {
-      result.notImplemented();
+    switch (call.method) {
+      case "downloadRemoteModel":
+        result.success("Testing call. Will be removed shortly");
+        break;
+      case "deleteDownloadedModels":
+      case "getDownloadedModels":
+      case "getLatestModelFile":
+      case "isModelDownloaded":
+      default:
+        result.notImplemented();
     }
   }
 

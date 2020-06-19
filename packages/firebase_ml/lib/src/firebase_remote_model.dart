@@ -2,13 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_ml;
-
-/// Describes a remote model to be downloaded to the device.
+/// A remote model to be downloaded to the device.
 ///
 /// https://firebase.google.com/docs/reference/android/com/google/
 /// firebase/ml/common/modeldownload/FirebaseRemoteModel
 abstract class FirebaseRemoteModel {
+  /// Name associated with remote model in the Firebase console.
   final String modelName;
 
   /// Constructor for [FirebaseRemoteModel] that requires
@@ -16,7 +15,7 @@ abstract class FirebaseRemoteModel {
   FirebaseRemoteModel(this.modelName);
 }
 
-/// Describes a custom remote model to be downloaded to the device.
+/// A custom remote model to be downloaded to the device.
 ///
 /// Create a remote model object with the model's name
 /// specified by the developer in the cloud console.

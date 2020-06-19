@@ -2,7 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_ml;
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter/services.dart';
+
+import 'firebase_remote_model.dart';
+import 'firebase_model_download_conditions.dart';
 
 /// The user downloads a remote model with [FirebaseModelManager].
 ///
@@ -16,10 +21,8 @@ class FirebaseModelManager {
   static const MethodChannel _channel =
       MethodChannel('plugins.flutter.io/firebase_ml');
 
-  FirebaseModelManager._();
-
   /// Singleton of [FirebaseModelManager].
-  static final FirebaseModelManager instance = FirebaseModelManager._();
+  static final FirebaseModelManager instance = FirebaseModelManager();
 
   /// Initiates the download of remoteModel if the download hasn't begun.
   Future<void> download(FirebaseRemoteModel model,
