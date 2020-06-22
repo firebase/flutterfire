@@ -4,7 +4,6 @@
 
 library firebase_ml;
 
-export 'src/firebase_ml.dart';
-export 'src/firebase_model_manager.dart';
-export 'src/firebase_model_download_conditions.dart';
-export 'src/firebase_remote_model.dart';
+export 'src/model_management/firebase_model_manager.dart';
+export 'src/model_management/firebase_model_download_conditions.dart';
+export 'src/model_management/firebase_remote_model.dart';

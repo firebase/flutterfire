@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'firebase_remote_model.dart';
@@ -18,32 +19,36 @@ import 'firebase_model_download_conditions.dart';
 /// https://firebase.google.com/docs/reference/android/com/google/
 /// firebase/ml/common/modeldownload/FirebaseModelManager
 class FirebaseModelManager {
-  static const MethodChannel _channel =
+  FirebaseModelManager._();
+
+  /// Means for communication with native platform code
+  @visibleForTesting
+  static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_ml');
 
   /// Singleton of [FirebaseModelManager].
-  static final FirebaseModelManager instance = FirebaseModelManager();
+  static final FirebaseModelManager instance = FirebaseModelManager._();
 
   /// Initiates the download of remoteModel if the download hasn't begun.
   Future<void> download(FirebaseRemoteModel model,
       FirebaseModelDownloadConditions conditions) async {
-    // Example call
-    await _channel.invokeMethod(
-        "FirebaseModelManager#download", {'model': model.toString()});
+    var modelMap = Map<String, String>.from(await channel.invokeMethod(
+        "FirebaseModelManager#download",
+        {'modelName': model.modelName, 'conditions': conditions.toMap()}));
+    model.modelHash = modelMap['modelHash'];
   }
 
-  /// Deletes the given [FirebaseRemoteModel] from disk.
-  Future<void> deleteDownloadedModel(FirebaseRemoteModel model) async {}
-
   /// Returns the [File] containing the latest model for the remote model name.
-  Future<File> getLatestModelFile(
-      FirebaseRemoteModel firebaseRemoteModel) async {
-    return File("");
+  Future<File> getLatestModelFile(FirebaseRemoteModel model) async {
+    var modelPath = await channel.invokeMethod(
+        "FirebaseModelManager#getLatestModelFile",
+        {'modelName': model.modelName});
+    return File(modelPath);
   }
 
   /// Returns whether the given [FirebaseRemoteModel] is currently downloaded.
-  Future<bool> isModelDownloaded(
-      FirebaseRemoteModel firebaseRemoteModel) async {
-    return true;
+  Future<bool> isModelDownloaded(FirebaseRemoteModel model) {
+    return channel.invokeMethod("FirebaseModelManager#isModelDownloaded",
+        {'modelName': model.modelName});
   }
 }
