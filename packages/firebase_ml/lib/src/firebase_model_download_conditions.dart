@@ -12,8 +12,9 @@ class FirebaseModelDownloadConditions {
   /// Constructor for the download conditions that takes optional parameters
   /// requireWifi, requireDeviceIdle and requireCharging and defaults them to
   /// false if none given.
-  FirebaseModelDownloadConditions(
-      {this.requireWifi = false,
-      this.requireDeviceIdle = false,
-      this.requireCharging = false});
+  FirebaseModelDownloadConditions({
+    this.requireWifi = false,
+    this.requireDeviceIdle = false,
+    this.requireCharging = false,
+  });
 }

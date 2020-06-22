@@ -7,12 +7,13 @@
 /// https://firebase.google.com/docs/reference/android/com/google/
 /// firebase/ml/common/modeldownload/FirebaseRemoteModel
 abstract class FirebaseRemoteModel {
+  /// Constructor for [FirebaseRemoteModel].
+  ///
+  /// Called only by classes that extend [FirebaseRemoteModel].
+  const FirebaseRemoteModel(this.modelName) : assert(modelName != null);
+
   /// Name associated with remote model in the Firebase console.
   final String modelName;
-
-  /// Constructor for [FirebaseRemoteModel] that requires
-  /// a model name as an input.
-  FirebaseRemoteModel(this.modelName);
 }
 
 /// A custom remote model to be downloaded to the device.
@@ -23,7 +24,6 @@ abstract class FirebaseRemoteModel {
 /// https://firebase.google.com/docs/reference/android/com/google/
 /// firebase/ml/custom/FirebaseCustomRemoteModel
 class FirebaseCustomRemoteModel extends FirebaseRemoteModel {
-  /// Constructor for [FirebaseCustomRemoteModel] that requires
-  /// a model name as an input.
+  /// Constructor for [FirebaseCustomRemoteModel].
   FirebaseCustomRemoteModel(String modelName) : super(modelName);
 }
