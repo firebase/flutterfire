@@ -31,13 +31,17 @@ android {
         disable 'InvalidPackage'
     }
 
+    aaptOptions {
+        noCompress 'tflite'
+    }
+
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "io.flutter.plugins.firebaseml_example"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -47,8 +51,17 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    dependencies {
+        api 'com.google.firebase:firebase-ml-model-interpreter:22.0.3'
+        androidTestImplementation 'androidx.test:runner:1.2.0'
+        androidTestImplementation 'androidx.test:rules:1.2.0'
+        androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    }
 }
 
 flutter {
     source '../..'
 }
+
+apply plugin: 'com.google.gms.google-services'

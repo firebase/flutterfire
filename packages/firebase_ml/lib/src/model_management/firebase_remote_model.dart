@@ -10,10 +10,23 @@ abstract class FirebaseRemoteModel {
   /// Constructor for [FirebaseRemoteModel].
   ///
   /// Called only by classes that extend [FirebaseRemoteModel].
-  const FirebaseRemoteModel(this.modelName) : assert(modelName != null);
+  FirebaseRemoteModel(this.modelName) : assert(modelName != null);
 
   /// Name associated with remote model in the Firebase console.
   final String modelName;
+
+  /// Hash associated with remote model in the Firebase console.
+  String modelHash;
+
+  /// Express download conditions via map.
+  ///
+  /// This method is used for ease of transfer via channel and printing.
+  Map toMap() {
+    var remoteModelToMap = Map();
+    remoteModelToMap['modelName'] = this.modelName;
+    remoteModelToMap['modelHash'] = this.modelHash;
+    return remoteModelToMap;
+  }
 }
 
 /// A custom remote model to be downloaded to the device.

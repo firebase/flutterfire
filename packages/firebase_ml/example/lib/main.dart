@@ -1,8 +1,11 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
-
+import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tflite/tflite.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml/firebase_ml.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,26 +18,58 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _pluginOutput = 'Unknown';
+  File _image;
+  List _labels;
+
+  Future predictImagePicker() async {
+    final image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      var labels = await Tflite.runModelOnImage(
+        path: image.path,
+      );
+      setState(() {
+        _labels = labels;
+        _image = image;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    loadModelFromFirebase();
   }
 
-  Future<void> initPlatformState() async {
-    String pluginOutput;
-    try {
-      pluginOutput = await FirebaseML.doSomething;
-    } on PlatformException {
-      pluginOutput = 'Failed to get plugin working.';
-    }
-    if (!mounted) return;
+  Future loadModelFromFirebase() async {
+    FirebaseCustomRemoteModel model =
+        FirebaseCustomRemoteModel('image_classification');
 
-    setState(() {
-      _pluginOutput = pluginOutput;
-    });
+    FirebaseModelDownloadConditions conditions =
+        FirebaseModelDownloadConditions(requireWifi: true);
+    FirebaseModelManager modelManager = FirebaseModelManager.instance;
+
+    await modelManager.download(model, conditions);
+
+    var isModelDownloaded = await modelManager.isModelDownloaded(model);
+    assert(isModelDownloaded == true);
+
+    var modelFile = await modelManager.getLatestModelFile(model);
+    assert(modelFile != null);
+
+    var appDirectory = await getApplicationDocumentsDirectory();
+    var labelsData =
+        await rootBundle.load("assets/labels_mobilenet_v1_224.txt");
+    var labelsFile =
+        await File(appDirectory.path + "_labels_mobilenet_v1_224.txt")
+            .writeAsBytes(labelsData.buffer.asUint8List(
+                labelsData.offsetInBytes, labelsData.lengthInBytes));
+
+    assert(await Tflite.loadModel(
+          model: modelFile.path,
+          labels: labelsFile.path,
+          isAsset: false,
+        ) ==
+        "success");
   }
 
   @override
@@ -42,10 +77,21 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('FirebaseML example app'),
         ),
-        body: Center(
-          child: Text('Plugin output: $_pluginOutput\n'),
+        body: Column(children: [
+          _image != null ? Image.file(_image) : Text('No image selected.'),
+          Column(
+            children: _labels != null
+                ? _labels.map((res) {
+                    return Text("${res["label"]}");
+                  }).toList()
+                : [],
+          ),
+        ]),
+        floatingActionButton: FloatingActionButton(
+          onPressed: predictImagePicker,
+          child: Icon(Icons.add),
         ),
       ),
     );

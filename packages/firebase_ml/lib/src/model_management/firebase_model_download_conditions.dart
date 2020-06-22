@@ -13,8 +13,19 @@ class FirebaseModelDownloadConditions {
   /// requireWifi, requireDeviceIdle and requireCharging and defaults them to
   /// false if none given.
   FirebaseModelDownloadConditions({
-    this.requireWifi = false,
     this.requireDeviceIdle = false,
     this.requireCharging = false,
+    this.requireWifi = false,
   });
+
+  /// Express download conditions via map.
+  ///
+  /// This method is used for ease of transfer via channel and printing.
+  Map toMap() {
+    var conditionsToMap = Map();
+    conditionsToMap['requireCharging'] = this.requireCharging;
+    conditionsToMap['requireDeviceIdle'] = this.requireDeviceIdle;
+    conditionsToMap['requireWifi'] = this.requireWifi;
+    return conditionsToMap;
+  }
 }
