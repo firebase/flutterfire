@@ -1,0 +1,40 @@
+group 'io.flutter.plugins.firebaseml'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+    dependencies {
+        implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.3'
+    }
+}
+
+//
+//com.google.firebase.ml.common.modeldownload
+//com.google.firebase.ml.custom
