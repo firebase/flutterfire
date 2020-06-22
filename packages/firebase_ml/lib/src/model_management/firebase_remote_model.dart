@@ -10,7 +10,7 @@ abstract class FirebaseRemoteModel {
   /// Constructor for [FirebaseRemoteModel].
   ///
   /// Called only by classes that extend [FirebaseRemoteModel].
-  const FirebaseRemoteModel(this.modelName) : assert(modelName != null);
+  FirebaseRemoteModel(this.modelName) : assert(modelName != null);
 
   /// Name associated with remote model in the Firebase console.
   final String modelName;
