@@ -8,8 +8,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.util.SparseArray;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApiNotAvailableException;
@@ -41,6 +43,7 @@ import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.gson.Gson;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -50,6 +53,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -58,7 +62,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/** Flutter plugin for Firebase Auth. */
+/**
+ * Flutter plugin for Firebase Auth.
+ */
 public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
   // Only set registrar for v1 embedder.
   private PluginRegistry.Registrar registrar;
@@ -224,66 +230,74 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     }
   }
 
-  private void handleSignInWithPhoneNumber(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleSignInWithPhoneNumber(
+      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     Map<String, String> arguments = call.arguments();
     String verificationId = arguments.get("verificationId");
     String smsCode = arguments.get("smsCode");
 
-    PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getInstance(firebaseAuth).getCredential(verificationId,
-        smsCode);
-    firebaseAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(new SignInCompleteListener(result));
+    PhoneAuthCredential phoneAuthCredential =
+        PhoneAuthProvider.getInstance(firebaseAuth).getCredential(verificationId, smsCode);
+    firebaseAuth.signInWithCredential(phoneAuthCredential)
+        .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
-  private void handleVerifyPhoneNumber(MethodCall call, Result result, final FirebaseAuth firebaseAuth) {
+  private void handleVerifyPhoneNumber(
+      MethodCall call, Result result, final FirebaseAuth firebaseAuth) {
     Map<String, Object> arguments = call.arguments();
     final int handle = (int) arguments.get("handle");
     String phoneNumber = (String) arguments.get("phoneNumber");
     int timeout = (int) arguments.get("timeout");
 
-    PhoneAuthProvider.OnVerificationStateChangedCallbacks verificationCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-      @Override
-      public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-        Map<String, Object> arguments = new HashMap<>();
-        arguments.put("handle", handle);
-        String parsedJson = new Gson().toJson(phoneAuthCredential);
-        arguments.put("phoneAuthCredential", parsedJson);
-        channel.invokeMethod("phoneVerificationCompleted", arguments);
-      }
+    PhoneAuthProvider.OnVerificationStateChangedCallbacks verificationCallbacks =
+        new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+          @Override
+          public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            Map<String, Object> arguments = new HashMap<>();
+            arguments.put("handle", handle);
+            String parsedJson = new Gson().toJson(phoneAuthCredential);
+            arguments.put("phoneAuthCredential", parsedJson);
+            channel.invokeMethod("phoneVerificationCompleted", arguments);
+          }
 
-      @Override
-      public void onVerificationFailed(FirebaseException e) {
-        Map<String, Object> arguments = new HashMap<>();
-        arguments.put("handle", handle);
-        arguments.put("exception", getVerifyPhoneNumberExceptionMap(e));
-        channel.invokeMethod("phoneVerificationFailed", arguments);
-      }
+          @Override
+          public void onVerificationFailed(FirebaseException e) {
+            Map<String, Object> arguments = new HashMap<>();
+            arguments.put("handle", handle);
+            arguments.put("exception", getVerifyPhoneNumberExceptionMap(e));
+            channel.invokeMethod("phoneVerificationFailed", arguments);
+          }
 
-      @Override
-      public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-        Map<String, Object> arguments = new HashMap<>();
-        arguments.put("handle", handle);
-        arguments.put("verificationId", verificationId);
-        arguments.put("forceResendingToken", forceResendingToken.hashCode());
-        channel.invokeMethod("phoneCodeSent", arguments);
-      }
+          @Override
+          public void onCodeSent(
+              String verificationId, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            Map<String, Object> arguments = new HashMap<>();
+            arguments.put("handle", handle);
+            arguments.put("verificationId", verificationId);
+            arguments.put("forceResendingToken", forceResendingToken.hashCode());
+            channel.invokeMethod("phoneCodeSent", arguments);
+          }
 
-      @Override
-      public void onCodeAutoRetrievalTimeOut(String verificationId) {
-        Map<String, Object> arguments = new HashMap<>();
-        arguments.put("handle", handle);
-        arguments.put("verificationId", verificationId);
-        channel.invokeMethod("phoneCodeAutoRetrievalTimeout", arguments);
-      }
-    };
+          @Override
+          public void onCodeAutoRetrievalTimeOut(String verificationId) {
+            Map<String, Object> arguments = new HashMap<>();
+            arguments.put("handle", handle);
+            arguments.put("verificationId", verificationId);
+            channel.invokeMethod("phoneCodeAutoRetrievalTimeout", arguments);
+          }
+        };
 
     if (call.argument("forceResendingToken") != null) {
       int forceResendingTokenKey = (int) arguments.get("forceResendingToken");
-      PhoneAuthProvider.ForceResendingToken forceResendingToken = forceResendingTokens.get(forceResendingTokenKey);
-      PhoneAuthProvider.getInstance(firebaseAuth).verifyPhoneNumber(phoneNumber, timeout, TimeUnit.MILLISECONDS,
-          getActivity(), verificationCallbacks, forceResendingToken);
+      PhoneAuthProvider.ForceResendingToken forceResendingToken =
+          forceResendingTokens.get(forceResendingTokenKey);
+      PhoneAuthProvider.getInstance(firebaseAuth)
+          .verifyPhoneNumber(phoneNumber, timeout, TimeUnit.MILLISECONDS, getActivity(),
+                             verificationCallbacks, forceResendingToken);
     } else {
-      PhoneAuthProvider.getInstance(firebaseAuth).verifyPhoneNumber(phoneNumber, timeout, TimeUnit.MILLISECONDS,
-          getActivity(), verificationCallbacks);
+      PhoneAuthProvider.getInstance(firebaseAuth)
+          .verifyPhoneNumber(phoneNumber, timeout, TimeUnit.MILLISECONDS, getActivity(),
+                             verificationCallbacks);
     }
 
     result.success(null);
@@ -314,14 +328,15 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
       return;
     }
 
-    @SuppressWarnings("unchecked")
-    AuthCredential credential = getCredential((Map<String, Object>) call.arguments);
+    @SuppressWarnings("unchecked") AuthCredential credential =
+        getCredential((Map<String, Object>) call.arguments);
 
-    currentUser.linkWithCredential(credential).addOnCompleteListener(new SignInCompleteListener(result));
+    currentUser.linkWithCredential(credential)
+        .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
-  private void handleCurrentUser(@SuppressWarnings("unused") MethodCall call, final Result result,
-      FirebaseAuth firebaseAuth) {
+  private void handleCurrentUser(
+      @SuppressWarnings("unused") MethodCall call, final Result result, FirebaseAuth firebaseAuth) {
     FirebaseUser user = firebaseAuth.getCurrentUser();
     if (user == null) {
       result.success(null);
@@ -331,12 +346,13 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     result.success(userMap);
   }
 
-  private void handleSignInAnonymously(@SuppressWarnings("unused") MethodCall call, Result result,
-      FirebaseAuth firebaseAuth) {
+  private void handleSignInAnonymously(
+      @SuppressWarnings("unused") MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     firebaseAuth.signInAnonymously().addOnCompleteListener(new SignInCompleteListener(result));
   }
 
-  private void handleCreateUserWithEmailAndPassword(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleCreateUserWithEmailAndPassword(
+      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     Map<String, String> arguments = call.arguments();
     String email = arguments.get("email");
     String password = arguments.get("password");
@@ -345,50 +361,59 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
         .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
-  private void handleFetchSignInMethodsForEmail(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleFetchSignInMethodsForEmail(
+      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     Map<String, String> arguments = call.arguments();
     String email = arguments.get("email");
 
-    firebaseAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener(new GetSignInMethodsCompleteListener(result));
+    firebaseAuth.fetchSignInMethodsForEmail(email)
+        .addOnCompleteListener(new GetSignInMethodsCompleteListener(result));
   }
 
-  private void handleSendPasswordResetEmail(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleSendPasswordResetEmail(
+      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     Map<String, String> arguments = call.arguments();
     String email = arguments.get("email");
 
-    firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(new TaskVoidCompleteListener(result));
+    firebaseAuth.sendPasswordResetEmail(email)
+        .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
   private void handleSendLinkToEmail(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     Map<String, Object> arguments = call.arguments();
     String email = arguments.get("email").toString();
-    ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder().setUrl(arguments.get("url").toString())
+    ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
+        .setUrl(arguments.get("url").toString())
         .setHandleCodeInApp((Boolean) arguments.get("handleCodeInApp"))
         .setIOSBundleId(arguments.get("iOSBundleID").toString())
         .setAndroidPackageName(arguments.get("androidPackageName").toString(),
-            (Boolean) arguments.get("androidInstallIfNotAvailable"), arguments.get("androidMinimumVersion").toString())
+                               (Boolean) arguments.get("androidInstallIfNotAvailable"),
+                               arguments.get("androidMinimumVersion").toString())
         .build();
 
     firebaseAuth.sendSignInLinkToEmail(email, actionCodeSettings)
         .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
-  private void handleIsSignInWithEmailLink(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleIsSignInWithEmailLink(
+      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     Map<String, String> arguments = call.arguments();
     String link = arguments.get("link");
     Boolean isSignInWithEmailLink = firebaseAuth.isSignInWithEmailLink(link);
     result.success(isSignInWithEmailLink);
   }
 
-  private void handleSignInWithEmailAndLink(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleSignInWithEmailAndLink(
+      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     Map<String, String> arguments = call.arguments();
     String email = arguments.get("email");
     String link = arguments.get("link");
-    firebaseAuth.signInWithEmailLink(email, link).addOnCompleteListener(new SignInCompleteListener(result));
+    firebaseAuth.signInWithEmailLink(email, link)
+        .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
-  private void handleSendEmailVerification(@SuppressWarnings("unused") MethodCall call, Result result,
-      FirebaseAuth firebaseAuth) {
+  private void handleSendEmailVerification(
+      @SuppressWarnings("unused") MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     if (currentUser == null) {
       markUserRequired(result);
@@ -398,7 +423,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     currentUser.sendEmailVerification().addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
-  private void handleReload(@SuppressWarnings("unused") MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleReload(
+      @SuppressWarnings("unused") MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     if (currentUser == null) {
       markUserRequired(result);
@@ -408,7 +434,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     currentUser.reload().addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
-  private void handleDelete(@SuppressWarnings("unused") MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleDelete(
+      @SuppressWarnings("unused") MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     if (currentUser == null) {
       markUserRequired(result);
@@ -421,8 +448,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   private AuthCredential getCredential(Map<String, Object> arguments) {
     AuthCredential credential;
 
-    @SuppressWarnings("unchecked")
-    Map<String, String> data = (Map<String, String>) arguments.get("data");
+    @SuppressWarnings("unchecked") Map<String, String> data =
+        (Map<String, String>) arguments.get("data");
 
     switch ((String) arguments.get("provider")) {
       case EmailAuthProvider.PROVIDER_ID: {
@@ -475,7 +502,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
         String rawNonce = data.get("rawNonce");
 
         if (providerId != null && providerId != "" && idToken != null && idToken != "") {
-          OAuthProvider.CredentialBuilder oAuthProvider = OAuthProvider.newCredentialBuilder(providerId);
+          OAuthProvider.CredentialBuilder oAuthProvider =
+              OAuthProvider.newCredentialBuilder(providerId);
 
           if (accessToken != null && accessToken != "" && rawNonce != null && rawNonce != "") {
             oAuthProvider.setAccessToken(accessToken);
@@ -500,25 +528,29 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     return credential;
   }
 
-  private void handleSignInWithCredential(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleSignInWithCredential(
+      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
 
-    @SuppressWarnings("unchecked")
-    AuthCredential credential = getCredential((Map<String, Object>) call.arguments());
+    @SuppressWarnings("unchecked") AuthCredential credential =
+        getCredential((Map<String, Object>) call.arguments());
 
-    firebaseAuth.signInWithCredential(credential).addOnCompleteListener(new SignInCompleteListener(result));
+    firebaseAuth.signInWithCredential(credential)
+        .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
-  private void handleReauthenticateWithCredential(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleReauthenticateWithCredential(
+      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     if (currentUser == null) {
       markUserRequired(result);
       return;
     }
 
-    @SuppressWarnings("unchecked")
-    AuthCredential credential = getCredential((Map<String, Object>) call.arguments());
+    @SuppressWarnings("unchecked") AuthCredential credential =
+        getCredential((Map<String, Object>) call.arguments());
 
-    currentUser.reauthenticateAndRetrieveData(credential).addOnCompleteListener(new SignInCompleteListener(result));
+    currentUser.reauthenticateAndRetrieveData(credential)
+        .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
   private void handleUnlinkFromProvider(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
@@ -534,15 +566,17 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     currentUser.unlink(provider).addOnCompleteListener(new SignInCompleteListener(result));
   }
 
-  private void handleSignInWithCustomToken(MethodCall call, final Result result, FirebaseAuth firebaseAuth) {
+  private void handleSignInWithCustomToken(
+      MethodCall call, final Result result, FirebaseAuth firebaseAuth) {
     Map<String, String> arguments = call.arguments();
     String token = arguments.get("token");
 
-    firebaseAuth.signInWithCustomToken(token).addOnCompleteListener(new SignInCompleteListener(result));
+    firebaseAuth.signInWithCustomToken(token)
+        .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
-  private void handleSignOut(@SuppressWarnings("unused") MethodCall call, final Result result,
-      FirebaseAuth firebaseAuth) {
+  private void handleSignOut(
+      @SuppressWarnings("unused") MethodCall call, final Result result, FirebaseAuth firebaseAuth) {
     firebaseAuth.signOut();
     result.success(null);
   }
@@ -593,10 +627,11 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   }
 
   private void handleUpdatePhoneNumber(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
-    @SuppressWarnings("unchecked")
-    AuthCredential credential = getCredential((Map<String, Object>) call.arguments);
+    @SuppressWarnings("unchecked") AuthCredential credential =
+        getCredential((Map<String, Object>) call.arguments);
 
-    firebaseAuth.getCurrentUser().updatePhoneNumber((PhoneAuthCredential) credential)
+    firebaseAuth.getCurrentUser()
+        .updatePhoneNumber((PhoneAuthCredential) credential)
         .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
@@ -610,7 +645,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     Map<String, String> arguments = call.arguments();
     final String password = arguments.get("password");
 
-    currentUser.updatePassword(password).addOnCompleteListener(new TaskVoidCompleteListener(result));
+    currentUser.updatePassword(password)
+        .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
   private void handleUpdateProfile(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
@@ -630,11 +666,12 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
       builder.setPhotoUri(Uri.parse(arguments.get("photoUrl")));
     }
 
-    currentUser.updateProfile(builder.build()).addOnCompleteListener(new TaskVoidCompleteListener(result));
+    currentUser.updateProfile(builder.build())
+        .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
-  private void handleStartListeningAuthState(@SuppressWarnings("unused") MethodCall call, Result result,
-      FirebaseAuth firebaseAuth) {
+  private void handleStartListeningAuthState(
+      @SuppressWarnings("unused") MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     final int handle = nextHandle++;
     FirebaseAuth.AuthStateListener listener = new FirebaseAuth.AuthStateListener() {
       @Override
@@ -654,7 +691,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     result.success(handle);
   }
 
-  private void handleStopListeningAuthState(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleStopListeningAuthState(
+      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     Map<String, Integer> arguments = call.arguments();
     Integer id = arguments.get("id");
 
@@ -664,7 +702,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
       authStateListeners.remove(id);
       result.success(null);
     } else {
-      reportException(result, new FirebaseAuthException("ERROR_LISTENER_NOT_FOUND",
+      reportException(result, new FirebaseAuthException(
+          "ERROR_LISTENER_NOT_FOUND",
           String.format(Locale.US, "Listener with identifier '%d' not found.", id)));
     }
   }
@@ -677,12 +716,14 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     result.success(null);
   }
 
-  private void handleConfirmPasswordReset(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+  private void handleConfirmPasswordReset(
+      MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     Map<String, String> arguments = call.arguments();
     String oobCode = arguments.get("oobCode");
     String newPassword = arguments.get("newPassword");
 
-    firebaseAuth.confirmPasswordReset(oobCode, newPassword).addOnCompleteListener(new TaskVoidCompleteListener(result));
+    firebaseAuth.confirmPasswordReset(oobCode, newPassword)
+        .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
   private class SignInCompleteListener implements OnCompleteListener<AuthResult> {
@@ -727,7 +768,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     }
   }
 
-  private class GetSignInMethodsCompleteListener implements OnCompleteListener<SignInMethodQueryResult> {
+  private class GetSignInMethodsCompleteListener
+      implements OnCompleteListener<SignInMethodQueryResult> {
     private final Result result;
 
     GetSignInMethodsCompleteListener(Result result) {
