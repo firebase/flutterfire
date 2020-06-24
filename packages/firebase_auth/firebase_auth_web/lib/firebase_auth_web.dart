@@ -530,4 +530,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     // See https://github.com/flutter/flutter/issues/46021
     throw UnimplementedError('verifyPhoneNumber');
   }
+
+  Future<void> confirmPasswordReset(
+      String app, String oobCode, String newPassword) async {
+    final firebase.Auth auth = _getAuth(app);
+    await auth.confirmPasswordReset(oobCode, newPassword);
+  }
 }
