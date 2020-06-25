@@ -54,7 +54,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // database.setPersistenceCacheSizeBytes(10000000);
     _counterRef.keepSynced(true);
     _counterSubscription = _counterRef.onValue.listen((Event event) {
-      print(event);
       setState(() {
         _error = null;
         _counter = event.snapshot.value ?? 0;
