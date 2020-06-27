@@ -4,6 +4,8 @@
 
 package io.flutter.plugins.firebaseauth;
 
+import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.util.SparseArray;
 import androidx.annotation.NonNull;
@@ -39,6 +41,10 @@ import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.gson.Gson;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -53,25 +59,68 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /** Flutter plugin for Firebase Auth. */
-public class FirebaseAuthPlugin implements MethodCallHandler {
-  private final PluginRegistry.Registrar registrar;
-  private final SparseArray<AuthStateListener> authStateListeners = new SparseArray<>();
-  private final SparseArray<ForceResendingToken> forceResendingTokens = new SparseArray<>();
-  private final MethodChannel channel;
+public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
+  // Only set registrar for v1 embedder.
+  private PluginRegistry.Registrar registrar;
+  private SparseArray<AuthStateListener> authStateListeners;
+  private SparseArray<ForceResendingToken> forceResendingTokens;
+  private MethodChannel channel;
+  // Only set activity for v2 embedder. Always access activity from getActivity() method.
+  private Activity activity;
 
   // Handles are ints used as indexes into the sparse array of active observers
   private int nextHandle = 0;
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
-    MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_auth");
-    channel.setMethodCallHandler(new FirebaseAuthPlugin(registrar, channel));
+    FirebaseAuthPlugin instance = new FirebaseAuthPlugin();
+    instance.registrar = registrar;
+    instance.initInstance(registrar.messenger(), registrar.context());
   }
 
-  private FirebaseAuthPlugin(PluginRegistry.Registrar registrar, MethodChannel channel) {
-    this.registrar = registrar;
-    this.channel = channel;
-    FirebaseApp.initializeApp(registrar.context());
+  private void initInstance(BinaryMessenger messenger, Context context) {
+    channel = new MethodChannel(messenger, "plugins.flutter.io/firebase_auth");
+    FirebaseApp.initializeApp(context);
+    channel.setMethodCallHandler(this);
+    authStateListeners = new SparseArray<>();
+    forceResendingTokens = new SparseArray<>();
+  }
+
+  // Only access activity with this method.
+  public Activity getActivity() {
+    return registrar != null ? registrar.activity() : activity;
+  }
+
+  @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    initInstance(binding.getBinaryMessenger(), binding.getApplicationContext());
+  }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    authStateListeners = null;
+    forceResendingTokens = null;
+    channel.setMethodCallHandler(null);
+    channel = null;
+  }
+
+  @Override
+  public void onAttachedToActivity(ActivityPluginBinding activityPluginBinding) {
+    activity = activityPluginBinding.getActivity();
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    activity = null;
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding activityPluginBinding) {
+    activity = activityPluginBinding.getActivity();
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    activity = null;
   }
 
   private FirebaseAuth getAuth(MethodCall call) {
@@ -241,17 +290,13 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
               phoneNumber,
               timeout,
               TimeUnit.MILLISECONDS,
-              registrar.activity(),
+              getActivity(),
               verificationCallbacks,
               forceResendingToken);
     } else {
       PhoneAuthProvider.getInstance()
           .verifyPhoneNumber(
-              phoneNumber,
-              timeout,
-              TimeUnit.MILLISECONDS,
-              registrar.activity(),
-              verificationCallbacks);
+              phoneNumber, timeout, TimeUnit.MILLISECONDS, getActivity(), verificationCallbacks);
     }
 
     result.success(null);

@@ -6,7 +6,7 @@ part of cloud_firestore;
 
 class _CodecUtility {
   static Map<String, dynamic> replaceValueWithDelegatesInMap(
-      Map<String, dynamic> data) {
+      Map<dynamic, dynamic> data) {
     if (data == null) {
       return null;
     }
@@ -23,7 +23,7 @@ class _CodecUtility {
   }
 
   static Map<String, dynamic> replaceDelegatesWithValueInMap(
-      Map<String, dynamic> data, Firestore firestore) {
+      Map<dynamic, dynamic> data, Firestore firestore) {
     if (data == null) {
       return null;
     }
@@ -47,7 +47,7 @@ class _CodecUtility {
       return value._delegate;
     } else if (value is List) {
       return replaceValueWithDelegatesInArray(value);
-    } else if (value is Map<String, dynamic>) {
+    } else if (value is Map<dynamic, dynamic>) {
       return replaceValueWithDelegatesInMap(value);
     }
     return value;
@@ -58,7 +58,7 @@ class _CodecUtility {
       return DocumentReference._(value, firestore);
     } else if (value is List) {
       return replaceDelegatesWithValueInArray(value, firestore);
-    } else if (value is Map<String, dynamic>) {
+    } else if (value is Map<dynamic, dynamic>) {
       return replaceDelegatesWithValueInMap(value, firestore);
     }
     return value;

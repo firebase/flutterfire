@@ -152,3 +152,53 @@ Plugin issues that are not specific to Flutterfire can be filed in the [Flutter 
 To contribute a change to this plugin,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
 and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+
+## 0.4.x to 0.5.x Firebase Dynamic Links Android migration tip
+
+When upgrading from an older version of the Dynamic Links library, passwordless (email link) sign-in will break, and the link will return null if you simply replace `FirebaseDynamicLinks.instance.retrieveDynamicLink()` with `FirebaseDynamicLinks.instance.getInitialLink()`. Instead you need to update your code to something similar to 
+
+```
+@override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      final PendingDynamicLinkData data =
+      await FirebaseDynamicLinks.instance.getInitialLink();
+      if( data?.link != null ) {
+        handleLink(data?.link);
+      }
+
+      FirebaseDynamicLinks.instance.onLink(
+          onSuccess: (PendingDynamicLinkData dynamicLink) async {
+            final Uri deepLink = dynamicLink?.link;
+
+            handleLink(deepLink);
+          }, onError: (OnLinkErrorException e) async {
+        print('onLinkError');
+        print(e.message);
+      });
+    }
+  }
+
+  void handleLink(Uri link) async {
+    if (link != null) {
+      final FirebaseUser user = (await _auth.signInWithEmailAndLink(
+        email: _userEmail,
+        link: link.toString(),
+      ))
+          .user;
+
+      if (user != null) {
+        _userID = user.uid;
+        _success = true;
+      } else {
+        _success = false;
+      }
+    } else {
+      _success = false;
+    }
+
+    setState(() {});
+  }
+```
+
+More context can be found in this [issue discussion](https://github.com/FirebaseExtended/flutterfire/issues/1537)

@@ -25,9 +25,5 @@ Firebase Cloud Messaging plugin for Flutter.
   s.static_framework = true
   s.ios.deployment_target = '8.0'
 
-  s.prepare_command = <<-CMD
-      echo // Generated file, do not edit > Classes/UserAgent.h
-      echo "#define LIBRARY_VERSION @\\"#{libraryVersion}\\"" >> Classes/UserAgent.h
-      echo "#define LIBRARY_NAME @\\"flutter-fire-fcm\\"" >> Classes/UserAgent.h
-    CMD
+  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{libraryVersion}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-fcm\\\"" }
 end

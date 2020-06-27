@@ -1,0 +1,9 @@
+#!/usr/bin/sh
+echo "Moving tests to lib/main.dart..."
+cp test_driver/cloud_firestore.dart lib/main.dart
+
+flutter run -d chrome
+
+echo "Restoring lib/main.dart..."
+git restore lib/main.dart
+

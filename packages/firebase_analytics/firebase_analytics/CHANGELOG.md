@@ -1,3 +1,19 @@
+## 5.0.15
+
+* Use the platform interface.
+
+## 5.0.14
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 5.0.13
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 5.0.12
+
+* Make the pedantic dev_dependency explicit.
+
 ## 5.0.11
 
 * Fix overrides a deprecated API.
