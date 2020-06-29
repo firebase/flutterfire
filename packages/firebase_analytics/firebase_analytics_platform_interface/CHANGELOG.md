@@ -1,3 +1,7 @@
+## 1.0.4
+
+* Add logEcommercePurchase and logAddToCart
+
 ## 1.0.3
 
 * Update lower bound of dart dependency to 2.0.0.
