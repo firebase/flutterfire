@@ -1,3 +1,7 @@
+## 3.1.6+1
+
+* Added package to sub folder to add web support
+
 ## 3.1.6
 
 * Update lower bound of dart dependency to 2.0.0.
