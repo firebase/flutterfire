@@ -52,7 +52,7 @@ To run the integration tests:
 
 ```
 cd example
-flutter drive test/<name_of_plugin>.dart
+flutter drive test_driver/<name_of_plugin>.dart
 ```
 
 ## Contributing code
