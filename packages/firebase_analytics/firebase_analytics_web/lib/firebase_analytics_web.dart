@@ -50,4 +50,43 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   }) async {
     _analytics.setUserProperties({name: value});
   }
+
+   @override
+  Future<void> logAddToCart({
+    String itemId,
+    String itemName,
+    String itemCategory,
+    int quantity,
+    double price,
+    double value,
+    String currency,
+    String origin,
+    String itemLocationId,
+    String destination,
+    String startDate,
+    String endDate,
+  }) async {
+    _analytics.logAddToCart(itemId,itemName,itemCategory,quantity,price,value,currency,origin,itemLocationId,destination,startDate,endDate);
+  }
+
+     @override
+  Future<void> logEcommercePurchase({
+    String currency,
+    double value,
+    String transactionId,
+    double tax,
+    double shipping,
+    String coupon,
+    String location,
+    int numberOfNights,
+    int numberOfRooms,
+    int numberOfPassengers,
+    String origin,
+    String destination,
+    String startDate,
+    String endDate,
+    String travelClass,
+  }) async {
+    _analytics.logAddToCart(currency,value,transactionId,tax,shipping,coupon,location,numberOfNights,numberOfRooms,numberOfPassengers,origin,destination,startDate,endDate,travelClass);
+  }
 }

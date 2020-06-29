@@ -108,4 +108,42 @@ abstract class FirebaseAnalyticsPlatform {
     throw UnimplementedError(
         'setSessionTimeoutDuration() is not implemented on this platform');
   }
+
+  Future<void> logAddToCart({
+    @required String itemId,
+    @required String itemName,
+    @required String itemCategory,
+    @required int quantity,
+    double price,
+    double value,
+    String currency,
+    String origin,
+    String itemLocationId,
+    String destination,
+    String startDate,
+    String endDate,
+  }) {
+    throw UnimplementedError('logEvent() is not implemented on this platform');
+  }
+
+   Future<void> logEcommercePurchase({
+    String currency,
+    double value,
+    String transactionId,
+    double tax,
+    double shipping,
+    String coupon,
+    String location,
+    int numberOfNights,
+    int numberOfRooms,
+    int numberOfPassengers,
+    String origin,
+    String destination,
+    String startDate,
+    String endDate,
+    String travelClass,
+  }) {
+    throw UnimplementedError('logEvent() is not implemented on this platform');
+  }
+
 }

@@ -70,4 +70,73 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     return _channel.invokeMethod<void>(
         'setSessionTimeoutDuration', milliseconds);
   }
+
+  @override
+  Future<void> logAddToCart({
+    @required String itemId,
+    @required String itemName,
+    @required String itemCategory,
+    @required int quantity,
+    double price,
+    double value,
+    String currency,
+    String origin,
+    String itemLocationId,
+    String destination,
+    String startDate,
+    String endDate,
+  }) {
+    return _channel.invokeMethod<void>('logAddToCart', <String, dynamic>{
+    "itemId" : itemId,
+    "itemName" : itemName,
+    "itemCategory" : itemCategory,
+    "quantity" : quantity,
+    "price" : price,
+    "value" : value,
+    "currency" : currency,
+    "origin" : origin,
+    "itemLocationId" : itemLocationId,
+    "destination" : destination,
+    "startDate" : startDate,
+    "endDate" : endDate,
+    });
+  }
+
+  @override
+  Future<void> logEcommercePurchase({
+    String currency,
+    double value,
+    String transactionId,
+    double tax,
+    double shipping,
+    String coupon,
+    String location,
+    int numberOfNights,
+    int numberOfRooms,
+    int numberOfPassengers,
+    String origin,
+    String destination,
+    String startDate,
+    String endDate,
+    String travelClass,
+  }) {
+    return _channel.invokeMethod<void>('logEcommercePurchase', <String, dynamic>{
+    "currency" : currency,
+    "value" : value,
+    "transactionId" : transactionId,
+    "tax" : tax,
+    "shipping" : shipping,
+    "coupon" : coupon,
+    "location" : location,
+    "numberOfNights" : numberOfNights,
+    "numberOfRooms" : numberOfRooms,
+    "numberOfPassengers" : numberOfPassengers,
+    "origin" : origin,
+    "destination" : destination,
+    "startDate" : startDate,
+    "endDate" : endDate,
+    "travelClass" : travelClass,
+    });
+  }
+
 }
