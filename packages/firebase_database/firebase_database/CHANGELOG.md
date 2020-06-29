@@ -1,6 +1,6 @@
 ## 3.1.6+1
 
-* Added package to sub folder to add web support
+* Added package to a sub folder to add web support
 
 ## 3.1.6
 
