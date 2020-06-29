@@ -1,3 +1,7 @@
+## 0.13.8
+
+- Fix stream error report on iOS.
+
 ## 0.13.7
 
 * Clean up snapshot listeners when Android Activity is destroyed.
