@@ -368,10 +368,9 @@ int nextHandle = 0;
     NSString *verificationId = call.arguments[@"verificationId"];
     NSString *smsCode = call.arguments[@"smsCode"];
 
-    FIRPhoneAuthCredential *credential =
-        [[FIRPhoneAuthProvider providerWithAuth:[self getAuth:call.arguments]]
-                                 credentialWithVerificationID:verificationId
-                                        verificationCode:smsCode];
+    FIRPhoneAuthCredential *credential = [[FIRPhoneAuthProvider
+        providerWithAuth:[self getAuth:call.arguments]] credentialWithVerificationID:verificationId
+                                                                    verificationCode:smsCode];
     [[self getAuth:call.arguments]
         signInAndRetrieveDataWithCredential:credential
                                  completion:^(FIRAuthDataResult *authResult,

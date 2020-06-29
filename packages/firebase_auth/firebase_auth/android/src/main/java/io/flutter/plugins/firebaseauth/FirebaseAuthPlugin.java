@@ -8,10 +8,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.util.SparseArray;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApiNotAvailableException;
@@ -43,7 +41,6 @@ import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.gson.Gson;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -53,7 +50,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,17 +58,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Flutter plugin for Firebase Auth.
- */
+/** Flutter plugin for Firebase Auth. */
 public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
   // Only set registrar for v1 embedder.
   private PluginRegistry.Registrar registrar;
   private SparseArray<AuthStateListener> authStateListeners;
   private SparseArray<ForceResendingToken> forceResendingTokens;
   private MethodChannel channel;
-  // Only set activity for v2 embedder. Always access activity from getActivity()
-  // method.
+  // Only set activity for v2 embedder. Always access activity from getActivity() method.
   private Activity activity;
 
   // Handles are ints used as indexes into the sparse array of active observers
@@ -238,7 +231,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
 
     PhoneAuthCredential phoneAuthCredential =
         PhoneAuthProvider.getInstance(firebaseAuth).getCredential(verificationId, smsCode);
-    firebaseAuth.signInWithCredential(phoneAuthCredential)
+    firebaseAuth
+        .signInWithCredential(phoneAuthCredential)
         .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
@@ -292,12 +286,17 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
       PhoneAuthProvider.ForceResendingToken forceResendingToken =
           forceResendingTokens.get(forceResendingTokenKey);
       PhoneAuthProvider.getInstance(firebaseAuth)
-          .verifyPhoneNumber(phoneNumber, timeout, TimeUnit.MILLISECONDS, getActivity(),
-                             verificationCallbacks, forceResendingToken);
+          .verifyPhoneNumber(
+              phoneNumber,
+              timeout,
+              TimeUnit.MILLISECONDS,
+              getActivity(),
+              verificationCallbacks,
+              forceResendingToken);
     } else {
       PhoneAuthProvider.getInstance(firebaseAuth)
-          .verifyPhoneNumber(phoneNumber, timeout, TimeUnit.MILLISECONDS, getActivity(),
-                             verificationCallbacks);
+          .verifyPhoneNumber(
+              phoneNumber, timeout, TimeUnit.MILLISECONDS, getActivity(), verificationCallbacks);
     }
 
     result.success(null);
@@ -328,10 +327,11 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
       return;
     }
 
-    @SuppressWarnings("unchecked") AuthCredential credential =
-        getCredential((Map<String, Object>) call.arguments);
+    @SuppressWarnings("unchecked")
+    AuthCredential credential = getCredential((Map<String, Object>) call.arguments);
 
-    currentUser.linkWithCredential(credential)
+    currentUser
+        .linkWithCredential(credential)
         .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
@@ -357,7 +357,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     String email = arguments.get("email");
     String password = arguments.get("password");
 
-    firebaseAuth.createUserWithEmailAndPassword(email, password)
+    firebaseAuth
+        .createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
@@ -366,7 +367,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     Map<String, String> arguments = call.arguments();
     String email = arguments.get("email");
 
-    firebaseAuth.fetchSignInMethodsForEmail(email)
+    firebaseAuth
+        .fetchSignInMethodsForEmail(email)
         .addOnCompleteListener(new GetSignInMethodsCompleteListener(result));
   }
 
@@ -375,23 +377,27 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     Map<String, String> arguments = call.arguments();
     String email = arguments.get("email");
 
-    firebaseAuth.sendPasswordResetEmail(email)
+    firebaseAuth
+        .sendPasswordResetEmail(email)
         .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
   private void handleSendLinkToEmail(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     Map<String, Object> arguments = call.arguments();
     String email = arguments.get("email").toString();
-    ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
-        .setUrl(arguments.get("url").toString())
-        .setHandleCodeInApp((Boolean) arguments.get("handleCodeInApp"))
-        .setIOSBundleId(arguments.get("iOSBundleID").toString())
-        .setAndroidPackageName(arguments.get("androidPackageName").toString(),
-                               (Boolean) arguments.get("androidInstallIfNotAvailable"),
-                               arguments.get("androidMinimumVersion").toString())
-        .build();
+    ActionCodeSettings actionCodeSettings =
+        ActionCodeSettings.newBuilder()
+            .setUrl(arguments.get("url").toString())
+            .setHandleCodeInApp((Boolean) arguments.get("handleCodeInApp"))
+            .setIOSBundleId(arguments.get("iOSBundleID").toString())
+            .setAndroidPackageName(
+                arguments.get("androidPackageName").toString(),
+                (Boolean) arguments.get("androidInstallIfNotAvailable"),
+                arguments.get("androidMinimumVersion").toString())
+            .build();
 
-    firebaseAuth.sendSignInLinkToEmail(email, actionCodeSettings)
+    firebaseAuth
+        .sendSignInLinkToEmail(email, actionCodeSettings)
         .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
@@ -408,7 +414,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     Map<String, String> arguments = call.arguments();
     String email = arguments.get("email");
     String link = arguments.get("link");
-    firebaseAuth.signInWithEmailLink(email, link)
+    firebaseAuth
+        .signInWithEmailLink(email, link)
         .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
@@ -448,82 +455,89 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   private AuthCredential getCredential(Map<String, Object> arguments) {
     AuthCredential credential;
 
-    @SuppressWarnings("unchecked") Map<String, String> data =
-        (Map<String, String>) arguments.get("data");
+    @SuppressWarnings("unchecked")
+    Map<String, String> data = (Map<String, String>) arguments.get("data");
 
     switch ((String) arguments.get("provider")) {
-      case EmailAuthProvider.PROVIDER_ID: {
-        String email = data.get("email");
-        if (data.containsKey("password")) {
-          String password = data.get("password");
-          credential = EmailAuthProvider.getCredential(email, password);
-        } else {
-          String link = data.get("link");
-          credential = EmailAuthProvider.getCredentialWithLink(email, link);
+      case EmailAuthProvider.PROVIDER_ID:
+        {
+          String email = data.get("email");
+          if (data.containsKey("password")) {
+            String password = data.get("password");
+            credential = EmailAuthProvider.getCredential(email, password);
+          } else {
+            String link = data.get("link");
+            credential = EmailAuthProvider.getCredentialWithLink(email, link);
+          }
+          break;
         }
-        break;
-      }
-      case GoogleAuthProvider.PROVIDER_ID: {
-        String idToken = data.get("idToken");
-        String accessToken = data.get("accessToken");
-        credential = GoogleAuthProvider.getCredential(idToken, accessToken);
-        break;
-      }
-      case FacebookAuthProvider.PROVIDER_ID: {
-        String accessToken = data.get("accessToken");
-        credential = FacebookAuthProvider.getCredential(accessToken);
-        break;
-      }
-      case TwitterAuthProvider.PROVIDER_ID: {
-        String authToken = data.get("authToken");
-        String authTokenSecret = data.get("authTokenSecret");
-        credential = TwitterAuthProvider.getCredential(authToken, authTokenSecret);
-        break;
-      }
-      case GithubAuthProvider.PROVIDER_ID: {
-        String token = data.get("token");
-        credential = GithubAuthProvider.getCredential(token);
-        break;
-      }
-      case PhoneAuthProvider.PROVIDER_ID: {
-        if (data.containsKey("verificationId")) {
-          String accessToken = data.get("verificationId");
-          String smsCode = data.get("smsCode");
-          credential = PhoneAuthProvider.getCredential(accessToken, smsCode);
-        } else {
-          credential = new Gson().fromJson(data.get("jsonObject"), PhoneAuthCredential.class);
+      case GoogleAuthProvider.PROVIDER_ID:
+        {
+          String idToken = data.get("idToken");
+          String accessToken = data.get("accessToken");
+          credential = GoogleAuthProvider.getCredential(idToken, accessToken);
+          break;
         }
-        break;
-      }
-      default: {
-        String providerId = (String) arguments.get("provider");
-        String idToken = data.get("idToken");
-        String accessToken = data.get("accessToken");
-        String rawNonce = data.get("rawNonce");
+      case FacebookAuthProvider.PROVIDER_ID:
+        {
+          String accessToken = data.get("accessToken");
+          credential = FacebookAuthProvider.getCredential(accessToken);
+          break;
+        }
+      case TwitterAuthProvider.PROVIDER_ID:
+        {
+          String authToken = data.get("authToken");
+          String authTokenSecret = data.get("authTokenSecret");
+          credential = TwitterAuthProvider.getCredential(authToken, authTokenSecret);
+          break;
+        }
+      case GithubAuthProvider.PROVIDER_ID:
+        {
+          String token = data.get("token");
+          credential = GithubAuthProvider.getCredential(token);
+          break;
+        }
+      case PhoneAuthProvider.PROVIDER_ID:
+        {
+          if (data.containsKey("verificationId")) {
+            String accessToken = data.get("verificationId");
+            String smsCode = data.get("smsCode");
+            credential = PhoneAuthProvider.getCredential(accessToken, smsCode);
+          } else {
+            credential = new Gson().fromJson(data.get("jsonObject"), PhoneAuthCredential.class);
+          }
+          break;
+        }
+      default:
+        {
+          String providerId = (String) arguments.get("provider");
+          String idToken = data.get("idToken");
+          String accessToken = data.get("accessToken");
+          String rawNonce = data.get("rawNonce");
 
-        if (providerId != null && providerId != "" && idToken != null && idToken != "") {
-          OAuthProvider.CredentialBuilder oAuthProvider =
-              OAuthProvider.newCredentialBuilder(providerId);
+          if (providerId != null && providerId != "" && idToken != null && idToken != "") {
+            OAuthProvider.CredentialBuilder oAuthProvider =
+                OAuthProvider.newCredentialBuilder(providerId);
 
-          if (accessToken != null && accessToken != "" && rawNonce != null && rawNonce != "") {
-            oAuthProvider.setAccessToken(accessToken);
-            oAuthProvider.setIdTokenWithRawNonce(idToken, rawNonce);
-            credential = oAuthProvider.build();
-          } else if (accessToken != null && accessToken != "") {
-            oAuthProvider.setAccessToken(accessToken);
-            oAuthProvider.setIdToken(idToken);
-            credential = oAuthProvider.build();
-          } else if (rawNonce != null && rawNonce != "") {
-            oAuthProvider.setIdTokenWithRawNonce(idToken, rawNonce);
-            credential = oAuthProvider.build();
+            if (accessToken != null && accessToken != "" && rawNonce != null && rawNonce != "") {
+              oAuthProvider.setAccessToken(accessToken);
+              oAuthProvider.setIdTokenWithRawNonce(idToken, rawNonce);
+              credential = oAuthProvider.build();
+            } else if (accessToken != null && accessToken != "") {
+              oAuthProvider.setAccessToken(accessToken);
+              oAuthProvider.setIdToken(idToken);
+              credential = oAuthProvider.build();
+            } else if (rawNonce != null && rawNonce != "") {
+              oAuthProvider.setIdTokenWithRawNonce(idToken, rawNonce);
+              credential = oAuthProvider.build();
+            } else {
+              credential = null;
+            }
           } else {
             credential = null;
           }
-        } else {
-          credential = null;
+          break;
         }
-        break;
-      }
     }
     return credential;
   }
@@ -531,10 +545,11 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   private void handleSignInWithCredential(
       MethodCall call, Result result, FirebaseAuth firebaseAuth) {
 
-    @SuppressWarnings("unchecked") AuthCredential credential =
-        getCredential((Map<String, Object>) call.arguments());
+    @SuppressWarnings("unchecked")
+    AuthCredential credential = getCredential((Map<String, Object>) call.arguments());
 
-    firebaseAuth.signInWithCredential(credential)
+    firebaseAuth
+        .signInWithCredential(credential)
         .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
@@ -546,10 +561,11 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
       return;
     }
 
-    @SuppressWarnings("unchecked") AuthCredential credential =
-        getCredential((Map<String, Object>) call.arguments());
+    @SuppressWarnings("unchecked")
+    AuthCredential credential = getCredential((Map<String, Object>) call.arguments());
 
-    currentUser.reauthenticateAndRetrieveData(credential)
+    currentUser
+        .reauthenticateAndRetrieveData(credential)
         .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
@@ -571,7 +587,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     Map<String, String> arguments = call.arguments();
     String token = arguments.get("token");
 
-    firebaseAuth.signInWithCustomToken(token)
+    firebaseAuth
+        .signInWithCustomToken(token)
         .addOnCompleteListener(new SignInCompleteListener(result));
   }
 
@@ -591,26 +608,29 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     Map<String, Boolean> arguments = call.arguments();
     final boolean refresh = arguments.get("refresh");
 
-    currentUser.getIdToken(refresh).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-      public void onComplete(@NonNull Task<GetTokenResult> task) {
-        if (task.isSuccessful() && task.getResult() != null) {
-          final Map<String, Object> map = new HashMap<>();
-          map.put("token", task.getResult().getToken());
-          map.put("expirationTimestamp", task.getResult().getExpirationTimestamp());
-          map.put("authTimestamp", task.getResult().getAuthTimestamp());
-          map.put("issuedAtTimestamp", task.getResult().getIssuedAtTimestamp());
-          map.put("claims", task.getResult().getClaims());
+    currentUser
+        .getIdToken(refresh)
+        .addOnCompleteListener(
+            new OnCompleteListener<GetTokenResult>() {
+              public void onComplete(@NonNull Task<GetTokenResult> task) {
+                if (task.isSuccessful() && task.getResult() != null) {
+                  final Map<String, Object> map = new HashMap<>();
+                  map.put("token", task.getResult().getToken());
+                  map.put("expirationTimestamp", task.getResult().getExpirationTimestamp());
+                  map.put("authTimestamp", task.getResult().getAuthTimestamp());
+                  map.put("issuedAtTimestamp", task.getResult().getIssuedAtTimestamp());
+                  map.put("claims", task.getResult().getClaims());
 
-          if (task.getResult().getSignInProvider() != null) {
-            map.put("signInProvider", task.getResult().getSignInProvider());
-          }
+                  if (task.getResult().getSignInProvider() != null) {
+                    map.put("signInProvider", task.getResult().getSignInProvider());
+                  }
 
-          result.success(Collections.unmodifiableMap(map));
-        } else {
-          reportException(result, task.getException());
-        }
-      }
-    });
+                  result.success(Collections.unmodifiableMap(map));
+                } else {
+                  reportException(result, task.getException());
+                }
+              }
+            });
   }
 
   private void handleUpdateEmail(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
@@ -627,10 +647,11 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   }
 
   private void handleUpdatePhoneNumber(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
-    @SuppressWarnings("unchecked") AuthCredential credential =
-        getCredential((Map<String, Object>) call.arguments);
+    @SuppressWarnings("unchecked")
+    AuthCredential credential = getCredential((Map<String, Object>) call.arguments);
 
-    firebaseAuth.getCurrentUser()
+    firebaseAuth
+        .getCurrentUser()
         .updatePhoneNumber((PhoneAuthCredential) credential)
         .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
@@ -645,7 +666,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     Map<String, String> arguments = call.arguments();
     final String password = arguments.get("password");
 
-    currentUser.updatePassword(password)
+    currentUser
+        .updatePassword(password)
         .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
@@ -666,26 +688,28 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
       builder.setPhotoUri(Uri.parse(arguments.get("photoUrl")));
     }
 
-    currentUser.updateProfile(builder.build())
+    currentUser
+        .updateProfile(builder.build())
         .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
   private void handleStartListeningAuthState(
       @SuppressWarnings("unused") MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     final int handle = nextHandle++;
-    FirebaseAuth.AuthStateListener listener = new FirebaseAuth.AuthStateListener() {
-      @Override
-      public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        Map<String, Object> userMap = mapFromUser(user);
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", handle);
-        if (userMap != null) {
-          map.put("user", userMap);
-        }
-        channel.invokeMethod("onAuthStateChanged", Collections.unmodifiableMap(map));
-      }
-    };
+    FirebaseAuth.AuthStateListener listener =
+        new FirebaseAuth.AuthStateListener() {
+          @Override
+          public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            Map<String, Object> userMap = mapFromUser(user);
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", handle);
+            if (userMap != null) {
+              map.put("user", userMap);
+            }
+            channel.invokeMethod("onAuthStateChanged", Collections.unmodifiableMap(map));
+          }
+        };
     firebaseAuth.addAuthStateListener(listener);
     authStateListeners.append(handle, listener);
     result.success(handle);
@@ -702,9 +726,11 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
       authStateListeners.remove(id);
       result.success(null);
     } else {
-      reportException(result, new FirebaseAuthException(
-          "ERROR_LISTENER_NOT_FOUND",
-          String.format(Locale.US, "Listener with identifier '%d' not found.", id)));
+      reportException(
+          result,
+          new FirebaseAuthException(
+              "ERROR_LISTENER_NOT_FOUND",
+              String.format(Locale.US, "Listener with identifier '%d' not found.", id)));
     }
   }
 
@@ -722,7 +748,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     String oobCode = arguments.get("oobCode");
     String newPassword = arguments.get("newPassword");
 
-    firebaseAuth.confirmPasswordReset(oobCode, newPassword)
+    firebaseAuth
+        .confirmPasswordReset(oobCode, newPassword)
         .addOnCompleteListener(new TaskVoidCompleteListener(result));
   }
 
