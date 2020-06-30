@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('FirebaseML example app'),
         ),
         body: Column(children: [
-          _image != null ? Image.file(_image) : Text('No image selected.'),
+          _image != null ? Image.file(_image) : Text('Please select image to analyze.'),
           Column(
             children: _labels != null
                 ? _labels.map((res) {
