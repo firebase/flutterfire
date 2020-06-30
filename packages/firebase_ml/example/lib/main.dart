@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
     loadModelFromFirebase();
   }
 
-  Future loadModelFromFirebase() async {
+  Future<void> loadModelFromFirebase() async {
     FirebaseCustomRemoteModel model =
         FirebaseCustomRemoteModel('image_classification');
 
