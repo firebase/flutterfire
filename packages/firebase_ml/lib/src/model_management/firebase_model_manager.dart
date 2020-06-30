@@ -21,14 +21,14 @@ import 'firebase_model_download_conditions.dart';
 class FirebaseModelManager {
   FirebaseModelManager._();
 
-  /// Singleton of [FirebaseModelManager].
-  static final FirebaseModelManager instance = FirebaseModelManager._();
-
   @visibleForTesting
 
   /// Means for communication with native platform code
   static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_ml');
+
+  /// Singleton of [FirebaseModelManager].
+  static final FirebaseModelManager instance = FirebaseModelManager._();
 
   /// Initiates the download of remoteModel if the download hasn't begun.
   Future<void> download(FirebaseRemoteModel model,
