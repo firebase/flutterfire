@@ -10,7 +10,7 @@ import 'package:firebase_ml/firebase_ml.dart';
 part 'firebase_model_manager.dart';
 
 void main() {
-  final Completer<String> completer = Completer<String>();
+  var completer = Completer<String>();
   enableFlutterDriverExtension(handler: (_) => completer.future);
   tearDownAll(() => completer.complete(null));
 

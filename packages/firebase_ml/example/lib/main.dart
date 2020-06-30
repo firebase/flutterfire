@@ -20,44 +20,51 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final picker = ImagePicker();
   File _image;
-  List _labels;
+  List<Map<dynamic, dynamic>> _labels;
+  bool _ready = false;
 
   Future<void> getImageLabels() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     final image = File(pickedFile.path);
-    if (image != null) {
-      var labels = await Tflite.runModelOnImage(
-        path: image.path,
-      );
-      setState(() {
-        _labels = labels;
-        _image = image;
-      });
+    if (image == null) {
+      return;
     }
+    var labels = List<Map>.from(await Tflite.runModelOnImage(
+      path: image.path,
+    ));
+    setState(() {
+      _labels = labels;
+      _image = image;
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    loadModelFromFirebase();
+    loadModel();
   }
 
-  Future<void> loadModelFromFirebase() async {
-    FirebaseCustomRemoteModel model =
-        FirebaseCustomRemoteModel('image_classification');
+  Future<void> loadModel() async {
+    var modelFile = await loadModelFromFirebase();
+    await loadTFLiteModel(modelFile);
+  }
 
-    FirebaseModelDownloadConditions conditions =
-        FirebaseModelDownloadConditions(requireWifi: true);
-    FirebaseModelManager modelManager = FirebaseModelManager.instance;
+  Future<File> loadModelFromFirebase() async {
+    var model = FirebaseCustomRemoteModel('image_classification');
+
+    var conditions = FirebaseModelDownloadConditions(requireWifi: true);
+    var modelManager = FirebaseModelManager.instance;
 
     await modelManager.download(model, conditions);
-
-    var isModelDownloaded = await modelManager.isModelDownloaded(model);
-    assert(isModelDownloaded == true);
+    assert(await modelManager.isModelDownloaded(model) == true);
 
     var modelFile = await modelManager.getLatestModelFile(model);
     assert(modelFile != null);
 
+    return modelFile;
+  }
+
+  Future<void> loadTFLiteModel(File modelFile) async {
     var appDirectory = await getApplicationDocumentsDirectory();
     var labelsData =
         await rootBundle.load("assets/labels_mobilenet_v1_224.txt");
@@ -72,6 +79,9 @@ class _MyAppState extends State<MyApp> {
           isAsset: false,
         ) ==
         "success");
+    setState(() {
+      _ready = true;
+    });
   }
 
   @override
@@ -79,22 +89,27 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('FirebaseML example app'),
+          title: const Text('Firebase ML example app'),
         ),
-        body: Column(children: [
-          _image != null
-              ? Image.file(_image)
-              : Text('Please select image to analyze.'),
-          Column(
-            children: _labels != null
-                ? _labels.map((res) {
-                    return Text("${res["label"]}");
-                  }).toList()
-                : [],
-          ),
-        ]),
+        body: Column(
+          children: [
+            _image != null
+                ? Image.file(_image)
+                : _ready
+                    ? Text('Please select image to analyze.')
+                    : Text('Please wait for the model to load. '
+                        'No image can be selected.'),
+            Column(
+              children: _labels != null
+                  ? _labels.map((label) {
+                      return Text("${label["label"]}");
+                    }).toList()
+                  : [],
+            ),
+          ],
+        ),
         floatingActionButton: FloatingActionButton(
-          onPressed: getImageLabels,
+          onPressed: _ready ? getImageLabels : () {},
           child: Icon(Icons.add),
         ),
       ),

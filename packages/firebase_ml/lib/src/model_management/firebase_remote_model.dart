@@ -21,11 +21,11 @@ abstract class FirebaseRemoteModel {
   /// Express download conditions via map.
   ///
   /// This method is used for ease of transfer via channel and printing.
-  Map toMap() {
-    var remoteModelToMap = Map();
-    remoteModelToMap['modelName'] = this.modelName;
-    remoteModelToMap['modelHash'] = this.modelHash;
-    return remoteModelToMap;
+  Map<String, String> toMap() {
+    return <String, String>{
+      'modelName': modelName,
+      'modelHash': modelHash,
+    };
   }
 }
 
