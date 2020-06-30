@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Add logEcommercePurchase and logAddToCart
+
 ## 0.1.1
 
 - Add missing iOS files to be able to endorse this plugin as the web implementation of firebase_analytics.

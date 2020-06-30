@@ -51,7 +51,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     _analytics.setUserProperties({name: value});
   }
 
-   @override
+  @override
   Future<void> logAddToCart({
     String itemId,
     String itemName,
@@ -66,10 +66,24 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String startDate,
     String endDate,
   }) async {
-    _analytics.logAddToCart(itemId,itemName,itemCategory,quantity,price,value,currency,origin,itemLocationId,destination,startDate,endDate);
+    _analytics.logEvent(
+      "add_to_cart",
+    {"itemId" : itemId,
+    "itemName" : itemName,
+    "itemCategory" : itemCategory,
+    "quantity" : quantity,
+    "price" : price,
+    "value" : value,
+    "currency" : currency,
+    "origin" : origin,
+    "itemLocationId" : itemLocationId,
+    "destination" : destination,
+    "startDate" : startDate,
+    "endDate" : endDate
+    });
   }
 
-     @override
+  @override
   Future<void> logEcommercePurchase({
     String currency,
     double value,
@@ -87,6 +101,22 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String endDate,
     String travelClass,
   }) async {
-    _analytics.logAddToCart(currency,value,transactionId,tax,shipping,coupon,location,numberOfNights,numberOfRooms,numberOfPassengers,origin,destination,startDate,endDate,travelClass);
+    _analytics.logEvent("purchase",{
+      "currency" : currency,
+    "value" : value,
+    "transactionId" : transactionId,
+    "tax" : tax,
+    "shipping" : shipping,
+    "coupon" : coupon,
+    "location" : location,
+    "numberOfNights" : numberOfNights,
+    "numberOfRooms" : numberOfRooms,
+    "numberOfPassengers" : numberOfPassengers,
+    "origin" : origin,
+    "destination" : destination,
+    "startDate" : startDate,
+    "endDate" : endDate,
+    "travelClass" : travelClass,
+    });
   }
 }

@@ -109,6 +109,7 @@ abstract class FirebaseAnalyticsPlatform {
         'setSessionTimeoutDuration() is not implemented on this platform');
   }
 
+/// Logs the event [logAddToCart] with the given [parameters].
   Future<void> logAddToCart({
     @required String itemId,
     @required String itemName,
@@ -125,7 +126,7 @@ abstract class FirebaseAnalyticsPlatform {
   }) {
     throw UnimplementedError('logEvent() is not implemented on this platform');
   }
-
+/// Logs the event [logEcommercePurchase] with the given [parameters].
    Future<void> logEcommercePurchase({
     String currency,
     double value,
