@@ -5,7 +5,7 @@
 import 'package:flutter_driver/flutter_driver.dart';
 
 void main() async {
-  final FlutterDriver driver = await FlutterDriver.connect();
+  var driver = await FlutterDriver.connect();
   await driver.requestData(null, timeout: const Duration(minutes: 1));
   await driver.close();
 }

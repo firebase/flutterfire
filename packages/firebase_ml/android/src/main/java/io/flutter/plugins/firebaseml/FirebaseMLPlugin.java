@@ -7,20 +7,12 @@ package io.flutter.plugins.firebaseml;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
-import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
-import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /** A flutter plugin for accessing the FirebaseML API. */
 public class FirebaseMLPlugin implements FlutterPlugin, MethodCallHandler {
@@ -53,81 +45,11 @@ public class FirebaseMLPlugin implements FlutterPlugin, MethodCallHandler {
   @RequiresApi(api = Build.VERSION_CODES.N)
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
-    final FirebaseCustomRemoteModel remoteModel;
-    String modelName;
-
-    switch (call.method) {
-      case "FirebaseModelManager#download":
-        assert (call.argument("model") != null);
-        assert (call.argument("conditions") != null);
-
-        modelName = call.argument("model");
-        Map<String, Boolean> conditionsToMap = call.argument("conditions");
-        remoteModel = new FirebaseCustomRemoteModel.Builder(modelName).build();
-        FirebaseModelDownloadConditions.Builder conditionsBuilder =
-            new FirebaseModelDownloadConditions.Builder();
-        if (conditionsToMap.get("requireCharging")) conditionsBuilder.requireCharging();
-        if (conditionsToMap.get("requireDeviceIdle")) conditionsBuilder.requireDeviceIdle();
-        if (conditionsToMap.get("requireWifi")) conditionsBuilder.requireWifi();
-
-        FirebaseModelDownloadConditions conditions = conditionsBuilder.build();
-        FirebaseModelManager.getInstance()
-            .download(remoteModel, conditions)
-            .addOnCompleteListener(
-                new OnCompleteListener<Void>() {
-                  @Override
-                  public void onComplete(@NonNull Task<Void> task) {
-                    result.success(remoteModelToMap(remoteModel));
-                  }
-                });
-        break;
-      case "FirebaseModelManager#getLatestModelFile":
-        assert (call.argument("model") != null);
-
-        modelName = call.argument("model");
-
-        remoteModel = new FirebaseCustomRemoteModel.Builder(modelName).build();
-
-        FirebaseModelManager.getInstance()
-            .getLatestModelFile(remoteModel)
-            .addOnCompleteListener(
-                new OnCompleteListener<File>() {
-                  @Override
-                  public void onComplete(@NonNull Task<File> task) {
-                    File modelFile = task.getResult();
-                    if (modelFile != null) result.success(modelFile.getAbsolutePath());
-                    else task.getException().printStackTrace();
-                  }
-                });
-        break;
-      case "FirebaseModelManager#isModelDownloaded":
-        assert (call.argument("model") != null);
-        modelName = call.argument("model");
-
-        remoteModel = new FirebaseCustomRemoteModel.Builder(modelName).build();
-
-        FirebaseModelManager.getInstance()
-            .isModelDownloaded(remoteModel)
-            .addOnCompleteListener(
-                new OnCompleteListener<Boolean>() {
-                  @Override
-                  public void onComplete(@NonNull Task<Boolean> task) {
-                    Boolean isModelDownloaded = task.getResult();
-                    if (isModelDownloaded != null) result.success(isModelDownloaded);
-                    else task.getException().printStackTrace();
-                  }
-                });
-        break;
-      default:
-        result.notImplemented();
+    if (call.method.split("#")[0].equals("FirebaseModelManager")) {
+      ModelManager.handleModelManager(call, result);
+    } else {
+      result.notImplemented();
     }
-  }
-
-  private Map<String, String> remoteModelToMap(FirebaseCustomRemoteModel model) {
-    Map remoteModelToMap = new HashMap<String, String>();
-    remoteModelToMap.put("modelName", model.getModelName());
-    remoteModelToMap.put("modelHash", model.getModelHash());
-    return remoteModelToMap;
   }
 
   @Override

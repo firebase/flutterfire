@@ -9,7 +9,6 @@ import 'package:firebase_ml/firebase_ml.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   String MODEL_NAME = "myModelName";
-  String MODEL_HASH = "myModelHash";
   String MODEL_FILE_PATH = "someDestination";
 
   group('$FirebaseModelManager', () {
@@ -23,10 +22,7 @@ void main() {
 
         switch (methodCall.method) {
           case 'FirebaseModelManager#download':
-            var model = <String, String>{};
-            model['modelName'] = MODEL_NAME;
-            model['modelHash'] = MODEL_HASH;
-            return model;
+            return "Success";
           case 'FirebaseModelManager#getLatestModelFile':
             return MODEL_FILE_PATH;
           case 'FirebaseModelManager#isModelDownloaded':
@@ -41,21 +37,59 @@ void main() {
     tearDown(() {
       FirebaseModelManager.channel.setMockMethodCallHandler(null);
     });
-
-    test('valid sequence of calls', () async {
+    test('condition constructor defaults to right values', () async {
+      FirebaseModelDownloadConditions conditions =
+          FirebaseModelDownloadConditions();
+      expect(conditions.androidRequireWifi, false);
+      expect(conditions.androidRequireDeviceIdle, false);
+      expect(conditions.androidRequireCharging, false);
+      expect(conditions.iosAllowBackgroundDownloading, false);
+      expect(conditions.iosAllowCellularAccess, true);
+    });
+    test('manager downloads model', () async {
       expect(modelManager, isNotNull);
       FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
-      expect(model.modelHash, isNull);
       FirebaseModelDownloadConditions conditions =
-          FirebaseModelDownloadConditions(requireWifi: true);
+          FirebaseModelDownloadConditions(androidRequireWifi: true);
       expect(conditions, isNotNull);
 
       await modelManager.download(model, conditions);
-      expect(model.modelName, MODEL_NAME);
-      expect(model.modelHash, MODEL_HASH);
+
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'FirebaseModelManager#download',
+            arguments: <String, dynamic>{
+              'modelName': MODEL_NAME,
+              'conditions': conditions.toMap(),
+            },
+          ),
+        ],
+      );
+    });
+    test('manager checks if model is downloaded', () async {
+      expect(modelManager, isNotNull);
+      FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
 
       var isModelDownloaded = await modelManager.isModelDownloaded(model);
       expect(isModelDownloaded, isTrue);
+
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'FirebaseModelManager#isModelDownloaded',
+            arguments: <String, dynamic>{
+              'modelName': MODEL_NAME,
+            },
+          ),
+        ],
+      );
+    });
+    test('manager gets model file', () async {
+      expect(modelManager, isNotNull);
+      FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
 
       var modelFile = await modelManager.getLatestModelFile(model);
       expect(modelFile.path, MODEL_FILE_PATH);
@@ -64,22 +98,9 @@ void main() {
         log,
         <Matcher>[
           isMethodCall(
-            'FirebaseModelManager#download',
-            arguments: <String, dynamic>{
-              'model': MODEL_NAME,
-              'conditions': conditions.toMap(),
-            },
-          ),
-          isMethodCall(
-            'FirebaseModelManager#isModelDownloaded',
-            arguments: <String, dynamic>{
-              'model': MODEL_NAME,
-            },
-          ),
-          isMethodCall(
             'FirebaseModelManager#getLatestModelFile',
             arguments: <String, dynamic>{
-              'model': MODEL_NAME,
+              'modelName': MODEL_NAME,
             },
           ),
         ],

@@ -21,9 +21,8 @@ import 'firebase_model_download_conditions.dart';
 class FirebaseModelManager {
   FirebaseModelManager._();
 
-  @visibleForTesting
-
   /// Means for communication with native platform code
+  @visibleForTesting
   static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_ml');
 
@@ -33,21 +32,21 @@ class FirebaseModelManager {
   /// Initiates the download of remoteModel if the download hasn't begun.
   Future<void> download(FirebaseRemoteModel model,
       FirebaseModelDownloadConditions conditions) async {
-    Map modelMap = await channel.invokeMethod("FirebaseModelManager#download",
-        {'model': model.modelName, 'conditions': conditions.toMap()});
-    model.modelHash = modelMap['modelHash'];
+    await channel.invokeMethod("FirebaseModelManager#download",
+        {'modelName': model.modelName, 'conditions': conditions.toMap()});
   }
 
   /// Returns the [File] containing the latest model for the remote model name.
   Future<File> getLatestModelFile(FirebaseRemoteModel model) async {
-    String modelPath = await channel.invokeMethod(
-        "FirebaseModelManager#getLatestModelFile", {'model': model.modelName});
+    var modelPath = await channel.invokeMethod(
+        "FirebaseModelManager#getLatestModelFile",
+        {'modelName': model.modelName});
     return File(modelPath);
   }
 
   /// Returns whether the given [FirebaseRemoteModel] is currently downloaded.
-  Future<bool> isModelDownloaded(FirebaseRemoteModel model) async {
-    return await channel.invokeMethod(
-        "FirebaseModelManager#isModelDownloaded", {'model': model.modelName});
+  Future<bool> isModelDownloaded(FirebaseRemoteModel model) {
+    return channel.invokeMethod("FirebaseModelManager#isModelDownloaded",
+        {'modelName': model.modelName});
   }
 }
