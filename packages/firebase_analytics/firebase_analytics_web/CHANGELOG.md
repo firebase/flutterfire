@@ -1,6 +1,6 @@
 ## 0.1.2
 
-- Add logEcommercePurchase and logAddToCart
+- Add Events logEcommercePurchase and logAddToCart
 
 ## 0.1.1
 
