@@ -32,7 +32,7 @@ persistent anonymous user. This allows you to integrate into other services such
 Ensure the "Anonymous" sign in provide is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
 
 ```dart title="NEEDS UPDATING/VALIDATING"
-final FirebaseUser user = (await FirebaseAuth.instance.signInAnonymously()).user;
+UserCredential user = await FirebaseAuth.instance.signInAnonymously();
 ```
 
 ## Email/Password Registration & Sign-in
@@ -47,10 +47,10 @@ The `createUserWithEmailAndPassword` method performs two operations. It first cr
 exist, and then signs them in:
 
 ```dart title="NEEDS UPDATING/VALIDATING"
-final FirebaseUser user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  email: 'clark.kent@example.com',
-  password:'SuperSecretPassword!',
-)).user;
+UserCredential user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  email: "barry.allen@example.com",
+  password: "SuperSecretPassword!"
+);
 ```
 
 ## Signing Out

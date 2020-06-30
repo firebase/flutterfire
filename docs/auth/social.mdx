@@ -49,19 +49,56 @@ final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(cred
 
 ### Google
 
+> Wording needs rework
+
 Most configuration is already setup when using Google Sign-In with Firebase, however you need to ensure your machines
 SHA1 key has been configured for use with Android. You can see view how to generate the key on the
 [Getting Started](overview) documentation.
 
 Ensure the "Google" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
 
-```dart title="NEEDS UPDATING/VALIDATING"
-final AuthCredential credential = GoogleAuthProvider.getCredential(
-  idToken: 'ABC123',
-  accessToken: 'AccessToken'
-);
+#### Installation
 
-final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+1. Add dependency
+
+```yaml {2} title="pubspec.yaml"
+dependencies:
+  google_sign_in: ^4.5.1
+```
+
+2. Download dependency
+
+```
+$ flutter pub get
+```
+
+#### Usage
+
+Once your Firebase instance has been initialized, you can call the Google Sign In method, which will prompt the user to
+sign into their Google account.  Once this has been done, their `AuthCredential` will be passed to the the `FirebaseAuth`
+`signInWithCredential` method:
+
+```dart
+import 'package:google_sign_in/google_sign_in.dart';
+
+Future<void> signInWithGoogle() async {
+  try {
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.credential(
+       accessToken: googleAuth.accessToken,
+       idToken: googleAuth.idToken,
+    );
+
+    await FirebaseAuth.instance.signInWithCredential(credential);
+
+  } catch (e) {
+      // Handle Error
+  }
+}
+
+
 ```
 
 
