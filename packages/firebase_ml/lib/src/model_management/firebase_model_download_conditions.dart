@@ -22,7 +22,7 @@ class FirebaseModelDownloadConditions {
   ///
   /// This method is used for ease of transfer via channel and printing.
   Map toMap() {
-    var conditionsToMap = Map();
+    var conditionsToMap = <String, bool>{};
     conditionsToMap['requireCharging'] = this.requireCharging;
     conditionsToMap['requireDeviceIdle'] = this.requireDeviceIdle;
     conditionsToMap['requireWifi'] = this.requireWifi;

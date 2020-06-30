@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   File _image;
   List _labels;
 
-  Future predictImagePicker() async {
+  Future<void> getImageLabels() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     final image = File(pickedFile.path);
     if (image != null) {
@@ -94,7 +94,7 @@ class _MyAppState extends State<MyApp> {
           ),
         ]),
         floatingActionButton: FloatingActionButton(
-          onPressed: predictImagePicker,
+          onPressed: getImageLabels,
           child: Icon(Icons.add),
         ),
       ),

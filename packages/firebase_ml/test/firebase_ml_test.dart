@@ -42,7 +42,7 @@ void main() {
       FirebaseModelManager.channel.setMockMethodCallHandler(null);
     });
 
-    test('valid sequence of calls', () async {
+    test('download', () async {
       expect(modelManager, isNotNull);
       FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
       expect(model.modelHash, isNull);
@@ -54,8 +54,41 @@ void main() {
       expect(model.modelName, MODEL_NAME);
       expect(model.modelHash, MODEL_HASH);
 
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'FirebaseModelManager#download',
+            arguments: <String, dynamic>{
+              'modelName': MODEL_NAME,
+              'conditions': conditions.toMap(),
+            },
+          ),
+        ],
+      );
+    });
+    test('download', () async {
+      expect(modelManager, isNotNull);
+      FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
+
       var isModelDownloaded = await modelManager.isModelDownloaded(model);
       expect(isModelDownloaded, isTrue);
+
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'FirebaseModelManager#isModelDownloaded',
+            arguments: <String, dynamic>{
+              'modelName': MODEL_NAME,
+            },
+          ),
+        ],
+      );
+    });
+    test('get model file', () async {
+      expect(modelManager, isNotNull);
+      FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
 
       var modelFile = await modelManager.getLatestModelFile(model);
       expect(modelFile.path, MODEL_FILE_PATH);
@@ -64,22 +97,9 @@ void main() {
         log,
         <Matcher>[
           isMethodCall(
-            'FirebaseModelManager#download',
-            arguments: <String, dynamic>{
-              'model': MODEL_NAME,
-              'conditions': conditions.toMap(),
-            },
-          ),
-          isMethodCall(
-            'FirebaseModelManager#isModelDownloaded',
-            arguments: <String, dynamic>{
-              'model': MODEL_NAME,
-            },
-          ),
-          isMethodCall(
             'FirebaseModelManager#getLatestModelFile',
             arguments: <String, dynamic>{
-              'model': MODEL_NAME,
+              'modelName': MODEL_NAME,
             },
           ),
         ],
