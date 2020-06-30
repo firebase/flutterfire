@@ -18,11 +18,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final picker = ImagePicker();
   File _image;
   List _labels;
 
   Future predictImagePicker() async {
-    final image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final image = File(pickedFile.path);
     if (image != null) {
       var labels = await Tflite.runModelOnImage(
         path: image.path,
@@ -80,7 +82,9 @@ class _MyAppState extends State<MyApp> {
           title: const Text('FirebaseML example app'),
         ),
         body: Column(children: [
-          _image != null ? Image.file(_image) : Text('Please select image to analyze.'),
+          _image != null
+              ? Image.file(_image)
+              : Text('Please select image to analyze.'),
           Column(
             children: _labels != null
                 ? _labels.map((res) {

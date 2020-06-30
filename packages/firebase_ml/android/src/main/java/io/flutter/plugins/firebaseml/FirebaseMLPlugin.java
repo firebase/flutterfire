@@ -5,8 +5,6 @@
 package io.flutter.plugins.firebaseml;
 
 import android.os.Build;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -49,8 +47,7 @@ public class FirebaseMLPlugin implements FlutterPlugin, MethodCallHandler {
   public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
     if (call.method.split("#")[0].equals("FirebaseModelManager")) {
       ModelManager.handleModelManager(call, result);
-    }
-    else {
+    } else {
       result.notImplemented();
     }
   }

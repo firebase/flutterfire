@@ -41,13 +41,14 @@ class FirebaseModelManager {
   /// Returns the [File] containing the latest model for the remote model name.
   Future<File> getLatestModelFile(FirebaseRemoteModel model) async {
     String modelPath = await channel.invokeMethod(
-        "FirebaseModelManager#getLatestModelFile", {'modelName': model.modelName});
+        "FirebaseModelManager#getLatestModelFile",
+        {'modelName': model.modelName});
     return File(modelPath);
   }
 
   /// Returns whether the given [FirebaseRemoteModel] is currently downloaded.
   Future<bool> isModelDownloaded(FirebaseRemoteModel model) async {
-    return await channel.invokeMethod(
-        "FirebaseModelManager#isModelDownloaded", {'modelName': model.modelName});
+    return await channel.invokeMethod("FirebaseModelManager#isModelDownloaded",
+        {'modelName': model.modelName});
   }
 }
