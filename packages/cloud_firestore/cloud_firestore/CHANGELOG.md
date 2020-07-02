@@ -1,3 +1,7 @@
+## 0.13.7
+
+* Clean up snapshot listeners when Android Activity is destroyed.
+
 ## 0.13.6
 
 * Update lower bound of dart dependency to 2.0.0.
