@@ -56,7 +56,7 @@ void main() {
           ref.child("invalid").writeToFile(tempFile);
       Exception taskException;
       try {
-        (await invalidTask.future).totalByteCount;
+        (await invalidTask.onComplete).totalByteCount;
       } catch (e) {
         taskException = e;
       }
@@ -65,7 +65,7 @@ void main() {
       final StorageFileDownloadTask task = ref.writeToFile(tempFile);
       int byteCount = 0;
       try {
-        byteCount = (await task.future).totalByteCount;
+        byteCount = (await task.onComplete).totalByteCount;
       } catch (e) {
         // Unexpected exception
       }

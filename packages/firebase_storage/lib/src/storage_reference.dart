@@ -129,8 +129,8 @@ class StorageReference {
   /// Asynchronously downloads the object at this [StorageReference] to a
   /// specified system file.
   StorageFileDownloadTask writeToFile(File file) {
-    final StorageFileDownloadTask task = StorageFileDownloadTask._(
-        _firebaseStorage, _pathComponents.join("/"), file);
+    final StorageFileDownloadTask task =
+        _StorageFileDownloadTask._(file, _firebaseStorage, this);
     task._start();
     return task;
   }

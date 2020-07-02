@@ -551,7 +551,7 @@ void main() {
       test('invokes correct method', () async {
         ref = storage.ref().child('image.jpg');
         final StorageFileDownloadTask task = ref.writeToFile(File('image.jpg'));
-        await task.future;
+        await task.onComplete;
 
         expect(log, <Matcher>[
           isMethodCall(
@@ -569,7 +569,7 @@ void main() {
       test('returns correct result', () async {
         ref = storage.ref().child('image.jpg');
         final StorageFileDownloadTask task = ref.writeToFile(File('image.jpg'));
-        final FileDownloadTaskSnapshot snapshot = await task.future;
+        final FileDownloadTaskSnapshot snapshot = await task.onComplete;
         expect(snapshot.totalByteCount, 4711);
       });
 
@@ -577,7 +577,7 @@ void main() {
         ref = storage.ref().child('image_bad.jpg');
         final StorageFileDownloadTask task = ref.writeToFile(File('image.jpg'));
         try {
-          await task.future;
+          await task.onComplete;
         } on PlatformException catch (e) {
           exceptionCode = e.code;
         }

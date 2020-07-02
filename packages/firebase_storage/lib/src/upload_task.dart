@@ -35,7 +35,8 @@ abstract class StorageUploadTask {
     _handle = await _platformStart();
     final StorageTaskEvent event = await _firebaseStorage._methodStream
         .where((MethodCall m) {
-      return m.method == 'StorageTaskEvent' && m.arguments['handle'] == _handle;
+      return m.method == 'StorageUploadTaskEvent' &&
+          m.arguments['handle'] == _handle;
     }).map<StorageTaskEvent>((MethodCall m) {
       final Map<dynamic, dynamic> args = m.arguments;
       final StorageTaskEvent e =

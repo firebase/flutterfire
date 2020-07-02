@@ -12,7 +12,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 part 'src/error.dart';
-part 'src/event.dart';
+part 'src/upload_event.dart';
+part 'src/download_event.dart';
 part 'src/firebase_storage.dart';
 part 'src/storage_metadata.dart';
 part 'src/storage_reference.dart';
