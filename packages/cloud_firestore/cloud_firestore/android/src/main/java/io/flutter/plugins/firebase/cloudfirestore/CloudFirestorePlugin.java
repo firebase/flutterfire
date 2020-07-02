@@ -489,6 +489,11 @@ public class CloudFirestorePlugin implements MethodCallHandler, FlutterPlugin, A
   }
 
   private void onDetachedFromEngine() {
+    observers.clear();
+    documentObservers.clear();
+    batches.clear();
+    transactions.clear();
+    completionTasks.clear();
     removeSnapshotListeners();
     channel.setMethodCallHandler(null);
     channel = null;
