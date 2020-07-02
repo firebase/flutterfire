@@ -1,3 +1,7 @@
+## 0.16.1+1
+
+* Fix bug #2656 (verifyPhoneNumber always use the default FirebaseApp, not the configured one)
+
 ## 0.16.1
 
 * Update lower bound of dart dependency to 2.0.0.

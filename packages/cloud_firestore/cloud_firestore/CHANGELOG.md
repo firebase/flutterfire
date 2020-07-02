@@ -1,3 +1,7 @@
+## 0.13.7
+
+* Clean up snapshot listeners when Android Activity is destroyed.
+
 ## 0.13.6+1
 
 * Fix crash where listeners are not removed when app quits.
