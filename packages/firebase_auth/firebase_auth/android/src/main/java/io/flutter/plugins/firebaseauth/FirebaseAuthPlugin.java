@@ -230,7 +230,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
     String smsCode = arguments.get("smsCode");
 
     PhoneAuthCredential phoneAuthCredential =
-        PhoneAuthProvider.getCredential(verificationId, smsCode);
+        PhoneAuthProvider.getInstance(firebaseAuth).getCredential(verificationId, smsCode);
     firebaseAuth
         .signInWithCredential(phoneAuthCredential)
         .addOnCompleteListener(new SignInCompleteListener(result));
@@ -285,7 +285,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
       int forceResendingTokenKey = (int) arguments.get("forceResendingToken");
       PhoneAuthProvider.ForceResendingToken forceResendingToken =
           forceResendingTokens.get(forceResendingTokenKey);
-      PhoneAuthProvider.getInstance()
+      PhoneAuthProvider.getInstance(firebaseAuth)
           .verifyPhoneNumber(
               phoneNumber,
               timeout,
@@ -294,7 +294,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
               verificationCallbacks,
               forceResendingToken);
     } else {
-      PhoneAuthProvider.getInstance()
+      PhoneAuthProvider.getInstance(firebaseAuth)
           .verifyPhoneNumber(
               phoneNumber, timeout, TimeUnit.MILLISECONDS, getActivity(), verificationCallbacks);
     }
