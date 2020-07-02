@@ -5,9 +5,32 @@ A Flutter plugin to use the [Firebase Authentication API](https://firebase.googl
 
 For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
+*Note*: This plugin is still under development, and some APIs might not be available yet. [Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
+
+## Supported authentication providers
+
+The following authentication providers are supported:
+
+* Email/password.
+* Facebook
+* GitHub
+* Google
+* phone
+* Twitter
+* Anonymous sign-in
+
 ## Usage
 
-### Configure the Google sign-in plugin
+### Facebook sign-in integration
+
+The flutter_facebook_login plugin can be used to enable Facebook authentication. Follow the [README](https://pub.dev/packages/flutter_facebook_login) for setup instructions.
+
+### Twitter sign-in integration
+
+The flutter_twitter plugin can be used to enable Twitter authentication. Follow the [README](https://pub.dev/packages/flutter_twitter) for setup instructions.
+
+### Google sign-in integration
+
 The Google Sign-in plugin is required to use the firebase_auth plugin for Google authentication. Follow the [Google sign-in plugin installation instructions](https://pub.dartlang.org/packages/google_sign_in#pub-pkg-tab-installing).
 
 If you're using Google Sign-in with Firebase auth, be sure to include all required fields in the [OAuth consent screen](https://console.developers.google.com/apis/credentials/consent). If you don't, you may encounter an `ApiException`.
@@ -125,7 +148,7 @@ After a successful authentication, you will receive a `FirebaseUser` object. You
 
   - When testing you can add test phone numbers and verification codes to the Firebase console.
 
-1. [Enable App verification](https://firebase.google.com/docs/auth/ios/phone-auth#enable-app-verification)  
+1. [Enable App verification](https://firebase.google.com/docs/auth/ios/phone-auth#enable-app-verification)
 
 **Note:** App verification may use APNs, if using a simulator (where APNs does not work) or APNs is not setup on the
 device you are using you must set the `URL Schemes` to the `REVERSE_CLIENT_ID` from the GoogleServices-Info.plist file.
@@ -161,7 +184,7 @@ and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls)
 
 ## 0.4.x to 0.5.x Firebase Dynamic Links Android migration tip
 
-When upgrading from an older version of the Dynamic Links library, passwordless (email link) sign-in will break, and the link will return null if you simply replace `FirebaseDynamicLinks.instance.retrieveDynamicLink()` with `FirebaseDynamicLinks.instance.getInitialLink()`. Instead you need to update your code to something similar to 
+When upgrading from an older version of the Dynamic Links library, passwordless (email link) sign-in will break, and the link will return null if you simply replace `FirebaseDynamicLinks.instance.retrieveDynamicLink()` with `FirebaseDynamicLinks.instance.getInitialLink()`. Instead you need to update your code to something similar to
 
 ```
 @override
