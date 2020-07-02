@@ -1,3 +1,7 @@
+## 0.3.2
+
+* Added macOS support
+
 ## 0.3.1+1
 
 * Propagate native error message on fetch method.
