@@ -1,3 +1,7 @@
+## 0.16.1+2
+
+* Update README to make it clear which authentication options are possible.
+
 ## 0.16.1+1
 
 * Fix bug #2656 (verifyPhoneNumber always use the default FirebaseApp, not the configured one)
