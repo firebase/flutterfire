@@ -47,8 +47,8 @@ class FirebaseModelManager {
   }
 
   /// Returns whether the given [FirebaseRemoteModel] is currently downloaded.
-  Future<bool> isModelDownloaded(FirebaseRemoteModel model) async {
-    return await channel.invokeMethod("FirebaseModelManager#isModelDownloaded",
+  Future<bool> isModelDownloaded(FirebaseRemoteModel model) {
+    return channel.invokeMethod("FirebaseModelManager#isModelDownloaded",
         {'modelName': model.modelName});
   }
 }

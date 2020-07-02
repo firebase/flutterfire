@@ -8,7 +8,11 @@ import 'package:firebase_ml/firebase_ml.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MaterialApp(
+      home: MyApp(),
+    ),
+  );
 }
 
 /// Widget with a future function that initiates actions from FirebaseML
@@ -21,7 +25,7 @@ class _MyAppState extends State<MyApp> {
   final picker = ImagePicker();
   File _image;
   List<Map<dynamic, dynamic>> _labels;
-  bool _ready = false;
+  Future<String> _loaded = loadModel();
 
   Future<void> getImageLabels() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -38,18 +42,12 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    loadModel();
-  }
-
-  Future<void> loadModel() async {
+  static Future<String> loadModel() async {
     var modelFile = await loadModelFromFirebase();
-    await loadTFLiteModel(modelFile);
+    return await loadTFLiteModel(modelFile);
   }
 
-  Future<File> loadModelFromFirebase() async {
+  static Future<File> loadModelFromFirebase() async {
     var model = FirebaseCustomRemoteModel('image_classification');
 
     var conditions = FirebaseModelDownloadConditions(requireWifi: true);
@@ -64,7 +62,7 @@ class _MyAppState extends State<MyApp> {
     return modelFile;
   }
 
-  Future<void> loadTFLiteModel(File modelFile) async {
+  static Future<String> loadTFLiteModel(File modelFile) async {
     var appDirectory = await getApplicationDocumentsDirectory();
     var labelsData =
         await rootBundle.load("assets/labels_mobilenet_v1_224.txt");
@@ -79,39 +77,54 @@ class _MyAppState extends State<MyApp> {
           isAsset: false,
         ) ==
         "success");
-    setState(() {
-      _ready = true;
-    });
+    return "Model is loaded";
   }
 
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Firebase ML example app'),
-        ),
-        body: Column(
-          children: [
-            _image != null
-                ? Image.file(_image)
-                : _ready
-                    ? Text('Please select image to analyze.')
-                    : Text('Please wait for the model to load. '
-                        'No image can be selected.'),
-            Column(
-              children: _labels != null
-                  ? _labels.map((label) {
-                      return Text("${label["label"]}");
-                    }).toList()
-                  : [],
-            ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _ready ? getImageLabels : () {},
-          child: Icon(Icons.add),
-        ),
+    return DefaultTextStyle(
+      style: Theme.of(context).textTheme.headline2,
+      textAlign: TextAlign.center,
+      child: FutureBuilder<String>(
+        future: _loaded, // a previously-obtained Future<String> or null
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Firebase ML example app'),
+              ),
+              body: Column(
+                children: [
+                  _image != null
+                      ? Image.file(_image)
+                      : Text('Please select image to analyze.'),
+                  Column(
+                    children: _labels != null
+                        ? _labels.map((label) {
+                            return Text("${label["label"]}");
+                          }).toList()
+                        : [],
+                  ),
+                ],
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: getImageLabels,
+                child: Icon(Icons.add),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(
+                child: Text("Error loading model. Sorry about that :("),
+              ),
+            );
+          } else {
+            return Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        },
       ),
     );
   }
