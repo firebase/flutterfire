@@ -1,4 +1,4 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
+// Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -11,16 +11,27 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'test_common.dart';
+
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  initializeMethodChannel();
+  final String storageBucket = 'gs://fake-storage-bucket-url.com';
+  FirebaseApp app;
+  FirebaseStorage storage;
 
   group('FirebaseStorage', () {
-    final FirebaseApp app = FirebaseApp(
-      name: 'testApp',
-    );
-    final String storageBucket = 'gs://fake-storage-bucket-url.com';
-    final FirebaseStorage storage =
-        FirebaseStorage(app: app, storageBucket: storageBucket);
+    setUpAll(() async {
+      app = await Firebase.initializeApp(
+        name: 'testApp',
+        options: const FirebaseOptions(
+          appId: '1:1234567890:ios:42424242424242',
+          apiKey: '123',
+          projectId: '123',
+          messagingSenderId: '1234567890',
+        ),
+      );
+      storage = FirebaseStorage(app: app, storageBucket: storageBucket);
+    });
 
     group('getMaxDownloadRetryTimeMillis', () {
       final List<MethodCall> log = <MethodCall>[];
@@ -31,6 +42,11 @@ void main() {
           log.add(methodCall);
           return 1000;
         });
+      });
+      FirebaseStorage.channel
+          .setMockMethodCallHandler((MethodCall methodCall) async {
+        log.add(methodCall);
+        return 1000;
       });
 
       test('invokes correct method', () async {

@@ -11,11 +11,11 @@ dependencies:
 
 dev_dependencies:
   pedantic: ^1.8.0
-  e2e: ^0.2.1
+  e2e: ^0.4.3+1
   http: ^0.12.0
   flutter_test:
     sdk: flutter
-  firebase_core: ^0.4.0
+  firebase_core: ^0.4.5
   flutter_driver:
     sdk: flutter
   test: any

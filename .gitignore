@@ -43,3 +43,4 @@ build/
 .project
 .classpath
 .settings
+pubspec.yaml

@@ -16,16 +16,16 @@ void main() {
 
     setUpAll(() async {
       final FirebaseOptions firebaseOptions = const FirebaseOptions(
-        googleAppID: '1:79601577497:ios:5f2bcc6ba8cecddd',
-        gcmSenderID: '79601577497',
+        appId: '1:79601577497:ios:5f2bcc6ba8cecddd',
+        messagingSenderId: '79601577497',
         apiKey: 'AIzaSyArgmRGfB5kiQT6CunAOmKRVKEsxKmy6YI-G72PVU',
-        projectID: 'flutter-firestore',
+        projectId: 'flutter-firestore',
       );
-      final FirebaseApp app = await FirebaseApp.configure(
+      final FirebaseApp app = await Firebase.initializeApp(
         name: 'test',
         options: firebaseOptions,
       );
-      final FirebaseApp app2 = await FirebaseApp.configure(
+      final FirebaseApp app2 = await Firebase.initializeApp(
         name: 'test2',
         options: firebaseOptions,
       );

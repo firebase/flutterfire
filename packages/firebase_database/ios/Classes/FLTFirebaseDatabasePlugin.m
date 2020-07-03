@@ -167,6 +167,10 @@ id roundDoubles(id value) {
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
   FIRDatabase *database;
   NSString *appName = call.arguments[@"app"];
+  // TODO(Salakar): Remove name check once plugin refactored with new Core.
+  if ([appName isEqualToString:@"[DEFAULT]"]) {
+    appName = @"__FIRAPP_DEFAULT";
+  }
   NSString *databaseURL = call.arguments[@"databaseURL"];
   if (![appName isEqual:[NSNull null]] && ![databaseURL isEqual:[NSNull null]]) {
     database = [FIRDatabase databaseForApp:[FIRApp appNamed:appName] URL:databaseURL];

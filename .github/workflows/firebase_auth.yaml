@@ -1,0 +1,115 @@
+name: firebase_auth
+
+on:
+  pull_request:
+    paths:
+      - "packages/firebase_core/**"
+      - "packages/firebase_auth/**"
+      - ".github/workflows/firebase_auth.yaml"
+  push:
+    branches:
+      - master
+
+env:
+  FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_auth*"
+  FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: "*firebase_auth_example*"
+
+jobs:
+  android:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - name: "Install Tools"
+        run: |
+          pub global activate melos
+          echo "::add-path::$HOME/.pub-cache/bin"
+      - name: "Bootstrap Workspace"
+        run: melos bootstrap
+      - name: "Build Example"
+        run: |
+          melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
+            flutter build apk
+      - name: Download Emulator Image
+        run: |
+          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install "system-images;android-28;google_apis;x86_64"
+          echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd --force --name TestingAVD --device "Nexus 5X" -k 'system-images;android-28;google_apis;x86_64' -g google_apis
+          $ANDROID_HOME/emulator/emulator -list-avds
+      - name: Start Android Emulator
+        timeout-minutes: 15
+        continue-on-error: true
+        run: |
+          echo "Starting emulator"
+          nohup $ANDROID_HOME/emulator/emulator -avd TestingAVD -no-audio -no-snapshot -no-window -no-boot-anim &
+          $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done'
+          $ANDROID_HOME/platform-tools/adb devices
+          $ANDROID_HOME/platform-tools/adb shell settings put global window_animation_scale 0.0
+          $ANDROID_HOME/platform-tools/adb shell settings put global transition_animation_scale 0.0
+          $ANDROID_HOME/platform-tools/adb shell settings put global animator_duration_scale 0.0
+          echo "Emulator started"
+          flutter emulators
+      - name: "Drive Example"
+        run: |
+          melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
+            flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - name: "Install Tools"
+        run: |
+          pub global activate melos
+          echo "::add-path::$HOME/.pub-cache/bin"
+      - name: "Bootstrap Workspace"
+        run: melos bootstrap
+      - name: "Build Example"
+        run: |
+          melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
+            flutter build ios --no-codesign
+      - name: "Boot Simulator"
+        run: xcrun simctl boot "iPhone 11"
+      - name: "Drive Example"
+        run: |
+          melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
+            flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v1
+        with:
+          # https://github.com/subosito/flutter-action/issues/37
+          channel: "beta"
+      - name: "Install Tools"
+        run: |
+          pub global activate melos
+          flutter config --enable-web
+          echo "::add-path::$HOME/.pub-cache/bin"
+      - name: "Bootstrap Workspace"
+        run: melos bootstrap
+      - name: "Build Example"
+        run: |
+          melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=web -- \
+            flutter build web
+      - name: "Drive Example"
+        run: |
+          melos clean && melos bootstrap
+          chromedriver --port=4444 &
+          melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=web -- \
+            flutter drive --release --no-pub --verbose-system-logs --browser-name=chrome --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart

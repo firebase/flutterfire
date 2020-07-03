@@ -44,7 +44,7 @@ abstract class FirestorePlatform extends PlatformInterface {
 
   /// Create an instance using [app]
   FirestorePlatform({FirebaseApp app})
-      : app = app ?? FirebaseApp.instance,
+      : app = app ?? Firebase.app(),
         super(token: _token);
 
   static final Object _token = Object();
