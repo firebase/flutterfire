@@ -21,7 +21,9 @@ static FlutterError *getFlutterError(NSError *error) {
                       NSMutableDictionary<NSString * /* bucket */, FIRStorage *> *> *_storageMap;
   FIRStorage *storage;
   int _nextUploadHandle;
+  int _nextDownloadHandle;
   NSMutableDictionary<NSNumber *, FIRStorageUploadTask *> *_uploadTasks;
+  NSMutableDictionary<NSNumber *, FIRStorageDownloadTask *> *_downloadTasks;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -97,6 +99,12 @@ static FlutterError *getFlutterError(NSError *error) {
     [self resumeUploadTask:call result:result];
   } else if ([@"UploadTask#cancel" isEqualToString:call.method]) {
     [self cancelUploadTask:call result:result];
+  } else if ([@"DownloadTask#pause" isEqualToString:call.method]) {
+    [self pauseDownloadTask:call result:result];
+  } else if ([@"DownloadTask#resume" isEqualToString:call.method]) {
+    [self resumeDownloadTask:call result:result];
+  } else if ([@"DownloadTask#cancel" isEqualToString:call.method]) {
+    [self cancelDownloadTask:call result:result];
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -187,7 +195,7 @@ static FlutterError *getFlutterError(NSError *error) {
 - (void)putFile:(FlutterMethodCall *)call result:(FlutterResult)result {
   NSURL *fileUrl = [NSURL fileURLWithPath:call.arguments[@"filename"]];
   [self
-      putHandler:^(FIRStorageReference *fileRef, FIRStorageMetadata *metadata) {
+      putUploadHandler:^(FIRStorageReference *fileRef, FIRStorageMetadata *metadata) {
         return [fileRef putFile:fileUrl metadata:metadata];
       }
             call:call
@@ -203,15 +211,15 @@ static FlutterError *getFlutterError(NSError *error) {
     return;
   }
   [self
-      putHandler:^(FIRStorageReference *fileRef, FIRStorageMetadata *metadata) {
+      putUploadHandler:^(FIRStorageReference *fileRef, FIRStorageMetadata *metadata) {
         return [fileRef putData:data metadata:metadata];
       }
             call:call
           result:result];
 }
 
-- (void)putHandler:(FIRStorageUploadTask * (^)(FIRStorageReference *fileRef,
-                                               FIRStorageMetadata *metadata))putHandler
+- (void)putUploadHandler:(FIRStorageUploadTask * (^)(FIRStorageReference *fileRef,
+                                               FIRStorageMetadata *metadata))putUploadHandler
               call:(FlutterMethodCall *)call
             result:(FlutterResult)result {
   NSString *path = call.arguments[@"path"];
@@ -221,31 +229,64 @@ static FlutterError *getFlutterError(NSError *error) {
     metadata = [self buildMetadataFromDictionary:metadataDictionary];
   }
   FIRStorageReference *fileRef = [storage.reference child:path];
-  FIRStorageUploadTask *uploadTask = putHandler(fileRef, metadata);
+  FIRStorageUploadTask *uploadTask = putUploadHandler(fileRef, metadata);
   NSNumber *handle = [NSNumber numberWithInt:_nextUploadHandle++];
   [uploadTask observeStatus:FIRStorageTaskStatusSuccess
                     handler:^(FIRStorageTaskSnapshot *snapshot) {
-                      [self invokeStorageTaskEvent:handle type:kSuccess snapshot:snapshot];
+                      [self invokeUploadStorageTaskEvent:handle type:kSuccess snapshot:snapshot];
                       [self->_uploadTasks removeObjectForKey:handle];
                     }];
   [uploadTask observeStatus:FIRStorageTaskStatusProgress
                     handler:^(FIRStorageTaskSnapshot *snapshot) {
-                      [self invokeStorageTaskEvent:handle type:kProgress snapshot:snapshot];
+                      [self invokeUploadStorageTaskEvent:handle type:kProgress snapshot:snapshot];
                     }];
   [uploadTask observeStatus:FIRStorageTaskStatusResume
                     handler:^(FIRStorageTaskSnapshot *snapshot) {
-                      [self invokeStorageTaskEvent:handle type:kResume snapshot:snapshot];
+                      [self invokeUploadStorageTaskEvent:handle type:kResume snapshot:snapshot];
                     }];
   [uploadTask observeStatus:FIRStorageTaskStatusPause
                     handler:^(FIRStorageTaskSnapshot *snapshot) {
-                      [self invokeStorageTaskEvent:handle type:kPause snapshot:snapshot];
+                      [self invokeUploadStorageTaskEvent:handle type:kPause snapshot:snapshot];
                     }];
   [uploadTask observeStatus:FIRStorageTaskStatusFailure
                     handler:^(FIRStorageTaskSnapshot *snapshot) {
-                      [self invokeStorageTaskEvent:handle type:kFailure snapshot:snapshot];
+                      [self invokeUploadStorageTaskEvent:handle type:kFailure snapshot:snapshot];
                       [self->_uploadTasks removeObjectForKey:handle];
                     }];
   _uploadTasks[handle] = uploadTask;
+  result(handle);
+}
+
+- (void)putDownloadHandler:(FIRStorageDownloadTask * (^)(FIRStorageReference *fileRef))putDownloadHandler
+              call:(FlutterMethodCall *)call
+            result:(FlutterResult)result {
+  NSString *path = call.arguments[@"path"];
+  FIRStorageReference *fileRef = [storage.reference child:path];
+  FIRStorageDownloadTask *downloadTask = putDownloadHandler(fileRef);
+  NSNumber *handle = [NSNumber numberWithInt:_nextDownloadHandle++];
+  [downloadTask observeStatus:FIRStorageTaskStatusSuccess
+                    handler:^(FIRStorageTaskSnapshot *snapshot) {
+                      [self invokeDownloadStorageTaskEvent:handle type:kSuccess snapshot:snapshot];
+                      [self->_downloadTasks removeObjectForKey:handle];
+                    }];
+  [downloadTask observeStatus:FIRStorageTaskStatusProgress
+                    handler:^(FIRStorageTaskSnapshot *snapshot) {
+                      [self invokeDownloadStorageTaskEvent:handle type:kProgress snapshot:snapshot];
+                    }];
+  [downloadTask observeStatus:FIRStorageTaskStatusResume
+                    handler:^(FIRStorageTaskSnapshot *snapshot) {
+                      [self invokeDownloadStorageTaskEvent:handle type:kResume snapshot:snapshot];
+                    }];
+  [downloadTask observeStatus:FIRStorageTaskStatusPause
+                    handler:^(FIRStorageTaskSnapshot *snapshot) {
+                      [self invokeDownloadStorageTaskEvent:handle type:kPause snapshot:snapshot];
+                    }];
+  [downloadTask observeStatus:FIRStorageTaskStatusFailure
+                    handler:^(FIRStorageTaskSnapshot *snapshot) {
+                      [self invokeDownloadStorageTaskEvent:handle type:kFailure snapshot:snapshot];
+                      [self->_uploadTasks removeObjectForKey:handle];
+                    }];
+  _downloadTasks[handle] = downloadTask;
   result(handle);
 }
 
@@ -257,14 +298,24 @@ typedef NS_ENUM(NSUInteger, StorageTaskEventType) {
   kFailure
 };
 
-- (void)invokeStorageTaskEvent:(NSNumber *)handle
+- (void)invokeUploadStorageTaskEvent:(NSNumber *)handle
                           type:(StorageTaskEventType)type
                       snapshot:(FIRStorageTaskSnapshot *)snapshot {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
   [dictionary setValue:handle forKey:@"handle"];
   [dictionary setValue:@((int)type) forKey:@"type"];
   [dictionary setValue:[self buildDictionaryFromTaskSnapshot:snapshot] forKey:@"snapshot"];
-  [self.channel invokeMethod:@"StorageTaskEvent" arguments:dictionary];
+  [self.channel invokeMethod:@"StorageUploadTaskEvent" arguments:dictionary];
+}
+
+- (void)invokeDownloadStorageTaskEvent:(NSNumber *)handle
+                          type:(StorageTaskEventType)type
+                      snapshot:(FIRStorageTaskSnapshot *)snapshot {
+  NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+  [dictionary setValue:handle forKey:@"handle"];
+  [dictionary setValue:@((int)type) forKey:@"type"];
+  [dictionary setValue:[self buildDictionaryFromTaskSnapshot:snapshot] forKey:@"snapshot"];
+  [self.channel invokeMethod:@"StorageDownloadTaskEvent" arguments:dictionary];
 }
 
 - (NSDictionary *)buildDictionaryFromTaskSnapshot:(FIRStorageTaskSnapshot *)snapshot {
@@ -349,17 +400,13 @@ typedef NS_ENUM(NSUInteger, StorageTaskEventType) {
   NSString *filePath = call.arguments[@"filePath"];
   NSURL *localURL = [NSURL fileURLWithPath:filePath];
   FIRStorageReference *ref = [storage.reference child:path];
-  FIRStorageDownloadTask *task = [ref writeToFile:localURL];
-  [task observeStatus:FIRStorageTaskStatusSuccess
-              handler:^(FIRStorageTaskSnapshot *snapshot) {
-                result(@(snapshot.progress.totalUnitCount));
-              }];
-  [task observeStatus:FIRStorageTaskStatusFailure
-              handler:^(FIRStorageTaskSnapshot *snapshot) {
-                if (snapshot.error != nil) {
-                  result(getFlutterError(snapshot.error));
-                }
-              }];
+    [self
+        putDownloadHandler:^(FIRStorageReference *fileRef) {
+          return [ref writeToFile:localURL];;
+        }
+              call:call
+            result:result];
+
 }
 
 - (void)getMetadata:(FlutterMethodCall *)call result:(FlutterResult)result {
@@ -455,6 +502,40 @@ typedef NS_ENUM(NSUInteger, StorageTaskEventType) {
 - (void)cancelUploadTask:(FlutterMethodCall *)call result:(FlutterResult)result {
   NSNumber *handle = call.arguments[@"handle"];
   FIRStorageUploadTask *task = [_uploadTasks objectForKey:handle];
+  if (task != nil) {
+    [task cancel];
+    result(nil);
+  } else {
+    result([FlutterError errorWithCode:@"cancel_error" message:@"task == null" details:nil]);
+  }
+}
+
+
+- (void)pauseDownloadTask:(FlutterMethodCall *)call result:(FlutterResult)result {
+  NSNumber *handle = call.arguments[@"handle"];
+  FIRStorageDownloadTask *task = [_downloadTasks objectForKey:handle];
+  if (task != nil) {
+    [task pause];
+    result(nil);
+  } else {
+    result([FlutterError errorWithCode:@"pause_error" message:@"task == null" details:nil]);
+  }
+}
+
+- (void)resumeDownloadTask:(FlutterMethodCall *)call result:(FlutterResult)result {
+  NSNumber *handle = call.arguments[@"handle"];
+  FIRStorageDownloadTask *task = [_downloadTasks objectForKey:handle];
+  if (task != nil) {
+    [task resume];
+    result(nil);
+  } else {
+    result([FlutterError errorWithCode:@"resume_error" message:@"task == null" details:nil]);
+  }
+}
+
+- (void)cancelDownloadTask:(FlutterMethodCall *)call result:(FlutterResult)result {
+  NSNumber *handle = call.arguments[@"handle"];
+  FIRStorageDownloadTask *task = [_downloadTasks objectForKey:handle];
   if (task != nil) {
     [task cancel];
     result(nil);
