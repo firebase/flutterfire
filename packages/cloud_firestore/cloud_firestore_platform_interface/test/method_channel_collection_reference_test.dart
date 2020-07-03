@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -17,12 +18,23 @@ const _kDocumentId = "document";
 void main() {
   initializeMethodChannel();
 
+  MethodChannelCollectionReference _testCollection;
+
+  setUpAll(() async {
+    await Firebase.initializeApp(
+      name: 'testApp',
+      options: const FirebaseOptions(
+        appId: '1:1234567890:ios:42424242424242',
+        apiKey: '123',
+        projectId: '123',
+        messagingSenderId: '1234567890',
+      ),
+    );
+    _testCollection = MethodChannelCollectionReference(
+        FirestorePlatform.instance, [_kCollectionId]);
+  });
+
   group("$MethodChannelCollectionReference", () {
-    MethodChannelCollectionReference _testCollection;
-    setUp(() {
-      _testCollection = MethodChannelCollectionReference(
-          FirestorePlatform.instance, [_kCollectionId]);
-    });
     test("Parent", () {
       expect(_testCollection.parent(), isNull);
       expect(

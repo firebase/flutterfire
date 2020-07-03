@@ -2,13 +2,34 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_collection_reference.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
 
+import 'test_common.dart';
+
+const _kCollectionId = "test";
+
 void main() {
+  initializeMethodChannel();
   group("$MethodChannelFieldValueFactory()", () {
+    setUpAll(() async {
+      await Firebase.initializeApp(
+        name: 'testApp',
+        options: const FirebaseOptions(
+          appId: '1:1234567890:ios:42424242424242',
+          apiKey: '123',
+          projectId: '123',
+          messagingSenderId: '1234567890',
+        ),
+      );
+      MethodChannelCollectionReference(
+          FirestorePlatform.instance, [_kCollectionId]);
+    });
     final MethodChannelFieldValueFactory factory =
         MethodChannelFieldValueFactory();
     test("arrayRemove", () {

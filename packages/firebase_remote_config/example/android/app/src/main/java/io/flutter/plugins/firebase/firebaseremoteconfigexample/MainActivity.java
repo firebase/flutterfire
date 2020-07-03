@@ -6,7 +6,7 @@ package io.flutter.plugins.firebase.firebaseremoteconfigexample;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
-import io.flutter.plugins.firebase.core.FirebaseCorePlugin;
+import io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin;
 import io.flutter.plugins.firebase.firebaseremoteconfig.FirebaseRemoteConfigPlugin;
 
 public class MainActivity extends FlutterActivity {
@@ -17,6 +17,6 @@ public class MainActivity extends FlutterActivity {
   public void configureFlutterEngine(FlutterEngine flutterEngine) {
     super.configureFlutterEngine(flutterEngine);
     flutterEngine.getPlugins().add(new FirebaseRemoteConfigPlugin());
-    flutterEngine.getPlugins().add(new FirebaseCorePlugin());
+    flutterEngine.getPlugins().add(new FlutterFirebaseCorePlugin());
   }
 }
