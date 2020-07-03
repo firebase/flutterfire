@@ -198,8 +198,8 @@ static FlutterError *getFlutterError(NSError *error) {
       putUploadHandler:^(FIRStorageReference *fileRef, FIRStorageMetadata *metadata) {
         return [fileRef putFile:fileUrl metadata:metadata];
       }
-            call:call
-          result:result];
+                  call:call
+                result:result];
 }
 
 - (void)putData:(FlutterMethodCall *)call result:(FlutterResult)result {
@@ -214,14 +214,14 @@ static FlutterError *getFlutterError(NSError *error) {
       putUploadHandler:^(FIRStorageReference *fileRef, FIRStorageMetadata *metadata) {
         return [fileRef putData:data metadata:metadata];
       }
-            call:call
-          result:result];
+                  call:call
+                result:result];
 }
 
 - (void)putUploadHandler:(FIRStorageUploadTask * (^)(FIRStorageReference *fileRef,
-                                               FIRStorageMetadata *metadata))putUploadHandler
-              call:(FlutterMethodCall *)call
-            result:(FlutterResult)result {
+                                                     FIRStorageMetadata *metadata))putUploadHandler
+                    call:(FlutterMethodCall *)call
+                  result:(FlutterResult)result {
   NSString *path = call.arguments[@"path"];
   NSDictionary *metadataDictionary = call.arguments[@"metadata"];
   FIRStorageMetadata *metadata;
@@ -257,35 +257,42 @@ static FlutterError *getFlutterError(NSError *error) {
   result(handle);
 }
 
-- (void)putDownloadHandler:(FIRStorageDownloadTask * (^)(FIRStorageReference *fileRef))putDownloadHandler
-              call:(FlutterMethodCall *)call
-            result:(FlutterResult)result {
+- (void)putDownloadHandler:
+            (FIRStorageDownloadTask * (^)(FIRStorageReference *fileRef))putDownloadHandler
+                      call:(FlutterMethodCall *)call
+                    result:(FlutterResult)result {
   NSString *path = call.arguments[@"path"];
   FIRStorageReference *fileRef = [storage.reference child:path];
   FIRStorageDownloadTask *downloadTask = putDownloadHandler(fileRef);
   NSNumber *handle = [NSNumber numberWithInt:_nextDownloadHandle++];
   [downloadTask observeStatus:FIRStorageTaskStatusSuccess
-                    handler:^(FIRStorageTaskSnapshot *snapshot) {
-                      [self invokeDownloadStorageTaskEvent:handle type:kSuccess snapshot:snapshot];
-                      [self->_downloadTasks removeObjectForKey:handle];
-                    }];
+                      handler:^(FIRStorageTaskSnapshot *snapshot) {
+                        [self invokeDownloadStorageTaskEvent:handle
+                                                        type:kSuccess
+                                                    snapshot:snapshot];
+                        [self->_downloadTasks removeObjectForKey:handle];
+                      }];
   [downloadTask observeStatus:FIRStorageTaskStatusProgress
-                    handler:^(FIRStorageTaskSnapshot *snapshot) {
-                      [self invokeDownloadStorageTaskEvent:handle type:kProgress snapshot:snapshot];
-                    }];
+                      handler:^(FIRStorageTaskSnapshot *snapshot) {
+                        [self invokeDownloadStorageTaskEvent:handle
+                                                        type:kProgress
+                                                    snapshot:snapshot];
+                      }];
   [downloadTask observeStatus:FIRStorageTaskStatusResume
-                    handler:^(FIRStorageTaskSnapshot *snapshot) {
-                      [self invokeDownloadStorageTaskEvent:handle type:kResume snapshot:snapshot];
-                    }];
+                      handler:^(FIRStorageTaskSnapshot *snapshot) {
+                        [self invokeDownloadStorageTaskEvent:handle type:kResume snapshot:snapshot];
+                      }];
   [downloadTask observeStatus:FIRStorageTaskStatusPause
-                    handler:^(FIRStorageTaskSnapshot *snapshot) {
-                      [self invokeDownloadStorageTaskEvent:handle type:kPause snapshot:snapshot];
-                    }];
+                      handler:^(FIRStorageTaskSnapshot *snapshot) {
+                        [self invokeDownloadStorageTaskEvent:handle type:kPause snapshot:snapshot];
+                      }];
   [downloadTask observeStatus:FIRStorageTaskStatusFailure
-                    handler:^(FIRStorageTaskSnapshot *snapshot) {
-                      [self invokeDownloadStorageTaskEvent:handle type:kFailure snapshot:snapshot];
-                      [self->_uploadTasks removeObjectForKey:handle];
-                    }];
+                      handler:^(FIRStorageTaskSnapshot *snapshot) {
+                        [self invokeDownloadStorageTaskEvent:handle
+                                                        type:kFailure
+                                                    snapshot:snapshot];
+                        [self->_uploadTasks removeObjectForKey:handle];
+                      }];
   _downloadTasks[handle] = downloadTask;
   result(handle);
 }
@@ -299,8 +306,8 @@ typedef NS_ENUM(NSUInteger, StorageTaskEventType) {
 };
 
 - (void)invokeUploadStorageTaskEvent:(NSNumber *)handle
-                          type:(StorageTaskEventType)type
-                      snapshot:(FIRStorageTaskSnapshot *)snapshot {
+                                type:(StorageTaskEventType)type
+                            snapshot:(FIRStorageTaskSnapshot *)snapshot {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
   [dictionary setValue:handle forKey:@"handle"];
   [dictionary setValue:@((int)type) forKey:@"type"];
@@ -309,8 +316,8 @@ typedef NS_ENUM(NSUInteger, StorageTaskEventType) {
 }
 
 - (void)invokeDownloadStorageTaskEvent:(NSNumber *)handle
-                          type:(StorageTaskEventType)type
-                      snapshot:(FIRStorageTaskSnapshot *)snapshot {
+                                  type:(StorageTaskEventType)type
+                              snapshot:(FIRStorageTaskSnapshot *)snapshot {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
   [dictionary setValue:handle forKey:@"handle"];
   [dictionary setValue:@((int)type) forKey:@"type"];
@@ -400,13 +407,13 @@ typedef NS_ENUM(NSUInteger, StorageTaskEventType) {
   NSString *filePath = call.arguments[@"filePath"];
   NSURL *localURL = [NSURL fileURLWithPath:filePath];
   FIRStorageReference *ref = [storage.reference child:path];
-    [self
-        putDownloadHandler:^(FIRStorageReference *fileRef) {
-          return [ref writeToFile:localURL];;
-        }
-              call:call
-            result:result];
-
+  [self
+      putDownloadHandler:^(FIRStorageReference *fileRef) {
+        return [ref writeToFile:localURL];
+        ;
+      }
+                    call:call
+                  result:result];
 }
 
 - (void)getMetadata:(FlutterMethodCall *)call result:(FlutterResult)result {
@@ -509,7 +516,6 @@ typedef NS_ENUM(NSUInteger, StorageTaskEventType) {
     result([FlutterError errorWithCode:@"cancel_error" message:@"task == null" details:nil]);
   }
 }
-
 
 - (void)pauseDownloadTask:(FlutterMethodCall *)call result:(FlutterResult)result {
   NSNumber *handle = call.arguments[@"handle"];

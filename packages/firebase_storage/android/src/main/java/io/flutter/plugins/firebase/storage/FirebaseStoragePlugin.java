@@ -430,7 +430,6 @@ public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
     }
   }
 
-
   private void pauseDownloadTask(MethodCall call, final Result result) {
     int handle = call.argument("handle");
     FileDownloadTask task = downloadTasks.get(handle);
@@ -504,40 +503,39 @@ public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
 
   private int addDownloadListeners(final FileDownloadTask downloadTask) {
     final int handle = ++nextDownloadHandle;
-    downloadTask.addOnProgressListener(
+    downloadTask
+        .addOnProgressListener(
             new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
               @Override
               public void onProgress(FileDownloadTask.TaskSnapshot snapshot) {
-                invokeStorageDownloadTaskEvent(handle, StorageTaskEventType.progress, snapshot, null);
+                invokeStorageDownloadTaskEvent(
+                    handle, StorageTaskEventType.progress, snapshot, null);
               }
-            }
-    ).addOnPausedListener(
+            })
+        .addOnPausedListener(
             new OnPausedListener<FileDownloadTask.TaskSnapshot>() {
               @Override
               public void onPaused(FileDownloadTask.TaskSnapshot snapshot) {
                 invokeStorageDownloadTaskEvent(handle, StorageTaskEventType.pause, snapshot, null);
               }
-            }
-    )
-            .addOnCompleteListener(
-                    new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
-                      @Override
-                      public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-                        if (!task.isSuccessful()) {
-                          invokeStorageDownloadTaskEvent(
-                                  handle,
-                                  StorageTaskEventType.failure,
-                                  downloadTask.getSnapshot(),
-                                  (StorageException) task.getException());
-                        } else {
-                          invokeStorageDownloadTaskEvent(
-                                  handle, StorageTaskEventType.success, task.getResult(), null);
-                        }
-                        uploadTasks.remove(handle);
-                      }
-                    }
-            )
-    ;
+            })
+        .addOnCompleteListener(
+            new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+              @Override
+              public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
+                if (!task.isSuccessful()) {
+                  invokeStorageDownloadTaskEvent(
+                      handle,
+                      StorageTaskEventType.failure,
+                      downloadTask.getSnapshot(),
+                      (StorageException) task.getException());
+                } else {
+                  invokeStorageDownloadTaskEvent(
+                      handle, StorageTaskEventType.success, task.getResult(), null);
+                }
+                uploadTasks.remove(handle);
+              }
+            });
     downloadTasks.put(handle, downloadTask);
     return handle;
   }
@@ -560,19 +558,19 @@ public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
   }
 
   private void invokeStorageDownloadTaskEvent(
-          int handle,
-          StorageTaskEventType type,
-          FileDownloadTask.TaskSnapshot snapshot,
-          StorageException error) {
+      int handle,
+      StorageTaskEventType type,
+      FileDownloadTask.TaskSnapshot snapshot,
+      StorageException error) {
     methodChannel.invokeMethod(
-            "StorageDownloadTaskEvent", buildMapFromDownloadTaskEvent(handle, type, snapshot, error));
+        "StorageDownloadTaskEvent", buildMapFromDownloadTaskEvent(handle, type, snapshot, error));
   }
 
   private Map<String, Object> buildMapFromUploadTaskEvent(
-          int handle,
-          StorageTaskEventType type,
-          UploadTask.TaskSnapshot snapshot,
-          StorageException error) {
+      int handle,
+      StorageTaskEventType type,
+      UploadTask.TaskSnapshot snapshot,
+      StorageException error) {
     Map<String, Object> map = new HashMap<>();
     map.put("handle", handle);
     map.put("type", type.ordinal());
@@ -581,10 +579,10 @@ public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
   }
 
   private Map<String, Object> buildMapFromDownloadTaskEvent(
-          int handle,
-          StorageTaskEventType type,
-          FileDownloadTask.TaskSnapshot snapshot,
-          StorageException error) {
+      int handle,
+      StorageTaskEventType type,
+      FileDownloadTask.TaskSnapshot snapshot,
+      StorageException error) {
     Map<String, Object> map = new HashMap<>();
     map.put("handle", handle);
     map.put("type", type.ordinal());
@@ -593,7 +591,7 @@ public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
   }
 
   private Map<String, Object> buildMapFromUploadTaskSnapshot(
-          UploadTask.TaskSnapshot snapshot, StorageException error) {
+      UploadTask.TaskSnapshot snapshot, StorageException error) {
     Map<String, Object> map = new HashMap<>();
     map.put("bytesTransferred", snapshot.getBytesTransferred());
     map.put("totalByteCount", snapshot.getTotalByteCount());
@@ -610,7 +608,7 @@ public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
   }
 
   private Map<String, Object> buildMapFromDownloadTaskSnapshot(
-          FileDownloadTask.TaskSnapshot snapshot, StorageException error) {
+      FileDownloadTask.TaskSnapshot snapshot, StorageException error) {
     Map<String, Object> map = new HashMap<>();
     map.put("bytesTransferred", snapshot.getBytesTransferred());
     map.put("totalByteCount", snapshot.getTotalByteCount());
