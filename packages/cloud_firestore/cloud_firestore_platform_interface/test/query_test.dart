@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
@@ -22,6 +23,17 @@ void main() {
   initializeMethodChannel();
 
   group("$QueryPlatform()", () {
+    setUpAll(() async {
+      await Firebase.initializeApp(
+        name: 'testApp',
+        options: const FirebaseOptions(
+          appId: '1:1234567890:ios:42424242424242',
+          apiKey: '123',
+          projectId: '123',
+          messagingSenderId: '1234567890',
+        ),
+      );
+    });
     test("parameters", () {
       _hasDefaultParameters(TestQuery._().parameters);
     });

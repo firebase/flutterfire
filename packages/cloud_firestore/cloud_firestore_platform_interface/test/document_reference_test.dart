@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'test_common.dart';
@@ -19,6 +20,9 @@ void main() {
   initializeMethodChannel();
 
   group("$DocumentReferencePlatform()", () {
+    setUpAll(() async {
+      await Firebase.initializeApp();
+    });
     test("Parent", () {
       final document = TestDocumentReference._();
       final parent = document.parent();

@@ -22,7 +22,7 @@ import 'utils/maps.dart';
 class MethodChannelFirestore extends FirestorePlatform {
   /// Create an instance of [MethodChannelFirestore] with optional [FirebaseApp]
   MethodChannelFirestore({FirebaseApp app})
-      : super(app: app ?? FirebaseApp.instance) {
+      : super(app: app ?? Firebase.app()) {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       if (call.method == 'QuerySnapshot') {
