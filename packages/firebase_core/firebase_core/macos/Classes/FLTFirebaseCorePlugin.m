@@ -1,1 +1,1 @@
-../../darwin/Classes/FLTFirebaseCorePlugin.m
+../../ios/Classes/FLTFirebaseCorePlugin.m

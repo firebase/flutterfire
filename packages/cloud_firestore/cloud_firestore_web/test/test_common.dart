@@ -50,7 +50,7 @@ web.Firestore mockFirestore() {
     })
   });
   js.context['firebase'] = firebaseMock;
-  FirebaseCorePlatform.instance = FirebaseCoreWeb();
+  FirebasePlatform.instance = FirebaseCoreWeb();
   FirestorePlatform.instance = FirestoreWeb();
   return mockFirestoreWeb;
 }

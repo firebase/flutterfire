@@ -26,7 +26,7 @@ void main() {
         ),
       ));
 
-      FirebaseCorePlatform.instance = FirebaseCoreWeb();
+      FirebasePlatform.instance = FirebaseCoreWeb();
       FirebaseAuthPlatform.instance = FirebaseAuthWeb();
     });
 

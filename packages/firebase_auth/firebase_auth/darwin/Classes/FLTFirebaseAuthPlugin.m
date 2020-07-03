@@ -70,6 +70,10 @@ int nextHandle = 0;
 
 - (FIRAuth *_Nullable)getAuth:(NSDictionary *)args {
   NSString *appName = [args objectForKey:@"app"];
+  // TODO(Salakar): Remove name check once plugin refactored with new Core.
+  if ([appName isEqualToString:@"[DEFAULT]"]) {
+    appName = @"__FIRAPP_DEFAULT";
+  }
   return [FIRAuth authWithApp:[FIRApp appNamed:appName]];
 }
 

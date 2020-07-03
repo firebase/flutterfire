@@ -15,7 +15,12 @@ static FlutterError *getFlutterError(NSError *error) {
 }
 
 static FIRFirestore *getFirestore(NSDictionary *arguments) {
-  FIRApp *app = [FIRApp appNamed:arguments[@"app"]];
+  NSString *appName = [arguments objectForKey:@"app"];
+  // TODO(Salakar): Remove name check once plugin refactored with new Core.
+  if ([appName isEqualToString:@"[DEFAULT]"]) {
+    appName = @"__FIRAPP_DEFAULT";
+  }
+  FIRApp *app = [FIRApp appNamed:appName];
   return [FIRFirestore firestoreForApp:app];
 }
 

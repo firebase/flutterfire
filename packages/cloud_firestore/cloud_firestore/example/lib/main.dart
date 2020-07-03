@@ -10,13 +10,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final FirebaseApp app = await FirebaseApp.configure(
+  final FirebaseApp app = await Firebase.initializeApp(
     name: 'test',
     options: const FirebaseOptions(
-      googleAppID: '1:79601577497:ios:5f2bcc6ba8cecddd',
-      gcmSenderID: '79601577497',
+      appId: '1:79601577497:ios:5f2bcc6ba8cecddd',
+      messagingSenderId: '79601577497',
       apiKey: 'AIzaSyArgmRGfB5kiQT6CunAOmKRVKEsxKmy6YI-G72PVU',
-      projectID: 'flutter-firestore',
+      projectId: 'flutter-firestore',
     ),
   );
   final Firestore firestore = Firestore(app: app);

@@ -12,6 +12,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import 'test_common.dart';
+
 const String kMockProviderId = 'firebase';
 const String kMockUid = '12345';
 const String kMockDisplayName = 'Flutter Test User';
@@ -79,15 +81,25 @@ final PlatformAuthResult kMockAuthResult = PlatformAuthResult(
 );
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  initializeMethodChannel();
 
   group('$FirebaseAuth', () {
-    final String appName = 'testApp';
-    final FirebaseApp app = FirebaseApp(name: appName);
-    final FirebaseAuth auth = FirebaseAuth.fromApp(app);
+    FirebaseAuth auth;
     MockFirebaseAuth mock;
 
-    setUp(() {
+    final String appName = 'testApp';
+    FirebaseApp app;
+
+    setUpAll(() async {
+      app = await Firebase.initializeApp(
+          name: appName,
+          options: const FirebaseOptions(
+            appId: '1:1234567890:ios:42424242424242',
+            apiKey: '123',
+            projectId: '123',
+            messagingSenderId: '1234567890',
+          ));
+      auth = FirebaseAuth.fromApp(app);
       mock = MockFirebaseAuth();
       when(mock.getIdToken(any, any)).thenAnswer(
           (_) => Future<PlatformIdTokenResult>.value(kMockIdTokenResult));
