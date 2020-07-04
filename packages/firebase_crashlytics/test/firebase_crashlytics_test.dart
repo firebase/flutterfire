@@ -25,12 +25,33 @@ void main() {
           case 'Crashlytics#onError':
             return 'Error reported to Crashlytics.';
           case 'Crashlytics#setUserIdentifier':
+          case 'Crashlytics#setKey':
+          case 'Crashlytics#log':
             return true;
           default:
             return false;
         }
       });
       log.clear();
+    });
+
+    test('log', () async {
+      crashlytics.enableInDevMode = true;
+      final msg = 'foo';
+      await crashlytics.log(msg);
+      expect(log[0].method, 'Crashlytics#log');
+      expect(log[0].arguments['log'], msg);
+    });
+
+    test('setKeys', () async {
+      crashlytics.enableInDevMode = true;
+      final key = 'testKey';
+      // All values are converted to Strings by Dart code
+      final value = 'testValue';
+      await crashlytics.setCustomKey(key, value);
+      expect(log[0].method, 'Crashlytics#setKey');
+      expect(log[0].arguments['key'], key);
+      expect(log[0].arguments['value'], value);
     });
 
     test('recordFlutterError', () async {
@@ -44,29 +65,16 @@ void main() {
         ],
         context: ErrorDescription('foo context'),
       );
-      crashlytics
-        ..enableInDevMode = true
-        ..log('foo')
-        ..setCustomKey('testBool', true)
-        ..setCustomKey('testInt', 42)
-        ..setCustomKey('testDouble', 42.0)
-        ..setCustomKey('testString', 'bar');
+      crashlytics.enableInDevMode = true;
       await crashlytics.recordFlutterError(details);
       expect(log[0].method, 'Crashlytics#onError');
       expect(log[0].arguments['exception'], 'foo exception');
       expect(log[0].arguments['context'], 'foo context');
       expect(log[0].arguments['information'], 'test message\nsecond message');
-      expect(log[0].arguments['logs'], isNotEmpty);
-      expect(log[0].arguments['logs'], contains('foo'));
-      expect(log[0].arguments['keys']['testBool'], 'true');
-      expect(log[0].arguments['keys']['testInt'], '42');
-      expect(log[0].arguments['keys']['testDouble'], '42.0');
-      expect(log[0].arguments['keys']['testString'], 'bar');
     });
 
     test('recordError', () async {
       crashlytics.enableInDevMode = true;
-      crashlytics.log('foo');
       await crashlytics.recordError('foo exception', null, context: "context");
       expect(log[0].method, 'Crashlytics#onError');
       expect(log[0].arguments['exception'], 'foo exception');
@@ -76,12 +84,6 @@ void main() {
         log[0].arguments['stackTraceElements'],
         contains(containsPair('file', 'firebase_crashlytics_test.dart')),
       );
-      expect(log[0].arguments['logs'], isNotEmpty);
-      expect(log[0].arguments['logs'], contains('foo'));
-      expect(log[0].arguments['keys']['testBool'], 'true');
-      expect(log[0].arguments['keys']['testInt'], '42');
-      expect(log[0].arguments['keys']['testDouble'], '42.0');
-      expect(log[0].arguments['keys']['testString'], 'bar');
     });
 
     test('crash', () {
