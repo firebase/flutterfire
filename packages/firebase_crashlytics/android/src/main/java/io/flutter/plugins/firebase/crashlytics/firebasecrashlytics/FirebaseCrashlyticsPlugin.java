@@ -53,18 +53,6 @@ public class FirebaseCrashlyticsPlugin implements FlutterPlugin, MethodCallHandl
   public void onMethodCall(MethodCall call, Result result) {
     final FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
     if (call.method.equals("Crashlytics#onError")) {
-      // Add logs.
-      final List<String> logs = call.argument("logs");
-      for (String l : logs) {
-        crashlytics.log(l);
-      }
-
-      // Set keys.
-      final Map<String, Object> keys = call.argument("keys");
-      for (String key : keys.keySet()) {
-        crashlytics.setCustomKey(key, (String) keys.get(key));
-      }
-
       // Report crash.
       final String dartExceptionMessage = (String) call.argument("exception");
       final Exception exception = new Exception(dartExceptionMessage);
@@ -92,6 +80,15 @@ public class FirebaseCrashlyticsPlugin implements FlutterPlugin, MethodCallHandl
       result.success("Error reported to Crashlytics.");
     } else if (call.method.equals("Crashlytics#setUserIdentifier")) {
       crashlytics.setUserId((String) call.argument("identifier"));
+      result.success(null);
+    } else if (call.method.equals("Crashlytics#setKey")) {
+      final String key = (String) call.argument("key");
+      final String value = (String) call.argument("value");
+      crashlytics.setCustomKey(key, value);
+      result.success(null);
+    } else if (call.method.equals("Crashlytics#log")) {
+      final String msg = (String) call.argument("log");
+      crashlytics.log(msg);
       result.success(null);
     } else {
       result.notImplemented();

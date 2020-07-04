@@ -9,6 +9,7 @@
   * `getVersion`
   * `isDebuggable`
 * **Breaking change**: the methods `setInt`, `setDouble`, `setString` and `setBool` have been replaced by `setCustomKey`.
+* Logs and keys are sent to Crashlytics as they're set.
 * Fixes a bug that prevented keys from being set on iOS devices.
 
 ## 0.1.4+1

@@ -36,18 +36,6 @@
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
   if ([@"Crashlytics#onError" isEqualToString:call.method]) {
-    // Add logs.
-    NSArray *logs = call.arguments[@"logs"];
-    for (NSString *log in logs) {
-      [[FIRCrashlytics crashlytics] logWithFormat:@"%@", log];
-    }
-
-    // Set keys.
-    NSDictionary *keys = call.arguments[@"keys"];
-    for (NSString *key in keys) {
-      [[FIRCrashlytics crashlytics] setCustomValue:keys[key] forKey:key];
-    }
-
     // Add additional information from the Flutter framework to the exception reported in
     // Crashlytics.
     NSString *information = call.arguments[@"information"];
@@ -77,6 +65,15 @@
     result(@"Error reported to Crashlytics.");
   } else if ([@"Crashlytics#setUserIdentifier" isEqualToString:call.method]) {
     [[FIRCrashlytics crashlytics] setUserID:call.arguments[@"identifier"]];
+    result(nil);
+  } else if ([@"Crashlytics#setKey" isEqualToString:call.method]) {
+    NSString *key = call.arguments[@"key"];
+    NSString *value = call.arguments[@"value"];
+    [[FIRCrashlytics crashlytics] setCustomValue:value forKey:key];
+    result(nil);
+  } else if ([@"Crashlytics#log" isEqualToString:call.method]) {
+    NSString *msg = call.arguments[@"log"];
+    [[FIRCrashlytics crashlytics] logWithFormat:@"%@", msg];
     result(nil);
   } else {
     result(FlutterMethodNotImplemented);
