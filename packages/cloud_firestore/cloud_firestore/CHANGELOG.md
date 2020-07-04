@@ -1,3 +1,15 @@
+## 0.13.7+1
+
+* Fix crash where listeners are not removed when app quits.
+
+## 0.13.7
+
+* Clean up snapshot listeners when Android Activity is destroyed.
+
+## 0.13.6
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 0.13.5
 
 * Migrate cloud_firestore to android v2 embedding.

@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -22,6 +23,17 @@ void main() {
       FieldValuePlatform(MethodChannelFieldValueFactory().increment(2.0));
 
   group("MethodChannelTransaction()", () {
+    setUpAll(() async {
+      await Firebase.initializeApp(
+        name: 'testApp',
+        options: const FirebaseOptions(
+          appId: '1:1234567890:ios:42424242424242',
+          apiKey: '123',
+          projectId: '123',
+          messagingSenderId: '1234567890',
+        ),
+      );
+    });
     TransactionPlatform transaction;
     final mockDocumentReference = MockDocumentReference();
     when(mockDocumentReference.path).thenReturn("$kCollectionId/$kDocumentId");

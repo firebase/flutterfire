@@ -133,6 +133,20 @@ runZonedGuarded<Future<void>>(
   },
   Crashlytics.instance.recordError,
 );
+  }, onError: Crashlytics.instance.recordError);
+```
+
+Finally, to catch errors that happen outside Flutter context, install an error
+listener on the current Isolate:
+
+```dart
+Isolate.current.addErrorListener(RawReceivePort((pair) async {
+  final List<dynamic> errorAndStacktrace = pair;
+  await Crashlytics.instance.recordError(
+    errorAndStacktrace.first,
+    errorAndStacktrace.last,
+  );
+}).sendPort);
 ```
 
 ## Result

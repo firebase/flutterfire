@@ -113,6 +113,10 @@ static FlutterError *getFlutterError(NSError *error) {
   if ([appName isEqual:[NSNull null]]) {
     app = [FIRApp defaultApp];
   } else {
+    // TODO(Salakar): Remove name check once plugin refactored with new Core.
+    if ([appName isEqualToString:@"[DEFAULT]"]) {
+      appName = @"__FIRAPP_DEFAULT";
+    }
     app = [FIRApp appNamed:appName];
   }
 

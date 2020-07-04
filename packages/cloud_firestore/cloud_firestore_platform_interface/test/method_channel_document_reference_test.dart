@@ -4,6 +4,7 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_document_reference.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
@@ -16,7 +17,18 @@ void main() {
   group("$MethodChannelDocumentReference()", () {
     MethodChannelDocumentReference _documentReference;
     FieldValuePlatform mockFieldValue;
-    setUp(() {
+
+    setUpAll(() async {
+      await Firebase.initializeApp(
+        name: 'testApp',
+        options: const FirebaseOptions(
+          appId: '1:1234567890:ios:42424242424242',
+          apiKey: '123',
+          projectId: '123',
+          messagingSenderId: '1234567890',
+        ),
+      );
+
       _documentReference = MethodChannelDocumentReference(
           FirestorePlatform.instance, [kCollectionId, kDocumentId]);
       mockFieldValue =
