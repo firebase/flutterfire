@@ -1,3 +1,7 @@
+## 0.3.1+2
+
+* Update homepage now that the package has moved
+
 ## 0.3.1+1
 
 * Propagate native error message on fetch method.

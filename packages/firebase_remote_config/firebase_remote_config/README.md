@@ -65,7 +65,7 @@ print('welcome message: ' + remoteConfig.getString('welcome'));
 
 ## Example
 
-See the [example application](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config/example) source
+See the [example application](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config/example) source
 for a complete sample app using the Firebase Remote Config.
 
 ## Issues and feedback
