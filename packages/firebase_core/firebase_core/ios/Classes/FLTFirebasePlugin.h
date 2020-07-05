@@ -2,7 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import <Firebase/Firebase.h>
+// Note: Don't use <Firebase/Firebase.h> umbrella header here - will cause a build
+//       failure on MacOS builds (Flutter MacOS uses Swift) when this file is included
+//       in other Flutter plugins like Firestore with an error of "Include of non-modular header
+//       inside framework module".
+#import <FirebaseCore/FirebaseCore.h>
 #import <Foundation/Foundation.h>
 
 #if TARGET_OS_OSX
