@@ -32,8 +32,9 @@ android {
     }
 
     defaultConfig {
-        applicationId "dev.flutter.plugins.firebaseauthexample"
-        minSdkVersion 16
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "io.flutter.plugins.firebaseauthexample"
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -55,8 +56,8 @@ flutter {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

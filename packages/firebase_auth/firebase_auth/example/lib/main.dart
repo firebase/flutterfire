@@ -1,28 +1,38 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
+// Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import './register_page.dart';
 import './signin_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  MyApp();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Firebase Auth Demo',
-      home: MyHomePage(title: 'Firebase Auth Demo'),
+      home: MyHomePage(
+        title: 'Firebase Auth Demo',
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({
+    Key key,
+    this.title,
+  }) : super(key: key);
 
   final String title;
 
@@ -31,7 +41,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  FirebaseUser user;
+  _MyHomePageState();
+  FirebaseAuth user;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

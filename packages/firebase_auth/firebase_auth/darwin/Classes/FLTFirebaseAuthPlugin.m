@@ -351,7 +351,7 @@ int nextHandle = 0;
   else if ([@"verifyPhoneNumber" isEqualToString:call.method]) {
     NSString *phoneNumber = call.arguments[@"phoneNumber"];
     NSNumber *handle = call.arguments[@"handle"];
-    [[FIRPhoneAuthProvider providerWithAuth:[self getAuth:call.arguments]]
+    [[FIRPhoneAuthProvider provider]
         verifyPhoneNumber:phoneNumber
                UIDelegate:nil
                completion:^(NSString *verificationID, NSError *error) {
@@ -372,9 +372,9 @@ int nextHandle = 0;
     NSString *verificationId = call.arguments[@"verificationId"];
     NSString *smsCode = call.arguments[@"smsCode"];
 
-    FIRPhoneAuthCredential *credential = [[FIRPhoneAuthProvider
-        providerWithAuth:[self getAuth:call.arguments]] credentialWithVerificationID:verificationId
-                                                                    verificationCode:smsCode];
+    FIRPhoneAuthCredential *credential =
+        [[FIRPhoneAuthProvider provider] credentialWithVerificationID:verificationId
+                                                     verificationCode:smsCode];
     [[self getAuth:call.arguments]
         signInAndRetrieveDataWithCredential:credential
                                  completion:^(FIRAuthDataResult *authResult,

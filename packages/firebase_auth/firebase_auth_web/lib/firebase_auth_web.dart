@@ -6,361 +6,193 @@ import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase/firebase.dart' as firebase;
-import 'package:flutter/services.dart' show PlatformException;
+import 'package:firebase_auth_web/firebase_auth_web_confirmation_result.dart';
+import 'package:firebase_auth_web/firebase_auth_web_user.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:http_parser/http_parser.dart';
+import 'package:meta/meta.dart';
+
+import 'firebase_auth_web_recaptcha_verifier_factory.dart';
+import 'firebase_auth_web_user_credential.dart';
+import 'utils.dart';
 
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
+  /// instance of Auth from the web plugin
+  final firebase.Auth _webAuth;
+
+  /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
     FirebaseAuthPlatform.instance = FirebaseAuthWeb();
+    RecaptchaVerifierFactoryPlatform.instance =
+        RecaptchaVerifierFactoryWeb.instance;
   }
 
-  firebase.Auth _getAuth(String name) {
-    final firebase.App app = firebase.app(name);
-    return firebase.auth(app);
+  FirebaseAuthWeb({FirebaseApp app})
+      : _webAuth = firebase.auth(firebase.app(app?.name)),
+        super(appInstance: app);
+
+  @override
+  FirebaseAuthPlatform delegateFor({FirebaseApp app}) {
+    return FirebaseAuthWeb(app: app);
   }
 
-  PlatformAdditionalUserInfo _fromJsAdditionalUserInfo(
-      firebase.AdditionalUserInfo additionalUserInfo) {
-    return PlatformAdditionalUserInfo(
-      isNewUser: additionalUserInfo.isNewUser,
-      providerId: additionalUserInfo.providerId,
-      username: additionalUserInfo.username,
-      profile: additionalUserInfo.profile,
-    );
-  }
+  // todo initial values
 
-  PlatformUserInfo _fromJsUserInfo(firebase.UserInfo userInfo) {
-    return PlatformUserInfo(
-      providerId: userInfo.providerId,
-      uid: userInfo.providerId,
-      displayName: userInfo.displayName,
-      photoUrl: userInfo.photoURL,
-      email: userInfo.email,
-      phoneNumber: userInfo.phoneNumber,
-    );
-  }
+  @override
+  UserPlatform get currentUser {
+    firebase.User webCurrentUser = _webAuth.currentUser;
 
-  PlatformUser _fromJsUser(firebase.User user) {
-    if (user == null) {
+    if (webCurrentUser == null) {
       return null;
     }
-    return PlatformUser(
-      providerId: user.providerId,
-      uid: user.uid,
-      displayName: user.displayName,
-      photoUrl: user.photoURL,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      creationTimestamp:
-          parseHttpDate(user.metadata.creationTime).millisecondsSinceEpoch,
-      lastSignInTimestamp:
-          parseHttpDate(user.metadata.lastSignInTime).millisecondsSinceEpoch,
-      isAnonymous: user.isAnonymous,
-      isEmailVerified: user.emailVerified,
-      providerData:
-          user.providerData.map<PlatformUserInfo>(_fromJsUserInfo).toList(),
-    );
-  }
 
-  PlatformAuthResult _fromJsUserCredential(firebase.UserCredential credential) {
-    return PlatformAuthResult(
-      user: _fromJsUser(credential.user),
-      additionalUserInfo: _fromJsAdditionalUserInfo(
-        credential.additionalUserInfo,
-      ),
-    );
-  }
-
-  PlatformIdTokenResult _fromJsIdTokenResult(
-      firebase.IdTokenResult idTokenResult) {
-    return PlatformIdTokenResult(
-      token: idTokenResult.token,
-      expirationTimestamp: idTokenResult.expirationTime.millisecondsSinceEpoch,
-      authTimestamp: idTokenResult.authTime.millisecondsSinceEpoch,
-      issuedAtTimestamp: idTokenResult.issuedAtTime.millisecondsSinceEpoch,
-      claims: idTokenResult.claims,
-      signInProvider: idTokenResult.signInProvider,
-    );
-  }
-
-  firebase.User _getCurrentUserOrThrow(firebase.Auth auth) {
-    final firebase.User user = auth.currentUser;
-    if (user == null) {
-      throw PlatformException(
-        code: 'USER_REQUIRED',
-        message: 'Please authenticate with Firebase first',
-      );
-    }
-    return user;
-  }
-
-  firebase.OAuthCredential _getCredential(AuthCredential credential) {
-    if (credential is EmailAuthCredential) {
-      return firebase.EmailAuthProvider.credential(
-        credential.email,
-        credential.password,
-      );
-    }
-    if (credential is GoogleAuthCredential) {
-      return firebase.GoogleAuthProvider.credential(
-        credential.idToken,
-        credential.accessToken,
-      );
-    }
-    if (credential is FacebookAuthCredential) {
-      return firebase.FacebookAuthProvider.credential(credential.accessToken);
-    }
-    if (credential is TwitterAuthCredential) {
-      return firebase.TwitterAuthProvider.credential(
-        credential.authToken,
-        credential.authTokenSecret,
-      );
-    }
-    if (credential is GithubAuthCredential) {
-      return firebase.GithubAuthProvider.credential(credential.token);
-    }
-    if (credential is PhoneAuthCredential) {
-      return firebase.PhoneAuthProvider.credential(
-        credential.verificationId,
-        credential.smsCode,
-      );
-    }
-    return null;
+    return UserWeb(this, _webAuth.currentUser);
   }
 
   @override
-  Future<PlatformAuthResult> createUserWithEmailAndPassword(
-      String app, String email, String password) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.UserCredential credential =
-        await auth.createUserWithEmailAndPassword(email, password);
-    return _fromJsUserCredential(credential);
+  Future<void> applyActionCode(String code) {
+    return _webAuth.applyActionCode(code);
   }
 
   @override
-  Future<void> delete(String app) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.User user = _getCurrentUserOrThrow(auth);
-    await user.delete();
+  Future<ActionCodeInfo> checkActionCode(String code) async {
+    return convertWebActionCodeInfo(await _webAuth.checkActionCode(code));
   }
 
   @override
-  Future<List<String>> fetchSignInMethodsForEmail(String app, String email) {
-    final firebase.Auth auth = _getAuth(app);
-    return auth.fetchSignInMethodsForEmail(email);
+  Future<UserCredentialPlatform> createUserWithEmailAndPassword(
+      String email, String password) async {
+    return UserCredentialWeb(
+        this, await _webAuth.createUserWithEmailAndPassword(email, password));
   }
 
   @override
-  Future<PlatformUser> getCurrentUser(String app) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.User currentUser = auth.currentUser;
-    return _fromJsUser(currentUser);
+  Future<List<String>> fetchSignInMethodsForEmail(String email) {
+    return _webAuth.fetchSignInMethodsForEmail(email);
   }
 
   @override
-  Future<PlatformIdTokenResult> getIdToken(String app, bool refresh) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.User currentUser = auth.currentUser;
-    final firebase.IdTokenResult idTokenResult =
-        await currentUser.getIdTokenResult(refresh);
-    return _fromJsIdTokenResult(idTokenResult);
+  Future<UserCredentialPlatform> getRedirectResult() async {
+    return UserCredentialWeb(this, await _webAuth.getRedirectResult());
   }
 
   @override
-  Future<bool> isSignInWithEmailLink(String app, String link) {
-    final firebase.Auth auth = _getAuth(app);
-    return Future.value(auth.isSignInWithEmailLink(link));
+  Stream<UserPlatform> authStateChanges() {
+    return _webAuth.onAuthStateChanged.map((firebase.User webUser) {
+      return UserWeb(this, webUser);
+    });
   }
 
   @override
-  Future<PlatformAuthResult> linkWithCredential(
-      String app, AuthCredential credential) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.User currentUser = _getCurrentUserOrThrow(auth);
-    final firebase.OAuthCredential firebaseCredential =
-        _getCredential(credential);
-    final firebase.UserCredential userCredential =
-        await currentUser.linkWithCredential(firebaseCredential);
-    return _fromJsUserCredential(userCredential);
+  Stream<UserPlatform> idTokenChanges() {
+    return _webAuth.onIdTokenChanged.map((firebase.User webUser) {
+      return UserWeb(this, webUser);
+    });
   }
 
   @override
-  Stream<PlatformUser> onAuthStateChanged(String app) {
-    final firebase.Auth auth = _getAuth(app);
-    return auth.onAuthStateChanged.map<PlatformUser>(_fromJsUser);
+  Future<void> sendPasswordResetEmail(String email,
+      [ActionCodeSettings actionCodeSettings]) {
+    return _webAuth.sendPasswordResetEmail(
+        email, convertPlatformActionCodeSettings(actionCodeSettings));
   }
 
   @override
-  Future<PlatformAuthResult> reauthenticateWithCredential(
-      String app, AuthCredential credential) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.User currentUser = _getCurrentUserOrThrow(auth);
-    final firebase.OAuthCredential firebaseCredential =
-        _getCredential(credential);
-    final firebase.UserCredential userCredential =
-        await currentUser.reauthenticateWithCredential(firebaseCredential);
-    return _fromJsUserCredential(userCredential);
+  Future<void> sendSignInWithEmailLink(String email,
+      [ActionCodeSettings actionCodeSettings]) {
+    return _webAuth.sendSignInLinkToEmail(
+        email, convertPlatformActionCodeSettings(actionCodeSettings));
   }
 
   @override
-  Future<void> reload(String app) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.User currentUser = _getCurrentUserOrThrow(auth);
-    await currentUser.reload();
+  Future<void> setLanguageCode(String languageCode) async {
+    _webAuth.languageCode = languageCode;
+  }
+
+  // TODO: not supported in firebase-dart
+  // @override
+  // Future<void> setSettings({bool appVerificationDisabledForTesting}) async {
+  //   //
+  // }
+
+  @override
+  Future<void> setPersistence(Persistence persistence) async {
+    return _webAuth.setPersistence(convertPlatformPersistence(persistence));
   }
 
   @override
-  Future<void> sendEmailVerification(String app) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.User currentUser = _getCurrentUserOrThrow(auth);
-    await currentUser.sendEmailVerification();
+  Future<UserCredentialPlatform> signInAnonymously() async {
+    return UserCredentialWeb(this, await _webAuth.signInAnonymously());
+  }
+
+  Future<UserCredentialPlatform> signInWithCredential(
+      AuthCredential credential) async {
+    return UserCredentialWeb(
+        this,
+        await _webAuth
+            .signInWithCredential(convertPlatformCredential(credential)));
   }
 
   @override
-  Future<void> sendLinkToEmail(String app,
-      {String email,
-      String url,
-      bool handleCodeInApp,
-      String iOSBundleID,
-      String androidPackageName,
-      bool androidInstallIfNotAvailable,
-      String androidMinimumVersion}) {
-    final firebase.Auth auth = _getAuth(app);
-    final actionCodeSettings = firebase.ActionCodeSettings(
-      url: url,
-      handleCodeInApp: handleCodeInApp,
-      iOS: firebase.IosSettings(
-        bundleId: iOSBundleID,
-      ),
-      android: firebase.AndroidSettings(
-        packageName: androidPackageName,
-        installApp: androidInstallIfNotAvailable,
-        minimumVersion: androidMinimumVersion,
-      ),
-    );
-    return auth.sendSignInLinkToEmail(email, actionCodeSettings);
+  Future<UserCredentialPlatform> signInWithCustomToken(String token) async {
+    return UserCredentialWeb(this, await _webAuth.signInWithCustomToken(token));
   }
 
   @override
-  Future<void> sendPasswordResetEmail(String app, String email) async {
-    final firebase.Auth auth = _getAuth(app);
-    await auth.sendPasswordResetEmail(email);
+  Future<UserCredentialPlatform> signInWithEmailAndPassword(
+      String email, String password) async {
+    return UserCredentialWeb(
+        this, await _webAuth.signInWithEmailAndPassword(email, password));
   }
 
   @override
-  Future<void> setLanguageCode(String app, String language) async {
-    final firebase.Auth auth = _getAuth(app);
-    auth.languageCode = language;
+  Future<UserCredentialPlatform> signInWithEmailLink(
+      String email, String emailLink) async {
+    return UserCredentialWeb(
+        this, await _webAuth.signInWithEmailLink(email, emailLink));
   }
 
   @override
-  Future<PlatformAuthResult> signInAnonymously(String app) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.UserCredential userCredential =
-        await auth.signInAnonymously();
-    return _fromJsUserCredential(userCredential);
+  Future<ConfirmationResultPlatform> signInWithPhoneNumber(
+      String phoneNumber, RecaptchaVerifierPlatform applicationVerifier) async {
+    return ConfirmationResultlWeb(
+        this,
+        await _webAuth.signInWithPhoneNumber(phoneNumber,
+            RecaptchaVerifierPlatform.getDelegate(applicationVerifier)));
   }
 
   @override
-  Future<PlatformAuthResult> signInWithCredential(
-      String app, AuthCredential credential) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.OAuthCredential firebaseCredential =
-        _getCredential(credential);
-    final firebase.UserCredential userCredential =
-        await auth.signInWithCredential(firebaseCredential);
-    return _fromJsUserCredential(userCredential);
+  Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) async {
+    return UserCredentialWeb(this,
+        await _webAuth.signInWithPopup(convertPlatformAuthProvider(provider)));
   }
 
   @override
-  Future<PlatformAuthResult> signInWithCustomToken(
-      String app, String token) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.UserCredential userCredential =
-        await auth.signInWithCustomToken(token);
-    return _fromJsUserCredential(userCredential);
+  Future<void> signInWithRedirect(AuthProvider provider) async {
+    return _webAuth.signInWithRedirect(convertPlatformAuthProvider(provider));
   }
 
   @override
-  Future<PlatformAuthResult> signInWithEmailAndLink(
-      String app, String email, String link) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.UserCredential userCredential =
-        await auth.signInWithEmailLink(email, link);
-    return _fromJsUserCredential(userCredential);
+  Future<void> signOut() {
+    return _webAuth.signOut();
   }
 
   @override
-  Future<void> signOut(String app) async {
-    final firebase.Auth auth = _getAuth(app);
-    await auth.signOut();
+  Future<String> verifyPasswordResetCode(String code) {
+    return _webAuth.verifyPasswordResetCode(code);
   }
 
   @override
-  Future<void> unlinkFromProvider(String app, String provider) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.User currentUser = _getCurrentUserOrThrow(auth);
-    await currentUser.unlink(provider);
-  }
-
-  @override
-  Future<void> updateEmail(String app, String email) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.User currentUser = _getCurrentUserOrThrow(auth);
-    await currentUser.updateEmail(email);
-  }
-
-  @override
-  Future<void> updatePassword(String app, String password) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.User currentUser = _getCurrentUserOrThrow(auth);
-    await currentUser.updatePassword(password);
-  }
-
-  @override
-  Future<void> updatePhoneNumberCredential(
-      String app, PhoneAuthCredential phoneAuthCredential) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.User currentUser = _getCurrentUserOrThrow(auth);
-    final firebase.OAuthCredential credential =
-        _getCredential(phoneAuthCredential);
-    await currentUser.updatePhoneNumber(credential);
-  }
-
-  @override
-  Future<void> updateProfile(String app,
-      {String displayName, String photoUrl}) async {
-    final firebase.Auth auth = _getAuth(app);
-    final firebase.User currentUser = _getCurrentUserOrThrow(auth);
-    final firebase.UserProfile profile = firebase.UserProfile();
-    if (displayName != null) {
-      profile.displayName = displayName;
-    }
-    if (photoUrl != null) {
-      profile.photoURL = photoUrl;
-    }
-    await currentUser.updateProfile(profile);
-  }
-
-  @override
-  Future<void> verifyPhoneNumber(String app,
-      {String phoneNumber,
-      Duration timeout,
+  Future<void> verifyPhoneNumber(
+      {@required String phoneNumber,
+      @required PhoneVerificationCompleted verificationCompleted,
+      @required PhoneVerificationFailed verificationFailed,
+      @required PhoneCodeSent codeSent,
+      @required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
+      Duration timeout = const Duration(seconds: 30),
       int forceResendingToken,
-      PhoneVerificationCompleted verificationCompleted,
-      PhoneVerificationFailed verificationFailed,
-      PhoneCodeSent codeSent,
-      PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout}) async {
-    // TODO(hterkelsen): Figure out how to do this on Web. We need to display
-    // a DOM element to contain the reCaptcha.
-    // See https://github.com/flutter/flutter/issues/46021
-    throw UnimplementedError('verifyPhoneNumber');
-  }
-
-  Future<void> confirmPasswordReset(
-      String app, String oobCode, String newPassword) async {
-    final firebase.Auth auth = _getAuth(app);
-    await auth.confirmPasswordReset(oobCode, newPassword);
+      bool requireSmsValidation}) {
+    throw UnimplementedError(
+        'verifyPhoneNumber() is not supported on the web. Please use `signInWithPhoneNumber` instead.');
   }
 }

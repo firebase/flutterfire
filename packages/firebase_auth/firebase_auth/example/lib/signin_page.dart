@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -29,7 +29,7 @@ class SignInPageState extends State<SignInPage> {
               child: const Text('Sign out'),
               textColor: Theme.of(context).buttonColor,
               onPressed: () async {
-                final FirebaseUser user = await _auth.currentUser();
+                final User user = await _auth.currentUser;
                 if (user == null) {
                   Scaffold.of(context).showSnackBar(const SnackBar(
                     content: Text('No one has signed in.'),
@@ -149,7 +149,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
 
   // Example code of how to sign in with email and password.
   void _signInWithEmailAndPassword() async {
-    final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
+    final User user = (await _auth.signInWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
     ))
@@ -195,43 +195,33 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      final PendingDynamicLinkData data =
-          await FirebaseDynamicLinks.instance.getInitialLink();
-      if (data?.link != null) {
-        handleLink(data?.link);
-      }
+      final Uri link = await _getInitialLink();
 
-      FirebaseDynamicLinks.instance.onLink(
-          onSuccess: (PendingDynamicLinkData dynamicLink) async {
-        final Uri deepLink = dynamicLink?.link;
+      if (link != null) {
+        final User user = (await _auth.signInWithEmailAndLink(
+          email: _userEmail,
+          emailLink: link.toString(),
+        ))
+            .user;
 
-        handleLink(deepLink);
-      }, onError: (OnLinkErrorException e) async {
-        print('onLinkError');
-        print(e.message);
-      });
-    }
-  }
-
-  void handleLink(Uri link) async {
-    if (link != null) {
-      final FirebaseUser user = (await _auth.signInWithEmailAndLink(
-        email: _userEmail,
-        link: link.toString(),
-      ))
-          .user;
-
-      if (user != null) {
-        _userID = user.uid;
-        _success = true;
+        if (user != null) {
+          _userID = user.uid;
+          _success = true;
+        } else {
+          _success = false;
+        }
       } else {
         _success = false;
       }
-    } else {
-      _success = false;
-    }
 
-    setState(() {});
+      setState(() {});
+    }
+  }
+
+  Future<Uri> _getInitialLink() async {
+    final PendingDynamicLinkData data =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    return data?.link;
   }
 
   @override
@@ -287,16 +277,21 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection>
 
   Future<void> _signInWithEmailAndLink() async {
     _userEmail = _emailController.text;
-
+    // TODO(helenaford): check this works
     return await _auth.sendSignInWithEmailLink(
-      email: _userEmail,
-      url: '<Url with domain from your Firebase project>',
-      handleCodeInApp: true,
-      iOSBundleID: 'io.flutter.plugins.firebaseAuthExample',
-      androidPackageName: 'io.flutter.plugins.firebaseauthexample',
-      androidInstallIfNotAvailable: true,
-      androidMinimumVersion: "1",
-    );
+        email: _userEmail,
+        actionCodeSettings: ActionCodeSettings(
+          url: '<Url with domain from your Firebase project>',
+          handleCodeInApp: true,
+          iOS: {
+            'BundleID': 'io.flutter.plugins.firebaseAuthExample',
+          },
+          android: {
+            'PackageName': 'io.flutter.plugins.firebaseauthexample',
+            'androidInstallIfNotAvailable': true,
+            'androidMinimumVersion': "1",
+          },
+        ));
   }
 }
 
@@ -346,10 +341,10 @@ class _AnonymouslySignInSectionState extends State<_AnonymouslySignInSection> {
 
   // Example code of how to sign in anonymously.
   void _signInAnonymously() async {
-    final FirebaseUser user = (await _auth.signInAnonymously()).user;
+    final User user = (await _auth.signInAnonymously()).user;
     assert(user != null);
     assert(user.isAnonymous);
-    assert(!user.isEmailVerified);
+    assert(!user.emailVerified);
     assert(await user.getIdToken() != null);
     if (Platform.isIOS) {
       // Anonymous auth doesn't show up as a provider on iOS
@@ -360,11 +355,12 @@ class _AnonymouslySignInSectionState extends State<_AnonymouslySignInSection> {
       assert(user.providerData[0].providerId == 'firebase');
       assert(user.providerData[0].uid != null);
       assert(user.providerData[0].displayName == null);
-      assert(user.providerData[0].photoUrl == null);
+      // TODO(helenaford): check this
+      // assert(user.providerData[0].photoURL == null);
       assert(user.providerData[0].email == null);
     }
 
-    final FirebaseUser currentUser = await _auth.currentUser();
+    final User currentUser = await _auth.currentUser;
     assert(user.uid == currentUser.uid);
     setState(() {
       if (user != null) {
@@ -425,18 +421,17 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
+    final User user = (await _auth.signInWithCredential(credential)).user;
     assert(user.email != null);
     assert(user.displayName != null);
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
-    final FirebaseUser currentUser = await _auth.currentUser();
+    final User currentUser = await _auth.currentUser;
     assert(user.uid == currentUser.uid);
     setState(() {
       if (user != null) {
@@ -526,6 +521,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
     setState(() {
       _message = '';
     });
+    // TODO(helenaford): check this method
     final PhoneVerificationCompleted verificationCompleted =
         (AuthCredential phoneAuthCredential) {
       _auth.signInWithCredential(phoneAuthCredential);
@@ -566,13 +562,12 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
 
   // Example code of how to sign in with phone.
   void _signInWithPhoneNumber() async {
-    final AuthCredential credential = PhoneAuthProvider.getCredential(
-      verificationId: _verificationId,
-      smsCode: _smsController.text,
+    final AuthCredential credential = PhoneAuthProvider.credential(
+      _verificationId,
+      _smsController.text,
     );
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
-    final FirebaseUser currentUser = await _auth.currentUser();
+    final User user = (await _auth.signInWithCredential(credential)).user;
+    final User currentUser = await _auth.currentUser;
     assert(user.uid == currentUser.uid);
     setState(() {
       if (user != null) {
@@ -713,17 +708,16 @@ class _OtherProvidersSignInSectionState
 
   // Example code of how to sign in with Github.
   void _signInWithGithub() async {
-    final AuthCredential credential = GithubAuthProvider.getCredential(
-      token: _tokenController.text,
+    final AuthCredential credential = GithubAuthProvider.credential(
+      _tokenController.text,
     );
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
+    final User user = (await _auth.signInWithCredential(credential)).user;
     assert(user.email != null);
     assert(user.displayName != null);
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
-    final FirebaseUser currentUser = await _auth.currentUser();
+    final User currentUser = await _auth.currentUser;
     assert(user.uid == currentUser.uid);
     setState(() {
       if (user != null) {
@@ -736,17 +730,16 @@ class _OtherProvidersSignInSectionState
 
   // Example code of how to sign in with Facebook.
   void _signInWithFacebook() async {
-    final AuthCredential credential = FacebookAuthProvider.getCredential(
-      accessToken: _tokenController.text,
+    final AuthCredential credential = FacebookAuthProvider.credential(
+      _tokenController.text,
     );
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
+    final User user = (await _auth.signInWithCredential(credential)).user;
     assert(user.email != null);
     assert(user.displayName != null);
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
-    final FirebaseUser currentUser = await _auth.currentUser();
+    final User currentUser = await _auth.currentUser;
     assert(user.uid == currentUser.uid);
     setState(() {
       if (user != null) {
@@ -759,17 +752,16 @@ class _OtherProvidersSignInSectionState
 
   // Example code of how to sign in with Twitter.
   void _signInWithTwitter() async {
-    final AuthCredential credential = TwitterAuthProvider.getCredential(
-        authToken: _tokenController.text,
-        authTokenSecret: _tokenSecretController.text);
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
+    final AuthCredential credential = TwitterAuthProvider.credential(
+        accessToken: _tokenController.text,
+        secret: _tokenSecretController.text);
+    final User user = (await _auth.signInWithCredential(credential)).user;
     assert(user.email != null);
     assert(user.displayName != null);
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
-    final FirebaseUser currentUser = await _auth.currentUser();
+    final User currentUser = await _auth.currentUser;
     assert(user.uid == currentUser.uid);
     setState(() {
       if (user != null) {

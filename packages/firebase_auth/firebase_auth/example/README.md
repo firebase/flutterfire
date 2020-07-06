@@ -13,7 +13,7 @@ Demonstrates how to use the firebase_auth plugin.
 1. Click the `Test verifyPhoneNumber` button.
   - If APNs is not enabled or a simulator is being used, verification
     will be done via a Captcha.
-1. Once the phone number is verified the app displays the test 
+1. Once the phone number is verified the app displays the test
    verification code.
 1. Click the `Test signInWithPhoneNumber` button.
 1. Signed in user's details are displayed in the UI.
