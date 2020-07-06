@@ -25,14 +25,37 @@ Before getting started, ensure you have installed the library, [configured your 
 and setup your [Facebook Developer Account](https://github.com/facebook/react-native-fbsdk#3-configure-projects) to enable Facebook Login.
 
 Ensure the "Facebook" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
+with the Facebook App ID and Secret set.
 
-```dart title="NEEDS UPDATING/VALIDATING"
-final AuthCredential credential = FacebookAuthProvider.getCredential(
-  accessToken: 'abc123'
-);
+#### Installation
 
-final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+1. Add dependency
+
+```yaml {2} title="pubspec.yaml"
+dependencies:
+  flutter_facebook_auth: ^0.2.3
 ```
+
+2. Download dependency
+
+```
+$ flutter pub get
+```
+
+```dart
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+
+Future<void> signInWithFacebook() async {
+  try {
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      final FacebookAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(result.accessToken.token);
+
+      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  } catch (e) {
+      // Handle Error
+  }
+}
 
 ### Twitter
 
