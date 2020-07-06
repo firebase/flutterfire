@@ -16,6 +16,12 @@ abstract class FirebaseRemoteModel {
   final String modelName;
 
   /// Hash associated with remote model in the Firebase console.
+  ///
+  /// It's used for caching -- SDK send the hash of the model it already has and
+  /// server determines whether it has changed.
+  ///
+  /// User can access it to compare downloaded models. Change of this modelHash
+  /// will not change the hash of the model.
   String modelHash;
 
   /// Express download conditions via map.

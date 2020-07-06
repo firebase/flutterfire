@@ -58,7 +58,6 @@ class _MyAppState extends State<MyApp> {
 
     var modelFile = await modelManager.getLatestModelFile(model);
     assert(modelFile != null);
-
     return modelFile;
   }
 
@@ -80,6 +79,48 @@ class _MyAppState extends State<MyApp> {
     return "Model is loaded";
   }
 
+  Widget readyScreen() {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Firebase ML example app'),
+      ),
+      body: Column(
+        children: [
+          _image != null
+              ? Image.file(_image)
+              : Text('Please select image to analyze.'),
+          Column(
+            children: _labels != null
+                ? _labels.map((label) {
+                    return Text("${label["label"]}");
+                  }).toList()
+                : [],
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: getImageLabels,
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget errorScreen() {
+    return Scaffold(
+      body: Center(
+        child: Text("Error loading model. Sorry about that :("),
+      ),
+    );
+  }
+
+  Widget loadingScreen() {
+    return Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.headline2,
@@ -88,41 +129,11 @@ class _MyAppState extends State<MyApp> {
         future: _loaded, // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if (snapshot.hasData) {
-            return Scaffold(
-              appBar: AppBar(
-                title: const Text('Firebase ML example app'),
-              ),
-              body: Column(
-                children: [
-                  _image != null
-                      ? Image.file(_image)
-                      : Text('Please select image to analyze.'),
-                  Column(
-                    children: _labels != null
-                        ? _labels.map((label) {
-                            return Text("${label["label"]}");
-                          }).toList()
-                        : [],
-                  ),
-                ],
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: getImageLabels,
-                child: Icon(Icons.add),
-              ),
-            );
+            return readyScreen();
           } else if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(
-                child: Text("Error loading model. Sorry about that :("),
-              ),
-            );
+            return errorScreen();
           } else {
-            return Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
+            return loadingScreen();
           }
         },
       ),

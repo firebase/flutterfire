@@ -7,10 +7,10 @@ part of 'firebase_ml.dart';
 void firebaseModelManagerTest() {
   group('$FirebaseModelManager', () {
     final FirebaseModelManager modelManager = FirebaseModelManager.instance;
+    final String MODEL_NAME = 'image_classification';
 
     test('downloadModel', () async {
-      FirebaseCustomRemoteModel model =
-          FirebaseCustomRemoteModel('image_classification');
+      FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
       assert(model != null);
 
       FirebaseModelDownloadConditions conditions =
@@ -24,7 +24,7 @@ void firebaseModelManagerTest() {
 
       var modelFile = await modelManager.getLatestModelFile(model);
       expect(modelFile, isNotNull);
-      expect(modelFile.path.runtimeType, ''.runtimeType);
+      expect(modelFile.path.contains(MODEL_NAME), isTrue);
     });
   });
 }
