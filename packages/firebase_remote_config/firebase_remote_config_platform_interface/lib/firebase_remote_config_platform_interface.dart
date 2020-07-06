@@ -10,7 +10,8 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show visibleForTesting;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-part 'method_channel_firebase_remote_config.dart';
+part 'src/method_channel_firebase_remote_config.dart';
+part 'src/types.dart';
 
 /// The interface that implementations of `firebase_remote_config` must extend.
 ///
@@ -54,7 +55,8 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// Set the configuration settings for the [RemoteConfig] instance.
   ///
   /// This can be used for enabling developer mode.
-  Future<void> setConfigSettings(bool debugMode) async {
+  Future<void> setConfigSettings(
+      RemoteConfigSettings remoteConfigSettings) async {
     throw UnimplementedError('setConfigSettings() is not implemented');
   }
 

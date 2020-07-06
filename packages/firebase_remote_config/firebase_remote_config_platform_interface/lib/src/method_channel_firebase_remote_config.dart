@@ -8,37 +8,38 @@ part of firebase_remote_config_platform_interface;
 class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   /// The [MethodChannel] to which calls will be delegated.
   @visibleForTesting
-  static const MethodChannel _channel =
+  static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_remote_config');
 
   @override
   Future<Map<String, dynamic>> getRemoteConfigInstance() async {
-    return _channel.invokeMapMethod<String, dynamic>('RemoteConfig#instance');
+    return channel.invokeMapMethod<String, dynamic>('RemoteConfig#instance');
   }
 
   @override
-  Future<void> setConfigSettings(bool debugMode) async {
-    return _channel
+  Future<void> setConfigSettings(
+      RemoteConfigSettings remoteConfigSettings) async {
+    return channel
         .invokeMethod<void>('RemoteConfig#setConfigSettings', <String, dynamic>{
-      'debugMode': debugMode,
+      'debugMode': remoteConfigSettings.debugMode,
     });
   }
 
   @override
   Future<Map<String, dynamic>> fetch(
       {Duration expiration = const Duration(hours: 12)}) async {
-    return _channel.invokeMapMethod<String, dynamic>('RemoteConfig#fetch',
+    return channel.invokeMapMethod<String, dynamic>('RemoteConfig#fetch',
         <dynamic, dynamic>{'expiration': expiration.inSeconds});
   }
 
   @override
   Future<Map<String, dynamic>> activateFetched() async {
-    return _channel.invokeMapMethod<String, dynamic>('RemoteConfig#activate');
+    return channel.invokeMapMethod<String, dynamic>('RemoteConfig#activate');
   }
 
   @override
   Future<void> setDefaults(Map<String, dynamic> defaults) async {
-    return _channel.invokeMethod<void>(
+    return channel.invokeMethod<void>(
         'RemoteConfig#setDefaults', <String, dynamic>{'defaults': defaults});
   }
 }
