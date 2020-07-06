@@ -48,15 +48,14 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   }
 
   /// Gets the instance of RemoteConfig for the default Firebase app.
-  Future<Map<String, dynamic>> getRemoteConfigInstance() async {
+  Future<Map<String, dynamic>> getRemoteConfigInstance() {
     throw UnimplementedError('getRemoteConfigInstance() is not implemented');
   }
 
   /// Set the configuration settings for the [RemoteConfig] instance.
   ///
   /// This can be used for enabling developer mode.
-  Future<void> setConfigSettings(
-      RemoteConfigSettings remoteConfigSettings) async {
+  Future<void> setConfigSettings(RemoteConfigSettings remoteConfigSettings) {
     throw UnimplementedError('setConfigSettings() is not implemented');
   }
 
@@ -67,12 +66,12 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// fetched from the server. The default expiration time is 12 hours.
   /// Expiration must be defined in seconds.
   Future<Map<String, dynamic>> fetch(
-      {Duration expiration = const Duration(hours: 12)}) async {
+      {Duration expiration = const Duration(hours: 12)}) {
     throw UnimplementedError('fetch() is not implemented');
   }
 
   /// Activates the fetched config, makes fetched key-values take effect.
-  Future<Map<String, dynamic>> activateFetched() async {
+  Future<Map<String, dynamic>> activateFetched() {
     throw UnimplementedError('activateFetched() is not implemented');
   }
 
@@ -80,7 +79,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   ///
   /// Default config parameters should be set then when changes are needed the
   /// parameters should be updated in the Firebase console.
-  Future<void> setDefaults(Map<String, dynamic> defaults) async {
+  Future<void> setDefaults(Map<String, dynamic> defaults) {
     throw UnimplementedError('setDefaults() is not implemented');
   }
 }
