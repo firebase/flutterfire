@@ -10,7 +10,10 @@ sidebar_label: Social Auth
 ### Apple
 
 Apple has [announced](https://developer.apple.com/news/?id=09122019b) that any applications using 3rd party login
-services (such as Facebook, Twitter, Google etc) must have an Apple Sign-In method.Authentication
+services (such as Facebook, Twitter, Google etc) must have an Apple Sign-In method.  Apple Sign-In is not required for Android devices.secret
+
+To integrate Apple Sign-In on your iOS application, you will need to install a 3rd party library to authenticate with Apple.
+Once authentication is successful, a Firebase credential can then be used to sign the user into Firebase with their Apple account
 
 > To Do
 
@@ -22,10 +25,12 @@ final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(cred
 ### Facebook
 
 Before getting started, ensure you have installed the library, [configured your Android & iOS applications](https://developers.facebook.com/docs/android/getting-started/)
-and setup your [Facebook Developer Account](https://github.com/facebook/react-native-fbsdk#3-configure-projects) to enable Facebook Login.
+and setup your [Facebook Developer App](https://developers.facebook.com/apps/) and follow the setup process to enable Facebook Login.
 
 Ensure the "Facebook" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
 with the Facebook App ID and Secret set.
+
+For the example, we are using the [`flutter_facebook_auth`](https://pub.dev/packages/flutter_facebook_auth) plugin.
 
 #### Installation
 
@@ -42,6 +47,13 @@ dependencies:
 $ flutter pub get
 ```
 
+#### Usage
+
+Once the plugin is installed, we can begin the Facebook authentication flow by calling the `login` method on the FacebookAuth
+class.
+When the login flow is completed, we generate a `FacebookAuthCredential` from the accessToken and pass this to the FirebaseAuth
+method `signInWithCredential`
+
 ```dart
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
@@ -49,7 +61,8 @@ Future<void> signInWithFacebook() async {
   try {
       final LoginResult result = await FacebookAuth.instance.login();
 
-      final FacebookAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(result.accessToken.token);
+      final FacebookAuthCredential facebookAuthCredential =
+            FacebookAuthProvider.credential(result.accessToken.token);
 
       await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   } catch (e) {
@@ -57,6 +70,9 @@ Future<void> signInWithFacebook() async {
   }
 }
 ```
+
+When the user has successfully signed in, any [`authStateChanges`](usage#authentication-state) listeners will trigger with the new authentication state
+of the user
 
 ### Twitter
 
@@ -79,6 +95,16 @@ dependencies:
 $ flutter pub get
 ```
 
+#### Usage
+
+Once the plugin is installed, we first need to initialize the Twitter plugin using the consumer key and secret.
+
+We can then trigger the Twitter login flow by calling the `authorize` method, and then generate an `AuthCredential` from
+the `TwitterAuthProvider`, passing in the accessToken and secrete from the session.
+
+We can then pass this `AuthCredential` to the `signInWithCredential` method to sign the user into Firebase
+
+
 ```dart title="NEEDS UPDATING/VALIDATING"
 import 'package:flutter_twitter/flutter_twitter.dart';
 
@@ -100,6 +126,9 @@ Future<void> signInWithTwitter() async {
   }
 }
 ```
+
+When the user has successfully signed in, any [`authStateChanges`](usage#authentication-state) listeners will trigger with the new authentication state
+of the user
 
 ### Google
 
@@ -155,6 +184,9 @@ Future<void> signInWithGoogle() async {
 }
 ```
 
+When the user has successfully signed in, any [`authStateChanges`](usage#authentication-state) listeners will trigger with the new authentication state
+of the user
+
 
 ### GitHub
 
@@ -198,3 +230,10 @@ Future<void> signInWithGitHub() async {
   }
 }
 ```
+
+When the user has successfully signed in, any [`authStateChanges`](usage#authentication-state) listeners will trigger with the new authentication state
+of the user
+
+## Web
+
+> TODO
