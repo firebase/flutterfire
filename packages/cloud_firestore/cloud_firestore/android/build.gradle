@@ -29,6 +29,7 @@ if (firebaseCoreProject == null) {
 } else if (!firebaseCoreProject.properties['FirebaseSDKVersion']) {
     throw new GradleException('A newer version of the firebase_core FlutterFire plugin is required, please update your firebase_core pubspec dependency.')
 }
+
 def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
     if (!rootProject.ext.has('FlutterFire')) return firebaseCoreProject.properties[name]
     if (!rootProject.ext.get('FlutterFire')[name]) return firebaseCoreProject.properties[name]
@@ -37,7 +38,10 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 
 android {
     compileSdkVersion 28
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         minSdkVersion 16
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
