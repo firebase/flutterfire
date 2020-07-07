@@ -42,7 +42,7 @@ void main() {
       FirebaseModelManager.channel.setMockMethodCallHandler(null);
     });
 
-    test('download', () async {
+    test('manager downloads model', () async {
       expect(modelManager, isNotNull);
       FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
       expect(model.modelHash, isNull);
@@ -67,7 +67,7 @@ void main() {
         ],
       );
     });
-    test('download', () async {
+    test('manager checks if model is downloaded', () async {
       expect(modelManager, isNotNull);
       FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
 
@@ -86,7 +86,7 @@ void main() {
         ],
       );
     });
-    test('get model file', () async {
+    test('manager gets model file', () async {
       expect(modelManager, isNotNull);
       FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
 

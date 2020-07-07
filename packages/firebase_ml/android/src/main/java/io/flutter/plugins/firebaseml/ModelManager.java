@@ -16,9 +16,11 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ModelManager {
+public final class ModelManager {
+  private ModelManager(){}
+
   @RequiresApi(api = Build.VERSION_CODES.N)
-  public static void handleModelManager(@NonNull MethodCall call, @NonNull final Result result) {
+  static void handleModelManager(@NonNull MethodCall call, @NonNull final Result result) {
     switch (call.method) {
       case "FirebaseModelManager#download":
         download(call, result);
@@ -35,7 +37,7 @@ public class ModelManager {
   }
 
   @RequiresApi(api = Build.VERSION_CODES.N)
-  public static void download(@NonNull MethodCall call, @NonNull final Result result) {
+  static void download(@NonNull MethodCall call, @NonNull final Result result) {
     assert (call.argument("modelName") != null);
     assert (call.argument("conditions") != null);
 
@@ -124,7 +126,7 @@ public class ModelManager {
   }
 
   private static Map<String, String> remoteModelToMap(FirebaseCustomRemoteModel model) {
-    Map remoteModelToMap = new HashMap<String, String>();
+    Map<String, String> remoteModelToMap = new HashMap<>();
     remoteModelToMap.put("modelName", model.getModelName());
     remoteModelToMap.put("modelHash", model.getModelHash());
     return remoteModelToMap;
