@@ -18,7 +18,7 @@ flutter:
         default_package: firebase_core_web
 
 dependencies:
-  firebase_core_platform_interface: ^1.1.0-dev.1
+  firebase_core_platform_interface: ^2.0.0-dev.1
   flutter:
     sdk: flutter
   quiver: ">=2.0.0 <3.0.0"

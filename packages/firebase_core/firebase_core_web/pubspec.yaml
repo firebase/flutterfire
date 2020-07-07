@@ -12,7 +12,7 @@ flutter:
 
 dependencies:
   firebase: ^7.3.0
-  firebase_core_platform_interface: ^1.1.0-dev.1
+  firebase_core_platform_interface: ^2.0.0-dev.1
   flutter:
     sdk: flutter
   flutter_web_plugins:
