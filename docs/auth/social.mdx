@@ -60,26 +60,58 @@ Future<void> signInWithFacebook() async {
 
 ### Twitter
 
-Ensure the "Twitter" sign-in provider is enabled on the Firebase Console.
+Ensure the "Twitter" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers)
+with API Key and API Secret set.
+
+
+#### Installation
+
+1. Add dependency
+
+```yaml {2} title="pubspec.yaml"
+dependencies:
+  flutter_twitter: ^1.1.3
+```
+
+2. Download dependency
+
+```
+$ flutter pub get
+```
 
 ```dart title="NEEDS UPDATING/VALIDATING"
-final AuthCredential credential = TwitterAuthProvider.getCredential(
-  authToken: 'abc123',
-  authTokenSecret: 'SuperSecretToken'
-);
+import 'package:flutter_twitter/flutter_twitter.dart';
 
-final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+Future<void> signInWithTwitter() async {
+  try {
+      final TwitterLogin twitterLogin = new TwitterLogin(
+          consumerKey: 'abc',
+          consumerSecret: '123'
+      );
+
+      final TwitterLoginResult loginResult = await twitterLogin.authorize();
+      final TwitterSession twitterSession = loginResult.session;
+
+      final AuthCredential authCredential = TwitterAuthProvider.credential(accessToken: twitterSession.token, secret: twitterSession.secret);
+
+      await FirebaseAuth.instance.signInWithCredential(authCredential);
+  } catch (e) {
+      // Handle Error
+  }
+}
 ```
 
 ### Google
-
-> Wording needs rework
 
 Most configuration is already setup when using Google Sign-In with Firebase, however you need to ensure your machines
 SHA1 key has been configured for use with Android. You can see view how to generate the key on the
 [Getting Started](overview) documentation.
 
 Ensure the "Google" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
+
+> If your user signs in with Google, after having already manually registered an account, their authentication provider will automatically
+change to Google, due to Firebase Authentications concept of trusted providers.  You can find out more about
+this [here](https://groups.google.com/g/firebase-talk/c/ms_NVQem_Cw/m/8g7BFk1IAAAJ)
 
 #### Installation
 
@@ -121,19 +153,48 @@ Future<void> signInWithGoogle() async {
       // Handle Error
   }
 }
-
-
 ```
 
 
 ### GitHub
 
-Ensure the "GitHub" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
+Ensure the "GitHub" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers)
+with the Client ID and secret set.
+
+#### Installation
+
+1. Add dependency
+
+```yaml {2} title="pubspec.yaml"
+dependencies:
+  github_sign_in: ^0.0.1
+```
+
+2. Download dependency
+
+```
+$ flutter pub get
+```
+
+#### Usage
 
 ```dart title="NEEDS UPDATING/VALIDATING"
-final AuthCredential credential = GithubAuthProvider.getCredential(
-  token: 'ABC123',
-);
+import 'package:github_sign_in/github_sign_in.dart';
 
-final FirebaseUser user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+Future<void> signInWithGitHub() async {
+  try {
+    final GitHubSignIn gitHubSignIn = GitHubSignIn(
+            clientId: clientId,
+            clientSecret: clientSecret,
+            redirectUrl: redirectUrl);
+
+    var result = await gitHubSignIn.signIn(context);
+    final AuthCredential authCredential = GithubAuthProvider.credential(result.token);
+
+    await FirebaseAuth.instance.signInWithCredential(authCredential);
+
+  } catch (e) {
+      // Handle Error
+  }
+}
 ```
