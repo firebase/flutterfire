@@ -26,20 +26,11 @@ class MethodChannelTransaction extends TransactionPlatform {
         FirebaseFirestorePlatform.instanceFor(app: Firebase.app(appName));
   }
 
-  int _documentGetCount = 0;
-
   List<Map<String, dynamic>> _commands = [];
 
   /// Returns all transaction commands for the current instance.
-  ///
-  /// All get operations must be written, otherwise an [AssertionError] will be thrown
   @override
   List<Map<String, dynamic>> get commands {
-    if (_documentGetCount > 0) {
-      assert(_documentGetCount <= _commands.length,
-          "All transaction get operations must also be written.");
-    }
-
     return _commands;
   }
 
@@ -58,7 +49,6 @@ class MethodChannelTransaction extends TransactionPlatform {
       'transactionId': _transactionId,
       'reference': _firestore.doc(documentPath),
     });
-    _documentGetCount++;
 
     return DocumentSnapshotPlatform(
       _firestore,
