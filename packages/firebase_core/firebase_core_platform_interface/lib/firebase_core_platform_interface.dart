@@ -8,11 +8,11 @@ library firebase_core_platform_interface;
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show required;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:quiver/core.dart';
-import 'package:universal_platform/universal_platform.dart';
 
 part 'src/firebase_core_exceptions.dart';
 

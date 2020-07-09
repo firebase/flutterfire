@@ -37,19 +37,19 @@ FirebaseException noDefaultAppInitialization() {
 FirebaseException coreNotInitialized() {
   String message;
 
-  if (UniversalPlatform.isWeb) {
+  if (kIsWeb) {
     message =
         '''Firebase has not been correctly initialized. Have you added the Firebase import scripts to your index.html file? 
     
     View the Web Installation documentation for more information: https://firebaseextended.github.io/flutterfire/docs/installation/web
     ''';
-  } else if (UniversalPlatform.isAndroid) {
+  } else if (defaultTargetPlatform == TargetPlatform.android) {
     message =
         '''Firebase has not been correctly initialized. Have you added the "google-services.json" file to the project? 
     
     View the Android Installation documentation for more information: https://firebaseextended.github.io/flutterfire/docs/installation/android
     ''';
-  } else if (UniversalPlatform.isIOS) {
+  } else if (defaultTargetPlatform == TargetPlatform.iOS) {
     message =
         '''Firebase has not been correctly initialized. Have you added the "GoogleService-Info.plist" file to the project? 
     
