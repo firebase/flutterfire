@@ -44,6 +44,8 @@ build/
 .project
 .classpath
 .settings
+/pubspec.yaml
+.last_build_id
 
 # Docs
 
@@ -58,7 +60,6 @@ website/build
 .cache-loader
 
 # Misc
-.DS_Store
 .env.local
 .env.development.local
 .env.test.local
