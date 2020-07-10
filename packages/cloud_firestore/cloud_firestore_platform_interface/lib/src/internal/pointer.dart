@@ -14,7 +14,7 @@ class Pointer {
         components =
             path.split('/').where((element) => element.isNotEmpty).toList();
 
-  /// The Firestore path the [Pointer] was initialized with.
+  /// The Firestore normalized path of the [Pointer].
   String get path {
     return components.join('/');
   }
