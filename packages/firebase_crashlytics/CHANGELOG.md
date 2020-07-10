@@ -1,3 +1,7 @@
+## 0.1.4+1
+
+* Put current stack trace into report if no other stack trace is supplied.
+
 ## 0.1.4
 
 * Update lower bound of dart dependency to 2.0.0.

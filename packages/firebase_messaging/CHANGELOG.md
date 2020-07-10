@@ -1,5 +1,9 @@
 ## 6.0.16
 
+* Fix push notifications clearing after app launch on iOS.
+
+## 6.0.16
+
 * Update lower bound of dart dependency to 2.0.0.
 
 ## 6.0.15
@@ -31,7 +35,7 @@
 
 ## 6.0.10
 
-* Update README to explain how to correctly implement Android background message handling with the new v2 embedding. 
+* Update README to explain how to correctly implement Android background message handling with the new v2 embedding.
 
 ## 6.0.9
 
@@ -155,7 +159,7 @@ is not a top-level or static function.
 * Add missing template type parameter to `invokeMethod` calls.
 * Bump minimum Flutter version to 1.5.0.
 * Replace invokeMethod with invokeMapMethod wherever necessary.
- 
+
 ## 5.0.1+1
 
 * Enable support for `onMessage` on iOS using `shouldEstablishDirectChannel`.

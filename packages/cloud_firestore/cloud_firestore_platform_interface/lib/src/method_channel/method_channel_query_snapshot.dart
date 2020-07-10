@@ -4,31 +4,34 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 import 'method_channel_document_change.dart';
-import 'utils/maps.dart';
 
-/// Contains zero or more [DocumentSnapshotPlatform] objects.
+/// An implementation of [QuerySnapshotPlatform] that uses [MethodChannel] to
+/// communicate with Firebase plugins.
 class MethodChannelQuerySnapshot extends QuerySnapshotPlatform {
   /// Creates a [MethodChannelQuerySnapshot] from the given [data]
   MethodChannelQuerySnapshot(
-      Map<dynamic, dynamic> data, FirestorePlatform firestore)
+      FirebaseFirestorePlatform firestore, Map<dynamic, dynamic> data)
       : super(
             List<DocumentSnapshotPlatform>.generate(data['documents'].length,
                 (int index) {
               return DocumentSnapshotPlatform(
-                data['paths'][index],
-                asStringKeyedMap(data['documents'][index]),
-                SnapshotMetadataPlatform(
-                  data['metadatas'][index]['hasPendingWrites'],
-                  data['metadatas'][index]['isFromCache'],
-                ),
                 firestore,
+                data['paths'][index],
+                <String, dynamic>{
+                  'data': Map<String, dynamic>.from(data['documents'][index]),
+                  'metadata': <String, dynamic>{
+                    'isFromCache': data['metadatas'][index]['isFromCache'],
+                    'hasPendingWrites': data['metadatas'][index]
+                        ['hasPendingWrites'],
+                  },
+                },
               );
             }),
             List<DocumentChangePlatform>.generate(
                 data['documentChanges'].length, (int index) {
               return MethodChannelDocumentChange(
-                data['documentChanges'][index],
                 firestore,
+                Map<String, dynamic>.from(data['documentChanges'][index]),
               );
             }),
             SnapshotMetadataPlatform(

@@ -124,7 +124,7 @@ void main() {
           arguments: 234,
         ),
       );
-    });
+    }, testOn: 'android');
 
     test('resetAnalyticsData', () async {
       await analytics.resetAnalyticsData();
