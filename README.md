@@ -5,6 +5,14 @@
   <h1 align="center">FlutterFire</h2>
 </p>
 
+<p align="center">
+  <a href="https://github.com/FirebaseExtended/flutterfire/actions?query=workflow%3Aall_plugins">
+    <img src="https://github.com/FirebaseExtended/flutterfire/workflows/all_plugins/badge.svg" alt="all_plugins GitHub Workflow Status"/>
+  </a>
+</p>
+
+---
+
 FlutterFire is a set of [Flutter plugins](https://flutter.io/platform-plugins/)
 that enable Flutter apps to use [Firebase](https://firebase.google.com/) services. You can follow an example that shows how to use these plugins in the [Firebase for Flutter](https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html#0) codelab.
 
