@@ -12,7 +12,7 @@ module.exports = {
     announcementBar: {
       id: 'wip',
       content:
-        'The FlutterFire documentation hub is currently a <b>work in progress</b>. Some documentation may be missing or incomplete.',
+        'The FlutterFire documentation hub is currently a work in progress. <a rel="noopener" target="_blank" href="https://github.com/FirebaseExtended/flutterfire/issues/2582"><b>Check out the roadmap to learn more.</b></a>.',
       backgroundColor: '#13B9FD',
       textColor: '#fff',
     },
@@ -33,12 +33,17 @@ module.exports = {
     navbar: {
       title: 'FlutterFire',
       links: [
-        // {
-        //   to: 'docs/overview',
-        //   activeBasePath: 'docs',
-        //   label: 'Docs',
-        //   position: 'right',
-        // },
+        {
+          to: 'docs/overview',
+          activeBasePath: 'docs',
+          label: 'Docs',
+          position: 'right',
+        },
+        {
+          href: 'https://twitter.com/flutterfiredev',
+          label: 'Twitter',
+          position: 'right',
+        },
         {
           href: 'https://github.com/firebaseextended/flutterfire',
           label: 'GitHub',
@@ -53,17 +58,21 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Coming soon',
-              to: '#',
+              label: 'Getting Started',
+              to: '/docs/overview',
             },
-            // {
-            //   label: 'Android Installation',
-            //   to: 'docs/install/android',
-            // },
-            // {
-            //   label: 'iOS Installation',
-            //   to: 'docs/install/ios',
-            // },
+            {
+              label: 'Android Installation',
+              to: 'docs/installation/android',
+            },
+            {
+              label: 'iOS Installation',
+              to: 'docs/installation/ios',
+            },
+            {
+              label: 'Web Installation',
+              to: 'docs/installation/web',
+            },
           ],
         },
         {
@@ -89,6 +98,10 @@ module.exports = {
             {
               label: 'GitHub',
               href: 'https://github.com/FirebaseExtended/flutterfire',
+            },
+            {
+              label: 'Twitter',
+              href: 'https://twitter.com/flutterfiredev',
             },
           ],
         },

@@ -172,6 +172,35 @@ class _AppState extends State<App> {
 
 Once initialized, you're ready to get started using FlutterFire!
 
+## Overriding Native SDK Versions
+
+FlutterFire internally sets the versions of the native SDKs that each module uses.  Each release is tested against a fixed
+set of SDK version to ensure everything works as expected.
+
+If you wish to change these versions, you can manually override the native SDK versions
+
+### Android
+
+In the `/android/app/build.gradle` file, you can provide your own versions using the options shown below:
+
+```groovy
+project.ext {
+  set('FlutterFire', [
+    FirebaseSDKVersion: '21.1.0'
+  ])
+}
+```
+
+### iOS
+
+Open your `/ios/Podfile` and add any of the globals below to the top of the file:
+
+```ruby
+# Override Firebase SDK Version
+$FirebaseSDKVersion = '21.1.0'
+```
+
+
 ## Next Steps
 
 On its own the [`firebase_core`](!firebase_core) plugin provides basic functionality for usage with Firebase. FlutterFire is broken down

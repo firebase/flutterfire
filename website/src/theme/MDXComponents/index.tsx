@@ -86,6 +86,12 @@ export default {
   h5: Heading('h5'),
   h6: Heading('h6'),
 
+  table: (props: HTMLProps<HTMLTableElement>) => (
+    <div style={{ overflowX: 'auto' }}>
+      <table {...props} />
+    </div>
+  ),
+
   Tabs,
   TabItem,
 

@@ -31,7 +31,7 @@ First, add the 'google-services' plugin as a dependency inside of the `android/b
 buildscript {
   dependencies {
     // ... other dependencies
-    classpath 'com.google.gms:google-services: {{ android.google_services }}'
+    classpath 'com.google.gms:google-services:{{ android.google_services }}'
   }
 }
 ```
@@ -42,6 +42,31 @@ the `/android/app/build.gradle` file:
 ```java title="android/app/build.gradle"
 apply plugin: 'com.google.gms.google-services'
 ```
+
+## Building for Android
+
+Due to the large number of classes in some FlutterFire plugins, it may bump you over the 64k method limit on the Android
+ build system and you will get an error stating `Error while merging dex archives: The number of method references in a .dex file cannot exceed 64K`.
+
+If you do get this error, we suggest enabling Multidex for Android.
+
+### Enabling Multidex
+
+Open the `/android/app/build.gradle` file.  Under `dependencies` you need to add the multidex module, and enable it within
+the `defaultConfig`:
+
+```groovy highlight={3,8}
+android {
+    defaultConfig {
+        multiDexEnabled true
+    }
+}
+
+dependencies {
+  implementation 'com.android.support:multidex:1.0.3'
+}
+```
+
 
 ## Initializing FlutterFire
 
