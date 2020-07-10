@@ -64,11 +64,6 @@ void main() {
     });
 
     group('commands', () {
-      test('should throw if get is not written', () async {
-        await transaction.get(mockDocumentReference.path);
-        expect(() => transaction.commands, throwsAssertionError);
-      });
-
       test('returns with equal checks', () async {
         await transaction.get(mockDocumentReference.path);
         transaction.set(mockDocumentReference.path, {'foo': 'bar'});
