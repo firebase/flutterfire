@@ -16,6 +16,10 @@ module.exports = {
       backgroundColor: '#13B9FD',
       textColor: '#fff',
     },
+    algolia: {
+      apiKey: '61eba190d4380f3db4e11d21b70e7608',
+      indexName: 'flutterfire',
+    },
     prism: {
       additionalLanguages: [
         'dart',
