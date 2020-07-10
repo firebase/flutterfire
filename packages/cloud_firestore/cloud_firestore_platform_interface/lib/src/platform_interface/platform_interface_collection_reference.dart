@@ -52,8 +52,8 @@ abstract class CollectionReferencePlatform extends QueryPlatform {
   @override
   bool operator ==(dynamic o) =>
       o is CollectionReferencePlatform &&
-          o.firestore == firestore &&
-          o._pointer == _pointer;
+      o.firestore == firestore &&
+      o._pointer == _pointer;
 
   @override
   int get hashCode => _pointer.hashCode;
