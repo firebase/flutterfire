@@ -9,13 +9,15 @@
 /// to reduce code repetition and improve testability.
 class Pointer {
   /// Create instance of [Pointer]
-  Pointer(this.path)
+  Pointer(String path)
       : assert(path != null),
         components =
             path.split('/').where((element) => element.isNotEmpty).toList();
 
-  /// The Firestore path the [Pointer] was initialized with.
-  final String path;
+  /// The Firestore normalized path of the [Pointer].
+  String get path {
+    return components.join('/');
+  }
 
   /// Pointer components of the path.
   ///

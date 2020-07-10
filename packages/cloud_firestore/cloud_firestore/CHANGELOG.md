@@ -19,7 +19,9 @@ Along with the below changes, the plugin has undergone a quality of life update 
 
 **`CollectionReference`**:
 - **BREAKING**: Getting a collection parent document via `parent()` has been changed to a getter `parent`.
+- **BREAKING**: Getting the collection `path` now always returns the `path` without leading and trailing slashes.
 - **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
+- **FIX**: Equality checking of `CollectionReference` now does not depend on the original path used to create the `CollectionReference`. 
 
 **`Query`**:
 - **BREAKING**: The internal query logic has been overhauled to better assert invalid queries locally.
@@ -38,9 +40,11 @@ Along with the below changes, the plugin has undergone a quality of life update 
 - **BREAKING**: `setData`/`set` has been updated to accept an instance of `SetOptions` (see below, supports `mergeFields`).
 - **BREAKING**: `get()` has been updated to accept an instance of `GetOptions` (see below).
 - **BREAKING**: Getting a document parent collection via `parent()` has been changed to a getter `parent`.
+- **BREAKING**: Getting the document `path` now always returns the `path` without leading and trailing slashes.
 - **DEPRECATED**: `documentID` has been deprecated in favor of `id`.
 - **DEPRECATED**: `setData()` has been deprecated in favor of `set()`.
 - **DEPRECATED**: `updateData()` has been deprecated in favor of `update()`.
+- **FIX**: Equality checking of `DocumentReference` now does not depend on the original path used to create the `DocumentReference`.
 
 **`DocumentChange`**:
 - **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.

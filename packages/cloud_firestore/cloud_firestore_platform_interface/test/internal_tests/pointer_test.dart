@@ -66,5 +66,12 @@ void main() {
       expect(Pointer('foo') == Pointer('foo'), true);
       expect(Pointer('foo') == Pointer('foo/bar'), false);
     });
+
+    test('Pointer equality with un-normalized paths', () {
+      expect(Pointer('foo') == Pointer('/foo'), true);
+      expect(Pointer('foo') == Pointer('/foo/bar'), false);
+      expect(Pointer('foo') == Pointer('foo/'), true);
+      expect(Pointer('foo') == Pointer('foo/bar/'), false);
+    });
   });
 }
