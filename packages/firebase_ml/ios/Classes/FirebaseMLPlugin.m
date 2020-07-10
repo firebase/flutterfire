@@ -10,7 +10,7 @@
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  if ([@"downloadRemoteModel" isEqualToString:call.method]) {
+  if ([@"doSomething" isEqualToString:call.method]) {
     result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
   } else {
     result(FlutterMethodNotImplemented);

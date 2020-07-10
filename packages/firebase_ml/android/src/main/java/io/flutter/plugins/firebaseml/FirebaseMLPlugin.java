@@ -4,7 +4,9 @@
 
 package io.flutter.plugins.firebaseml;
 
+import android.os.Build;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -40,18 +42,13 @@ public class FirebaseMLPlugin implements FlutterPlugin, MethodCallHandler {
     channel.setMethodCallHandler(this);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.N)
   @Override
-  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    switch (call.method) {
-      case "downloadRemoteModel":
-        result.success("Testing call. Will be removed shortly");
-        break;
-      case "deleteDownloadedModels":
-      case "getDownloadedModels":
-      case "getLatestModelFile":
-      case "isModelDownloaded":
-      default:
-        result.notImplemented();
+  public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
+    if (call.method.split("#")[0].equals("FirebaseModelManager")) {
+      ModelManager.handleModelManager(call, result);
+    } else {
+      result.notImplemented();
     }
   }
 
