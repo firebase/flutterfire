@@ -5,7 +5,7 @@ module.exports = {
   tagline: 'The official Firebase plugins for Flutter',
   url: 'https://firebase.flutter.dev',
   baseUrl: '/',
-  favicon: 'img/favicon.ico',
+  favicon: '/favicon/favicon.ico',
   organizationName: 'FirebaseExtended',
   projectName: 'flutterfire',
   themeConfig: {
@@ -112,6 +112,7 @@ module.exports = {
   plugins: [
     require.resolve('docusaurus-plugin-sass'),
     require.resolve('@docusaurus/plugin-ideal-image'),
+    path.resolve(__dirname, './docusaurus-plugins/favicon-tags'),
     path.resolve(__dirname, './docusaurus-plugins/source-versions'),
     path.resolve(__dirname, './docusaurus-plugins/source-api-reference'),
   ],
