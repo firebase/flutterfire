@@ -42,6 +42,15 @@ void main() {
       expect(collection.id, equals(_kCollectionId));
     });
 
+    test('==', () {
+      final other = CollectionReferencePlatform(
+        FirebaseFirestorePlatform.instance,
+        '/$_kCollectionId',
+      );
+      final collection = TestCollectionReference._();
+      expect(other, equals(collection));
+    });
+
     test("parent", () {
       final collection = TestSubcollectionReference._();
       final parent = collection.parent;

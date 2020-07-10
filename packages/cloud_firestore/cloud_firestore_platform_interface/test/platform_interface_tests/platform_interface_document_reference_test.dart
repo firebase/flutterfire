@@ -37,6 +37,15 @@ void main() {
       expect(document.path, equals("$_kCollectionId/$_kDocumentId"));
     });
 
+    test('==', () {
+      final other = DocumentReferencePlatform(
+        FirebaseFirestorePlatform.instance,
+        '/$_kCollectionId/$_kDocumentId',
+      );
+      final reference = TestDocumentReference._();
+      expect(other, equals(reference));
+    });
+
     test("id", () {
       final document = TestDocumentReference._();
       expect(document.id, equals(_kDocumentId));
