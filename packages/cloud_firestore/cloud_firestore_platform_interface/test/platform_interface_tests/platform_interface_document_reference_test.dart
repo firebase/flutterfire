@@ -24,7 +24,7 @@ class TestDocumentReference extends DocumentReferencePlatform {
 class ShadowTestDocumentReference extends DocumentReferencePlatform {
   ShadowTestDocumentReference._()
       : super(FirebaseFirestorePlatform.instance,
-      '/$_kCollectionId/$_kDocumentId');
+            '/$_kCollectionId/$_kDocumentId');
 }
 
 void main() {
