@@ -1,7 +1,9 @@
 .DS_Store
 .atom/
 .idea/
-.vscode/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/settings.json
 
 .packages
 .pub/
@@ -11,7 +13,6 @@ flutter_export_environment.sh
 
 examples/all_plugins/pubspec.yaml
 
-Podfile
 Podfile.lock
 Pods/
 .symlinks/

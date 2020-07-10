@@ -3,17 +3,13 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
-
-const MethodChannel firebaseChannel =
-    MethodChannel('plugins.flutter.io/firebase_analytics');
+import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 
 /// Firebase Analytics API.
 class FirebaseAnalytics {
-  final MethodChannel _channel = firebaseChannel;
+  final _platformInstance = FirebaseAnalyticsPlatform.instance;
 
   /// Namespace for analytics API available on Android only.
   ///
@@ -26,7 +22,7 @@ class FirebaseAnalytics {
   ///     FirebaseAnalytics analytics = FirebaseAnalytics();
   ///     analytics.android?.setSessionTimeoutDuration(true);
   final FirebaseAnalyticsAndroid android =
-      defaultTargetPlatform == TargetPlatform.android
+      defaultTargetPlatform == TargetPlatform.android && !kIsWeb
           ? FirebaseAnalyticsAndroid()
           : null;
 
@@ -45,10 +41,7 @@ class FirebaseAnalytics {
           'Prefix "$kReservedPrefix" is reserved and cannot be used.');
     }
 
-    await _channel.invokeMethod<void>('logEvent', <String, dynamic>{
-      'name': name,
-      'parameters': parameters,
-    });
+    await _platformInstance.logEvent(name: name, parameters: parameters);
   }
 
   /// Sets whether analytics collection is enabled for this app on this device.
@@ -58,8 +51,7 @@ class FirebaseAnalytics {
     if (enabled == null) {
       throw ArgumentError.notNull('enabled');
     }
-
-    await _channel.invokeMethod<void>('setAnalyticsCollectionEnabled', enabled);
+    await _platformInstance.setAnalyticsCollectionEnabled(enabled);
   }
 
   /// Sets the user ID property.
@@ -68,7 +60,7 @@ class FirebaseAnalytics {
   ///
   /// [1]: https://www.google.com/policies/privacy/
   Future<void> setUserId(String id) async {
-    await _channel.invokeMethod<void>('setUserId', id);
+    await _platformInstance.setUserId(id);
   }
 
   /// Sets the current [screenName], which specifies the current visual context
@@ -95,10 +87,10 @@ class FirebaseAnalytics {
       throw ArgumentError.notNull('screenName');
     }
 
-    await _channel.invokeMethod<void>('setCurrentScreen', <String, String>{
-      'screenName': screenName,
-      'screenClassOverride': screenClassOverride,
-    });
+    await _platformInstance.setCurrentScreen(
+      screenName: screenName,
+      screenClassOverride: screenClassOverride,
+    );
   }
 
   static final RegExp _nonAlphaNumeric = RegExp(r'[^a-zA-Z0-9_]');
@@ -129,15 +121,12 @@ class FirebaseAnalytics {
     if (name.startsWith('firebase_'))
       throw ArgumentError.value(name, 'name', '"firebase_" prefix is reserved');
 
-    await _channel.invokeMethod<void>('setUserProperty', <String, String>{
-      'name': name,
-      'value': value,
-    });
+    await _platformInstance.setUserProperty(name: name, value: value);
   }
 
   /// Clears all analytics data for this app from the device and resets the app instance id.
   Future<void> resetAnalyticsData() async {
-    await _channel.invokeMethod<void>('resetAnalyticsData');
+    await _platformInstance.resetAnalyticsData();
   }
 
   /// Logs the standard `add_payment_info` event.
@@ -869,7 +858,7 @@ class FirebaseAnalytics {
 
 /// Android-specific analytics API.
 class FirebaseAnalyticsAndroid {
-  final MethodChannel _channel = firebaseChannel;
+  final _platformInstance = FirebaseAnalyticsPlatform.instance;
 
   /// Sets the duration of inactivity that terminates the current session.
   ///
@@ -878,8 +867,7 @@ class FirebaseAnalyticsAndroid {
     if (milliseconds == null) {
       throw ArgumentError.notNull('milliseconds');
     }
-    await _channel.invokeMethod<void>(
-        'setSessionTimeoutDuration', milliseconds);
+    await _platformInstance.setSessionTimeoutDuration(milliseconds);
   }
 }
 

@@ -8,18 +8,17 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
-    }
-}
-
-rootProject.allprojects {
-    repositories {
-        google()
-        jcenter()
+        classpath 'com.android.tools.build:gradle:3.5.0'
     }
 }
 
 apply plugin: 'com.android.library'
+
+def getRootProjectExtOrDefaultProperty(name) {
+    if (!rootProject.ext.has("FlutterFire")) return project.properties[name]
+    if (!rootProject.ext.get("FlutterFire")[name]) return project.properties[name]
+    return rootProject.ext.get("FlutterFire").get(name)
+}
 
 android {
     compileSdkVersion 28
@@ -28,38 +27,18 @@ android {
         minSdkVersion 16
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     lintOptions {
         disable 'InvalidPackage'
     }
     dependencies {
-        implementation 'com.google.firebase:firebase-common:16.1.0'
-        implementation 'androidx.annotation:annotation:1.1.0'
-    }
-}
+        implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrDefaultProperty("FirebaseSDKVersion")}")
+        implementation "com.google.firebase:firebase-core"
 
-// TODO(bparrishMines): Remove this hack once androidx.lifecycle is included on stable. https://github.com/flutter/flutter/issues/42348
-afterEvaluate {
-    def containsEmbeddingDependencies = false
-    for (def configuration : configurations.all) {
-        for (def dependency : configuration.dependencies) {
-            if (dependency.group == 'io.flutter' &&
-                    dependency.name.startsWith('flutter_embedding') &&
-                    dependency.isTransitive())
-            {
-                containsEmbeddingDependencies = true
-                break
-            }
-        }
-    }
-    if (!containsEmbeddingDependencies) {
-        android {
-            dependencies {
-                def lifecycle_version = "1.1.1"
-                implementation "android.arch.lifecycle:runtime:$lifecycle_version"
-                implementation "android.arch.lifecycle:common:$lifecycle_version"
-                implementation "android.arch.lifecycle:common-java8:$lifecycle_version"
-            }
-        }
+        implementation 'androidx.annotation:annotation:1.1.0'
     }
 }
 
