@@ -25,18 +25,90 @@ that enable Flutter apps to use [Firebase](https://firebase.google.com/) service
 
 **Table of contents:**
 
+ - [AdMob (`firebase_admob`)](#firebase_admob)
+ - [Analytics (`firebase_analytics`)](#firebase_analytics)
  - [Authentication (`firebase_auth`)](#firebase_auth)
+ - [Cloud Firestore (`cloud_firestore`)](#cloud_firestore)
+ - [Cloud Functions (`cloud_functions`)](#cloud_functions)
+
+ - [Cloud Messaging (`firebase_messaging`)](#firebase_messaging)
+ - [Cloud Storage (`firebase_storage`)](#firebase_storage)
+
  - [Core (`firebase_core`)](#firebase_core)
 
 ---
 
+### `firebase_admob`
+
+> [![firebase_admob][admob_badge_pub][admob_pub]
+
+Google AdMob is a mobile advertising platform that you can use to generate revenue from your app. Using AdMob with Firebase provides you with additional app usage data and analytics capabilities. [[Learn More][admob_product]]
+
+[[View Source][admob_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |       |     |
+
+----
+
+### `firebase_analytics`
+
+> [![firebase_analytics][analytics_badge_pub]][analytics_pub]
+
+Google Analytics for Firebase provides automatic captures of certain key application events and user properties, and you can define your own custom events to measure the things that uniquely matter to your application. [[Learn More][analytics_product]]
+
+[[View Source][analytics_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |   ✔️   |  ✔️  |
+
+----
+
 ### `firebase_auth`
 
-> ![firebase_auth][auth_badge_ci] ![firebase_auth][auth_badge_pub]
+> ![firebase_auth][auth_badge_ci] [![firebase_auth][auth_badge_pub]][auth_pub]
 
 Firebase Authentication provides easy-to-use APIs to authenticate users to your app. It supports authentication using passwords, phone numbers, popular federated identity providers like Google, Facebook and Twitter, and more. [[Learn More][auth_product]]
 
-[[View Documentation][auth_product]] [[View Source][auth_code]]
+[[View Source][auth_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |   ✔️   |  ✔️  |
+
+----
+
+### `cloud_firestore`
+
+> ![cloud_firestore][firestore_badge_ci] [![cloud_firestore][firestore_badge_pub]][firestore_pub]
+
+Cloud Firestore is a NoSQL document database that lets you easily store, sync, and query data for your mobile and web apps - at global scale. [[Learn More][firestore_product]]
+
+[[View Documentation][firestore_docs]] [[View Source][firestore_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |   ✔️   |  ✔️  |
+
+----
+
+### `cloud_functions`
+
+> ![cloud_functions][functions_badge_ci] [![cloud_functions][functions_badge_pub]][functions_pub]
+
+Cloud Firestore is a NoSQL document database that lets you easily store, sync, and query data for your mobile and web apps - at global scale. [[Learn More][functions_product]]
+
+[[View Source][functions_code]]
 
 #### Platform Support
 
@@ -50,7 +122,7 @@ Firebase Authentication provides easy-to-use APIs to authenticate users to your 
 
 > ![firebase_core][core_badge_ci] ![firebase_core][core_badge_pub]
 
-Firebase Core provides APIs to manage your Firebase application instances and credentials.
+Firebase Core provides APIs to manage your Firebase application instances and credentials. This plugin is required by all FlutterFire plugins.
 
 [[View Documentation][core_docs]] [[View Source][core_code]]
 
@@ -59,7 +131,6 @@ Firebase Core provides APIs to manage your Firebase application instances and cr
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
 |    ✔️    |  ✔️  |   ✔️   |  ✔️  |
-
 
 
 ----
@@ -115,14 +186,17 @@ and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls)
 [dynamic_links_badge_pub]: https://img.shields.io/pub/v/firebase_dynamic_links.svg
 
 [firestore_pub]: https://pub.dartlang.org/packages/cloud_firestore
+[firestore_docs]: https://firebase.flutter.dev/docs/firestore/usage
 [firestore_product]: https://firebase.google.com/products/firestore/
 [firestore_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_firestore
 [firestore_badge_pub]: https://img.shields.io/pub/v/cloud_firestore.svg
+[firestore_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_firestore/badge.svg
 
 [functions_pub]: https://pub.dartlang.org/packages/cloud_functions
 [functions_product]: https://firebase.google.com/products/functions/
 [functions_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_functions
 [functions_badge_pub]: https://img.shields.io/pub/v/cloud_functions.svg
+[functions_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_functions/badge.svg
 
 [in_app_messaging_pub]: https://pub.dartlang.org/packages/firebase_in_app_messaging
 [in_app_messaging_product]: https://firebase.google.com/products/in-app-messaging/
