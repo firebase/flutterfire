@@ -1,18 +1,16 @@
 <p align="center">
   <a href="https://firebase.flutter.dev">
-    <img width="160px" src="website/static/img/flutterfire_300x.png"><br/>
+    <img width="250px" src="website/static/img/flutterfire_300x.png"><br/>
   </a>
   <h1 align="center">FlutterFire</h2>
 </p>
-
----
 
 FlutterFire is a set of [Flutter plugins](https://flutter.io/platform-plugins/)
 that enable Flutter apps to use [Firebase](https://firebase.google.com/) services. You can follow an example that shows how to use these plugins in the [Firebase for Flutter](https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html#0) codelab.
 
 [Flutter](https://flutter.dev) is Google’s UI toolkit for building beautiful, natively compiled applications for mobile, web, and desktop from a single codebase. Flutter is used by developers and organizations around the world, and is free and open source.
 
-*Note*: FlutterFire is still under development, and some APIs and platforms might not be available yet.
+> *Note*: FlutterFire is still under development (see [roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582)), and some APIs and platforms might not be available yet.
 [Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
 
 ## Available FlutterFire plugins
