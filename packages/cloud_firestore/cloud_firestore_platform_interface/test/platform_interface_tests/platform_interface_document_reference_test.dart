@@ -22,7 +22,7 @@ class TestDocumentReference extends DocumentReferencePlatform {
 ///
 /// However, this has a leading `/` for testing path equality.
 class ShadowTestDocumentReference extends DocumentReferencePlatform {
-  TestDocumentReference._()
+  ShadowTestDocumentReference._()
       : super(FirebaseFirestorePlatform.instance,
       '/$_kCollectionId/$_kDocumentId');
 }
