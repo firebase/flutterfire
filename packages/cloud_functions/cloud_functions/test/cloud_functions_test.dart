@@ -1,4 +1,4 @@
-// Copyright 2018, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -8,13 +8,21 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'test_common.dart';
+
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  initializeMethodChannel();
 
   group('$CloudFunctions', () {
     final List<MethodCall> log = <MethodCall>[];
 
     setUp(() async {
+      await Firebase.initializeApp();
+      await Firebase.initializeApp(
+        name: '1337',
+        options: Firebase.app().options,
+      );
+
       MethodChannelCloudFunctions.channel
           .setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
@@ -35,7 +43,7 @@ void main() {
           .getHttpsCallable(functionName: 'baz')
           .call();
       final HttpsCallable callable =
-          CloudFunctions(app: FirebaseApp(name: '1337'), region: 'space')
+          CloudFunctions(app: Firebase.app('1337'), region: 'space')
               .getHttpsCallable(functionName: 'qux')
                 ..timeout = const Duration(days: 300);
       await callable.call(<String, dynamic>{

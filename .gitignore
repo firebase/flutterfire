@@ -1,7 +1,9 @@
 .DS_Store
 .atom/
 .idea/
-.vscode/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/settings.json
 
 .packages
 .pub/
@@ -11,7 +13,6 @@ flutter_export_environment.sh
 
 examples/all_plugins/pubspec.yaml
 
-Podfile
 Podfile.lock
 Pods/
 .symlinks/
@@ -43,6 +44,8 @@ build/
 .project
 .classpath
 .settings
+/pubspec.yaml
+.last_build_id
 
 # Docs
 
@@ -57,7 +60,6 @@ website/build
 .cache-loader
 
 # Misc
-.DS_Store
 .env.local
 .env.development.local
 .env.test.local

@@ -1,3 +1,11 @@
+## 0.5.2
+
+* Fix for race-condition issue on iOS during initialization process
+
+## 0.5.1
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 0.5.0+12
 
 * Fix for missing UserAgent.h compilation failures.

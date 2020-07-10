@@ -1,3 +1,15 @@
+## 0.16.1+2
+
+* Update README to make it clear which authentication options are possible.
+
+## 0.16.1+1
+
+* Fix bug #2656 (verifyPhoneNumber always use the default FirebaseApp, not the configured one)
+
+## 0.16.1
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 0.16.0
 
 * Migrate to Android v2 embedding.

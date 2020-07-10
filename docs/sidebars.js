@@ -21,6 +21,7 @@ module.exports = {
       "auth/usage",
       "auth/social",
       "auth/phone",
+      "auth/error-handling",
       toReferenceAPI("firebase_auth"),
     ],
     "Cloud Firestore": [
