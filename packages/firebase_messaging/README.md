@@ -113,7 +113,7 @@ By default background messaging is not enabled. To handle messages in the backgr
 1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
 
    ```dart
-   Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+   Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
      if (message.containsKey('data')) {
        // Handle data message
        final dynamic data = message['data'];

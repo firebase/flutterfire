@@ -45,6 +45,10 @@
     NSString *region = call.arguments[@"region"];
     NSString *origin = call.arguments[@"origin"];
     NSNumber *timeoutMicroseconds = call.arguments[@"timeoutMicroseconds"];
+    // TODO(Salakar): Remove name check once plugin refactored with new Core.
+    if ([appName isEqualToString:@"[DEFAULT]"]) {
+      appName = @"__FIRAPP_DEFAULT";
+    }
     FIRApp *app = [FIRApp appNamed:appName];
     FIRFunctions *functions;
     if (region != nil && region != (id)[NSNull null]) {
