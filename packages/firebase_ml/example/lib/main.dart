@@ -63,7 +63,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   static Future<String> loadTFLiteModel(File modelFile) async {
-    print(modelFile.path);
     var appDirectory = await getApplicationDocumentsDirectory();
     var labelsData =
         await rootBundle.load("assets/labels_mobilenet_v1_224.txt");

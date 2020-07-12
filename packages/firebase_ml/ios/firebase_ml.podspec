@@ -1,5 +1,6 @@
 #
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
+# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
+# Run `pod lib lint firebase_ml.podspec' to validate before publishing.
 #
 
 require 'yaml'

@@ -2,17 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FirebaseMLPlugin.h"
+#import "FLTFirebaseMLPlugin.h"
 
-@implementation ModelManager
+@implementation FLTModelManager
 
 + (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
   if ([@"FirebaseModelManager#download" isEqualToString:call.method]) {
-    [ModelManager download:call result:result];
+    [FLTModelManager download:call result:result];
   } else if ([@"FirebaseModelManager#getLatestModelFile" isEqualToString:call.method]) {
-    [ModelManager getLatestModelFile:call result:result];
+    [FLTModelManager getLatestModelFile:call result:result];
   } else if ([@"FirebaseModelManager#isModelDownloaded" isEqualToString:call.method]) {
-    [ModelManager isModelDownloaded:call result:result];
+    [FLTModelManager isModelDownloaded:call result:result];
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -41,30 +41,33 @@
                 if (weakSelf == nil | note.userInfo == nil) {
                   return;
                 }
+
                 __strong typeof(self) strongSelf = weakSelf;
 
                 FIRRemoteModel *model = note.userInfo[FIRModelDownloadUserInfoKeyRemoteModel];
+
                 if ([model.name isEqualToString:modelName]) {
                   result(@"Model successfully downloaded");
                 } else {
                   NSError *error = note.userInfo[FIRModelDownloadUserInfoKeyError];
-                  result(error);
+                  [FLTFirebaseMLPlugin handleError:error result:result];
                 }
               }];
 
-  [NSNotificationCenter.defaultCenter addObserverForName:FIRModelDownloadDidFailNotification
-                                                  object:nil
-                                                   queue:nil
-                                              usingBlock:^(NSNotification *_Nonnull note) {
-                                                if (weakSelf == nil | note.userInfo == nil) {
-                                                  return;
-                                                }
-                                                __strong typeof(self) strongSelf = weakSelf;
+  [NSNotificationCenter.defaultCenter
+      addObserverForName:FIRModelDownloadDidFailNotification
+                  object:nil
+                   queue:nil
+              usingBlock:^(NSNotification *_Nonnull note) {
+                if (weakSelf == nil | note.userInfo == nil) {
+                  return;
+                }
 
-                                                NSError *error =
-                                                    note.userInfo[FIRModelDownloadUserInfoKeyError];
-                                                result(error);
-                                              }];
+                __strong typeof(self) strongSelf = weakSelf;
+
+                NSError *error = note.userInfo[FIRModelDownloadUserInfoKeyError];
+                [FLTFirebaseMLPlugin handleError:error result:result];
+              }];
 }
 
 + (void)getLatestModelFile:(FlutterMethodCall *)call result:(FlutterResult)result {
@@ -78,7 +81,7 @@
                       NSLog(@"-- remoteModelPath: %@", remoteModelPath);
                       result([NSString stringWithString:remoteModelPath]);
                     } else {
-                      result(error);
+                      [FLTFirebaseMLPlugin handleError:error result:result];
                     }
                   }];
 }

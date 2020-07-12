@@ -2,14 +2,25 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FirebaseMLPlugin.h"
+#import "FLTFirebaseMLPlugin.h"
 
-@implementation FirebaseMLPlugin
+static FlutterError* getFlutterError(NSError* error) {
+  return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %d", (int)error.code]
+                             message:error.domain
+                             details:error.localizedDescription];
+}
+
+@implementation FLTFirebaseMLPlugin
+
++ (void)handleError:(NSError*)error result:(FlutterResult)result {
+  result(getFlutterError(error));
+}
+
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel =
       [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_ml"
                                   binaryMessenger:[registrar messenger]];
-  FirebaseMLPlugin* instance = [[FirebaseMLPlugin alloc] init];
+  FLTFirebaseMLPlugin* instance = [[FLTFirebaseMLPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
 
   SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");
@@ -32,8 +43,9 @@
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   NSString* callHandler = [[call.method componentsSeparatedByString:@"#"] objectAtIndex:0];
+
   if ([@"FirebaseModelManager" isEqualToString:callHandler]) {
-    [ModelManager handleMethodCall:call result:result];
+    [FLTModelManager handleMethodCall:call result:result];
   } else {
     result(FlutterMethodNotImplemented);
   }
