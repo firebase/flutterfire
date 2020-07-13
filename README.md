@@ -46,7 +46,7 @@ that enable Flutter apps to use [Firebase](https://firebase.google.com/) service
 
 ### `firebase_admob`
 
-> [![firebase_admob][admob_badge_pub][admob_pub]
+> [![firebase_admob][admob_badge_pub]][admob_pub]
 
 Google AdMob is a mobile advertising platform that you can use to generate revenue from your app. Using AdMob with Firebase provides you with additional app usage data and analytics capabilities. [[Learn More][admob_product]]
 
@@ -130,7 +130,7 @@ The Cloud Functions for Firebase plugin let you call functions directly from wit
 
 Firebase Cloud Messaging (FCM) provides a reliable and battery-efficient connection between your server and devices that allows you to deliver and receive messages and notifications on iOS & Android, at no cost. [[Learn More][messaging_product]]
 
-[[View Documentation][messaging_docs]] [[View Source][messaging_code]]
+[[View Source][messaging_code]]
 
 #### Platform Support
 
