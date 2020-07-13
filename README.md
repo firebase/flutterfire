@@ -221,10 +221,10 @@ and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls)
 [core_badge_pub]: https://img.shields.io/pub/v/firebase_core.svg
 [core_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_core/badge.svg
 
-[crash_pub]: https://pub.dartlang.org/packages/firebase_crashlytics
-[crash_product]: https://firebase.google.com/products/crashlytics/
-[crash_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_crashlytics
-[crash_badge_pub]: https://img.shields.io/pub/v/firebase_crashlytics.svg
+[crashlytics_pub]: https://pub.dartlang.org/packages/firebase_crashlytics
+[crashlytics_product]: https://firebase.google.com/products/crashlytics/
+[crashlytics_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_crashlytics
+[crashlytics_badge_pub]: https://img.shields.io/pub/v/firebase_crashlytics.svg
 
 [database_pub]: https://pub.dartlang.org/packages/firebase_database
 [database_product]: https://firebase.google.com/products/database/
