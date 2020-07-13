@@ -30,11 +30,17 @@ that enable Flutter apps to use [Firebase](https://firebase.google.com/) service
  - [Authentication (`firebase_auth`)](#firebase_auth)
  - [Cloud Firestore (`cloud_firestore`)](#cloud_firestore)
  - [Cloud Functions (`cloud_functions`)](#cloud_functions)
-
  - [Cloud Messaging (`firebase_messaging`)](#firebase_messaging)
  - [Cloud Storage (`firebase_storage`)](#firebase_storage)
-
  - [Core (`firebase_core`)](#firebase_core)
+
+ - [Crashlytics (`firebase_crashlytics`)](#firebase_crashlytics)
+ - [Realtime Database (`firebase_database`)](#firebase_database)
+ - [Dynamic Links (`firebase_dynamic_links`)](#firebase_dynamic_links)
+ - [In-App Messaging (`firebase_in_app_messaging`)](#firebase_in_app_messaging)
+ - [ML Kit Vision (`firebase_ml_vision`)](#firebase_ml_vision)
+ - [Performance Monitoring (`firebase_performance`)](#firebase_performance)
+ - [Remote Config (`firebase_remote_config`)](#firebase_remote_config)
 
 ---
 
@@ -115,6 +121,38 @@ The Cloud Functions for Firebase plugin let you call functions directly from wit
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
 |    ✔️    |  ✔️  |   ✔️   |  ✔️  |
+
+----
+
+### `firebase_messaging`
+
+> [![firebase_messaging][messaging_badge_pub]][messaging_pub]
+
+Firebase Cloud Messaging (FCM) provides a reliable and battery-efficient connection between your server and devices that allows you to deliver and receive messages and notifications on iOS & Android, at no cost. [[Learn More][messaging_product]]
+
+[[View Documentation][messaging_docs]] [[View Source][messaging_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |       |     |
+
+----
+
+### `firebase_storage`
+
+> ![firebase_storage][storage_badge_ci] [![firebase_storage][storage_badge_pub]][storage_pub]
+
+Cloud Storage is designed to help you quickly and easily store and serve user-generated content, such as photos and videos. [[Learn More][storage_product]]
+
+[[View Source][storage_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |       |     |
 
 ----
 
@@ -227,3 +265,4 @@ and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls)
 [storage_product]: https://firebase.google.com/products/storage/
 [storage_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_storage
 [storage_badge_pub]: https://img.shields.io/pub/v/firebase_storage.svg
+[storage_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_storage/badge.svg
