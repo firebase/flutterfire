@@ -9,6 +9,9 @@
   <a href="https://github.com/FirebaseExtended/flutterfire/actions?query=workflow%3Aall_plugins">
     <img src="https://github.com/FirebaseExtended/flutterfire/workflows/all_plugins/badge.svg" alt="all_plugins GitHub Workflow Status"/>
   </a>
+  <a href="https://twitter.com/flutterfiredev">
+    <img src="https://img.shields.io/twitter/follow/flutterfiredev.svg?colorA=1da1f2&colorB=&label=Follow%20on%20Twitter" alt="Follow on Twitter">
+  </a>
 </p>
 
 ---
