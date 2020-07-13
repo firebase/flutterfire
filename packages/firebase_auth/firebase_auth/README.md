@@ -73,6 +73,7 @@ Otherwise you will not be able to authenticate.
 Add the following imports to your Dart code:
 ```dart
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 ```
 
 Initialize `GoogleSignIn` and `FirebaseAuth`:
