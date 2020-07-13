@@ -1,8 +1,8 @@
 import React, { HTMLProps } from 'react';
 import Link from '@docusaurus/Link';
 import CodeBlock from '@theme/CodeBlock';
-import Heading from '@theme/Heading';
 import Tabs from '@theme/Tabs';
+import Heading from '@theme/Heading';
 import TabItem from '@theme/TabItem';
 import IdealImage from '@theme/IdealImage';
 import Zoom from 'react-medium-image-zoom';
@@ -41,6 +41,12 @@ export default {
   },
 
   img: (props: HTMLProps<HTMLImageElement>) => {
+    // @ts-ignore
+    if (props['data-asset'] === 'false') {
+      // @ts-ignore
+      return <img {...props} />;
+    }
+
     let alt = props.alt || '';
 
     // Prefix any alt tags with "hide:" to not show them as a caption
