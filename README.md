@@ -106,7 +106,7 @@ Cloud Firestore is a NoSQL document database that lets you easily store, sync, a
 
 > ![cloud_functions][functions_badge_ci] [![cloud_functions][functions_badge_pub]][functions_pub]
 
-Cloud Firestore is a NoSQL document database that lets you easily store, sync, and query data for your mobile and web apps - at global scale. [[Learn More][functions_product]]
+The Cloud Functions for Firebase plugin let you call functions directly from within your app. To call a function from your app in this way, write and deploy an HTTPS Callable function in Cloud Functions, and then add client logic to call the function from your app. [[Learn More][functions_product]]
 
 [[View Source][functions_code]]
 
