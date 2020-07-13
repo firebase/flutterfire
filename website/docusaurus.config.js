@@ -36,6 +36,10 @@ module.exports = {
     },
     navbar: {
       title: 'FlutterFire',
+      logo: {
+        alt: 'FlutterFire Logo',
+        src: '/img/flutterfire_300x.png',
+      },
       links: [
         {
           to: 'docs/overview',
