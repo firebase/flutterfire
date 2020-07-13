@@ -46,6 +46,14 @@ void main() {
       expect(ref == firestore.collection('foo'), isTrue);
       expect(ref2 == firestoreSecondary.collection('foo'), isTrue);
       expect(ref3 == ref, isFalse);
+
+      DocumentReference docRef = firestore.collection('foo').doc('bar');
+      DocumentReference docRef2 =
+          firestoreSecondary.collection('foo').doc('bar');
+
+      expect(docRef, firestore.collection('foo').doc('bar'));
+      expect(docRef2, firestoreSecondary.collection('foo').doc('bar'));
+      expect(docRef == docRef2, isFalse);
     });
 
     test('returns the correct id', () {
