@@ -527,7 +527,7 @@ void runQueryTests() {
 
       test('endbeforeDocument() ends before a document field value', () async {
         CollectionReference collection =
-            await initializeTest('endBefore-document');
+            await initializeTest('endBefore-document-field-value');
         await Future.wait([
           collection.doc('doc1').set({
             'bar': {'value': 3}
