@@ -39,6 +39,8 @@ void main() {
 
       expect(ref == firestoreSecondary.doc('foo/bar'), isFalse);
       expect(ref2 == firestoreSecondary.doc('foo/bar/baz/bert'), isFalse);
+
+      expect(ref == ref2, isFalse);
     });
 
     test("returns document() returns a $DocumentReference", () {
