@@ -33,8 +33,8 @@ that enable Flutter apps to use [Firebase](https://firebase.google.com/) service
  - [Cloud Messaging (`firebase_messaging`)](#firebase_messaging)
  - [Cloud Storage (`firebase_storage`)](#firebase_storage)
  - [Core (`firebase_core`)](#firebase_core)
-
  - [Crashlytics (`firebase_crashlytics`)](#firebase_crashlytics)
+
  - [Realtime Database (`firebase_database`)](#firebase_database)
  - [Dynamic Links (`firebase_dynamic_links`)](#firebase_dynamic_links)
  - [In-App Messaging (`firebase_in_app_messaging`)](#firebase_in_app_messaging)
@@ -170,8 +170,21 @@ Firebase Core provides APIs to manage your Firebase application instances and cr
 |:-------:|:---:|:-----:|:---:|
 |    ✔️    |  ✔️  |   ✔️   |  ✔️  |
 
-
 ----
+
+### `firebase_crashlytics`
+
+> [![firebase_crashlytics][crashlytics_badge_pub]][crashlytics_pub]
+
+Firebase Crashlytics helps you track, prioritize, and fix stability issues that erode app quality, in realtime. Spend less time triaging and troubleshooting crashes and more time building app features that delight users. [[Learn More][crashlytics_product]]
+
+[[View Source][crashlytics_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |       |     |
 
 ## Issues
 
