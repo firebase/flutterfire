@@ -14,10 +14,10 @@ void firebaseModelManagerTest() {
       assert(model != null);
 
       FirebaseModelDownloadConditions conditions =
-          FirebaseModelDownloadConditions(
-              androidRequireWifi: true, iosAllowCellularAccess: false);
+          FirebaseModelDownloadConditions(requireWifi: true);
 
       await modelManager.download(model, conditions);
+      expect(model.modelHash, isNotNull);
 
       var isModelDownloaded = await modelManager.isModelDownloaded(model);
       expect(isModelDownloaded, isTrue);

@@ -35,7 +35,6 @@ class _MyAppState extends State<MyApp> {
     }
     var labels = List<Map>.from(await Tflite.runModelOnImage(
       path: image.path,
-      imageStd: 127.5,
     ));
     setState(() {
       _labels = labels;
@@ -51,7 +50,7 @@ class _MyAppState extends State<MyApp> {
   static Future<File> loadModelFromFirebase() async {
     var model = FirebaseCustomRemoteModel('image_classification');
 
-    var conditions = FirebaseModelDownloadConditions(androidRequireWifi: true);
+    var conditions = FirebaseModelDownloadConditions(requireWifi: true);
     var modelManager = FirebaseModelManager.instance;
 
     await modelManager.download(model, conditions);

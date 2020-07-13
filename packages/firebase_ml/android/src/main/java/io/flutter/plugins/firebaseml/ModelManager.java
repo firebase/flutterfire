@@ -1,7 +1,6 @@
 package io.flutter.plugins.firebaseml;
 
 import android.os.Build;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -14,10 +13,11 @@ import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel.Result;
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 public final class ModelManager {
-  private ModelManager() {}
+  private ModelManager(){}
 
   @RequiresApi(api = Build.VERSION_CODES.N)
   static void handleModelManager(@NonNull MethodCall call, @NonNull final Result result) {
@@ -65,7 +65,7 @@ public final class ModelManager {
             new OnSuccessListener<Void>() {
               @Override
               public void onSuccess(Void v) {
-                result.success("Model successfully downloaded");
+                result.success(remoteModelToMap(remoteModel));
               }
             })
         .addOnFailureListener(
@@ -92,7 +92,6 @@ public final class ModelManager {
               public void onComplete(@NonNull Task<File> task) {
                 File modelFile = task.getResult();
                 if (modelFile != null) {
-                  Log.i("-- remoteModelPath", modelFile.getAbsolutePath());
                   result.success(modelFile.getAbsolutePath());
                 } else {
                   result.error(
@@ -124,5 +123,12 @@ public final class ModelManager {
                 }
               }
             });
+  }
+
+  private static Map<String, String> remoteModelToMap(FirebaseCustomRemoteModel model) {
+    Map<String, String> remoteModelToMap = new HashMap<>();
+    remoteModelToMap.put("modelName", model.getModelName());
+    remoteModelToMap.put("modelHash", model.getModelHash());
+    return remoteModelToMap;
   }
 }

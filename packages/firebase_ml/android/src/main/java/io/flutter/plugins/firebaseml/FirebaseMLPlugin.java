@@ -14,7 +14,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
-/** A flutter plugin for accessing the Firebase ML APIs. */
+/** A flutter plugin for accessing the FirebaseML API. */
 public class FirebaseMLPlugin implements FlutterPlugin, MethodCallHandler {
 
   private static final String CHANNEL_NAME = "plugins.flutter.io/firebase_ml";

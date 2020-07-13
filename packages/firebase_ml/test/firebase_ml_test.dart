@@ -9,6 +9,7 @@ import 'package:firebase_ml/firebase_ml.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   String MODEL_NAME = "myModelName";
+  String MODEL_HASH = "myModelHash";
   String MODEL_FILE_PATH = "someDestination";
 
   group('$FirebaseModelManager', () {
@@ -22,7 +23,10 @@ void main() {
 
         switch (methodCall.method) {
           case 'FirebaseModelManager#download':
-            return "Success";
+            var model = <String, String>{};
+            model['modelName'] = MODEL_NAME;
+            model['modelHash'] = MODEL_HASH;
+            return model;
           case 'FirebaseModelManager#getLatestModelFile':
             return MODEL_FILE_PATH;
           case 'FirebaseModelManager#isModelDownloaded':
@@ -37,23 +41,18 @@ void main() {
     tearDown(() {
       FirebaseModelManager.channel.setMockMethodCallHandler(null);
     });
-    test('condition constructor defaults to right values', () async {
-      FirebaseModelDownloadConditions conditions =
-          FirebaseModelDownloadConditions();
-      expect(conditions.androidRequireWifi, false);
-      expect(conditions.androidRequireDeviceIdle, false);
-      expect(conditions.androidRequireCharging, false);
-      expect(conditions.iosAllowBackgroundDownloading, false);
-      expect(conditions.iosAllowCellularAccess, true);
-    });
+
     test('manager downloads model', () async {
       expect(modelManager, isNotNull);
       FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
+      expect(model.modelHash, isNull);
       FirebaseModelDownloadConditions conditions =
-          FirebaseModelDownloadConditions(androidRequireWifi: true);
+          FirebaseModelDownloadConditions(requireWifi: true);
       expect(conditions, isNotNull);
 
       await modelManager.download(model, conditions);
+      expect(model.modelName, MODEL_NAME);
+      expect(model.modelHash, MODEL_HASH);
 
       expect(
         log,

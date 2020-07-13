@@ -32,8 +32,10 @@ class FirebaseModelManager {
   /// Initiates the download of remoteModel if the download hasn't begun.
   Future<void> download(FirebaseRemoteModel model,
       FirebaseModelDownloadConditions conditions) async {
-    await channel.invokeMethod("FirebaseModelManager#download",
-        {'modelName': model.modelName, 'conditions': conditions.toMap()});
+    var modelMap = Map<String, String>.from(await channel.invokeMethod(
+        "FirebaseModelManager#download",
+        {'modelName': model.modelName, 'conditions': conditions.toMap()}));
+    model.modelHash = modelMap['modelHash'];
   }
 
   /// Returns the [File] containing the latest model for the remote model name.
