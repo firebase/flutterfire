@@ -34,8 +34,8 @@ that enable Flutter apps to use [Firebase](https://firebase.google.com/) service
  - [Cloud Storage (`firebase_storage`)](#firebase_storage)
  - [Core (`firebase_core`)](#firebase_core)
  - [Crashlytics (`firebase_crashlytics`)](#firebase_crashlytics)
-
  - [Realtime Database (`firebase_database`)](#firebase_database)
+
  - [Dynamic Links (`firebase_dynamic_links`)](#firebase_dynamic_links)
  - [In-App Messaging (`firebase_in_app_messaging`)](#firebase_in_app_messaging)
  - [ML Kit Vision (`firebase_ml_vision`)](#firebase_ml_vision)
@@ -185,6 +185,104 @@ Firebase Crashlytics helps you track, prioritize, and fix stability issues that 
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
 |    ✔️    |  ✔️  |       |     |
+
+----
+
+### `firebase_database`
+
+> [![firebase_database][database_badge_pub]][database_pub]
+
+The Firebase Realtime Database is a cloud-hosted NoSQL database that lets you store and sync data between your users in realtime. [[Learn More][database_product]]
+
+[[View Source][database_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |       |     |
+
+----
+
+### `firebase_dynamic_links`
+
+> [![firebase_dynamic_links][dynamic_links_badge_pub]][dynamic_links_pub]
+
+Dynamic Links are smart URLs that allow you to send existing and potential users to any location within your iOS or Android app. [[Learn More][dynamic_links_product]]
+
+[[View Source][dynamic_links_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |       |     |
+
+----
+
+### `firebase_in_app_messaging`
+
+> [![firebase_in_app_messaging][in_app_messaging_badge_pub]][in_app_messaging_pub]
+
+Firebase In-App Messaging helps you engage users who are actively using your app by sending them targeted and contextual messages that nudge them to complete key in-app actions - like beating a game level, buying an item, or subscribing to content. [[Learn More][in_app_messaging_product]]
+
+[[View Source][in_app_messaging_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |       |     |
+
+----
+
+### `firebase_ml_vision`
+
+> [![firebase_ml_vision][ml_vision_badge_pub]][ml_vision_pub]
+
+Use Firebase ML to train and deploy custom models, or use a more turn-key solution with the Cloud Vision APIs. [[Learn More][ml_vision_product]]
+
+[[View Source][ml_vision_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |       |     |
+
+----
+
+### `firebase_performance`
+
+> [![firebase_performance][performance_badge_pub]][performance_pub]
+
+Get insights into how your app performs from your users’ point of view, with automatic and customized performance tracing. [[Learn More][performance_product]]
+
+[[View Source][performance_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |       |     |
+
+----
+
+### `firebase_remote_config`
+
+> [![firebase_remote_config][remote_config_badge_pub]][remote_config_pub]
+
+With Firebase Remote Config, you can change the behavior and appearance of your app on the fly from the Firebase console, and then track performance in Google Analytics for Firebase. [[Learn More][remote_config_product]]
+
+[[View Source][remote_config_code]]
+
+#### Platform Support
+
+| Android | iOS | MacOS | Web |
+|:-------:|:---:|:-----:|:---:|
+|    ✔️    |  ✔️  |       |     |
+
+----
 
 ## Issues
 
