@@ -98,10 +98,10 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   bool operator ==(dynamic o) =>
       o is DocumentReferencePlatform &&
       o.firestore == firestore &&
-      o._pointer == _pointer;
+      o.path == path;
 
   @override
-  int get hashCode => _pointer.hashCode;
+  int get hashCode => path.hashCode;
 
   @override
   String toString() => '$DocumentReferencePlatform($path)';
