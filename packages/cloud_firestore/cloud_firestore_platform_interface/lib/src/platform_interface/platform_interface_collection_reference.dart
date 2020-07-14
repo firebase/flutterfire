@@ -53,10 +53,10 @@ abstract class CollectionReferencePlatform extends QueryPlatform {
   bool operator ==(dynamic o) =>
       o is CollectionReferencePlatform &&
       o.firestore == firestore &&
-      o._pointer == _pointer;
+      o.path == path;
 
   @override
-  int get hashCode => _pointer.hashCode;
+  int get hashCode => path.hashCode;
 
   @override
   String toString() => '$CollectionReferencePlatform($path)';
