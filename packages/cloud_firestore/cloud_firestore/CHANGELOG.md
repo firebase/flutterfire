@@ -1,4 +1,4 @@
-## 0.14.0-dev.1
+## [UNPUBLISHED]
 
 - **FIX**: Added `==` operator override to `CollectionReferencePlatform`.
 
