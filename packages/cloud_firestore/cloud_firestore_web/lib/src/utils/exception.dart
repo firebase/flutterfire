@@ -17,7 +17,7 @@ FirebaseException getFirebaseException(Object object) {
 
   if (object is! firebase.FirebaseError) {
     return FirebaseException(
-        plugin: "cloud_firestore",
+        plugin: 'cloud_firestore',
         code: 'unknown',
         message: (object as Exception).toString());
   }
