@@ -48,4 +48,16 @@ abstract class CollectionReferencePlatform extends QueryPlatform {
   DocumentReferencePlatform doc([String path]) {
     throw UnimplementedError("doc() is not implemented");
   }
+
+  @override
+  bool operator ==(dynamic o) =>
+      o is CollectionReferencePlatform &&
+      o.firestore == firestore &&
+      o.path == path;
+
+  @override
+  int get hashCode => path.hashCode;
+
+  @override
+  String toString() => '$CollectionReferencePlatform($path)';
 }

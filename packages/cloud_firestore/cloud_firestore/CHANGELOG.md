@@ -1,5 +1,9 @@
 ## 0.14.0-dev.1
 
+- **FIX**: Added `==` operator override to `CollectionReferencePlatform`.
+
+## 0.14.0-dev.1
+
 Along with the below changes, the plugin has undergone a quality of life update to better support exceptions thrown. Any Firestore specific errors now return a `FirebaseException`, allowing you to directly access the code (e.g. `permission-denied`) and message.
 
 **`Firestore`**:
