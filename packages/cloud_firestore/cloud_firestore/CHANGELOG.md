@@ -1,6 +1,7 @@
 ## [UNPUBLISHED]
 
 - **FIX**: Added `==` operator override to `CollectionReferencePlatform`.
+- **FIX**: Allow iOS and macOS to be imported as a module.
 
 ## 0.14.0-dev.1
 
