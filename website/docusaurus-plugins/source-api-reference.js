@@ -1,23 +1,7 @@
 const fs = require('fs');
-const axios = require('axios');
 const webpack = require('webpack');
 const plugins = require('../plugins');
-
-// Fetch the plugins latest version documentation reference from the API
-function fetchPluginApiReference(plugin) {
-  return axios
-    .get(`https://pub.dartlang.org/documentation/${plugin}/latest/index.json`)
-    .then(response => {
-      if (response.headers['content-type'] === 'application/json') {
-        return response.data.map(entity => ({
-          ...entity,
-          plugin,
-        }));
-      }
-
-      return null;
-    });
-}
+const { fetchPluginVersion, fetchPluginApiReference } = require('../api');
 
 module.exports = function sourceApiReference() {
   return {
@@ -30,8 +14,15 @@ module.exports = function sourceApiReference() {
 
       for (let i = 0; i < plugins.length; i++) {
         const { pub } = plugins[i];
-        promises.push(fetchPluginApiReference(pub));
-        promises.push(fetchPluginApiReference(`${pub}_platform_interface`));
+        const platformName = `${pub}_platform_interface`;
+
+        const versions = {
+          [pub]: await fetchPluginVersion(pub),
+          [platformName]: await fetchPluginVersion(`${pub}_platform_interface`),
+        };
+
+        promises.push(fetchPluginApiReference(pub, versions[pub]));
+        promises.push(fetchPluginApiReference(platformName, versions[platformName]));
       }
 
       const responses = await Promise.allSettled(promises);
@@ -40,7 +31,7 @@ module.exports = function sourceApiReference() {
         const response = responses[j];
         const data = response.value;
 
-        if (response.status === 'fulfilled' && data) {
+        if (response.status === 'fulfilled' && Array.isArray(data)) {
           data.forEach(entity => {
             reference[entity.qualifiedName] = entity;
           });

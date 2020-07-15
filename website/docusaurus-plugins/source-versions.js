@@ -1,17 +1,6 @@
-const axios = require('axios');
 const webpack = require('webpack');
 const plugins = require('../plugins');
-
-// Fetch the plugins latest version from the pub API
-async function fetchPluginVersion(plugin) {
-  try {
-    const response = await axios.get(`https://pub.dartlang.org/api/packages/${plugin}/metrics`);
-    return response.data.scorecard.packageVersion;
-  } catch (e) {
-    console.log(`Failed to load version for plugin "${plugin}".`);
-    return '';
-  }
-}
+const { fetchPluginVersion } = require('../api');
 
 module.exports = function sourceVersions() {
   return {
@@ -22,9 +11,15 @@ module.exports = function sourceVersions() {
       let versions = '';
 
       for (let i = 0; i < plugins.length; i++) {
-        const { pub } = plugins[i];
-        const version = await fetchPluginVersion(pub);
-        versions += `PUB_${pub.toUpperCase()}=${version}`;
+        const { pub, version_overrides } = plugins[i];
+
+        if (version_overrides && version_overrides[pub]) {
+          versions += `PUB_${pub.toUpperCase()}=${version_overrides[pub]}`;
+        } else {
+          const version = await fetchPluginVersion(pub);
+          versions += `PUB_${pub.toUpperCase()}=${version}`;
+        }
+
         if (i < plugins.length - 1) versions += '\n';
       }
 

@@ -37,7 +37,7 @@ Install the official [`google_sign_in`](https://pub.dev/packages/google_sign_in)
 
 ```yaml title="pubspec.yaml"
 dependencies:
-  google_sign_in: ^4.5.1
+  google_sign_in: "{{ external.google_sign_in }}"
 ```
 
 Once installed, trigger the sign-in flow and create a new credential:
@@ -123,7 +123,7 @@ Install the [`flutter_facebook_auth`](https://pub.dev/packages/flutter_facebook_
 
 ```yaml title="pubspec.yaml"
 dependencies:
-  flutter_facebook_auth: ^0.2.3
+  flutter_facebook_auth: "{{ external.flutter_facebook_auth }}"
 ```
 
 You will need to follow the steps in the plugin documentation to ensure that both the Android & iOS Facebook SDKs have been initialized

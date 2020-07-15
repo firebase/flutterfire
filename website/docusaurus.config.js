@@ -131,7 +131,7 @@ module.exports = {
         docs: {
           path: '../docs',
           sidebarPath: require.resolve('../docs/sidebars.js'),
-          editUrl: 'https://github.com/FirebaseExtended/flutterfire/edit/next/docs/',
+          editUrl: 'https://github.com/FirebaseExtended/flutterfire/edit/master/docs/',
         },
         theme: {
           customCss: require.resolve('./src/styles.scss'),
