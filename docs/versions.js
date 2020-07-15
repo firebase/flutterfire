@@ -27,4 +27,8 @@ export default {
   web: {
     firebase_cdn: "7.14.4", // https://firebase.google.com/docs/web/setup#expandable-8-label
   },
+  external: {
+    google_sign_in: "^4.5.1",
+    flutter_facebook_auth: "^0.2.3"
+  }
 };
