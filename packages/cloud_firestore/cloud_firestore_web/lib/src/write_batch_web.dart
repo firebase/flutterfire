@@ -23,7 +23,7 @@ class WriteBatchWeb extends WriteBatchPlatform {
     try {
       await _webWriteBatchDelegate.commit();
     } catch (e) {
-      throw throwFirebaseException(e);
+      throw getFirebaseException(e);
     }
   }
 

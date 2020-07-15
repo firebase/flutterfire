@@ -63,7 +63,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.disableNetwork();
     } catch (e) {
-      throw throwFirebaseException(e);
+      throw getFirebaseException(e);
     }
   }
 
@@ -76,7 +76,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.enableNetwork();
     } catch (e) {
-      throw throwFirebaseException(e);
+      throw getFirebaseException(e);
     }
   }
 
@@ -97,7 +97,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       // See: https://github.com/dart-lang/sdk/issues/29722
       return result as T;
     } catch (e) {
-      throw throwFirebaseException(e);
+      throw getFirebaseException(e);
     }
   }
 
@@ -132,7 +132,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.enablePersistence();
     } catch (e) {
-      throw throwFirebaseException(e);
+      throw getFirebaseException(e);
     }
   }
 

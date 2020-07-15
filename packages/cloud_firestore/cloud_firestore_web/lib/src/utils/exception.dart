@@ -7,19 +7,26 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 /// Returns a [FirebaseException] from a thrown web error.
-FirebaseException throwFirebaseException(Object exception) {
-  if (exception is! firebase.FirebaseError) {
+FirebaseException getFirebaseException(Object object) {
+  if (object is! Exception) {
     return FirebaseException(
-        plugin: "cloud_firestore",
+        plugin: 'cloud_firestore',
         code: 'unknown',
         message: 'An unknown error occurred.');
   }
 
-  firebase.FirebaseError firebaseError = exception as firebase.FirebaseError;
+  if (object is! firebase.FirebaseError) {
+    return FirebaseException(
+        plugin: "cloud_firestore",
+        code: 'unknown',
+        message: (object as Exception).toString());
+  }
+
+  firebase.FirebaseError firebaseError = object as firebase.FirebaseError;
 
   String code = firebaseError.code.replaceFirst('firestore/', '');
   String message =
       firebaseError.message.replaceFirst('(${firebaseError.code})', '');
   return FirebaseException(
-      plugin: "cloud_firestore", code: code, message: message);
+      plugin: 'cloud_firestore', code: code, message: message);
 }
