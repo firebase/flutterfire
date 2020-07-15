@@ -1,4 +1,4 @@
-## 1.0.0-1.0.pre
+## 0.2.0-dev.1
 
 * DEPRECATED: `FirebaseApp.configure` method is now deprecated in favor of the `Firebase.initializeApp` method.
 * DEPRECATED: `FirebaseApp.allApps` method is now deprecated in favor of the `Firebase.apps` property.

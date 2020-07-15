@@ -17,6 +17,16 @@ class TestDocumentReference extends DocumentReferencePlatform {
             '$_kCollectionId/$_kDocumentId');
 }
 
+/// Collection reference pointing to the same collection as
+/// [TestDocumentReference].
+///
+/// However, this has a leading `/` for testing path equality.
+class ShadowTestDocumentReference extends DocumentReferencePlatform {
+  ShadowTestDocumentReference._()
+      : super(FirebaseFirestorePlatform.instance,
+            '/$_kCollectionId/$_kDocumentId');
+}
+
 void main() {
   initializeMethodChannel();
 
@@ -35,6 +45,12 @@ void main() {
     test("path", () {
       final document = TestDocumentReference._();
       expect(document.path, equals("$_kCollectionId/$_kDocumentId"));
+    });
+
+    test('==', () {
+      final other = ShadowTestDocumentReference._();
+      final reference = TestDocumentReference._();
+      expect(other, equals(reference));
     });
 
     test("id", () {

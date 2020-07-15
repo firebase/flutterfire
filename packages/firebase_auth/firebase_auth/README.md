@@ -73,6 +73,7 @@ Otherwise you will not be able to authenticate.
 Add the following imports to your Dart code:
 ```dart
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 ```
 
 Initialize `GoogleSignIn` and `FirebaseAuth`:
@@ -174,13 +175,13 @@ for a complete sample app using the Firebase authentication.
 
 ## Issues and feedback
 
-Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
 Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
-please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
-and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
 
 ## 0.4.x to 0.5.x Firebase Dynamic Links Android migration tip
 

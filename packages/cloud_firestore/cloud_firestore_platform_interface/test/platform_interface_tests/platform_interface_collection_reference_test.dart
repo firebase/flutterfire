@@ -17,6 +17,15 @@ class TestCollectionReference extends CollectionReferencePlatform {
       : super(FirebaseFirestorePlatform.instance, '$_kCollectionId');
 }
 
+/// Collection reference pointing to the same collection as
+/// [TestCollectionReference].
+///
+/// However, this has a leading `/` for testing path equality.
+class ShadowTestCollectionReference extends CollectionReferencePlatform {
+  ShadowTestCollectionReference._()
+      : super(FirebaseFirestorePlatform.instance, '/$_kCollectionId');
+}
+
 class TestSubcollectionReference extends CollectionReferencePlatform {
   TestSubcollectionReference._()
       : super(FirebaseFirestorePlatform.instance,
@@ -40,6 +49,12 @@ void main() {
     test("id", () {
       final collection = TestCollectionReference._();
       expect(collection.id, equals(_kCollectionId));
+    });
+
+    test('==', () {
+      final other = ShadowTestCollectionReference._();
+      final collection = TestCollectionReference._();
+      expect(other, equals(collection));
     });
 
     test("parent", () {
