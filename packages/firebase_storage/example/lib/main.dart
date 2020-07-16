@@ -18,20 +18,20 @@ void main() async {
 
   final FirebaseOptions firebaseOptions = (Platform.isIOS || Platform.isMacOS)
       ? const FirebaseOptions(
-          googleAppID: '1:159623150305:ios:4a213ef3dbd8997b',
-          gcmSenderID: '159623150305',
+          appId: '1:159623150305:ios:4a213ef3dbd8997b',
+          messagingSenderId: '159623150305',
           apiKey: 'AIzaSyChk3KEG7QYrs4kQPLP1tjJNxBTbfCAdgg',
-          projectID: 'flutter-firebase-plugins',
+          projectId: 'flutter-firebase-plugins',
         )
       : const FirebaseOptions(
-          googleAppID: '1:159623150305:android:ef48439a0cc0263d',
-          gcmSenderID: '159623150305',
+          appId: '1:159623150305:android:ef48439a0cc0263d',
+          messagingSenderId: '159623150305',
           apiKey: 'AIzaSyChk3KEG7QYrs4kQPLP1tjJNxBTbfCAdgg',
-          projectID: 'flutter-firebase-plugins',
+          projectId: 'flutter-firebase-plugins',
         );
 
   final FirebaseApp app =
-      await FirebaseApp.configure(name: 'test', options: firebaseOptions);
+      await Firebase.initializeApp(name: 'test', options: firebaseOptions);
   final FirebaseStorage storage = FirebaseStorage(
       app: app, storageBucket: 'gs://flutter-firebase-plugins.appspot.com');
   runApp(MyApp(storage: storage));

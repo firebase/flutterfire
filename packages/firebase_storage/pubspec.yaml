@@ -18,7 +18,7 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core:
+  firebase_core: 0.5.0-dev.1
 
 dev_dependencies:
   firebase_core_platform_interface:
