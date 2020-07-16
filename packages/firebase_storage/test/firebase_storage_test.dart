@@ -20,13 +20,13 @@ void main() {
 
   group('FirebaseStorage', () {
     setUpAll(() async {
-      app = await FirebaseApp.configure(
+      app = await Firebase.initializeApp(
         name: 'testApp',
         options: FirebaseOptions(
-          googleAppID: '1:1234567890:ios:42424242424242',
+          appId: '1:1234567890:ios:42424242424242',
           apiKey: '123',
-          projectID: '123',
-          gcmSenderID: '1234567890',
+          projectId: '123',
+          messagingSenderId: '1234567890',
         ),
       );
       storage = FirebaseStorage(app: app, storageBucket: storageBucket);

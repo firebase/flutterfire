@@ -7,7 +7,7 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 
 void initializeMethodChannel() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  MethodChannelFirebaseCore.channel.setMockMethodCallHandler((call) async {
+  MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
     if (call.method == 'Firebase#initializeCore') {
       return [
         {
