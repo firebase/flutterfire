@@ -1,3 +1,7 @@
+## 2.0.0-dev.1
+
+* Update to v1 core plugin.
+
 ## 1.1.0
 
 * Change environment SDK requirement from `>=2.0.0-dev.28.0` to `>=2.0.0` to fix 'publishable' CI stage.

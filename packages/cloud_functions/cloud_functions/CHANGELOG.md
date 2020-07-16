@@ -1,3 +1,7 @@
+## 0.6.0-dev.1
+
+* Update to v1 core plugin.
+
 ## 0.5.0
 
 * Fix example app build failure on CI (missing AndroidX Gradle properties).

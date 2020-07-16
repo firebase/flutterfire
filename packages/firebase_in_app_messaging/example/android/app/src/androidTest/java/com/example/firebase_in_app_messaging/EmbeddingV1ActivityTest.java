@@ -2,11 +2,11 @@ package com.example.firebase_in_app_messaging;
 
 import androidx.test.rule.ActivityTestRule;
 import com.example.firebase_in_app_messaging_example.EmbeddingV1Activity;
-import dev.flutter.plugins.e2e.FlutterRunner;
+import dev.flutter.plugins.e2e.FlutterTestRunner;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 
-@RunWith(FlutterRunner.class)
+@RunWith(FlutterTestRunner.class)
 public class EmbeddingV1ActivityTest {
   @Rule
   public ActivityTestRule<EmbeddingV1Activity> rule =

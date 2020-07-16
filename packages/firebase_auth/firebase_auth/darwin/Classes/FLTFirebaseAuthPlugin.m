@@ -70,6 +70,10 @@ int nextHandle = 0;
 
 - (FIRAuth *_Nullable)getAuth:(NSDictionary *)args {
   NSString *appName = [args objectForKey:@"app"];
+  // TODO(Salakar): Remove name check once plugin refactored with new Core.
+  if ([appName isEqualToString:@"[DEFAULT]"]) {
+    appName = @"__FIRAPP_DEFAULT";
+  }
   return [FIRAuth authWithApp:[FIRApp appNamed:appName]];
 }
 
@@ -347,7 +351,7 @@ int nextHandle = 0;
   else if ([@"verifyPhoneNumber" isEqualToString:call.method]) {
     NSString *phoneNumber = call.arguments[@"phoneNumber"];
     NSNumber *handle = call.arguments[@"handle"];
-    [[FIRPhoneAuthProvider provider]
+    [[FIRPhoneAuthProvider providerWithAuth:[self getAuth:call.arguments]]
         verifyPhoneNumber:phoneNumber
                UIDelegate:nil
                completion:^(NSString *verificationID, NSError *error) {
@@ -368,9 +372,9 @@ int nextHandle = 0;
     NSString *verificationId = call.arguments[@"verificationId"];
     NSString *smsCode = call.arguments[@"smsCode"];
 
-    FIRPhoneAuthCredential *credential =
-        [[FIRPhoneAuthProvider provider] credentialWithVerificationID:verificationId
-                                                     verificationCode:smsCode];
+    FIRPhoneAuthCredential *credential = [[FIRPhoneAuthProvider
+        providerWithAuth:[self getAuth:call.arguments]] credentialWithVerificationID:verificationId
+                                                                    verificationCode:smsCode];
     [[self getAuth:call.arguments]
         signInAndRetrieveDataWithCredential:credential
                                  completion:^(FIRAuthDataResult *authResult,

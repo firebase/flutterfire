@@ -1,6 +1,7 @@
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// ignore_for_file: public_member_api_docs
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -10,30 +11,42 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   final String name = 'foo';
-  final FirebaseOptions options = const FirebaseOptions(
-    googleAppID: '1:297855924061:ios:c6de2b69b03a5be8',
-    gcmSenderID: '297855924061',
-    apiKey: 'AIzaSyBq6mcufFXfyqr79uELCiqM_O_1-G72PVU',
+  final FirebaseOptions firebaseOptions = const FirebaseOptions(
+    appId: '1:448618578101:ios:0b650370bb29e29cac3efc',
+    apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
+    projectId: 'react-native-firebase-testing',
+    messagingSenderId: '448618578101',
   );
 
-  Future<void> _configure() async {
-    final FirebaseApp app = await FirebaseApp.configure(
-      name: name,
-      options: options,
-    );
+  Future<void> initializeDefault() async {
+    FirebaseApp app = await Firebase.initializeApp();
     assert(app != null);
-    print('Configured $app');
+    print('Initialized default app $app');
   }
 
-  Future<void> _allApps() async {
-    final List<FirebaseApp> apps = await FirebaseApp.allApps();
-    print('Currently configured apps: $apps');
+  Future<void> initializeSecondary() async {
+    FirebaseApp app =
+        await Firebase.initializeApp(name: name, options: firebaseOptions);
+
+    assert(app != null);
+    print('Initialized $app');
   }
 
-  Future<void> _options() async {
-    final FirebaseApp app = await FirebaseApp.appNamed(name);
-    final FirebaseOptions options = await app?.options;
+  void apps() {
+    final List<FirebaseApp> apps = Firebase.apps;
+    print('Currently initialized apps: $apps');
+  }
+
+  void options() {
+    final FirebaseApp app = Firebase.app(name);
+    final FirebaseOptions options = app?.options;
     print('Current options for app $name: $options');
+  }
+
+  Future<void> delete() async {
+    final FirebaseApp app = Firebase.app(name);
+    await app?.delete();
+    print('App $name deleted');
   }
 
   @override
@@ -50,9 +63,15 @@ class MyApp extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               RaisedButton(
-                  onPressed: _configure, child: const Text('initialize')),
-              RaisedButton(onPressed: _allApps, child: const Text('allApps')),
-              RaisedButton(onPressed: _options, child: const Text('options')),
+                  onPressed: initializeDefault,
+                  child: const Text('Initialize default app')),
+              RaisedButton(
+                  onPressed: initializeSecondary,
+                  child: const Text('Initialize secondary app')),
+              RaisedButton(onPressed: apps, child: const Text('Get apps')),
+              RaisedButton(
+                  onPressed: options, child: const Text('List options')),
+              RaisedButton(onPressed: delete, child: const Text('Delete app')),
             ],
           ),
         ),
