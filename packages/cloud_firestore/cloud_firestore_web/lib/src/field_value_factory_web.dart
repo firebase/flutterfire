@@ -10,7 +10,7 @@ import 'package:cloud_firestore_web/src/field_value_web.dart';
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
 
 /// An implementation of [FieldValueFactoryPlatform] which builds [FieldValuePlatform]
-/// instance that is [jsify] friendly
+/// instances that are [jsify] friendly.
 class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
   @override
   FieldValueWeb arrayRemove(List elements) => FieldValueWeb(

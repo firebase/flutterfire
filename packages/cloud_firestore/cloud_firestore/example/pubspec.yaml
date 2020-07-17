@@ -1,4 +1,4 @@
-name: firestore_example
+name: cloud_firestore_example
 description: Demonstrates how to use the firestore plugin.
 
 dependencies:
@@ -6,10 +6,12 @@ dependencies:
     sdk: flutter
   cloud_firestore:
     path: ../
-  firebase_core: "^0.4.4"
+  firebase_core:
+    path: ../../../firebase_core/firebase_core
 
 dev_dependencies:
   pedantic: ^1.8.0
+  drive: 0.0.1-6.0.pre
   flutter_driver:
     sdk: flutter
   test: any

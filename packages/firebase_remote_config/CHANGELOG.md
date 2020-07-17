@@ -1,3 +1,11 @@
+## 0.3.1+1
+
+* Propagate native error message on fetch method.
+
+## 0.3.1
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 0.3.0+4
 
 * Fix for missing UserAgent.h compilation failures.

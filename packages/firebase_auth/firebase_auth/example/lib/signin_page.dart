@@ -195,33 +195,43 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      final Uri link = await _retrieveDynamicLink();
-
-      if (link != null) {
-        final FirebaseUser user = (await _auth.signInWithEmailAndLink(
-          email: _userEmail,
-          link: link.toString(),
-        ))
-            .user;
-
-        if (user != null) {
-          _userID = user.uid;
-          _success = true;
-        } else {
-          _success = false;
-        }
-      } else {
-        _success = false;
+      final PendingDynamicLinkData data =
+          await FirebaseDynamicLinks.instance.getInitialLink();
+      if (data?.link != null) {
+        handleLink(data?.link);
       }
 
-      setState(() {});
+      FirebaseDynamicLinks.instance.onLink(
+          onSuccess: (PendingDynamicLinkData dynamicLink) async {
+        final Uri deepLink = dynamicLink?.link;
+
+        handleLink(deepLink);
+      }, onError: (OnLinkErrorException e) async {
+        print('onLinkError');
+        print(e.message);
+      });
     }
   }
 
-  Future<Uri> _retrieveDynamicLink() async {
-    final PendingDynamicLinkData data =
-        await FirebaseDynamicLinks.instance.retrieveDynamicLink();
-    return data?.link;
+  void handleLink(Uri link) async {
+    if (link != null) {
+      final FirebaseUser user = (await _auth.signInWithEmailAndLink(
+        email: _userEmail,
+        link: link.toString(),
+      ))
+          .user;
+
+      if (user != null) {
+        _userID = user.uid;
+        _success = true;
+      } else {
+        _success = false;
+      }
+    } else {
+      _success = false;
+    }
+
+    setState(() {});
   }
 
   @override
