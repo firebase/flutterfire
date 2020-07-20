@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_web/src/utils/exception.dart';
 import 'package:firebase/firestore.dart' as web;
 
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
@@ -28,10 +29,14 @@ class TransactionWeb extends TransactionPlatform {
 
   @override
   Future<DocumentSnapshotPlatform> get(String documentPath) async {
-    final webDocumentSnapshot = await _webTransactionDelegate
-        .get(_webFirestoreDelegate.doc(documentPath));
+    try {
+      final webDocumentSnapshot = await _webTransactionDelegate
+          .get(_webFirestoreDelegate.doc(documentPath));
 
-    return convertWebDocumentSnapshot(this._firestore, webDocumentSnapshot);
+      return convertWebDocumentSnapshot(this._firestore, webDocumentSnapshot);
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
   }
 
   @override

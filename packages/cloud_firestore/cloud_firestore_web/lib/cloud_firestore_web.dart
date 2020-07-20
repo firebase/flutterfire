@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_web/src/utils/exception.dart';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/firestore.dart' as web;
 import 'package:firebase_core/firebase_core.dart';
@@ -59,7 +60,11 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   Future<void> disableNetwork() async {
-    await _webFirestore.disableNetwork();
+    try {
+      await _webFirestore.disableNetwork();
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
   }
 
   @override
@@ -68,7 +73,11 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   Future<void> enableNetwork() async {
-    await _webFirestore.enableNetwork();
+    try {
+      await _webFirestore.enableNetwork();
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
   }
 
   // @override
@@ -79,13 +88,17 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   @override
   Future<T> runTransaction<T>(TransactionHandler transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
-    dynamic result = await _webFirestore.runTransaction((transaction) async {
-      return transactionHandler(
-          TransactionWeb(this, _webFirestore, transaction));
-    }).timeout(timeout);
-    // Workaround for 'Runtime type information not available for type_variable_local'
-    // See: https://github.com/dart-lang/sdk/issues/29722
-    return result as T;
+    try {
+      dynamic result = await _webFirestore.runTransaction((transaction) async {
+        return transactionHandler(
+            TransactionWeb(this, _webFirestore, transaction));
+      }).timeout(timeout);
+      // Workaround for 'Runtime type information not available for type_variable_local'
+      // See: https://github.com/dart-lang/sdk/issues/29722
+      return result as T;
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
   }
 
   @override
@@ -114,9 +127,13 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// Enable persistence of Firestore data. Web only.
   Future<void> enablePersistence() async {
     // TODO(salakar): this should accept a [PersistenceSettings] argument
-    // but it is currently unsupported on the 'firebase' dart package.
+    // but it is currently unsupported on the 'firebase-dart' package.
     // See https://firebase.google.com/docs/reference/js/firebase.firestore.PersistenceSettings
-    await _webFirestore.enablePersistence();
+    try {
+      await _webFirestore.enablePersistence();
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
   }
 
   // @override

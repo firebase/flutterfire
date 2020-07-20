@@ -89,11 +89,9 @@ void runQueryTests() {
         try {
           await collection.get();
         } catch (error) {
-          if (!kIsWeb) {
-            expect(error, isA<FirebaseException>());
-            expect(
-                (error as FirebaseException).code, equals('permission-denied'));
-          }
+          expect(error, isA<FirebaseException>());
+          expect(
+              (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
         fail("Should have thrown a [FireebaseException]");
@@ -185,11 +183,9 @@ void runQueryTests() {
         try {
           await stream.first;
         } catch (error) {
-          if (!kIsWeb) {
-            expect(error, isA<FirebaseException>());
-            expect(
-                (error as FirebaseException).code, equals('permission-denied'));
-          }
+          expect(error, isA<FirebaseException>());
+          expect(
+              (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
 
