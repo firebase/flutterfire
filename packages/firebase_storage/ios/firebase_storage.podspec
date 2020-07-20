@@ -27,8 +27,7 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   
   s.source_files     = 'Classes/**/*.{h,m}'
-  s.public_header_files = 'Classes/Public/*.h'
-  s.private_header_files = 'Classes/Private/*.h'
+  s.public_header_files = 'Classes/*.h'
 
   s.ios.deployment_target = '8.0'
   s.dependency 'Flutter'
