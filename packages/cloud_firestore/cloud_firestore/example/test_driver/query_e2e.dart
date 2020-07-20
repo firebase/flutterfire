@@ -175,7 +175,7 @@ void runQueryTests() {
         await collection.doc('doc2').set({'foo': 'bar'});
         await collection.doc('doc2').update({'foo': 'baz'});
 
-        subscription.cancel();
+        await subscription.cancel();
       });
 
       test('listeners throws a [FirebaseException]', () async {

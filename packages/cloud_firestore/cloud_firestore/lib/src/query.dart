@@ -8,7 +8,9 @@ part of cloud_firestore;
 ///
 /// Can construct refined [Query] objects by adding filters and ordering.
 class Query {
+  /// The [FirebaseFirestore] instance of this query.
   final FirebaseFirestore firestore;
+
   final QueryPlatform _delegate;
 
   Query._(this.firestore, this._delegate) {
@@ -177,6 +179,7 @@ class Query {
   }
 
   @Deprecated("Deprecated in favor of `.get()`")
+  // ignore: public_member_api_docs
   Future<QuerySnapshot> getDocuments([GetOptions options]) => get(options);
 
   /// Creates and returns a new Query that's additionally limited to only return up

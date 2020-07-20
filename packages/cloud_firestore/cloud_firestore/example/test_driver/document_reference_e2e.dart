@@ -80,7 +80,7 @@ void runDocumentReferenceTests() {
         await document.set({'foo': 'bar'});
         await document.update({'foo': 'baz'});
 
-        subscription.cancel();
+        await subscription.cancel();
       });
 
       test('listeners throws a [FirebaseException]', () async {

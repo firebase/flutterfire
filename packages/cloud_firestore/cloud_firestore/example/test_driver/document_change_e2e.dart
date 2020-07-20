@@ -65,7 +65,7 @@ void runDocumentChangeTests() {
       await Future.delayed(Duration(seconds: 1)); // Ensure listener fires
       await doc1.delete();
 
-      subscription.cancel();
+      await subscription.cancel();
     });
 
     test('returns the correct metadata when modifying', () async {
@@ -111,7 +111,7 @@ void runDocumentChangeTests() {
       await Future.delayed(Duration(seconds: 1)); // Ensure listener fires
       await doc1.update({'value': 4});
 
-      subscription.cancel();
+      await subscription.cancel();
     });
   });
 }
