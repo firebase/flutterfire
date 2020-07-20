@@ -274,7 +274,7 @@ class Likes extends StatefulWidget {
   /// The number of current likes (before manipulation).
   final num currentLikes;
 
-  /// Construts a new [Likes] instance with a given [DocumentReference] and 
+  /// Constructs a new [Likes] instance with a given [DocumentReference] and
   /// current like count.
   Likes({Key key, this.reference, this.currentLikes}) : super(key: key);
 
