@@ -36,6 +36,7 @@ import java.util.Map;
 // TODO(kroikie): Better handle empty paths.
 //                https://github.com/FirebaseExtended/flutterfire/issues/1505
 /** FirebaseStoragePlugin */
+// TODO(Salakar): Should also implement io.flutter.plugins.firebase.core.FlutterFirebasePlugin when reworked.
 public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
   private FirebaseStorage firebaseStorage;
   private MethodChannel methodChannel;

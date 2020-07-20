@@ -5,6 +5,7 @@
 #import "FLTFirebaseStoragePlugin.h"
 
 #import <Firebase/Firebase.h>
+#import <firebase_core/FLTFirebasePlugin.h>
 
 static FlutterError *getFlutterError(NSError *error) {
   return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %ld", (long)error.code]
@@ -12,6 +13,7 @@ static FlutterError *getFlutterError(NSError *error) {
                              details:error.localizedDescription];
 }
 
+// TODO(Salakar): Protocal should inherit FLTFirebasePlugin as part of upcoming re-work.
 @interface FLTFirebaseStoragePlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @end
@@ -41,11 +43,6 @@ static FlutterError *getFlutterError(NSError *error) {
 - (instancetype)init {
   self = [super init];
   if (self) {
-    if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
-      NSLog(@"Configuring the default Firebase app...");
-      [FIRApp configure];
-      NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    }
     _storageMap = [[NSMutableDictionary alloc] init];
     _uploadTasks = [NSMutableDictionary<NSNumber *, FIRStorageUploadTask *> dictionary];
     _nextUploadHandle = 0;
@@ -110,14 +107,11 @@ static FlutterError *getFlutterError(NSError *error) {
   NSString *bucketUrl = call.arguments[@"bucket"];
   FIRApp *app;
 
+  // TODO(Salakar): Should never be null after upcoming re-work in Dart.
   if ([appName isEqual:[NSNull null]]) {
     app = [FIRApp defaultApp];
   } else {
-    // TODO(Salakar): Remove name check once plugin refactored with new Core.
-    if ([appName isEqualToString:@"[DEFAULT]"]) {
-      appName = @"__FIRAPP_DEFAULT";
-    }
-    app = [FIRApp appNamed:appName];
+    app = [FLTFirebasePlugin firebaseAppNamed:appName];
   }
 
   if ([bucketUrl isEqual:[NSNull null]]) {
