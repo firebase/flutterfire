@@ -13,7 +13,7 @@ static FlutterError *getFlutterError(NSError *error) {
                              details:error.localizedDescription];
 }
 
-// TODO(Salakar): Protocal should inherit FLTFirebasePlugin as part of upcoming re-work.
+// TODO(Salakar): Protocol should inherit FLTFirebasePlugin as part of upcoming re-work.
 @interface FLTFirebaseStoragePlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @end
