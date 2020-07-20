@@ -10,9 +10,7 @@ import 'package:firebase/firebase.dart' as firebase;
 FirebaseException getFirebaseException(Object object) {
   if (object is! firebase.FirebaseError) {
     return FirebaseException(
-        plugin: 'cloud_firestore',
-        code: 'unknown',
-        message: object.toString());
+        plugin: 'cloud_firestore', code: 'unknown', message: object.toString());
   }
 
   firebase.FirebaseError firebaseError = object as firebase.FirebaseError;
