@@ -17,7 +17,7 @@ env:
 jobs:
   android:
     runs-on: macos-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v1
         with:
@@ -58,29 +58,41 @@ jobs:
           melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
             flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME.dart
 
-  ios:
+  apple:
     runs-on: macos-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 0
       - uses: subosito/flutter-action@v1
         with:
-          channel: "stable"
+          channel: "dev"
       - name: "Install Tools"
         run: |
           pub global activate melos
           echo "::add-path::$HOME/.pub-cache/bin"
+          flutter config --enable-macos-desktop
+          flutter devices
       - name: "Bootstrap Workspace"
         run: melos bootstrap
-      - name: "Build Example"
+      - name: "Build iOS Example"
         run: |
           melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
             flutter build ios --no-codesign
       - name: "Boot Simulator"
         run: xcrun simctl boot "iPhone 11"
-      - name: "Drive Example"
+      - name: "Drive iOS Example"
         run: |
           melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-            flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME.dart
+            flutter drive -d \"iPhone 11\" --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME.dart
+      - name: "Shutdown Simulator"
+        run: xcrun simctl shutdown "iPhone 11"
+      - name: "Build MacOS Example"
+        run: |
+          melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
+            flutter build macos
+      - name: "Drive MacOS Example"
+        run: |
+          melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
+            flutter drive -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME.dart
