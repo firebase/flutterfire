@@ -96,7 +96,7 @@ class GetUserName extends StatelessWidget {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
     return FutureBuilder<DocumentSnapshot>(
-      future: users.doc(documentId).get(),
+      future: users.document(documentId).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 
@@ -129,7 +129,7 @@ a `snapshots()` method which returns a [`Stream`](https://api.dart.dev/stable/2.
 
 ```dart
 Stream collectionStream = FirebaseFirestore.instance.collection('users').snapshots();
-Stream documentStream = FirebaseFirestore.instance.collection('users').doc('ABC123').snapshots();
+Stream documentStream = FirebaseFirestore.instance.collection('users').document('ABC123').snapshots();
 ```
 
 Once returned, you can subscribe to updates via the `listen()` method. The below example uses a [`StreamBuilder`](https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html)
@@ -223,7 +223,7 @@ method, which returns a `Map<String, dynamic>`, or `null` if it does not exist:
 ```dart
 FirebaseFirestore.instance
     .collection('users')
-    .doc(userId)
+    .document(userId)
     .get()
     .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
@@ -413,7 +413,7 @@ CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 Future<void> addUser() {
   return users
-    .doc('ABC123')
+    .document('ABC123')
     .set({
       'full_name': "Mary Jane",
       'age': 18
@@ -436,7 +436,7 @@ CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 Future<void> updateUser() {
   return users
-    .doc('ABC123')
+    .document('ABC123')
     .update({'company': 'Stokes and Sons'})
     .then((value) => print("User Updated"))
     .catchError((error) => print("Failed to update user: $error"));
@@ -450,7 +450,7 @@ CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 Future<void> updateUser() {
   return users
-    .doc('ABC123')
+    .document('ABC123')
     .update({'info.address.zipcode': 90210})
     .then((value) => print("User Updated"))
     .catchError((error) => print("Failed to update user: $error"));
@@ -470,7 +470,7 @@ CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 Future<void> updateUser() {
   return users
-    .doc('ABC123')
+    .document('ABC123')
     .update({'info.address.location': GeoPoint(53.483959, -2.244644)})
     .then((value) => print("User Updated"))
     .catchError((error) => print("Failed to update user: $error"));
@@ -489,7 +489,7 @@ Future<void> updateUser() {
     .then((bytes) => bytes.buffer.asUint8List())
     .then((avatar) {
       return users
-        .doc('ABC123')
+        .document('ABC123')
         .update({'info.avatar': Blob(avatar)});
       })
     .then((value) => print("User Updated"))
@@ -507,7 +507,7 @@ CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 Future<void> deleteUser() {
   return users
-    .doc('ABC123')
+    .document('ABC123')
     .delete()
     .then((value) => print("User Deleted"))
     .catchError((error) => print("Failed to delete user: $error"));
@@ -523,7 +523,7 @@ CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 Future<void> deleteField() {
   return users
-    .doc('ABC123')
+    .document('ABC123')
     .update({'age': FieldValue.delete()})
     .then((value) => print("User Deleted"))
     .catchError((error) => print("Failed to delete user: $error"));
@@ -560,7 +560,7 @@ To execute a transaction, call the [`runTransaction`](!cloud_firestore.FirebaseF
 // Create a reference to the document the transaction will use
 DocumentReference documentReference = FirebaseFirestore.instance
   .collection('users')
-  .doc(documentId);
+  .document(documentId);
 
 return Firestore.instance.runTransaction((transaction) async {
   // Get the document
