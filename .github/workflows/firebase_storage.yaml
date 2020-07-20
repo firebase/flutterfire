@@ -31,10 +31,6 @@ jobs:
           echo "::add-path::$HOME/.pub-cache/bin"
       - name: "Bootstrap Workspace"
         run: melos bootstrap
-      - name: "Build Example"
-        run: |
-          melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
-            flutter build apk
       - name: Download Emulator Image
         run: |
           echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install "system-images;android-28;google_apis;x86_64"
