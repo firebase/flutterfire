@@ -38,5 +38,6 @@ class DocumentChange {
       DocumentSnapshot._(_firestore, _delegate.document);
 
   @Deprecated("Deprecated in favor of .doc")
+  // ignore: public_member_api_docs
   DocumentSnapshot get document => doc;
 }
