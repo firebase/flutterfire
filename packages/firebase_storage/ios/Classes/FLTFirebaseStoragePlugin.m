@@ -1,17 +1,17 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
+// Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #import "FLTFirebaseStoragePlugin.h"
 
 #import <Firebase/Firebase.h>
+#import <firebase_core/FLTFirebasePlugin.h>
 
 static FlutterError *getFlutterError(NSError *error) {
   return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %ld", (long)error.code]
                              message:error.domain
                              details:error.localizedDescription];
 }
-
 @interface FLTFirebaseStoragePlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @end
@@ -41,11 +41,6 @@ static FlutterError *getFlutterError(NSError *error) {
 - (instancetype)init {
   self = [super init];
   if (self) {
-    if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
-      NSLog(@"Configuring the default Firebase app...");
-      [FIRApp configure];
-      NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    }
     _storageMap = [[NSMutableDictionary alloc] init];
     _uploadTasks = [NSMutableDictionary<NSNumber *, FIRStorageUploadTask *> dictionary];
     _nextUploadHandle = 0;
@@ -110,10 +105,11 @@ static FlutterError *getFlutterError(NSError *error) {
   NSString *bucketUrl = call.arguments[@"bucket"];
   FIRApp *app;
 
+  // TODO(Salakar): Should never be null after upcoming re-work in Dart.
   if ([appName isEqual:[NSNull null]]) {
     app = [FIRApp defaultApp];
   } else {
-    app = [FIRApp appNamed:appName];
+    app = [FLTFirebasePlugin firebaseAppNamed:appName];
   }
 
   if ([bucketUrl isEqual:[NSNull null]]) {
