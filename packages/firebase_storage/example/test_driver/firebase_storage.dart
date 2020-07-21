@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_driver/driver_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
@@ -16,6 +17,7 @@ void main() {
     FirebaseStorage firebaseStorage;
 
     setUp(() async {
+      await Firebase.initializeApp();
       firebaseStorage = FirebaseStorage();
     });
 
