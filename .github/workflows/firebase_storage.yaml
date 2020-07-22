@@ -31,6 +31,10 @@ jobs:
           echo "::add-path::$HOME/.pub-cache/bin"
       - name: "Bootstrap Workspace"
         run: melos bootstrap
+      - name: "Build Example"
+        run: |
+          melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
+            flutter build apk
       - name: Download Emulator Image
         run: |
           echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install "system-images;android-28;google_apis;x86_64"
@@ -52,7 +56,7 @@ jobs:
       - name: "Drive Example"
         run: |
           melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-            flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME.dart
+            flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
 
   apple:
     runs-on: macos-latest
@@ -81,7 +85,7 @@ jobs:
       - name: "Drive iOS Example"
         run: |
           melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-            flutter drive -d \"iPhone 11\" --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME.dart
+            flutter drive -d \"iPhone 11\" --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
       - name: "Shutdown Simulator"
         run: xcrun simctl shutdown "iPhone 11"
       - name: "Build MacOS Example"
@@ -91,4 +95,4 @@ jobs:
       - name: "Drive MacOS Example"
         run: |
           melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-            flutter drive -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME.dart
+            flutter drive -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
