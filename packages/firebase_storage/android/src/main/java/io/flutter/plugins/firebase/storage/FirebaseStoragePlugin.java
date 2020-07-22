@@ -50,7 +50,6 @@ public class FirebaseStoragePlugin implements MethodCallHandler, FlutterPlugin {
   }
 
   private void onAttachedToEngine(Context applicationContext, BinaryMessenger binaryMessenger) {
-    FirebaseApp.initializeApp(applicationContext);
     methodChannel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_storage");
     methodChannel.setMethodCallHandler(this);
   }
