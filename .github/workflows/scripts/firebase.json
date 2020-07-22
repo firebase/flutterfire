@@ -1,7 +1,10 @@
 {
+  "firestore": {
+    "rules": "firestore.rules"
+  },
   "emulators": {
     "firestore": {
-      "port": 8080
+      "port": "8080"
     },
     "ui": {
       "enabled": true
