@@ -5,8 +5,8 @@
 
 #import "FLTFirebaseAuthPlugin.h"
 
-#import "Firebase/Firebase.h"
 #import <firebase_core/FLTFirebasePlugin.h>
+#import "Firebase/Firebase.h"
 
 static NSString *getFlutterErrorCode(NSError *error) {
   NSString *code = [error userInfo][FIRAuthErrorUserInfoNameKey];
