@@ -2,12 +2,18 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import './register_page.dart';
 import './signin_page.dart';
 
-void main() {
+void main() async {
+  // TODO(Salakar): Firebase should be initialized via a FutureBuilder or a StatefulWidget,
+  // this is a quick & dirty way to initialize it with the least amount of code changes,
+  // to minimise code conflicts when Auth rework lands.
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
