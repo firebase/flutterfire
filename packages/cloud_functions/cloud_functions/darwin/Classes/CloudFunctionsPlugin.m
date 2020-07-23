@@ -5,6 +5,7 @@
 #import "CloudFunctionsPlugin.h"
 
 #import "Firebase/Firebase.h"
+#import <firebase_core/FLTFirebasePlugin.h>
 
 @interface CloudFunctionsPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *_channel;
@@ -45,11 +46,16 @@
     NSString *region = call.arguments[@"region"];
     NSString *origin = call.arguments[@"origin"];
     NSNumber *timeoutMicroseconds = call.arguments[@"timeoutMicroseconds"];
+
+    FIRApp *app
     // TODO(Salakar): Remove name check once plugin refactored with new Core.
-    if ([appName isEqualToString:@"[DEFAULT]"]) {
+    if ([appName isEqualToString:@"[DEFAULT]"] || [appName isEqual:[NSNull null]]) {
       appName = @"__FIRAPP_DEFAULT";
+      app = [FIRApp appNamed:appName];
+    } else {
+      app = [FLTFirebasePlugin firebaseAppNamed:appName];
     }
-    FIRApp *app = [FIRApp appNamed:appName];
+
     FIRFunctions *functions;
     if (region != nil && region != (id)[NSNull null]) {
       functions = [FIRFunctions functionsForApp:app region:region];
