@@ -1,3 +1,7 @@
+## 0.17.0-dev.1
+
+* Depend on `firebase_core` pre-release versions.
+
 ## 0.16.1+2
 
 * Update README to make it clear which authentication options are possible.

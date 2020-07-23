@@ -1,3 +1,7 @@
+## 0.2.0-dev.1
+
+* Depend on `firebase_core` pre-release versions.
+
 ## 0.1.3+1
 
 * Implement `confirmPasswordReset`.
