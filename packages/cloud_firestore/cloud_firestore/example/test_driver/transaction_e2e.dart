@@ -9,8 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'cloud_firestore_e2e.dart';
-
 void runTransactionTests() {
   group('$Transaction', () {
     FirebaseFirestore firestore;
