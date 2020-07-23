@@ -11,7 +11,10 @@ flutter:
         fileName: firebase_auth_web.dart
 
 dependencies:
-  firebase_auth_platform_interface: ^1.0.0
+  firebase_auth_platform_interface:
+    git:
+      url: https://github.com/appvinio/flutterfire.git
+      path: packages/firebase_auth/firebase_auth_platform_interface
   flutter:
     sdk: flutter
   flutter_web_plugins:
