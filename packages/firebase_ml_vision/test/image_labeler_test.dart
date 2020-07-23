@@ -33,7 +33,7 @@ void main() {
       test('processImage', () async {
         final List<dynamic> labelData = <dynamic>[
           <dynamic, dynamic>{
-            'confidence': 0.6,
+            'confidence': 1,
             'entityId': 'hello',
             'text': 'friend',
           },
@@ -73,7 +73,7 @@ void main() {
           ),
         ]);
 
-        expect(labels[0].confidence, 0.6);
+        expect(labels[0].confidence, 1.0);
         expect(labels[0].entityId, 'hello');
         expect(labels[0].text, 'friend');
 

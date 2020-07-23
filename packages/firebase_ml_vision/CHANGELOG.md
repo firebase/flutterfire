@@ -1,5 +1,9 @@
 ## 0.9.4
 
+* Fix for error if confidence is 1 or 0.
+
+## 0.9.4
+
 * Update lower bound of dart dependency to 2.0.0.
 
 ## 0.9.3+9

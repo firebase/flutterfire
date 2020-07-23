@@ -795,7 +795,7 @@ void main() {
                 'languageCode': 'cd',
               }
             ],
-            'confidence': 0.1,
+            'confidence': 0,
           },
           <dynamic, dynamic>{
             'text': 'my',
@@ -808,7 +808,7 @@ void main() {
               <dynamic>[8.0, 7.0],
             ],
             'recognizedLanguages': <dynamic>[],
-            'confidence': 0.2,
+            'confidence': 1,
           },
         ];
 
@@ -975,7 +975,7 @@ void main() {
           expect(element.recognizedLanguages, hasLength(2));
           expect(element.recognizedLanguages[0].languageCode, 'ab');
           expect(element.recognizedLanguages[1].languageCode, 'cd');
-          expect(element.confidence, 0.1);
+          expect(element.confidence, 0.0);
 
           element = text.blocks[0].lines[0].elements[1];
           // TODO(jackson): Use const Rect when available in minimum Flutter SDK
@@ -986,7 +986,7 @@ void main() {
             Offset(6.0, 5.0),
             Offset(8.0, 7.0),
           ]);
-          expect(element.confidence, 0.2);
+          expect(element.confidence, 1.0);
         });
       });
 
