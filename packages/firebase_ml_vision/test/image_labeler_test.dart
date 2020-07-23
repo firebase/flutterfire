@@ -33,7 +33,7 @@ void main() {
       test('processImage', () async {
         final List<dynamic> labelData = <dynamic>[
           <dynamic, dynamic>{
-            'confidence': 1,
+            'confidence': 0.6,
             'entityId': 'hello',
             'text': 'friend',
           },
@@ -41,6 +41,11 @@ void main() {
             'confidence': 0.8,
             'entityId': 'hi',
             'text': 'brother',
+          },
+          <dynamic, dynamic>{
+            'confidence': 1,
+            'entityId': 'hey',
+            'text': 'sister',
           },
         ];
 
@@ -73,13 +78,17 @@ void main() {
           ),
         ]);
 
-        expect(labels[0].confidence, 1.0);
+        expect(labels[0].confidence, 0.6);
         expect(labels[0].entityId, 'hello');
         expect(labels[0].text, 'friend');
 
         expect(labels[1].confidence, 0.8);
         expect(labels[1].entityId, 'hi');
         expect(labels[1].text, 'brother');
+
+        expect(labels[2].confidence, 1.0);
+        expect(labels[2].entityId, 'hey');
+        expect(labels[2].text, 'sister');
       });
 
       test('processImage no blocks', () async {
@@ -127,6 +136,11 @@ void main() {
             'entityId': '/m/1',
             'text': 'apple',
           },
+          <dynamic, dynamic>{
+            'confidence': 1,
+            'entityId': '/m/2',
+            'text': 'orange',
+          },
         ];
 
         returnValue = labelData;
@@ -165,6 +179,10 @@ void main() {
         expect(labels[1].confidence, 0.8);
         expect(labels[1].entityId, '/m/1');
         expect(labels[1].text, 'apple');
+
+        expect(labels[2].confidence, 1.0);
+        expect(labels[2].entityId, '/m/2');
+        expect(labels[2].text, 'orange');
       });
     });
   });

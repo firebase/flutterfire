@@ -1,4 +1,4 @@
-## 0.9.4
+## 0.9.5
 
 * Fix for error if confidence is 1 or 0.
 

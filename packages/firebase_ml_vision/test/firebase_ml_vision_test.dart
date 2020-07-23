@@ -795,7 +795,7 @@ void main() {
                 'languageCode': 'cd',
               }
             ],
-            'confidence': 0,
+            'confidence': 0.1,
           },
           <dynamic, dynamic>{
             'text': 'my',
@@ -808,7 +808,7 @@ void main() {
               <dynamic>[8.0, 7.0],
             ],
             'recognizedLanguages': <dynamic>[],
-            'confidence': 1,
+            'confidence': 0.2,
           },
         ];
 
@@ -886,6 +886,20 @@ void main() {
             'lines': <dynamic>[],
             'confidence': 0.6,
           },
+          <dynamic, dynamic>{
+            'text': 'hey',
+            'left': 14.0,
+            'top': 13.0,
+            'width': 16.0,
+            'height': 15.0,
+            'points': <dynamic>[
+              <dynamic>[18.0, 17.0],
+              <dynamic>[20.0, 19.0],
+            ],
+            'recognizedLanguages': <dynamic>[],
+            'lines': <dynamic>[],
+            'confidence': 1,
+          },
         ];
 
         final dynamic visionText = <dynamic, dynamic>{
@@ -900,7 +914,7 @@ void main() {
         test('processImage', () async {
           final VisionText text = await recognizer.processImage(image);
 
-          expect(text.blocks, hasLength(2));
+          expect(text.blocks, hasLength(3));
 
           TextBlock block = text.blocks[0];
           // TODO(jackson): Use const Rect when available in minimum Flutter SDK
@@ -926,6 +940,17 @@ void main() {
             Offset(20.0, 19.0),
           ]);
           expect(block.confidence, 0.6);
+
+          block = text.blocks[2];
+          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
+          // ignore: prefer_const_constructors
+          expect(block.boundingBox, Rect.fromLTWH(14.0, 13.0, 16.0, 15.0));
+          expect(block.text, 'hey');
+          expect(block.cornerPoints, const <Offset>[
+            Offset(18.0, 17.0),
+            Offset(20.0, 19.0),
+          ]);
+          expect(block.confidence, 1.0);
         });
       });
 
@@ -975,7 +1000,7 @@ void main() {
           expect(element.recognizedLanguages, hasLength(2));
           expect(element.recognizedLanguages[0].languageCode, 'ab');
           expect(element.recognizedLanguages[1].languageCode, 'cd');
-          expect(element.confidence, 0.0);
+          expect(element.confidence, 0.1);
 
           element = text.blocks[0].lines[0].elements[1];
           // TODO(jackson): Use const Rect when available in minimum Flutter SDK
@@ -986,7 +1011,7 @@ void main() {
             Offset(6.0, 5.0),
             Offset(8.0, 7.0),
           ]);
-          expect(element.confidence, 1.0);
+          expect(element.confidence, 0.2);
         });
       });
 
