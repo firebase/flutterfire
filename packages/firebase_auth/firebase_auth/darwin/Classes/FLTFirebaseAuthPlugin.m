@@ -64,7 +64,7 @@ int nextHandle = 0;
 
 - (FIRAuth *_Nullable)getAuth:(NSDictionary *)args {
   NSString *appName = [args objectForKey:@"app"];
-  return [FLTFirebasePlugin firebaseAppNamed:appName];
+  return [FIRAuth authWithApp:[FLTFirebasePlugin firebaseAppNamed:appName]];
 }
 
 #if TARGET_OS_IPHONE
