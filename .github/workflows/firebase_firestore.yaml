@@ -29,7 +29,7 @@ jobs:
         run: |
           pub global activate melos
           echo "::add-path::$HOME/.pub-cache/bin"
-          npm i -g firebase-tools
+          sudo npm i -g firebase-tools
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Example"
@@ -75,7 +75,7 @@ jobs:
         run: |
           pub global activate melos
           echo "::add-path::$HOME/.pub-cache/bin"
-          npm i -g firebase-tools
+          sudo npm i -g firebase-tools
           flutter config --enable-macos-desktop
           flutter devices
       - name: "Bootstrap Workspace"
@@ -121,7 +121,7 @@ jobs:
           pub global activate melos
           flutter config --enable-web
           echo "::add-path::$HOME/.pub-cache/bin"
-          npm i -g firebase-tools
+          sudo npm i -g firebase-tools
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Example"
