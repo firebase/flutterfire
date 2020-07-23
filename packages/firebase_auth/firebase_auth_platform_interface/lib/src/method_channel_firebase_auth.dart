@@ -416,6 +416,18 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     final PlatformUser currentUser = data != null ? _decodeUser(data) : null;
     _authStateChangedControllers[id].add(currentUser);
   }
+
+  @override
+  Future<PlatformAuthResult> signInWithMicrosoft(String appName) async {
+    final Map<String, dynamic> data =
+    await channel.invokeMapMethod<String, dynamic>(
+      'signInWithMicrosoft',
+      <String, dynamic>{
+        'app': appName,
+      },
+    );
+    return _decodeAuthResult(data);
+  }
 }
 
 PlatformUser _decodeUser(Map<dynamic, dynamic> data) {
