@@ -20,8 +20,9 @@ import 'timestamp_e2e.dart';
 import 'transaction_e2e.dart';
 import 'write_batch_e2e.dart';
 
-// Requires that an emulator is running locally
-bool kUseFirestoreEmulator = true;
+// TODO(Salakar): Web can't connect to Firestore emulator in CI, unable to reproduce
+// connection issue locally (working fine locally and also for Android/iOS on CI).
+bool kUseFirestoreEmulator = !kIsWeb;
 
 void testsMain() {
   setUpAll(() async {
