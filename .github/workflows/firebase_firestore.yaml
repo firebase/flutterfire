@@ -55,7 +55,7 @@ jobs:
           echo "Emulator started"
           flutter emulators
       - name: Start Firestore Emulator
-        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh &
+        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh
       - name: "Drive Example"
         run: |
           melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
@@ -87,7 +87,7 @@ jobs:
       - name: "Boot Simulator"
         run: xcrun simctl boot "iPhone 11"
       - name: Start Firestore Emulator
-        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh &
+        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh
       - name: "Drive iOS Example"
         run: |
           melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
@@ -124,12 +124,12 @@ jobs:
           sudo npm i -g firebase-tools
       - name: "Bootstrap Workspace"
         run: melos bootstrap
-      - name: Start Firestore Emulator
-        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh &
       - name: "Build Example"
         run: |
           melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=web -- \
             flutter build web
+      - name: Start Firestore Emulator
+        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh
       - name: "Drive Example"
         run: |
           melos clean && melos bootstrap
