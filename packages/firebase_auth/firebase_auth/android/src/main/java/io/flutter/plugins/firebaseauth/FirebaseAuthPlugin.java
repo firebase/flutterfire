@@ -79,7 +79,6 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
 
   private void initInstance(BinaryMessenger messenger, Context context) {
     channel = new MethodChannel(messenger, "plugins.flutter.io/firebase_auth");
-    FirebaseApp.initializeApp(context);
     channel.setMethodCallHandler(this);
     authStateListeners = new SparseArray<>();
     forceResendingTokens = new SparseArray<>();
