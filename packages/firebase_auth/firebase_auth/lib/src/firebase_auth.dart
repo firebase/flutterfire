@@ -328,6 +328,8 @@ class FirebaseAuth {
   }
 
   Future<AuthResult> signInWithMicrosoft() async {
+    final PlatformAuthResult data = await FirebaseAuthPlatform.instance
+        .signInWithCredential(app.name, credential);
     final Map<String, dynamic> data =
     await channel.invokeMapMethod<String, dynamic>(
       'signInWithMicrosoft',

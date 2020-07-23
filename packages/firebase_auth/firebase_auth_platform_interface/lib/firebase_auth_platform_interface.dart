@@ -194,6 +194,8 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     throw UnimplementedError('setLanguageCode() is not implemented');
   }
 
+  Future<PlatformAuthResult> signInWithMicrosoft();
+
   /// Creates a new stream which emits the current user on signOut and signIn.
   Stream<PlatformUser> onAuthStateChanged(String app) {
     throw UnimplementedError('onAuthStateChanged() is not implemented');
