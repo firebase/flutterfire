@@ -87,7 +87,7 @@ final ImageLabeler labeler = FirebaseVision.instance.imageLabeler();
 final TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
 ```
 
-You can also configure all detectors, except `TextRecognizer`, with desired options.
+You can also configure all detectors, except on-device `TextRecognizer`, with desired options.
 
 ```dart
 final ImageLabeler labeler = FirebaseVision.instance.imageLabler(

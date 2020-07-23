@@ -84,8 +84,9 @@ class FirebaseVision {
   }
 
   /// Creates a cloud instance of [TextRecognizer].
-  TextRecognizer cloudTextRecognizer() {
+  TextRecognizer cloudTextRecognizer([CloudTextRecognizerOptions options]) {
     return TextRecognizer._(
+      options: options ?? const CloudTextRecognizerOptions(),
       modelType: ModelType.cloud,
       handle: nextHandle++,
     );
