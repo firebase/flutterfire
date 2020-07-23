@@ -124,12 +124,12 @@ jobs:
           sudo npm i -g firebase-tools
       - name: "Bootstrap Workspace"
         run: melos bootstrap
+      - name: Start Firestore Emulator
+        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh &
       - name: "Build Example"
         run: |
           melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=web -- \
             flutter build web
-      - name: Start Firestore Emulator
-        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh &
       - name: "Drive Example"
         run: |
           melos clean && melos bootstrap
