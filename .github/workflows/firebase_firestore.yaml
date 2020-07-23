@@ -1,6 +1,5 @@
 name: firebase_firestore
 
-# TODO(Salakar): Re-enable integration tests on new Firestore changes branch.
 on:
   pull_request:
     paths:
@@ -30,6 +29,7 @@ jobs:
         run: |
           pub global activate melos
           echo "::add-path::$HOME/.pub-cache/bin"
+          sudo npm i -g firebase-tools
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Example"
@@ -54,6 +54,8 @@ jobs:
           $ANDROID_HOME/platform-tools/adb shell settings put global animator_duration_scale 0.0
           echo "Emulator started"
           flutter emulators
+      - name: Start Firestore Emulator
+        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh
       - name: "Drive Example"
         run: |
           melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
@@ -73,6 +75,7 @@ jobs:
         run: |
           pub global activate melos
           echo "::add-path::$HOME/.pub-cache/bin"
+          sudo npm i -g firebase-tools
           flutter config --enable-macos-desktop
           flutter devices
       - name: "Bootstrap Workspace"
@@ -83,12 +86,16 @@ jobs:
             flutter build ios --no-codesign
       - name: "Boot Simulator"
         run: xcrun simctl boot "iPhone 11"
+      - name: Start Firestore Emulator
+        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh
       - name: "Drive iOS Example"
         run: |
           melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
             flutter drive -d \"iPhone 11\" --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
       - name: "Shutdown Simulator"
         run: xcrun simctl shutdown "iPhone 11"
+      - name: "Reset Firestore Emulator"
+        run: cd ./.github/workflows/scripts && ./reset-firestore-emulator.sh
       - name: "Build MacOS Example"
         run: |
           melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
@@ -114,12 +121,15 @@ jobs:
           pub global activate melos
           flutter config --enable-web
           echo "::add-path::$HOME/.pub-cache/bin"
+          sudo npm i -g firebase-tools
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Example"
         run: |
           melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=web -- \
             flutter build web
+      - name: Start Firestore Emulator
+        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh
       - name: "Drive Example"
         run: |
           melos clean && melos bootstrap
