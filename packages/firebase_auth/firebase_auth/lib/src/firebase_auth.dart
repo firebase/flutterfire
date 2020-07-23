@@ -327,6 +327,18 @@ class FirebaseAuth {
     return FirebaseAuthPlatform.instance.setLanguageCode(app.name, language);
   }
 
+  Future<AuthResult> signInWithMicrosoft() async {
+    final Map<String, dynamic> data =
+    await channel.invokeMapMethod<String, dynamic>(
+      'signInWithMicrosoft',
+      <String, dynamic>{
+        'app': app.name,
+      },
+    );
+    final AuthResult authResult = AuthResult._(data, app);
+    return authResult;
+  }
+
   /// Completes the password reset process, given a confirmation code and new password.
   ///
   /// Errors:

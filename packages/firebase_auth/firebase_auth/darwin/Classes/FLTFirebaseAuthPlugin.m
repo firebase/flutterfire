@@ -33,6 +33,8 @@ NSDictionary *toDictionary(id<FIRUserInfo> userInfo) {
 
 @implementation FLTFirebaseAuthPlugin
 
+FIROAuthProvider *microsoftProvider;
+
 // Handles are ints used as indexes into the NSMutableDictionary of active observers
 int nextHandle = 0;
 
@@ -127,6 +129,20 @@ int nextHandle = 0;
                                        forAuthDataResult:authResult
                                                    error:error];
                                  }];
+  } else if ([@"signInWithMicrosoft" isEqualToString:call.method]) {
+          microsoftProvider = [FIROAuthProvider providerWithProviderID:@"microsoft.com"];
+          [microsoftProvider getCredentialWithUIDelegate:nil
+                                     completion:^(FIRAuthCredential *credential, NSError *error) {
+                                         if (credential) {
+                                             [[self getAuth:call.arguments] signInWithCredential:credential
+                                                                       completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                                                                           [self sendResult:result
+                                                                          forAuthDataResult:authResult
+                                                                                      error:error];
+                                                                       }];
+                                         }
+                                     }];
+          [provider setCustomParameters:@{@"prompt": @"select_account", @"tenant":  @"08c3c6f5-8532-40b8-9a06-62f54296ed4b"}];
   } else if ([@"createUserWithEmailAndPassword" isEqualToString:call.method]) {
     NSString *email = call.arguments[@"email"];
     NSString *password = call.arguments[@"password"];

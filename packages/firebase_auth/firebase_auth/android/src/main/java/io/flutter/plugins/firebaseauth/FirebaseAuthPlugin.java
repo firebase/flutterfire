@@ -214,12 +214,30 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
       case "setLanguageCode":
         handleSetLanguageCode(call, result, getAuth(call));
         break;
+      case "signInWithMicrosoft":
+        handleSignInWithMicrosoft(call, result, getAuth(call));
+        break;
       case "confirmPasswordReset":
         handleConfirmPasswordReset(call, result, getAuth(call));
         break;
       default:
         result.notImplemented();
         break;
+    }
+  }
+
+  private void handleSignInWithMicrosoft(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
+    final OAuthProvider.Builder provider = OAuthProvider.newBuilder("microsoft.com");
+    provider.addCustomParameter("prompt", "select_account");
+    provider.addCustomParameter("tenant", "08c3c6f5-8532-40b8-9a06-62f54296ed4b");
+    Task<AuthResult> pendingResultTask = firebaseAuth.getPendingAuthResult();
+    if (pendingResultTask != null) {
+      pendingResultTask
+        .addOnCompleteListener(new SignInCompleteListener(result));
+    } else {
+      firebaseAuth
+        .startActivityForSignInWithProvider(registrar.activity(), provider.build())
+        .addOnCompleteListener(new SignInCompleteListener(result));
     }
   }
 
