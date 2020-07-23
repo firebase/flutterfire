@@ -6,6 +6,7 @@
 #import "FLTFirebaseAuthPlugin.h"
 
 #import "Firebase/Firebase.h"
+#import <firebase_core/FLTFirebasePlugin.h>
 
 static NSString *getFlutterErrorCode(NSError *error) {
   NSString *code = [error userInfo][FIRAuthErrorUserInfoNameKey];
@@ -63,11 +64,7 @@ int nextHandle = 0;
 
 - (FIRAuth *_Nullable)getAuth:(NSDictionary *)args {
   NSString *appName = [args objectForKey:@"app"];
-  // TODO(Salakar): Remove name check once plugin refactored with new Core.
-  if ([appName isEqualToString:@"[DEFAULT]"]) {
-    appName = @"__FIRAPP_DEFAULT";
-  }
-  return [FIRAuth authWithApp:[FIRApp appNamed:appName]];
+  return [FLTFirebasePlugin firebaseAppNamed:appName];
 }
 
 #if TARGET_OS_IPHONE
