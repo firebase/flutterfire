@@ -34,7 +34,7 @@ jobs:
       - name: "Build Example"
         run: |
           melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
-            flutter build apk
+            flutter build apk --debug --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
       - name: Download Emulator Image
         run: |
           echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install "system-images;android-28;google_apis;x86_64"
@@ -56,7 +56,7 @@ jobs:
       - name: "Drive Example"
         run: |
           melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-            flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+            flutter drive --no-pub --no-build --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
 
   ios:
     runs-on: macos-latest
