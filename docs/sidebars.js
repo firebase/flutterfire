@@ -29,7 +29,7 @@ module.exports = {
       "firestore/usage",
       toReferenceAPI("cloud_firestore"),
     ],
-    // "Cloud Functions": ["functions/usage", toReferenceAPI("cloud_functions")],
+    "Cloud Functions": ["functions/overview", toReferenceAPI("cloud_functions")],
     // "Cloud Messaging": ["messaging/usage", toReferenceAPI("firebase_messaging")],
     "Cloud Storage": ["storage/overview", "storage/usage", toReferenceAPI("firebase_storage")],
     Core: ["core/usage", toReferenceAPI("firebase_core")],
