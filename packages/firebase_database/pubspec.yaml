@@ -12,7 +12,8 @@ flutter:
         pluginClass: FirebaseDatabasePlugin
       ios:
         pluginClass: FLTFirebaseDatabasePlugin
-
+      macos:
+        pluginClass: FLTFirebaseDatabasePlugin
 
 dependencies:
   flutter:
