@@ -29,4 +29,4 @@ flutter:
         package: io.flutter.plugins.firebaseml
         pluginClass: FirebaseMLPlugin
       ios:
-        pluginClass: FirebaseMLPlugin
+        pluginClass: FLTFirebaseMLPlugin
