@@ -15,7 +15,7 @@ class FirebaseAuth {
   }
 
   /// Provides an instance of this class corresponding to the default app.
-  static final FirebaseAuth instance = FirebaseAuth._(Firebase.app());
+  static final FirebaseAuth instance = FirebaseAuth._(FirebaseApp.instance);
 
   final FirebaseApp app;
 
@@ -327,9 +327,9 @@ class FirebaseAuth {
     return FirebaseAuthPlatform.instance.setLanguageCode(app.name, language);
   }
 
-  Future<AuthResult> signInWithMicrosoft() async {
+  Future<AuthResult> signInWithMicrosoft(String appName) async {
     final PlatformAuthResult data = await FirebaseAuthPlatform.instance
-        .signInWithMicrosoft();
+        .signInWithMicrosoft(appName);
     final AuthResult authResult = AuthResult._(data, app);
     return authResult;
   }
