@@ -48,12 +48,11 @@
     NSNumber *timeoutMicroseconds = call.arguments[@"timeoutMicroseconds"];
 
     FIRApp *app;
-        // TODO(Salakar): Remove name check once plugin refactored with new Core.
-        if ([appName isEqualToString:@"[DEFAULT]"] || [appName isEqual:[NSNull null]]) {
+    // TODO(Salakar): Remove name check once plugin refactored with new Core.
+    if ([appName isEqualToString:@"[DEFAULT]"] || [appName isEqual:[NSNull null]]) {
       appName = @"__FIRAPP_DEFAULT";
       app = [FIRApp appNamed:appName];
-    }
-    else {
+    } else {
       app = [FLTFirebasePlugin firebaseAppNamed:appName];
     }
 
