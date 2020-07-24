@@ -5,6 +5,7 @@
 #import "FLTFirebaseDatabasePlugin.h"
 
 #import <Firebase/Firebase.h>
+#import <firebase_core/FLTFirebasePlugin.h>
 
 static FlutterError *getFlutterError(NSError *error) {
   if (error == nil) return nil;
@@ -131,6 +132,8 @@ id roundDoubles(id value) {
   return value;
 }
 
+// TODO(Salakar): Should also implement io.flutter.plugins.firebase.core.FlutterFirebasePlugin when
+// reworked.
 @interface FLTFirebaseDatabasePlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @end
@@ -167,15 +170,13 @@ id roundDoubles(id value) {
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
   FIRDatabase *database;
   NSString *appName = call.arguments[@"app"];
-  // TODO(Salakar): Remove name check once plugin refactored with new Core.
-  if ([appName isEqualToString:@"[DEFAULT]"]) {
-    appName = @"__FIRAPP_DEFAULT";
-  }
   NSString *databaseURL = call.arguments[@"databaseURL"];
+  // TODO(Salakar): `appName` Should never be null after upcoming re-work in Dart.
   if (![appName isEqual:[NSNull null]] && ![databaseURL isEqual:[NSNull null]]) {
-    database = [FIRDatabase databaseForApp:[FIRApp appNamed:appName] URL:databaseURL];
+    database = [FIRDatabase databaseForApp:[FLTFirebasePlugin firebaseAppNamed:appName]
+                                       URL:databaseURL];
   } else if (![appName isEqual:[NSNull null]]) {
-    database = [FIRDatabase databaseForApp:[FIRApp appNamed:appName]];
+    database = [FIRDatabase databaseForApp:[FLTFirebasePlugin firebaseAppNamed:appName]];
   } else if (![databaseURL isEqual:[NSNull null]]) {
     database = [FIRDatabase databaseWithURL:databaseURL];
   } else {
