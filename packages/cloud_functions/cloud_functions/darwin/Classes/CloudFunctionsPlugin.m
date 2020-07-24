@@ -28,13 +28,6 @@
 
 - (instancetype)init {
   self = [super init];
-  if (self) {
-    if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
-      NSLog(@"Configuring the default Firebase app...");
-      [FIRApp configure];
-      NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    }
-  }
   return self;
 }
 
@@ -47,15 +40,7 @@
     NSString *origin = call.arguments[@"origin"];
     NSNumber *timeoutMicroseconds = call.arguments[@"timeoutMicroseconds"];
 
-    FIRApp *app;
-    // TODO(Salakar): Remove name check once plugin refactored with new Core.
-    if ([appName isEqualToString:@"[DEFAULT]"] || [appName isEqual:[NSNull null]]) {
-      appName = @"__FIRAPP_DEFAULT";
-      app = [FIRApp appNamed:appName];
-    } else {
-      app = [FLTFirebasePlugin firebaseAppNamed:appName];
-    }
-
+    FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appName];
     FIRFunctions *functions;
     if (region != nil && region != (id)[NSNull null]) {
       functions = [FIRFunctions functionsForApp:app region:region];
