@@ -29,6 +29,7 @@ jobs:
         run: |
           pub global activate melos
           echo "::add-path::$HOME/.pub-cache/bin"
+          flutter upgrade
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Example"
