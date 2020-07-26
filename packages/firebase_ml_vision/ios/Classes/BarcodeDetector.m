@@ -79,8 +79,8 @@ NSDictionary *visionBarcodeWiFiToDictionary(FIRVisionBarcodeWiFi *wifi) {
 NSDictionary *visionBarcodeEmailToDictionary(FIRVisionBarcodeEmail *email) {
   return @{
     @"address" : email.address,
-    @"body" : email.body,
-    @"subject" : email.subject,
+    @"body" : email.body ? email.body : [NSNull null],
+    @"subject" : email.subject ? email.subject : [NSNull null],
     @"type" : @(email.type),
   };
 }
