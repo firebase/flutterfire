@@ -11,10 +11,10 @@ public class EmbeddingV1Activity extends FlutterActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     FlutterFirebaseCorePlugin.registerWith(
-      registrarFor("io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin"));
+        registrarFor("io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin"));
     // TODO(Salakar) rename as part of re-work FirebasePerformancePlugin -> FlutterFirebasePerformancePlugin
     FirebasePerformancePlugin.registerWith(
-      registrarFor("io.flutter.plugins.firebaseperformance.FirebasePerformancePlugin"));
+        registrarFor("io.flutter.plugins.firebaseperformance.FirebasePerformancePlugin"));
     E2EPlugin.registerWith(registrarFor("dev.flutter.plugins.e2e.E2EPlugin"));
   }
 }
