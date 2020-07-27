@@ -1,23 +1,31 @@
 /// Conditions to download remote models.
 class FirebaseModelDownloadConditions {
-  /// Android: Boolean that indicates if wifi is required.
+  /// Android only: indicates if wifi is required.
+  ///
+  /// The default is false.
   final bool androidRequireWifi;
 
-  /// Android: Boolean that indicates if device idle is required.
+  /// Android only: indicates if device idle is required.
+  ///
+  /// The default is false.
   final bool androidRequireDeviceIdle;
 
-  /// Android: Boolean that indicates if charging is required.
+  /// Android only: indicates if charging is required.
+  ///
+  /// The default is false.
   final bool androidRequireCharging;
 
-  /// IOS: Boolean that indicates if download should be over a cellular network.
+  /// IOS only: indicates if download should be over a cellular network.
+  ///
+  /// The default is true.
   final bool iosAllowCellularAccess;
 
-  /// IOS: Boolean that indicates if download can happen in the background.
+  /// IOS only: indicates if download can happen in the background.
+  ///
+  /// The default is false.
   final bool iosAllowBackgroundDownloading;
 
-  /// Constructor for the download conditions that takes optional parameters
-  /// requireWifi, requireDeviceIdle and requireCharging and defaults them to
-  /// false if none given.
+  /// Constructor for the download conditions that takes optional platform-specific parameters and defaults them if none given.
   FirebaseModelDownloadConditions(
       {this.androidRequireDeviceIdle = false,
       this.androidRequireCharging = false,

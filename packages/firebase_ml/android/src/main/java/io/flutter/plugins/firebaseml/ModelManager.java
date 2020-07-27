@@ -95,7 +95,7 @@ public final class ModelManager {
                 } else {
                   result.error(
                       "FirebaseModelManager",
-                      "The model is not yet downloaded or valid model is not provided.",
+                      "Please make sure your custom remote model is downloaded.",
                       null);
                 }
               }
