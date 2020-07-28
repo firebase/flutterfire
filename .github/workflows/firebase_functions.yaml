@@ -27,7 +27,7 @@ jobs:
       - name: "Install Tools"
         run: |
           flutter pub global activate melos
-          echo "::add-path::$HOME/.pub-cache/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/_flutter/.pub-cache/bin"
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Example"
