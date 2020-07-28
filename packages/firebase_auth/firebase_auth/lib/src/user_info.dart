@@ -35,7 +35,6 @@ class UserInfo {
     return '$runtimeType($_data)';
   }
 
-  @override
   Map<String, dynamic> toMap() {
     return {
       'providerId': providerId,
