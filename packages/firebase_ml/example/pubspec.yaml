@@ -1,5 +1,5 @@
-name: firebaseml_example
-description: Demonstrates how to use the firebaseml plugin.
+name: firebase_ml_custom_example
+description: Demonstrates how to use the firebase_ml_custom plugin.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  firebase_ml:
+  firebase_ml_custom:
     path: ../
   firebase_core: ^0.4.0
   cupertino_icons: ^0.1.3

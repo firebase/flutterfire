@@ -24,7 +24,7 @@ class FirebaseModelManager {
   /// Means for communication with native platform code
   @visibleForTesting
   static const MethodChannel channel =
-      MethodChannel('plugins.flutter.io/firebase_ml');
+      MethodChannel('plugins.flutter.io/firebase_ml_custom');
 
   /// Singleton of [FirebaseModelManager].
   static final FirebaseModelManager instance = FirebaseModelManager._();

@@ -6,13 +6,13 @@
 
 #import "Firebase/Firebase.h"
 
-/** A flutter plugin for accessing the Firebase ML APIs. */
-@interface FLTFirebaseMLPlugin : NSObject <FlutterPlugin>
+/** A flutter plugin for accessing the Firebase ML APIs for custom models. */
+@interface FLTFirebaseMLCustomPlugin : NSObject <FlutterPlugin>
 + (void)handleError:(NSError *)error result:(FlutterResult)result;
 @end
 
 /**
- * A delegate for FLTFirebaseMLPlugin to handle management of remote models.
+ * A delegate for FLTFirebaseMLCustomPlugin to handle management of remote models.
  */
 @interface FLTModelManager : NSObject
 

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.flutter.plugins.firebaseml_example">
+    package="io.flutter.plugins.firebasemlcustomexample">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
@@ -9,7 +9,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="firebaseml_example"
+        android:label="firebasemlcustomexample"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

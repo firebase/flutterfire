@@ -1,7 +1,7 @@
-name: firebase_ml
+name: firebase_ml_custom
 description: Flutter plugin for Firebase Custom Model support.
 version: 0.0.1
-homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_ml
+homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_ml_custom
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -26,7 +26,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: io.flutter.plugins.firebaseml
-        pluginClass: FirebaseMLPlugin
+        package: io.flutter.plugins.firebasemlcustom
+        pluginClass: FirebaseMLCustomPlugin
       ios:
-        pluginClass: FLTFirebaseMLPlugin
+        pluginClass: FLTFirebaseMLCustomPlugin

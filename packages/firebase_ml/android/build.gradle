@@ -1,4 +1,4 @@
-group 'io.flutter.plugins.firebaseml'
+group 'io.flutter.plugins.firebasemlcustom'
 version '1.0'
 
 buildscript {
@@ -33,7 +33,6 @@ android {
     }
     dependencies {
         api 'com.google.firebase:firebase-ml-model-interpreter:22.0.3'
-        api 'com.google.firebase:firebase-common:16.1.0'
         implementation 'androidx.annotation:annotation:1.0.0'
         implementation 'androidx.exifinterface:exifinterface:1.0.0'
     }

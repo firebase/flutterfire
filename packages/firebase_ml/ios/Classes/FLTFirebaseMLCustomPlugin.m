@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FLTFirebaseMLPlugin.h"
+#import "FLTFirebaseMLCustomPlugin.h"
 
 static FlutterError* getFlutterError(NSError* error) {
   return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %d", (int)error.code]
@@ -10,7 +10,7 @@ static FlutterError* getFlutterError(NSError* error) {
                              details:error.localizedDescription];
 }
 
-@implementation FLTFirebaseMLPlugin
+@implementation FLTFirebaseMLCustomPlugin
 
 + (void)handleError:(NSError*)error result:(FlutterResult)result {
   result(getFlutterError(error));
@@ -18,9 +18,9 @@ static FlutterError* getFlutterError(NSError* error) {
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel =
-      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_ml"
+      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_ml_custom"
                                   binaryMessenger:[registrar messenger]];
-  FLTFirebaseMLPlugin* instance = [[FLTFirebaseMLPlugin alloc] init];
+  FLTFirebaseMLCustomPlugin* instance = [[FLTFirebaseMLCustomPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
 
   SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FLTFirebaseMLPlugin.h"
+#import "FLTFirebaseMLCustomPlugin.h"
 
 @implementation FLTModelManager
 
@@ -50,7 +50,7 @@
                   result(nil);
                 } else {
                   NSError *error = note.userInfo[FIRModelDownloadUserInfoKeyError];
-                  [FLTFirebaseMLPlugin handleError:error result:result];
+                  [FLTFirebaseMLCustomPlugin handleError:error result:result];
                 }
               }];
 
@@ -66,7 +66,7 @@
                 __strong typeof(self) strongSelf = weakSelf;
 
                 NSError *error = note.userInfo[FIRModelDownloadUserInfoKeyError];
-                [FLTFirebaseMLPlugin handleError:error result:result];
+                [FLTFirebaseMLCustomPlugin handleError:error result:result];
               }];
 }
 
@@ -80,7 +80,7 @@
                     if (remoteModelPath != nil && error == nil) {
                       result([NSString stringWithString:remoteModelPath]);
                     } else {
-                      [FLTFirebaseMLPlugin handleError:error result:result];
+                      [FLTFirebaseMLCustomPlugin handleError:error result:result];
                     }
                   }];
 }

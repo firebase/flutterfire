@@ -1,10 +1,14 @@
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tflite/tflite.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_ml/firebase_ml.dart';
+import 'package:firebase_ml_custom/firebase_ml_custom.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() {
@@ -83,7 +87,7 @@ class _MyAppState extends State<MyApp> {
   Widget readyScreen() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Firebase ML example app'),
+        title: const Text('Firebase ML Custom example app'),
       ),
       body: Column(
         children: [

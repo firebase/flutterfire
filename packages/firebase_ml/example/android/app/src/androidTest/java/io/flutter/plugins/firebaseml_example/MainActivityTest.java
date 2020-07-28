@@ -1,4 +1,4 @@
-package io.flutter.plugins.firebaseml_example;
+package io.flutter.plugins.firebasemlcustomexample;
 
 import androidx.test.rule.ActivityTestRule;
 import dev.flutter.plugins.e2e.FlutterRunner;

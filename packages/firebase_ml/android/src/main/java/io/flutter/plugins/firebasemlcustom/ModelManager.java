@@ -1,4 +1,4 @@
-package io.flutter.plugins.firebaseml;
+package io.flutter.plugins.firebasemlcustom;
 
 import android.os.Build;
 import androidx.annotation.NonNull;

@@ -4,7 +4,7 @@
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_ml/firebase_ml.dart';
+import 'package:firebase_ml_custom/firebase_ml_custom.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package io.flutter.plugins.firebaseml;
+package io.flutter.plugins.firebasemlcustom;
 
 import androidx.annotation.Keep;
 import com.google.firebase.components.Component;

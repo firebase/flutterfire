@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.package io.flutter.plugins.firebaseml;
 
-package io.flutter.plugins.firebaseml;
+package io.flutter.plugins.firebasemlcustom;
 
 import android.os.Build;
 import androidx.annotation.NonNull;
@@ -14,10 +14,10 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
-/** A flutter plugin for accessing the FirebaseML API. */
-public class FirebaseMLPlugin implements FlutterPlugin, MethodCallHandler {
+/** A flutter plugin for accessing the FirebaseML API for custom models. */
+public class FirebaseMLCustomPlugin implements FlutterPlugin, MethodCallHandler {
 
-  private static final String CHANNEL_NAME = "plugins.flutter.io/firebase_ml";
+  private static final String CHANNEL_NAME = "plugins.flutter.io/firebase_ml_custom";
 
   private MethodChannel channel;
 
@@ -33,7 +33,7 @@ public class FirebaseMLPlugin implements FlutterPlugin, MethodCallHandler {
    */
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
-    channel.setMethodCallHandler(new FirebaseMLPlugin());
+    channel.setMethodCallHandler(new FirebaseMLCustomPlugin());
   }
 
   @Override
