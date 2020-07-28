@@ -8,102 +8,276 @@ import 'package:firebase_ml/firebase_ml.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  String MODEL_NAME = "myModelName";
-  String MODEL_HASH = "myModelHash";
-  String MODEL_FILE_PATH = "someDestination";
+  final MODEL_NAME = "myModelName";
+  final MODEL_FILE_PATH = "someDestination";
+
+  group('$FirebaseRemoteModel()', () {
+    test('constructor creates a valid model with correct name', () {
+      final model = FirebaseCustomRemoteModel(MODEL_NAME);
+
+      expect(model, isA<FirebaseRemoteModel>());
+      expect(model, isNotNull);
+      expect(model.modelName, MODEL_NAME);
+    });
+
+    test('constructor throws exception when name is null', () {
+      expect(
+          () => FirebaseCustomRemoteModel(null),
+          throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+              contains("'modelName != null': is not true"))));
+    });
+  });
+
+  group('$FirebaseModelDownloadConditions()', () {
+    test('constructor defaults to right values', () {
+      final conditions = FirebaseModelDownloadConditions();
+
+      expect(conditions.androidRequireWifi, false);
+      expect(conditions.androidRequireDeviceIdle, false);
+      expect(conditions.androidRequireCharging, false);
+      expect(conditions.iosAllowBackgroundDownloading, false);
+      expect(conditions.iosAllowCellularAccess, true);
+    });
+
+    test('constructor assigns values correctly', () {
+      final conditions = FirebaseModelDownloadConditions(
+          androidRequireWifi: true,
+          androidRequireDeviceIdle: true,
+          androidRequireCharging: true,
+          iosAllowBackgroundDownloading: true,
+          iosAllowCellularAccess: false);
+
+      expect(conditions.androidRequireWifi, true);
+      expect(conditions.androidRequireDeviceIdle, true);
+      expect(conditions.androidRequireCharging, true);
+      expect(conditions.iosAllowBackgroundDownloading, true);
+      expect(conditions.iosAllowCellularAccess, false);
+    });
+
+    test('constructor throws exception if androidRequireWifi is null', () {
+      expect(
+          () => FirebaseModelDownloadConditions(androidRequireWifi: null),
+          throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+              contains("'androidRequireWifi != null': is not true"))));
+    });
+
+    test('constructor throws exception if androidRequireDeviceIdle is null',
+        () {
+      expect(
+          () => FirebaseModelDownloadConditions(androidRequireDeviceIdle: null),
+          throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+              contains("'androidRequireDeviceIdle != null': is not true"))));
+    });
+
+    test('constructor throws exception if androidRequireCharging is null', () {
+      expect(
+          () => FirebaseModelDownloadConditions(androidRequireCharging: null),
+          throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+              contains("'androidRequireCharging != null': is not true"))));
+    });
+
+    test(
+        'constructor throws exception if iosAllowBackgroundDownloading is null',
+        () {
+      expect(
+          () => FirebaseModelDownloadConditions(
+              iosAllowBackgroundDownloading: null),
+          throwsA(isA<AssertionError>().having(
+              (e) => e.toString(),
+              'message',
+              contains(
+                  "'iosAllowBackgroundDownloading != null': is not true"))));
+    });
+
+    test('constructor throws exception if iosAllowCellularAccess is null', () {
+      expect(
+          () => FirebaseModelDownloadConditions(iosAllowCellularAccess: null),
+          throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+              contains("'iosAllowCellularAccess != null': is not true"))));
+    });
+
+    test('conditions are passed as a map correctly', () {
+      final conditionsMap = FirebaseModelDownloadConditions().toMap();
+
+      expect(conditionsMap['androidRequireWifi'], false);
+      expect(conditionsMap['androidRequireDeviceIdle'], false);
+      expect(conditionsMap['androidRequireCharging'], false);
+      expect(conditionsMap['iosAllowBackgroundDownloading'], false);
+      expect(conditionsMap['iosAllowCellularAccess'], true);
+    });
+  });
 
   group('$FirebaseModelManager', () {
-    final List<MethodCall> log = <MethodCall>[];
-    final FirebaseModelManager modelManager = FirebaseModelManager.instance;
+    test('constructor creates a valid model manager', () {
+      final FirebaseModelManager modelManager = FirebaseModelManager.instance;
+      expect(modelManager, isNotNull);
+    });
 
-    setUp(() {
-      FirebaseModelManager.channel
-          .setMockMethodCallHandler((MethodCall methodCall) async {
-        log.add(methodCall);
+    group('when gets incorrect inputs', () {
+      final FirebaseModelManager modelManager = FirebaseModelManager.instance;
 
-        switch (methodCall.method) {
-          case 'FirebaseModelManager#download':
-            var model = <String, String>{};
-            model['modelName'] = MODEL_NAME;
-            model['modelHash'] = MODEL_HASH;
-            return model;
-          case 'FirebaseModelManager#getLatestModelFile':
-            return MODEL_FILE_PATH;
-          case 'FirebaseModelManager#isModelDownloaded':
-            return true;
-          default:
-            return null;
-        }
+      test('throws exception when tries to download model if model is null',
+          () {
+        final conditions = FirebaseModelDownloadConditions();
+        expect(
+            modelManager.download(null, conditions),
+            throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+                contains("'model != null': is not true"))));
       });
-      log.clear();
+
+      test(
+          'throws exception when tries to download model if conditions are null',
+          () {
+        final model = FirebaseCustomRemoteModel(MODEL_NAME);
+        expect(
+            modelManager.download(model, null),
+            throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+                contains("'conditions != null': is not true"))));
+      });
+
+      test(
+          'throws exception when tries to check if model is downloaded if model is null',
+          () {
+        expect(
+            modelManager.isModelDownloaded(null),
+            throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+                contains("'model != null': is not true"))));
+      });
+
+      test(
+          'throws exception when tries to get latest model file if model is null',
+          () {
+        expect(
+            modelManager.getLatestModelFile(null),
+            throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+                contains("'model != null': is not true"))));
+      });
     });
 
-    tearDown(() {
-      FirebaseModelManager.channel.setMockMethodCallHandler(null);
+    group('when successfully communicates with native API', () {
+      final List<MethodCall> log = <MethodCall>[];
+      final FirebaseModelManager modelManager = FirebaseModelManager.instance;
+      final FirebaseCustomRemoteModel model =
+          FirebaseCustomRemoteModel(MODEL_NAME);
+
+      setUp(() {
+        FirebaseModelManager.channel
+            .setMockMethodCallHandler((MethodCall methodCall) async {
+          log.add(methodCall);
+
+          switch (methodCall.method) {
+            case 'FirebaseModelManager#download':
+              return null;
+            case 'FirebaseModelManager#getLatestModelFile':
+              return MODEL_FILE_PATH;
+            case 'FirebaseModelManager#isModelDownloaded':
+              return true;
+            default:
+              throw Exception("Not implemented");
+          }
+        });
+        log.clear();
+      });
+
+      tearDown(() {
+        FirebaseModelManager.channel.setMockMethodCallHandler(null);
+      });
+
+      test('downloads model', () async {
+        final conditions =
+            FirebaseModelDownloadConditions(androidRequireWifi: true);
+
+        await modelManager.download(model, conditions);
+
+        expect(
+          log,
+          <Matcher>[
+            isMethodCall(
+              'FirebaseModelManager#download',
+              arguments: <String, dynamic>{
+                'modelName': MODEL_NAME,
+                'conditions': conditions.toMap(),
+              },
+            ),
+          ],
+        );
+      });
+
+      test('checks if model is downloaded', () async {
+        final isModelDownloaded = await modelManager.isModelDownloaded(model);
+
+        expect(isModelDownloaded, isTrue);
+        expect(
+          log,
+          <Matcher>[
+            isMethodCall(
+              'FirebaseModelManager#isModelDownloaded',
+              arguments: <String, dynamic>{
+                'modelName': MODEL_NAME,
+              },
+            ),
+          ],
+        );
+      });
+
+      test('gets model file', () async {
+        final modelFile = await modelManager.getLatestModelFile(model);
+
+        expect(modelFile.path, MODEL_FILE_PATH);
+        expect(
+          log,
+          <Matcher>[
+            isMethodCall(
+              'FirebaseModelManager#getLatestModelFile',
+              arguments: <String, dynamic>{
+                'modelName': MODEL_NAME,
+              },
+            ),
+          ],
+        );
+      });
     });
 
-    test('manager downloads model', () async {
-      expect(modelManager, isNotNull);
-      FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
-      expect(model.modelHash, isNull);
-      FirebaseModelDownloadConditions conditions =
-          FirebaseModelDownloadConditions(requireWifi: true);
-      expect(conditions, isNotNull);
+    group('when fails to communicate with native API', () {
+      final FirebaseModelManager modelManager = FirebaseModelManager.instance;
+      final FirebaseCustomRemoteModel model =
+          FirebaseCustomRemoteModel(MODEL_NAME);
+      final ERROR_MESSAGE = "There is some problem with a call";
 
-      await modelManager.download(model, conditions);
-      expect(model.modelName, MODEL_NAME);
-      expect(model.modelHash, MODEL_HASH);
+      setUp(() {
+        FirebaseModelManager.channel
+            .setMockMethodCallHandler((MethodCall methodCall) async {
+          throw Exception(ERROR_MESSAGE);
+        });
+      });
 
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'FirebaseModelManager#download',
-            arguments: <String, dynamic>{
-              'modelName': MODEL_NAME,
-              'conditions': conditions.toMap(),
-            },
-          ),
-        ],
-      );
-    });
-    test('manager checks if model is downloaded', () async {
-      expect(modelManager, isNotNull);
-      FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
+      tearDown(() {
+        FirebaseModelManager.channel.setMockMethodCallHandler(null);
+      });
 
-      var isModelDownloaded = await modelManager.isModelDownloaded(model);
-      expect(isModelDownloaded, isTrue);
+      test('throws exception when fails to download model', () async {
+        final conditions =
+            FirebaseModelDownloadConditions(androidRequireWifi: true);
+        expect(
+            modelManager.download(model, conditions),
+            throwsA(isA<PlatformException>().having(
+                (e) => e.toString(), 'message', contains(ERROR_MESSAGE))));
+      });
 
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'FirebaseModelManager#isModelDownloaded',
-            arguments: <String, dynamic>{
-              'modelName': MODEL_NAME,
-            },
-          ),
-        ],
-      );
-    });
-    test('manager gets model file', () async {
-      expect(modelManager, isNotNull);
-      FirebaseCustomRemoteModel model = FirebaseCustomRemoteModel(MODEL_NAME);
+      test('throws exception when fails to check if model is downloaded',
+          () async {
+        expect(
+            modelManager.isModelDownloaded(model),
+            throwsA(isA<PlatformException>().having(
+                (e) => e.toString(), 'message', contains(ERROR_MESSAGE))));
+      });
 
-      var modelFile = await modelManager.getLatestModelFile(model);
-      expect(modelFile.path, MODEL_FILE_PATH);
-
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'FirebaseModelManager#getLatestModelFile',
-            arguments: <String, dynamic>{
-              'modelName': MODEL_NAME,
-            },
-          ),
-        ],
-      );
+      test('throws exception when fails to get model file', () async {
+        expect(
+            modelManager.getLatestModelFile(model),
+            throwsA(isA<PlatformException>().having(
+                (e) => e.toString(), 'message', contains(ERROR_MESSAGE))));
+      });
     });
   });
 }
