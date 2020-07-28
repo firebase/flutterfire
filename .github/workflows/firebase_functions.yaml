@@ -32,6 +32,10 @@ jobs:
           echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin/cache/dart-sdk/bin"
       - name: "Bootstrap Workspace"
         run: melos bootstrap
+      - uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/packages/cloud_functions/**/*.gradle*') }}-${{ hashFiles('**/packages/cloud_functions/**/gradle/wrapper/gradle-wrapper.properties') }}
       - name: "Build Example"
         run: |
           melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
@@ -43,9 +47,7 @@ jobs:
           arch: x86_64
           target: google_apis
           profile: Nexus 5X
-          script: |
-            melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-              flutter drive --no-pub --no-build --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+          script: ./.github/workflows/scripts/drive-android-example.sh
 
   ios:
     runs-on: macos-latest
@@ -68,10 +70,8 @@ jobs:
         run: |
           melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
             flutter build ios --no-codesign --simulator --debug --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
-      - name: "Boot Simulator"
-        run: xcrun simctl boot "iPhone 11"
       - name: "Drive Example"
-        run: melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- flutter drive --no-pub --no-build --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+        run: ./.github/workflows/scripts/drive-ios-example.sh
 
   web:
     runs-on: ubuntu-latest
