@@ -46,5 +46,4 @@ class UserInfo {
       'uid': uid,
     };
   }
-
 }
