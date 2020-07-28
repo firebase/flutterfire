@@ -34,8 +34,8 @@ class UserInfo {
   String toString() {
     return '$runtimeType($_data)';
   }
-  
-  @override
+
+  /// Convenience method to convert UserInfo to a map.
   Map<String, dynamic> toMap() {
     return {
       'providerId': providerId,
