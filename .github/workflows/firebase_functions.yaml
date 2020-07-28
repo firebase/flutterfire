@@ -26,9 +26,8 @@ jobs:
       - run: echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin"
       - name: "Install Tools"
         run: |
-          pub global activate melos
+          flutter pub global activate melos
           echo "::add-path::$HOME/.pub-cache/bin"
-          flutter upgrade
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Example"
@@ -69,7 +68,7 @@ jobs:
       - run: echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin"
       - name: "Install Tools"
         run: |
-          pub global activate melos
+          flutter pub global activate melos
           echo "::add-path::$HOME/.pub-cache/bin"
       - name: "Bootstrap Workspace"
         run: melos bootstrap
@@ -95,7 +94,7 @@ jobs:
       - run: echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin"
       - name: "Install Tools"
         run: |
-          pub global activate melos
+          flutter pub global activate melos
           flutter config --enable-web
           echo "::add-path::$HOME/.pub-cache/bin"
       - name: "Bootstrap Workspace"
