@@ -12,7 +12,6 @@ dependencies:
 
 dev_dependencies:
   pedantic: ^1.8.0
-  e2e: ^0.4.3+1
   http: ^0.12.0
   flutter_test:
     sdk: flutter
