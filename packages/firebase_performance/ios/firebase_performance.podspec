@@ -4,7 +4,7 @@
 
 require 'yaml'
 pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
-libraryVersion = pubspec['version'].gsub('+', '-')
+library_version = pubspec['version'].gsub('+', '-')
 
 firebase_sdk_version = '6.26.0'
 if defined?($FirebaseSDKVersion)
@@ -37,5 +37,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
   s.static_framework = true
 
-  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{libraryVersion}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-perf\\\"" }
+  s.pod_target_xcconfig = { 
+    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-perf\\\""
+  }
 end
