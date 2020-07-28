@@ -21,8 +21,8 @@
 + (void)download:(FlutterMethodCall *)call result:(FlutterResult)result {
   NSString *modelName = call.arguments[@"modelName"];
   NSDictionary *conditionsToMap = call.arguments[@"conditions"];
-  BOOL allowsCellularAccess = [conditionsToMap objectForKey:@"allowCellularAccess"];
-  BOOL allowBackgroundDownloading = [conditionsToMap objectForKey:@"allowBackgroundDownloading"];
+  BOOL allowsCellularAccess = [conditionsToMap objectForKey:@"iosAllowCellularAccess"];
+  BOOL allowBackgroundDownloading = [conditionsToMap objectForKey:@"iosAllowBackgroundDownloading"];
 
   FIRCustomRemoteModel *remoteModel = [[FIRCustomRemoteModel alloc] initWithName:modelName];
   FIRModelDownloadConditions *downloadConditions =
@@ -47,7 +47,7 @@
                 FIRRemoteModel *model = note.userInfo[FIRModelDownloadUserInfoKeyRemoteModel];
 
                 if ([model.name isEqualToString:modelName]) {
-                  result(@"Model successfully downloaded");
+                  result(nil);
                 } else {
                   NSError *error = note.userInfo[FIRModelDownloadUserInfoKeyError];
                   [FLTFirebaseMLPlugin handleError:error result:result];
@@ -78,7 +78,6 @@
       getLatestModelFilePath:remoteModel
                   completion:^(NSString *_Nullable remoteModelPath, NSError *error) {
                     if (remoteModelPath != nil && error == nil) {
-                      NSLog(@"-- remoteModelPath: %@", remoteModelPath);
                       result([NSString stringWithString:remoteModelPath]);
                     } else {
                       [FLTFirebaseMLPlugin handleError:error result:result];

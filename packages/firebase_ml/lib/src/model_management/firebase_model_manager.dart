@@ -30,16 +30,31 @@ class FirebaseModelManager {
   static final FirebaseModelManager instance = FirebaseModelManager._();
 
   /// Initiates the download of remoteModel if the download hasn't begun.
+  ///
+  /// If the model's download is already in progress,
+  /// new download will not be initiated.
+  ///
+  /// If the model is already downloaded to the device,
+  /// and there is no update, the task will immediately succeed.
+  ///
+  /// If the model is already downloaded to the device, and there is update,
+  /// a download for the updated version will be attempted.
+  ///
+  /// If the model update is failed to schedule, no error is raised,
+  /// and the caller should use the existing model.
   Future<void> download(FirebaseRemoteModel model,
       FirebaseModelDownloadConditions conditions) async {
-    var modelMap = Map<String, String>.from(await channel.invokeMethod(
-        "FirebaseModelManager#download",
-        {'modelName': model.modelName, 'conditions': conditions.toMap()}));
-    model.modelHash = modelMap['modelHash'];
+    assert(model != null);
+    assert(conditions != null);
+    await channel.invokeMethod("FirebaseModelManager#download",
+        {'modelName': model.modelName, 'conditions': conditions.toMap()});
   }
 
-  /// Returns the [File] containing the latest model for the remote model name.
+  /// Returns a [File] containing the latest model for the remote model name.
+  ///
+  /// This will fail with if the model is not yet downloaded on the device or valid custom remote model is not provided.
   Future<File> getLatestModelFile(FirebaseRemoteModel model) async {
+    assert(model != null);
     var modelPath = await channel.invokeMethod(
         "FirebaseModelManager#getLatestModelFile",
         {'modelName': model.modelName});
@@ -47,7 +62,8 @@ class FirebaseModelManager {
   }
 
   /// Returns whether the given [FirebaseRemoteModel] is currently downloaded.
-  Future<bool> isModelDownloaded(FirebaseRemoteModel model) {
+  Future<bool> isModelDownloaded(FirebaseRemoteModel model) async {
+    assert(model != null);
     return channel.invokeMethod("FirebaseModelManager#isModelDownloaded",
         {'modelName': model.modelName});
   }
