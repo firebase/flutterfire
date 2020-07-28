@@ -13,7 +13,7 @@ if [ "$ACTION" == "ios" ]
 then
   xcrun simctl boot "iPhone 11"
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-    flutter drive -d \"iPhone 11\" --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart 
+    flutter drive -d \"iPhone 11\" --no-pub --no-build --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
   exit
 fi
 
