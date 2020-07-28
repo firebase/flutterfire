@@ -90,7 +90,7 @@ jobs:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 0
-      - run: git clone https://github.com/flutter/flutter.git --depth 1 -b master _flutter
+      - run: git clone https://github.com/flutter/flutter.git --depth 1 -b beta _flutter
       - run: echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin"
       - name: "Install Tools"
         run: |
