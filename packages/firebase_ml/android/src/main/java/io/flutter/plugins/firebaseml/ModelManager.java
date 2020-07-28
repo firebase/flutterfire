@@ -93,10 +93,11 @@ public final class ModelManager {
                 if (modelFile != null) {
                   result.success(modelFile.getAbsolutePath());
                 } else {
-                  result.error(
-                      "FirebaseModelManager",
-                      "Please make sure your custom remote model is downloaded.",
-                      null);
+                  String errorMessage =
+                      task.getException() == null
+                          ? "Please make sure your custom remote model is downloaded."
+                          : task.getException().getLocalizedMessage();
+                  result.error("FirebaseModelManager", errorMessage, null);
                 }
               }
             });

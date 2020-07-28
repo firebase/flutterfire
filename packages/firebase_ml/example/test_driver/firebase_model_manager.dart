@@ -36,15 +36,17 @@ void firebaseModelManagerTest() {
       if (Platform.isAndroid) {
         expect(
             modelManager.download(model, conditions),
-            throwsA(isA<PlatformException>().having((e) => e.toString(),
-                'message', contains('Failed to schedule the download task'))));
+            throwsA(isA<PlatformException>().having(
+                (e) => e.toString().toLowerCase(),
+                'message',
+                contains('failed to schedule the download task'))));
       }
 
       if (Platform.isIOS) {
         expect(
             modelManager.download(model, conditions),
-            throwsA(isA<PlatformException>().having((e) => e.toString(),
-                'message', contains('The operation couldn’t be completed'))));
+            throwsA(isA<PlatformException>()
+                .having((e) => e.toString(), 'message', contains('404'))));
       }
     });
 
@@ -56,8 +58,7 @@ void firebaseModelManagerTest() {
           throwsA(isA<PlatformException>().having(
               (e) => e.toString(),
               'message',
-              contains(
-                  'Please make sure your custom remote model is downloaded'))));
+              contains('make sure your custom remote model is downloaded'))));
     });
   });
 }

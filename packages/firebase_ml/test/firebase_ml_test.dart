@@ -21,8 +21,10 @@ void main() {
     });
 
     test('constructor throws exception when name is null', () {
-      expect(() => FirebaseCustomRemoteModel(null),
-          throwsA(isA<AssertionError>()));
+      expect(
+          () => FirebaseCustomRemoteModel(null),
+          throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+              contains("'modelName != null': is not true"))));
     });
   });
 
@@ -53,21 +55,25 @@ void main() {
     });
 
     test('constructor throws exception if androidRequireWifi is null', () {
-      expect(() => FirebaseModelDownloadConditions(androidRequireWifi: null),
-          throwsA(isA<AssertionError>()));
+      expect(
+          () => FirebaseModelDownloadConditions(androidRequireWifi: null),
+          throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+              contains("'androidRequireWifi != null': is not true"))));
     });
 
     test('constructor throws exception if androidRequireDeviceIdle is null',
         () {
       expect(
           () => FirebaseModelDownloadConditions(androidRequireDeviceIdle: null),
-          throwsA(isA<AssertionError>()));
+          throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+              contains("'androidRequireDeviceIdle != null': is not true"))));
     });
 
     test('constructor throws exception if androidRequireCharging is null', () {
       expect(
           () => FirebaseModelDownloadConditions(androidRequireCharging: null),
-          throwsA(isA<AssertionError>()));
+          throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+              contains("'androidRequireCharging != null': is not true"))));
     });
 
     test(
@@ -76,13 +82,18 @@ void main() {
       expect(
           () => FirebaseModelDownloadConditions(
               iosAllowBackgroundDownloading: null),
-          throwsA(isA<AssertionError>()));
+          throwsA(isA<AssertionError>().having(
+              (e) => e.toString(),
+              'message',
+              contains(
+                  "'iosAllowBackgroundDownloading != null': is not true"))));
     });
 
     test('constructor throws exception if iosAllowCellularAccess is null', () {
       expect(
           () => FirebaseModelDownloadConditions(iosAllowCellularAccess: null),
-          throwsA(isA<AssertionError>()));
+          throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+              contains("'iosAllowCellularAccess != null': is not true"))));
     });
 
     test('conditions are passed as a map correctly', () {
@@ -108,8 +119,10 @@ void main() {
       test('throws exception when tries to download model if model is null',
           () {
         final conditions = FirebaseModelDownloadConditions();
-        expect(modelManager.download(null, conditions),
-            throwsA(isA<AssertionError>()));
+        expect(
+            modelManager.download(null, conditions),
+            throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+                contains("'model != null': is not true"))));
       });
 
       test(
@@ -117,21 +130,27 @@ void main() {
           () {
         final model = FirebaseCustomRemoteModel(MODEL_NAME);
         expect(
-            modelManager.download(model, null), throwsA(isA<AssertionError>()));
+            modelManager.download(model, null),
+            throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+                contains("'conditions != null': is not true"))));
       });
 
       test(
           'throws exception when tries to check if model is downloaded if model is null',
           () {
-        expect(modelManager.isModelDownloaded(null),
-            throwsA(isA<AssertionError>()));
+        expect(
+            modelManager.isModelDownloaded(null),
+            throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+                contains("'model != null': is not true"))));
       });
 
       test(
           'throws exception when tries to get latest model file if model is null',
           () {
-        expect(modelManager.getLatestModelFile(null),
-            throwsA(isA<AssertionError>()));
+        expect(
+            modelManager.getLatestModelFile(null),
+            throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+                contains("'model != null': is not true"))));
       });
     });
 

@@ -31,9 +31,17 @@ class FirebaseModelManager {
 
   /// Initiates the download of remoteModel if the download hasn't begun.
   ///
-  /// If the model's download is already in progress, new download will not be initiated.
-  /// If the model is already downloaded to the device, and there is no update, the task will immediately succeed.
-  /// If the model is already downloaded to the device, and there is update, a download for the updated version will be attempted.
+  /// If the model's download is already in progress,
+  /// new download will not be initiated.
+  ///
+  /// If the model is already downloaded to the device,
+  /// and there is no update, the task will immediately succeed.
+  ///
+  /// If the model is already downloaded to the device, and there is update,
+  /// a download for the updated version will be attempted.
+  ///
+  /// If the model update is failed to schedule, no error is raised,
+  /// and the caller should use the existing model.
   Future<void> download(FirebaseRemoteModel model,
       FirebaseModelDownloadConditions conditions) async {
     assert(model != null);
