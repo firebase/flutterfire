@@ -5,7 +5,7 @@ on:
     paths:
       - "packages/firebase_core/**"
       - "packages/cloud_functions/**"
-      - ".github/workflows/firebase_functions.yml"
+      - ".github/workflows/firebase_functions.yaml"
   push:
     branches:
       - master
