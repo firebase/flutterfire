@@ -33,7 +33,7 @@ Pod::Spec.new do |s|
   s.dependency 'Flutter'
   s.dependency 'firebase_core'
   s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
-  s.dependency 'Firebase/Functions', "~> #{firebase_sdk_version}"
+  s.dependency 'Firebase/Performance', "~> #{firebase_sdk_version}"
   s.ios.deployment_target = '8.0'
   s.static_framework = true
 
