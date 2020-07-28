@@ -28,6 +28,7 @@ jobs:
         run: |
           flutter pub global activate melos
           echo "::add-path::$GITHUB_WORKSPACE/_flutter/.pub-cache/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin/cache/dart-sdk/bin"
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Example"
@@ -69,7 +70,8 @@ jobs:
       - name: "Install Tools"
         run: |
           flutter pub global activate melos
-          echo "::add-path::$HOME/.pub-cache/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/_flutter/.pub-cache/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin/cache/dart-sdk/bin"
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Example"
@@ -96,7 +98,8 @@ jobs:
         run: |
           flutter pub global activate melos
           flutter config --enable-web
-          echo "::add-path::$HOME/.pub-cache/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/_flutter/.pub-cache/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin/cache/dart-sdk/bin"
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Example"
