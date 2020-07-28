@@ -41,6 +41,6 @@ module.exports = {
     // "ML Kit Natural Language": ["ml-language/usage"],
     // "ML Kit Vision": ["ml-vision/usage", toReferenceAPI("firebase_ml_vision")],
     // "Remote Config": ["remote-config/usage", toReferenceAPI("firebase_remote_config")],
-    // "Performance Monitoring": ["performance/usage", toReferenceAPI("firebase_performance")],
+    "Performance Monitoring": ["performance/overview", toReferenceAPI("firebase_performance")],
   },
 };
