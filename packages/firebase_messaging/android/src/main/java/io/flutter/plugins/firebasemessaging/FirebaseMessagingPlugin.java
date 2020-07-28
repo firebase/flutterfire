@@ -125,6 +125,7 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
       Map<String, Object> content = parseRemoteMessage(message);
       channel.invokeMethod("onMessage", content);
     }
+    //Just for first commit
   }
 
   @NonNull
