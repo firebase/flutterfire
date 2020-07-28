@@ -34,7 +34,7 @@ class UserInfo {
   String toString() {
     return '$runtimeType($_data)';
   }
-  
+
   @override
   Map<String, dynamic> toMap() {
     return {
@@ -46,5 +46,4 @@ class UserInfo {
       'uid': uid,
     };
   }
-
 }
