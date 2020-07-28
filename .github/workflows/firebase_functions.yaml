@@ -22,24 +22,12 @@ jobs:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 0
-      - run: git clone https://github.com/flutter/flutter.git --depth 1 -b stable _flutter
-      - run: echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin"
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
-        run: |
-          flutter pub global activate melos
-          echo "::add-path::$HOME/.pub-cache/bin"
-          echo "::add-path::$GITHUB_WORKSPACE/_flutter/.pub-cache/bin"
-          echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin/cache/dart-sdk/bin"
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/packages/cloud_functions/**/*.gradle*') }}-${{ hashFiles('**/packages/cloud_functions/**/gradle/wrapper/gradle-wrapper.properties') }}
+        run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
-        run: |
-          melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
-            flutter build apk --debug --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+        run: ./.github/workflows/scripts/build-example.sh android
       - name: "Drive Example"
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -47,7 +35,7 @@ jobs:
           arch: x86_64
           target: google_apis
           profile: Nexus 5X
-          script: ./.github/workflows/scripts/drive-android-example.sh
+          script: ./.github/workflows/scripts/drive-example.sh android
 
   ios:
     runs-on: macos-latest
@@ -56,22 +44,14 @@ jobs:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 0
-      - run: git clone https://github.com/flutter/flutter.git --depth 1 -b stable _flutter
-      - run: echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin"
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
-        run: |
-          flutter pub global activate melos
-          echo "::add-path::$HOME/.pub-cache/bin"
-          echo "::add-path::$GITHUB_WORKSPACE/_flutter/.pub-cache/bin"
-          echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin/cache/dart-sdk/bin"
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
+        run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
-        run: |
-          melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
-            flutter build ios --no-codesign --simulator --debug --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+        run: ./.github/workflows/scripts/build-example.sh ios
       - name: "Drive Example"
-        run: ./.github/workflows/scripts/drive-ios-example.sh
+        run: ./.github/workflows/scripts/drive-example.sh ios
 
   web:
     runs-on: ubuntu-latest
@@ -80,24 +60,13 @@ jobs:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 0
-      - run: git clone https://github.com/flutter/flutter.git --depth 1 -b beta _flutter
-      - run: echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin"
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh beta
       - name: "Install Tools"
         run: |
-          flutter pub global activate melos
+          ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-web
-          echo "::add-path::$HOME/.pub-cache/bin"
-          echo "::add-path::$GITHUB_WORKSPACE/_flutter/.pub-cache/bin"
-          echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin/cache/dart-sdk/bin"
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
       - name: "Build Example"
-        run: |
-          melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=web -- \
-            flutter build web
+        run: ./.github/workflows/scripts/build-example.sh web
       - name: "Drive Example"
-        run: |
-          melos clean && melos bootstrap
-          chromedriver --port=4444 &
-          melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=web -- \
-            flutter drive --release --no-pub --verbose-system-logs --browser-name=chrome --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+        run: ./.github/workflows/scripts/drive-example.sh web
