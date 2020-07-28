@@ -15,7 +15,7 @@ module.exports = {
       "installation/web",
     ],
     // AdMob: ["admob/usage", toReferenceAPI("firebase_admob")],
-    // Analytics: ["analytics/usage", toReferenceAPI("firebase_analytics")],
+    Analytics: ["analytics/overview", toReferenceAPI("firebase_analytics")],
     Authentication: [
       "auth/overview",
       // "auth/usage",
