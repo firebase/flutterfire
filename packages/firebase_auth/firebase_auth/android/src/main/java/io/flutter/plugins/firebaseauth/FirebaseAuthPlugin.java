@@ -236,7 +236,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
         .addOnCompleteListener(new SignInCompleteListener(result));
     } else {
       firebaseAuth
-        .startActivityForSignInWithProvider(registrar.activity(), provider.build())
+        .startActivityForSignInWithProvider(getActivity(), provider.build())
         .addOnCompleteListener(new SignInCompleteListener(result));
     }
   }
