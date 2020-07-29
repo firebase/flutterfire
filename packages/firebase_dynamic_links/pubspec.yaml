@@ -16,6 +16,7 @@ dev_dependencies:
     sdk: flutter
   url_launcher: ^5.1.6
   firebase_core: ^0.4.5
+  e2e: ^0.6.1
 
 flutter:
   plugin:

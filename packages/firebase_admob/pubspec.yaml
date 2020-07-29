@@ -27,6 +27,7 @@ dev_dependencies:
   mockito: ^3.0.0
   flutter_test:
     sdk: flutter
+  e2e: ^0.6.1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

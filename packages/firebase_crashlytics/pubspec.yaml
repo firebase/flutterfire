@@ -21,6 +21,7 @@ dev_dependencies:
   test: ^1.5.1
   flutter_driver:
     sdk: flutter
+  e2e: ^0.6.1
 
 flutter:
   plugin:
