@@ -21,7 +21,7 @@ then
   sleep 15
   xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-    flutter drive -d \"$SIMULATOR\" --verbose --no-pub --no-build --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+    flutter drive -d \"$SIMULATOR\" --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
   xcrun simctl shutdown "$SIMULATOR"
   exit
 fi
