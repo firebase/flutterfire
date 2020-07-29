@@ -21,7 +21,7 @@ void main() {
     } else {
       expect(FirebaseAnalytics().android, isNull);
     }
-  });
+  }, skip: kIsWeb);
 
   testWidgets('logging', (WidgetTester tester) async {
     expect(FirebaseAnalytics().setAnalyticsCollectionEnabled(true), completes);
