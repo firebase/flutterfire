@@ -27,6 +27,7 @@ fi
 
 if [ "$ACTION" == "web" ]
 then
+  chromedriver --port=4444 --log-level=INFO &
   melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=web -- \
     flutter build web --release --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
   exit
