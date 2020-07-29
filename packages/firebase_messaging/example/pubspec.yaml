@@ -13,7 +13,7 @@ dev_dependencies:
   pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
-  e2e: ^0.4.3+1
+  e2e: ^0.6.1
   flutter_driver:
     sdk: flutter
   test: any
