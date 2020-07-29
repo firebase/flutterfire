@@ -4,7 +4,7 @@ Demonstrates how to use the firebase_ml_custom plugin.
 ## Usage
 In order to run this example app you first need to **upload a tflite model to the Firebase console.**
 This app uses `mobilenet_v1_1.0_224.tflite` label recognition model, which you can find in the `assets` folder.
-###### How to host this model on Frebase:
+###### How to host this model on Firebase:
 1. In the `Machine Learning` section of the Firebase console, click the `Custom` tab.
 2. Click `Add model`.
 3. Specify a name that will be used to identify your model in your Firebase project, `mobilenet_v1_1_0_224` for this example app. Then upload the TensorFlow Lite model file.
