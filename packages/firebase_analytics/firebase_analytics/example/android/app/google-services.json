@@ -82,7 +82,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:448618578101:android:cc6c1dc7a65cc83c",
         "android_client_info": {
-          "package_name": "com.invertase.testing"
+          "package_name": "io.flutter.plugins.firebaseanalyticsexample"
         }
       },
       "oauth_client": [
@@ -90,7 +90,7 @@
           "client_id": "448618578101-h0o9b94jnhcoal2qgjn7s7ckkc2n7okq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.invertase.testing",
+            "package_name": "io.flutter.plugins.firebaseanalyticsexample",
             "certificate_hash": "909ca1482ef022bbae45a2db6b6d05d807a4c4aa"
           }
         },
@@ -98,7 +98,7 @@
           "client_id": "448618578101-gva3jv7cr8qquj04k0o7cni674j65kha.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.invertase.testing",
+            "package_name": "io.flutter.plugins.firebaseanalyticsexample",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
@@ -106,7 +106,7 @@
           "client_id": "448618578101-a9p7bj5jlakabp22fo3cbkj7nsmag24e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.invertase.testing",
+            "package_name": "io.flutter.plugins.firebaseanalyticsexample",
             "certificate_hash": "889b4292c735f371168a372cc7778992cd8a5052"
           }
         },
@@ -114,7 +114,7 @@
           "client_id": "448618578101-pdjje2lkv3p941e03hkrhfa7459cr2v8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.invertase.testing",
+            "package_name": "io.flutter.plugins.firebaseanalyticsexample",
             "certificate_hash": "992e468b990cc418f306d0131be61ecfad800ac1"
           }
         },
