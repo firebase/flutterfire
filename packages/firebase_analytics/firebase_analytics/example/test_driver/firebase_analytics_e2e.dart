@@ -15,22 +15,19 @@ void main() {
     await Firebase.initializeApp();
   });
 
-  group('$FirebaseAnalytics', () {
-    testWidgets('Android-only functionality', (WidgetTester tester) async {
-      if (Platform.isIOS) {
-        expect(FirebaseAnalytics().android, isNull);
-      }
-      if (Platform.isAndroid) {
-        await FirebaseAnalytics().android.setSessionTimeoutDuration(1000);
-      }
-    });
+  testWidgets('Android-only functionality', (WidgetTester tester) async {
+    if (Platform.isIOS) {
+      expect(FirebaseAnalytics().android, isNull);
+    }
+    if (Platform.isAndroid) {
+      await FirebaseAnalytics().android.setSessionTimeoutDuration(1000);
+    }
+  });
 
-    testWidgets('logging', (WidgetTester tester) async {
-      expect(
-          FirebaseAnalytics().setAnalyticsCollectionEnabled(true), completes);
-      expect(FirebaseAnalytics().setCurrentScreen(screenName: 'testing'),
-          completes);
-      expect(FirebaseAnalytics().logEvent(name: 'testing'), completes);
-    });
+  testWidgets('logging', (WidgetTester tester) async {
+    expect(FirebaseAnalytics().setAnalyticsCollectionEnabled(true), completes);
+    expect(
+        FirebaseAnalytics().setCurrentScreen(screenName: 'testing'), completes);
+    expect(FirebaseAnalytics().logEvent(name: 'testing'), completes);
   });
 }
