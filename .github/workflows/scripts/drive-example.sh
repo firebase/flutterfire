@@ -27,6 +27,7 @@ fi
 
 if [ "$ACTION" == "web" ]
 then
+  melos bootstrap
   chromedriver --port=4444 &
   melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=web -- \
     flutter drive --release --no-pub --verbose-system-logs --browser-name=chrome --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
