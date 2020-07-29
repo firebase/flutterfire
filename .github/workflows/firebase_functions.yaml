@@ -66,7 +66,5 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-web
-      - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh web
       - name: "Drive Example"
         run: ./.github/workflows/scripts/drive-example.sh web
