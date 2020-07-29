@@ -229,7 +229,7 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
   private void handleSignInWithMicrosoft(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     final OAuthProvider.Builder provider = OAuthProvider.newBuilder("microsoft.com");
 //    provider.addCustomParameter("prompt", "select_account");
-//    provider.addCustomParameter("tenant", "08c3c6f5-8532-40b8-9a06-62f54296ed4b");
+    provider.addCustomParameter("redirect_url", "msauth://com.numarics.mobile/Xs3B9J65cAM8RysprBvMyDKbeIE%3D");
     Task<AuthResult> pendingResultTask = firebaseAuth.getPendingAuthResult();
     if (pendingResultTask != null) {
       pendingResultTask
