@@ -13,8 +13,8 @@ fi
 
 if [ "$ACTION" == "ios" ]
 then
-  # melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
-  #   flutter build ios --no-codesign --simulator --debug --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+  melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
+    flutter build ios --no-codesign --simulator --debug --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
   exit
 fi
 
