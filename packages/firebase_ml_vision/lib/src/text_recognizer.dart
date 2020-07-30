@@ -97,7 +97,8 @@ abstract class TextContainer {
                 data['height'],
               )
             : null,
-        confidence = data['confidence'],
+        confidence =
+            data['confidence'] == null ? null : data['confidence'].toDouble(),
         cornerPoints = List<Offset>.unmodifiable(
             data['points'].map<Offset>((dynamic point) => Offset(
                   point[0],

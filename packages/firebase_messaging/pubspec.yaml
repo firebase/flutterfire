@@ -26,9 +26,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   firebase_core: ^0.4.0
-  e2e: ^0.4.3+1
   flutter_driver:
     sdk: flutter
+  e2e: ^0.6.1
 
 environment:
   sdk: ">=2.0.0 <3.0.0"

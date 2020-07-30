@@ -21,6 +21,7 @@ class QuerySnapshot {
       .toList();
 
   @Deprecated("Deprecated in favor of `.docs`")
+  // ignore: public_member_api_docs
   List<QueryDocumentSnapshot> get documents => docs;
 
   /// An array of the documents that changed since the last snapshot. If this
@@ -30,6 +31,7 @@ class QuerySnapshot {
       .toList();
 
   @Deprecated("Deprecated in favor of `docChanges`")
+  // ignore: public_member_api_docs
   List<DocumentChange> get documentChanges => docChanges;
 
   /// Returns the [SnapshotMetadata] for this snapshot.

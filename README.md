@@ -155,7 +155,7 @@ Cloud Storage is designed to help you quickly and easily store and serve user-ge
 
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+|    ✔️    |  ✔️  |   ✔️   |     |
 
 ----
 
@@ -203,7 +203,7 @@ The Firebase Realtime Database is a cloud-hosted NoSQL database that lets you st
 
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+|    ✔️    |  ✔️  |   ✔️   |     |
 
 ----
 
@@ -296,8 +296,8 @@ Plugin issues that are not specific to FlutterFire can be filed in the [Flutter 
 ## Contributing
 
 If you wish to contribute a change to any of the existing plugins in this repo,
-please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
-and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
 
 
 [admob_pub]: https://pub.dartlang.org/packages/firebase_admob

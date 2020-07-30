@@ -80,7 +80,7 @@ void runDocumentReferenceTests() {
         await document.set({'foo': 'bar'});
         await document.update({'foo': 'baz'});
 
-        subscription.cancel();
+        await subscription.cancel();
       });
 
       test('listeners throws a [FirebaseException]', () async {
@@ -90,12 +90,9 @@ void runDocumentReferenceTests() {
         try {
           await stream.first;
         } catch (error) {
-          // TODO(ehesp): Web does not support handling exceptions yet.
-          if (!kIsWeb) {
-            expect(error, isA<FirebaseException>());
-            expect(
-                (error as FirebaseException).code, equals('permission-denied'));
-          }
+          expect(error, isA<FirebaseException>());
+          expect(
+              (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
 
@@ -122,11 +119,9 @@ void runDocumentReferenceTests() {
         try {
           await document.delete();
         } catch (error) {
-          if (!kIsWeb) {
-            expect(error, isA<FirebaseException>());
-            expect(
-                (error as FirebaseException).code, equals('permission-denied'));
-          }
+          expect(error, isA<FirebaseException>());
+          expect(
+              (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
         fail("Should have thrown a [FirebaseException]");
@@ -159,12 +154,9 @@ void runDocumentReferenceTests() {
         try {
           await document.get();
         } catch (error) {
-          // TODO(ehesp): Web does not support handling exceptions yet.
-          if (!kIsWeb) {
-            expect(error, isA<FirebaseException>());
-            expect(
-                (error as FirebaseException).code, equals('permission-denied'));
-          }
+          expect(error, isA<FirebaseException>());
+          expect(
+              (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
         fail("Should have thrown a [FirebaseException]");
@@ -226,12 +218,9 @@ void runDocumentReferenceTests() {
         try {
           await document.set({'foo': 'bar'});
         } catch (error) {
-          // TODO(ehesp): Web does not support handling exceptions yet.
-          if (!kIsWeb) {
-            expect(error, isA<FirebaseException>());
-            expect(
-                (error as FirebaseException).code, equals('permission-denied'));
-          }
+          expect(error, isA<FirebaseException>());
+          expect(
+              (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
         fail("Should have thrown a [FirebaseException]");
@@ -321,11 +310,8 @@ void runDocumentReferenceTests() {
           await document.update({'foo': 'bar'});
           fail("Should have thrown");
         } catch (e) {
-          // TODO(ehesp): Web does not support handling exceptions yet.
-          if (!kIsWeb) {
-            expect(e, isA<FirebaseException>());
-            expect(e.code, equals('not-found'));
-          }
+          expect(e, isA<FirebaseException>());
+          expect(e.code, equals('not-found'));
         }
       });
     });

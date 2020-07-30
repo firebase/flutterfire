@@ -1,3 +1,6 @@
+## 0.5.0-dev.2
+* Allow iOS and macOS to be imported as a module.
+
 ## 0.5.0-dev.1
 
 * DEPRECATED: `FirebaseApp.configure` method is now deprecated in favor of the `Firebase.initializeApp` method.

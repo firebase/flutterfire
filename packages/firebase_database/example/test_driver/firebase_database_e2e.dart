@@ -1,14 +1,18 @@
 import 'package:e2e/e2e.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-void main() {
+void main() async {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
   group('$FirebaseDatabase', () {
-    final FirebaseDatabase database = FirebaseDatabase.instance;
+    setUp(() async {
+      await Firebase.initializeApp();
+    });
 
     testWidgets('runTransaction', (WidgetTester tester) async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
       final DatabaseReference ref = database.reference().child('counter');
       final DataSnapshot snapshot = await ref.once();
       final int value = snapshot.value ?? 0;
@@ -23,11 +27,14 @@ void main() {
 
     testWidgets('setPersistenceCacheSizeBytes Integer',
         (WidgetTester tester) async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
+
       await database.setPersistenceCacheSizeBytes(2147483647);
     });
 
     testWidgets('setPersistenceCacheSizeBytes Long',
         (WidgetTester tester) async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setPersistenceCacheSizeBytes(2147483648);
     });
   });

@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:flutter/foundation.dart';
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,16 +20,20 @@ import 'timestamp_e2e.dart';
 import 'transaction_e2e.dart';
 import 'write_batch_e2e.dart';
 
-// Requires that an emulator is running locally
-bool USE_EMULATOR = false;
+// TODO(Salakar): Web can't connect to Firestore emulator in CI, unable to reproduce
+// connection issue locally (working fine locally and also for Android/iOS on CI).
+bool kUseFirestoreEmulator = !kIsWeb;
 
 void testsMain() {
   setUpAll(() async {
     await Firebase.initializeApp();
 
-    if (USE_EMULATOR) {
-      FirebaseFirestore.instance.settings = Settings(
-          host: '10.0.2.2:8080', sslEnabled: false, persistenceEnabled: false);
+    if (kUseFirestoreEmulator) {
+      String host = defaultTargetPlatform == TargetPlatform.android
+          ? '10.0.2.2:8080'
+          : 'localhost:8080';
+      FirebaseFirestore.instance.settings =
+          Settings(host: host, sslEnabled: false, persistenceEnabled: true);
     }
   });
 

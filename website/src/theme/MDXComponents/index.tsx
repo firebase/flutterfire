@@ -26,7 +26,7 @@ export default {
           <a
             {...props}
             target="_blank"
-            href={`https://pub.dev/documentation/${entity.plugin}/latest/${entity.href}`}
+            href={`https://pub.dev/documentation/${entity.plugin}/${entity.version}/${entity.href}`}
           />
         );
       } else {

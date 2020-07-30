@@ -38,5 +38,8 @@ Pod::Spec.new do |s|
   s.dependency 'Firebase/Firestore', "~> #{firebase_sdk_version}"
   
   s.static_framework = true
-  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-fst\\\"" }
+  s.pod_target_xcconfig = {
+    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-fst\\\"",
+    'DEFINES_MODULE' => 'YES'
+  }
 end

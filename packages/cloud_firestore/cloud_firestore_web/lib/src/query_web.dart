@@ -4,6 +4,7 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
+import 'package:cloud_firestore_web/src/utils/exception.dart';
 import 'package:firebase/firestore.dart' as web;
 
 import 'package:cloud_firestore_web/src/utils/web_utils.dart';
@@ -121,8 +122,12 @@ class QueryWeb extends QueryPlatform {
   @override
   Future<QuerySnapshotPlatform> get([GetOptions options]) async {
     // TODO(ehesp): web implementation not handling options
-    return convertWebQuerySnapshot(
-        firestore, await _buildWebQueryWithParameters().get());
+    try {
+      return convertWebQuerySnapshot(
+          firestore, await _buildWebQueryWithParameters().get());
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
   }
 
   @override
@@ -152,8 +157,12 @@ class QueryWeb extends QueryPlatform {
     } else {
       querySnapshots = _buildWebQueryWithParameters().onSnapshot;
     }
-    return querySnapshots.map((webQuerySnapshot) =>
-        convertWebQuerySnapshot(firestore, webQuerySnapshot));
+    return querySnapshots
+        .map((webQuerySnapshot) =>
+            convertWebQuerySnapshot(firestore, webQuerySnapshot))
+        .handleError((e) {
+      throw getFirebaseException(e);
+    });
   }
 
   @override
