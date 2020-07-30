@@ -5,9 +5,9 @@ ACTION=$1
 if [ "$ACTION" == "android" ]
 then
   # Sleep to allow emulator to settle.
-  sleep 30 
+  sleep 15 
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-    flutter drive --no-pub --no-build --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+    flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
   exit
 fi
 
@@ -19,7 +19,8 @@ then
   xcrun simctl logverbose "$SIMULATOR" enable
   # Sleep to allow simulator to settle.
   sleep 15
-  xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
+  # Uncomment following line to have simulator logs printed out for debugging purposes.
+  # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
     flutter drive -d \"$SIMULATOR\" --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
   xcrun simctl shutdown "$SIMULATOR"
