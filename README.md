@@ -65,7 +65,7 @@ Google AdMob is a mobile advertising platform that you can use to generate reven
 
 ### `firebase_analytics`
 
-> [![firebase_analytics][analytics_badge_pub]][analytics_pub]
+> ![firebase_analytics][analytics_badge_ci] [![firebase_analytics][analytics_badge_pub]][analytics_pub]
 
 Google Analytics for Firebase provides automatic captures of certain key application events and user properties, and you can define your own custom events to measure the things that uniquely matter to your application. [[Learn More][analytics_product]]
 
@@ -193,7 +193,7 @@ Firebase Crashlytics helps you track, prioritize, and fix stability issues that 
 
 ### `firebase_database`
 
-> [![firebase_database][database_badge_pub]][database_pub]
+> ![firebase_database][database_badge_ci] [![firebase_database][database_badge_pub]][database_pub]
 
 The Firebase Realtime Database is a cloud-hosted NoSQL database that lets you store and sync data between your users in realtime. [[Learn More][database_product]]
 
@@ -257,7 +257,7 @@ Use Firebase ML to train and deploy custom models, or use a more turn-key soluti
 
 ### `firebase_performance`
 
-> [![firebase_performance][performance_badge_pub]][performance_pub]
+> ![firebase_performance][performance_badge_ci] [![firebase_performance][performance_badge_pub]][performance_pub]
 
 Get insights into how your app performs from your users’ point of view, with automatic and customized performance tracing. [[Learn More][performance_product]]
 
@@ -309,6 +309,7 @@ and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls)
 [analytics_product]: https://firebase.google.com/products/analytics/
 [analytics_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics
 [analytics_badge_pub]: https://img.shields.io/pub/v/firebase_analytics.svg
+[analytics_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_analytics/badge.svg
 
 [auth_pub]: https://pub.dartlang.org/packages/firebase_auth
 [auth_product]: https://firebase.google.com/products/auth/
@@ -331,6 +332,7 @@ and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls)
 [database_product]: https://firebase.google.com/products/database/
 [database_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_database
 [database_badge_pub]: https://img.shields.io/pub/v/firebase_database.svg
+[database_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_database/badge.svg
 
 [dynamic_links_pub]: https://pub.dartlang.org/packages/firebase_dynamic_links
 [dynamic_links_product]: https://firebase.google.com/products/dynamic-links/
@@ -369,6 +371,7 @@ and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls)
 [performance_product]: https://firebase.google.com/products/performance/
 [performance_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_performance
 [performance_badge_pub]: https://img.shields.io/pub/v/firebase_performance.svg
+[performance_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_performance/badge.svg
 
 [remote_config_pub]: https://pub.dartlang.org/packages/firebase_remote_config
 [remote_config_product]: https://firebase.google.com/products/remote-config/
