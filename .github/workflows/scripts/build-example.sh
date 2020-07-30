@@ -24,10 +24,3 @@ then
     flutter build macos --debug --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
   exit
 fi
-
-if [ "$ACTION" == "web" ]
-then
-  melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=web -- \
-    flutter build web
-  exit
-fi
