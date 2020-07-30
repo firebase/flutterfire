@@ -155,7 +155,7 @@ Cloud Storage is designed to help you quickly and easily store and serve user-ge
 
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+|    ✔️    |  ✔️  |   ✔️   |     |
 
 ----
 
