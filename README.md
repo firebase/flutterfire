@@ -203,7 +203,7 @@ The Firebase Realtime Database is a cloud-hosted NoSQL database that lets you st
 
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+|    ✔️    |  ✔️  |   ✔️   |     |
 
 ----
 
