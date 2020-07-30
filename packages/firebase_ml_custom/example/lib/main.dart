@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   static Future<File> loadModelFromFirebase() async {
-    var model = FirebaseCustomRemoteModel('image_classification');
+    var model = FirebaseCustomRemoteModel('mobilenet_v1_1_0_224');
 
     var conditions = FirebaseModelDownloadConditions(androidRequireWifi: true);
     var modelManager = FirebaseModelManager.instance;
