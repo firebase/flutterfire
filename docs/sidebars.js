@@ -40,7 +40,7 @@ module.exports = {
     // "In-App Messaging": ["in-app-messaging/usage", toReferenceAPI("firebase_in_app_messaging")],
     // "ML Kit Natural Language": ["ml-language/usage"],
     // "ML Kit Vision": ["ml-vision/usage", toReferenceAPI("firebase_ml_vision")],
-    // "Remote Config": ["remote-config/usage", toReferenceAPI("firebase_remote_config")],
+    "Remote Config": ["remote-config/overview", toReferenceAPI("firebase_remote_config")],
     "Performance Monitoring": ["performance/overview", toReferenceAPI("firebase_performance")],
   },
 };
