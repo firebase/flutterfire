@@ -1,3 +1,7 @@
+## 0.4.0-dev.1
+
+* Depend on new `firebase_core` (pre-release).
+
 ## 0.3.1+1
 
 * Propagate native error message on fetch method.
