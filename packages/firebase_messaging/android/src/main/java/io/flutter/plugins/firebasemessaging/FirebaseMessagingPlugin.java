@@ -54,7 +54,6 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
 
   private void onAttachedToEngine(Context context, BinaryMessenger binaryMessenger) {
     this.applicationContext = context;
-    FirebaseApp.initializeApp(applicationContext);
     channel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging");
     final MethodChannel backgroundCallbackChannel =
         new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging_background");
