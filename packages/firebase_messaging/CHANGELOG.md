@@ -1,3 +1,7 @@
+## 7.0.0-dev.1
+
+* Depend on reworked `firebase_core` pre-release.
+
 ## 6.0.16
 
 * Fix push notifications clearing after app launch on iOS.
