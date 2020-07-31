@@ -273,7 +273,7 @@ Get insights into how your app performs from your users’ point of view, with a
 
 ### `firebase_remote_config`
 
-> [![firebase_remote_config][remote_config_badge_pub]][remote_config_pub]
+> ![firebase_remote_config][remote_config_badge_ci] [![firebase_remote_config][remote_config_badge_pub]][remote_config_pub]
 
 With Firebase Remote Config, you can change the behavior and appearance of your app on the fly from the Firebase console, and then track performance in Google Analytics for Firebase. [[Learn More][remote_config_product]]
 
@@ -283,7 +283,7 @@ With Firebase Remote Config, you can change the behavior and appearance of your 
 
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+|    ✔️    |  ✔️  |   ✔️   |     |
 
 ----
 
@@ -377,6 +377,7 @@ and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls)
 [remote_config_product]: https://firebase.google.com/products/remote-config/
 [remote_config_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config
 [remote_config_badge_pub]: https://img.shields.io/pub/v/firebase_remote_config.svg
+[remote_config_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_remote_config/badge.svg
 
 [storage_pub]: https://pub.dartlang.org/packages/firebase_storage
 [storage_product]: https://firebase.google.com/products/storage/

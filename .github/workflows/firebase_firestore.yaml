@@ -69,6 +69,7 @@ jobs:
         run: ./.github/workflows/scripts/drive-example.sh macos
 
   web:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

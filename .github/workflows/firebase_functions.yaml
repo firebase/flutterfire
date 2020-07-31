@@ -3,7 +3,6 @@ name: firebase_functions
 on:
   pull_request:
     paths:
-      - "packages/firebase_core/**"
       - "packages/cloud_functions/**"
       - ".github/workflows/firebase_functions.yaml"
   push:
