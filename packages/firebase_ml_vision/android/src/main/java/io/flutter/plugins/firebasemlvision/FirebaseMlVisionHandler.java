@@ -31,12 +31,14 @@ class FirebaseMlVisionHandler implements MethodChannel.MethodCallHandler {
       case "FaceDetector#processImage":
       case "ImageLabeler#processImage":
       case "TextRecognizer#processImage":
+      case "DocumentTextRecognizer#processImage":
         handleDetection(call, result);
         break;
       case "BarcodeDetector#close":
       case "FaceDetector#close":
       case "ImageLabeler#close":
       case "TextRecognizer#close":
+      case "DocumentTextRecognizer#close":
         closeDetector(call, result);
         break;
       default:
@@ -70,6 +72,9 @@ class FirebaseMlVisionHandler implements MethodChannel.MethodCallHandler {
           break;
         case "TextRecognizer":
           detector = new TextRecognizer(FirebaseVision.getInstance(), options);
+          break;
+        case "DocumentTextRecognizer":
+          detector = new DocumentTextRecognizer(FirebaseVision.getInstance(), options);
           break;
       }
 
