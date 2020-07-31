@@ -30,7 +30,7 @@ module.exports = {
       toReferenceAPI("cloud_firestore"),
     ],
     "Cloud Functions": ["functions/overview", toReferenceAPI("cloud_functions")],
-    // "Cloud Messaging": ["messaging/usage", toReferenceAPI("firebase_messaging")],
+    "Cloud Messaging": ["messaging/overview", toReferenceAPI("firebase_messaging")],
     "Cloud Storage": ["storage/overview", toReferenceAPI("firebase_storage")],
     Core: ["core/usage", toReferenceAPI("firebase_core")],
     // Crashlytics: ["crashlytics/usage", toReferenceAPI("firebase_crashlytics")],
