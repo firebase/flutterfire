@@ -1,18 +1,23 @@
-import 'dart:async';
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutter_driver/driver_extension.dart';
+import 'package:e2e/e2e.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() {
-  final Completer<String> completer = Completer<String>();
-  enableFlutterDriverExtension(handler: (_) => completer.future);
-  tearDownAll(() => completer.complete(null));
+  E2EWidgetsFlutterBinding.ensureInitialized();
 
   group('$FirebaseMessaging', () {
-    final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+    FirebaseMessaging firebaseMessaging;
+    setUp(() async {
+      await Firebase.initializeApp();
+      firebaseMessaging = await FirebaseMessaging();
+    });
 
-    test('autoInitEnabled', () async {
+    testWidgets('autoInitEnabled', (WidgetTester tester) async {
       await firebaseMessaging.setAutoInitEnabled(false);
       expect(await firebaseMessaging.autoInitEnabled(), false);
       await firebaseMessaging.setAutoInitEnabled(true);
@@ -20,16 +25,16 @@ void main() {
     });
 
     // TODO(jackson): token retrieval isn't working on test devices yet
-    test('subscribeToTopic', () async {
+    testWidgets('subscribeToTopic', (WidgetTester tester) async {
       await firebaseMessaging.subscribeToTopic('foo');
     }, skip: true);
 
     // TODO(jackson): token retrieval isn't working on test devices yet
-    test('unsubscribeFromTopic', () async {
+    testWidgets('unsubscribeFromTopic', (WidgetTester tester) async {
       await firebaseMessaging.unsubscribeFromTopic('foo');
     }, skip: true);
 
-    test('deleteInstanceID', () async {
+    testWidgets('deleteInstanceID', (WidgetTester tester) async {
       final bool result = await firebaseMessaging.deleteInstanceID();
       expect(result, isTrue);
     });
