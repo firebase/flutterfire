@@ -104,9 +104,9 @@ By default background messaging is not enabled. To handle messages in the backgr
   ```
 1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
 
-   ```java
+  ```java
     package io.flutter.plugins.firebasemessagingexample;
-   
+    
     import io.flutter.app.FlutterApplication;
     import io.flutter.plugin.common.PluginRegistry;
     import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
@@ -126,7 +126,7 @@ By default background messaging is not enabled. To handle messages in the backgr
         FirebaseCloudMessagingPluginRegistrant.registerWith(registry);
       }
     }
-   ```
+  ```
 
 1. In `Application.java` and `FirebaseCloudMessagingPluginRegistrant.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
 
