@@ -1,3 +1,7 @@
+## 6.0.17
+
+* Update README to work with background notification for Android
+
 ## 6.0.16
 
 * Fix push notifications clearing after app launch on iOS.
