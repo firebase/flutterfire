@@ -283,7 +283,7 @@ With Firebase Remote Config, you can change the behavior and appearance of your 
 
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+|    ✔️    |  ✔️  |   ✔️   |     |
 
 ----
 
