@@ -16,10 +16,7 @@ To use this plugin, add `firebase_messaging` as a [dependency in your pubspec.ya
 Check out the `example` directory for a sample app using Firebase Cloud Messaging.
 
 ### Android Integration
-Make sure you have created your Flutter app with the java option:
-```
-flutter create -i objc -a java appname
-```
+
 To integrate your plugin into the Android part of your app, follow these steps:
 
 1. Using the [Firebase Console](https://console.firebase.google.com/) add an Android app to your project: Follow the assistant, download the generated `google-services.json` file and place it inside `android/app`.
@@ -76,61 +73,55 @@ By default background messaging is not enabled. To handle messages in the backgr
    
    Note: you can find out what the latest version of the plugin is [here ("Cloud Messaging")](https://firebase.google.com/support/release-notes/android#latest_sdk_versions).
 
-1. Add an `FirebaseCloudMessagingPluginRegistrant.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
+1. Add an `FirebaseCloudMessagingPluginRegistrant.kt` class to your app in the same directory as your `MainActivity.kt`. This is typically found in `<app-name>/android/app/src/main/kotlin/<app-organization-path>/`.
 
-  ```java
-    package io.flutter.plugins.firebasemessagingexample;
+  ```kt
+    import io.flutter.plugin.common.PluginRegistry
+    import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin
 
-    import io.flutter.plugin.common.PluginRegistry;
-    import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin;
 
-    public final class FirebaseCloudMessagingPluginRegistrant{
-        public static void registerWith(PluginRegistry registry) {
+    object FirebaseCloudMessagingPluginRegistrant {
+        fun registerWith(registry: PluginRegistry) {
             if (alreadyRegisteredWith(registry)) {
-                return;
+                return
             }
-            FirebaseMessagingPlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"));
+            FirebaseMessagingPlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"))
         }
 
-        private static boolean alreadyRegisteredWith(PluginRegistry registry) {
-            final String key = FirebaseCloudMessagingPluginRegistrant.class.getCanonicalName();
+        private fun alreadyRegisteredWith(registry: PluginRegistry): Boolean {
+            val key = FirebaseCloudMessagingPluginRegistrant::class.java.canonicalName
             if (registry.hasPlugin(key)) {
-                return true;
+                return true
             }
-            registry.registrarFor(key);
-            return false;
+            registry.registrarFor(key)
+            return false
         }
     }
   ```
-1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
+1. Add an `Application.kt` class to your app in the same directory as your `MainActivity.kt`. This is typically found in `<app-name>/android/app/src/main/kotlin/<app-organization-path>/`.
 
-  ```java
-    package io.flutter.plugins.firebasemessagingexample;
-    
-    import io.flutter.app.FlutterApplication;
-    import io.flutter.plugin.common.PluginRegistry;
-    import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
-    import io.flutter.plugins.GeneratedPluginRegistrant;
-    import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin;
-    import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
+  ```kt
+    import io.flutter.app.FlutterApplication
+    import io.flutter.plugin.common.PluginRegistry
+    import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback
+    import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService
 
-    public class Application extends FlutterApplication implements PluginRegistrantCallback {
-      @Override
-      public void onCreate() {
-        super.onCreate();
-        FlutterFirebaseMessagingService.setPluginRegistrant(this);
-      }
 
-      @Override
-      public void registerWith(PluginRegistry registry) {
-        FirebaseCloudMessagingPluginRegistrant.registerWith(registry);
-      }
+    class Application : FlutterApplication(), PluginRegistrantCallback {
+        override fun onCreate() {
+            super.onCreate()
+            FlutterFirebaseMessagingService.setPluginRegistrant(this)
+        }
+
+        override fun registerWith(registry: PluginRegistry) {
+            FirebaseCloudMessagingPluginRegistrant.registerWith(registry)
+        }
     }
   ```
 
-1. In `Application.java` and `FirebaseCloudMessagingPluginRegistrant.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
+1. In `Application.kt` and `FirebaseCloudMessagingPluginRegistrant.kt`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
 
-   ```java
+   ```kt
    package com.domain.myapplication;
    ```
 
