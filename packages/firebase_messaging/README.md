@@ -150,7 +150,7 @@ By default background messaging is not enabled. To handle messages in the backgr
    ```
 
    Note: the protocol of `data` and `notification` are in line with the
-   fields defined by a [RemoteMessage](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/RemoteMessage). 
+   fields defined by a [RemoteMessage](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/RemoteMessage). You may also need to force stop or uninstall & reinstall the app to make the background notifications work.
 
 1. Set `onBackgroundMessage` handler when calling `configure`
 
