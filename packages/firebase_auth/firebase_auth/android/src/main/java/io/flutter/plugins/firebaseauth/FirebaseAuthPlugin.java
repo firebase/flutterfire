@@ -228,7 +228,8 @@ public class FirebaseAuthPlugin implements MethodCallHandler, FlutterPlugin, Act
 
   private void handleSignInWithMicrosoft(MethodCall call, Result result, FirebaseAuth firebaseAuth) {
     final OAuthProvider.Builder provider = OAuthProvider.newBuilder("microsoft.com");
-    final List<String> scopes = call.arguments().get("scopes");
+    Map<String, Object> arguments = call.arguments();
+    final List<String> scopes = (List<String>) arguments.get("scopes");
     provider.setScopes(scopes);
     Task<AuthResult> pendingResultTask = firebaseAuth.getPendingAuthResult();
     if (pendingResultTask != null) {
