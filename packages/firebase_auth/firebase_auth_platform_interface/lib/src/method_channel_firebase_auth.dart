@@ -418,12 +418,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<PlatformAuthResult> signInWithMicrosoft(String appName) async {
+  Future<PlatformAuthResult> signInWithMicrosoft(String appName, List<String> scopes) async {
     final Map<String, dynamic> data =
     await channel.invokeMapMethod<String, dynamic>(
       'signInWithMicrosoft',
       <String, dynamic>{
         'app': appName,
+        'scopes': scopes
       },
     );
     return _decodeAuthResult(data);
