@@ -327,9 +327,9 @@ class FirebaseAuth {
     return FirebaseAuthPlatform.instance.setLanguageCode(app.name, language);
   }
 
-  Future<AuthResult> signInWithMicrosoft(String appName) async {
+  Future<AuthResult> signInWithMicrosoft(String appName, List<String> scopes) async {
     final PlatformAuthResult data = await FirebaseAuthPlatform.instance
-        .signInWithMicrosoft(appName);
+        .signInWithMicrosoft(appName, scopes);
     final AuthResult authResult = AuthResult._(data, app);
     return authResult;
   }
