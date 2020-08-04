@@ -1,3 +1,7 @@
+## 0.17.0-dev.2
+
+* Update plugin and example to use the same core.
+
 ## 0.17.0-dev.1
 
 * Depend on `firebase_core` pre-release versions.
