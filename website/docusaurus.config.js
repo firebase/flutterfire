@@ -40,7 +40,7 @@ module.exports = {
         alt: 'FlutterFire Logo',
         src: '/img/flutterfire_300x.png',
       },
-      links: [
+      items: [
         {
           to: 'docs/overview',
           activeBasePath: 'docs',
