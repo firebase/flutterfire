@@ -6,6 +6,7 @@
 * Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
   to specify individual SDK versions. BoM version is also sourced from
   `firebase_core`.
+* Allow iOS to be imported as a module.
 
 ## 0.1.2
 
