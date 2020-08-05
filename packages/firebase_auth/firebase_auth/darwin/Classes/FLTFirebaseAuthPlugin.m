@@ -131,6 +131,8 @@ int nextHandle = 0;
                                  }];
   } else if ([@"signInWithMicrosoft" isEqualToString:call.method]) {
           microsoftProvider = [FIROAuthProvider providerWithProviderID:@"microsoft.com"];
+          NSArray *scope = call.arguments[@"scopes"];
+          microsoftProvider.scopes = scope;
           [microsoftProvider getCredentialWithUIDelegate:nil
                                      completion:^(FIRAuthCredential *credential, NSError *error) {
                                          if (credential) {
