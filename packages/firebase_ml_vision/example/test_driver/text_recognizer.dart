@@ -8,15 +8,15 @@ void textRecognizerTests() {
   FirebaseVisionImage visionImage;
 
   setUp(() async {
-    final String tmpFilename = await _loadImage('assets/test_text.png');
+    final tmpFilename = await _loadImage('assets/test_text.png');
     visionImage = FirebaseVisionImage.fromFilePath(tmpFilename);
   });
 
   group('$TextRecognizer', () {
-    final TextRecognizer recognizer = FirebaseVision.instance.textRecognizer();
+    final recognizer = FirebaseVision.instance.textRecognizer();
 
     test('processImage', () async {
-      final VisionText text = await recognizer.processImage(visionImage);
+      final text = await recognizer.processImage(visionImage);
 
       expect(text.text, 'TEXT');
     });
@@ -27,11 +27,10 @@ void textRecognizerTests() {
   });
 
   group('Cloud $TextRecognizer', () {
-    final TextRecognizer recognizer =
-        FirebaseVision.instance.cloudTextRecognizer();
+    final recognizer = FirebaseVision.instance.cloudTextRecognizer();
 
     test('processImage with default options', () async {
-      final VisionText text = await recognizer.processImage(visionImage);
+      final text = await recognizer.processImage(visionImage);
 
       expect(text.text, 'TEXT\n');
     });
@@ -41,16 +40,15 @@ void textRecognizerTests() {
     });
 
     test('processImage with specified options', () async {
-      var languageHints = ['en', 'ru'];
-      var textModelType = CloudTextModelType.dense;
+      final languageHints = ['en', 'ru'];
+      final textModelType = CloudTextModelType.dense;
 
-      var options = CloudTextRecognizerOptions(
+      final options = CloudTextRecognizerOptions(
           hintedLanguages: languageHints, textModelType: textModelType);
       final TextRecognizer recognizerWithOptions =
           FirebaseVision.instance.cloudTextRecognizer(options);
 
-      final VisionText text =
-          await recognizerWithOptions.processImage(visionImage);
+      final text = await recognizerWithOptions.processImage(visionImage);
 
       expect(text.text, 'TEXT\n');
 
