@@ -1,3 +1,7 @@
+## 0.1.3-dev.1
+
+* Depend on `firebase_core` pre-release.
+
 ## 0.1.2
 
 * Update lower bound of dart dependency to 2.0.0.
