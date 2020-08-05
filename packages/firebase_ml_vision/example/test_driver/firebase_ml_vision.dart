@@ -29,6 +29,7 @@ void main() {
     faceDetectorTests();
     imageLabelerTests();
     textRecognizerTests();
+    documentTextRecognizerTests();
   });
 }
 

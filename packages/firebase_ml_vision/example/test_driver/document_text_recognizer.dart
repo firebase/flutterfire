@@ -14,7 +14,7 @@ void documentTextRecognizerTests() {
       final visionImage = FirebaseVisionImage.fromFilePath(tmpFilename);
       final text = await recognizer.processImage(visionImage);
 
-      expect(text.text, 'TEXT');
+      expect(text.text, 'TEXT\n');
     });
 
     test('close', () {
