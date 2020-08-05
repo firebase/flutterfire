@@ -8,6 +8,11 @@ public class EmbeddingV1Activity extends FlutterActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    GeneratedPluginRegistrant.registerWith(this);
+    FlutterFirebaseCorePlugin.registerWith(
+      registrarFor("io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin"));
+    // TODO(Salakar) rename as part of re-work FirebaseInAppMessagingPlugin -> FlutterFirebaseInAppMessagingPlugin
+    FirebasePerformancePlugin.registerWith(
+      registrarFor("io.flutter.plugins.firebase.inappmessaging.FirebasePerformancePlugin"));
+    E2EPlugin.registerWith(registrarFor("dev.flutter.plugins.e2e.E2EPlugin"));
   }
 }
