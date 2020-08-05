@@ -5,6 +5,7 @@
 
 #import "FLTFirebaseAuthPlugin.h"
 
+#import <firebase_core/FLTFirebasePlugin.h>
 #import "Firebase/Firebase.h"
 
 static NSString *getFlutterErrorCode(NSError *error) {
@@ -58,23 +59,12 @@ int nextHandle = 0;
 
 - (instancetype)init {
   self = [super init];
-  if (self) {
-    if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
-      NSLog(@"Configuring the default Firebase app...");
-      [FIRApp configure];
-      NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    }
-  }
   return self;
 }
 
 - (FIRAuth *_Nullable)getAuth:(NSDictionary *)args {
   NSString *appName = [args objectForKey:@"app"];
-  // TODO(Salakar): Remove name check once plugin refactored with new Core.
-  if ([appName isEqualToString:@"[DEFAULT]"]) {
-    appName = @"__FIRAPP_DEFAULT";
-  }
-  return [FIRAuth authWithApp:[FIRApp appNamed:appName]];
+  return [FIRAuth authWithApp:[FLTFirebasePlugin firebaseAppNamed:appName]];
 }
 
 #if TARGET_OS_IPHONE
@@ -468,7 +458,8 @@ int nextHandle = 0;
 
   if (error.code == FIRAuthErrorCodeCaptchaCheckFailed) {
     errorCode = @"captchaCheckFailed";
-  } else if (error.code == FIRAuthErrorCodeQuotaExceeded) {
+  } else if (error.code == FIRAuthErrorCodeQuotaExceeded ||
+             error.code == FIRAuthErrorCodeTooManyRequests) {
     errorCode = @"quotaExceeded";
   } else if (error.code == FIRAuthErrorCodeInvalidPhoneNumber) {
     errorCode = @"invalidPhoneNumber";

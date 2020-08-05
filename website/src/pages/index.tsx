@@ -127,7 +127,7 @@ function Home() {
                   </td>
                   <td className="icon">{plugin.support.mobile ? <Check /> : <Cross />}</td>
                   <td>{plugin.support.web ? <Check /> : <Cross />}</td>
-                  <td>{plugin.support.web ? <Check /> : <Cross />}</td>
+                  <td>{plugin.support.macos ? <Check /> : <Cross />}</td>
                 </tr>
               ))}
             </tbody>

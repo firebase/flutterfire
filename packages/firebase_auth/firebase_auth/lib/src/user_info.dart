@@ -34,4 +34,15 @@ class UserInfo {
   String toString() {
     return '$runtimeType($_data)';
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'providerId': providerId,
+      'displayName': displayName,
+      'photoUrl': photoUrl,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'uid': uid,
+    };
+  }
 }
