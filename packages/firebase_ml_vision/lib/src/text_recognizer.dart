@@ -26,18 +26,18 @@ enum CloudTextModelType { sparse, dense }
 /// ```
 class TextRecognizer {
   TextRecognizer._({
-    CloudTextRecognizerOptions options,
+    CloudTextRecognizerOptions cloudOptions,
     @required this.modelType,
     @required int handle,
-  })  : _options = options,
+  })  : _cloudOptions = cloudOptions,
         _handle = handle,
         assert(modelType != null),
-        assert((modelType == ModelType.cloud && options != null) ||
-            (modelType == ModelType.onDevice && options == null));
+        assert((modelType == ModelType.cloud && cloudOptions != null) ||
+            (modelType == ModelType.onDevice && cloudOptions == null));
 
   final ModelType modelType;
 
-  final CloudTextRecognizerOptions _options;
+  final CloudTextRecognizerOptions _cloudOptions;
   final int _handle;
   bool _hasBeenOpened = false;
   bool _isClosed = false;
@@ -50,10 +50,10 @@ class TextRecognizer {
     _hasBeenOpened = true;
     Map<String, dynamic> options = {'modelType': _enumToString(modelType)};
 
-    if (_options != null) {
+    if (_cloudOptions != null) {
       options.addAll({
-        'hintedLanguages': _options.hintedLanguages,
-        'textModelType': _enumToString(_options.textModelType),
+        'hintedLanguages': _cloudOptions.hintedLanguages,
+        'textModelType': _enumToString(_cloudOptions.textModelType),
       });
     }
 
