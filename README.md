@@ -299,6 +299,12 @@ If you wish to contribute a change to any of the existing plugins in this repo,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
 and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
 
+## Status
+
+[Status: Experimenta](https://img.shields.io/badge/Status-Experimental-blue)
+
+This repository is maintained by Googlers but is not a supported Firebase product.  Issues here are answered by maintainers and other community members on GitHub on a best-effort basis.
+
 
 [admob_pub]: https://pub.dartlang.org/packages/firebase_admob
 [admob_product]: https://firebase.google.com/docs/admob/
