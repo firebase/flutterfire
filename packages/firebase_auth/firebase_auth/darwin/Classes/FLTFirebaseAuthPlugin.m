@@ -144,7 +144,6 @@ int nextHandle = 0;
                                                                        }];
                                          }
                                      }];
-          [provider setCustomParameters:@{@"prompt": @"select_account", @"tenant":  @"08c3c6f5-8532-40b8-9a06-62f54296ed4b"}];
   } else if ([@"createUserWithEmailAndPassword" isEqualToString:call.method]) {
     NSString *email = call.arguments[@"email"];
     NSString *password = call.arguments[@"password"];
