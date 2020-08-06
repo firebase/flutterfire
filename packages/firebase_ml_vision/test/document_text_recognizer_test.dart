@@ -69,8 +69,10 @@ void main() {
 
         test('process an image with non-default options', () async {
           final hintedLanguages = ['en', 'ru'];
-          final options = CloudDocumentRecognizerOptions(hintedLanguages: hintedLanguages);
-          final recognizerWithOptions = FirebaseVision.instance.cloudDocumentTextRecognizer(options);
+          final options =
+              CloudDocumentRecognizerOptions(hintedLanguages: hintedLanguages);
+          final recognizerWithOptions =
+              FirebaseVision.instance.cloudDocumentTextRecognizer(options);
           final text = await recognizerWithOptions.processImage(image);
 
           expect(text.text, 'Hello');
@@ -79,7 +81,9 @@ void main() {
               'DocumentTextRecognizer#processImage',
               arguments: <String, dynamic>{
                 'handle': 1,
-                'options': <String, dynamic>{ 'hintedLanguages': ['en', 'ru']},
+                'options': <String, dynamic>{
+                  'hintedLanguages': ['en', 'ru']
+                },
                 'type': 'file',
                 'path': 'empty',
                 'bytes': null,
@@ -98,7 +102,7 @@ void main() {
               'DocumentTextRecognizer#processImage',
               arguments: <String, dynamic>{
                 'handle': 0,
-                'options': <String, dynamic>{ 'hintedLanguages': null},
+                'options': <String, dynamic>{'hintedLanguages': null},
                 'type': 'file',
                 'path': 'empty',
                 'bytes': null,

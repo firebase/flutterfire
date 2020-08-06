@@ -37,9 +37,9 @@ class DocumentTextRecognizer {
   DocumentTextRecognizer._({
     @required dynamic cloudOptions,
     @required int handle,
-  }) : _cloudOptions = cloudOptions,
-       _handle = handle,
-       assert(cloudOptions != null);
+  })  : _cloudOptions = cloudOptions,
+        _handle = handle,
+        assert(cloudOptions != null);
 
   bool _hasBeenOpened = false;
   bool _isClosed = false;
@@ -85,8 +85,7 @@ class CloudDocumentRecognizerOptions {
   /// In cases, when the language of the text in the image is known, setting
   /// a hint will help get better results (although it will be a significant
   /// hindrance if the hint is wrong).
-  const CloudDocumentRecognizerOptions(
-      {this.hintedLanguages});
+  const CloudDocumentRecognizerOptions({this.hintedLanguages});
 
   /// Language hints for text recognition.
   ///

@@ -26,11 +26,12 @@ class DocumentTextRecognizer implements Detector {
 
   DocumentTextRecognizer(FirebaseVision vision, Map<String, Object> options) {
     FirebaseVisionCloudDocumentRecognizerOptions.Builder optionsBuilder =
-      new FirebaseVisionCloudDocumentRecognizerOptions.Builder();
+        new FirebaseVisionCloudDocumentRecognizerOptions.Builder();
     if (options.get("hintedLanguages") != null) {
       optionsBuilder.setLanguageHints((List<String>) options.get("hintedLanguages"));
     }
-    FirebaseVisionCloudDocumentRecognizerOptions cloudDocumentTextRecognizerOptions = optionsBuilder.build();
+    FirebaseVisionCloudDocumentRecognizerOptions cloudDocumentTextRecognizerOptions =
+        optionsBuilder.build();
     recognizer = vision.getCloudDocumentTextRecognizer(cloudDocumentTextRecognizerOptions);
   }
 

@@ -6,8 +6,7 @@ part of 'firebase_ml_vision.dart';
 
 void documentTextRecognizerTests() {
   group('$DocumentTextRecognizer', () {
-    final recognizer =
-        FirebaseVision.instance.cloudDocumentTextRecognizer();
+    final recognizer = FirebaseVision.instance.cloudDocumentTextRecognizer();
     FirebaseVisionImage visionImage;
 
     setUp(() async {
@@ -23,7 +22,8 @@ void documentTextRecognizerTests() {
 
     test('processImage with specified options', () async {
       final hintedLanguages = ['en', 'ru'];
-      final options = CloudDocumentRecognizerOptions(hintedLanguages: hintedLanguages);
+      final options =
+          CloudDocumentRecognizerOptions(hintedLanguages: hintedLanguages);
       FirebaseVision.instance.cloudDocumentTextRecognizer(options);
       final text = await recognizer.processImage(visionImage);
 
