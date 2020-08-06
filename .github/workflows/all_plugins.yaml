@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - "docs/**"
 
 jobs:
   analyze:

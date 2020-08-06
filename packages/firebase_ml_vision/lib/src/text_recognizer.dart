@@ -69,7 +69,7 @@ class TextRecognizer {
     return VisionText._(reply);
   }
 
-  /// Release resources used by this recognizer.
+  /// Releases resources used by this recognizer.
   Future<void> close() {
     if (!_hasBeenOpened) _isClosed = true;
     if (_isClosed) return Future<void>.value(null);
@@ -126,15 +126,6 @@ class VisionText {
   final List<TextBlock> blocks;
 }
 
-/// Detected language from text recognition.
-class RecognizedLanguage {
-  RecognizedLanguage._(dynamic data) : languageCode = data['languageCode'];
-
-  /// The BCP-47 language code, such as, en-US or sr-Latn. For more information,
-  /// see http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.
-  final String languageCode;
-}
-
 /// Abstract class representing dimensions of recognized text in an image.
 abstract class TextContainer {
   TextContainer._(Map<dynamic, dynamic> data)
@@ -167,8 +158,7 @@ abstract class TextContainer {
 
   /// The confidence of the recognized text block.
   ///
-  /// The value is null for all text recognizers except for cloud text
-  /// recognizers.
+  /// The value is null for onDevice text recognizer.
   final double confidence;
 
   /// The four corner points in clockwise direction starting with top-left.

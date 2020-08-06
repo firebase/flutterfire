@@ -9,6 +9,8 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - "docs/**"
 
 env:
   FLUTTERFIRE_PLUGIN_SCOPE: "*cloud_firestore*"
