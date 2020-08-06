@@ -194,7 +194,9 @@ void main() {
     group('$DatabaseReference', () {
       test('set', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
-        final dynamic serverValue = <String, dynamic>{'qux': ServerValue.increment(8)};
+        final dynamic serverValue = <String, dynamic>{
+          'qux': ServerValue.increment(8)
+        };
         final int priority = 42;
         await database.reference().child('foo').set(value);
         await database.reference().child('bar').set(value, priority: priority);
@@ -228,7 +230,11 @@ void main() {
                 'app': app.name,
                 'databaseURL': databaseURL,
                 'path': 'baz',
-                'value': {'qux': {'.sv': {'increment': 8}}},
+                'value': {
+                  'qux': {
+                    '.sv': {'increment': 8}
+                  }
+                },
                 'priority': null,
               },
             ),

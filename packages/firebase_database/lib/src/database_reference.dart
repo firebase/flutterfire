@@ -194,11 +194,11 @@ class ServerValue {
     '.sv': 'timestamp'
   };
 
+  /// Returns a placeholder value that can be used to atomically increment the
+  /// current database value by the provided delta.
   static Map<dynamic, dynamic> increment(int delta) {
     return <dynamic, dynamic>{
-      '.sv': {
-        'increment': delta
-      }
+      '.sv': {'increment': delta}
     };
   }
 }
