@@ -1,4 +1,4 @@
-## 0.1.3-dev.1
+## 0.2.0-dev.1
 
 * Depend on `firebase_core` pre-release.
 * Firebase iOS SDK versions are now locked to use the same version defined in
@@ -7,6 +7,8 @@
   to specify individual SDK versions. BoM version is also sourced from
   `firebase_core`.
 * Allow iOS to be imported as a module.
+* Updated package of Android from `com.example.firebase_in_app_messaging` to
+  `io.flutter.plugins.firebase.inappmessaging`.
 
 ## 0.1.2
 
