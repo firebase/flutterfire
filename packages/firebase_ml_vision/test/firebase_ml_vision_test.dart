@@ -1057,7 +1057,7 @@ void main() {
 
     group('Cloud $TextRecognizer', () {
       TextRecognizer recognizer;
-      final FirebaseVisionImage image = FirebaseVisionImage.fromFilePath(
+      final image = FirebaseVisionImage.fromFilePath(
         'empty',
       );
 
@@ -1279,7 +1279,7 @@ void main() {
       });
 
       test('processImage with default options', () async {
-        final VisionText text = await recognizer.processImage(image);
+        final text = await recognizer.processImage(image);
 
         expect(text.text, 'testext');
         expect(log, <Matcher>[
@@ -1302,12 +1302,12 @@ void main() {
       });
 
       test('processImage with non-default options', () async {
-        final CloudTextRecognizerOptions options = CloudTextRecognizerOptions(
+        final options = CloudTextRecognizerOptions(
             hintedLanguages: ['en'], textModelType: CloudTextModelType.dense);
 
-        final TextRecognizer recognizerWithOptions =
+        final recognizerWithOptions =
             FirebaseVision.instance.cloudTextRecognizer(options);
-        final VisionText text = await recognizerWithOptions.processImage(image);
+        final text = await recognizerWithOptions.processImage(image);
 
         expect(text.text, 'testext');
         expect(log, <Matcher>[

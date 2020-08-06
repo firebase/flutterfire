@@ -45,7 +45,7 @@ void textRecognizerTests() {
 
       final options = CloudTextRecognizerOptions(
           hintedLanguages: languageHints, textModelType: textModelType);
-      final TextRecognizer recognizerWithOptions =
+      final recognizerWithOptions =
           FirebaseVision.instance.cloudTextRecognizer(options);
 
       final text = await recognizerWithOptions.processImage(visionImage);

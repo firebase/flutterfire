@@ -25,6 +25,10 @@ enum CloudTextModelType { sparse, dense }
 ///     await textRecognizer.processImage(image);
 /// ```
 class TextRecognizer {
+  final ModelType modelType;
+  final CloudTextRecognizerOptions _cloudOptions;
+  final int _handle;
+
   TextRecognizer._({
     CloudTextRecognizerOptions cloudOptions,
     @required this.modelType,
@@ -35,10 +39,6 @@ class TextRecognizer {
         assert((modelType == ModelType.cloud && cloudOptions != null) ||
             (modelType == ModelType.onDevice && cloudOptions == null));
 
-  final ModelType modelType;
-
-  final CloudTextRecognizerOptions _cloudOptions;
-  final int _handle;
   bool _hasBeenOpened = false;
   bool _isClosed = false;
 
@@ -84,17 +84,6 @@ class TextRecognizer {
 
 /// Options for cloud text recognizer.
 class CloudTextRecognizerOptions {
-  /// Constructor for [TextRecognizerOptions].
-  ///
-  /// For Latin alphabet based languages, setting language hints is not needed.
-  ///
-  /// In cases, when the language of the text in the image is known, setting
-  /// a hint will help get better results (although it will be a significant
-  /// hindrance if the hint is wrong).
-  const CloudTextRecognizerOptions(
-      {this.hintedLanguages, this.textModelType = CloudTextModelType.sparse})
-      : assert(textModelType != null);
-
   /// Language hints for text recognition.
   ///
   /// In most cases, an empty value yields the best results since it enables
@@ -110,6 +99,17 @@ class CloudTextRecognizerOptions {
   ///
   /// Default setting is 'sparse'.
   final CloudTextModelType textModelType;
+
+  /// Constructor for [CloudTextRecognizerOptions].
+  ///
+  /// For Latin alphabet based languages, setting language hints is not needed.
+  ///
+  /// In cases, when the language of the text in the image is known, setting
+  /// a hint will help get better results (although it will be a significant
+  /// hindrance if the hint is wrong).
+  const CloudTextRecognizerOptions(
+      {this.hintedLanguages, this.textModelType = CloudTextModelType.sparse})
+      : assert(textModelType != null);
 }
 
 /// Recognized text in an image.
