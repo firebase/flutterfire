@@ -9,6 +9,8 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - "docs/**"
 
 env:
   FLUTTERFIRE_PLUGIN_SCOPE: "*cloud_firestore*"
@@ -69,6 +71,7 @@ jobs:
         run: ./.github/workflows/scripts/drive-example.sh macos
 
   web:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
