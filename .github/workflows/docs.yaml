@@ -20,12 +20,10 @@ jobs:
         cd website
         npm install
         npm run build
-        ls
-        pwd
     - uses: actions/upload-artifact@v2
       with:
         name: docs-release-build
-        path: build/docs
+        path: website/build/docs
   deploy_docs:
     name: Deploy Docs
     runs-on: ubuntu-latest
@@ -36,7 +34,7 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: docs-release-build
-        path: build/docs
+        path: website/build/docs
     - uses: actions/setup-node@v2-beta
       with:
         node-version: '12'
