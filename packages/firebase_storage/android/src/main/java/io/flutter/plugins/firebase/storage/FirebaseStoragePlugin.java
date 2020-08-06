@@ -330,6 +330,7 @@ public class FirebaseStoragePlugin implements MethodCallHandler {
     map.put("name", storageReference.getName());
     map.put("bucket", storageReference.getBucket());
     map.put("path", storageReference.getPath());
+    map.put("creationTimeMillis", storageReference.get)
     return map;
   }
 
