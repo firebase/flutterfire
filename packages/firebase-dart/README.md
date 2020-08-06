@@ -1,6 +1,15 @@
 [![Pub Package](https://img.shields.io/pub/v/firebase.svg)](https://pub.dev/packages/firebase)
 [![Build Status](https://travis-ci.org/FirebaseExtended/firebase-dart.svg?branch=master)](https://travis-ci.org/FirebaseExtended/firebase-dart)
 
+
+## Status
+
+![Status: Experimental](https://img.shields.io/badge/Status-Experimental-blue)
+
+This repository is maintained by Googlers but is not a supported Firebase product.  Issues here are answered by maintainers and other community members on GitHub on a best-effort basis.
+
+## Introduction
+
 **NOTE:** This package provides three libraries:
 
 * For browser-based applications:
