@@ -89,7 +89,7 @@ final TextRecognizer cloudTextRecognizer = FirebaseVision.instance.cloudTextReco
 final DocumentTextRecognizer cloudDocumentTextRecognizer = FirebaseVision.instance.cloudDocumentTextRecognizer();
 ```
 
-You can also configure all detectors, except on-device `TextRecognizer`, with desired options.
+You can also configure all detectors, except on-device `TextRecognizer` and `DocumentTextRecognizer`, with desired options.
 
 ```dart
 final ImageLabeler labeler = FirebaseVision.instance.imageLabler(
