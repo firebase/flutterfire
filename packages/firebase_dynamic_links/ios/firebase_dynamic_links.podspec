@@ -36,5 +36,8 @@ Pod::Spec.new do |s|
   s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
   s.dependency 'Firebase/DynamicLinks', "~> #{firebase_sdk_version}"
 
-  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{libraryVersion}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-dl\\\"" }
+  s.pod_target_xcconfig = {
+    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{libraryVersion}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-dl\\\"",
+    'DEFINES_MODULE' => 'YES'
+  }
 end
