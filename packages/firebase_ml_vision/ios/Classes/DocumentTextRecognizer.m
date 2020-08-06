@@ -28,75 +28,91 @@
                      result(@{@"text" : @"", @"blocks" : @[]});
                      return;
                    }
-
                    NSMutableDictionary *visionDocumentTextData = [NSMutableDictionary dictionary];
                    visionDocumentTextData[@"text"] = visionDocumentText.text;
-
-                   NSMutableArray *allBlockData = [NSMutableArray array];
-                   for (FIRVisionDocumentTextBlock *block in visionDocumentText.blocks) {
-                     NSMutableDictionary *blockData = [NSMutableDictionary dictionary];
-
-                     [self addData:blockData
-                                   frame:block.frame
-                              confidence:block.confidence
-                         recognizedBreak:block.recognizedBreak
-                               languages:block.recognizedLanguages
-                                    text:block.text];
-
-                     NSMutableArray *allParagraphData = [NSMutableArray array];
-                     for (FIRVisionDocumentTextParagraph *paragraph in block.paragraphs) {
-                       NSMutableDictionary *paragraphData = [NSMutableDictionary dictionary];
-
-                       [self addData:paragraphData
-                                     frame:paragraph.frame
-                                confidence:paragraph.confidence
-                           recognizedBreak:paragraph.recognizedBreak
-                                 languages:paragraph.recognizedLanguages
-                                      text:paragraph.text];
-
-                       NSMutableArray *allWordData = [NSMutableArray array];
-                       for (FIRVisionDocumentTextWord *word in paragraph.words) {
-                         NSMutableDictionary *wordData = [NSMutableDictionary dictionary];
-
-                         [self addData:wordData
-                                       frame:word.frame
-                                  confidence:word.confidence
-                             recognizedBreak:word.recognizedBreak
-                                   languages:word.recognizedLanguages
-                                        text:word.text];
-
-                         NSMutableArray *allSymbolData = [NSMutableArray array];
-                         for (FIRVisionDocumentTextSymbol *symbol in word.symbols) {
-                           NSMutableDictionary *symbolData = [NSMutableDictionary dictionary];
-
-                           [self addData:symbolData
-                                         frame:symbol.frame
-                                    confidence:symbol.confidence
-                               recognizedBreak:symbol.recognizedBreak
-                                     languages:symbol.recognizedLanguages
-                                          text:symbol.text];
-                           [allSymbolData addObject:symbolData];
-                         }
-                         wordData[@"symbols"] = allSymbolData;
-                         [allWordData addObject:wordData];
-                       }
-                       paragraphData[@"words"] = allWordData;
-                       [allParagraphData addObject:paragraphData];
-                     }
-                     blockData[@"paragraphs"] = allParagraphData;
-                     [allBlockData addObject:blockData];
-                   }
-                   visionDocumentTextData[@"blocks"] = allBlockData;
+                   [self getBlockData:visionDocumentTextData visionDocumentText:visionDocumentText];
                    result(visionDocumentTextData);
                  }];
 }
 
-- (void)addData:(NSMutableDictionary *)addTo
-              frame:(CGRect)frame
-         confidence:(NSNumber *)confidence
-    recognizedBreak:(FIRVisionTextRecognizedBreak *)recognizedBreak
-          languages:(NSArray<FIRVisionTextRecognizedLanguage *> *)languages
-               text:(NSString *)text {
+- (void)getBlockData:(NSMutableDictionary *)visionDocumentTextData
+    visionDocumentText:(FIRVisionDocumentText *)visionDocumentText {
+  NSMutableArray *allBlockData = [NSMutableArray array];
+  for (FIRVisionDocumentTextBlock *block in visionDocumentText.blocks) {
+    NSMutableDictionary *blockData = [NSMutableDictionary dictionary];
+
+    [self addCommonDataFieldsToMap:blockData
+                             frame:block.frame
+                        confidence:block.confidence
+                   recognizedBreak:block.recognizedBreak
+                         languages:block.recognizedLanguages
+                              text:block.text];
+
+    [self getParagraphData:blockData block:block];
+    [allBlockData addObject:blockData];
+  }
+  visionDocumentTextData[@"blocks"] = allBlockData;
+}
+
+- (void)getParagraphData:(NSMutableDictionary *)blockData
+                   block:(FIRVisionDocumentTextBlock *)block {
+  NSMutableArray *allParagraphData = [NSMutableArray array];
+  for (FIRVisionDocumentTextParagraph *paragraph in block.paragraphs) {
+    NSMutableDictionary *paragraphData = [NSMutableDictionary dictionary];
+
+    [self addCommonDataFieldsToMap:paragraphData
+                             frame:paragraph.frame
+                        confidence:paragraph.confidence
+                   recognizedBreak:paragraph.recognizedBreak
+                         languages:paragraph.recognizedLanguages
+                              text:paragraph.text];
+    [self getWordData:paragraphData paragraph:paragraph];
+    [allParagraphData addObject:paragraphData];
+  }
+  blockData[@"paragraphs"] = allParagraphData;
+}
+
+- (void)getWordData:(NSMutableDictionary *)paragraphData
+          paragraph:(FIRVisionDocumentTextParagraph *)paragraph {
+  NSMutableArray *allWordData = [NSMutableArray array];
+  for (FIRVisionDocumentTextWord *word in paragraph.words) {
+    NSMutableDictionary *wordData = [NSMutableDictionary dictionary];
+
+    [self addCommonDataFieldsToMap:wordData
+                             frame:word.frame
+                        confidence:word.confidence
+                   recognizedBreak:word.recognizedBreak
+                         languages:word.recognizedLanguages
+                              text:word.text];
+
+    [self getSymbolData:wordData word:word];
+    [allWordData addObject:wordData];
+  }
+  paragraphData[@"words"] = allWordData;
+}
+
+- (void)getSymbolData:(NSMutableDictionary *)wordData word:(FIRVisionDocumentTextWord *)word {
+  NSMutableArray *allSymbolData = [NSMutableArray array];
+  for (FIRVisionDocumentTextSymbol *symbol in word.symbols) {
+    NSMutableDictionary *symbolData = [NSMutableDictionary dictionary];
+
+    [self addCommonDataFieldsToMap:symbolData
+                             frame:symbol.frame
+                        confidence:symbol.confidence
+                   recognizedBreak:symbol.recognizedBreak
+                         languages:symbol.recognizedLanguages
+                              text:symbol.text];
+    [allSymbolData addObject:symbolData];
+  }
+  wordData[@"symbols"] = allSymbolData;
+}
+
+- (void)addCommonDataFieldsToMap:(NSMutableDictionary *)addTo
+                           frame:(CGRect)frame
+                      confidence:(NSNumber *)confidence
+                 recognizedBreak:(FIRVisionTextRecognizedBreak *)recognizedBreak
+                       languages:(NSArray<FIRVisionTextRecognizedLanguage *> *)languages
+                            text:(NSString *)text {
   __block NSMutableArray<NSDictionary *> *allLanguageData = [NSMutableArray array];
   for (FIRVisionTextRecognizedLanguage *language in languages) {
     [allLanguageData addObject:@{
