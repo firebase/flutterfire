@@ -36,7 +36,6 @@ dev_dependencies:
     sdk: flutter
   test: any
   mockito: ^1.8.0
-  e2e: ^0.4.3+1
 
 environment:
   sdk: ">=2.0.0 <3.0.0"

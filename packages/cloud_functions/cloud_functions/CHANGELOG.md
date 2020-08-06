@@ -1,3 +1,7 @@
+## 0.6.0-dev.3
+
+* Fix HttpsCallable#call not working with parameters of non-Map type.
+
 ## 0.6.0-dev.2
 
 * Firebase iOS SDK versions are now locked to use the same version defined in

@@ -458,7 +458,8 @@ int nextHandle = 0;
 
   if (error.code == FIRAuthErrorCodeCaptchaCheckFailed) {
     errorCode = @"captchaCheckFailed";
-  } else if (error.code == FIRAuthErrorCodeQuotaExceeded) {
+  } else if (error.code == FIRAuthErrorCodeQuotaExceeded ||
+             error.code == FIRAuthErrorCodeTooManyRequests) {
     errorCode = @"quotaExceeded";
   } else if (error.code == FIRAuthErrorCodeInvalidPhoneNumber) {
     errorCode = @"invalidPhoneNumber";
