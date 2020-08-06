@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package com.example.firebase_in_app_messaging;
+package io.flutter.plugins.firebase.inappmessaging;
 
 import com.google.firebase.inappmessaging.FirebaseInAppMessaging;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
