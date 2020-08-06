@@ -193,6 +193,14 @@ class ServerValue {
   static const Map<String, String> timestamp = <String, String>{
     '.sv': 'timestamp'
   };
+
+  static Map<dynamic, dynamic> increment(int delta) {
+    return <dynamic, dynamic>{
+      '.sv': {
+        'increment': delta
+      }
+    };
+  }
 }
 
 typedef Future<MutableData> TransactionHandler(MutableData mutableData);
