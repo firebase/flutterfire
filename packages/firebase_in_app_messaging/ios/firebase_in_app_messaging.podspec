@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
   s.dependency 'Flutter'
   s.dependency 'firebase_core'
   s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
-  s.dependency 'Firebase/InAppMessagingDisplay', "~> #{firebase_sdk_version}"
+  s.dependency 'Firebase/InAppMessaging', "~> #{firebase_sdk_version}"
   s.static_framework = true
 
   s.ios.deployment_target = '8.0'
@@ -37,4 +37,3 @@ Pod::Spec.new do |s|
     'DEFINES_MODULE' => 'YES'
   }
 end
-
