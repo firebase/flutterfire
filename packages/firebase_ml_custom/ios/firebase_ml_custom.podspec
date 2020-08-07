@@ -21,7 +21,7 @@ A new Flutter plugin.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'Firebase/MLModelInterpreter'
+  s.dependency 'Firebase/MLModelInterpreter', "~> 6.27.0"
   s.ios.deployment_target = '9.0'
   s.static_framework = true
 

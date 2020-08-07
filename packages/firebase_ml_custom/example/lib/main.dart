@@ -29,8 +29,10 @@ class _MyAppState extends State<MyApp> {
   final picker = ImagePicker();
   File _image;
   List<Map<dynamic, dynamic>> _labels;
+  //When the model is ready, _loaded changes to trigger the screen state change.
   Future<String> _loaded = loadModel();
 
+  // Triggers selection of an image and the consequent inference
   Future<void> getImageLabels() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     final image = File(pickedFile.path);
@@ -52,20 +54,33 @@ class _MyAppState extends State<MyApp> {
     return await loadTFLiteModel(modelFile);
   }
 
+  // Download custom model from the Firebase console and return its file
+  // located on the mobile device
   static Future<File> loadModelFromFirebase() async {
+    // Create model with a name that is specified in the Firebase console
     var model = FirebaseCustomRemoteModel('mobilenet_v1_1_0_224');
 
-    var conditions = FirebaseModelDownloadConditions(androidRequireWifi: true);
+    // Specify conditions when the model can be downloaded.
+    // If there is no wifi access when the app is started,
+    // this app will continue loading until the conditions are satisfied.
+    var conditions = FirebaseModelDownloadConditions(
+        androidRequireWifi: true, iosAllowCellularAccess: false);
+
+    // Create model manager associated with default Firebase App instance.
     var modelManager = FirebaseModelManager.instance;
 
+    // Begin downloading and wait until the model is downloaded successfully.
     await modelManager.download(model, conditions);
     assert(await modelManager.isModelDownloaded(model) == true);
 
+    // Get latest model file to use it for inference by the interpreter.
     var modelFile = await modelManager.getLatestModelFile(model);
     assert(modelFile != null);
     return modelFile;
   }
 
+  // Load the model into some TF Lite interpreter.
+  // In this case interpreter provided by tflite plugin
   static Future<String> loadTFLiteModel(File modelFile) async {
     var appDirectory = await getApplicationDocumentsDirectory();
     var labelsData =
@@ -84,6 +99,7 @@ class _MyAppState extends State<MyApp> {
     return "Model is loaded";
   }
 
+  // Shows image selection screen only when the model is ready to be used.
   Widget readyScreen() {
     return Scaffold(
       appBar: AppBar(
@@ -110,6 +126,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  // In case of error shows unrecoverable error screen.
   Widget errorScreen() {
     return Scaffold(
       body: Center(
@@ -118,14 +135,27 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  // In case of long loading shows loading screen until either model is ready or
+  // error is received.
   Widget loadingScreen() {
     return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: CircularProgressIndicator(),
+            ),
+            Text("Please make sure that you are using wifi."),
+          ],
+        ),
       ),
     );
   }
 
+  // Shows different screens based on the state of the custom model.
   Widget build(BuildContext context) {
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.headline2,
