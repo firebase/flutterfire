@@ -34,19 +34,26 @@ class _MyAppState extends State<MyApp> {
 
   // Triggers selection of an image and the consequent inference
   Future<void> getImageLabels() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    final image = File(pickedFile.path);
-    if (image == null) {
-      return;
+    try {
+      final pickedFile = await picker.getImage(source: ImageSource.gallery);
+      final image = File(pickedFile.path);
+      if (image == null) {
+        return;
+      }
+      var labels = List<Map>.from(await Tflite.runModelOnImage(
+        path: image.path,
+        imageStd: 127.5,
+      ));
+      setState(() {
+        _labels = labels;
+        _image = image;
+      });
     }
-    var labels = List<Map>.from(await Tflite.runModelOnImage(
-      path: image.path,
-      imageStd: 127.5,
-    ));
-    setState(() {
-      _labels = labels;
-      _image = image;
-    });
+    catch (exception) {
+      print("Failed on getting your image and it's labels: $exception");
+      print('Continuing with the program...');
+      rethrow;
+    }
   }
 
   static Future<String> loadModel() async {
@@ -57,46 +64,60 @@ class _MyAppState extends State<MyApp> {
   // Download custom model from the Firebase console and return its file
   // located on the mobile device
   static Future<File> loadModelFromFirebase() async {
-    // Create model with a name that is specified in the Firebase console
-    var model = FirebaseCustomRemoteModel('mobilenet_v1_1_0_224');
+    try {
+      // Create model with a name that is specified in the Firebase console
+      var model = FirebaseCustomRemoteModel('mobilenet_v1_1_0_224');
 
-    // Specify conditions when the model can be downloaded.
-    // If there is no wifi access when the app is started,
-    // this app will continue loading until the conditions are satisfied.
-    var conditions = FirebaseModelDownloadConditions(
-        androidRequireWifi: true, iosAllowCellularAccess: false);
+      // Specify conditions when the model can be downloaded.
+      // If there is no wifi access when the app is started,
+      // this app will continue loading until the conditions are satisfied.
+      var conditions = FirebaseModelDownloadConditions(
+          androidRequireWifi: true, iosAllowCellularAccess: false);
 
-    // Create model manager associated with default Firebase App instance.
-    var modelManager = FirebaseModelManager.instance;
+      // Create model manager associated with default Firebase App instance.
+      var modelManager = FirebaseModelManager.instance;
 
-    // Begin downloading and wait until the model is downloaded successfully.
-    await modelManager.download(model, conditions);
-    assert(await modelManager.isModelDownloaded(model) == true);
+      // Begin downloading and wait until the model is downloaded successfully.
+      await modelManager.download(model, conditions);
+      assert(await modelManager.isModelDownloaded(model) == true);
 
-    // Get latest model file to use it for inference by the interpreter.
-    var modelFile = await modelManager.getLatestModelFile(model);
-    assert(modelFile != null);
-    return modelFile;
+      // Get latest model file to use it for inference by the interpreter.
+      var modelFile = await modelManager.getLatestModelFile(model);
+      assert(modelFile != null);
+      return modelFile;
+    }
+    catch (exception) {
+      print('Failed on loading your model from Firebase: $exception');
+      print('The program will not be resumed');
+      rethrow;
+    }
   }
 
   // Load the model into some TF Lite interpreter.
   // In this case interpreter provided by tflite plugin
   static Future<String> loadTFLiteModel(File modelFile) async {
-    var appDirectory = await getApplicationDocumentsDirectory();
-    var labelsData =
-        await rootBundle.load("assets/labels_mobilenet_v1_224.txt");
-    var labelsFile =
-        await File(appDirectory.path + "_labels_mobilenet_v1_224.txt")
-            .writeAsBytes(labelsData.buffer.asUint8List(
-                labelsData.offsetInBytes, labelsData.lengthInBytes));
+    try{
+      var appDirectory = await getApplicationDocumentsDirectory();
+      var labelsData =
+          await rootBundle.load("assets/labels_mobilenet_v1_224.txt");
+      var labelsFile =
+          await File(appDirectory.path + "_labels_mobilenet_v1_224.txt")
+              .writeAsBytes(labelsData.buffer.asUint8List(
+                  labelsData.offsetInBytes, labelsData.lengthInBytes));
 
-    assert(await Tflite.loadModel(
-          model: modelFile.path,
-          labels: labelsFile.path,
-          isAsset: false,
-        ) ==
-        "success");
-    return "Model is loaded";
+      assert(await Tflite.loadModel(
+            model: modelFile.path,
+            labels: labelsFile.path,
+            isAsset: false,
+          ) ==
+          "success");
+      return "Model is loaded";
+    }
+    catch (exception) {
+      print('Failed on loading your model to the TFLite interpreter: $exception');
+      print('The program will not be resumed');
+      rethrow;
+    }
   }
 
   // Shows image selection screen only when the model is ready to be used.
@@ -130,7 +151,7 @@ class _MyAppState extends State<MyApp> {
   Widget errorScreen() {
     return Scaffold(
       body: Center(
-        child: Text("Error loading model. Sorry about that :("),
+        child: Text("Error loading model. Please check the logs."),
       ),
     );
   }
