@@ -19,7 +19,7 @@ void main() {
   );
 }
 
-/// Widget with a future function that initiates actions from FirebaseML
+/// Widget with a future function that initiates actions from FirebaseML.
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
   //When the model is ready, _loaded changes to trigger the screen state change.
   Future<String> _loaded = loadModel();
 
-  // Triggers selection of an image and the consequent inference
+  /// Triggers selection of an image and the consequent inference.
   Future<void> getImageLabels() async {
     try {
       final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -56,13 +56,14 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  /// Gets the model ready for inference on images.
   static Future<String> loadModel() async {
     final modelFile = await loadModelFromFirebase();
     return await loadTFLiteModel(modelFile);
   }
 
-  // Download custom model from the Firebase console and return its file
-  // located on the mobile device
+  /// Downloads custom model from the Firebase console and return its file.
+  /// located on the mobile device.
   static Future<File> loadModelFromFirebase() async {
     try {
       // Create model with a name that is specified in the Firebase console
@@ -93,8 +94,8 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  // Load the model into some TF Lite interpreter.
-  // In this case interpreter provided by tflite plugin
+  /// Loads the model into some TF Lite interpreter.
+  /// In this case interpreter provided by tflite plugin.
   static Future<String> loadTFLiteModel(File modelFile) async {
     try{
       final appDirectory = await getApplicationDocumentsDirectory();
@@ -120,7 +121,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  // Shows image selection screen only when the model is ready to be used.
+  /// Shows image selection screen only when the model is ready to be used.
   Widget readyScreen() {
     return Scaffold(
       appBar: AppBar(
@@ -147,7 +148,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  // In case of error shows unrecoverable error screen.
+  /// In case of error shows unrecoverable error screen.
   Widget errorScreen() {
     return Scaffold(
       body: Center(
@@ -156,8 +157,8 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  // In case of long loading shows loading screen until either model is ready or
-  // error is received.
+  /// In case of long loading shows loading screen until model is ready or
+  /// error is received.
   Widget loadingScreen() {
     return Scaffold(
       body: Center(
@@ -176,7 +177,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  // Shows different screens based on the state of the custom model.
+  /// Shows different screens based on the state of the custom model.
   Widget build(BuildContext context) {
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.headline2,
