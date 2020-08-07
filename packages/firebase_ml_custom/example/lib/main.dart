@@ -26,7 +26,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final picker = ImagePicker();
   File _image;
   List<Map<dynamic, dynamic>> _labels;
   //When the model is ready, _loaded changes to trigger the screen state change.
@@ -35,7 +34,8 @@ class _MyAppState extends State<MyApp> {
   /// Triggers selection of an image and the consequent inference.
   Future<void> getImageLabels() async {
     try {
-      final pickedFile = await picker.getImage(source: ImageSource.gallery);
+      final pickedFile =
+          await ImagePicker.pickImage(source: ImageSource.gallery);
       final image = File(pickedFile.path);
       if (image == null) {
         return;
@@ -48,8 +48,7 @@ class _MyAppState extends State<MyApp> {
         _labels = labels;
         _image = image;
       });
-    }
-    catch (exception) {
+    } catch (exception) {
       print("Failed on getting your image and it's labels: $exception");
       print('Continuing with the program...');
       rethrow;
@@ -86,8 +85,7 @@ class _MyAppState extends State<MyApp> {
       var modelFile = await modelManager.getLatestModelFile(model);
       assert(modelFile != null);
       return modelFile;
-    }
-    catch (exception) {
+    } catch (exception) {
       print('Failed on loading your model from Firebase: $exception');
       print('The program will not be resumed');
       rethrow;
@@ -97,7 +95,7 @@ class _MyAppState extends State<MyApp> {
   /// Loads the model into some TF Lite interpreter.
   /// In this case interpreter provided by tflite plugin.
   static Future<String> loadTFLiteModel(File modelFile) async {
-    try{
+    try {
       final appDirectory = await getApplicationDocumentsDirectory();
       final labelsData =
           await rootBundle.load("assets/labels_mobilenet_v1_224.txt");
@@ -113,9 +111,9 @@ class _MyAppState extends State<MyApp> {
           ) ==
           "success");
       return "Model is loaded";
-    }
-    catch (exception) {
-      print('Failed on loading your model to the TFLite interpreter: $exception');
+    } catch (exception) {
+      print(
+          'Failed on loading your model to the TFLite interpreter: $exception');
       print('The program will not be resumed');
       rethrow;
     }
