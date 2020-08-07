@@ -178,7 +178,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:479882132969:android:ae50362b4bc06086",
         "android_client_info": {
-          "package_name": "io.flutter.plugins.firebaseml_example"
+          "package_name": "io.flutter.plugins.firebasemlcustomexample"
         }
       },
       "oauth_client": [
@@ -186,7 +186,7 @@
           "client_id": "479882132969-9pp74fkgmtvt47t9rikc1p861v7n85tn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "io.flutter.plugins.firebaseml_example",
+            "package_name": "io.flutter.plugins.firebasemlcustomexample",
             "certificate_hash": "e733b7a303250b63e06de6f7c9767c517d69cfa0"
           }
         },
