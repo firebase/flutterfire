@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   static Future<String> loadModel() async {
-    var modelFile = await loadModelFromFirebase();
+    final modelFile = await loadModelFromFirebase();
     return await loadTFLiteModel(modelFile);
   }
 
@@ -66,16 +66,16 @@ class _MyAppState extends State<MyApp> {
   static Future<File> loadModelFromFirebase() async {
     try {
       // Create model with a name that is specified in the Firebase console
-      var model = FirebaseCustomRemoteModel('mobilenet_v1_1_0_224');
+      final model = FirebaseCustomRemoteModel('mobilenet_v1_1_0_224');
 
       // Specify conditions when the model can be downloaded.
       // If there is no wifi access when the app is started,
       // this app will continue loading until the conditions are satisfied.
-      var conditions = FirebaseModelDownloadConditions(
+      final conditions = FirebaseModelDownloadConditions(
           androidRequireWifi: true, iosAllowCellularAccess: false);
 
       // Create model manager associated with default Firebase App instance.
-      var modelManager = FirebaseModelManager.instance;
+      final modelManager = FirebaseModelManager.instance;
 
       // Begin downloading and wait until the model is downloaded successfully.
       await modelManager.download(model, conditions);
@@ -97,11 +97,11 @@ class _MyAppState extends State<MyApp> {
   // In this case interpreter provided by tflite plugin
   static Future<String> loadTFLiteModel(File modelFile) async {
     try{
-      var appDirectory = await getApplicationDocumentsDirectory();
-      var labelsData =
+      final appDirectory = await getApplicationDocumentsDirectory();
+      final labelsData =
           await rootBundle.load("assets/labels_mobilenet_v1_224.txt");
-      var labelsFile =
-          await File(appDirectory.path + "_labels_mobilenet_v1_224.txt")
+      final labelsFile =
+          await File(appDirectory.path + "/_labels_mobilenet_v1_224.txt")
               .writeAsBytes(labelsData.buffer.asUint8List(
                   labelsData.offsetInBytes, labelsData.lengthInBytes));
 
