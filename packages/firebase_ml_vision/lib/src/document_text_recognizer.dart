@@ -35,7 +35,7 @@ class DocumentTextRecognizer {
   final CloudDocumentRecognizerOptions _cloudOptions;
 
   DocumentTextRecognizer._({
-    @required dynamic cloudOptions,
+    @required CloudDocumentRecognizerOptions cloudOptions,
     @required int handle,
   })  : _cloudOptions = cloudOptions,
         _handle = handle,
