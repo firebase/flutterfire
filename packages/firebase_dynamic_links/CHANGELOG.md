@@ -1,3 +1,7 @@
+## 0.5.4
+
+* Updated README.md instructions to add intent-filter in AndroidManifest.xml for opening application directly through dynamic link rather than opening link in browser.(Android Only) 
+
 ## 0.5.3
 
 * Fix for passing null/nil link between native libraries and flutter code.
