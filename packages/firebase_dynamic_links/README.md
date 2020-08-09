@@ -116,7 +116,7 @@ Note:-This step is optional and in case we do not implement this then link will 
                 <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
                 <data
                     android:scheme="https"
-                    android:host="sikhnotes.page.link" />
+                    android:host="YOUR_SUBDOMAIN.page.link" />//you can use your own domain also for eg: example.com, example.sub.com
             </intent-filter>
 ```
 6. To receive a dynamic link, call the `getInitialLink()` method from `FirebaseDynamicLinks` which gets the link that opened the app (or null if it was not opened via a dynamic link)
