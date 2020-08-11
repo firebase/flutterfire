@@ -33,6 +33,7 @@ class _PictureScannerState extends State<PictureScanner> {
       FirebaseVision.instance.cloudTextRecognizer();
   final DocumentTextRecognizer _cloudDocumentRecognizer =
       FirebaseVision.instance.cloudDocumentTextRecognizer();
+  final ImagePicker _picker = ImagePicker();
 
   Future<void> _getAndScanImage() async {
     setState(() {
@@ -40,8 +41,9 @@ class _PictureScannerState extends State<PictureScanner> {
       _imageSize = null;
     });
 
-    final File imageFile =
-        await ImagePicker.pickImage(source: ImageSource.gallery);
+    final PickedFile pickedImage =
+        await _picker.getImage(source: ImageSource.gallery);
+    final File imageFile = File(pickedImage.path);
 
     if (imageFile != null) {
       _getImageSize(imageFile);
