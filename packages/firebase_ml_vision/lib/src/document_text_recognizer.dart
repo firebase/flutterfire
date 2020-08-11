@@ -77,6 +77,10 @@ class DocumentTextRecognizer {
 }
 
 /// Options for cloud document text recognizer.
+///
+/// In cases, when the language of the text in the image is known, setting
+/// a hint will help get better results (although it will be a significant
+/// hindrance if the hint is wrong).
 class CloudDocumentRecognizerOptions {
   /// Constructor for [CloudDocumentRecognizerOptions].
   ///
