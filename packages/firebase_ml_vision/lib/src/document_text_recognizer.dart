@@ -85,10 +85,6 @@ class CloudDocumentRecognizerOptions {
   /// Constructor for [CloudDocumentRecognizerOptions].
   ///
   /// For Latin alphabet based languages, setting language hints is not needed.
-  ///
-  /// In cases, when the language of the text in the image is known, setting
-  /// a hint will help get better results (although it will be a significant
-  /// hindrance if the hint is wrong).
   const CloudDocumentRecognizerOptions({this.hintedLanguages});
 
   /// Language hints for text recognition.
