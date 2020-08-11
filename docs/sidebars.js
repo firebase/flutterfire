@@ -13,6 +13,7 @@ module.exports = {
       "installation/android",
       "installation/ios",
       "installation/web",
+      "migration",
     ],
     // AdMob: ["admob/usage", toReferenceAPI("firebase_admob")],
     Analytics: ["analytics/overview", toReferenceAPI("firebase_analytics")],
