@@ -1,6 +1,6 @@
 # Firebase Cloud Storage for Flutter
 
-[![pub package](https://img.shields.io/pub/v/firebase_storage.svg)](https://pub.dartlang.org/packages/firebase_storage)
+[![pub package](https://img.shields.io/pub/v/firebase_storage.svg)](https://pub.dev/packages/firebase_storage)
 
 A Flutter plugin to use the [Firebase Cloud Storage API](https://firebase.google.com/products/storage/).
 

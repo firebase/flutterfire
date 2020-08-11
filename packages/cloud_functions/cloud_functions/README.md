@@ -2,7 +2,7 @@
 
 A Flutter plugin to use the [Cloud Functions for Firebase API](https://firebase.google.com/docs/functions/callable)
 
-[![pub package](https://img.shields.io/pub/v/cloud_functions.svg)](https://pub.dartlang.org/packages/cloud_functions)
+[![pub package](https://img.shields.io/pub/v/cloud_functions.svg)](https://pub.dev/packages/cloud_functions)
 
 For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
