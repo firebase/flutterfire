@@ -82,7 +82,10 @@ class TextRecognizer {
   }
 }
 
-/// Options for cloud text recognizer.
+/// Options for a cloud text recognizer.
+///
+/// Hinted languages and text model type may provide better results if text
+/// language and density are known prior to inference.
 class CloudTextRecognizerOptions {
   /// Language hints for text recognition.
   ///
