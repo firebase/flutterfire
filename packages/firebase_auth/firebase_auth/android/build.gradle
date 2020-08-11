@@ -1,11 +1,11 @@
-
-group 'io.flutter.plugins.firebaseauth'
+group 'io.flutter.plugins.firebase.auth'
 version '1.0-SNAPSHOT'
 
 buildscript {
     repositories {
         google()
         jcenter()
+        mavenLocal()
     }
 
     dependencies {
@@ -13,14 +13,13 @@ buildscript {
     }
 }
 
-rootProject.allprojects {
+allprojects {
     repositories {
         google()
         jcenter()
+        mavenLocal()
     }
 }
-
-apply plugin: 'com.android.library'
 
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {
@@ -35,9 +34,14 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
     return rootProject.ext.get('FlutterFire').get(name)
 }
 
+apply plugin: 'com.android.library'
+
 android {
     compileSdkVersion 28
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         minSdkVersion 16
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -50,8 +54,6 @@ android {
         implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
         implementation 'com.google.firebase:firebase-auth'
         implementation 'androidx.annotation:annotation:1.1.0'
-        // TODO(Salakar): Remove gson after rework lands.
-        api 'com.google.code.gson:gson:2.8.5'
     }
 }
 

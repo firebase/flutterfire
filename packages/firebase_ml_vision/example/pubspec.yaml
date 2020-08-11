@@ -6,7 +6,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  image_picker: ^0.6.0
+  image_picker: ^0.5.0
   cupertino_icons: ^0.1.2
   firebase_ml_vision:
     path: ../
