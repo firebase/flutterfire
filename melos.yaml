@@ -88,7 +88,7 @@ scripts:
       rm -rf ./build ./android/.gradle ./ios/.symlinks ./ios/Pods ./android/.idea ./.idea ./.dart-tool/build
 
 dev_dependencies:
-  pedantic: ^1.8.0
+  pedantic: 1.8.0
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
