@@ -1,3 +1,7 @@
+## 2.0.0-dev.1
+
+* See the `firebase_auth` plugin changelog.
+
 ## 1.1.8
 
 * Update lower bound of dart dependency to 2.0.0.
