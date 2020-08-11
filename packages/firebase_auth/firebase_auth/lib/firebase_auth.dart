@@ -6,31 +6,48 @@ library firebase_auth;
 
 import 'dart:async';
 
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 
 export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
     show
-        AuthCredential,
-        AuthException,
+        FirebaseAuthException,
+        IdTokenResult,
+        UserMetadata,
+        UserInfo,
+        ActionCodeInfo,
+        ActionCodeSettings,
+        AdditionalUserInfo,
+        ActionCodeInfoOperation,
+        Persistence,
         PhoneVerificationCompleted,
         PhoneVerificationFailed,
         PhoneCodeSent,
-        PhoneCodeAutoRetrievalTimeout;
+        PhoneCodeAutoRetrievalTimeout,
+        AuthCredential,
+        EmailAuthProvider,
+        EmailAuthCredential,
+        FacebookAuthProvider,
+        FacebookAuthCredential,
+        GithubAuthProvider,
+        GithubAuthCredential,
+        GoogleAuthProvider,
+        GoogleAuthCredential,
+        OAuthProvider,
+        OAuthCredential,
+        PhoneAuthProvider,
+        PhoneAuthCredential,
+        SAMLAuthProvider,
+        TwitterAuthProvider,
+        TwitterAuthCredential;
 
-part 'src/auth_provider/email_auth_provider.dart';
-part 'src/auth_provider/facebook_auth_provider.dart';
-part 'src/auth_provider/github_auth_provider.dart';
-part 'src/auth_provider/google_auth_provider.dart';
-part 'src/auth_provider/phone_auth_provider.dart';
-part 'src/auth_provider/twitter_auth_provider.dart';
-part 'src/auth_provider/oauth_auth_provider.dart';
-part 'src/additional_user_info.dart';
-part 'src/auth_result.dart';
+export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show FirebaseException;
+
 part 'src/firebase_auth.dart';
-part 'src/firebase_user.dart';
-part 'src/id_token_result.dart';
-part 'src/user_info.dart';
-part 'src/user_metadata.dart';
-part 'src/user_update_info.dart';
+part 'src/user_credential.dart';
+part 'src/user.dart';
+part 'src/confirmation_result.dart';
+part 'src/recaptcha_verifier.dart';

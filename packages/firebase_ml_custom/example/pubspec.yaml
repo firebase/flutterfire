@@ -1,0 +1,38 @@
+name: firebase_ml_custom_example
+description: Demonstrates how to use the firebase_ml_custom plugin.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  firebase_ml_custom:
+    path: ../
+  firebase_core: ^0.4.0
+  cupertino_icons: ^0.1.3
+
+  image_picker: ^0.6.0
+  tflite: 1.1.1
+
+dev_dependencies:
+  pedantic: ^1.8.0
+  flutter_test:
+    sdk: flutter
+  flutter_driver:
+    sdk: flutter
+  test: any
+  path: ^1.6.2
+  path_provider: ^0.5.0+1
+  e2e: ^0.2.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/labels_mobilenet_v1_224.txt
