@@ -18,10 +18,10 @@ module.exports = {
     Analytics: ["analytics/overview", toReferenceAPI("firebase_analytics")],
     Authentication: [
       "auth/overview",
-      // "auth/usage",
-      // "auth/social",
-      // "auth/phone",
-      // "auth/error-handling",
+      "auth/usage",
+      "auth/social",
+      "auth/phone",
+      "auth/error-handling",
       toReferenceAPI("firebase_auth"),
     ],
     "Cloud Firestore": [
