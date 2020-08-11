@@ -103,8 +103,10 @@ class FirebaseVision {
   }
 
   /// Creates a cloud instance of [DocumentTextRecognizer].
-  DocumentTextRecognizer cloudDocumentTextRecognizer() {
+  DocumentTextRecognizer cloudDocumentTextRecognizer(
+      [CloudDocumentRecognizerOptions cloudOptions]) {
     return DocumentTextRecognizer._(
+      cloudOptions: cloudOptions ?? const CloudDocumentRecognizerOptions(),
       handle: nextHandle++,
     );
   }

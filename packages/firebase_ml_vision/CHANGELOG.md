@@ -1,3 +1,7 @@
+## 0.9.6+2
+
+* Add options for cloud document text recognition.
+
 ## 0.9.6+1
 
 * Add options for cloud text recognition.

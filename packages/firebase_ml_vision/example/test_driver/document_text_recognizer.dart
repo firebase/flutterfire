@@ -6,12 +6,25 @@ part of 'firebase_ml_vision.dart';
 
 void documentTextRecognizerTests() {
   group('$DocumentTextRecognizer', () {
-    final DocumentTextRecognizer recognizer =
-        FirebaseVision.instance.cloudDocumentTextRecognizer();
+    final recognizer = FirebaseVision.instance.cloudDocumentTextRecognizer();
+    FirebaseVisionImage visionImage;
 
-    test('processImage', () async {
+    setUp(() async {
       final tmpFilename = await _loadImage('assets/test_text.png');
-      final visionImage = FirebaseVisionImage.fromFilePath(tmpFilename);
+      visionImage = FirebaseVisionImage.fromFilePath(tmpFilename);
+    });
+
+    test('processImage with default options', () async {
+      final text = await recognizer.processImage(visionImage);
+
+      expect(text.text, 'TEXT\n');
+    });
+
+    test('processImage with specified options', () async {
+      final hintedLanguages = ['en', 'ru'];
+      final options =
+          CloudDocumentRecognizerOptions(hintedLanguages: hintedLanguages);
+      FirebaseVision.instance.cloudDocumentTextRecognizer(options);
       final text = await recognizer.processImage(visionImage);
 
       expect(text.text, 'TEXT\n');
