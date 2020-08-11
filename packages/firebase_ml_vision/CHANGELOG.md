@@ -1,6 +1,14 @@
+## 0.9.6+1
+
+* Add options for cloud text recognition.
+
 ## 0.9.6
 
 * Add recognition of text in document images through `DocumentTextRecognizer`. See `README.md` for more information.
+
+## 0.9.5+1
+
+* Add options for cloud text recognition.
 
 ## 0.9.5
 
