@@ -631,13 +631,15 @@ Firestore provides out of the box support for offline capabilities. When reading
 local database which automatically synchronizes with the server. Cloud Firestore functionality continues when users are
 offline, and automatically handles data migration when they regain connectivity.
 
-This functionality is enabled by default, however it can be disabled if needed. The [`settings`](!cloud_firestore.FirebaseFirestore.settings)
-method must be called before any Firestore interaction is performed:
+This functionality is enabled by default, however it can be disabled if needed. The [`settings`](!cloud_firestore.FirebaseFirestore.settings) must be set before any Firestore interaction is performed:
 
 ```dart
-await FirebaseFirestore.instance.settings(
-  Settings(persistenceEnabled: false)
-);
+// Web.
+await FirebaseFirestore.instance.enablePersistence();
+
+// All other platforms.
+FirebaseFirestore.instance.settings =
+    Settings(persistenceEnabled: false);
 ```
 
 If you want to clear any persisted data, you can call the [`clearPersistence()`](!cloud_firestore.FirebaseFirestore.clearPersistence) method.
@@ -659,10 +661,8 @@ will attempt to remove older, unused data. You can configure different cache siz
 // The default value is 40 MB. The threshold must be set to at least 1 MB,
 // and can be set to Settings.CACHE_SIZE_UNLIMITED to disable garbage collection.
 
-await FirebaseFirestore.instance.settings(
-  Settings(
-    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED
-  ));
+FirebaseFirestore.instance.settings = 
+    Settings(cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED);
 ```
 
 ### Disable and Enable Network Access
@@ -686,13 +686,22 @@ If you are using the local [Firestore emulators](https://firebase.google.com/doc
 connect to these by passing a [`host`](!cloud_firestore.Settings.host) parameter to the [`settings`](!cloud_firestore.FirebaseFirestore.settings) method,
 immediately after initializing Firebase. Ensure you pass the correct port on which the Firebase emulator is running on.
 
-> On Android, to reference `localhost`, use the `10.0.2.2` IP address instead.
+> On Android emulators, to reference `localhost`, use the `10.0.2.2` IP address instead.
 
 ```dart
-// Initialize first
-await FirebaseCore.instance.initializeApp();
+// Import foundation for [TargetPlatform].
+import 'package:flutter/foundation.dart';
 
-// Set the host as soon as possible
-await FirebaseFirestore.instance
-  .settings(Settings(host: "localhost:8080", sslEnabled: false));
+// ...
+
+// Switch host based on platform.
+String host = defaultTargetPlatform == TargetPlatform.android
+    ? '10.0.2.2:8080'
+    : 'localhost:8080';
+
+// Set the host as soon as possible.
+FirebaseFirestore.instance.settings =
+    Settings(host: host, sslEnabled: false);
+
+// ...
 ```

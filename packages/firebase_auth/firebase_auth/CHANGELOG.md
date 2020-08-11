@@ -9,7 +9,7 @@ Overall, Firebase Auth has been heavily reworked to bring it inline with the fed
 - **NEW**: The `ActionCodeSettings` class is now consumable on all supporting methods.
   - **NEW**: Added support for the `dynamicLinkDomain` property.
 - **NEW**: Added a new `FirebaseAuthException` class (extends `FirebaseException`).
-  - All errors are now returned as a `FirebaseAuthException`, allowing you to access the code & message associated with the error. 
+  - All errors are now returned as a `FirebaseAuthException`, allowing you to access the code & message associated with the error.
   - In addition, it is now possible to access the `email` and `credential` properties on exceptions if they exist.
 
 ### `FirebaseAuth`
@@ -20,7 +20,7 @@ Overall, Firebase Auth has been heavily reworked to bring it inline with the fed
 - **DEPRECATED**: `onAuthStateChanged` has been deprecated in favor of `authStateChanges()`.
 - **NEW**: Added support for `idTokenChanges()` stream listener.
 - **NEW**: Added support for `userChanges()` stream listener.
-  - The purpose of this API is to allow users to subscribe to all user events without having to manually hydrate app state in cases where a manual reload was required (e.g. `updateProfile()`). 
+  - The purpose of this API is to allow users to subscribe to all user events without having to manually hydrate app state in cases where a manual reload was required (e.g. `updateProfile()`).
 - **NEW**: Added support for `applyActionCode()`.
 - **NEW**: Added support for `checkActionCode()`.
 - **NEW**: Added support for `verifyPasswordResetCode()`.
@@ -53,6 +53,10 @@ Overall, Firebase Auth has been heavily reworked to bring it inline with the fed
   - **DEPRECATED**:  `EmailAuthProvider.getCredentialWithLink()` has been deprecated in favor of `EmailAuthProvider.credentialWithLink()`.
 - **NEW**: Supporting providers can now assign scope and custom request parameters.
   - The scope and parameters will be used on web platforms when triggering a redirect or popup via `signInWithPopup()` or `signInWithRedirect()`.
+
+## 0.17.0-dev.2
+
+* Update plugin and example to use the same core.
 
 ## 0.17.0-dev.1
 

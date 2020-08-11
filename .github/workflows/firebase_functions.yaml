@@ -3,12 +3,13 @@ name: firebase_functions
 on:
   pull_request:
     paths:
-      - "packages/firebase_core/**"
       - "packages/cloud_functions/**"
       - ".github/workflows/firebase_functions.yaml"
   push:
     branches:
       - master
+    paths-ignore:
+      - "docs/**"
 
 env:
   FLUTTERFIRE_PLUGIN_SCOPE: "*cloud_functions*"

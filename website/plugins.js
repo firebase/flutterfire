@@ -109,16 +109,16 @@ module.exports = [
       macos: false,
     },
   },
-  {
-    name: 'Instance ID',
-    pub: 'firebase_iid',
-    firebase: '',
-    support: {
-      web: false,
-      mobile: false,
-      macos: false,
-    },
-  },
+  // {
+  //   name: 'Instance ID',
+  //   pub: 'firebase_iid',
+  //   firebase: '',
+  //   support: {
+  //     web: false,
+  //     mobile: false,
+  //     macos: false,
+  //   },
+  // },
   {
     name: 'In-App Messaging',
     pub: 'firebase_in_app_messaging',
@@ -129,16 +129,16 @@ module.exports = [
       macos: false,
     },
   },
-  {
-    name: 'ML Kit Natural Language',
-    pub: 'firebase_ml_language',
-    firebase: 'ml-kit',
-    support: {
-      web: false,
-      mobile: false,
-      macos: false,
-    },
-  },
+  // {
+  //   name: 'ML Kit Natural Language',
+  //   pub: 'firebase_ml_language',
+  //   firebase: 'ml-kit',
+  //   support: {
+  //     web: false,
+  //     mobile: false,
+  //     macos: false,
+  //   },
+  // },
   {
     name: 'ML Kit Vision',
     pub: 'firebase_ml_vision',
@@ -166,7 +166,7 @@ module.exports = [
     support: {
       web: false,
       mobile: true,
-      macos: false,
+      macos: true,
     },
   },
 ];

@@ -52,11 +52,6 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
   if (self) {
     _channel = channel;
     _resumingFromBackground = NO;
-    if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
-      NSLog(@"Configuring the default Firebase app...");
-      [FIRApp configure];
-      NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    }
     [FIRMessaging messaging].delegate = self;
   }
   return self;
