@@ -1,3 +1,7 @@
+## 0.0.2
+
+* Fix plugin description and the changelog.
+
 ## 0.0.1
 
 * Initial release with model manager.
