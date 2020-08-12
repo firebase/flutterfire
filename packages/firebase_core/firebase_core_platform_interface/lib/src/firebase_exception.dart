@@ -10,23 +10,17 @@ part of firebase_core_platform_interface;
 /// ```dart
 /// try {
 ///   await Firebase.initializeApp();
-/// } catch (e) {
+/// } on FirebaseException catch (e) {
 ///   print(e.toString());
 /// }
 /// ```
 class FirebaseException implements Exception {
-  /// A generic class which provides exceptions in a Firebase-friendly format
-  /// to users.
-  ///
-  /// ```dart
-  /// try {
-  ///   await Firebase.initializeApp();
-  /// } catch (e) {
-  ///   print(e.toString());
-  /// }
-  /// ```
+  /// Creates a new instance of [FirebaseException].
   FirebaseException(
-      {@required this.plugin, @required this.message, this.code = 'unknown'});
+      {@required this.plugin,
+      @required this.message,
+      this.code = 'unknown',
+      this.stackTrace});
 
   /// The plugin the exception is for.
   ///
@@ -44,6 +38,10 @@ class FirebaseException implements Exception {
   /// not exist.
   final String code;
 
+  /// The stack trace which provides information to the user about the call
+  /// sequence that triggered an exception
+  final StackTrace stackTrace;
+
   @override
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
@@ -58,6 +56,12 @@ class FirebaseException implements Exception {
 
   @override
   String toString() {
-    return "[$plugin/$code] $message";
+    String output = "[$plugin/$code] $message";
+
+    if (stackTrace != null) {
+      output += "\n\n${stackTrace.toString()}";
+    }
+
+    return output;
   }
 }
