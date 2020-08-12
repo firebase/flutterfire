@@ -46,12 +46,12 @@ class FirebaseException implements Exception {
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
     if (other is! FirebaseException) return false;
-    return other.toString() == this.toString();
+    return other.hashCode == hashCode;
   }
 
   @override
   int get hashCode {
-    return this.toString().hashCode;
+    return hash3(plugin, code, message);
   }
 
   @override
