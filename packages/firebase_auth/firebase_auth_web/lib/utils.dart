@@ -11,10 +11,13 @@ import 'package:firebase/firebase.dart' as firebase;
 /// use the code and message and convert it into an expected [FirebaseAuthException].
 ///
 /// TODO: The firebase-dart wrapper does not support email or credential properties.
-FirebaseAuthException throwFirebaseAuthException(Object exception) {
+FirebaseAuthException throwFirebaseAuthException(Object exception,
+    [StackTrace stackTrace]) {
   if (exception is! firebase.FirebaseError) {
     return FirebaseAuthException(
-        code: 'unknown', message: 'An unknown error occurred.');
+        code: 'unknown',
+        message: 'An unknown error occurred.',
+        stackTrace: stackTrace);
   }
 
   firebase.FirebaseError firebaseError = exception as firebase.FirebaseError;
@@ -22,7 +25,8 @@ FirebaseAuthException throwFirebaseAuthException(Object exception) {
   String code = firebaseError.code.replaceFirst('auth/', '');
   String message =
       firebaseError.message.replaceFirst('(${firebaseError.code})', '');
-  return FirebaseAuthException(code: code, message: message);
+  return FirebaseAuthException(
+      code: code, message: message, stackTrace: stackTrace);
 }
 
 /// Converts a [firebase.ActionCodeInfo] into a [ActionCodeInfo].

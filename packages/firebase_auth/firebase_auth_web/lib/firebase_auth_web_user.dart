@@ -54,8 +54,8 @@ class UserWeb extends UserPlatform {
   Future<void> delete() {
     try {
       return _webUser.delete();
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -63,15 +63,19 @@ class UserWeb extends UserPlatform {
   Future<String> getIdToken(bool forceRefresh) {
     try {
       return _webUser.getIdToken(forceRefresh);
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
   @override
   Future<IdTokenResult> getIdTokenResult(bool forceRefresh) async {
-    return convertWebIdTokenResult(
-        await _webUser.getIdTokenResult(forceRefresh));
+    try {
+      return convertWebIdTokenResult(
+          await _webUser.getIdTokenResult(forceRefresh));
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
+    }
   }
 
   @override
@@ -82,8 +86,8 @@ class UserWeb extends UserPlatform {
           auth,
           await _webUser
               .linkWithCredential(convertPlatformCredential(credential)));
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -95,8 +99,8 @@ class UserWeb extends UserPlatform {
           auth,
           await _webUser.reauthenticateWithCredential(
               convertPlatformCredential(credential)));
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -105,8 +109,8 @@ class UserWeb extends UserPlatform {
     try {
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -115,8 +119,8 @@ class UserWeb extends UserPlatform {
     try {
       return _webUser.sendEmailVerification(
           convertPlatformActionCodeSettings(actionCodeSettings));
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -124,8 +128,8 @@ class UserWeb extends UserPlatform {
   Future<UserPlatform> unlink(String providerId) async {
     try {
       return UserWeb(auth, await _webUser.unlink(providerId));
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -135,8 +139,8 @@ class UserWeb extends UserPlatform {
       await _webUser.updateEmail(newEmail);
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -158,8 +162,8 @@ class UserWeb extends UserPlatform {
           .updatePhoneNumber(convertPlatformCredential(phoneCredential));
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -172,8 +176,8 @@ class UserWeb extends UserPlatform {
       ));
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 

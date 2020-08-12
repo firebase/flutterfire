@@ -24,8 +24,8 @@ class ConfirmationResultWeb extends ConfirmationResultPlatform {
     try {
       return UserCredentialWeb(
           _auth, await _webConfirmationResult.confirm(verificationCode));
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 }

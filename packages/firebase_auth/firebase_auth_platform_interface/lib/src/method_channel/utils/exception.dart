@@ -12,7 +12,8 @@ import '../../firebase_auth_exception.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseAuthException]
 /// if it was intentionally caught on the native platform.
-FutureOr<Map<String, dynamic>> catchPlatformException(Object exception) async {
+FutureOr<Map<String, dynamic>> catchPlatformException(Object exception,
+    [StackTrace stackTrace]) async {
   if (exception is! Exception || exception is! PlatformException) {
     throw exception;
   }
@@ -27,7 +28,8 @@ FutureOr<Map<String, dynamic>> catchPlatformException(Object exception) async {
 /// the `details` of the exception exist. Firebase returns specific codes and
 /// messages which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseAuthException(
-    PlatformException platformException) {
+    PlatformException platformException,
+    [StackTrace stackTrace]) {
   Map<String, dynamic> details = platformException.details != null
       ? Map<String, dynamic>.from(platformException.details)
       : null;
@@ -57,5 +59,9 @@ FirebaseException platformExceptionToFirebaseAuthException(
     }
   }
   return FirebaseAuthException(
-      code: code, message: message, email: email, credential: credential);
+      code: code,
+      message: message,
+      email: email,
+      credential: credential,
+      stackTrace: stackTrace);
 }

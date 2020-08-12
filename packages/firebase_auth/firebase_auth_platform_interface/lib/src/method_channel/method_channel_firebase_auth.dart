@@ -198,6 +198,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     FirebaseAuthException exception = FirebaseAuthException(
       message: details != null ? details['message'] : error['message'],
       code: details != null ? details['code'] : 'unknown',
+      stackTrace: StackTrace.current,
     );
 
     callbacks.verificationFailed(exception);

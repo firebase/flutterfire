@@ -56,8 +56,8 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   Future<String> verify() {
     try {
       return _delegate.verify();
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -65,8 +65,8 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   Future<int> render() {
     try {
       return _delegate.render();
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 }

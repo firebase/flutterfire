@@ -6,7 +6,6 @@ import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase/firebase.dart' as firebase;
-// import 'package:firebase_auth_web/firebase_auth_web_confirmation_result.dart';
 import 'package:firebase_auth_web/firebase_auth_web_user.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
@@ -209,8 +208,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<void> setPersistence(Persistence persistence) async {
     try {
       return _webAuth.setPersistence(convertPlatformPersistence(persistence));
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -218,8 +217,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<UserCredentialPlatform> signInAnonymously() async {
     try {
       return UserCredentialWeb(this, await _webAuth.signInAnonymously());
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -230,8 +229,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           this,
           await _webAuth
               .signInWithCredential(convertPlatformCredential(credential)));
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -240,8 +239,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return UserCredentialWeb(
           this, await _webAuth.signInWithCustomToken(token));
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -251,8 +250,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return UserCredentialWeb(
           this, await _webAuth.signInWithEmailAndPassword(email, password));
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -262,8 +261,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return UserCredentialWeb(
           this, await _webAuth.signInWithEmailLink(email, emailLink));
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -284,8 +283,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           this,
           await _webAuth
               .signInWithPopup(convertPlatformAuthProvider(provider)));
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -293,8 +292,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<void> signInWithRedirect(AuthProvider provider) async {
     try {
       return _webAuth.signInWithRedirect(convertPlatformAuthProvider(provider));
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -302,8 +301,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<void> signOut() {
     try {
       return _webAuth.signOut();
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
@@ -311,8 +310,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<String> verifyPasswordResetCode(String code) {
     try {
       return _webAuth.verifyPasswordResetCode(code);
-    } catch (e) {
-      throw throwFirebaseAuthException(e);
+    } catch (e, s) {
+      throw throwFirebaseAuthException(e, s);
     }
   }
 
