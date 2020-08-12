@@ -1,6 +1,6 @@
 ## 0.2.0-dev.2
 
-- **NEW**: Added support for `FirebaseException` stack traces.
+* **NEW**: Added support for `FirebaseException` stack traces.
 
 ## 0.2.0-dev.1
 
