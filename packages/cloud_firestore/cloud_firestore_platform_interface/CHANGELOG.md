@@ -1,3 +1,7 @@
+## 2.0.0-dev.2
+
+- Added support for `FirebaseException` stack traces.
+
 ## 2.0.0-dev.1
 
 * See `cloud_firestore` plugin changelog.
