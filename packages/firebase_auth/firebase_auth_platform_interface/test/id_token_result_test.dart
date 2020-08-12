@@ -7,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const String kMockSignInProvider = 'password';
-  const String kMockSignInSecondFactor = 'phone';
   const String kMockToken = 'test-token';
   const int kMockExpirationTimestamp = 1234566;
   const int kMockAuthTimestamp = 1234567;
@@ -22,7 +21,6 @@ void main() {
     'authTimestamp': kMockAuthTimestamp,
     'expirationTimestamp': kMockExpirationTimestamp,
     'signInProvider': kMockSignInProvider,
-    'signInSecondFactor': kMockSignInSecondFactor,
     'token': kMockToken
   };
 
