@@ -323,8 +323,6 @@ void main() {
             equals(kMockIdTokenResultExpirationTimestamp));
         expect(idTokenResult.issuedAtTime.millisecondsSinceEpoch,
             equals(kMockIdTokenResultIssuedAtTimestamp));
-        expect(idTokenResult.signInSecondFactor,
-            equals(kMockIdTokenResultSignInFactor));
         expect(idTokenResult.token, equals(kMockIdToken));
       });
 
