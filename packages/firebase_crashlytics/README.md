@@ -2,7 +2,7 @@
 
 A Flutter plugin to use the [Firebase Crashlytics Service](https://firebase.google.com/docs/crashlytics/).
 
-[![pub package](https://img.shields.io/pub/v/firebase_crashlytics.svg)](https://pub.dartlang.org/packages/firebase_crashlytics)
+[![pub package](https://img.shields.io/pub/v/firebase_crashlytics.svg)](https://pub.dev/packages/firebase_crashlytics)
 
 For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
@@ -10,7 +10,7 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 ### Import the firebase_crashlytics plugin
 
-To use the `firebase_crashlytics` plugin, follow the [plugin installation instructions](https://pub.dartlang.org/packages/firebase_crashlytics#pub-pkg-tab-installing).
+To use the `firebase_crashlytics` plugin, follow the [plugin installation instructions](https://pub.dev/packages/firebase_crashlytics#pub-pkg-tab-installing).
 
 ### Android integration
 

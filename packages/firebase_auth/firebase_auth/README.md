@@ -1,5 +1,5 @@
 # Firebase Auth for Flutter
-[![pub package](https://img.shields.io/pub/v/firebase_auth.svg)](https://pub.dartlang.org/packages/firebase_auth)
+[![pub package](https://img.shields.io/pub/v/firebase_auth.svg)](https://pub.dev/packages/firebase_auth)
 
 A Flutter plugin to use the [Firebase Authentication API](https://firebase.google.com/products/auth/).
 

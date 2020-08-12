@@ -103,7 +103,7 @@ function Home() {
                     />
                   </td>
                   <td>
-                    <a href={`https://pub.dartlang.org/packages/${plugin.pub}`}>
+                    <a href={`https://pub.dev/packages/${plugin.pub}`}>
                       <img width={25} src={useBaseUrl('img/dart-logo.png')} alt="Pub" />
                     </a>
                   </td>
