@@ -192,8 +192,9 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
                   channel.invokeMethod("onToken", task.getResult().getToken());
                 }
               });
-      if (mainActivity != null) {
-        sendMessageFromIntent("onLaunch", mainActivity.getIntent());
+      Intent intent = mainActivity.getIntent();
+      if (mainActivity != null && !launchedActivityFromHistory(intent)) {
+        sendMessageFromIntent("onLaunch", intent);
       }
       result.success(null);
     } else if ("subscribeToTopic".equals(call.method)) {
@@ -286,6 +287,10 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     } else {
       result.notImplemented();
     }
+  }
+
+  private static boolean launchedActivityFromHistory(Intent intent) {
+    return intent != null && (intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
   }
 
   @Override

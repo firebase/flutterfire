@@ -1,3 +1,7 @@
+## 7.0.0-dev.2
+
+* Fix `onLaunch` being called again when resuming an application on Android from the Recents screen
+
 ## 7.0.0-dev.1
 
 * Depend on `firebase_core` pre-release versions and migrate plugin to use `firebase_core` native SDK versioning features;
