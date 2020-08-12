@@ -290,7 +290,9 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   }
 
   private static boolean launchedActivityFromHistory(Intent intent) {
-    return intent != null && (intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
+    return intent != null
+        && (intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
+            == Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
   }
 
   @Override
