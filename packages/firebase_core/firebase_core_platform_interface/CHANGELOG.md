@@ -1,3 +1,6 @@
+## 2.0.0-dev.2
+* Added support for [FirebaseException] stack traces.
+
 ## 2.0.0-dev.1
 
 * DEPRECATED: `FirebaseApp.configure` method is now deprecated in favor of the `Firebase.initializeApp` method.

@@ -1,3 +1,6 @@
+## 0.5.0-dev.3
+* Added support for [FirebaseException] stack traces.
+
 ## 0.5.0-dev.2
 * Allow iOS and macOS to be imported as a module.
 
