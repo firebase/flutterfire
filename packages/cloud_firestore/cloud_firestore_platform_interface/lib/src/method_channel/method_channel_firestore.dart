@@ -167,6 +167,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         plugin: 'cloud_firestore',
         code: errorMap['code'],
         message: errorMap['message'],
+        stackTrace: StackTrace.current,
       );
       controller.addError(exception);
     } else {
@@ -317,22 +318,25 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
     T result;
     Object exception;
+    StackTrace stackTrace;
 
     // If the uses [TransactionHandler] throws an error, the stream broadcasts
     // it so we don't lose it's context.
     StreamSubscription subscription =
         streamController.stream.listen((Object data) {
       result = data;
-    }, onError: (Object e) {
+    }, onError: (Object e, StackTrace s) {
       exception = e;
+      stackTrace = s;
     });
 
     await channel.invokeMethod<T>('Transaction#create', <String, dynamic>{
       'firestore': this,
       'transactionId': transactionId,
       'timeout': timeout.inMilliseconds
-    }).catchError((Object e) {
+    }).catchError((Object e, StackTrace s) {
       exception = e;
+      stackTrace = s;
     });
 
     // The transaction is successful, cleanup the stream
@@ -341,9 +345,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
     if (exception != null) {
       if (exception is PlatformException) {
-        return Future.error(platformExceptionToFirebaseException(exception));
+        return Future.error(
+            platformExceptionToFirebaseException(exception, stackTrace));
       } else {
-        return Future.error(exception);
+        return Future.error(exception, stackTrace);
       }
     }
 

@@ -34,8 +34,8 @@ class TransactionWeb extends TransactionPlatform {
           .get(_webFirestoreDelegate.doc(documentPath));
 
       return convertWebDocumentSnapshot(this._firestore, webDocumentSnapshot);
-    } catch (e) {
-      throw getFirebaseException(e);
+    } catch (e, s) {
+      throw getFirebaseException(e, s);
     }
   }
 

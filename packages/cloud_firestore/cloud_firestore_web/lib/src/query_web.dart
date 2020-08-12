@@ -125,8 +125,8 @@ class QueryWeb extends QueryPlatform {
     try {
       return convertWebQuerySnapshot(
           firestore, await _buildWebQueryWithParameters().get());
-    } catch (e) {
-      throw getFirebaseException(e);
+    } catch (e, s) {
+      throw getFirebaseException(e, s);
     }
   }
 
@@ -160,8 +160,8 @@ class QueryWeb extends QueryPlatform {
     return querySnapshots
         .map((webQuerySnapshot) =>
             convertWebQuerySnapshot(firestore, webQuerySnapshot))
-        .handleError((e) {
-      throw getFirebaseException(e);
+        .handleError((e, s) {
+      throw getFirebaseException(e, s);
     });
   }
 

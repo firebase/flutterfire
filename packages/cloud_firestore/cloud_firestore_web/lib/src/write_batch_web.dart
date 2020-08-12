@@ -22,8 +22,8 @@ class WriteBatchWeb extends WriteBatchPlatform {
   Future<void> commit() async {
     try {
       await _webWriteBatchDelegate.commit();
-    } catch (e) {
-      throw getFirebaseException(e);
+    } catch (e, s) {
+      throw getFirebaseException(e, s);
     }
   }
 

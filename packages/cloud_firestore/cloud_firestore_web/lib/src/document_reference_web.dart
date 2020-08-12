@@ -34,8 +34,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         // TODO(ehesp): `mergeFields` missing from web implementation
         options != null ? web.SetOptions(merge: options.merge) : null,
       );
-    } catch (e) {
-      throw getFirebaseException(e);
+    } catch (e, s) {
+      throw getFirebaseException(e, s);
     }
   }
 
@@ -43,8 +43,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   Future<void> update(Map<String, dynamic> data) async {
     try {
       await _delegate.update(data: CodecUtility.encodeMapData(data));
-    } catch (e) {
-      throw getFirebaseException(e);
+    } catch (e, s) {
+      throw getFirebaseException(e, s);
     }
   }
 
@@ -54,8 +54,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     try {
       web.DocumentSnapshot documentSnapshot = await _delegate.get();
       return convertWebDocumentSnapshot(this.firestore, documentSnapshot);
-    } catch (e) {
-      throw getFirebaseException(e);
+    } catch (e, s) {
+      throw getFirebaseException(e, s);
     }
   }
 
@@ -63,8 +63,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   Future<void> delete() async {
     try {
       await _delegate.delete();
-    } catch (e) {
-      throw getFirebaseException(e);
+    } catch (e, s) {
+      throw getFirebaseException(e, s);
     }
   }
 
@@ -79,8 +79,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     return querySnapshots
         .map((webSnapshot) =>
             convertWebDocumentSnapshot(this.firestore, webSnapshot))
-        .handleError((e) {
-      throw getFirebaseException(e);
+        .handleError((e, s) {
+      throw getFirebaseException(e, s);
     });
   }
 }

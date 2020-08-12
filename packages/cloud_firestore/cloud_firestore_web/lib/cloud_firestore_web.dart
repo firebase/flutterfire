@@ -62,8 +62,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   Future<void> disableNetwork() async {
     try {
       await _webFirestore.disableNetwork();
-    } catch (e) {
-      throw getFirebaseException(e);
+    } catch (e, s) {
+      throw getFirebaseException(e, s);
     }
   }
 
@@ -75,8 +75,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   Future<void> enableNetwork() async {
     try {
       await _webFirestore.enableNetwork();
-    } catch (e) {
-      throw getFirebaseException(e);
+    } catch (e, s) {
+      throw getFirebaseException(e, s);
     }
   }
 
@@ -96,8 +96,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       // Workaround for 'Runtime type information not available for type_variable_local'
       // See: https://github.com/dart-lang/sdk/issues/29722
       return result as T;
-    } catch (e) {
-      throw getFirebaseException(e);
+    } catch (e, s) {
+      throw getFirebaseException(e, s);
     }
   }
 
@@ -131,8 +131,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     // See https://firebase.google.com/docs/reference/js/firebase.firestore.PersistenceSettings
     try {
       await _webFirestore.enablePersistence();
-    } catch (e) {
-      throw getFirebaseException(e);
+    } catch (e, s) {
+      throw getFirebaseException(e, s);
     }
   }
 
