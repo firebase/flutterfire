@@ -11,7 +11,8 @@ FirebaseException noAppExists(String appName) {
       plugin: 'core',
       code: 'no-app',
       message:
-          "No Firebase App '${appName}' has been created - call Firebase.initializeApp()");
+          "No Firebase App '${appName}' has been created - call Firebase.initializeApp()",
+      stackTrace: StackTrace.current);
 }
 
 /// Throws a consistent cross-platform error message when an app is being created
@@ -20,7 +21,8 @@ FirebaseException duplicateApp(String appName) {
   return FirebaseException(
       plugin: 'core',
       code: 'duplicate-app',
-      message: 'A Firebase App named "$appName" already exists');
+      message: 'A Firebase App named "$appName" already exists',
+      stackTrace: StackTrace.current);
 }
 
 /// Throws a consistent cross-platform error message if the user attempts to
@@ -29,7 +31,8 @@ FirebaseException noDefaultAppInitialization() {
   return FirebaseException(
       plugin: 'core',
       message:
-          'The $defaultFirebaseAppName app cannot be initialized here. To initialize the default app, follow the installation instructions for the specific platform you are developing with.');
+          'The $defaultFirebaseAppName app cannot be initialized here. To initialize the default app, follow the installation instructions for the specific platform you are developing with.',
+      stackTrace: StackTrace.current);
 }
 
 /// Throws a consistent platform specific error message if the user attempts to
@@ -61,7 +64,10 @@ FirebaseException coreNotInitialized() {
   }
 
   return FirebaseException(
-      plugin: 'core', code: 'not-initialized', message: message);
+      plugin: 'core',
+      code: 'not-initialized',
+      message: message,
+      stackTrace: StackTrace.current);
 }
 
 /// Throws a consistent cross-platform error message if the user attempts
@@ -69,5 +75,6 @@ FirebaseException coreNotInitialized() {
 FirebaseException noDefaultAppDelete() {
   return FirebaseException(
       plugin: 'core',
-      message: 'The default Firebase app instance cannot be deleted.');
+      message: 'The default Firebase app instance cannot be deleted.',
+      stackTrace: StackTrace.current);
 }
