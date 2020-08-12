@@ -1,3 +1,7 @@
+## 0.18.0-dev.3
+
+* **NEW**: Added support for `FirebaseException` stack traces.
+
 ## 0.18.0-dev.2
 
 * Point `firebase_auth_web` dependency to version `0.3.0-dev.1`
