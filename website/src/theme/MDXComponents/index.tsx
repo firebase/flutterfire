@@ -77,6 +77,15 @@ export default {
   },
 
   pre: (props: HTMLProps<HTMLDivElement>) => <div className={styles.mdxCodeBlock} {...props} />,
+
+  inlineCode: (props: HTMLProps<HTMLElement>) => {
+    const { children } = props;
+    if (typeof children === 'string') {
+      return <code {...props}>{getVersion(children)}</code>;
+    }
+    return children;
+  },
+
   code: (props: HTMLProps<HTMLElement>) => {
     const { children } = props;
     if (typeof children === 'string') {
