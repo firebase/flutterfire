@@ -46,7 +46,7 @@ Once installed, trigger the sign-in flow and create a new credential:
 import 'package:google_sign_in/google_sign_in.dart';
 
 Future<UserCredential> signInWithGoogle() async {
-  // Trigger the authenticaion flow
+  // Trigger the authentication flow
   final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
   // Obtain the auth details from the request
