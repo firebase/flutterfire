@@ -8,7 +8,7 @@ dependencies:
     sdk: flutter
   meta: ^1.0.5
   collection: ^1.14.3
-  firebase_core: ">=0.5.0-dev.2 <0.6.0"
+  firebase_core: ">=0.5.0-dev.3 <0.6.0"
   plugin_platform_interface: ^1.0.0
 
 dev_dependencies:
