@@ -1,6 +1,6 @@
 # Google Dynamic Links for Firebase
 
-[![pub package](https://img.shields.io/pub/v/firebase_dynamic_links.svg)](https://pub.dartlang.org/packages/firebase_dynamic_links)
+[![pub package](https://img.shields.io/pub/v/firebase_dynamic_links.svg)](https://pub.dev/packages/firebase_dynamic_links)
 
 A Flutter plugin to use the [Google Dynamic Links for Firebase API](https://firebase.google.com/docs/dynamic-links/).
 

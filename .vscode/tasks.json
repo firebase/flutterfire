@@ -107,6 +107,69 @@
       "command": "melos exec -c 1 --scope=\"*cloud_firestore_example*\" --fail-fast -- flutter build web",
       "detail": "Build the Firestore Web example application",
       "problemMatcher": []
+    },
+    {
+      "label": "auth -> analyze",
+      "type": "shell",
+      "command": "melos exec -c 1 --scope=\"*auth*\" --fail-fast -- pub global run tuneup check",
+      "detail": "Run Dart Analyzer on all Auth packages",
+      "problemMatcher": []
+    },
+    {
+      "label": "auth -> test",
+      "type": "shell",
+      "command": "melos exec -c 1 --scope=\"*auth*\" --fail-fast --ignore=\"*web*\" --ignore=\"*example*\" -- flutter test",
+      "detail": "Run `flutter test` on all Auth packages (excluding web & example)",
+      "problemMatcher": []
+    },
+    {
+      "label": "auth -> test:e2e",
+      "type": "shell",
+      "command": "melos exec -c 1 --scope=\"*firebase_auth_example*\" --fail-fast --dir-exists=test_driver -- flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart",
+      "detail": "Run end-to-end testing for Android & iOS via `flutter drive` on the Auth example application",
+      "problemMatcher": []
+    },
+    {
+      "label": "auth -> test:e2e:web",
+      "type": "shell",
+      "command": "melos exec -c 1 --scope=\"*firebase_auth_example*\" --dir-exists=web --fail-fast --dir-exists=test_driver -- flutter drive --release -d chrome --no-pub --verbose-system-logs --browser-name=chrome --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart",
+      "detail": "Run end-to-end testing for Web via `flutter drive` on the Auth example application",
+      "problemMatcher": []
+    },
+    {
+      "label": "auth -> test:web",
+      "type": "shell",
+      "command": "melos exec -c 1 --scope=\"*firebase_auth_web*\" --fail-fast --  flutter test --platform=chrome",
+      "detail": "Run `flutter test` on the Auth web package (with '--platform=chrome')",
+      "problemMatcher": []
+    },
+    {
+      "label": "auth -> build:example:ios",
+      "type": "shell",
+      "command": "melos exec -c 1 --scope=\"*firebase_auth_example*\" --fail-fast -- flutter build ios --no-codesign",
+      "detail": "Build the Auth iOS example application",
+      "problemMatcher": []
+    },
+    {
+      "label": "auth -> build:example:android",
+      "type": "shell",
+      "command": "melos exec -c 1 --scope=\"*firebase_auth_example*\" --fail-fast -- flutter build apk",
+      "detail": "Build the Auth Android example application",
+      "problemMatcher": []
+    },
+    {
+      "label": "auth -> build:example:macos",
+      "type": "shell",
+      "command": "melos exec -c 1 --scope=\"*firebase_auth_example*\" --fail-fast -- flutter build macos",
+      "detail": "Build the Auth MacOS example application",
+      "problemMatcher": []
+    },
+    {
+      "label": "auth -> build:example:web",
+      "type": "shell",
+      "command": "melos exec -c 1 --scope=\"*firebase_auth_example*\" --fail-fast -- flutter build web",
+      "detail": "Build the Auth Web example application",
+      "problemMatcher": []
     }
   ]
 }

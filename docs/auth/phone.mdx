@@ -9,9 +9,9 @@ into Firebase.
 
 > Phone numbers that end users provide for authentication will be sent and stored by Google to improve spam and abuse
 > prevention across Google service, including to, but not limited to Firebase. Developers should ensure they have the
-> appropriate end-user conset prior to using the Firebase Authentication phone number sign-in service.authentication
+> appropriate end-user consent prior to using the Firebase Authentication phone number sign-in service.authentication
 
-Firebase Phone Authentication is not supported in all countries. Please see their [FAQs](https://firebase.google.com/support/faq/#develop) for more information
+Firebase Phone Authentication is not supported in all countries. Please see their [FAQs](https://firebase.google.com/support/faq/#develop) for more information.
 
 ## Setup
 
@@ -22,8 +22,8 @@ Before starting with Phone Authentication, ensure you have followed these steps:
    See [Authenticating Your Client](https://developers.google.com/android/guides/client-auth) for information about finding your app's SHA-1 hash.
 3. **iOS**: In XCode, [enable push notifications](http://help.apple.com/xcode/mac/current/#/devdfd3d04a1) for your project & ensure
    your APNs authentication key is [configured with Firebase Cloud Messaging (FCM)](https://firebase.google.com/docs/cloud-messaging/ios/certs).
-   To view an indepth explaination of this step, view the [Firebase iOS Phone Auth](https://firebase.google.com/docs/auth/ios/phone-auth) documentation.
-4. **Web**: Ensure that you have added your applications domian on the [Firebase console](https://console.firebase.google.com/), under
+   To view an in-depth explanation of this step, view the [Firebase iOS Phone Auth](https://firebase.google.com/docs/auth/ios/phone-auth) documentation.
+4. **Web**: Ensure that you have added your applications domain on the [Firebase console](https://console.firebase.google.com/), under
    **OAuth redirect domains**.
 
 **Note**; Phone number sign-in is only available for use on real devices and the web. To test your authentication flow on device emulators,
@@ -36,6 +36,7 @@ different functionality to validating a phone number than the web, therefore two
 
 - **Native Platform**: [`verifyPhoneNumber`](!firebase_auth.FirebaseAuth.verifyPhoneNumber).
 - **Web Platform**: [`signInWithPhoneNumber`](!firebase_auth.FirebaseAuth.signInWithPhoneNumber).
+  - **Note**: the `firebase_auth_web` package does not yet support this method. Support will be added in a future release.
 
 ### Native: `verifyPhoneNumber`
 
@@ -54,10 +55,10 @@ await FirebaseAuth.instance.verifyPhoneNumber(
 );
 ```
 
-There are 4 seperate callbacks that you must handle, each will determine how you update the application UI:
+There are 4 separate callbacks that you must handle, each will determine how you update the application UI:
 
 1. **[verificationCompleted](#verificationCompleted)**: Automatic handling of the SMS code on Android devices.
-2. **[verificationFailed](#verificationFailed)**: Handle failure events such as invalid phone numbers or whethehr the SMS quota has been exceeded.
+2. **[verificationFailed](#verificationFailed)**: Handle failure events such as invalid phone numbers or whether the SMS quota has been exceeded.
 3. **[codeSent](#codeSent)**: Handle when a code has been sent to the device from Firebase, used to prompt users to enter the code.
 4. **[codeAutoRetrievalTimeout](#codeAutoRetrievalTimeout)**: Handle a timeout of when automatic SMS code handling fails.
 
@@ -152,10 +153,6 @@ await auth.verifyPhoneNumber(
   },
 );
 ```
-
-### Web: `signInWithPhoneNumber`
-
-TODO
 
 ## Testing
 
