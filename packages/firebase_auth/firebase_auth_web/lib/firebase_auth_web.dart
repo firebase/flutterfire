@@ -326,8 +326,34 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       @required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
       String autoRetrievedSmsCodeForTesting,
       Duration timeout = const Duration(seconds: 30),
-      int forceResendingToken}) {
-    throw UnimplementedError(
-        'verifyPhoneNumber() is not supported on the web. Please use `signInWithPhoneNumber` instead.');
+      int forceResendingToken}) async {
+    if (window.document.getElementById("recaptcha-container") == null) {
+      window.document.documentElement.children
+          .add(DivElement()..id = "recaptcha-container");
+    }
+
+    firebase.RecaptchaVerifier verifier =
+    firebase.RecaptchaVerifier('recaptcha-container', {
+      'size': 'invisible',
+      'callback': (resp) {
+        print('reCAPTCHA solved, allow signInWithPhoneNumber.');
+      },
+      'expired-callback': () {
+        verificationFailed(Exception('reCAPTCHA expired'));
+      }
+    });
+    verifier.render();
+    firebase.ConfirmationResult _confirmationResult;
+    try {
+      _confirmationResult =
+          await firebase.auth().signInWithPhoneNumber(phoneNumber, verifier);
+    } on FirebaseAuthException catch (e) {
+      verificationFailed(e);
+    } catch (error) {
+      verificationFailed(error);
+    }
+    if (_confirmationResult != null) {
+      codeSent(_confirmationResult.verificationId, forceResendingToken);
+    }
   }
 }
