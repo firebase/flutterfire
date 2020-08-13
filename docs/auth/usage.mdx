@@ -21,7 +21,7 @@ By default, this allows you to interact with Firebase Auth using the default Fir
 platform. If however you'd like to use a secondary Firebase App, use the [`instanceFor`](!firebase_auth.FirebaseAuth.instanceFor) method:
 
 ```dart
-FirebaseApp secondaryApp = Firebase.app('SecondayApp');
+FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
 FirebaseAuth auth = FirebaseAuth.instanceFor(app: secondaryApp);
 ```
 
@@ -32,7 +32,7 @@ Flutter application. In many cases, you will need to know about the authenticati
 logged in or logged out.
 
 Firebase Auth enables you to subscribe in realtime to this state via a [`Stream`](https://api.flutter.dev/flutter/dart-async/Stream-class.html).
-Once called, the stream provides an immidiate event of the users current authentication state, and then provides subsequent events whenever
+Once called, the stream provides an immediate event of the users current authentication state, and then provides subsequent events whenever
 the authentication state changes.
 
 To subscribe to these changes, call the `authStateChanges()` method on your [`FirebaseAuth`](!firebase_auth.FirebaseAuth) instance:
@@ -83,12 +83,12 @@ on the Firebase console.
 
 ## Anonymous sign-in
 
-Even though many applications do not require the user to explicially sign into an application, it is important that you are able
+Even though many applications do not require the user to explicitly sign into an application, it is important that you are able
 to uniquely identify your users (for both analytical and security reasons). Anonymous sign-in provides an extra layer of security if
-using Firebases Firestore, Realtime Database or even an external API, since you're able to detect whether a request comes from an authenticated user.
+using Firebase Firestore, Realtime Database or even an external API, since you're able to detect whether a request comes from an authenticated user.
 
 If no previous anonymous account on the platform (for your specific application) has been created, when signing in anonymously Firebase
-will create a new unqiue user which will be persisted across app restarts/page reloads. If the user signs-out and reauthenticates
+will create a new unique user which will be persisted across app restarts/page reloads. If the user signs-out and reauthenticates
 anonymously again, they will be signed-in with the previously created account. It is however important to remember the anonymous account created
 will not be persisted if the user uninstalls the application, clears their browser storage or uses a private browsing method (e.g.
 incognito mode on Google Chrome).
@@ -102,7 +102,7 @@ UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
 Once successfully resolved, the user will be granted an anonymous account. If you are listening to changes in
 [authentication state](#authentication-state), a new event will be sent to your listeners.
 
-To learn more about how you can handle any errors which are thrown from the method, view the [Error Handling](auth/error-handling)
+To learn more about how you can handle any errors which are thrown from the method, view the [Error Handling](error-handling)
 documentation.
 
 ## Email/Password Registration & Sign-in
@@ -137,7 +137,7 @@ The method is a two-step operation; it will first create the new account (if it 
 then automatically sign in the user in to that account. If you are listening to changes in [authentication state](#authentication-state),
 a new event will be sent to your listeners.
 
-To learn more about how you can handle any errors which are thrown from the method, view the [Error Handling](auth/error-handling)
+To learn more about how you can handle any errors which are thrown from the method, view the [Error Handling](error-handling)
 documentation.
 
 ### Sign-in
@@ -203,7 +203,7 @@ try {
 }
 ```
 
-To learn more about how you can handle any errors which are thrown from the method, view the [Error Handling](auth/error-handling)
+To learn more about how you can handle any errors which are thrown from the method, view the [Error Handling](error-handling)
 documentation.
 
 ## Signing Out
@@ -283,7 +283,7 @@ FirebaseAuth.instance
 
 ### Deleting a user
 
-If your user wishes to delete their account from your project, this can be achived with the `delete()` method. Since this is a
+If your user wishes to delete their account from your project, this can be archived with the `delete()` method. Since this is a
 security-sensitive operation, it requires that user must have recently signed-in. You can handle this scenario by catching the error, for
 example:
 

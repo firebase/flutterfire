@@ -14,6 +14,15 @@ enum ImageRotation { rotation0, rotation90, rotation180, rotation270 }
 /// Indicates whether a model is ran on device or in the cloud.
 enum ModelType { onDevice, cloud }
 
+/// Detected language from text recognition in regular and document images.
+class RecognizedLanguage {
+  RecognizedLanguage._(dynamic data) : languageCode = data['languageCode'];
+
+  /// The BCP-47 language code, such as, en-US or sr-Latn. For more information,
+  /// see http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.
+  final String languageCode;
+}
+
 /// The Firebase machine learning vision API.
 ///
 /// You can get an instance by calling [FirebaseVision.instance] and then get
@@ -84,9 +93,20 @@ class FirebaseVision {
   }
 
   /// Creates a cloud instance of [TextRecognizer].
-  TextRecognizer cloudTextRecognizer() {
+  TextRecognizer cloudTextRecognizer(
+      [CloudTextRecognizerOptions cloudOptions]) {
     return TextRecognizer._(
+      cloudOptions: cloudOptions ?? const CloudTextRecognizerOptions(),
       modelType: ModelType.cloud,
+      handle: nextHandle++,
+    );
+  }
+
+  /// Creates a cloud instance of [DocumentTextRecognizer].
+  DocumentTextRecognizer cloudDocumentTextRecognizer(
+      [CloudDocumentRecognizerOptions cloudOptions]) {
+    return DocumentTextRecognizer._(
+      cloudOptions: cloudOptions ?? const CloudDocumentRecognizerOptions(),
       handle: nextHandle++,
     );
   }

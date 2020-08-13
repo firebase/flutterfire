@@ -75,6 +75,7 @@ void runInstanceTests() {
       StreamController controller = StreamController();
 
       // Set some data while offline
+      // ignore: unawaited_futures
       documentReference.set({'foo': 'baz'}).then((_) async {
         // Only when back online will this trigger
         controller.add(true);

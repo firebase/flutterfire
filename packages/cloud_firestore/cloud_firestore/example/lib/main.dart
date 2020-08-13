@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// Requires that a Firestore emulator is running locally.
-// See https://firebase.flutter.dev/docs/firestore/usage#emulator-usage
+/// Requires that a Firestore emulator is running locally.
+/// See https://firebase.flutter.dev/docs/firestore/usage#emulator-usage
 bool USE_FIRESTORE_EMULATOR = false;
 
 void main() async {
-  await WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   if (USE_FIRESTORE_EMULATOR) {
     FirebaseFirestore.instance.settings = Settings(
@@ -20,9 +20,11 @@ void main() async {
   runApp(FirestoreExampleApp());
 }
 
+/// The entry point of the application.
+///
+/// Returns a [MaterialApp].
 class FirestoreExampleApp extends StatelessWidget {
-  FirestoreExampleApp();
-
+  /// Given a [Widget], wrap and return a [MaterialApp].
   MaterialApp withMaterialApp(Widget body) {
     return MaterialApp(
       title: 'Firestore Example App',
@@ -39,6 +41,7 @@ class FirestoreExampleApp extends StatelessWidget {
   }
 }
 
+/// Holds all example app films
 class FilmList extends StatefulWidget {
   @override
   _FilmListState createState() => _FilmListState();
@@ -174,15 +177,20 @@ class _FilmListState extends State<FilmList> {
   }
 }
 
+/// A single movie row.
 class Movie extends StatelessWidget {
+  /// Contains all snapshot data for a given movie.
   final DocumentSnapshot snapshot;
 
+  /// Initialize a [Move] instance with a given [DocumentSnapshot].
   Movie(this.snapshot);
 
+  /// Returns the [DocumentSnapshot] data as a a [Map].
   Map<String, dynamic> get movie {
     return snapshot.data();
   }
 
+  /// Returns the movie poster.
   Widget get poster {
     return Container(
       width: 100,
@@ -190,6 +198,7 @@ class Movie extends StatelessWidget {
     );
   }
 
+  /// Returns movie details.
   Widget get details {
     return Padding(
         padding: EdgeInsets.only(left: 8, right: 8),
@@ -207,11 +216,13 @@ class Movie extends StatelessWidget {
         ));
   }
 
+  /// Return the movie title.
   Widget get title {
     return Text("${movie['title']} (${movie['year']})",
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
   }
 
+  /// Returns metadata about the movie.
   Widget get metadata {
     return Padding(
         padding: EdgeInsets.only(top: 8),
@@ -223,6 +234,7 @@ class Movie extends StatelessWidget {
         ]));
   }
 
+  /// Returns a list of genre movie tags.
   List<Widget> genreItems() {
     List<Widget> items = <Widget>[];
     movie['genre'].forEach((genre) {
@@ -236,6 +248,7 @@ class Movie extends StatelessWidget {
     return items;
   }
 
+  /// Returns all genres.
   Widget get genres {
     return Padding(
         padding: EdgeInsets.only(top: 8), child: Wrap(children: genreItems()));
@@ -253,10 +266,16 @@ class Movie extends StatelessWidget {
   }
 }
 
+/// Displays and manages the movie "like" count.
 class Likes extends StatefulWidget {
+  /// The [DocumentReference] relating to the counter.
   final DocumentReference reference;
+
+  /// The number of current likes (before manipulation).
   final num currentLikes;
 
+  /// Constructs a new [Likes] instance with a given [DocumentReference] and
+  /// current like count.
   Likes({Key key, this.reference, this.currentLikes}) : super(key: key);
 
   @override

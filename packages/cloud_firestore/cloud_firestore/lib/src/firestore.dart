@@ -57,6 +57,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return newInstance;
   }
 
+  // ignore: public_member_api_docs
   @Deprecated(
       "Constructing Firestore is deprecated, use 'FirebaseFirestore.instance' or 'FirebaseFirestore.instanceFor' instead")
   factory FirebaseFirestore({FirebaseApp app}) {
@@ -130,6 +131,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   @Deprecated("Deprecated in favor of `.doc()`")
+  // ignore: public_member_api_docs
   DocumentReference document(String documentPath) => doc(documentPath);
 
   /// Enables the network for this instance. Any pending local-only writes
@@ -228,8 +230,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   String toString() => '$FirebaseFirestore(app: ${app.name})';
 }
 
+/// Extends the [FirebaseFirestore] class to allow for deprecated usage of
+/// using [Firebase] directly.
 @Deprecated("Class Firestore is deprecated, use 'FirebaseFirestore' instead.")
 class Firestore extends FirebaseFirestore {
+  // ignore: public_member_api_docs
   @Deprecated(
       "Constructing Firestore is deprecated, use 'FirebaseFirestore.instance' or 'FirebaseFirestore.instanceFor' instead")
   factory Firestore({FirebaseApp app}) {

@@ -1,3 +1,7 @@
+## 0.5.3
+
+* Fix for passing null/nil link between native libraries and flutter code.
+
 ## 0.5.2
 
 * Fix for race-condition issue on iOS during initialization process

@@ -4,7 +4,7 @@ A Flutter plugin to use the [Cloud Firestore API](https://firebase.google.com/do
 
 To learn more about Firebase Cloud Firestore, please visit the [Firebase website](https://firebase.google.com/products/firestore)
 
-[![pub package](https://img.shields.io/pub/v/cloud_firestore.svg)](https://pub.dartlang.org/packages/cloud_firestore)
+[![pub package](https://img.shields.io/pub/v/cloud_firestore.svg)](https://pub.dev/packages/cloud_firestore)
 
 ## Getting Started
 

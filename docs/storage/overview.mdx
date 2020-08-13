@@ -1,0 +1,48 @@
+---
+title: Cloud Storage
+sidebar_label: Overview
+---
+
+##  What does it do?
+
+Cloud Storage is designed to help you quickly and easily store and serve user-generated content, such as photos and videos.
+
+<YouTube id="_tyjqozrEPY"/>
+
+## Installation
+
+### 1. Add dependency
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  firebase_storage: "^{{ plugins.firebase_storage }}"
+```
+
+### 2. Download dependency
+
+```
+$ flutter pub get
+```
+
+### 3. (Web Only) Add the SDK
+
+> Web is currently not supported. See the [FlutterFire roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582).
+
+### 4. Rebuild your app
+
+Once complete, rebuild your Flutter application:
+
+```bash
+$ flutter run
+```
+
+## Next Steps
+
+Once installed, you're ready to start using Cloud Storage in your Flutter Project.
+
+> Additional documentation will be available once the Firebase Cloud Storage plugin update lands as part of the [FlutterFire roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582).
+
+<!-- View the [Usage documentation](usage.mdx) to get started. -->

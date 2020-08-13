@@ -7,7 +7,7 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 ## Usage
 
 ### Import the firebase_in_app_messaging plugin
-To use the firebase_in_app_messaging plugin, follow the [plugin installation instructions](https://pub.dartlang.org/packages/firebase_in_app_messaging#pub-pkg-tab-installing).
+To use the firebase_in_app_messaging plugin, follow the [plugin installation instructions](https://pub.dev/packages/firebase_in_app_messaging#pub-pkg-tab-installing).
 
 ### Android integration
 
