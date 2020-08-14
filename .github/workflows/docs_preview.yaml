@@ -20,6 +20,7 @@ jobs:
         yarn
         yarn run build
     - uses: ./docs-preview
+      working-directory: ./website
       with:
         firebaseCli: "${{ secrets.CLI_URL }}"
         repoToken: "${{ secrets.GITHUB_TOKEN }}"
