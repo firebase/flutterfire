@@ -11,6 +11,9 @@ inputs:
   firebaseAccessToken:
     description: "Firebase access token"
     required: true
+  workingDir:
+    description: "Working directory of the preview"
+    required: false
   expires:
     description:
       "How long should a preview live? See the preview channels docs for options"
