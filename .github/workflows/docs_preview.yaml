@@ -15,10 +15,10 @@ jobs:
       with:
         node-version: '12'
     - name: Run Build
-        working-directory: ./website
-        run: |
-          yarn
-          yarn run build
+      working-directory: ./website
+      run: |
+        yarn
+        yarn run build
     - uses: ./docs-preview
       with:
         firebaseCli: "${{ secrets.CLI_URL }}"
