@@ -26,5 +26,6 @@ jobs:
         firebaseAccessToken: "${{ secrets.FIREBASE_DOCS_TOKEN }}"
         expires: 30d
         projectId: flutter-firebase-docs
+        workingDir: "website"
       env:
         FIREBASE_CLI_PREVIEWS: hostingchannels
