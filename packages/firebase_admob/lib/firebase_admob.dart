@@ -246,7 +246,7 @@ abstract class MobileAd {
   /// Disposing a banner ad that's been shown removes it from the screen.
   /// Interstitial ads can't be programmatically removed from view.
   Future<bool> dispose() {
-    assert(_allAds[id] != null);
+    ///assert(_allAds[id] != null);
     _allAds[id] = null;
     return _invokeBooleanMethod("disposeAd", <String, dynamic>{'id': id});
   }
