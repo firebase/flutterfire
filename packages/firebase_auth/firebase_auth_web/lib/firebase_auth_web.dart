@@ -14,6 +14,7 @@ import 'package:meta/meta.dart';
 
 import 'firebase_auth_web_recaptcha_verifier_factory.dart';
 import 'firebase_auth_web_user_credential.dart';
+import 'firebase_auth_web_confirmation_result.dart';
 import 'utils.dart';
 
 /// The web delegate implementation for [FirebaseAuth].
@@ -267,15 +268,15 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     }
   }
 
-  // TODO(ehesp): This is currently unimplemented due to an underlying firebase.ApplicationVerifier issue on the firebase-dart repository.
-  // @override
-  // Future<ConfirmationResultPlatform> signInWithPhoneNumber(String phoneNumber,
-  //     RecaptchaVerifierFactoryPlatform applicationVerifier) async {
-  //   return ConfirmationResultWeb(
-  //       this,
-  //       await _webAuth.signInWithPhoneNumber(phoneNumber,
-  //           applicationVerifier.getDelegate<firebase.ApplicationVerifier>()));
-  // }
+  @override
+  Future<ConfirmationResultPlatform> signInWithPhoneNumber(String phoneNumber,
+      RecaptchaVerifierFactoryPlatform applicationVerifier) async {
+    // Do not inline - type is not inferred & error is thrown.
+    firebase.RecaptchaVerifier verifier = applicationVerifier.delegate;
+
+    return ConfirmationResultWeb(
+        this, await _webAuth.signInWithPhoneNumber(phoneNumber, verifier));
+  }
 
   @override
   Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) async {

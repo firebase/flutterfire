@@ -521,7 +521,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   Future<ConfirmationResult> signInWithPhoneNumber(
       String phoneNumber, RecaptchaVerifier verifier) async {
     assert(phoneNumber != null);
-    assert(verifier != null);
+    verifier ??= RecaptchaVerifier();
     return ConfirmationResult._(this,
         await _delegate.signInWithPhoneNumber(phoneNumber, verifier.delegate));
   }

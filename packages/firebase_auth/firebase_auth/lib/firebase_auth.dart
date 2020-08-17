@@ -9,6 +9,7 @@ import 'dart:async';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
@@ -41,7 +42,10 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
         PhoneAuthCredential,
         SAMLAuthProvider,
         TwitterAuthProvider,
-        TwitterAuthCredential;
+        TwitterAuthCredential,
+        RecaptchaVerifierOnSuccess,
+        RecaptchaVerifierOnExpired,
+        RecaptchaVerifierOnError;
 
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;

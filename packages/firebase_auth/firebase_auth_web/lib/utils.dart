@@ -14,7 +14,7 @@ import 'package:firebase/firebase.dart' as firebase;
 FirebaseAuthException throwFirebaseAuthException(Object exception) {
   if (exception is! firebase.FirebaseError) {
     return FirebaseAuthException(
-        code: 'unknown', message: 'An unknown error occurred.');
+        code: 'unknown', message: 'An unknown error occurred: ${exception}');
   }
 
   firebase.FirebaseError firebaseError = exception as firebase.FirebaseError;
@@ -224,3 +224,26 @@ firebase.OAuthCredential convertPlatformCredential(AuthCredential credential) {
 
   return null;
 }
+
+/// Converts a [RecaptchaVerifierSize] enum into a string.
+String convertRecaptchaVerifierSize(RecaptchaVerifierSize size) {
+  switch (size) {
+    case RecaptchaVerifierSize.compact:
+      return 'compact';
+    case RecaptchaVerifierSize.normal:
+    default:
+      return 'normal';
+  }
+}
+
+/// Converts a [RecaptchaVerifierTheme] enum into a string.
+String convertRecaptchaVerifierTheme(RecaptchaVerifierTheme theme) {
+  switch (theme) {
+    case RecaptchaVerifierTheme.dark:
+      return 'dark';
+    case RecaptchaVerifierTheme.light:
+    default:
+      return 'light';
+  }
+}
+
