@@ -207,7 +207,7 @@ class QueryWeb extends QueryPlatform {
   @override
   QueryPlatform where(List<List<dynamic>> conditions) {
     return _copyWithParameters(<String, dynamic>{
-      'where': CodecUtility.valueEncode(conditions),
+      'where': conditions,
     });
   }
 }
