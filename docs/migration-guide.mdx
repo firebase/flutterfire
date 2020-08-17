@@ -60,9 +60,14 @@ show you how to set up a default Firebase application:
 #### A. [Android Installation](installation/android.mdx)
 
  - Ensure that the `com.google.gms:google-services` plugin is up-to-date.
+   - Update the version by changing the `classpath 'com.google.gms:google-services:4.3.3'` line in your `android/build.gradle` file to use version `4.3.3` or higher.
  - Ensure your apps gradle wrapper distribution version is v5 or higher, FlutterFire uses v5.6.2 for it's examples.
    - Update the version by changing the `distributionUrl` value in your projects `android/gradle/wrapper/gradle-wrapper.properties` file.
      - e.g. setting to v5.6.2: `distributionUrl=https\://services.gradle.org/distributions/gradle-5.6.2-all.zip`
+ - Ensure that you're not manually importing any Firebase Android SDK dependencies in your `android/app/build.gradle` files `dependencies { ... }` section.
+   - e.g. remove any lines similar to: `implementation 'com.google.firebase:firebase-{PRODUCT}:{VERSION}`
+   - The reworked plugins now automatically manage the versions of the Firebase SDKs used internally so these are no longer required.
+     - See the [overriding native sdk versions documentation](overview#overriding-native-sdk-versions) if this is something you require.
 
 #### B. [iOS Installation](installation/ios.mdx)
 
