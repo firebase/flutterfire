@@ -1,4 +1,4 @@
-## 2.0.0-dev.1
+## 2.0.0
 
 * See the `firebase_auth` plugin changelog.
 
