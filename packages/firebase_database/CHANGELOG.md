@@ -1,4 +1,4 @@
-## 4.0.0-dev.1
+## 4.0.0
 
 * Add MacOS support.
 * Add MacOS example.
