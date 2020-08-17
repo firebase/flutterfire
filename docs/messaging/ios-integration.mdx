@@ -96,21 +96,28 @@ Upload the downloaded file and enter the Key ID:
 For messaging to work when your app is built for production, you must create a new App Identifier which is linked to the
 application that you're developing.
 
-On the "Identifiers" menu item, register a App Identifier. Select the "App IDs" option and click "Continue".
+On the Apple Developer portal:
 
-The following screen enables you to link the identifier to your application via the "Bundle ID". This is a unique string
+1. Click the "Identifiers" side menu item.
+2. Click the plus button to register a App Identifier. 
+3. Select the "App IDs" option and click "Continue".
+4. Select the "App" type option and click "Continue".
+
+![Apple Developer portal - Register a new identifier](https://images.prismic.io/invertase/944b25ff-8360-456f-8a43-da8c3cd80644_ios-apple-dev-register-app-id2.gif)
+
+The "Register an App ID" page allows you to link the identifier to your application via the "Bundle ID". This is a unique string
 which was generated when starting your new Flutter project. Your Bundle ID can be obtained within Xcode, under the
 "General" tab for your project target:
 
 ![Xcode - View Bundle ID](ios-xcode-bundle-id.png)
 
-Next, follow these steps:
+On the Apple Developer portal "Register an App ID" page, follow these steps to create your identifier:
 
 1. Enter a description for the identifier.
 2. Enter the "Bundle ID" copied from Xcode.
 3. Scroll down and enable the "Push Notifications" capability (along with any others your app uses).
 
-![Apple Developer portal - Create an identifier](https://images.prismic.io/invertase/0e711691-ccd2-43ab-9c0c-7696b6790153_apple-identifier.gif?auto=format)
+![Apple Developer portal - Register an App ID](https://images.prismic.io/invertase/0e711691-ccd2-43ab-9c0c-7696b6790153_apple-identifier.gif?auto=format)
 
 Save the identifier, it'll be used when creating a provisioning profile in the next step.
 
