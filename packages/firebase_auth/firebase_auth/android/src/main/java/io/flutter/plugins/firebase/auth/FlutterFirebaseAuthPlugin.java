@@ -206,7 +206,7 @@ public class FlutterFirebaseAuthPlugin
 
   private AuthCredential getCredential(Map<String, Object> arguments)
       throws FlutterFirebaseAuthPluginException {
-    //noinspection unchecked
+    @SuppressWarnings("unchecked")
     Map<String, Object> credentialMap =
         (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.CREDENTIAL));
 
