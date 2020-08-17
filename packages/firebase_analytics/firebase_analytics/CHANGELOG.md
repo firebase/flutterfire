@@ -1,3 +1,12 @@
+## 6.0.0-dev.1
+
+* Firebase iOS SDK versions are now locked to use the same version defined in
+  `firebase_core`.
+* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
+  to specify individual SDK versions. BoM version is also sourced from
+  `firebase_core`.
+* Allow iOS plugin to be imported as a module.
+
 ## 5.0.16
 
 * Endorse `firebase_analytics_web`.

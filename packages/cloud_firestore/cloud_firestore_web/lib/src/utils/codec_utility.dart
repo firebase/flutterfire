@@ -34,6 +34,71 @@ class CodecUtility {
     if (value is FieldValuePlatform) {
       FieldValueWeb delegate = FieldValuePlatform.getDelegate(value);
       return delegate.data;
+    } else if (value is FieldPath) {
+      List<String> components = value.components;
+      int length = components.length;
+
+      // The [web.FieldPath] class accepts optional args, which cannot be null/empty-string
+      // values. This code below works around that, however limits users to 10 level
+      // deep FieldPaths which the web counterpart supports
+      switch (length) {
+        case 1:
+          return web.FieldPath(components[0]);
+        case 2:
+          return web.FieldPath(components[0], components[1]);
+        case 3:
+          return web.FieldPath(components[0], components[1], components[2]);
+        case 4:
+          return web.FieldPath(
+              components[0], components[1], components[2], components[3]);
+        case 5:
+          return web.FieldPath(components[0], components[1], components[2],
+              components[3], components[4]);
+        case 6:
+          return web.FieldPath(components[0], components[1], components[2],
+              components[3], components[4], components[5]);
+        case 7:
+          return web.FieldPath(components[0], components[1], components[2],
+              components[3], components[4], components[5], components[6]);
+        case 8:
+          return web.FieldPath(
+              components[0],
+              components[1],
+              components[2],
+              components[3],
+              components[4],
+              components[5],
+              components[6],
+              components[7]);
+        case 9:
+          return web.FieldPath(
+              components[0],
+              components[1],
+              components[2],
+              components[3],
+              components[4],
+              components[5],
+              components[6],
+              components[7],
+              components[8]);
+        case 10:
+          return web.FieldPath(
+              components[0],
+              components[1],
+              components[2],
+              components[3],
+              components[4],
+              components[5],
+              components[6],
+              components[7],
+              components[8],
+              components[9]);
+        default:
+          throw Exception(
+              "Firestore web FieldPath only supports 10 levels deep field paths");
+      }
+    } else if (value == FieldPath.documentId) {
+      return web.FieldPath.documentId();
     } else if (value is Timestamp) {
       return value.toDate();
     } else if (value is GeoPoint) {
@@ -41,7 +106,7 @@ class CodecUtility {
     } else if (value is Blob) {
       return web.Blob.fromUint8Array(value.bytes);
     } else if (value is DocumentReferenceWeb) {
-      return value.delegate;
+      return value.firestoreWeb.doc(value.path);
     } else if (value is Map<String, dynamic>) {
       return encodeMapData(value);
     } else if (value is List<dynamic>) {
@@ -77,7 +142,8 @@ class CodecUtility {
     } else if (value is web.Blob) {
       return Blob(value.toUint8Array());
     } else if (value is web.DocumentReference) {
-      return (FirestorePlatform.instance as FirestoreWeb).document(value.path);
+      return (FirebaseFirestorePlatform.instance as FirebaseFirestoreWeb)
+          .doc(value.path);
     } else if (value is Map<String, dynamic>) {
       return decodeMapData(value);
     } else if (value is List<dynamic>) {
