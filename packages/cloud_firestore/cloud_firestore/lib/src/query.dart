@@ -216,7 +216,7 @@ class Query {
   ///
   /// After a [FieldPath.documentId] order by call, you cannot add any more [orderBy]
   /// calls.
-  /// 
+  ///
   /// Furthermore, you may not use [orderBy] on the [FieldPath.documentId] [field] when
   /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
   /// or [endAtDocument] because the order by clause on the document id
