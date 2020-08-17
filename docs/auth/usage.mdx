@@ -299,7 +299,7 @@ try {
 
 ### Reauthenticating a user
 
-As mentioned above, some operations such as deleting the user, updating their email address or provide require the user to have recently
+As mentioned above, some operations such as deleting the user, updating their email address or provider require the user to have recently
 signed in. Rather than signing the user out and back in again, the `reauthenticateWithCredential()` method can be called. If a recent login
 is required, create a new [`AuthCredential`](!firebase_auth_platform_interface.AuthCredential) and pass it to the method. For example,
 to reauthenticate with email & password, create a new [`EmailAuthCredential`](!firebase_auth_platform_interface.EmailAuthCredential):
