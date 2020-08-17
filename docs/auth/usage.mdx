@@ -299,7 +299,7 @@ try {
 
 ### Reauthenticating a user
 
-As mentioned above, some operations such as deleting the user, updating their email address or provider require the user to have recently
+As mentioned above, some operations such as deleting the user, updating their email address or providers require the user to have recently
 signed in. Rather than signing the user out and back in again, the `reauthenticateWithCredential()` method can be called. If a recent login
 is required, create a new [`AuthCredential`](!firebase_auth_platform_interface.AuthCredential) and pass it to the method. For example,
 to reauthenticate with email & password, create a new [`EmailAuthCredential`](!firebase_auth_platform_interface.EmailAuthCredential):
@@ -317,3 +317,47 @@ await FirebaseAuth.instance.currentUser.reauthenticateWithCredential(credential)
 ```
 
 Reauthentication also works if you are using an OAuth credential instead.
+
+### Linking user accounts
+
+You can allow your users to sign into your application using multiple providers by linking authentication credentials to
+existing user accounts. Users can then be identified using their Firebase UID, regardless of the provider they used to sign in.
+
+The user must first be logged in to one of the accounts you want to link the new provider to. You can then log the user into the second provider,
+and pass that `AuthCredential` to the `linkWithCredential` method from the first UserCredential:
+
+```dart
+Future<void> linkGoogleAndTwitter() async {
+  // Trigger the Google Authentication flow.
+  final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+  // Obtain the auth details from the request.
+  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+  // Create a new credential.
+  final GoogleAuthCredential googleCredential = GoogleAuthProvider.credential(
+    accessToken: googleAuth.accessToken,
+    idToken: googleAuth.idToken,
+  );
+  // Sign in to Firebase with the Google [UserCredential].
+  final UserCredential googleUserCredential =
+    await FirebaseAuth.instance.signInWithCredential(googleCredential);
+
+  // Now let's link Twitter to the currently signed in account.
+  // Create a [TwitterLogin] instance.
+  final TwitterLogin twitterLogin = new TwitterLogin(
+    consumerKey: consumerKey,
+    consumerSecret: consumerSecret
+  );
+  // Trigger the sign-in flow.
+  final TwitterLoginResult loginResult = await twitterLogin.authorize();
+  // Get the logged in session.
+  final TwitterSession twitterSession = loginResult.session;
+  // Create a [AuthCredential] from the access token.
+  final AuthCredential twitterAuthCredential =
+    TwitterAuthProvider.credential(
+      accessToken: twitterSession.token,
+      secret: twitterSession.secret
+     );
+  // Link the Twitter account to the Google account.
+  await googleUserCredential.user.linkWithCredential(twitterAuthCredential);
+}
+```
