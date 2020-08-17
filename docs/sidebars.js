@@ -12,6 +12,7 @@ module.exports = {
       "overview",
       "installation/android",
       "installation/ios",
+      "installation/macos",
       "installation/web",
       "migration",
     ],
