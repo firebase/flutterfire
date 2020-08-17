@@ -1,4 +1,4 @@
-## 0.2.0-dev.1
+## 0.2.0
 
 * See `cloud_firestore` plugin changelog.
 
