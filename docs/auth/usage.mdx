@@ -61,14 +61,14 @@ unlinked and when the user's profile is updated.
 
 ## Persisting authentication state
 
-The Firebase SDKs for all platforms provide out of the box support for ensuring that your users authentication state is persisted across
+The Firebase SDKs for all platforms provide out of the box support for ensuring that your user's authentication state is persisted across
 app restarts or page reloads.
 
-On native platforms such as Android & iOS, this behaviour is not configurable and the user's authenticate state will be persisted on-device
+On native platforms such as Android & iOS, this behaviour is not configurable and the user's authentication state will be persisted on-device
 between app restarts. The user can clear the apps cached data via the device settings which will wipe any existing state being stored.
 
 On web platforms, the user's authentication state is stored in [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
-If required you can change this default behaviour to only persist authentication state for the current session, or not at all. To configure
+If required, you can change this default behaviour to only persist authentication state for the current session, or not at all. To configure
 these settings, call the `setPersistence()` method (note; on native platforms an [`UnimplementedError`](https://api.flutter.dev/flutter/dart-core/UnimplementedError-class.html))
 will be thrown):
 

@@ -31,7 +31,7 @@ Each method provides various error codes and messages depending on the type of a
 If you enabled the One account per email address setting in the [Firebase console](https://console.firebase.google.com/project/_/authentication/providers),
 when a user tries to sign in a to a provider (such as Google) with an email that already exists for another Firebase user's provider
 (such as Facebook), the error `auth/account-exists-with-different-credential` is thrown along with an `AuthCredential` class (Google ID token).
-To complete the sign-in flow to the intended provider, the user has to sign first to the existing provider (e.g. Facebook) and then link to the former
+To complete the sign-in flow to the intended provider, the user has to first sign in to the existing provider (e.g. Facebook) and then link to the former
 `AuthCredential` (Google ID token).
 
 ```dart
