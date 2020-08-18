@@ -52,11 +52,11 @@ FirebaseAuth.instance
 The stream returns a [`User`](!firebase_auth.User) class if the user is signed in, or `null` if they are not. You can read more
 about managing your users below.
 
-If you also need authentication state change events along with any user token refresh events, you can subscribe via the
+If you need authentication state change events along with any user token refresh events, you can subscribe via the
 `idTokenChanges()` method instead.
 
-Or, if you need all user change events which include auth state changes and id token changes along with any other user updates, you can subscribe via the
-`userChanges()` method instead. This stream provides realtime updates to the `User` class without having to call `reload()`, such as when credentials are linked,
+Alternatively, if you need all user change events which also include authentication state changes and id token changes, you can subscribe via the
+`userChanges()` method. This stream provides realtime updates to the `User` class without having to call `reload()`, such as when credentials are linked,
 unlinked and when the user's profile is updated.
 
 ## Persisting authentication state
