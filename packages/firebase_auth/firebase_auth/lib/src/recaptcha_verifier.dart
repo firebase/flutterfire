@@ -22,8 +22,8 @@ class RecaptchaVerifier {
   /// defaults will be created.
   ///
   /// [container] If a value is provided, the element must exist in the DOM when
-  ///   [render] is called. The reCAPTCHA widget will be rendered within the
-  ///   specified DOM element.
+  ///   [render] or [signInWithPhoneNumber] is called. The reCAPTCHA widget will
+  ///   be rendered within the specified DOM element.
   ///
   ///   If no value is provided, an "invisible" reCAPTCHA will be shown when [render]
   ///   is called. An invisible reCAPTCHA widget is shown a modal on-top of your

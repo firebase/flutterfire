@@ -101,9 +101,13 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
     throw UnimplementedError("clear() is not implemented");
   }
 
-  /// Renders the reCAPTCHA widget on the page.
+  /// Pre-renders the reCAPTCHA widget on the page.
   ///
   /// Returns a Future that resolves with the reCAPTCHA widget ID.
+  /// 
+  /// If you do not pre-render the widget, it will be rendered before the
+  /// sign-in request is called. Depending on the network connection speed, this
+  /// may cause a small delay before the widget is displayed.
   Future<int> render() async {
     throw UnimplementedError("render() is not implemented");
   }

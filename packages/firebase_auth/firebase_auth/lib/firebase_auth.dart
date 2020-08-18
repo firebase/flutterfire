@@ -45,7 +45,9 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
         TwitterAuthCredential,
         RecaptchaVerifierOnSuccess,
         RecaptchaVerifierOnExpired,
-        RecaptchaVerifierOnError;
+        RecaptchaVerifierOnError,
+        RecaptchaVerifierSize,
+        RecaptchaVerifierTheme;
 
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;

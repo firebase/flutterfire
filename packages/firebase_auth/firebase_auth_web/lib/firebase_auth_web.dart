@@ -271,11 +271,15 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<ConfirmationResultPlatform> signInWithPhoneNumber(String phoneNumber,
       RecaptchaVerifierFactoryPlatform applicationVerifier) async {
-    // Do not inline - type is not inferred & error is thrown.
-    firebase.RecaptchaVerifier verifier = applicationVerifier.delegate;
+    try {
+      // Do not inline - type is not inferred & error is thrown.
+      firebase.RecaptchaVerifier verifier = applicationVerifier.delegate;
 
-    return ConfirmationResultWeb(
-        this, await _webAuth.signInWithPhoneNumber(phoneNumber, verifier));
+      return ConfirmationResultWeb(
+          this, await _webAuth.signInWithPhoneNumber(phoneNumber, verifier));
+    } catch (e) {
+      throw throwFirebaseAuthException(e);
+    }
   }
 
   @override

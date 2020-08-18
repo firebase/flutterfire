@@ -42,7 +42,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
     Map<String, dynamic> parameters = {};
 
     if (onSuccess != null) {
-      parameters['callback'] = () {
+      parameters['callback'] = (resp) {
         onSuccess();
       };
     }
@@ -78,12 +78,12 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
 
       Element el = window.document.getElementById(container);
       assert(el != null,
-          'An exception was thrown whilst creating a RecaptchaVerifier instance. No DOM element with an ID of "$container" could be found.');
+          'An exception was thrown whilst creating a RecaptchaVerifier instance. No DOM element with an ID of $container could be found.');
 
       // If the provided string container ID has been found, assign it.
       element = container;
     }
-
+    
     _delegate = firebase.RecaptchaVerifier(element, parameters);
   }
 
