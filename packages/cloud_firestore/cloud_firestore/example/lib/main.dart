@@ -1,159 +1,339 @@
-// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final FirebaseApp app = await FirebaseApp.configure(
-    name: 'test',
-    options: const FirebaseOptions(
-      googleAppID: '1:79601577497:ios:5f2bcc6ba8cecddd',
-      gcmSenderID: '79601577497',
-      apiKey: 'AIzaSyArgmRGfB5kiQT6CunAOmKRVKEsxKmy6YI-G72PVU',
-      projectID: 'flutter-firestore',
-    ),
-  );
-  final Firestore firestore = Firestore(app: app);
+/// Requires that a Firestore emulator is running locally.
+/// See https://firebase.flutter.dev/docs/firestore/usage#emulator-usage
+bool USE_FIRESTORE_EMULATOR = false;
 
-  runApp(MaterialApp(
-      title: 'Firestore Example', home: MyHomePage(firestore: firestore)));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  if (USE_FIRESTORE_EMULATOR) {
+    FirebaseFirestore.instance.settings = Settings(
+        host: 'localhost:8080', sslEnabled: false, persistenceEnabled: false);
+  }
+  runApp(FirestoreExampleApp());
 }
 
-class MessageList extends StatelessWidget {
-  MessageList({this.firestore});
-
-  final Firestore firestore;
+/// The entry point of the application.
+///
+/// Returns a [MaterialApp].
+class FirestoreExampleApp extends StatelessWidget {
+  /// Given a [Widget], wrap and return a [MaterialApp].
+  MaterialApp withMaterialApp(Widget body) {
+    return MaterialApp(
+      title: 'Firestore Example App',
+      theme: ThemeData.dark(),
+      home: Scaffold(
+        body: body,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: firestore
-          .collection("messages")
-          .orderBy("created_at", descending: true)
-          .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) return const Text('Loading...');
-        final int messageCount = snapshot.data.documents.length;
-        return ListView.builder(
-          itemCount: messageCount,
-          itemBuilder: (_, int index) {
-            final DocumentSnapshot document = snapshot.data.documents[index];
-            final dynamic message = document['message'];
-            return ListTile(
-              trailing: IconButton(
-                onPressed: () => document.reference.delete(),
-                icon: Icon(Icons.delete),
-              ),
-              title: Text(
-                message != null ? message.toString() : '<No message retrieved>',
-              ),
-              subtitle: Text('Message ${index + 1} of $messageCount'),
-            );
-          },
-        );
-      },
-    );
+    return withMaterialApp(Center(child: FilmList()));
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  MyHomePage({this.firestore});
+/// Holds all example app films
+class FilmList extends StatefulWidget {
+  @override
+  _FilmListState createState() => _FilmListState();
+}
 
-  final Firestore firestore;
+class _FilmListState extends State<FilmList> {
+  String _filterOrSort = "sort_year";
 
-  CollectionReference get messages => firestore.collection('messages');
+  _FilmListState();
 
-  Future<void> _addMessage() async {
-    await messages.add(<String, dynamic>{
-      'message': 'Hello world!',
-      'created_at': FieldValue.serverTimestamp(),
-    });
-  }
+  @override
+  Widget build(BuildContext context) {
+    Query query =
+        FirebaseFirestore.instance.collection('firestore-example-app');
 
-  Future<void> _runTransaction() async {
-    firestore.runTransaction((Transaction transaction) async {
-      final allDocs = await firestore.collection("messages").getDocuments();
-      final toBeRetrieved =
-          allDocs.documents.sublist(allDocs.documents.length ~/ 2);
-      final toBeDeleted =
-          allDocs.documents.sublist(0, allDocs.documents.length ~/ 2);
-      await Future.forEach(toBeDeleted, (DocumentSnapshot snapshot) async {
-        await transaction.delete(snapshot.reference);
-      });
+    void _onActionSelected(String value) async {
+      if (value == "batch_reset_likes") {
+        WriteBatch batch = FirebaseFirestore.instance.batch();
 
-      await Future.forEach(toBeRetrieved, (DocumentSnapshot snapshot) async {
-        await transaction.update(snapshot.reference, {
-          "message": "Updated from Transaction",
-          "created_at": FieldValue.serverTimestamp()
-        });
-      });
-    });
+        await query.get().then((querySnapshot) async {
+          querySnapshot.docs.forEach((document) {
+            batch.update(document.reference, {'likes': 0});
+          });
 
-    await Future.forEach(List.generate(2, (index) => index), (item) async {
-      await firestore.runTransaction((Transaction transaction) async {
-        await Future.forEach(List.generate(10, (index) => index), (item) async {
-          await transaction.set(firestore.collection("messages").document(), {
-            "message": "Created from Transaction $item",
-            "created_at": FieldValue.serverTimestamp()
+          await batch.commit();
+
+          setState(() {
+            _filterOrSort = "sort_year";
           });
         });
-      });
-    });
+      } else {
+        setState(() {
+          _filterOrSort = value;
+        });
+      }
+    }
+
+    switch (_filterOrSort) {
+      case "sort_year":
+
+        /// Order by the production year. Set [descending] to [false] to reverse the order
+        query = query.orderBy('year', descending: true);
+        break;
+      case "sort_likes_desc":
+
+        /// Order by the number of likes. Set [descending] to [false] to reverse the order
+        query = query.orderBy('likes', descending: true);
+        break;
+      case "sort_likes_asc":
+
+        /// Order by the number of likes. Set [descending] to [false] to reverse the order
+        query = query.orderBy('likes', descending: false);
+        break;
+      case "sort_score":
+
+        /// Order by the score, and return only those which has one great than 90
+        query = query.orderBy('score').where('score', isGreaterThan: 90);
+        break;
+      case "filter_genre_scifi":
+
+        /// Return the movies which have the following categories
+        query = query.where('genre', arrayContainsAny: ['Sci-Fi']);
+        break;
+      case "filter_genre_fantasy":
+
+        /// Return the movies which have the following categories
+        query = query.where('genre', arrayContainsAny: ['Fantasy']);
+        break;
+    }
+
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Firestore Example: Movies'),
+          actions: <Widget>[
+            PopupMenuButton(
+              onSelected: (String value) async {
+                await _onActionSelected(value);
+              },
+              itemBuilder: (BuildContext context) {
+                return [
+                  PopupMenuItem(
+                    value: "sort_year",
+                    child: Text("Sort by Year"),
+                  ),
+                  PopupMenuItem(
+                    value: "sort_score",
+                    child: Text("Sort by Score"),
+                  ),
+                  PopupMenuItem(
+                    value: "sort_likes_asc",
+                    child: Text("Sort by Likes ascending"),
+                  ),
+                  PopupMenuItem(
+                    value: "sort_likes_desc",
+                    child: Text("Sort by Likes descending"),
+                  ),
+                  PopupMenuItem(
+                    value: "filter_genre_fantasy",
+                    child: Text("Filter genre Fantasy"),
+                  ),
+                  PopupMenuItem(
+                    value: "filter_genre_scifi",
+                    child: Text("Filter genre Sci-Fi"),
+                  ),
+                  PopupMenuItem(
+                    value: "batch_reset_likes",
+                    child: Text("Reset like counts (WriteBatch)"),
+                  ),
+                ];
+              },
+            ),
+          ],
+        ),
+        body: StreamBuilder<QuerySnapshot>(
+          stream: query.snapshots(),
+          builder: (context, stream) {
+            if (stream.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            if (stream.hasError) {
+              return Center(child: Text(stream.error.toString()));
+            }
+
+            QuerySnapshot querySnapshot = stream.data;
+
+            return ListView.builder(
+              itemCount: querySnapshot.size,
+              itemBuilder: (context, index) => Movie(querySnapshot.docs[index]),
+            );
+          },
+        ));
+  }
+}
+
+/// A single movie row.
+class Movie extends StatelessWidget {
+  /// Contains all snapshot data for a given movie.
+  final DocumentSnapshot snapshot;
+
+  /// Initialize a [Move] instance with a given [DocumentSnapshot].
+  Movie(this.snapshot);
+
+  /// Returns the [DocumentSnapshot] data as a a [Map].
+  Map<String, dynamic> get movie {
+    return snapshot.data();
   }
 
-  Future<void> _runBatchWrite() async {
-    final batchWrite = firestore.batch();
-    final querySnapshot = await firestore
-        .collection("messages")
-        .orderBy("created_at")
-        .limit(12)
-        .getDocuments();
-    querySnapshot.documents
-        .sublist(0, querySnapshot.documents.length - 3)
-        .forEach((DocumentSnapshot doc) {
-      batchWrite.updateData(doc.reference, {
-        "message": "Batched message",
-        "created_at": FieldValue.serverTimestamp()
-      });
+  /// Returns the movie poster.
+  Widget get poster {
+    return Container(
+      width: 100,
+      child: Center(child: Image.network(movie['poster'])),
+    );
+  }
+
+  /// Returns movie details.
+  Widget get details {
+    return Padding(
+        padding: EdgeInsets.only(left: 8, right: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            title,
+            metadata,
+            genres,
+            Likes(
+              reference: snapshot.reference,
+              currentLikes: movie['likes'],
+            )
+          ],
+        ));
+  }
+
+  /// Return the movie title.
+  Widget get title {
+    return Text("${movie['title']} (${movie['year']})",
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
+  }
+
+  /// Returns metadata about the movie.
+  Widget get metadata {
+    return Padding(
+        padding: EdgeInsets.only(top: 8),
+        child: Row(children: [
+          Padding(
+              child: Text('Rated: ${movie['rated']}'),
+              padding: EdgeInsets.only(right: 8)),
+          Text('Runtime: ${movie['runtime']}'),
+        ]));
+  }
+
+  /// Returns a list of genre movie tags.
+  List<Widget> genreItems() {
+    List<Widget> items = <Widget>[];
+    movie['genre'].forEach((genre) {
+      items.add(Padding(
+        child: Chip(
+            label: Text(genre, style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.lightBlue),
+        padding: EdgeInsets.only(right: 2),
+      ));
     });
-    batchWrite.setData(firestore.collection("messages").document(), {
-      "message": "Batched message created",
-      "created_at": FieldValue.serverTimestamp()
-    });
-    batchWrite.delete(
-        querySnapshot.documents[querySnapshot.documents.length - 2].reference);
-    batchWrite.delete(querySnapshot.documents.last.reference);
-    await batchWrite.commit();
+    return items;
+  }
+
+  /// Returns all genres.
+  Widget get genres {
+    return Padding(
+        padding: EdgeInsets.only(top: 8), child: Wrap(children: genreItems()));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Firestore Example'),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: _runTransaction,
-            child: Text("Run Transaction"),
+    return Padding(
+        padding: EdgeInsets.only(bottom: 4, top: 4),
+        child: Container(
+          child: Row(
+            children: [poster, Flexible(child: details)],
           ),
-          FlatButton(
-            onPressed: _runBatchWrite,
-            child: Text("Batch Write"),
-          )
-        ],
-      ),
-      body: MessageList(firestore: firestore),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addMessage,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
+        ));
+  }
+}
+
+/// Displays and manages the movie "like" count.
+class Likes extends StatefulWidget {
+  /// The [DocumentReference] relating to the counter.
+  final DocumentReference reference;
+
+  /// The number of current likes (before manipulation).
+  final num currentLikes;
+
+  /// Constructs a new [Likes] instance with a given [DocumentReference] and
+  /// current like count.
+  Likes({Key key, this.reference, this.currentLikes}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _Likes();
+  }
+}
+
+class _Likes extends State<Likes> {
+  int _likes;
+
+  _onLike(int current) async {
+    // Increment the "like" count straight away to show feedback to the user.
+    setState(() {
+      _likes = current + 1;
+    });
+
+    try {
+      // Return and set the updated "likes" count from the transaction
+      int newLikes = await FirebaseFirestore.instance
+          .runTransaction<int>((transaction) async {
+        DocumentSnapshot txSnapshot = await transaction.get(widget.reference);
+
+        if (!txSnapshot.exists) {
+          throw Exception("Document does not exist!");
+        }
+
+        int updatedLikes = (txSnapshot.data()['likes'] ?? 0) + 1;
+        transaction.update(widget.reference, {'likes': updatedLikes});
+        return updatedLikes;
+      });
+
+      // Update with the real count once the transaction has completed.
+      setState(() {
+        _likes = newLikes;
+      });
+    } catch (e) {
+      print("Failed to update likes for document! $e");
+
+      // If the transaction fails, revert back to the old count
+      setState(() {
+        _likes = current;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    int currentLikes = _likes ?? widget.currentLikes ?? 0;
+
+    return Row(children: [
+      IconButton(
+          icon: Icon(Icons.favorite),
+          iconSize: 20,
+          onPressed: () {
+            _onLike(currentLikes);
+          }),
+      Text("$currentLikes likes"),
+    ]);
   }
 }

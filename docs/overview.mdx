@@ -1,0 +1,230 @@
+---
+id: overview
+title: FlutterFire Overview
+sidebar_label: Overview
+hide_title: true
+---
+
+<img
+  data-asset="false"
+  src="/img/flutterfire.svg"
+  alt="FlutterFire Logo"
+  style={{
+    height: 100,
+    display: "block",
+    margin: "0 auto",
+  }}
+/>
+
+<h1 style={{ textAlign: 'center', marginBottom: '4rem' }}>FlutterFire Overview</h1>
+
+Welcome to FlutterFire! 🔥 
+
+FlutterFire is a set of Flutter plugins which connect your Flutter application to [Firebase](https://firebase.com).
+
+> FlutterFire is currently a work in progress as we work towards a stable release. Plugins & documentation may be incomplete
+> or missing functionality. See the [roadmap issue](https://github.com/FirebaseExtended/flutterfire/issues/2582) to learn more.
+
+## Prerequisites
+
+Before getting started, the documentation assumes you are able to create (or have an existing) Flutter project and also
+have an active Firebase project. If you do not meet these prerequisites, follow the links below:
+
+- [Getting Started with Flutter](https://flutter.dev/docs/get-started/install).
+- [Create a new Firebase project](https://console.firebase.google.com/).
+
+## Installation
+
+Before any Firebase services can be used, you must first install the [`firebase_core`](https://pub.dev/packages/firebase_core)
+plugin, which is responsible for connecting your application to Firebase. Add the plugin to your `pubspec.yaml` file:
+
+```yaml {4} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "{{ plugins.firebase_core }}"
+```
+
+Install the plugin by running the following command from the project root:
+
+```bash
+$ flutter pub get
+```
+
+## Platform Setup
+
+Once installed, Firebase needs to be configured to work with the various platforms you're working with:
+
+1. [Android Installation](installation/android.mdx).
+1. [iOS Installation](installation/ios.mdx).
+1. [MacOS Installation](installation/macos.mdx).
+1. [Web Installation](installation/web.mdx).
+
+## Initializing FlutterFire
+
+Before any of the Firebase services can be used, FlutterFire needs to be initialized (you can think of this process as
+FlutterFire "bootstrapping" itself). The initialization step is asynchronous, meaning you'll need to prevent any FlutterFire
+related usage until the initialization is completed.
+
+To initialize FlutterFire, call the [`initializeApp`](!firebase_core.Firebase.initializeApp) method on the [`Firebase`](!firebase_core.Firebase) class:
+
+```dart
+await Firebase.initializeApp();
+```
+
+The method is asynchronous and returns a [`Future`](https://api.flutter.dev/flutter/dart-async/Future-class.html), so
+you need to ensure it has completed before displaying your main application. The examples below show how this can be
+achieved with a [`FutureBuilder`](https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html) or
+a [`StatefulWidget`](https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html):
+
+<Tabs
+  defaultValue="future"
+  values={[
+    { label: 'FutureBuilder', value: 'future', },
+    { label: 'StatefulWidget', value: 'state', },
+  ]
+}>
+<TabItem value="future">
+
+```dart title="lib/main.dart"
+import 'package:flutter/material.dart';
+
+// Import the firebase_core plugin
+import 'package:firebase_core/firebase_core.dart';
+
+void main() {
+  runApp(App());
+}
+
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      // Initialize FlutterFire
+      future: Firebase.initializeApp(),
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          return SomethingWentWrong();
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MyAwesomeApp();
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return Loading();
+      },
+    );
+  }
+}
+```
+
+</TabItem>
+<TabItem value="state">
+
+```dart title="lib/main.dart"
+import 'package:flutter/material.dart';
+
+// Import the firebase_core plugin
+import 'package:firebase_core/firebase_core.dart';
+
+void main() {
+  runApp(App());
+}
+
+class App extends StatefulWidget {
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  // Set default `_initialized` and `_error` state to false
+  bool _initialized = false;
+  bool _error = false;
+
+  // Define an async function to initialize FlutterFire
+  void initializeFlutterFire() async {
+    try {
+      // Wait for Firebase to initialize and set `_initialized` state to true
+      await Firebase.initializeApp();
+      setState(() {
+        _initialized = true;
+      });
+    } catch(e) {
+      // Set `_error` state to true if Firebase initialization fails
+      setState(() {
+        _error = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    initializeFlutterFire();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Show error message if initialization failed
+    if(_error) {
+      return SomethingWentWrong();
+    }
+
+    // Show a loader until FlutterFire is initialized
+    if (!_initialized) {
+      return Loading();
+    }
+
+    return MyAwesomeApp();
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+Once initialized, you're ready to get started using FlutterFire!
+
+## Overriding Native SDK Versions
+
+FlutterFire internally sets the versions of the native SDKs that each module uses. Each release is tested against a fixed
+set of SDK version to ensure everything works as expected.
+
+If you wish to change these versions, you can manually override the native SDK versions
+
+### Android
+
+In the `/android/app/build.gradle` file, you can provide your own versions using the options shown below:
+
+```groovy
+project.ext {
+  set('FlutterFire', [
+    FirebaseSDKVersion: '21.1.0'
+  ])
+}
+```
+
+### iOS/MacOS
+
+Open your `/ios/Podfile` or `/macos/Podfile` file and add any of the globals below to the top of the file:
+
+```ruby
+# Override Firebase SDK Version
+$FirebaseSDKVersion = '21.1.0'
+```
+
+## Next Steps
+
+On its own the [`firebase_core`](!firebase_core) plugin provides basic functionality for usage with Firebase. FlutterFire is broken down
+into several individual installable plugins that allow you to integrate with a specific Firebase service.
+
+The table below lists all of the currently supported plugins. You can follow the documentation for each plugin to
+get started:
+
+|      Firebase       | Description                                                                                                                                                                                                                                                                                                                             |                          FlutterFire Plugin                          |
+| :-----------------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------: |
+| **Authentication**  | Using Firebase Authentication you can authenticate users to your app using several methods such as passwords, phone numbers, and popular federated providers like Google, Facebook, and more. <br /><br /> [View documentation &raquo;](auth/overview.mdx)                                                                              |   [firebase_auth](https://pub.dev/packages/firebase_auth)   |
+| **Cloud Firestore** | Cloud Firestore is a flexible, scalable database for mobile, web, and server development from Firebase and Google Cloud Platform. Cloud Firestore also offers seamless integration with other Firebase and Google Cloud Platform products, including Cloud Functions. <br /><br /> [View documentation &raquo;](firestore/overview.mdx) | [cloud_firestore](https://pub.dev/packages/cloud_firestore) |
+|      **Core**       | The `firebase_core` plugin is used to initialize FlutterFire and connect your application with multiple Firebase projects. <br /><br /> [View documentation &raquo;](core/usage.mdx)                                                                                                                                                    |   [firebase_core](https://pub.dev/packages/firebase_core)   |

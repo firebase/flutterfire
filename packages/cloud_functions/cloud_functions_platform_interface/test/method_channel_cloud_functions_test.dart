@@ -7,13 +7,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+import 'test_common.dart';
 
+void main() {
+  initializeMethodChannel();
   group('$CloudFunctionsPlatform', () {
     final List<MethodCall> log = <MethodCall>[];
-
+    FirebaseApp app;
     setUp(() async {
+      app = await Firebase.initializeApp();
       MethodChannelCloudFunctions.channel
           .setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
@@ -30,7 +32,7 @@ void main() {
     });
 
     test('call', () async {
-      final String appName = FirebaseApp.instance.name;
+      final String appName = app.name;
       await CloudFunctionsPlatform.instance
           .callCloudFunction(appName: appName, functionName: 'baz');
 

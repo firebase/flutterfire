@@ -1,3 +1,7 @@
+## 0.2.0
+
+* See `cloud_firestore` plugin changelog.
+
 ## 0.1.1+2
 
 * Ensure QueryWeb correctly encodes values passed in to `[start|end][At|Before](Document?)` methods.

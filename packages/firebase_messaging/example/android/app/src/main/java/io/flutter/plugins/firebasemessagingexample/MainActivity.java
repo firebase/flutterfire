@@ -7,6 +7,7 @@ package io.flutter.plugins.firebasemessagingexample;
 import dev.flutter.plugins.e2e.E2EPlugin;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin;
 import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin;
 
 public class MainActivity extends FlutterActivity {
@@ -15,6 +16,7 @@ public class MainActivity extends FlutterActivity {
   @Override
   public void configureFlutterEngine(FlutterEngine flutterEngine) {
     flutterEngine.getPlugins().add(new FirebaseMessagingPlugin());
+    flutterEngine.getPlugins().add(new FlutterFirebaseCorePlugin());
     flutterEngine.getPlugins().add(new E2EPlugin());
   }
 }

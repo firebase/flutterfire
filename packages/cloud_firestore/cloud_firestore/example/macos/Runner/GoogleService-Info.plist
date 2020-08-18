@@ -2,39 +2,37 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
-	<string>ca-app-pub-3940256099942544/2934735716</string>
-	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
-	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>159623150305-1iiqqggbff817a8bpnalo64nuc3qobid.apps.googleusercontent.com</string>
+	<string>448618578101-ja1be10uicsa2dvss16gh4hkqks0vq61.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.159623150305-1iiqqggbff817a8bpnalo64nuc3qobid</string>
+	<string>com.googleusercontent.apps.448618578101-ja1be10uicsa2dvss16gh4hkqks0vq61</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>448618578101-2baveavh8bvs2famsa5r8t77fe1nrcn6.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDyzecVw1zXTpBKwfFHxpl7QyYBhimNhUk</string>
+	<string>AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0</string>
 	<key>GCM_SENDER_ID</key>
-	<string>159623150305</string>
+	<string>448618578101</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>io.flutter.plugins.firestoreExample</string>
+	<string>io.flutter.plugins.firebase.firestore.example</string>
 	<key>PROJECT_ID</key>
-	<string>flutter-firebase-plugins</string>
+	<string>react-native-firebase-testing</string>
 	<key>STORAGE_BUCKET</key>
-	<string>flutter-firebase-plugins.appspot.com</string>
+	<string>react-native-firebase-testing.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<true></true>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
 	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false></false>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
 	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:159623150305:ios:7e8aafdf0bd8d289</string>
+	<string>1:448618578101:ios:2bc5c1fe2ec336f8ac3efc</string>
 	<key>DATABASE_URL</key>
-	<string>https://flutter-firebase-plugins.firebaseio.com</string>
+	<string>https://react-native-firebase-testing.firebaseio.com</string>
 </dict>
 </plist>
