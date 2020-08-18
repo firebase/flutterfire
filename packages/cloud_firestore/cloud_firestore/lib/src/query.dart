@@ -235,9 +235,13 @@ class Query {
     assert(orders.where((List<dynamic> item) => field == item[0]).isEmpty,
         "OrderBy field '$field' already exists in this query");
 
-    FieldPath fieldPath = field is String ? FieldPath.fromString(field) : field;
-
-    orders.add([fieldPath, descending]);
+    if (field == FieldPath.documentId) {
+      orders.add([field, descending]);
+    } else {
+      FieldPath fieldPath =
+          field is String ? FieldPath.fromString(field) : field;
+      orders.add([fieldPath, descending]);
+    }
 
     final List<List<dynamic>> conditions =
         List<List<dynamic>>.from(parameters['where']);
