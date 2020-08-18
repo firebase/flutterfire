@@ -474,7 +474,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///
   /// You can optionally provide a [RecaptchaVerifier] instance to control the
   /// reCAPTCHA widget apperance and behaviour.
-  /// 
+  ///
   /// Once the reCAPTCHA verification has completed, called [ConfirmationResult.confirm]
   /// with the users SMS verification code to complete the authentication flow.
   ///

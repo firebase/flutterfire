@@ -16,7 +16,7 @@ class RecaptchaVerifier {
 
   /// Creates a new [RecaptchaVerifier] instance used to render a reCAPTCHA widget
   /// when calling [signInWithPhoneNumber].
-  /// 
+  ///
   /// It is possible to configure the reCAPTCHA widget with the following arguments,
   /// however if no arguments are provided, an "invisible" reCAPTCHA widget with
   /// defaults will be created.
@@ -42,7 +42,7 @@ class RecaptchaVerifier {
   ///
   /// [onError] An optional callback which is called when the reCAPTCHA widget errors
   ///   (such as a network issue).
-  /// 
+  ///
   /// [onExpired] An optional callback which is called when the reCAPTCHA expires.
   factory RecaptchaVerifier({
     String container,

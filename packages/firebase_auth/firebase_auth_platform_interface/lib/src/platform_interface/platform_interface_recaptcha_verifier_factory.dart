@@ -11,6 +11,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 enum RecaptchaVerifierSize {
   /// Renders the widget in the default size.
   normal,
+
   /// Renders the widget in a smaller, compact size.
   compact,
 }
@@ -19,6 +20,7 @@ enum RecaptchaVerifierSize {
 enum RecaptchaVerifierTheme {
   /// Renders the widget in a light theme (white-gray background).
   light,
+
   /// Renders the widget in a dark theme (black-gray background).
   dark,
 }
@@ -104,7 +106,7 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
   /// Pre-renders the reCAPTCHA widget on the page.
   ///
   /// Returns a Future that resolves with the reCAPTCHA widget ID.
-  /// 
+  ///
   /// If you do not pre-render the widget, it will be rendered before the
   /// sign-in request is called. Depending on the network connection speed, this
   /// may cause a small delay before the widget is displayed.

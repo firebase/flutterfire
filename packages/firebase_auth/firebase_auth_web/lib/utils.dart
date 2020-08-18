@@ -246,4 +246,3 @@ String convertRecaptchaVerifierTheme(RecaptchaVerifierTheme theme) {
       return 'light';
   }
 }
-

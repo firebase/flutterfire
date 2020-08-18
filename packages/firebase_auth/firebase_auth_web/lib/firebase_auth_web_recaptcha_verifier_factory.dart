@@ -83,7 +83,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
       // If the provided string container ID has been found, assign it.
       element = container;
     }
-    
+
     _delegate = firebase.RecaptchaVerifier(element, parameters);
   }
 
