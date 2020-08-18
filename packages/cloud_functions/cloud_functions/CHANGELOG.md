@@ -1,19 +1,13 @@
-## 0.6.0-dev.3
+## 0.6.0
 
 * Fix HttpsCallable#call not working with parameters of non-Map type.
-
-## 0.6.0-dev.2
-
 * Firebase iOS SDK versions are now locked to use the same version defined in
   `firebase_core`.
 * Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
   to specify individual SDK versions. BoM version is also sourced from
   `firebase_core`.
 * Allow iOS & MacOS plugins to be imported as modules.
-
-## 0.6.0-dev.1
-
-* Update to v1 core plugin.
+* Update to depend on `firebase_core` plugin.
 
 ## 0.5.0
 

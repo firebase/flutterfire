@@ -13,9 +13,9 @@ Remember to add your app to the your Firebase project and replace `google-servic
 - `io.flutter.plugins.firebasemlcustomexample` as Android package name and
 - `io.flutter.plugins.firebaseMlCustomExample` as IOS bundle ID.
 
-This example uses the *image_picker* plugin to get images from the device gallery. If using an iOS device you will have to configure your project with the correct permissions seen under iOS configuration [here](https://pub.dartlang.org/packages/image_picker).
+This example uses the *image_picker* plugin to get images from the device gallery. If using an iOS device you will have to configure your project with the correct permissions seen under iOS configuration [here](https://pub.dev/packages/image_picker).
 
-The example also uses the *tflite* plugin to perform inference. If using an Android device you may need to modify your `android/app/build.gradle` file as specified [here](https://pub.dartlang.org/packages/tflite).
+The example also uses the *tflite* plugin to perform inference. If using an Android device you may need to modify your `android/app/build.gradle` file as specified [here](https://pub.dev/packages/tflite).
 
 ### Common issues with installation
 1. If your build breaks due to flutter package related issues, run `flutter upgrade`.

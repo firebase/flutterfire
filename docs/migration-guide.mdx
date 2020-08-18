@@ -10,7 +10,13 @@ to upgrade to the latest recommended versions, follow this guide to help ease th
 
 > If you're starting a fresh project, you can ignore this page and follow the [Getting Started](overview.mdx) documentation.
 
-The table below shows the recommended minimum versions for each plugin which the migration guide covers.
+The table below shows the recommended package versions for each plugin this migration guide covers.
+
+| Plugin              | Version                          |
+| ------------------: | -------------------------------: |
+| `cloud_firestore`   | `^{{ plugins.cloud_firestore }}` |
+| `firebase_auth`     | `^{{ plugins.firebase_auth }}`   |
+| `firebase_core`     | `^{{ plugins.firebase_core }}`   |
 
 ## Breaking Changes & Deprecations
 
@@ -31,7 +37,7 @@ Add the plugin to your `pubspec.yaml` file within your project:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: "{{ plugins.firebase_core }}"
+  firebase_core: "^{{ plugins.firebase_core }}"
 ```
 
 Install the plugin by running the following command from the project root:
@@ -39,6 +45,8 @@ Install the plugin by running the following command from the project root:
 ```bash
 $ flutter pub get
 ```
+
+We also recommend running `flutter clean` before continuing.
 
 ### 2. Platform Setup
 
@@ -51,12 +59,21 @@ show you how to set up a default Firebase application:
 
 #### A. [Android Installation](installation/android.mdx)
 
-Ensure that the `com.google.gms:google-services` plugin is up-to-date.
+ - Ensure that the `com.google.gms:google-services` plugin is up-to-date.
+   - Update the version by changing the `classpath 'com.google.gms:google-services:4.3.3'` line in your `android/build.gradle` file to use version `4.3.3` or higher.
+ - Ensure your apps Gradle wrapper distribution version is v5 or higher, FlutterFire uses v5.6.2 for its examples.
+   - Update the version by changing the `distributionUrl` value in your projects `android/gradle/wrapper/gradle-wrapper.properties` file.
+     - e.g. setting to v5.6.2: `distributionUrl=https\://services.gradle.org/distributions/gradle-5.6.2-all.zip`
+ - Ensure that you're not manually importing any Firebase Android SDK dependencies in your `android/app/build.gradle` files `dependencies { ... }` section.
+   - e.g. remove any lines similar to: `implementation 'com.google.firebase:firebase-{PRODUCT}:{VERSION}`
+   - The reworked plugins now automatically manage the versions of the Firebase SDKs used internally so these are no longer required.
+     - See the [overriding native sdk versions documentation](overview#overriding-native-sdk-versions) if this is something you require.
 
 #### B. [iOS Installation](installation/ios.mdx)
 
  - If you manually configured the `[FIRApp configure];` or `FirebaseApp.configure()` within your projects `ios/{projectName}/AppDelegate{.m/.swift}` file,
  you can now safely remove it - FlutterFire automatically handles this for you.
+ - If you face CocoaPods issues when building, follow the steps below in the [CocoaPods could not find compatible versions for pod](#cocoapods-could-not-find-compatible-versions-for-pod) section.
 
 #### C. [Web Installation](installation/web.mdx)
 
@@ -72,9 +89,9 @@ which are installed.
 
 To learn more, view the [Initializing FlutterFire](overview.mdx#initializing-flutterfire) documentation.
 
-## Plugin usage
+## Plugin Usage
 
-Each plugin how provides a consistent API for integrating with Firebase. The example below shows how the `cloud_firestore`
+Each plugin now provides a consistent API for integrating with Firebase. The example below shows how the `cloud_firestore`
 package previously created a new instance vs the new way:
 
 ```dart
@@ -95,7 +112,7 @@ Firestore firestore = Firestore(app: secondaryApp);
 FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: secondaryApp);
 ```
 
-To learn more about seconday Firebase app instances, view the [Initializing secondary apps](core/usage) documentation.
+To learn more about secondary Firebase app instances, view the [Initializing secondary apps](core/usage) documentation.
 
 ## Plugin Changes
 
@@ -214,7 +231,7 @@ The API has mainly been kept the same, however there are some breaking changes.
   - **NEW**: The `ActionCodeSettings` class is now consumable on all supporting methods.
     - **NEW**: Added support for the `dynamicLinkDomain` property.
   - **NEW**: Added a new `FirebaseAuthException` class (extends `FirebaseException`).
-    - All errors are now returned as a `FirebaseAuthException`, allowing you to access the code & message associated with the error. 
+    - All errors are now returned as a `FirebaseAuthException`, allowing you to access the code & message associated with the error.
     - In addition, it is now possible to access the `email` and `credential` properties on exceptions if they exist.
 
 - **`FirebaseAuth`**
@@ -224,7 +241,7 @@ The API has mainly been kept the same, however there are some breaking changes.
   - **DEPRECATED**: `onAuthStateChanged` has been deprecated in favor of `authStateChanges()`.
   - **NEW**: Added support for `idTokenChanges()` stream listener.
   - **NEW**: Added support for `userChanges()` stream listener.
-    - The purpose of this API is to allow users to subscribe to all user events without having to manually hydrate app state in cases where a manual reload was required (e.g. `updateProfile()`). 
+    - The purpose of this API is to allow users to subscribe to all user events without having to manually hydrate app state in cases where a manual reload was required (e.g. `updateProfile()`).
   - **NEW**: Added support for `applyActionCode()`.
   - **NEW**: Added support for `checkActionCode()`.
   - **NEW**: Added support for `verifyPasswordResetCode()`.
@@ -257,11 +274,11 @@ The API has mainly been kept the same, however there are some breaking changes.
 
 ## Common Upgrade Issues
 
-### CocoaPods could not find compatible versions for pod 
+### CocoaPods could not find compatible versions for pod
 
 This issue can happen when you upgrade your FlutterFire packages and attempt to build for iOS or MacOS, this is usually down to one of the following:
 
  - Your `Podfile.lock` version inside your iOS or MacOS directory is out of date and locked to older versions of the Firebase iOS SDKs whereas the newly upgraded FlutterFire packages might be using newer versions of these SDKs.
    - **Solution:** Delete the `Podfile.lock` file and try your build again. This file will get regenerated after the next `pod install`.
- - Your pod specs repo is out of date, meanining CocoaPods locally isn't aware of any potential newer versions of the Firebase iOS SDKs that have been recently published.
+ - Your pod specs repo is out of date, meaning CocoaPods locally isn't aware of any potential newer versions of the Firebase iOS SDKs that have been recently published.
    - **Solution:** Run `pod repo update` in your terminal and try your build again.

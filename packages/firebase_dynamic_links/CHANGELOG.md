@@ -1,3 +1,12 @@
+## 0.5.4-dev.1
+
+* Depend on `firebase_core` pre-release.
+* Firebase iOS SDK versions are now locked to use the same version defined in
+  `firebase_core`.
+* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
+  to specify individual SDK versions. BoM version is also sourced from
+  `firebase_core`.
+
 ## 0.5.3
 
 * Fix for passing null/nil link between native libraries and flutter code.

@@ -7,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const String kMockSignInProvider = 'password';
-  const String kMockSignInSecondFactor = 'phone';
   const String kMockToken = 'test-token';
   const int kMockExpirationTimestamp = 1234566;
   const int kMockAuthTimestamp = 1234567;
@@ -22,7 +21,6 @@ void main() {
     'authTimestamp': kMockAuthTimestamp,
     'expirationTimestamp': kMockExpirationTimestamp,
     'signInProvider': kMockSignInProvider,
-    'signInSecondFactor': kMockSignInSecondFactor,
     'token': kMockToken
   };
 
@@ -39,8 +37,6 @@ void main() {
         expect(idTokenResult.issuedAtTime.millisecondsSinceEpoch,
             equals(kMockIssuedAtTimestamp));
         expect(idTokenResult.signInProvider, equals(kMockSignInProvider));
-        expect(
-            idTokenResult.signInSecondFactor, equals(kMockSignInSecondFactor));
         expect(idTokenResult.token, equals(kMockToken));
       });
     });
@@ -62,7 +58,7 @@ void main() {
 
     test('toString()', () {
       expect(idTokenResult.toString(),
-          '$IdTokenResult(authTime: ${idTokenResult.authTime}, claims: ${kMockClaims.toString()}, expirationTime: ${idTokenResult.expirationTime}, issuedAtTime: ${idTokenResult.issuedAtTime}, signInProvider: $kMockSignInProvider, signInSecondFactor: $kMockSignInSecondFactor, token: $kMockToken)');
+          '$IdTokenResult(authTime: ${idTokenResult.authTime}, claims: ${kMockClaims.toString()}, expirationTime: ${idTokenResult.expirationTime}, issuedAtTime: ${idTokenResult.issuedAtTime}, signInProvider: $kMockSignInProvider, token: $kMockToken)');
     });
   });
 }

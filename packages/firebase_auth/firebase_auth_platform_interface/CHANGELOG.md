@@ -1,8 +1,8 @@
-## 2.0.0-dev.2
+## Unpublished
 
 * Added support for `FirebaseException` stack traces.
 
-## 2.0.0-dev.1
+## 2.0.0
 
 * See the `firebase_auth` plugin changelog.
 

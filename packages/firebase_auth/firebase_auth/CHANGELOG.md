@@ -1,12 +1,8 @@
-## 0.18.0-dev.3
+## Unpublished
 
-* **NEW**: Added support for `FirebaseException` stack traces.
+- **NEW**: Added support for `FirebaseException` stack traces.
 
-## 0.18.0-dev.2
-
-* Point `firebase_auth_web` dependency to version `0.3.0-dev.1`
-
-## 0.18.0-dev.1
+## 0.18.0
 
 Overall, Firebase Auth has been heavily reworked to bring it inline with the federated plugin setup along with adding new features, documentation and many more unit and end-to-end tests. The API has mainly been kept the same, however there are some breaking changes.
 

@@ -1,4 +1,4 @@
-## 6.0.0-dev.1
+## 6.0.0
 
 * Firebase iOS SDK versions are now locked to use the same version defined in
   `firebase_core`.
