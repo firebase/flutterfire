@@ -261,10 +261,10 @@ The API has mainly been kept the same, however there are some breaking changes.
   - **NEW**: Added support for `getIdTokenResult()`.
   - **NEW**: Added support for `verifyBeforeUpdateEmail()`.
   - **FIX**: Fixed several iOS crashes when the Firebase SDK returned `nil` property values.
-  - **FIX**: Fixed an issue on Web & iOS where a users email address would still show after unlinking the email/password provider.
+  - **FIX**: Fixed an issue on Web & iOS where a user's email address would still show after unlinking the email/password provider.
 
 - **`UserCredential`**
-  - **NEW**: Added support for accessing the users `AuthCredential` via the `credential` property.
+  - **NEW**: Added support for accessing the user's `AuthCredential` via the `credential` property.
 
 - **`AuthProvider`** & **`AuthCredential`**
   - **DEPRECATED**: All sub-class (e.g. `GoogleAuthProvider`) `getCredential()` methods have been deprecated in favor of `credential()`.

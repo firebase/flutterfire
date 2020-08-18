@@ -32,7 +32,7 @@ Flutter application. In many cases, you will need to know about the authenticati
 logged in or logged out.
 
 Firebase Auth enables you to subscribe in realtime to this state via a [`Stream`](https://api.flutter.dev/flutter/dart-async/Stream-class.html).
-Once called, the stream provides an immediate event of the users current authentication state, and then provides subsequent events whenever
+Once called, the stream provides an immediate event of the user's current authentication state, and then provides subsequent events whenever
 the authentication state changes.
 
 To subscribe to these changes, call the `authStateChanges()` method on your [`FirebaseAuth`](!firebase_auth.FirebaseAuth) instance:
@@ -52,19 +52,23 @@ FirebaseAuth.instance
 The stream returns a [`User`](!firebase_auth.User) class if the user is signed in, or `null` if they are not. You can read more
 about managing your users below.
 
-If you also need authentication state change events along with any user token refresh events, you can subscribe via the
+If you need authentication state change events along with any user token refresh events, you can subscribe via the
 `idTokenChanges()` method instead.
+
+Alternatively, if you need all user change events which also include authentication state changes and id token changes, you can subscribe via the
+`userChanges()` method. This stream provides realtime updates to the `User` class without having to call `reload()`, such as when credentials are linked,
+unlinked and when the user's profile is updated.
 
 ## Persisting authentication state
 
-The Firebase SDKs for all platforms provide out of the box support for ensuring that your users authentication state is persisted across
+The Firebase SDKs for all platforms provide out of the box support for ensuring that your user's authentication state is persisted across
 app restarts or page reloads.
 
-On native platforms such as Android & iOS, this behaviour is not configurable and the users authenticate state will be persisted on-device
+On native platforms such as Android & iOS, this behaviour is not configurable and the user's authentication state will be persisted on-device
 between app restarts. The user can clear the apps cached data via the device settings which will wipe any existing state being stored.
 
-On web platforms, the users authentication state is stored in [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
-If required you can change this default behaviour to only persist authentication state for the current session, or not at all. To configure
+On web platforms, the user's authentication state is stored in [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
+If required, you can change this default behaviour to only persist authentication state for the current session, or not at all. To configure
 these settings, call the `setPersistence()` method (note; on native platforms an [`UnimplementedError`](https://api.flutter.dev/flutter/dart-core/UnimplementedError-class.html))
 will be thrown):
 
@@ -113,7 +117,7 @@ an existing account with `signInWithEmailAndPassword()`.
 
 ### Registration
 
-To create a new account on your Firebase project call the `createUserWithEmailAndPassword()` method with the users email address
+To create a new account on your Firebase project call the `createUserWithEmailAndPassword()` method with the user's email address
 and password:
 
 ```dart
@@ -122,7 +126,7 @@ try {
     email: "barry.allen@example.com",
     password: "SuperSecretPassword!"
   );
-} catch on FirebaseAuthException (e) {
+} on FirebaseAuthException catch (e) {
   if (e.code == 'weak-password') {
     print('The password provided is too weak.');
   } else if (e.code == 'email-already-in-use') {
@@ -150,7 +154,7 @@ try {
     email: "barry.allen@example.com",
     password: "SuperSecretPassword!"
   );
-} catch on FirebaseAuthException (e) {
+} on FirebaseAuthException catch (e) {
   if (e.code == 'user-not-found') {
     print('No user found for that email.');
   } else if (e.code == 'wrong-password') {
@@ -196,7 +200,7 @@ try {
 
   // If successful, reload the user:
   auth.currentUser.reload();
-} catch on FirebaseAuthException (e) {
+} on FirebaseAuthException catch (e) {
   if (e.code == 'invalid-action-code') {
     print('The code is invalid.');
   }

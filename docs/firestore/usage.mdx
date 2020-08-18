@@ -53,7 +53,7 @@ class AddUser extends StatelessWidget {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
     Future<void> addUser() {
-      // Call the users CollectionReference to add a new user
+      // Call the user's CollectionReference to add a new user
       return users
           .add({
             'full_name': fullName, // John Doe
@@ -383,7 +383,7 @@ class AddUser extends StatelessWidget {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
     Future<void> addUser() {
-      // Call the users CollectionReference to add a new user
+      // Call the user's CollectionReference to add a new user
       return users
           .add({
             'full_name': fullName, // John Doe
