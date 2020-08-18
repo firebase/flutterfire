@@ -64,25 +64,17 @@ void main() {
       });
     });
 
-    test('throws if getDelegate()', () async {
+    test('throws if delegate', () async {
       try {
-        await recaptchaVerifierFactoryPlatform.getDelegate();
+        await recaptchaVerifierFactoryPlatform.delegate;
       } on UnimplementedError catch (e) {
-        expect(e.message, equals('getDelegate() is not implemented'));
+        expect(e.message, equals('delegate is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
     group('delegateFor()', () {
-      test('accepts two arguments', () {
-        try {
-          recaptchaVerifierFactoryPlatform
-              .delegateFor(container: 'test', parameters: <String, dynamic>{});
-        } catch (_) {}
-        return;
-      });
-
       test('throws UnimplementedError error', () async {
         try {
           await recaptchaVerifierFactoryPlatform.delegateFor();
