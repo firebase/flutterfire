@@ -155,7 +155,7 @@ By default background messaging is not enabled. To handle messages in the backgr
     import firebase_messaging
    ```
 
-1. Then add the following code to `AppDelegate.swift`:
+1. Then add the following code to `AppDelegate.swift` (E.g. last in the function `application` right before the return statement)):
 
    ```swift
     FLTFirebaseMessagingPlugin.setPluginRegistrantCallback({ (registry: FlutterPluginRegistry) -> Void in
@@ -224,14 +224,14 @@ Next, you should probably request permissions for receiving Push Notifications. 
 
 ## Receiving Messages
 
-Messages are sent to your Flutter app via the `onMessage`, `onLaunch`, and `onResume` callbacks that you configured with the plugin during setup. Here is how different message types are delivered on the supported platforms:
+Messages are sent to your Flutter app via the `onMessage`, `onLaunch`, `onResume` and `onBackgroundMessage` callbacks that you configured with the plugin during setup. Here is how different message types are delivered on the supported platforms:
 
 |                             | App in Foreground | App in Background                                                                                                                                                   | App Terminated                                                                                                                                                      |
 | --------------------------: | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Notification on Android** | `onMessage`       | Notification is delivered to system tray. When the user clicks on it to open app `onResume` fires if `click_action: FLUTTER_NOTIFICATION_CLICK` is set (see below). | Notification is delivered to system tray. When the user clicks on it to open app `onLaunch` fires if `click_action: FLUTTER_NOTIFICATION_CLICK` is set (see below). |
 |     **Notification on iOS** | `onMessage`       | Notification is delivered to system tray. When the user clicks on it to open app `onResume` fires.                                                                  | Notification is delivered to system tray. When the user clicks on it to open app `onLaunch` fires.                                                                  |
 | **Data Message on Android** | `onMessage`       | `onMessage` while app stays in the background.                                                                                                                      | *not supported by plugin, message is lost*                                                                                                                          |
-|     **Data Message on iOS** | `onMessage`       | Message is stored by FCM and delivered to app via `onMessage` when the app is brought back to foreground.                                                           | Message is stored by FCM and delivered to app via `onMessage` when the app is brought back to foreground.                                                           |
+|     **Data Message on iOS** | `onMessage`       | Message is delivered to `onBackgroundMessage`. This is the case both when app is running in background and the system has suspended the app.                        | Whan app is force-quit by the user the message is not handled.                                                                                                      |
 
 Additional reading: Firebase's [About FCM Messages](https://firebase.google.com/docs/cloud-messaging/concept-options).
 
