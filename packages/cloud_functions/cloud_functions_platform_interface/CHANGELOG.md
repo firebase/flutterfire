@@ -1,6 +1,6 @@
-## 2.0.0-dev.1
+## 2.0.0
 
-* Update to v1 core plugin.
+* Update to depend on `firebase_core` plugin.
 
 ## 1.1.0
 

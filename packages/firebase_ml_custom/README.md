@@ -1,6 +1,6 @@
 # Firebase Machine Learning Custom
 
-[![pub package](https://img.shields.io/pub/v/firebase_ml_custom.svg)](https://pub.dartlang.org/packages/firebase_ml_custom)
+[![pub package](https://img.shields.io/pub/v/firebase_ml_custom.svg)](https://pub.dev/packages/firebase_ml_custom)
 
 A Flutter plugin to use the [Firebase ML Custom Models API](https://firebase.google.com/docs/ml/use-custom-models).
 

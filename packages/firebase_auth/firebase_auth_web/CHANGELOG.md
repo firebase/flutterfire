@@ -1,6 +1,7 @@
-## 0.2.0-dev.1
+## 0.3.0
 
-* Depend on `firebase_core` pre-release versions.
+* See the `firebase_auth` plugin changelog.
+* Depend on `firebase_core`.
 
 ## 0.1.3+1
 

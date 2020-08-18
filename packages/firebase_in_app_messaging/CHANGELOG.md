@@ -1,4 +1,4 @@
-## 0.2.0-dev.1
+## 0.2.0
 
 * Depend on `firebase_core` pre-release.
 * Firebase iOS SDK versions are now locked to use the same version defined in
