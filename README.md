@@ -50,7 +50,7 @@ that enable Flutter apps to use [Firebase](https://firebase.google.com/) service
 
 ### `firebase_admob`
 
-> [![firebase_admob][admob_badge_pub]][admob_pub]
+> [![firebase_admob][admob_badge_pub]][admob_pub] [![pub points][admob_badge_pub_points]][admob_pub_points]
 
 Google AdMob is a mobile advertising platform that you can use to generate revenue from your app. Using AdMob with Firebase provides you with additional app usage data and analytics capabilities. [[Learn More][admob_product]]
 
@@ -66,7 +66,7 @@ Google AdMob is a mobile advertising platform that you can use to generate reven
 
 ### `firebase_analytics`
 
-> ![firebase_analytics][analytics_badge_ci] [![firebase_analytics][analytics_badge_pub]][analytics_pub]
+> ![firebase_analytics][analytics_badge_ci] [![firebase_analytics][analytics_badge_pub]][analytics_pub] [![pub points][analytics_badge_pub_points]][analytics_pub_points]
 
 Google Analytics for Firebase provides automatic captures of certain key application events and user properties, and you can define your own custom events to measure the things that uniquely matter to your application. [[Learn More][analytics_product]]
 
@@ -325,11 +325,15 @@ This repository is maintained by Googlers but is not a supported Firebase produc
 [admob_pub]: https://pub.dev/packages/firebase_admob
 [admob_product]: https://firebase.google.com/docs/admob/
 [admob_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_admob
+[admob_pub_points]: https://pub.dev/packages/firebase_admob/score
+[admob_badge_pub_points]: https://badges.bar/firebase_admob/pub%20points
 [admob_badge_pub]: https://img.shields.io/pub/v/firebase_admob.svg
 
 [analytics_pub]: https://pub.dev/packages/firebase_analytics
 [analytics_product]: https://firebase.google.com/products/analytics/
 [analytics_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics
+[analytics_pub_points]: https://pub.dev/packages/firebase_analytics/score
+[analytics_badge_pub_points]: https://badges.bar/firebase_analytics/pub%20points
 [analytics_badge_pub]: https://img.shields.io/pub/v/firebase_analytics.svg
 [analytics_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_analytics/badge.svg
 
