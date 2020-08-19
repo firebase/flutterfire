@@ -14,7 +14,7 @@ a popup or redirect.
 
 Most configuration is already setup when using Google Sign-In with Firebase, however you need to ensure your machine's
 SHA1 key has been configured for use with Android. You can see how to generate the key on the
-[Installation](installation/android#generating-firebase-credentials) documentation.
+[Installation](../installation/android#generating-firebase-credentials) documentation.
 
 Ensure the "Google" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
 
@@ -220,24 +220,24 @@ with an API Key and API Secret set.
 
 On native platforms, a 3rd party library is required to both install the Twitter SDK and trigger the authentication flow.
 
-Install the [`flutter_twitter`](https://pub.dev/packages/flutter_twitter) plugin:
+Install the [`flutter_twitter_login`](https://pub.dev/packages/flutter_twitter_login) plugin:
 
 ```yaml title="pubspec.yaml"
 dependencies:
-  flutter_twitter: ^1.1.3
+  flutter_twitter_login: ^1.1.0
 ```
 
 You will need to ensure that your application in the [Twitter Developer Portal](https://developer.twitter.com/) has
 a callback URL of `twittersdk://` for Android, and `twitterkit-CONSUMERKEY://` for iOS. Once complete, trigger the sign-in flow, create a Twitter credential and sign the user in:
 
 ```dart
-import 'package:flutter_twitter/flutter_twitter.dart';
+import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 
 Future<UserCredential> signInWithTwitter() async {
   // Create a TwitterLogin instance
   final TwitterLogin twitterLogin = new TwitterLogin(
-    consumerKey: consumerKey,
-    consumerSecret: consumerSecret
+    consumerKey: '<your consumer key>',
+    consumerSecret:' <your consumer secret>',
   );
 
   // Trigger the sign-in flow
@@ -254,6 +254,8 @@ Future<UserCredential> signInWithTwitter() async {
   return await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
 }
 ```
+
+Please note there is an [outstanding issue](https://github.com/roughike/flutter_twitter_login/issues/32) with this package, regarding iOS and the use of `UIWebView` which is deprecated.
 
 </TabItem>
 <TabItem value="web">
@@ -313,7 +315,7 @@ You will need to populate the `GitHubSignIn` instance with your GitHub Client ID
 Once complete trigger the sign-in flow, create a GitHub credential and sign the user in:
 
 ```dart
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:github_sign_in/github_sign_in.dart';
 
 Future<UserCredential> signInWithGitHub() async {
   // Create a GitHubSignIn instance
