@@ -1,3 +1,7 @@
+## 0.2.0+1
+
+* Fixed issue #3227 (Invalid podspec). 
+
 ## 0.2.0
 
 * Depend on `firebase_core` pre-release.

@@ -1,3 +1,10 @@
+## 0.14.0+1
+
+* Fixed issue #3210 (`Query.orderBy(FieldPath.documentId)` throws exception).
+* Fixed issue #3237 (`DocumentReference` not being parsed correctly).
+* Bump `cloud_firestore_web` dependency.
+* Bump `cloud_firestore_platform_interface` dependency to fix 2 race conditions. [(#3251)](https://github.com/FirebaseExtended/flutterfire/pull/3251)
+
 ## 0.14.0
 
 Along with the below changes, the plugin has undergone a quality of life update to better support exceptions thrown. Any Firestore specific errors now return a `FirebaseException`, allowing you to directly access the code (e.g. `permission-denied`) and message.
