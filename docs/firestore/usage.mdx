@@ -242,7 +242,7 @@ If no data exists at the nested path, a [`StateError`](https://api.dart.dev/stab
 ```dart
 try {
   dynamic nested = snapshot.get(FieldPath(['address', 'postcode']));
-} on StateError (e) {
+} on StateError catch(e) {
   print('No nested field exists!');
 }
 ```
