@@ -64,6 +64,15 @@ class User {
     return _delegate.photoURL;
   }
 
+  /// Returns a photo URL for the user.
+  ///
+  /// This property will be populated if the user has signed in or been linked
+  /// with a 3rd party OAuth provider (such as Google).
+  @Deprecated("Deprecated in favor of 'photoURL'.")
+  String get photoUrl {
+    return _delegate.photoURL;
+  }
+
   /// Returns a list of user information for each linked provider.
   List<UserInfo> get providerData {
     return _delegate.providerData;
@@ -320,4 +329,11 @@ class User {
   String toString() {
     return '$User(displayName: $displayName, email: $email, emailVerified: $emailVerified, isAnonymous: $isAnonymous, metadata: ${metadata.toString()}, phoneNumber: $phoneNumber, photoURL: $photoURL, providerData, ${providerData.toString()}, refreshToken: $refreshToken, tenantId: $tenantId, uid: $uid)';
   }
+}
+
+@Deprecated(
+    "Deprecated in favor of `User`. When updating your code it is recommended to namespace your 'firebase_auth' import to avoid class naming conflicts if you already have a 'User' class in your project e.g. `import 'package:firebase_auth/firebase_auth.dart' as auth;`, `User` then becomes `auth.User`.")
+// ignore: public_member_api_docs
+class FirebaseUser extends User {
+  FirebaseUser._(FirebaseAuth auth, UserPlatform user) : super._(auth, user);
 }
