@@ -225,7 +225,7 @@ class FirebaseOptions {
 
   @override
   int get hashCode {
-    return hashObjects(asMap.entries);
+    return asMap.toString().hashCode;
   }
 
   @override
