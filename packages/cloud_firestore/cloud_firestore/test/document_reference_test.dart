@@ -40,6 +40,9 @@ void main() {
       expect(ref == firestoreSecondary.doc('foo/bar'), isFalse);
       expect(ref2 == firestoreSecondary.doc('foo/bar/baz/bert'), isFalse);
 
+      expect(ref.hashCode == ref.hashCode, isTrue);
+      expect(ref == ref, isTrue);
+      expect(ref.hashCode == ref2.hashCode, isFalse);
       expect(ref == ref2, isFalse);
     });
 
