@@ -4,26 +4,18 @@ description: Demonstrates how to use the firebase_core plugin.
 dependencies:
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.0
-
-dev_dependencies:
-  pedantic: ^1.8.0
-  e2e: ^0.2.1
-  flutter_test:
-    sdk: flutter
-
   firebase_core:
     path: ../
 
-# For information on the generic Dart part of this file, see the
-# following page: https://www.dartlang.org/tools/pub/pubspec
+dev_dependencies:
+  e2e: ^0.6.1
+  flutter_driver:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
 
-# The following section is specific to Flutter.
 flutter:
   uses-material-design: true
 
 environment:
-  sdk: ">=2.0.0-dev.28.0 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"

@@ -1,3 +1,12 @@
+## 0.2.0+1
+
+* Fixed issue #3210 (`Query.orderBy(FieldPath.documentId)` throws exception).
+* Bump `cloud_firestore_platform_interface` dependency.
+
+## 0.2.0
+
+* See `cloud_firestore` plugin changelog.
+
 ## 0.1.1+2
 
 * Ensure QueryWeb correctly encodes values passed in to `[start|end][At|Before](Document?)` methods.

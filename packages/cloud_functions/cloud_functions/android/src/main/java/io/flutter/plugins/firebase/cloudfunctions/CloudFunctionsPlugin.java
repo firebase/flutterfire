@@ -35,7 +35,7 @@ public class CloudFunctionsPlugin implements MethodCallHandler {
     switch (call.method) {
       case "CloudFunctions#call":
         String functionName = call.argument("functionName");
-        Map<String, Object> parameters = call.argument("parameters");
+        Object parameters = call.argument("parameters");
         String appName = call.argument("app");
         FirebaseApp app = FirebaseApp.getInstance(appName);
         String region = call.argument("region");

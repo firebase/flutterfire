@@ -1,0 +1,91 @@
+name: firebase_firestore
+
+on:
+  pull_request:
+    paths:
+      - "packages/firebase_core/**"
+      - "packages/cloud_firestore/**"
+      - ".github/workflows/firebase_firestore.yaml"
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "docs/**"
+
+env:
+  FLUTTERFIRE_PLUGIN_SCOPE: "*cloud_firestore*"
+  FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: "*cloud_firestore_example*"
+
+jobs:
+  android:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          sudo npm i -g firebase-tools
+      - name: "Build Example"
+        run: ./.github/workflows/scripts/build-example.sh android
+      - name: Start Firestore Emulator
+        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh
+      - name: "Drive Example"
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 28
+          arch: x86_64
+          target: google_apis
+          profile: Nexus 5X
+          script: ./.github/workflows/scripts/drive-example.sh android
+
+  apple:
+    runs-on: macos-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh dev
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          sudo npm i -g firebase-tools
+          flutter config --enable-macos-desktop
+      - name: "Build iOS Example"
+        run: ./.github/workflows/scripts/build-example.sh ios
+      - name: Start Firestore Emulator
+        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh
+      - name: "Drive iOS Example"
+        run: ./.github/workflows/scripts/drive-example.sh ios
+      - name: "Build MacOS Example"
+        run: ./.github/workflows/scripts/build-example.sh macos
+      - name: "Reset Firestore Emulator"
+        run: cd ./.github/workflows/scripts && ./reset-firestore-emulator.sh
+      - name: "Drive MacOS Example"
+        run: ./.github/workflows/scripts/drive-example.sh macos
+
+  web:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh beta
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          sudo npm i -g firebase-tools
+          flutter config --enable-web
+      - name: Start Firestore Emulator
+        run: cd ./.github/workflows/scripts && ./start-firestore-emulator.sh
+      - name: "Drive Example"
+        run: ./.github/workflows/scripts/drive-example.sh web

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:e2e/e2e.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 void main() {
@@ -9,6 +10,7 @@ void main() {
     RemoteConfig remoteConfig;
 
     setUp(() async {
+      await Firebase.initializeApp();
       remoteConfig = await RemoteConfig.instance;
       await remoteConfig
           .setConfigSettings(RemoteConfigSettings(debugMode: true));

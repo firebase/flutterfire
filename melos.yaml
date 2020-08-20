@@ -1,0 +1,95 @@
+name: flutterfire_plugins
+
+packages:
+  - packages/**
+
+scripts:
+  # Analyze the project for Dart analysis issues.
+  #  - Requires `pub global activate tuneup`.
+  analyze: >
+    melos exec -c 1 --fail-fast -- \
+      pub global run tuneup check
+
+  # Formats the code of all packages (Java, Objective-C, and Dart).
+  #  - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
+  #  - Requires `git`.
+  #  - Requires `clang-format` (can be installed via Brew on MacOS).
+  format: pub global run flutter_plugin_tools format
+
+  # Build iOS plugin example apps.
+  build:examples:ios: >
+    melos exec -c 1 --scope="*example*" --fail-fast -- \
+      flutter build ios --no-codesign
+
+  # Build Android plugin example apps.
+  build:examples:android: >
+    melos exec -c 1 --scope="*example*" --fail-fast -- \
+      flutter build apk
+
+  # Build any plugin example apps that have MacOS support.
+  # - Requires `flutter config --enable-macos-desktop` enabled.
+  # - Requires `flutter channel master && flutter upgrade`.
+  build:examples:macos: >
+    melos exec -c 1 --scope="*example*" --dir-exists=macos --fail-fast -- \
+      flutter build macos
+
+  # Run standard flutter tests in all packages that have them.
+  test: >
+    melos exec -c 1 --fail-fast --dir-exists=test --ignore="*example*" --ignore="*web*" -- \
+      flutter test
+
+  test:web: >
+    melos exec -c 1 --fail-fast --dir-exists=test --scope="*web*" -- \
+      flutter test --platform=chrome
+
+  # Run all test driver e2e tests in the example apps, use this for mobile.
+  # Will target Android/iOS depending on what emulator/simulator you have running.
+  # TODO(Salakar): ignoring cloud functions as has no tests
+  test:e2e: >
+    melos exec -c 1 --fail-fast --scope="*example*" --ignore=cloud_functions_example --dir-exists=test_driver -- \
+      flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+
+  # Run all web test driver e2e tests in the example apps.
+  # - Requires `flutter channel master && flutter upgrade`.
+  # - Requires `flutter config --enable-web` enabled.
+  test:e2e:web: >
+    melos exec -c 1 --fail-fast --dir-exists=web --scope="*example*" --dir-exists=test_driver -- \
+      flutter drive --release -d chrome --no-pub --verbose-system-logs --browser-name=chrome --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+
+  # Run all MacOS test driver e2e tests in the example apps.
+  # - Requires `flutter config --enable-macos-desktop` enabled.
+  # - Requires `flutter channel master && flutter upgrade`.
+  # TODO(Salakar): ignoring cloud functions as has no tests
+  test:e2e:macos: >
+    melos exec -c 1 --fail-fast --dir-exists=macos --scope="*example*" --ignore=cloud_functions_example --dir-exists=test_driver -- \
+      flutter drive -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+
+  # Check pubspecs are valid and publishable in each package.
+  lint:pub: >
+    melos exec -c 5 --fail-fast --no-private --ignore="*example*" -- \
+      pub publish --dry-run
+
+  # MacOS only. Ignores stub iOS podspecs in web federated plugins.
+  lint:podspecs: >
+    melos exec -c 1 --ignore="*web*" --fail-fast --file-exists=ios/\$MELOS_PACKAGE_NAME.podspec -- \
+      pod lib lint ./ios/\$MELOS_PACKAGE_NAME.podspec \
+        --allow-warnings \
+        --fail-fast \
+        --include-podspecs=\$MELOS_ROOT_PATH/packages/firebase_core/firebase_core/ios/firebase_core.podspec
+
+  # TODO(Salakar): Temporary workaround melos issue (should not creating these for non app packages)
+  postbootstrap: >
+    melos exec -c 5 --ignore="*example*" -- \
+      rm .flutter-plugins .flutter-plugins-dependencies
+
+  # Additional cleanup lifecycle script, executed when `melos clean` is ran.
+  postclean: >
+    melos exec -- \
+      rm -rf ./build ./android/.gradle ./ios/.symlinks ./ios/Pods ./android/.idea ./.idea ./.dart-tool/build
+
+dev_dependencies:
+  pedantic: 1.8.0
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"

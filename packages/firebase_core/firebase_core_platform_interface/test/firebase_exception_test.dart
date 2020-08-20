@@ -1,0 +1,42 @@
+// Copyright 2020 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  group('$FirebaseException', () {
+    test('should return a formatted message', () async {
+      FirebaseException e = FirebaseException(
+        plugin: 'foo',
+        message: 'bar',
+      );
+
+      expect(e.toString(), '[foo/unknown] bar');
+    });
+
+    test('should return a formatted message with a custom code', () async {
+      FirebaseException e =
+          FirebaseException(plugin: 'foo', message: 'bar', code: 'baz');
+
+      expect(e.toString(), '[foo/baz] bar');
+    });
+
+    test('should override the == operator', () async {
+      FirebaseException e1 =
+          FirebaseException(plugin: 'foo', message: 'bar', code: 'baz');
+
+      FirebaseException e2 =
+          FirebaseException(plugin: 'foo', message: 'bar', code: 'baz');
+
+      FirebaseException e3 =
+          FirebaseException(plugin: 'foo', message: 'bar', code: 'baz');
+
+      expect(e1 == e2, true);
+      expect(e1 != e3, false);
+    });
+  });
+}

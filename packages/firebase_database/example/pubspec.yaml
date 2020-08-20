@@ -6,18 +6,19 @@ dependencies:
     sdk: flutter
   firebase_database:
     path: ../
-  firebase_core: ^0.4.1
+  firebase_core:
+    path: ../../firebase_core/firebase_core
 
 dev_dependencies:
   pedantic: ^1.8.0
   flutter_driver:
     sdk: flutter
   test: any
-  e2e: ^0.2.0
+  e2e: ^0.6.1
 
 flutter:
   uses-material-design: true
 
 environment:
-  sdk: ">=2.0.0-dev.28.0 <3.0.0"
+  sdk: ">=2.0.0 <3.0.0"
   flutter: ">=1.9.1+hotfix.2 <2.0.0"

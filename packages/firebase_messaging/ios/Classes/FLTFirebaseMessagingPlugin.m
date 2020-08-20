@@ -52,11 +52,6 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
   if (self) {
     _channel = channel;
     _resumingFromBackground = NO;
-    if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
-      NSLog(@"Configuring the default Firebase app...");
-      [FIRApp configure];
-      NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    }
     [FIRMessaging messaging].delegate = self;
   }
   return self;
@@ -249,20 +244,8 @@ static NSObject<FlutterPluginRegistrar> *_registrar;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   _resumingFromBackground = NO;
-  // Clears push notifications from the notification center, with the
-  // side effect of resetting the badge count. We need to clear notifications
-  // because otherwise the user could tap notifications in the notification
-  // center while the app is in the foreground, and we wouldn't be able to
-  // distinguish that case from the case where a message came in and the
-  // user dismissed the notification center without tapping anything.
-  // TODO(goderbauer): Revisit this behavior once we provide an API for managing
-  // the badge number, or if we add support for running Dart in the background.
-  // Setting badgeNumber to 0 is a no-op (= notifications will not be cleared)
-  // if it is already 0,
-  // therefore the next line is setting it to 1 first before clearing it again
-  // to remove all
-  // notifications.
-  application.applicationIconBadgeNumber = 1;
+  // Removes badge number but doesn't clear push notifications,
+  // helpful when you have valuable info in your push notification
   application.applicationIconBadgeNumber = 0;
 }
 

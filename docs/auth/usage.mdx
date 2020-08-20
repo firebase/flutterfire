@@ -1,0 +1,367 @@
+---
+title: Using Firebase Authentication
+sidebar_label: Usage
+---
+
+Once installed, you can access the [`firebase_auth`](!firebase_auth) plugin by importing it in your Dart code:
+
+```dart
+import 'package:firebase_auth/firebase_auth.dart';
+```
+
+Before using Firebase Auth, you must first have ensured you have [initialized FlutterFire](../overview.mdx#initializing-flutterfire).
+
+To create a new Firebase Auth instance, call the [`instance`](!firebase_auth.FirebaseAuth.instance) getter on [`FirebaseAuth`](!firebase_auth.FirebaseAuth):
+
+```dart
+FirebaseAuth auth = FirebaseAuth.instance;
+```
+
+By default, this allows you to interact with Firebase Auth using the default Firebase App used whilst installing FlutterFire on your
+platform. If however you'd like to use a secondary Firebase App, use the [`instanceFor`](!firebase_auth.FirebaseAuth.instanceFor) method:
+
+```dart
+FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
+FirebaseAuth auth = FirebaseAuth.instanceFor(app: secondaryApp);
+```
+
+## Authentication state
+
+Firebase Auth provides many methods and utilities for enabling you to integrate secure authentication into your new or existing
+Flutter application. In many cases, you will need to know about the authentication _state_ of your user, such as whether they're
+logged in or logged out.
+
+Firebase Auth enables you to subscribe in realtime to this state via a [`Stream`](https://api.flutter.dev/flutter/dart-async/Stream-class.html).
+Once called, the stream provides an immediate event of the user's current authentication state, and then provides subsequent events whenever
+the authentication state changes.
+
+To subscribe to these changes, call the `authStateChanges()` method on your [`FirebaseAuth`](!firebase_auth.FirebaseAuth) instance:
+
+```dart
+FirebaseAuth.instance
+  .authStateChanges()
+  .listen((User user) {
+    if (user == null) {
+      print('User is currently signed out!');
+    } else {
+      print('User is signed in!');
+    }
+  });
+```
+
+The stream returns a [`User`](!firebase_auth.User) class if the user is signed in, or `null` if they are not. You can read more
+about managing your users below.
+
+If you need authentication state change events along with any user token refresh events, you can subscribe via the
+`idTokenChanges()` method instead.
+
+Alternatively, if you need all user change events which also include authentication state changes and id token changes, you can subscribe via the
+`userChanges()` method. This stream provides realtime updates to the `User` class without having to call `reload()`, such as when credentials are linked,
+unlinked and when the user's profile is updated.
+
+## Persisting authentication state
+
+The Firebase SDKs for all platforms provide out of the box support for ensuring that your user's authentication state is persisted across
+app restarts or page reloads.
+
+On native platforms such as Android & iOS, this behaviour is not configurable and the user's authentication state will be persisted on-device
+between app restarts. The user can clear the apps cached data via the device settings which will wipe any existing state being stored.
+
+On web platforms, the user's authentication state is stored in [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
+If required, you can change this default behaviour to only persist authentication state for the current session, or not at all. To configure
+these settings, call the `setPersistence()` method (note; on native platforms an [`UnimplementedError`](https://api.flutter.dev/flutter/dart-core/UnimplementedError-class.html))
+will be thrown):
+
+```dart
+// Disable persistence on web platforms
+await FirebaseAuth.instance.setPersistence(Persistence.NONE);
+```
+
+## Sign-in methods
+
+Firebase provides a number of ways to sign users into your application, from anonymous users, password authentication,
+phone authentication and using OAuth/social providers.
+
+Before using any sign-in methods, ensure you have configured the [sign-in methods](https://console.firebase.google.com/project/_/authentication/providers)
+on the Firebase console.
+
+## Anonymous sign-in
+
+Even though many applications do not require the user to explicitly sign into an application, it is important that you are able
+to uniquely identify your users (for both analytical and security reasons). Anonymous sign-in provides an extra layer of security if
+using Firebase Firestore, Realtime Database or even an external API, since you're able to detect whether a request comes from an authenticated user.
+
+If no previous anonymous account on the platform (for your specific application) has been created, when signing in anonymously Firebase
+will create a new unique user which will be persisted across app restarts/page reloads. If the user signs-out and reauthenticates
+anonymously again, they will be signed-in with the previously created account. It is however important to remember the anonymous account created
+will not be persisted if the user uninstalls the application, clears their browser storage or uses a private browsing method (e.g.
+incognito mode on Google Chrome).
+
+To get started, call the `signInAnonymously()` method on the [`FirebaseAuth`](!firebase_auth.FirebaseAuth) instance:
+
+```dart
+UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
+```
+
+Once successfully resolved, the user will be granted an anonymous account. If you are listening to changes in
+[authentication state](#authentication-state), a new event will be sent to your listeners.
+
+To learn more about how you can handle any errors which are thrown from the method, view the [Error Handling](error-handling)
+documentation.
+
+## Email/Password Registration & Sign-in
+
+Email/Password is a common user sign in method for most applications. This requires the user to provide an email address
+and secure password. Users can register new accounts with a method called `createUserWithEmailAndPassword()` or sign in to
+an existing account with `signInWithEmailAndPassword()`.
+
+### Registration
+
+To create a new account on your Firebase project call the `createUserWithEmailAndPassword()` method with the user's email address
+and password:
+
+```dart
+try {
+  UserCredential user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    email: "barry.allen@example.com",
+    password: "SuperSecretPassword!"
+  );
+} on FirebaseAuthException catch (e) {
+  if (e.code == 'weak-password') {
+    print('The password provided is too weak.');
+  } else if (e.code == 'email-already-in-use') {
+    print('The account already exists for that email.');
+  }
+} catch (e) {
+  print(e.toString());
+}
+```
+
+The method is a two-step operation; it will first create the new account (if it does not already exist and the password is valid) and
+then automatically sign in the user in to that account. If you are listening to changes in [authentication state](#authentication-state),
+a new event will be sent to your listeners.
+
+To learn more about how you can handle any errors which are thrown from the method, view the [Error Handling](error-handling)
+documentation.
+
+### Sign-in
+
+To sign-in to an existing account, call the `signInWithEmailAndPassword()` method:
+
+```dart
+try {
+  UserCredential user = await FirebaseAuth.instance.signInWithEmailAndPassword(
+    email: "barry.allen@example.com",
+    password: "SuperSecretPassword!"
+  );
+} on FirebaseAuthException catch (e) {
+  if (e.code == 'user-not-found') {
+    print('No user found for that email.');
+  } else if (e.code == 'wrong-password') {
+    print('Wrong password provided for that user.');
+  }
+}
+```
+
+Once successful, if you are listening to changes in [authentication state](#authentication-state), a new event will be sent to your
+listeners.
+
+### Verifying a users email
+
+Even though the above authentication flows sign a user into your application, they can provide any valid email address even if they
+do not have access to that email address. In many cases, you may wish to make a user verify the provided email address before you
+grant them full access to your application.
+
+The [`User`](!firebase_auth.User) class provides a `sendEmailVerification()` method and `emailVerified` property which you can use to handle
+this scenario.
+
+For example, once signed in you can check the property and send an email verification to the user:
+
+```dart
+User user = FirebaseAuth.instance.currentUser;
+
+if (!user.emailVerified) {
+  await user.sendEmailVerification();
+}
+```
+
+Firebase will send an automated email to the user with a unique code. This code can then be entered via the `applyActionCode()` method.
+You can first check whether the code is valid by using the `checkActionCode()` method:
+
+```dart
+FirebaseAuth auth = FirebaseAuth.instance;
+
+// Get the code from the email:
+String code = 'xxxxxxx';
+
+try {
+  await auth.checkActionCode(code);
+  await auth.applyActionCode(code);
+
+  // If successful, reload the user:
+  auth.currentUser.reload();
+} on FirebaseAuthException catch (e) {
+  if (e.code == 'invalid-action-code') {
+    print('The code is invalid.');
+  }
+}
+```
+
+To learn more about how you can handle any errors which are thrown from the method, view the [Error Handling](error-handling)
+documentation.
+
+## Signing Out
+
+To sign a user out, call the `signOut()` method:
+
+```dart
+await FirebaseAuth.instance.signOut();
+```
+
+If you are listening to changes in [authentication state](#authentication-state), a new event will be sent to your
+listeners.
+
+## Other sign-in methods
+
+Firebase also supports authenticating with external provides. To learn more, view the documentation for your authentication method:
+
+- [Apple Sign-In.](social#apple)
+- [Facebook Sign-In.](social#facebook)
+- [Twitter Sign-In.](social#twitter)
+- [Google Sign-In.](social#google)
+- [Phone Number Sign-In.](phone)
+
+## User management
+
+Once authenticated, FlutterFire provides you access to the user via the [`User`](!firebase_auth.User) class. The class stores the
+current information about the user such as their unique user ID, any linked provider accounts and methods to manage the user.
+
+The [`User`](!firebase_auth.User) class is returned from any [authentication state](#authentication-state) listeners, or as part of
+a [`UserCredential`](!firebase_auth.UserCredential) when using authentication methods. If you are sure the user is currently signed-in,
+you can also access the `User` via the `currentUser` property on the `FirebaseAuth` instance. The examples below show how to access the
+user:
+
+<Tabs
+  defaultValue="currentUser"
+  values={[
+    { label: 'currentUser', value: 'currentUser', },
+    { label: 'Sign-in Methods', value: 'methods', },
+    { label: 'State Listener Stream', value: 'stream', },
+  ]
+}>
+<TabItem value="currentUser">
+
+```dart
+FirebaseAuth auth = FirebaseAuth.instance;
+
+if (auth.currentUser != null) {
+  print(auth.currentUser.uid);
+}
+```
+
+</TabItem>
+<TabItem value="methods">
+
+```dart
+UserCredential userCredential = await Firebase.auth.signInAnonymously();
+
+print(userCredential.user.uid);
+```
+
+</TabItem>
+
+<TabItem value="stream">
+
+```dart
+FirebaseAuth.instance
+  .authStateChanges()
+  .listen((User user) {
+    if (user != null) {
+      print(user.uid);
+    }
+  });
+```
+
+</TabItem>
+</Tabs>
+
+### Deleting a user
+
+If your user wishes to delete their account from your project, this can be archived with the `delete()` method. Since this is a
+security-sensitive operation, it requires that user must have recently signed-in. You can handle this scenario by catching the error, for
+example:
+
+```dart
+try {
+  await FirebaseAuth.instance.currentUser.delete();
+} catch on FirebaseAuthException (e) {
+  if (e.code == 'requires-recent-login') {
+    print('The user must reauthenticate before this operation can be executed.');
+  }
+}
+```
+
+### Reauthenticating a user
+
+As mentioned above, some operations such as deleting the user, updating their email address or providers require the user to have recently
+signed in. Rather than signing the user out and back in again, the `reauthenticateWithCredential()` method can be called. If a recent login
+is required, create a new [`AuthCredential`](!firebase_auth_platform_interface.AuthCredential) and pass it to the method. For example,
+to reauthenticate with email & password, create a new [`EmailAuthCredential`](!firebase_auth_platform_interface.EmailAuthCredential):
+
+```dart
+// Prompt the user to enter their email and password
+String email = 'barry.allen@example.com';
+String password = 'SuperSecretPassword!';
+
+// Create a credential
+EmailAuthCredential credential = EmailAuthProvider.credential(email, password);
+
+// Reauthenticate
+await FirebaseAuth.instance.currentUser.reauthenticateWithCredential(credential);
+```
+
+Reauthentication also works if you are using an OAuth credential instead.
+
+### Linking user accounts
+
+You can allow your users to sign into your application using multiple providers by linking authentication credentials to
+existing user accounts. Users can then be identified using their Firebase UID, regardless of the provider they used to sign in.
+
+The user must first be logged in to one of the accounts you want to link the new provider to. You can then log the user into the second provider,
+and pass that `AuthCredential` to the `linkWithCredential` method from the first UserCredential:
+
+```dart
+Future<void> linkGoogleAndTwitter() async {
+  // Trigger the Google Authentication flow.
+  final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+  // Obtain the auth details from the request.
+  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+  // Create a new credential.
+  final GoogleAuthCredential googleCredential = GoogleAuthProvider.credential(
+    accessToken: googleAuth.accessToken,
+    idToken: googleAuth.idToken,
+  );
+  // Sign in to Firebase with the Google [UserCredential].
+  final UserCredential googleUserCredential =
+    await FirebaseAuth.instance.signInWithCredential(googleCredential);
+
+  // Now let's link Twitter to the currently signed in account.
+  // Create a [TwitterLogin] instance.
+  final TwitterLogin twitterLogin = new TwitterLogin(
+    consumerKey: consumerKey,
+    consumerSecret: consumerSecret
+  );
+  // Trigger the sign-in flow.
+  final TwitterLoginResult loginResult = await twitterLogin.authorize();
+  // Get the logged in session.
+  final TwitterSession twitterSession = loginResult.session;
+  // Create a [AuthCredential] from the access token.
+  final AuthCredential twitterAuthCredential =
+    TwitterAuthProvider.credential(
+      accessToken: twitterSession.token,
+      secret: twitterSession.secret
+     );
+  // Link the Twitter account to the Google account.
+  await googleUserCredential.user.linkWithCredential(twitterAuthCredential);
+}
+```
