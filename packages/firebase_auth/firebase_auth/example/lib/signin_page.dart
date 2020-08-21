@@ -226,14 +226,10 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
             url:
                 'https://react-native-firebase-testing.firebaseapp.com/emailSignin',
             handleCodeInApp: true,
-            iOS: {
-              'bundleId': 'io.flutter.plugins.firebaseAuthExample',
-            },
-            android: {
-              'packageName': 'io.flutter.plugins.firebaseauthexample',
-              'androidInstallIfNotAvailable': true,
-              'androidMinimumVersion': "1",
-            },
+            iOSBundleId: 'io.flutter.plugins.firebaseAuthExample',
+            androidPackageName: 'io.flutter.plugins.firebaseauthexample',
+            androidInstallApp: true,
+            androidMinimumVersion: "1",
           ));
 
       Scaffold.of(context).showSnackBar(SnackBar(

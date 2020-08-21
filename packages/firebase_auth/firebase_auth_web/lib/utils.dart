@@ -71,18 +71,27 @@ firebase.ActionCodeSettings convertPlatformActionCodeSettings(
     return null;
   }
 
+  Map<String, dynamic> actionCodeSettingsMap = actionCodeSettings.asMap();
+  firebase.AndroidSettings android;
+  firebase.IosSettings iOS;
+
+  if (actionCodeSettingsMap['android'] != null) {
+    android = firebase.AndroidSettings(
+        packageName: actionCodeSettingsMap['android']['packageName'],
+        minimumVersion: actionCodeSettingsMap['android']['minimumVersion'],
+        installApp: actionCodeSettingsMap['android']['installApp']);
+  }
+
+  if (actionCodeSettingsMap['iOS'] != null) {
+    iOS = firebase.IosSettings(
+        bundleId: actionCodeSettingsMap['iOS']['bundleId']);
+  }
+
   return firebase.ActionCodeSettings(
       url: actionCodeSettings.url,
       handleCodeInApp: actionCodeSettings.handleCodeInApp,
-      android: actionCodeSettings.android == null
-          ? null
-          : firebase.AndroidSettings(
-              packageName: actionCodeSettings.android['packageName'],
-              minimumVersion: actionCodeSettings.android['minimumVersion'],
-              installApp: actionCodeSettings.android['installApp']),
-      iOS: actionCodeSettings.iOS == null
-          ? null
-          : firebase.IosSettings(bundleId: actionCodeSettings.iOS['bundleId']));
+      android: android,
+      iOS: iOS);
 }
 
 /// Converts a [Persistence] enum into a web string persistence value.
