@@ -1,3 +1,7 @@
+## 0.14.0+2
+
+* Added missing deprecated `Firestore` static methods.
+
 ## 0.14.0+1
 
 * Fixed issue #3210 (`Query.orderBy(FieldPath.documentId)` throws exception).
