@@ -1,0 +1,310 @@
+---
+id: migration
+title: Migration Guide
+sidebar_label: Migration Guide
+---
+
+With the recent [FlutterFire Roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582) announcement, we've
+changed the way developers integrate Flutter applications with Firebase. If you're currently using FlutterFire and wish
+to upgrade to the latest recommended versions, follow this guide to help ease that process.
+
+> If you're starting a fresh project, you can ignore this page and follow the [Getting Started](overview.mdx) documentation.
+
+The table below shows the recommended package versions for each plugin this migration guide covers.
+
+| Plugin              | Version                          |
+| ------------------: | -------------------------------: |
+| `cloud_firestore`   | `^{{ plugins.cloud_firestore }}` |
+| `firebase_auth`     | `^{{ plugins.firebase_auth }}`   |
+| `firebase_core`     | `^{{ plugins.firebase_core }}`   |
+
+## Breaking Changes & Deprecations
+
+Although breaking changes have been kept to a minimum, the substantial changes and improvements which have been made
+required us to break a few things (for the greater good). Where possible, we've deprecated some of the "old ways" of
+integrating FlutterFire and you should aim to replace these deprecations as soon as possible.
+
+## Migration Steps
+
+### 1. Adding `firebase_core`
+
+The FlutterFire plugins now depend on the `firebase_core` plugin. The plugin is responsible for connecting your
+Flutter application to your Firebase project(s), and without it all other plugins will not work.
+
+Add the plugin to your `pubspec.yaml` file within your project:
+
+```yaml {4} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+```
+
+### 2. Update Firebase Plugins
+
+Update the Firebase plugins you use in your project to versions that are compatible with the new `firebase_core` plugin.
+
+Edit the plugin versions in your `pubspec.yaml` file within your project to match the versions below:
+
+```yaml {6,7} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  # Newly reworked plugins covered by this migration guide:
+  firebase_auth: "^{{ plugins.firebase_auth }}"
+  cloud_firestore: "^{{ plugins.cloud_firestore }}"
+  # Updated to work with new core only plugins (no new changes):
+  cloud_functions: "^{{ plugins.cloud_functions }}"
+  firebase_analytics: "^{{ plugins.firebase_analytics }}"
+  firebase_database: "^{{ plugins.firebase_database }}"
+  firebase_dynamic_links: "^{{ plugins.firebase_dynamic_links }}"
+  firebase_in_app_messaging: "^{{ plugins.firebase_in_app_messaging }}"
+  firebase_messaging: "^{{ plugins.firebase_messaging }}"
+  firebase_performance: "^{{ plugins.firebase_performance }}"
+  firebase_remote_config: "^{{ plugins.firebase_remote_config }}"
+  firebase_storage: "^{{ plugins.firebase_storage }}"
+```
+
+Install the updated plugins by running the following command from the project root:
+
+```bash
+$ flutter pub get
+```
+
+We also recommend running `flutter clean` before continuing.
+
+### 3. Platform Setup
+
+Even though you may have already setup your platform to connect with Firebase, we recommend following the new documentation
+steps for each platform to ensure everything is up-to-date.
+
+Previously, it was possible to use FlutterFire without a "default" Firebase application. This has now changed, and all
+platforms now require an underlying default Firebase app has been registered. The platform specific guides below
+show you how to set up a default Firebase application:
+
+#### A. [Android Installation](installation/android.mdx)
+
+ - Ensure that the `com.google.gms:google-services` plugin is up-to-date.
+   - Update the version by changing the `classpath 'com.google.gms:google-services:4.3.3'` line in your `android/build.gradle` file to use version `4.3.3` or higher.
+ - Ensure your apps Gradle wrapper distribution version is v5 or higher, FlutterFire uses v5.6.2 for its examples.
+   - Update the version by changing the `distributionUrl` value in your projects `android/gradle/wrapper/gradle-wrapper.properties` file.
+     - e.g. setting to v5.6.2: `distributionUrl=https\://services.gradle.org/distributions/gradle-5.6.2-all.zip`
+ - Ensure that you're not manually importing any Firebase Android SDK dependencies in your `android/app/build.gradle` files `dependencies { ... }` section.
+   - e.g. remove any lines similar to: `implementation 'com.google.firebase:firebase-{PRODUCT}:{VERSION}`
+   - The reworked plugins now automatically manage the versions of the Firebase SDKs used internally so these are no longer required.
+     - See the [overriding native sdk versions documentation](overview#overriding-native-sdk-versions) if this is something you require.
+
+#### B. [iOS Installation](installation/ios.mdx)
+
+ - If you manually configured the `[FIRApp configure];` or `FirebaseApp.configure()` within your projects `ios/{projectName}/AppDelegate{.m/.swift}` file,
+ you can now safely remove it - FlutterFire automatically handles this for you.
+ - If you face CocoaPods issues when building, follow the steps below in the [CocoaPods could not find compatible versions for pod](#cocoapods-could-not-find-compatible-versions-for-pod) section.
+
+#### C. [Web Installation](installation/web.mdx)
+
+### 4. Initialize FlutterFire
+
+To ensure each plugin has a consistent API and to enable the possibility of some new features, you are now required to
+initialize FlutterFire before performing any other Firebase related functionality.
+
+The `firebase_core` package exposes a [`Firebase`](!firebase_core.Firebase) class, provides an
+[`initializeApp`](!firebase_core.Firebase.initializeApp) method. This method should be called as soon as possible in your
+application. It is responsible for ensuring the default app is ready, and bootstraps all additional FlutterFire plugins
+which are installed.
+
+To learn more, view the [Initializing FlutterFire](overview.mdx#initializing-flutterfire) documentation.
+
+## Plugin Usage
+
+Each plugin now provides a consistent API for integrating with Firebase. The example below shows how the `cloud_firestore`
+package previously created a new instance vs the new way:
+
+```dart
+// Before
+Firestore firestore = Firestore();
+// After
+FirebaseFirestore firestore = FirebaseFirestore.instance;
+```
+
+If you'd like to a plugin with a secondary Firebase application, use the `instanceFor` method instead:
+
+```dart
+FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
+
+// Before
+Firestore firestore = Firestore(app: secondaryApp);
+// After
+FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: secondaryApp);
+```
+
+To learn more about secondary Firebase app instances, view the [Initializing secondary apps](core/usage) documentation.
+
+## Plugin Changes
+
+### Core
+
+- **DEPRECATED**: `FirebaseApp.configure` method is now deprecated in favor of the `Firebase.initializeApp` method.
+- **DEPRECATED**: `FirebaseApp.allApps` method is now deprecated in favor of the `Firebase.apps` property.
+  - Previously, `allApps` was asynchronous & is now synchronous.
+- **DEPRECATED**: `FirebaseApp.appNamed` method is now deprecated in favor of the `Firebase.app` method.
+- **BREAKING**: `FirebaseApp.options` getter is now synchronous.
+
+- `FirebaseOptions` has been reworked to better match web property names:
+  - **DEPRECATED**: `googleAppID` is now deprecated in favor of `appId`.
+  - **DEPRECATED**: `projectID` is now deprecated in favor of `projectId`.
+  - **DEPRECATED**: `bundleID` is now deprecated in favor of `bundleId`.
+  - **DEPRECATED**: `clientID` is now deprecated in favor of `androidClientId`.
+  - **DEPRECATED**: `trackingID` is now deprecated in favor of `trackingId`.
+  - **DEPRECATED**: `gcmSenderID` is now deprecated in favor of `messagingSenderId`.
+  - Added support for `authDomain`.
+  - Added support for `trackingId`.
+  - Required properties are now `apiKey`, `appId`, `messagingSenderId` & `projectId`.
+
+- Added support for deleting Firebase app instances via the `delete` method on `FirebaseApp`.
+- iOS: The default Firebase app is now automatically configured without needing to manually add Objective-C code to your iOS application.
+- Added support for returning consistent error messages from `firebase-dart` plugin.
+  - Any FlutterFire related errors now throw a `FirebaseException`.
+- Added a `FirebaseException` class to handle all FlutterFire related errors.
+  - Matching the web sdk, the exception returns a formatted "[plugin/code] message" message when thrown.
+- Added support for `setAutomaticDataCollectionEnabled` & `isAutomaticDataCollectionEnabled` on a `FirebaseApp` instance.
+- Added support for `setAutomaticResourceManagementEnabled` on a `FirebaseApp` instance.
+
+- Android: Gradle build tools updated to 3.5.0 from 3.3.0.
+- Android: Removed Gradle ‘hacks’ and upgrade Flutter SDK requirement from `>=1.12.13+hotfix.4` to `>=1.12.13+hotfix.5` - based on PR https://github.com/flutter/plugins/pull/2651
+- Android: Switched to using Firebase BoM to manage SDK versions
+
+### Firestore
+
+Along with the below changes, the plugin has undergone a quality of life update to better support exceptions thrown.
+Any Firestore specific errors now return a `FirebaseException` (see Core changes), allowing you to directly access the code
+(e.g. permission-denied) and message.
+
+- **`FirebaseFirestore`**:
+  - **BREAKING**: Calling `settings()` now accepts a `Settings` instance.
+  - **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
+  - **DEPRECATED**: Calling `Firestore(app: app)` is now deprecated. Use `FirebaseFirestore.instance` or `FirebaseFirestore.instanceFor` instead.
+  - **BREAKING**: `enablePersistence` has now been removed, see `settings()` instead.
+  - **NEW**: Add `clearPersistence()` support.
+  - **NEW**: Add `disableNetwork()` support.
+  - **NEW**: Add `enableNetwork()` support.
+  - **NEW**: Add `snapshotInSync()` support.
+  - **NEW**: Add `terminate()` support.
+  - **NEW**: Add `waitForPendingWrites()` support.
+
+- **`CollectionReference`**:
+  - **BREAKING**: Getting a collection parent document via `parent()` has been changed to a getter `parent`.
+  - **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
+
+- **`Query`**:
+  - **BREAKING**: The internal query logic has been overhauled to better assert invalid queries locally.
+  - **BREAKING**: `getDocuments`/`get` has been updated to accept an instance of `GetOptions` (see below).
+  - **DEPRECATED**: Calling `getDocuments()` is deprecated in favor of `get()`.
+  - **NEW**: Query methods are now chainable.
+  - **NEW**: It is now possible to call same-point cursor based queries without throwing (e.g. calling `endAt()` and then `endBefore()` will replace the "end" cursor query with the `endBefore`).
+  - **NEW**: Added support for `limitToLast`.
+
+- **`QuerySnapshot`**:
+  - **DEPRECATED**: `documents` has been deprecated in favor of `docs`.
+  - **DEPRECATED**: `documentChanges` has been deprecated in favor of `docChanges`.
+  - **NEW**: `docs` now returns a `List<QueryDocumentSnapshot>` vs `List<DocumentSnapshot>`. This doesn't break existing functionality.
+
+- **`DocumentReference`**:
+  - **BREAKING**: `setData`/`set` has been updated to accept an instance of `SetOptions` (see below, supports `mergeFields`).
+  - **BREAKING**: `get()` has been updated to accept an instance of `GetOptions` (see below).
+  - **BREAKING**: Getting a document parent collection via `parent()` has been changed to a getter `parent`.
+  - **DEPRECATED**: `documentID` has been deprecated in favor of `id`.
+  - **DEPRECATED**: `setData()` has been deprecated in favor of `set()`.
+  - **DEPRECATED**: `updateData()` has been deprecated in favor of `update()`.
+
+- **`DocumentSnapshot`**:
+  - **BREAKING**: Getting a snapshots data via the `data` getter is now done via the `data()` method.
+  - **DEPRECATED**: `documentID` has been deprecated in favor of `id`.
+  - **NEW**: Added support for fetching nested snapshot data via the `get()` method. If no data exists at the given path, a `StateError` will be thrown.
+
+- **`DocumentChange`**:
+  - **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
+
+- **`WriteBatch`**:
+  - **BREAKING**: `setData`/`set` now supports `SetOptions` to merge data/fields (previously this accepted a `Map`).
+  - **DEPRECATED**: `setData()` has been deprecated in favor of `set()`.
+  - **DEPRECATED**: `updateData()` has been deprecated in favor of `update()`.
+
+- **`Transaction`**:
+  - **BREAKING**: Transactions have been overhauled to address a number of issues:
+    - Values returned from the transaction will now be returned from the Future. Previously, only primitive values (e.g. `String`) were supported. It is now possible to return values such as a `DataSnapshot`.
+    - When manually throwing an exception, the context was lost and a generic `PlatformException` was thrown. You can now throw & catch on any exceptions.
+    - The modify methods on a transaction (`set`, `delete`, `update`) were previously Futures. This has been updated to better reflect how transactions should behave - they are now synchronous and are executed atomically once the transaction handler block has finished executing.
+
+- **`FieldPath`**:
+  - **NEW**: The constructor has now been made public to accept a `List` of `String` values. Previously field paths were accessible only via a dot-notated string path. This meant attempting to access a field in a document with a `.` in the name (e.g. `foo.bar@gmail.com`) was impossible.
+
+- **`GetOptions`**: New class created to support how data is fetched from Firestore (server, cache, serverAndCache).
+
+- **`SetOptions`**: New class created to both `merge` and `mergeFields` when setting data on documents.
+
+- **`GeoPoint`**:
+  - **BREAKING**: Added latitude and longitude validation when constructing a new `GeoPoint` instance.
+
+### Authentication
+
+Overall, Firebase Auth has been heavily reworked to bring it inline with the federated plugin setup along with adding new features, documentation and many more unit and end-to-end tests.
+The API has mainly been kept the same, however there are some breaking changes.
+
+- **General**:
+  - **BREAKING**: The `FirebaseUser` class has been renamed to `User`.
+  - **BREAKING**: The `AuthResult` class has been renamed to `UserCredential`.
+  - **NEW**: The `ActionCodeSettings` class is now consumable on all supporting methods.
+    - **NEW**: Added support for the `dynamicLinkDomain` property.
+  - **NEW**: Added a new `FirebaseAuthException` class (extends `FirebaseException`).
+    - All errors are now returned as a `FirebaseAuthException`, allowing you to access the code & message associated with the error.
+    - In addition, it is now possible to access the `email` and `credential` properties on exceptions if they exist.
+
+- **`FirebaseAuth`**
+  - **BREAKING**: Accessing the current user via `currentUser()` is now synchronous via the `currentUser` getter.
+  - **BREAKING**: `isSignInWithEmailLink()` is now synchronous.
+  - **DEPRECATED**: `FirebaseAuth.fromApp()` is now deprecated in favor of `FirebaseAuth.instanceFor()`.
+  - **DEPRECATED**: `onAuthStateChanged` has been deprecated in favor of `authStateChanges()`.
+  - **NEW**: Added support for `idTokenChanges()` stream listener.
+  - **NEW**: Added support for `userChanges()` stream listener.
+    - The purpose of this API is to allow users to subscribe to all user events without having to manually hydrate app state in cases where a manual reload was required (e.g. `updateProfile()`).
+  - **NEW**: Added support for `applyActionCode()`.
+  - **NEW**: Added support for `checkActionCode()`.
+  - **NEW**: Added support for `verifyPasswordResetCode()`.
+  - **NEW**: Added support for accessing the current language code via the `languageCode` getter.
+  - **NEW**: `setLanguageCode()` now supports providing a `null` value.
+    - On web platforms, if `null` is provided the Firebase projects default language will be set.
+    - On native platforms, if `null` is provided the device language will be used.
+  - **NEW**: `verifyPhoneNumber()` exposes a `autoRetrievedSmsCodeForTesting` property.
+    - This allows developers to test automatic SMS code resolution on Android devices during development.
+  - **NEW** (iOS): `appVerificationDisabledForTesting`  setting can now be set for iOS.
+    - This allows developers to skip ReCaptcha verification when testing phone authentication.
+  - **NEW** (iOS): `userAccessGroup` setting can now be set for iOS & MacOS.
+    - This allows developers to share authentication states across multiple apps or extensions on iOS & MacOS. For more information see the [Firebase iOS SDK documentation](https://firebase.google.com/docs/auth/ios/single-sign-on).
+
+- **`User`**
+  - **BREAKING**: Removed the `UpdateUserInfo` class when using `updateProfile` in favor of named arguments.
+  - **NEW**: Added support for `getIdTokenResult()`.
+  - **NEW**: Added support for `verifyBeforeUpdateEmail()`.
+  - **FIX**: Fixed several iOS crashes when the Firebase SDK returned `nil` property values.
+  - **FIX**: Fixed an issue on Web & iOS where a user's email address would still show after unlinking the email/password provider.
+
+- **`UserCredential`**
+  - **NEW**: Added support for accessing the user's `AuthCredential` via the `credential` property.
+
+- **`AuthProvider`** & **`AuthCredential`**
+  - **DEPRECATED**: All sub-class (e.g. `GoogleAuthProvider`) `getCredential()` methods have been deprecated in favor of `credential()`.
+    - **DEPRECATED**:  `EmailAuthProvider.getCredentialWithLink()` has been deprecated in favor of `EmailAuthProvider.credentialWithLink()`.
+  - **NEW**: Supporting providers can now assign scope and custom request parameters.
+    - The scope and parameters will be used on web platforms when triggering a redirect or popup via `signInWithPopup()` or `signInWithRedirect()`.
+
+## Common Upgrade Issues
+
+### CocoaPods could not find compatible versions for pod
+
+This issue can happen when you upgrade your FlutterFire packages and attempt to build for iOS or MacOS, this is usually down to one of the following:
+
+ - Your `Podfile.lock` version inside your iOS or MacOS directory is out of date and locked to older versions of the Firebase iOS SDKs whereas the newly upgraded FlutterFire packages might be using newer versions of these SDKs.
+   - **Solution:** Delete the `Podfile.lock` file and try your build again. This file will get regenerated after the next `pod install`.
+ - Your pod specs repo is out of date, meaning CocoaPods locally isn't aware of any potential newer versions of the Firebase iOS SDKs that have been recently published.
+   - **Solution:** Run `pod repo update` in your terminal and try your build again.

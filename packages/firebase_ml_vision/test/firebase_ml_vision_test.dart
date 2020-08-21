@@ -1057,7 +1057,7 @@ void main() {
 
     group('Cloud $TextRecognizer', () {
       TextRecognizer recognizer;
-      final FirebaseVisionImage image = FirebaseVisionImage.fromFilePath(
+      final image = FirebaseVisionImage.fromFilePath(
         'empty',
       );
 
@@ -1278,8 +1278,8 @@ void main() {
         });
       });
 
-      test('processImage', () async {
-        final VisionText text = await recognizer.processImage(image);
+      test('processImage with default options', () async {
+        final text = await recognizer.processImage(image);
 
         expect(text.text, 'testext');
         expect(log, <Matcher>[
@@ -1293,6 +1293,36 @@ void main() {
               'metadata': null,
               'options': <String, dynamic>{
                 'modelType': 'cloud',
+                'hintedLanguages': null,
+                'textModelType': 'sparse',
+              },
+            },
+          ),
+        ]);
+      });
+
+      test('processImage with non-default options', () async {
+        final options = CloudTextRecognizerOptions(
+            hintedLanguages: ['en'], textModelType: CloudTextModelType.dense);
+
+        final recognizerWithOptions =
+            FirebaseVision.instance.cloudTextRecognizer(options);
+        final text = await recognizerWithOptions.processImage(image);
+
+        expect(text.text, 'testext');
+        expect(log, <Matcher>[
+          isMethodCall(
+            'TextRecognizer#processImage',
+            arguments: <String, dynamic>{
+              'handle': 1,
+              'type': 'file',
+              'path': 'empty',
+              'bytes': null,
+              'metadata': null,
+              'options': <String, dynamic>{
+                'modelType': 'cloud',
+                'hintedLanguages': ['en'],
+                'textModelType': 'dense',
               },
             },
           ),
@@ -1315,6 +1345,88 @@ void main() {
 
         final TextBlock block = text.blocks[0];
         expect(block.boundingBox, null);
+      });
+
+      test('close', () async {
+        await recognizer.processImage(image);
+        expect(recognizer.close(), completes);
+
+        expect(log, <Matcher>[
+          isMethodCall(
+            'TextRecognizer#processImage',
+            arguments: <String, dynamic>{
+              'handle': 0,
+              'type': 'file',
+              'path': 'empty',
+              'bytes': null,
+              'metadata': null,
+              'options': <String, dynamic>{
+                'modelType': 'cloud',
+                'hintedLanguages': null,
+                'textModelType': 'sparse',
+              },
+            },
+          ),
+          isMethodCall(
+            'TextRecognizer#close',
+            arguments: <String, dynamic>{
+              'handle': 0,
+            },
+          ),
+        ]);
+      });
+
+      test('when called to close without opening returns right away', () async {
+        expect(recognizer.close(), completes);
+
+        expect(log, <Matcher>[]);
+      });
+
+      test('when given wrong input on processing an image fails', () async {
+        expect(
+            () => recognizer.processImage(null),
+            throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+                contains("'visionImage != null': is not true"))));
+      });
+
+      test('when given wrong null options', () async {
+        expect(
+            () => recognizer.processImage(null),
+            throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
+                contains("'visionImage != null': is not true"))));
+      });
+
+      group('throws an exception when native API fails to', () {
+        final ERROR_MESSAGE = "There is some problem with a call";
+
+        test('process an image', () async {
+          FirebaseVision.channel
+              .setMockMethodCallHandler((MethodCall methodCall) async {
+            throw Exception(ERROR_MESSAGE);
+          });
+          expect(
+              recognizer.processImage(image),
+              throwsA(isA<PlatformException>().having(
+                  (e) => e.toString(), 'message', contains(ERROR_MESSAGE))));
+        });
+
+        test('close', () async {
+          FirebaseVision.channel
+              .setMockMethodCallHandler((MethodCall methodCall) async {
+            switch (methodCall.method) {
+              case 'TextRecognizer#processImage':
+                return returnValue;
+              default:
+                throw Exception(ERROR_MESSAGE);
+            }
+          });
+          await recognizer.processImage(image);
+
+          expect(
+              recognizer.close(),
+              throwsA(isA<PlatformException>().having(
+                  (e) => e.toString(), 'message', contains(ERROR_MESSAGE))));
+        });
       });
     });
   });

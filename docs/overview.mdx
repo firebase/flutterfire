@@ -23,7 +23,7 @@ Welcome to FlutterFire! 🔥
 FlutterFire is a set of Flutter plugins which connect your Flutter application to [Firebase](https://firebase.com).
 
 > FlutterFire is currently a work in progress as we work towards a stable release. Plugins & documentation may be incomplete
-> or missing functionality.
+> or missing functionality. See the [roadmap issue](https://github.com/FirebaseExtended/flutterfire/issues/2582) to learn more.
 
 ## Prerequisites
 
@@ -57,6 +57,7 @@ Once installed, Firebase needs to be configured to work with the various platfor
 
 1. [Android Installation](installation/android.mdx).
 1. [iOS Installation](installation/ios.mdx).
+1. [MacOS Installation](installation/macos.mdx).
 1. [Web Installation](installation/web.mdx).
 
 ## Initializing FlutterFire
@@ -205,9 +206,9 @@ project.ext {
 }
 ```
 
-### iOS
+### iOS/MacOS
 
-Open your `/ios/Podfile` and add any of the globals below to the top of the file:
+Open your `/ios/Podfile` or `/macos/Podfile` file and add any of the globals below to the top of the file:
 
 ```ruby
 # Override Firebase SDK Version
@@ -224,6 +225,6 @@ get started:
 
 |      Firebase       | Description                                                                                                                                                                                                                                                                                                                             |                          FlutterFire Plugin                          |
 | :-----------------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------: |
-| **Authentication**  | Using Firebase Authentication you can authenticate users to your app using several methods such as passwords, phone numbers, and popular federated providers like Google, Facebook, and more. <br /><br /> [View documentation &raquo;](auth/overview.mdx)                                                                              |   [firebase_auth](https://pub.dartlang.org/packages/firebase_auth)   |
-| **Cloud Firestore** | Cloud Firestore is a flexible, scalable database for mobile, web, and server development from Firebase and Google Cloud Platform. Cloud Firestore also offers seamless integration with other Firebase and Google Cloud Platform products, including Cloud Functions. <br /><br /> [View documentation &raquo;](firestore/overview.mdx) | [cloud_firestore](https://pub.dartlang.org/packages/cloud_firestore) |
-|      **Core**       | The `firebase_core` plugin is used to initialize FlutterFire and connect your application with multiple Firebase projects. <br /><br /> [View documentation &raquo;](core/usage.mdx)                                                                                                                                                    |   [firebase_core](https://pub.dartlang.org/packages/firebase_core)   |
+| **Authentication**  | Using Firebase Authentication you can authenticate users to your app using several methods such as passwords, phone numbers, and popular federated providers like Google, Facebook, and more. <br /><br /> [View documentation &raquo;](auth/overview.mdx)                                                                              |   [firebase_auth](https://pub.dev/packages/firebase_auth)   |
+| **Cloud Firestore** | Cloud Firestore is a flexible, scalable database for mobile, web, and server development from Firebase and Google Cloud Platform. Cloud Firestore also offers seamless integration with other Firebase and Google Cloud Platform products, including Cloud Functions. <br /><br /> [View documentation &raquo;](firestore/overview.mdx) | [cloud_firestore](https://pub.dev/packages/cloud_firestore) |
+|      **Core**       | The `firebase_core` plugin is used to initialize FlutterFire and connect your application with multiple Firebase projects. <br /><br /> [View documentation &raquo;](core/usage.mdx)                                                                                                                                                    |   [firebase_core](https://pub.dev/packages/firebase_core)   |

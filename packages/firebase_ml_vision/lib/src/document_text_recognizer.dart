@@ -32,10 +32,14 @@ enum TextRecognizedBreakType {
 /// ```
 class DocumentTextRecognizer {
   final int _handle;
+  final CloudDocumentRecognizerOptions _cloudOptions;
 
   DocumentTextRecognizer._({
+    @required CloudDocumentRecognizerOptions cloudOptions,
     @required int handle,
-  }) : _handle = handle;
+  })  : _cloudOptions = cloudOptions,
+        _handle = handle,
+        assert(cloudOptions != null);
 
   bool _hasBeenOpened = false;
   bool _isClosed = false;
@@ -51,6 +55,9 @@ class DocumentTextRecognizer {
       'DocumentTextRecognizer#processImage',
       <String, dynamic>{
         'handle': _handle,
+        'options': <String, dynamic>{
+          'hintedLanguages': _cloudOptions.hintedLanguages,
+        },
       }..addAll(visionImage._serialize()),
     );
     return VisionDocumentText._(reply);
@@ -67,6 +74,27 @@ class DocumentTextRecognizer {
       <String, dynamic>{'handle': _handle},
     );
   }
+}
+
+/// Options for cloud document text recognizer.
+///
+/// In cases, when the language of the text in the image is known, setting
+/// a hint will help get better results (although it will be a significant
+/// hindrance if the hint is wrong).
+class CloudDocumentRecognizerOptions {
+  /// Constructor for [CloudDocumentRecognizerOptions].
+  ///
+  /// For Latin alphabet based languages, setting language hints is not needed.
+  const CloudDocumentRecognizerOptions({this.hintedLanguages});
+
+  /// Language hints for text recognition.
+  ///
+  /// In most cases, an empty value yields the best results since it enables
+  /// automatic language detection.
+  ///
+  /// Each language code parameter typically consists of a BCP-47 identifier.
+  /// See //cloud.google.com/vision/docs/languages for more details.
+  final List<String> hintedLanguages;
 }
 
 /// Representation for start or end of a structural component.

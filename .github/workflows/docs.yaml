@@ -6,6 +6,8 @@ on:
     - master
     paths:
     - "docs/**"
+    - "website/**"
+  workflow_dispatch:
 
 jobs:
   build_docs:
@@ -16,10 +18,11 @@ jobs:
     - uses: actions/setup-node@v2-beta
       with:
         node-version: '12'
-    - run: |
-        cd website
-        npm install
-        npm run build
+    - name: Run Build
+      working-directory: ./website
+      run: |
+        yarn
+        yarn run build
     - uses: actions/upload-artifact@v2
       with:
         name: docs-release-build

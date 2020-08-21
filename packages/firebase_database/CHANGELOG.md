@@ -1,8 +1,4 @@
-## 4.0.0-dev.2
-
-* Add support for ServerValue.increment function.
-
-## 4.0.0-dev.1
+## 4.0.0
 
 * Add MacOS support.
 * Add MacOS example.

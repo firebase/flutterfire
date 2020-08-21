@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions;
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText;
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentTextRecognizer;
 import com.google.firebase.ml.vision.text.RecognizedLanguage;
@@ -24,7 +25,14 @@ class DocumentTextRecognizer implements Detector {
   private final FirebaseVisionDocumentTextRecognizer recognizer;
 
   DocumentTextRecognizer(FirebaseVision vision, Map<String, Object> options) {
-    recognizer = vision.getCloudDocumentTextRecognizer();
+    FirebaseVisionCloudDocumentRecognizerOptions.Builder optionsBuilder =
+        new FirebaseVisionCloudDocumentRecognizerOptions.Builder();
+    if (options.get("hintedLanguages") != null) {
+      optionsBuilder.setLanguageHints((List<String>) options.get("hintedLanguages"));
+    }
+    FirebaseVisionCloudDocumentRecognizerOptions cloudDocumentTextRecognizerOptions =
+        optionsBuilder.build();
+    recognizer = vision.getCloudDocumentTextRecognizer(cloudDocumentTextRecognizerOptions);
   }
 
   @Override

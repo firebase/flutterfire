@@ -1,6 +1,6 @@
-## 0.4.0-dev.1
+## 0.4.0
 
-* Depend on `firebase_core` pre-release.
+* Depend on `firebase_core`.
 * Firebase iOS SDK versions are now locked to use the same version defined in
   `firebase_core`.
 * Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)

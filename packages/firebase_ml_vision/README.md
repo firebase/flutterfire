@@ -1,6 +1,6 @@
 # Machine Learning Vision for Firebase
 
-[![pub package](https://img.shields.io/pub/v/firebase_ml_vision.svg)](https://pub.dartlang.org/packages/firebase_ml_vision)
+[![pub package](https://img.shields.io/pub/v/firebase_ml_vision.svg)](https://pub.dev/packages/firebase_ml_vision)
 
 A Flutter plugin to use the capabilities of [Firebase ML](https://firebase.google.com/docs/ml), which includes all of Firebase's cloud-based ML features, and [ML Kit](https://developers.google.com/ml-kit), a standalone library for on-device ML, which can be used with or without Firebase.
 
@@ -89,7 +89,7 @@ final TextRecognizer cloudTextRecognizer = FirebaseVision.instance.cloudTextReco
 final DocumentTextRecognizer cloudDocumentTextRecognizer = FirebaseVision.instance.cloudDocumentTextRecognizer();
 ```
 
-You can also configure all detectors, except `TextRecognizer` and `DocumentTextRecognizer`, with desired options.
+You can also configure all detectors, except on-device `TextRecognizer`, with desired options.
 
 ```dart
 final ImageLabeler labeler = FirebaseVision.instance.imageLabler(
