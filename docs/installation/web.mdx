@@ -1,0 +1,72 @@
+---
+title: Web Installation
+---
+
+Before using FlutterFire on the web, you must first import the Firebase JavaScript SDK and initialize Firebase.
+
+:::caution
+Support for web is currently limited. We are working to bring full support for web to all plugins. To learn more, visit
+the <a href="https://github.com/FirebaseExtended/flutterfire/issues/2582"><b>FlutterFire Roadmap</b></a>.
+:::
+
+## Add Firebase SDKs
+
+The only way to currently add the Firebase SDKs to your Flutter web project is by importing the scripts from the
+Firebase content delivery network (CDN). Add the `firebase-app.js` script to your `index.html` file:
+
+```html {5} title="web/index.html"
+<html>
+  ...
+  <body>
+    <!-- Add this line -->
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
+
+    <script src="main.dart.js" type="application/javascript"></script>
+  </body>
+</html>
+```
+
+For more information on setting Firebase up for the web, view the [official documentation](https://firebase.google.com/docs/web/setup#add-sdks-initialize).
+
+_We are actively investigating ways to initialize Firebase without directly using the CDN and will update the documentation
+once this becomes available._
+
+## Initializing Firebase
+
+The next step is to initialize Firebase using your project's credentials. Create a new web app (or choose an existing one)
+on the [Firebase Console](https://console.firebase.google.com/project/_/settings/general/web) and copy the configuration
+details.
+
+Initialize Firebase using these credentials, placing the following script below the CDN imports added above:
+
+```html {7-21} title="web/index.html"
+<html>
+  ...
+  <body>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
+
+    <!-- Firebase Credentials -->
+    <script>
+      var firebaseConfig = {
+        apiKey: "...",
+        authDomain: "[YOUR_PROJECT].firebaseapp.com",
+        databaseURL: "https://[YOUR_PROJECT].firebaseio.com",
+        projectId: "[YOUR_PROJECT]",
+        storageBucket: "[YOUR_PROJECT].appspot.com",
+        messagingSenderId: "...",
+        appId: "1:...:web:...",
+        measurementId: "G-...",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script src="main.dart.js" type="application/javascript"></script>
+  </body>
+</html>
+```
+
+## Initializing FlutterFire
+
+Once complete follow the instructions on [Initializing FlutterFire](../overview.mdx#initializing-flutterfire).

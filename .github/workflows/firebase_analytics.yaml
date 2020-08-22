@@ -1,0 +1,71 @@
+name: firebase_analytics
+
+on:
+  pull_request:
+    paths:
+      - "packages/firebase_analytics/**"
+      - ".github/workflows/firebase_analytics.yaml"
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "docs/**"
+
+env:
+  FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_analytics*"
+  FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: "*firebase_analytics_example*"
+
+jobs:
+  android:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh
+      - name: "Build Example"
+        run: ./.github/workflows/scripts/build-example.sh android
+      - name: "Drive Example"
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 28
+          arch: x86_64
+          target: google_apis
+          profile: Nexus 5X
+          script: ./.github/workflows/scripts/drive-example.sh android
+
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh
+      - name: "Build Example"
+        run: ./.github/workflows/scripts/build-example.sh ios
+      - name: "Drive Example"
+        run: ./.github/workflows/scripts/drive-example.sh ios
+
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh beta
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          flutter config --enable-web
+      - name: "Drive Example"
+        run: ./.github/workflows/scripts/drive-example.sh web

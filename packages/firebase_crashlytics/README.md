@@ -2,7 +2,7 @@
 
 A Flutter plugin to use the [Firebase Crashlytics Service](https://firebase.google.com/docs/crashlytics/).
 
-[![pub package](https://img.shields.io/pub/v/firebase_crashlytics.svg)](https://pub.dartlang.org/packages/firebase_crashlytics)
+[![pub package](https://img.shields.io/pub/v/firebase_crashlytics.svg)](https://pub.dev/packages/firebase_crashlytics)
 
 For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
@@ -10,7 +10,7 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 ### Import the firebase_crashlytics plugin
 
-To use the `firebase_crashlytics` plugin, follow the [plugin installation instructions](https://pub.dartlang.org/packages/firebase_crashlytics#pub-pkg-tab-installing).
+To use the `firebase_crashlytics` plugin, follow the [plugin installation instructions](https://pub.dev/packages/firebase_crashlytics#pub-pkg-tab-installing).
 
 ### Android integration
 
@@ -99,7 +99,20 @@ you can supply `Crashlytics.instance.recordError` to the `onError` parameter:
 runZoned<Future<void>>(() async {
     // ...
   }, onError: Crashlytics.instance.recordError);
-``` 
+```
+
+Finally, to catch errors that happen outside Flutter context, install an error
+listener on the current Isolate:
+
+```dart
+Isolate.current.addErrorListener(RawReceivePort((pair) async {
+  final List<dynamic> errorAndStacktrace = pair;
+  await Crashlytics.instance.recordError(
+    errorAndStacktrace.first,
+    errorAndStacktrace.last,
+  );
+}).sendPort);
+```
 
 ## Result
 
@@ -122,10 +135,10 @@ for a complete sample app using `firebase_crashlytics`.
 
 ## Issues and feedback
 
-Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
 Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
-please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
-and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).

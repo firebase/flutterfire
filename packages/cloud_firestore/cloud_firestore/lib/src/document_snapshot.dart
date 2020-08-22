@@ -1,38 +1,50 @@
-// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
 part of cloud_firestore;
 
-/// A DocumentSnapshot contains data read from a document in your Firestore
+/// A [DocumentSnapshot] contains data read from a document in your [FirebaseFirestore]
 /// database.
 ///
 /// The data can be extracted with the data property or by using subscript
 /// syntax to access a specific field.
 class DocumentSnapshot {
-  platform.DocumentSnapshotPlatform _delegate;
-  final Firestore _firestore;
+  final FirebaseFirestore _firestore;
+  final DocumentSnapshotPlatform _delegate;
 
-  DocumentSnapshot._(this._delegate, this._firestore);
+  DocumentSnapshot._(this._firestore, this._delegate) {
+    DocumentSnapshotPlatform.verifyExtends(_delegate);
+  }
 
-  /// The reference that produced this snapshot
-  DocumentReference get reference =>
-      _firestore.document(_delegate.reference.path);
+  /// This document's given ID for this snapshot.
+  String get id => _delegate.id;
 
-  /// Contains all the data of this snapshot
-  Map<String, dynamic> get data =>
-      _CodecUtility.replaceDelegatesWithValueInMap(_delegate.data, _firestore);
+  @Deprecated("Deprecated in favor of `.id`")
+  // ignore: public_member_api_docs
+  String get documentID => id;
 
-  /// Metadata about this snapshot concerning its source and if it has local
+  /// Returns the [DocumentReference] of this snapshot.
+  DocumentReference get reference => _firestore.doc(_delegate.reference.path);
+
+  /// Metadata about this [DocumentSnapshot] concerning its source and if it has local
   /// modifications.
   SnapshotMetadata get metadata => SnapshotMetadata._(_delegate.metadata);
 
-  /// Reads individual values from the snapshot
-  dynamic operator [](String key) => data[key];
+  /// Returns `true` if the [DocumentSnapshot] exists.
+  bool get exists => _delegate.exists;
 
-  /// Returns the ID of the snapshot's document
-  String get documentID => _delegate.documentID;
+  /// Contains all the data of this [DocumentSnapshot].
+  Map<String, dynamic> data() {
+    return _CodecUtility.replaceDelegatesWithValueInMap(
+        _delegate.data(), _firestore);
+  }
 
-  /// Returns `true` if the document exists.
-  bool get exists => data != null;
+  /// Gets a nested field by [String] or [FieldPath] from this [DocumentSnapshot].
+  ///
+  /// Data can be accessed by providing a dot-notated path or [FieldPath]
+  /// which recursively finds the specified data. If no data could be found
+  /// at the specified path, a [StateError] will be thrown.
+  dynamic get(dynamic field) =>
+      _CodecUtility.valueDecode(_delegate.get(field), _firestore);
 }

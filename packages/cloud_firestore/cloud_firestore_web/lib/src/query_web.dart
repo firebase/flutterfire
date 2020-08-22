@@ -4,20 +4,19 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
+import 'package:cloud_firestore_web/src/utils/exception.dart';
 import 'package:firebase/firestore.dart' as web;
 
-import 'package:cloud_firestore_web/src/utils/document_reference_utils.dart';
+import 'package:cloud_firestore_web/src/utils/web_utils.dart';
 
-/// Web implementation for firestore [QueryPlatform]
+/// Web implementation of Firestore [QueryPlatform].
 class QueryWeb extends QueryPlatform {
   final web.Query _webQuery;
-  final FirestorePlatform _firestore;
-  final bool _isCollectionGroup;
+  final FirebaseFirestorePlatform _firestore;
   final String _path;
-  final List<dynamic> _orderByKeys;
-  static const _kChangeTypeAdded = "added";
-  static const _kChangeTypeModified = "modified";
-  static const _kChangeTypeRemoved = "removed";
+
+  /// Flags whether the current query is for a collection group.
+  final bool isCollectionGroupQuery;
 
   /// Builds an instance of [QueryWeb] delegating to a package:firebase [Query]
   /// to delegate queries to underlying firestore web plugin
@@ -25,293 +24,190 @@ class QueryWeb extends QueryPlatform {
     this._firestore,
     this._path,
     this._webQuery, {
-    bool isCollectionGroup,
-    List<dynamic> orderByKeys,
-  })  : this._isCollectionGroup = isCollectionGroup ?? false,
-        this._orderByKeys = orderByKeys ?? [],
-        super(
-          firestore: _firestore,
-          pathComponents: _path.split('/'),
-          isCollectionGroup: isCollectionGroup,
-        );
+    Map<String, dynamic> parameters,
+    this.isCollectionGroupQuery = false,
+  }) : super(_firestore, parameters);
+
+  QueryWeb _copyWithParameters(Map<String, dynamic> parameters) {
+    return QueryWeb(_firestore, _path, _webQuery,
+        isCollectionGroupQuery: isCollectionGroupQuery,
+        parameters: Map<String, dynamic>.unmodifiable(
+          Map<String, dynamic>.from(this.parameters)..addAll(parameters),
+        ));
+  }
+
+  /// Builds a [web.Query] from given [parameters].
+  web.Query _buildWebQueryWithParameters() {
+    web.Query query = _webQuery;
+
+    for (List<dynamic> order in parameters['orderBy']) {
+      query = query.orderBy(
+          CodecUtility.valueEncode(order[0]), order[1] ? 'desc' : 'asc');
+    }
+
+    if (parameters['startAt'] != null) {
+      query = query.startAt(
+          fieldValues: CodecUtility.valueEncode(parameters['startAt']));
+    }
+
+    if (parameters['startAfter'] != null) {
+      query = query.startAfter(
+          fieldValues: CodecUtility.valueEncode(parameters['startAfter']));
+    }
+
+    if (parameters['endAt'] != null) {
+      query = query.endAt(
+          fieldValues: CodecUtility.valueEncode(parameters['endAt']));
+    }
+
+    if (parameters['endBefore'] != null) {
+      query = query.endBefore(
+          fieldValues: CodecUtility.valueEncode(parameters['endBefore']));
+    }
+
+    if (parameters['limit'] != null) {
+      query = query.limit(parameters['limit']);
+    }
+
+    // TODO(ehesp): Not supported on web platform (firebase-dart)
+    // if (parameters['limitToLast'] != null) {
+    //   query = query.limitToLast(parameters['limitToLast']);
+    // }
+
+    for (List<dynamic> condition in parameters['where']) {
+      dynamic fieldPath = CodecUtility.valueEncode(condition[0]);
+      String opStr = condition[1];
+      dynamic value = CodecUtility.valueEncode(condition[2]);
+
+      query = query.where(fieldPath, opStr, value);
+    }
+
+    return query;
+  }
+
+  @override
+  QueryPlatform endAtDocument(List<dynamic> orders, List<dynamic> values) {
+    return _copyWithParameters(<String, dynamic>{
+      'orderBy': orders,
+      'endAt': values,
+      'endBefore': null,
+    });
+  }
+
+  @override
+  QueryPlatform endAt(List<dynamic> fields) {
+    return _copyWithParameters(<String, dynamic>{
+      'endAt': fields,
+      'endBefore': null,
+    });
+  }
+
+  @override
+  QueryPlatform endBeforeDocument(List<dynamic> orders, List<dynamic> values) {
+    return _copyWithParameters(<String, dynamic>{
+      'orderBy': orders,
+      'endAt': null,
+      'endBefore': values,
+    });
+  }
+
+  @override
+  QueryPlatform endBefore(List<dynamic> fields) {
+    return _copyWithParameters(<String, dynamic>{
+      'endAt': null,
+      'endBefore': fields,
+    });
+  }
+
+  @override
+  Future<QuerySnapshotPlatform> get([GetOptions options]) async {
+    // TODO(ehesp): web implementation not handling options
+    try {
+      return convertWebQuerySnapshot(
+          firestore, await _buildWebQueryWithParameters().get());
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
+  }
+
+  @override
+  QueryPlatform limit(int limit) {
+    return _copyWithParameters(<String, dynamic>{
+      'limit': limit,
+      'limitToLast': null,
+    });
+  }
+
+  // TODO(ehesp): Not supported on web platform (firebase-dart)
+  // @override
+  // QueryPlatform limitToLast(int limit) {
+  //   return _copyWithParameters(<String, dynamic>{
+  //     'limit': null,
+  //     'limitToLast': limit,
+  //   });
+  // }
 
   @override
   Stream<QuerySnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    assert(_webQuery != null);
-    Stream<web.QuerySnapshot> querySnapshots = _webQuery.onSnapshot;
+    Stream<web.QuerySnapshot> querySnapshots;
     if (includeMetadataChanges) {
-      querySnapshots = _webQuery.onSnapshotMetadata;
+      querySnapshots = _buildWebQueryWithParameters().onSnapshotMetadata;
+    } else {
+      querySnapshots = _buildWebQueryWithParameters().onSnapshot;
     }
-    return querySnapshots.map(_webQuerySnapshotToQuerySnapshot);
+    return querySnapshots
+        .map((webQuerySnapshot) =>
+            convertWebQuerySnapshot(firestore, webQuerySnapshot))
+        .handleError((e) {
+      throw getFirebaseException(e);
+    });
   }
 
   @override
-  Future<QuerySnapshotPlatform> getDocuments({
-    Source source = Source.serverAndCache,
-  }) async {
-    assert(_webQuery != null);
-    return _webQuerySnapshotToQuerySnapshot(await _webQuery.get());
+  QueryPlatform orderBy(List<List<dynamic>> orders) {
+    return _copyWithParameters(<String, dynamic>{'orderBy': orders});
   }
 
   @override
-  Map<String, dynamic> buildArguments() => Map();
-
-  @override
-  QueryPlatform endAt(List values) => QueryWeb(
-        this._firestore,
-        this._path,
-        _webQuery != null
-            ? _webQuery.endAt(fieldValues: CodecUtility.valueEncode(values))
-            : null,
-        isCollectionGroup: _isCollectionGroup,
-      );
-
-  @override
-  QueryPlatform endAtDocument(DocumentSnapshotPlatform documentSnapshot) {
-    assert(_webQuery != null && _orderByKeys.isNotEmpty);
-    return QueryWeb(
-        this._firestore,
-        this._path,
-        _webQuery.endAt(
-          fieldValues: CodecUtility.valueEncode(
-            _orderByKeys.map((key) => documentSnapshot.data[key]).toList(),
-          ),
-        ),
-        isCollectionGroup: _isCollectionGroup);
+  QueryPlatform startAfterDocument(List<dynamic> orders, List<dynamic> values) {
+    return _copyWithParameters(<String, dynamic>{
+      'orderBy': orders,
+      'startAt': null,
+      'startAfter': values,
+    });
   }
 
   @override
-  QueryPlatform endBefore(List values) => QueryWeb(
-        this._firestore,
-        this._path,
-        _webQuery != null
-            ? _webQuery.endBefore(fieldValues: CodecUtility.valueEncode(values))
-            : null,
-        isCollectionGroup: _isCollectionGroup,
-      );
-
-  @override
-  QueryPlatform endBeforeDocument(DocumentSnapshotPlatform documentSnapshot) {
-    assert(_webQuery != null && _orderByKeys.isNotEmpty);
-    return QueryWeb(
-        this._firestore,
-        this._path,
-        _webQuery.endBefore(
-          fieldValues: CodecUtility.valueEncode(
-            _orderByKeys.map((key) => documentSnapshot.data[key]).toList(),
-          ),
-        ),
-        isCollectionGroup: _isCollectionGroup);
+  QueryPlatform startAfter(List<dynamic> fields) {
+    return _copyWithParameters(<String, dynamic>{
+      'startAt': null,
+      'startAfter': fields,
+    });
   }
 
   @override
-  FirestorePlatform get firestore => _firestore;
-
-  @override
-  bool get isCollectionGroup => _isCollectionGroup;
-
-  @override
-  QueryPlatform limit(int length) => QueryWeb(
-        this._firestore,
-        this._path,
-        _webQuery != null ? _webQuery.limit(length) : null,
-        orderByKeys: _orderByKeys,
-        isCollectionGroup: _isCollectionGroup,
-      );
-
-  @override
-  QueryPlatform orderBy(
-    field, {
-    bool descending = false,
-  }) {
-    dynamic usableField = field;
-    if (field == FieldPath.documentId) {
-      usableField = web.FieldPath.documentId();
-    }
-    return QueryWeb(
-      this._firestore,
-      this._path,
-      _webQuery.orderBy(usableField, descending ? "desc" : "asc"),
-      orderByKeys: _orderByKeys..add(usableField),
-      isCollectionGroup: _isCollectionGroup,
-    );
+  QueryPlatform startAtDocument(List<dynamic> orders, List<dynamic> values) {
+    return _copyWithParameters(<String, dynamic>{
+      'orderBy': orders,
+      'startAt': values,
+      'startAfter': null,
+    });
   }
 
   @override
-  String get path => this._path;
-
-  @override
-  List<String> get pathComponents => this._path.split("/");
-
-  @override
-  CollectionReferencePlatform reference() => firestore.collection(_path);
-
-  @override
-  QueryPlatform startAfter(List values) => QueryWeb(
-        this._firestore,
-        this._path,
-        _webQuery.startAfter(fieldValues: CodecUtility.valueEncode(values)),
-        orderByKeys: _orderByKeys,
-        isCollectionGroup: _isCollectionGroup,
-      );
-
-  @override
-  QueryPlatform startAfterDocument(DocumentSnapshotPlatform documentSnapshot) {
-    assert(_webQuery != null && _orderByKeys.isNotEmpty);
-    return QueryWeb(
-        this._firestore,
-        this._path,
-        _webQuery.startAfter(
-          fieldValues: CodecUtility.valueEncode(
-            _orderByKeys.map((key) => documentSnapshot.data[key]).toList(),
-          ),
-        ),
-        orderByKeys: _orderByKeys,
-        isCollectionGroup: _isCollectionGroup);
+  QueryPlatform startAt(List<dynamic> fields) {
+    return _copyWithParameters(<String, dynamic>{
+      'startAt': fields,
+      'startAfter': null,
+    });
   }
 
   @override
-  QueryPlatform startAt(List values) => QueryWeb(
-        this._firestore,
-        this._path,
-        _webQuery.startAt(fieldValues: CodecUtility.valueEncode(values)),
-        orderByKeys: _orderByKeys,
-        isCollectionGroup: _isCollectionGroup,
-      );
-
-  @override
-  QueryPlatform startAtDocument(DocumentSnapshotPlatform documentSnapshot) {
-    assert(_webQuery != null && _orderByKeys.isNotEmpty);
-    return QueryWeb(
-      this._firestore,
-      this._path,
-      _webQuery.startAt(
-        fieldValues: CodecUtility.valueEncode(
-          _orderByKeys.map((key) => documentSnapshot.data[key]).toList(),
-        ),
-      ),
-      orderByKeys: _orderByKeys,
-      isCollectionGroup: _isCollectionGroup,
-    );
+  QueryPlatform where(List<List<dynamic>> conditions) {
+    return _copyWithParameters(<String, dynamic>{
+      'where': conditions,
+    });
   }
-
-  @override
-  QueryPlatform where(
-    field, {
-    isEqualTo,
-    isLessThan,
-    isLessThanOrEqualTo,
-    isGreaterThan,
-    isGreaterThanOrEqualTo,
-    arrayContains,
-    List arrayContainsAny,
-    List whereIn,
-    bool isNull,
-  }) {
-    assert(field is String || field is FieldPath,
-        'Supported [field] types are [String] and [FieldPath].');
-    assert(_webQuery != null);
-    dynamic usableField = CodecUtility.valueEncode(field);
-    if (field == FieldPath.documentId) {
-      usableField = web.FieldPath.documentId();
-    }
-    web.Query query = _webQuery;
-
-    if (isEqualTo != null) {
-      query =
-          query.where(usableField, "==", CodecUtility.valueEncode(isEqualTo));
-    }
-    if (isLessThan != null) {
-      query =
-          query.where(usableField, "<", CodecUtility.valueEncode(isLessThan));
-    }
-    if (isLessThanOrEqualTo != null) {
-      query = query.where(
-          usableField, "<=", CodecUtility.valueEncode(isLessThanOrEqualTo));
-    }
-    if (isGreaterThan != null) {
-      query = query.where(
-          usableField, ">", CodecUtility.valueEncode(isGreaterThan));
-    }
-    if (isGreaterThanOrEqualTo != null) {
-      query = query.where(
-          usableField, ">=", CodecUtility.valueEncode(isGreaterThanOrEqualTo));
-    }
-    if (arrayContains != null) {
-      query = query.where(usableField, "array-contains",
-          CodecUtility.valueEncode(arrayContains));
-    }
-    if (arrayContainsAny != null) {
-      assert(arrayContainsAny.length <= 10,
-          "array contains can have maximum of 10 items");
-      query = query.where(usableField, "array-contains-any",
-          CodecUtility.valueEncode(arrayContainsAny));
-    }
-    if (whereIn != null) {
-      assert(
-          whereIn.length <= 10, "array contains can have maximum of 10 items");
-      query = query.where(usableField, "in", CodecUtility.valueEncode(whereIn));
-    }
-    if (isNull != null) {
-      assert(
-          isNull,
-          'isNull can only be set to true. '
-          'Use isEqualTo to filter on non-null values.');
-      query = query.where(usableField, "==", null);
-    }
-    return QueryWeb(this._firestore, this._path, query,
-        orderByKeys: _orderByKeys, isCollectionGroup: _isCollectionGroup);
-  }
-
-  QuerySnapshotPlatform _webQuerySnapshotToQuerySnapshot(
-    web.QuerySnapshot webSnapshot,
-  ) {
-    return QuerySnapshotPlatform(
-        webSnapshot.docs
-            .map((webSnapshot) =>
-                fromWebDocumentSnapshotToPlatformDocumentSnapshot(
-                    webSnapshot, this._firestore))
-            .toList(),
-        webSnapshot.docChanges().map(_webChangeToChange).toList(),
-        _webMetadataToMetada(webSnapshot.metadata));
-  }
-
-  DocumentChangePlatform _webChangeToChange(web.DocumentChange webChange) {
-    return DocumentChangePlatform(
-        _fromString(webChange.type),
-        webChange.oldIndex,
-        webChange.newIndex,
-        fromWebDocumentSnapshotToPlatformDocumentSnapshot(
-            webChange.doc, this._firestore));
-  }
-
-  DocumentChangeType _fromString(String item) {
-    switch (item.toLowerCase()) {
-      case _kChangeTypeAdded:
-        return DocumentChangeType.added;
-      case _kChangeTypeModified:
-        return DocumentChangeType.modified;
-      case _kChangeTypeRemoved:
-        return DocumentChangeType.removed;
-      default:
-        throw ArgumentError("Invalid type");
-    }
-  }
-
-  SnapshotMetadataPlatform _webMetadataToMetada(
-      web.SnapshotMetadata webMetadata) {
-    return SnapshotMetadataPlatform(
-      webMetadata.hasPendingWrites,
-      webMetadata.fromCache,
-    );
-  }
-
-  @override
-  Map<String, dynamic> get parameters => Map();
-
-  /// Returns a clean clone of this QueryWeb.
-  QueryWeb resetQueryDelegate() =>
-      QueryWeb(firestore, pathComponents.join("/"), _webQuery);
 }
