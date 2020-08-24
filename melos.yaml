@@ -3,7 +3,7 @@
 name: FlutterFire
 
 versioning:
-  # versioning mode, currently only independent supported
+  # Versioning mode, currently only independent supported.
   mode: independent
 
 # Array of globs to search for packages.
