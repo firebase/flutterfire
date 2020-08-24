@@ -4,13 +4,13 @@
 
 package io.flutter.plugins.firebase.auth;
 
-import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
-
 import android.app.Activity;
 import android.net.Uri;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApiNotAvailableException;
@@ -42,6 +42,16 @@ import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -52,14 +62,8 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+
+import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
 /** Flutter plugin for Firebase Auth. */
 public class FlutterFirebaseAuthPlugin
@@ -786,6 +790,10 @@ public class FlutterFirebaseAuthPlugin
                   int phoneAuthCredentialHashCode = phoneAuthCredential.hashCode();
                   authCredentials.put(phoneAuthCredentialHashCode, phoneAuthCredential);
                   event.put(Constants.TOKEN, phoneAuthCredentialHashCode);
+
+                  if (phoneAuthCredential.getSmsCode() != null) {
+                    event.put(Constants.SMS_CODE, phoneAuthCredential.getSmsCode());
+                  }
 
                   channel.invokeMethod(
                       "Auth#phoneVerificationCompleted",
