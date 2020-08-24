@@ -7,7 +7,7 @@ dependencies:
   firebase_analytics:
     path: ../
   firebase_core:
-    path: ../../firebase_core/firebase_core
+    path: ../../../firebase_core/firebase_core
   e2e: ^0.6.1
 
 dependency_overrides:
