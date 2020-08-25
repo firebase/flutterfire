@@ -14,7 +14,13 @@ public class EmbeddingV1Activity extends FlutterActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    GeneratedPluginRegistrant.registerWith(this);
+    FlutterFirebaseCorePlugin.registerWith(
+      registrarFor("io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin"));
+    // TODO(Salakar) rename as part of re-work FirebaseAdMobPlugin -> FlutterFirebaseAdMobPlugin
+    FirebaseDynamicLinksPlugin.registerWith(
+      registrarFor("io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin"));
+    E2EPlugin.registerWith(registrarFor("dev.flutter.plugins.e2e.E2EPlugin"));
+
     final NativeAdFactory factory = new NativeAdFactoryExample(getLayoutInflater());
     FirebaseAdMobPlugin.registerNativeAdFactory(this, "adFactoryExample", factory);
   }
