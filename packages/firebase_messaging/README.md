@@ -293,6 +293,40 @@ Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
 }
 ```
 
+## Setting Icon for Notification Bar in Android
+
+In `android/app/src/main/AndroidManifest.xml` file.
+
+```xml
+    <application
+        android:name="io.flutter.app.FlutterApplication"
+        android:label="your_app_name"
+        android:icon="@mipmap/ic_launcher">
+        <!-- icon setting is here -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher"
+        />
+        <!-- back ground color is here -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent"
+        />
+```
+
+Icon files in the `android/app/src/main/res/`.
+
+Color setting is in the `android/app/src/main/res/values/colors.xml` file.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <color name="colorAccent">#00FF00</color>
+</resources>
+```
+
+*IMPORTANT: The metadata goes at the <application> level, NOT the <activity> level which seems logical when you first look at AndroidManifest.xml*
+
 ## Issues and feedback
 
 Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
