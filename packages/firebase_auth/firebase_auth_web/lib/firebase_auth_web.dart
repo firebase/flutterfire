@@ -115,7 +115,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     assert(appName != null);
     assert(_userChangesListeners[appName] != null);
 
-    _userChangesListeners[appName].add(null);
+    _userChangesListeners[appName].add(userPlatform);
   }
 
   @override

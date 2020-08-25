@@ -13,8 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.ActionCodeEmailInfo;
 import com.google.firebase.auth.ActionCodeInfo;
 import com.google.firebase.auth.ActionCodeResult;
@@ -206,7 +209,7 @@ public class FlutterFirebaseAuthPlugin
 
   private AuthCredential getCredential(Map<String, Object> arguments)
       throws FlutterFirebaseAuthPluginException {
-    //noinspection unchecked
+    @SuppressWarnings("unchecked")
     Map<String, Object> credentialMap =
         (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.CREDENTIAL));
 
@@ -1289,17 +1292,50 @@ public class FlutterFirebaseAuthPlugin
       details.put("code", authException.getCode());
       details.put("message", authException.getMessage());
       details.put("additionalData", authException.getAdditionalData());
-    } else {
-      // Manual overrides to match other platforms.
-      if (exception.getMessage() != null
-          && exception
-              .getMessage()
-              .startsWith("Cannot create PhoneAuthCredential without either verificationProof")) {
-        details.put("code", "invalid-verification-id");
-        details.put(
-            "message", "The verification ID used to create the phone auth credential is invalid.");
-        details.put("additionalData", new HashMap<>());
-      }
+      return details;
+    }
+
+    if (exception instanceof FirebaseNetworkException
+        || (exception.getCause() != null
+            && exception.getCause() instanceof FirebaseNetworkException)) {
+      details.put("code", "network-request-failed");
+      details.put(
+          "message",
+          "A network error (such as timeout, interrupted connection or unreachable host) has occurred.");
+      details.put("additionalData", new HashMap<>());
+      return details;
+    }
+
+    if (exception instanceof FirebaseApiNotAvailableException
+        || (exception.getCause() != null
+            && exception.getCause() instanceof FirebaseApiNotAvailableException)) {
+      details.put("code", "api-not-available");
+      details.put("message", "The requested API is not available.");
+      details.put("additionalData", new HashMap<>());
+      return details;
+    }
+
+    if (exception instanceof FirebaseTooManyRequestsException
+        || (exception.getCause() != null
+            && exception.getCause() instanceof FirebaseTooManyRequestsException)) {
+      details.put("code", "too-many-requests");
+      details.put(
+          "message",
+          "We have blocked all requests from this device due to unusual activity. Try again later.");
+      details.put("additionalData", new HashMap<>());
+      return details;
+    }
+
+    // Manual message overrides to match other platforms.
+    if (exception.getMessage() != null
+        && exception
+            .getMessage()
+            .startsWith("Cannot create PhoneAuthCredential without either verificationProof")) {
+      details.put("code", "invalid-verification-id");
+      details.put(
+          "message", "The verification ID used to create the phone auth credential is invalid.");
+      details.put("additionalData", new HashMap<>());
+      return details;
     }
 
     return details;

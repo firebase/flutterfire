@@ -33,14 +33,40 @@ Flutter application to your Firebase project(s), and without it all other plugin
 
 Add the plugin to your `pubspec.yaml` file within your project:
 
-```yaml title="pubspec.yaml"
+```yaml {4} title="pubspec.yaml"
 dependencies:
   flutter:
     sdk: flutter
   firebase_core: "^{{ plugins.firebase_core }}"
 ```
 
-Install the plugin by running the following command from the project root:
+### 2. Update Firebase Plugins
+
+Update the Firebase plugins you use in your project to versions that are compatible with the new `firebase_core` plugin.
+
+Edit the plugin versions in your `pubspec.yaml` file within your project to match the versions below:
+
+```yaml {6,7} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  # Newly reworked plugins covered by this migration guide:
+  firebase_auth: "^{{ plugins.firebase_auth }}"
+  cloud_firestore: "^{{ plugins.cloud_firestore }}"
+  # Updated to work with new core only plugins (no new changes):
+  cloud_functions: "^{{ plugins.cloud_functions }}"
+  firebase_analytics: "^{{ plugins.firebase_analytics }}"
+  firebase_database: "^{{ plugins.firebase_database }}"
+  firebase_dynamic_links: "^{{ plugins.firebase_dynamic_links }}"
+  firebase_in_app_messaging: "^{{ plugins.firebase_in_app_messaging }}"
+  firebase_messaging: "^{{ plugins.firebase_messaging }}"
+  firebase_performance: "^{{ plugins.firebase_performance }}"
+  firebase_remote_config: "^{{ plugins.firebase_remote_config }}"
+  firebase_storage: "^{{ plugins.firebase_storage }}"
+```
+
+Install the updated plugins by running the following command from the project root:
 
 ```bash
 $ flutter pub get
@@ -48,7 +74,7 @@ $ flutter pub get
 
 We also recommend running `flutter clean` before continuing.
 
-### 2. Platform Setup
+### 3. Platform Setup
 
 Even though you may have already setup your platform to connect with Firebase, we recommend following the new documentation
 steps for each platform to ensure everything is up-to-date.
@@ -60,9 +86,14 @@ show you how to set up a default Firebase application:
 #### A. [Android Installation](installation/android.mdx)
 
  - Ensure that the `com.google.gms:google-services` plugin is up-to-date.
- - Ensure your apps gradle wrapper distribution version is v5 or higher, FlutterFire uses v5.6.2 for it's examples.
+   - Update the version by changing the `classpath 'com.google.gms:google-services:4.3.3'` line in your `android/build.gradle` file to use version `4.3.3` or higher.
+ - Ensure your apps Gradle wrapper distribution version is v5 or higher, FlutterFire uses v5.6.2 for its examples.
    - Update the version by changing the `distributionUrl` value in your projects `android/gradle/wrapper/gradle-wrapper.properties` file.
      - e.g. setting to v5.6.2: `distributionUrl=https\://services.gradle.org/distributions/gradle-5.6.2-all.zip`
+ - Ensure that you're not manually importing any Firebase Android SDK dependencies in your `android/app/build.gradle` files `dependencies { ... }` section.
+   - e.g. remove any lines similar to: `implementation 'com.google.firebase:firebase-{PRODUCT}:{VERSION}`
+   - The reworked plugins now automatically manage the versions of the Firebase SDKs used internally so these are no longer required.
+     - See the [overriding native sdk versions documentation](overview#overriding-native-sdk-versions) if this is something you require.
 
 #### B. [iOS Installation](installation/ios.mdx)
 
@@ -72,7 +103,7 @@ show you how to set up a default Firebase application:
 
 #### C. [Web Installation](installation/web.mdx)
 
-### 3. Initialize FlutterFire
+### 4. Initialize FlutterFire
 
 To ensure each plugin has a consistent API and to enable the possibility of some new features, you are now required to
 initialize FlutterFire before performing any other Firebase related functionality.
@@ -86,7 +117,7 @@ To learn more, view the [Initializing FlutterFire](overview.mdx#initializing-flu
 
 ## Plugin Usage
 
-Each plugin how provides a consistent API for integrating with Firebase. The example below shows how the `cloud_firestore`
+Each plugin now provides a consistent API for integrating with Firebase. The example below shows how the `cloud_firestore`
 package previously created a new instance vs the new way:
 
 ```dart
@@ -256,10 +287,10 @@ The API has mainly been kept the same, however there are some breaking changes.
   - **NEW**: Added support for `getIdTokenResult()`.
   - **NEW**: Added support for `verifyBeforeUpdateEmail()`.
   - **FIX**: Fixed several iOS crashes when the Firebase SDK returned `nil` property values.
-  - **FIX**: Fixed an issue on Web & iOS where a users email address would still show after unlinking the email/password provider.
+  - **FIX**: Fixed an issue on Web & iOS where a user's email address would still show after unlinking the email/password provider.
 
 - **`UserCredential`**
-  - **NEW**: Added support for accessing the users `AuthCredential` via the `credential` property.
+  - **NEW**: Added support for accessing the user's `AuthCredential` via the `credential` property.
 
 - **`AuthProvider`** & **`AuthCredential`**
   - **DEPRECATED**: All sub-class (e.g. `GoogleAuthProvider`) `getCredential()` methods have been deprecated in favor of `credential()`.

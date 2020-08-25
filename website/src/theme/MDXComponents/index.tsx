@@ -56,6 +56,18 @@ export default {
 
     // Windows Workaround
     if (!props.src) return null;
+    if (props.src.startsWith('http')) {
+      return (
+        <figure className={styles.figure}>
+          <Zoom>
+            {/* @ts-ignore */}
+            <img {...props} />
+          </Zoom>
+          {alt === props.alt && <figcaption>{alt}</figcaption>}
+        </figure>
+      );
+    }
+
     let imgSrc;
     try {
       imgSrc = require(`../../../../docs/_assets/${props.src}`);

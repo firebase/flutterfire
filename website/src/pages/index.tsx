@@ -120,7 +120,7 @@ function Home() {
                   </td>
                   <td>
                     <a
-                      href={`https://github.com/FirebaseExtended/flutterfire/tree/next/packages/${plugin.pub}`}
+                      href={`https://github.com/FirebaseExtended/flutterfire/tree/master/packages/${plugin.pub}`}
                     >
                       <code>{plugin.pub}</code>
                     </a>

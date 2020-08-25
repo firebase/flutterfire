@@ -1,8 +1,11 @@
-## 0.18.0-dev.2
+## 0.18.0+1
 
-* Point `firebase_auth_web` dependency to version `0.3.0-dev.1`
+* Fixed an Android issue where certain network related Firebase Auth error codes would come through as `unknown`. [(#3217)](https://github.com/FirebaseExtended/flutterfire/pull/3217)
+* Added missing deprecations: `FirebaseUser` class and `photoUrl` getter.
+* Bump `firebase_auth_platform_interface` dependency to fix an assertion issue when creating Google sign-in credentials.
+* Bump `firebase_auth_web` dependency to `^0.3.0+1`.
 
-## 0.18.0-dev.1
+## 0.18.0
 
 Overall, Firebase Auth has been heavily reworked to bring it inline with the federated plugin setup along with adding new features, documentation and many more unit and end-to-end tests. The API has mainly been kept the same, however there are some breaking changes.
 

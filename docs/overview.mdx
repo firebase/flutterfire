@@ -23,7 +23,7 @@ Welcome to FlutterFire! 🔥
 FlutterFire is a set of Flutter plugins which connect your Flutter application to [Firebase](https://firebase.com).
 
 > FlutterFire is currently a work in progress as we work towards a stable release. Plugins & documentation may be incomplete
-> or missing functionality.
+> or missing functionality. See the [roadmap issue](https://github.com/FirebaseExtended/flutterfire/issues/2582) to learn more.
 
 ## Prerequisites
 
@@ -34,6 +34,10 @@ have an active Firebase project. If you do not meet these prerequisites, follow 
 - [Create a new Firebase project](https://console.firebase.google.com/).
 
 ## Installation
+
+:::caution
+Are you migrating your existing project to these new plugins? Please start with the <a href="https://firebase.flutter.dev/docs/migration"><b>migration guide</b></a>.
+:::
 
 Before any Firebase services can be used, you must first install the [`firebase_core`](https://pub.dev/packages/firebase_core)
 plugin, which is responsible for connecting your application to Firebase. Add the plugin to your `pubspec.yaml` file:
@@ -57,6 +61,7 @@ Once installed, Firebase needs to be configured to work with the various platfor
 
 1. [Android Installation](installation/android.mdx).
 1. [iOS Installation](installation/ios.mdx).
+1. [MacOS Installation](installation/macos.mdx).
 1. [Web Installation](installation/web.mdx).
 
 ## Initializing FlutterFire
@@ -205,13 +210,13 @@ project.ext {
 }
 ```
 
-### iOS
+### iOS/MacOS
 
-Open your `/ios/Podfile` and add any of the globals below to the top of the file:
+Open your `/ios/Podfile` or `/macos/Podfile` file and add any of the globals below to the top of the file:
 
 ```ruby
 # Override Firebase SDK Version
-$FirebaseSDKVersion = '21.1.0'
+$FirebaseSDKVersion = '6.30.0'
 ```
 
 ## Next Steps

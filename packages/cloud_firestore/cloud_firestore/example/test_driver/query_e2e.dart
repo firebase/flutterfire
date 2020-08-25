@@ -691,9 +691,9 @@ void runQueryTests() {
       });
     });
 
-    // /**
-    //  * Limit
-    //  */
+    /**
+     * Limit
+     */
 
     group('Query.limit{toLast}()', () {
       test('limits documents', () async {
@@ -760,8 +760,37 @@ void runQueryTests() {
      * Order
      */
     group('Query.orderBy()', () {
+      test('allows ordering by documentId', () async {
+        CollectionReference collection =
+            await initializeTest('order-document-id');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 1,
+          }),
+          collection.doc('doc2').set({
+            'foo': 1,
+          }),
+          collection.doc('doc3').set({
+            'foo': 1,
+          }),
+          collection.doc('doc4').set({
+            'bar': 1,
+          }),
+        ]);
+
+        QuerySnapshot snapshot =
+            await collection.orderBy('foo').orderBy(FieldPath.documentId).get();
+
+        expect(snapshot.docs.length, equals(3));
+        expect(snapshot.docs[0].id, equals('doc1'));
+        expect(snapshot.docs[1].id, equals('doc2'));
+        expect(snapshot.docs[2].id, equals('doc3'));
+      });
+
       test('orders async by default', () async {
         CollectionReference collection = await initializeTest('order-asc');
+
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 3,
@@ -1063,6 +1092,53 @@ void runQueryTests() {
         expect(snapshot.docs[0].get(fieldPath), isTrue);
         expect(snapshot.docs[1].get(fieldPath), isTrue);
         expect(snapshot.docs[1].get('foo'), equals('bar'));
+      });
+
+      test('returns results using FieldPath.documentId', () async {
+        CollectionReference collection =
+            await initializeTest('where-field-path-document-id');
+
+        DocumentReference docRef = await collection.add({
+          'foo': 'bar',
+        });
+
+        // Add secondary document for sanity check
+        await collection.add({
+          'bar': 'baz',
+        });
+
+        QuerySnapshot snapshot = await collection
+            .where(FieldPath.documentId, isEqualTo: docRef.id)
+            .get();
+
+        expect(snapshot.docs.length, equals(1));
+        expect(snapshot.docs[0].get('foo'), equals('bar'));
+      });
+
+      test('returns returns and encoded DocumentReferences', () async {
+        CollectionReference collection =
+            await initializeTest('where-document-reference');
+
+        DocumentReference ref = FirebaseFirestore.instance.doc('foo/bar');
+
+        await Future.wait([
+          collection.add({
+            'foo': ref,
+          }),
+          collection.add({
+            'foo': FirebaseFirestore.instance.doc('bar/baz'),
+          }),
+          collection.add({
+            'foo': 'foo/bar',
+          })
+        ]);
+
+        QuerySnapshot snapshot = await collection
+            .where('foo', isEqualTo: FirebaseFirestore.instance.doc('foo/bar'))
+            .get();
+
+        expect(snapshot.docs.length, equals(1));
+        expect(snapshot.docs[0].get('foo'), equals(ref));
       });
     });
   });
