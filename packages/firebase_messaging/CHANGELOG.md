@@ -1,3 +1,7 @@
+## 7.0.1
+
+* Fix the `platform` dependency error on Flutter master
+
 ## 7.0.0
 
 * Depend on `firebase_core` and migrate plugin to use `firebase_core` native SDK versioning features;
