@@ -6,7 +6,6 @@ package io.flutter.plugins.firebaseadmobexample;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
-import io.flutter.plugins.GeneratedPluginRegistrant;
 import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin;
 import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
 
@@ -15,10 +14,10 @@ public class EmbeddingV1Activity extends FlutterActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     FlutterFirebaseCorePlugin.registerWith(
-      registrarFor("io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin"));
+        registrarFor("io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin"));
     // TODO(Salakar) rename as part of re-work FirebaseAdMobPlugin -> FlutterFirebaseAdMobPlugin
     FirebaseDynamicLinksPlugin.registerWith(
-      registrarFor("io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin"));
+        registrarFor("io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin"));
     E2EPlugin.registerWith(registrarFor("dev.flutter.plugins.e2e.E2EPlugin"));
 
     final NativeAdFactory factory = new NativeAdFactoryExample(getLayoutInflater());
