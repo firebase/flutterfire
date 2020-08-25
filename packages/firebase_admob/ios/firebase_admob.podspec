@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
   s.dependency 'Flutter'
   s.dependency 'firebase_core'
   s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
-  s.dependency 'Firebase/AdMob', "~> #{firebase_sdk_version}"
+  s.dependency 'Google-Mobile-Ads-SDK'
 
   s.ios.deployment_target = '8.0'
 
