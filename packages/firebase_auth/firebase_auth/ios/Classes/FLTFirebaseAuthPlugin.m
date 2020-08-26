@@ -911,7 +911,7 @@ NSString *const kErrMsgInvalidCredential =
   @synchronized(self->_authChangeListeners) {
     if (_authChangeListeners[auth.app.name] == nil) {
       _authChangeListeners[auth.app.name] =
-          [[FIRAuth auth] addAuthStateDidChangeListener:authStateChangeListener];
+          [auth addAuthStateDidChangeListener:authStateChangeListener];
     }
   }
 
@@ -927,7 +927,7 @@ NSString *const kErrMsgInvalidCredential =
   @synchronized(self->_idTokenChangeListeners) {
     if (_idTokenChangeListeners[auth.app.name] == nil) {
       _idTokenChangeListeners[auth.app.name] =
-          [[FIRAuth auth] addIDTokenDidChangeListener:idTokenChangeListener];
+          [auth addIDTokenDidChangeListener:idTokenChangeListener];
     }
   }
 

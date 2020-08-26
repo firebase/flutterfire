@@ -101,11 +101,14 @@ void main() {
 }
 
 class App extends StatelessWidget {
+  // Create the initilization Future outside of `build`:
+  Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      // Initialize FlutterFire
-      future: Firebase.initializeApp(),
+      // Initialize FlutterFire:
+      future: _initialization,
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
@@ -191,6 +194,27 @@ class _AppState extends State<App> {
 
 Once initialized, you're ready to get started using FlutterFire!
 
+## Improve iOS Build Times
+
+Currently the Firestore iOS SDK depends on some 500k lines of mostly C++ code which can take upwards of 5 minutes to build in XCode. To reduce build times significantly, you can use a pre-compiled version by adding 1 line to your `ios/Podfile` inside your Flutter project;
+
+`pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '6.26.0'`
+
+Add this line inside your target 'Runner' do block in your Podfile, e.g.:
+
+```
+# ...
+target 'Runner' do
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '6.26.0'
+# ...
+end
+```
+
+Additionally, ensure that you have upgraded your cocoapods to 1.9.1 or higher:
+`gem install cocoapods`
+
+For more information see this issue: https://github.com/FirebaseExtended/flutterfire/issues/2751
+
 ## Overriding Native SDK Versions
 
 FlutterFire internally sets the versions of the native SDKs that each module uses. Each release is tested against a fixed
@@ -216,7 +240,7 @@ Open your `/ios/Podfile` or `/macos/Podfile` file and add any of the globals bel
 
 ```ruby
 # Override Firebase SDK Version
-$FirebaseSDKVersion = '21.1.0'
+$FirebaseSDKVersion = '6.30.0'
 ```
 
 ## Next Steps
