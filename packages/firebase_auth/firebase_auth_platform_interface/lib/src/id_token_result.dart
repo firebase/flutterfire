@@ -21,7 +21,7 @@ class IdTokenResult {
 
   /// The authentication time formatted as UTC string. This is the time the user
   /// authenticated (signed in) and not the time the token was refreshed.
-  DateTime get authTime => _data['issuedAtTimestamp'] == null
+  DateTime get authTime => _data['authTimestamp'] == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(_data['authTimestamp']);
 

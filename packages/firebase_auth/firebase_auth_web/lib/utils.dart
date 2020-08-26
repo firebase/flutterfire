@@ -58,6 +58,7 @@ IdTokenResult convertWebIdTokenResult(firebase.IdTokenResult webIdTokenResult) {
     'claims': webIdTokenResult.claims,
     'expirationTimestamp': webIdTokenResult.expirationTime.millisecondsSinceEpoch,
     'issuedAtTimestamp': webIdTokenResult.issuedAtTime.millisecondsSinceEpoch,
+    'authTimestamp': webIdTokenResult.authTime.millisecondsSinceEpoch,
     'signInProvider': webIdTokenResult.signInProvider,
     'signInSecondFactor': null,
     'token': webIdTokenResult.token,
