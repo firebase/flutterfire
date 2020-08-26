@@ -29,7 +29,7 @@ jobs:
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android
+        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
 # TODO Add test driver - pending AdMob rework.
 #      - name: "Drive Example"
 #        uses: reactivecircus/android-emulator-runner@v2
@@ -54,7 +54,7 @@ jobs:
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-macos-desktop
       - name: "Build iOS Example"
-        run: ./.github/workflows/scripts/build-example.sh ios
+        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
 # TODO Add test driver - pending AdMob rework.
 #      - name: "Drive iOS Example"
 #        run: ./.github/workflows/scripts/drive-example.sh ios
