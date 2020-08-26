@@ -1,6 +1,6 @@
 # Google Performance Monitoring for Firebase
 
-[![pub package](https://img.shields.io/pub/v/firebase_performance.svg)](https://pub.dartlang.org/packages/firebase_performance)
+[![pub package](https://img.shields.io/pub/v/firebase_performance.svg)](https://pub.dev/packages/firebase_performance)
 
 A Flutter plugin to use the [Google Performance Monitoring for Firebase API](https://firebase.google.com/docs/perf-mon/).
 

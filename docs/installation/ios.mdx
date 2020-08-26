@@ -4,23 +4,25 @@ title: iOS Installation
 
 Before using FlutterFire on iOS, you must first connect to your Firebase project with your iOS application.
 
-## Generating iOS credentials
+## Generating a Firebase project configuration file
 
 On the [Firebase Console](https://console.firebase.google.com/project/_/overview), add a new iOS app or select an
-existing iOS app for your Firebase project. The "iOS bundle ID" must match your local project bundle ID. The ID
-can be found within the "General" tab when opening the project with Xcode.
+existing iOS app for your Firebase project. The "iOS bundle ID" must match your local project bundle ID. The bundle ID
+can be found within the "General" tab when opening `ios/Runner.xcworkspace` with Xcode.
 
 Download the `GoogleService-Info.plist` file for the Firebase app.
 
-Next you must add the file to the project using XCode (adding manually via the filesystem won't link the file to the
-project). Using XCode, open the project's `ios/{projectName}.xcworkspace` file. Right click the project name within XCode
+## Installing your Firebase configuration file
+
+Next you must add the file to the project using Xcode (adding manually via the filesystem won't link the file to the
+project). Using Xcode, open the project's `ios/{projectName}.xcworkspace` file. Right click the project name within Xcode
 and select "Add files", as seen below:
 
-
+![hide:Add files via Xcode](ios-add-files-via-xcode.png)
 
 Select the `GoogleService-Info.plist` file you downloaded, and ensure the "Copy items if needed" checkbox is enabled:
 
-
+![hide:Add files via Xcode](ios-xcode-copy-items.png)
 
 ## Initializing FlutterFire
 

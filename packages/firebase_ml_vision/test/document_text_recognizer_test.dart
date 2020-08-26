@@ -48,8 +48,8 @@ void main() {
       });
 
       group('successfully calls native API to', () {
-        test('process an image', () async {
-          final VisionDocumentText text = await recognizer.processImage(image);
+        test('process an image with default options', () async {
+          final text = await recognizer.processImage(image);
 
           expect(text.text, 'Hello');
           expect(log, <Matcher>[
@@ -57,6 +57,33 @@ void main() {
               'DocumentTextRecognizer#processImage',
               arguments: <String, dynamic>{
                 'handle': 0,
+                'options': <String, dynamic>{'hintedLanguages': null},
+                'type': 'file',
+                'path': 'empty',
+                'bytes': null,
+                'metadata': null,
+              },
+            ),
+          ]);
+        });
+
+        test('process an image with non-default options', () async {
+          final hintedLanguages = ['en', 'ru'];
+          final options =
+              CloudDocumentRecognizerOptions(hintedLanguages: hintedLanguages);
+          final recognizerWithOptions =
+              FirebaseVision.instance.cloudDocumentTextRecognizer(options);
+          final text = await recognizerWithOptions.processImage(image);
+
+          expect(text.text, 'Hello');
+          expect(log, <Matcher>[
+            isMethodCall(
+              'DocumentTextRecognizer#processImage',
+              arguments: <String, dynamic>{
+                'handle': 1,
+                'options': <String, dynamic>{
+                  'hintedLanguages': ['en', 'ru']
+                },
                 'type': 'file',
                 'path': 'empty',
                 'bytes': null,
@@ -75,6 +102,7 @@ void main() {
               'DocumentTextRecognizer#processImage',
               arguments: <String, dynamic>{
                 'handle': 0,
+                'options': <String, dynamic>{'hintedLanguages': null},
                 'type': 'file',
                 'path': 'empty',
                 'bytes': null,

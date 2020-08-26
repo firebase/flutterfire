@@ -12,7 +12,14 @@
 - (instancetype)initWithVision:(FIRVision *)vision options:(NSDictionary *)options {
   self = [super init];
   if (self) {
-    _recognizer = [vision cloudDocumentTextRecognizer];
+    FIRVisionCloudDocumentTextRecognizerOptions *cloudDocumentTextRecognizerOptions =
+        [[FIRVisionCloudDocumentTextRecognizerOptions alloc] init];
+    if (options[@"hintedLanguages"] != [NSNull null]) {
+      NSArray<NSString *> *languageHints = options[@"hintedLanguages"];
+      cloudDocumentTextRecognizerOptions.languageHints = languageHints;
+    }
+    _recognizer =
+        [vision cloudDocumentTextRecognizerWithOptions:cloudDocumentTextRecognizerOptions];
   }
   return self;
 }
