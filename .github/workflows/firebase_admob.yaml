@@ -1,4 +1,4 @@
-name: firebase_auth
+name: firebase_admob
 
 on:
   pull_request:
