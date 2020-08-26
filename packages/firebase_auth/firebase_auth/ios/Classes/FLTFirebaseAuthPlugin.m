@@ -247,7 +247,7 @@ NSString *const kErrMsgInvalidCredential =
 #pragma mark - AppDelegate
 
 #if TARGET_OS_IPHONE
-- (bool)application:(UIApplication *)application
+- (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)notification
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
   if ([[FIRAuth auth] canHandleNotification:notification]) {
