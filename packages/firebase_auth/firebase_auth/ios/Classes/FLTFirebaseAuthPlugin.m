@@ -603,11 +603,11 @@ NSString *const kErrMsgInvalidCredential =
                                   @{kArgumentToken : (id)tokenResult.token ?: [NSNull null]});
                             } else {
                               long expirationTimestamp =
-                                  (long)[tokenResult.expirationDate timeIntervalSince1970];
+                                  (long)[tokenResult.expirationDate timeIntervalSince1970] * 1000;
                               long authTimestamp =
-                                  (long)[tokenResult.authDate timeIntervalSince1970];
+                                  (long)[tokenResult.authDate timeIntervalSince1970] * 1000;
                               long issuedAtTimestamp =
-                                  (long)[tokenResult.issuedAtDate timeIntervalSince1970];
+                                  (long)[tokenResult.issuedAtDate timeIntervalSince1970] * 1000;
 
                               NSMutableDictionary *tokenData =
                                   [[NSMutableDictionary alloc] initWithDictionary:@{

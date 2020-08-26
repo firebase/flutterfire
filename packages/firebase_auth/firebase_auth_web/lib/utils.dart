@@ -56,8 +56,10 @@ AdditionalUserInfo convertWebAdditionalUserInfo(
 IdTokenResult convertWebIdTokenResult(firebase.IdTokenResult webIdTokenResult) {
   return IdTokenResult(<String, dynamic>{
     'claims': webIdTokenResult.claims,
-    'expirationTimestamp': webIdTokenResult.expirationTime.millisecond,
-    'issuedAtTimestamp': webIdTokenResult.issuedAtTime.millisecond,
+    'expirationTimestamp':
+        webIdTokenResult.expirationTime.millisecondsSinceEpoch,
+    'issuedAtTimestamp': webIdTokenResult.issuedAtTime.millisecondsSinceEpoch,
+    'authTimestamp': webIdTokenResult.authTime.millisecondsSinceEpoch,
     'signInProvider': webIdTokenResult.signInProvider,
     'signInSecondFactor': null,
     'token': webIdTokenResult.token,
