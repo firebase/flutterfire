@@ -1,7 +1,7 @@
 ---
 name: "\U0001F4DA Documentation Feedback"
 about: Report an issue with the firebase.flutter.dev documentation or suggest an improvement.
-title: "[\U0001F4DA] You documentation feedback title (CHANGE ME)"
+title: "[\U0001F4DA] Your documentation feedback title (CHANGE ME)"
 labels: 'good first issue, type: documentation'
 assignees: ''
 
