@@ -4,6 +4,7 @@ about: Issues identifying existing FlutterFire features that are not working as 
 title: "[<FIREBASE_PRODUCT>] <TITLE>"
 labels: bug
 assignees: ''
+
 ---
 
 **Describe the bug**
