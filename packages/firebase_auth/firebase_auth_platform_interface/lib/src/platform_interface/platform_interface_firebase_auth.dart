@@ -497,7 +497,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Signs out the current user.
   ///
-  /// If successful, it also signs the user in into the app and updates
+  /// If successful, it also updates
   /// any [authStateChanges], [idTokenChanges] or [userChanges] stream
   /// listeners.
   Future<void> signOut() async {
