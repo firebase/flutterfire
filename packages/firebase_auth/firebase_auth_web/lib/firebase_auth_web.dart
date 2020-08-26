@@ -129,7 +129,20 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<ActionCodeInfo> checkActionCode(String code) async {
-    return convertWebActionCodeInfo(await _webAuth.checkActionCode(code));
+    try {
+      return convertWebActionCodeInfo(await _webAuth.checkActionCode(code));
+    } catch (e) {
+      throw throwFirebaseAuthException(e);
+    }
+  }
+
+  @override
+  Future<void> confirmPasswordReset(String code, String newPassword) async {
+    try {
+      await _webAuth.confirmPasswordReset(code, newPassword);
+    } catch (e) {
+      throw throwFirebaseAuthException(e);
+    }
   }
 
   @override
