@@ -180,9 +180,10 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       Map<dynamic, dynamic> arguments) async {
     final int handle = arguments['handle'];
     final int token = arguments['token'];
+    final String smsCode = arguments['smsCode'];
 
     PhoneAuthCredential phoneAuthCredential =
-        PhoneAuthProvider.credentialFromToken(token);
+        PhoneAuthProvider.credentialFromToken(token, smsCode: smsCode);
     PhoneAuthCallbacks callbacks = _phoneAuthCallbacks[handle];
     callbacks.verificationCompleted(phoneAuthCredential);
   }

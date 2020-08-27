@@ -15,6 +15,12 @@ dependencies:
     path: ../../../firebase_dynamic_links
   uuid: ^2.0.2
 
+dependency_overrides:
+  firebase_core:
+    path: ../../../firebase_core/firebase_core
+  firebase_dynamic_links:
+    path: ../../../firebase_dynamic_links
+
 dev_dependencies:
   pedantic: ^1.8.0
   drive: 0.0.1-6.0.pre
