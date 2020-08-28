@@ -32,7 +32,7 @@ Along with the below changes, the plugin has undergone a quality of life update 
 - **BREAKING**: Getting a collection parent document via `parent()` has been changed to a getter `parent`.
 - **BREAKING**: Getting the collection `path` now always returns the `path` without leading and trailing slashes.
 - **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
-- **FIX**: Equality checking of `CollectionReference` now does not depend on the original path used to create the `CollectionReference`. 
+- **FIX**: Equality checking of `CollectionReference` now does not depend on the original path used to create the `CollectionReference`.
 
 **`Query`**:
 - **BREAKING**: The internal query logic has been overhauled to better assert invalid queries locally.
