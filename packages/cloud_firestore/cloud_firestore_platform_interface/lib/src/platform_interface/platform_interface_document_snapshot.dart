@@ -112,4 +112,11 @@ class DocumentSnapshotPlatform extends PlatformInterface {
 
     return _findComponent(0, snapshotData);
   }
+
+  /// Gets a nested field by [String] or [FieldPath] from the snapshot.
+  ///
+  /// Data can be accessed by providing a dot-notated path or [FieldPath]
+  /// which recursively finds the specified data. If no data could be found
+  /// at the specified path, a [StateError] will be thrown.
+  dynamic operator [](dynamic field) => get(field);
 }
