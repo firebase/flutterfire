@@ -787,6 +787,10 @@ public class FlutterFirebaseAuthPlugin
                   authCredentials.put(phoneAuthCredentialHashCode, phoneAuthCredential);
                   event.put(Constants.TOKEN, phoneAuthCredentialHashCode);
 
+                  if (phoneAuthCredential.getSmsCode() != null) {
+                    event.put(Constants.SMS_CODE, phoneAuthCredential.getSmsCode());
+                  }
+
                   channel.invokeMethod(
                       "Auth#phoneVerificationCompleted",
                       event,

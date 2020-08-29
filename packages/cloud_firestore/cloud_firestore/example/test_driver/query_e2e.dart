@@ -1114,6 +1114,32 @@ void runQueryTests() {
         expect(snapshot.docs.length, equals(1));
         expect(snapshot.docs[0].get('foo'), equals('bar'));
       });
+
+      test('returns returns and encoded DocumentReferences', () async {
+        CollectionReference collection =
+            await initializeTest('where-document-reference');
+
+        DocumentReference ref = FirebaseFirestore.instance.doc('foo/bar');
+
+        await Future.wait([
+          collection.add({
+            'foo': ref,
+          }),
+          collection.add({
+            'foo': FirebaseFirestore.instance.doc('bar/baz'),
+          }),
+          collection.add({
+            'foo': 'foo/bar',
+          })
+        ]);
+
+        QuerySnapshot snapshot = await collection
+            .where('foo', isEqualTo: FirebaseFirestore.instance.doc('foo/bar'))
+            .get();
+
+        expect(snapshot.docs.length, equals(1));
+        expect(snapshot.docs[0].get('foo'), equals(ref));
+      });
     });
   });
 }

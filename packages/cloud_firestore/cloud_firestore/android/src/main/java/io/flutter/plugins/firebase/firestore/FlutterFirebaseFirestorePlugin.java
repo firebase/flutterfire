@@ -493,8 +493,10 @@ public class FlutterFirebaseFirestorePlugin
     switch (call.method) {
       case "Firestore#removeListener":
         int handle = Objects.requireNonNull(call.argument("handle"));
-        listenerRegistrations.get(handle).remove();
-        listenerRegistrations.remove(handle);
+        if (listenerRegistrations.get(handle) != null) {
+          listenerRegistrations.get(handle).remove();
+          listenerRegistrations.remove(handle);
+        }
         result.success(null);
         return;
       case "Firestore#disableNetwork":

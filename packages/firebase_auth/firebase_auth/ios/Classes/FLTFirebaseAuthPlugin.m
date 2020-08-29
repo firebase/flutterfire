@@ -247,7 +247,7 @@ NSString *const kErrMsgInvalidCredential =
 #pragma mark - AppDelegate
 
 #if TARGET_OS_IPHONE
-- (bool)application:(UIApplication *)application
+- (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)notification
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
   if ([[FIRAuth auth] canHandleNotification:notification]) {
@@ -259,7 +259,7 @@ NSString *const kErrMsgInvalidCredential =
 
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-  [[FIRAuth auth] setAPNSToken:deviceToken type:FIRAuthAPNSTokenTypeProd];
+  [[FIRAuth auth] setAPNSToken:deviceToken type:FIRAuthAPNSTokenTypeUnknown];
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary *)options {
@@ -603,11 +603,11 @@ NSString *const kErrMsgInvalidCredential =
                                   @{kArgumentToken : (id)tokenResult.token ?: [NSNull null]});
                             } else {
                               long expirationTimestamp =
-                                  (long)[tokenResult.expirationDate timeIntervalSince1970];
+                                  (long)[tokenResult.expirationDate timeIntervalSince1970] * 1000;
                               long authTimestamp =
-                                  (long)[tokenResult.authDate timeIntervalSince1970];
+                                  (long)[tokenResult.authDate timeIntervalSince1970] * 1000;
                               long issuedAtTimestamp =
-                                  (long)[tokenResult.issuedAtDate timeIntervalSince1970];
+                                  (long)[tokenResult.issuedAtDate timeIntervalSince1970] * 1000;
 
                               NSMutableDictionary *tokenData =
                                   [[NSMutableDictionary alloc] initWithDictionary:@{
@@ -911,7 +911,7 @@ NSString *const kErrMsgInvalidCredential =
   @synchronized(self->_authChangeListeners) {
     if (_authChangeListeners[auth.app.name] == nil) {
       _authChangeListeners[auth.app.name] =
-          [[FIRAuth auth] addAuthStateDidChangeListener:authStateChangeListener];
+          [auth addAuthStateDidChangeListener:authStateChangeListener];
     }
   }
 
@@ -927,7 +927,7 @@ NSString *const kErrMsgInvalidCredential =
   @synchronized(self->_idTokenChangeListeners) {
     if (_idTokenChangeListeners[auth.app.name] == nil) {
       _idTokenChangeListeners[auth.app.name] =
-          [[FIRAuth auth] addIDTokenDidChangeListener:idTokenChangeListener];
+          [auth addIDTokenDidChangeListener:idTokenChangeListener];
     }
   }
 

@@ -357,6 +357,7 @@ class Query {
     // Conditions can be chained from other [Query] instances
     void addCondition(dynamic field, String operator, dynamic value) {
       List<dynamic> condition;
+      value = _CodecUtility.valueEncode(value);
 
       if (field == FieldPath.documentId) {
         condition = <dynamic>[field, operator, value];

@@ -4,7 +4,7 @@ title: MacOS Installation
 
 Before using FlutterFire on MacOS, you must first connect to your Firebase project with your MacOS application.
 
-## Generating Firebase credentials
+## Generating a Firebase project configuration file
 
 On the [Firebase Console](https://console.firebase.google.com/project/_/overview), add a new iOS app or select an
 existing iOS app for your Firebase project. The "iOS bundle ID" must match your local project bundle ID for your MacOS application. The bundle ID
@@ -12,7 +12,7 @@ can be found within the "General" tab when opening `macos/Runner.xcworkspace` wi
 
 Download the `GoogleService-Info.plist` file for the Firebase app.
 
-## Installing Firebase credentials
+## Installing your Firebase configuration file
 
 Next you must add the file to the project using Xcode (adding manually via the filesystem won't link the file to the
 project). Using Xcode, open the project's `macos/{projectName}.xcworkspace` file. Right click the project name within Xcode
