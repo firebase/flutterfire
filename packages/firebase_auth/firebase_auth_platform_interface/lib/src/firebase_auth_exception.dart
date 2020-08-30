@@ -56,6 +56,8 @@ class FirebaseAuthException extends FirebaseException implements Exception {
         return AuthExceptionStatusCode.operationNotAllowed;
       case 'account-exists-with-different-credential':
         return AuthExceptionStatusCode.accountExistsWithDifferentCredential;
+      case 'network-request-failed':
+        return AuthExceptionStatusCode.networkRequestFailed;
       default:
         return AuthExceptionStatusCode.undefined;
     }

@@ -21,6 +21,9 @@ enum AuthExceptionStatusCode {
   /// Used if the email exists for multiple Firebase user's providers.
   accountExistsWithDifferentCredential,
 
+  /// Used if the request failed due to network issues.
+  networkRequestFailed,
+
   /// Used if the status is undefined.
   undefined
 }
