@@ -32,7 +32,7 @@ class Crashlytics {
     // forceReport=true.
     FlutterError.dumpErrorToConsole(details, forceReport: true);
 
-    _recordError(details.exceptionAsString(), details.stack,
+    await _recordError(details.exceptionAsString(), details.stack,
         context: details.context,
         information: details.informationCollector == null
             ? null
@@ -47,7 +47,7 @@ class Crashlytics {
       {dynamic context}) async {
     print('Error caught by Crashlytics plugin <recordError>:');
 
-    _recordError(exception, stack, context: context);
+    await _recordError(exception, stack, context: context);
   }
 
   void crash() {
