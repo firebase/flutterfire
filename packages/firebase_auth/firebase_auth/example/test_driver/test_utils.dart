@@ -50,7 +50,7 @@ void ensureSignedIn(testEmail) async {
       await auth.createUserWithEmailAndPassword(
           email: testEmail, password: TEST_PASSWORD);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
+      if (e.statusCode == AuthExceptionStatusCode.emailAlreadyInUse) {
         await auth.signInWithEmailAndPassword(
             email: testEmail, password: TEST_PASSWORD);
       }

@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/exception.dart';
@@ -52,7 +53,8 @@ void main() {
 
       FirebaseAuthException result =
           platformExceptionToFirebaseAuthException(platformException);
-      expect(result.code, equals('unknown'));
+      // ignore: unnecessary_cast
+      expect((result as FirebaseException).code, equals('unknown'));
       expect(result.message, equals('PlatformException Message'));
       expect(result.email, isNull);
 
@@ -79,7 +81,8 @@ void main() {
 
       FirebaseAuthException result =
           platformExceptionToFirebaseAuthException(platformException);
-      expect(result.code, equals('A Known Code'));
+      // ignore: unnecessary_cast
+      expect((result as FirebaseException).code, equals('A Known Code'));
       expect(result.message, equals('A Known Message'));
       expect(result.email, 'test@email.com');
 
@@ -96,7 +99,8 @@ void main() {
 
       FirebaseAuthException result =
           platformExceptionToFirebaseAuthException(platformException);
-      expect(result.code, equals('unknown'));
+      // ignore: unnecessary_cast
+      expect((result as FirebaseException).code, equals('unknown'));
       expect(result.message, equals('a message'));
       expect(result.email, null);
 
@@ -111,7 +115,8 @@ void main() {
 
       FirebaseAuthException result =
           platformExceptionToFirebaseAuthException(platformException);
-      expect(result.code, equals('unknown'));
+      // ignore: unnecessary_cast
+      expect((result as FirebaseException).code, equals('unknown'));
       expect(result.message, equals('a message'));
       expect(result.email, isNull);
 
@@ -128,7 +133,8 @@ void main() {
 
       FirebaseAuthException result =
           platformExceptionToFirebaseAuthException(platformException);
-      expect(result.code, equals('A Known Code'));
+      // ignore: unnecessary_cast
+      expect((result as FirebaseException).code, equals('A Known Code'));
       expect(result.message, equals('A Known Message'));
       expect(result.email, 'test@email.com');
 

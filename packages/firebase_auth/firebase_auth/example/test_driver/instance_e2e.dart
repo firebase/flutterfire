@@ -262,7 +262,7 @@ void runInstanceTests() {
               email: regularTestEmail, password: '123456');
           fail("Should have thrown FirebaseAuthException");
         } on FirebaseAuthException catch (e) {
-          expect(e.code, equals('email-already-in-use'));
+          expect(e.statusCode, AuthExceptionStatusCode.emailAlreadyInUse);
         } catch (e) {
           fail(e.toString());
         }
@@ -275,7 +275,7 @@ void runInstanceTests() {
               email: '!!!!!', password: '123456');
           fail("Should have thrown FirebaseAuthException");
         } on FirebaseAuthException catch (e) {
-          expect(e.code, equals('invalid-email'));
+          expect(e.statusCode, AuthExceptionStatusCode.invalidEmail);
         } catch (e) {
           fail(e.toString());
         }
@@ -288,7 +288,7 @@ void runInstanceTests() {
               email: generateRandomEmail(), password: '1');
           fail("Should have thrown FirebaseAuthException");
         } on FirebaseAuthException catch (e) {
-          expect(e.code, equals('weak-password'));
+          expect(e.statusCode, AuthExceptionStatusCode.weakPassword);
         } catch (e) {
           fail(e.toString());
         }
@@ -315,7 +315,7 @@ void runInstanceTests() {
           await auth.fetchSignInMethodsForEmail('foobar');
           fail('Should have thrown');
         } on FirebaseAuthException catch (e) {
-          expect(e.code, equals("invalid-email"));
+          expect(e.statusCode, AuthExceptionStatusCode.invalidEmail);
         } catch (e) {
           fail(e.toString());
         }
@@ -375,7 +375,7 @@ void runInstanceTests() {
           await auth.sendPasswordResetEmail(email: 'does-not-exist@bar.com');
           fail('Should have thrown');
         } on FirebaseAuthException catch (e) {
-          expect(e.code, equals('user-not-found'));
+          expect(e.statusCode, AuthExceptionStatusCode.userNotFound);
         } catch (e) {
           fail(e.toString());
         }
@@ -720,7 +720,8 @@ void runInstanceTests() {
         Exception e = await getError();
         expect(e, isA<FirebaseAuthException>());
         FirebaseAuthException exception = e as FirebaseAuthException;
-        expect(exception.code, equals('invalid-phone-number'));
+        expect(
+            exception.statusCode, AuthExceptionStatusCode.invalidPhoneNumber);
       });
 
       test('should auto verify phone number', () async {
