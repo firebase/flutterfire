@@ -70,6 +70,8 @@ class FirebaseAuthException extends FirebaseException implements Exception {
         return AuthExceptionStatusCode.userMismatch;
       case 'no-such-provider':
         return AuthExceptionStatusCode.noSuchProvider;
+      case 'no-current-user':
+        return AuthExceptionStatusCode.noCurrentUser;
       default:
         return AuthExceptionStatusCode.unknown;
     }
