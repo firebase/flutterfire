@@ -98,6 +98,28 @@ By default background messaging is not enabled. To handle messages in the backgr
    }
    ```
 
+1. If you create project with Kotlin, add an `Application.kt` class to your app in the same directory as your `MainActivity.kt`. This is typically found in `<app-name>/android/app/src/main/kotlin/<app-organization-path>/`.
+
+   ```kotlin
+   package io.flutter.plugins.firebasemessagingexample
+
+   import io.flutter.app.FlutterApplication
+   import io.flutter.plugin.common.PluginRegistry
+   import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback
+   import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService
+
+   class Application : FlutterApplication(), PluginRegistrantCallback {
+       override fun onCreate() {
+           super.onCreate()
+           FlutterFirebaseMessagingService.setPluginRegistrant(this)
+       }
+
+       override fun registerWith(registry: PluginRegistry?) {
+           io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin.registerWith(registry?.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"));
+       }
+   }
+   ```
+
 1. In `Application.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
 
    ```java
