@@ -24,6 +24,27 @@ enum AuthExceptionStatusCode {
   /// Used if the request failed due to network issues.
   networkRequestFailed,
 
-  /// Used if the status is undefined.
-  undefined
+  /// Used if a user being created already exists.
+  emailAlreadyInUse,
+
+  /// Used if the request to create a user has a weak password.
+  weakPassword,
+
+  /// Used if the phone verification fails with an invalid phone number.
+  invalidPhoneNumber,
+
+  /// Used if the verification ID used to create the phone auth credential is invalid.
+  invalidVerificationId,
+
+  /// Used if the supplied credentials do not correspond to the previously signed in user.
+  userMismatch,
+
+  /// Used if the user was not linked to an account with the given provider.
+  noSuchProvider,
+
+  /// Used if there is no user currently signed in.
+  noCurrentUser,
+
+  /// Used if the status is unknown.
+  unknown
 }
