@@ -11,6 +11,7 @@ export 'src/platform_interface/platform_interface_confirmation_result.dart';
 export 'src/platform_interface/platform_interface_recaptcha_verifier_factory.dart';
 
 export 'src/firebase_auth_exception.dart';
+export 'src/auth_exception_status_code.dart';
 export 'src/auth_credential.dart';
 export 'src/action_code_info.dart';
 export 'src/action_code_settings.dart';

@@ -14,15 +14,15 @@ class FirebaseAuthException extends FirebaseException implements Exception {
   @protected
   FirebaseAuthException(
       {@required this.message,
-      this.code,
+      String code,
       this.email,
       this.credential,
       this.phoneNumber,
       this.tenantId})
       : super(plugin: 'firebase_auth', message: message, code: code);
 
-  /// Unique error code
-  final String code;
+  @Deprecated('Deprecated in favor of `.statusCode`.')
+  String get code => super.code;
 
   /// Complete error message.
   final String message;
@@ -39,9 +39,9 @@ class FirebaseAuthException extends FirebaseException implements Exception {
   /// The tenant ID being used for sign-in/linking.
   final String tenantId;
 
-  /// The exception code parsed into the [AuthExceptionStatusCode] enum.
+  /// The error code.
   AuthExceptionStatusCode get statusCode {
-    switch (code) {
+    switch (super.code) {
       case 'invalid-email':
         return AuthExceptionStatusCode.invalidEmail;
       case 'user-disabled':
@@ -58,8 +58,20 @@ class FirebaseAuthException extends FirebaseException implements Exception {
         return AuthExceptionStatusCode.accountExistsWithDifferentCredential;
       case 'network-request-failed':
         return AuthExceptionStatusCode.networkRequestFailed;
+      case 'email-already-in-use':
+        return AuthExceptionStatusCode.emailAlreadyInUse;
+      case 'weak-password':
+        return AuthExceptionStatusCode.weakPassword;
+      case 'invalid-phone-number':
+        return AuthExceptionStatusCode.invalidPhoneNumber;
+      case 'invalid-verification-id':
+        return AuthExceptionStatusCode.invalidVerificationId;
+      case 'user-mismatch':
+        return AuthExceptionStatusCode.userMismatch;
+      case 'no-such-provider':
+        return AuthExceptionStatusCode.noSuchProvider;
       default:
-        return AuthExceptionStatusCode.undefined;
+        return AuthExceptionStatusCode.unknown;
     }
   }
 }
