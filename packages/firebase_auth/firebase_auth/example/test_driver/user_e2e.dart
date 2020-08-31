@@ -190,7 +190,7 @@ void runUserTests() {
               PhoneAuthProvider.credential(
                   verificationId: 'test', smsCode: 'test'));
         } on FirebaseAuthException catch (e) {
-          expect(e.statusCode, equals("invalid-verification-id"));
+          expect(e.statusCode, AuthExceptionStatusCode.invalidVerificationId);
           expect(
               e.message,
               equals(
