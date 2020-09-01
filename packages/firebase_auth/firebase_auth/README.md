@@ -9,7 +9,7 @@ To learn more about Firebase, please visit the [Firebase website](https://fireba
 
 > If you are migrating your existing project to these new plugins, please start with the [migration guide](https://firebase.flutter.dev/docs/migration)
 
-To get started with FlutterFire, please [see the documentation](https://firebase.flutter.dev/docs/auth/overview)
+To get started with Firebase Auth for FlutterFire, please [see the documentation](https://firebase.flutter.dev/docs/auth/overview)
 available at [https://firebase.flutter.dev](https://firebase.flutter.dev/docs/overview)
 
 ## Usage
