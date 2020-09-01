@@ -10,7 +10,7 @@ To learn more about Firebase, please visit the [Firebase website](https://fireba
 
 > If you are migrating your existing project to these new plugins, please start with the [migration guide](https://firebase.flutter.dev/docs/migration)
 
-To get started with FlutterFire, please [see the documentation](https://firebase.flutter.dev/docs/crashlytics/overview)
+To get started with Crashlytics for FlutterFire, please [see the documentation](https://firebase.flutter.dev/docs/crashlytics/overview)
 available at [https://firebase.flutter.dev](https://firebase.flutter.dev/crashlytics/overview)
 
 ## Usage
@@ -31,7 +31,7 @@ FirebaseCrashlytics.instance.log("Higgs-Boson detected! Bailing out");
 ```
 
 For more information on how to use this plugin,
-please visit the [Authentication Usage documentation](https://firebase.flutter.dev/docs/crashlytics/usage)
+please visit the [Crashlytics Usage documentation](https://firebase.flutter.dev/docs/crashlytics/usage)
 
 ## Issues and feedback
 
