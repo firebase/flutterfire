@@ -8,12 +8,39 @@ To learn more about Firebase Cloud Firestore, please visit the [Firebase website
 
 ## Getting Started
 
+> If you are migrating your existing project to these new plugins, please start with the [migration guide](https://firebase.flutter.dev/docs/migration)
+
 To get started with Cloud Firestore for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/firestore/overview) available
  at [https://firebase.flutter.dev](https://firebase.flutter.dev)
 
 ## Usage
 
-To use this plugin, please visit the [Firestore Usage documentation](https://firebase.flutter.dev/docs/firestore/usage)
+To use any of the Firebase services, FlutterFire needs to be initialized.  To initialize FlutterFire,
+call the `initializeApp` method on the `Firebase` class:
+
+```dart
+await Firebase.initializeApp();
+```
+
+### Basic Example
+
+When getting document data from Firestore, it is returned as a `DocumentSnapshot`. A snapshot is always returned,
+even if no document exists, however you can use the `exists` property to determine if the document exists:
+
+```dart
+FirebaseFirestore.instance
+  .collection('users')
+  .document(userId)
+  .get()
+  .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      print('Document exists on the database');
+    }
+  });
+```
+For more information on how to use this plugin,
+please visit the [Firestore Usage documentation](https://firebase.flutter.dev/docs/firestore/usage)
+
 
 ## Issues and feedback
 
