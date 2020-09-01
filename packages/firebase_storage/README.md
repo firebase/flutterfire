@@ -4,40 +4,42 @@
 
 A Flutter plugin to use the [Firebase Cloud Storage API](https://firebase.google.com/products/storage/).
 
-For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
-
-## Usage
-
-To use this plugin, add `firebase_storage` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
-
-### Logging
-
-If you wish to see status events for your upload tasks in your logs, you should listen to the `StorageUploadTask.events` stream.  
-This could look like the following if you are using `StorageReference.putData`:
-
-```dart
-final StorageReference storageReference = FirebaseStorage().ref().child(path);
-
-final StorageUploadTask uploadTask = storageReference.putData(data);
-
-final StreamSubscription<StorageTaskEvent> streamSubscription = uploadTask.events.listen((event) {
-  // You can use this to notify yourself or your user in any kind of way.
-  // For example: you could use the uploadTask.events stream in a StreamBuilder instead
-  // to show your user what the current status is. In that case, you would not need to cancel any
-  // subscription as StreamBuilder handles this automatically.
-
-  // Here, every StorageTaskEvent concerning the upload is printed to the logs.
-  print('EVENT ${event.type}');
-});
-
-// Cancel your subscription when done.
-await uploadTask.onComplete;
-streamSubscription.cancel();
-```
+To learn more about Firebase, please visit the [Firebase website](https://firebase.google.com)
 
 ## Getting Started
 
-See the `example` directory for a complete sample app using Firebase Cloud Storage.
+> If you are migrating your existing project to these new plugins, please start with the [migration guide](https://firebase.flutter.dev/docs/migration)
+
+To get started with Cloud Storage for FlutterFire, please [see the documentation](https://firebase.flutter.dev/docs/storage/overview)
+available at [https://firebase.flutter.dev](https://firebase.flutter.dev/docs/overview)
+
+## Usage
+
+To use any of the Firebase services, FlutterFire needs to be initialized.  To initialize FlutterFire,
+call the `initializeApp` method on the `Firebase` class:
+
+```dart
+await Firebase.initializeApp();
+```
+
+### Basic Example
+
+To upload a file to Firebase Storage, you need to first create a reference for the file, and then call either the
+`putFile` or `putBlob` method that takes the passed data and uploads them to Firebase Storage:
+
+```dart
+Future<void> uploadFile() {
+  // Create bucket storage reference to not yet existing file
+  Reference ref = FirebaseStorage.instance.ref('/file-upload-test.txt');
+
+  // Upload file
+  UploadTask task = ref.putFile(file);
+}
+```
+
+For more information on how to use this plugin,
+please visit the [Storage Usage documentation](https://firebase.flutter.dev/docs/storage/overview)
+
 
 ## Issues and feedback
 
