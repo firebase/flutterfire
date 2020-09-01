@@ -229,7 +229,7 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
           email: _userEmail,
           actionCodeSettings: ActionCodeSettings(
             url:
-            'https://flutterfireptruiz.page.link/emailSignin',
+            'https://react-native-firebase-testing.firebaseapp.com/emailSignin',
             handleCodeInApp: true,
             iOS: iosAppInfoMap,
             android: androidAppInfoMap,
