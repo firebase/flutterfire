@@ -18,7 +18,7 @@ to Firebase the next time the application is launched.
 
 Call the `setCrashlyticsCollectionEnabled` method to toggle Crashlytics collection status.
 
-For example to ensure enabled when your app is in debug mode you can do the following:
+For example to ensure it is disabled when your app is in debug mode you can do the following:
 
 ```dart
 import 'package:flutter/foundation.dart' show kDebugMode;
@@ -26,9 +26,10 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 // ...
 
 if (kDebugMode) {
-  // Force enable crashlytics collection enabled if we're testing it in debug.
+  // Force disable Crashlytics collection while doing every day development.
+  // Temporarily toggle this to true if you want to test crash reporting in your app.
   await FirebaseCrashlytics.instance
-      .setCrashlyticsCollectionEnabled(true);
+      .setCrashlyticsCollectionEnabled(false);
 } else {
   // Handle Crashlytics enabled status when not in Debug,
   // e.g. allow your users to opt-in to crash reporting.
