@@ -10,23 +10,21 @@
 NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/firebase_crashlytics";
 
 // Argument Keys
-NSString *const kArgumentException = @"exception";
-NSString *const kArgumentInformation = @"information";
-NSString *const kArgumentStackTraceElements = @"stackTraceElements";
-NSString *const kArgumentContext = @"context";
-NSString *const kArgumentIdentifier = @"identifier";
-NSString *const kArgumentKey = @"key";
-NSString *const kArgumentValue = @"value";
-NSString *const kArgumentMessage = @"message";
-NSString *const kArgumentCode = @"code";
+NSString *const kCrashlyticsArgumentException = @"exception";
+NSString *const kCrashlyticsArgumentInformation = @"information";
+NSString *const kCrashlyticsArgumentStackTraceElements = @"stackTraceElements";
+NSString *const kCrashlyticsArgumentContext = @"context";
+NSString *const kCrashlyticsArgumentIdentifier = @"identifier";
+NSString *const kCrashlyticsArgumentKey = @"key";
+NSString *const kCrashlyticsArgumentValue = @"value";
 
-NSString *const kArgumentFile = @"file";
-NSString *const kArgumentLine = @"line";
-NSString *const kArgumentMethod = @"method";
+NSString *const kCrashlyticsArgumentFile = @"file";
+NSString *const kCrashlyticsArgumentLine = @"line";
+NSString *const kCrashlyticsArgumentMethod = @"method";
 
-NSString *const kArgumentEnabled = @"enabled";
-NSString *const kArgumentUnsentReports = @"unsentReports";
-NSString *const kArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecution";
+NSString *const kCrashlyticsArgumentEnabled = @"enabled";
+NSString *const kCrashlyticsArgumentUnsentReports = @"unsentReports";
+NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecution";
 
 @interface FLTFirebaseCrashlyticsPlugin ()
 @end
@@ -77,7 +75,6 @@ NSString *const kArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecu
   } else if ([@"Crashlytics#log" isEqualToString:call.method]) {
     [self log:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Crashlytics#crash" isEqualToString:call.method]) {
-    // https://firebase.google.com/docs/crashlytics/test-implementation?platform=ios
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wall"
     @throw
@@ -103,10 +100,10 @@ NSString *const kArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecu
 #pragma mark - Firebase Crashlytics API
 
 - (void)recordError:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *context = arguments[@"context"];
-  NSString *information = arguments[@"information"];
-  NSString *dartExceptionMessage = arguments[@"exception"];
-  NSArray *errorElements = arguments[@"stackTraceElements"];
+  NSString *context = arguments[kCrashlyticsArgumentContext];
+  NSString *information = arguments[kCrashlyticsArgumentInformation];
+  NSString *dartExceptionMessage = arguments[kCrashlyticsArgumentException];
+  NSArray *errorElements = arguments[kCrashlyticsArgumentStackTraceElements];
 
   // Log additional information so it's captured on the Firebase Crashlytics dashboard.
   if ([information length] != 0) {
@@ -142,13 +139,13 @@ NSString *const kArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecu
 }
 
 - (void)setUserIdentifier:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  [[FIRCrashlytics crashlytics] setUserID:arguments[@"identifier"]];
+  [[FIRCrashlytics crashlytics] setUserID:arguments[kCrashlyticsArgumentIdentifier]];
   result.success(nil);
 }
 
 - (void)setCustomKey:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *key = arguments[@"key"];
-  NSString *value = arguments[@"value"];
+  NSString *key = arguments[kCrashlyticsArgumentKey];
+  NSString *value = arguments[kCrashlyticsArgumentValue];
   [[FIRCrashlytics crashlytics] setCustomValue:value forKey:key];
   result.success(nil);
 }
@@ -161,7 +158,7 @@ NSString *const kArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecu
 
 - (void)setCrashlyticsCollectionEnabled:(id)arguments
                    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  BOOL enabled = [arguments[@"enabled"] boolValue];
+  BOOL enabled = [arguments[kCrashlyticsArgumentEnabled] boolValue];
   [[FIRCrashlytics crashlytics] setCrashlyticsCollectionEnabled:enabled];
   result.success(@{
     @"isCrashlyticsCollectionEnabled" :
@@ -171,7 +168,7 @@ NSString *const kArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecu
 
 - (void)checkForUnsentReportsWithMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   [[FIRCrashlytics crashlytics] checkForUnsentReportsWithCompletion:^(BOOL unsentReports) {
-    result.success(@{@"unsentReports" : @(unsentReports)});
+    result.success(@{kCrashlyticsArgumentUnsentReports : @(unsentReports)});
   }];
 }
 
@@ -187,16 +184,16 @@ NSString *const kArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecu
 
 - (void)didCrashOnPreviousExecutionWithMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   BOOL didCrash = [[FIRCrashlytics crashlytics] didCrashDuringPreviousExecution];
-  result.success(@{kArgumentDidCrashOnPreviousExecution : @(didCrash)});
+  result.success(@{kCrashlyticsArgumentDidCrashOnPreviousExecution : @(didCrash)});
 }
 
 #pragma mark - Utilities
 
 - (FIRStackFrame *)generateFrame:(NSDictionary *)errorElement {
-  FIRStackFrame *frame =
-      [FIRStackFrame stackFrameWithSymbol:[errorElement valueForKey:@"method"]
-                                     file:[errorElement valueForKey:@"file"]
-                                     line:[[errorElement valueForKey:@"line"] intValue]];
+  FIRStackFrame *frame = [FIRStackFrame
+      stackFrameWithSymbol:[errorElement valueForKey:kCrashlyticsArgumentMethod]
+                      file:[errorElement valueForKey:kCrashlyticsArgumentFile]
+                      line:[[errorElement valueForKey:kCrashlyticsArgumentLine] intValue]];
   return frame;
 }
 
