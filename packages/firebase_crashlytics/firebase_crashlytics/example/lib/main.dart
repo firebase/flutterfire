@@ -162,7 +162,7 @@ class _MyAppState extends State<MyApp> {
                 duration: Duration(seconds: 5),
               ));
 
-              // // Example of an exception that does not get caught
+              // Example of an exception that does not get caught
               // by `FlutterError.onError` but is caught by
               // `runZonedGuarded`.
               runZonedGuarded(() {
