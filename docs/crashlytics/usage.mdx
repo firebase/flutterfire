@@ -12,23 +12,50 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 ## Sending reports to Crashlytics
 
 To send report data to Crashlytics, the **application must be restarted**.  Crashlytics automatically sends any crash reports
-to Firebase next time the application is launched
+to Firebase the next time the application is launched.
 
-## Enabling Debug Mode
+## Toggle Crashlytics collection
 
-Set `enabledInDevMode` to true to see reports whilst in debug mode.  This is only to be used for confirming that reports are being
-submitted as expected. It is not intended to be used for everyday development.
+Call the `setCrashlyticsCollectionEnabled` method to toggle Crashlytics collection status.
+
+For example to ensure enabled when your app is in debug mode you can do the following:
 
 ```dart
-FirebaseCrashlytics.instance.enableInDevMode = true;
+import 'package:flutter/foundation.dart' show kDebugMode;
+
+// ...
+
+if (kDebugMode) {
+  // Force enable crashlytics collection enabled if we're testing it in debug.
+  await FirebaseCrashlytics.instance
+      .setCrashlyticsCollectionEnabled(true);
+} else {
+  // Handle Crashlytics enabled status when not in Debug,
+  // e.g. allow your users to opt-in to crash reporting.
+}
+```
+
+You can additionally read the current collection enabled status:
+
+```dart
+if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {
+  // Collection is enabled.
+}
 ```
 
 ## Forcing a crash
+
 You don't have to wait for a crash to know that Crashlytics is working. To force a crash, call the `crash` method:
 
 ```dart
 FirebaseCrashlytics.instance.crash();
 ```
+
+Your app should exit immediately after calling this method. After opening your app again after the crash
+Firebase Crashlytics will upload the crash report to the Firebase Console.
+
+The error will be show on the Firebase Crashlytics dashboard as an instance of `FirebaseCrashlyticsTestCrash`, with a message of
+`This is a test crash caused by calling .crash() in Dart.`
 
 ## Add custom keys
 
