@@ -9,7 +9,7 @@ To start using the Cloud Firestore package within your project, import it at the
 import 'package:cloud_firestore/cloud_firestore.dart';
 ```
 
-Before using Firestore, you must first have ensured you have [initialized FlutterFire](overview#initializing-flutterfire).
+Before using Firestore, you must first have ensured you have [initialized FlutterFire](../overview.mdx#initializing-flutterfire).
 
 To create a new Firestore instance, call the [`instance`](!cloud_firestore.FirebaseFirestore.instance) getter on [`FirebaseFirestore`](!cloud_firestore.FirebaseFirestore):
 
@@ -53,7 +53,7 @@ class AddUser extends StatelessWidget {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
     Future<void> addUser() {
-      // Call the users CollectionReference to add a new user
+      // Call the user's CollectionReference to add a new user
       return users
           .add({
             'full_name': fullName, // John Doe
@@ -105,7 +105,7 @@ class GetUserName extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data();
+          Map<String, dynamic> data = snapshot.data.data();
           return Text("Full Name: ${data['full_name']} ${data['last_name']}");
         }
 
@@ -242,7 +242,7 @@ If no data exists at the nested path, a [`StateError`](https://api.dart.dev/stab
 ```dart
 try {
   dynamic nested = snapshot.get(FieldPath(['address', 'postcode']));
-} on StateError (e) {
+} on StateError catch(e) {
   print('No nested field exists!');
 }
 ```
@@ -383,7 +383,7 @@ class AddUser extends StatelessWidget {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
     Future<void> addUser() {
-      // Call the users CollectionReference to add a new user
+      // Call the user's CollectionReference to add a new user
       return users
           .add({
             'full_name': fullName, // John Doe
