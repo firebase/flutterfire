@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:collection';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -224,7 +225,7 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
       Map<String, dynamic> androidAppInfoMap = new HashMap();
       iosAppInfoMap.putIfAbsent("bundleId", () => "io.flutter.plugins.firebaseAuthExample");
       androidAppInfoMap.putIfAbsent("packageName", () => "io.flutter.plugins.firebaseauthexample");
-      
+
       await _auth.sendSignInLinkToEmail(
           email: _userEmail,
           actionCodeSettings: ActionCodeSettings(
