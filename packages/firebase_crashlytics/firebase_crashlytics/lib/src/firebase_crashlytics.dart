@@ -35,6 +35,24 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// then no crash reporting data is sent to Firebase.
   ///
   /// See [setCrashlyticsCollectionEnabled] for toggling collection status.
+  @Deprecated(
+      "enableInDevMode getter is deprecated, use 'isCrashlyticsCollectionEnabled' instead")
+  bool get enableInDevMode {
+    return _delegate.isCrashlyticsCollectionEnabled;
+  }
+
+  /// Whether the current Crashlytics instance is collecting reports. If false,
+  /// then no crash reporting data is sent to Firebase.
+  @Deprecated(
+      "enableInDevMode setter is deprecated, use 'setCrashlyticsCollectionEnabled(bool)' instead")
+  set enableInDevMode(bool enabled) {
+    _delegate.setCrashlyticsCollectionEnabled(enabled).then((value) => null);
+  }
+
+  /// Whether the current Crashlytics instance is collecting reports. If false,
+  /// then no crash reporting data is sent to Firebase.
+  ///
+  /// See [setCrashlyticsCollectionEnabled] for toggling collection status.
   bool get isCrashlyticsCollectionEnabled {
     return _delegate.isCrashlyticsCollectionEnabled;
   }
