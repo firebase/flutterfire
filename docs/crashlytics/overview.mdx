@@ -33,29 +33,28 @@ $ flutter pub get
 
 ### 3. Platform integration
 
-If you are migrating from a previous version of Crashlytics that used Fabric, please follow this [upgrade guide](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=android).
+If you are migrating from a previous version of Crashlytics that used Fabric, please follow these
+guides and remove any legacy Fabric integration steps from your project:
+
+ - [Android](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=android).
+ - [iOS/macOS](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=ios).
 
 #### a. Android
 
-1. Add the following classpaths to the `/android/build.gradle` file.
+1. Add the following classpaths to your `android/build.gradle` file.
 
-```dart
+```groovy {3} title="android/build.gradle"
 dependencies {
   // ... other dependencies
   classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
 }
 ```
 
-2. Apply the following plugins to the `/android/app/build.gradle` file.
+2. Apply the following to the bottom of your `android/app/build.gradle` file.
 
-```dart
+```groovy {5} title="android/app/build.gradle"
 dependencies {
-  // ... other dependencies
-  // Optional but recommended: Add the Firebase SDK for Google Analytics.
-  implementation 'com.google.firebase:firebase-analytics:17.5.0'
-
-  // Add the Firebase Crashlytics SDK.
-  implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
+  // ... your dependencies
 }
 
 apply plugin: 'com.google.firebase.crashlytics'
@@ -66,7 +65,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 1. From Xcode select `Runner` from the project navigation.
 2. Select the `Build Phases` tab, then click `+ > New Run Script Phase`.
 3. Add `${PODS_ROOT}/FirebaseCrashlytics/run` to the `Type a script...` text box.
-4. You can also provide your app's built `Info.plist` location to the build phase's Input Files field:
+4. Optionally you can also provide your app's built `Info.plist` location to the build phase's Input Files field:
 For example: `$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)`
 
 ### 4. Rebuild your app
