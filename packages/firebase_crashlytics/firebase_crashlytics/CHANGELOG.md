@@ -1,3 +1,7 @@
+## 0.2.0-dev.2
+
+* Fixed an iOS variable naming collision that could cause builds to fail when used alongside `firebase_auth`.
+
 ## 0.2.0-dev.1
 
 * **Breaking change**: Migration to the new Firebase Crashlytics SDK. Follow the [migration guide](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=android) (steps 1 and 2) to update your app.
