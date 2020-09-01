@@ -163,7 +163,7 @@ class _MyAppState extends State<MyApp> {
               ));
 
               // // Example of an exception that does not get caught
-              // // by `FlutterError.onError` but is caught by
+              // by `FlutterError.onError` but is caught by
               // `runZonedGuarded`.
               runZonedGuarded(() {
                 Future<void>.delayed(const Duration(seconds: 2), () {
