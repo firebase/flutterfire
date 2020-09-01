@@ -8,10 +8,19 @@ To learn more about Firebase, please visit the [Firebase website](https://fireba
 
 ## Getting Started
 
+> If you are migrating your existing project to these new plugins, please start with the [migration guide](https://firebase.flutter.dev/docs/migration)
+
 To get started with FlutterFire, please [see the documentation](https://firebase.flutter.dev/docs/overview)
 available at [https://firebase.flutter.dev](https://firebase.flutter.dev/docs/overview)
 
 ## Usage
+
+To use any of the Firebase services, FlutterFire needs to be initialized.  To initialize FlutterFire,
+call the `initializeApp` method on the `Firebase` class:
+
+```dart
+await Firebase.initializeApp();
+```
 
 To use this plugin, please visit the [Core Usage documentation](https://firebase.flutter.dev/docs/core/usage)
 
