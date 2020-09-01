@@ -37,6 +37,25 @@ Future<void> uploadFile() {
 }
 ```
 
+The `UploadTask` has a listener which may trigger events when transferring files.  When an event
+occurs, a `TaskSnapshot` object gets passed back.  These events can be used to provide a way of monitoring
+transfers:
+
+```dart
+// Listen for task events
+task.snapshotEvents.listen((TaskSnapshot snapshot) {
+  // Get task state such as running, progress and pause
+  print('Snapshot state: ${snapshot.state}');
+  // Calculate the task progress
+  print('Progress: ${(snapshot.totalBytes/snapshot.bytesTransferred) * 100} %');
+});
+
+task.onComplete.then((TaskSnapshot snapshot){
+  // Handle successful uploads on complete
+  print('Upload Complete');
+});
+```
+
 For more information on how to use this plugin,
 please visit the [Storage Usage documentation](https://firebase.flutter.dev/docs/storage/overview)
 
