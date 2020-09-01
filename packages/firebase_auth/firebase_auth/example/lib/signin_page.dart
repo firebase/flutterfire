@@ -229,8 +229,7 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
       await _auth.sendSignInLinkToEmail(
           email: _userEmail,
           actionCodeSettings: ActionCodeSettings(
-            url:
-            'https://react-native-firebase-testing.firebaseapp.com/emailSignin',
+            url: 'https://react-native-firebase-testing.firebaseapp.com/emailSignin',
             handleCodeInApp: true,
             iOS: iosAppInfoMap,
             android: androidAppInfoMap,
