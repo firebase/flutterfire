@@ -34,13 +34,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  Future<void> _initializeFlutterFireFuture;
 
-  // Set default `_initialized` and `_error` state to false
-  bool _initialized = false;
-  bool _error = false;
-
-  void testAsyncErrorOnInit() async {
+  Future<void> _testAsyncErrorOnInit() async {
     Future<void>.delayed(const Duration(seconds: 2), () {
       final List<int> list = <int>[];
       print(list[100]);
@@ -48,166 +44,160 @@ class _MyAppState extends State<MyApp> {
   }
 
   // Define an async function to initialize FlutterFire
-  void initializeFlutterFire() async {
-    try {
-      // Wait for Firebase to initialize and set `_initialized` state to true
-      await Firebase.initializeApp();
+  Future<void> _initializeFlutterFire() async {
+    // Wait for Firebase to initialize
+    await Firebase.initializeApp();
 
-      if (_kTestingCrashlytics) {
-        // Force enable crashlytics collection enabled if we're testing it.
-        await FirebaseCrashlytics.instance
-            .setCrashlyticsCollectionEnabled(true);
-      } else {
-        // Else only enable it in non-debug builds.
-        // You could additionally extend this to allow users to opt-in.
-        await FirebaseCrashlytics.instance
-            .setCrashlyticsCollectionEnabled(!kDebugMode);
-      }
+    if (_kTestingCrashlytics) {
+      // Force enable crashlytics collection enabled if we're testing it.
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    } else {
+      // Else only enable it in non-debug builds.
+      // You could additionally extend this to allow users to opt-in.
+      await FirebaseCrashlytics.instance
+          .setCrashlyticsCollectionEnabled(!kDebugMode);
+    }
 
-      // Pass all uncaught errors to Crashlytics.
-      Function originalOnError = FlutterError.onError;
-      FlutterError.onError = (FlutterErrorDetails errorDetails) async {
-        await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-        // Forward to original handler.
-        originalOnError(errorDetails);
-      };
+    // Pass all uncaught errors to Crashlytics.
+    Function originalOnError = FlutterError.onError;
+    FlutterError.onError = (FlutterErrorDetails errorDetails) async {
+      await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+      // Forward to original handler.
+      originalOnError(errorDetails);
+    };
 
-      setState(() {
-        _initialized = true;
-      });
-      if (_kShouldTestAsyncErrorOnInit) testAsyncErrorOnInit();
-    } catch (e) {
-      // Set `_error` state to true if Firebase initialization fails
-      print(e);
-      setState(() {
-        _error = true;
-      });
+    if (_kShouldTestAsyncErrorOnInit) {
+      await _testAsyncErrorOnInit();
     }
   }
 
   @override
   void initState() {
-    initializeFlutterFire();
     super.initState();
-  }
-
-  Widget get appContent {
-    if (_error) {
-      return Center(child: Text(_error.toString()));
-    } else if (!_initialized) {
-      return Center(child: Text("Loading"));
-    }
-
-    return Column(
-      children: <Widget>[
-        RaisedButton(
-            child: const Text('Key'),
-            onPressed: () {
-              FirebaseCrashlytics.instance
-                  .setCustomKey('example', 'flutterfire');
-              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                content: Text(
-                    'Custom Key "example: flutterfire" has been set \n'
-                    'Key will appear in Firebase Console once app has crashed and reopened'),
-                duration: Duration(seconds: 5),
-              ));
-            }),
-        RaisedButton(
-            child: const Text('Log'),
-            onPressed: () {
-              FirebaseCrashlytics.instance.log('This is a log example');
-              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                content: Text(
-                    'The message "This is a log example" has been logged \n'
-                    'Message will appear in Firebase Console once app has crashed and reopened'),
-                duration: Duration(seconds: 5),
-              ));
-            }),
-        RaisedButton(
-            child: const Text('Crash'),
-            onPressed: () async {
-              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                content: Text('App will crash is 5 seconds \n'
-                    'Please reopen to send data to Crashlytics'),
-                duration: Duration(seconds: 5),
-              ));
-
-              // Delay crash for 5 seconds
-              sleep(const Duration(seconds: 5));
-
-              // Use FirebaseCrashlytics to throw an error. Use this for
-              // confirmation that errors are being correctly reported.
-              FirebaseCrashlytics.instance.crash();
-            }),
-        RaisedButton(
-            child: const Text('Throw Error'),
-            onPressed: () {
-              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                content: Text('Thrown error has been caught \n'
-                    'Please crash and reopen to send data to Crashlytics'),
-                duration: Duration(seconds: 5),
-              ));
-
-              // Example of thrown error, it will be caught and sent to
-              // Crashlytics.
-              throw StateError('Uncaught error thrown by app');
-            }),
-        RaisedButton(
-            child: const Text('Async out of bounds'),
-            onPressed: () {
-              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                content: Text(
-                    'Uncaught Exception that is handled by second parameter of runZonedGuarded \n'
-                    'Please crash and reopen to send data to Crashlytics'),
-                duration: Duration(seconds: 5),
-              ));
-
-              // Example of an exception that does not get caught
-              // by `FlutterError.onError` but is caught by
-              // `runZonedGuarded`.
-              runZonedGuarded(() {
-                Future<void>.delayed(const Duration(seconds: 2), () {
-                  final List<int> list = <int>[];
-                  print(list[100]);
-                });
-              }, FirebaseCrashlytics.instance.recordError);
-            }),
-        RaisedButton(
-            child: const Text('Record Error'),
-            onPressed: () async {
-              try {
-                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                  content: Text('Recorded Error  \n'
-                      'Please crash and reopen to send data to Crashlytics'),
-                  duration: Duration(seconds: 5),
-                ));
-                throw 'error_example';
-              } catch (e, s) {
-                // "context" will append the word "thrown" in the
-                // Crashlytics console.
-                await FirebaseCrashlytics.instance
-                    .recordError(e, s, context: 'as an example');
-              }
-            }),
-      ],
-    );
-  }
-
-  /// Given a [Widget], wrap and return a [MaterialApp].
-  MaterialApp withMaterialApp(Widget body) {
-    return MaterialApp(
-      home: Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: const Text('Crashlytics example app'),
-        ),
-        body: body,
-      ),
-    );
+    _initializeFlutterFireFuture = _initializeFlutterFire();
   }
 
   @override
   Widget build(BuildContext context) {
-    return withMaterialApp(Center(child: appContent));
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Crashlytics example app'),
+        ),
+        body: FutureBuilder(
+          future: _initializeFlutterFireFuture,
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.done:
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                }
+                return Center(
+                  child: Column(
+                    children: <Widget>[
+                      RaisedButton(
+                          child: const Text('Key'),
+                          onPressed: () {
+                            FirebaseCrashlytics.instance
+                                .setCustomKey('example', 'flutterfire');
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  'Custom Key "example: flutterfire" has been set \n'
+                                  'Key will appear in Firebase Console once app has crashed and reopened'),
+                              duration: Duration(seconds: 5),
+                            ));
+                          }),
+                      RaisedButton(
+                          child: const Text('Log'),
+                          onPressed: () {
+                            FirebaseCrashlytics.instance
+                                .log('This is a log example');
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  'The message "This is a log example" has been logged \n'
+                                  'Message will appear in Firebase Console once app has crashed and reopened'),
+                              duration: Duration(seconds: 5),
+                            ));
+                          }),
+                      RaisedButton(
+                          child: const Text('Crash'),
+                          onPressed: () async {
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text('App will crash is 5 seconds \n'
+                                  'Please reopen to send data to Crashlytics'),
+                              duration: Duration(seconds: 5),
+                            ));
+
+                            // Delay crash for 5 seconds
+                            sleep(const Duration(seconds: 5));
+
+                            // Use FirebaseCrashlytics to throw an error. Use this for
+                            // confirmation that errors are being correctly reported.
+                            FirebaseCrashlytics.instance.crash();
+                          }),
+                      RaisedButton(
+                          child: const Text('Throw Error'),
+                          onPressed: () {
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text('Thrown error has been caught \n'
+                                  'Please crash and reopen to send data to Crashlytics'),
+                              duration: Duration(seconds: 5),
+                            ));
+
+                            // Example of thrown error, it will be caught and sent to
+                            // Crashlytics.
+                            throw StateError('Uncaught error thrown by app');
+                          }),
+                      RaisedButton(
+                          child: const Text('Async out of bounds'),
+                          onPressed: () {
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  'Uncaught Exception that is handled by second parameter of runZonedGuarded \n'
+                                  'Please crash and reopen to send data to Crashlytics'),
+                              duration: Duration(seconds: 5),
+                            ));
+
+                            // Example of an exception that does not get caught
+                            // by `FlutterError.onError` but is caught by
+                            // `runZonedGuarded`.
+                            runZonedGuarded(() {
+                              Future<void>.delayed(const Duration(seconds: 2),
+                                  () {
+                                final List<int> list = <int>[];
+                                print(list[100]);
+                              });
+                            }, FirebaseCrashlytics.instance.recordError);
+                          }),
+                      RaisedButton(
+                          child: const Text('Record Error'),
+                          onPressed: () async {
+                            try {
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text('Recorded Error  \n'
+                                    'Please crash and reopen to send data to Crashlytics'),
+                                duration: Duration(seconds: 5),
+                              ));
+                              throw 'error_example';
+                            } catch (e, s) {
+                              // "context" will append the word "thrown" in the
+                              // Crashlytics console.
+                              await FirebaseCrashlytics.instance
+                                  .recordError(e, s, context: 'as an example');
+                            }
+                          }),
+                    ],
+                  ),
+                );
+                break;
+              default:
+                return Center(child: Text('Loading'));
+            }
+          },
+        ),
+      ),
+    );
   }
 }
