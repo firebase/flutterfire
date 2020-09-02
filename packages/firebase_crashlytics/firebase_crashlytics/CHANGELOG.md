@@ -1,3 +1,8 @@
+## 0.2.0-dev.3
+
+* Fixed an issue with iOS logs appearing as `null` on the Firebase Console.
+* Ensure cosmetic Android exception classes keep their name when app obfuscated.
+
 ## 0.2.0-dev.2
 
 * Fixed an iOS variable naming collision that could cause builds to fail when used alongside `firebase_auth`.
