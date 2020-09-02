@@ -2,6 +2,7 @@
 
 * Fixed an issue with iOS logs appearing as `null` on the Firebase Console.
 * Ensure cosmetic Android exception classes keep their name when app obfuscated.
+* Fixed an error when hot restarting on Android (#3432).
 
 ## 0.2.0-dev.2
 

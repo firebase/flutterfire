@@ -331,6 +331,6 @@ public class FlutterFirebaseCrashlyticsPlugin
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return null;
+    return Tasks.call(() -> null);
   }
 }
