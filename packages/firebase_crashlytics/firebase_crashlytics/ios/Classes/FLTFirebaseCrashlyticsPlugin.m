@@ -201,6 +201,7 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
   // Not required for this plugin, nothing to cleanup between reloads.
+  completion();
 }
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
