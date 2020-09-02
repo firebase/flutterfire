@@ -1,3 +1,7 @@
+## 0.2.0-dev.4
+
+* Fixed an error when hot restarting on iOS/macOS (#3432).
+
 ## 0.2.0-dev.3
 
 * Fixed an issue with iOS logs appearing as `null` on the Firebase Console.
