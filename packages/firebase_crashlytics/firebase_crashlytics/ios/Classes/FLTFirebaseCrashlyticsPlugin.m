@@ -151,7 +151,7 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 }
 
 - (void)log:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *msg = arguments[@"log"];
+  NSString *msg = arguments[@"message"];
   [[FIRCrashlytics crashlytics] logWithFormat:@"%@", msg];
   result.success(nil);
 }
