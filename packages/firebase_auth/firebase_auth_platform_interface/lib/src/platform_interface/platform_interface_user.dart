@@ -193,7 +193,7 @@ abstract class UserPlatform extends PlatformInterface {
   }
 
   /// Links the user account with the given phone number.
-  /// 
+  ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **provider-already-linked**:
   ///  - Thrown if the provider has already been linked to the user. This error
@@ -209,7 +209,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// - **user-disabled**:
   ///  - Thrown if the user corresponding to the given phone number has been disabled.
   /// - **credential-already-in-use**:
-  ///  - Thrown if the account corresponding to the phone number already exists 
+  ///  - Thrown if the account corresponding to the phone number already exists
   ///    among your users, or is already linked to a Firebase User.
   /// - **operation-not-allowed**:
   ///  - Thrown if you have not enabled the phone authentication provider in the
