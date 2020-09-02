@@ -16,39 +16,39 @@
 
 For help migrating to this release please see the [migration guide](https://firebase.flutter.dev/docs/migration).
 
-* **Breaking change**: Removal of Fabric SDKs and migration to the new Firebase Crashlytics SDK.
-* **Breaking change**: The following methods have been removed as they are no longer available on the Firebase Crashlytics SDK:
+* **BREAKING**: Removal of Fabric SDKs and migration to the new Firebase Crashlytics SDK.
+* **BREAKING**: The following methods have been removed as they are no longer available on the Firebase Crashlytics SDK:
   * `setUserEmail`
   * `setUserName`
   * `getVersion`
   * `isDebuggable`
-* **Breaking change**: `log` now returns a Future. Calling `log` now sends logs immediately to the underlying Crashlytics SDK instead of pooling them in Dart.
-* **Breaking change**: the methods `setInt`, `setDouble`, `setString` and `setBool` have been replaced by `setCustomKey`.
+* **BREAKING**: `log` now returns a Future. Calling `log` now sends logs immediately to the underlying Crashlytics SDK instead of pooling them in Dart.
+* **BREAKING**: the methods `setInt`, `setDouble`, `setString` and `setBool` have been replaced by `setCustomKey`.
   * `setCustomKey` returns a Future. Calling `setCustomKey` now sends custom keys immediately to the underlying Crashlytics SDK instead of pooling them in Dart.
-* **Deprecated**: `enableInDevMode` has been deprecated, use `isCrashlyticsCollectionEnabled` and `setCrashlyticsCollectionEnabled` instead.
-* **Deprecated**: `Crashlytics` has been deprecated, use `FirebaseCrashlytics` instead.
-* **New**: Custom keys that are automatically added by FlutterFire when calling `reportError` are now prefixed with `flutter_error_`.
-* **New**: Calling `.crash()` on Android  & iOS/macOS now reports a custom named exception to the Firebase Console. This allows you to easily locate test crashes.
+* **DEPRECATED**: `enableInDevMode` has been deprecated, use `isCrashlyticsCollectionEnabled` and `setCrashlyticsCollectionEnabled` instead.
+* **DEPRECATED**: `Crashlytics` has been deprecated, use `FirebaseCrashlytics` instead.
+* **NEW**: Custom keys that are automatically added by FlutterFire when calling `reportError` are now prefixed with `flutter_error_`.
+* **NEW**: Calling `.crash()` on Android  & iOS/macOS now reports a custom named exception to the Firebase Console. This allows you to easily locate test crashes.
   * Name: `FirebaseCrashlyticsTestCrash`.
   * Message: `This is a test crash caused by calling .crash() in Dart.`.
-* **New**: `recordError` now uses a named native exception when reporting to the Firebase Console. This allows you to easily locate errors originating from Flutter.
+* **NEW**: `recordError` now uses a named native exception when reporting to the Firebase Console. This allows you to easily locate errors originating from Flutter.
   * Name: `FlutterError`.
-* **New**: Added support for `checkForUnsentReports`.
+* **NEW**: Added support for `checkForUnsentReports`.
   * Checks a device for any fatal or non-fatal crash reports that haven't yet been sent to Crashlytics.
   * See reference API docs for more information.
-* **New**: Added support for `deleteUnsentReports`.
+* **NEW**: Added support for `deleteUnsentReports`.
   * If automatic data collection is disabled, this method queues up all the reports on a device for deletion.
   * See reference API docs for more information.
-* **New**: Added support for `didCrashOnPreviousExecution`.
+* **NEW**: Added support for `didCrashOnPreviousExecution`.
   * Checks whether the app crashed on its previous run.
   * See reference API docs for more information.
-* **New**: Added support for `sendUnsentReports`.
+* **NEW**: Added support for `sendUnsentReports`.
   * If automatic data collection is disabled, this method queues up all the reports on a device to send to Crashlytics.
   * See reference API docs for more information.
-* **New**: Added support for `setCrashlyticsCollectionEnabled`.
+* **NEW**: Added support for `setCrashlyticsCollectionEnabled`.
   * Enables/disables automatic data collection by Crashlytics.
   * See reference API docs for more information.
-* **New**: Added support for `isCrashlyticsCollectionEnabled`.
+* **NEW**: Added support for `isCrashlyticsCollectionEnabled`.
   * Whether the current Crashlytics instance is collecting reports. If false, then no crash reporting data is sent to Firebase.
   * See reference API docs for more information.
 * **FIX**: Fixed a bug that prevented keys from being set on iOS devices.
