@@ -51,7 +51,7 @@ For help migrating to this release please see the [migration guide](https://fire
 * **New**: Added support for `isCrashlyticsCollectionEnabled`.
   * Whether the current Crashlytics instance is collecting reports. If false, then no crash reporting data is sent to Firebase.
   * See reference API docs for more information.
-* **Bug fix**: Fixed a bug that prevented keys from being set on iOS devices.
+* **FIX**: Fixed a bug that prevented keys from being set on iOS devices.
 
 ## 0.1.4+1
 
