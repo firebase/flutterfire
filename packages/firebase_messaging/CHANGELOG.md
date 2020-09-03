@@ -1,5 +1,5 @@
 ## 7.0.1
-* Add Kotling support in README.md.
+* Add Kotlin support in README.md.
 
 ## 7.0.0
 
