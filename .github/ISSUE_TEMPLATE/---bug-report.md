@@ -10,19 +10,26 @@ assignees: ''
 ## Bug report
 
 **Describe the bug**
+
 A clear and concise description of what the bug is.
 
 ### Steps to reproduce
 
 Steps to reproduce the behavior:
 
-1. Go to '...'
-2. '...'
+1. Go to ...
+2. ...
 4. See error or incorrect behavior
+
+---
 
 ### Expected behavior
 
 A clear and concise description of what you expected to happen.
+
+### Actual behaviour
+
+A clear and concise description of what actually happened.
 
 ---
 
@@ -36,10 +43,10 @@ Add any other context about the problem here.
 
 Run `flutter doctor` and paste the output below:
 
-<details><summary>Click To Expand</summary>
+<details><summary>Logs</summary>
 
 ```
-PASTE OUTPUT INSIDE HERE
+PASTE OUTPUT HERE
 ```
 
 </details>
@@ -50,10 +57,10 @@ PASTE OUTPUT INSIDE HERE
 
 Run `flutter pub deps -- --style=compact` and paste the output below:
 
-<details><summary>Click To Expand</summary>
+<details><summary>Logs</summary>
 
 ```
-PASTE OUTPUT INSIDE HERE
+PASTE OUTPUT HERE
 ```
 
 </details>
