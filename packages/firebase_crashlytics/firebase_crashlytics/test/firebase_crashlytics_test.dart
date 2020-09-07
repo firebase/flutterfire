@@ -66,14 +66,14 @@ void main() {
       test('with stack', () async {
         final stack = StackTrace.current;
         final exception = 'foo exception';
-        final exceptionContext = 'bar context';
+        final exceptionReason = 'bar reason';
 
         await crashlytics.recordError(exception, stack,
-            context: exceptionContext, printDetails: false);
+            reason: exceptionReason, printDetails: false);
         expect(methodCallLog, <Matcher>[
           isMethodCall('Crashlytics#recordError', arguments: {
             'exception': exception,
-            'context': exceptionContext,
+            'reason': exceptionReason,
             'information': '',
             'stackTraceElements': getStackTraceElements(
                 Trace.format(stack).trimRight().split('\n'))
@@ -89,13 +89,12 @@ void main() {
 
       test('without stack', () async {
         final exception = 'foo exception';
-        final exceptionContext = 'bar context';
+        final exceptionReason = 'bar reason';
 
-        await crashlytics.recordError(exception, null,
-            context: exceptionContext);
+        await crashlytics.recordError(exception, null, reason: exceptionReason);
         expect(methodCallLog[0].method, 'Crashlytics#recordError');
         expect(methodCallLog[0].arguments['exception'], exception);
-        expect(methodCallLog[0].arguments['context'], exceptionContext);
+        expect(methodCallLog[0].arguments['reason'], exceptionReason);
 
         // Confirm that the stack trace contains current stack.
         expect(
@@ -108,7 +107,7 @@ void main() {
 
     test('recordFlutterError', () async {
       final exception = 'foo exception';
-      final exceptionContext = 'bar context';
+      final exceptionReason = 'bar reason';
       final exceptionLibrary = 'baz library';
       final exceptionFirstMessage = 'first message';
       final exceptionSecondMessage = 'second message';
@@ -121,13 +120,13 @@ void main() {
           DiagnosticsNode.message(exceptionFirstMessage),
           DiagnosticsNode.message(exceptionSecondMessage),
         ],
-        context: ErrorDescription(exceptionContext),
+        context: ErrorDescription(exceptionReason),
       );
       await crashlytics.recordFlutterError(details);
       expect(methodCallLog, <Matcher>[
         isMethodCall('Crashlytics#recordError', arguments: {
           'exception': exception,
-          'context': exceptionContext,
+          'reason': exceptionReason,
           'information': '$exceptionFirstMessage\n$exceptionSecondMessage',
           'stackTraceElements':
               getStackTraceElements(Trace.format(stack).trimRight().split('\n'))

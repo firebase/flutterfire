@@ -13,7 +13,7 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 NSString *const kCrashlyticsArgumentException = @"exception";
 NSString *const kCrashlyticsArgumentInformation = @"information";
 NSString *const kCrashlyticsArgumentStackTraceElements = @"stackTraceElements";
-NSString *const kCrashlyticsArgumentContext = @"context";
+NSString *const kCrashlyticsArgumentReason = @"reason";
 NSString *const kCrashlyticsArgumentIdentifier = @"identifier";
 NSString *const kCrashlyticsArgumentKey = @"key";
 NSString *const kCrashlyticsArgumentValue = @"value";
@@ -100,7 +100,7 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 #pragma mark - Firebase Crashlytics API
 
 - (void)recordError:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *context = arguments[kCrashlyticsArgumentContext];
+  NSString *reason = arguments[kCrashlyticsArgumentReason];
   NSString *information = arguments[kCrashlyticsArgumentInformation];
   NSString *dartExceptionMessage = arguments[kCrashlyticsArgumentException];
   NSArray *errorElements = arguments[kCrashlyticsArgumentStackTraceElements];
@@ -116,11 +116,10 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
     [frames addObject:[self generateFrame:errorElement]];
   }
 
-  NSString *reason;
-  if (![context isEqual:[NSNull null]]) {
-    reason = [NSString stringWithFormat:@"%@. Error thrown %@.", dartExceptionMessage, context];
+  if (![reason isEqual:[NSNull null]]) {
+    reason = [NSString stringWithFormat:@"%@. Error thrown %@.", dartExceptionMessage, reason];
     // Log additional custom value to match Android.
-    [[FIRCrashlytics crashlytics] setCustomValue:[NSString stringWithFormat:@"thrown %@", context]
+    [[FIRCrashlytics crashlytics] setCustomValue:[NSString stringWithFormat:@"thrown %@", reason]
                                           forKey:@"flutter_error_reason"];
   } else {
     reason = dartExceptionMessage;
