@@ -39,7 +39,9 @@ jobs:
         with:
           api-level: 28
           arch: x86_64
-          target: google_apis
+          # Firebase Firestore works without Google Play Services, so we don't use the `googleapis`
+          # emulator target as it's considerably slower on CI.
+          target: default
           profile: Nexus 5X
           script: ./.github/workflows/scripts/drive-example.sh android
 
@@ -71,8 +73,9 @@ jobs:
         run: ./.github/workflows/scripts/drive-example.sh macos
 
   web:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    # Using macos instead of ubuntu as Web app can't connect to Firebase Firestore emulator
+    # when running on ubuntu.
+    runs-on: macos-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v1
