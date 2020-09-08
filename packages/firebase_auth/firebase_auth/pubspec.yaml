@@ -22,8 +22,17 @@ dependencies:
   meta: ^1.0.4
   firebase_core: ">=0.5.0 <0.6.0"
   firebase_core_platform_interface: ">=2.0.0 <2.1.0"
-  firebase_auth_platform_interface: ^2.0.1
-  firebase_auth_web: ^0.3.0+1
+  firebase_auth_platform_interface:
+    git:
+      url: git@github.com:N2BBrasil/flutterfire.git
+      path: packages/firebase_auth/firebase_auth_platform_interface
+      ref: master
+
+  firebase_auth_web:
+    git:
+      url: git@github.com:N2BBrasil/flutterfire.git
+      path: packages/firebase_auth/firebase_auth_web
+      ref: master
 
   flutter:
     sdk: flutter
