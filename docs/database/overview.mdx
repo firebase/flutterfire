@@ -1,0 +1,50 @@
+---
+title: Realtime Database
+sidebar_label: Overview
+---
+
+##  What does it do?
+
+The Firebase Realtime Database is a cloud-hosted database. Data is stored as JSON and
+synchronized in realtime to every connected client. When you build cross-platform apps Flutter & Firebase,
+all of your clients can share one Realtime Database instance and automatically receive updates with the newest data.
+
+<YouTube id="U5aeM5dvUpA"/>
+
+## Installation
+
+### 1. Add dependency
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  firebase_database: "^{{ plugins.firebase_database }}"
+```
+
+### 2. Download dependency
+
+```
+$ flutter pub get
+```
+
+### 3. (Web Only) Add the SDK
+
+> Web is currently not supported. See the [FlutterFire roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582).
+
+### 4. Rebuild your app
+
+Once complete, rebuild your Flutter application:
+
+```bash
+$ flutter run
+```
+
+## Next Steps
+
+Once installed, you're ready to start using Realtime Database in your Flutter Project.
+
+> Additional documentation will be available once the Realtime Database plugin update lands as part of the [FlutterFire roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582).
+
+<!-- View the [Usage documentation](usage.mdx) to get started. -->

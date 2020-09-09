@@ -1,0 +1,66 @@
+---
+title: Authentication
+sidebar_label: Overview
+---
+
+## What does it do?
+
+Firebase Authentication provides backend services & easy-to-use SDKs to authenticate users to your app.
+It supports authentication using passwords, phone numbers, popular federated identity providers like Google, Facebook
+and Twitter, and more.
+
+<YouTube id="8sGY55yxicA" />
+
+## Installation
+
+Before installing the Authentication plugin, ensure that you have followed the [Getting Started](../overview.mdx) documentation
+and have initialized FlutterFire.
+
+### 1. Add dependency
+
+Add the [`firebase_auth`](https://pub.dev/packages/firebase_auth) dependency to your projects `pubspec.yaml` file:
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  firebase_auth: "^{{ plugins.firebase_auth }}"
+```
+
+### 2. Download dependency
+
+Download the dependency by running the following command in your project:
+
+```bash
+$ flutter pub get
+```
+
+### 3. (Web Only) Add the SDK
+
+If using FlutterFire on the web, add the [`firebase-auth`](!firebase_auth) JavaScript SDK to your `index.html` file:
+
+```html {5} title="web/index.html"
+<html>
+  ...
+  <body>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-auth.js"></script>
+  </body>
+</html>
+```
+
+### 4. Rebuild your app
+
+Once complete, rebuild your Flutter application:
+
+```bash
+$ flutter run
+```
+
+## Next Steps
+
+Once installed, you're ready to start using Firebase Authentication in your Flutter Project. View the
+[Usage documentation](./usage.mdx) to get started.
+
+<!-- View the [Usage documentation](usage.mdx) to get started. -->
