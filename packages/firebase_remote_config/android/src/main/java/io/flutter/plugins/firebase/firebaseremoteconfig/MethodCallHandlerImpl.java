@@ -49,10 +49,9 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         }
       case "RemoteConfig#setConfigSettings":
         {
-          boolean debugMode = call.argument("debugMode");
           final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
           FirebaseRemoteConfigSettings settings =
-              new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(debugMode).build();
+              new FirebaseRemoteConfigSettings.Builder()..setMinimumFetchIntervalInSeconds(3600L).build();
           firebaseRemoteConfig.setConfigSettings(settings);
           result.success(null);
           break;
