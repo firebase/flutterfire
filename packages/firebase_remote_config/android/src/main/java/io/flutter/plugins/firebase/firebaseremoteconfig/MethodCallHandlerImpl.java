@@ -124,7 +124,7 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
       case "RemoteConfig#setDefaults":
         {
           Map<String, Object> defaults = call.argument("defaults");
-          FirebaseRemoteConfig.getInstance().setDefaults(defaults);
+          FirebaseRemoteConfig.getInstance().setDefaultsAsync(defaults);
           SharedPreferences.Editor editor = sharedPreferences.edit();
           editor.putStringSet(DEFAULT_PREF_KEY, defaults.keySet()).apply();
           result.success(null);
