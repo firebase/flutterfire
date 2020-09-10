@@ -13,6 +13,8 @@ into Firebase.
 
 Firebase Phone Authentication is not supported in all countries. Please see their [FAQs](https://firebase.google.com/support/faq/#develop) for more information.
 
+September 10: Be aware that this documentation is newer than current stable version (0.18.0+1).  If you want to follow these instructions with flutter web , you must fetch newer versin from repository. See "Note for users of Flutter Web".
+
 ## Setup
 
 Before starting with Phone Authentication, ensure you have followed these steps:
@@ -155,6 +157,7 @@ await auth.verifyPhoneNumber(
 
 ### Web: `signInWithPhoneNumber`
 
+
 On web platforms, users can sign-in by confirming they have access to a phone by entering the SMS code sent to the provided phone number.
 For added security and spam prevention, users are requested to prove they are human by completing a [Google reCAPTCHA](https://www.google.com/recaptcha/about/)
 widget. Once confirmed, the SMS code will be sent.
@@ -217,6 +220,30 @@ RecaptchaVerifier(
   onError: (FirebaseAuthException error) => print(error),
   onExpired: () => print('reCAPTCHA Expired!'),
 );
+```
+
+#### Note for users of Flutter Web
+
+firebase_auth: 0.18.0+1 is older than this documentation.
+Add these to you pubspec.yaml until these features are published
+```
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_auth:
+    git:
+      url: https://github.com/FirebaseExtended/flutterfire.git
+      path: packages/firebase_auth/firebase_auth
+
+dependency_overrides:
+  firebase_auth_web: 
+    git: 
+      url: https://github.com/FirebaseExtended/flutterfire.git
+      path: packages/firebase_auth/firebase_auth_web
+  firebase_auth_platform_interface:
+    git: 
+      url: https://github.com/FirebaseExtended/flutterfire.git
+      path: packages/firebase_auth/firebase_auth_platform_interface
 ```
 
 ## Testing
