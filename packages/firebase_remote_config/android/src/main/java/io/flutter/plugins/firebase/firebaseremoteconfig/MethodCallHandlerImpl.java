@@ -53,7 +53,7 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
           final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
           FirebaseRemoteConfigSettings settings =
               new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(debugMode).build();
-          firebaseRemoteConfig.setConfigSettings(settings);
+          firebaseRemoteConfig.setConfigSettingsAsync(settings);
           result.success(null);
           break;
         }
