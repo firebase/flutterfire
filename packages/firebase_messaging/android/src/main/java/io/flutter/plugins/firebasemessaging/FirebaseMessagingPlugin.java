@@ -192,9 +192,8 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
                   channel.invokeMethod("onToken", task.getResult().getToken());
                 }
               });
-      Intent intent = mainActivity.getIntent();
-      if (mainActivity != null && !launchedActivityFromHistory(intent)) {
-        sendMessageFromIntent("onLaunch", intent);
+      if (mainActivity != null && !launchedActivityFromHistory(mainActivity.getIntent())) {
+        sendMessageFromIntent("onLaunch", mainActivity.getIntent());
       }
       result.success(null);
     } else if ("subscribeToTopic".equals(call.method)) {
