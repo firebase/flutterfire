@@ -1,4 +1,8 @@
-## 2.0.0-dev.1
+## 2.0.1
+
+* Fixed an incorrect assert when creating a `GoogleAuthCredential` instance. [(#3216)](https://github.com/FirebaseExtended/flutterfire/pull/3216/files#diff-be71096f90f1a879f17b7c94607b0885)
+
+## 2.0.0
 
 * See the `firebase_auth` plugin changelog.
 

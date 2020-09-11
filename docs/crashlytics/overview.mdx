@@ -1,0 +1,82 @@
+---
+title: Crashlytics
+sidebar_label: Overview
+---
+
+##  What does it do?
+
+Crashlytics helps you to collect analytics and details about crashes and errors that occur in your app. It does this through three aspects:
+
+- **Logs**: Log events in your app to be sent with the crash report for context if your app crashes.
+- **Crash reports**: Every crash is automatically turned into a crash report and sent when the application next opens.
+- **Stack traces**: Even when an error is caught and your app recovers, the Dart stack trace can still be sent.
+
+<YouTube id="k_mdNRZzd30"/>
+
+## Installation
+
+### 1. Add dependency
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  firebase_crashlytics: "^{{ plugins.firebase_crashlytics }}"
+```
+
+### 2. Download dependency
+
+```
+$ flutter pub get
+```
+
+### 3. Platform integration
+
+If you are migrating from a previous version of Crashlytics that used Fabric, please follow these
+guides and remove any legacy Fabric integration steps from your project:
+
+ - [Android](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=android).
+ - [iOS/macOS](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=ios).
+
+#### a. Android
+
+1. Add the following classpaths to your `android/build.gradle` file.
+
+```groovy {3} title="android/build.gradle"
+dependencies {
+  // ... other dependencies
+  classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
+}
+```
+
+2. Apply the following to the bottom of your `android/app/build.gradle` file.
+
+```groovy {5} title="android/app/build.gradle"
+dependencies {
+  // ... your dependencies
+}
+
+apply plugin: 'com.google.firebase.crashlytics'
+```
+
+#### b. iOS
+
+1. From Xcode select `Runner` from the project navigation.
+2. Select the `Build Phases` tab, then click `+ > New Run Script Phase`.
+3. Add `${PODS_ROOT}/FirebaseCrashlytics/run` to the `Type a script...` text box.
+4. Optionally you can also provide your app's built `Info.plist` location to the build phase's Input Files field:
+For example: `$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)`
+
+### 4. Rebuild your app
+
+Once complete, rebuild your Flutter application:
+
+```bash
+$ flutter run
+```
+
+## Next steps
+
+Once installed, you're ready to start using Firebase Crashlytics in your Flutter Project. View the
+[Usage documentation](./usage.mdx) to get started.

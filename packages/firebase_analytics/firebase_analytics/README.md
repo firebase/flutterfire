@@ -1,6 +1,6 @@
 # Google Analytics for Firebase
 
-[![pub package](https://img.shields.io/pub/v/firebase_analytics.svg)](https://pub.dartlang.org/packages/firebase_analytics)
+[![pub package](https://img.shields.io/pub/v/firebase_analytics.svg)](https://pub.dev/packages/firebase_analytics)
 
 A Flutter plugin to use the [Google Analytics for Firebase API](https://firebase.google.com/docs/analytics/).
 

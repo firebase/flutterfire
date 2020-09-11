@@ -21,7 +21,7 @@ class IdTokenResult {
 
   /// The authentication time formatted as UTC string. This is the time the user
   /// authenticated (signed in) and not the time the token was refreshed.
-  DateTime get authTime => _data['issuedAtTimestamp'] == null
+  DateTime get authTime => _data['authTimestamp'] == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(_data['authTimestamp']);
 
@@ -45,15 +45,11 @@ class IdTokenResult {
   /// custom, phone, password, etc). Note, this does not map to provider IDs.
   String get signInProvider => _data['signInProvider'];
 
-  /// The type of second factor associated with this session, provided the user
-  /// was multi-factor authenticated (for example, phone, etc.).
-  String get signInSecondFactor => _data['signInSecondFactor'];
-
   /// The Firebase Auth ID token JWT string.
   String get token => _data['token'];
 
   @override
   String toString() {
-    return '$IdTokenResult(authTime: $authTime, claims: ${claims.toString()}, expirationTime: $expirationTime, issuedAtTime: $issuedAtTime, signInProvider: $signInProvider, signInSecondFactor: $signInSecondFactor, token: $token)';
+    return '$IdTokenResult(authTime: $authTime, claims: ${claims.toString()}, expirationTime: $expirationTime, issuedAtTime: $issuedAtTime, signInProvider: $signInProvider, token: $token)';
   }
 }

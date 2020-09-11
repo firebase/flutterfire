@@ -4,7 +4,35 @@
 
 import 'dart:async';
 
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+/// A enum to represent a reCAPTCHA widget size.
+enum RecaptchaVerifierSize {
+  /// Renders the widget in the default size.
+  normal,
+
+  /// Renders the widget in a smaller, compact size.
+  compact,
+}
+
+/// A enum to represent a reCAPTCHA widget theme.
+enum RecaptchaVerifierTheme {
+  /// Renders the widget in a light theme (white-gray background).
+  light,
+
+  /// Renders the widget in a dark theme (black-gray background).
+  dark,
+}
+
+/// Called on successful completion of the reCAPTCHA widget.
+typedef void RecaptchaVerifierOnSuccess();
+
+/// Called when the reCAPTCHA widget errors (such as a network error).
+typedef void RecaptchaVerifierOnError(FirebaseAuthException exception);
+
+/// Called when the time to complete the reCAPTCHA widget expires.
+typedef void RecaptchaVerifierOnExpired();
 
 /// A factory platform class for Recaptcha Verifier implementations.
 abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
@@ -44,16 +72,22 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
   }
 
   /// Returns the assigned factory delegate.
-  T getDelegate<T>() {
-    throw UnimplementedError("getDelegate() is not implemented");
+  dynamic get delegate {
+    throw UnimplementedError("delegate is not implemented");
   }
 
   /// Returns a [RecaptchaVerifierFactoryPlatform] delegate instance.
   ///
   /// Underlying implementations can use this method to create the underlying
   /// implementation of a Recaptcha Verifier.
-  RecaptchaVerifierFactoryPlatform delegateFor(
-      {String container, Map<String, dynamic> parameters}) {
+  RecaptchaVerifierFactoryPlatform delegateFor({
+    String container,
+    RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
+    RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,
+    RecaptchaVerifierOnSuccess onSuccess,
+    RecaptchaVerifierOnError onError,
+    RecaptchaVerifierOnExpired onExpired,
+  }) {
     throw UnimplementedError("delegateFor() is not implemented");
   }
 
@@ -69,9 +103,13 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
     throw UnimplementedError("clear() is not implemented");
   }
 
-  /// Renders the reCAPTCHA widget on the page.
+  /// Pre-renders the reCAPTCHA widget on the page.
   ///
   /// Returns a Future that resolves with the reCAPTCHA widget ID.
+  ///
+  /// If you do not pre-render the widget, it will be rendered before the
+  /// sign-in request is called. Depending on the network connection speed, this
+  /// may cause a small delay before the widget is displayed.
   Future<int> render() async {
     throw UnimplementedError("render() is not implemented");
   }

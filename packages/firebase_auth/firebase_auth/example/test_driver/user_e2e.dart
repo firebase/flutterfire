@@ -695,7 +695,9 @@ void runUserTests() {
 
         // Assertions
         expect(auth.currentUser, isNotNull);
-      });
+      },
+          skip:
+              true); // gets rate-limited often so should only be enabled when manual testing
 
       test('should error if email is null', () async {
         // Setup

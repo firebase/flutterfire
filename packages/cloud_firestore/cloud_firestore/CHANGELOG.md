@@ -1,9 +1,15 @@
-## [UNPUBLISHED]
+## 0.14.0+2
 
-- **FIX**: Added `==` operator override to `CollectionReferencePlatform`.
-- **FIX**: Allow iOS and macOS to be imported as a module.
+* Added missing deprecated `Firestore` static methods.
 
-## 0.14.0-dev.1
+## 0.14.0+1
+
+* Fixed issue #3210 (`Query.orderBy(FieldPath.documentId)` throws exception).
+* Fixed issue #3237 (`DocumentReference` not being parsed correctly).
+* Bump `cloud_firestore_web` dependency.
+* Bump `cloud_firestore_platform_interface` dependency to fix 2 race conditions. [(#3251)](https://github.com/FirebaseExtended/flutterfire/pull/3251)
+
+## 0.14.0
 
 Along with the below changes, the plugin has undergone a quality of life update to better support exceptions thrown. Any Firestore specific errors now return a `FirebaseException`, allowing you to directly access the code (e.g. `permission-denied`) and message.
 
@@ -26,7 +32,7 @@ Along with the below changes, the plugin has undergone a quality of life update 
 - **BREAKING**: Getting a collection parent document via `parent()` has been changed to a getter `parent`.
 - **BREAKING**: Getting the collection `path` now always returns the `path` without leading and trailing slashes.
 - **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
-- **FIX**: Equality checking of `CollectionReference` now does not depend on the original path used to create the `CollectionReference`. 
+- **FIX**: Equality checking of `CollectionReference` now does not depend on the original path used to create the `CollectionReference`.
 
 **`Query`**:
 - **BREAKING**: The internal query logic has been overhauled to better assert invalid queries locally.

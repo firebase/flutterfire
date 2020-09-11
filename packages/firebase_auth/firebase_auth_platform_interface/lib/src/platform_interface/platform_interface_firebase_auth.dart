@@ -470,7 +470,15 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     throw UnimplementedError('signInWithEmailLink() is not implemented');
   }
 
-  // ignore: public_member_api_docs
+  /// Starts a sign-in flow for a phone number.
+  ///
+  /// You can optionally provide a [RecaptchaVerifier] instance to control the
+  /// reCAPTCHA widget apperance and behaviour.
+  ///
+  /// Once the reCAPTCHA verification has completed, called [ConfirmationResult.confirm]
+  /// with the users SMS verification code to complete the authentication flow.
+  ///
+  /// This method is only available on web based platforms.
   Future<ConfirmationResultPlatform> signInWithPhoneNumber(String phoneNumber,
       RecaptchaVerifierFactoryPlatform applicationVerifier) async {
     throw UnimplementedError('signInWithPhoneNumber() is not implemented');
@@ -497,7 +505,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Signs out the current user.
   ///
-  /// If successful, it also signs the user in into the app and updates
+  /// If successful, it also updates
   /// any [authStateChanges], [idTokenChanges] or [userChanges] stream
   /// listeners.
   Future<void> signOut() async {

@@ -9,7 +9,7 @@ To start using the Cloud Firestore package within your project, import it at the
 import 'package:cloud_firestore/cloud_firestore.dart';
 ```
 
-Before using Firestore, you must first have ensured you have [initialized FlutterFire](overview#initializing-flutterfire).
+Before using Firestore, you must first have ensured you have [initialized FlutterFire](../overview.mdx#initializing-flutterfire).
 
 To create a new Firestore instance, call the [`instance`](!cloud_firestore.FirebaseFirestore.instance) getter on [`FirebaseFirestore`](!cloud_firestore.FirebaseFirestore):
 
@@ -21,7 +21,7 @@ By default, this allows you to interact with Firestore using the default Firebas
 platform. If however you'd like to use Firestore with a secondary Firebase App, use the [`instanceFor`](!cloud_firestore.FirebaseFirestore.instanceFor) method:
 
 ```dart
-FirebaseApp secondaryApp = Firebase.app('SecondayApp');
+FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
 FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: secondaryApp);
 ```
 
@@ -53,7 +53,7 @@ class AddUser extends StatelessWidget {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
     Future<void> addUser() {
-      // Call the users CollectionReference to add a new user
+      // Call the user's CollectionReference to add a new user
       return users
           .add({
             'full_name': fullName, // John Doe
@@ -105,7 +105,7 @@ class GetUserName extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data();
+          Map<String, dynamic> data = snapshot.data.data();
           return Text("Full Name: ${data['full_name']} ${data['last_name']}");
         }
 
@@ -177,7 +177,7 @@ FirebaseFirestore.instance
 
 ### Document & Query Snapshots
 
-When perfoming a query, Firestore returns either a [`QuerySnapshot`](!cloud_firestore.QuerySnapshot) or a [`DocumentSnapshot`](!cloud_firestore.DocumentSnapshot).
+When performing a query, Firestore returns either a [`QuerySnapshot`](!cloud_firestore.QuerySnapshot) or a [`DocumentSnapshot`](!cloud_firestore.DocumentSnapshot).
 
 #### QuerySnapshot
 
@@ -242,7 +242,7 @@ If no data exists at the nested path, a [`StateError`](https://api.dart.dev/stab
 ```dart
 try {
   dynamic nested = snapshot.get(FieldPath(['address', 'postcode']));
-} on StateError (e) {
+} on StateError catch(e) {
   print('No nested field exists!');
 }
 ```
@@ -325,8 +325,8 @@ FirebaseFirestore.instance
   .collection('users')
   .orderBy('age')
   .orderBy('company')
-  .startAt([20, 'Swift - Harber'])
-  .endAt([50, 'Wiza Group'])
+  .startAt([4, 'Alphabet Inc.'])
+  .endAt([21, 'Google LLC'])
   .get()
   .then(...);
 ```
@@ -383,7 +383,7 @@ class AddUser extends StatelessWidget {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
     Future<void> addUser() {
-      // Call the users CollectionReference to add a new user
+      // Call the user's CollectionReference to add a new user
       return users
           .add({
             'full_name': fullName, // John Doe
@@ -579,7 +579,7 @@ return Firestore.instance.runTransaction((transaction) async {
   // Return the new count
   return newFollowerCount;
 })
-.then((value) => print("Follower count updatd to $value"))
+.then((value) => print("Follower count updated to $value"))
 .catchError((error) => print("Failed to update user followers: $error"));
 ```
 
@@ -661,7 +661,7 @@ will attempt to remove older, unused data. You can configure different cache siz
 // The default value is 40 MB. The threshold must be set to at least 1 MB,
 // and can be set to Settings.CACHE_SIZE_UNLIMITED to disable garbage collection.
 
-FirebaseFirestore.instance.settings = 
+FirebaseFirestore.instance.settings =
     Settings(cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED);
 ```
 

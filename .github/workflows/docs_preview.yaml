@@ -1,0 +1,31 @@
+name: Deploy Preview
+
+on:
+  pull_request:
+    paths:
+    - "docs/**"
+    - "website/**"
+
+jobs:
+  build_and_preview:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: '12'
+    - name: Run Build
+      working-directory: ./website
+      run: |
+        yarn
+        yarn run build
+    - uses: ./.github/docs-preview
+      with:
+        firebaseCli: "${{ secrets.CLI_URL }}"
+        repoToken: "${{ secrets.GITHUB_TOKEN }}"
+        firebaseAccessToken: "${{ secrets.FIREBASE_DOCS_TOKEN }}"
+        expires: 30d
+        projectId: flutter-firebase-docs
+        workingDir: "website"
+      env:
+        FIREBASE_CLI_PREVIEWS: hostingchannels
