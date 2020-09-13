@@ -193,7 +193,7 @@ FirebaseFirestore.instance
     .get()
     .then((QuerySnapshot querySnapshot) => {
         querySnapshot.docs.forEach((doc) {
-            print(doc["first_name"]);
+            print(doc.data()["first_name"]);
         });
     });
 ```
