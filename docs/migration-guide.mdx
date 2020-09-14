@@ -359,6 +359,7 @@ The API has mainly been kept the same, however there are some breaking changes.
 This issue can happen when you upgrade your FlutterFire packages and attempt to build for iOS or MacOS, this is usually down to one of the following:
 
  - Your `Podfile.lock` version inside your iOS or MacOS directory is out of date and locked to older versions of the Firebase iOS SDKs whereas the newly upgraded FlutterFire packages might be using newer versions of these SDKs.
-   - **Solution:** Delete the `Podfile.lock` file and try your build again. This file will get regenerated after the next `pod install`.
+   - **Solution:** Delete the `Podfile.lock` file, `ios/Podfile`, run `pod cache clean --all` and try your build again. This file will get regenerated after the next `pod install`.
  - Your pod specs repo is out of date, meaning CocoaPods locally isn't aware of any potential newer versions of the Firebase iOS SDKs that have been recently published.
    - **Solution:** Run `pod repo update` in your terminal and try your build again.
+ 
