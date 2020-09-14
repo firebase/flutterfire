@@ -240,4 +240,14 @@ class Firestore extends FirebaseFirestore {
   factory Firestore({FirebaseApp app}) {
     return FirebaseFirestore.instanceFor(app: app);
   }
+
+  /// Returns an instance using the default [FirebaseApp].
+  static FirebaseFirestore get instance {
+    return FirebaseFirestore.instance;
+  }
+
+  /// Returns an instance using a specified [FirebaseApp].
+  static FirebaseFirestore instanceFor({FirebaseApp app}) {
+    return FirebaseFirestore.instanceFor(app: app);
+  }
 }

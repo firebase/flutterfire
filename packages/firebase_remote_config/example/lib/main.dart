@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 
@@ -54,6 +55,7 @@ class WelcomeWidget extends AnimatedWidget {
 }
 
 Future<RemoteConfig> setupRemoteConfig() async {
+  await Firebase.initializeApp();
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
   // Enable developer mode to relax fetch throttling
   remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));

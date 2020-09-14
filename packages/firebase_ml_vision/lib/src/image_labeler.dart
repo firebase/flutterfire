@@ -127,7 +127,8 @@ class CloudImageLabelerOptions {
 /// Represents an entity label detected by [ImageLabeler] and [CloudImageLabeler].
 class ImageLabel {
   ImageLabel._(dynamic data)
-      : confidence = data['confidence'],
+      : confidence =
+            data['confidence'] == null ? null : data['confidence'].toDouble(),
         entityId = data['entityId'],
         text = data['text'];
 

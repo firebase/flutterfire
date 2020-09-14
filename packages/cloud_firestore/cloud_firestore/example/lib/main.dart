@@ -11,7 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 bool USE_FIRESTORE_EMULATOR = false;
 
 void main() async {
-  await WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   if (USE_FIRESTORE_EMULATOR) {
     FirebaseFirestore.instance.settings = Settings(

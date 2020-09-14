@@ -33,11 +33,11 @@ once this becomes available._
 
 ## Initializing Firebase
 
-The next step is to initialize Firebase using your project's credentials. Create a new web app (or choose an existing one)
+The next step is to initialize Firebase using your project configuration. Create a new web app (or choose an existing one)
 on the [Firebase Console](https://console.firebase.google.com/project/_/settings/general/web) and copy the configuration
 details.
 
-Initialize Firebase using these credentials, placing the following script below the CDN imports added above:
+Initialize Firebase using these configuration details, placing the following script below the CDN imports added above:
 
 ```html {7-21} title="web/index.html"
 <html>
@@ -45,7 +45,7 @@ Initialize Firebase using these credentials, placing the following script below 
   <body>
     <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
 
-    <!-- Firebase Credentials -->
+    <!-- Firebase Configuration -->
     <script>
       var firebaseConfig = {
         apiKey: "...",

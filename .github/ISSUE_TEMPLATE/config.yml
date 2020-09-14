@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Feature Request
+    url: https://github.com/FirebaseExtended/flutterfire/discussions/new?category_id=24213383
+    about: Share ideas for new features.
+  - name: Ask a Question
+    url: https://github.com/FirebaseExtended/flutterfire/discussions/new?category_id=24213382
+    about: Ask the community for help.
+  - name: Show and tell
+    url: https://github.com/FirebaseExtended/flutterfire/discussions/new?category_id=24213384
+    about: Share what you've built with FlutterFire.

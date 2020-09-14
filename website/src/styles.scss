@@ -39,6 +39,12 @@ $theme: (
   }
 }
 
+html[data-theme='dark'] {
+  --ifm-code-background: var(--google-gray-primary-dark);
+  --ifm-color-primary: var(--flutter-blue-primary-light);
+  --ifm-menu-color-active: var(--flutter-blue-primary-light);
+}
+
 // Create dark-mode helper classes for text color & background color
 @each $name, $color in $theme {
   html[data-theme='dark'] {
@@ -112,4 +118,8 @@ li.menu__list-item > a[target='_blank'] {
     height: 15px;
     color: var(--ifm-menu-color);
   }
+}
+
+.keyword {
+  color: var(--firebase-amber);
 }
