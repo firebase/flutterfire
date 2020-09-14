@@ -11,6 +11,7 @@ public class Constants {
   public static final String PACKAGE_NAME = "packageName";
   public static final String BUNDLE_ID = "bundleId";
   public static final String APP_NAME = "appName";
+  public static final String SCOPES = "scopes";
 
   // Providers
   public static final String SIGN_IN_METHOD_PASSWORD = "password";

@@ -450,6 +450,11 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     throw UnimplementedError('signInWithEmailAndPassword() is not implemented');
   }
 
+  Future<UserCredentialPlatform> signInWithMicrosoft(String appName,
+      List<String> scope) async {
+    throw UnimplementedError('signInWithMicrosoft() is not implemented');
+  }
+
   /// Signs in using an email address and email sign-in link.
   ///
   /// Fails with an error if the email address is invalid or OTP in email link
@@ -467,11 +472,6 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  - Thrown if the user corresponding to the given email has been disabled.
   Future<UserCredentialPlatform> signInWithEmailLink(String email,
       String emailLink) async {
-    throw UnimplementedError('signInWithEmailLink() is not implemented');
-  }
-
-  Future<UserCredentialPlatform> signInWithMicrosoft(String appName,
-      List<String> scope) async {
     throw UnimplementedError('signInWithEmailLink() is not implemented');
   }
 

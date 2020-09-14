@@ -450,6 +450,22 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
+  Future<UserCredentialPlatform> signInWithMicrosoft(
+      String appName, List<String> scopes) async {
+    Map<String, dynamic> data = await channel.invokeMapMethod<String, dynamic>(
+        'Auth#signInWithMicrosoft', <String, dynamic>{
+      'appName': appName,
+      'scopes': scopes
+    }).catchError(catchPlatformException);
+
+    MethodChannelUserCredential userCredential =
+    MethodChannelUserCredential(this, data);
+
+    currentUser = userCredential.user;
+    return userCredential;
+  }
+
+  @override
   Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) {
     throw UnimplementedError(
         'signInWithPopup() is only supported on web based platforms');

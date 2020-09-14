@@ -231,6 +231,8 @@ public class FlutterFirebaseAuthPlugin
     String idToken = (String) credentialMap.get(Constants.ID_TOKEN);
     String accessToken = (String) credentialMap.get(Constants.ACCESS_TOKEN);
     String rawNonce = (String) credentialMap.get(Constants.RAW_NONCE);
+    String appName = (String) credentialMap.get(Constants.APP_NAME);
+    List<String> scopes = (List<String>) credentialMap.get(Constants.SCOPES);
 
     switch (signInMethod) {
       case Constants.SIGN_IN_METHOD_PASSWORD:
@@ -250,8 +252,8 @@ public class FlutterFirebaseAuthPlugin
             Objects.requireNonNull(accessToken), Objects.requireNonNull(secret));
 //        TODO Rafał
       case Constants.SIGN_IN_METHOD_MICROSOFT:
-        return TwitterAuthProvider.getCredential(
-          Objects.requireNonNull(accessToken), Objects.requireNonNull(secret));
+        return MicrosoftAuthProvider.getCredential(
+          Objects.requireNonNull(appName), Objects.requireNonNull(scopes));
 
       case Constants.SIGN_IN_METHOD_GITHUB:
         return GithubAuthProvider.getCredential(Objects.requireNonNull(accessToken));
@@ -747,6 +749,20 @@ public class FlutterFirebaseAuthPlugin
         });
   }
 
+//  TODO Rafał
+  private Task<Map<String, Object>> signInWithMicrosoft(Map<String, Object> arguments) {
+    return Tasks.call(
+      cachedThreadPool,
+      () -> {
+        FirebaseAuth firebaseAuth = getAuth(arguments);
+        String appName = (String) Objects.requireNonNull(arguments.get(Constants.APP_NAME));
+        String scopes = (String) Objects.requireNonNull(arguments.get(Constants.SCOPES));
+
+        AuthResult authResult = Tasks.await(firebaseAuth.signInWithMicrosoft(appName, scopes));
+        return parseAuthResult(authResult);
+      });
+  }
+
   private Task<Void> signOut(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -1185,6 +1201,9 @@ public class FlutterFirebaseAuthPlugin
         break;
       case "Auth#signInWithEmailLink":
         methodCallTask = signInWithEmailLink(call.arguments());
+        break;
+      case "Auth#signInWithMicrosoft":
+        methodCallTask = signInWithMicrosoft(call.arguments());
         break;
       case "Auth#signOut":
         methodCallTask = signOut(call.arguments());

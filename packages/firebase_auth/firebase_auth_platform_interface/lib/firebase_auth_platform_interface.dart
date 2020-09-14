@@ -29,3 +29,4 @@ export 'src/providers/oauth.dart';
 export 'src/providers/saml_auth.dart';
 export 'src/providers/phone_auth.dart';
 export 'src/providers/twitter_auth.dart';
+export 'src/providers/microsoft_auth.dart';
