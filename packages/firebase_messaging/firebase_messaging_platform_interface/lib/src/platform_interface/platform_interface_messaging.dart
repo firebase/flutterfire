@@ -60,7 +60,8 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// it is called.
   ///
   /// Does nothing and returns null on Android.
-  Future<bool> requestNotificationPermissions() {
+  Future<bool> requestNotificationPermissions(
+      IosNotificationSettings iosSettings) {
     throw UnimplementedError(
         'requestNotificationPermissions() is not implemented');
   }
@@ -73,7 +74,12 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   }
 
   /// Sets up [MessageHandler] for incoming messages.
-  void configure() {
+  void configure({
+    MessageHandler onMessage,
+    MessageHandler onBackgroundMessage,
+    MessageHandler onLaunch,
+    MessageHandler onResume,
+  }) {
     throw UnimplementedError('configure() is not implemented');
   }
 

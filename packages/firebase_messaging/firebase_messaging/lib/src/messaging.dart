@@ -40,8 +40,10 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// it is called.
   ///
   /// Does nothing and returns null on Android.
-  Future<bool> requestNotificationPermissions() {
-    return _delegate.requestNotificationPermissions();
+  Future<bool> requestNotificationPermissions(
+      [IosNotificationSettings iosSettings]) {
+    iosSettings ??= const IosNotificationSettings();
+    return _delegate.requestNotificationPermissions(iosSettings);
   }
 
   /// Stream that fires when the user changes their notification settings.
@@ -52,9 +54,18 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   }
 
   /// Sets up [MessageHandler] for incoming messages.
-  void configure() {
-    // TODO args
-    return _delegate.configure();
+  void configure({
+    MessageHandler onMessage,
+    MessageHandler onBackgroundMessage,
+    MessageHandler onLaunch,
+    MessageHandler onResume,
+  }) {
+    return _delegate.configure(
+      onMessage: onMessage,
+      onBackgroundMessage: onBackgroundMessage,
+      onLaunch: onLaunch,
+      onResume: onResume,
+    );
   }
 
   /// Fires when a new FCM token is generated.
