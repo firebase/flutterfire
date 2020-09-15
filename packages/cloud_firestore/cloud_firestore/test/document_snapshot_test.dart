@@ -177,11 +177,93 @@ void main() {
         expect(ds.get(FieldPath(['dot.field'])), isTrue);
       });
 
-      test('throws when geting a field containing a "." using [String]',
+      test('throws when getting a field containing a "." using [String]',
           () async {
         DocumentSnapshot ds = await firestore.doc('doc/get-test').get();
         try {
           ds.get('dot.field');
+        } on StateError {
+          return;
+        }
+        fail("Did not throw a StateError");
+      });
+    });
+
+    group('[]', () {
+      test('throws if field is invalid', () async {
+        DocumentSnapshot ds = await firestore.doc('doc/exists').get();
+        expect(() => ds[null], throwsAssertionError);
+        expect(() => ds[123], throwsAssertionError);
+        expect(() => ds[{}], throwsAssertionError);
+      });
+
+      test('gets a top-level field by [String]', () async {
+        DocumentSnapshot ds = await firestore.doc('doc/exists').get();
+        expect(ds['foo'], equals('bar'));
+      });
+
+      test('gets a top-level field by [FieldPath]', () async {
+        DocumentSnapshot ds = await firestore.doc('doc/exists').get();
+        expect(ds[FieldPath(['foo'])], equals('bar'));
+      });
+
+      test('throws a [StateError] if document does not exist', () async {
+        DocumentSnapshot ds = await firestore.doc('doc/not-exists').get();
+        try {
+          ds['foo'];
+        } on StateError {
+          return;
+        }
+        fail("Did not throw a StateError");
+      });
+
+      test('throws a [StateError] if a top-level field was not found',
+          () async {
+        DocumentSnapshot ds = await firestore.doc('doc/exists').get();
+        try {
+          ds['bar'];
+        } on StateError {
+          return;
+        }
+        fail("Did not throw a StateError");
+      });
+
+      test('gets a nested Map field by [String]', () async {
+        DocumentSnapshot ds = await firestore.doc('doc/get-test').get();
+        expect(ds['foo.bar'], equals('baz'));
+      });
+
+      test('gets a nested Map field by [FieldPath]', () async {
+        DocumentSnapshot ds = await firestore.doc('doc/get-test').get();
+        expect(ds[FieldPath(['foo', 'bar'])], equals('baz'));
+      });
+
+      test('gets a Map field', () async {
+        DocumentSnapshot ds = await firestore.doc('doc/get-test').get();
+        expect(ds['foo'], equals({'bar': 'baz'}));
+      });
+
+      test('gets a List field', () async {
+        DocumentSnapshot ds = await firestore.doc('doc/get-test').get();
+        expect(ds['baz'], equals([123, '456']));
+      });
+
+      test('gets a deep Map field', () async {
+        DocumentSnapshot ds = await firestore.doc('doc/get-test').get();
+        expect(ds['ben.foo.bar'], equals('baz'));
+      });
+
+      test('gets a field containing a "." using [FieldPath]', () async {
+        DocumentSnapshot ds = await firestore.doc('doc/get-test').get();
+
+        expect(ds[FieldPath(['dot.field'])], isTrue);
+      });
+
+      test('throws when getting a field containing a "." using [String]',
+          () async {
+        DocumentSnapshot ds = await firestore.doc('doc/get-test').get();
+        try {
+          ds['dot.field'];
         } on StateError {
           return;
         }

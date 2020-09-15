@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_web/src/utils/exception.dart';
 import 'package:firebase/firestore.dart' as web;
 
 import 'package:cloud_firestore_web/src/utils/web_utils.dart';
@@ -26,27 +27,46 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         super(firestore, path);
 
   @override
-  Future<void> set(Map<String, dynamic> data, [SetOptions options]) {
-    return _delegate.set(
-      CodecUtility.encodeMapData(data),
-      // TODO(ehesp): `mergeFields` missing from web implementation
-      options != null ? web.SetOptions(merge: options.merge) : null,
-    );
+  Future<void> set(Map<String, dynamic> data, [SetOptions options]) async {
+    try {
+      await _delegate.set(
+        CodecUtility.encodeMapData(data),
+        // TODO(ehesp): `mergeFields` missing from web implementation
+        options != null ? web.SetOptions(merge: options.merge) : null,
+      );
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
   }
 
   @override
-  Future<void> update(Map<String, dynamic> data) =>
-      _delegate.update(data: CodecUtility.encodeMapData(data));
+  Future<void> update(Map<String, dynamic> data) async {
+    try {
+      await _delegate.update(data: CodecUtility.encodeMapData(data));
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
+  }
 
   @override
   Future<DocumentSnapshotPlatform> get([GetOptions options]) async {
     // TODO(ehesp): web implementation not handling options
-    web.DocumentSnapshot documentSnapshot = await _delegate.get();
-    return convertWebDocumentSnapshot(this.firestore, documentSnapshot);
+    try {
+      web.DocumentSnapshot documentSnapshot = await _delegate.get();
+      return convertWebDocumentSnapshot(this.firestore, documentSnapshot);
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
   }
 
   @override
-  Future<void> delete() => _delegate.delete();
+  Future<void> delete() async {
+    try {
+      await _delegate.delete();
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
+  }
 
   @override
   Stream<DocumentSnapshotPlatform> snapshots({
@@ -56,7 +76,11 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     if (includeMetadataChanges) {
       querySnapshots = _delegate.onMetadataChangesSnapshot;
     }
-    return querySnapshots.map((webSnapshot) =>
-        convertWebDocumentSnapshot(this.firestore, webSnapshot));
+    return querySnapshots
+        .map((webSnapshot) =>
+            convertWebDocumentSnapshot(this.firestore, webSnapshot))
+        .handleError((e) {
+      throw getFirebaseException(e);
+    });
   }
 }

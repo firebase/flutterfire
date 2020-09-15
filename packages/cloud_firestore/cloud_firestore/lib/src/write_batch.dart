@@ -48,6 +48,7 @@ class WriteBatch {
   }
 
   @Deprecated("Deprecated in favor of `.set`")
+  // ignore: public_member_api_docs
   void setData(DocumentReference document, Map<String, dynamic> data,
       [SetOptions options]) {
     return set(document, data, options);
@@ -66,6 +67,7 @@ class WriteBatch {
   }
 
   @Deprecated("Deprecated in favor of `.update`")
+  // ignore: public_member_api_docs
   void updateData(DocumentReference document, Map<String, dynamic> data) {
     return update(document, data);
   }

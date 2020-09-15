@@ -24,6 +24,7 @@ class DocumentReference {
   String get id => _delegate.id;
 
   @Deprecated("Deprecated in favor of `.id`")
+  // ignore: public_member_api_docs
   String get documentID => id;
 
   /// The parent [CollectionReference] of this document.
@@ -83,11 +84,12 @@ class DocumentReference {
   }
 
   @Deprecated("Deprecated in favor of `.set()`")
+  // ignore: public_member_api_docs
   Future<void> setData(Map<String, dynamic> data, [SetOptions options]) {
     return set(data, options);
   }
 
-  /// Updates data on the documnent. Data will be merged with any existing
+  /// Updates data on the document. Data will be merged with any existing
   /// document data.
   ///
   /// If no document exists yet, the update will fail.
@@ -97,6 +99,7 @@ class DocumentReference {
   }
 
   @Deprecated("Deprecated in favor of `.update()`")
+  // ignore: public_member_api_docs
   Future<void> updateData(Map<String, dynamic> data) {
     return update(data);
   }

@@ -1,10 +1,10 @@
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-import 'package:flutter/services.dart';
+import 'dart:async';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -50,23 +50,86 @@ void main() {
       log.clear();
     });
 
-    test('getInitialLink', () async {
-      final PendingDynamicLinkData data =
-          await FirebaseDynamicLinks.instance.getInitialLink();
+    group('getInitialLink', () {
+      test('link can be parsed', () async {
+        final PendingDynamicLinkData data =
+            await FirebaseDynamicLinks.instance.getInitialLink();
 
-      expect(data.link, Uri.parse('https://google.com'));
+        expect(data.link, Uri.parse('https://google.com'));
 
-      expect(data.android.clickTimestamp, 1234567);
-      expect(data.android.minimumVersion, 12);
+        expect(data.android.clickTimestamp, 1234567);
+        expect(data.android.minimumVersion, 12);
 
-      expect(data.ios.minimumVersion, 'Version 12');
+        expect(data.ios.minimumVersion, 'Version 12');
 
-      expect(log, <Matcher>[
-        isMethodCall(
-          'FirebaseDynamicLinks#getInitialLink',
-          arguments: null,
-        )
-      ]);
+        expect(log, <Matcher>[
+          isMethodCall(
+            'FirebaseDynamicLinks#getInitialLink',
+            arguments: null,
+          )
+        ]);
+      });
+
+      // Both iOS FIRDynamicLink.url and android PendingDynamicLinkData.getUrl()
+      // might return null link. In such a case we want to ignore the deep-link.
+      test('for null link, returns null', () async {
+        FirebaseDynamicLinks.channel
+            .setMockMethodCallHandler((MethodCall methodCall) async {
+          log.add(methodCall);
+          switch (methodCall.method) {
+            case 'FirebaseDynamicLinks#getInitialLink':
+              return <dynamic, dynamic>{
+                'link': null,
+                'android': <dynamic, dynamic>{
+                  'clickTimestamp': 1234567,
+                  'minimumVersion': 12,
+                },
+                'ios': <dynamic, dynamic>{
+                  'minimumVersion': 'Version 12',
+                },
+              };
+            default:
+              return null;
+          }
+        });
+
+        final PendingDynamicLinkData data =
+            await FirebaseDynamicLinks.instance.getInitialLink();
+
+        expect(data, isNull);
+
+        expect(log, <Matcher>[
+          isMethodCall(
+            'FirebaseDynamicLinks#getInitialLink',
+            arguments: null,
+          )
+        ]);
+      });
+
+      test('for null result, returns null', () async {
+        FirebaseDynamicLinks.channel
+            .setMockMethodCallHandler((MethodCall methodCall) async {
+          log.add(methodCall);
+          switch (methodCall.method) {
+            case 'FirebaseDynamicLinks#getInitialLink':
+              return null;
+            default:
+              return null;
+          }
+        });
+
+        final PendingDynamicLinkData data =
+            await FirebaseDynamicLinks.instance.getInitialLink();
+
+        expect(data, isNull);
+
+        expect(log, <Matcher>[
+          isMethodCall(
+            'FirebaseDynamicLinks#getInitialLink',
+            arguments: null,
+          )
+        ]);
+      });
     });
 
     test('getDynamicLink', () async {
@@ -495,6 +558,115 @@ void main() {
             },
           ),
         ]);
+      });
+    });
+
+    group('onLink', () {
+      OnLinkSuccessCallback onSuccess;
+      OnLinkErrorCallback onError;
+      final List<PendingDynamicLinkData> successLog =
+          <PendingDynamicLinkData>[];
+      final List<OnLinkErrorException> errorLog = <OnLinkErrorException>[];
+      setUp(() {
+        onSuccess = (linkData) async {
+          successLog.add(linkData);
+        };
+        onError = (error) async {
+          errorLog.add(error);
+        };
+        successLog.clear();
+        errorLog.clear();
+      });
+
+      Future<void> callMethodHandler(String method, dynamic arguments) {
+        final channel = FirebaseDynamicLinks.channel;
+        final methodCall = MethodCall(method, arguments);
+        final data = channel.codec.encodeMethodCall(methodCall);
+        final Completer<void> completer = Completer<void>();
+        channel.binaryMessenger.handlePlatformMessage(
+          channel.name,
+          data,
+          (data) {
+            completer.complete(null);
+          },
+        );
+        return completer.future;
+      }
+
+      test('onSuccess', () async {
+        FirebaseDynamicLinks.instance
+            .onLink(onSuccess: onSuccess, onError: onError);
+        await callMethodHandler('onLinkSuccess', <dynamic, dynamic>{
+          'link': 'https://google.com',
+          'android': <dynamic, dynamic>{
+            'clickTimestamp': 1234567,
+            'minimumVersion': 12,
+          },
+          'ios': <dynamic, dynamic>{
+            'minimumVersion': 'Version 12',
+          },
+        });
+
+        expect(successLog, hasLength(1));
+        expect(errorLog, hasLength(0));
+        final success = successLog[0];
+
+        expect(success.link, Uri.parse('https://google.com'));
+
+        expect(success.android.clickTimestamp, 1234567);
+        expect(success.android.minimumVersion, 12);
+
+        expect(success.ios.minimumVersion, 'Version 12');
+      });
+
+      test('onSuccess with null link', () async {
+        FirebaseDynamicLinks.instance
+            .onLink(onSuccess: onSuccess, onError: onError);
+        await callMethodHandler('onLinkSuccess', <dynamic, dynamic>{
+          'link': null,
+          'android': <dynamic, dynamic>{
+            'clickTimestamp': 1234567,
+            'minimumVersion': 12,
+          },
+          'ios': <dynamic, dynamic>{
+            'minimumVersion': 'Version 12',
+          },
+        });
+
+        expect(successLog, hasLength(1));
+        expect(errorLog, hasLength(0));
+        final success = successLog[0];
+
+        expect(success, isNull);
+      });
+
+      test('onSuccess with null', () async {
+        FirebaseDynamicLinks.instance
+            .onLink(onSuccess: onSuccess, onError: onError);
+        await callMethodHandler('onLinkSuccess', null);
+
+        expect(successLog, hasLength(1));
+        expect(errorLog, hasLength(0));
+        final success = successLog[0];
+
+        expect(success, isNull);
+      });
+
+      test('onError', () async {
+        FirebaseDynamicLinks.instance
+            .onLink(onSuccess: onSuccess, onError: onError);
+        await callMethodHandler('onLinkError', <dynamic, dynamic>{
+          'code': 'code',
+          'message': 'message',
+          'details': 'details',
+        });
+
+        expect(successLog, hasLength(0));
+        expect(errorLog, hasLength(1));
+        final failure = errorLog[0];
+        expect(failure.code, 'code');
+        expect(failure.message, 'message');
+        expect(failure.details, 'details');
       });
     });
   });

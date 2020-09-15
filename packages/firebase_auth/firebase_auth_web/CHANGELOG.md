@@ -1,3 +1,12 @@
+## 0.3.0+1
+
+* Bump `firebase_auth_platform_interface` dependency to fix an assertion issue when creating Google sign-in credentials.
+
+## 0.3.0
+
+* See the `firebase_auth` plugin changelog.
+* Depend on `firebase_core`.
+
 ## 0.1.3+1
 
 * Implement `confirmPasswordReset`.

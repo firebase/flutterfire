@@ -12,6 +12,10 @@ dependencies:
   uuid: ^2.0.2
   http: ^0.12.0
 
+dependency_overrides:
+  firebase_core:
+    path: ../../firebase_core/firebase_core
+
 dev_dependencies:
   pedantic: ^1.8.0
   flutter_test:
@@ -19,7 +23,7 @@ dev_dependencies:
   flutter_driver:
     sdk: flutter
   test: any
-  e2e: ^0.4.3+1
+  e2e: ^0.6.1
 
 flutter:
   uses-material-design: true

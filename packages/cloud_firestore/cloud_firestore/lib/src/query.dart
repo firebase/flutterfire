@@ -8,7 +8,9 @@ part of cloud_firestore;
 ///
 /// Can construct refined [Query] objects by adding filters and ordering.
 class Query {
+  /// The [FirebaseFirestore] instance of this query.
   final FirebaseFirestore firestore;
+
   final QueryPlatform _delegate;
 
   Query._(this.firestore, this._delegate) {
@@ -108,7 +110,8 @@ class Query {
 
   /// Asserts that the query [field] is either a String or a [FieldPath].
   void _assertValidFieldType(dynamic field) {
-    assert(field is String || field is FieldPath,
+    assert(
+        field is String || field is FieldPath || field == FieldPath.documentId,
         'Supported [field] types are [String] and [FieldPath].');
   }
 
@@ -177,6 +180,7 @@ class Query {
   }
 
   @Deprecated("Deprecated in favor of `.get()`")
+  // ignore: public_member_api_docs
   Future<QuerySnapshot> getDocuments([GetOptions options]) => get(options);
 
   /// Creates and returns a new Query that's additionally limited to only return up
@@ -212,6 +216,7 @@ class Query {
   ///
   /// After a [FieldPath.documentId] order by call, you cannot add any more [orderBy]
   /// calls.
+  ///
   /// Furthermore, you may not use [orderBy] on the [FieldPath.documentId] [field] when
   /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
   /// or [endAtDocument] because the order by clause on the document id
@@ -230,9 +235,13 @@ class Query {
     assert(orders.where((List<dynamic> item) => field == item[0]).isEmpty,
         "OrderBy field '$field' already exists in this query");
 
-    FieldPath fieldPath = field is String ? FieldPath.fromString(field) : field;
-
-    orders.add([fieldPath, descending]);
+    if (field == FieldPath.documentId) {
+      orders.add([field, descending]);
+    } else {
+      FieldPath fieldPath =
+          field is String ? FieldPath.fromString(field) : field;
+      orders.add([fieldPath, descending]);
+    }
 
     final List<List<dynamic>> conditions =
         List<List<dynamic>>.from(parameters['where']);
@@ -347,9 +356,17 @@ class Query {
 
     // Conditions can be chained from other [Query] instances
     void addCondition(dynamic field, String operator, dynamic value) {
-      FieldPath fieldPath =
-          field is String ? FieldPath.fromString(field) : field as FieldPath;
-      final List<dynamic> condition = <dynamic>[fieldPath, operator, value];
+      List<dynamic> condition;
+      value = _CodecUtility.valueEncode(value);
+
+      if (field == FieldPath.documentId) {
+        condition = <dynamic>[field, operator, value];
+      } else {
+        FieldPath fieldPath =
+            field is String ? FieldPath.fromString(field) : field as FieldPath;
+        condition = <dynamic>[fieldPath, operator, value];
+      }
+
       assert(
           conditions
               .where((List<dynamic> item) => equality.equals(condition, item))
@@ -390,7 +407,7 @@ class Query {
     // Once all conditions have been set, we must now check them to ensure the
     // query is valid.
     for (dynamic condition in conditions) {
-      FieldPath field = condition[0];
+      dynamic field = condition[0]; // FieldPath or FieldPathType
       String operator = condition[1];
       dynamic value = condition[2];
 

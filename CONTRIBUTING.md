@@ -157,7 +157,7 @@ guide. For example, for a fix to the Cloud Firestore plugin:
 
 `fix(cloud_firestore): Fixed a bug!`
 
-Plugins tests are run automatically on contributions using GitHub Actions. Depending on 
+Plugins tests are run automatically on contributions using GitHub Actions. Depending on
 your code contributions, various tests will be run against your updated code automatically.
 
 Once you've gotten an LGTM from a project maintainer and once your PR has received

@@ -31,35 +31,33 @@ void runQueryTests() {
     /**
      * collectionGroup
      */
-    // TODO(ehesp): specific rules need enabling
-    // group('collectionGroup()', () {
-    //   test('returns a data via a sub-collection',
-    //       () async {
-    //     CollectionReference collection =
-    //         firestore.collection('flutter-tests/collection-group/group-test');
-    //     QuerySnapshot snapshot = await collection.get();
-    //     await Future.forEach(snapshot.docs,
-    //         (DocumentSnapshot documentSnapshot) {
-    //       return documentSnapshot.reference.delete();
-    //     });
+    group('collectionGroup()', () {
+      test('returns a data via a sub-collection', () async {
+        CollectionReference collection =
+            firestore.collection('flutter-tests/collection-group/group-test');
+        QuerySnapshot snapshot = await collection.get();
 
-    //     await collection.doc('doc1').set({'foo': 1});
-    //     await collection.doc('doc2').set({'foo': 2});
+        await Future.forEach(snapshot.docs,
+            (DocumentSnapshot documentSnapshot) {
+          return documentSnapshot.reference.delete();
+        });
 
-    //     QuerySnapshot groupSnapshot = await firestore
-    //         .collectionGroup('group-test')
-    //         .orderBy('foo', descending: true)
-    //         .get();
-    //     expect(groupSnapshot.size, equals(2));
-    //     expect(groupSnapshot.docs[0].data()['foo'], equals(2));
-    //     expect(groupSnapshot.docs[1].data()['foo'], equals(1));
-    //   });
-    // });
+        await collection.doc('doc1').set({'foo': 1});
+        await collection.doc('doc2').set({'foo': 2});
+
+        QuerySnapshot groupSnapshot = await firestore
+            .collectionGroup('group-test')
+            .orderBy('foo', descending: true)
+            .get();
+        expect(groupSnapshot.size, equals(2));
+        expect(groupSnapshot.docs[0].data()['foo'], equals(2));
+        expect(groupSnapshot.docs[1].data()['foo'], equals(1));
+      });
+    });
 
     /**
      * get
      */
-
     group('Query.get()', () {
       test('returns a [QuerySnapshot]', () async {
         CollectionReference collection = await initializeTest('get');
@@ -89,11 +87,9 @@ void runQueryTests() {
         try {
           await collection.get();
         } catch (error) {
-          if (!kIsWeb) {
-            expect(error, isA<FirebaseException>());
-            expect(
-                (error as FirebaseException).code, equals('permission-denied'));
-          }
+          expect(error, isA<FirebaseException>());
+          expect(
+              (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
         fail("Should have thrown a [FireebaseException]");
@@ -175,7 +171,7 @@ void runQueryTests() {
         await collection.doc('doc2').set({'foo': 'bar'});
         await collection.doc('doc2').update({'foo': 'baz'});
 
-        subscription.cancel();
+        await subscription.cancel();
       });
 
       test('listeners throws a [FirebaseException]', () async {
@@ -185,11 +181,9 @@ void runQueryTests() {
         try {
           await stream.first;
         } catch (error) {
-          if (!kIsWeb) {
-            expect(error, isA<FirebaseException>());
-            expect(
-                (error as FirebaseException).code, equals('permission-denied'));
-          }
+          expect(error, isA<FirebaseException>());
+          expect(
+              (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
 
@@ -697,9 +691,9 @@ void runQueryTests() {
       });
     });
 
-    // /**
-    //  * Limit
-    //  */
+    /**
+     * Limit
+     */
 
     group('Query.limit{toLast}()', () {
       test('limits documents', () async {
@@ -766,8 +760,37 @@ void runQueryTests() {
      * Order
      */
     group('Query.orderBy()', () {
+      test('allows ordering by documentId', () async {
+        CollectionReference collection =
+            await initializeTest('order-document-id');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 1,
+          }),
+          collection.doc('doc2').set({
+            'foo': 1,
+          }),
+          collection.doc('doc3').set({
+            'foo': 1,
+          }),
+          collection.doc('doc4').set({
+            'bar': 1,
+          }),
+        ]);
+
+        QuerySnapshot snapshot =
+            await collection.orderBy('foo').orderBy(FieldPath.documentId).get();
+
+        expect(snapshot.docs.length, equals(3));
+        expect(snapshot.docs[0].id, equals('doc1'));
+        expect(snapshot.docs[1].id, equals('doc2'));
+        expect(snapshot.docs[2].id, equals('doc3'));
+      });
+
       test('orders async by default', () async {
         CollectionReference collection = await initializeTest('order-asc');
+
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 3,
@@ -1069,6 +1092,53 @@ void runQueryTests() {
         expect(snapshot.docs[0].get(fieldPath), isTrue);
         expect(snapshot.docs[1].get(fieldPath), isTrue);
         expect(snapshot.docs[1].get('foo'), equals('bar'));
+      });
+
+      test('returns results using FieldPath.documentId', () async {
+        CollectionReference collection =
+            await initializeTest('where-field-path-document-id');
+
+        DocumentReference docRef = await collection.add({
+          'foo': 'bar',
+        });
+
+        // Add secondary document for sanity check
+        await collection.add({
+          'bar': 'baz',
+        });
+
+        QuerySnapshot snapshot = await collection
+            .where(FieldPath.documentId, isEqualTo: docRef.id)
+            .get();
+
+        expect(snapshot.docs.length, equals(1));
+        expect(snapshot.docs[0].get('foo'), equals('bar'));
+      });
+
+      test('returns returns and encoded DocumentReferences', () async {
+        CollectionReference collection =
+            await initializeTest('where-document-reference');
+
+        DocumentReference ref = FirebaseFirestore.instance.doc('foo/bar');
+
+        await Future.wait([
+          collection.add({
+            'foo': ref,
+          }),
+          collection.add({
+            'foo': FirebaseFirestore.instance.doc('bar/baz'),
+          }),
+          collection.add({
+            'foo': 'foo/bar',
+          })
+        ]);
+
+        QuerySnapshot snapshot = await collection
+            .where('foo', isEqualTo: FirebaseFirestore.instance.doc('foo/bar'))
+            .get();
+
+        expect(snapshot.docs.length, equals(1));
+        expect(snapshot.docs[0].get('foo'), equals(ref));
       });
     });
   });

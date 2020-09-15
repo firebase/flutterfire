@@ -4,6 +4,7 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
+import 'package:cloud_firestore_web/src/utils/exception.dart';
 import 'package:firebase/firestore.dart' as web;
 
 import 'package:cloud_firestore_web/src/utils/web_utils.dart';
@@ -87,8 +88,8 @@ class QueryWeb extends QueryPlatform {
   @override
   QueryPlatform endAtDocument(List<dynamic> orders, List<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': CodecUtility.valueEncode(orders),
-      'endAt': CodecUtility.valueEncode(values),
+      'orderBy': orders,
+      'endAt': values,
       'endBefore': null,
     });
   }
@@ -96,7 +97,7 @@ class QueryWeb extends QueryPlatform {
   @override
   QueryPlatform endAt(List<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
-      'endAt': CodecUtility.valueEncode(fields),
+      'endAt': fields,
       'endBefore': null,
     });
   }
@@ -104,9 +105,9 @@ class QueryWeb extends QueryPlatform {
   @override
   QueryPlatform endBeforeDocument(List<dynamic> orders, List<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': CodecUtility.valueEncode(orders),
+      'orderBy': orders,
       'endAt': null,
-      'endBefore': CodecUtility.valueEncode(values),
+      'endBefore': values,
     });
   }
 
@@ -114,15 +115,19 @@ class QueryWeb extends QueryPlatform {
   QueryPlatform endBefore(List<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
       'endAt': null,
-      'endBefore': CodecUtility.valueEncode(fields),
+      'endBefore': fields,
     });
   }
 
   @override
   Future<QuerySnapshotPlatform> get([GetOptions options]) async {
     // TODO(ehesp): web implementation not handling options
-    return convertWebQuerySnapshot(
-        firestore, await _buildWebQueryWithParameters().get());
+    try {
+      return convertWebQuerySnapshot(
+          firestore, await _buildWebQueryWithParameters().get());
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
   }
 
   @override
@@ -152,8 +157,12 @@ class QueryWeb extends QueryPlatform {
     } else {
       querySnapshots = _buildWebQueryWithParameters().onSnapshot;
     }
-    return querySnapshots.map((webQuerySnapshot) =>
-        convertWebQuerySnapshot(firestore, webQuerySnapshot));
+    return querySnapshots
+        .map((webQuerySnapshot) =>
+            convertWebQuerySnapshot(firestore, webQuerySnapshot))
+        .handleError((e) {
+      throw getFirebaseException(e);
+    });
   }
 
   @override
@@ -166,7 +175,7 @@ class QueryWeb extends QueryPlatform {
     return _copyWithParameters(<String, dynamic>{
       'orderBy': orders,
       'startAt': null,
-      'startAfter': CodecUtility.valueEncode(values),
+      'startAfter': values,
     });
   }
 
@@ -174,7 +183,7 @@ class QueryWeb extends QueryPlatform {
   QueryPlatform startAfter(List<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
       'startAt': null,
-      'startAfter': CodecUtility.valueEncode(fields),
+      'startAfter': fields,
     });
   }
 
@@ -182,7 +191,7 @@ class QueryWeb extends QueryPlatform {
   QueryPlatform startAtDocument(List<dynamic> orders, List<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
       'orderBy': orders,
-      'startAt': CodecUtility.valueEncode(values),
+      'startAt': values,
       'startAfter': null,
     });
   }
@@ -190,7 +199,7 @@ class QueryWeb extends QueryPlatform {
   @override
   QueryPlatform startAt(List<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
-      'startAt': CodecUtility.valueEncode(fields),
+      'startAt': fields,
       'startAfter': null,
     });
   }
@@ -198,7 +207,7 @@ class QueryWeb extends QueryPlatform {
   @override
   QueryPlatform where(List<List<dynamic>> conditions) {
     return _copyWithParameters(<String, dynamic>{
-      'where': CodecUtility.valueEncode(conditions),
+      'where': conditions,
     });
   }
 }

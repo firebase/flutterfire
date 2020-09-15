@@ -9,7 +9,7 @@ import 'package:collection/collection.dart';
 
 /// Represents binary data stored in [Uint8List].
 class Blob {
-  /// Create a blob.
+  /// Creates a blob.
   const Blob(this.bytes);
 
   /// The bytes that are contained in this blob.

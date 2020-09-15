@@ -21,8 +21,10 @@ class DocumentSnapshot {
   String get id => _delegate.id;
 
   @Deprecated("Deprecated in favor of `.id`")
+  // ignore: public_member_api_docs
   String get documentID => id;
 
+  /// Returns the [DocumentReference] of this snapshot.
   DocumentReference get reference => _firestore.doc(_delegate.reference.path);
 
   /// Metadata about this [DocumentSnapshot] concerning its source and if it has local
@@ -43,5 +45,13 @@ class DocumentSnapshot {
   /// Data can be accessed by providing a dot-notated path or [FieldPath]
   /// which recursively finds the specified data. If no data could be found
   /// at the specified path, a [StateError] will be thrown.
-  dynamic get(dynamic field) => _delegate.get(field);
+  dynamic get(dynamic field) =>
+      _CodecUtility.valueDecode(_delegate.get(field), _firestore);
+
+  /// Gets a nested field by [String] or [FieldPath] from this [DocumentSnapshot].
+  ///
+  /// Data can be accessed by providing a dot-notated path or [FieldPath]
+  /// which recursively finds the specified data. If no data could be found
+  /// at the specified path, a [StateError] will be thrown.
+  dynamic operator [](dynamic field) => get(field);
 }

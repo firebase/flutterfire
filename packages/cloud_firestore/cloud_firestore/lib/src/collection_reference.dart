@@ -62,6 +62,7 @@ class CollectionReference extends Query {
   }
 
   @Deprecated("Deprecated in favor of `.doc()`")
+  // ignore: public_member_api_docs
   DocumentReference document([String path]) => doc(path);
 
   @override

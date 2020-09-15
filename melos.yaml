@@ -1,5 +1,12 @@
-name: flutterfire_plugins
+# Name of this workspace, this is used for display purpose on the CLI
+# and on your IDEs.
+name: FlutterFire
 
+versioning:
+  # Versioning mode, currently only independent supported.
+  mode: independent
+
+# Array of globs to search for packages.
 packages:
   - packages/**
 
@@ -77,18 +84,13 @@ scripts:
         --fail-fast \
         --include-podspecs=\$MELOS_ROOT_PATH/packages/firebase_core/firebase_core/ios/firebase_core.podspec
 
-  # TODO(Salakar): Temporary workaround melos issue (should not creating these for non app packages)
-  postbootstrap: >
-    melos exec -c 5 --ignore="*example*" -- \
-      rm .flutter-plugins .flutter-plugins-dependencies
-
   # Additional cleanup lifecycle script, executed when `melos clean` is ran.
   postclean: >
     melos exec -- \
       rm -rf ./build ./android/.gradle ./ios/.symlinks ./ios/Pods ./android/.idea ./.idea ./.dart-tool/build
 
 dev_dependencies:
-  pedantic: ^1.8.0
+  pedantic: 1.8.0
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
