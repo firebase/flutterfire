@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 ///
 /// You can get an instance by calling [FirebaseMessaging.instance].
 class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
-  /// Create an instance of [MethodChannelFirebaseFirestore] with optional [FirebaseApp]
+  /// Create an instance of [MethodChannelFirebaseMessaging] with optional [FirebaseApp]
   MethodChannelFirebaseMessaging({FirebaseApp app}) : super(appInstance: app) {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {

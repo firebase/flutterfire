@@ -38,9 +38,9 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
 
   static FirebaseMessagingPlatform _instance;
 
-  /// The current default [FirebaseFirestorePlatform] instance.
+  /// The current default [FirebaseMessagingPlatform] instance.
   ///
-  /// It will always default to [MethodChannelFirebaseFirestore]
+  /// It will always default to [MethodChannelFirebaseMessaging]
   /// if no other implementation was provided.
   static FirebaseMessagingPlatform get instance {
     if (_instance == null) {

@@ -1,13 +1,12 @@
 name: firebase_messaging_platform_interface
 description: A common platform interface for the firebase_messaging plugin.
-version: 2.0.1
+version: 1.0.0
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/firebase_messaging_platform_interface
 
 dependencies:
   flutter:
     sdk: flutter
   meta: ^1.0.5
-  collection: ^1.14.3
   firebase_core: ">=0.5.0 <0.6.0"
   plugin_platform_interface: ^1.0.0
 
