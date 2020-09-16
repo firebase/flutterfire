@@ -54,12 +54,8 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   private void onAttachedToEngine(Context context, BinaryMessenger binaryMessenger) {
     this.applicationContext = context;
     channel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging");
-    final MethodChannel backgroundCallbackChannel =
-        new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging_background");
-
     channel.setMethodCallHandler(this);
-    backgroundCallbackChannel.setMethodCallHandler(this);
-    FlutterFirebaseMessagingService.setBackgroundChannel(backgroundCallbackChannel);
+    FlutterFirebaseMessagingService.setFirebaseMessagingPlugin(this);
 
     // Register broadcast receiver
     IntentFilter intentFilter = new IntentFilter();
@@ -67,6 +63,12 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     intentFilter.addAction(FlutterFirebaseMessagingService.ACTION_REMOTE_MESSAGE);
     LocalBroadcastManager manager = LocalBroadcastManager.getInstance(applicationContext);
     manager.registerReceiver(this, intentFilter);
+  }
+
+  public void initializeBackgroundMethodChannel(BinaryMessenger binaryMessenger) {
+    final MethodChannel backgroundCallbackChannel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging_background");
+    backgroundCallbackChannel.setMethodCallHandler(this);
+    FlutterFirebaseMessagingService.setBackgroundChannel(backgroundCallbackChannel);
   }
 
   private void setActivity(Activity flutterActivity) {

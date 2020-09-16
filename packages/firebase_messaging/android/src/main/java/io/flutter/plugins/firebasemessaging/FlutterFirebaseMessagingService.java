@@ -9,12 +9,17 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.os.Handler;
 import android.os.Process;
 import android.util.Log;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.embedding.engine.dart.DartExecutor;
+import io.flutter.embedding.engine.dart.DartExecutor.DartCallback;
+import io.flutter.embedding.engine.plugins.shim.ShimPluginRegistry;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.view.FlutterCallbackInformation;
@@ -48,7 +53,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   private static AtomicBoolean isIsolateRunning = new AtomicBoolean(false);
 
   /** Background Dart execution context. */
-  private static FlutterNativeView backgroundFlutterView;
+  private static FlutterEngine backgroundFlutterEngine;
 
   private static MethodChannel backgroundChannel;
 
@@ -63,12 +68,15 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
 
   private static Context backgroundContext;
 
+  private static FirebaseMessagingPlugin firebaseMessagingPlugin;
+
   @Override
   public void onCreate() {
     super.onCreate();
 
+    
     backgroundContext = getApplicationContext();
-    FlutterMain.ensureInitializationComplete(backgroundContext, null);
+    //FlutterMain.ensureInitializationComplete(backgroundContext, null);
 
     // If background isolate is not running start it.
     if (!isIsolateRunning.get()) {
@@ -139,30 +147,37 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
    *     handling on the dart side.
    */
   public static void startBackgroundIsolate(Context context, long callbackHandle) {
-    FlutterMain.ensureInitializationComplete(context, null);
-    String appBundlePath = FlutterMain.findAppBundlePath();
-    FlutterCallbackInformation flutterCallback =
-        FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
-    if (flutterCallback == null) {
-      Log.e(TAG, "Fatal: failed to find callback");
+    if (backgroundFlutterEngine != null) {
+      Log.e(TAG, "Background isolate already started");
       return;
     }
 
-    // Note that we're passing `true` as the second argument to our
-    // FlutterNativeView constructor. This specifies the FlutterNativeView
-    // as a background view and does not create a drawing surface.
-    backgroundFlutterView = new FlutterNativeView(context, true);
-    if (appBundlePath != null) {
-      if (pluginRegistrantCallback == null) {
-        throw new RuntimeException("PluginRegistrantCallback is not set.");
+    String appBundlePath = FlutterMain.findAppBundlePath();
+    AssetManager assets = context.getAssets();
+    if(!isIsolateRunning.get()){
+      backgroundFlutterEngine = new FlutterEngine(context);
+
+      // We need to create an instance of `FlutterEngine` before looking up the
+      // callback. If we don't, the callback cache won't be initialized and the
+      // lookup will fail.
+      FlutterCallbackInformation flutterCallback =
+          FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
+
+      DartExecutor executor = backgroundFlutterEngine.getDartExecutor();
+      firebaseMessagingPlugin.initializeBackgroundMethodChannel(executor);
+      DartCallback dartCallback = new DartCallback(assets, appBundlePath, flutterCallback);
+
+      executor.executeDartCallback(dartCallback);
+
+      // The pluginRegistrantCallback should only be set in the V1 embedding as
+      // plugin registration is done via reflection in the V2 embedding. 
+      // If set while using V2 embedding, the application will crash.
+      if (pluginRegistrantCallback != null) {
+        Log.d(TAG, "Proceeding with v1 embedding");
+        pluginRegistrantCallback.registerWith(new ShimPluginRegistry(backgroundFlutterEngine));
       }
-      FlutterRunArguments args = new FlutterRunArguments();
-      args.bundlePath = appBundlePath;
-      args.entrypoint = flutterCallback.callbackName;
-      args.libraryPath = flutterCallback.callbackLibraryPath;
-      backgroundFlutterView.runFromBundle(args);
-      pluginRegistrantCallback.registerWith(backgroundFlutterView.getPluginRegistry());
     }
+
   }
 
   /**
@@ -180,6 +195,16 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
       }
       backgroundMessageQueue.clear();
     }
+  }
+
+  /**
+   * Set the Firebase messaging plugin instance that is used to register method channels. This method is only
+   * called when the plugin registers.
+   *
+   * @param plugin Firebase messaging plugin instance.
+   */
+  public static void setFirebaseMessagingPlugin(FirebaseMessagingPlugin plugin) {
+    firebaseMessagingPlugin = plugin;
   }
 
   /**
@@ -329,4 +354,5 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     }
     return false;
   }
+
 }
