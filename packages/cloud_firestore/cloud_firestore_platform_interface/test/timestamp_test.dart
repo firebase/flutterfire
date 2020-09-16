@@ -10,7 +10,6 @@ const int _kStartOfTime = -62135596800;
 const int _kEndOfTime = 253402300800;
 const int int64MaxValue = 9223372036854775807;
 
-
 void main() {
   group('$Timestamp', () {
     test('equality', () {
@@ -37,42 +36,45 @@ void main() {
       Timestamp.fromMicrosecondsSinceEpoch(maxTimestamp.microsecondsSinceEpoch);
     });
 
-
     test('fromMillisecondsSinceEpoch throws max out of range exception', () {
-      expect(() => Timestamp.fromMillisecondsSinceEpoch(int64MaxValue), throwsArgumentError);
+      expect(() => Timestamp.fromMillisecondsSinceEpoch(int64MaxValue),
+          throwsArgumentError);
     });
 
     test('fromMillisecondsSinceEpoch can handle future date', () {
       int currentEpoch = DateTime.now().millisecondsSinceEpoch;
-      Timestamp t =  Timestamp.fromMillisecondsSinceEpoch(currentEpoch);
+      Timestamp t = Timestamp.fromMillisecondsSinceEpoch(currentEpoch);
 
       expect(t.toDate().year > 1970, equals(true));
     });
 
     test('fromMillisecondsSinceEpoch can handle future date', () {
       int currentEpoch = DateTime.now().millisecondsSinceEpoch + 999999999;
-      Timestamp t =  Timestamp.fromMillisecondsSinceEpoch(currentEpoch);
+      Timestamp t = Timestamp.fromMillisecondsSinceEpoch(currentEpoch);
 
-      expect(t.toDate().millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch, equals(true));
+      expect(
+          t.toDate().millisecondsSinceEpoch >
+              DateTime.now().millisecondsSinceEpoch,
+          equals(true));
     });
 
-   test('fromMillisecondsSinceEpoch can handle 0', () {
-
-      Timestamp t =  Timestamp.fromMillisecondsSinceEpoch(0);
+    test('fromMillisecondsSinceEpoch can handle 0', () {
+      Timestamp t = Timestamp.fromMillisecondsSinceEpoch(0);
       expect(t.toDate().year, 1970);
       expect(t.toDate().month, 1);
       expect(t.toDate().day, 1);
     });
 
-    test('fromMillisecondsSinceEpoch can handle nagtive millisecond values', () {
-      Timestamp t =  Timestamp.fromMillisecondsSinceEpoch(-9999999999);
+    test('fromMillisecondsSinceEpoch can handle nagtive millisecond values',
+        () {
+      Timestamp t = Timestamp.fromMillisecondsSinceEpoch(-9999999999);
 
       expect(t.toDate().year, 1969);
       expect(t.toDate().month, 9);
     });
 
     test('millisecondsSinceEpoch returns correct negative epoch value', () {
-      Timestamp t =  Timestamp.fromMillisecondsSinceEpoch(-9999999999);
+      Timestamp t = Timestamp.fromMillisecondsSinceEpoch(-9999999999);
       int epoch = t.millisecondsSinceEpoch;
 
       expect(epoch, equals(-9999999999));
