@@ -35,7 +35,7 @@ example's directory, run `pub get` to make sure its dependencies have been
 downloaded, and use `flutter run`. Make sure you have a device connected over
 USB and debugging enabled on that device.
 
- * `cd packages/cloud_firestore/example`
+ * `cd packages/cloud_firestore/cloud_firestore/example`
  * `flutter run`
 
 ## Running the tests
@@ -52,7 +52,7 @@ To run the integration tests:
 
 ```
 cd example
-flutter drive test/<name_of_plugin>.dart
+flutter drive test_driver/<name_of_plugin>.dart
 ```
 
 ## Contributing code
@@ -70,7 +70,7 @@ To start working on a patch:
  * `git fetch upstream`
  * `git checkout upstream/master -b <name_of_your_branch>`
  * Hack away.
- * Verify changes with [flutter_plugin_tools](https://pub.dartlang.org/packages/flutter_plugin_tools)
+ * Verify changes with [flutter_plugin_tools](https://pub.dev/packages/flutter_plugin_tools)
 ```
 pub global activate flutter_plugin_tools
 pub global run flutter_plugin_tools format --plugins plugin_name

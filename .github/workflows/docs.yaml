@@ -1,0 +1,49 @@
+name: publish_docs
+
+on:
+  push:
+    branches:
+    - master
+    paths:
+    - "docs/**"
+    - "website/**"
+  workflow_dispatch:
+
+jobs:
+  build_docs:
+    name: Build Docs
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: '12'
+    - name: Run Build
+      working-directory: ./website
+      run: |
+        yarn
+        yarn run build
+    - uses: actions/upload-artifact@v2
+      with:
+        name: docs-release-build
+        path: website/build
+  deploy_docs:
+    name: Deploy Docs
+    runs-on: ubuntu-latest
+    needs: build_docs
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: '12'
+    - uses: actions/download-artifact@v2
+      with:
+        name: docs-release-build
+        path: website/build
+    - run: |
+        cd website
+        npm install -g firebase-tools
+        firebase deploy --only hosting \
+            --project flutter-firebase-docs \
+            --token ${{ secrets.FIREBASE_DOCS_TOKEN }}
+

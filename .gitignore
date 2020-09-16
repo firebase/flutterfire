@@ -1,7 +1,9 @@
 .DS_Store
 .atom/
 .idea/
-.vscode/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/settings.json
 
 .packages
 .pub/
@@ -11,10 +13,12 @@ flutter_export_environment.sh
 
 examples/all_plugins/pubspec.yaml
 
-Podfile
 Podfile.lock
 Pods/
+Podfile
 .symlinks/
+**/Flutter/ephemeral/
+**/Flutter/Flutter.podspec
 **/Flutter/App.framework/
 **/Flutter/Flutter.framework/
 **/Flutter/Generated.xcconfig
@@ -43,3 +47,31 @@ build/
 .project
 .classpath
 .settings
+/pubspec.yaml
+.last_build_id
+
+# Docs
+
+# Dependencies
+node_modules
+
+# Production
+website/build
+
+# Generated files
+.docusaurus
+.cache-loader
+
+# Misc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+firebase-debug.log
+firestore-debug.log
+ui-debug.log

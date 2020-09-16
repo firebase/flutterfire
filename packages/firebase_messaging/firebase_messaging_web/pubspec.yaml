@@ -11,7 +11,8 @@ flutter:
         fileName: firebase_messaging_web.dart
 
 dependencies:
-  firebase_messaging_platform_interface: ^1.0.0
+  firebase_messaging_platform_interface: #^1.0.0
+    path: ../firebase_messaging_platform_interface
   flutter:
     sdk: flutter
   flutter_web_plugins:
@@ -28,5 +29,5 @@ dev_dependencies:
   path: ^1.6.2
 
 environment:
-  sdk: ">=2.0.0-dev.28.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+  sdk: ">=2.0.0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"

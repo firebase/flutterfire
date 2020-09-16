@@ -2,14 +2,14 @@
 
 A Flutter plugin to use the [Firebase Remote Config API](https://firebase.google.com/products/remote-config/).
 
-[![pub package](https://img.shields.io/pub/v/firebase_remote_config.svg)](https://pub.dartlang.org/packages/firebase_remote_config)
+[![pub package](https://img.shields.io/pub/v/firebase_remote_config.svg)](https://pub.dev/packages/firebase_remote_config)
 
 For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
 ## Usage
 
 ### Import the firebase_remote_config plugin
-To use the firebase_remote_config plugin, follow the [plugin installation instructions](https://pub.dartlang.org/packages/firebase_remote_config#pub-pkg-tab-installing).
+To use the firebase_remote_config plugin, follow the [plugin installation instructions](https://pub.dev/packages/firebase_remote_config#pub-pkg-tab-installing).
 
 ### Android integration
 
@@ -70,10 +70,10 @@ for a complete sample app using the Firebase Remote Config.
 
 ## Issues and feedback
 
-Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
 Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
-please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
-and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).

@@ -1,10 +1,11 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
+// Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #import "FLTFirebaseDatabasePlugin.h"
 
 #import <Firebase/Firebase.h>
+#import <firebase_core/FLTFirebasePlugin.h>
 
 static FlutterError *getFlutterError(NSError *error) {
   if (error == nil) return nil;
@@ -131,6 +132,8 @@ id roundDoubles(id value) {
   return value;
 }
 
+// TODO(Salakar): Should also implement io.flutter.plugins.firebase.core.FlutterFirebasePlugin when
+// reworked.
 @interface FLTFirebaseDatabasePlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @end
@@ -154,11 +157,6 @@ id roundDoubles(id value) {
 - (instancetype)init {
   self = [super init];
   if (self) {
-    if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
-      NSLog(@"Configuring the default Firebase app...");
-      [FIRApp configure];
-      NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    }
     self.updatedSnapshots = [NSMutableDictionary new];
   }
   return self;
@@ -168,10 +166,12 @@ id roundDoubles(id value) {
   FIRDatabase *database;
   NSString *appName = call.arguments[@"app"];
   NSString *databaseURL = call.arguments[@"databaseURL"];
+  // TODO(Salakar): `appName` Should never be null after upcoming re-work in Dart.
   if (![appName isEqual:[NSNull null]] && ![databaseURL isEqual:[NSNull null]]) {
-    database = [FIRDatabase databaseForApp:[FIRApp appNamed:appName] URL:databaseURL];
+    database = [FIRDatabase databaseForApp:[FLTFirebasePlugin firebaseAppNamed:appName]
+                                       URL:databaseURL];
   } else if (![appName isEqual:[NSNull null]]) {
-    database = [FIRDatabase databaseForApp:[FIRApp appNamed:appName]];
+    database = [FIRDatabase databaseForApp:[FLTFirebasePlugin firebaseAppNamed:appName]];
   } else if (![databaseURL isEqual:[NSNull null]]) {
     database = [FIRDatabase databaseWithURL:databaseURL];
   } else {

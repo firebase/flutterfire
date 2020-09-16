@@ -1,3 +1,14 @@
+## 4.0.0
+
+* Depend on `firebase_core`.
+* Firebase iOS SDK versions are now locked to use the same version defined in `firebase_core`.
+* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM) to specify individual SDK versions. BoM version is also sourced from `firebase_core`.
+* Allow iOS & MacOS plugins to be imported as modules.
+
+## 3.1.6
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 3.1.5
 
 * Add macOS support

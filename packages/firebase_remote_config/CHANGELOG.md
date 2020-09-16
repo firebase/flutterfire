@@ -1,3 +1,23 @@
+## 0.4.0
+
+* Depend on new `firebase_core`.
+* Firebase iOS SDK versions are now locked to use the same version defined in
+  `firebase_core`.
+* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
+  to specify individual SDK versions. BoM version is also sourced from
+  `firebase_core`.
+* Added support for MacOS.
+* Allow iOS & MacOS plugins to be imported as modules.
+
+
+## 0.3.1+1
+
+* Propagate native error message on fetch method.
+
+## 0.3.1
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 0.3.0+4
 
 * Fix for missing UserAgent.h compilation failures.

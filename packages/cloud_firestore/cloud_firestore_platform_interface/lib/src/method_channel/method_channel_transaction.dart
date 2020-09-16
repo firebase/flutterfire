@@ -4,83 +4,96 @@
 
 import 'dart:async';
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 import 'method_channel_firestore.dart';
 
-/// An implementation of [TransactionPlatform] which uses [MethodChannel] to
-/// communication with native plugin
+/// An implementation of [TransactionPlatform] that uses [MethodChannel] to
+/// communicate with Firebase plugins.
 class MethodChannelTransaction extends TransactionPlatform {
   /// [FirebaseApp] name used for this [MethodChannelTransaction]
   final String appName;
   int _transactionId;
+  FirebaseFirestorePlatform _firestore;
 
   /// Constructor.
   MethodChannelTransaction(int transactionId, this.appName)
       : _transactionId = transactionId,
-        super(appName == FirebaseApp.defaultAppName
-            ? FirestorePlatform.instance
-            : FirestorePlatform.instanceFor(app: FirebaseApp(name: appName)));
+        super() {
+    _firestore =
+        FirebaseFirestorePlatform.instanceFor(app: Firebase.app(appName));
+  }
 
+  List<Map<String, dynamic>> _commands = [];
+
+  /// Returns all transaction commands for the current instance.
   @override
-  Future<DocumentSnapshotPlatform> doGet(
-    DocumentReferencePlatform documentReference,
-  ) async {
-    final Map<String, dynamic> result = await MethodChannelFirestore.channel
+  List<Map<String, dynamic>> get commands {
+    return _commands;
+  }
+
+  /// Reads the document referenced by the provided [documentPath].
+  ///
+  /// Requires all reads to be executed before all writes, otherwise an [AssertionError] will be thrown
+  @override
+  Future<DocumentSnapshotPlatform> get(documentPath) async {
+    assert(_commands.isEmpty,
+        "Transactions require all reads to be executed before all writes.");
+
+    final Map<String, dynamic> result = await MethodChannelFirebaseFirestore
+        .channel
         .invokeMapMethod<String, dynamic>('Transaction#get', <String, dynamic>{
-      'app': firestore.app.name,
+      'firestore': _firestore,
       'transactionId': _transactionId,
-      'path': documentReference.path,
+      'reference': _firestore.doc(documentPath),
     });
-    if (result != null) {
-      return DocumentSnapshotPlatform(
-          documentReference.path,
-          result['data']?.cast<String, dynamic>(),
-          SnapshotMetadataPlatform(result['metadata']['hasPendingWrites'],
-              result['metadata']['isFromCache']),
-          firestore);
-    } else {
-      return null;
-    }
+
+    return DocumentSnapshotPlatform(
+      _firestore,
+      documentPath,
+      Map<String, dynamic>.from(result),
+    );
   }
 
   @override
-  Future<void> doDelete(DocumentReferencePlatform documentReference) async {
-    return MethodChannelFirestore.channel
-        .invokeMethod<void>('Transaction#delete', <String, dynamic>{
-      'app': firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
+  MethodChannelTransaction delete(String documentPath) {
+    _commands.add(<String, String>{
+      'type': 'DELETE',
+      'path': documentPath,
     });
+
+    return this;
   }
 
   @override
-  Future<void> doUpdate(
-    DocumentReferencePlatform documentReference,
+  MethodChannelTransaction update(
+    String documentPath,
     Map<String, dynamic> data,
-  ) async {
-    return MethodChannelFirestore.channel
-        .invokeMethod<void>('Transaction#update', <String, dynamic>{
-      'app': firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
+  ) {
+    _commands.add(<String, dynamic>{
+      'type': 'UPDATE',
+      'path': documentPath,
       'data': data,
     });
+
+    return this;
   }
 
   @override
-  Future<void> doSet(
-    DocumentReferencePlatform documentReference,
-    Map<String, dynamic> data,
-  ) async {
-    return MethodChannelFirestore.channel
-        .invokeMethod<void>('Transaction#set', <String, dynamic>{
-      'app': firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
+  MethodChannelTransaction set(String documentPath, Map<String, dynamic> data,
+      [SetOptions options]) {
+    _commands.add(<String, dynamic>{
+      'type': 'SET',
+      'path': documentPath,
       'data': data,
+      'options': {
+        'merge': options?.merge,
+        'mergeFields': options?.mergeFields,
+      },
     });
+
+    return this;
   }
 }

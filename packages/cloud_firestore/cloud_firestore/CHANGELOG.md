@@ -1,3 +1,110 @@
+## 0.14.0+2
+
+* Added missing deprecated `Firestore` static methods.
+
+## 0.14.0+1
+
+* Fixed issue #3210 (`Query.orderBy(FieldPath.documentId)` throws exception).
+* Fixed issue #3237 (`DocumentReference` not being parsed correctly).
+* Bump `cloud_firestore_web` dependency.
+* Bump `cloud_firestore_platform_interface` dependency to fix 2 race conditions. [(#3251)](https://github.com/FirebaseExtended/flutterfire/pull/3251)
+
+## 0.14.0
+
+Along with the below changes, the plugin has undergone a quality of life update to better support exceptions thrown. Any Firestore specific errors now return a `FirebaseException`, allowing you to directly access the code (e.g. `permission-denied`) and message.
+
+**`Firestore`**:
+- **BREAKING**: `settings()` is now a synchronous setter that accepts a `Settings` instance.
+  - **NEW**: This change allows us to support changing Firestore settings (such as using the Firestore emulator) without having to quit the application, e.g. Hot Restarts.
+- **BREAKING**: `enablePersistence()` is now a Web only method, use `[Settings.persistenceEnabled]` instead for other platforms.
+- **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
+- **DEPRECATED**: Class `Firestore` is now deprecated. Use `FirebaseFirestore` instead.
+- **DEPRECATED**: Calling `Firestore(app: app)` is now deprecated. Use `FirebaseFirestore.instance` or `FirebaseFirestore.instanceFor(app: app)` instead.
+- **NEW**: Added `clearPersistence()` support.
+- **NEW**: Added `disableNetwork()` support.
+- **NEW**: Added `enableNetwork()` support.
+- **NEW**: Added `snapshotInSync()` listener support.
+- **NEW**: Added `terminate()` support.
+- **NEW**: Added `waitForPendingWrites()` support.
+- **FIX**: All document/query listeners & currently in progress transactions are now correctly torn down between Hot Restarts.
+
+**`CollectionReference`**:
+- **BREAKING**: Getting a collection parent document via `parent()` has been changed to a getter `parent`.
+- **BREAKING**: Getting the collection `path` now always returns the `path` without leading and trailing slashes.
+- **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
+- **FIX**: Equality checking of `CollectionReference` now does not depend on the original path used to create the `CollectionReference`.
+
+**`Query`**:
+- **BREAKING**: The internal query logic has been overhauled to better assert invalid queries locally.
+- **DEPRECATED**: Calling `getDocuments()` is deprecated in favor of `get()`.
+- **BREAKING**: `getDocuments`/`get` has been updated to accept an instance of `GetOptions` (see below).
+- **NEW**: Query methods can now be chained.
+- **NEW**: It is now possible to call same-point cursor based queries without throwing (e.g. calling `endAt()` and then `endBefore()` will replace the "end" cursor query with the `endBefore`).
+- **NEW**: Added support for the `limitToLast` query modifier.
+
+**`QuerySnapshot`**:
+- **DEPRECATED**: `documents` has been deprecated in favor of `docs`.
+- **DEPRECATED**: `documentChanges` has been deprecated in favor of `docChanges`.
+- **NEW**: `docs` now returns a `List<QueryDocumentSnapshot>` vs `List<DocumentSnapshot>`. This doesn't break existing functionality.
+
+**`DocumentReference`**:
+- **BREAKING**: `setData`/`set` has been updated to accept an instance of `SetOptions` (see below, supports `mergeFields`).
+- **BREAKING**: `get()` has been updated to accept an instance of `GetOptions` (see below).
+- **BREAKING**: Getting a document parent collection via `parent()` has been changed to a getter `parent`.
+- **BREAKING**: Getting the document `path` now always returns the `path` without leading and trailing slashes.
+- **DEPRECATED**: `documentID` has been deprecated in favor of `id`.
+- **DEPRECATED**: `setData()` has been deprecated in favor of `set()`.
+- **DEPRECATED**: `updateData()` has been deprecated in favor of `update()`.
+- **FIX**: Equality checking of `DocumentReference` now does not depend on the original path used to create the `DocumentReference`.
+
+**`DocumentChange`**:
+- **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
+
+**`DocumentSnapshot`**:
+- **BREAKING**: The `get data` getter is now a `data()` method instead.
+- **DEPRECATED**: `documentID` has been deprecated in favor of `id`.
+- **NEW**: Added support for fetching nested snapshot data via the `get()` method. If no data exists at the given path, a `StateError` will be thrown.
+- **FIX**: `NaN` values stored in your Firestore instance are now correctly parsed when reading & writing data.
+- **FIX**: `INFINITY` values stored in your Firestore instance are now correctly parsed when reading & writing data.
+- **FIX**: `-INFINITY` values stored in your Firestore instance are now correctly parsed when reading & writing data.
+
+**`WriteBatch`**:
+- **DEPRECATED**: `setData()` has been deprecated in favor of `set()`.
+- **DEPRECATED**: `updateData()` has been deprecated in favor of `update()`.
+- **BREAKING**: `setData`/`set` now supports `SetOptions` to merge data/fields (previously this accepted a `Map`).
+
+**`Transaction`**:
+- **BREAKING**: Transactions have been overhauled to address a number of critical issues:
+  - Values returned from the transaction will now be returned from the Future. Previously, only JSON serializable values were supported. It is now possible to return any value from your transaction handler, e.g. a `DocumentSnapshot`.
+  - When manually throwing an exception, the context was lost and a generic `PlatformException` was thrown. You can now throw & catch on any exceptions.
+  - The modify methods on a transaction (`set`, `delete`, `update`) were previously Futures. These have been updated to better reflect how transactions should behave - they are now synchronous and are executed atomically once the transaction handler block has finished executing.
+- **FIX**: Timeouts will now function correctly.
+- **FIX**: iOS: transaction completion block incorrectly resolving a `FlutterResult` multiple times.
+
+See the new [transactions documentation](https://firebase.flutter.dev/docs/firestore/usage#transactions) to learn more.
+
+**`FieldPath`**:
+- **NEW**: The constructor has now been made public to accept a `List` of `String` values. Previously field paths were accessible only via a dot-notated string path. This meant attempting to access a field in a document with a `.` in the name (e.g. `foo.bar@gmail.com`) was impossible.
+
+**`GetOptions`**: New class created to support how data is fetched from Firestore (`server`, `cache`, `serverAndCache`).
+
+**`SetOptions`**: New class created to both `merge` and `mergeFields` when setting data on documents.
+
+**`GeoPoint`**:
+- **BREAKING**: Add latitude and longitude validation when constructing a new `GeoPoint` instance.
+
+## 0.13.7+1
+
+* Fix crash where listeners are not removed when app quits.
+
+## 0.13.7
+
+* Clean up snapshot listeners when Android Activity is destroyed.
+
+## 0.13.6
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 0.13.5
 
 * Migrate cloud_firestore to android v2 embedding.

@@ -3,18 +3,18 @@ description:
   Flutter plugin for Cloud Firestore, a cloud-hosted, noSQL database with
   live synchronization and offline support on Android and iOS.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore
-version: 0.13.5
+version: 0.14.0+2
 
 flutter:
   plugin:
     platforms:
       android:
-        package: io.flutter.plugins.firebase.cloudfirestore
-        pluginClass: CloudFirestorePlugin
+        package: io.flutter.plugins.firebase.firestore
+        pluginClass: FlutterFirebaseFirestorePlugin
       ios:
-        pluginClass: FLTCloudFirestorePlugin
+        pluginClass: FLTFirebaseFirestorePlugin
       macos:
-        pluginClass: FLTCloudFirestorePlugin
+        pluginClass: FLTFirebaseFirestorePlugin
       web:
         default_package: cloud_firestore_web
 
@@ -22,14 +22,11 @@ dependencies:
   flutter:
     sdk: flutter
   meta: ^1.0.5
-  firebase_core: ^0.4.4
-  cloud_firestore_platform_interface: ^1.0.0
-  # The design on https://flutter.dev/go/federated-plugins was to leave
-  # this constraint as "any". We cannot do it right now as it fails pub publish
-  # validation, so we set a ^ constraint.
-  # TODO(amirh): Revisit this (either update this part in the  design or the pub tool).
-  # https://github.com/flutter/flutter/issues/46264
-  cloud_firestore_web: ^0.1.1
+  quiver: ">=2.0.0 <3.0.0"
+  firebase_core: ">=0.5.0 <0.6.0"
+  firebase_core_platform_interface: ">=2.0.0 <2.1.0"
+  cloud_firestore_platform_interface: ">=2.0.1 <2.1.0"
+  cloud_firestore_web: ">=0.2.0+1 <0.3.0"
 
 dev_dependencies:
   pedantic: ^1.8.0
@@ -38,8 +35,8 @@ dev_dependencies:
   flutter_driver:
     sdk: flutter
   test: any
-  e2e: ^0.2.1
+  mockito: ^4.1.1
 
 environment:
-  sdk: ">=2.0.0-dev.28.0 <3.0.0"
+  sdk: ">=2.0.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.4 <2.0.0"

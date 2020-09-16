@@ -1,0 +1,58 @@
+---
+title: Google Analytics for Firebase
+sidebar_label: Overview
+---
+
+##  What does it do?
+
+Google Analytics is a free app measurement solution that provides insight on app usage and user engagement. 
+Analytics reports help you understand clearly how your users behave, which enables you to make informed decisions regarding app marketing and performance optimizations.
+
+<YouTube id="8iZpH7O6zXo"/>
+
+## Installation
+
+### 1. Add dependency
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  firebase_analytics: "^{{ plugins.firebase_analytics }}"
+```
+
+### 2. Download dependency
+
+```
+$ flutter pub get
+```
+
+### 3. (Web Only) Add the SDK
+
+If using FlutterFire on the web, add the `firebase-analytics` JavaScript SDK to your `index.html` file:
+
+```html {5} title="web/index.html"
+<html>
+  ...
+  <body>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-analytics.js"></script>
+  </body>
+</html>
+```
+### 4. Rebuild your app
+
+Once complete, rebuild your Flutter application:
+
+```bash
+$ flutter run
+```
+
+## Next Steps
+
+Once installed, you're ready to start using Firebase Analytics in your Flutter Project.
+
+> Additional documentation will be available once the Firebase Analytics plugin update lands as part of the [FlutterFire roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582).
+
+<!-- View the [Usage documentation](usage.mdx) to get started. -->

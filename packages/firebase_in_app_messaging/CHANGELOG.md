@@ -1,3 +1,23 @@
+## 0.2.0+1
+
+* Fixed issue #3227 (Invalid podspec). 
+
+## 0.2.0
+
+* Depend on `firebase_core` pre-release.
+* Firebase iOS SDK versions are now locked to use the same version defined in
+  `firebase_core`.
+* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
+  to specify individual SDK versions. BoM version is also sourced from
+  `firebase_core`.
+* Allow iOS to be imported as a module.
+* Updated package of Android from `com.example.firebase_in_app_messaging` to
+  `io.flutter.plugins.firebase.inappmessaging`.
+
+## 0.1.2
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 0.1.1+3
 
 * Replace deprecated `getFlutterEngine` call on Android.
