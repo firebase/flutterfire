@@ -35,10 +35,11 @@ void main() {
       Timestamp.fromMicrosecondsSinceEpoch(maxTimestamp.microsecondsSinceEpoch);
     });
 
-    test('can handle nagtive values', () {
-      Timestamp t =  Timestamp.fromMillisecondsSinceEpoch(-1);
-      expect(t.seconds, equals(-1));
-      expect(t.nanoseconds, equals(999000000));
+    test('can handle nagtive millisecond values', () {
+      Timestamp t =  Timestamp.fromMillisecondsSinceEpoch(-9999999999);
+      print(t.toDate());
+      expect(t.toDate().year, 1969);
+      expect(t.toDate().month, 9);
     });
   });
 }
