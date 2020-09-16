@@ -34,5 +34,11 @@ void main() {
       Timestamp maxTimestamp = Timestamp(_kEndOfTime - 1, _kBillion - 1);
       Timestamp.fromMicrosecondsSinceEpoch(maxTimestamp.microsecondsSinceEpoch);
     });
+
+    test('can handle nagtive values', () {
+      Timestamp t =  Timestamp.fromMillisecondsSinceEpoch(-1);
+      expect(t.seconds, equals(-1));
+      expect(t.nanoseconds, equals(999000000));
+    });
   });
 }

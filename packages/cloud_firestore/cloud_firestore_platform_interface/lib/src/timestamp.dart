@@ -31,7 +31,7 @@ class Timestamp implements Comparable<Timestamp> {
 
   /// Create a [Timestamp] fromMillisecondsSinceEpoch
   factory Timestamp.fromMillisecondsSinceEpoch(int milliseconds) {
-    final int seconds = (milliseconds ~/ _kThousand).floor();
+    int seconds = (milliseconds / _kThousand).floor();
     final int nanoseconds = (milliseconds - seconds * _kThousand) * _kMillion;
     return Timestamp(seconds, nanoseconds);
   }
