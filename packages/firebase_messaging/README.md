@@ -73,7 +73,7 @@ By default background messaging is not enabled. To handle messages in the backgr
    
    Note: you can find out what the latest version of the plugin is [here ("Cloud Messaging")](https://firebase.google.com/support/release-notes/android#latest_sdk_versions).
 
-1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
+1. Add an `Application.java` or `Application.kt` class to your app in the same directory as your `MainActivity.java` or `MainActivity.kt`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/` or `<app-name>/android/app/src/main/kotlin/<app-organization-path>/`.
 
    ```java
    package io.flutter.plugins.firebasemessagingexample;
@@ -99,7 +99,28 @@ By default background messaging is not enabled. To handle messages in the backgr
    }
    ```
 
-1. In `Application.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
+```kotlin
+   package io.flutter.plugins.firebasemessagingexample;
+   
+   import io.flutter.app.FlutterApplication
+   import io.flutter.plugin.common.PluginRegistry
+   import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback
+   import io.flutter.plugins.GeneratedPluginRegistrant
+   import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService
+   import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin
+
+   class Application:FlutterApplication(), PluginRegistrantCallback {
+     override fun onCreate() {
+       super.onCreate()
+       FlutterFirebaseMessagingService.setPluginRegistrant(this)
+     }
+     override fun registerWith(registry:PluginRegistry) {
+       FirebaseMessagingPlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"))
+     }
+   }
+   ```
+
+1. In `Application.java` or `Application.kt`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
 
    ```java
    package com.domain.myapplication;
