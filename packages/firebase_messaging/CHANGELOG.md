@@ -1,3 +1,7 @@
+## 7.0.1
+
+* Add support for Android v2 embedding.
+
 ## 7.0.0
 
 * Depend on `firebase_core` and migrate plugin to use `firebase_core` native SDK versioning features;
