@@ -1,6 +1,11 @@
-## 7.0.1
+## 8.0.0
 
 * Add support for Android v2 embedding.
+* **Breaking Change** This will cause applications with v2 embedding that declare the background handler and
+  call `FlutterFirebaseMessagingService.setPluginRegistrant` in their `Application.java` `onCreate` method
+  to crash on startup or when receiving background notifications.
+  To have this plugin work with these applications, you can read the updated README or
+  you can delete your `Application.java` and remove the `android:name=".Application"` reference in your manifest.
 
 ## 7.0.0
 
