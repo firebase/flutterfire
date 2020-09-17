@@ -2,7 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+/// A class representing iOS specfic permissions which can be requested by your
+/// application.
+@Deprecated(
+    "Using [IosNotificationSettings] is deprecated. Instead, call [requestPermission] directly with named arguments")
 class IosNotificationSettings {
+  // ignore: public_member_api_docs
   const IosNotificationSettings({
     this.sound = true,
     this.alert = true,
@@ -10,17 +15,19 @@ class IosNotificationSettings {
     this.provisional = false,
   });
 
-  IosNotificationSettings._fromMap(Map<String, bool> settings)
-      : sound = settings['sound'],
-        alert = settings['alert'],
-        badge = settings['badge'],
-        provisional = settings['provisional'];
-
+  /// Request permission to play sounds.
   final bool sound;
+
+  /// Request permission to display alerts.
   final bool alert;
+
+  /// Request permission to update the application badge.
   final bool badge;
+
+  /// Request permission to provisionally create non-interrupting notifications.
   final bool provisional;
 
+  /// Converts the settings into a [Map].
   Map<String, dynamic> toMap() {
     return <String, bool>{
       'sound': sound,
@@ -31,5 +38,5 @@ class IosNotificationSettings {
   }
 
   @override
-  String toString() => 'PushNotificationSettings ${toMap()}';
+  String toString() => 'IosNotificationSettings(${toMap()})';
 }

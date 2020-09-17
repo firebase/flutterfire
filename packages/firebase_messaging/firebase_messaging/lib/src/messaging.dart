@@ -4,6 +4,9 @@
 
 part of firebase_messaging;
 
+/// The [FirebaseMessaging] entry point.
+///
+/// To get a new instance, call [FirebaseMessaging.instance].
 class FirebaseMessaging extends FirebasePluginPlatform {
   // Cached and lazily loaded instance of [FirebaseMessagingPlatform] to avoid
   // creating a [MethodChannelFirebaseMessaging] when not needed or creating an
@@ -29,6 +32,27 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return FirebaseMessaging._(app: Firebase.app());
   }
 
+  /// Sets up handlers for various messaging events.
+  static void configure({
+    MessageHandler onMessage,
+    void Function(String messageId) onMessageSent,
+    MessageHandler onNotificationOpenedApp,
+    void Function(FirebaseException exception, String messageId) onSendError,
+    void Function() onDeletedMessages,
+    MessageHandler onBackgroundMessage,
+    MessageHandler onLaunch, // deprecate
+    MessageHandler onResume, // deprecate
+  }) {
+    return FirebaseMessagingPlatform.configure(
+      onMessage: onMessage,
+      onMessageSent: onMessageSent,
+      onNotificationOpenedApp: onNotificationOpenedApp,
+      onSendError: onSendError,
+      onDeletedMessages: onDeletedMessages,
+      onBackgroundMessage: onBackgroundMessage,
+    );
+  }
+
   // ignore: public_member_api_docs
   @Deprecated(
       "Constructing Messaging is deprecated, use 'FirebaseMessaging.instance' instead")
@@ -36,36 +60,63 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return FirebaseMessaging.instance;
   }
 
-  /// On iOS, prompts the user for notification permissions the first time
-  /// it is called.
-  ///
-  /// Does nothing and returns null on Android.
-  Future<bool> requestNotificationPermissions(
-      [IosNotificationSettings iosSettings]) {
-    iosSettings ??= const IosNotificationSettings();
-    return _delegate.requestNotificationPermissions(iosSettings);
+  /// Returns whether messaging auto initialization is enabled or disabled for the device.
+  bool get isAutoInitEnabled {
+    return _delegate.isAutoInitEnabled;
   }
 
-  /// Stream that fires when the user changes their notification settings.
+  /// If the application has been opened from a terminated state via a [Notification],
+  /// it will be returned, otherwise it will be `null`.
   ///
-  /// Only fires on iOS.
-  Stream<IosNotificationSettings> get onIosSettingsRegistered {
-    return _delegate.onIosSettingsRegistered;
+  /// Once the [Notification] has been consumed, it will be removed and further
+  /// calls to [initialNotification] will be `null`.
+  ///
+  /// This should be used to determine whether specific notification interaction
+  /// should open the app with a specific purpose (e.g. opening a chat message,
+  /// specific screen etc).
+  Notification get initialNotification {
+    return _delegate.initialNotification;
   }
 
-  /// Sets up [MessageHandler] for incoming messages.
-  void configure({
-    MessageHandler onMessage,
-    MessageHandler onBackgroundMessage,
-    MessageHandler onLaunch,
-    MessageHandler onResume,
+  /// Removes access to an FCM token previously authorized by it's scope.
+  ///
+  /// Messages sent by the server to this token will fail.
+  Future<void> deleteToken({
+    String authorizedEntity,
+    String scope,
   }) {
-    return _delegate.configure(
-      onMessage: onMessage,
-      onBackgroundMessage: onBackgroundMessage,
-      onLaunch: onLaunch,
-      onResume: onResume,
+    return _delegate.deleteToken(
+      authorizedEntity: authorizedEntity,
+      scope: scope,
     );
+  }
+
+  /// On iOS, it is possible to get the users APNs token. This may be required
+  /// if you want to send messages to your iOS devices without using the FCM service.
+  Future<String> getAPNSToken() {
+    return _delegate.getAPNSToken();
+  }
+
+  /// Returns an FCM token for this device.
+  ///
+  /// Optionally you can specify a custom authorized entity or scope to tailor
+  /// tokens to your own use-case.
+  Future<String> getToken({
+    String authorizedEntity,
+    String scope,
+    String vapidKey,
+  }) {
+    return _delegate.getToken(
+      authorizedEntity: authorizedEntity,
+      scope: scope,
+      vapidKey: vapidKey,
+    );
+  }
+
+  /// Returns a [AuthorizationStatus] as to whether the user has messaging
+  /// permission for this app.
+  Future<AuthorizationStatus> hasPermission() {
+    return _delegate.hasPermission();
   }
 
   /// Fires when a new FCM token is generated.
@@ -73,9 +124,114 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.onTokenRefresh;
   }
 
-  /// Returns the FCM token.
-  Future<String> getToken() {
-    return _delegate.getToken();
+  /// Prompts the user for notification permissions.
+  ///
+  /// On iOS, a dialog is shown requesting the users permission.
+  /// If [provisional] is set to `true`, silent notification permissions will be
+  /// automatically granted. When notifications are delivered to the device, the
+  /// user will be presented with an option to disable notifications, keep receiving
+  /// them silently or enable prominent notifications.
+  ///
+  /// On Android, permissions are not required and [AuthorizationStatus.authorized] is returned.
+  ///
+  /// On Web, a popup requesting the users permission is shown using the native
+  /// browser API.
+  Future<AuthorizationStatus> requestPermission({
+    /// Request permission to display alerts. Defaults to `true`.
+    ///
+    /// iOS only.
+    bool alert = true,
+
+    /// Request permission for Siri to automatically read out notification messages over AirPods.
+    /// Defaults to `false`.
+    ///
+    /// iOS only.
+    bool announcement = false,
+
+    /// Request permission to update the application badge. Defaults to `true`.
+    ///
+    /// iOS only.
+    bool badge = true,
+
+    /// Request permission to display notifications in a CarPlay environment.
+    /// Defaults to `false`.
+    ///
+    /// iOS only.
+    bool carPlay = false,
+
+    /// Request permission for critical alerts. Defaults to `false`.
+    ///
+    /// Note; your application must explicitly state reasoning for enabling
+    /// crticial alerts during the App Store review process or your may be
+    /// rejected.
+    ///
+    /// iOS only.
+    bool criticalAlert = false,
+
+    /// Request permission to provisionally create non-interrupting notifications.
+    /// Defaults to `false`.
+    ///
+    /// iOS only.
+    bool provisional = false,
+
+    /// Request permission to play sounds. Defaults to `true`.
+    ///
+    /// iOS only.
+    bool sound = true,
+  }) {
+    return _delegate.requestPermission(
+      alert: alert,
+      announcement: announcement,
+      badge: badge,
+      carPlay: carPlay,
+      criticalAlert: criticalAlert,
+      provisional: provisional,
+      sound: sound,
+    );
+  }
+
+  /// Prompts the user for notification permissions.
+  ///
+  /// On iOS, a dialog is shown requesting the users permission.
+  ///
+  /// On Android, permissions are not required and `true` is returned.
+  ///
+  /// On Web, a popup requesting the users permission is shown using the native
+  /// browser API.
+  @Deprecated(
+      "requestNotificationPermissions() is deprecated in favor of requestPermission()")
+  Future<bool> requestNotificationPermissions(
+      [IosNotificationSettings iosSettings]) async {
+    iosSettings ??= const IosNotificationSettings();
+    AuthorizationStatus status = await requestPermission(
+      sound: iosSettings.sound,
+      alert: iosSettings.alert,
+      badge: iosSettings.badge,
+      provisional: iosSettings.provisional,
+    );
+
+    return status == AuthorizationStatus.authorized ||
+        status == AuthorizationStatus.provisional;
+  }
+
+  /// Send a new [RemoteMessage] to the FCM server.
+  Future<void> sendMessage(RemoteMessage message) {
+    assert(message != null);
+    return _delegate.sendMessage(message);
+  }
+
+  /// Enable or disable auto-initialization of Firebase Cloud Messaging.
+  Future<void> setAutoInitEnabled(bool enabled) async {
+    assert(enabled != null);
+    return _delegate.setAutoInitEnabled(enabled);
+  }
+
+  /// Stream that fires when the user changes their notification settings.
+  ///
+  /// Only fires on iOS.
+  // TODO(salakar): is this still needed?
+  Stream<IosNotificationSettings> get onIosSettingsRegistered {
+    return _delegate.onIosSettingsRegistered;
   }
 
   /// Subscribe to topic in background.
@@ -83,13 +239,13 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// [topic] must match the following regular expression:
   /// "[a-zA-Z0-9-_.~%]{1,900}".
   Future<void> subscribeToTopic(String topic) {
-    // TODO validate
+    _assertTopicName(topic);
     return _delegate.subscribeToTopic(topic);
   }
 
   /// Unsubscribe from topic in background.
   Future<void> unsubscribeFromTopic(String topic) {
-    // TODO validate
+    _assertTopicName(topic);
     return _delegate.unsubscribeFromTopic(topic);
   }
 
@@ -103,13 +259,14 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   }
 
   /// Determine whether FCM auto-initialization is enabled or disabled.
-  Future<bool> autoInitEnabled() {
-    return _delegate.autoInitEnabled();
+  @Deprecated(
+      "autoInitEnabled() is deprecated. Use [isAutoInitEnabled] instead")
+  Future<bool> autoInitEnabled() async {
+    return isAutoInitEnabled;
   }
+}
 
-  /// Enable or disable auto-initialization of Firebase Cloud Messaging.
-  Future<void> setAutoInitEnabled(bool enabled) async {
-    assert(enabled != null);
-    return _delegate.setAutoInitEnabled(enabled);
-  }
+_assertTopicName(String topic) {
+  assert(topic != null);
+  // TODO(salakar): Regex for topics
 }

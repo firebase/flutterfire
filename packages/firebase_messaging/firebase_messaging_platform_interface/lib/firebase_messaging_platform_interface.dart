@@ -8,3 +8,5 @@ export 'src/platform_interface/platform_interface_messaging.dart';
 
 export 'src/ios_notification_settings.dart';
 export 'src/types.dart';
+export 'src/notification.dart';
+export 'src/remote_message.dart';

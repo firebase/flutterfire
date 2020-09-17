@@ -10,6 +10,12 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
 export 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart'
-    show MessageHandler, IosNotificationSettings;
+    show
+        MessageHandler,
+        AuthorizationStatus,
+        // ignore: deprecated_member_use
+        IosNotificationSettings,
+        NotificationPriority,
+        NotificationVisibility;
 
 part 'src/messaging.dart';

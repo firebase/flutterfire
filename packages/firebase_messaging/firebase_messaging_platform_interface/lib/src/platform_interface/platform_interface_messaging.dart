@@ -49,6 +49,18 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     return _instance;
   }
 
+  static void configure({
+    //  String publicVapidKey, TODO(ehesp): add in with web support
+    MessageHandler onMessage,
+    void Function(String messageId) onMessageSent,
+    MessageHandler onNotificationOpenedApp,
+    void Function(FirebaseException exception, String messageId) onSendError,
+    void Function() onDeletedMessages,
+    MessageHandler onBackgroundMessage,
+  }) {
+    // TODO store somewhere & use in the implementations
+  }
+
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
@@ -56,31 +68,56 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
-  /// On iOS, prompts the user for notification permissions the first time
-  /// it is called.
-  ///
-  /// Does nothing and returns null on Android.
-  Future<bool> requestNotificationPermissions(
-      IosNotificationSettings iosSettings) {
-    throw UnimplementedError(
-        'requestNotificationPermissions() is not implemented');
+  /// Returns whether messaging auto initialization is enabled or disabled for the device.
+  bool get isAutoInitEnabled {
+    throw UnimplementedError('isAutoInitEnabled is not implemented');
   }
 
-  /// Stream that fires when the user changes their notification settings.
+  /// If the application has been opened from a terminated state via a [Notification],
+  /// it will be returned, otherwise it will be `null`.
   ///
-  /// Only fires on iOS.
-  Stream<IosNotificationSettings> get onIosSettingsRegistered {
-    throw UnimplementedError('onIosSettingsRegistered is not implemented');
+  /// Once the [Notification] has been consumed, it will be removed and further
+  /// calls to [initialNotification] will be `null`.
+  ///
+  /// This should be used to determine whether specific notification interaction
+  /// should open the app with a specific purpose (e.g. opening a chat message,
+  /// specific screen etc).
+  Notification get initialNotification {
+    throw UnimplementedError('initialNotification is not implemented');
   }
 
-  /// Sets up [MessageHandler] for incoming messages.
-  void configure({
-    MessageHandler onMessage,
-    MessageHandler onBackgroundMessage,
-    MessageHandler onLaunch,
-    MessageHandler onResume,
+  /// Removes access to an FCM token previously authorized by it's scope.
+  ///
+  /// Messages sent by the server to this token will fail.
+  Future<void> deleteToken({
+    String authorizedEntity,
+    String scope,
   }) {
-    throw UnimplementedError('configure() is not implemented');
+    throw UnimplementedError('deleteToken() is not implemented');
+  }
+
+  /// On iOS, it is possible to get the users APNs token. This may be required
+  /// if you want to send messages to your iOS devices without using the FCM service.
+  Future<String> getAPNSToken() {
+    throw UnimplementedError('getAPNSToken() is not implemented');
+  }
+
+  /// Returns an FCM token for this device.
+  ///
+  /// Optionally you can specify a custom authorized entity or scope to tailor
+  /// tokens to your own use-case.
+  Future<String> getToken({
+    String authorizedEntity,
+    String scope,
+    String vapidKey,
+  }) {
+    throw UnimplementedError('getToken() is not implemented');
+  }
+
+  /// Returns a [AuthorizationStatus] as to whether the user has messaging
+  /// permission for this app.
+  Future<AuthorizationStatus> hasPermission() {
+    throw UnimplementedError('hasPermission() is not implemented');
   }
 
   /// Fires when a new FCM token is generated.
@@ -88,9 +125,79 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('onTokenRefresh is not implemented');
   }
 
-  /// Returns the FCM token.
-  Future<String> getToken() async {
-    throw UnimplementedError('getToken() is not implemented');
+  /// Prompts the user for notification permissions.
+  ///
+  /// On iOS, a dialog is shown requesting the users permission.
+  /// If [provisional] is set to `true`, silent notification permissions will be
+  /// automatically granted. When notifications are delivered to the device, the
+  /// user will be presented with an option to disable notifications, keep receiving
+  /// them silently or enable prominent notifications.
+  ///
+  /// On Android, permissions are not required and [AuthorizationStatus.authorized] is returned.
+  ///
+  /// On Web, a popup requesting the users permission is shown using the native
+  /// browser API.
+  Future<AuthorizationStatus> requestPermission({
+    /// Request permission to display alerts. Defaults to `true`.
+    ///
+    /// iOS only.
+    bool alert = true,
+
+    /// Request permission for Siri to automatically read out notification messages over AirPods.
+    /// Defaults to `false`.
+    ///
+    /// iOS only.
+    bool announcement = false,
+
+    /// Request permission to update the application badge. Defaults to `true`.
+    ///
+    /// iOS only.
+    bool badge = true,
+
+    /// Request permission to display notifications in a CarPlay environment.
+    /// Defaults to `false`.
+    ///
+    /// iOS only.
+    bool carPlay = false,
+
+    /// Request permission for critical alerts. Defaults to `false`.
+    ///
+    /// Note; your application must explicitly state reasoning for enabling
+    /// crticial alerts during the App Store review process or your may be
+    /// rejected.
+    ///
+    /// iOS only.
+    bool criticalAlert = false,
+
+    /// Request permission to provisionally create non-interrupting notifications.
+    /// Defaults to `false`.
+    ///
+    /// iOS only.
+    bool provisional = false,
+
+    /// Request permission to play sounds. Defaults to `true`.
+    ///
+    /// iOS only.
+    bool sound = true,
+  }) {
+    throw UnimplementedError('requestPermission() is not implemented');
+  }
+
+  /// Send a new [RemoteMessage] to the FCM server.
+  Future<void> sendMessage(RemoteMessage message) {
+    throw UnimplementedError('sendMessage() is not implemented');
+  }
+
+  /// Enable or disable auto-initialization of Firebase Cloud Messaging.
+  Future<void> setAutoInitEnabled(bool enabled) async {
+    throw UnimplementedError('setAutoInitEnabled() is not implemented');
+  }
+
+  /// Stream that fires when the user changes their notification settings.
+  ///
+  /// Only fires on iOS.
+  Stream<IosNotificationSettings> get onIosSettingsRegistered {
+    throw UnimplementedError('onIosSettingsRegistered is not implemented');
   }
 
   /// Subscribe to topic in background.
@@ -113,15 +220,5 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// returns true if the operations executed successfully and false if an error ocurred
   Future<bool> deleteInstanceID() async {
     throw UnimplementedError('deleteInstanceID() is not implemented');
-  }
-
-  /// Determine whether FCM auto-initialization is enabled or disabled.
-  Future<bool> autoInitEnabled() async {
-    throw UnimplementedError('autoInitEnabled() is not implemented');
-  }
-
-  /// Enable or disable auto-initialization of Firebase Cloud Messaging.
-  Future<void> setAutoInitEnabled(bool enabled) async {
-    throw UnimplementedError('setAutoInitEnabled() is not implemented');
   }
 }
