@@ -55,6 +55,8 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     this.applicationContext = context;
     channel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging");
     channel.setMethodCallHandler(this);
+
+    //Add reference to this class as the MethodCallHandler
     FlutterFirebaseMessagingService.setFirebaseMessagingPlugin(this);
 
     // Register broadcast receiver
@@ -66,9 +68,17 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   }
 
   public void initializeBackgroundMethodChannel(BinaryMessenger binaryMessenger) {
+
+    // backgroundChannel is the channel responsible for receiving the following messages from
+    // the background isolate that was setup by this plugin:
+    // - "FcmDartService#initialized"
+    //
+    // This channel is also responsible for sending requests from Android to Dart to execute Dart
+    // callbacks in the background isolate.
     final MethodChannel backgroundCallbackChannel =
         new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging_background");
     backgroundCallbackChannel.setMethodCallHandler(this);
+
     FlutterFirebaseMessagingService.setBackgroundChannel(backgroundCallbackChannel);
   }
 

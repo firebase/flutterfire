@@ -50,7 +50,6 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   // TODO(kroikie): make isIsolateRunning per-instance, not static.
   private static AtomicBoolean isIsolateRunning = new AtomicBoolean(false);
 
-  /** Background Dart execution context. */
   private static FlutterEngine backgroundFlutterEngine;
 
   private static MethodChannel backgroundChannel;
@@ -73,7 +72,6 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     super.onCreate();
 
     backgroundContext = getApplicationContext();
-    //FlutterMain.ensureInitializationComplete(backgroundContext, null);
 
     // If background isolate is not running start it.
     if (!isIsolateRunning.get()) {
@@ -311,6 +309,10 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
    * message handling is enabled.
    *
    * @param callback Application class which implements PluginRegistrantCallback.
+   * 
+   * <p>Note: this is only necessary for applications using the V1 engine embedding API as plugins
+   * are automatically registered via reflection in the V2 engine embedding API. If not set, messaging
+   * callbacks will not be able to utilize functionality from other plugins nor the background message handler.
    */
   public static void setPluginRegistrant(PluginRegistry.PluginRegistrantCallback callback) {
     pluginRegistrantCallback = callback;
