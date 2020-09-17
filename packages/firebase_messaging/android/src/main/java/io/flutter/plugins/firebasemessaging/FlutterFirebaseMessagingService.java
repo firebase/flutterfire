@@ -24,8 +24,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.view.FlutterCallbackInformation;
 import io.flutter.view.FlutterMain;
-import io.flutter.view.FlutterNativeView;
-import io.flutter.view.FlutterRunArguments;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -74,7 +72,6 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   public void onCreate() {
     super.onCreate();
 
-    
     backgroundContext = getApplicationContext();
     //FlutterMain.ensureInitializationComplete(backgroundContext, null);
 
@@ -154,7 +151,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
 
     String appBundlePath = FlutterMain.findAppBundlePath();
     AssetManager assets = context.getAssets();
-    if(!isIsolateRunning.get()){
+    if (!isIsolateRunning.get()) {
       backgroundFlutterEngine = new FlutterEngine(context);
 
       // We need to create an instance of `FlutterEngine` before looking up the
@@ -170,14 +167,13 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
       executor.executeDartCallback(dartCallback);
 
       // The pluginRegistrantCallback should only be set in the V1 embedding as
-      // plugin registration is done via reflection in the V2 embedding. 
+      // plugin registration is done via reflection in the V2 embedding.
       // If set while using V2 embedding, the application will crash.
       if (pluginRegistrantCallback != null) {
         Log.d(TAG, "Proceeding with v1 embedding");
         pluginRegistrantCallback.registerWith(new ShimPluginRegistry(backgroundFlutterEngine));
       }
     }
-
   }
 
   /**
@@ -198,8 +194,8 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   }
 
   /**
-   * Set the Firebase messaging plugin instance that is used to register method channels. This method is only
-   * called when the plugin registers.
+   * Set the Firebase messaging plugin instance that is used to register method channels. This
+   * method is only called when the plugin registers.
    *
    * @param plugin Firebase messaging plugin instance.
    */
@@ -354,5 +350,4 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     }
     return false;
   }
-
 }

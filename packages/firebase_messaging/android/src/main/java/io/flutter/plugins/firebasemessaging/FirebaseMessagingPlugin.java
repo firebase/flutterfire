@@ -66,7 +66,8 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   }
 
   public void initializeBackgroundMethodChannel(BinaryMessenger binaryMessenger) {
-    final MethodChannel backgroundCallbackChannel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging_background");
+    final MethodChannel backgroundCallbackChannel =
+        new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_messaging_background");
     backgroundCallbackChannel.setMethodCallHandler(this);
     FlutterFirebaseMessagingService.setBackgroundChannel(backgroundCallbackChannel);
   }
