@@ -73,42 +73,6 @@ By default background messaging is not enabled. To handle messages in the backgr
    
    Note: you can find out what the latest version of the plugin is [here ("Cloud Messaging")](https://firebase.google.com/support/release-notes/android#latest_sdk_versions).
 
-1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
-
-   ```java
-   package io.flutter.plugins.firebasemessagingexample;
-   
-   import io.flutter.app.FlutterApplication;
-   import io.flutter.plugin.common.PluginRegistry;
-   import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
-   import io.flutter.plugins.GeneratedPluginRegistrant;
-   import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
-   
-   public class Application extends FlutterApplication implements PluginRegistrantCallback {
-     @Override
-     public void onCreate() {
-       super.onCreate();
-       FlutterFirebaseMessagingService.setPluginRegistrant(this);
-     }
-   
-     @Override
-     public void registerWith(PluginRegistry registry) {
-       GeneratedPluginRegistrant.registerWith(registry);
-     }
-   }
-   ```
-
-1. In `Application.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
-
-   ```java
-   package com.domain.myapplication;
-   ```
-
-1. Set name property of application in `AndroidManifest.xml`. This is typically found in `<app-name>/android/app/src/main/`.
-
-   ```xml
-   <application android:name=".Application" ...>
-   ```
 
 1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
 
@@ -154,6 +118,51 @@ By default background messaging is not enabled. To handle messages in the backgr
    Note: `configure` should be called early in the lifecycle of your application
    so that it can be ready to receive messages as early as possible. See the
    [example app](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/example) for a demonstration.
+
+
+>If you are using a Flutter version prior to 1.12 or you are using v1 embedding, you need to complete additional steps.
+For more information about v1/v2 embedding, check [Upgrading pre 1.12 Android](https://github.com/flutter/flutter/wiki/Upgrading-pre-1.12-Android-projects).
+
+Additional steps for v1 embedding:
+
+1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
+
+   ```java
+   package io.flutter.plugins.firebasemessagingexample;
+   
+   import io.flutter.app.FlutterApplication;
+   import io.flutter.plugin.common.PluginRegistry;
+   import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
+   import io.flutter.plugins.GeneratedPluginRegistrant;
+   import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
+   
+   public class Application extends FlutterApplication implements PluginRegistrantCallback {
+     @Override
+     public void onCreate() {
+       super.onCreate();
+       FlutterFirebaseMessagingService.setPluginRegistrant(this);
+     }
+   
+     @Override
+     public void registerWith(PluginRegistry registry) {
+       GeneratedPluginRegistrant.registerWith(registry);
+     }
+   }
+   ```
+
+   Note: Calls to `FlutterFirebaseMessagingService.setPluginRegistrant` while using v2 embedding will result in a build time error.
+
+1. In `Application.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
+
+   ```java
+   package com.domain.myapplication;
+   ```
+
+1. Set name property of application in `AndroidManifest.xml`. This is typically found in `<app-name>/android/app/src/main/`.
+
+   ```xml
+   <application android:name=".Application" ...>
+   ```
 
 ### iOS Integration
 
