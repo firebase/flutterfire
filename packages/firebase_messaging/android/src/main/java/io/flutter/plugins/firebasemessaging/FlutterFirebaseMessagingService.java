@@ -309,10 +309,10 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
    * message handling is enabled.
    *
    * @param callback Application class which implements PluginRegistrantCallback.
-   * 
-   * <p>Note: this is only necessary for applications using the V1 engine embedding API as plugins
-   * are automatically registered via reflection in the V2 engine embedding API. If not set, messaging
-   * callbacks will not be able to utilize functionality from other plugins nor the background message handler.
+   *     <p>Note: this is only necessary for applications using the V1 engine embedding API as
+   *     plugins are automatically registered via reflection in the V2 engine embedding API. If not
+   *     set, messaging callbacks will not be able to utilize functionality from other plugins nor
+   *     the background message handler.
    */
   public static void setPluginRegistrant(PluginRegistry.PluginRegistrantCallback callback) {
     pluginRegistrantCallback = callback;
