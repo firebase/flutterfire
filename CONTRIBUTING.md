@@ -87,6 +87,8 @@ E2e tests are those which directly communicate with Firebase, whose results cann
 an example application. To run e2e tests, run the `flutter drive` command from the plugins main `example` directory, targeting the
 entry e2e test file:
 
+** Please ensure the cloud firestore emulator is running for any db related tests. https://firebase.flutter.dev/docs/firestore/usage/#emulator-usage **
+
 ```bash
 cd packages/cloud_firestore/cloud_firestore/example
 flutter drive --target=./test_driver/cloud_firestrore_e2e.dart
