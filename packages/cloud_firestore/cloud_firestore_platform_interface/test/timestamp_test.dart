@@ -41,7 +41,7 @@ void main() {
           throwsArgumentError);
     });
 
-    test('fromMillisecondsSinceEpoch can handle future date', () {
+    test('fromMillisecondsSinceEpoch can handle current timestamp', () {
       int currentEpoch = DateTime.now().millisecondsSinceEpoch;
       Timestamp t = Timestamp.fromMillisecondsSinceEpoch(currentEpoch);
 
