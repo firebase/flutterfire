@@ -2,11 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
-typedef void MessageHandler(RemoteMessage message);
+typedef void RemoteMessageHandler(RemoteMessage message);
 
 /// Represents the current status of the platforms notification permissions.
 enum AuthorizationStatus {
