@@ -9,6 +9,9 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import '../../firebase_messaging_platform_interface.dart';
+import '../utils.dart';
+
 /// The entry point for accessing a Messaging.
 ///
 /// You can get an instance by calling [FirebaseMessaging.instance].
@@ -27,6 +30,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     });
     _initialized = true;
   }
+
+  bool _autoInitEnabled;
+
+  Notification _initialNotification;
 
   static bool _initialized = false;
 
@@ -47,15 +54,73 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
+  FirebaseMessagingPlatform setInitialValues(
+      {bool isAutoInitEnabled, Map<String, dynamic> initialNotification}) {
+    _autoInitEnabled = isAutoInitEnabled ?? false;
+
+    if (initialNotification != null) {
+      AndroidNotification _android;
+      IOSNotification _ios;
+
+      if (initialNotification['android'] != null) {
+        _android = AndroidNotification(
+          channelId: initialNotification['android']['channelId'],
+          clickAction: initialNotification['android']['clickAction'],
+          color: initialNotification['android']['color'],
+          count: initialNotification['android']['count'],
+          imageUrl: initialNotification['android']['imageUrl'],
+          link: initialNotification['android']['link'],
+          priority: convertToNotificationPriority(
+              initialNotification['android']['priority']),
+          smallIcon: initialNotification['android']['smallIcon'],
+          sound: initialNotification['android']['sound'],
+          ticker: initialNotification['android']['ticker'],
+          visibility: convertToNotificationVisibility(
+              initialNotification['android']['visibility']),
+        );
+      }
+
+      if (initialNotification['ios'] != null) {
+        _ios = IOSNotification(
+            badge: initialNotification['ios']['badge'],
+            sound: initialNotification['ios']['sound'],
+            subtitle: initialNotification['ios']['subtitle'],
+            subtitleLocArgs: initialNotification['ios']['subtitleLocArgs'],
+            subtitleLocKey: initialNotification['ios']['subtitleLocKey'],
+            criticalSound: initialNotification['ios']['criticalSound'] == null
+                ? null
+                : NotificationIOSCriticalSound(
+                    critical: initialNotification['ios']['criticalSound']
+                        ['critical'],
+                    name: initialNotification['ios']['criticalSound']['name'],
+                    volume: initialNotification['ios']['criticalSound']
+                        ['volume']));
+      }
+
+      _initialNotification = Notification(
+        title: initialNotification['title'],
+        titleLocArgs: initialNotification['titleLocArgs'],
+        titleLocKey: initialNotification['titleLocKey'],
+        body: initialNotification['body'],
+        bodyLocArgs: initialNotification['bodyLocArgs'],
+        bodyLocKey: initialNotification['bodyLocKey'],
+        android: _android,
+        ios: _ios,
+      );
+    }
+  }
+
+  @override
   bool get isAutoInitEnabled {
-    // TODO from constants
-    return false;
+    return _autoInitEnabled;
   }
 
   @override
   Notification get initialNotification {
-    // TODO from constants
-    return null;
+    Notification result = _initialNotification;
+    // Remove the notification once consumed
+    _initialNotification = null;
+    return result;
   }
 
   @override

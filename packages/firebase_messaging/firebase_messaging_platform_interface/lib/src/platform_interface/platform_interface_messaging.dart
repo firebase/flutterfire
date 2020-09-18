@@ -32,8 +32,14 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseMessagingPlatform.instanceFor({FirebaseApp app}) {
-    return FirebaseMessagingPlatform.instance.delegateFor(app: app);
+  factory FirebaseMessagingPlatform.instanceFor(
+      {FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
+    return FirebaseMessagingPlatform.instance
+        .delegateFor(app: app)
+        .setInitialValues(
+          isAutoInitEnabled: pluginConstants['AUTO_INIT_ENABLED'],
+          initialNotification: pluginConstants['INITIAL_NOTIFICATION'],
+        );
   }
 
   static FirebaseMessagingPlatform _instance;
@@ -66,6 +72,19 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   @protected
   FirebaseMessagingPlatform delegateFor({FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
+  }
+
+  /// Sets any initial values on the instance.
+  ///
+  /// Platforms with Method Channels can provide constant values to be available
+  /// before the instance has initialized to prevent any unnecessary async
+  /// calls.
+  @protected
+  FirebaseMessagingPlatform setInitialValues({
+    bool isAutoInitEnabled,
+    Map<String, dynamic> initialNotification,
+  }) {
+    throw UnimplementedError('setInitialValues() is not implemented');
   }
 
   /// Returns whether messaging auto initialization is enabled or disabled for the device.

@@ -4,6 +4,8 @@
 
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
+import 'utils.dart';
+
 class Notification {
   const Notification(
       {this.android,
@@ -97,7 +99,7 @@ class AndroidNotification {
       'color': color,
       'imageUrl': imageUrl,
       'link': link,
-      'priority': priority.index,
+      'priority': convertFromNotificationPriority(priority),
       'smallIcon': smallIcon,
       'sound': sound,
       'ticker': ticker,

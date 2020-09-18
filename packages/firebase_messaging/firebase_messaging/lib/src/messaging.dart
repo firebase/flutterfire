@@ -15,8 +15,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   FirebaseMessagingPlatform get _delegate {
     if (_delegatePackingProperty == null) {
-      _delegatePackingProperty =
-          FirebaseMessagingPlatform.instanceFor(app: app);
+      _delegatePackingProperty = FirebaseMessagingPlatform.instanceFor(
+          app: app, pluginConstants: pluginConstants);
     }
     return _delegatePackingProperty;
   }
