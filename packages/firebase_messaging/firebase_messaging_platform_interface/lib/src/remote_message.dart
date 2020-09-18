@@ -6,7 +6,8 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 
 class RemoteMessage {
   const RemoteMessage(
-      {this.category,
+      {this.senderId,
+      this.category,
       this.collapseKey,
       this.contentAvailable,
       this.data,
@@ -18,6 +19,9 @@ class RemoteMessage {
       this.sentTime,
       this.threadId,
       this.ttl});
+
+  ///
+  final String senderId;
 
   /// The iOS category this notification is assigned to.
   final String category;
@@ -56,8 +60,13 @@ class RemoteMessage {
   /// The time to live for the message in seconds.
   final int ttl;
 
-  Map<String, dynamic> toMap() {
+  /// Returns the [RemoteMessage] as a [Map].
+  ///
+  /// If no [senderId] has been provided, the [FirebaseApp] sender ID will be
+  /// used.
+  Map<String, dynamic> toMap(String messagingSenderId) {
     return <String, dynamic>{
+      'to': senderId ?? '$messagingSenderId@fcm.googleapis.com',
       'category': category,
       'collapseKey': collapseKey,
       'contentAvailable': contentAvailable,

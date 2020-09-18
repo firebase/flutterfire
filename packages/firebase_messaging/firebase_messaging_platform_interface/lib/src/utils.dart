@@ -63,3 +63,16 @@ int convertFromNotificationVisibility(NotificationVisibility visibility) {
       return 0;
   }
 }
+
+AuthorizationStatus convertToAuthorizationStatus(int status) {
+  switch (status) {
+    case -1:
+      return AuthorizationStatus.notDetermined;
+    case 0:
+      return AuthorizationStatus.denied;
+    case 1:
+      return AuthorizationStatus.authorized;
+    case 2:
+      return AuthorizationStatus.provisional;
+  }
+}
