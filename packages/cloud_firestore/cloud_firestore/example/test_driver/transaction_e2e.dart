@@ -99,17 +99,21 @@ void runTransactionTests() {
 
     group('Transaction.get()', () {
       test('should resolve', () async {
-        try{
-        DocumentReference documentReference =
+       
+        DocumentReference fooReference =
             firestore.doc('flutter-tests/foo');
 
-        Future<void> response = await firestore.runTransaction((Transaction transaction) async {
-            return transaction.get(documentReference)
-                              .then((DocumentSnapshot doc) => doc)
-                              .then((doc) => {
-                                return transaction.set(documentReference, {'foo': 'bars'});
-                              });   
-        });
+        DocumentReference newRef = firestore.collection('test-collection').doc();
+
+         try{
+            Future<void> response = await firestore.runTransaction((Transaction transaction) async {
+                return transaction.get(fooReference)
+                        .then((DocumentSnapshot doc){
+                          return transaction.set(newRef, {
+                            'foo': 'bar'
+                          });
+                        });
+            });
         }
         catch(ex){
           print('error >>>>>${ex.message}');
