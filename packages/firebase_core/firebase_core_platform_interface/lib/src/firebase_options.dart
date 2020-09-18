@@ -225,7 +225,22 @@ class FirebaseOptions {
 
   @override
   int get hashCode {
-    return asMap.toString().hashCode;
+    return hashValues(
+      apiKey ?? googleAppID,
+      appId,
+      messagingSenderId ?? gcmSenderID,
+      projectId ?? projectID,
+      authDomain,
+      databaseURL,
+      storageBucket,
+      measurementId,
+      trackingId ?? trackingID,
+      deepLinkURLScheme,
+      androidClientId ?? clientID,
+      iosClientId ?? clientID,
+      iosBundleId ?? bundleID,
+      appGroupId,
+    );
   }
 
   @override
