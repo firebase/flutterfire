@@ -8,6 +8,21 @@ void barcodeDetectorTests() {
   group('$BarcodeDetector', () {
     final BarcodeDetector detector = FirebaseVision.instance.barcodeDetector();
 
+    test('detectInImage with pdf417', () async {
+      final String tmpFilename = await _loadImage('assets/test_driver_license_barcode.png');
+      final FirebaseVisionImage visionImage =
+      FirebaseVisionImage.fromFilePath(tmpFilename);
+
+      final List<Barcode> barcodes = await detector.detectInImage(
+        visionImage,
+      );
+      final driverLicense = barcodes.first.driverLicense;
+
+      expect(barcodes.length, 1);
+      expect(driverLicense, isNotNull);
+      expect(driverLicense, isInstanceOf<BarcodeDriverLicense>());
+    });
+
     test('detectInImage', () async {
       final String tmpFilename = await _loadImage('assets/test_barcode.jpg');
       final FirebaseVisionImage visionImage =
