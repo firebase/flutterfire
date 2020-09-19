@@ -4,6 +4,7 @@
 
 #import "CloudFunctionsPlugin.h"
 
+#import <firebase_core/FLTFirebasePlugin.h>
 #import "Firebase/Firebase.h"
 
 @interface CloudFunctionsPlugin ()
@@ -27,13 +28,6 @@
 
 - (instancetype)init {
   self = [super init];
-  if (self) {
-    if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
-      NSLog(@"Configuring the default Firebase app...");
-      [FIRApp configure];
-      NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    }
-  }
   return self;
 }
 
@@ -45,7 +39,8 @@
     NSString *region = call.arguments[@"region"];
     NSString *origin = call.arguments[@"origin"];
     NSNumber *timeoutMicroseconds = call.arguments[@"timeoutMicroseconds"];
-    FIRApp *app = [FIRApp appNamed:appName];
+
+    FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appName];
     FIRFunctions *functions;
     if (region != nil && region != (id)[NSNull null]) {
       functions = [FIRFunctions functionsForApp:app region:region];

@@ -60,7 +60,7 @@ void main() {
                 ))),
       ));
 
-      FirebaseCorePlatform.instance = FirebaseCoreWeb();
+      FirebasePlatform.instance = FirebaseCoreWeb();
       CloudFunctionsPlatform.instance = CloudFunctionsWeb();
 
       // install loggingCall on the HttpsCallable mock as the thing that gets

@@ -1,8 +1,9 @@
 name: firebase_analytics
-description: Flutter plugin for Google Analytics for Firebase, an app measurement
+description:
+  Flutter plugin for Google Analytics for Firebase, an app measurement
   solution that provides insight on app usage and user engagement on Android and iOS.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics/firebase_analytics
-version: 5.0.13
+version: 6.0.0
 
 flutter:
   plugin:
@@ -12,22 +13,25 @@ flutter:
         pluginClass: FirebaseAnalyticsPlugin
       ios:
         pluginClass: FLTFirebaseAnalyticsPlugin
+      web:
+        default_package: firebase_analytics_web
 
 dependencies:
   meta: ^1.0.4
   flutter:
     sdk: flutter
+  firebase_core: ^0.5.0
+  firebase_analytics_web: ^0.1.0
+  firebase_analytics_platform_interface: ^1.0.1
 
 dev_dependencies:
   pedantic: ^1.8.0
-  e2e: ^0.2.1
   mockito: 3.0.0
   flutter_test:
     sdk: flutter
-  firebase_core: ^0.4.0
   flutter_driver:
     sdk: flutter
 
 environment:
-  sdk: ">=2.0.0-dev.28.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+  sdk: ">=2.0.0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"

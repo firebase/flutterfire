@@ -1,6 +1,6 @@
 # Firebase Cloud Messaging for Flutter
 
-[![pub package](https://img.shields.io/pub/v/firebase_messaging.svg)](https://pub.dartlang.org/packages/firebase_messaging)
+[![pub package](https://img.shields.io/pub/v/firebase_messaging.svg)](https://pub.dev/packages/firebase_messaging)
 
 A Flutter plugin to use the [Firebase Cloud Messaging (FCM) API](https://firebase.google.com/docs/cloud-messaging/).
 
@@ -113,7 +113,7 @@ By default background messaging is not enabled. To handle messages in the backgr
 1. Define a **TOP-LEVEL** or **STATIC** function to handle background messages
 
    ```dart
-   Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+   Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
      if (message.containsKey('data')) {
        // Handle data message
        final dynamic data = message['data'];
@@ -295,10 +295,10 @@ Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
 
 ## Issues and feedback
 
-Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
 Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
-please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
-and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).

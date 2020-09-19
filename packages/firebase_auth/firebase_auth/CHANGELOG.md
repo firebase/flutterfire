@@ -1,3 +1,90 @@
+## 0.18.0+1
+
+* Fixed an Android issue where certain network related Firebase Auth error codes would come through as `unknown`. [(#3217)](https://github.com/FirebaseExtended/flutterfire/pull/3217)
+* Added missing deprecations: `FirebaseUser` class and `photoUrl` getter.
+* Bump `firebase_auth_platform_interface` dependency to fix an assertion issue when creating Google sign-in credentials.
+* Bump `firebase_auth_web` dependency to `^0.3.0+1`.
+
+## 0.18.0
+
+Overall, Firebase Auth has been heavily reworked to bring it inline with the federated plugin setup along with adding new features, documentation and many more unit and end-to-end tests. The API has mainly been kept the same, however there are some breaking changes.
+
+### General
+
+- **BREAKING**: The `FirebaseUser` class has been renamed to `User`.
+- **BREAKING**: The `AuthResult` class has been renamed to `UserCredential`.
+- **NEW**: The `ActionCodeSettings` class is now consumable on all supporting methods.
+  - **NEW**: Added support for the `dynamicLinkDomain` property.
+- **NEW**: Added a new `FirebaseAuthException` class (extends `FirebaseException`).
+  - All errors are now returned as a `FirebaseAuthException`, allowing you to access the code & message associated with the error.
+  - In addition, it is now possible to access the `email` and `credential` properties on exceptions if they exist.
+
+### `FirebaseAuth`
+
+- **BREAKING**: Accessing the current user via `currentUser()` is now synchronous via the `currentUser` getter.
+- **BREAKING**: `isSignInWithEmailLink()` is now synchronous.
+- **DEPRECATED**: `FirebaseAuth.fromApp()` is now deprecated in favor of `FirebaseAuth.instanceFor()`.
+- **DEPRECATED**: `onAuthStateChanged` has been deprecated in favor of `authStateChanges()`.
+- **NEW**: Added support for `idTokenChanges()` stream listener.
+- **NEW**: Added support for `userChanges()` stream listener.
+  - The purpose of this API is to allow users to subscribe to all user events without having to manually hydrate app state in cases where a manual reload was required (e.g. `updateProfile()`).
+- **NEW**: Added support for `applyActionCode()`.
+- **NEW**: Added support for `checkActionCode()`.
+- **NEW**: Added support for `verifyPasswordResetCode()`.
+- **NEW**: Added support for accessing the current language code via the `languageCode` getter.
+- **NEW**: `setLanguageCode()` now supports providing a `null` value.
+  - On web platforms, if `null` is provided the Firebase projects default language will be set.
+  - On native platforms, if `null` is provided the device language will be used.
+- **NEW**: `verifyPhoneNumber()` exposes a `autoRetrievedSmsCodeForTesting` property.
+  - This allows developers to test automatic SMS code resolution on Android devices during development.
+- **NEW** (iOS): `appVerificationDisabledForTesting`  setting can now be set for iOS.
+  - This allows developers to skip ReCaptcha verification when testing phone authentication.
+- **NEW** (iOS): `userAccessGroup` setting can now be set for iOS & MacOS.
+  - This allows developers to share authentication states across multiple apps or extensions on iOS & MacOS. For more information see the [Firebase iOS SDK documentation](https://firebase.google.com/docs/auth/ios/single-sign-on).
+
+### `User`
+
+- **BREAKING**: Removed the `UpdateUserInfo` class when using `updateProfile` in favor of named arguments.
+- **NEW**: Added support for `getIdTokenResult()`.
+- **NEW**: Added support for `verifyBeforeUpdateEmail()`.
+- **FIX**: Fixed several iOS crashes when the Firebase SDK returned `nil` property values.
+- **FIX**: Fixed an issue on Web & iOS where a users email address would still show after unlinking the email/password provider.
+
+### `UserCredential`
+
+- **NEW**: Added support for accessing the users `AuthCredential` via the `credential` property.
+
+### `AuthProvider` & `AuthCredential`
+
+- **DEPRECATED**: All sub-class (e.g. `GoogleAuthProvider`) `getCredential()` methods have been deprecated in favor of `credential()`.
+  - **DEPRECATED**:  `EmailAuthProvider.getCredentialWithLink()` has been deprecated in favor of `EmailAuthProvider.credentialWithLink()`.
+- **NEW**: Supporting providers can now assign scope and custom request parameters.
+  - The scope and parameters will be used on web platforms when triggering a redirect or popup via `signInWithPopup()` or `signInWithRedirect()`.
+
+## 0.17.0-dev.2
+
+* Update plugin and example to use the same core.
+
+## 0.17.0-dev.1
+
+* Depend on `firebase_core` pre-release versions.
+
+## 0.16.1+2
+
+* Update README to make it clear which authentication options are possible.
+
+## 0.16.1+1
+
+* Fix bug #2656 (verifyPhoneNumber always use the default FirebaseApp, not the configured one)
+
+## 0.16.1
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 0.16.0
+
+* Migrate to Android v2 embedding.
+
 ## 0.15.5+3
 
 * Fix for missing UserAgent.h compilation failures.

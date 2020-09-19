@@ -131,7 +131,7 @@ class RemoteConfig extends ChangeNotifier {
         final int fetchThrottleEnd = e.details['fetchThrottledEnd'];
         throw FetchThrottledException._(endTimeInMills: fetchThrottleEnd);
       } else {
-        throw Exception('Unable to fetch remote config');
+        throw Exception(e.message);
       }
     }
   }

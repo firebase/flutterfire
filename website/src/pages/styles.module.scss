@@ -1,0 +1,80 @@
+.hero {
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+
+  @media only screen and (max-width: 940px) {
+    svg {
+      display: none;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    .actions {
+      margin-top: 1rem;
+
+      a {
+        color: var(--white);
+        border: 1px solid #fff;
+        border-radius: 3px;
+        font-size: 1.2rem;
+        margin: 0 0.3rem 1rem 0.3rem;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+  }
+}
+
+.plugins {
+  display: flex;
+  justify-content: center;
+  margin: 3rem auto;
+  max-width: 1200px;
+  overflow-x: auto;
+
+  table {
+    align-self: center;
+  }
+}
+
+.table {
+  width: initial;
+
+  th,
+  td {
+    text-align: center;
+  }
+
+  td {
+    min-width: 80px;
+
+    &.icon {
+      font-size: 2rem;
+    }
+  }
+}

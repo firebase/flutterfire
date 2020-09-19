@@ -1,3 +1,24 @@
+## 0.6.0
+
+* Depend on new `firebase_core` plugin.
+* Firebase iOS SDK versions are now locked to use the same version defined in
+  `firebase_core`.
+* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
+  to specify individual SDK versions. BoM version is also sourced from
+  `firebase_core`.
+
+## 0.5.3
+
+* Fix for passing null/nil link between native libraries and flutter code.
+
+## 0.5.2
+
+* Fix for race-condition issue on iOS during initialization process
+
+## 0.5.1
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 0.5.0+12
 
 * Fix for missing UserAgent.h compilation failures.
