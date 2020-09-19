@@ -9,9 +9,10 @@ void barcodeDetectorTests() {
     final BarcodeDetector detector = FirebaseVision.instance.barcodeDetector();
 
     test('detectInImage with pdf417', () async {
-      final String tmpFilename = await _loadImage('assets/test_driver_license_barcode.png');
+      final String tmpFilename =
+          await _loadImage('assets/test_driver_license_barcode.png');
       final FirebaseVisionImage visionImage =
-      FirebaseVisionImage.fromFilePath(tmpFilename);
+          FirebaseVisionImage.fromFilePath(tmpFilename);
 
       final List<Barcode> barcodes = await detector.detectInImage(
         visionImage,

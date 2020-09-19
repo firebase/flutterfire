@@ -189,22 +189,46 @@ NSDictionary *calendarEventToDictionary(FIRVisionBarcodeCalendarEvent *calendar)
 }
 
 NSDictionary *driverLicenseToDictionary(FIRVisionBarcodeDriverLicense *license) {
-  return @{
-    @"firstName" : license.firstName ?? [NSNull null],
-    @"middleName" : license.middleName ?? [NSNull null],
-    @"lastName" : license.lastName ?? [NSNull null],
-    @"gender" : license.gender ?? [NSNull null],
-    @"addressCity" : license.addressCity ?? [NSNull null],
-    @"addressStreet" : license.addressStreet ?? [NSNull null],
-    @"addressState" : license.addressState ?? [NSNull null],
-    @"addressZip" : license.addressZip ?? [NSNull null],
-    @"birthDate" : license.birthDate ?? [NSNull null],
-    @"documentType" : license.documentType ?? [NSNull null],
-    @"licenseNumber" : license.licenseNumber ?? [NSNull null],
-    @"expiryDate" : license.expiryDate ?? [NSNull null],
-    @"issuingDate" : license.issuingDate ?? [NSNull null],
-    @"issuingCountry" : license.issuingCountry ?? [NSNull null]
-  };
+  return @{@"firstName" : license.firstName ? ? [NSNull null],
+           @"middleName"
+                                              : license.middleName
+           ? ? [NSNull null],
+           @"lastName"
+             : license.lastName
+           ? ? [NSNull null],
+           @"gender"
+             : license.gender
+           ? ? [NSNull null],
+           @"addressCity"
+             : license.addressCity
+           ? ? [NSNull null],
+           @"addressStreet"
+             : license.addressStreet
+           ? ? [NSNull null],
+           @"addressState"
+             : license.addressState
+           ? ? [NSNull null],
+           @"addressZip"
+             : license.addressZip
+           ? ? [NSNull null],
+           @"birthDate"
+             : license.birthDate
+           ? ? [NSNull null],
+           @"documentType"
+             : license.documentType
+           ? ? [NSNull null],
+           @"licenseNumber"
+             : license.licenseNumber
+           ? ? [NSNull null],
+           @"expiryDate"
+             : license.expiryDate
+           ? ? [NSNull null],
+           @"issuingDate"
+             : license.issuingDate
+           ? ? [NSNull null],
+           @"issuingCountry"
+             : license.issuingCountry
+           ? ? [NSNull null] };
 }
 
 + (FIRVisionBarcodeDetectorOptions *)parseOptions:(NSDictionary *)optionsData {
