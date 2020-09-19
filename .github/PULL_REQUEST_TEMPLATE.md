@@ -15,7 +15,7 @@ Before you create this PR confirm that it meets all requirements listed below by
 - [ ] My PR includes unit or integration tests for *all* changed/updated/fixed behaviors (See [Contributor Guide]).
 - [ ] All existing and new tests are passing.
 - [ ] I updated/added relevant documentation (doc comments with `///`).
-- [ ] The analyzer (`flutter analyze`) does not report any problems on my PR.
+- [ ] The analyzer (`melos run analyze`) does not report any problems on my PR.
 - [ ] I read and followed the [Flutter Style Guide].
 - [ ] I updated pubspec.yaml with an appropriate new version according to the [pub versioning philosophy].
 - [ ] I updated CHANGELOG.md to add a description of the change.
