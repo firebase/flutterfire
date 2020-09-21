@@ -201,10 +201,24 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<void> sendMessage(RemoteMessage message) {
+  Future<void> sendMessage({
+    String senderId,
+    Map<String, String> data,
+    String collapseKey,
+    String messageId,
+    String messageType,
+    int ttl,
+  }) {
     return _channel.invokeMethod<void>('Messaging#sendMessage', {
       'appName': app.name,
-      'message': message.toMap(app.options.messagingSenderId),
+      'message': {
+        'senderId': senderId,
+        'data': data,
+        'collapseKey': collapseKey,
+        'messageId': messageId,
+        'messageType': messageType,
+        'tt;': ttl,
+      }
     });
   }
 

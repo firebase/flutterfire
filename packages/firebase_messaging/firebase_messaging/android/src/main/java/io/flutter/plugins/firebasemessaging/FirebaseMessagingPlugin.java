@@ -169,7 +169,7 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     Map<String, Object> messageMap =
         (Map<String, Object>) Objects.requireNonNull(arguments.get("message"));
 
-    String to = (String) Objects.requireNonNull(messageMap.get("to"));
+    String to = (String) Objects.requireNonNull(messageMap.get("senderId"));
     RemoteMessage.Builder builder = new RemoteMessage.Builder(to);
 
     String collapseKey = (String) messageMap.get("collapseKey");

@@ -215,8 +215,15 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('requestPermission() is not implemented');
   }
 
-  /// Send a new [RemoteMessage] to the FCM server.
-  Future<void> sendMessage(RemoteMessage message) {
+  /// Send a new message to the FCM server.
+  Future<void> sendMessage({
+    String senderId,
+    Map<String, String> data,
+    String collapseKey,
+    String messageId,
+    String messageType,
+    int ttl,
+  }) {
     throw UnimplementedError('sendMessage() is not implemented');
   }
 

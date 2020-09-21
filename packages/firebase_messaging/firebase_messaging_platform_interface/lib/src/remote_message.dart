@@ -59,25 +59,4 @@ class RemoteMessage {
 
   /// The time to live for the message in seconds.
   final int ttl;
-
-  /// Returns the [RemoteMessage] as a [Map].
-  ///
-  /// If no [senderId] has been provided, the [FirebaseApp] sender ID will be
-  /// used.
-  Map<String, dynamic> toMap(String messagingSenderId) {
-    return <String, dynamic>{
-      'to': senderId ?? '$messagingSenderId@fcm.googleapis.com',
-      'category': category,
-      'collapseKey': collapseKey,
-      'contentAvailable': contentAvailable,
-      'data': data,
-      'from': from,
-      'messageId': messageId,
-      'mutableContent': mutableContent,
-      'notification': notification?.toMap(),
-      'sentTime': sentTime?.millisecondsSinceEpoch,
-      'threadId': threadId,
-      'ttl': ttl,
-    };
-  }
 }

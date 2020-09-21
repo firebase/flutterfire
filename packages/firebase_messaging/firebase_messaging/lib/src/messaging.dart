@@ -215,9 +215,24 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   }
 
   /// Send a new [RemoteMessage] to the FCM server.
-  Future<void> sendMessage(RemoteMessage message) {
-    assert(message != null);
-    return _delegate.sendMessage(message);
+  Future<void> sendMessage({
+    String senderId,
+    Map<String, String> data,
+    String collapseKey,
+    String messageId,
+    String messageType,
+    int ttl,
+  }) {
+    if (ttl != null) {
+      assert(ttl >= 0);
+    }
+    return _delegate.sendMessage(
+      senderId: senderId ?? '${app.options.messagingSenderId}@fcm.googleapis.com',
+      data: data,
+      collapseKey: collapseKey,
+      messageId: messageId,
+      messageType: messageType
+    );
   }
 
   /// Enable or disable auto-initialization of Firebase Cloud Messaging.
