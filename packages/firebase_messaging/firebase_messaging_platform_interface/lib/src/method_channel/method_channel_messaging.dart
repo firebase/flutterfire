@@ -9,7 +9,6 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import '../../firebase_messaging_platform_interface.dart';
 import '../utils.dart';
 
 /// The entry point for accessing a Messaging.
@@ -108,6 +107,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         ios: _ios,
       );
     }
+
+    return this;
   }
 
   @override
@@ -134,6 +135,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<String> getAPNSToken() {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return null;
+    }
+
     return _channel.invokeMethod<String>('Messaging#getAPNSToken', {
       'appName': app.name,
     });
@@ -158,12 +163,11 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       return AuthorizationStatus.authorized;
     }
 
-    await _channel.invokeMethod<int>('Messaging#hasPermission', {
+    int status = await _channel.invokeMethod<int>('Messaging#hasPermission', {
       'appName': app.name,
     });
 
-    // TODO handle from result
-    return AuthorizationStatus.authorized;
+    return convertToAuthorizationStatus(status);
   }
 
   @override
@@ -179,8 +183,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       return AuthorizationStatus.authorized;
     }
 
-    // todo true from android
-    await _channel.invokeMethod<int>('Messaging#requestPermission', {
+    int status =
+        await _channel.invokeMethod<int>('Messaging#requestPermission', {
       'appName': app.name,
       'permissions': <String, bool>{
         'alert': alert,
@@ -193,15 +197,14 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       }
     });
 
-    // TODO handle from result
-    return AuthorizationStatus.authorized;
+    return convertToAuthorizationStatus(status);
   }
 
   @override
   Future<void> sendMessage(RemoteMessage message) {
     return _channel.invokeMethod<void>('Messaging#sendMessage', {
       'appName': app.name,
-      'message': message.toMap(),
+      'message': message.toMap(app.options.messagingSenderId),
     });
   }
 

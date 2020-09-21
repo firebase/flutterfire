@@ -10,6 +10,14 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import '../method_channel/method_channel_messaging.dart';
+import '../types.dart';
+
+RemoteMessageHandler _onMessage;
+void Function(String messageId) _onMessageSent;
+RemoteMessageHandler _onNotificationOpenedApp;
+void Function(FirebaseException exception, String messageId) _onSendError;
+void Function() _onDeletedMessages;
+RemoteMessageHandler _onBackgroundMessage;
 
 /// Defines an interface to work with Messaging on web and mobile
 abstract class FirebaseMessagingPlatform extends PlatformInterface {
@@ -57,14 +65,19 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
 
   static void configure({
     //  String publicVapidKey, TODO(ehesp): add in with web support
-    MessageHandler onMessage,
+    RemoteMessageHandler onMessage,
     void Function(String messageId) onMessageSent,
-    MessageHandler onNotificationOpenedApp,
+    RemoteMessageHandler onNotificationOpenedApp,
     void Function(FirebaseException exception, String messageId) onSendError,
     void Function() onDeletedMessages,
-    MessageHandler onBackgroundMessage,
+    RemoteMessageHandler onBackgroundMessage,
   }) {
-    // TODO store somewhere & use in the implementations
+    _onMessage = onMessage;
+    _onMessageSent = onMessageSent;
+    _onNotificationOpenedApp = onNotificationOpenedApp;
+    _onSendError = onSendError;
+    _onDeletedMessages = onDeletedMessages;
+    _onBackgroundMessage = onBackgroundMessage;
   }
 
   /// Enables delegates to create new instances of themselves if a none default

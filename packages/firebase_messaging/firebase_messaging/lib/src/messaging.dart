@@ -34,14 +34,14 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   /// Sets up handlers for various messaging events.
   static void configure({
-    MessageHandler onMessage,
+    RemoteMessageHandler onMessage,
     void Function(String messageId) onMessageSent,
-    MessageHandler onNotificationOpenedApp,
+    RemoteMessageHandler onNotificationOpenedApp,
     void Function(FirebaseException exception, String messageId) onSendError,
     void Function() onDeletedMessages,
-    MessageHandler onBackgroundMessage,
-    MessageHandler onLaunch, // deprecate
-    MessageHandler onResume, // deprecate
+    RemoteMessageHandler onBackgroundMessage,
+    RemoteMessageHandler onLaunch, // deprecate
+    RemoteMessageHandler onResume, // deprecate
   }) {
     return FirebaseMessagingPlatform.configure(
       onMessage: onMessage,
