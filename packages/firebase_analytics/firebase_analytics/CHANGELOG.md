@@ -1,3 +1,8 @@
+## 6.0.0+1
+
+* Removed a `dart:async` import that isn't required for \>=Dart 2.1.
+* Require \>=Dart 2.1.
+
 ## 6.0.0
 
 * Firebase iOS SDK versions are now locked to use the same version defined in

@@ -1,3 +1,7 @@
+## 0.5.0+1
+
+* Removed a `dart:async` import that isn't required for \>=Dart 2.1.
+
 ## 0.5.0
 
 * Allow iOS and macOS to be imported as a module.

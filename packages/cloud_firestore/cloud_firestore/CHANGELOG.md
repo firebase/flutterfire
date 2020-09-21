@@ -1,3 +1,8 @@
+## 0.14.0+3
+
+* Removed a `dart:async` import that isn't required for \>=Dart 2.1.
+* Require \>=Dart 2.1.
+
 ## 0.14.0+2
 
 * Added missing deprecated `Firestore` static methods.
