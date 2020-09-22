@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -39,10 +41,12 @@ void runTaskTests() {
           streamError = error;
         }, cancelOnError: true);
 
-        await task.snapshotEvents.first;
+        // TODO(Salakar): Known issue with iOS SDK where pausing immediately will cause an 'unknown' error.
         if (defaultTargetPlatform == TargetPlatform.iOS) {
+          await task.snapshotEvents.first;
           await Future.delayed(Duration(milliseconds: 750));
         }
+
         bool paused = await task.pause();
         expect(paused, isTrue);
         expect(task.snapshot.state, TaskState.paused);
@@ -77,7 +81,42 @@ void runTaskTests() {
         await downloadRef.writeToFile(file);
         task = uploadRef.putFile(file);
         await _testPauseTask('Upload');
-      }, skip: false);
+      });
+
+      test('handles errors, e.g. if permission denied', () async {
+        FirebaseException streamError;
+
+        List<int> list = utf8.encode('hello world');
+        Uint8List data = Uint8List.fromList(list);
+        UploadTask task = storage.ref('/uploadNope.jpeg').putData(data);
+
+        expect(task.snapshot.state, TaskState.running);
+
+        task.snapshotEvents.listen((TaskSnapshot snapshot) {
+          // noop
+        }, onError: (error) {
+          streamError = error;
+        }, cancelOnError: true);
+
+        try {
+          await task;
+          fail('Should have thrown an error');
+        } on FirebaseException catch (error) {
+          expect(error.plugin, 'firebase_storage');
+          expect(error.code, 'unauthorized');
+          expect(error.message,
+              'User is not authorized to perform the desired action.');
+        } catch (_) {
+          fail('Should have thrown an [FirebaseException] error');
+        }
+
+        expect(streamError.plugin, 'firebase_storage');
+        expect(streamError.code, 'unauthorized');
+        expect(streamError.message,
+            'User is not authorized to perform the desired action.');
+
+        expect(task.snapshot.state, TaskState.error);
+      });
     });
 
     group('snapshot', () {
