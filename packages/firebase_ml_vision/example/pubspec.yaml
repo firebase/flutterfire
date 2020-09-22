@@ -27,7 +27,7 @@ dev_dependencies:
     sdk: flutter
   test: any
   path: ^1.6.2
-  path_provider: ^0.5.0+1
+  path_provider: ^1.6.11
 
 flutter:
   uses-material-design: true
