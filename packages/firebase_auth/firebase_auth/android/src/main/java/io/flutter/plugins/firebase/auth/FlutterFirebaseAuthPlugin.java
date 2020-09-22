@@ -250,11 +250,6 @@ public class FlutterFirebaseAuthPlugin
       case Constants.SIGN_IN_METHOD_TWITTER:
         return TwitterAuthProvider.getCredential(
             Objects.requireNonNull(accessToken), Objects.requireNonNull(secret));
-//        TODO Rafał
-      case Constants.SIGN_IN_METHOD_MICROSOFT:
-        return MicrosoftAuthProvider.getCredential(
-          Objects.requireNonNull(appName), Objects.requireNonNull(scopes));
-
       case Constants.SIGN_IN_METHOD_GITHUB:
         return GithubAuthProvider.getCredential(Objects.requireNonNull(accessToken));
       case Constants.SIGN_IN_METHOD_PHONE:
@@ -749,16 +744,16 @@ public class FlutterFirebaseAuthPlugin
         });
   }
 
-//  TODO Rafał
   private Task<Map<String, Object>> signInWithMicrosoft(Map<String, Object> arguments) {
     return Tasks.call(
       cachedThreadPool,
       () -> {
         FirebaseAuth firebaseAuth = getAuth(arguments);
-        String appName = (String) Objects.requireNonNull(arguments.get(Constants.APP_NAME));
-        String scopes = (String) Objects.requireNonNull(arguments.get(Constants.SCOPES));
-
-        AuthResult authResult = Tasks.await(firebaseAuth.signInWithMicrosoft(appName, scopes));
+        final OAuthProvider.Builder provider = OAuthProvider.newBuilder("microsoft.com");
+        final List<String> scopes = (List<String>) arguments.get("scopes");
+        provider.setScopes(scopes);
+        AuthResult authResult = Tasks.await(firebaseAuth
+          .startActivityForSignInWithProvider(getActivity(), provider.build()));
         return parseAuthResult(authResult);
       });
   }

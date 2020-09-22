@@ -58,6 +58,8 @@ NSString *const kErrMsgInvalidCredential =
 
 #pragma mark - FlutterPlugin
 
+FIROAuthProvider *microsoftProvider;
+
 // Returns a singleton instance of the Firebase Auth plugin.
 + (instancetype)sharedInstance {
   static dispatch_once_t onceToken;
@@ -206,6 +208,8 @@ NSString *const kErrMsgInvalidCredential =
     [self signInWithCustomToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#signInWithEmailAndPassword" isEqualToString:call.method]) {
     [self signInWithEmailAndPassword:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Auth#signInWithMicrosoft" isEqualToString:call.method]) {
+    [self signInWithMicrosoft:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#signInWithEmailLink" isEqualToString:call.method]) {
     [self signInWithEmailLink:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#signOut" isEqualToString:call.method]) {
@@ -514,6 +518,28 @@ NSString *const kErrMsgInvalidCredential =
                  result.success(authResult);
                }
              }];
+}
+
+- (void)signInWithMicrosoft:(id)arguments
+              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
+
+  microsoftProvider = [FIROAuthProvider providerWithProviderID:@"microsoft.com"];
+          NSArray *scope = arguments[@"scopes"];
+          microsoftProvider.scopes = scope;
+          [microsoftProvider getCredentialWithUIDelegate:nil
+                                     completion:^(FIRAuthCredential *credential, NSError *error) {
+                                         if (credential) {
+                                             [auth signInWithCredential:credential
+                                                                        completion:^(FIRAuthDataResult *_Nullable authResult, NSError *_Nullable error) {
+                                                                                      if (error != nil) {
+                                                                                        result.error(nil, nil, nil, error);
+                                                                                      } else {
+                                                                                        result.success(authResult);
+                                                                                      }
+                                                                                    }];
+                                         }
+                                     }];
 }
 
 - (void)signInWithEmailLink:(id)arguments

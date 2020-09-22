@@ -81,9 +81,9 @@ class MicrosoftAuthProvider extends AuthProvider {
   @Deprecated('Deprecated in favor of `TwitterAuthProvider.credential()`')
   // ignore: public_member_api_docs
   static AuthCredential getCredential(
-      {@required String accessToken, @required String secret}) {
-    return MicrosoftAuthCredential.credential(
-        accessToken: accessToken, secret: secret);
+      {@required String appName, @required List<String> scopes}) {
+    return MicrosoftAuthProvider.credential(
+        appName: appName, scopes: scopes);
   }
 }
 
@@ -95,9 +95,7 @@ class MicrosoftAuthCredential extends OAuthCredential {
     List<String> scopes,
   }) : super(
             providerId: _kProviderId,
-            signInMethod: _kProviderId,
-            appName: accessToken,
-            scopes: scopes);
+            signInMethod: _kProviderId);
 
   factory MicrosoftAuthCredential._credential(
       {@required String appName, @required List<String> scopes}) {

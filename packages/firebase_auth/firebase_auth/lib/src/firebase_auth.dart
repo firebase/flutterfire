@@ -58,12 +58,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
     return _firebaseAuthInstances[app.name];
   }
 
-  @Deprecated
-    (
-      '
-      Deprecated in favor of `FirebaseAuth.instanceFor`
-      '
-  )
+  @Deprecated('Deprecated in favor of `authStateChanges`')
   // ignore: public_member_api_docs
   factory
   FirebaseAuth.fromApp(FirebaseApp app) {
@@ -497,7 +492,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
         this, await _delegate.signInWithEmailAndPassword(email, password));
   }
 
-  Future<AuthResult> signInWithMicrosoft(String appName,
+  Future<UserCredential> signInWithMicrosoft(String appName,
       List<String> scopes) async {
     assert(appName != null);
     assert(scopes != null);
