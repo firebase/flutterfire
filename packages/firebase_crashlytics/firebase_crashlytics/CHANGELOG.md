@@ -1,26 +1,4 @@
-## 0.2.0-dev.5
-
-* Bump to update changelog.
-* See the version `0.2.0-dev.1` changelog for accumulated changes in this dev release.
-
-## 0.2.0-dev.4
-
-* Fixed an error when hot restarting on iOS/macOS (#3432).
-* See the version `0.2.0-dev.1` changelog for accumulated changes in this dev release.
-
-## 0.2.0-dev.3
-
-* Fixed an issue with iOS logs appearing as `null` on the Firebase Console.
-* Ensure cosmetic Android exception classes keep their name when app obfuscated.
-* Fixed an error when hot restarting on Android (#3432).
-* See the version `0.2.0-dev.1` changelog for accumulated changes in this dev release.
-
-## 0.2.0-dev.2
-
-* Fixed an iOS variable naming collision that could cause builds to fail when used alongside `firebase_auth`.
-* See the version `0.2.0-dev.1` changelog for accumulated changes in this dev release.
-
-## 0.2.0-dev.1
+## 0.2.0
 
 For help migrating to this release please see the [migration guide](https://firebase.flutter.dev/docs/migration).
 

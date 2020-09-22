@@ -91,7 +91,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
 
   /// Submits a Crashlytics report of a caught error.
   Future<void> recordError(dynamic exception, StackTrace stack,
-      {dynamic context,
+      {dynamic reason,
       Iterable<DiagnosticsNode> information,
       bool printDetails}) async {
     // If [null] is provided, use the debug flag instead.
@@ -104,9 +104,9 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     if (printDetails) {
       print('----------------FIREBASE CRASHLYTICS----------------');
 
-      // If available, give context to the exception.
-      if (context != null) {
-        print('The following exception was thrown $context:');
+      // If available, give a reason to the exception.
+      if (reason != null) {
+        print('The following exception was thrown $reason:');
       }
 
       // Need to print the exception to explain why the exception was thrown.
@@ -134,7 +134,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
 
     return _delegate.recordError(
       exception: exception.toString(),
-      context: context?.toString(),
+      reason: reason?.toString(),
       information: _information,
       stackTraceElements: stackTraceElements,
     );
@@ -146,7 +146,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     FlutterError.dumpErrorToConsole(flutterErrorDetails, forceReport: true);
     return recordError(
         flutterErrorDetails.exceptionAsString(), flutterErrorDetails.stack,
-        context: flutterErrorDetails.context,
+        reason: flutterErrorDetails.context,
         printDetails: false,
         information: flutterErrorDetails.informationCollector == null
             ? null

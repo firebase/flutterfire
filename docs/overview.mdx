@@ -227,7 +227,7 @@ If you wish to change these versions, you can manually override the native SDK v
 In the `/android/app/build.gradle` file, you can provide your own versions using the options shown below:
 
 ```groovy
-project.ext {
+rootProject.ext {
   set('FlutterFire', [
     FirebaseSDKVersion: '21.1.0'
   ])

@@ -73,14 +73,14 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> recordError({
     String exception,
-    String context,
+    String reason,
     String information,
     List<Map<String, String>> stackTraceElements,
   }) {
     return channel
         .invokeMethod<void>('Crashlytics#recordError', <String, dynamic>{
       'exception': exception,
-      'context': context,
+      'reason': reason,
       'information': information,
       'stackTraceElements': stackTraceElements ?? [],
     }).catchError(catchPlatformException);

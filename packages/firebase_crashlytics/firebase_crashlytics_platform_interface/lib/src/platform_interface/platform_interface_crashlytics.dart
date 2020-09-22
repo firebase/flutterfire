@@ -106,7 +106,7 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
   /// Submits a Crashlytics report of a caught error.
   Future<void> recordError({
     String exception,
-    String context,
+    String reason,
     String information,
     List<Map<String, String>> stackTraceElements,
   }) {

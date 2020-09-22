@@ -27,7 +27,7 @@ void main() {
 
   Map<String, dynamic> kMockError = <String, dynamic>{
     'exception': 'Test exception',
-    'context': 'MethodChannelTest',
+    'reason': 'MethodChannelTest',
     'information': 'This is a test exception',
     'stackTraceElements': <Map<String, String>>[
       <String, String>{
@@ -195,7 +195,7 @@ void main() {
       test('should call delegate method successfully', () async {
         await crashlytics.recordError(
             exception: kMockError['exception'],
-            context: kMockError['context'],
+            reason: kMockError['reason'],
             information: kMockError['information'],
             stackTraceElements: kMockError['stackTraceElements']);
 
@@ -205,7 +205,7 @@ void main() {
             'Crashlytics#recordError',
             arguments: <String, dynamic>{
               'exception': kMockError['exception'],
-              'context': kMockError['context'],
+              'reason': kMockError['reason'],
               'information': kMockError['information'],
               'stackTraceElements': kMockError['stackTraceElements'],
             },
