@@ -2,72 +2,66 @@
 
 As part of our on-going work for [#2582](https://github.com/FirebaseExtended/flutterfire/issues/2582) this is our Firebase Storage rework changes.
 
-Overall, Firebase Storage has been heavily reworked to bring it inline with the federated plugin setup along with adding new features, 
+Overall, Firebase Storage has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
 documentation and many more unit and end-to-end tests (tested on Android, iOS & MacOS).
 
-### `FirebaseStorage`
+- **`FirebaseStorage`**
 
-- **DEPRECATED**: Constructing an instance is now deprecated, use `FirebaseStorage.instanceFor` or `FirebaseStorage.instance` instead.
-- **DEPRECATED**: `getReferenceFromUrl()` is deprecated in favor of calling `ref()` with a path.
-- **DEPRECATED**: `getMaxOperationRetryTimeMillis()` is deprecated in favor of the getter `maxOperationRetryTime`.
-- **DEPRECATED**: `getMaxUploadRetryTimeMillis()` is deprecated in favor of the getter `maxUploadRetryTime`.
-- **DEPRECATED**: `getMaxDownloadRetryTimeMillis()` is deprecated in favor of the getter `maxDownloadRetryTime`.
-- **DEPRECATED**: `setMaxOperationRetryTimeMillis()` is deprecated in favor of `setMaxOperationRetryTime()`.
-- **DEPRECATED**: `setMaxUploadRetryTimeMillis()` is deprecated in favor of `setMaxUploadRetryTime()`.
-- **DEPRECATED**: `setMaxDownloadRetryTimeMillis()` is deprecated in favor of `setMaxDownloadRetryTime()`.
-- **NEW**: To match the Web SDK, calling `ref()` creates a new `Reference` at the bucket root, whereas an optional path (`ref('/foo/bar.png')`) can be used to create a `Reference` pointing at a specific location.
-- **NEW**: Added support for `refFromURL`, which accepts a Google Storage (`gs://`) or HTTP URL and returns a `Reference` synchronously. 
+  - **DEPRECATED**: Constructing an instance is now deprecated, use `FirebaseStorage.instanceFor` or `FirebaseStorage.instance` instead.
+  - **DEPRECATED**: `getReferenceFromUrl()` is deprecated in favor of calling `ref()` with a path.
+  - **DEPRECATED**: `getMaxOperationRetryTimeMillis()` is deprecated in favor of the getter `maxOperationRetryTime`.
+  - **DEPRECATED**: `getMaxUploadRetryTimeMillis()` is deprecated in favor of the getter `maxUploadRetryTime`.
+  - **DEPRECATED**: `getMaxDownloadRetryTimeMillis()` is deprecated in favor of the getter `maxDownloadRetryTime`.
+  - **DEPRECATED**: `setMaxOperationRetryTimeMillis()` is deprecated in favor of `setMaxUploadRetryTime()`.
+  - **DEPRECATED**: `setMaxUploadRetryTimeMillis()` is deprecated in favor of `setMaxUploadRetryTime()`.
+  - **DEPRECATED**: `setMaxDownloadRetryTimeMillis()` is deprecated in favor of `setMaxDownloadRetryTime()`.
+  - **NEW**: To match the Web SDK, calling `ref()` creates a new `Reference` at the bucket root, whereas an optional path (`ref('/foo/bar.png')`) can be used to create a `Reference` pointing at a specific location.
+  - **NEW**: Added support for `refFromURL`, which accepts a Google Storage (`gs://`) or HTTP URL and returns a `Reference` synchronously.
 
-### `Reference`
+- **`Reference`**
+  - **BREAKING**: `StorageReference` has been renamed to `Reference`.
+  - **DEPRECATED**: `getParent()` is deprecated in favor of `.parent`.
+  - **DEPRECATED**: `getRoot()` is deprecated in favor of `.root`.
+  - **DEPRECATED**: `getStorage()` is deprecated in favor of `.storage`.
+  - **DEPRECATED**: `getBucket()` is deprecated in favor of `.bucket`.
+  - **DEPRECATED**: `getPath()` is deprecated in favor of `.fullPath`.
+  - **DEPRECATED**: `getName()` is deprecated in favor of `.name`.
+  - **NEW**: Added support for `list(options)`.
+    - Includes `ListOptions` API (see below).
+  - **NEW**: Added support for `listAll()`.
+  - **NEW**: `putString()` has been added to accept a string value, of type Base64, Base64Url, a [Data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs) or raw strings.
+    - Data URLs automatically set the `Content-Type` metadata if not already set.
+  - **NEW**: `getData()` does not require a `maxSize`, it can now be called with a default of 10mb.
 
-- **BREAKING**: `StorageReference` has been renamed to `Reference`.
-- **DEPRECATED**: `getParent()` is deprecated in favor of `.parent`.
-- **DEPRECATED**: `getRoot()` is deprecated in favor of `.root`.
-- **DEPRECATED**: `getStorage()` is deprecated in favor of `.storage`.
-- **DEPRECATED**: `getBucket()` is deprecated in favor of `.bucket`.
-- **DEPRECATED**: `getPath()` is deprecated in favor of `.fullPath`.
-- **DEPRECATED**: `getName()` is deprecated in favor of `.name`.
-- **NEW**: Added support for `list(options)`.
-  - Includes `ListOptions` API (see below).
-- **NEW**: Added support for `listAll()`.
-- **NEW**: `putString()` has been added to accept a string value, of type Base64, Base64Url, a [Data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs) or raw strings.
-  - Data URLs automatically set the `Content-Type` metadata if not already set.
-- **NEW**: `getData()` does not require a `maxSize`, it can now be called with a default of 10mb.
+- **NEW `ListOptions`**
+  - The `list()` method accepts a `ListOptions` instance with the following arguments:
+    - `maxResults`: limits the number of results returned from a call. Defaults to 1000.
+    - `pageToken`: a page token returned from a `ListResult` - used if there are more items to query.
 
-### **NEW** `ListOptions`
+- **NEW `ListResult`**
+  - A `ListResult` class has been added, which is returned from a call to `list()` or `listAll()`. It exposes the following properties:
+    - `items` (`List<Reference>`): Returns the list of reference objects at the current reference location.
+    - `prefixes` (`List<Reference>`): Returns the list of reference sub-folders at the current reference location.
+    - `nextPageToken` (`String`): Returns a string (or null) if a next page during a `list()` call exists.
 
-The `list()` method accepts a `ListOptions` instance with the following arguments:
-
-- `maxResults`: limits the number of results returned from a call. Defaults to 1000.
-- `pageToken`: a page token returned from a `ListResult` - used if there are more items to query.
-
-### **NEW** `ListResult`
-
-A `ListResult` class has been added, which is returned from a call to `list()` or `listAll()`. It exposes the following properties:
-
-- `items` (`List<Reference>`): Returns the list of reference objects at the current reference location.
-- `prefixes` (`List<Reference>`): Returns the list of reference sub-folders at the current reference location.
-- `nextPageToken` (`String`): Returns a string (or null) if a next page during a `list()` call exists.
-
-### Tasks
-
-Tasks have been overhauled to be closer to the expected Firebase Web SDK Storage API, allowing users to access and control on-going tasks easier. There are a number of breaking changes & features with this overhaul:
-
-- **BREAKING**: `StorageUploadTask` has been renamed to `UploadTask` (extends `Task`).
-- **BREAKING**: `StorageDownloadTask` has been renamed to `DownloadTask` (extends `Task`).
-- **BREAKING**: `StorageTaskEvent` has been removed (see below).
-- **BREAKING**: `StorageTaskSnapshot` has been renamed to `TaskSnapshot`.
-- **BREAKING**: `pause()`, `cancel()` and `resume()` are now Futures which return a boolean value to represent whether the status update was successful.
-  - Previously, these were `void` methods but still carried out an asynchronous tasks, potentially leading to uncaught exceptions.
-- **BREAKING**: `isCanceled`, `isComplete`, `isInProgress`, `isPaused` and `isSuccessful` have now been removed. Instead you should subscribe to the stream (for paused/progress/complete/error events) or the task `Future` for task completion/errors.
-- **BREAKING**: The `events` stream (now `snapshotEvents`) previously returned a `StorageTaskEvent`, containing a `StorageTaskEventType` and `StorageTaskSnapshot` Instead, the stream now returns a `TaskSnapshot` which includes the `state`.
-- **BREAKING**: A task failure and cancellation now throw a `FirebaseException` instead of a new event.
-- **DEPRECATED**: `events` stream is deprecated in favor of `snapshotEvents`.
-- **DEPRECATED**: `lastSnapshot` is deprecated in favor of `snapshot`.
+- **Tasks**
+  - Tasks have been overhauled to be closer to the expected Firebase Web SDK Storage API, allowing users to access and control on-going tasks easier. There are a number of breaking changes & features with this overhaul:
+    - **BREAKING**: `StorageUploadTask` has been renamed to `UploadTask` (extends `Task`).
+    - **BREAKING**: `StorageDownloadTask` has been renamed to `DownloadTask` (extends `Task`).
+    - **BREAKING**: `StorageTaskEvent` has been removed (see below).
+    - **BREAKING**: `StorageTaskSnapshot` has been renamed to `TaskSnapshot`.
+    - **BREAKING**: `pause()`, `cancel()` and `resume()` are now Futures which return a boolean value to represent whether the status update was successful.
+      - Previously, these were `void` methods but still carried out an asynchronous tasks, potentially leading to uncaught exceptions.
+    - **BREAKING**: `isCanceled`, `isComplete`, `isInProgress`, `isPaused` and `isSuccessful` have now been removed. Instead, you should subscribe to the stream (for paused/progress/complete/error events) or the task `Future` for task completion/errors.
+     - Additionally the latest `TaskSnapshot` now provides the latest `TaskState` via `task.snapshot.state`.
+    - **BREAKING**: The `events` stream (now `snapshotEvents`) previously returned a `StorageTaskEvent`, containing a `StorageTaskEventType` and `StorageTaskSnapshot` Instead, the stream now returns a `TaskSnapshot` which includes the `state`.
+    - **BREAKING**: A task failure and cancellation now throw a `FirebaseException` instead of a new event.
+    - **DEPRECATED**: `events` stream is deprecated in favor of `snapshotEvents`.
+    - **DEPRECATED**: `lastSnapshot` is deprecated in favor of `snapshot`.
 
 #### Example
 
-The new API matches the Web SDK API, for example:
+The new Tasks API matches the Web SDK API, for example:
 
 ```dart
 UploadTask task = FirebaseStorage.instance.ref('/notes.text').putString('My notes!');
@@ -90,12 +84,8 @@ task
   });
 ```
 
-Subscribing to Stream updates and/or the tasks delegating Future is optional - if you require progress updates on your task use the Stream, otherwise the Future will resolve once its complete. Using both together is also supported.
-
-### `SettableMetadata`
-
-- **BREAKING**: `StorageMetadata` has been renamed to `SettableMetadata`.
-- **BREAKING**: Fetching an objects metadata (e.g. via `getMetadata()` now returns a `FullMetadata` instance vs `StorageMetadata`.
+Subscribing to Stream updates and/or the tasks delegating Future is optional - if you require progress updates on your task use the Stream, otherwise
+the Future will resolve once its complete. Using both together is also supported.
 
 ## 4.0.0
 
