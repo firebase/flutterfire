@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 
 import 'method_channel_firebase_storage.dart';
@@ -61,6 +62,19 @@ abstract class MethodChannelTask extends TaskPlatform {
         await _subscription.cancel();
       }
     }, onError: (Object e, StackTrace stackTrace) {
+      if (e is FirebaseException && e.code == 'canceled') {
+        _snapshot = MethodChannelTaskSnapshot(storage, TaskState.canceled, {
+          'path': path,
+          'bytesTransferred': _snapshot.bytesTransferred,
+          'totalBytes': _snapshot.totalBytes,
+        });
+      } else {
+        _snapshot = MethodChannelTaskSnapshot(storage, TaskState.error, {
+          'path': path,
+          'bytesTransferred': _snapshot.bytesTransferred,
+          'totalBytes': _snapshot.totalBytes,
+        });
+      }
       _didComplete = true;
       _exception = e;
       _stackTrace = stackTrace;
