@@ -135,6 +135,13 @@ class FlutterFirebaseStorageTask {
   void destroy() {
     destroyed = true;
 
+    synchronized (inProgressTasks) {
+      if (storageTask.isInProgress() || storageTask.isPaused()) {
+        storageTask.cancel();
+      }
+      inProgressTasks.remove(handle);
+    }
+
     synchronized (cancelSyncObject) {
       cancelSyncObject.notifyAll();
     }
@@ -145,13 +152,6 @@ class FlutterFirebaseStorageTask {
 
     synchronized (resumeSyncObject) {
       resumeSyncObject.notifyAll();
-    }
-
-    synchronized (inProgressTasks) {
-      if (storageTask.isInProgress() || storageTask.isPaused()) {
-        storageTask.cancel();
-      }
-      inProgressTasks.remove(handle);
     }
   }
 
@@ -266,8 +266,11 @@ class FlutterFirebaseStorageTask {
         () -> {
           if (destroyed) return;
           new Handler(Looper.getMainLooper())
-              .post(() -> channel.invokeMethod("Task#onCanceled", getTaskEventMap(null, null)));
-          destroy();
+              .post(
+                  () -> {
+                    channel.invokeMethod("Task#onCanceled", getTaskEventMap(null, null));
+                    destroy();
+                  });
         });
 
     storageTask.addOnFailureListener(
@@ -275,8 +278,11 @@ class FlutterFirebaseStorageTask {
         exception -> {
           if (destroyed) return;
           new Handler(Looper.getMainLooper())
-              .post(() -> channel.invokeMethod("Task#onFailure", getTaskEventMap(null, exception)));
-          destroy();
+              .post(
+                  () -> {
+                    channel.invokeMethod("Task#onFailure", getTaskEventMap(null, exception));
+                    destroy();
+                  });
         });
   }
 
