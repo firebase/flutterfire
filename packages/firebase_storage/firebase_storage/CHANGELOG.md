@@ -12,7 +12,7 @@ documentation and many more unit and end-to-end tests (tested on Android, iOS & 
 - **DEPRECATED**: `getMaxOperationRetryTimeMillis()` is deprecated in favor of the getter `maxOperationRetryTime`.
 - **DEPRECATED**: `getMaxUploadRetryTimeMillis()` is deprecated in favor of the getter `maxUploadRetryTime`.
 - **DEPRECATED**: `getMaxDownloadRetryTimeMillis()` is deprecated in favor of the getter `maxDownloadRetryTime`.
-- **DEPRECATED**: `setMaxOperationRetryTimeMillis()` is deprecated in favor of `setMaxUploadRetryTime()`.
+- **DEPRECATED**: `setMaxOperationRetryTimeMillis()` is deprecated in favor of `setMaxOperationRetryTime()`.
 - **DEPRECATED**: `setMaxUploadRetryTimeMillis()` is deprecated in favor of `setMaxUploadRetryTime()`.
 - **DEPRECATED**: `setMaxDownloadRetryTimeMillis()` is deprecated in favor of `setMaxDownloadRetryTime()`.
 - **NEW**: To match the Web SDK, calling `ref()` creates a new `Reference` at the bucket root, whereas an optional path (`ref('/foo/bar.png')`) can be used to create a `Reference` pointing at a specific location.

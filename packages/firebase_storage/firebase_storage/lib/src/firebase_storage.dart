@@ -179,7 +179,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
   /// Sets the new maximum operation retry time in milliseconds.
   @Deprecated("Deprecated in favor of setMaxUploadRetryTime()")
   Future<void> setMaxOperationRetryTimeMillis(int time) async {
-    return setMaxUploadRetryTime(Duration(milliseconds: time));
+    return setMaxOperationRetryTime(Duration(milliseconds: time));
   }
 
   /// Sets the new maximum upload retry time.
