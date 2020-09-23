@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'auth.dart';
 import 'database.dart';
 import 'firestore.dart';

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'interop/js_interop.dart' as js_interop;
 import 'interop/remote_config_interop.dart';
 import 'js.dart';
