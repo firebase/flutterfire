@@ -1,3 +1,6 @@
+## 0.10.1
+ * update platform dependency to 3.0.0-nullsafety.1.
+
 ## 0.10.0-dev.1
 
 * Depend on `firebase_core` 0.5.0.

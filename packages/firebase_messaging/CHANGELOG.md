@@ -1,3 +1,6 @@
+## 7.0.1
+ * update platform dependency to 3.0.0-nullsafety.1.
+
 ## 7.0.0
 
 * Depend on `firebase_core` and migrate plugin to use `firebase_core` native SDK versioning features;
