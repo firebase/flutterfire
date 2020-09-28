@@ -14,15 +14,15 @@ class FirebaseAuthException extends FirebaseException implements Exception {
   @protected
   FirebaseAuthException(
       {@required this.message,
-      String code,
+      this.code,
       this.email,
       this.credential,
       this.phoneNumber,
       this.tenantId})
       : super(plugin: 'firebase_auth', message: message, code: code);
 
-  @Deprecated('Deprecated in favor of `.statusCode`.')
-  String get code => super.code;
+  /// Unique error code.
+  final String code;
 
   /// Complete error message.
   final String message;
@@ -39,8 +39,8 @@ class FirebaseAuthException extends FirebaseException implements Exception {
   /// The tenant ID being used for sign-in/linking.
   final String tenantId;
 
-  /// The error code.
-  AuthExceptionStatusCode get statusCode {
+  /// The error status code.
+  AuthExceptionStatusCode get status {
     switch (super.code) {
       case 'invalid-email':
         return AuthExceptionStatusCode.invalidEmail;
@@ -72,6 +72,25 @@ class FirebaseAuthException extends FirebaseException implements Exception {
         return AuthExceptionStatusCode.noSuchProvider;
       case 'no-current-user':
         return AuthExceptionStatusCode.noCurrentUser;
+      case 'expired-action-code':
+        return AuthExceptionStatusCode.expiredActionCode;
+      case 'invalid-action-code':
+        return AuthExceptionStatusCode.invalidActionCode;
+      case 'custom-token-mismatch':
+        return AuthExceptionStatusCode.customTokenMismatch;
+      case 'invalid-custom-token':
+        return AuthExceptionStatusCode.invalidCustomToken;
+      case 'invalid-verification-code':
+        return AuthExceptionStatusCode.invalidVerificationCode;
+      case 'invalid-credential':
+        return AuthExceptionStatusCode.invalidCredential;
+      case 'requires-recent-login':
+        return AuthExceptionStatusCode.requiresRecentLogin;
+      case 'provider-already-linked':
+        return AuthExceptionStatusCode.providerAlreadyLinked;
+      case 'credential-already-in-use':
+        return AuthExceptionStatusCode.credentialAlreadyInUse;
+      case 'unknown':
       default:
         return AuthExceptionStatusCode.unknown;
     }

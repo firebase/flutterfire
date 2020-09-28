@@ -435,7 +435,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
         (FirebaseAuthException authException) {
       setState(() {
         _message =
-            'Phone number verification failed. Code: ${authException.statusCode}. Message: ${authException.message}';
+            'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
       });
     };
 

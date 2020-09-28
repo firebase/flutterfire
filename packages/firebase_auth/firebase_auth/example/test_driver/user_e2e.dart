@@ -126,7 +126,7 @@ void runUserTests() {
           ));
         } on FirebaseAuthException catch (e) {
           // Assertions
-          expect(e.statusCode, AuthExceptionStatusCode.emailAlreadyInUse);
+          expect(e.status, AuthExceptionStatusCode.emailAlreadyInUse);
           expect(e.message,
               'The email address is already in use by another account.');
 
@@ -190,7 +190,7 @@ void runUserTests() {
               PhoneAuthProvider.credential(
                   verificationId: 'test', smsCode: 'test'));
         } on FirebaseAuthException catch (e) {
-          expect(e.statusCode, AuthExceptionStatusCode.invalidVerificationId);
+          expect(e.status, AuthExceptionStatusCode.invalidVerificationId);
           expect(
               e.message,
               equals(
@@ -239,7 +239,7 @@ void runUserTests() {
           await auth.currentUser.reauthenticateWithCredential(credential);
         } on FirebaseAuthException catch (e) {
           // Assertions
-          expect(e.statusCode, AuthExceptionStatusCode.userMismatch);
+          expect(e.status, AuthExceptionStatusCode.userMismatch);
           expect(
               e.message,
               equals(
@@ -293,7 +293,7 @@ void runUserTests() {
           await auth.currentUser.reauthenticateWithCredential(credential);
         } on FirebaseAuthException catch (e) {
           // Assertions
-          expect(e.statusCode, AuthExceptionStatusCode.invalidEmail);
+          expect(e.status, AuthExceptionStatusCode.invalidEmail);
           expect(e.message, equals("The email address is badly formatted."));
           return;
         } catch (e) {
@@ -315,7 +315,7 @@ void runUserTests() {
           await auth.currentUser.reauthenticateWithCredential(credential);
         } on FirebaseAuthException catch (e) {
           // Assertions
-          expect(e.statusCode, AuthExceptionStatusCode.wrongPassword);
+          expect(e.status, AuthExceptionStatusCode.wrongPassword);
           expect(
               e.message,
               equals(
@@ -415,7 +415,7 @@ void runUserTests() {
         try {
           await auth.currentUser.unlink("invalid");
         } on FirebaseAuthException catch (e) {
-          expect(e.statusCode, AuthExceptionStatusCode.noSuchProvider);
+          expect(e.status, AuthExceptionStatusCode.noSuchProvider);
           expect(e.message,
               'User was not linked to an account with the given provider.');
           return;
@@ -433,7 +433,7 @@ void runUserTests() {
         try {
           await auth.currentUser.unlink(EmailAuthProvider.PROVIDER_ID);
         } on FirebaseAuthException catch (e) {
-          expect(e.statusCode, AuthExceptionStatusCode.noSuchProvider);
+          expect(e.status, AuthExceptionStatusCode.noSuchProvider);
           expect(e.message,
               'User was not linked to an account with the given provider.');
           return;
@@ -488,7 +488,7 @@ void runUserTests() {
           // Update user password
           await auth.currentUser.updatePassword('weak');
         } on FirebaseAuthException catch (e) {
-          expect(e.statusCode, AuthExceptionStatusCode.weakPassword);
+          expect(e.status, AuthExceptionStatusCode.weakPassword);
           expect(e.message, 'Password should be at least 6 characters');
           return;
         } catch (e) {
@@ -624,7 +624,7 @@ void runUserTests() {
           await auth.currentUser.updatePhoneNumber(PhoneAuthProvider.credential(
               verificationId: "invalid", smsCode: TEST_SMS_CODE));
         } on FirebaseAuthException catch (e) {
-          expect(e.statusCode, AuthExceptionStatusCode.invalidVerificationId);
+          expect(e.status, AuthExceptionStatusCode.invalidVerificationId);
           expect(e.message,
               "The verification ID used to create the phone auth credential is invalid.");
           return;
@@ -668,7 +668,7 @@ void runUserTests() {
           // ignore: unnecessary_cast
           print((e as FirebaseException).code);
           print(e.message);
-          expect(e.statusCode, AuthExceptionStatusCode.invalidVerificationId);
+          expect(e.status, AuthExceptionStatusCode.invalidVerificationId);
           expect(e.message,
               "The verification ID used to create the phone auth credential is invalid.");
           return;
@@ -762,7 +762,7 @@ void runUserTests() {
           await user.delete();
         } on FirebaseAuthException catch (e) {
           // Assertions
-          expect(e.statusCode, AuthExceptionStatusCode.noCurrentUser);
+          expect(e.status, AuthExceptionStatusCode.noCurrentUser);
           expect(e.message, 'No user currently signed in.');
 
           return;
