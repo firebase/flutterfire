@@ -96,7 +96,11 @@ public class FlutterFirebaseStoragePlugin
 
     Map<String, String> customMetadata = new HashMap<>();
     for (String key : storageMetadata.getCustomMetadataKeys()) {
-      customMetadata.put(key, Objects.requireNonNull(storageMetadata.getCustomMetadata(key)));
+      if (storageMetadata.getCustomMetadata(key) == null) {
+        customMetadata.put(key, "");
+      } else {
+        customMetadata.put(key, Objects.requireNonNull(storageMetadata.getCustomMetadata(key)));
+      }
     }
     out.put("customMetadata", customMetadata);
     return out;
