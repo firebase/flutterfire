@@ -4,13 +4,12 @@
 
 import 'dart:async';
 
+import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import '../method_channel/method_channel_messaging.dart';
-import '../types.dart';
 
 RemoteMessageHandler _onMessage;
 void Function(String messageId) _onMessageSent;
