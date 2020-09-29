@@ -705,7 +705,10 @@ NSString *const kErrMsgInvalidCredential =
     return;
   }
 
-  [currentUser sendEmailVerificationWithCompletion:^(NSError *_Nullable error) {
+  FIRActionCodeSettings *actionCodeSettings =
+      [self getFIRActionCodeSettingsFromArguments:arguments];
+  [currentUser sendEmailVerificationWithActionCodeSettings:actionCodeSettings
+                                                completion:^(NSError *_Nullable error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
