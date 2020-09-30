@@ -22,6 +22,8 @@ void main() {
 
   group('$FirebaseMessaging', () {
     setUpAll(() async {
+      FirebaseMessagingPlatform.instance = kMockMessagingPlatform;
+
       app = await Firebase.initializeApp();
       secondaryApp = await Firebase.initializeApp(
           name: 'foo',
@@ -33,7 +35,7 @@ void main() {
           ));
 
       messaging = FirebaseMessaging.instance;
-      // secondaryMessaging = FirebaseMessaging.instanceFor(app: secondaryApp);
+      secondaryMessaging = FirebaseMessaging.instanceFor(app: secondaryApp);
     });
     group('instance', () {
       test('returns an instance', () async {
@@ -46,17 +48,16 @@ void main() {
       });
     });
 
-    // TODO(helenaford): instancefor
-    // group('instanceFor()', () {
-    //   test('returns an instance', () async {
-    //     expect(secondaryMessaging, isA<FirebaseMessaging>());
-    //   });
+    group('instanceFor()', () {
+      test('returns an instance', () async {
+        expect(secondaryMessaging, isA<FirebaseMessaging>());
+      });
 
-    //   test('returns the correct $FirebaseApp', () {
-    //     expect(secondaryMessaging.app, isA<FirebaseApp>());
-    //     expect(secondaryMessaging.app.name, secondaryApp.name);
-    //   });
-    // });
+      test('returns the correct $FirebaseApp', () {
+        expect(secondaryMessaging.app, isA<FirebaseApp>());
+        expect(secondaryMessaging.app.name, secondaryApp.name);
+      });
+    });
 
     group('configure', () {});
 
@@ -174,14 +175,14 @@ void main() {
     group('requestPermission', () {
       test('verify delegate method is called with correct args', () async {
         when(kMockMessagingPlatform.requestPermission(
-                alert: any,
-                announcement: any,
-                badge: any,
-                carPlay: any,
-                criticalAlert: any,
-                provisional: any,
-                sound: any))
-            .thenAnswer((_) => Future.value(AuthorizationStatus.authorized));
+          alert: anyNamed('alert'),
+          announcement: anyNamed('announcement'),
+          badge: anyNamed('badge'),
+          carPlay: anyNamed('carPlay'),
+          criticalAlert: anyNamed('criticalAlert'),
+          provisional: anyNamed('provisional'),
+          sound: anyNamed('sound'),
+        )).thenAnswer((_) => Future.value(AuthorizationStatus.authorized));
 
         // true values
         await messaging.requestPermission(
@@ -235,21 +236,61 @@ void main() {
       });
     });
     group('sendMessage', () {
+      var senderId = 'custom-sender@fcm.googleapis.com';
+      var data = <String, String>{'foo': 'bar'};
+      var collapseKey = 'collapse-key';
+      var messageId = 'message-id';
+      var messageType = 'message-type';
+      var ttl = 1;
+
+      setUpAll(() {
+        when(kMockMessagingPlatform.sendMessage(
+          senderId: anyNamed('senderId'),
+          data: anyNamed('data'),
+          collapseKey: anyNamed('collapseKey'),
+          messageId: anyNamed('messageId'),
+          messageType: anyNamed('messageType'),
+          ttl: anyNamed('ttl'),
+        )).thenAnswer((_) => null);
+      });
       test('verify delegate method is called with correct args', () async {
-        const token = 'test-token';
+        await messaging.sendMessage(
+            senderId: senderId,
+            data: data,
+            collapseKey: collapseKey,
+            messageId: messageId,
+            messageType: messageType,
+            ttl: ttl);
 
-        when(kMockMessagingPlatform.sendMessage()).thenAnswer((_) => null);
-
-        verify(kMockMessagingPlatform.sendMessage());
+        verify(kMockMessagingPlatform.sendMessage(
+            senderId: senderId,
+            data: data,
+            collapseKey: collapseKey,
+            messageId: messageId,
+            messageType: messageType,
+            ttl: ttl));
       });
 
-      // test('senderId defaults to the correct value if not set', () async {
-      //   const defaultSenderId ='${app.options.messagingSenderId}@fcm.googleapis.com',
+      test('senderId defaults to the correct value if not set', () async {
+        var defaultSenderId =
+            '${app.options.messagingSenderId}@fcm.googleapis.com';
 
-      //   when(kMockMessagingPlatform.sendMessage).thenAnswer((_) => null);
+        await messaging.sendMessage(
+            senderId: null,
+            data: data,
+            collapseKey: collapseKey,
+            messageId: messageId,
+            messageType: messageType,
+            ttl: null);
 
-      //   verify(kMockMessagingPlatform.sendMessage());
-      // });
+        verify(kMockMessagingPlatform.sendMessage(
+            senderId: defaultSenderId,
+            data: data,
+            collapseKey: collapseKey,
+            messageId: messageId,
+            messageType: messageType,
+            ttl: null));
+      });
 
       test('asserts [ttl] is more than 0 if not null', () {
         expect(() => messaging.sendMessage(ttl: -1), throwsAssertionError);
@@ -273,8 +314,18 @@ void main() {
     });
     // group('onIosSettingsRegistered', () {});
     group('subscribeToTopic', () {
-      when(kMockMessagingPlatform.subscribeToTopic(any))
-          .thenAnswer((_) => null);
+      setUpAll(() {
+        when(kMockMessagingPlatform.subscribeToTopic(any))
+            .thenAnswer((_) => null);
+      });
+
+      test('throws AssertionError if topic is invalid', () async {
+        final invalidTopic = 'test invalid = topic';
+
+        expect(() => messaging.subscribeToTopic(invalidTopic),
+            throwsAssertionError);
+      });
+
       test('verify delegate method is called with correct args', () async {
         final topic = 'test-topic';
 

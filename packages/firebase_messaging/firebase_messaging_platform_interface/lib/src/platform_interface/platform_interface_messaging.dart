@@ -62,6 +62,13 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     return _instance;
   }
 
+  /// Sets the [FirebaseMessagingPlatform.instance]
+  static set instance(FirebaseMessagingPlatform instance) {
+    assert(instance != null);
+    PlatformInterface.verifyToken(instance, _token);
+    _instance = instance;
+  }
+
   static void configure({
     //  String publicVapidKey, TODO(ehesp): add in with web support
     RemoteMessageHandler onMessage,

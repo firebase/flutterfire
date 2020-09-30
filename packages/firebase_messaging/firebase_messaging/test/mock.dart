@@ -13,8 +13,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 typedef Callback(MethodCall call);
 
 final String kTestString = 'Hello World';
-final String kBucket = 'gs://fake-messaging-bucket-url.com';
-final String kSecondaryBucket = 'gs://fake-messaging-bucket-url-2.com';
+
 final MockFirebaseMessaging kMockMessagingPlatform = MockFirebaseMessaging();
 
 setupFirebaseMessagingMocks() {
@@ -30,7 +29,6 @@ setupFirebaseMessagingMocks() {
             'appId': '123',
             'messagingSenderId': '123',
             'projectId': '123',
-            'messagingBucket': kBucket
           },
           'pluginConstants': {},
         }
@@ -49,8 +47,11 @@ setupFirebaseMessagingMocks() {
   });
 
   // Mock Platform Interface Methods
-  when(kMockMessagingPlatform.delegateFor(
-          app: anyNamed("app"), bucket: anyNamed("bucket")))
+  when(kMockMessagingPlatform.delegateFor(app: anyNamed("app")))
+      .thenReturn(kMockMessagingPlatform);
+  when(kMockMessagingPlatform.setInitialValues(
+          isAutoInitEnabled: anyNamed("isAutoInitEnabled"),
+          initialNotification: anyNamed("initialNotification")))
       .thenReturn(kMockMessagingPlatform);
 }
 
@@ -59,7 +60,7 @@ setupFirebaseMessagingMocks() {
 // FirebaseMessagingPlatform Mock
 class MockFirebaseMessaging extends Mock
     with MockPlatformInterfaceMixin
-    implements TestFirebaseMessagingPlatform {
+    implements FirebaseMessagingPlatform {
   MockFirebaseMessaging() {
     TestFirebaseMessagingPlatform();
   }
@@ -68,7 +69,7 @@ class MockFirebaseMessaging extends Mock
 class TestFirebaseMessagingPlatform extends FirebaseMessagingPlatform {
   TestFirebaseMessagingPlatform() : super();
 
-  FirebaseMessagingPlatform delegateFor({FirebaseApp app, String bucket}) {
-    return this;
-  }
+//   // FirebaseMessagingPlatform delegateFor({FirebaseApp app}) {
+//   //   return this;
+//   // }
 }

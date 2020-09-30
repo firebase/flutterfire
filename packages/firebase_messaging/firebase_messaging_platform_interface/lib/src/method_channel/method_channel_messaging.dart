@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../utils.dart';
+import 'utils/exception.dart';
 
 /// The entry point for accessing a Messaging.
 ///
@@ -217,17 +218,19 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'collapseKey': collapseKey,
         'messageId': messageId,
         'messageType': messageType,
-        'tt;': ttl,
+        'ttl': ttl,
       }
     });
   }
 
   @override
-  Future<void> setAutoInitEnabled(bool enabled) {
-    return _channel.invokeMethod<String>('Messaging#setAutoInitEnabled', {
+  Future<void> setAutoInitEnabled(bool enabled) async {
+    Map<String, dynamic> data = await _channel
+        .invokeMapMethod<String, dynamic>('Messaging#setAutoInitEnabled', {
       'appName': app.name,
       'enabled': enabled,
-    });
+    }).catchError(catchPlatformException);
+    _autoInitEnabled = data['isAutoInitEnabled'];
   }
 
   @override

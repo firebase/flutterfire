@@ -8,6 +8,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import './test_utils.dart';
 
+bool SKIP_MANUAL_TESTS = false;
+
 void runInstanceTests() {
   group('$FirebaseMessaging.instance', () {
     FirebaseApp app;
@@ -31,14 +33,13 @@ void runInstanceTests() {
       expect(messaging.app.name, defaultFirebaseAppName);
     });
 
-    // TODO(helenaford): write test once implemented
-    // test('instanceFor', () {
-    //   // FirebaseMessaging secondaryMessaging =
-    //   //     FirebaseMessaging.instanceFor(app: secondaryApp);
-    //   // expect(messaging.app, isA<FirebaseApp>());
-    //   // expect(secondaryMessaging, isA<FirebaseMessaging>());
-    //   // expect(secondaryMessaging.app.name, 'testapp');
-    // });
+    test('instanceFor', () {
+      FirebaseMessaging secondaryMessaging =
+          FirebaseMessaging.instanceFor(app: secondaryApp);
+      expect(messaging.app, isA<FirebaseApp>());
+      expect(secondaryMessaging, isA<FirebaseMessaging>());
+      expect(secondaryMessaging.app.name, secondaryApp.name);
+    });
 
     group('app', () {
       test('accessible from firebase.app()', () {
@@ -47,7 +48,7 @@ void runInstanceTests() {
       });
     });
 
-    group('configure', () {});
+    // group('configure', () {});
 
     group('setAutoInitEnabled()', () {
       test('sets the value', () async {
@@ -110,7 +111,12 @@ void runInstanceTests() {
       });
     });
 
-    group('getToken()', () {});
+    group('getToken()', () {
+      test('returns a token', () async {
+        final result = await messaging.getToken();
+        expect(result, isA<String>());
+      });
+    }, skip: SKIP_MANUAL_TESTS); // only run for manual testing
 
     group('deleteToken()', () {
       test('generate a new token after deleting', () async {
@@ -123,57 +129,71 @@ void runInstanceTests() {
         expect(token1, isA<String>());
         expect(token2, isA<String>());
         expect(token1, isNot(token2));
-      });
+      }, skip: SKIP_MANUAL_TESTS); // only run for manual testing
     });
 
     // TODO(helenaford): test listeners
-    group('onTokenRefresh()', () {});
+    // group('onTokenRefresh()', () {});
 
-    group('onMessage()', () {});
+    // group('onMessage()', () {});
 
-    group('onMessageSent()', () {});
+    // group('onMessageSent()', () {});
 
-    group('onSendError()', () {});
+    // group('onSendError()', () {});
 
-    group('onDeletedMessages()', () {});
+    // group('onDeletedMessages()', () {});
 
-    group('onBackgroundMessage()', () {
-      test('receives messages when the app is in the background', () async {},
-          skip: !Platform.isAndroid);
-    });
+    // group('onBackgroundMessage()', () {
+    //   test('receives messages when the app is in the background', () async {},
+    //       skip: !Platform.isAndroid);
+    // });
 
-    group('onLaunch()', () {});
+    // group('onLaunch()', () {});
 
-    group('onResume()', () {});
+    // group('onResume()', () {});
 
     group('subscribeToTopic()', () {
-      test('successfully subscribes from topic', () {});
+      test('successfully subscribes from topic', () async {
+        final topic = 'test-topic';
+
+        await messaging.subscribeToTopic(topic);
+      });
     });
 
     group('unsubscribeFromTopic()', () {
-      test('successfully unsubscribes from topic', () {});
+      test('successfully unsubscribes from topic', () async {
+        final topic = 'test-topic';
+
+        await messaging.unsubscribeFromTopic(topic);
+      });
     });
 
-    group('sendMessage', () {
-      test('sends a message', () {});
+    // group('sendMessage', () {
+    //   test(
+    //     'sends a message',
+    //     () {},
+    //   );
 
-      test('sends a message with the default senderId', () {});
-    });
+    //   test(
+    //     'sends a message with the default senderId',
+    //     () {},
+    //   );
+    // }, skip: SKIP_MANUAL_TESTS);
 
-    group('deleteInstanceID', () {
-      test('instance Id is reset', () {});
+    // group('deleteInstanceID', () {
+    //   test('instance Id is reset', () {});
 
-      test('all tokens are revoked', () {});
+    //   test('all tokens are revoked', () {});
 
-      test('returns false when an error occurs', () {});
-    });
+    //   test('returns false when an error occurs', () {});
+    // }, skip: SKIP_MANUAL_TESTS);
 
     // TODO(helenaford): see if these are needed for android
     // group('setDeliveryMetricsExportToBigQuery', () {});
     //  group('deliveryMetricsExportToBigQueryEnabled', () {});
 
     // deprecated methods
-    group('FirebaseMessaging', () {
+    group('FirebaseMessaging (deprecated)', () {
       test('returns an instance with the current [FirebaseApp]', () async {
         final testInstance = FirebaseMessaging();
         expect(testInstance, isA<FirebaseMessaging>());
@@ -184,7 +204,7 @@ void runInstanceTests() {
 
     group('requestNotificationPermissions', () {});
 
-    group('autoInitEnabled', () {
+    group('autoInitEnabled (deprecated)', () {
       test('returns correct value', () async {
         expect(messaging.isAutoInitEnabled, isFalse);
         expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);

@@ -7,8 +7,7 @@ dependencies:
   firebase_messaging:
     path: ../
   firebase_core: 
-    path: ../../firebase_core/firebase_core
-
+    path: ../../../firebase_core/firebase_core
 
 dependency_overrides:
   firebase_core:

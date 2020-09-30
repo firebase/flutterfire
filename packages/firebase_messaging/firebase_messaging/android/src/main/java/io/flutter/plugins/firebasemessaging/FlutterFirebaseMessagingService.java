@@ -57,6 +57,10 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   private static List<RemoteMessage> backgroundMessageQueue =
       Collections.synchronizedList(new LinkedList<RemoteMessage>());
 
+  // TODO: change backgroundMessageQueue from list to hashmap or store notifications in another variable
+  // for getInitialNotification()
+  //  static final HashMap<String, RemoteMessage> backgroundMessageQueue = new HashMap<>();
+
   private static PluginRegistry.PluginRegistrantCallback pluginRegistrantCallback;
 
   private static final String TAG = "FlutterFcmService";
@@ -156,6 +160,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
       if (pluginRegistrantCallback == null) {
         throw new RuntimeException("PluginRegistrantCallback is not set.");
       }
+
       FlutterRunArguments args = new FlutterRunArguments();
       args.bundlePath = appBundlePath;
       args.entrypoint = flutterCallback.callbackName;
@@ -174,9 +179,13 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     synchronized (backgroundMessageQueue) {
       // Handle all the messages received before the Dart isolate was
       // initialized, then clear the queue.
+
       Iterator<RemoteMessage> i = backgroundMessageQueue.iterator();
+      //      Iterator<?> i = backgroundMessageQueue.entrySet().iterator();
       while (i.hasNext()) {
         executeDartCallbackInBackgroundIsolate(backgroundContext, i.next(), null);
+        //        Map.Entry<?, ?> pair = (Map.Entry<?, ?>) i.next();
+        //        executeDartCallbackInBackgroundIsolate(backgroundContext, (RemoteMessage) pair.getValue(), null);
       }
       backgroundMessageQueue.clear();
     }

@@ -32,6 +32,41 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return FirebaseMessaging._(app: Firebase.app());
   }
 
+  /// Returns an instance using a specified [FirebaseApp] and/or custom storage bucket.
+  ///
+  /// If [app] is not provided, the default Firebase app will be used.
+  static FirebaseMessaging instanceFor({
+    FirebaseApp app,
+  }) {
+    app ??= Firebase.app();
+    assert(app != null);
+
+    // bucket ??= app.options.storageBucket;
+
+    // // A bucket must exist at this point
+    // if (bucket == null) {
+    //   if (app.name == defaultFirebaseAppName) {
+    //     _throwNoBucketError(
+    //         "No default storage bucket could be found. Ensure you have correctly followed the Getting Started guide.");
+    //   } else {
+    //     _throwNoBucketError(
+    //         "No storage bucket could be found for the app '${app.name}'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.");
+    //   }
+    // }
+
+    String key = '${app.name}';
+    if (_cachedInstances.containsKey(key)) {
+      return _cachedInstances[key];
+    }
+
+    FirebaseMessaging newInstance = FirebaseMessaging._(app: app);
+    _cachedInstances[key] = newInstance;
+
+    return newInstance;
+  }
+
+  static final Map<String, FirebaseMessaging> _cachedInstances = {};
+
   /// Sets up handlers for various messaging events.
   static void configure({
     RemoteMessageHandler onMessage,
@@ -81,13 +116,15 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// Removes access to an FCM token previously authorized by it's scope.
   ///
   /// Messages sent by the server to this token will fail.
+  /// authorizedEntity The messaging sender ID. In most cases this will be the current default app.
+  /// scope The scope to assign when token will be deleted.
   Future<void> deleteToken({
     String authorizedEntity,
     String scope,
   }) {
     return _delegate.deleteToken(
-      authorizedEntity: authorizedEntity,
-      scope: scope,
+      authorizedEntity: authorizedEntity ?? app.options.messagingSenderId,
+      scope: scope ?? 'FCM',
     );
   }
 
@@ -107,8 +144,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     String vapidKey,
   }) {
     return _delegate.getToken(
-      authorizedEntity: authorizedEntity,
-      scope: scope,
+      authorizedEntity: authorizedEntity ?? app.options.messagingSenderId,
+      scope: scope ?? 'FCM',
       vapidKey: vapidKey,
     );
   }
@@ -227,11 +264,13 @@ class FirebaseMessaging extends FirebasePluginPlatform {
       assert(ttl >= 0);
     }
     return _delegate.sendMessage(
-      senderId: senderId ?? '${app.options.messagingSenderId}@fcm.googleapis.com',
+      senderId:
+          senderId ?? '${app.options.messagingSenderId}@fcm.googleapis.com',
       data: data,
       collapseKey: collapseKey,
       messageId: messageId,
-      messageType: messageType
+      messageType: messageType,
+      ttl: ttl,
     );
   }
 
@@ -283,5 +322,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
 _assertTopicName(String topic) {
   assert(topic != null);
-  // TODO(salakar): Regex for topics
+
+  bool isValidTopic = RegExp(r"^[a-zA-Z0-9-_.~%]{1,900}$").hasMatch(topic);
+
+  assert(isValidTopic);
 }

@@ -16,6 +16,7 @@ export 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
         // ignore: deprecated_member_use
         IosNotificationSettings,
         NotificationPriority,
-        NotificationVisibility;
+        NotificationVisibility,
+        RemoteMessage;
 
 part 'src/messaging.dart';
