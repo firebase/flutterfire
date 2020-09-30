@@ -1,3 +1,7 @@
+## 5.0.0-dev.2
+
+ - **FIX**: if custom metadata value returns null put value as empty string.
+
 ## 5.0.0-dev.1
 
 As part of our on-going work for [#2582](https://github.com/FirebaseExtended/flutterfire/issues/2582) this is our Firebase Storage rework changes.
