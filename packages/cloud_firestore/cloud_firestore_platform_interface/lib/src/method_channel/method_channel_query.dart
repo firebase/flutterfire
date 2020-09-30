@@ -99,7 +99,7 @@ class MethodChannelQuery extends QueryPlatform {
           'source': getSourceString(options.source),
         },
       );
-      
+
       return MethodChannelQuerySnapshot(firestore, data);
     } catch (e) {
       throw convertPlatformException(e);
