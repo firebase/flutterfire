@@ -50,15 +50,17 @@ The bootstrap command locally links all dependencies within the project without 
 provide manual [`dependency_overrides`](https://dart.dev/tools/pub/pubspec). This allows all
 plugins, examples and tests to build from the local clone project.
 
+> You do not need to run `flutter pub get` once bootstrap has been completed.
+
 ## 4. Running an example
 
 Each plugin provides an example app which aims to showcase the main use-cases of each plugin.
 
 To run an example, run the `flutter run` command from the `example` directory of each plugins main
-directory. For example, for Cloud Firestore example:
+directory. For example, for Firebase Auth example:
 
 ```bash
-cd packages/cloud_firestore/cloud_firestore/example
+cd packages/firebase_auth/firebase_auth/example
 flutter run
 ```
 
@@ -71,13 +73,13 @@ FlutterFire comprises of a number of tests for each plugin, either end-to-end (e
 
 ### Unit tests
 
-Unit tests are responsible for ensuring expected behaviour whilst developing the plugins Dart code. Unit tests do not
+Unit tests are responsible for ensuring expected behavior whilst developing the plugins Dart code. Unit tests do not
 interact with 3rd party Firebase services, and mock where possible. To run unit tests for a specific plugin, run the
-`flutter test` command from the plugins root directory. For example, Cloud Firestore platform interface tests can be run
+`flutter test` command from the plugins root directory. For example, Firebase Auth platform interface tests can be run
 with the following commands:
 
 ```bash
-cd packages/cloud_firestore/cloud_firestore_platform_interface
+cd packages/firebase_auth/firebase_auth_platform_interface
 flutter test
 ```
 
@@ -85,20 +87,20 @@ flutter test
 
 E2e tests are those which directly communicate with Firebase, whose results cannot be mocked. These tests run directly from
 an example application. To run e2e tests, run the `flutter drive` command from the plugins main `example` directory, targeting the
-entry e2e test file:
+entry e2e test file.
 
-** Please ensure the cloud firestore emulator is running for any db related tests. https://firebase.flutter.dev/docs/firestore/usage/#emulator-usage **
+> Some packages use Firebase Emulator Suite to run tests. To learn more, [visit the official documentation](https://firebase.google.com/docs/emulator-suite).
 
 ```bash
-cd packages/cloud_firestore/cloud_firestore/example
-flutter drive --target=./test_driver/cloud_firestrore_e2e.dart
+cd packages/firebase_auth/firebase_auth/example
+flutter drive --target=./test_driver/firebase_auth_e2e.dart
 ```
 
 To run tests against web environments, run the command as a release build:
 
 ```bash
-cd packages/cloud_firestore/cloud_firestore/example
-flutter drive --target=./test_driver/cloud_firestrore_e2e.dart --release -d chrome
+cd packages/firebase_auth/firebase_auth/example
+flutter drive --target=./test_driver/firebase_auth_e2e.dart --release -d chrome
 ```
 
 ### Using Melos
@@ -152,12 +154,12 @@ To send us a pull request:
   go to `https://github.com/FirebaseExtended/flutterfire` and click the
   "Compare & pull request" button
 
-Please make sure all your checkins have detailed commit messages explaining the patch.
+Please make sure all your check-ins have detailed commit messages explaining the patch.
 
 When naming the title of your pull request, please follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.4/)
-guide. For example, for a fix to the Cloud Firestore plugin:
+guide. For example, for a fix to the Firebase Auth plugin:
 
-`fix(cloud_firestore): Fixed a bug!`
+`fix(firebase_auth): fixed a bug!`
 
 Plugins tests are run automatically on contributions using GitHub Actions. Depending on
 your code contributions, various tests will be run against your updated code automatically.
@@ -188,13 +190,12 @@ Newly opened PRs first go through initial triage which results in one of:
 
 ### The release process
 
-We push releases manually. Generally every merged PR upgrades at least one
-plugin's `pubspec.yaml`, so also needs to be published as a package release. The
-FlutterFire maintainer most involved with the PR should be the person responsible
-for publishing the package release. In cases where the PR is authored by a
-FlutterFire maintainer, the publisher should probably be the author. In other cases
-where the PR is from a contributor, it's up to the reviewing Flutter team member
-to publish the release instead.
+We push releases manually, using [Melos](https://github.com/invertase/melos)
+to take care of the hard work.
+
+Changelogs and version updates are automatically updated by a project maintainer
+(via [Melos](https://github.com/invertase/melos)). The new version is automatically
+generated via the commit types and changelogs via the commit messages.
 
 Some things to keep in mind before publishing the release:
 
@@ -214,44 +215,4 @@ Some things to keep in mind before publishing the release:
   from people that immediately adopt it, and uncovering and resolving those
   support issues will take more time if you're unavailable.
 
-Releasing a package is a two-step process.
-
-1. Push the package update to [pub.dev](https://pub.dev) using `pub publish`.
-2. Tag the commit with git in the format of `<package_name>-v<package_version>`,
-   and then push the tag to the `flutter/plugins` master branch. This can be
-   done manually with `git tag $tagname && git push upstream $tagname` while
-   checked out on the commit that updated `version` in `pubspec.yaml`.
-
-We've recently updated
-[flutter_plugin_tools](https://github.com/flutter/plugin_tools) to wrap both of
-those steps into one command to make it a little easier. This new tool is
-experimental. Feel free to fall back on manually running `pub publish` and
-creating and pushing the tag in git if there are issues with it.
-
-Install the tool by running:
-
-```terminal
-$ pub global activate flutter_plugin_tools
-```
-
-Then, from the root of your locally cloned repository, use the tool to
-publish a release.
-
-```terminal
-$ pub global run flutter_plugin_tools publish-plugin --package $package
-```
-
-By default the tool tries to push tags to the `upstream` remote, but that and
-some additional settings can be configured. Run `pub global activate flutter_plugin_tools --help` for more usage information.
-
-The tool wraps `pub publish` for pushing the package to pub, and then will
-automatically use git to try and create and push tags. It has some additional
-safety checking around `pub publish` too. By default `pub publish` publishes
-_everything_, including untracked or uncommitted files in version control.
-`flutter_plugin_tools publish-plugin` will first check the status of the local
-directory and refuse to publish if there are any mismatched files with version
-control present.
-
-There is a lot about this process that is still to be desired. Some top level
-items are being tracked in
-[flutter/flutter#27258](https://github.com/flutter/flutter/issues/27258).
+TODO(ehesp): detail melos release process
