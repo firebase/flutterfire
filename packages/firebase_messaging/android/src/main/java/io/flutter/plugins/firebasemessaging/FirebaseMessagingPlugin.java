@@ -135,10 +135,10 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     if (notification != null) {
       Map<String, Object> notificationMap = new HashMap<>();
 
-      String title = notification != null ? notification.getTitle() : null;
+      String title = notification.getTitle();
       notificationMap.put("title", title);
 
-      String body = notification != null ? notification.getBody() : null;
+      String body = notification.getBody();
       notificationMap.put("body", body);
 
       content.put("notification", notificationMap);
