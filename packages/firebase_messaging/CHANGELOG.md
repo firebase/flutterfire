@@ -1,3 +1,8 @@
+## 7.0.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **CHORE**: intellij cleanup (#3326).
+
 ## 7.0.0
 
 * Depend on `firebase_core` and migrate plugin to use `firebase_core` native SDK versioning features;

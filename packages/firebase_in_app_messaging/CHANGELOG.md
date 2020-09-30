@@ -1,3 +1,8 @@
+## 0.2.0+2
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **CHORE**: fix pod install error on example FIAM app (#3116).
+
 ## 0.2.0+1
 
 * Fixed issue #3227 (Invalid podspec). 

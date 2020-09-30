@@ -1,3 +1,9 @@
+## 2.1.0
+
+ - **FIX**: check for Stream existence before sending event (#3435).
+ - **FEAT**: add a [] operator to DocumentSnapshot, acting as get() (#3387).
+ - **DOCS**: Fixed docs typo (#3471).
+
 ## 2.0.1
 
  - Fixed 2 race conditions. [(#3251)](https://github.com/FirebaseExtended/flutterfire/pull/3251)
