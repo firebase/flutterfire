@@ -5,20 +5,18 @@
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
-/// Given a web error, a [FirebaseAuthException] is returned.
+/// Given a web error, an [Exception] is returned.
 ///
 /// The firebase-dart wrapper exposes a [firebase.FirebaseError], allowing us to
 /// use the code and message and convert it into an expected [FirebaseAuthException].
-///
-/// TODO: The firebase-dart wrapper does not support email or credential properties.
-FirebaseAuthException throwFirebaseAuthException(Object exception) {
+Exception convertPlatformException(Object exception) {
   if (exception is! firebase.FirebaseError) {
-    return FirebaseAuthException(
-        code: 'unknown', message: 'An unknown error occurred: ${exception}');
+    return exception;
   }
 
   firebase.FirebaseError firebaseError = exception as firebase.FirebaseError;
 
+  // TODO: The firebase-dart wrapper does not support email or credential properties.
   String code = firebaseError.code.replaceFirst('auth/', '');
   String message =
       firebaseError.message.replaceFirst('(${firebaseError.code})', '');

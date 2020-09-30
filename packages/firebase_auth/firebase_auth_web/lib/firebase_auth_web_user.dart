@@ -56,7 +56,7 @@ class UserWeb extends UserPlatform {
     try {
       return _webUser.delete();
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -65,7 +65,7 @@ class UserWeb extends UserPlatform {
     try {
       return _webUser.getIdToken(forceRefresh);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -84,7 +84,7 @@ class UserWeb extends UserPlatform {
           await _webUser
               .linkWithCredential(convertPlatformCredential(credential)));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -98,7 +98,7 @@ class UserWeb extends UserPlatform {
       return ConfirmationResultWeb(
           this.auth, await _webUser.linkWithPhoneNumber(phoneNumber, verifier));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -111,7 +111,7 @@ class UserWeb extends UserPlatform {
           await _webUser.reauthenticateWithCredential(
               convertPlatformCredential(credential)));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -121,7 +121,7 @@ class UserWeb extends UserPlatform {
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -131,7 +131,7 @@ class UserWeb extends UserPlatform {
       return _webUser.sendEmailVerification(
           convertPlatformActionCodeSettings(actionCodeSettings));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -140,7 +140,7 @@ class UserWeb extends UserPlatform {
     try {
       return UserWeb(auth, await _webUser.unlink(providerId));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -151,7 +151,7 @@ class UserWeb extends UserPlatform {
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -162,7 +162,7 @@ class UserWeb extends UserPlatform {
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -174,7 +174,7 @@ class UserWeb extends UserPlatform {
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -188,7 +188,7 @@ class UserWeb extends UserPlatform {
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 

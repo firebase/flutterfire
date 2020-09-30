@@ -124,7 +124,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return _webAuth.applyActionCode(code);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -133,7 +133,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return convertWebActionCodeInfo(await _webAuth.checkActionCode(code));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -142,7 +142,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       await _webAuth.confirmPasswordReset(code, newPassword);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -153,7 +153,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return UserCredentialWeb(
           this, await _webAuth.createUserWithEmailAndPassword(email, password));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -162,7 +162,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return _webAuth.fetchSignInMethodsForEmail(email);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -171,7 +171,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return UserCredentialWeb(this, await _webAuth.getRedirectResult());
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -193,7 +193,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return _webAuth.sendPasswordResetEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -204,7 +204,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return _webAuth.sendSignInLinkToEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -224,7 +224,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return _webAuth.setPersistence(convertPlatformPersistence(persistence));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -233,7 +233,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return UserCredentialWeb(this, await _webAuth.signInAnonymously());
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -245,7 +245,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           await _webAuth
               .signInWithCredential(convertPlatformCredential(credential)));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -255,7 +255,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return UserCredentialWeb(
           this, await _webAuth.signInWithCustomToken(token));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -266,7 +266,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return UserCredentialWeb(
           this, await _webAuth.signInWithEmailAndPassword(email, password));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -277,7 +277,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return UserCredentialWeb(
           this, await _webAuth.signInWithEmailLink(email, emailLink));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -291,7 +291,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return ConfirmationResultWeb(
           this, await _webAuth.signInWithPhoneNumber(phoneNumber, verifier));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -303,7 +303,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           await _webAuth
               .signInWithPopup(convertPlatformAuthProvider(provider)));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -312,7 +312,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return _webAuth.signInWithRedirect(convertPlatformAuthProvider(provider));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -321,7 +321,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return _webAuth.signOut();
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -330,7 +330,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return _webAuth.verifyPasswordResetCode(code);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 

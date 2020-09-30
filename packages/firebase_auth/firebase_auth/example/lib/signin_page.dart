@@ -153,6 +153,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
         content: Text("${user.email} signed in"),
       ));
     } catch (e) {
+      print('>>>>>> $e');
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("Failed to sign in with Email & Password"),
       ));

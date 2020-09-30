@@ -55,7 +55,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
 
     if (onError != null) {
       parameters['error-callback'] = (Object error) {
-        onError(throwFirebaseAuthException(error));
+        onError(convertPlatformException(error));
       };
     }
 
@@ -122,7 +122,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
     try {
       return _delegate.verify();
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -131,7 +131,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
     try {
       return (await _delegate.render()) as int;
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw convertPlatformException(e);
     }
   }
 }
