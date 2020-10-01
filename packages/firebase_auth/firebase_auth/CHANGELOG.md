@@ -1,7 +1,3 @@
-## 0.18.1+1
-
-- **FIX**: iOS issue where optional parameters with `null` value caused Firebase backend error. [(#3674)](https://github.com/FirebaseExtended/flutterfire/issues/3674).
-
 ## 0.18.1
 
  - **FIX**: local dependencies in example apps (#3319).
