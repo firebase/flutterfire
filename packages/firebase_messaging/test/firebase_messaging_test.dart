@@ -3,12 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
 import 'package:mockito/mockito.dart';
-import 'package:platform/platform.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -19,8 +19,7 @@ void main() {
 
   setUp(() {
     mockChannel = MockMethodChannel();
-    firebaseMessaging = FirebaseMessaging.private(
-        mockChannel, FakePlatform(operatingSystem: 'ios'));
+    firebaseMessaging = FirebaseMessaging.private(mockChannel);
   });
 
   test('requestNotificationPermissions on ios with default permissions', () {
@@ -32,7 +31,7 @@ void main() {
       'alert': true,
       'provisional': false
     }));
-  });
+  }, skip: !Platform.isIOS);
 
   test('requestNotificationPermissions on ios with custom permissions', () {
     firebaseMessaging.requestNotificationPermissions(
@@ -44,22 +43,6 @@ void main() {
       'alert': true,
       'provisional': true
     }));
-  });
-
-  test('requestNotificationPermissions on android', () {
-    firebaseMessaging = FirebaseMessaging.private(
-        mockChannel, FakePlatform(operatingSystem: 'android'));
-
-    firebaseMessaging.requestNotificationPermissions();
-    verifyZeroInteractions(mockChannel);
-  });
-
-  test('requestNotificationPermissions on android', () {
-    firebaseMessaging = FirebaseMessaging.private(
-        mockChannel, FakePlatform(operatingSystem: 'android'));
-
-    firebaseMessaging.requestNotificationPermissions();
-    verifyZeroInteractions(mockChannel);
   });
 
   test('configure', () {

@@ -9,7 +9,6 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
-import 'package:platform/platform.dart';
 
 typedef Future<dynamic> MessageHandler(Map<String, dynamic> message);
 
@@ -58,16 +57,12 @@ class FirebaseMessaging {
   factory FirebaseMessaging() => _instance;
 
   @visibleForTesting
-  FirebaseMessaging.private(MethodChannel channel, Platform platform)
-      : _channel = channel,
-        _platform = platform;
+  FirebaseMessaging.private(MethodChannel channel) : _channel = channel;
 
   static final FirebaseMessaging _instance = FirebaseMessaging.private(
-      const MethodChannel('plugins.flutter.io/firebase_messaging'),
-      const LocalPlatform());
+      const MethodChannel('plugins.flutter.io/firebase_messaging'));
 
   final MethodChannel _channel;
-  final Platform _platform;
 
   MessageHandler _onMessage;
   MessageHandler _onBackgroundMessage;
@@ -81,7 +76,7 @@ class FirebaseMessaging {
   FutureOr<bool> requestNotificationPermissions([
     IosNotificationSettings iosSettings = const IosNotificationSettings(),
   ]) {
-    if (!_platform.isIOS) {
+    if (!Platform.isIOS) {
       return null;
     }
     return _channel.invokeMethod<bool>(
