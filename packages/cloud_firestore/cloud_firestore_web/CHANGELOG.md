@@ -1,3 +1,7 @@
+## 0.2.0+2
+
+ - **FIX**: fix dependency in pubspec.yaml (#3713).
+
 ## 0.2.0+1
 
 * Fixed issue #3210 (`Query.orderBy(FieldPath.documentId)` throws exception).

@@ -1,7 +1,7 @@
-## 6.0.0+1
+## 6.0.1
 
-* Removed a `dart:async` import that isn't required for \>=Dart 2.1.
-* Require \>=Dart 2.1.
+ - **FIX**: local dependencies in example apps (#3319).
+ - **CHORE**: intellij cleanup (#3326).
 
 ## 6.0.0
 
