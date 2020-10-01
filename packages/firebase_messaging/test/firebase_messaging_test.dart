@@ -8,8 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
 import 'package:mockito/mockito.dart';
-import 'package:platform/platform.dart';
 import 'package:test/test.dart';
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, TargetPlatform;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -19,8 +20,7 @@ void main() {
 
   setUp(() {
     mockChannel = MockMethodChannel();
-    firebaseMessaging = FirebaseMessaging.private(
-        mockChannel, FakePlatform(operatingSystem: 'ios'));
+    firebaseMessaging = FirebaseMessaging.private(mockChannel);
   });
 
   test('requestNotificationPermissions on ios with default permissions', () {
@@ -32,7 +32,7 @@ void main() {
       'alert': true,
       'provisional': false
     }));
-  });
+  }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
   test('requestNotificationPermissions on ios with custom permissions', () {
     firebaseMessaging.requestNotificationPermissions(
@@ -44,23 +44,7 @@ void main() {
       'alert': true,
       'provisional': true
     }));
-  });
-
-  test('requestNotificationPermissions on android', () {
-    firebaseMessaging = FirebaseMessaging.private(
-        mockChannel, FakePlatform(operatingSystem: 'android'));
-
-    firebaseMessaging.requestNotificationPermissions();
-    verifyZeroInteractions(mockChannel);
-  });
-
-  test('requestNotificationPermissions on android', () {
-    firebaseMessaging = FirebaseMessaging.private(
-        mockChannel, FakePlatform(operatingSystem: 'android'));
-
-    firebaseMessaging.requestNotificationPermissions();
-    verifyZeroInteractions(mockChannel);
-  });
+  }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
   test('configure', () {
     firebaseMessaging.configure();
@@ -100,7 +84,7 @@ void main() {
     iosSettingsFromStream = firebaseMessaging.onIosSettingsRegistered.first;
     await handler(MethodCall('onIosSettingsRegistered', iosSettings.toMap()));
     expect((await iosSettingsFromStream).toMap(), iosSettings.toMap());
-  });
+  }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
   test('incoming messages', () async {
     final Completer<dynamic> onMessage = Completer<dynamic>();
