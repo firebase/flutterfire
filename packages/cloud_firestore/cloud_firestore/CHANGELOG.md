@@ -1,3 +1,11 @@
+## 0.14.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **FIX**: pub.dev score fixes (#3318).
+ - **FIX**: add missing deprecated static methods (#3278).
+ - **FEAT**: add a [] operator to DocumentSnapshot, acting as get() (#3387).
+ - **DOCS**: Fixed docs typo (#3471).
+
 ## 0.14.0+2
 
 * Added missing deprecated `Firestore` static methods.
