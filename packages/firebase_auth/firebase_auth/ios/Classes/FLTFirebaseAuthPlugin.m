@@ -709,12 +709,12 @@ NSString *const kErrMsgInvalidCredential =
       [self getFIRActionCodeSettingsFromArguments:arguments];
   [currentUser sendEmailVerificationWithActionCodeSettings:actionCodeSettings
                                                 completion:^(NSError *_Nullable error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-  }];
+                                                  if (error != nil) {
+                                                    result.error(nil, nil, nil, error);
+                                                  } else {
+                                                    result.success(nil);
+                                                  }
+                                                }];
 }
 
 - (void)userUnlink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
