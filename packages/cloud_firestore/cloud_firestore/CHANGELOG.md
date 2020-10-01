@@ -1,3 +1,8 @@
+## 0.14.1+1
+
+ - **FIX**: remove listener if available (#3452).
+ - **DOCS**: remove `updateBlock` reference in Firestore docs (#3728).
+
 ## 0.14.1
 
  - **FIX**: local dependencies in example apps (#3319).
