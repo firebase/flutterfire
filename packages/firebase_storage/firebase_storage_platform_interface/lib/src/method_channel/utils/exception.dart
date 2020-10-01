@@ -7,15 +7,15 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
-/// Catches a [PlatformException] and converts it into a [FirebaseException] if
-/// it was intentionally caught on the native platform.
-FutureOr<Map<String, dynamic>> catchPlatformException(Object exception,
-    [StackTrace stackTrace]) async {
+/// Catches a [PlatformException] and returns an [Exception].
+///
+/// If the [Exception] is a [PlatformException], a [FirebaseException] is returned.
+Exception convertPlatformException(Object exception, [StackTrace stackTrace]) {
   if (exception is! Exception || exception is! PlatformException) {
-    throw exception;
+    return exception;
   }
 
-  throw platformExceptionToFirebaseException(
+  return platformExceptionToFirebaseException(
       exception as PlatformException, stackTrace);
 }
 
