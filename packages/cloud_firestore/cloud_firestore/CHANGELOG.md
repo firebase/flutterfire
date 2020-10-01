@@ -1,3 +1,7 @@
+## 0.14.1+2
+
+ - Update a dependency to the latest release.
+
 ## 0.14.1+1
 
  - **FIX**: remove listener if available (#3452).

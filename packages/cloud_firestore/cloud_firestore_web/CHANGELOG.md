@@ -1,3 +1,7 @@
+## 0.2.0+3
+
+ - **FIX**: dependency issue in pubspec.yaml (#3734).
+
 ## 0.2.0+2
 
  - **FIX**: fix dependency in pubspec.yaml (#3713).
