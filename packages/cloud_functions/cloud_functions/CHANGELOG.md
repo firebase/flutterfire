@@ -1,3 +1,7 @@
+## 0.6.0+1
+
+ - **FIX**: local dependencies in example apps (#3319).
+
 ## 0.6.0
 
 * Fix HttpsCallable#call not working with parameters of non-Map type.

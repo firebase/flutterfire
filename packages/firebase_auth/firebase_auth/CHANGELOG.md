@@ -1,6 +1,20 @@
-## 0.18.0+2
+## 0.18.1+1
 
-* Fixed an iOS issue where optional parameters with null value caused Firebase backend error. [(#3674)](https://github.com/FirebaseExtended/flutterfire/issues/3674).
+- **FIX**: iOS issue where optional parameters with `null` value caused Firebase backend error. [(#3674)](https://github.com/FirebaseExtended/flutterfire/issues/3674).
+
+## 0.18.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **FIX**: fix IdTokenResult timestamps (web, ios) (#3357).
+ - **FIX**: pub.dev score fixes (#3318).
+ - **FIX**: use unknown APNS token type (#3345).
+ - **FIX**: update FLTFirebaseAuthPlugin.m (#3360).
+ - **FIX**: use correct FIRAuth instance on listeners (#3316).
+ - **FEAT**: add support for linkWithPhoneNumber (#3436).
+ - **FEAT**: use named arguments for ActionCodeSettings (#3269).
+ - **FEAT**: implement signInWithPhoneNumber on web (#3205).
+ - **FEAT**: expose smsCode (android only) (#3308).
+ - **DOCS**: fixed signOut method documentation (#3342).
 
 ## 0.18.0+1
 
