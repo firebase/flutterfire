@@ -3,13 +3,14 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, TargetPlatform;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +32,7 @@ void main() {
       'alert': true,
       'provisional': false
     }));
-  }, skip: !Platform.isIOS);
+  }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
   test('requestNotificationPermissions on ios with custom permissions', () {
     firebaseMessaging.requestNotificationPermissions(

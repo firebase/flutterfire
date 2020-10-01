@@ -3,12 +3,13 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, TargetPlatform;
 
 typedef Future<dynamic> MessageHandler(Map<String, dynamic> message);
 
@@ -76,7 +77,7 @@ class FirebaseMessaging {
   FutureOr<bool> requestNotificationPermissions([
     IosNotificationSettings iosSettings = const IosNotificationSettings(),
   ]) {
-    if (!Platform.isIOS) {
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
       return null;
     }
     return _channel.invokeMethod<bool>(
