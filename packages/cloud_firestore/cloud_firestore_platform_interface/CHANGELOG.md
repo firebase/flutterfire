@@ -1,3 +1,8 @@
+## 2.1.1
+
+ - **FIX**: typo in code comments (#3655).
+ - **DOCS**: remove `updateBlock` reference in Firestore docs (#3728).
+
 ## 2.1.0
 
  - **FIX**: check for Stream existence before sending event (#3435).

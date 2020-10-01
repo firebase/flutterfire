@@ -1,3 +1,8 @@
+## 0.9.7
+
+ - **FEAT**: rework (#3612).
+ - **DOCS**: fix typo in the documentation of firebase_ml_vision(#3603).
+
 ## 0.9.6+3
 
  - **FIX**: local dependencies in example apps (#3319).

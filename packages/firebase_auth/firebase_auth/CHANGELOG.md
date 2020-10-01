@@ -1,3 +1,7 @@
+## 0.18.1+1
+
+ - **FIX**: Optional params for "signInWithCredential" method are converted to "nil" if "null" for iOS (#3731).
+
 ## 0.18.1
 
  - **FIX**: local dependencies in example apps (#3319).
