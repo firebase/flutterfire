@@ -1,3 +1,7 @@
+## 0.18.0+2
+
+* Fixed an iOS issue where optional parameters with null value caused Firebase backend error. [(#3674)](https://github.com/FirebaseExtended/flutterfire/issues/3674).
+
 ## 0.18.0+1
 
 * Fixed an Android issue where certain network related Firebase Auth error codes would come through as `unknown`. [(#3217)](https://github.com/FirebaseExtended/flutterfire/pull/3217)
