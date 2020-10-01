@@ -1,7 +1,3 @@
-## 0.2.0+2
-
-* Bump `cloud_firestore_platform_interface` dependency.
-
 ## 0.2.0+1
 
 * Fixed issue #3210 (`Query.orderBy(FieldPath.documentId)` throws exception).
