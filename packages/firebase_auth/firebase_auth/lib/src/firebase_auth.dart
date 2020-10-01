@@ -19,10 +19,9 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// If called and no [_delegatePackingProperty] exists, it will first be
   /// created and assigned before returning the delegate.
   FirebaseAuthPlatform get _delegate {
-    if (_delegatePackingProperty == null) {
       _delegatePackingProperty = FirebaseAuthPlatform.instanceFor(
           app: app, pluginConstants: pluginConstants);
-    }
+    
     return _delegatePackingProperty;
   }
 
