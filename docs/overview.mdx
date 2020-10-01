@@ -18,7 +18,7 @@ hide_title: true
 
 <h1 style={{ textAlign: 'center', marginBottom: '4rem' }}>FlutterFire Overview</h1>
 
-Welcome to FlutterFire! 🔥 
+Welcome to FlutterFire! 🔥
 
 FlutterFire is a set of Flutter plugins which connect your Flutter application to [Firebase](https://firebase.com).
 
@@ -73,63 +73,19 @@ related usage until the initialization is completed.
 To initialize FlutterFire, call the [`initializeApp`](!firebase_core.Firebase.initializeApp) method on the [`Firebase`](!firebase_core.Firebase) class:
 
 ```dart
-await Firebase.initializeApp();
+// Import the firebase_core plugin
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+}
 ```
 
 The method is asynchronous and returns a [`Future`](https://api.flutter.dev/flutter/dart-async/Future-class.html), so
 you need to ensure it has completed before displaying your main application. The examples below show how this can be
-achieved with a [`FutureBuilder`](https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html) or
-a [`StatefulWidget`](https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html):
+achieved with a [`StatefulWidget`](https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html):
 
-<Tabs
-  defaultValue="future"
-  values={[
-    { label: 'FutureBuilder', value: 'future', },
-    { label: 'StatefulWidget', value: 'state', },
-  ]
-}>
-<TabItem value="future">
-
-```dart title="lib/main.dart"
-import 'package:flutter/material.dart';
-
-// Import the firebase_core plugin
-import 'package:firebase_core/firebase_core.dart';
-
-void main() {
-  runApp(App());
-}
-
-class App extends StatelessWidget {
-  // Create the initialization Future outside of `build`:
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      // Initialize FlutterFire:
-      future: _initialization,
-      builder: (context, snapshot) {
-        // Check for errors
-        if (snapshot.hasError) {
-          return SomethingWentWrong();
-        }
-
-        // Once complete, show your application
-        if (snapshot.connectionState == ConnectionState.done) {
-          return MyAwesomeApp();
-        }
-
-        // Otherwise, show something whilst waiting for initialization to complete
-        return Loading();
-      },
-    );
-  }
-}
-```
-
-</TabItem>
-<TabItem value="state">
 
 ```dart title="lib/main.dart"
 import 'package:flutter/material.dart';
@@ -188,9 +144,6 @@ class _AppState extends State<App> {
   }
 }
 ```
-
-</TabItem>
-</Tabs>
 
 Once initialized, you're ready to get started using FlutterFire!
 
