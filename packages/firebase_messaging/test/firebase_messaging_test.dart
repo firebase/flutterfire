@@ -44,7 +44,7 @@ void main() {
       'alert': true,
       'provisional': true
     }));
-  });
+  }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
   test('configure', () {
     firebaseMessaging.configure();
@@ -84,7 +84,7 @@ void main() {
     iosSettingsFromStream = firebaseMessaging.onIosSettingsRegistered.first;
     await handler(MethodCall('onIosSettingsRegistered', iosSettings.toMap()));
     expect((await iosSettingsFromStream).toMap(), iosSettings.toMap());
-  });
+  }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
   test('incoming messages', () async {
     final Completer<dynamic> onMessage = Completer<dynamic>();
