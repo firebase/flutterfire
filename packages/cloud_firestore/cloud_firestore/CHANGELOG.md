@@ -1,3 +1,20 @@
+## 0.14.1+1
+
+ - **FIX**: remove listener if available (#3452).
+ - **DOCS**: remove `updateBlock` reference in Firestore docs (#3728).
+
+## 0.14.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **FIX**: pub.dev score fixes (#3318).
+ - **FIX**: add missing deprecated static methods (#3278).
+ - **FEAT**: add a [] operator to DocumentSnapshot, acting as get() (#3387).
+ - **DOCS**: Fixed docs typo (#3471).
+
+## 0.14.0+2
+
+* Added missing deprecated `Firestore` static methods.
+
 ## 0.14.0+1
 
 * Fixed issue #3210 (`Query.orderBy(FieldPath.documentId)` throws exception).
@@ -28,7 +45,7 @@ Along with the below changes, the plugin has undergone a quality of life update 
 - **BREAKING**: Getting a collection parent document via `parent()` has been changed to a getter `parent`.
 - **BREAKING**: Getting the collection `path` now always returns the `path` without leading and trailing slashes.
 - **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
-- **FIX**: Equality checking of `CollectionReference` now does not depend on the original path used to create the `CollectionReference`. 
+- **FIX**: Equality checking of `CollectionReference` now does not depend on the original path used to create the `CollectionReference`.
 
 **`Query`**:
 - **BREAKING**: The internal query logic has been overhauled to better assert invalid queries locally.

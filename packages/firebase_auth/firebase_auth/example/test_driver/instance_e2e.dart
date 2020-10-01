@@ -699,16 +699,19 @@ void runInstanceTests() {
           unawaited(auth.verifyPhoneNumber(
               phoneNumber: 'foo',
               verificationCompleted: (PhoneAuthCredential credential) {
-                fail("Should not have been called");
+                return completer
+                    .completeError(Exception("Should not have been called"));
               },
               verificationFailed: (FirebaseAuthException e) {
                 completer.complete(e);
               },
               codeSent: (String verificationId, int resetToken) {
-                fail("Should not have been called");
+                return completer
+                    .completeError(Exception("Should not have been called"));
               },
               codeAutoRetrievalTimeout: (String foo) {
-                fail("Should not have been called");
+                return completer
+                    .completeError(Exception("Should not have been called"));
               }));
 
           return completer.future;
@@ -722,6 +725,7 @@ void runInstanceTests() {
 
       test('should auto verify phone number', () async {
         String testPhoneNumber = '+447444555666';
+        String testSmsCode = '123456';
         await auth.signInAnonymously();
 
         Future<PhoneAuthCredential> getCredential() async {
@@ -730,18 +734,26 @@ void runInstanceTests() {
           unawaited(auth.verifyPhoneNumber(
               phoneNumber: testPhoneNumber,
               // ignore: invalid_use_of_visible_for_testing_member
-              autoRetrievedSmsCodeForTesting: '123456',
+              autoRetrievedSmsCodeForTesting: testSmsCode,
               verificationCompleted: (PhoneAuthCredential credential) {
+                if (credential.smsCode != testSmsCode) {
+                  return completer
+                      .completeError(Exception("SMS code did not match"));
+                }
+
                 completer.complete(credential);
               },
               verificationFailed: (FirebaseException e) {
-                fail("Should not have been called");
+                return completer
+                    .completeError(Exception("Should not have been called"));
               },
               codeSent: (String verificationId, int resetToken) {
-                fail("Should not have been called");
+                return completer
+                    .completeError(Exception("Should not have been called"));
               },
               codeAutoRetrievalTimeout: (String foo) {
-                fail("Should not have been called");
+                return completer
+                    .completeError(Exception("Should not have been called"));
               }));
 
           return completer.future;

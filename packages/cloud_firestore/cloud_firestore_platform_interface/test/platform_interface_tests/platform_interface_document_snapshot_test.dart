@@ -65,5 +65,10 @@ void main() {
       final snapshot = TestDocumentSnapshot._();
       expect(snapshot.get('foo'), 'bar');
     });
+
+    test("[]", () {
+      final snapshot = TestDocumentSnapshot._();
+      expect(snapshot['foo'], 'bar');
+    });
   });
 }

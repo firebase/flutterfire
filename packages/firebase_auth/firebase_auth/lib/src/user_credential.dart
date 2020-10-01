@@ -34,6 +34,6 @@ class UserCredential {
 
   @override
   String toString() {
-    return 'UserCredential(additionalUserInfo: ${additionalUserInfo.toString()}, credential: ${credential.toString()}, user: ${user})';
+    return 'UserCredential(additionalUserInfo: ${additionalUserInfo.toString()}, credential: ${credential.toString()}, user: $user)';
   }
 }

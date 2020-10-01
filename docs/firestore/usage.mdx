@@ -105,7 +105,7 @@ class GetUserName extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data();
+          Map<String, dynamic> data = snapshot.data.data();
           return Text("Full Name: ${data['full_name']} ${data['last_name']}");
         }
 
@@ -208,7 +208,7 @@ To determine whether the document exists, use the [`exists`](!cloud_firestore.Do
 ```dart
 FirebaseFirestore.instance
     .collection('users')
-    .document(userId)
+    .doc(userId)
     .get()
     .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
@@ -571,6 +571,9 @@ return Firestore.instance.runTransaction((transaction) async {
   }
 
   // Update the follower count based on the current count
+  // Note: this could be done without a transaction
+  // by updating the population using FieldValue.increment()
+
   int newFollowerCount = snapshot.data()['followers'] + 1;
 
   // Perform an update on the document

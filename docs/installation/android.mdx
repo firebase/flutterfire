@@ -4,25 +4,25 @@ title: Android Installation
 
 Before using FlutterFire on Android, you must first connect to your Firebase project with your Android application.
 
-## Generating Firebase credentials
+## Generating a Firebase project configuration file
 
 On the [Firebase Console](https://console.firebase.google.com/project/_/overview), add a new Android app or select an
 existing Android app for your Firebase project.
 
 The "Android package name" must match your local project's package name that was created when you started the
-Flutter project. The current package name can be found in the `manifest` tag within the project's
-`/android/app/src/main/AndroidManifest.xml` file.
+Flutter project. The current package name can be found in your module (app-level) Gradle file,
+usually `android/app/build.gradle`, `defaultConfig` section (example package name: `com.yourcompany.yourproject`).
 
 > When creating a new Android app "debug signing certificate SHA-1" is optional, however, it is required for Dynamic Links
 > & Phone Authentication. To generate a certificate run `cd android && ./gradlew signingReport` and copy the SHA1 from
 > the `debug` key. This generates two variant keys. You can copy the 'SHA1' that belongs to the `debugAndroidTest` variant key option.
 
-Once your Android app has been registered, download the credential file from the Firebase Console (the file is called
+Once your Android app has been registered, download the configuration file from the Firebase Console (the file is called
 `google-services.json`). Add this file into the `android/app` directory within your Flutter project.
 
-## Installing Firebase credentials
+## Installing your Firebase configuration file
 
-To allow Firebase to use the credentials on Android, the 'google-services' plugin must be applied on the project. This requires
+To allow Firebase to use the configuration on Android, the 'google-services' plugin must be applied on the project. This requires
 modification to two files in the `android/` directory.
 
 First, add the 'google-services' plugin as a dependency inside of the `android/build.gradle` file:

@@ -190,6 +190,41 @@ class User {
         _auth, await _delegate.linkWithCredential(credential));
   }
 
+  /// Links the user account with the given phone number.
+  ///
+  /// This method is only supported on web platforms. Use [verifyPhoneNumber] and
+  /// then [linkWithCredential] on these platforms.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **provider-already-linked**:
+  ///  - Thrown if the provider has already been linked to the user. This error
+  ///    is thrown even if this is not the same provider's account that is
+  ///    currently linked to the user.
+  /// - **captcha-check-failed**:
+  ///  - Thrown if the reCAPTCHA response token was invalid, expired, or if this
+  ///    method was called from a non-whitelisted domain.
+  /// - **invalid-phone-number**:
+  ///  - Thrown if the phone number has an invalid format.
+  /// - **quota-exceeded**:
+  ///  - Thrown if the SMS quota for the Firebase project has been exceeded.
+  /// - **user-disabled**:
+  ///  - Thrown if the user corresponding to the given phone number has been disabled.
+  /// - **credential-already-in-use**:
+  ///  - Thrown if the account corresponding to the phone number already exists
+  ///    among your users, or is already linked to a Firebase User.
+  /// - **operation-not-allowed**:
+  ///  - Thrown if you have not enabled the phone authentication provider in the
+  ///  Firebase Console. Go to the Firebase Console for your project, in the Auth
+  ///  section and the Sign in Method tab and configure the provider.
+  Future<ConfirmationResult> linkWithPhoneNumber(String phoneNumber,
+      [RecaptchaVerifier verifier]) async {
+    assert(phoneNumber != null);
+    assert(phoneNumber.isNotEmpty);
+    verifier ??= RecaptchaVerifier();
+    return ConfirmationResult._(this._auth,
+        await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate));
+  }
+
   /// Re-authenticates a user using a fresh credential.
   ///
   /// Use before operations such as [User.updatePassword] that require tokens

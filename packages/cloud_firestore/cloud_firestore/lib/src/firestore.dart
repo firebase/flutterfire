@@ -154,7 +154,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// After the [TransactionHandler] is run, [FirebaseFirestore] will attempt to apply the
   /// changes to the server. If any of the data read has been modified outside
   /// of this [Transaction] since being read, then the transaction will be
-  /// retried by executing the `updateBlock` again. If the transaction still
+  /// retried by executing the provided [TransactionHandler] again. If the transaction still
   /// fails after 5 retries, then the transaction will fail.s
   ///
   /// The [TransactionHandler] may be executed multiple times, it should be able
@@ -238,6 +238,16 @@ class Firestore extends FirebaseFirestore {
   @Deprecated(
       "Constructing Firestore is deprecated, use 'FirebaseFirestore.instance' or 'FirebaseFirestore.instanceFor' instead")
   factory Firestore({FirebaseApp app}) {
+    return FirebaseFirestore.instanceFor(app: app);
+  }
+
+  /// Returns an instance using the default [FirebaseApp].
+  static FirebaseFirestore get instance {
+    return FirebaseFirestore.instance;
+  }
+
+  /// Returns an instance using a specified [FirebaseApp].
+  static FirebaseFirestore instanceFor({FirebaseApp app}) {
     return FirebaseFirestore.instanceFor(app: app);
   }
 }
