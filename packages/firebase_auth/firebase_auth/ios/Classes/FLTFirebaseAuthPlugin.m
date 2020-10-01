@@ -1109,11 +1109,11 @@ NSString *const kErrMsgInvalidCredential =
     return _credentials[credentialHashCode];
   }
 
-  NSString *signInMethod = credentialDictionary[kArgumentSignInMethod];
-  NSString *secret = credentialDictionary[kArgumentSecret];
-  NSString *idToken = credentialDictionary[kArgumentIdToken];
-  NSString *accessToken = credentialDictionary[kArgumentAccessToken];
-  NSString *rawNonce = credentialDictionary[kArgumentRawNonce];
+  NSString * signInMethod = credentialDictionary[kArgumentSignInMethod];
+  NSString * secret = credentialDictionary[kArgumentSecret] == [NSNull null] ? nil : credentialDictionary[kArgumentSecret];
+  NSString * idToken = credentialDictionary[kArgumentIdToken] == [NSNull null] ? nil : credentialDictionary[kArgumentIdToken];
+  NSString * accessToken = credentialDictionary[kArgumentAccessToken] == [NSNull null] ? nil : credentialDictionary[kArgumentAccessToken];
+  NSString * rawNonce = credentialDictionary[kArgumentRawNonce] == [NSNull null] ? nil : credentialDictionary[kArgumentRawNonce];
 
   // Password Auth
   if ([signInMethod isEqualToString:kSignInMethodPassword]) {
