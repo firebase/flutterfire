@@ -37,6 +37,13 @@ class FirestoreExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseFirestore.instance
+        .collection('playground')
+        .doc('not-in')
+        .collection('not-in')
+        .where('foo', whereNotIn: ['123'])
+        .get()
+        .then((value) => print(value));
     return withMaterialApp(Center(child: FilmList()));
   }
 }
