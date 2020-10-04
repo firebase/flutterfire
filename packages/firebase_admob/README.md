@@ -17,7 +17,7 @@ to do so will result in a crash on launch of your app.  The line should look lik
     android:value="[ADMOB_APP_ID]"/>
 ```
 
-where `[ADMOB_APP_ID]` is your App ID.  You must pass the same value when you 
+where `[ADMOB_APP_ID]` is your App ID.  You must pass the same value when you
 initialize the plugin in your Dart code.
 
 See https://goo.gl/fQ2neu for more information about configuring `AndroidManifest.xml`
@@ -58,7 +58,7 @@ Starting in version 17.0.0, if you are an AdMob publisher you are now required t
 
 Failure to add this tag will result in the app crashing at app launch with a message starting with *"The Google Mobile Ads SDK was initialized incorrectly."*
 
-On Android, this value must be the same as the App ID value set in your 
+On Android, this value must be the same as the App ID value set in your
 `AndroidManifest.xml`.
 
 ### iOS
@@ -79,13 +79,13 @@ You are also required to ensure that you have Google Service file from Firebase 
 
 ### iOS
 
-Create an "App" in firebase and generate a GoogleService-info.plist file. This file needs to be embedded in the projects "Runner/Runner" folder using Xcode. 
+Create an "App" in firebase and generate a GoogleService-info.plist file. This file needs to be embedded in the projects "Runner/Runner" folder using Xcode.
 
 https://firebase.google.com/docs/ios/setup#create-firebase-project -> Steps 1-3
 
 ### Android
 
-Create an "App" in firebase and generate a google-service.json file. This file needs to be embedded in you projects "android/app" folder. 
+Create an "App" in firebase and generate a google-service.json file. This file needs to be embedded in you projects "android/app" folder.
 
 https://firebase.google.com/docs/android/setup#create-firebase-project -> Steps 1-3.1
 
@@ -217,23 +217,24 @@ that takes a
 and custom options and returns a
 [UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView).
 
-You can implement this in your `MainActivity.java` or create a separate class in the same directory
-as `MainActivity.java` as seen below:
+You can implement this in your `MainActivity.kt` or create a separate class in the same directory
+as `MainActivity.kt` as seen below:
 
-```java
-package my.app.path;
+```kotlin
+package my.app.path
 
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAdView;
-import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
-import java.util.Map;
+import com.google.android.gms.ads.formats.UnifiedNativeAd
+import com.google.android.gms.ads.formats.UnifiedNativeAdView
+import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory
+import kotlin.collections.Map
 
-class NativeAdFactoryExample implements NativeAdFactory {
-  @Override
-  public UnifiedNativeAdView createNativeAd(
-      UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
-    // Create UnifiedNativeAdView
-  }
+class NativeAdFactoryExample : NativeAdFactory {
+    override fun createNativeAd(
+        nativeAd: UnifiedNativeAd,
+        customOptions: Map<String, Any>
+    ): UnifiedNativeAdView {
+        // Create UnifiedNativeAdView
+    }
 }
 ```
 
@@ -241,26 +242,26 @@ An instance of a `NativeAdFactory` should also be added to the `FirebaseAdMobPlu
 slightly differently depending on whether you are using Embedding V1 or Embedding V2.
 
 If you're using the Embedding V1, you need to register your `NativeAdFactory` with a unique `String`
-identifier after calling `GeneratedPluginRegistrant.registerWith(this);`.
+identifier after calling `GeneratedPluginRegistrant.registerWith(this@MainActivity)`.
 
-You're `MainActivity.java` should look similar to:
+Your `MainActivity.kt` should look similar to:
 
-```java
-package my.app.path;
+```kotlin
+package my.app.path
 
-import android.os.Bundle;
-import io.flutter.app.FlutterActivity;
-import io.flutter.plugins.GeneratedPluginRegistrant;
-import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin;
+import android.os.Bundle
+import io.flutter.app.FlutterActivity
+import io.flutter.plugins.GeneratedPluginRegistrant
+import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin
 
-public class MainActivity extends FlutterActivity {
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    GeneratedPluginRegistrant.registerWith(this);
+class MainActivity : FlutterActivity {
+    override fun onCreate(savedInstanceState: Bundle) {
+        super.onCreate(savedInstanceState)
+        GeneratedPluginRegistrant.registerWith(this@MainActivity)
 
-    FirebaseAdMobPlugin.registerNativeAdFactory(this, "adFactoryExample", new NativeAdFactoryExample());
-  }
+        FirebaseAdMobPlugin.registerNativeAdFactory(this@MainActivity, "adFactoryExample",
+           NativeAdFactoryExample())
+    }
 }
 ```
 
@@ -270,27 +271,25 @@ identifier after adding the `FirebaseAdMobPlugin` to the `FlutterEngine`. (Addin
 future, so you may not see it being added here). You should also unregister the factory in
 `cleanUpFlutterEngine(engine)`.
 
-You're `MainActivity.java` should look similar to:
+You're `MainActivity.kt` should look similar to:
 
-```java
-package my.app.path;
+```kotlin
+package my.app.path
 
-import io.flutter.embedding.android.FlutterActivity;
-import io.flutter.embedding.engine.FlutterEngine;
-import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin;
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin
 
-public class MainActivity extends FlutterActivity {
-  @Override
-  public void configureFlutterEngine(FlutterEngine flutterEngine) {
-    flutterEngine.getPlugins().add(new FirebaseAdMobPlugin());
+class MainActivity : FlutterActivity {
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        flutterEngine.getPlugins().add(FirebaseAdMobPlugin())
 
-    FirebaseAdMobPlugin.registerNativeAdFactory(flutterEngine, "adFactoryExample", NativeAdFactoryExample());
-  }
+        FirebaseAdMobPlugin.registerNativeAdFactory(flutterEngine, "adFactoryExample", NativeAdFactoryExample());
+    }
 
-  @Override
-  public void cleanUpFlutterEngine(FlutterEngine flutterEngine) {
-    FirebaseAdMobPlugin.unregisterNativeAdFactory(flutterEngine, "adFactoryExample");
-  }
+    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        FirebaseAdMobPlugin.unregisterNativeAdFactory(flutterEngine, "adFactoryExample")
+    }
 }
 ```
 
