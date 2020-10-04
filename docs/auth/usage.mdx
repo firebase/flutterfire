@@ -217,7 +217,7 @@ await user.sendEmailVerification(actionCodeSettings);
 
 The code then can be received in app by parsing the Firebase Dynamic Link. Refer - [Handling email actions in a mobile application](https://firebase.google.com/docs/auth/web/passing-state-in-email-actions#handling_email_actions_in_a_mobile_application) to know how to handle the link in app.
 You can use
-[firebase_dynamic_links package](https://pub.dev/packages/firebase_dynamic_links) to get the `oobCode` from the link and apply actionCode as follow.
+[firebase_dynamic_links](https://pub.dev/packages/firebase_dynamic_links) flutter package to get the `oobCode` from the link and apply actionCode as follow.
 
 ```dart
 FirebaseAuth auth = FirebaseAuth.instance;
