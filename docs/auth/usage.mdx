@@ -187,7 +187,7 @@ if (!user.emailVerified) {
 
 Firebase will send an automated email to the user with a link. User's email will be verified when the link is opened in a browser.
 
-####Open link in app
+#### Open link in app
 
 You can pass state via a continue URL when sending email actions for verifying a user's email. This provides the user the ability to go back to the app after the action is completed. In addition, you can specify whether to handle the email action link directly from a mobile application when it is installed instead of a web page.
 
@@ -215,11 +215,11 @@ await user.sendEmailVerification(actionCodeSettings);
 }
 ```
 
-The code then can be received in app by parsing the Firebase Dynamic Link. Refer - (Handling email actions in a mobile application)(https://firebase.google.com/docs/auth/web/passing-state-in-email-actions#handling_email_actions_in_a_mobile_application) to know how to handle the link in app.
+The code then can be received in app by parsing the Firebase Dynamic Link. Refer - [Handling email actions in a mobile application](https://firebase.google.com/docs/auth/web/passing-state-in-email-actions#handling_email_actions_in_a_mobile_application) to know how to handle the link in app.
 You can use
-[Firebase Dynamic Link package](https://pub.dev/packages/firebase_dynamic_links) to get the `oobCode` from the link and apply actionCode as follow.
+[firebase_dynamic_links package](https://pub.dev/packages/firebase_dynamic_links) to get the `oobCode` from the link and apply actionCode as follow.
 
-```
+```dart
 FirebaseAuth auth = FirebaseAuth.instance;
 
 //Get actionCode from the dynamicLink
