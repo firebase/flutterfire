@@ -66,40 +66,42 @@ By default background messaging is not enabled. To handle messages in the backgr
    ```gradle
    dependencies {
      // ...
-
+   
      implementation 'com.google.firebase:firebase-messaging:<latest_version>'
    }
    ```
-
+   
    Note: you can find out what the latest version of the plugin is [here ("Cloud Messaging")](https://firebase.google.com/support/release-notes/android#latest_sdk_versions).
 
-1. Add an `Application.kt` class to your app in the same directory as your `MainActivity.kt`. This is typically found in `<app-name>/android/app/src/main/kotlin/<app-organization-path>/`.
+1. Add an `Application.java` class to your app in the same directory as your `MainActivity.java`. This is typically found in `<app-name>/android/app/src/main/java/<app-organization-path>/`.
 
-   ```kotlin
-   package io.flutter.plugins.firebasemessagingexample
-
-   import io.flutter.app.FlutterApplication
-   import io.flutter.plugin.common.PluginRegistry
-   import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback
-   import io.flutter.plugins.GeneratedPluginRegistrant
-   import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService
-
-   class Application : FlutterApplications, PluginRegistrantCallback {
-       override fun onCreate() {
-           super.onCreate()
-           FlutterFirebaseMessagingService.setPluginRegistrant(this@Application)
-       }
-
-       override fun registerWith(registry: PluginRegistry) {
-           GeneratedPluginRegistrant.registerWith(registry)
-       }
+   ```java
+   package io.flutter.plugins.firebasemessagingexample;
+   
+   import io.flutter.app.FlutterApplication;
+   import io.flutter.plugin.common.PluginRegistry;
+   import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
+   import io.flutter.plugins.GeneratedPluginRegistrant;
+   import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
+   
+   public class Application extends FlutterApplication implements PluginRegistrantCallback {
+     @Override
+     public void onCreate() {
+       super.onCreate();
+       FlutterFirebaseMessagingService.setPluginRegistrant(this);
+     }
+   
+     @Override
+     public void registerWith(PluginRegistry registry) {
+       GeneratedPluginRegistrant.registerWith(registry);
+     }
    }
    ```
 
-1. In `Application.kt`, make sure to change `package io.flutter.plugins.firebasemessagingexample` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
+1. In `Application.java`, make sure to change `package io.flutter.plugins.firebasemessagingexample;` to your package's identifier. Your package's identifier should be something like `com.domain.myapplication`.
 
-   ```kotlin
-   package com.domain.myapplication
+   ```java
+   package com.domain.myapplication;
    ```
 
 1. Set name property of application in `AndroidManifest.xml`. This is typically found in `<app-name>/android/app/src/main/`.
@@ -116,18 +118,18 @@ By default background messaging is not enabled. To handle messages in the backgr
        // Handle data message
        final dynamic data = message['data'];
      }
-
+   
      if (message.containsKey('notification')) {
        // Handle notification message
        final dynamic notification = message['notification'];
      }
-
+   
      // Or do other work.
    }
    ```
 
    Note: the protocol of `data` and `notification` are in line with the
-   fields defined by a [RemoteMessage](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/RemoteMessage).
+   fields defined by a [RemoteMessage](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/RemoteMessage). 
 
 1. Set `onBackgroundMessage` handler when calling `configure`
 
