@@ -271,7 +271,7 @@ identifier after adding the `FirebaseAdMobPlugin` to the `FlutterEngine`. (Addin
 future, so you may not see it being added here). You should also unregister the factory in
 `cleanUpFlutterEngine(engine)`.
 
-You're `MainActivity.kt` should look similar to:
+Your `MainActivity.kt` should look similar to:
 
 ```kotlin
 package my.app.path
