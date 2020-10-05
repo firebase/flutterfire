@@ -54,15 +54,6 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
   private static final byte DATA_TYPE_FIRESTORE_INSTANCE = (byte) 144;
   private static final byte DATA_TYPE_FIRESTORE_QUERY = (byte) 145;
   private static final byte DATA_TYPE_FIRESTORE_SETTINGS = (byte) 146;
-Exception exception
-
-{
-      Log.e(
-          "FLTFirestoreMsgCodec",
-          "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
-          exception);
-      return null;
-    }
 
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
@@ -237,7 +228,7 @@ Exception exception
     }
   }
 
-    private FirebaseFirestore readFirestoreInstance(ByteBuffer buffer) {
+  private FirebaseFirestore readFirestoreInstance(ByteBuffer buffer) {
     String appName = (String) readValue(buffer);
     FirebaseFirestoreSettings settings = (FirebaseFirestoreSettings) readValue(buffer);
 
@@ -255,7 +246,8 @@ Exception exception
       FlutterFirebaseFirestorePlugin.setCachedFirebaseFirestoreInstanceForKey(firestore, appName);
       return firestore;
     }
-  } catch (
+  }
+
   private FirebaseFirestoreSettings readFirestoreSettings(ByteBuffer buffer) {
     @SuppressWarnings("unchecked")
     Map<String, Object> settingsMap = (Map<String, Object>) readValue(buffer);
@@ -294,8 +286,9 @@ Exception exception
     }
 
     return settingsBuilder.build();
-  })
-private Query readFirestoreQuery(ByteBuffer buffer) {
+  }
+
+  private Query readFirestoreQuery(ByteBuffer buffer) {
     try {
       @SuppressWarnings("unchecked")
       Map<String, Object> values = (Map<String, Object>) readValue(buffer);
@@ -399,6 +392,12 @@ private Query readFirestoreQuery(ByteBuffer buffer) {
       if (endBefore != null) query = query.endBefore(Objects.requireNonNull(endBefore.toArray()));
 
       return query;
+    } catch (Exception exception) {
+      Log.e(
+          "FLTFirestoreMsgCodec",
+          "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
+          exception);
+      return null;
     }
   }
 

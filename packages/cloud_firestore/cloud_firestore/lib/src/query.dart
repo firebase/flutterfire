@@ -340,7 +340,7 @@ class Query {
   Query where(
     dynamic field, {
     dynamic isEqualTo,
-    dynamic notEqualTo,
+    dynamic isNotEqualTo,
     dynamic isLessThan,
     dynamic isLessThanOrEqualTo,
     dynamic isGreaterThan,
@@ -379,7 +379,7 @@ class Query {
     }
 
     if (isEqualTo != null) addCondition(field, '==', isEqualTo);
-    if (notEqualTo != null) addCondition(field, '!=', notEqualTo);
+    if (isNotEqualTo != null) addCondition(field, '!=', isNotEqualTo);
     if (isLessThan != null) addCondition(field, '<', isLessThan);
     if (isLessThanOrEqualTo != null) {
       addCondition(field, '<=', isLessThanOrEqualTo);
