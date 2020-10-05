@@ -1,6 +1,86 @@
 ---
-title: Cloud Functions
+title: Using Cloud Functions for Firebase
 sidebar_label: Usage
 ---
 
-Cloud Functions usage
+To start using the Cloud Functions for Firebase package within your project, import it at the top of your project files:
+
+```dart
+import 'package:cloud_functions/cloud_functions.dart';
+```
+
+Before using Cloud Functions, you must first have ensured you have [initialized FlutterFire](overview#initializing-flutterfire).
+
+To create a new Cloud Functions for Firebase instance, call the [`instance`](!cloud_functions.FirebaseFunctions.instance) getter on [`FirebaseFunctions`](!cloud_functions.FirebaseFunctions):
+
+```dart
+FirebaseFunctions functions = FirebaseFunctions.instance;
+```
+
+By default, this allows you to interact with Cloud Functions using the default Firebase App used whilst installing Cloud Functions on your
+platform. If however you'd like to use Cloud Functions with a secondary Firebase App, use the [`instanceFor`](!cloud_functions.FirebaseFunctions.instanceFor) method:
+
+```dart
+FirebaseApp secondary = Firebase.app('Secondary');
+FirebaseFunctions secondaryApp = FirebaseFunctions.instanceFor(app: secondary);
+```
+
+## Calling Endpoints
+
+Assuming we have a deployed function named `listFruit`, we can call the Cloud Function using the `httpsCallable` method.
+For example:
+
+```javascript title="Deployed Function"
+const functions = require('firebase-functions');
+
+exports.listFruit = functions.https.onCall((data, context) => {
+  return ["Apple", "Banana", "Cherry", "Date", "Fig", "Grapes"]
+});
+```
+
+Within Flutter, the function can be called, and the results accessed:
+
+```dart
+import 'package:cloud_functions/cloud_functions.dart';
+
+Future<void> getFruit() async {
+  HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('listFruit');
+  final results = await callable();
+  List fruit = results.data;  // ["Apple", "Banana", "Cherry", "Date", "Fig", "Grapes"]
+}
+```
+
+### Specifying regions
+
+If you wish to specify a region for a Cloud Function that runs in any region other than `us-central1`, you can do this
+by passing the region to the FirebaseFunctions instance, using `instanceFor`:
+
+```dart highlight={2}
+HttpsCallableResult callable = await FirebaseFunctions
+  .instanceFor(region: 'europe-west1')
+  .httpsCallable('getName');
+```
+
+
+## Emulator Usage
+
+If you are using the local Cloud Functions emulators, then it is possible to connect to these using the `useFunctionsEmulator` method.
+Ensure you pass the correct port on which the Firebase emulator is running on.
+
+
+```dart
+FirebaseFunctions.instance
+  .useFunctionsEmulator(origin: 'http://localhost:5000')
+  .httpsCallable('myCloudFunction');
+```
+
+If you are targeting apps using Android 8.0+, the platform will block the http endpoint.  The simplest solution is to change
+this in your **debug** builds by adding the following to your `android/app/src/main/AndroidManifest.xml` file:
+
+```xml
+<application
+  android:usesCleartextTraffic="true"
+/>
+```
+
+If you are concerned about security, you can set a more advanced [per-host network security file](https://developer.android.com/training/articles/security-config)
