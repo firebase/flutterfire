@@ -5,6 +5,7 @@
 package io.flutter.plugins.firebase.firestore;
 
 import android.util.Log;
+
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Blob;
@@ -19,7 +20,7 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SnapshotMetadata;
-import io.flutter.plugin.common.StandardMessageCodec;
+
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import io.flutter.plugin.common.StandardMessageCodec;
 
 class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
   public static final FlutterFirebaseFirestoreMessageCodec INSTANCE =
@@ -51,6 +54,15 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
   private static final byte DATA_TYPE_FIRESTORE_INSTANCE = (byte) 144;
   private static final byte DATA_TYPE_FIRESTORE_QUERY = (byte) 145;
   private static final byte DATA_TYPE_FIRESTORE_SETTINGS = (byte) 146;
+Exception exception
+
+{
+      Log.e(
+          "FLTFirestoreMsgCodec",
+          "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
+          exception);
+      return null;
+    }
 
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
@@ -225,7 +237,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     }
   }
 
-  private FirebaseFirestore readFirestoreInstance(ByteBuffer buffer) {
+    private FirebaseFirestore readFirestoreInstance(ByteBuffer buffer) {
     String appName = (String) readValue(buffer);
     FirebaseFirestoreSettings settings = (FirebaseFirestoreSettings) readValue(buffer);
 
@@ -243,8 +255,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       FlutterFirebaseFirestorePlugin.setCachedFirebaseFirestoreInstanceForKey(firestore, appName);
       return firestore;
     }
-  }
-
+  } catch (
   private FirebaseFirestoreSettings readFirestoreSettings(ByteBuffer buffer) {
     @SuppressWarnings("unchecked")
     Map<String, Object> settingsMap = (Map<String, Object>) readValue(buffer);
@@ -283,9 +294,8 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     }
 
     return settingsBuilder.build();
-  }
-
-  private Query readFirestoreQuery(ByteBuffer buffer) {
+  })
+private Query readFirestoreQuery(ByteBuffer buffer) {
     try {
       @SuppressWarnings("unchecked")
       Map<String, Object> values = (Map<String, Object>) readValue(buffer);
@@ -317,6 +327,8 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
         if ("==".equals(operator)) {
           query = query.whereEqualTo(fieldPath, value);
+        } else if ("!=".equals(operator)) {
+          query = query.whereNotEqualTo(fieldPath, value);
         } else if ("<".equals(operator)) {
           query = query.whereLessThan(fieldPath, value);
         } else if ("<=".equals(operator)) {
@@ -335,6 +347,10 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
           @SuppressWarnings("unchecked")
           List<Object> listValues = (List<Object>) value;
           query = query.whereIn(fieldPath, listValues);
+        } else if ("not-in".equals(operator)) {
+          @SuppressWarnings("unchecked")
+          List<Object> listValues = (List<Object>) value;
+          query = query.whereNotIn(fieldPath, listValues);
         } else {
           Log.w(
               "FLTFirestoreMsgCodec",
@@ -383,12 +399,6 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       if (endBefore != null) query = query.endBefore(Objects.requireNonNull(endBefore.toArray()));
 
       return query;
-    } catch (Exception exception) {
-      Log.e(
-          "FLTFirestoreMsgCodec",
-          "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
-          exception);
-      return null;
     }
   }
 
