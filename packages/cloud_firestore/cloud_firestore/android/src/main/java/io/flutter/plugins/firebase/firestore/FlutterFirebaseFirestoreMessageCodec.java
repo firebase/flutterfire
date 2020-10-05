@@ -5,7 +5,6 @@
 package io.flutter.plugins.firebase.firestore;
 
 import android.util.Log;
-
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Blob;
@@ -20,7 +19,7 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SnapshotMetadata;
-
+import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -29,8 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import io.flutter.plugin.common.StandardMessageCodec;
 
 class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
   public static final FlutterFirebaseFirestoreMessageCodec INSTANCE =
