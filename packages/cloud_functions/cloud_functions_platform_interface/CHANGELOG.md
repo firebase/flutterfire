@@ -1,3 +1,7 @@
+## 3.0.0-dev.1
+
+* Refactor to introduce `HttpsCallablePlatform`, `HttpsCallableOptions` & `FirebaseFunctionsException` classes.
+
 ## 2.0.0
 
 * Update to depend on `firebase_core` plugin.
