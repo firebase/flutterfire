@@ -1,3 +1,7 @@
+## 3.0.0-dev.1
+
+See `cloud_functions` `0.7.0-dev.1` changelog for details.
+
 ## 2.0.0
 
 * Update to depend on `firebase_core` plugin.
