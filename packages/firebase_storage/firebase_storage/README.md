@@ -23,4 +23,3 @@ Plugin issues that are not specific to Flutterfire can be filed in the [Flutter 
 To contribute a change to this plugin,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
 and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
-
