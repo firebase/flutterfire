@@ -2,7 +2,7 @@ package io.flutter.plugins.firebase.crashlytics;
 
 public class Constants {
   public static final String EXCEPTION = "exception";
-  public static final String CONTEXT = "context";
+  public static final String REASON = "reason";
   public static final String INFORMATION = "information";
   public static final String STACK_TRACE_ELEMENTS = "stackTraceElements";
   public static final String FLUTTER_ERROR_EXCEPTION = "flutter_error_exception";

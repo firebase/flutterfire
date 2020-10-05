@@ -571,6 +571,9 @@ return Firestore.instance.runTransaction((transaction) async {
   }
 
   // Update the follower count based on the current count
+  // Note: this could be done without a transaction
+  // by updating the population using FieldValue.increment()
+
   int newFollowerCount = snapshot.data()['followers'] + 1;
 
   // Perform an update on the document
