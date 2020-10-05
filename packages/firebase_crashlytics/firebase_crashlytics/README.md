@@ -4,7 +4,7 @@
 
 A Flutter plugin to use the [Firebase Crashlytics API](https://firebase.google.com/docs/crashlytics/).
 
-To learn more about Firebase, please visit the [Firebase website](https://firebase.google.com/products/crashlytics)
+To learn more about Crashlytics, please visit the [Firebase website](https://firebase.google.com/products/crashlytics)
 
 ## Getting Started
 
