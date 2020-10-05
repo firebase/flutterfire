@@ -130,8 +130,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   /// Handles any incoming [authChanges] listener events.
-  /// Duplicate setting of [currentUser] in [_handleAuthStateChangesListener] & [_handleIdTokenChangesListener]
-  /// as iOS & Android do not guarantee correct ordering
+  // Duplicate setting of [currentUser] in [_handleAuthStateChangesListener] & [_handleIdTokenChangesListener]
+  // as iOS & Android do not guarantee correct ordering
   Future<void> _handleAuthStateChangesListener(
       Map<dynamic, dynamic> arguments) async {
     String appName = arguments['appName'];
