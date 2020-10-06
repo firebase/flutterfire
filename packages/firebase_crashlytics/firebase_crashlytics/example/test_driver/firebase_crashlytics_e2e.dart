@@ -64,7 +64,7 @@ void main() {
         await crashlytics.recordFlutterError(FlutterErrorDetails(
             exception: 'foo exception',
             stack: StackTrace.fromString(''),
-            context: DiagnosticsNode.message('bar context'),
+            context: DiagnosticsNode.message('bar reason'),
             informationCollector: () => <DiagnosticsNode>[
                   DiagnosticsNode.message('first message'),
                   DiagnosticsNode.message('second message')

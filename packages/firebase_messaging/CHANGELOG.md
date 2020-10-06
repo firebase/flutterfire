@@ -7,6 +7,15 @@
   To have this plugin work with these applications, you can read the updated README or
   you can delete your `Application.java` and remove the `android:name=".Application"` reference in your manifest.
 
+## 7.0.2
+
+ - **FIX**: remove `platform` package usage (#3729).
+
+## 7.0.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **CHORE**: intellij cleanup (#3326).
+
 ## 7.0.0
 
 * Depend on `firebase_core` and migrate plugin to use `firebase_core` native SDK versioning features;
