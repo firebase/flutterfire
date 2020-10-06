@@ -1,3 +1,7 @@
+## 7.0.2
+
+ - **FIX**: remove `platform` package usage (#3729).
+
 ## 7.0.1
 
  - **FIX**: local dependencies in example apps (#3319).
