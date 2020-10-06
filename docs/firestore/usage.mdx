@@ -208,7 +208,7 @@ To determine whether the document exists, use the [`exists`](!cloud_firestore.Do
 ```dart
 FirebaseFirestore.instance
     .collection('users')
-    .document(userId)
+    .doc(userId)
     .get()
     .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
