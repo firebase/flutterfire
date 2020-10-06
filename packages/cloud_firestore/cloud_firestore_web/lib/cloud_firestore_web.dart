@@ -64,7 +64,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.disableNetwork();
     } catch (e) {
-      throw getFirebaseException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -77,7 +77,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.enableNetwork();
     } catch (e) {
-      throw getFirebaseException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -97,7 +97,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
       return null;
     } catch (e) {
-      throw getFirebaseException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -132,7 +132,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.enablePersistence();
     } catch (e) {
-      throw getFirebaseException(e);
+      throw convertPlatformException(e);
     }
   }
 
