@@ -124,7 +124,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// After the [TransactionHandler] is run, Firestore will attempt to apply the
   /// changes to the server. If any of the data read has been modified outside
   /// of this transaction since being read, then the transaction will be
-  /// retried by executing the updateBlock again. If the transaction still
+  /// retried by executing the provided [TransactionHandler] again. If the transaction still
   /// fails after 5 retries, then the transaction will fail.
   ///
   /// The [TransactionHandler] may be executed multiple times, it should be able

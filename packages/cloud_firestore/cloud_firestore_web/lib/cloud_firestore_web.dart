@@ -55,7 +55,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   QueryPlatform collectionGroup(String path) {
-    return QueryWeb(this, path, _webFirestore.collectionGroup(path));
+    return QueryWeb(this, path, _webFirestore.collectionGroup(path),
+        isCollectionGroupQuery: true);
   }
 
   @override
@@ -86,16 +87,15 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   // }
 
   @override
-  Future<T> runTransaction<T>(TransactionHandler transactionHandler,
+  Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
     try {
-      dynamic result = await _webFirestore.runTransaction((transaction) async {
+      await _webFirestore.runTransaction((transaction) async {
         return transactionHandler(
             TransactionWeb(this, _webFirestore, transaction));
       }).timeout(timeout);
-      // Workaround for 'Runtime type information not available for type_variable_local'
-      // See: https://github.com/dart-lang/sdk/issues/29722
-      return result as T;
+
+      return null;
     } catch (e) {
       throw convertPlatformException(e);
     }

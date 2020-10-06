@@ -353,6 +353,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       exception = e;
     });
 
+    // The #create call only resolves once all transaction attempts have succeeded
+    // or something failed.
     await channel.invokeMethod<T>('Transaction#create', <String, dynamic>{
       'firestore': this,
       'transactionId': transactionId,
@@ -361,7 +363,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       exception = e;
     });
 
-    // The transaction is successful, cleanup the stream
+    // The transaction has completed (may have errored), cleanup the stream
     await subscription.cancel();
     _transactionStreamControllerHandlers.remove(transactionId);
 
