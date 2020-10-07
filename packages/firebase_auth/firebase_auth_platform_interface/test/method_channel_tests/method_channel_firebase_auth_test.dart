@@ -163,7 +163,7 @@ void main() {
         }
       });
 
-      auth = MethodChannelFirebaseAuth(app: app);
+      auth = MethodChannelFirebaseAuth.instance.delegateFor(app:app);
       user = kMockUser;
     });
 
@@ -996,17 +996,22 @@ void main() {
           expectAsync1((UserPlatform user) {
             call++;
             if (call == 1) {
+              print("here111: " + user.toString());
               expect(user, isNull);
             } else if (call == 2) {
+              print("here222" + user.uid.toString());
               expect(user.uid, isA<String>());
               expect(user.uid, equals(kMockUid));
+              print("here333" + auth.currentUser.uid.toString());
               expect(auth.currentUser.uid, equals(user.uid));
             } else {
               fail("Should not have been called");
             }
           }, count: 2, reason: "Stream should only have been called 2 times"),
         );
+// Map<String, dynamic> thing = {};
 
+// thing['user'] = user;
         await simulateEvent('Auth#idTokenChanges', null);
         await simulateEvent('Auth#idTokenChanges', user);
 
