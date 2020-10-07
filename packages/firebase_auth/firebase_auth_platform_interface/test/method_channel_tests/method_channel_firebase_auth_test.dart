@@ -1006,7 +1006,7 @@ void main() {
             }
           }, count: 2, reason: "Stream should only have been called 2 times"),
         );
-        
+
         await simulateEvent('Auth#idTokenChanges', null);
         await simulateEvent('Auth#idTokenChanges', user);
 
