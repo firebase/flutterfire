@@ -163,7 +163,7 @@ void main() {
         }
       });
 
-      auth = MethodChannelFirebaseAuth.instance.delegateFor(app:app);
+      auth = MethodChannelFirebaseAuth.instance.delegateFor(app: app);
       user = kMockUser;
     });
 
