@@ -11,10 +11,11 @@ if [ "$ACTION" == "android" ]
 then
   melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
     flutter build apk --debug --target="$TARGET_FILE"
-  pkill dart
-  pkill java
-  pkill -f '.*GradleDaemon.*'
-  exit
+  MELOS_EXIT_CODE=$?
+  pkill dart || true
+  pkill java || true
+  pkill -f '.*GradleDaemon.*' || true
+  exit $MELOS_EXIT_CODE
 fi
 
 if [ "$ACTION" == "ios" ]
