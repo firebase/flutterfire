@@ -1,3 +1,26 @@
+## 0.18.1+2
+
+ - **FIX**: on iOS use sendEmailVerificationWithActionCodeSettings instead of sendEmailVerificationWithCompletion (#3686).
+ - **DOCS**: README updates (#3768).
+
+## 0.18.1+1
+
+ - **FIX**: Optional params for "signInWithCredential" method are converted to "nil" if "null" for iOS (#3731).
+
+## 0.18.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **FIX**: fix IdTokenResult timestamps (web, ios) (#3357).
+ - **FIX**: pub.dev score fixes (#3318).
+ - **FIX**: use unknown APNS token type (#3345).
+ - **FIX**: update FLTFirebaseAuthPlugin.m (#3360).
+ - **FIX**: use correct FIRAuth instance on listeners (#3316).
+ - **FEAT**: add support for linkWithPhoneNumber (#3436).
+ - **FEAT**: use named arguments for ActionCodeSettings (#3269).
+ - **FEAT**: implement signInWithPhoneNumber on web (#3205).
+ - **FEAT**: expose smsCode (android only) (#3308).
+ - **DOCS**: fixed signOut method documentation (#3342).
+
 ## 0.18.0+1
 
 * Fixed an Android issue where certain network related Firebase Auth error codes would come through as `unknown`. [(#3217)](https://github.com/FirebaseExtended/flutterfire/pull/3217)

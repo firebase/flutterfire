@@ -8,17 +8,15 @@
 
 ## Checklist
 
-Before you create this PR confirm that it meets all requirements listed below by checking the relevant checkboxes (`[x]`). This will ensure a smooth and quick review process.
+Before you create this PR confirm that it meets all requirements listed below by checking the relevant checkboxes (`[x]`).
+This will ensure a smooth and quick review process. Updating the `pubspec.yaml` and changelogs is not required.
 
 - [ ] I read the [Contributor Guide] and followed the process outlined there for submitting PRs.
-- [ ] If the pull request affects only one plugin, the PR title starts with the name of the plugin in brackets (e.g. [cloud_firestore])
 - [ ] My PR includes unit or integration tests for *all* changed/updated/fixed behaviors (See [Contributor Guide]).
 - [ ] All existing and new tests are passing.
 - [ ] I updated/added relevant documentation (doc comments with `///`).
 - [ ] The analyzer (`flutter analyze`) does not report any problems on my PR.
 - [ ] I read and followed the [Flutter Style Guide].
-- [ ] I updated pubspec.yaml with an appropriate new version according to the [pub versioning philosophy].
-- [ ] I updated CHANGELOG.md to add a description of the change.
 - [ ] I signed the [CLA].
 - [ ] I am willing to follow-up on review comments in a timely manner.
 

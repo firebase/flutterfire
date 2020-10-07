@@ -1,6 +1,479 @@
 ---
-title: Cloud Storage
+title: Using Cloud Storage
 sidebar_label: Usage
 ---
 
-> Documentation coming soon.
+To start using the Cloud Storage package within your project, import it at the top of your project files:
+
+```dart
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+```
+
+Before using Storage, you must first have ensured you have [initialized FlutterFire](../overview.mdx#initializing-flutterfire).
+
+To create a new Storage instance, call the instance getter on `FirebaseStorage`:
+
+```dart
+firebase_storage.FirebaseStorage storage =
+  firebase_storage.FirebaseStorage.instance;
+```
+
+By default, this allows you to interact with Storage using the default Firebase App used whilst installing FlutterFire on your platform.
+If however you'd like to use Storage with a secondary Firebase App, use the `instanceFor` method:
+
+```dart
+FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
+firebase_storage.FirebaseStorage storage =
+  firebase_storage.FirebaseStorage.instanceFor(app: secondaryApp);
+```
+
+It is also possible to specify a non-default Storage bucket which you may have created in your Firebase project (see below). To connect to a
+different bucket, provide the name to the `instanceFor` method:
+
+```dart
+firebase_storage.FirebaseStorage storage =
+  firebase_storage.FirebaseStorage.instanceFor(
+      bucket: 'secondary-storage-bucket');
+```
+
+If no `app` argument is provided to the `instanceFor` method, the default app will be used.
+
+### Create additional storage buckets
+
+If you haven't already done so, you first need to create the default storage bucket on the [Firebase console](https://console.firebase.google.com/project/_/storage).
+
+Firebase provides the ability to create multiple buckets per project. Creating additional storage buckets is recommended to separate unrelated files for your project
+(such as database backups) however are not required to successfully use Firebase Storage.
+
+You can create a new bucket by visiting the Firebase console. For more information, visit the [official documentation](https://firebase.google.com/docs/storage/web/start#create-default-bucket).
+
+## References
+
+A reference is a pointer to a file within your specified storage bucket. This can be a file that already exists,
+or one that does not exist.
+
+To create a reference, use the [`ref`](!firebase_storage.FirebaseStorage.ref) method on a `FirebaseStorage` instance:
+
+```dart
+firebase_storage.Reference ref =
+  firebase_storage.FirebaseStorage.instance.ref('/notes.txt');
+```
+
+A reference can also be a nested file or directory. Provide the full path or use the [`child`](!firebase_storage.Reference.child) method on the
+returned reference:
+
+```dart
+firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+    .ref('images/defaultProfile.png');
+// or
+firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+    .ref()
+    .child('images')
+    .child('defaultProfile.png');
+```
+
+When no argument to `ref` is provided, the root of the storage bucket will be used as the reference.
+
+## Listing files & directories
+
+Firebase provides the ability to list the files and directories within a directory. There are two methods available
+which provide this ability; [`list`](!firebase_storage.Reference.list) & [`listAll`](!firebase_storage.Reference.listAll). Both methods
+return a [`ListResult`](!firebase_storage.ListResult) which contains any files, directories and pagination tokens from the request.
+
+For example, to view all files and directories within the root of the default storage bucket:
+
+```dart
+Future<void> listExample() async {
+  firebase_storage.ListResult result =
+      await firebase_storage.FirebaseStorage.instance.ref().listAll();
+
+  result.items.forEach((firebase_storage.Reference ref) {
+    print('Found file: $ref');
+  });
+
+  result.prefixes.forEach((firebase_storage.Reference ref) {
+    print('Found directory: $ref');
+  });
+}
+```
+
+The `items` property represents files within the bucket, and the `prefixes` property represents nested directories.
+
+In cases where you have a large volume of files and directories, calling `listAll` may take a long time to return
+all results. In this case, calling `list` and limiting the results may result in a better user experience:
+
+```dart
+Future<void> listExample() async {
+  firebase_storage.ListResult result = await firebase_storage
+      .FirebaseStorage.instance
+      .ref()
+      .list(firebase_storage.ListOptions(maxResults: 10));
+  // ...
+}
+```
+
+The [`ListOptions`](firebase_storage_platform_interface.ListOptions) instance provided to `list`
+allows us to limit the number of results returned. It also accepts an optional `pageToken` argument
+which can be used to paginate any additional results not returned in the listing, for example:
+
+```dart
+Future<void> listExample() async {
+  firebase_storage.ListResult result = await firebase_storage
+      .FirebaseStorage.instance
+      .ref()
+      .list(firebase_storage.ListOptions(maxResults: 10));
+
+  if (result.nextPageToken != null) {
+    firebase_storage.ListResult additionalResults = await firebase_storage
+        .FirebaseStorage.instance
+        .ref()
+        .list(firebase_storage.ListOptions(
+          maxResults: 10,
+          pageToken: result.nextPageToken,
+        ));
+  }
+}
+```
+
+## Download URLs
+
+In many use-cases, you may wish to display images stored on a storage bucket within your application, using
+Firebase as a scalable and cost-effective Content Distribution Network (CDN). Firebase allows you to
+retrieve a long-lived download URL which can be used. To request a download URL, call the
+[`getDownloadURL`](!firebase_storage.Reference.getDownloadURL) method on a reference:
+
+```dart
+Future<void> downloadURLExample() async {
+  String downloadURL = await firebase_storage.FirebaseStorage.instance
+      .ref('users/123/avatar.jpg')
+      .getDownloadURL();
+
+  // Within your widgets:
+  // Image.network(downloadURL);
+}
+```
+
+## Uploading Files
+
+FlutterFire supports uploading via variety of ways to Firebase Storage, such a raw string values or
+on-device files.
+
+### File uploads
+
+To upload a file, you must first create an absolute path to it's on-device location. For example, if a file exists within the
+application's documents directory, we can use the official [`path_provider`](https://pub.dev/packages/path_provider) package
+to generate a file path:
+
+```dart
+import 'package:path_provider/path_provider.dart';
+
+Future<void> uploadExample() async {
+  Directory appDocDir = await getApplicationDocumentsDirectory();
+  String filePath = '${appDocDir.absolute}/file-to-upload.png';
+  // ...
+  // e.g. await uploadFile(filePath);
+}
+```
+
+Once your absolute path has been created, it can be passed as a [`File`](https://api.flutter.dev/flutter/dart-io/File-class.html)
+instance to the [`putFile`](!firebase_storage.Reference.putFile) method:
+
+```dart
+Future<void> uploadFile(String filePath) async {
+  File file = File(filePath);
+
+  try {
+    await firebase_storage.FirebaseStorage.instance
+        .ref('uploads/file-to-upload.png')
+        .putFile(file);
+  } on firebase_core.FirebaseException catch (e) {
+    // e.g, e.code == 'canceled'
+  }
+}
+```
+
+To learn more about tasks, view the [Handling Tasks](#handling-tasks) documentation.
+
+### Upload from a String
+
+It is possible to upload a raw, `base64`, `base64url`, or `data_url` encoded string to Firebase Storage using the
+[`putString`](!firebase_storage.Reference.putString) method. For example, to upload a text string encoded as a Data URL:
+
+```dart
+Future<void> uploadString() async {
+  String dataUrl = 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==';
+
+  try {
+    await firebase_storage.FirebaseStorage.instance
+        .ref('uploads/hello-world.text')
+        .putString(dataUrl, format: firebase_storage.PutStringFormat.dataUrl);
+  } on firebase_core.FirebaseException catch (e) {
+    // e.g, e.code == 'canceled'
+  }
+}
+```
+
+To learn more about tasks, view the [Handling Tasks](#handling-tasks) documentation.
+
+### Uploading raw data
+
+FlutterFire also supports uploading lower-level typed data in the form of a [`Uint8List`](https://api.dart.dev/stable/2.9.2/dart-typed_data/Uint8List-class.html)
+for those cases where uploading a string or `File` is not practical. In this case, call the [`putData`](!firebase_storage.Reference.putData)
+method with your data:
+
+```dart
+import 'dart:convert' show utf8;
+import 'dart:typed_data' show Uint8List;
+
+Future<void> uploadData() async {
+  String text = 'Hello World!';
+  List<int> encoded = utf8.encode(text);
+  Uint8List data = Uint8List.fromList(encoded);
+
+  firebase_storage.Reference ref =
+      firebase_storage.FirebaseStorage.instance.ref('uploads/hello-world.text');
+
+  try {
+    // Upload raw data.
+    await ref.putData(data);
+    // Get raw data.
+    Uint8List downloadedData = await ref.getData();
+    // prints -> Hello World!
+    print(utf8.decode(downloadedData));
+  } on firebase_core.FirebaseException catch (e) {
+    // e.g, e.code == 'canceled'
+  }
+}
+```
+
+To learn more about tasks, view the [Handling Tasks](#handling-tasks) documentation.
+
+### Adding Metadata
+
+When uploading a file, you can specify metadata such as the content type, cache control and any custom properties for the file.
+
+Whilst calling one of the upload methods, provide a [`SettableMetadata`](!firebase_storage_platform_interface.SettableMetadata) instance:
+
+```dart
+Future<void> uploadFileWithMetadata(String filePath) async {
+  File file = File(filePath);
+
+  // Create your custom metadata.
+  firebase_storage.SettableMetadata metadata =
+      firebase_storage.SettableMetadata(
+    cacheControl: 'max-age=60',
+    customMetadata: <String, String>{
+      'userId': 'ABC123',
+    },
+  );
+
+  try {
+    // Pass metadata to any file upload method e.g putFile.
+    await firebase_storage.FirebaseStorage.instance
+        .ref('uploads/file-to-upload.png')
+        .putFile(file, metadata);
+  } on firebase_core.FirebaseException catch (e) {
+    // e.g, e.code == 'canceled'
+  }
+}
+```
+
+If a file is already present on the storage bucket, you can request the metadata by calling `getMetadata`:
+
+```dart
+Future<void> getMetadataExample() async {
+  firebase_storage.FullMetadata metadata = await firebase_storage
+      .FirebaseStorage.instance
+      .ref('uploads/file-to-upload.png')
+      .getMetadata();
+
+  // As set in previous example.
+  print(metadata.customMetadata['userId']);
+}
+```
+
+## Downloading Files
+
+To download a file to the local device, you can call the [`writeToFile`](!firebase_storage.Reference.writeToFile) method on
+any storage bucket reference. The location of where the file will be downloaded to is determined by the absolute path of the
+[`File`](https://api.dart.dev/stable/2.9.2/dart-io/File-class.html) instance provided, for example:
+
+```dart
+import 'package:path_provider/path_provider.dart';
+
+Future<void> downloadFileExample() async {
+  Directory appDocDir = await getApplicationDocumentsDirectory();
+  File downloadToFile = File('${appDocDir.absolute}/download-logo.png');
+
+  try {
+    await firebase_storage.FirebaseStorage.instance
+        .ref('uploads/logo.png')
+        .writeToFile(downloadToFile);
+  } on firebase_core.FirebaseException catch (e) {
+    // e.g, e.code == 'canceled'
+  }
+}
+```
+
+If a file already exists at the provided path, it will be overwritten.
+
+To learn more about tasks, view the [Handling Tasks](#handling-tasks) documentation.
+
+## Handling Tasks
+
+The uploading and downloading examples in the documentation all return a `UploadTask` or `DownloadTask`. Tasks provide
+the ability to control how the file is being uploaded/downloaded and provides metadata on the state of the task (e.g. progress status).
+
+The simplest way to hook into when a task has completed is to `await` the task, for example:
+
+```dart
+Future<void> handleTaskExample1() async {
+  firebase_storage.UploadTask task = firebase_storage.FirebaseStorage.instance
+      .ref('uploads/hello-world.txt')
+      .putString('Hello World');
+
+  try {
+    // Storage tasks function as a Delegating Future so we can await them.
+    firebase_storage.TaskSnapshot snapshot = await task;
+    print('Uploaded ${snapshot.bytesTransferred} bytes.');
+  } on firebase_core.FirebaseException catch (e) {
+    // The final snapshot is also available on the task via `.snapshot`,
+    // this can include 2 additional states, `TaskState.error` & `TaskState.canceled`
+    print(task.snapshot);
+
+    if (e.code == 'permission-denied') {
+      print('User does not have permission to upload to this reference.');
+    }
+    // ...
+  }
+}
+```
+
+Although this can satisfy most use-cases, for larger files it may be a better user experience if a progress indicator
+can be shown. Tasks can also provide a stream of events, which emits a [`TaskSnapshot`](!firebase_storage.TaskSnapshot) each time
+a notable event occurs (e.g. upload progress). The snapshot provides information about the state of the task along with the amount of
+bytes that have been processed:
+
+```dart
+Future<void> handleTaskExample2(String filePath) async {
+  File largeFile = File(filePath);
+
+  firebase_storage.UploadTask task = firebase_storage.FirebaseStorage.instance
+      .ref('uploads/hello-world.txt')
+      .putFile(largeFile);
+
+  task.snapshotEvents.listen((firebase_storage.TaskSnapshot snapshot) {
+    print('Task state: ${snapshot.state}');
+    print(
+        'Progress: ${(snapshot.totalBytes / snapshot.bytesTransferred) * 100} %');
+  }, onError: (firebase_core.FirebaseException e) {
+    // The final snapshot is also available on the task via `.snapshot`,
+    // this can include 2 additional states, `TaskState.error` & `TaskState.canceled`
+    print(task.snapshot);
+
+    if (e.code == 'permission-denied') {
+      print('User does not have permission to upload to this reference.');
+    }
+  });
+
+  // We can still optionally use the Future alongside the stream.
+  try {
+    await task;
+    print('Upload complete.');
+  } on firebase_core.FirebaseException catch (e) {
+    if (e.code == 'permission-denied') {
+      print('User does not have permission to upload to this reference.');
+    }
+    // ...
+  }
+}
+```
+
+The `state` property of a snapshot indicates a [`TaskState`](!firebase_storage_platform_interface.TaskState). The state can be one
+of the following values on stream snapshots:
+
+- `TaskState.running` - Indicates the task is currently running.
+- `TaskState.paused` - Indicates the task is paused.
+- `TaskState.success` - The task has successfully completed and no more events will be sent.
+
+Using both `snapshotEvents` and the task delegated `Future` together, or individually is supported - use whichever combination works for your application.
+
+### Pause, resume and cancel
+
+It is possible to pause/resume or cancel a task, by calling the `pause`, `resume` or `cancel` methods:
+
+```dart
+Future<void> handleTaskExample3(String filePath) async {
+  File largeFile = File(filePath);
+
+  firebase_storage.UploadTask task = firebase_storage.FirebaseStorage.instance
+      .ref('uploads/hello-world.txt')
+      .putFile(largeFile);
+
+  // Pause the upload.
+  bool paused = await task.pause();
+  print('paused, $paused');
+
+  // Resume the upload.
+  bool resumed = await task.resume();
+  print('resumed, $resumed');
+
+  // Cancel the upload.
+  bool cancelled = await task.cancel();
+  print('cancelled, $cancelled');
+
+  // ...
+}
+```
+
+When calling `pause` or `resume`, any `snapshotEvents` listeners will be triggered with a new `TaskState`.
+
+However, calling `cancel` will cause the task to fail. Any Future or Stream listeners will receive a `FirebaseException` instance
+with a `canceled` code instead, for example:
+
+```dart
+Future<void> handleTaskExample4(String filePath) async {
+  File largeFile = File(filePath);
+
+  firebase_storage.UploadTask task = firebase_storage.FirebaseStorage.instance
+      .ref('uploads/hello-world.txt')
+      .putFile(largeFile);
+
+  // Via a Stream
+  task.snapshotEvents.listen((firebase_storage.TaskSnapshot snapshot) {
+    // Handle your snapshot events...
+  }, onError: (e) {
+    // Check if cancelled by checking error code.
+    if (e.code == 'canceled') {
+      print('The task has been canceled');
+    }
+    // Or, you can also check for cancellations via the final task.snapshot state.
+    if (task.snapshot.state == firebase_storage.TaskState.canceled) {
+      print('The task has been canceled');
+    }
+    // If the task failed for any other reason then state would be:
+    print(firebase_storage.TaskState.error);
+  });
+
+  // Cancel the upload.
+  bool cancelled = await task.cancel();
+  print('cancelled? $cancelled');
+
+  // Or a Task Future (or both).
+  try {
+    await task;
+  } on firebase_core.FirebaseException catch (e) {
+    // Check if cancelled by checking error code.
+    if (e.code == 'canceled') {
+      print('The task has been canceled');
+    }
+    // Or, you can also check for cancellations via the final task.snapshot state.
+    if (task.snapshot.state == firebase_storage.TaskState.canceled) {
+      print('The task has been canceled');
+    }
+    // If the task failed for any other reason then state would be:
+    print(firebase_storage.TaskState.error);
+    // ...
+  }
+}
+```
