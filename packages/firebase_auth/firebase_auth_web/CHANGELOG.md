@@ -1,3 +1,7 @@
+## 0.3.1+1
+
+ - Update a dependency to the latest release.
+
 ## 0.3.1
 
  - **FIX**: fix IdTokenResult timestamps (web, ios) (#3357).
