@@ -1,3 +1,7 @@
+## 1.1.1
+
+ - Update a dependency to the latest release.
+
 ## 1.1.0
 
  - **REFACTOR**: changes context to reason (#1542) (#3334).

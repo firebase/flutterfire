@@ -4,8 +4,6 @@
 
 library cloud_firestore;
 
-import 'dart:async';
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
