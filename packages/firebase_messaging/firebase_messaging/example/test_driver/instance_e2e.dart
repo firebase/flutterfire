@@ -78,8 +78,8 @@ void runInstanceTests() {
     group('hasPermission', () {
       test('returns true android (default)', () async {
         final result = await messaging.hasPermission();
-        expect(result, isA<AuthorizationStatus>());
-        expect(result, AuthorizationStatus.authorized);
+        expect(result, isA<IOSAuthorizationStatus>());
+        expect(result, IOSAuthorizationStatus.authorized);
       }, skip: !Platform.isAndroid);
 
       test('returns -1 on ios (default)', () async {
@@ -90,8 +90,8 @@ void runInstanceTests() {
     group('requestPermission', () {
       test('resolves 1 on android', () async {
         final result = await messaging.requestPermission();
-        expect(result, isA<AuthorizationStatus>());
-        expect(result, AuthorizationStatus.authorized);
+        expect(result, isA<IOSAuthorizationStatus>());
+        expect(result, IOSAuthorizationStatus.authorized);
       }, skip: !Platform.isAndroid);
     });
 

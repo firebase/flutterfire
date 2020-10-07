@@ -9,25 +9,31 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Utilities', () {
     test('convertToNotificationPriority()', () {
-      expect(convertToNotificationPriority(1), isA<NotificationPriority>());
+      expect(convertToAndroidNotificationPriority(1),
+          isA<AndroidNotificationPriority>());
     });
 
-    test('convertFromNotificationPriority()', () {
-      expect(convertFromNotificationPriority(NotificationPriority.high),
+    test('convertFromAndroidNotificationPriority()', () {
+      expect(
+          convertFromAndroidNotificationPriority(
+              AndroidNotificationPriority.highPriority),
           isA<int>());
     });
 
-    test('convertToNotificationVisibility()', () {
-      expect(convertToNotificationVisibility(1), isA<NotificationVisibility>());
+    test('convertToAndroidNotificationVisibility()', () {
+      expect(convertToAndroidNotificationVisibility(1),
+          isA<AndroidNotificationVisibility>());
     });
 
-    test('convertFromNotificationVisibility()', () {
-      expect(convertFromNotificationVisibility(NotificationVisibility.public),
+    test('convertFromAndroidNotificationVisibility()', () {
+      expect(
+          convertFromAndroidNotificationVisibility(
+              AndroidNotificationVisibility.public),
           isA<int>());
     });
 
-    test('convertToAuthorizationStatus()', () {
-      expect(convertToAuthorizationStatus(1), isA<AuthorizationStatus>());
+    test('convertToIOSAuthorizationStatus()', () {
+      expect(convertToIOSAuthorizationStatus(1), isA<IOSAuthorizationStatus>());
     });
   });
 }

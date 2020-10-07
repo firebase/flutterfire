@@ -154,7 +154,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
 
   /// Returns a [AuthorizationStatus] as to whether the user has messaging
   /// permission for this app.
-  Future<AuthorizationStatus> hasPermission() {
+  Future<IOSAuthorizationStatus> hasPermission() {
     throw UnimplementedError('hasPermission() is not implemented');
   }
 
@@ -175,7 +175,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   ///
   /// On Web, a popup requesting the users permission is shown using the native
   /// browser API.
-  Future<AuthorizationStatus> requestPermission({
+  Future<IOSAuthorizationStatus> requestPermission({
     /// Request permission to display alerts. Defaults to `true`.
     ///
     /// iOS only.

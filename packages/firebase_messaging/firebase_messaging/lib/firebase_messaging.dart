@@ -11,12 +11,12 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 
 export 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart'
     show
-        MessageHandler,
-        AuthorizationStatus,
+        RemoteMessageHandler,
+        IOSAuthorizationStatus,
         // ignore: deprecated_member_use
         IosNotificationSettings,
-        NotificationPriority,
-        NotificationVisibility,
+        AndroidNotificationPriority,
+        AndroidNotificationVisibility,
         RemoteMessage;
 
 part 'src/messaging.dart';

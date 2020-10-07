@@ -148,12 +148,12 @@ void main() {
     group('hasPermission', () {
       test('verify delegate method is called', () async {
         when(kMockMessagingPlatform.hasPermission())
-            .thenAnswer((_) => Future.value(AuthorizationStatus.authorized));
+            .thenAnswer((_) => Future.value(IOSAuthorizationStatus.authorized));
 
         final result = await messaging.hasPermission();
 
-        expect(result, isA<AuthorizationStatus>());
-        expect(result, AuthorizationStatus.authorized);
+        expect(result, isA<IOSAuthorizationStatus>());
+        expect(result, IOSAuthorizationStatus.authorized);
 
         verify(kMockMessagingPlatform.hasPermission());
       });
@@ -182,7 +182,7 @@ void main() {
           criticalAlert: anyNamed('criticalAlert'),
           provisional: anyNamed('provisional'),
           sound: anyNamed('sound'),
-        )).thenAnswer((_) => Future.value(AuthorizationStatus.authorized));
+        )).thenAnswer((_) => Future.value(IOSAuthorizationStatus.authorized));
 
         // true values
         await messaging.requestPermission(

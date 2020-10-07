@@ -139,7 +139,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   /// Returns a [AuthorizationStatus] as to whether the user has messaging
   /// permission for this app.
-  Future<AuthorizationStatus> hasPermission() {
+  Future<IOSAuthorizationStatus> hasPermission() {
     return _delegate.hasPermission();
   }
 
@@ -160,7 +160,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// On Web, a popup requesting the users permission is shown using the native
   /// browser API.
-  Future<AuthorizationStatus> requestPermission({
+  Future<IOSAuthorizationStatus> requestPermission({
     /// Request permission to display alerts. Defaults to `true`.
     ///
     /// iOS only.
@@ -227,15 +227,15 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   Future<bool> requestNotificationPermissions(
       [IosNotificationSettings iosSettings]) async {
     iosSettings ??= const IosNotificationSettings();
-    AuthorizationStatus status = await requestPermission(
+    IOSAuthorizationStatus status = await requestPermission(
       sound: iosSettings.sound,
       alert: iosSettings.alert,
       badge: iosSettings.badge,
       provisional: iosSettings.provisional,
     );
 
-    return status == AuthorizationStatus.authorized ||
-        status == AuthorizationStatus.provisional;
+    return status == IOSAuthorizationStatus.authorized ||
+        status == IOSAuthorizationStatus.provisional;
   }
 
   /// Send a new [RemoteMessage] to the FCM server.

@@ -21,7 +21,7 @@ void main() {
     test('toMap()', () {
       const testChannelId = 'fooId';
       final notification = AndroidNotification(
-          channelId: testChannelId, priority: NotificationPriority.low);
+          channelId: testChannelId, priority: AndroidNotificationPriority.lowPriority);
       final notificationMap = notification.toMap();
       expect(notificationMap, isA<Map<String, dynamic>>());
       expect(notificationMap['channelId'], equals(testChannelId));

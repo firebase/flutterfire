@@ -7,7 +7,7 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 typedef void RemoteMessageHandler(RemoteMessage message);
 
 /// Represents the current status of the platforms notification permissions.
-enum AuthorizationStatus {
+enum IOSAuthorizationStatus {
   /// The app is authorized to create notifications.
   authorized,
 
@@ -23,16 +23,43 @@ enum AuthorizationStatus {
   provisional,
 }
 
-enum NotificationPriority {
-  min,
-  low,
-  def,
-  high,
-  max,
+/// An enum representing a notification priority on Android.
+///
+/// Note; on devices which have channel support (Android 8.0 (API level 26) +),
+/// this value will be ignored. Instead, the channel "importance" level is used.
+enum AndroidNotificationPriority {
+  /// The application small icon will not show up in the status bar, or alert the user. The notification
+  /// will be in a collapsed state in the notification shade and placed at the bottom of the list.
+  minimumPriority,
+
+  /// The application small icon will show in the device status bar, however the notification will
+  /// not alert the user (no sound or vibration). The notification will show in it's expanded state
+  /// when the notification shade is pulled down.  
+  lowPriority,
+
+  /// When a notification is received, the device smallIcon will appear in the notification shade.
+  /// When the user pulls down the notification shade, the content of the notification will be shown
+  /// in it's expanded state.
+  defaultPriority,
+
+  /// Notifications will appear on-top of applications, allowing direct interaction without pulling
+  /// own the notification shade. This level is used for urgent notifications, such as
+  /// incoming phone calls, messages etc, which require immediate attention.
+  highPriority,
+
+  /// The highest priority level a notification can be set to.
+  maximumPriority,
 }
 
-enum NotificationVisibility {
+
+/// An enum representing the visibility level of a notification on Android.
+enum AndroidNotificationVisibility {
+  /// Do not reveal any part of this notification on a secure lock-screen.
   secret,
+
+  /// Show this notification on all lock-screens, but conceal sensitive or private information on secure lock-screens.
   private,
+
+  /// Show this notification in its entirety on all lock-screens.
   public,
 }

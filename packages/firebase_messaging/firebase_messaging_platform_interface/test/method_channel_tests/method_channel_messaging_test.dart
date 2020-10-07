@@ -186,14 +186,14 @@ void main() {
     test('hasPermission', () async {
       // test android response
       final androidStatus = await messaging.hasPermission();
-      expect(androidStatus, equals(AuthorizationStatus.authorized));
+      expect(androidStatus, equals(IOSAuthorizationStatus.authorized));
       // clear log
       log.clear();
 
       // test other platforms
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final iosStatus = await messaging.hasPermission();
-      expect(iosStatus, isA<AuthorizationStatus>());
+      expect(iosStatus, isA<IOSAuthorizationStatus>());
 
       // check native method was called
       expect(log, <Matcher>[
@@ -209,14 +209,14 @@ void main() {
     test('requestPermission', () async {
       // test android response
       final androidStatus = await messaging.requestPermission();
-      expect(androidStatus, equals(AuthorizationStatus.authorized));
+      expect(androidStatus, equals(IOSAuthorizationStatus.authorized));
       // clear log
       log.clear();
 
       // test other platforms
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final iosStatus = await messaging.requestPermission();
-      expect(iosStatus, isA<AuthorizationStatus>());
+      expect(iosStatus, isA<IOSAuthorizationStatus>());
 
       // check native method was called
       expect(log, <Matcher>[

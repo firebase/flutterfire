@@ -71,12 +71,12 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           count: initialNotification['android']['count'],
           imageUrl: initialNotification['android']['imageUrl'],
           link: initialNotification['android']['link'],
-          priority: convertToNotificationPriority(
+          priority: convertToAndroidNotificationPriority(
               initialNotification['android']['priority']),
           smallIcon: initialNotification['android']['smallIcon'],
           sound: initialNotification['android']['sound'],
           ticker: initialNotification['android']['ticker'],
-          visibility: convertToNotificationVisibility(
+          visibility: convertToAndroidNotificationVisibility(
               initialNotification['android']['visibility']),
         );
       }
@@ -160,20 +160,20 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<AuthorizationStatus> hasPermission() async {
+  Future<IOSAuthorizationStatus> hasPermission() async {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return AuthorizationStatus.authorized;
+      return IOSAuthorizationStatus.authorized;
     }
 
     int status = await channel.invokeMethod<int>('Messaging#hasPermission', {
       'appName': app.name,
     });
 
-    return convertToAuthorizationStatus(status);
+    return convertToIOSAuthorizationStatus(status);
   }
 
   @override
-  Future<AuthorizationStatus> requestPermission(
+  Future<IOSAuthorizationStatus> requestPermission(
       {bool alert = true,
       bool announcement = false,
       bool badge = true,
@@ -182,7 +182,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       bool provisional = false,
       bool sound = true}) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return AuthorizationStatus.authorized;
+      return IOSAuthorizationStatus.authorized;
     }
 
     int status =
@@ -199,7 +199,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       }
     });
 
-    return convertToAuthorizationStatus(status);
+    return convertToIOSAuthorizationStatus(status);
   }
 
   @override

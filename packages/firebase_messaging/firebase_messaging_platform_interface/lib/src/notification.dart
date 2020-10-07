@@ -82,7 +82,7 @@ class AndroidNotification {
 
   final String link;
 
-  final NotificationPriority priority;
+  final AndroidNotificationPriority priority;
 
   final String smallIcon;
 
@@ -90,7 +90,7 @@ class AndroidNotification {
 
   final String ticker;
 
-  final NotificationVisibility visibility;
+  final AndroidNotificationVisibility visibility;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -99,7 +99,7 @@ class AndroidNotification {
       'color': color,
       'imageUrl': imageUrl,
       'link': link,
-      'priority': convertFromNotificationPriority(priority),
+      'priority': convertFromAndroidNotificationPriority(priority),
       'smallIcon': smallIcon,
       'sound': sound,
       'ticker': ticker,
@@ -153,7 +153,7 @@ class NotificationIOSCriticalSound {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'critical': critical,
-      'namename': name,
+      'name': name,
       'volume': volume,
     };
   }

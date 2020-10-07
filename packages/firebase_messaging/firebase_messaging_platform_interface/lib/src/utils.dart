@@ -4,75 +4,78 @@
 
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
-NotificationPriority convertToNotificationPriority(int priority) {
+AndroidNotificationPriority convertToAndroidNotificationPriority(int priority) {
   switch (priority) {
-    case 0:
-      return NotificationPriority.def;
-    case 1:
-      return NotificationPriority.high;
-    case -1:
-      return NotificationPriority.low;
-    case 2:
-      return NotificationPriority.max;
     case -2:
-      return NotificationPriority.min;
-    default:
-      return NotificationPriority.def;
-  }
-}
-
-int convertFromNotificationPriority(NotificationPriority priority) {
-  switch (priority) {
-    case NotificationPriority.def:
-      return 0;
-    case NotificationPriority.high:
-      return 1;
-    case NotificationPriority.low:
-      return -1;
-    case NotificationPriority.max:
-      return 2;
-    case NotificationPriority.min:
-      return -2;
-    default:
-      return 0;
-  }
-}
-
-NotificationVisibility convertToNotificationVisibility(int visibility) {
-  switch (visibility) {
-    case 0:
-      return NotificationVisibility.private;
-    case 1:
-      return NotificationVisibility.public;
+      return AndroidNotificationPriority.minimumPriority;
     case -1:
-      return NotificationVisibility.secret;
+      return AndroidNotificationPriority.lowPriority;
+    case 0:
+      return AndroidNotificationPriority.defaultPriority;
+    case 1:
+      return AndroidNotificationPriority.highPriority;
+    case 2:
+      return AndroidNotificationPriority.maximumPriority;
     default:
-      return NotificationVisibility.private;
+      return AndroidNotificationPriority.defaultPriority;
   }
 }
 
-int convertFromNotificationVisibility(NotificationVisibility visibility) {
-  switch (visibility) {
-    case NotificationVisibility.private:
-      return 0;
-    case NotificationVisibility.public:
-      return 1;
-    case NotificationVisibility.secret:
+int convertFromAndroidNotificationPriority(
+    AndroidNotificationPriority priority) {
+  switch (priority) {
+    case AndroidNotificationPriority.minimumPriority:
+      return -2;
+    case AndroidNotificationPriority.lowPriority:
       return -1;
+    case AndroidNotificationPriority.defaultPriority:
+      return 0;
+    case AndroidNotificationPriority.highPriority:
+      return 1;
+    case AndroidNotificationPriority.maximumPriority:
+      return 2;
     default:
       return 0;
   }
 }
 
-AuthorizationStatus convertToAuthorizationStatus(int status) {
+AndroidNotificationVisibility convertToAndroidNotificationVisibility(
+    int visibility) {
+  switch (visibility) {
+    case -1:
+      return AndroidNotificationVisibility.secret;
+    case 0:
+      return AndroidNotificationVisibility.private;
+    case 1:
+      return AndroidNotificationVisibility.public;
+    default:
+      return AndroidNotificationVisibility.private;
+  }
+}
+
+int convertFromAndroidNotificationVisibility(
+    AndroidNotificationVisibility visibility) {
+  switch (visibility) {
+    case AndroidNotificationVisibility.secret:
+      return -1;
+    case AndroidNotificationVisibility.private:
+      return 0;
+    case AndroidNotificationVisibility.public:
+      return 1;
+    default:
+      return 0;
+  }
+}
+
+IOSAuthorizationStatus convertToIOSAuthorizationStatus(int status) {
   switch (status) {
     case -1:
-      return AuthorizationStatus.notDetermined;
+      return IOSAuthorizationStatus.notDetermined;
     case 0:
-      return AuthorizationStatus.denied;
+      return IOSAuthorizationStatus.denied;
     case 1:
-      return AuthorizationStatus.authorized;
+      return IOSAuthorizationStatus.authorized;
     case 2:
-      return AuthorizationStatus.provisional;
+      return IOSAuthorizationStatus.provisional;
   }
 }
