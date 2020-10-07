@@ -1,3 +1,9 @@
+## 5.0.0-dev.3
+
+ - **FEAT**: rework (#3612).
+ - **DOCS**: README updates (#3768).
+ - **CHORE**: delete package_config.json (#3744).
+
 ## 5.0.0-dev.2
 
  - **FIX**: if custom metadata value returns null put value as empty string.

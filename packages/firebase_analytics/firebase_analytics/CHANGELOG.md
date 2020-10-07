@@ -1,3 +1,7 @@
+## 6.0.2
+
+ - **FIX**: remove unused dart:async import (#3611).
+
 ## 6.0.1
 
  - **FIX**: local dependencies in example apps (#3319).

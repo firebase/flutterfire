@@ -2,7 +2,7 @@ name: firebase_messaging_example
 description: Demonstrates how to use the firebase_messaging plugin.
 
 dependencies:
-  firebase_analytics: any
+  firebase_analytics: ^6.0.2
   flutter:
     sdk: flutter
   firebase_messaging:

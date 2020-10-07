@@ -1,3 +1,8 @@
+## 1.0.0-dev.2
+
+ - **FIX**: bubble exceptions (#3726).
+ - **FEAT**: rework (#3612).
+
 ## 1.0.0-dev.1
 
 - See `firebase_storage` changelog.

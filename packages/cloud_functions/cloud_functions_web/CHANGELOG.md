@@ -1,3 +1,7 @@
+## 3.0.0-dev.2
+
+ - Update a dependency to the latest release.
+
 ## 3.0.0-dev.1
 
 See `cloud_functions` `0.7.0-dev.1` changelog for details.

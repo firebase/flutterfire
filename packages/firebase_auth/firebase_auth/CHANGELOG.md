@@ -1,3 +1,8 @@
+## 0.18.1+2
+
+ - **FIX**: on iOS use sendEmailVerificationWithActionCodeSettings instead of sendEmailVerificationWithCompletion (#3686).
+ - **DOCS**: README updates (#3768).
+
 ## 0.18.1+1
 
  - **FIX**: Optional params for "signInWithCredential" method are converted to "nil" if "null" for iOS (#3731).

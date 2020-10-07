@@ -1,3 +1,8 @@
+## 0.7.0-dev.2
+
+ - **DOCS**: update package readme.
+ - **DOCS**: update pubspec description to meet minumum length requirement.
+
 ## 0.7.0-dev.1
 
 Along with the below changes, the plugin has been reworked to bring it inline with the federated plugin setup along with documentation and additional unit and end-to-end tests. The API has mainly been kept the same, however there are some breaking changes.
