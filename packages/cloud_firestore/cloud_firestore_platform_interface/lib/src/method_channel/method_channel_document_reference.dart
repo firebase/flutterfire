@@ -25,56 +25,72 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   }
 
   @override
-  Future<void> set(Map<String, dynamic> data, [SetOptions options]) {
-    return MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-      'DocumentReference#set',
-      <String, dynamic>{
-        'firestore': firestore,
-        'reference': this,
-        'data': data,
-        'options': <String, dynamic>{
-          'merge': options?.merge,
-          'mergeFields': options?.mergeFields,
+  Future<void> set(Map<String, dynamic> data, [SetOptions options]) async {
+    try {
+      await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
+        'DocumentReference#set',
+        <String, dynamic>{
+          'firestore': firestore,
+          'reference': this,
+          'data': data,
+          'options': <String, dynamic>{
+            'merge': options?.merge,
+            'mergeFields': options?.mergeFields,
+          },
         },
-      },
-    ).catchError(catchPlatformException);
+      );
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
-  Future<void> update(Map<String, dynamic> data) {
-    return MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-      'DocumentReference#update',
-      <String, dynamic>{
-        'firestore': firestore,
-        'reference': this,
-        'data': data,
-      },
-    ).catchError(catchPlatformException);
+  Future<void> update(Map<String, dynamic> data) async {
+    try {
+      await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
+        'DocumentReference#update',
+        <String, dynamic>{
+          'firestore': firestore,
+          'reference': this,
+          'data': data,
+        },
+      );
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
   Future<DocumentSnapshotPlatform> get(
       [GetOptions options = const GetOptions()]) async {
-    final Map<String, dynamic> data = await MethodChannelFirebaseFirestore
-        .channel
-        .invokeMapMethod<String, dynamic>(
-      'DocumentReference#get',
-      <String, dynamic>{
-        'firestore': firestore,
-        'reference': this,
-        'source': getSourceString(options.source),
-      },
-    ).catchError(catchPlatformException);
+    try {
+      final Map<String, dynamic> data = await MethodChannelFirebaseFirestore
+          .channel
+          .invokeMapMethod<String, dynamic>(
+        'DocumentReference#get',
+        <String, dynamic>{
+          'firestore': firestore,
+          'reference': this,
+          'source': getSourceString(options.source),
+        },
+      );
 
-    return DocumentSnapshotPlatform(firestore, _pointer.path, data);
+      return DocumentSnapshotPlatform(firestore, _pointer.path, data);
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
-  Future<void> delete() {
-    return MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-      'DocumentReference#delete',
-      <String, dynamic>{'firestore': firestore, 'reference': this},
-    ).catchError(catchPlatformException);
+  Future<void> delete() async {
+    try {
+      await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
+        'DocumentReference#delete',
+        <String, dynamic>{'firestore': firestore, 'reference': this},
+      );
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
