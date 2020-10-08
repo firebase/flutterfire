@@ -11,13 +11,6 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../method_channel/method_channel_messaging.dart';
 
-RemoteMessageHandler _onMessage;
-void Function(String messageId) _onMessageSent;
-RemoteMessageHandler _onNotificationOpenedApp;
-void Function(FirebaseException exception, String messageId) _onSendError;
-void Function() _onDeletedMessages;
-RemoteMessageHandler _onBackgroundMessage;
-
 /// Defines an interface to work with Messaging on web and mobile
 abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
@@ -72,10 +65,14 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   static RemoteMessageHandler _onBackgroundMessage;
 
   static RemoteMessageHandler onMessage;
+
   static void Function(String messageId) onMessageSent;
+
   static RemoteMessageHandler onNotificationOpenedApp;
+
   static void Function(FirebaseException exception, String messageId)
       onSendError;
+
   static void Function() onDeletedMessages;
 
   static RemoteMessageHandler get onBackgroundMessage {
@@ -96,12 +93,12 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     void Function() onDeletedMessages,
     RemoteMessageHandler onBackgroundMessage,
   }) {
-    _onMessage = onMessage;
-    _onMessageSent = onMessageSent;
-    _onNotificationOpenedApp = onNotificationOpenedApp;
-    _onSendError = onSendError;
-    _onDeletedMessages = onDeletedMessages;
-    _onBackgroundMessage = onBackgroundMessage;
+    onMessage = onMessage;
+    onMessageSent = onMessageSent;
+    onNotificationOpenedApp = onNotificationOpenedApp;
+    onSendError = onSendError;
+    onDeletedMessages = onDeletedMessages;
+    onBackgroundMessage = onBackgroundMessage;
   }
 
   /// Enables delegates to create new instances of themselves if a none default
@@ -148,7 +145,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// on web a service worker can be registered.
   void registerBackgroundMessageHandler() {
     throw UnimplementedError(
-        'setBackgroundMessageHandler() is not implemented');
+        'registerBackgroundMessageHandler() is not implemented');
   }
 
   /// Removes access to an FCM token previously authorized by it's scope.

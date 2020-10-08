@@ -109,7 +109,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   }
 
   /// Set a message handler function which is called when the app is in the background or terminated.
-  /// 
+  ///
   /// In Android, a headless task is created, allowing you to access the React Native environment to perform tasks such as updating local storage, or sending a network request.
   static void onBackgroundMessage(RemoteMessageHandler handler) {
     FirebaseMessagingPlatform.onBackgroundMessage = handler;
