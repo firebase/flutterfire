@@ -182,41 +182,17 @@ void main() {
       ]);
     });
 
-    // hasPermission
-    test('hasPermission', () async {
-      // test android response
-      final androidStatus = await messaging.hasPermission();
-      expect(androidStatus, equals(IOSAuthorizationStatus.authorized));
-      // clear log
-      log.clear();
-
-      // test other platforms
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      final iosStatus = await messaging.hasPermission();
-      expect(iosStatus, isA<IOSAuthorizationStatus>());
-
-      // check native method was called
-      expect(log, <Matcher>[
-        isMethodCall(
-          'Messaging#hasPermission',
-          arguments: <String, dynamic>{
-            'appName': defaultFirebaseAppName,
-          },
-        ),
-      ]);
-    });
-
     test('requestPermission', () async {
       // test android response
       final androidStatus = await messaging.requestPermission();
-      expect(androidStatus, equals(IOSAuthorizationStatus.authorized));
+      expect(androidStatus, equals(AuthorizationStatus.authorized));
       // clear log
       log.clear();
 
       // test other platforms
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final iosStatus = await messaging.requestPermission();
-      expect(iosStatus, isA<IOSAuthorizationStatus>());
+      expect(iosStatus, isA<AuthorizationStatus>());
 
       // check native method was called
       expect(log, <Matcher>[
@@ -275,11 +251,6 @@ void main() {
           },
         ),
       ]);
-    });
-
-    test('onIosSettingsRegistered', () {
-      expect(messaging.onIosSettingsRegistered,
-          isA<Stream<IosNotificationSettings>>());
     });
 
     test('onTokenRefresh', () {
