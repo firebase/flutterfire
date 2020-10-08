@@ -54,7 +54,81 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   static final Map<String, FirebaseMessaging> _cachedInstances = {};
 
+  /// Sets a handler that is called when an incoming FCM payload is received whilst
+  /// the Flutter instance is running.
+  ///
+  /// To handle messages whilst the app is in the background or terminated,
+  /// see [onBackgroundMessage].
+  ///
+  /// To unsubscribe from further events, pass `null` as the handler.
+  static void onMessage(RemoteMessageHandler handler) {
+    FirebaseMessagingPlatform.onMessage = handler;
+  }
+
+  /// Sets a handler that is called when a message being sent to FCM (via [sendMessage])
+  /// has successfully been sent.
+  ///
+  /// See [onSendError] to handle sending failures.
+  ///
+  /// To unsubscribe from further events, pass `null` as the handler.
+  static void onMessageSent(void Function(String messageId) handler) {
+    FirebaseMessagingPlatform.onMessageSent = handler;
+  }
+
+  /// When the user presses a notification displayed via FCM, this listener will
+  /// be called if the app has opened from a background state.
+  ///
+  /// To unsubscribe from further events, pass `null` as the handler.
+  static void onNotificationOpenedApp(RemoteMessageHandler handler) {
+    FirebaseMessagingPlatform.onNotificationOpenedApp = handler;
+  }
+
+  /// When sending a message via [sendMessage], this listener is called when an
+  /// error is thrown and the message could not be sent.
+  ///
+  /// To unsubscribe from further events, pass `null` as the handler.
+  static void onSendError(
+      void Function(FirebaseException exception, String messageId) handler) {
+    FirebaseMessagingPlatform.onSendError = handler;
+  }
+
+  /// Called when the FCM server deletes pending messages.
+  ///
+  /// This may be due to:
+  ///
+  /// 1.  Too many messages stored on the FCM server. This can occur when an
+  /// app's servers sends many non-collapsible messages to FCM servers while
+  /// the device is offline.
+  ///
+  /// 2. he device hasn't connected in a long time and the app server has recently
+  /// (within the last 4 weeks) sent a message to the app on that device.
+  ///
+  /// To unsubscribe from further events, pass `null` as the handler.
+  static void onDeletedMessages(void Function() handler) {
+    FirebaseMessagingPlatform.onDeletedMessages = handler;
+  }
+
+  /// Set a message handler function which is called when the app is in the background or terminated.
+  /// 
+  /// In Android, a headless task is created, allowing you to access the React Native environment to perform tasks such as updating local storage, or sending a network request.
+  static void onBackgroundMessage(RemoteMessageHandler handler) {
+    FirebaseMessagingPlatform.onBackgroundMessage = handler;
+  }
+
   /// Sets up handlers for various messaging events.
+  @Deprecated('''
+Calling [configure] is deprecated in favor of calling specific static methods: 
+
+- [onMessage]
+- [onMessageSent]
+- [onNotificationOpenedApp]
+- [onSendError]
+- [onDeletedMessages]
+- [onBackgroundMessage]
+
+This has been deprecated to avoid unwanted side effects when [configure] was called
+multiple times.
+  ''')
   static void configure({
     RemoteMessageHandler onMessage,
     void Function(String messageId) onMessageSent,
@@ -62,17 +136,16 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     void Function(FirebaseException exception, String messageId) onSendError,
     void Function() onDeletedMessages,
     RemoteMessageHandler onBackgroundMessage,
+    // TODO(salakar): are these required?
     RemoteMessageHandler onLaunch, // deprecate
     RemoteMessageHandler onResume, // deprecate
   }) {
-    return FirebaseMessagingPlatform.configure(
-      onMessage: onMessage,
-      onMessageSent: onMessageSent,
-      onNotificationOpenedApp: onNotificationOpenedApp,
-      onSendError: onSendError,
-      onDeletedMessages: onDeletedMessages,
-      onBackgroundMessage: onBackgroundMessage,
-    );
+    FirebaseMessaging.onMessage(onMessage);
+    FirebaseMessaging.onMessageSent(onMessageSent);
+    FirebaseMessaging.onNotificationOpenedApp(onNotificationOpenedApp);
+    FirebaseMessaging.onSendError(onSendError);
+    FirebaseMessaging.onDeletedMessages(onDeletedMessages);
+    FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
   }
 
   // ignore: public_member_api_docs

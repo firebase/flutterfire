@@ -57,7 +57,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// if no other implementation was provided.
   static FirebaseMessagingPlatform get instance {
     if (_instance == null) {
-      _instance = MethodChannelFirebaseMessaging(app: Firebase.app());
+      _instance = MethodChannelFirebaseMessaging.instance;
     }
     return _instance;
   }
@@ -67,6 +67,24 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
+  }
+
+  static RemoteMessageHandler _onBackgroundMessage;
+
+  static RemoteMessageHandler onMessage;
+  static void Function(String messageId) onMessageSent;
+  static RemoteMessageHandler onNotificationOpenedApp;
+  static void Function(FirebaseException exception, String messageId)
+      onSendError;
+  static void Function() onDeletedMessages;
+
+  static RemoteMessageHandler get onBackgroundMessage {
+    return _onBackgroundMessage;
+  }
+
+  static set onBackgroundMessage(RemoteMessageHandler handler) {
+    _onBackgroundMessage = handler;
+    instance.registerBackgroundMessageHandler();
   }
 
   static void configure({
@@ -122,6 +140,15 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// specific screen etc).
   Notification get initialNotification {
     throw UnimplementedError('initialNotification is not implemented');
+  }
+
+  /// Allows delegates to create a background message handler implementation.
+  ///
+  /// For example, on native platforms this could be to setup an isolate, whereas
+  /// on web a service worker can be registered.
+  void registerBackgroundMessageHandler() {
+    throw UnimplementedError(
+        'setBackgroundMessageHandler() is not implemented');
   }
 
   /// Removes access to an FCM token previously authorized by it's scope.

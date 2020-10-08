@@ -39,6 +39,18 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   static bool _initialized = false;
 
+  /// Returns a stub instance to allow the platform interface to access
+  /// the class instance statically.
+  static MethodChannelFirebaseMessaging get instance {
+    return MethodChannelFirebaseMessaging._();
+  }
+
+  /// Internal stub class initializer.
+  ///
+  /// When the user code calls an auth method, the real instance is
+  /// then initialized via the [delegateFor] method.
+  MethodChannelFirebaseMessaging._() : super(appInstance: null);
+
   /// The [MethodChannel] to which calls will be delegated.
   @visibleForTesting
   static const MethodChannel channel = MethodChannel(
@@ -123,6 +135,18 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     // Remove the notification once consumed
     _initialNotification = null;
     return result;
+  }
+
+  @override
+  void registerBackgroundMessageHandler() async {
+    RemoteMessageHandler handler =
+        FirebaseMessagingPlatform.onBackgroundMessage;
+
+    if (handler == null) {
+      return;
+    }
+
+    // TODO(salakar): register handler
   }
 
   @override

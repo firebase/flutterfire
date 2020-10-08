@@ -4,6 +4,7 @@
 
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
+/// Defines a handler for incoming remote message payloads.
 typedef void RemoteMessageHandler(RemoteMessage message);
 
 /// An enum representing a notification setting for this app on the device.
