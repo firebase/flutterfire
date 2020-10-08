@@ -4,9 +4,9 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/exception.dart';
-import 'package:firebase/firebase.dart' as firebase;
-import 'package:firebase/firestore.dart' as web;
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web_interop.dart'
+    as core_interop;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'package:cloud_firestore_web/src/collection_reference_web.dart';
@@ -16,11 +16,13 @@ import 'package:cloud_firestore_web/src/query_web.dart';
 import 'package:cloud_firestore_web/src/transaction_web.dart';
 import 'package:cloud_firestore_web/src/write_batch_web.dart';
 
+import 'src/interop/firestore.dart' as firestore_interop;
+
 /// Web implementation for [FirebaseFirestorePlatform]
 /// delegates calls to firestore web plugin
 class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// instance of Firestore from the web plugin
-  final web.Firestore _webFirestore;
+  final firestore_interop.Firestore _webFirestore;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -30,7 +32,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// Builds an instance of [FirebaseFirestoreWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
   FirebaseFirestoreWeb({FirebaseApp app})
-      : _webFirestore = firebase.firestore(firebase.app(app?.name)),
+      : _webFirestore =
+            firestore_interop.getFirestoreInstance(core_interop.app(app?.name)),
         super(appInstance: app) {
     FieldValueFactoryPlatform.instance = FieldValueFactoryWeb();
   }
@@ -96,7 +99,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       // Workaround for 'Runtime type information not available for type_variable_local'
       // See: https://github.com/dart-lang/sdk/issues/29722
       return result as T;
-    } catch (e) {
+    } catch (e, s) {
+      print(s);
       throw getFirebaseException(e);
     }
   }
@@ -115,12 +119,13 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     }
 
     if (settings.host != null && settings.sslEnabled != null) {
-      _webFirestore.settings(web.Settings(
+      _webFirestore.settings(firestore_interop.Settings(
           cacheSizeBytes: cacheSizeBytes,
           host: settings.host,
           ssl: settings.sslEnabled));
     } else {
-      _webFirestore.settings(web.Settings(cacheSizeBytes: cacheSizeBytes));
+      _webFirestore
+          .settings(firestore_interop.Settings(cacheSizeBytes: cacheSizeBytes));
     }
   }
 

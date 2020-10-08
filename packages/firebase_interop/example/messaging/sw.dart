@@ -1,8 +1,8 @@
 @JS()
 library messaging_demo.service_worker;
 
-import 'package:firebase/firebase.dart' as firebase;
-import 'package:firebase/src/assets/assets.dart';
+import 'package:firebase_interop/firebase_interop.dart' as fb;
+import 'package:firebase_interop/src/assets/assets.dart';
 import 'package:service_worker/worker.dart' as sw;
 
 import 'package:js/js.dart';
@@ -14,9 +14,9 @@ void main(List<String> args) async {
 
   await config();
 
-  firebase.initializeApp(messagingSenderId: messagingSenderId);
+  fb.initializeApp(messagingSenderId: messagingSenderId);
 
-  final messaging = firebase.messaging();
+  final messaging = fb.messaging();
   messaging.onBackgroundMessage.listen((payload) {
     final options = sw.ShowNotificationOptions(body: payload.notification.body);
     sw.registration.showNotification(payload.notification.title, options);

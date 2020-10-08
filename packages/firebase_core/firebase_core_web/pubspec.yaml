@@ -11,7 +11,6 @@ flutter:
         fileName: firebase_core_web.dart
 
 dependencies:
-  firebase: ^7.3.0
   firebase_core_platform_interface: ^2.0.0
   flutter:
     sdk: flutter

@@ -5,13 +5,13 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
 import 'package:cloud_firestore_web/src/utils/exception.dart';
-import 'package:firebase/firestore.dart' as web;
 
-import 'package:cloud_firestore_web/src/utils/web_utils.dart';
+import 'interop/firestore.dart' as firestore_interop;
+import 'utils/web_utils.dart';
 
 /// Web implementation of Firestore [QueryPlatform].
 class QueryWeb extends QueryPlatform {
-  final web.Query _webQuery;
+  final firestore_interop.Query _webQuery;
   final FirebaseFirestorePlatform _firestore;
   final String _path;
 
@@ -37,8 +37,8 @@ class QueryWeb extends QueryPlatform {
   }
 
   /// Builds a [web.Query] from given [parameters].
-  web.Query _buildWebQueryWithParameters() {
-    web.Query query = _webQuery;
+  firestore_interop.Query _buildWebQueryWithParameters() {
+    firestore_interop.Query query = _webQuery;
 
     for (List<dynamic> order in parameters['orderBy']) {
       query = query.orderBy(
@@ -151,7 +151,7 @@ class QueryWeb extends QueryPlatform {
   Stream<QuerySnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    Stream<web.QuerySnapshot> querySnapshots;
+    Stream<firestore_interop.QuerySnapshot> querySnapshots;
     if (includeMetadataChanges) {
       querySnapshots = _buildWebQueryWithParameters().onSnapshotMetadata;
     } else {

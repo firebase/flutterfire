@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 @TestOn("chrome")
-import 'package:firebase/firestore.dart' as web show FieldValue;
+import 'package:firebase_interop/firebase_interop.dart' as web show FieldValue;
 import 'package:cloud_firestore_web/src/field_value_factory_web.dart';
 import 'package:cloud_firestore_web/src/field_value_web.dart';
 import 'package:flutter_test/flutter_test.dart';

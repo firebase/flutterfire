@@ -1,8 +1,8 @@
 @TestOn('browser')
 import 'dart:convert';
 
-import 'package:firebase/firebase.dart';
-import 'package:firebase/src/assets/assets.dart';
+import 'package:firebase_interop/firebase_interop.dart';
+import 'package:firebase_interop/src/assets/assets.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;
 import 'package:test/test.dart';

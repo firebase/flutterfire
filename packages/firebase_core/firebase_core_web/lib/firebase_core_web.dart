@@ -6,10 +6,10 @@ library firebase_core_web;
 
 import 'dart:async';
 
-import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:js/js_util.dart' as js_util;
+import 'src/interop/core.dart' as firebase;
 
 part 'src/firebase_app_web.dart';
 part 'src/firebase_core_web.dart';

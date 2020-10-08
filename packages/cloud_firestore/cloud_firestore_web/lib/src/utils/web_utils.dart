@@ -3,9 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:firebase/firestore.dart' as web;
 
-import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
+import '../utils/codec_utility.dart';
+import '../interop/firestore.dart' as firestore_interop;
 
 const _kChangeTypeAdded = "added";
 const _kChangeTypeModified = "modified";
@@ -13,7 +13,8 @@ const _kChangeTypeRemoved = "removed";
 
 /// Converts a [web.QuerySnapshot] to a [QuerySnapshotPlatform].
 QuerySnapshotPlatform convertWebQuerySnapshot(
-    FirebaseFirestorePlatform firestore, web.QuerySnapshot webQuerySnapshot) {
+    FirebaseFirestorePlatform firestore,
+    firestore_interop.QuerySnapshot webQuerySnapshot) {
   return QuerySnapshotPlatform(
     webQuerySnapshot.docs
         .map((webDocumentSnapshot) =>
@@ -30,7 +31,8 @@ QuerySnapshotPlatform convertWebQuerySnapshot(
 
 /// Converts a [web.DocumentSnapshot] to a [DocumentSnapshotPlatform].
 DocumentSnapshotPlatform convertWebDocumentSnapshot(
-    FirebaseFirestorePlatform firestore, web.DocumentSnapshot webSnapshot) {
+    FirebaseFirestorePlatform firestore,
+    firestore_interop.DocumentSnapshot webSnapshot) {
   return DocumentSnapshotPlatform(
     firestore,
     webSnapshot.ref.path,
@@ -46,7 +48,8 @@ DocumentSnapshotPlatform convertWebDocumentSnapshot(
 
 /// Converts a [web.DocumentChange] to a [DocumentChangePlatform].
 DocumentChangePlatform convertWebDocumentChange(
-    FirebaseFirestorePlatform firestore, web.DocumentChange webDocumentChange) {
+    FirebaseFirestorePlatform firestore,
+    firestore_interop.DocumentChange webDocumentChange) {
   return (DocumentChangePlatform(
       convertWebDocumentChangeType(webDocumentChange.type),
       webDocumentChange.oldIndex,
@@ -70,7 +73,7 @@ DocumentChangeType convertWebDocumentChangeType(String changeType) {
 
 /// Converts a [web.SnapshotMetadata] to a [SnapshotMetadataPlatform].
 SnapshotMetadataPlatform convertWebSnapshotMetadata(
-    web.SnapshotMetadata webSnapshotMetadata) {
+    firestore_interop.SnapshotMetadata webSnapshotMetadata) {
   return SnapshotMetadataPlatform(
       webSnapshotMetadata.hasPendingWrites, webSnapshotMetadata.fromCache);
 }

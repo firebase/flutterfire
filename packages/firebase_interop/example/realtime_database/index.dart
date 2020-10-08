@@ -1,7 +1,7 @@
 import 'dart:html';
 
-import 'package:firebase/firebase.dart' as fb;
-import 'package:firebase/src/assets/assets.dart';
+import 'package:firebase_interop/firebase_interop.dart' as fb;
+import 'package:firebase_interop/src/assets/assets.dart';
 
 void main() async {
   //Use for firebase package development only

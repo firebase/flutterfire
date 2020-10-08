@@ -1,21 +1,19 @@
 import 'dart:async';
-
+import 'package:firebase_core_web/firebase_core_web_interop.dart'
+    hide jsify, dartify;
 import 'package:js/js.dart';
 
-import 'app.dart';
-import 'interop/firestore_interop.dart' as firestore_interop;
-import 'js.dart';
-import 'utils.dart';
+import 'firestore_interop.dart' as firestore_interop;
+import 'firebase_interop.dart' as firebase_interop;
+import 'utils/utils.dart';
 
-export 'interop/firestore_interop.dart'
-    show
-        Blob,
-        FieldPath,
-        GeoPoint,
-        setLogLevel,
-        SetOptions,
-        Settings,
-        SnapshotMetadata;
+export 'firestore_interop.dart';
+
+Firestore getFirestoreInstance([App app]) {
+  return Firestore.getInstance(app != null
+      ? firebase_interop.firestore(app.jsObject)
+      : firebase_interop.firestore());
+}
 
 /// The Cloud Firestore service interface.
 ///
@@ -282,7 +280,8 @@ class DocumentReference
   /// that resolves with a [DocumentSnapshot] containing the current document
   /// contents.
   Future<DocumentSnapshot> get() =>
-      handleThenable(jsObject.get()).then(DocumentSnapshot.getInstance);
+      handleThenable<firestore_interop.DocumentSnapshotJsImpl>(jsObject.get())
+          .then(DocumentSnapshot.getInstance);
 
   StreamController<DocumentSnapshot> _onSnapshotController;
   StreamController<DocumentSnapshot> _onMetadataController;
@@ -417,7 +416,8 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// Returns non-null [Future] that will be resolved with the results of the
   /// query.
   Future<QuerySnapshot> get() =>
-      handleThenable(jsObject.get()).then(QuerySnapshot.getInstance);
+      handleThenable<firestore_interop.QuerySnapshotJsImpl>(jsObject.get())
+          .then(QuerySnapshot.getInstance);
 
   /// Creates a new [Query] where the results are limited to the specified
   /// number of documents.
@@ -600,7 +600,8 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
   /// pointing to the newly created document after it has been written
   /// to the backend.
   Future<DocumentReference> add(Map<String, dynamic> data) =>
-      handleThenable(jsObject.add(jsify(data)))
+      handleThenable<firestore_interop.DocumentReferenceJsImpl>(
+              jsObject.add(jsify(data)))
           .then(DocumentReference.getInstance);
 
   /// Gets a [DocumentReference] for the document within the collection
@@ -817,7 +818,8 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
   ///
   /// Returns non-null [Future] of the read data in a [DocumentSnapshot].
   Future<DocumentSnapshot> get(DocumentReference documentRef) =>
-      handleThenable(jsObject.get(documentRef.jsObject))
+      handleThenable<firestore_interop.DocumentSnapshotJsImpl>(
+              jsObject.get(documentRef.jsObject))
           .then(DocumentSnapshot.getInstance);
 
   /// Writes to the document referred to by the provided [DocumentReference].
@@ -895,8 +897,6 @@ abstract class _Updatable {
   }
 }
 
-// Field values
-
 class _FieldValueDelete implements FieldValue {
   @override
   firestore_interop.FieldValue _jsify() =>
@@ -967,52 +967,23 @@ dynamic jsifyFieldValue(FieldValue fieldValue) => fieldValue._jsify();
 /// Sentinel values that can be used when writing document fields with set()
 /// or update().
 abstract class FieldValue {
-  firestore_interop.FieldValue _jsify();
+  firestore_interop.FieldValue _jsify() {
+    throw UnimplementedError('_jsify() has not been implemented');
+  }
 
-  /// Returns a sentinel used with set() or update() to include a
-  /// server-generated timestamp in the written data.
   static FieldValue serverTimestamp() => _serverTimestamp;
-
-  /// Returns a sentinel for use with update() to mark a field for deletion.
   static FieldValue delete() => _delete;
-
-  /// Returns a special value that tells the server to union the given elements
-  /// with any array value that already exists on the server.
-  ///
-  /// Can be used with set(), create() or update() operations.
-  ///
-  /// Each specified element that doesn't already exist in the array will be
-  /// added to the end. If the field being modified is not already an array it
-  /// will be overwritten with an array containing exactly the specified
-  /// elements.
   static FieldValue arrayUnion(List elements) =>
       _FieldValueArrayUnion(elements);
-
-  /// Returns a special value that tells the server to remove the given elements
-  /// from any array value that already exists on the server.
-  ///
-  /// Can be used with set(), create() or update() operations.
-  ///
-  /// All instances of each element specified will be removed from the array.
-  /// If the field being modified is not already an array it will be overwritten
-  /// with an empty array.
   static FieldValue arrayRemove(List elements) =>
       _FieldValueArrayRemove(elements);
-
-  /// Returns a special value that can be used with set() or update() that tells
-  /// the server to increment the field's current value by the given value.
-
-  /// If either the operand or the current field value uses floating point
-  /// precision, all arithmetic follows IEEE 754 semantics. If both values
-  /// are integers, values outside of JavaScript's safe number range
-  /// (Number.MIN_SAFE_INTEGER to Number.MAX_SAFE_INTEGER) are also subject
-  /// to precision loss. Furthermore, once processed by the Firestore backend,
-  /// all integer operations are capped between -2^63 and 2^63-1.
-
-  /// If the current field value is not of type number, or if the field does not
-  /// yet exist, the transformation sets the field to the given value.
+  // If either the operand or the current field value uses floating point
+  // precision, all arithmetic follows IEEE 754 semantics. If both values
+  // are integers, values outside of JavaScript's safe number range
+  // (Number.MIN_SAFE_INTEGER to Number.MAX_SAFE_INTEGER) are also subject
+  // to precision loss. Furthermore, once processed by the Firestore backend,
+  // all integer operations are capped between -2^63 and 2^63-1.
   static FieldValue increment(num n) => _FieldValueIncrement(n);
-
   FieldValue._();
 
   static final FieldValue _serverTimestamp = _FieldValueServerTimestamp();

@@ -1,9 +1,9 @@
 @JS()
-library firebase.es6_interop;
+library firebase_interop.core.es6;
 
 import 'package:js/js.dart';
 
-import '../func.dart';
+import 'func.dart';
 
 @JS('Promise')
 class PromiseJsImpl<T> {

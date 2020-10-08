@@ -4,9 +4,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:firebase/firebase.dart' as fb;
-import 'package:firebase/firestore.dart' as fs;
-import 'package:firebase/src/assets/assets.dart';
+import 'package:firebase_interop/firebase_interop.dart' as fb;
+import 'package:firebase_interop/src/assets/assets.dart';
 import 'package:test/test.dart';
 
 import 'test_util.dart' show throwsToString, validDatePathComponent;
@@ -16,7 +15,7 @@ import 'test_util.dart' show throwsToString, validDatePathComponent;
 
 // Delete entire collection
 // <https://firebase.google.com/docs/firestore/manage-data/delete-data#collections>
-Future _deleteCollection(fs.Firestore db, fs.CollectionReference collectionRef,
+Future _deleteCollection(fb.Firestore db, fb.CollectionReference collectionRef,
     {int batchSize}) async {
   batchSize ??= 4;
   var query = collectionRef.orderBy('__name__').limit(batchSize);
@@ -45,7 +44,7 @@ void main() {
   final testPath = 'pkg_firebase_test_${validDatePathComponent()}';
 
   fb.App app;
-  fs.Firestore firestore;
+  fb.Firestore firestore;
 
   setUpAll(() async {
     await config();
@@ -79,50 +78,50 @@ void main() {
 
   group('equality', () {
     test('GeoPoint', () {
-      var a = fs.GeoPoint(1, 2);
-      var b = fs.GeoPoint(1, 2);
+      var a = fb.GeoPoint(1, 2);
+      var b = fb.GeoPoint(1, 2);
       expect(a.isEqual(b), isTrue);
       expect(a.isEqual(a), isTrue);
       expect(b.isEqual(a), isTrue);
     });
 
     test('FieldValue', () {
-      var a = fs.FieldValue.delete();
-      var b = fs.FieldValue.delete();
+      var a = fb.FieldValue.delete();
+      var b = fb.FieldValue.delete();
       expect(a, b);
       expect(a, a);
       expect(b, a);
 
-      a = fs.FieldValue.serverTimestamp();
-      b = fs.FieldValue.serverTimestamp();
+      a = fb.FieldValue.serverTimestamp();
+      b = fb.FieldValue.serverTimestamp();
       expect(a, b);
       expect(a, a);
       expect(b, a);
     });
 
     test('FieldPath', () {
-      var a = fs.FieldPath('bob');
-      var b = fs.FieldPath('bob');
+      var a = fb.FieldPath('bob');
+      var b = fb.FieldPath('bob');
       expect(a.isEqual(b), isTrue);
       expect(a.isEqual(a), isTrue);
       expect(b.isEqual(a), isTrue);
     });
 
     test('Blob', () {
-      var a = fs.Blob.fromBase64String('AQIDBA==');
-      var b = fs.Blob.fromBase64String('AQIDBA==');
+      var a = fb.Blob.fromBase64String('AQIDBA==');
+      var b = fb.Blob.fromBase64String('AQIDBA==');
       expect(a.isEqual(b), isTrue);
       expect(a.isEqual(a), isTrue);
       expect(b.isEqual(a), isTrue);
 
-      var c = fs.Blob.fromUint8Array(Uint8List.fromList([1, 2, 3, 4]));
+      var c = fb.Blob.fromUint8Array(Uint8List.fromList([1, 2, 3, 4]));
       expect(a.isEqual(c), isTrue);
       expect(c.isEqual(a), isTrue);
     });
   });
 
   group('Collections and documents', () {
-    fs.CollectionReference ref;
+    fb.CollectionReference ref;
 
     setUp(() {
       ref = firestore.collection(testPath);
@@ -179,7 +178,7 @@ void main() {
   });
 
   group('DocumentReference', () {
-    fs.CollectionReference ref;
+    fb.CollectionReference ref;
 
     setUp(() {
       ref = firestore.collection(testPath);
@@ -250,7 +249,7 @@ void main() {
       expect(snapshotData['name'], 'New York');
       expect(snapshotData['population'], 1000);
 
-      await nycRef.update(data: {'population': fs.FieldValue.delete()});
+      await nycRef.update(data: {'population': fb.FieldValue.delete()});
 
       snapshot = await nycRef.get();
       snapshotData = snapshot.data();
@@ -293,7 +292,7 @@ void main() {
       var snapshotData = snapshot.data();
 
       await docRef.set(
-          {'text': 'MessageNew', 'title': 'Ahoj'}, fs.SetOptions(merge: true));
+          {'text': 'MessageNew', 'title': 'Ahoj'}, fb.SetOptions(merge: true));
       snapshot = await docRef.get();
       snapshotData = snapshot.data();
 
@@ -312,13 +311,13 @@ void main() {
 
       var snapshot = await docWithReference.get();
 
-      Future validateValue(fs.DocumentReference ref) async {
+      Future validateValue(fb.DocumentReference ref) async {
         var mySnap = await ref.get();
         expect(mySnap.get('value'), mapValue);
       }
 
-      await validateValue(snapshot.data()['ref'] as fs.DocumentReference);
-      await validateValue(snapshot.get('ref') as fs.DocumentReference);
+      await validateValue(snapshot.data()['ref'] as fb.DocumentReference);
+      await validateValue(snapshot.get('ref') as fb.DocumentReference);
     });
 
     group('validate simple types', () {
@@ -336,13 +335,13 @@ void main() {
         'dateTime': DateTime.fromMillisecondsSinceEpoch(123456789),
         'dateTimeUtc':
             DateTime.fromMillisecondsSinceEpoch(123456789, isUtc: true),
-        'geoPoint': fs.GeoPoint(43.3247, -95.1500),
-        'blob - base64': fs.Blob.fromBase64String('AQIDBA=='),
+        'geoPoint': fb.GeoPoint(43.3247, -95.1500),
+        'blob - base64': fb.Blob.fromBase64String('AQIDBA=='),
         'blob - bytes':
-            fs.Blob.fromUint8Array(Uint8List.fromList([1, 2, 3, 4])),
+            fb.Blob.fromUint8Array(Uint8List.fromList([1, 2, 3, 4])),
       };
 
-      void expectSameGeo(fs.GeoPoint value, fs.GeoPoint expected) {
+      void expectSameGeo(fb.GeoPoint value, fb.GeoPoint expected) {
         expect(value.latitude, expected.latitude);
         expect(value.longitude, expected.longitude);
       }
@@ -377,8 +376,8 @@ void main() {
             expectSameGeo(snapshotGetValue, value);
           } else if (key.startsWith('blob - ')) {
             // NOTE: `is` checks on interop objects always return true
-            expect((snapshotDataValue as fs.Blob).isEqual(value), isTrue);
-            expect((snapshotGetValue as fs.Blob).isEqual(value), isTrue);
+            expect((snapshotDataValue as fb.Blob).isEqual(value), isTrue);
+            expect((snapshotGetValue as fb.Blob).isEqual(value), isTrue);
           } else {
             expect(snapshotDataValue, value);
             expect(snapshotGetValue, value);
@@ -400,7 +399,7 @@ void main() {
 
       expect(snapshot.get('stringExample'), 'Hello world!');
       expect(snapshot.get('innerMap.someNumber'), 3.14159265);
-      expect(snapshot.get(fs.FieldPath('innerMap', 'someNumber')), 3.14159265);
+      expect(snapshot.get(fb.FieldPath('innerMap', 'someNumber')), 3.14159265);
       expect(snapshot.get('someNotExistentValue'), isNull);
     });
 
@@ -432,7 +431,7 @@ void main() {
 
     test('update with serverTimestamp', () async {
       var docRef = await ref.add({'text': 'Good night'});
-      await docRef.update(data: {'timestamp': fs.FieldValue.serverTimestamp()});
+      await docRef.update(data: {'timestamp': fb.FieldValue.serverTimestamp()});
 
       var snapshot = await docRef.get();
       var timeStamp = snapshot.data()['timestamp'];
@@ -449,11 +448,11 @@ void main() {
 
       await docRef.set({
         'increment': {
-          'int': fs.FieldValue.increment(100),
-          'double': fs.FieldValue.increment(1.618),
-          'nonnumber': fs.FieldValue.increment(42)
+          'int': fb.FieldValue.increment(100),
+          'double': fb.FieldValue.increment(1.618),
+          'nonnumber': fb.FieldValue.increment(42)
         }
-      }, fs.SetOptions(merge: true));
+      }, fb.SetOptions(merge: true));
 
       var snapshot = await docRef.get();
       var snapshotData = snapshot.data();
@@ -480,9 +479,9 @@ void main() {
         'greeting': {'text': 'Good Evening'}
       });
       await docRef.update(fieldsAndValues: [
-        fs.FieldPath('greeting', 'text'),
+        fb.FieldPath('greeting', 'text'),
         'Good Evening after update',
-        fs.FieldPath('greeting', 'text_cs'),
+        fb.FieldPath('greeting', 'text_cs'),
         'Dobry vecer po uprave'
       ]);
 
@@ -515,9 +514,9 @@ void main() {
       var docRef = ref.doc('array_field_value');
 
       // Make sure FieldValue class is exported by using it here
-      final fieldValueArrayUnion = fs.FieldValue.arrayUnion([1, 2]);
-      final fieldValueArrayUnion2 = fs.FieldValue.arrayUnion([10, 11]);
-      final fieldValueArrayComplex = fs.FieldValue.arrayUnion([
+      final fieldValueArrayUnion = fb.FieldValue.arrayUnion([1, 2]);
+      final fieldValueArrayUnion2 = fb.FieldValue.arrayUnion([10, 11]);
+      final fieldValueArrayComplex = fb.FieldValue.arrayUnion([
         100,
         'text',
         {
@@ -550,10 +549,10 @@ void main() {
 
       // update and remove some data
       var updateData = {
-        'array': fs.FieldValue.arrayUnion([2, 3]),
-        'array2': fs.FieldValue.arrayRemove([11, 12]),
+        'array': fb.FieldValue.arrayUnion([2, 3]),
+        'array2': fb.FieldValue.arrayRemove([11, 12]),
         // try to remove a complex object
-        'complex': fs.FieldValue.arrayRemove([
+        'complex': fb.FieldValue.arrayRemove([
           100,
           {
             'sub': [1]
@@ -633,9 +632,9 @@ void main() {
 
         await firestore.runTransaction((transaction) async {
           transaction.update(docRef, fieldsAndValues: [
-            fs.FieldPath('description', 'text'),
+            fb.FieldPath('description', 'text'),
             'Good morning after update!!!',
-            fs.FieldPath('description', 'text_cs'),
+            fb.FieldPath('description', 'text_cs'),
             'Dobre rano po uprave!!!'
           ]);
         });
@@ -713,9 +712,9 @@ void main() {
 
       var batch = firestore.batch();
       batch.update(sfRef, fieldsAndValues: [
-        fs.FieldPath('name', 'long'),
+        fb.FieldPath('name', 'long'),
         'San Francisco',
-        fs.FieldPath('population'),
+        fb.FieldPath('population'),
         1000000
       ]);
       await batch.commit();
@@ -792,11 +791,11 @@ void main() {
     }, count: 3));
 
     // ignore: unawaited_futures
-    ref.doc('message1').set({'value': fs.FieldValue.serverTimestamp()});
+    ref.doc('message1').set({'value': fb.FieldValue.serverTimestamp()});
   });
 
   group('Quering data', () {
-    fs.CollectionReference ref;
+    fb.CollectionReference ref;
 
     setUp(() async {
       ref = firestore.collection('$testPath/with/index');
@@ -847,7 +846,7 @@ void main() {
     });
 
     test('get documents where with FieldPath', () async {
-      var snapshot = await ref.where(fs.FieldPath('new'), '==', true).get();
+      var snapshot = await ref.where(fb.FieldPath('new'), '==', true).get();
       expect(snapshot.size, 2);
     });
 
@@ -926,7 +925,7 @@ void main() {
         var events = await ref.onSnapshot.take(4).toList();
         expect(
             events,
-            everyElement(isA<fs.QuerySnapshot>()
+            everyElement(isA<fb.QuerySnapshot>()
                 .having(
                     (qs) => qs.metadata.fromCache, 'metadata.fromCache', isTrue)
                 .having((qs) => qs.metadata.hasPendingWrites,

@@ -3,12 +3,10 @@ import 'dart:async';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
 
-import 'firestore.dart';
 import 'func.dart';
-import 'interop/es6_interop.dart';
-import 'interop/firebase_interop.dart' show FirebaseError;
-import 'interop/firestore_interop.dart' show TimestampJsImpl;
-import 'interop/js_interop.dart' as js;
+import 'es6_interop.dart';
+import 'js_interop.dart' as js;
+import '../core.dart' show FirebaseError;
 
 /// Returns Dart representation from JS Object.
 dynamic dartify(Object jsObject) {
@@ -24,36 +22,6 @@ dynamic dartify(Object jsObject) {
   var jsDate = js.dartifyDate(jsObject);
   if (jsDate != null) {
     return jsDate;
-  }
-
-  if (util.hasProperty(jsObject, 'firestore') &&
-      util.hasProperty(jsObject, 'id') &&
-      util.hasProperty(jsObject, 'parent')) {
-    // This is likely a document reference – at least we hope
-    // TODO(kevmoo): figure out if there is a more robust way to detect
-    return DocumentReference.getInstance(jsObject);
-  }
-
-  if (util.hasProperty(jsObject, 'latitude') &&
-      util.hasProperty(jsObject, 'longitude') &&
-      js.objectKeys(jsObject).length == 2) {
-    // This is likely a GeoPoint – return it as-is
-    return jsObject as GeoPoint;
-  }
-
-  var proto = util.getProperty(jsObject, '__proto__');
-
-  if (util.hasProperty(proto, 'toDate') &&
-      util.hasProperty(proto, 'toMillis')) {
-    return DateTime.fromMillisecondsSinceEpoch(
-        (jsObject as TimestampJsImpl).toMillis());
-  }
-
-  if (util.hasProperty(proto, 'isEqual') &&
-      util.hasProperty(proto, 'toBase64')) {
-    // This is likely a GeoPoint – return it as-is
-    // TODO(kevmoo): figure out if there is a more robust way to detect
-    return jsObject as Blob;
   }
 
   // Assume a map then...
@@ -73,14 +41,10 @@ dynamic jsifyList(Iterable list) {
   return js.toJSArray(list.map(jsify).toList());
 }
 
-/// Returns the JS implementation from Dart Object.
+// Returns the JS implementation from Dart Object.
 dynamic jsify(Object dartObject) {
   if (_isBasicType(dartObject)) {
     return dartObject;
-  }
-
-  if (dartObject is DateTime) {
-    return TimestampJsImpl.fromMillis(dartObject.millisecondsSinceEpoch);
   }
 
   if (dartObject is Iterable) {
@@ -93,23 +57,6 @@ dynamic jsify(Object dartObject) {
       util.setProperty(jsMap, key, jsify(value));
     });
     return jsMap;
-  }
-
-  if (dartObject is DocumentReference) {
-    return dartObject.jsObject;
-  }
-
-  if (dartObject is FieldValue) {
-    return jsifyFieldValue(dartObject);
-  }
-
-  if (dartObject is Blob) {
-    return dartObject;
-  }
-
-  // NOTE: if the firestore JS lib is not imported, we'll get a DDC warning here
-  if (dartObject is GeoPoint) {
-    return dartObject;
   }
 
   if (dartObject is Function) {
@@ -139,7 +86,7 @@ Future<T> handleThenable<T>(PromiseJsImpl<T> thenable) async {
     value = await util.promiseToFuture(thenable);
   } catch (e) {
     if (util.hasProperty(e, 'code')) {
-      throw _FirebaseErrorWrapper(e);
+      //TODO throw _FirebaseErrorWrapper(e);
     }
     rethrow;
   }
@@ -161,8 +108,8 @@ PromiseJsImpl<S> handleFutureWithMapper<T, S>(
 }
 
 /// Resolves error.
-void Function(Object) resolveError(Completer c) =>
-    allowInterop(c.completeError);
+// void Function(Object) resolveError(Completer c) =>
+//     allowInterop(c.completeError);
 
 class _FirebaseErrorWrapper extends Error implements FirebaseError {
   final FirebaseError _source;

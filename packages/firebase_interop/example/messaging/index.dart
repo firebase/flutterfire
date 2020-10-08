@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
 
-import 'package:firebase/firebase.dart' as fb;
-import 'package:firebase/src/assets/assets.dart';
+import 'package:firebase_interop/firebase_interop.dart' as fb;
+import 'package:firebase_interop/src/assets/assets.dart';
 import 'package:http/browser_client.dart';
 import 'package:service_worker/window.dart' as sw;
 

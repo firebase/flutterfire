@@ -1,8 +1,7 @@
 import 'dart:html';
 
-import 'package:firebase/firebase.dart' as fb;
-import 'package:firebase/firestore.dart';
-import 'package:firebase/src/assets/assets.dart';
+import 'package:firebase_interop/firebase_interop.dart' as fb;
+import 'package:firebase_interop/src/assets/assets.dart';
 
 void main() async {
   //Use for firebase package development only
@@ -23,7 +22,7 @@ void main() async {
 }
 
 class MessagesApp {
-  final CollectionReference ref;
+  final fb.CollectionReference ref;
   final UListElement messages;
   final InputElement newMessage;
   final InputElement submit;
@@ -91,7 +90,7 @@ class MessagesApp {
     });
   }
 
-  void _renderItemView(DocumentSnapshot docSnapshot) {
+  void _renderItemView(fb.DocumentSnapshot docSnapshot) {
     var spanElement = SpanElement()..text = docSnapshot.data()['text'];
 
     var aElementDelete = AnchorElement(href: '#')
@@ -116,7 +115,7 @@ class MessagesApp {
     messages.append(element);
   }
 
-  void _removeItemView(DocumentSnapshot docSnapshot) {
+  void _removeItemView(fb.DocumentSnapshot docSnapshot) {
     var element = querySelector('#item-${docSnapshot.id}');
 
     if (element != null) {
@@ -124,7 +123,7 @@ class MessagesApp {
     }
   }
 
-  void _modifyItemView(DocumentSnapshot docSnapshot) {
+  void _modifyItemView(fb.DocumentSnapshot docSnapshot) {
     var element = querySelector('#item-${docSnapshot.id} span');
 
     if (element != null) {
@@ -132,7 +131,7 @@ class MessagesApp {
     }
   }
 
-  Future _deleteItem(DocumentSnapshot docSnapshot) async {
+  Future _deleteItem(fb.DocumentSnapshot docSnapshot) async {
     try {
       await ref.doc(docSnapshot.id).delete();
     } catch (e) {
@@ -140,7 +139,7 @@ class MessagesApp {
     }
   }
 
-  Future _uppercaseItem(DocumentSnapshot docSnapshot) async {
+  Future _uppercaseItem(fb.DocumentSnapshot docSnapshot) async {
     var value = docSnapshot.data();
     var valueUppercase = value['text'].toString().toUpperCase();
     value['text'] = valueUppercase;

@@ -1,16 +1,10 @@
-// ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, comment_references
-
 @JS('firebase.firestore')
-library firebase.firestore_interop;
+library firebase_interop.firestore;
 
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'dart:typed_data' show Uint8List;
 
 import 'package:js/js.dart';
-
-import '../func.dart';
-import 'app_interop.dart';
-import 'es6_interop.dart';
-import 'firebase_interop.dart';
 
 /// Sets the verbosity of Cloud Firestore logs.
 ///
@@ -500,5 +494,7 @@ abstract class SetOptions {
 
   external set merge(bool v);
 
-  external factory SetOptions({bool merge});
+  external set mergeFields(List<String> v);
+
+  external factory SetOptions({bool merge, List<String> mergeFields});
 }
