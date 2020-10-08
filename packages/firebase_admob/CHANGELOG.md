@@ -1,3 +1,7 @@
+## 0.10.0+2
+
+ - Update a dependency to the latest release.
+
 ## 0.10.0+1
 
  - **FIX**: remove `platform` package usage (#3729).

@@ -15,6 +15,7 @@ The table below shows the recommended package versions for each plugin this migr
 |                 Plugin |                               Version |
 | ---------------------: | ------------------------------------: |
 |      `cloud_firestore` |      `^{{ plugins.cloud_firestore }}` |
+|      `cloud_functions` |      `^{{ plugins.cloud_functions }}` |
 |        `firebase_auth` |        `^{{ plugins.firebase_auth }}` |
 |        `firebase_core` |        `^{{ plugins.firebase_core }}` |
 | `firebase_crashlytics` | `^{{ plugins.firebase_crashlytics }}` |
@@ -48,7 +49,7 @@ Update the Firebase plugins you use in your project to versions that are compati
 
 Edit the plugin versions in your `pubspec.yaml` file within your project to match the versions below:
 
-```yaml {6,7,8} title="pubspec.yaml"
+```yaml {6,7,8,9,10} title="pubspec.yaml"
 dependencies:
   flutter:
     sdk: flutter
@@ -57,9 +58,9 @@ dependencies:
   firebase_auth: "^{{ plugins.firebase_auth }}"
   firebase_crashlytics: "^{{ plugins.firebase_crashlytics }}"
   cloud_firestore: "^{{ plugins.cloud_firestore }}"
+  cloud_functions: "^{{ plugins.cloud_functions }}"
   firebase_storage: "^{{ plugins.firebase_storage }}"
   # Updated to work with new core only plugins (no new changes):
-  cloud_functions: "^{{ plugins.cloud_functions }}"
   firebase_admob: "^{{ plugins.firebase_admob }}"
   firebase_analytics: "^{{ plugins.firebase_analytics }}"
   firebase_database: "^{{ plugins.firebase_database }}"
@@ -312,6 +313,30 @@ Any Firestore specific errors now return a `FirebaseException` (see Core changes
 - **`GeoPoint`**:
   - **BREAKING**: Added latitude and longitude validation when constructing a new `GeoPoint` instance.
 
+### Functions
+
+ - **`FirebaseFunctions`**:
+   - **DEPRECATED**: Class `CloudFunctions` is now deprecated. Use `FirebaseFunctions` instead.
+   - **DEPRECATED**: Calling `CloudFunctions.instance` or `CloudFunctions(app: app, region: region)` is now deprecated. Use `FirebaseFunctions.instance` or `FirebaseFunctions.instanceFor(app: app, region: region)` instead.
+   - **DEPRECATED**: Calling `getHttpsCallable(functionName: functionName)` is deprecated in favor of `httpsCallable(functionName)`
+   - **DEPRECATED**: `CloudFunctionsException` is deprecated in favor of `FirebaseFunctionsException`.
+   - **NEW**: `FirebaseFunctionsException` now exposes a `details` property to retrieve any additional data provided with the exception returned by a HTTPS callable function.
+   - **NEW**: Internally, instances of `FirebaseFunctions` are now cached and lazily loaded.
+   - **NEW**: `httpsCallable` accepts an instance of `HttpsCallableOptions` (see below).
+
+
+ - **`HttpsCallable`**:
+   - **DEPRECATED**: Setting `timeout` is deprecated in favor of using `HttpsCallableOptions` (see below).
+
+
+ - **`HttpsCallableResult`**:
+   - **BREAKING**: `data` is now read-only, only its getter is exposed.
+   - **FIX**: `HttpsCallableResult`'s `data` property can now return a Map, List or a primitive value. Previously the Web implementation incorrectly assumed that a Map was always returned by the HTTPS callable function.
+
+
+ - **`HttpsCallableOptions`**: 
+   - **NEW**: This new class has been created to support setting options for `httpsCallable` instances.
+
 ### Authentication
 
 Overall, Firebase Auth has been heavily reworked to bring it inline with the federated plugin setup along with adding new features, documentation and many more unit and end-to-end tests.
@@ -387,6 +412,7 @@ documentation and many more unit and end-to-end tests (tested on Android, iOS & 
   - **NEW**: Added support for `refFromURL`, which accepts a Google Storage (`gs://`) or HTTP URL and returns a `Reference` synchronously.
 
 - **`Reference`**
+
   - **BREAKING**: `StorageReference` has been renamed to `Reference`.
   - **DEPRECATED**: `getParent()` is deprecated in favor of `.parent`.
   - **DEPRECATED**: `getRoot()` is deprecated in favor of `.root`.
@@ -402,11 +428,13 @@ documentation and many more unit and end-to-end tests (tested on Android, iOS & 
   - **NEW**: `getData()` does not require a `maxSize`, it can now be called with a default of 10mb.
 
 - **NEW `ListOptions`**
+
   - The `list()` method accepts a `ListOptions` instance with the following arguments:
     - `maxResults`: limits the number of results returned from a call. Defaults to 1000.
     - `pageToken`: a page token returned from a `ListResult` - used if there are more items to query.
 
 - **NEW `ListResult`**
+
   - A `ListResult` class has been added, which is returned from a call to `list()` or `listAll()`. It exposes the following properties:
     - `items` (`List<Reference>`): Returns the list of reference objects at the current reference location.
     - `prefixes` (`List<Reference>`): Returns the list of reference sub-folders at the current reference location.
@@ -421,7 +449,7 @@ documentation and many more unit and end-to-end tests (tested on Android, iOS & 
     - **BREAKING**: `pause()`, `cancel()` and `resume()` are now Futures which return a boolean value to represent whether the status update was successful.
       - Previously, these were `void` methods but still carried out an asynchronous tasks, potentially leading to uncaught exceptions.
     - **BREAKING**: `isCanceled`, `isComplete`, `isInProgress`, `isPaused` and `isSuccessful` have now been removed. Instead, you should subscribe to the stream (for paused/progress/complete/error events) or the task `Future` for task completion/errors.
-     - Additionally the latest `TaskSnapshot` now provides the latest `TaskState` via `task.snapshot.state`.
+    - Additionally the latest `TaskSnapshot` now provides the latest `TaskState` via `task.snapshot.state`.
     - **BREAKING**: The `events` stream (now `snapshotEvents`) previously returned a `StorageTaskEvent`, containing a `StorageTaskEventType` and `StorageTaskSnapshot` Instead, the stream now returns a `TaskSnapshot` which includes the `state`.
     - **BREAKING**: A task failure and cancellation now throw a `FirebaseException` instead of a new event.
     - **DEPRECATED**: `events` stream is deprecated in favor of `snapshotEvents`.

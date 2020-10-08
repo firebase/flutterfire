@@ -16,6 +16,7 @@ dependency_overrides:
 
 dev_dependencies:
   pedantic: ^1.8.0
+  drive: 0.0.1-6.0.pre
   flutter_driver:
     sdk: flutter
   test: any
