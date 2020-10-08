@@ -13,7 +13,7 @@ export 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
     show
         RemoteMessageHandler,
         IOSAuthorizationStatus,
-        // ignore: deprecated_member_use
+        // ignore: deprecated_member_use, deprecated_member_use_from_same_package
         IosNotificationSettings,
         AndroidNotificationPriority,
         AndroidNotificationVisibility,
