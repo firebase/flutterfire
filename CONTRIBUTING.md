@@ -67,7 +67,35 @@ flutter run
 Using Melos (installed in step 3), any changes made to the plugins locally will also be reflected within all
 example applications code automatically.
 
-## 4. Running tests
+## 5. Setting up the Cloud Functions Emulator (Local development)
+
+### Running the Emulator
+
+Please see the setup guide via [Local emulator](https://firebase.google.com/docs/functions/local-emulator)
+
+### Calling a function
+
+If you are using the local Cloud Functions emulators, then it is possible to connect to these using the useFunctionsEmulator method.
+
+Ensure you pass the correct port on which the Firebase emulator is running on.
+
+```js
+FirebaseFunctions.instance
+  .useFunctionsEmulator((origin: "http://localhost:5000"))
+  .httpsCallable("myCloudFunction");
+```
+
+If you are targeting apps using Android 8.0+, the platform will block the http endpoint.
+
+The simplest solution is to change this in your debug builds by adding the following to your android/app/src/main/AndroidManifest.xml file:
+
+```js
+<application android:usesCleartextTraffic="true" />
+```
+
+If you are concerned about security, you can set a more advanced per-host [network security file](https://developer.android.com/training/articles/security-config)
+
+## 6. Running tests
 
 FlutterFire comprises of a number of tests for each plugin, either end-to-end (e2e) or unit tests.
 
@@ -116,7 +144,7 @@ melos run test:e2e
 A full list of all commands can be found within the [`melos.yaml`](https://github.com/FirebaseExtended/flutterfire/blob/master/melos.yaml)
 file.
 
-## 5. Contributing code
+## 7. Contributing code
 
 We gladly accept contributions via GitHub pull requests.
 
