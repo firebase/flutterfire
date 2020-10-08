@@ -61,12 +61,20 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// When a [snapshotsInSync] event is fired on the [MethodChannel], trigger
   /// a new Stream event.
   void _handleSnapshotsInSync(Map<dynamic, dynamic> arguments) async {
+    if (!snapshotInSyncObservers.containsKey(arguments['handle'])) {
+      return;
+    }
+
     snapshotInSyncObservers[arguments['handle']].add(null);
   }
 
   /// When a [QuerySnapshot] event is fired on the [MethodChannel],
   /// add a [MethodChannelQuerySnapshot] to the [StreamController].
   void _handleQuerySnapshotEvent(Map<dynamic, dynamic> arguments) async {
+    if (!queryObservers.containsKey(arguments['handle'])) {
+      return;
+    }
+
     try {
       queryObservers[arguments['handle']]
           .add(MethodChannelQuerySnapshot(this, arguments['snapshot']));
@@ -87,6 +95,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// When a [DocumentSnapshot] event is fired on the [MethodChannel],
   /// add a [DocumentSnapshotPlatform] to the [StreamController].
   void _handleDocumentSnapshotEvent(Map<dynamic, dynamic> arguments) async {
+    if (!documentObservers.containsKey(arguments['handle'])) {
+      return;
+    }
+
     try {
       Map<String, dynamic> snapshotMap =
           Map<String, dynamic>.from(arguments['snapshot']);
@@ -156,7 +168,9 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// Attach a [FirebaseException] to a given [StreamController].
   void _handleError(
       StreamController controller, Map<dynamic, dynamic> arguments) async {
-    assert(controller != null);
+    if (controller == null) {
+      return;
+    }
 
     if (arguments['error'] is Map) {
       // Map means its an error from Native.
@@ -231,10 +245,14 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Future<void> clearPersistence() async {
-    await channel
-        .invokeMethod<void>('Firestore#clearPersistence', <String, dynamic>{
-      'firestore': this,
-    }).catchError(catchPlatformException);
+    try {
+      await channel
+          .invokeMethod<void>('Firestore#clearPersistence', <String, dynamic>{
+        'firestore': this,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -255,10 +273,14 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Future<void> disableNetwork() async {
-    await channel
-        .invokeMethod<void>('Firestore#disableNetwork', <String, dynamic>{
-      'firestore': this,
-    }).catchError(catchPlatformException);
+    try {
+      await channel
+          .invokeMethod<void>('Firestore#disableNetwork', <String, dynamic>{
+        'firestore': this,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -268,10 +290,14 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Future<void> enableNetwork() async {
-    await channel
-        .invokeMethod<void>('Firestore#enableNetwork', <String, dynamic>{
-      'firestore': this,
-    }).catchError(catchPlatformException);
+    try {
+      await channel
+          .invokeMethod<void>('Firestore#enableNetwork', <String, dynamic>{
+        'firestore': this,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -330,6 +356,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       stackTrace = s;
     });
 
+    // The #create call only resolves once all transaction attempts have succeeded
+    // or something failed.
     await channel.invokeMethod<T>('Transaction#create', <String, dynamic>{
       'firestore': this,
       'transactionId': transactionId,
@@ -339,7 +367,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       stackTrace = s;
     });
 
-    // The transaction is successful, cleanup the stream
+    // The transaction has completed (may have errored), cleanup the stream
     await subscription.cancel();
     _transactionStreamControllerHandlers.remove(transactionId);
 
@@ -367,16 +395,24 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Future<void> terminate() async {
-    await channel.invokeMethod<void>('Firestore#terminate', <String, dynamic>{
-      'firestore': this,
-    }).catchError(catchPlatformException);
+    try {
+      await channel.invokeMethod<void>('Firestore#terminate', <String, dynamic>{
+        'firestore': this,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
   Future<void> waitForPendingWrites() async {
-    await channel
-        .invokeMethod<void>('Firestore#waitForPendingWrites', <String, dynamic>{
-      'firestore': this,
-    }).catchError(catchPlatformException);
+    try {
+      await channel.invokeMethod<void>(
+          'Firestore#waitForPendingWrites', <String, dynamic>{
+        'firestore': this,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 }

@@ -6,17 +6,16 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:firebase/firebase.dart' as firebase;
 
-/// Returns a [FirebaseException] from a thrown web error.
-FirebaseException getFirebaseException(Object object, [StackTrace stackTrace]) {
-  if (object is! firebase.FirebaseError) {
-    return FirebaseException(
-        plugin: 'cloud_firestore',
-        code: 'unknown',
-        message: object.toString(),
-        stackTrace: stackTrace);
+/// Given a web error, an [Exception] is returned.
+///
+/// The firebase-dart wrapper exposes a [firebase.FirebaseError], allowing us to
+/// use the code and message and convert it into an expected.
+Exception convertPlatformException(Object exception, [StackTrace stackTrace]) {
+  if (exception is! firebase.FirebaseError) {
+    return exception;
   }
 
-  firebase.FirebaseError firebaseError = object as firebase.FirebaseError;
+  firebase.FirebaseError firebaseError = exception as firebase.FirebaseError;
 
   String code = firebaseError.code.replaceFirst('firestore/', '');
   String message =

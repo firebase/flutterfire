@@ -5,7 +5,7 @@ ACTION=$1
 if [ "$ACTION" == "android" ]
 then
   # Sleep to allow emulator to settle.
-  sleep 15 
+  sleep 15
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
     flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
   exit
@@ -23,12 +23,16 @@ then
   # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
     flutter drive -d \"$SIMULATOR\" --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+  MELOS_EXIT_CODE=$?
   xcrun simctl shutdown "$SIMULATOR"
-  exit
+  exit $MELOS_EXIT_CODE
 fi
 
 if [ "$ACTION" == "macos" ]
 then
+  # TODO Flutter dev branch is currently broken so we're unable to test MacOS.
+  echo "TODO: Skipping macOS testing due to Flutter dev branch issue."
+  exit
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
     flutter drive -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
   exit

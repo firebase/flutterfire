@@ -37,9 +37,9 @@ class PhoneAuthProvider extends AuthProvider {
 
   /// Create a [PhoneAuthCredential] from an internal token, where the ID
   /// relates to a natively stored credential.
-  static AuthCredential credentialFromToken(int token) {
+  static AuthCredential credentialFromToken(int token, {String smsCode}) {
     assert(token != null);
-    return PhoneAuthCredential._credentialFromToken(token);
+    return PhoneAuthCredential._credentialFromToken(token, smsCode: smsCode);
   }
 
   @Deprecated('Deprecated in favor of `PhoneAuthProvider.credential()`')
@@ -69,8 +69,9 @@ class PhoneAuthCredential extends AuthCredential {
         verificationId: verificationId, smsCode: smsCode);
   }
 
-  factory PhoneAuthCredential._credentialFromToken(int token) {
-    return PhoneAuthCredential._(token: token);
+  factory PhoneAuthCredential._credentialFromToken(int token,
+      {String smsCode}) {
+    return PhoneAuthCredential._(token: token, smsCode: smsCode);
   }
 
   /// The phone auth verification ID.

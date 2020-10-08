@@ -1,6 +1,172 @@
 ---
-title: Crashlytics
+title: Using Firebase Crashlytics
 sidebar_label: Usage
 ---
 
-Crashlytics usage
+To start using Firebase Crashlytics within your project, import it at the top of your project files:
+
+```dart
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+```
+
+## Sending reports to Crashlytics
+
+To send report data to Crashlytics, the **application must be restarted**.  Crashlytics automatically sends any crash reports
+to Firebase the next time the application is launched.
+
+## Toggle Crashlytics collection
+
+Call the `setCrashlyticsCollectionEnabled` method to toggle Crashlytics collection status.
+
+For example to ensure it is disabled when your app is in debug mode you can do the following:
+
+```dart
+import 'package:flutter/foundation.dart' show kDebugMode;
+
+// ...
+
+if (kDebugMode) {
+  // Force disable Crashlytics collection while doing every day development.
+  // Temporarily toggle this to true if you want to test crash reporting in your app.
+  await FirebaseCrashlytics.instance
+      .setCrashlyticsCollectionEnabled(false);
+} else {
+  // Handle Crashlytics enabled status when not in Debug,
+  // e.g. allow your users to opt-in to crash reporting.
+}
+```
+
+You can additionally read the current collection enabled status:
+
+```dart
+if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {
+  // Collection is enabled.
+}
+```
+
+## Forcing a crash
+
+You don't have to wait for a crash to know that Crashlytics is working. To force a crash, call the `crash` method:
+
+```dart
+FirebaseCrashlytics.instance.crash();
+```
+
+Your app should exit immediately after calling this method. After opening your app again after the crash
+Firebase Crashlytics will upload the crash report to the Firebase Console.
+
+The error will be show on the Firebase Crashlytics dashboard as an instance of `FirebaseCrashlyticsTestCrash`, with a message of
+`This is a test crash caused by calling .crash() in Dart.`
+
+## Add custom keys
+
+To associate key/value pairs with your crash reports, you can use the `setCustomKey` method
+
+```dart
+// Set a key to a string.
+FirebaseCrashlytics.instance.setCustomKey('str_key', 'hello');
+
+// Set a key to a boolean.
+FirebaseCrashlytics.instance.setCustomKey("bool_key", true);
+
+// Set a key to an int.
+FirebaseCrashlytics.instance.setCustomKey("int_key", 1);
+
+// Set a key to a long.
+FirebaseCrashlytics.instance.setCustomKey("int_key", 1L);
+
+// Set a key to a float.
+FirebaseCrashlytics.instance.setCustomKey("float_key", 1.0f);
+
+// Set a key to a double.
+FirebaseCrashlytics.instance.setCustomKey("double_key", 1.0);
+```
+
+>   This accepts a maximum of 64 key/value pairs. New keys beyond that limit are ignored. Keys or values that exceed 1024 characters are truncated.
+
+## Add custom log messages
+
+To add custom Crashlytics log messages to your app, use the `log` method
+
+```dart
+FirebaseCrashlytics.instance.log("Higgs-Boson detected! Bailing out");
+```
+
+## Set user identifiers
+
+To add user IDs to your reports, assign each user with a unique ID.  This can be an ID number, token or hashed value:
+
+```dart
+FirebaseCrashlytics.instance.setUserIdentifier("12345");
+```
+
+## Handling uncaught errors
+
+By overriding `FlutterError.onError` with `FirebaseCrashlytics.instance.recordFlutterError`, it will automatically
+catch all errors that are thrown within the Flutter framework.
+
+```dart
+void main() {
+  // Pass all uncaught errors from the framework to Crashlytics.
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
+  runApp(MyApp());
+}
+```
+### Zoned Errors
+
+If you want to catch errors that occur in zones, you can pass `FirebaseCrashlytics.instance.recordError` to the second
+parameter of `runZonedGuarded`
+
+```dart
+runZonedGuarded<Future<void>>(() async {
+    // ...
+  }, FirebaseCrashlytics.instance.recordError);
+  ```
+
+### Errors outside of Flutter
+
+To catch errors that happen outside of the Flutter context, install an error listener on the current Isolate:
+
+```dart
+Isolate.current.addErrorListener(RawReceivePort((pair) async {
+  final List<dynamic> errorAndStacktrace = pair;
+  await FirebaseCrashlytics.instance.recordError(
+    errorAndStacktrace.first,
+    errorAndStacktrace.last,
+  );
+}).sendPort);
+```
+
+## Enable opt-in reporting
+
+By default, Crashlytics will automatically collect crash reports for all your app's users.  To give users more control over
+the data they send, you can enable opt-in reporting by disabling automatic collection and initializing Crashlytics only for selected users:
+
+1. Turn off automatic collection natively:
+
+a. Android
+In the `application` block of your `AndroidManifest.xml` file, add a `meta-data` tags to turn off automatic collection:
+
+```xml
+<meta-data
+  android:name="firebase_crashlytics_collection_enabled"
+  android:value="false" />
+```
+
+b. iOS
+
+Add a new key to your `Info.plist` file.
+
+- Key: `FirebaseCrashlyticsCollectionEnabled`
+- Value: `false`
+
+2. Enable collection for select users by calling the Crashlytics data collection override at runtime.  To opt out of automatic
+crash reporting, pass `false` as the override value.  When set to `false`, the new value does not apply until the next run
+of the app.
+
+```dart
+FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+```
+
+

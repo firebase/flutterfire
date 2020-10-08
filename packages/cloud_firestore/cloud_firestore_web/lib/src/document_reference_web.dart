@@ -35,7 +35,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         options != null ? web.SetOptions(merge: options.merge) : null,
       );
     } catch (e, s) {
-      throw getFirebaseException(e, s);
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -44,7 +44,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     try {
       await _delegate.update(data: CodecUtility.encodeMapData(data));
     } catch (e, s) {
-      throw getFirebaseException(e, s);
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -55,7 +55,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
       web.DocumentSnapshot documentSnapshot = await _delegate.get();
       return convertWebDocumentSnapshot(this.firestore, documentSnapshot);
     } catch (e, s) {
-      throw getFirebaseException(e, s);
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -64,7 +64,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     try {
       await _delegate.delete();
     } catch (e, s) {
-      throw getFirebaseException(e, s);
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -80,7 +80,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         .map((webSnapshot) =>
             convertWebDocumentSnapshot(this.firestore, webSnapshot))
         .handleError((e, s) {
-      throw getFirebaseException(e, s);
+      throw convertPlatformException(e, s);
     });
   }
 }

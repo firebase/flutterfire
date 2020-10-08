@@ -13,6 +13,7 @@ import 'package:meta/meta.dart';
 
 import 'firebase_auth_web_recaptcha_verifier_factory.dart';
 import 'firebase_auth_web_user_credential.dart';
+import 'firebase_auth_web_confirmation_result.dart';
 import 'utils.dart';
 
 /// The web delegate implementation for [FirebaseAuth].
@@ -114,7 +115,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     assert(appName != null);
     assert(_userChangesListeners[appName] != null);
 
-    _userChangesListeners[appName].add(null);
+    _userChangesListeners[appName].add(userPlatform);
   }
 
   @override
@@ -128,7 +129,20 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<ActionCodeInfo> checkActionCode(String code) async {
-    return convertWebActionCodeInfo(await _webAuth.checkActionCode(code));
+    try {
+      return convertWebActionCodeInfo(await _webAuth.checkActionCode(code));
+    } catch (e) {
+      throw throwFirebaseAuthException(e);
+    }
+  }
+
+  @override
+  Future<void> confirmPasswordReset(String code, String newPassword) async {
+    try {
+      await _webAuth.confirmPasswordReset(code, newPassword);
+    } catch (e) {
+      throw throwFirebaseAuthException(e);
+    }
   }
 
   @override
@@ -266,15 +280,19 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     }
   }
 
-  // TODO(ehesp): This is currently unimplemented due to an underlying firebase.ApplicationVerifier issue on the firebase-dart repository.
-  // @override
-  // Future<ConfirmationResultPlatform> signInWithPhoneNumber(String phoneNumber,
-  //     RecaptchaVerifierFactoryPlatform applicationVerifier) async {
-  //   return ConfirmationResultWeb(
-  //       this,
-  //       await _webAuth.signInWithPhoneNumber(phoneNumber,
-  //           applicationVerifier.getDelegate<firebase.ApplicationVerifier>()));
-  // }
+  @override
+  Future<ConfirmationResultPlatform> signInWithPhoneNumber(String phoneNumber,
+      RecaptchaVerifierFactoryPlatform applicationVerifier) async {
+    try {
+      // Do not inline - type is not inferred & error is thrown.
+      firebase.RecaptchaVerifier verifier = applicationVerifier.delegate;
+
+      return ConfirmationResultWeb(
+          this, await _webAuth.signInWithPhoneNumber(phoneNumber, verifier));
+    } catch (e) {
+      throw throwFirebaseAuthException(e);
+    }
+  }
 
   @override
   Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) async {

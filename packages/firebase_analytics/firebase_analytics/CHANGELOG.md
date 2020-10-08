@@ -1,3 +1,12 @@
+## 6.0.2
+
+ - **FIX**: remove unused dart:async import (#3611).
+
+## 6.0.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **CHORE**: intellij cleanup (#3326).
+
 ## 6.0.0
 
 * Firebase iOS SDK versions are now locked to use the same version defined in

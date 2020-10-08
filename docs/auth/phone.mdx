@@ -36,11 +36,10 @@ different functionality to validating a phone number than the web, therefore two
 
 - **Native Platform**: [`verifyPhoneNumber`](!firebase_auth.FirebaseAuth.verifyPhoneNumber).
 - **Web Platform**: [`signInWithPhoneNumber`](!firebase_auth.FirebaseAuth.signInWithPhoneNumber).
-  - **Note**: the `firebase_auth_web` package does not yet support this method. Support will be added in a future release.
 
 ### Native: `verifyPhoneNumber`
 
-On native platforms, the users phone number must be first verified and then the user can either sign-in or link their account with a
+On native platforms, the user's phone number must be first verified and then the user can either sign-in or link their account with a
 [`PhoneAuthCredential`](!firebase_auth_platform_interface.PhoneAuthCredential).
 
 First you must prompt the user for their phone number. Once provided, call the `verifyPhoneNumber()` method:
@@ -66,9 +65,9 @@ There are 4 separate callbacks that you must handle, each will determine how you
 
 This handler will only be called on Android devices which support automatic SMS code resolution.
 
-When the SMS code is delivered to the device Android will automatically verify the SMS code without
+When the SMS code is delivered to the device, Android will automatically verify the SMS code without
 requiring the user to manually input the code. If this event occurs, a `PhoneAuthCredential` is automatically provided which can be
-used to sign-in with or link the users phone number.
+used to sign-in with or link the user's phone number.
 
 ```dart
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -122,7 +121,7 @@ await auth.verifyPhoneNumber(
     String smsCode = 'xxxx';
 
     // Create a PhoneAuthCredential with the code
-    PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId, smsCode);
+    PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
 
     // Sign the user in (or link) with the credential
     await auth.signInWithCredential(phoneAuthCredential);
@@ -151,6 +150,72 @@ await auth.verifyPhoneNumber(
   codeAutoRetrievalTimeout: (String verificationId) {
     // Auto-resolution timed out...
   },
+);
+```
+
+### Web: `signInWithPhoneNumber`
+
+On web platforms, users can sign-in by confirming they have access to a phone by entering the SMS code sent to the provided phone number.
+For added security and spam prevention, users are requested to prove they are human by completing a [Google reCAPTCHA](https://www.google.com/recaptcha/about/)
+widget. Once confirmed, the SMS code will be sent.
+
+FlutterFire will manage the reCAPTCHA widget out of the box by default, however provides control over how it is displayed and configured if required.
+To get started, call the `signInWithPhoneNumber` method with the phone number.
+
+```dart
+FirebaseAuth auth = FirebaseAuth.instance;
+
+// Wait for the user to complete the reCAPTCHA & for a SMS code to be sent.
+ConfirmationResult confirmationResult = await auth.signInWithPhoneNumber('+44 7123 123 456');
+```
+
+Calling the method will first trigger the reCAPTCHA widget to display. The user must complete the
+test before an SMS code is sent. Once complete, you can then sign the user in by providing the
+SMS code to the `confirm` method on the resolved `ConfirmationResult` response:
+
+```dart
+UserCredential userCredential = await confirmationResult.confirm('123456');
+```
+
+Like other sign-in flows, a successful sign-in will trigger any authentication state listeners
+you have subscribed throughout your application.
+
+#### reCAPTCHA Configuration
+
+The reCAPTCHA widget is a fully managed flow which provides security to your web application.
+
+![reCAPTCHA Widget Example](recaptcha-widget.jpg)
+
+The second argument of `signInWithPhoneNumber` accepts an optional `RecaptchaVerifier` instance which can be used
+to manage the widget. By default, the widget will render as an invisible widget when the sign-in flow is triggered.
+An "invisible" widget will appear as a full-page modal on-top of your application like demonstrated above.
+
+It is however possible to display an inline widget which the user has to explicitly press to verify themselves.
+
+![Inline reCAPTCHA Widget Example](recaptcha-widget-inline.jpg)
+
+To add an inline widget, specify a DOM element ID to the `container` argument of the `RecaptchaVerifier` instance.
+The element must exist and be empty otherwise an error will be thrown.
+If no `container` argument is provided, the widget will be rendered as "invisible".
+
+```dart
+ConfirmationResult confirmationResult = await auth.signInWithPhoneNumber('+44 7123 123 456', RecaptchaVerifier(
+  container: 'recaptcha',
+  size: RecaptchaVerifierSize.compact,
+  theme: RecaptchaVerifierTheme.dark,
+));
+```
+
+You can optionally change the size and theme by customizing the `size` and `theme` arguments as shown above.
+
+It is also possible to listen to events, such as whether the reCAPTCHA has been completed by the user, whether
+the reCAPTCHA has expired or an error was thrown:
+
+```dart
+RecaptchaVerifier(
+  onSuccess: () => print('reCAPTCHA Completed!'),
+  onError: (FirebaseAuthException error) => print(error),
+  onExpired: () => print('reCAPTCHA Expired!'),
 );
 ```
 

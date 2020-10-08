@@ -15,9 +15,7 @@ FirebaseAuthException throwFirebaseAuthException(Object exception,
     [StackTrace stackTrace]) {
   if (exception is! firebase.FirebaseError) {
     return FirebaseAuthException(
-        code: 'unknown',
-        message: 'An unknown error occurred.',
-        stackTrace: stackTrace);
+        code: 'unknown', message: 'An unknown error occurred: ${exception}');
   }
 
   firebase.FirebaseError firebaseError = exception as firebase.FirebaseError;
@@ -60,8 +58,10 @@ AdditionalUserInfo convertWebAdditionalUserInfo(
 IdTokenResult convertWebIdTokenResult(firebase.IdTokenResult webIdTokenResult) {
   return IdTokenResult(<String, dynamic>{
     'claims': webIdTokenResult.claims,
-    'expirationTimestamp': webIdTokenResult.expirationTime.millisecond,
-    'issuedAtTimestamp': webIdTokenResult.issuedAtTime.millisecond,
+    'expirationTimestamp':
+        webIdTokenResult.expirationTime.millisecondsSinceEpoch,
+    'issuedAtTimestamp': webIdTokenResult.issuedAtTime.millisecondsSinceEpoch,
+    'authTimestamp': webIdTokenResult.authTime.millisecondsSinceEpoch,
     'signInProvider': webIdTokenResult.signInProvider,
     'signInSecondFactor': null,
     'token': webIdTokenResult.token,
@@ -75,18 +75,27 @@ firebase.ActionCodeSettings convertPlatformActionCodeSettings(
     return null;
   }
 
+  Map<String, dynamic> actionCodeSettingsMap = actionCodeSettings.asMap();
+  firebase.AndroidSettings android;
+  firebase.IosSettings iOS;
+
+  if (actionCodeSettingsMap['android'] != null) {
+    android = firebase.AndroidSettings(
+        packageName: actionCodeSettingsMap['android']['packageName'],
+        minimumVersion: actionCodeSettingsMap['android']['minimumVersion'],
+        installApp: actionCodeSettingsMap['android']['installApp']);
+  }
+
+  if (actionCodeSettingsMap['iOS'] != null) {
+    iOS = firebase.IosSettings(
+        bundleId: actionCodeSettingsMap['iOS']['bundleId']);
+  }
+
   return firebase.ActionCodeSettings(
       url: actionCodeSettings.url,
       handleCodeInApp: actionCodeSettings.handleCodeInApp,
-      android: actionCodeSettings.android == null
-          ? null
-          : firebase.AndroidSettings(
-              packageName: actionCodeSettings.android['packageName'],
-              minimumVersion: actionCodeSettings.android['minimumVersion'],
-              installApp: actionCodeSettings.android['installApp']),
-      iOS: actionCodeSettings.iOS == null
-          ? null
-          : firebase.IosSettings(bundleId: actionCodeSettings.iOS['bundleId']));
+      android: android,
+      iOS: iOS);
 }
 
 /// Converts a [Persistence] enum into a web string persistence value.
@@ -227,4 +236,26 @@ firebase.OAuthCredential convertPlatformCredential(AuthCredential credential) {
   }
 
   return null;
+}
+
+/// Converts a [RecaptchaVerifierSize] enum into a string.
+String convertRecaptchaVerifierSize(RecaptchaVerifierSize size) {
+  switch (size) {
+    case RecaptchaVerifierSize.compact:
+      return 'compact';
+    case RecaptchaVerifierSize.normal:
+    default:
+      return 'normal';
+  }
+}
+
+/// Converts a [RecaptchaVerifierTheme] enum into a string.
+String convertRecaptchaVerifierTheme(RecaptchaVerifierTheme theme) {
+  switch (theme) {
+    case RecaptchaVerifierTheme.dark:
+      return 'dark';
+    case RecaptchaVerifierTheme.light:
+    default:
+      return 'light';
+  }
 }

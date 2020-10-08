@@ -2,39 +2,37 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
-	<string>ca-app-pub-3940256099942544/2934735716</string>
-	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
-	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>297855924061-6gkhkcr566enm8q2ds9d81quuh6mm6of.apps.googleusercontent.com</string>
+	<string>448618578101-lc3q11v4dv28hef68s6skqju3k2gjd3j.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.297855924061-6gkhkcr566enm8q2ds9d81quuh6mm6of</string>
+	<string>com.googleusercontent.apps.448618578101-lc3q11v4dv28hef68s6skqju3k2gjd3j</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>448618578101-vh59lklbaigpccaugknk3j0g1pp81kr2.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBq6mcufFXfyqr79uELCiqM_O_1-G72PVU</string>
+	<string>AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0</string>
 	<key>GCM_SENDER_ID</key>
-	<string>297855924061</string>
+	<string>448618578101</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>io.flutter.plugins.firebase.cloudfunctions.cloudFunctionsExample</string>
+	<string>io.flutter.plugins.firebase.functions.example</string>
 	<key>PROJECT_ID</key>
-	<string>flutterfire-cd2f7</string>
+	<string>react-native-firebase-testing</string>
 	<key>STORAGE_BUCKET</key>
-	<string>flutterfire-cd2f7.appspot.com</string>
+	<string>react-native-firebase-testing.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<true></true>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
 	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false></false>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
 	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:297855924061:ios:ccfb5cc13360119c</string>
+	<string>1:448618578101:ios:f7208957983eeee4ac3efc</string>
 	<key>DATABASE_URL</key>
-	<string>https://flutterfire-cd2f7.firebaseio.com</string>
+	<string>https://react-native-firebase-testing.firebaseio.com</string>
 </dict>
 </plist>

@@ -134,7 +134,11 @@ public class FlutterFirebaseFirestorePlugin
   private void removeEventListeners() {
     for (int i = 0; i < listenerRegistrations.size(); i++) {
       int key = listenerRegistrations.keyAt(i);
-      listenerRegistrations.get(key).remove();
+      ListenerRegistration listenerRegistration = listenerRegistrations.get(key);
+
+      if (listenerRegistration != null) {
+        listenerRegistration.remove();
+      }
     }
     listenerRegistrations.clear();
   }
@@ -493,8 +497,10 @@ public class FlutterFirebaseFirestorePlugin
     switch (call.method) {
       case "Firestore#removeListener":
         int handle = Objects.requireNonNull(call.argument("handle"));
-        listenerRegistrations.get(handle).remove();
-        listenerRegistrations.remove(handle);
+        if (listenerRegistrations.get(handle) != null) {
+          listenerRegistrations.get(handle).remove();
+          listenerRegistrations.remove(handle);
+        }
         result.success(null);
         return;
       case "Firestore#disableNetwork":

@@ -1,6 +1,6 @@
-## Unpublished
+## 0.5.0+1
 
-* Added support for [FirebaseException] stack traces.
+ - **FIX**: remove unused dart:async import (#3611).
 
 ## 0.5.0
 
