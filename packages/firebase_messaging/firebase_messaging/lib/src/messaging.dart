@@ -131,21 +131,18 @@ multiple times.
   ''')
   static void configure({
     RemoteMessageHandler onMessage,
-    void Function(String messageId) onMessageSent,
-    RemoteMessageHandler onNotificationOpenedApp,
-    void Function(FirebaseException exception, String messageId) onSendError,
-    void Function() onDeletedMessages,
     RemoteMessageHandler onBackgroundMessage,
-    // TODO(salakar): are these required?
     RemoteMessageHandler onLaunch, // deprecate
     RemoteMessageHandler onResume, // deprecate
   }) {
     FirebaseMessaging.onMessage(onMessage);
-    FirebaseMessaging.onMessageSent(onMessageSent);
-    FirebaseMessaging.onNotificationOpenedApp(onNotificationOpenedApp);
-    FirebaseMessaging.onSendError(onSendError);
-    FirebaseMessaging.onDeletedMessages(onDeletedMessages);
     FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
+    if (onLaunch != null || onResume != null) {
+      FirebaseMessaging.onNotificationOpenedApp((message) {
+        onLaunch?.call(message);
+        onResume?.call(message);
+      });
+    }
   }
 
   // ignore: public_member_api_docs
