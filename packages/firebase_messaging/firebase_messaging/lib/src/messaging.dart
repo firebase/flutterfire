@@ -243,6 +243,18 @@ class FirebaseMessaging extends FirebasePluginPlatform {
         status == AuthorizationStatus.provisional;
   }
 
+  /// On Apple platforms, if your app wants to receive remote messages from FCM
+  /// (via APNs), you must explicitly register with APNs if auto-registration
+  /// has been disabled or [unregisterDeviceForRemoteMessages] has been called.
+  Future<void> registerDeviceForRemoteMessages() {
+    return _delegate.registerDeviceForRemoteMessages();
+  }
+
+  /// Unregisters the app from receiving remote notifications.
+  Future<void> unregisterDeviceForRemoteMessages() {
+    return _delegate.unregisterDeviceForRemoteMessages();
+  }
+
   /// Send a new [RemoteMessage] to the FCM server.
   Future<void> sendMessage({
     String senderId,
@@ -287,13 +299,21 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.unsubscribeFromTopic(topic);
   }
 
-  /// Resets Instance ID and revokes all tokens. In iOS, it also unregisters from remote notifications.
+  /// Resets Instance ID and revokes all tokens.
   ///
-  /// A new Instance ID is generated asynchronously if Firebase Cloud Messaging auto-init is enabled.
+  /// A new Instance ID is generated asynchronously if Firebase Cloud Messaging
+  /// auto-init is enabled.
   ///
-  /// returns true if the operations executed successfully and false if an error ocurred
-  Future<bool> deleteInstanceID() {
-    return _delegate.deleteInstanceID();
+  /// Returns `true` if the operations executed successfully and `false` if
+  /// an error ocurred.
+  @Deprecated('Use [deleteToken] instead.')
+  Future<bool> deleteInstanceID() async {
+    try {
+      await deleteToken();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   /// Determine whether FCM auto-initialization is enabled or disabled.

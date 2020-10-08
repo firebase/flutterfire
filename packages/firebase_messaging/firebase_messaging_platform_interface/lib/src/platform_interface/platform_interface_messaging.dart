@@ -225,6 +225,20 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('requestPermission() is not implemented');
   }
 
+  /// On Apple platforms, if your app wants to receive remote messages from FCM
+  /// (via APNs), you must explicitly register with APNs if auto-registration
+  /// has been disabled or [unregisterDeviceForRemoteMessages] has been called.
+  Future<void> registerDeviceForRemoteMessages() {
+    throw UnimplementedError(
+        'registerDeviceForRemoteMessages() is not implemented');
+  }
+
+  /// Unregisters the app from receiving remote notifications.
+  Future<void> unregisterDeviceForRemoteMessages() {
+    throw UnimplementedError(
+        'unregisterDeviceForRemoteMessages() is not implemented');
+  }
+
   /// Send a new message to the FCM server.
   Future<void> sendMessage({
     String senderId,

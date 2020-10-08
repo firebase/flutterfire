@@ -60,7 +60,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
     if (initialNotification != null) {
       AndroidNotification _android;
-      IOSNotification _ios;
+      AppleNotification _apple;
 
       if (initialNotification['android'] != null) {
         _android = AndroidNotification(
@@ -80,20 +80,20 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         );
       }
 
-      if (initialNotification['ios'] != null) {
-        _ios = IOSNotification(
-            badge: initialNotification['ios']['badge'],
-            sound: initialNotification['ios']['sound'],
-            subtitle: initialNotification['ios']['subtitle'],
-            subtitleLocArgs: initialNotification['ios']['subtitleLocArgs'],
-            subtitleLocKey: initialNotification['ios']['subtitleLocKey'],
-            criticalSound: initialNotification['ios']['criticalSound'] == null
+      if (initialNotification['apple'] != null) {
+        _apple = AppleNotification(
+            badge: initialNotification['apple']['badge'],
+            sound: initialNotification['apple']['sound'],
+            subtitle: initialNotification['apple']['subtitle'],
+            subtitleLocArgs: initialNotification['apple']['subtitleLocArgs'],
+            subtitleLocKey: initialNotification['apple']['subtitleLocKey'],
+            criticalSound: initialNotification['apple']['criticalSound'] == null
                 ? null
-                : NotificationIOSCriticalSound(
-                    critical: initialNotification['ios']['criticalSound']
+                : AppleNotificationCriticalSound(
+                    critical: initialNotification['apple']['criticalSound']
                         ['critical'],
-                    name: initialNotification['ios']['criticalSound']['name'],
-                    volume: initialNotification['ios']['criticalSound']
+                    name: initialNotification['apple']['criticalSound']['name'],
+                    volume: initialNotification['apple']['criticalSound']
                         ['volume']));
       }
 
@@ -105,7 +105,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         bodyLocArgs: initialNotification['bodyLocArgs'],
         bodyLocKey: initialNotification['bodyLocKey'],
         android: _android,
-        ios: _ios,
+        apple: _apple,
       );
     }
 
@@ -172,6 +172,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<NotificationSettings> getNotificationSettings() async {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return androidNotificationSettings;
+    }
+
     try {
       Map<String, int> response = await channel
           .invokeMapMethod<String, int>('Messaging#getNotificationSettings', {
@@ -219,6 +223,37 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
+  Future<void> registerDeviceForRemoteMessages() async {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return null;
+    }
+
+    try {
+      await channel.invokeMethod('Messaging#registerDeviceForRemoteMessages', {
+        'appName': app.name,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
+  }
+
+  @override
+  Future<void> unregisterDeviceForRemoteMessages() async {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return null;
+    }
+
+    try {
+      await channel
+          .invokeMethod('Messaging#unregisterDeviceForRemoteMessages', {
+        'appName': app.name,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
+  }
+
+  @override
   Future<void> sendMessage({
     String senderId,
     Map<String, String> data,
@@ -257,7 +292,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       throw convertPlatformException(e);
     }
   }
-  
+
   @override
   Stream<String> get onTokenRefresh {
     return _tokenStreamController.stream;

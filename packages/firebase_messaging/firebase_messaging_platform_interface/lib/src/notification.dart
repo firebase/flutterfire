@@ -9,7 +9,7 @@ import 'utils.dart';
 class Notification {
   const Notification(
       {this.android,
-      this.ios,
+      this.apple,
       this.title,
       this.titleLocArgs,
       this.titleLocKey,
@@ -19,7 +19,7 @@ class Notification {
 
   final AndroidNotification android;
 
-  final IOSNotification ios;
+  final AppleNotification apple;
 
   /// The notification title.
   final String title;
@@ -42,7 +42,7 @@ class Notification {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'android': android?.toMap(),
-      'ios': ios?.toMap(),
+      'apple': apple?.toMap(),
       'title': title,
       'titleLocArgs': titleLocArgs,
       'titleLocKey': titleLocKey,
@@ -108,8 +108,8 @@ class AndroidNotification {
   }
 }
 
-class IOSNotification {
-  const IOSNotification(
+class AppleNotification {
+  const AppleNotification(
       {this.badge,
       this.sound,
       this.criticalSound,
@@ -121,7 +121,7 @@ class IOSNotification {
 
   final String sound;
 
-  final NotificationIOSCriticalSound criticalSound;
+  final AppleNotificationCriticalSound criticalSound;
 
   final String subtitle;
 
@@ -141,8 +141,8 @@ class IOSNotification {
   }
 }
 
-class NotificationIOSCriticalSound {
-  const NotificationIOSCriticalSound({this.critical, this.name, this.volume});
+class AppleNotificationCriticalSound {
+  const AppleNotificationCriticalSound({this.critical, this.name, this.volume});
 
   final bool critical;
 
