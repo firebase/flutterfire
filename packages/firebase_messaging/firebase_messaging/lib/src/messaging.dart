@@ -137,15 +137,16 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     );
   }
 
-  /// Returns a [AuthorizationStatus] as to whether the user has messaging
-  /// permission for this app.
-  Future<IOSAuthorizationStatus> hasPermission() {
-    return _delegate.hasPermission();
-  }
-
   /// Fires when a new FCM token is generated.
   Stream<String> get onTokenRefresh {
     return _delegate.onTokenRefresh;
+  }
+
+  /// Returns the current [NotificationSettings].
+  ///
+  /// To request permissions, call [requestPermission].
+  Future<NotificationSettings> getNotificationSettings() {
+    return _delegate.getNotificationSettings();
   }
 
   /// Prompts the user for notification permissions.
@@ -156,11 +157,14 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// user will be presented with an option to disable notifications, keep receiving
   /// them silently or enable prominent notifications.
   ///
-  /// On Android, permissions are not required and [AuthorizationStatus.authorized] is returned.
+  /// On Android, is it not required to call this method. If called however,
+  /// a [NotificationSettings] class will be returned with
+  /// [NotificationSettings.authorizationStatus] returning
+  /// [AuthorizationStatus.authorized].
   ///
   /// On Web, a popup requesting the users permission is shown using the native
   /// browser API.
-  Future<IOSAuthorizationStatus> requestPermission({
+  Future<NotificationSettings> requestPermission({
     /// Request permission to display alerts. Defaults to `true`.
     ///
     /// iOS only.
@@ -227,15 +231,16 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   Future<bool> requestNotificationPermissions(
       [IosNotificationSettings iosSettings]) async {
     iosSettings ??= const IosNotificationSettings();
-    IOSAuthorizationStatus status = await requestPermission(
+    AuthorizationStatus status = (await requestPermission(
       sound: iosSettings.sound,
       alert: iosSettings.alert,
       badge: iosSettings.badge,
       provisional: iosSettings.provisional,
-    );
+    ))
+        .authorizationStatus;
 
-    return status == IOSAuthorizationStatus.authorized ||
-        status == IOSAuthorizationStatus.provisional;
+    return status == AuthorizationStatus.authorized ||
+        status == AuthorizationStatus.provisional;
   }
 
   /// Send a new [RemoteMessage] to the FCM server.
@@ -265,14 +270,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   Future<void> setAutoInitEnabled(bool enabled) async {
     assert(enabled != null);
     return _delegate.setAutoInitEnabled(enabled);
-  }
-
-  /// Stream that fires when the user changes their notification settings.
-  ///
-  /// Only fires on iOS.
-  // TODO(salakar): is this still needed?
-  Stream<IosNotificationSettings> get onIosSettingsRegistered {
-    return _delegate.onIosSettingsRegistered;
   }
 
   /// Subscribe to topic in background.

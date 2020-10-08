@@ -152,15 +152,16 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('getToken() is not implemented');
   }
 
-  /// Returns a [AuthorizationStatus] as to whether the user has messaging
-  /// permission for this app.
-  Future<IOSAuthorizationStatus> hasPermission() {
-    throw UnimplementedError('hasPermission() is not implemented');
-  }
-
   /// Fires when a new FCM token is generated.
   Stream<String> get onTokenRefresh {
     throw UnimplementedError('onTokenRefresh is not implemented');
+  }
+
+  /// Returns the current [NotificationSettings].
+  ///
+  /// To request permissions, call [requestPermission].
+  Future<NotificationSettings> getNotificationSettings() {
+    throw UnimplementedError('getNotificationSettings() is not implemented');
   }
 
   /// Prompts the user for notification permissions.
@@ -171,11 +172,14 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// user will be presented with an option to disable notifications, keep receiving
   /// them silently or enable prominent notifications.
   ///
-  /// On Android, permissions are not required and [AuthorizationStatus.authorized] is returned.
+  /// On Android, is it not required to call this method. If called however,
+  /// a [NotificationSettings] class will be returned with
+  /// [NotificationSettings.authorizationStatus] returning
+  /// [AuthorizationStatus.authorized].
   ///
   /// On Web, a popup requesting the users permission is shown using the native
   /// browser API.
-  Future<IOSAuthorizationStatus> requestPermission({
+  Future<NotificationSettings> requestPermission({
     /// Request permission to display alerts. Defaults to `true`.
     ///
     /// iOS only.
@@ -236,13 +240,6 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// Enable or disable auto-initialization of Firebase Cloud Messaging.
   Future<void> setAutoInitEnabled(bool enabled) async {
     throw UnimplementedError('setAutoInitEnabled() is not implemented');
-  }
-
-  /// Stream that fires when the user changes their notification settings.
-  ///
-  /// Only fires on iOS.
-  Stream<IosNotificationSettings> get onIosSettingsRegistered {
-    throw UnimplementedError('onIosSettingsRegistered is not implemented');
   }
 
   /// Subscribe to topic in background.

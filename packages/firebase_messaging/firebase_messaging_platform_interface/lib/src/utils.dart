@@ -41,6 +41,7 @@ int convertFromAndroidNotificationPriority(
   }
 }
 
+/// Converts an [int] into it's [AndroidNotificationVisibility] representation.
 AndroidNotificationVisibility convertToAndroidNotificationVisibility(
     int visibility) {
   switch (visibility) {
@@ -71,17 +72,77 @@ int convertFromAndroidNotificationVisibility(
 }
 
 /// Converts an [int] into it's [IOSAuthorizationStatus] representation.
-IOSAuthorizationStatus convertToIOSAuthorizationStatus(int status) {
+AuthorizationStatus convertToAuthorizationStatus(int status) {
   switch (status) {
     case -1:
-      return IOSAuthorizationStatus.notDetermined;
+      return AuthorizationStatus.notDetermined;
     case 0:
-      return IOSAuthorizationStatus.denied;
+      return AuthorizationStatus.denied;
     case 1:
-      return IOSAuthorizationStatus.authorized;
+      return AuthorizationStatus.authorized;
     case 2:
-      return IOSAuthorizationStatus.provisional;
+      return AuthorizationStatus.provisional;
     default:
-      return IOSAuthorizationStatus.notDetermined;
+      return AuthorizationStatus.notDetermined;
   }
 }
+
+/// Converts an [int] into it's [AppleNotificationSetting] representation.
+AppleNotificationSetting convertToAppleNotificationSetting(int status) {
+  switch (status) {
+    case -1:
+      return AppleNotificationSetting.notSupported;
+    case 0:
+      return AppleNotificationSetting.disabled;
+    case 1:
+      return AppleNotificationSetting.enabled;
+    default:
+      return AppleNotificationSetting.notSupported;
+  }
+}
+
+/// Converts an [int] into it's [AppleShowPreviewSetting] representation.
+AppleShowPreviewSetting convertToAppleShowPreviewSetting(int status) {
+  switch (status) {
+    case -1:
+      return AppleShowPreviewSetting.notSupported;
+    case 0:
+      return AppleShowPreviewSetting.never;
+    case 1:
+      return AppleShowPreviewSetting.always;
+    case 2:
+      return AppleShowPreviewSetting.whenAuthenticted;
+    default:
+      return AppleShowPreviewSetting.notSupported;
+  }
+}
+
+/// Converts a [Map] into it's [NotificationSettings] representation.
+NotificationSettings convertToNotificationSettings(Map<String, int> map) {
+  return NotificationSettings(
+    authorizationStatus:
+        convertToAuthorizationStatus(map['authorizationStatus']),
+    alert: convertToAppleNotificationSetting(map['alert']),
+    announcement: convertToAppleNotificationSetting(map['announcement']),
+    badge: convertToAppleNotificationSetting(map['badge']),
+    carPlay: convertToAppleNotificationSetting(map['carPlay']),
+    lockScreen: convertToAppleNotificationSetting(map['lockScreen']),
+    notificationCenter:
+        convertToAppleNotificationSetting(map['notificationCenter']),
+    showPreviews: convertToAppleShowPreviewSetting(map['showPreviews']),
+    sound: convertToAppleNotificationSetting(map['sound']),
+  );
+}
+
+/// Used to return [NotificationSettings] for all Android devices.
+final NotificationSettings androidNotificationSettings = NotificationSettings(
+  authorizationStatus: AuthorizationStatus.authorized,
+  alert: AppleNotificationSetting.notSupported,
+  announcement: AppleNotificationSetting.notSupported,
+  badge: AppleNotificationSetting.notSupported,
+  carPlay: AppleNotificationSetting.notSupported,
+  lockScreen: AppleNotificationSetting.notSupported,
+  notificationCenter: AppleNotificationSetting.notSupported,
+  showPreviews: AppleShowPreviewSetting.notSupported,
+  sound: AppleNotificationSetting.notSupported,
+);

@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -42,9 +44,6 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/firebase_messaging',
   );
-
-  final StreamController<IosNotificationSettings> _iosSettingsStreamController =
-      StreamController<IosNotificationSettings>.broadcast();
 
   final StreamController<String> _tokenStreamController =
       StreamController<String>.broadcast();
@@ -172,24 +171,21 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<IOSAuthorizationStatus> hasPermission() async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return IOSAuthorizationStatus.authorized;
-    }
-
+  Future<NotificationSettings> getNotificationSettings() async {
     try {
-      int status = await channel.invokeMethod<int>('Messaging#hasPermission', {
+      Map<String, int> response = await channel
+          .invokeMapMethod<String, int>('Messaging#getNotificationSettings', {
         'appName': app.name,
       });
 
-      return convertToIOSAuthorizationStatus(status);
+      return convertToNotificationSettings(response);
     } catch (e) {
       throw convertPlatformException(e);
     }
   }
 
   @override
-  Future<IOSAuthorizationStatus> requestPermission(
+  Future<NotificationSettings> requestPermission(
       {bool alert = true,
       bool announcement = false,
       bool badge = true,
@@ -198,12 +194,12 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       bool provisional = false,
       bool sound = true}) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return IOSAuthorizationStatus.authorized;
+      return androidNotificationSettings;
     }
 
     try {
-      int status =
-          await channel.invokeMethod<int>('Messaging#requestPermission', {
+      Map<String, int> response = await channel
+          .invokeMapMethod<String, int>('Messaging#requestPermission', {
         'appName': app.name,
         'permissions': <String, bool>{
           'alert': alert,
@@ -216,7 +212,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         }
       });
 
-      return convertToIOSAuthorizationStatus(status);
+      return convertToNotificationSettings(response);
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -261,11 +257,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       throw convertPlatformException(e);
     }
   }
-
-  @override
-  Stream<IosNotificationSettings> get onIosSettingsRegistered =>
-      _iosSettingsStreamController.stream;
-
+  
   @override
   Stream<String> get onTokenRefresh {
     return _tokenStreamController.stream;

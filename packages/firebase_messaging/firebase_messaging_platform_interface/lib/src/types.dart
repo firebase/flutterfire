@@ -6,8 +6,41 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 
 typedef void RemoteMessageHandler(RemoteMessage message);
 
+/// An enum representing a notification setting for this app on the device.
+enum AppleNotificationSetting {
+  /// This setting is currently disabled by the user.
+  disabled,
+
+  /// This setting is currently enabled.
+  enabled,
+
+  /// This setting is not supported on this device.
+  ///
+  /// Usually this means that the iOS version required for this setting has not been met,
+  /// or the platform is not Apple.
+  notSupported,
+}
+
+/// An enum representing the show previews notification setting for this app on the device.
+enum AppleShowPreviewSetting {
+  /// Always show previews even if the device is currently locked.
+  always,
+
+  /// Never show previews.
+  never,
+
+  /// This setting is not supported on this device.
+  ///
+  /// Usually this means that the iOS version required for this setting (iOS 11+) has not been met,
+  /// or the platform is not Apple.
+  notSupported,
+
+  /// Only show previews when the device is unlocked.
+  whenAuthenticted,
+}
+
 /// Represents the current status of the platforms notification permissions.
-enum IOSAuthorizationStatus {
+enum AuthorizationStatus {
   /// The app is authorized to create notifications.
   authorized,
 
@@ -34,7 +67,7 @@ enum AndroidNotificationPriority {
 
   /// The application small icon will show in the device status bar, however the notification will
   /// not alert the user (no sound or vibration). The notification will show in it's expanded state
-  /// when the notification shade is pulled down.  
+  /// when the notification shade is pulled down.
   lowPriority,
 
   /// When a notification is received, the device smallIcon will appear in the notification shade.
@@ -50,7 +83,6 @@ enum AndroidNotificationPriority {
   /// The highest priority level a notification can be set to.
   maximumPriority,
 }
-
 
 /// An enum representing the visibility level of a notification on Android.
 enum AndroidNotificationVisibility {
