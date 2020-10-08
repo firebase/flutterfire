@@ -6,9 +6,10 @@ import 'package:firebase_messaging_platform_interface/src/ios_notification_setti
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('$IosNotificationSettings', () {
+  group('IosNotificationSettings', () {
     test('toMap()', () {
-      final settings = new IosNotificationSettings(sound: false, alert: false);
+      // ignore: deprecated_member_use_from_same_package
+      final settings = IosNotificationSettings(sound: false, alert: false);
       final settingsMap = settings.toMap();
       expect(settingsMap, isA<Map<String, dynamic>>());
       expect(settingsMap['sound'], isFalse);

@@ -111,7 +111,7 @@ AppleShowPreviewSetting convertToAppleShowPreviewSetting(int status) {
     case 1:
       return AppleShowPreviewSetting.always;
     case 2:
-      return AppleShowPreviewSetting.whenAuthenticted;
+      return AppleShowPreviewSetting.whenAuthenticated;
     default:
       return AppleShowPreviewSetting.notSupported;
   }

@@ -1,19 +1,12 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-#include "AppDelegate.h"
-#include "GeneratedPluginRegistrant.h"
+#import "AppDelegate.h"
+#import "GeneratedPluginRegistrant.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  if (@available(iOS 10.0, *)) {
-    [UNUserNotificationCenter currentNotificationCenter].delegate =
-        (id<UNUserNotificationCenterDelegate>)self;
-  }
   [GeneratedPluginRegistrant registerWithRegistry:self];
+  // Override point for customization after application launch.
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 

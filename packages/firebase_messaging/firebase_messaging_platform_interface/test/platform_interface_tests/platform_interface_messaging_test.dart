@@ -84,11 +84,6 @@ void main() {
       });
     });
 
-    test('configure', () {
-      // just tests it can be called successfully
-      FirebaseMessagingPlatform.configure;
-    });
-
     test('throws if delegateFor', () {
       try {
         firebaseMessagingPlatform.testDelegateFor();

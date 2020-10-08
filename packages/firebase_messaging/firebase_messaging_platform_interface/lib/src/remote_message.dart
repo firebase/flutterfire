@@ -20,7 +20,6 @@ class RemoteMessage {
       this.threadId,
       this.ttl});
 
-  ///
   final String senderId;
 
   /// The iOS category this notification is assigned to.

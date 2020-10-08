@@ -37,7 +37,7 @@ enum AppleShowPreviewSetting {
   notSupported,
 
   /// Only show previews when the device is unlocked.
-  whenAuthenticted,
+  whenAuthenticated,
 }
 
 /// Represents the current status of the platforms notification permissions.

@@ -344,22 +344,5 @@ void main() {
         verifyNever(kMockMessagingPlatform.unsubscribeFromTopic(any));
       });
     });
-
-    group('deleteInstanceID', () {
-      test('verify delegate method', () async {
-        bool mockResult = true;
-        when(kMockMessagingPlatform.deleteInstanceID())
-            .thenAnswer((_) => Future.value(mockResult));
-
-        var result = await messaging.deleteInstanceID();
-        expect(result, isTrue);
-
-        verify(kMockMessagingPlatform.deleteInstanceID());
-
-        mockResult = false;
-        result = await messaging.deleteInstanceID();
-        expect(result, isFalse);
-      });
-    });
   });
 }
