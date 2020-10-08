@@ -127,23 +127,31 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<void> deleteToken({String authorizedEntity, String scope}) {
-    return channel.invokeMethod<String>('Messaging#deleteToken', {
-      'appName': app.name,
-      'authorizedEntity': authorizedEntity,
-      'scope': scope,
-    });
+  Future<void> deleteToken({String authorizedEntity, String scope}) async {
+    try {
+      await channel.invokeMethod<String>('Messaging#deleteToken', {
+        'appName': app.name,
+        'authorizedEntity': authorizedEntity,
+        'scope': scope,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
-  Future<String> getAPNSToken() {
+  Future<String> getAPNSToken() async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return null;
     }
 
-    return channel.invokeMethod<String>('Messaging#getAPNSToken', {
-      'appName': app.name,
-    });
+    try {
+      return await channel.invokeMethod<String>('Messaging#getAPNSToken', {
+        'appName': app.name,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -151,12 +159,16 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     String authorizedEntity,
     String scope,
     String vapidKey,
-  }) {
-    return channel.invokeMethod<String>('Messaging#getToken', {
-      'appName': app.name,
-      'authorizedEntity': authorizedEntity,
-      'scope': scope,
-    });
+  }) async {
+    try {
+      return await channel.invokeMethod<String>('Messaging#getToken', {
+        'appName': app.name,
+        'authorizedEntity': authorizedEntity,
+        'scope': scope,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -165,11 +177,15 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       return IOSAuthorizationStatus.authorized;
     }
 
-    int status = await channel.invokeMethod<int>('Messaging#hasPermission', {
-      'appName': app.name,
-    });
+    try {
+      int status = await channel.invokeMethod<int>('Messaging#hasPermission', {
+        'appName': app.name,
+      });
 
-    return convertToIOSAuthorizationStatus(status);
+      return convertToIOSAuthorizationStatus(status);
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -185,21 +201,25 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       return IOSAuthorizationStatus.authorized;
     }
 
-    int status =
-        await channel.invokeMethod<int>('Messaging#requestPermission', {
-      'appName': app.name,
-      'permissions': <String, bool>{
-        'alert': alert,
-        'announcement': announcement,
-        'badge': badge,
-        'carPlay': carPlay,
-        'criticalAlert': criticalAlert,
-        'provisional': provisional,
-        'sound': sound,
-      }
-    });
+    try {
+      int status =
+          await channel.invokeMethod<int>('Messaging#requestPermission', {
+        'appName': app.name,
+        'permissions': <String, bool>{
+          'alert': alert,
+          'announcement': announcement,
+          'badge': badge,
+          'carPlay': carPlay,
+          'criticalAlert': criticalAlert,
+          'provisional': provisional,
+          'sound': sound,
+        }
+      });
 
-    return convertToIOSAuthorizationStatus(status);
+      return convertToIOSAuthorizationStatus(status);
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -210,28 +230,36 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     String messageId,
     String messageType,
     int ttl,
-  }) {
-    return channel.invokeMethod<void>('Messaging#sendMessage', {
-      'appName': app.name,
-      'message': {
-        'senderId': senderId,
-        'data': data,
-        'collapseKey': collapseKey,
-        'messageId': messageId,
-        'messageType': messageType,
-        'ttl': ttl,
-      }
-    });
+  }) async {
+    try {
+      await channel.invokeMethod<void>('Messaging#sendMessage', {
+        'appName': app.name,
+        'message': {
+          'senderId': senderId,
+          'data': data,
+          'collapseKey': collapseKey,
+          'messageId': messageId,
+          'messageType': messageType,
+          'ttl': ttl,
+        }
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
   Future<void> setAutoInitEnabled(bool enabled) async {
-    Map<String, dynamic> data = await channel
-        .invokeMapMethod<String, dynamic>('Messaging#setAutoInitEnabled', {
-      'appName': app.name,
-      'enabled': enabled,
-    }).catchError(catchPlatformException);
-    _autoInitEnabled = data['isAutoInitEnabled'];
+    try {
+      Map<String, dynamic> data = await channel
+          .invokeMapMethod<String, dynamic>('Messaging#setAutoInitEnabled', {
+        'appName': app.name,
+        'enabled': enabled,
+      });
+      _autoInitEnabled = data['isAutoInitEnabled'];
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -244,25 +272,37 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<void> subscribeToTopic(String topic) {
-    return channel.invokeMethod<String>('Messaging#subscribeToTopic', {
-      'appName': app.name,
-      'topic': topic,
-    });
+  Future<void> subscribeToTopic(String topic) async {
+    try {
+      await channel.invokeMethod<String>('Messaging#subscribeToTopic', {
+        'appName': app.name,
+        'topic': topic,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
-  Future<void> unsubscribeFromTopic(String topic) {
-    return channel.invokeMethod<String>('Messaging#unsubscribeFromTopic', {
-      'appName': app.name,
-      'topic': topic,
-    });
+  Future<void> unsubscribeFromTopic(String topic) async {
+    try {
+      await channel.invokeMethod<String>('Messaging#unsubscribeFromTopic', {
+        'appName': app.name,
+        'topic': topic,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
-  Future<bool> deleteInstanceID() {
-    return channel.invokeMethod<bool>('Messaging#deleteInstanceID', {
-      'appName': app.name,
-    });
+  Future<bool> deleteInstanceID() async {
+    try {
+      return await channel.invokeMethod<bool>('Messaging#deleteInstanceID', {
+        'appName': app.name,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 }

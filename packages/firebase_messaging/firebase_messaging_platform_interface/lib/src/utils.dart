@@ -4,6 +4,7 @@
 
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
+/// Converts an [int] into it's [AndroidNotificationPriority] representation.
 AndroidNotificationPriority convertToAndroidNotificationPriority(int priority) {
   switch (priority) {
     case -2:
@@ -21,6 +22,7 @@ AndroidNotificationPriority convertToAndroidNotificationPriority(int priority) {
   }
 }
 
+/// Converts an [AndroidNotificationPriority] into it's [int] representation.
 int convertFromAndroidNotificationPriority(
     AndroidNotificationPriority priority) {
   switch (priority) {
@@ -53,6 +55,7 @@ AndroidNotificationVisibility convertToAndroidNotificationVisibility(
   }
 }
 
+/// Converts an [int] into it's [AndroidNotificationVisibility] representation.
 int convertFromAndroidNotificationVisibility(
     AndroidNotificationVisibility visibility) {
   switch (visibility) {
@@ -67,6 +70,7 @@ int convertFromAndroidNotificationVisibility(
   }
 }
 
+/// Converts an [int] into it's [IOSAuthorizationStatus] representation.
 IOSAuthorizationStatus convertToIOSAuthorizationStatus(int status) {
   switch (status) {
     case -1:
@@ -77,5 +81,7 @@ IOSAuthorizationStatus convertToIOSAuthorizationStatus(int status) {
       return IOSAuthorizationStatus.authorized;
     case 2:
       return IOSAuthorizationStatus.provisional;
+    default:
+      return IOSAuthorizationStatus.notDetermined;
   }
 }
