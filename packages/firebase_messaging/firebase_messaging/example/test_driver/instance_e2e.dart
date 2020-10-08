@@ -15,14 +15,11 @@ void runInstanceTests() {
     FirebaseApp app;
     FirebaseApp secondaryApp;
     FirebaseMessaging messaging;
-    FirebaseMessaging secondaryMessaging;
 
     setUpAll(() async {
       app = await Firebase.initializeApp();
       secondaryApp = await testInitializeSecondaryApp();
       messaging = FirebaseMessaging.instance;
-
-      //  secondaryMessaging = FirebaseMessaging.instanceFor(app: secondaryApp);
     });
 
     tearDownAll(() {});
@@ -58,40 +55,11 @@ void runInstanceTests() {
       });
     });
 
-    // TODO(helenaford): write test once logic implemented
-    // group('isDeviceRegisteredForRemoteMessages', ()  {
-    //   test('returns true on android', ()  {
-    //     expect(messaging.isDeviceRegisteredForRemoteMessages, true);
-    //   }, skip: !Platform.isAndroid);
-    //   test('defaults to false on ios before registering', ()  {
-    //     expect(messaging.isDeviceRegisteredForRemoteMessages, Curves.fastLinearToSlowEaseIn);
-    //   }, skip: !Platform.isIOS);
-    // });
-
-    // TODO(helenaford): write test once logic implemented
-    // group('unregisterDeviceForRemoteMessages', ()  {
-    //   test('', () async  {
-    //     await messaging.unregisterDeviceForRemoteMessages();
-    //   }, skip:  !Platform.isIOS);
-    // });
-
-    group('hasPermission', () {
-      test('returns true android (default)', () async {
-        final result = await messaging.hasPermission();
-        expect(result, isA<IOSAuthorizationStatus>());
-        expect(result, IOSAuthorizationStatus.authorized);
-      }, skip: !Platform.isAndroid);
-
-      test('returns -1 on ios (default)', () async {
-        expect(await messaging.hasPermission(), -1);
-      }, skip: !Platform.isIOS);
-    });
-
     group('requestPermission', () {
       test('resolves 1 on android', () async {
         final result = await messaging.requestPermission();
-        expect(result, isA<IOSAuthorizationStatus>());
-        expect(result, IOSAuthorizationStatus.authorized);
+        expect(result, isA<NotificationSettings>());
+        expect(result.authorizationStatus, AuthorizationStatus.authorized);
       }, skip: !Platform.isAndroid);
     });
 
@@ -132,26 +100,6 @@ void runInstanceTests() {
       }, skip: SKIP_MANUAL_TESTS); // only run for manual testing
     });
 
-    // TODO(helenaford): test listeners
-    // group('onTokenRefresh()', () {});
-
-    // group('onMessage()', () {});
-
-    // group('onMessageSent()', () {});
-
-    // group('onSendError()', () {});
-
-    // group('onDeletedMessages()', () {});
-
-    // group('onBackgroundMessage()', () {
-    //   test('receives messages when the app is in the background', () async {},
-    //       skip: !Platform.isAndroid);
-    // });
-
-    // group('onLaunch()', () {});
-
-    // group('onResume()', () {});
-
     group('subscribeToTopic()', () {
       test('successfully subscribes from topic', () async {
         final topic = 'test-topic';
@@ -168,33 +116,10 @@ void runInstanceTests() {
       });
     });
 
-    // group('sendMessage', () {
-    //   test(
-    //     'sends a message',
-    //     () {},
-    //   );
-
-    //   test(
-    //     'sends a message with the default senderId',
-    //     () {},
-    //   );
-    // }, skip: SKIP_MANUAL_TESTS);
-
-    // group('deleteInstanceID', () {
-    //   test('instance Id is reset', () {});
-
-    //   test('all tokens are revoked', () {});
-
-    //   test('returns false when an error occurs', () {});
-    // }, skip: SKIP_MANUAL_TESTS);
-
-    // TODO(helenaford): see if these are needed for android
-    // group('setDeliveryMetricsExportToBigQuery', () {});
-    //  group('deliveryMetricsExportToBigQueryEnabled', () {});
-
     // deprecated methods
     group('FirebaseMessaging (deprecated)', () {
       test('returns an instance with the current [FirebaseApp]', () async {
+        // ignore: deprecated_member_use
         final testInstance = FirebaseMessaging();
         expect(testInstance, isA<FirebaseMessaging>());
         expect(testInstance.app, isA<FirebaseApp>());
@@ -207,11 +132,13 @@ void runInstanceTests() {
     group('autoInitEnabled (deprecated)', () {
       test('returns correct value', () async {
         expect(messaging.isAutoInitEnabled, isFalse);
+        // ignore: deprecated_member_use
         expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
 
         await messaging.setAutoInitEnabled(true);
 
         expect(messaging.isAutoInitEnabled, isTrue);
+        // ignore: deprecated_member_use
         expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
       });
     });

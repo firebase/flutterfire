@@ -21,28 +21,29 @@ void main() {
     test('toMap()', () {
       const testChannelId = 'fooId';
       final notification = AndroidNotification(
-          channelId: testChannelId, priority: AndroidNotificationPriority.lowPriority);
+          channelId: testChannelId,
+          priority: AndroidNotificationPriority.lowPriority);
       final notificationMap = notification.toMap();
       expect(notificationMap, isA<Map<String, dynamic>>());
       expect(notificationMap['channelId'], equals(testChannelId));
     });
   });
 
-  group('$IOSNotification', () {
+  group('$AppleNotification', () {
     test('toMap()', () {
       const testSubtitle = 'bar';
-      final notification = IOSNotification(subtitle: testSubtitle);
+      final notification = AppleNotification(subtitle: testSubtitle);
       final notificationMap = notification.toMap();
       expect(notificationMap, isA<Map<String, dynamic>>());
       expect(notificationMap['subtitle'], equals(testSubtitle));
     });
   });
 
-  group('$NotificationIOSCriticalSound', () {
+  group('$AppleNotificationCriticalSound', () {
     test('toMap()', () {
       const testCritical = false;
       final iosCriticalSound =
-          new NotificationIOSCriticalSound(critical: testCritical);
+          AppleNotificationCriticalSound(critical: testCritical);
       final iosCriticalSoundMap = iosCriticalSound.toMap();
       expect(iosCriticalSoundMap, isA<Map<String, dynamic>>());
       expect(iosCriticalSoundMap['critical'], equals(testCritical));

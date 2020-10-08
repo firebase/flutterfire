@@ -8,6 +8,7 @@ import 'package:async/async.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
+import 'package:firebase_messaging_platform_interface/src/utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -145,19 +146,7 @@ void main() {
             vapidKey: vapidKey));
       });
     });
-    group('hasPermission', () {
-      test('verify delegate method is called', () async {
-        when(kMockMessagingPlatform.hasPermission())
-            .thenAnswer((_) => Future.value(IOSAuthorizationStatus.authorized));
 
-        final result = await messaging.hasPermission();
-
-        expect(result, isA<IOSAuthorizationStatus>());
-        expect(result, IOSAuthorizationStatus.authorized);
-
-        verify(kMockMessagingPlatform.hasPermission());
-      });
-    });
     group('onTokenRefresh', () {
       test('verify delegate method is called', () async {
         const token = 'test-token';
@@ -182,7 +171,7 @@ void main() {
           criticalAlert: anyNamed('criticalAlert'),
           provisional: anyNamed('provisional'),
           sound: anyNamed('sound'),
-        )).thenAnswer((_) => Future.value(IOSAuthorizationStatus.authorized));
+        )).thenAnswer((_) => Future.value(androidNotificationSettings));
 
         // true values
         await messaging.requestPermission(

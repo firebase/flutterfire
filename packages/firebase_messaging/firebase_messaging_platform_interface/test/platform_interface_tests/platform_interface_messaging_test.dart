@@ -159,16 +159,6 @@ void main() {
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test('throws if hasPermission()', () async {
-      try {
-        await firebaseMessagingPlatform.hasPermission();
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('hasPermission() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
-    });
-
     test('throws if onTokenRefresh', () {
       try {
         firebaseMessagingPlatform.onTokenRefresh;
@@ -204,16 +194,6 @@ void main() {
         await firebaseMessagingPlatform.setAutoInitEnabled(true);
       } on UnimplementedError catch (e) {
         expect(e.message, equals('setAutoInitEnabled() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
-    });
-
-    test('throws if onIosSettingsRegistered', () {
-      try {
-        firebaseMessagingPlatform.onIosSettingsRegistered;
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('onIosSettingsRegistered is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');

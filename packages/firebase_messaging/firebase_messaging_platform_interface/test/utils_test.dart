@@ -33,7 +33,7 @@ void main() {
     });
 
     test('convertToIOSAuthorizationStatus()', () {
-      expect(convertToIOSAuthorizationStatus(1), isA<IOSAuthorizationStatus>());
+      expect(convertToAuthorizationStatus(1), isA<AuthorizationStatus>());
     });
   });
 }
