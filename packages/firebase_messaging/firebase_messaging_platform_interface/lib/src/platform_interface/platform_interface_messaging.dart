@@ -84,23 +84,6 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     instance.registerBackgroundMessageHandler();
   }
 
-  static void configure({
-    //  String publicVapidKey, TODO(ehesp): add in with web support
-    RemoteMessageHandler onMessage,
-    void Function(String messageId) onMessageSent,
-    RemoteMessageHandler onNotificationOpenedApp,
-    void Function(FirebaseException exception, String messageId) onSendError,
-    void Function() onDeletedMessages,
-    RemoteMessageHandler onBackgroundMessage,
-  }) {
-    onMessage = onMessage;
-    onMessageSent = onMessageSent;
-    onNotificationOpenedApp = onNotificationOpenedApp;
-    onSendError = onSendError;
-    onDeletedMessages = onDeletedMessages;
-    onBackgroundMessage = onBackgroundMessage;
-  }
-
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
