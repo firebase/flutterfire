@@ -11,3 +11,4 @@ export 'src/ios_notification_settings.dart';
 export 'src/types.dart';
 export 'src/notification.dart';
 export 'src/remote_message.dart';
+export 'src/sent_message.dart';

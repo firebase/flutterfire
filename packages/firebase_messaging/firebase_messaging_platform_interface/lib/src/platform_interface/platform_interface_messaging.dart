@@ -11,13 +11,6 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../method_channel/method_channel_messaging.dart';
 
-RemoteMessageHandler _onMessage;
-void Function(String messageId) _onMessageSent;
-RemoteMessageHandler _onNotificationOpenedApp;
-void Function(FirebaseException exception, String messageId) _onSendError;
-void Function() _onDeletedMessages;
-RemoteMessageHandler _onBackgroundMessage;
-
 /// Defines an interface to work with Messaging on web and mobile
 abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
@@ -69,39 +62,76 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  static RemoteMessageHandler _onBackgroundMessage;
+  static Stream<RemoteMessage> _onMessageStream;
 
-  static RemoteMessageHandler onMessage;
-  static void Function(String messageId) onMessageSent;
-  static RemoteMessageHandler onNotificationOpenedApp;
-  static void Function(FirebaseException exception, String messageId)
-      onSendError;
-  static void Function() onDeletedMessages;
+  /// Returns a Stream that is called when an incoming FCM payload is received whilst
+  /// the Flutter instance is in the foreground.
+  ///
+  /// To handle messages whilst the app is in the background or terminated,
+  /// see [onBackgroundMessage].
+  static Stream<RemoteMessage> get onMessage {
+    return _onMessageStream ??= StreamController<RemoteMessage>().stream;
+  }
 
+  static Stream<SentMessage> _onMessageSentStream;
+
+  /// Returns a Stream that is called when a message being sent to FCM (via [sendMessage])
+  /// has successfully been sent.
+  ///
+  /// See [onSendError] to handle sending failures.
+  static Stream<SentMessage> get onMessageSent {
+    return _onMessageSentStream ??= StreamController<SentMessage>().stream;
+  }
+
+  static Stream<RemoteMessage> _onNotificationOpenedAppStream;
+
+  /// Returns a [Stream] that is called when a user presses a notification displayed
+  /// via FCM.
+  ///
+  /// A Stream event will be sent if the app has opened from a background state
+  /// (not terminated).
+  ///
+  /// If your app is opened via a notification whilst the app is terminated,
+  /// see [initialNotification].
+  static Stream<RemoteMessage> get onNotificationOpenedApp {
+    return _onNotificationOpenedAppStream ??=
+        StreamController<RemoteMessage>().stream;
+  }
+
+  static Stream<void> _onDeletedMessagesStream;
+
+  /// Returns a Stream which is called when the FCM server deletes pending messages.
+  ///
+  /// This may be due to:
+  ///
+  /// 1.  Too many messages stored on the FCM server. This can occur when an
+  /// app's servers sends many non-collapsible messages to FCM servers while
+  /// the device is offline.
+  ///
+  /// 2. he device hasn't connected in a long time and the app server has recently
+  /// (within the last 4 weeks) sent a message to the app on that device.
+  static Stream<RemoteMessage> get onDeletedMessages {
+    return _onDeletedMessagesStream ??=
+        StreamController<RemoteMessage>().stream;
+  }
+
+  static RemoteMessageHandler _onBackgroundMessageHandler;
+
+  /// Set a message handler function which is called when the app is in the
+  /// background or terminated.
+  ///
+  /// This provided handler must be a top-level function and cannot be
+  /// anonymous otherwise an [ArgumentError] will be thrown.
   static RemoteMessageHandler get onBackgroundMessage {
-    return _onBackgroundMessage;
+    return _onBackgroundMessageHandler;
   }
 
+  /// Allows the background message handler to be created and calls the
+  /// instance delegate [registerBackgroundMessageHandler] to perform any
+  /// platform specific registration logic.
   static set onBackgroundMessage(RemoteMessageHandler handler) {
-    _onBackgroundMessage = handler;
+    _onBackgroundMessageHandler = handler;
     instance.registerBackgroundMessageHandler();
-  }
-
-  static void configure({
-    //  String publicVapidKey, TODO(ehesp): add in with web support
-    RemoteMessageHandler onMessage,
-    void Function(String messageId) onMessageSent,
-    RemoteMessageHandler onNotificationOpenedApp,
-    void Function(FirebaseException exception, String messageId) onSendError,
-    void Function() onDeletedMessages,
-    RemoteMessageHandler onBackgroundMessage,
-  }) {
-    _onMessage = onMessage;
-    _onMessageSent = onMessageSent;
-    _onNotificationOpenedApp = onNotificationOpenedApp;
-    _onSendError = onSendError;
-    _onDeletedMessages = onDeletedMessages;
-    _onBackgroundMessage = onBackgroundMessage;
   }
 
   /// Enables delegates to create new instances of themselves if a none default

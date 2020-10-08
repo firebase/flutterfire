@@ -54,45 +54,63 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   static final Map<String, FirebaseMessaging> _cachedInstances = {};
 
-  /// Sets a handler that is called when an incoming FCM payload is received whilst
-  /// the Flutter instance is running.
+  /// Returns a Stream that is called when an incoming FCM payload is received whilst
+  /// the Flutter instance is in the foreground.
+  ///
+  /// The Stream contains the [RemoteMessage].
   ///
   /// To handle messages whilst the app is in the background or terminated,
   /// see [onBackgroundMessage].
-  ///
-  /// To unsubscribe from further events, pass `null` as the handler.
-  static void onMessage(RemoteMessageHandler handler) {
-    FirebaseMessagingPlatform.onMessage = handler;
+  static Stream<RemoteMessage> get onMessage {
+    Stream<RemoteMessage> onMessageStream = FirebaseMessagingPlatform.onMessage;
+
+    StreamController<RemoteMessage> streamController;
+    streamController = StreamController<RemoteMessage>.broadcast(onListen: () {
+      onMessageStream.pipe(streamController);
+    });
+
+    return streamController.stream;
   }
 
-  /// Sets a handler that is called when a message being sent to FCM (via [sendMessage])
+  /// Returns a Stream that is called when a message being sent to FCM (via [sendMessage])
   /// has successfully been sent.
   ///
+  /// The Stream contains a [String] representing a message ID.
+  ///
   /// See [onSendError] to handle sending failures.
-  ///
-  /// To unsubscribe from further events, pass `null` as the handler.
-  static void onMessageSent(void Function(String messageId) handler) {
-    FirebaseMessagingPlatform.onMessageSent = handler;
+  static Stream<SentMessage> get onMessageSent {
+    Stream<SentMessage> onMessageSentStream =
+        FirebaseMessagingPlatform.onMessageSent;
+
+    StreamController<SentMessage> streamController;
+    streamController = StreamController<SentMessage>.broadcast(onListen: () {
+      onMessageSentStream.pipe(streamController);
+    });
+
+    return streamController.stream;
   }
 
-  /// When the user presses a notification displayed via FCM, this listener will
-  /// be called if the app has opened from a background state.
+  /// Returns a [Stream] that is called when a user presses a notification displayed
+  /// via FCM.
   ///
-  /// To unsubscribe from further events, pass `null` as the handler.
-  static void onNotificationOpenedApp(RemoteMessageHandler handler) {
-    FirebaseMessagingPlatform.onNotificationOpenedApp = handler;
+  /// A Stream event will be sent if the app has opened from a background state
+  /// (not terminated).
+  ///
+  /// If your app is opened via a notification whilst the app is terminated,
+  /// see [initialNotification].
+  static Stream<RemoteMessage> get onNotificationOpenedApp {
+    Stream<RemoteMessage> onNotificationOpenedAppStream =
+        FirebaseMessagingPlatform.onNotificationOpenedApp;
+
+    StreamController<RemoteMessage> streamController;
+    streamController = StreamController<RemoteMessage>.broadcast(onListen: () {
+      onNotificationOpenedAppStream.pipe(streamController);
+    });
+
+    return streamController.stream;
   }
 
-  /// When sending a message via [sendMessage], this listener is called when an
-  /// error is thrown and the message could not be sent.
-  ///
-  /// To unsubscribe from further events, pass `null` as the handler.
-  static void onSendError(
-      void Function(FirebaseException exception, String messageId) handler) {
-    FirebaseMessagingPlatform.onSendError = handler;
-  }
-
-  /// Called when the FCM server deletes pending messages.
+  /// Returns a Stream which is called when the FCM server deletes pending messages.
   ///
   /// This may be due to:
   ///
@@ -102,50 +120,25 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// 2. he device hasn't connected in a long time and the app server has recently
   /// (within the last 4 weeks) sent a message to the app on that device.
-  ///
-  /// To unsubscribe from further events, pass `null` as the handler.
-  static void onDeletedMessages(void Function() handler) {
-    FirebaseMessagingPlatform.onDeletedMessages = handler;
+  static Stream<void> get onDeletedMessages {
+    Stream<void> onDeletedMessagesStream =
+        FirebaseMessagingPlatform.onDeletedMessages;
+
+    StreamController<void> streamController;
+    streamController = StreamController<void>.broadcast(onListen: () {
+      onDeletedMessagesStream.pipe(streamController);
+    });
+
+    return streamController.stream;
   }
 
-  /// Set a message handler function which is called when the app is in the background or terminated.
-  /// 
-  /// In Android, a headless task is created, allowing you to access the React Native environment to perform tasks such as updating local storage, or sending a network request.
+  /// Set a message handler function which is called when the app is in the
+  /// background or terminated.
+  ///
+  /// This provided handler must be a top-level function and cannot be
+  /// anonymous otherwise an [ArgumentError] will be thrown.
   static void onBackgroundMessage(RemoteMessageHandler handler) {
     FirebaseMessagingPlatform.onBackgroundMessage = handler;
-  }
-
-  /// Sets up handlers for various messaging events.
-  @Deprecated('''
-Calling [configure] is deprecated in favor of calling specific static methods: 
-
-- [onMessage]
-- [onMessageSent]
-- [onNotificationOpenedApp]
-- [onSendError]
-- [onDeletedMessages]
-- [onBackgroundMessage]
-
-This has been deprecated to avoid unwanted side effects when [configure] was called
-multiple times.
-  ''')
-  static void configure({
-    RemoteMessageHandler onMessage,
-    void Function(String messageId) onMessageSent,
-    RemoteMessageHandler onNotificationOpenedApp,
-    void Function(FirebaseException exception, String messageId) onSendError,
-    void Function() onDeletedMessages,
-    RemoteMessageHandler onBackgroundMessage,
-    // TODO(salakar): are these required?
-    RemoteMessageHandler onLaunch, // deprecate
-    RemoteMessageHandler onResume, // deprecate
-  }) {
-    FirebaseMessaging.onMessage(onMessage);
-    FirebaseMessaging.onMessageSent(onMessageSent);
-    FirebaseMessaging.onNotificationOpenedApp(onNotificationOpenedApp);
-    FirebaseMessaging.onSendError(onSendError);
-    FirebaseMessaging.onDeletedMessages(onDeletedMessages);
-    FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
   }
 
   // ignore: public_member_api_docs
@@ -188,8 +181,12 @@ multiple times.
     );
   }
 
-  /// On iOS, it is possible to get the users APNs token. This may be required
-  /// if you want to send messages to your iOS devices without using the FCM service.
+  /// On iOS, it is possible to get the users APNs token.
+  ///
+  /// This may be required if you want to send messages to your iOS/MacOS devices
+  /// without using the FCM service.
+  ///
+  /// On Android & web, this returns `null`.
   Future<String> getAPNSToken() {
     return _delegate.getAPNSToken();
   }
