@@ -13,7 +13,8 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 
 export 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart'
     show
-        RemoteMessageHandler,
+        BackgroundMessageHandler,
+        AppleShowPreviewSetting,
         AuthorizationStatus,
         NotificationSettings,
         // ignore: deprecated_member_use, deprecated_member_use_from_same_package

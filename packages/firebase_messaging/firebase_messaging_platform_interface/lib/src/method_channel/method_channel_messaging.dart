@@ -139,7 +139,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   void registerBackgroundMessageHandler() async {
-    RemoteMessageHandler handler =
+    BackgroundMessageHandler handler =
         FirebaseMessagingPlatform.onBackgroundMessage;
 
     if (handler == null) {
