@@ -30,11 +30,11 @@ class _MyAppState extends State<MyApp> {
 
   // Define an async function to initialize FlutterFire
   Future<void> _initializeFlutterFire() async {
-    FirebaseMessaging.configure(onMessage: (RemoteMessage message) async {
-      print("onMessage: $message");
-    }, onBackgroundMessage: (RemoteMessage message) async {
-      print("onMessage: $message");
-    });
+    // FirebaseMessaging.configure(onMessage: (RemoteMessage message) async {
+    //   print("onMessage: $message");
+    // }, onBackgroundMessage: (RemoteMessage message) async {
+    //   print("onMessage: $message");
+    // });
 
     // Wait for Firebase to initialize
     await Firebase.initializeApp();

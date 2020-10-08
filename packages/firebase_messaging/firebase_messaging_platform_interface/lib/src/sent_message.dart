@@ -5,13 +5,13 @@
 import 'package:firebase_core/firebase_core.dart';
 
 /// Represents a sent message response when calling [sendMessage].
-/// 
+///
 /// The result of which can be listened to via [onMessageSent].
 class SentMessage {
   const SentMessage._(this.messageId, this.error);
 
   /// The message ID.
-  /// 
+  ///
   /// This value is provided for both successful and failed sent messages.
   final String messageId;
 

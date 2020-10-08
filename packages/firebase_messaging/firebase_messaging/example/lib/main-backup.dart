@@ -139,26 +139,16 @@ class _PushMessagingExampleState extends State<PushMessagingExample> {
   // Define an async function to initialize FlutterFire
   Future<void> _initializeFlutterFire() async {
     await Firebase.initializeApp();
-    FirebaseMessaging.configure(
-      onMessage: (RemoteMessage message) async {
-        print("onMessage: $message");
-        // _showItemDialog(message);
-      },
-      // onLaunch: (Map<String, dynamic> message) async {
-      //   print("onLaunch: $message");
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("onMessage: $message");
+      // _showItemDialog(message);
+    });
+    FirebaseMessaging.onNotificationOpenedApp.listen((RemoteMessage message) {
+      //   print("onNotificationOpenedApp: $message");
       //   _navigateToItemDetail(message);
-      // },
-      // onResume: (Map<String, dynamic> message) async {
-      //   print("onResume: $message");
-      //   _navigateToItemDetail(message);
-      // },
-    );
+    });
     await _firebaseMessaging.requestPermission(
         sound: true, badge: true, alert: true, provisional: true);
-    // _firebaseMessaging.onIosSettingsRegistered
-    //     .listen((IosNotificationSettings settings) {
-    //   print("Settings registered: $settings");
-    // });
     await _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
       setState(() {
@@ -167,7 +157,10 @@ class _PushMessagingExampleState extends State<PushMessagingExample> {
       print(_homeScreenText);
     });
 
-    // print('initial notification ${_messaging.initialNotification}');
+    if (_firebaseMessaging.initialNotification != null) {
+      //   print("initialNotification: _firebaseMessaging.initialNotification");
+      //   _navigateToItemDetail(_firebaseMessaging.initialNotification);
+    }
   }
 
   @override
