@@ -244,10 +244,14 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Future<void> clearPersistence() async {
-    await channel
-        .invokeMethod<void>('Firestore#clearPersistence', <String, dynamic>{
-      'firestore': this,
-    }).catchError(catchPlatformException);
+    try {
+      await channel
+          .invokeMethod<void>('Firestore#clearPersistence', <String, dynamic>{
+        'firestore': this,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -268,10 +272,14 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Future<void> disableNetwork() async {
-    await channel
-        .invokeMethod<void>('Firestore#disableNetwork', <String, dynamic>{
-      'firestore': this,
-    }).catchError(catchPlatformException);
+    try {
+      await channel
+          .invokeMethod<void>('Firestore#disableNetwork', <String, dynamic>{
+        'firestore': this,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -281,10 +289,14 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Future<void> enableNetwork() async {
-    await channel
-        .invokeMethod<void>('Firestore#enableNetwork', <String, dynamic>{
-      'firestore': this,
-    }).catchError(catchPlatformException);
+    try {
+      await channel
+          .invokeMethod<void>('Firestore#enableNetwork', <String, dynamic>{
+        'firestore': this,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -341,6 +353,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       exception = e;
     });
 
+    // The #create call only resolves once all transaction attempts have succeeded
+    // or something failed.
     await channel.invokeMethod<T>('Transaction#create', <String, dynamic>{
       'firestore': this,
       'transactionId': transactionId,
@@ -349,7 +363,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       exception = e;
     });
 
-    // The transaction is successful, cleanup the stream
+    // The transaction has completed (may have errored), cleanup the stream
     await subscription.cancel();
     _transactionStreamControllerHandlers.remove(transactionId);
 
@@ -376,16 +390,24 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Future<void> terminate() async {
-    await channel.invokeMethod<void>('Firestore#terminate', <String, dynamic>{
-      'firestore': this,
-    }).catchError(catchPlatformException);
+    try {
+      await channel.invokeMethod<void>('Firestore#terminate', <String, dynamic>{
+        'firestore': this,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
   Future<void> waitForPendingWrites() async {
-    await channel
-        .invokeMethod<void>('Firestore#waitForPendingWrites', <String, dynamic>{
-      'firestore': this,
-    }).catchError(catchPlatformException);
+    try {
+      await channel.invokeMethod<void>(
+          'Firestore#waitForPendingWrites', <String, dynamic>{
+        'firestore': this,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 }

@@ -1,3 +1,17 @@
+## 0.2.0+4
+
+ - **FIX**: bubble exceptions (#3701).
+ - **FIX**: fix returning of transaction result (#3747).
+ - **FIX**: ensure isCollectionGroupQuery is initialised (#3772).
+
+## 0.2.0+3
+
+ - **FIX**: dependency issue in pubspec.yaml (#3734).
+
+## 0.2.0+2
+
+ - **FIX**: fix dependency in pubspec.yaml (#3713).
+
 ## 0.2.0+1
 
 * Fixed issue #3210 (`Query.orderBy(FieldPath.documentId)` throws exception).

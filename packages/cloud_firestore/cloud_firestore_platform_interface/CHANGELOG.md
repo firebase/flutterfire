@@ -1,3 +1,19 @@
+## 2.1.2
+
+ - **FIX**: bubble exceptions (#3701).
+ - **FIX**: fix returning of transaction result (#3747).
+
+## 2.1.1
+
+ - **FIX**: typo in code comments (#3655).
+ - **DOCS**: remove `updateBlock` reference in Firestore docs (#3728).
+
+## 2.1.0
+
+ - **FIX**: check for Stream existence before sending event (#3435).
+ - **FEAT**: add a [] operator to DocumentSnapshot, acting as get() (#3387).
+ - **DOCS**: Fixed docs typo (#3471).
+
 ## 2.0.1
 
  - Fixed 2 race conditions. [(#3251)](https://github.com/FirebaseExtended/flutterfire/pull/3251)

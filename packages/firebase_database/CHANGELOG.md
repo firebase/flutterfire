@@ -1,3 +1,13 @@
+## 4.1.1
+
+ - Update a dependency to the latest release.
+
+## 4.1.0
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **FEAT**: implement support for `ServerValue.increment(delta)` (#3109).
+ - **CHORE**: intellij cleanup (#3326).
+
 ## 4.0.0
 
 * Add MacOS support.

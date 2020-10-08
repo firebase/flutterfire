@@ -154,7 +154,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// After the [TransactionHandler] is run, [FirebaseFirestore] will attempt to apply the
   /// changes to the server. If any of the data read has been modified outside
   /// of this [Transaction] since being read, then the transaction will be
-  /// retried by executing the `updateBlock` again. If the transaction still
+  /// retried by executing the provided [TransactionHandler] again. If the transaction still
   /// fails after 5 retries, then the transaction will fail.s
   ///
   /// The [TransactionHandler] may be executed multiple times, it should be able
@@ -168,11 +168,15 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// By default transactions are limited to 5 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
   Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
-      {Duration timeout = const Duration(seconds: 30)}) {
+      {Duration timeout = const Duration(seconds: 30)}) async {
     assert(transactionHandler != null, "transactionHandler cannot be null");
-    return _delegate.runTransaction<T>((transaction) {
-      return transactionHandler(Transaction._(this, transaction));
+
+    T output;
+    await _delegate.runTransaction((transaction) async {
+      output = await transactionHandler(Transaction._(this, transaction));
     }, timeout: timeout);
+
+    return output;
   }
 
   /// Specifies custom settings to be used to configure this [FirebaseFirestore] instance.
