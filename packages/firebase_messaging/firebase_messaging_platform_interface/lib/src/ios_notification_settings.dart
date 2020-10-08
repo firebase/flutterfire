@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// A class representing iOS specfic permissions which can be requested by your
+/// A class representing iOS specific permissions which can be requested by your
 /// application.
 @Deprecated(
     "Using [IosNotificationSettings] is deprecated. Instead, call [requestPermission] directly with named arguments")

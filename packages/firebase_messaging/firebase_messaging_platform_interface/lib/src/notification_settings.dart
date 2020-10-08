@@ -26,9 +26,6 @@ class NotificationSettings {
 
   final AppleNotificationSetting carPlay;
 
-  /// Whether the application supports custom management of notification settings.
-  // final AppleNotificationSetting inAppNotificationSettings;
-
   final AppleNotificationSetting lockScreen;
 
   final AppleNotificationSetting notificationCenter;

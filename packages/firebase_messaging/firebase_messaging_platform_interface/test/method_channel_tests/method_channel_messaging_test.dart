@@ -122,14 +122,16 @@ void main() {
     });
 
     test('isAutoInitEnabled', () {
+      // ignore: invalid_use_of_protected_member
       messaging.setInitialValues(isAutoInitEnabled: true);
       expect(messaging.isAutoInitEnabled, isTrue);
     });
 
     test('initialNotification', () {
+      // ignore: invalid_use_of_protected_member
       messaging.setInitialValues(initialNotification: kMockNotification);
-      final initialNotication = messaging.initialNotification;
-      expect(initialNotication, isA<Notification>());
+      final initialNotification = messaging.initialNotification;
+      expect(initialNotification, isA<Notification>());
       // should now be null, since notification has been read
       expect(messaging.initialNotification, isNull);
     });

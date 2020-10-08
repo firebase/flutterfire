@@ -117,7 +117,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   /// Sets up handlers for various messaging events.
   @Deprecated('''
-Calling [configure] is deprecated in favor of calling specific static methods: 
+Calling [configure] is deprecated in favor of calling specific static methods:
 
 - [onMessage]
 - [onMessageSent]
@@ -260,7 +260,7 @@ multiple times.
     /// Request permission for critical alerts. Defaults to `false`.
     ///
     /// Note; your application must explicitly state reasoning for enabling
-    /// crticial alerts during the App Store review process or your may be
+    /// critical alerts during the App Store review process or your may be
     /// rejected.
     ///
     /// iOS only.
@@ -375,7 +375,7 @@ multiple times.
   /// auto-init is enabled.
   ///
   /// Returns `true` if the operations executed successfully and `false` if
-  /// an error ocurred.
+  /// an error occurred.
   @Deprecated('Use [deleteToken] instead.')
   Future<bool> deleteInstanceID() async {
     try {

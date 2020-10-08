@@ -212,7 +212,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     /// Request permission for critical alerts. Defaults to `false`.
     ///
     /// Note; your application must explicitly state reasoning for enabling
-    /// crticial alerts during the App Store review process or your may be
+    /// critical alerts during the App Store review process or your may be
     /// rejected.
     ///
     /// iOS only.
@@ -280,7 +280,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   ///
   /// A new Instance ID is generated asynchronously if Firebase Cloud Messaging auto-init is enabled.
   ///
-  /// returns true if the operations executed successfully and false if an error ocurred
+  /// returns true if the operations executed successfully and false if an error occurred
   Future<bool> deleteInstanceID() async {
     throw UnimplementedError('deleteInstanceID() is not implemented');
   }
