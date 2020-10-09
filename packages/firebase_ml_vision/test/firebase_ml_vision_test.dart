@@ -176,6 +176,26 @@ void main() {
         expect(barcode.email.type, BarcodeEmailType.home);
       });
 
+      test('detectInImage email simple', () async {
+        final Map<dynamic, dynamic> email = <dynamic, dynamic>{
+          'address': 'a',
+          'type': BarcodeEmailType.home.index,
+        };
+
+        returnBarcodes[0]['valueType'] = BarcodeValueType.email.index;
+        returnBarcodes[0]['email'] = email;
+        returnValue = returnBarcodes;
+
+        final List<Barcode> barcodes = await detector.detectInImage(image);
+
+        final Barcode barcode = barcodes[0];
+        expect(barcode.valueType, BarcodeValueType.email);
+        expect(barcode.email.address, 'a');
+        expect(barcode.email.body, null);
+        expect(barcode.email.subject, null);
+        expect(barcode.email.type, BarcodeEmailType.home);
+      });
+
       test('detectInImage phone', () async {
         final Map<dynamic, dynamic> phone = <dynamic, dynamic>{
           'number': '000',

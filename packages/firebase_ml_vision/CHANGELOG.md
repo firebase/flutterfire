@@ -1,3 +1,7 @@
+## 0.9.7+1
+
+ - **FIX**: Added nil check to visionBarcodeEmailToDictionary(#3506).
+
 ## 0.9.7
 
  - **FEAT**: rework (#3612).
