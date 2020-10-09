@@ -21,30 +21,30 @@ that enable Flutter apps to use [Firebase](https://firebase.google.com/) service
 
 [Flutter](https://flutter.dev) is Google’s UI toolkit for building beautiful, natively compiled applications for mobile, web, and desktop from a single codebase. Flutter is used by developers and organizations around the world, and is free and open source.
 
-> *Note*: FlutterFire is still under development (see [roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582)), and some APIs and platforms might not be available yet.
-[Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
+> _Note_: FlutterFire is still under development (see [roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582)), and some APIs and platforms might not be available yet.
+> [Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
 
 ## Plugins
 
 **Table of contents:**
 
- - [AdMob (`firebase_admob`)](#firebase_admob)
- - [Analytics (`firebase_analytics`)](#firebase_analytics)
- - [Authentication (`firebase_auth`)](#firebase_auth)
- - [Cloud Firestore (`cloud_firestore`)](#cloud_firestore)
- - [Cloud Functions (`cloud_functions`)](#cloud_functions)
- - [Cloud Messaging (`firebase_messaging`)](#firebase_messaging)
- - [Cloud Storage (`firebase_storage`)](#firebase_storage)
- - [Core (`firebase_core`)](#firebase_core)
- - [Crashlytics (`firebase_crashlytics`)](#firebase_crashlytics)
- - [Realtime Database (`firebase_database`)](#firebase_database)
+- [AdMob (`firebase_admob`)](#firebase_admob)
+- [Analytics (`firebase_analytics`)](#firebase_analytics)
+- [Authentication (`firebase_auth`)](#firebase_auth)
+- [Cloud Firestore (`cloud_firestore`)](#cloud_firestore)
+- [Cloud Functions (`cloud_functions`)](#cloud_functions)
+- [Cloud Messaging (`firebase_messaging`)](#firebase_messaging)
+- [Cloud Storage (`firebase_storage`)](#firebase_storage)
+- [Core (`firebase_core`)](#firebase_core)
+- [Crashlytics (`firebase_crashlytics`)](#firebase_crashlytics)
+- [Realtime Database (`firebase_database`)](#firebase_database)
 
- - [Dynamic Links (`firebase_dynamic_links`)](#firebase_dynamic_links)
- - [In-App Messaging (`firebase_in_app_messaging`)](#firebase_in_app_messaging)
- - [ML Custom (`firebase_ml_custom`)](#firebase_ml_custom)
- - [ML Vision (`firebase_ml_vision`)](#firebase_ml_vision)
- - [Performance Monitoring (`firebase_performance`)](#firebase_performance)
- - [Remote Config (`firebase_remote_config`)](#firebase_remote_config)
+- [Dynamic Links (`firebase_dynamic_links`)](#firebase_dynamic_links)
+- [In-App Messaging (`firebase_in_app_messaging`)](#firebase_in_app_messaging)
+- [ML Custom (`firebase_ml_custom`)](#firebase_ml_custom)
+- [ML Vision (`firebase_ml_vision`)](#firebase_ml_vision)
+- [Performance Monitoring (`firebase_performance`)](#firebase_performance)
+- [Remote Config (`firebase_remote_config`)](#firebase_remote_config)
 
 ---
 
@@ -59,10 +59,10 @@ Google AdMob is a mobile advertising platform that you can use to generate reven
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |       |     |
 
-----
+---
 
 ### `firebase_analytics`
 
@@ -75,10 +75,10 @@ Google Analytics for Firebase provides automatic captures of certain key applica
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |   ✔️   |  ✔️  |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |  ✔️   | ✔️  |
 
-----
+---
 
 ### `firebase_auth`
 
@@ -91,10 +91,10 @@ Firebase Authentication provides easy-to-use APIs to authenticate users to your 
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |   ✔️   |  ✔️  |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |  ✔️   | ✔️  |
 
-----
+---
 
 ### `cloud_firestore`
 
@@ -107,10 +107,10 @@ Cloud Firestore is a NoSQL document database that lets you easily store, sync, a
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |   ✔️   |  ✔️  |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |  ✔️   | ✔️  |
 
-----
+---
 
 ### `cloud_functions`
 
@@ -123,10 +123,10 @@ The Cloud Functions for Firebase plugin let you call functions directly from wit
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |   ✔️   |  ✔️  |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |  ✔️   | ✔️  |
 
-----
+---
 
 ### `firebase_messaging`
 
@@ -139,10 +139,10 @@ Firebase Cloud Messaging (FCM) provides a reliable and battery-efficient connect
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |       |     |
 
-----
+---
 
 ### `firebase_storage`
 
@@ -155,10 +155,10 @@ Cloud Storage is designed to help you quickly and easily store and serve user-ge
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |   ✔️   |     |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |  ✔️   |     |
 
-----
+---
 
 ### `firebase_core`
 
@@ -171,10 +171,10 @@ Firebase Core provides APIs to manage your Firebase application instances and cr
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |   ✔️   |  ✔️  |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |  ✔️   | ✔️  |
 
-----
+---
 
 ### `firebase_crashlytics`
 
@@ -187,10 +187,10 @@ Firebase Crashlytics helps you track, prioritize, and fix stability issues that 
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |       |     |
 
-----
+---
 
 ### `firebase_database`
 
@@ -203,10 +203,10 @@ The Firebase Realtime Database is a cloud-hosted NoSQL database that lets you st
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |   ✔️   |     |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |  ✔️   |     |
 
-----
+---
 
 ### `firebase_dynamic_links`
 
@@ -219,10 +219,10 @@ Dynamic Links are smart URLs that allow you to send existing and potential users
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |       |     |
 
-----
+---
 
 ### `firebase_in_app_messaging`
 
@@ -235,10 +235,11 @@ Firebase In-App Messaging helps you engage users who are actively using your app
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |       |     |
 
-----
+---
+
 ### `firebase_ml_custom`
 
 > [![firebase_ml_custom][ml_custom_badge_pub]][ml_custom_pub] [![pub points][ml_custom_badge_pub_points]][ml_custom_pub_points]
@@ -250,10 +251,10 @@ Use Firebase ML to deploy custom models. [[Learn More][ml_custom_product]]
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |       |     |
 
-----
+---
 
 ### `firebase_ml_vision`
 
@@ -266,10 +267,10 @@ Use Firebase ML turn-key solutions with the Cloud Vision APIs. [[Learn More][ml_
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |       |     |
 
-----
+---
 
 ### `firebase_performance`
 
@@ -282,10 +283,10 @@ Get insights into how your app performs from your users’ point of view, with a
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |       |     |
 
-----
+---
 
 ### `firebase_remote_config`
 
@@ -298,16 +299,18 @@ With Firebase Remote Config, you can change the behavior and appearance of your 
 #### Platform Support
 
 | Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |   ✔️   |     |
+| :-----: | :-: | :---: | :-: |
+|   ✔️    | ✔️  |  ✔️   |     |
 
-----
+---
 
 ## Issues
 
 Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
 Plugin issues that are not specific to FlutterFire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+
+For detailed bugs, please follow our template for creating issues via [Bug Reports](https://github.com/FirebaseExtended/flutterfire/issues/new?assignees=&labels=Needs+Attention%2C+type%3A+bug&template=---bug-report.md&title=%F0%9F%90%9B+%5BPLUGIN_NAME_HERE%5D+Your+issue+title+here)
 
 ## Contributing
 
@@ -319,8 +322,7 @@ and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls)
 
 ![Status: Experimental](https://img.shields.io/badge/Status-Experimental-blue)
 
-This repository is maintained by Googlers but is not a supported Firebase product.  Issues here are answered by maintainers and other community members on GitHub on a best-effort basis.
-
+This repository is maintained by Googlers but is not a supported Firebase product. Issues here are answered by maintainers and other community members on GitHub on a best-effort basis.
 
 [admob_pub]: https://pub.dev/packages/firebase_admob
 [admob_product]: https://firebase.google.com/docs/admob/
@@ -328,7 +330,6 @@ This repository is maintained by Googlers but is not a supported Firebase produc
 [admob_pub_points]: https://pub.dev/packages/firebase_admob/score
 [admob_badge_pub_points]: https://badges.bar/firebase_admob/pub%20points
 [admob_badge_pub]: https://img.shields.io/pub/v/firebase_admob.svg
-
 [analytics_pub]: https://pub.dev/packages/firebase_analytics
 [analytics_product]: https://firebase.google.com/products/analytics/
 [analytics_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics
@@ -336,7 +337,6 @@ This repository is maintained by Googlers but is not a supported Firebase produc
 [analytics_badge_pub_points]: https://badges.bar/firebase_analytics/pub%20points
 [analytics_badge_pub]: https://img.shields.io/pub/v/firebase_analytics.svg
 [analytics_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_analytics/badge.svg
-
 [auth_pub]: https://pub.dev/packages/firebase_auth
 [auth_product]: https://firebase.google.com/products/auth/
 [auth_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_auth
@@ -344,7 +344,6 @@ This repository is maintained by Googlers but is not a supported Firebase produc
 [auth_badge_pub_points]: https://badges.bar/firebase_auth/pub%20points
 [auth_badge_pub]: https://img.shields.io/pub/v/firebase_auth.svg
 [auth_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_auth/badge.svg
-
 [core_pub]: https://pub.dev/packages/firebase_core
 [core_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_core
 [core_docs]: https://firebase.flutter.dev/docs/core/usage
@@ -352,14 +351,12 @@ This repository is maintained by Googlers but is not a supported Firebase produc
 [core_badge_pub_points]: https://badges.bar/firebase_core/pub%20points
 [core_badge_pub]: https://img.shields.io/pub/v/firebase_core.svg
 [core_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_core/badge.svg
-
 [crashlytics_pub]: https://pub.dev/packages/firebase_crashlytics
 [crashlytics_product]: https://firebase.google.com/products/crashlytics/
 [crashlytics_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_crashlytics
 [crashlytics_pub_points]: https://pub.dev/packages/firebase_crashlytics/score
 [crashlytics_badge_pub_points]: https://badges.bar/firebase_crashlytics/pub%20points
 [crashlytics_badge_pub]: https://img.shields.io/pub/v/firebase_crashlytics.svg
-
 [database_pub]: https://pub.dev/packages/firebase_database
 [database_product]: https://firebase.google.com/products/database/
 [database_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_database
@@ -367,14 +364,12 @@ This repository is maintained by Googlers but is not a supported Firebase produc
 [database_badge_pub_points]: https://badges.bar/firebase_database/pub%20points
 [database_badge_pub]: https://img.shields.io/pub/v/firebase_database.svg
 [database_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_database/badge.svg
-
 [dynamic_links_pub]: https://pub.dev/packages/firebase_dynamic_links
 [dynamic_links_product]: https://firebase.google.com/products/dynamic-links/
 [dynamic_links_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_dynamic_links
 [dynamic_links_pub_points]: https://pub.dev/packages/firebase_dynamic_links/score
 [dynamic_links_badge_pub_points]: https://badges.bar/firebase_dynamic_links/pub%20points
 [dynamic_links_badge_pub]: https://img.shields.io/pub/v/firebase_dynamic_links.svg
-
 [firestore_pub]: https://pub.dev/packages/cloud_firestore
 [firestore_docs]: https://firebase.flutter.dev/docs/firestore/usage
 [firestore_product]: https://firebase.google.com/products/firestore/
@@ -383,7 +378,6 @@ This repository is maintained by Googlers but is not a supported Firebase produc
 [firestore_badge_pub_points]: https://badges.bar/cloud_firestore/pub%20points
 [firestore_badge_pub]: https://img.shields.io/pub/v/cloud_firestore.svg
 [firestore_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_firestore/badge.svg
-
 [functions_pub]: https://pub.dev/packages/cloud_functions
 [functions_product]: https://firebase.google.com/products/functions/
 [functions_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_functions
@@ -391,35 +385,30 @@ This repository is maintained by Googlers but is not a supported Firebase produc
 [functions_badge_pub_points]: https://badges.bar/cloud_functions/pub%20points
 [functions_badge_pub]: https://img.shields.io/pub/v/cloud_functions.svg
 [functions_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_functions/badge.svg
-
 [in_app_messaging_pub]: https://pub.dev/packages/firebase_in_app_messaging
 [in_app_messaging_product]: https://firebase.google.com/products/in-app-messaging/
 [in_app_messaging_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_in_app_messaging
 [in_app_messaging_pub_points]: https://pub.dev/packages/firebase_in_app_messaging/score
 [in_app_messaging_badge_pub_points]: https://badges.bar/firebase_in_app_messaging/pub%20points
 [in_app_messaging_badge_pub]: https://img.shields.io/pub/v/firebase_in_app_messaging.svg
-
 [messaging_pub]: https://pub.dev/packages/firebase_messaging
 [messaging_product]: https://firebase.google.com/products/cloud-messaging/
 [messaging_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging
 [messaging_pub_points]: https://pub.dev/packages/firebase_messaging/score
 [messaging_badge_pub_points]: https://badges.bar/firebase_messaging/pub%20points
 [messaging_badge_pub]: https://img.shields.io/pub/v/firebase_messaging.svg
-
 [ml_custom_pub]: https://pub.dev/packages/firebase_ml_custom
 [ml_custom_product]: https://firebase.google.com/products/ml/
 [ml_custom_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_ml_custom
 [ml_custom_pub_points]: https://pub.dev/packages/firebase_ml_custom/score
 [ml_custom_badge_pub_points]: https://badges.bar/firebase_ml_custom/pub%20points
 [ml_custom_badge_pub]: https://img.shields.io/pub/v/firebase_ml_custom.svg
-
 [ml_vision_pub]: https://pub.dev/packages/firebase_ml_vision
 [ml_vision_product]: https://firebase.google.com/products/ml/
 [ml_vision_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_ml_vision
 [ml_vision_pub_points]: https://pub.dev/packages/firebase_ml_vision/score
 [ml_vision_badge_pub_points]: https://badges.bar/firebase_ml_vision/pub%20points
 [ml_vision_badge_pub]: https://img.shields.io/pub/v/firebase_ml_vision.svg
-
 [performance_pub]: https://pub.dev/packages/firebase_performance
 [performance_product]: https://firebase.google.com/products/performance/
 [performance_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_performance
@@ -427,7 +416,6 @@ This repository is maintained by Googlers but is not a supported Firebase produc
 [performance_badge_pub_points]: https://badges.bar/firebase_performance/pub%20points
 [performance_badge_pub]: https://img.shields.io/pub/v/firebase_performance.svg
 [performance_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_performance/badge.svg
-
 [remote_config_pub]: https://pub.dev/packages/firebase_remote_config
 [remote_config_product]: https://firebase.google.com/products/remote-config/
 [remote_config_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config
@@ -435,7 +423,6 @@ This repository is maintained by Googlers but is not a supported Firebase produc
 [remote_config_badge_pub_points]: https://badges.bar/firebase_remote_config/pub%20points
 [remote_config_badge_pub]: https://img.shields.io/pub/v/firebase_remote_config.svg
 [remote_config_badge_ci]: https://github.com/FirebaseExtended/flutterfire/workflows/firebase_remote_config/badge.svg
-
 [storage_pub]: https://pub.dev/packages/firebase_storage
 [storage_product]: https://firebase.google.com/products/storage/
 [storage_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_storage
