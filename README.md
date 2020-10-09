@@ -306,11 +306,9 @@ With Firebase Remote Config, you can change the behavior and appearance of your 
 
 ## Issues
 
-Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new/choose).
 
 Plugin issues that are not specific to FlutterFire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
-
-For detailed bugs, please follow our template for creating issues via [Bug Reports](https://github.com/FirebaseExtended/flutterfire/issues/new?assignees=&labels=Needs+Attention%2C+type%3A+bug&template=---bug-report.md&title=%F0%9F%90%9B+%5BPLUGIN_NAME_HERE%5D+Your+issue+title+here)
 
 ## Contributing
 
