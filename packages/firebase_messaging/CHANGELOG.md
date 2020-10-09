@@ -1,3 +1,23 @@
+## 7.0.3
+
+ - Update a dependency to the latest release.
+
+## 7.0.2
+
+ - **FIX**: remove `platform` package usage (#3729).
+
+## 7.0.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **CHORE**: intellij cleanup (#3326).
+
+## 7.0.0
+
+* Depend on `firebase_core` and migrate plugin to use `firebase_core` native SDK versioning features;
+	* Firebase iOS SDK versions are now locked to use the same version defined in `firebase_core`.
+	* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM) to specify individual SDK versions. BoM version is also sourced from `firebase_core`.
+* Allow iOS to be imported as a module.
+
 ## 6.0.16
 
 * Fix push notifications clearing after app launch on iOS.

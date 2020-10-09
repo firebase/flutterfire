@@ -1,224 +1,31 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 library firebase_auth_platform_interface;
 
-import 'dart:async';
+export 'src/platform_interface/platform_interface_firebase_auth.dart';
+export 'src/platform_interface/platform_interface_user.dart';
+export 'src/platform_interface/platform_interface_user_credential.dart';
+export 'src/platform_interface/platform_interface_confirmation_result.dart';
+export 'src/platform_interface/platform_interface_recaptcha_verifier_factory.dart';
 
-import 'package:flutter/services.dart';
-import 'package:meta/meta.dart' show required, visibleForTesting;
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+export 'src/firebase_auth_exception.dart';
+export 'src/auth_credential.dart';
+export 'src/action_code_info.dart';
+export 'src/action_code_settings.dart';
+export 'src/user_metadata.dart';
+export 'src/id_token_result.dart';
+export 'src/user_info.dart';
+export 'src/additional_user_info.dart';
+export 'src/types.dart';
 
-part 'src/method_channel_firebase_auth.dart';
-part 'src/types.dart';
-
-/// The interface that implementations of `firebase_auth` must extend.
-///
-/// Platform implementations should extend this class rather than implement it
-/// as `firebase_auth` does not consider newly added methods to be breaking
-/// changes. Extending this class (using `extends`) ensures that the subclass
-/// will get the default implementation, while platform implementations that
-/// `implements` this interface will be broken by newly added
-/// [FirebaseAuthPlatform] methods.
-abstract class FirebaseAuthPlatform extends PlatformInterface {
-  FirebaseAuthPlatform() : super(token: _token);
-
-  static final Object _token = Object();
-
-  /// The default instance of [FirebaseAuthPlatform] to use.
-  ///
-  /// Platform-specific plugins should override this with their own class
-  /// that extends [FirebaseAuthPlatform] when they register themselves.
-  ///
-  /// Defaults to [MethodChannelFirebaseAuth].
-  static FirebaseAuthPlatform get instance => _instance;
-
-  static FirebaseAuthPlatform _instance = MethodChannelFirebaseAuth();
-
-  /// Platform-specific plugins should set this with their own platform-specific
-  /// class that extends [FirebaseAuthPlatform] when they register themselves.
-  static set instance(FirebaseAuthPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
-    _instance = instance;
-  }
-
-  /// Returns the current user.
-  Future<PlatformUser> getCurrentUser(String app) {
-    throw UnimplementedError('getCurrentUser() is not implemented');
-  }
-
-  /// Sign in anonymously and return the auth result.
-  Future<PlatformAuthResult> signInAnonymously(String app) {
-    throw UnimplementedError('signInAnonymously() is not implemented');
-  }
-
-  /// Create a user with the given [email] and [password].
-  Future<PlatformAuthResult> createUserWithEmailAndPassword(
-    String app,
-    String email,
-    String password,
-  ) {
-    throw UnimplementedError(
-        'createUserWithEmailAndPassword() is not implemented');
-  }
-
-  /// Retrieve a list of available sign in methods for the given [email].
-  Future<List<String>> fetchSignInMethodsForEmail(String app, String email) {
-    throw UnimplementedError('fetchSignInMethodsForEmail() is not implemented');
-  }
-
-  /// Sends a password reset email to the given [email].
-  Future<void> sendPasswordResetEmail(String app, String email) {
-    throw UnimplementedError('sendPasswordResetEmail() is not implemented');
-  }
-
-  /// Sends a sign in with email link to provided email address.
-  Future<void> sendLinkToEmail(
-    String app, {
-    @required String email,
-    @required String url,
-    @required bool handleCodeInApp,
-    @required String iOSBundleID,
-    @required String androidPackageName,
-    @required bool androidInstallIfNotAvailable,
-    @required String androidMinimumVersion,
-  }) {
-    throw UnimplementedError('sendLinkToEmail() is not implemented');
-  }
-
-  /// Completes to `true` if the given [link] is an email sign-in link.
-  Future<bool> isSignInWithEmailLink(String app, String link) {
-    throw UnimplementedError('isSignInWithEmailLink() is not implemented');
-  }
-
-  /// Signs in with the given [email] and [link].
-  Future<PlatformAuthResult> signInWithEmailAndLink(
-    String app,
-    String email,
-    String link,
-  ) {
-    throw UnimplementedError('signInWithEmailAndLink() is not implemented');
-  }
-
-  /// Sends an email verification to the current user.
-  Future<void> sendEmailVerification(String app) {
-    throw UnimplementedError('sendEmailVerification() is not implemented');
-  }
-
-  /// Refreshes the current user, if signed in.
-  Future<void> reload(String app) {
-    throw UnimplementedError('reload() is not implemented');
-  }
-
-  /// Delete the current user and logs them out.
-  Future<void> delete(String app) {
-    throw UnimplementedError('delete() is not implemented');
-  }
-
-  /// Signs in with the given [credential].
-  Future<PlatformAuthResult> signInWithCredential(
-    String app,
-    AuthCredential credential,
-  ) {
-    throw UnimplementedError('signInWithCredential() is not implemented');
-  }
-
-  /// Signs in the with the given custom [token].
-  Future<PlatformAuthResult> signInWithCustomToken(String app, String token) {
-    throw UnimplementedError('signInWithCustomToken() is not implemented');
-  }
-
-  /// Signs the current user out of the app.
-  Future<void> signOut(String app) {
-    throw UnimplementedError('signOut() is not implemented');
-  }
-
-  /// Returns a token used to identify the user to a Firebase service.
-  Future<PlatformIdTokenResult> getIdToken(String app, bool refresh) {
-    throw UnimplementedError('getIdToken() is not implemented');
-  }
-
-  /// Re-authenticates the current user with the given [credential].
-  Future<PlatformAuthResult> reauthenticateWithCredential(
-    String app,
-    AuthCredential credential,
-  ) {
-    throw UnimplementedError(
-        'reauthenticalWithCredential() is not implemented');
-  }
-
-  /// Links the current user with the given [credential].
-  Future<PlatformAuthResult> linkWithCredential(
-    String app,
-    AuthCredential credential,
-  ) {
-    throw UnimplementedError('linkWithCredential() is not implemented');
-  }
-
-  /// Unlinks the current user with the given [provider].
-  Future<void> unlinkFromProvider(String app, String provider) {
-    throw UnimplementedError('unlinkFromProvider() is not implemented');
-  }
-
-  /// Updates the current user's email to the given [email].
-  Future<void> updateEmail(String app, String email) {
-    throw UnimplementedError('updateEmail() is not implemented');
-  }
-
-  /// Update the current user's phone number with the given [phoneAuthCredential].
-  Future<void> updatePhoneNumberCredential(
-    String app,
-    PhoneAuthCredential phoneAuthCredential,
-  ) {
-    throw UnimplementedError(
-        'updatePhoneNumberCredential() is not implemented');
-  }
-
-  /// Update the current user's password to the given [password].
-  Future<void> updatePassword(String app, String password) {
-    throw UnimplementedError('updatePassword() is not implemented');
-  }
-
-  /// Update the current user's profile.
-  Future<void> updateProfile(
-    String app, {
-    String displayName,
-    String photoUrl,
-  }) {
-    throw UnimplementedError('updateProfile() is not implemented');
-  }
-
-  /// Sets the current language code.
-  Future<void> setLanguageCode(String app, String language) {
-    throw UnimplementedError('setLanguageCode() is not implemented');
-  }
-
-  /// Creates a new stream which emits the current user on signOut and signIn.
-  Stream<PlatformUser> onAuthStateChanged(String app) {
-    throw UnimplementedError('onAuthStateChanged() is not implemented');
-  }
-
-  /// Verify the current user's phone number.
-  Future<void> verifyPhoneNumber(
-    String app, {
-    @required String phoneNumber,
-    @required Duration timeout,
-    int forceResendingToken,
-    @required PhoneVerificationCompleted verificationCompleted,
-    @required PhoneVerificationFailed verificationFailed,
-    @required PhoneCodeSent codeSent,
-    @required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
-  }) {
-    throw UnimplementedError('verifyPhoneNumber() is not implemented');
-  }
-
-  /// Completes the password reset process, given a confirmation code and new password.
-  Future<void> confirmPasswordReset(
-    String app,
-    String oobCode,
-    String newPassword,
-  ) {
-    throw UnimplementedError('confirmPasswordReset() is not implemented');
-  }
-}
+export 'src/auth_provider.dart';
+export 'src/providers/email_auth.dart';
+export 'src/providers/facebook_auth.dart';
+export 'src/providers/github_auth.dart';
+export 'src/providers/google_auth.dart';
+export 'src/providers/oauth.dart';
+export 'src/providers/saml_auth.dart';
+export 'src/providers/phone_auth.dart';
+export 'src/providers/twitter_auth.dart';

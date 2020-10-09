@@ -8,8 +8,8 @@ authentication methods. FlutterFire exposes these errors via the [`FirebaseAuthE
 class.
 
 At a minimum, a `code` and `message` are provided, however in some cases additional properties such as an email address
-and credential are also provided. For example, if the user is attempting to sign in wih an email and password, 
-any errors thrown can be explicially caught:
+and credential are also provided. For example, if the user is attempting to sign in with an email and password,
+any errors thrown can be explicitly caught:
 
 ```dart
 try {
@@ -17,7 +17,7 @@ try {
     email: "barry.allen@example.com",
     password: "SuperSecretPassword!"
   );
-} catch on FirebaseAuthException (e) {
+} on FirebaseAuthException catch  (e) {
   print('Failed with error code: ${e.code}');
   print(e.message);
 }
@@ -26,12 +26,15 @@ try {
 Each method provides various error codes and messages depending on the type of authentication invocation type. The
 [Reference API](https://pub.dev/documentation/firebase_auth/latest/) provides up-to-date details on the errors for each method.
 
+Other errors such as `too-many-requests` or `operation-not-allowed` may be thrown if you reach the Firebase Authentication quota,
+or have not enabled a specific auth provider.
+
 ## Handling `account-exists-with-different-credential` Errors
 
 If you enabled the One account per email address setting in the [Firebase console](https://console.firebase.google.com/project/_/authentication/providers),
 when a user tries to sign in a to a provider (such as Google) with an email that already exists for another Firebase user's provider
 (such as Facebook), the error `auth/account-exists-with-different-credential` is thrown along with an `AuthCredential` class (Google ID token).
-To complete the sign in to the intended provider, the user has to sign first to the existing provider (e.g. Facebook) and then link to the former
+To complete the sign-in flow to the intended provider, the user has to first sign in to the existing provider (e.g. Facebook) and then link to the former
 `AuthCredential` (Google ID token).
 
 ```dart
@@ -43,7 +46,7 @@ GoogleAuthCredential googleAuthCredential = GoogleAuthProvider.credential(access
 try {
   // Attempt to sign in the user in with Google
   await auth.signInWithCredential(googleAuthCredential);
-} catch on FirebaseAuthError (e) {
+} on FirebaseAuthException catch (e) {
   if (e.code == 'account-exists-with-different-credential') {
     // The account already exists with a different credential
     String email = e.email;
@@ -92,5 +95,3 @@ try {
   }
 }
 ```
-
-

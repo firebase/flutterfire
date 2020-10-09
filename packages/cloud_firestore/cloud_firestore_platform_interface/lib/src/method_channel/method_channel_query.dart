@@ -88,17 +88,22 @@ class MethodChannelQuery extends QueryPlatform {
   /// Fetch the documents for this query
   @override
   Future<QuerySnapshotPlatform> get([GetOptions options]) async {
-    final Map<String, dynamic> data = await MethodChannelFirebaseFirestore
-        .channel
-        .invokeMapMethod<String, dynamic>(
-      'Query#get',
-      <String, dynamic>{
-        'query': this,
-        'firestore': firestore,
-        'source': getSourceString(options.source),
-      },
-    ).catchError(catchPlatformException);
-    return MethodChannelQuerySnapshot(firestore, data);
+    try {
+      final Map<String, dynamic> data = await MethodChannelFirebaseFirestore
+          .channel
+          .invokeMapMethod<String, dynamic>(
+        'Query#get',
+        <String, dynamic>{
+          'query': this,
+          'firestore': firestore,
+          'source': getSourceString(options.source),
+        },
+      );
+
+      return MethodChannelQuerySnapshot(firestore, data);
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -123,14 +128,15 @@ class MethodChannelQuery extends QueryPlatform {
   }) {
     assert(includeMetadataChanges != null);
     int handle = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
+    Completer<void> onListenComplete = Completer<void>();
 
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     StreamController<QuerySnapshotPlatform> controller; // ignore: close_sinks
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
-      onListen: () {
+      onListen: () async {
         MethodChannelFirebaseFirestore.queryObservers[handle] = controller;
-        MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
+        await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
           'Query#addSnapshotListener',
           <String, dynamic>{
             'query': this,
@@ -139,13 +145,18 @@ class MethodChannelQuery extends QueryPlatform {
             'includeMetadataChanges': includeMetadataChanges,
           },
         );
+
+        if (!onListenComplete.isCompleted) {
+          onListenComplete.complete();
+        }
       },
-      onCancel: () {
-        MethodChannelFirebaseFirestore.queryObservers.remove(handle);
-        MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
+      onCancel: () async {
+        await onListenComplete.future;
+        await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
           'Firestore#removeListener',
           <String, dynamic>{'handle': handle},
         );
+        MethodChannelFirebaseFirestore.queryObservers.remove(handle);
       },
     );
     return controller.stream;

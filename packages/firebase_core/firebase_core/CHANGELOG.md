@@ -1,8 +1,10 @@
-## 0.5.0-dev.2
+## 0.5.0+1
+
+ - **FIX**: remove unused dart:async import (#3611).
+
+## 0.5.0
+
 * Allow iOS and macOS to be imported as a module.
-
-## 0.5.0-dev.1
-
 * DEPRECATED: `FirebaseApp.configure` method is now deprecated in favor of the `Firebase.initializeApp` method.
 * DEPRECATED: `FirebaseApp.allApps` method is now deprecated in favor of the `Firebase.apps` property.
   * Previously, `allApps` was async & `apps` is now synchronous.

@@ -194,9 +194,13 @@ void main() {
     group('$DatabaseReference', () {
       test('set', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
+        final dynamic serverValue = <String, dynamic>{
+          'qux': ServerValue.increment(8)
+        };
         final int priority = 42;
         await database.reference().child('foo').set(value);
         await database.reference().child('bar').set(value, priority: priority);
+        await database.reference().child('baz').set(serverValue);
         expect(
           log,
           <Matcher>[
@@ -218,6 +222,20 @@ void main() {
                 'path': 'bar',
                 'value': value,
                 'priority': priority,
+              },
+            ),
+            isMethodCall(
+              'DatabaseReference#set',
+              arguments: <String, dynamic>{
+                'app': app.name,
+                'databaseURL': databaseURL,
+                'path': 'baz',
+                'value': {
+                  'qux': {
+                    '.sv': {'increment': 8}
+                  }
+                },
+                'priority': null,
               },
             ),
           ],

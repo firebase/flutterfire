@@ -84,8 +84,8 @@ class FlutterFirebaseFirestoreTransactionHandler {
                       arguments,
                       new MethodChannel.Result() {
                         @Override
+                        @SuppressWarnings("unchecked")
                         public void success(@Nullable Object result) {
-                          // noinspection unchecked
                           completionSource.trySetResult((Map<String, Object>) result);
                         }
 
@@ -128,7 +128,7 @@ class FlutterFirebaseFirestoreTransactionHandler {
             return FlutterFirebaseFirestoreTransactionResult.failed(e);
           }
 
-          // noinspection unchecked
+          @SuppressWarnings("unchecked")
           List<Map<String, Object>> commands =
               (List<Map<String, Object>>) Objects.requireNonNull(response.get("commands"));
 
@@ -137,7 +137,7 @@ class FlutterFirebaseFirestoreTransactionHandler {
             String path = (String) Objects.requireNonNull(command.get("path"));
             DocumentReference documentReference = firestore.document(path);
 
-            // noinspection unchecked
+            @SuppressWarnings("unchecked")
             Map<String, Object> data = (Map<String, Object>) command.get("data");
 
             switch (type) {
@@ -149,7 +149,7 @@ class FlutterFirebaseFirestoreTransactionHandler {
                 break;
               case "SET":
                 {
-                  // noinspection unchecked
+                  @SuppressWarnings("unchecked")
                   Map<String, Object> options =
                       (Map<String, Object>) Objects.requireNonNull(command.get("options"));
                   SetOptions setOptions = null;
@@ -157,7 +157,7 @@ class FlutterFirebaseFirestoreTransactionHandler {
                   if (options.get("merge") != null && (boolean) options.get("merge")) {
                     setOptions = SetOptions.merge();
                   } else if (options.get("mergeFields") != null) {
-                    // noinspection unchecked
+                    @SuppressWarnings("unchecked")
                     List<FieldPath> fieldPathList =
                         (List<FieldPath>) Objects.requireNonNull(options.get("mergeFields"));
                     setOptions = SetOptions.mergeFieldPaths(fieldPathList);

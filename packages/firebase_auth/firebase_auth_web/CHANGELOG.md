@@ -1,6 +1,25 @@
-## 0.2.0-dev.1
+## 0.3.1+1
 
-* Depend on `firebase_core` pre-release versions.
+ - Update a dependency to the latest release.
+
+## 0.3.1
+
+ - **FIX**: fix IdTokenResult timestamps (web, ios) (#3357).
+ - **FIX**: force locale timestamp conversion (#3320).
+ - **FIX**: implement missing web confirmPasswordReset (#3344).
+ - **FIX**: send userPlatform on changes (#3313).
+ - **FEAT**: add support for linkWithPhoneNumber (#3436).
+ - **FEAT**: use named arguments for ActionCodeSettings (#3269).
+ - **FEAT**: implement signInWithPhoneNumber on web (#3205).
+
+## 0.3.0+1
+
+* Bump `firebase_auth_platform_interface` dependency to fix an assertion issue when creating Google sign-in credentials.
+
+## 0.3.0
+
+* See the `firebase_auth` plugin changelog.
+* Depend on `firebase_core`.
 
 ## 0.1.3+1
 
