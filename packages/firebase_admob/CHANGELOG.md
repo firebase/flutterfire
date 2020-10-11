@@ -1,3 +1,21 @@
+## 0.10.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.10.0+1
+
+ - **FIX**: remove `platform` package usage (#3729).
+
+## 0.10.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 0.10.0-dev.2
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **FEAT**: integrate Admob with new core (#3347).
+ - **CHORE**: intellij cleanup (#3326).
+
 ## 0.10.0-dev.1
 
 * Depend on `firebase_core` 0.5.0.

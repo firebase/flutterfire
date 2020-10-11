@@ -9,6 +9,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_auth_web/firebase_auth_web_user_credential.dart';
 import 'package:intl/intl.dart';
 
+import 'firebase_auth_web_confirmation_result.dart';
 import 'utils.dart';
 
 /// The format of an incoming metadata string timestamp from the firebase-dart library
@@ -82,6 +83,20 @@ class UserWeb extends UserPlatform {
           auth,
           await _webUser
               .linkWithCredential(convertPlatformCredential(credential)));
+    } catch (e) {
+      throw throwFirebaseAuthException(e);
+    }
+  }
+
+  @override
+  Future<ConfirmationResultPlatform> linkWithPhoneNumber(String phoneNumber,
+      RecaptchaVerifierFactoryPlatform applicationVerifier) async {
+    try {
+      // Do not inline - type is not inferred & error is thrown.
+      firebase.RecaptchaVerifier verifier = applicationVerifier.delegate;
+
+      return ConfirmationResultWeb(
+          this.auth, await _webUser.linkWithPhoneNumber(phoneNumber, verifier));
     } catch (e) {
       throw throwFirebaseAuthException(e);
     }
