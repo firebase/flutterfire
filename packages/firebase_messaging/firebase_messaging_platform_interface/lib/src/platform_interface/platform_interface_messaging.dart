@@ -115,21 +115,21 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
         StreamController<RemoteMessage>().stream;
   }
 
-  static RemoteMessageHandler _onBackgroundMessageHandler;
+  static BackgroundMessageHandler _onBackgroundMessageHandler;
 
   /// Set a message handler function which is called when the app is in the
   /// background or terminated.
   ///
   /// This provided handler must be a top-level function and cannot be
   /// anonymous otherwise an [ArgumentError] will be thrown.
-  static RemoteMessageHandler get onBackgroundMessage {
+  static BackgroundMessageHandler get onBackgroundMessage {
     return _onBackgroundMessageHandler;
   }
 
   /// Allows the background message handler to be created and calls the
   /// instance delegate [registerBackgroundMessageHandler] to perform any
   /// platform specific registration logic.
-  static set onBackgroundMessage(RemoteMessageHandler handler) {
+  static set onBackgroundMessage(BackgroundMessageHandler handler) {
     _onBackgroundMessageHandler = handler;
     instance.registerBackgroundMessageHandler();
   }

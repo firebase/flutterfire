@@ -73,9 +73,10 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   }
 
   /// Returns a Stream that is called when a message being sent to FCM (via [sendMessage])
-  /// has successfully been sent.
+  /// has successfully been sent or fails.
   ///
-  /// The Stream contains a [String] representing a message ID.
+  /// The Stream contains a [String] representing a message ID. If sending failed,
+  /// the [SentMessage] will contain an [error] property containing a [FirebaseException].
   ///
   /// See [onSendError] to handle sending failures.
   static Stream<SentMessage> get onMessageSent {
@@ -137,7 +138,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// This provided handler must be a top-level function and cannot be
   /// anonymous otherwise an [ArgumentError] will be thrown.
-  static void onBackgroundMessage(RemoteMessageHandler handler) {
+  static void onBackgroundMessage(BackgroundMessageHandler handler) {
     FirebaseMessagingPlatform.onBackgroundMessage = handler;
   }
 

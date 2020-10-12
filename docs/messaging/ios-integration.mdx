@@ -152,6 +152,26 @@ you must manually add the profile from the Apple Developer console:
 
 ![Xcode - Assign provisioning profile](ios-xcode-assign-provisioning-profile.png)
 
+## Allowing Notification Images
+
+> If you want to know more about the specifics of this setup read the [official Firebase docs](https://firebase.google.com/docs/cloud-messaging/ios/send-image).
+
+On Apple devices, in order for incoming [Notifications](notifications.mdx) to display images, you must add an additional notification
+service extension.
+
+### Step 1 - Add a notification service extension
+
+TODO
+
+### Step 2 - Add target to the Podfile
+
+### Step 3 - Use the extension helper
+
+### Step 4
+
+Your device can now display images in a notification! Bear in mind, a 300KB max image size is enforced by the device.
+
+
 ## Next steps
 
 Once the above has been completed, you're ready to get started receiving messages on your iOS device for both
