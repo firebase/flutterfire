@@ -25,20 +25,22 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
-  
+
   s.source_files     = 'Classes/**/*.{h,m}'
   s.public_header_files = 'Classes/*.h'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
+
   s.dependency 'Flutter'
 
   s.dependency 'firebase_core'
   s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
   s.dependency 'Firebase/Messaging', "~> #{firebase_sdk_version}"
-  
   s.static_framework = true
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-fcm\\\"",
-    'DEFINES_MODULE' => 'YES'
+    'DEFINES_MODULE' => 'YES',
+    # So we can import GeneratedPluginRegistrant.h for custom FlutterEngine creation.
+    'HEADER_SEARCH_PATHS' => '"${PROJECT_DIR}/.."/**'
   }
 end

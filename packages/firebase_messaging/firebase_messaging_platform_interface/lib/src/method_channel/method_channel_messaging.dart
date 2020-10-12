@@ -247,63 +247,6 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<void> registerDeviceForRemoteMessages() async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return null;
-    }
-
-    try {
-      await channel.invokeMethod('Messaging#registerDeviceForRemoteMessages', {
-        'appName': app.name,
-      });
-    } catch (e) {
-      throw convertPlatformException(e);
-    }
-  }
-
-  @override
-  Future<void> unregisterDeviceForRemoteMessages() async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return null;
-    }
-
-    try {
-      await channel
-          .invokeMethod('Messaging#unregisterDeviceForRemoteMessages', {
-        'appName': app.name,
-      });
-    } catch (e) {
-      throw convertPlatformException(e);
-    }
-  }
-
-  @override
-  Future<void> sendMessage({
-    String senderId,
-    Map<String, String> data,
-    String collapseKey,
-    String messageId,
-    String messageType,
-    int ttl,
-  }) async {
-    try {
-      await channel.invokeMethod<void>('Messaging#sendMessage', {
-        'appName': app.name,
-        'message': {
-          'senderId': senderId,
-          'data': data,
-          'collapseKey': collapseKey,
-          'messageId': messageId,
-          'messageType': messageType,
-          'ttl': ttl,
-        }
-      });
-    } catch (e) {
-      throw convertPlatformException(e);
-    }
-  }
-
-  @override
   Future<void> setAutoInitEnabled(bool enabled) async {
     try {
       Map<String, dynamic> data = await channel
@@ -340,17 +283,6 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       await channel.invokeMethod<String>('Messaging#unsubscribeFromTopic', {
         'appName': app.name,
         'topic': topic,
-      });
-    } catch (e) {
-      throw convertPlatformException(e);
-    }
-  }
-
-  @override
-  Future<bool> deleteInstanceID() async {
-    try {
-      return await channel.invokeMethod<bool>('Messaging#deleteInstanceID', {
-        'appName': app.name,
       });
     } catch (e) {
       throw convertPlatformException(e);

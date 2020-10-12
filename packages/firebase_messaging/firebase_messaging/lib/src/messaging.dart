@@ -313,41 +313,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
         status == AuthorizationStatus.provisional;
   }
 
-  /// On Apple platforms, if your app wants to receive remote messages from FCM
-  /// (via APNs), you must explicitly register with APNs if auto-registration
-  /// has been disabled or [unregisterDeviceForRemoteMessages] has been called.
-  Future<void> registerDeviceForRemoteMessages() {
-    return _delegate.registerDeviceForRemoteMessages();
-  }
-
-  /// Unregisters the app from receiving remote notifications.
-  Future<void> unregisterDeviceForRemoteMessages() {
-    return _delegate.unregisterDeviceForRemoteMessages();
-  }
-
-  /// Send a new [RemoteMessage] to the FCM server.
-  Future<void> sendMessage({
-    String senderId,
-    Map<String, String> data,
-    String collapseKey,
-    String messageId,
-    String messageType,
-    int ttl,
-  }) {
-    if (ttl != null) {
-      assert(ttl >= 0);
-    }
-    return _delegate.sendMessage(
-      senderId:
-          senderId ?? '${app.options.messagingSenderId}@fcm.googleapis.com',
-      data: data,
-      collapseKey: collapseKey,
-      messageId: messageId,
-      messageType: messageType,
-      ttl: ttl,
-    );
-  }
-
   /// Enable or disable auto-initialization of Firebase Cloud Messaging.
   Future<void> setAutoInitEnabled(bool enabled) async {
     assert(enabled != null);

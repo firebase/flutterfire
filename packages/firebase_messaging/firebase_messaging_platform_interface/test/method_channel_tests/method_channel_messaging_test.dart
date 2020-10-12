@@ -216,28 +216,6 @@ void main() {
       ]);
     });
 
-    test('sendMessage', () async {
-      await messaging.sendMessage();
-
-      // check native method was called
-      expect(log, <Matcher>[
-        isMethodCall(
-          'Messaging#sendMessage',
-          arguments: <String, dynamic>{
-            'appName': defaultFirebaseAppName,
-            'message': <String, dynamic>{
-              'senderId': null,
-              'data': null,
-              'collapseKey': null,
-              'messageId': null,
-              'messageType': null,
-              'ttl': null,
-            }
-          },
-        ),
-      ]);
-    });
-
     test('setAutoInitEnabled', () async {
       expect(messaging.isAutoInitEnabled, isNull);
       await messaging.setAutoInitEnabled(true);
@@ -286,20 +264,6 @@ void main() {
           arguments: <String, dynamic>{
             'appName': defaultFirebaseAppName,
             'topic': topic,
-          },
-        ),
-      ]);
-    });
-
-    test('deleteInstanceID', () async {
-      await messaging.deleteInstanceID();
-
-      // check native method was called
-      expect(log, <Matcher>[
-        isMethodCall(
-          'Messaging#deleteInstanceID',
-          arguments: <String, dynamic>{
-            'appName': defaultFirebaseAppName,
           },
         ),
       ]);

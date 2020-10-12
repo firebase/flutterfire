@@ -282,32 +282,6 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('requestPermission() is not implemented');
   }
 
-  /// On Apple platforms, if your app wants to receive remote messages from FCM
-  /// (via APNs), you must explicitly register with APNs if auto-registration
-  /// has been disabled or [unregisterDeviceForRemoteMessages] has been called.
-  Future<void> registerDeviceForRemoteMessages() {
-    throw UnimplementedError(
-        'registerDeviceForRemoteMessages() is not implemented');
-  }
-
-  /// Unregisters the app from receiving remote notifications.
-  Future<void> unregisterDeviceForRemoteMessages() {
-    throw UnimplementedError(
-        'unregisterDeviceForRemoteMessages() is not implemented');
-  }
-
-  /// Send a new message to the FCM server.
-  Future<void> sendMessage({
-    String senderId,
-    Map<String, String> data,
-    String collapseKey,
-    String messageId,
-    String messageType,
-    int ttl,
-  }) {
-    throw UnimplementedError('sendMessage() is not implemented');
-  }
-
   /// Enable or disable auto-initialization of Firebase Cloud Messaging.
   Future<void> setAutoInitEnabled(bool enabled) async {
     throw UnimplementedError('setAutoInitEnabled() is not implemented');
@@ -324,14 +298,5 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// Unsubscribe from topic in background.
   Future<void> unsubscribeFromTopic(String topic) {
     throw UnimplementedError('unsubscribeFromTopic() is not implemented');
-  }
-
-  /// Resets Instance ID and revokes all tokens. In iOS, it also unregisters from remote notifications.
-  ///
-  /// A new Instance ID is generated asynchronously if Firebase Cloud Messaging auto-init is enabled.
-  ///
-  /// returns true if the operations executed successfully and false if an error occurred
-  Future<bool> deleteInstanceID() async {
-    throw UnimplementedError('deleteInstanceID() is not implemented');
   }
 }

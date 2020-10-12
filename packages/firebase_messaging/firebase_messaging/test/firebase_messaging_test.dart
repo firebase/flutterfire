@@ -5,8 +5,8 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:firebase_messaging_platform_interface/src/utils.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,14 +18,12 @@ void main() {
   setupFirebaseMessagingMocks();
   FirebaseMessaging messaging;
   FirebaseMessaging secondaryMessaging;
-  FirebaseApp app;
   FirebaseApp secondaryApp;
 
   group('$FirebaseMessaging', () {
     setUpAll(() async {
       FirebaseMessagingPlatform.instance = kMockMessagingPlatform;
 
-      app = await Firebase.initializeApp();
       secondaryApp = await Firebase.initializeApp(
           name: 'foo',
           options: FirebaseOptions(
@@ -224,67 +222,7 @@ void main() {
             sound: true));
       });
     });
-    group('sendMessage', () {
-      var senderId = 'custom-sender@fcm.googleapis.com';
-      var data = <String, String>{'foo': 'bar'};
-      var collapseKey = 'collapse-key';
-      var messageId = 'message-id';
-      var messageType = 'message-type';
-      var ttl = 1;
 
-      setUpAll(() {
-        when(kMockMessagingPlatform.sendMessage(
-          senderId: anyNamed('senderId'),
-          data: anyNamed('data'),
-          collapseKey: anyNamed('collapseKey'),
-          messageId: anyNamed('messageId'),
-          messageType: anyNamed('messageType'),
-          ttl: anyNamed('ttl'),
-        )).thenAnswer((_) => null);
-      });
-      test('verify delegate method is called with correct args', () async {
-        await messaging.sendMessage(
-            senderId: senderId,
-            data: data,
-            collapseKey: collapseKey,
-            messageId: messageId,
-            messageType: messageType,
-            ttl: ttl);
-
-        verify(kMockMessagingPlatform.sendMessage(
-            senderId: senderId,
-            data: data,
-            collapseKey: collapseKey,
-            messageId: messageId,
-            messageType: messageType,
-            ttl: ttl));
-      });
-
-      test('senderId defaults to the correct value if not set', () async {
-        var defaultSenderId =
-            '${app.options.messagingSenderId}@fcm.googleapis.com';
-
-        await messaging.sendMessage(
-            senderId: null,
-            data: data,
-            collapseKey: collapseKey,
-            messageId: messageId,
-            messageType: messageType,
-            ttl: null);
-
-        verify(kMockMessagingPlatform.sendMessage(
-            senderId: defaultSenderId,
-            data: data,
-            collapseKey: collapseKey,
-            messageId: messageId,
-            messageType: messageType,
-            ttl: null));
-      });
-
-      test('asserts [ttl] is more than 0 if not null', () {
-        expect(() => messaging.sendMessage(ttl: -1), throwsAssertionError);
-      });
-    });
     group('setAutoInitEnabled', () {
       test('verify delegate method is called with correct args', () async {
         when(kMockMessagingPlatform.setAutoInitEnabled(any))

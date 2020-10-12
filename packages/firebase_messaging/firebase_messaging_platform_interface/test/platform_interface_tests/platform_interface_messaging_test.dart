@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -174,16 +174,6 @@ void main() {
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test('throws if sendMessage()', () async {
-      try {
-        await firebaseMessagingPlatform.sendMessage();
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('sendMessage() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
-    });
-
     test('throws if setAutoInitEnabled()', () async {
       try {
         await firebaseMessagingPlatform.setAutoInitEnabled(true);
@@ -213,21 +203,12 @@ void main() {
       }
       fail('Should have thrown an [UnimplementedError]');
     });
-
-    test('throws if deleteInstanceID()', () async {
-      try {
-        await firebaseMessagingPlatform.deleteInstanceID();
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('deleteInstanceID() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
-    });
   });
 }
 
 class TestFirebaseMessagingPlatform extends FirebaseMessagingPlatform {
   TestFirebaseMessagingPlatform(FirebaseApp app) : super(appInstance: app);
+
   FirebaseMessagingPlatform testDelegateFor({FirebaseApp app}) {
     return this.delegateFor();
   }
