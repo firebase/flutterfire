@@ -42,14 +42,8 @@ class TransactionWeb extends TransactionPlatform {
   @override
   TransactionWeb set(String documentPath, Map<String, dynamic> data,
       [SetOptions options]) {
-    _webTransactionDelegate.set(
-      _webFirestoreDelegate.doc(documentPath),
-      CodecUtility.encodeMapData(data),
-      // TODO(ehesp): web implementation missing mergeFields support
-      options != null
-          ? firestore_interop.SetOptions(merge: options.merge)
-          : null,
-    );
+    _webTransactionDelegate.set(_webFirestoreDelegate.doc(documentPath),
+        CodecUtility.encodeMapData(data), convertSetOptions(options));
     return this;
   }
 

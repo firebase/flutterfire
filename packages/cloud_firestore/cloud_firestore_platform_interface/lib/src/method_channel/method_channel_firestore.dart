@@ -251,7 +251,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<void> enablePersistence() async {
+  Future<void> enablePersistence(
+      [PersistentSettings persistentSettings]) async {
     throw UnimplementedError(
         'enablePersistence() is only available for Web. Use [Settings.persistenceEnabled] for other platforms.');
   }

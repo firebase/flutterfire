@@ -1,3 +1,7 @@
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 @JS('firebase.firestore')
 library firebase_interop.firestore;
 
@@ -32,7 +36,10 @@ abstract class FirestoreJsImpl {
 
   external DocumentReferenceJsImpl doc(String documentPath);
 
-  external PromiseJsImpl<Null> enablePersistence();
+  external PromiseJsImpl<Null> enablePersistence(
+      [PersistenceSettings settings]);
+
+  external PromiseJsImpl<Null> clearPersistence();
 
   external PromiseJsImpl<void> runTransaction(
       Func1<TransactionJsImpl, PromiseJsImpl> updateFunction);
@@ -42,6 +49,10 @@ abstract class FirestoreJsImpl {
   external PromiseJsImpl<Null> disableNetwork();
 
   external PromiseJsImpl<Null> enableNetwork();
+
+  external PromiseJsImpl<Null> terminate();
+
+  external PromiseJsImpl<Null> waitForPendingWrites();
 }
 
 @JS('WriteBatch')
@@ -78,6 +89,13 @@ class CollectionReferenceJsImpl extends QueryJsImpl {
   external DocumentReferenceJsImpl doc([String documentPath]);
 
   external bool isEqual(CollectionReferenceJsImpl other);
+}
+
+@JS()
+class PersistenceSettings {
+  external bool get synchronizeTabs;
+
+  external factory PersistenceSettings({bool synchronizeTabs});
 }
 
 /// A [FieldPath] refers to a field in a document.
@@ -190,7 +208,7 @@ abstract class DocumentReferenceJsImpl {
 
   external PromiseJsImpl<Null> delete();
 
-  external PromiseJsImpl<DocumentSnapshotJsImpl> get();
+  external PromiseJsImpl<DocumentSnapshotJsImpl> get([GetOptions options]);
 
   external void Function() onSnapshot(
     optionsOrObserverOrOnNext,
@@ -293,8 +311,9 @@ abstract class QueryJsImpl {
 
 @JS('QuerySnapshot')
 abstract class QuerySnapshotJsImpl {
-  // TODO: [SnapshotOptions options]
-  external List<DocumentChangeJsImpl> docChanges();
+  // TODO: [SnapshoListenOptions options]
+  external List<DocumentChangeJsImpl> docChanges(
+      [SnapshotListenOptions options]);
 
   external List<DocumentSnapshotJsImpl> get docs;
 
@@ -482,6 +501,16 @@ abstract class DocumentListenOptions {
   external factory DocumentListenOptions({bool includeMetadataChanges});
 }
 
+/// An object to configure the [DocumentReference.get] and [Query.get] behavior.
+@anonymous
+@JS()
+abstract class GetOptions {
+  /// Describes whether we should get from server or cache.
+  external String get source;
+
+  external factory GetOptions({String source});
+}
+
 /// An object to configure the [WriteBatch.set] behavior.
 /// Pass [: {merge: true} :] to only replace the values specified in
 /// the data argument. Fields omitted will remain untouched.
@@ -497,4 +526,18 @@ abstract class SetOptions {
   external set mergeFields(List<String> v);
 
   external factory SetOptions({bool merge, List<String> mergeFields});
+}
+
+/// Options that configure how data is retrieved from a DocumentSnapshot
+/// (e.g. the desired behavior for server timestamps that have not yet been set to their final value).
+///
+/// See: https://firebase.google.com/docs/reference/js/firebase.firestore.SnapshotOptions.
+@JS()
+abstract class SnapshotOptions {
+// If set, controls the return value for server timestamps that have not yet been set to their final value.
+// Possible values are "estimate", "previous" and "none".
+// If omitted or set to 'none', null will be returned by default until the server value becomes available.
+  external String get serverTimestamps;
+
+  external factory SnapshotOptions({String serverTimestamps});
 }

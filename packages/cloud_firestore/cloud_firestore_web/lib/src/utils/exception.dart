@@ -13,7 +13,8 @@ FirebaseException getFirebaseException(Object object) {
         plugin: 'cloud_firestore', code: 'unknown', message: object.toString());
   }
 
-  core_interop.FirebaseError firebaseError = object as core_interop.FirebaseError;
+  core_interop.FirebaseError firebaseError =
+      object as core_interop.FirebaseError;
 
   String code = firebaseError.code.replaceFirst('firestore/', '');
   String message =

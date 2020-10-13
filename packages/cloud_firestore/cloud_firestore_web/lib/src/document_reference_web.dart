@@ -31,14 +31,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     try {
       await _delegate.set(
         CodecUtility.encodeMapData(data),
-        options != null
-            ? firestore_interop.SetOptions(
-                // merge: options.merge ?? Null,
-                // TODO(ehesp): make util to convert FieldPath
-                mergeFields: options.mergeFields
-                    ?.map((e) => e.components.toList().join('/'))
-                    .toList())
-            : null,
+        convertSetOptions(options),
       );
     } catch (e) {
       throw getFirebaseException(e);
@@ -56,9 +49,9 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
 
   @override
   Future<DocumentSnapshotPlatform> get([GetOptions options]) async {
-    // TODO(ehesp): web implementation not handling options
     try {
-      firestore_interop.DocumentSnapshot documentSnapshot = await _delegate.get();
+      firestore_interop.DocumentSnapshot documentSnapshot =
+          await _delegate.get(convertGetOptions(options));
       return convertWebDocumentSnapshot(this.firestore, documentSnapshot);
     } catch (e) {
       throw getFirebaseException(e);
@@ -78,7 +71,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   Stream<DocumentSnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    Stream<firestore_interop.DocumentSnapshot> querySnapshots = _delegate.onSnapshot;
+    Stream<firestore_interop.DocumentSnapshot> querySnapshots =
+        _delegate.onSnapshot;
     if (includeMetadataChanges) {
       querySnapshots = _delegate.onMetadataChangesSnapshot;
     }

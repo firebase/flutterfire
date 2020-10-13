@@ -77,3 +77,52 @@ SnapshotMetadataPlatform convertWebSnapshotMetadata(
   return SnapshotMetadataPlatform(
       webSnapshotMetadata.hasPendingWrites, webSnapshotMetadata.fromCache);
 }
+
+/// Converts a [GetOptions] to a [web.GetOptions].
+firestore_interop.GetOptions convertGetOptions(GetOptions options) {
+  if (options == null) return null;
+
+  var source;
+  if (options.source != null) {
+    switch (options.source) {
+      case Source.serverAndCache:
+        source = 'default';
+        break;
+      case Source.cache:
+        source = 'cache';
+        break;
+      case Source.server:
+        source = 'server';
+        break;
+      default:
+        // TODO(helenaford): check if this is needed
+        // ignore everything else
+        assert(false);
+        source = null;
+    }
+  }
+
+  return firestore_interop.GetOptions(source: source);
+}
+
+/// Converts a [SetOptions] to a [web.SetOptions].
+firestore_interop.SetOptions convertSetOptions(SetOptions options) {
+  if (options == null) return null;
+
+  var parsedOptions;
+  if (options.merge != null) {
+    parsedOptions = firestore_interop.SetOptions(merge: options.merge);
+  } else if (options.mergeFields != null) {
+    parsedOptions = firestore_interop.SetOptions(
+        mergeFields: options.mergeFields
+            .map((e) => e.components.toList().join('.'))
+            .toList());
+  }
+
+  return parsedOptions;
+}
+
+/// Converts a [FieldPath] to a [web.FieldPath].
+firestore_interop.FieldPath convertFieldPath(FieldPath fieldPath) {
+  return firestore_interop.FieldPath(fieldPath.components.toList().join('.'));
+}

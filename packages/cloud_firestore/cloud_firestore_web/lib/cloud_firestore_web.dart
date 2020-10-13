@@ -51,10 +51,14 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   @override
   WriteBatchPlatform batch() => WriteBatchWeb(_webFirestore);
 
-  // @override
-  // Future<void> clearPersistence() async {
-  //   // TODO(ehesp): not supported on firebase-dart
-  // }
+  @override
+  Future<void> clearPersistence() async {
+    try {
+      await _webFirestore.clearPersistence();
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
+  }
 
   @override
   QueryPlatform collectionGroup(String path) {
@@ -129,25 +133,33 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     }
   }
 
-  /// Enable persistence of Firestore data. Web only.
-  Future<void> enablePersistence() async {
-    // TODO(salakar): this should accept a [PersistenceSettings] argument
-    // but it is currently unsupported on the 'firebase-dart' package.
-    // See https://firebase.google.com/docs/reference/js/firebase.firestore.PersistenceSettings
+  /// Enable persistence of Firestore data.
+  @override
+  Future<void> enablePersistence([PersistenceSettings settings]) async {
     try {
-      await _webFirestore.enablePersistence();
+      await _webFirestore.enablePersistence(
+          firestore_interop.PersistenceSettings(
+              synchronizeTabs: settings.synchronizeTabs));
     } catch (e) {
       throw getFirebaseException(e);
     }
   }
 
-  // @override
-  // Future<void> terminate() async {
-  //   // TODO(ehesp): not supported on firebase-dart
-  // }
+  @override
+  Future<void> terminate() async {
+    try {
+      await _webFirestore.terminate();
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
+  }
 
-  // @override
-  // Future<void> waitForPendingWrites() async {
-  //   // TODO(ehesp): not supported on firebase-dart
-  // }
+  @override
+  Future<void> waitForPendingWrites() async {
+    try {
+      await _webFirestore.waitForPendingWrites();
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
+  }
 }

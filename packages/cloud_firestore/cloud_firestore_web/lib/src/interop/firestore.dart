@@ -1,3 +1,7 @@
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
@@ -85,8 +89,12 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   ///
   /// Returns non-null [Future] that represents successfully enabling
   /// persistent storage.
-  Future<Null> enablePersistence() =>
-      handleThenable(jsObject.enablePersistence());
+  Future<Null> enablePersistence(
+          [firestore_interop.PersistenceSettings settings]) =>
+      handleThenable(jsObject.enablePersistence(settings));
+
+  Future<Null> clearPersistence() =>
+      handleThenable(jsObject.clearPersistence());
 
   /// Executes the given [updateFunction] and then attempts to commit the
   /// changes applied within the transaction. If any document read within
@@ -123,6 +131,11 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   /// While the network is disabled, any snapshot listeners or get() calls will return results from cache,
   /// and any write operations will be queued until the network is restored.
   Future disableNetwork() => handleThenable(jsObject.disableNetwork());
+
+  Future<Null> terminate() => handleThenable(jsObject.terminate());
+
+  Future<Null> waitForPendingWrites() =>
+      handleThenable(jsObject.waitForPendingWrites());
 }
 
 /// A write batch, used to perform multiple writes as a single atomic unit.
@@ -186,7 +199,7 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
   WriteBatch set(DocumentReference documentRef, Map<String, dynamic> data,
       [firestore_interop.SetOptions options]) {
     var jsObjectSet = (options != null)
-        ? jsObject.set(documentRef.jsObject, jsify(data), options)
+        ? jsObject.set(documentRef.jsObject, jsify(data), jsify(options))
         : jsObject.set(documentRef.jsObject, jsify(data));
     return WriteBatch.getInstance(jsObjectSet);
   }
@@ -279,9 +292,11 @@ class DocumentReference
   /// Returns non-null [Future] containing non-null [DocumentSnapshot]
   /// that resolves with a [DocumentSnapshot] containing the current document
   /// contents.
-  Future<DocumentSnapshot> get() =>
-      handleThenable<firestore_interop.DocumentSnapshotJsImpl>(jsObject.get())
-          .then(DocumentSnapshot.getInstance);
+  Future<DocumentSnapshot> get([firestore_interop.GetOptions options]) {
+    var jsObjectSet =
+        (options != null) ? jsObject.get(jsify(options)) : jsObject.get();
+    return handleThenable(jsObjectSet).then(DocumentSnapshot.getInstance);
+  }
 
   StreamController<DocumentSnapshot> _onSnapshotController;
   StreamController<DocumentSnapshot> _onMetadataController;
@@ -344,7 +359,7 @@ class DocumentReference
   Future<Null> set(Map<String, dynamic> data,
       [firestore_interop.SetOptions options]) {
     var jsObjectSet = (options != null)
-        ? jsObject.set(jsify(data), options)
+        ? jsObject.set(jsify(data), jsify(options))
         : jsObject.set(jsify(data));
     return handleThenable(jsObjectSet);
   }
@@ -415,7 +430,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   ///
   /// Returns non-null [Future] that will be resolved with the results of the
   /// query.
-  Future<QuerySnapshot> get() =>
+  Future<QuerySnapshot> get([firestore_interop.GetOptions options]) =>
       handleThenable<firestore_interop.QuerySnapshotJsImpl>(jsObject.get())
           .then(QuerySnapshot.getInstance);
 
@@ -727,14 +742,16 @@ class QuerySnapshot
   /// Non-null list of the documents that changed since the last snapshot.
   /// If this is the first snapshot, all documents will be in the list as
   /// added changes.
-  // TODO: [SnapshotOptions options]
-  List<DocumentChange> docChanges() => jsObject
-      .docChanges()
-      // explicitly typing the param as dynamic to work-around
-      // https://github.com/dart-lang/sdk/issues/33537
-      // ignore: unnecessary_lambdas
-      .map((dynamic e) => DocumentChange.getInstance(e))
-      .toList();
+  // TODO: [SnapshotListenOptions options]
+  List<DocumentChange> docChanges(
+          [firestore_interop.SnapshotListenOptions options]) =>
+      jsObject
+          .docChanges(jsify(options))
+          // explicitly typing the param as dynamic to work-around
+          // https://github.com/dart-lang/sdk/issues/33537
+          // ignore: unnecessary_lambdas
+          .map((dynamic e) => DocumentChange.getInstance(e))
+          .toList();
 
   /// Non-null list of all the documents.
   List<DocumentSnapshot> get docs => jsObject.docs
@@ -830,7 +847,7 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
   /// The [DocumentReference] parameter is a reference to the document to be
   /// created. Value must not be null.
   ///
-  /// The [data] paramater is object of the fields and values for
+  /// The [data] parameter is object of the fields and values for
   /// the document. Value must not be null.
   ///
   /// The optional [options] is an object to configure the set behavior.
@@ -842,7 +859,7 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
   Transaction set(DocumentReference documentRef, Map<String, dynamic> data,
       [firestore_interop.SetOptions options]) {
     var jsObjectSet = (options != null)
-        ? jsObject.set(documentRef.jsObject, jsify(data), options)
+        ? jsObject.set(documentRef.jsObject, jsify(data), jsify(options))
         : jsObject.set(documentRef.jsObject, jsify(data));
     return Transaction.getInstance(jsObjectSet);
   }

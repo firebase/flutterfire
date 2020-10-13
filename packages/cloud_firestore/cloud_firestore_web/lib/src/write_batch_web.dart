@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_web/src/utils/web_utils.dart';
 
 import 'interop/firestore.dart' as firestore_interop;
 import 'utils/exception.dart';
@@ -35,11 +36,8 @@ class WriteBatchWeb extends WriteBatchPlatform {
   @override
   void set(String documentPath, Map<String, dynamic> data,
       [SetOptions options]) {
-    _webWriteBatchDelegate.set(
-        _webFirestoreDelegate.doc(documentPath),
-        CodecUtility.encodeMapData(data),
-        // TODO(ehesp): web implementation missing mergeFields support
-        options != null ? firestore_interop.SetOptions(merge: options.merge) : null);
+    _webWriteBatchDelegate.set(_webFirestoreDelegate.doc(documentPath),
+        CodecUtility.encodeMapData(data), convertSetOptions(options));
   }
 
   @override

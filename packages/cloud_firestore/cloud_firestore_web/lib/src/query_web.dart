@@ -121,10 +121,9 @@ class QueryWeb extends QueryPlatform {
 
   @override
   Future<QuerySnapshotPlatform> get([GetOptions options]) async {
-    // TODO(ehesp): web implementation not handling options
     try {
-      return convertWebQuerySnapshot(
-          firestore, await _buildWebQueryWithParameters().get());
+      return convertWebQuerySnapshot(firestore,
+          await _buildWebQueryWithParameters().get(convertGetOptions(options)));
     } catch (e) {
       throw getFirebaseException(e);
     }
