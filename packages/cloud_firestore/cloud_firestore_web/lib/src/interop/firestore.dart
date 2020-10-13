@@ -442,6 +442,17 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// Returns non-null created [Query].
   Query limit(num limit) => Query.fromJsObject(jsObject.limit(limit));
 
+  /// Creates a new [Query] where the results are limited to the last specified
+  /// number of documents.
+  ///
+  /// You must specify at least one orderBy clause for limitToLast queries,
+  /// otherwise an exception will be thrown during execution.
+  ///
+  /// The [limit] parameter is the maximum number of items to return.
+  ///
+  /// Returns non-null created [Query].
+  Query limitToLast(num limit) => Query.fromJsObject(jsObject.limitToLast(limit));
+
   StreamController<QuerySnapshot> _onSnapshotController;
   StreamController<QuerySnapshot> _onSnapshotMetadataController;
 

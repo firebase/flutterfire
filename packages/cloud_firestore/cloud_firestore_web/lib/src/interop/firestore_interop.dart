@@ -289,6 +289,8 @@ abstract class QueryJsImpl {
 
   external QueryJsImpl limit(num limit);
 
+  external QueryJsImpl limitToLast(num limit);
+
   external void Function() onSnapshot(
       SnapshotListenOptions options,
       void Function(QuerySnapshotJsImpl) onNext,
