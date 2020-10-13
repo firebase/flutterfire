@@ -69,10 +69,9 @@ class QueryWeb extends QueryPlatform {
       query = query.limit(parameters['limit']);
     }
 
-    // TODO(ehesp): Not supported on web platform (firebase-dart)
-    // if (parameters['limitToLast'] != null) {
-    //   query = query.limitToLast(parameters['limitToLast']);
-    // }
+    if (parameters['limitToLast'] != null) {
+      query = query.limitToLast(parameters['limitToLast']);
+    }
 
     for (List<dynamic> condition in parameters['where']) {
       dynamic fieldPath = CodecUtility.valueEncode(condition[0]);
@@ -138,14 +137,13 @@ class QueryWeb extends QueryPlatform {
     });
   }
 
-  // TODO(ehesp): Not supported on web platform (firebase-dart)
-  // @override
-  // QueryPlatform limitToLast(int limit) {
-  //   return _copyWithParameters(<String, dynamic>{
-  //     'limit': null,
-  //     'limitToLast': limit,
-  //   });
-  // }
+  @override
+  QueryPlatform limitToLast(int limit) {
+    return _copyWithParameters(<String, dynamic>{
+      'limit': null,
+      'limitToLast': limit,
+    });
+  }
 
   @override
   Stream<QuerySnapshotPlatform> snapshots({
