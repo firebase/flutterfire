@@ -18,7 +18,7 @@ import 'mock/firebase_mock.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('$CloudFunctionsWeb', () {
+  group('$FirebaseFunctionsWeb', () {
     final List<Map<String, dynamic>> log = <Map<String, dynamic>>[];
 
     Map<String, dynamic> loggingCall(
@@ -61,7 +61,7 @@ void main() {
       ));
 
       FirebasePlatform.instance = FirebaseCoreWeb();
-      CloudFunctionsPlatform.instance = CloudFunctionsWeb();
+      FirebaseFunctionsPlatform.instance = FirebaseFunctionsWeb();
 
       // install loggingCall on the HttpsCallable mock as the thing that gets
       // executed when its call method is invoked
@@ -96,33 +96,6 @@ void main() {
           'region': null
         }),
       ]);
-    });
-
-    test('callCloudFunction calls down to Firebase API', () async {
-      log.clear();
-
-      CloudFunctionsPlatform cfp = CloudFunctionsPlatform.instance;
-      expect(cfp, isA<CloudFunctionsWeb>());
-
-      await cfp.callCloudFunction(
-          appName: '[DEFAULT]', functionName: 'baz', region: 'space');
-      await cfp.callCloudFunction(appName: 'mock', functionName: 'mumble');
-
-      expect(
-        log,
-        <Matcher>[
-          equals(<String, dynamic>{
-            'appName': '[DEFAULT]',
-            'functionName': 'baz',
-            'region': 'space'
-          }),
-          equals(<String, dynamic>{
-            'appName': 'mock',
-            'functionName': 'mumble',
-            'region': null
-          }),
-        ],
-      );
     });
   });
 }
