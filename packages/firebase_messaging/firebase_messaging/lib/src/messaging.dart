@@ -72,25 +72,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return streamController.stream;
   }
 
-  /// Returns a Stream that is called when a message being sent to FCM (via [sendMessage])
-  /// has successfully been sent or fails.
-  ///
-  /// The Stream contains a [String] representing a message ID. If sending failed,
-  /// the [SentMessage] will contain an [error] property containing a [FirebaseException].
-  ///
-  /// See [onSendError] to handle sending failures.
-  static Stream<SentMessage> get onMessageSent {
-    Stream<SentMessage> onMessageSentStream =
-        FirebaseMessagingPlatform.onMessageSent;
-
-    StreamController<SentMessage> streamController;
-    streamController = StreamController<SentMessage>.broadcast(onListen: () {
-      onMessageSentStream.pipe(streamController);
-    });
-
-    return streamController.stream;
-  }
-
   /// Returns a [Stream] that is called when a user presses a notification displayed
   /// via FCM.
   ///
@@ -106,28 +87,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     StreamController<RemoteMessage> streamController;
     streamController = StreamController<RemoteMessage>.broadcast(onListen: () {
       onNotificationOpenedAppStream.pipe(streamController);
-    });
-
-    return streamController.stream;
-  }
-
-  /// Returns a Stream which is called when the FCM server deletes pending messages.
-  ///
-  /// This may be due to:
-  ///
-  /// 1.  Too many messages stored on the FCM server. This can occur when an
-  /// app's servers sends many non-collapsible messages to FCM servers while
-  /// the device is offline.
-  ///
-  /// 2. he device hasn't connected in a long time and the app server has recently
-  /// (within the last 4 weeks) sent a message to the app on that device.
-  static Stream<void> get onDeletedMessages {
-    Stream<void> onDeletedMessagesStream =
-        FirebaseMessagingPlatform.onDeletedMessages;
-
-    StreamController<void> streamController;
-    streamController = StreamController<void>.broadcast(onListen: () {
-      onDeletedMessagesStream.pipe(streamController);
     });
 
     return streamController.stream;
@@ -167,19 +126,11 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.initialNotification;
   }
 
-  /// Removes access to an FCM token previously authorized by it's scope.
+  /// Removes access to the default FCM token.
   ///
   /// Messages sent by the server to this token will fail.
-  /// authorizedEntity The messaging sender ID. In most cases this will be the current default app.
-  /// scope The scope to assign when token will be deleted.
-  Future<void> deleteToken({
-    String authorizedEntity,
-    String scope,
-  }) {
-    return _delegate.deleteToken(
-      authorizedEntity: authorizedEntity ?? app.options.messagingSenderId,
-      scope: scope ?? 'FCM',
-    );
+  Future<void> deleteToken() {
+    return _delegate.deleteToken();
   }
 
   /// On iOS, it is possible to get the users APNs token.
@@ -192,18 +143,11 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.getAPNSToken();
   }
 
-  /// Returns an FCM token for this device.
-  ///
-  /// Optionally you can specify a custom authorized entity or scope to tailor
-  /// tokens to your own use-case.
+  /// Returns the default FCM token for this device.
   Future<String> getToken({
-    String authorizedEntity,
-    String scope,
     String vapidKey,
   }) {
     return _delegate.getToken(
-      authorizedEntity: authorizedEntity ?? app.options.messagingSenderId,
-      scope: scope ?? 'FCM',
       vapidKey: vapidKey,
     );
   }

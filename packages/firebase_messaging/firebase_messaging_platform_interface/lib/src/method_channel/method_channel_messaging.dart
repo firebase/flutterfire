@@ -150,12 +150,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<void> deleteToken({String authorizedEntity, String scope}) async {
+  Future<void> deleteToken() async {
     try {
       await channel.invokeMethod<String>('Messaging#deleteToken', {
         'appName': app.name,
-        'authorizedEntity': authorizedEntity,
-        'scope': scope,
       });
     } catch (e) {
       throw convertPlatformException(e);
@@ -179,15 +177,11 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<String> getToken({
-    String authorizedEntity,
-    String scope,
     String vapidKey,
   }) async {
     try {
       return await channel.invokeMethod<String>('Messaging#getToken', {
         'appName': app.name,
-        'authorizedEntity': authorizedEntity,
-        'scope': scope,
       });
     } catch (e) {
       throw convertPlatformException(e);

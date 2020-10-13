@@ -26,6 +26,7 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
   NSObject<FlutterPluginRegistrar> *_registrar;
 
   FlutterMethodChannel *_backgroundChannel;
+  // TODO use me
   NSMutableArray<NSArray *> *_backgroundEventQueue;
 
   NSDictionary *_initialNotification;
@@ -38,7 +39,7 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
     unsigned int willPresentNotification : 1;
     unsigned int didReceiveNotificationResponse : 1;
     unsigned int openSettingsForNotification : 1;
-  } originalNotificationCenterDelegateRespondsTo;
+  } _originalNotificationCenterDelegateRespondsTo;
 #endif
 }
 
@@ -96,7 +97,7 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
       NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
       NSError *_Nullable error) {
     if (code == nil) {
-      NSDictionary *errorDetails = [self getNSDictionaryFromNSError:error];
+      NSDictionary *errorDetails = [self NSDictionaryForNSError:error];
       code = errorDetails[kMessagingArgumentCode];
       message = errorDetails[kMessagingArgumentMessage];
       details = errorDetails;
@@ -122,24 +123,28 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
 
-  // TODO implement the following APIS
-  // TODO implement the following APIS
-  // TODO implement the following APIS
-  // Messaging#deleteToken
-  // Messaging#getAPNSToken
-  // Messaging#getToken
-  // Messaging#getNotificationSettings
-  // Messaging#requestPermission
-  // Messaging#setAutoInitEnabled
-  // Messaging#subscribeToTopic
-  // Messaging#unsubscribeFromTopic
-  // TODO implement the following background APIs
-  // FcmDartService#start
-  // FcmDartService#initialized
-  if ([@"TODO" isEqualToString:call.method]) {
-    // TODO
-  } else if ([@"TODO" isEqualToString:call.method]) {
-    // TODO
+  if ([@"Messaging#getInitialNotification" isEqualToString:call.method]) {
+    methodCallResult.success([self copyInitialNotification]);
+  } else if ([@"Messaging#deleteToken" isEqualToString:call.method]) {
+    [self messagingDeleteToken:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Messaging#getAPNSToken" isEqualToString:call.method]) {
+    [self messagingGetAPNSToken:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Messaging#getToken" isEqualToString:call.method]) {
+    [self messagingGetToken:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Messaging#getNotificationSettings" isEqualToString:call.method]) {
+    [self messagingGetNotificationSettings:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Messaging#requestPermission" isEqualToString:call.method]) {
+    [self messagingRequestPermission:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Messaging#setAutoInitEnabled" isEqualToString:call.method]) {
+    [self messagingSetAutoInitEnabled:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Messaging#subscribeToTopic" isEqualToString:call.method]) {
+    [self messagingSubscribeToTopic:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Messaging#unsubscribeFromTopic" isEqualToString:call.method]) {
+    [self messagingUnsubscribeFromTopic:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"FcmDartService#start" isEqualToString:call.method]) {
+    [self dartServiceStart:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"FcmDartService#initialized" isEqualToString:call.method]) {
+    [self dartServiceInitialized:call.arguments withMethodCallResult:methodCallResult];
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
@@ -155,12 +160,7 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
   }
 
   // Send to Dart.
-  // TODO confirm method
-  // TODO confirm method
-  // TODO confirm method
-  // TODO confirm method
-  // TODO confirm method
-  [_channel invokeMethod:@"onToken" arguments:fcmToken];
+  [_channel invokeMethod:@"Messaging#onTokenRefresh" arguments:fcmToken];
 
   // If the users AppDelegate implements messaging:didReceiveRegistrationToken: then call it as well
   // so we don't break other libraries.
@@ -211,14 +211,14 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
       [UNUserNotificationCenter currentNotificationCenter];
   if (notificationCenter.delegate != nil) {
     _originalNotificationCenterDelegate = notificationCenter.delegate;
-    originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
+    _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
         (unsigned int)[_originalNotificationCenterDelegate
             respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
-    originalNotificationCenterDelegateRespondsTo.willPresentNotification =
+    _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
         (unsigned int)[_originalNotificationCenterDelegate
             respondsToSelector:@selector(userNotificationCenter:
                                         willPresentNotification:withCompletionHandler:)];
-    originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
+    _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
         (unsigned int)[_originalNotificationCenterDelegate
             respondsToSelector:@selector(userNotificationCenter:
                                    didReceiveNotificationResponse:withCompletionHandler:)];
@@ -249,12 +249,7 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
     // Don't send an event if contentAvailable is true - application:didReceiveRemoteNotification
     // will send the event for us, we don't want to duplicate them.
     if (!notificationDict[@"contentAvailable"]) {
-      // TODO send onMessage to foreground channel.
-      // TODO send onMessage to foreground channel.
-      // TODO send onMessage to foreground channel.
-      // TODO send onMessage to foreground channel.
-      // TODO send onMessage to foreground channel.
-      // TODO send onMessage to foreground channel.
+      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
     }
 
     // TODO in a later version possibly allow customising completion options in Dart code.
@@ -263,7 +258,7 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
 
   // Forward on to any other delegates.
   if (_originalNotificationCenterDelegate != nil &&
-      originalNotificationCenterDelegateRespondsTo.willPresentNotification) {
+      _originalNotificationCenterDelegateRespondsTo.willPresentNotification) {
     [_originalNotificationCenterDelegate userNotificationCenter:center
                                         willPresentNotification:notification
                                           withCompletionHandler:completionHandler];
@@ -281,12 +276,7 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
   if (remoteNotification[@"gcm.message_id"]) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
-    // TODO send onNotificationOpenedApp to foreground channel.
-    // TODO send onNotificationOpenedApp to foreground channel.
-    // TODO send onNotificationOpenedApp to foreground channel.
-    // TODO send onNotificationOpenedApp to foreground channel.
-    // TODO send onNotificationOpenedApp to foreground channel.
-    // TODO send onNotificationOpenedApp to foreground channel.
+    [_channel invokeMethod:@"Messaging#onNotificationOpenedApp" arguments:notificationDict];
     @synchronized(self) {
       _initialNotification = notificationDict;
     }
@@ -294,7 +284,7 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
 
   // Forward on to any other delegates.
   if (_originalNotificationCenterDelegate != nil &&
-      originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse) {
+      _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse) {
     [_originalNotificationCenterDelegate userNotificationCenter:center
                                  didReceiveNotificationResponse:response
                                           withCompletionHandler:completionHandler];
@@ -309,9 +299,12 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
     openSettingsForNotification:(nullable UNNotification *)notification {
   // Forward on to any other delegates.
   if (_originalNotificationCenterDelegate != nil &&
-      originalNotificationCenterDelegateRespondsTo.openSettingsForNotification) {
+      _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
     [_originalNotificationCenterDelegate userNotificationCenter:center
                                     openSettingsForNotification:notification];
+#pragma clang diagnostic pop
   }
 }
 
@@ -408,13 +401,8 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
       // TODO send notificationDict to background channel
       // TODO send notificationDict to background channel
     } else {
-      // TODO send notificationDict to foreground channel
-      // TODO send notificationDict to foreground channel
-      // TODO send notificationDict to foreground channel
-      // TODO send notificationDict to foreground channel
-      // TODO send notificationDict to foreground channel
-      // TODO send notificationDict to foreground channel
-      // TODO send notificationDict to foreground channel
+      // TODO check if this also needs queuing
+      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
       completionHandler(UIBackgroundFetchResultNoData);
     }
 
@@ -435,14 +423,156 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
 
 #pragma mark - Firebase Messaging API
 
-// TODO implement messaging APIs
-// TODO implement messaging APIs
-// TODO implement messaging APIs
-// TODO implement messaging APIs
-// TODO implement messaging APIs
-// TODO implement messaging APIs
-// TODO implement messaging APIs
-// TODO implement messaging APIs
+- (void)dartServiceInitialized:(id)arguments
+          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  // TODO implement
+  // TODO implement
+  // TODO implement
+  // TODO implement
+}
+
+- (void)dartServiceStart:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  // TODO implement
+  // TODO implement
+  // TODO implement
+  // TODO implement
+}
+
+- (void)messagingUnsubscribeFromTopic:(id)arguments
+                 withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+  NSString *topic = arguments[@"topic"];
+  [messaging unsubscribeFromTopic:topic
+                       completion:^(NSError *error) {
+                         if (error != nil) {
+                           result.error(nil, nil, nil, error);
+                         } else {
+                           result.success(nil);
+                         }
+                       }];
+}
+
+- (void)messagingSubscribeToTopic:(id)arguments
+             withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+  NSString *topic = arguments[@"topic"];
+  [messaging subscribeToTopic:topic
+                   completion:^(NSError *error) {
+                     if (error != nil) {
+                       result.error(nil, nil, nil, error);
+                     } else {
+                       result.success(nil);
+                     }
+                   }];
+}
+
+- (void)messagingSetAutoInitEnabled:(id)arguments
+               withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+  messaging.autoInitEnabled = [arguments[@"enabled"] boolValue];
+  result.success(@{
+    @"isAutoInitEnabled" : @(messaging.isAutoInitEnabled),
+  });
+}
+
+- (void)messagingRequestPermission:(id)arguments
+              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSDictionary *permissions = arguments[@"permissions"];
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+
+  UNAuthorizationOptions options = UNAuthorizationOptionNone;
+
+  if ([permissions[@"alert"] isEqual:@(YES)]) {
+    options |= UNAuthorizationOptionAlert;
+  }
+
+  if ([permissions[@"badge"] isEqual:@(YES)]) {
+    options |= UNAuthorizationOptionBadge;
+  }
+
+  if ([permissions[@"sound"] isEqual:@(YES)]) {
+    options |= UNAuthorizationOptionSound;
+  }
+
+  if ([permissions[@"provisional"] isEqual:@(YES)]) {
+    if (@available(iOS 12.0, *)) {
+      options |= UNAuthorizationOptionProvisional;
+    }
+  }
+
+  if ([permissions[@"announcement"] isEqual:@(YES)]) {
+    if (@available(iOS 13.0, *)) {
+      // TODO not available in iOS9 deployment target - enable once iOS10+ deployment target
+      // specified in podspec. options |= UNAuthorizationOptionAnnouncement;
+    }
+  }
+
+  if ([permissions[@"carPlay"] isEqual:@(YES)]) {
+    options |= UNAuthorizationOptionCarPlay;
+  }
+
+  if ([permissions[@"criticalAlert"] isEqual:@(YES)]) {
+    if (@available(iOS 12.0, *)) {
+      options |= UNAuthorizationOptionCriticalAlert;
+    }
+  }
+
+  id handler = ^(BOOL granted, NSError *_Nullable error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      [center getNotificationSettingsWithCompletionHandler:^(
+                  UNNotificationSettings *_Nonnull settings) {
+        result.success(
+            [FLTFirebaseMessagingPlugin NSDictionaryFromUNNotificationSettings:settings]);
+      }];
+    }
+  };
+
+  [center requestAuthorizationWithOptions:options completionHandler:handler];
+}
+
+- (void)messagingGetNotificationSettings:(id)arguments
+                    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  [center getNotificationSettingsWithCompletionHandler:^(
+              UNNotificationSettings *_Nonnull settings) {
+    result.success([FLTFirebaseMessagingPlugin NSDictionaryFromUNNotificationSettings:settings]);
+  }];
+}
+
+- (void)messagingGetToken:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+  [messaging tokenWithCompletion:^(NSString *token, NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(token);
+    }
+  }];
+}
+
+- (void)messagingGetAPNSToken:(id)arguments
+         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSData *apnsToken = [FIRMessaging messaging].APNSToken;
+  if (apnsToken) {
+    result.success([FLTFirebaseMessagingPlugin APNSTokenFromNSData:apnsToken]);
+  } else {
+    result.success([NSNull null]);
+  }
+}
+
+- (void)messagingDeleteToken:(id)arguments
+        withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+  [messaging deleteTokenWithCompletion:^(NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
+    }
+  }];
+}
 
 #pragma mark - FLTFirebasePlugin
 
@@ -451,13 +581,9 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
 }
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
-  // TODO auto init enabled
-  // TODO auto init enabled
-  // TODO auto init enabled
-  // TODO auto init enabled
-  // TODO auto init enabled
-  // TODO auto init enabled
-  return @{};
+  return @{
+    @"AUTO_INIT_ENABLED" : @([FIRMessaging messaging].isAutoInitEnabled),
+  };
 }
 
 - (NSString *_Nonnull)firebaseLibraryName {
@@ -473,6 +599,91 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
 }
 
 #pragma mark - Utilities
+
+/**
+ * Retrieve UNNotificationSettings for the application.
+ * Resolves a NSDictionary representation of UNNotificationSettings.
+ *
+ * @param block NSDictionary block
+ */
++ (NSDictionary *)NSDictionaryFromUNNotificationSettings:
+    (UNNotificationSettings *_Nonnull)settings {
+  NSMutableDictionary *settingsDictionary = [NSMutableDictionary dictionary];
+
+  // authorizedStatus
+  NSNumber *authorizedStatus = @-1;
+  if (settings.authorizationStatus == UNAuthorizationStatusNotDetermined) {
+    authorizedStatus = @-1;
+  } else if (settings.authorizationStatus == UNAuthorizationStatusDenied) {
+    authorizedStatus = @0;
+  } else if (settings.authorizationStatus == UNAuthorizationStatusAuthorized) {
+    authorizedStatus = @1;
+  }
+
+  if (@available(iOS 12.0, *)) {
+    if (settings.authorizationStatus == UNAuthorizationStatusProvisional) {
+      authorizedStatus = @2;
+    }
+  }
+
+  NSNumber *showPreviews = @-1;
+  if (@available(iOS 11.0, *)) {
+    if (settings.showPreviewsSetting == UNShowPreviewsSettingNever) {
+      showPreviews = @0;
+    } else if (settings.showPreviewsSetting == UNShowPreviewsSettingAlways) {
+      showPreviews = @1;
+    } else if (settings.showPreviewsSetting == UNShowPreviewsSettingWhenAuthenticated) {
+      showPreviews = @2;
+    }
+  }
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCSimplifyInspectionLegacy"
+  if (@available(iOS 13.0, *)) {
+    // TODO not available in iOS9 deployment target - enable once iOS10+ deployment target specified
+    // in podspec. settingsDictionary[@"announcement"] =
+    //   [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.announcementSetting];
+    settingsDictionary[@"announcement"] = @-1;
+  } else {
+    settingsDictionary[@"announcement"] = @-1;
+  }
+#pragma clang diagnostic pop
+
+  if (@available(iOS 12.0, *)) {
+    settingsDictionary[@"criticalAlert"] =
+        [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.criticalAlertSetting];
+  } else {
+    settingsDictionary[@"criticalAlert"] = @-1;
+  }
+
+  settingsDictionary[@"showPreviews"] = showPreviews;
+  settingsDictionary[@"authorizationStatus"] = authorizedStatus;
+  settingsDictionary[@"alert"] =
+      [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.alertSetting];
+  settingsDictionary[@"badge"] =
+      [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.badgeSetting];
+  settingsDictionary[@"sound"] =
+      [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.soundSetting];
+  settingsDictionary[@"carPlay"] =
+      [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.carPlaySetting];
+  settingsDictionary[@"lockScreen"] =
+      [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.lockScreenSetting];
+  settingsDictionary[@"notificationCenter"] = [FLTFirebaseMessagingPlugin
+      NSNumberForUNNotificationSetting:settings.notificationCenterSetting];
+  return settingsDictionary;
+}
+
++ (NSNumber *)NSNumberForUNNotificationSetting:(UNNotificationSetting)setting {
+  NSNumber *asNumber = @-1;
+  if (setting == UNNotificationSettingNotSupported) {
+    asNumber = @-1;
+  } else if (setting == UNNotificationSettingDisabled) {
+    asNumber = @0;
+  } else if (setting == UNNotificationSettingEnabled) {
+    asNumber = @1;
+  }
+  return asNumber;
+}
 
 + (NSString *)APNSTokenFromNSData:(NSData *)tokenData {
   const char *data = [tokenData bytes];
@@ -707,7 +918,7 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
   return nil;
 }
 
-- (NSDictionary *)getNSDictionaryFromNSError:(NSError *)error {
+- (NSDictionary *)NSDictionaryForNSError:(NSError *)error {
   NSString *code = @"unknown";
   NSString *message = @"An unknown error has occurred.";
 
@@ -738,8 +949,6 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
     code = @"invalid-argument";
   } else if (error.code == kFIRMessagingErrorCodeAlreadyConnected) {
     code = @"already-connected";
-  } else if (error.code == kFIRMessagingErrorCodePubSubClientNotSetup) {
-    code = @"pubsub-not-setup";
   } else if (error.code == kFIRMessagingErrorCodePubSubOperationIsCancelled) {
     code = @"pubsub-operation-cancelled";
   }

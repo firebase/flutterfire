@@ -99,15 +99,11 @@ void main() {
 
     group('deleteToken', () {
       test('verify delegate method is called with correct args', () async {
-        const authorizedEntity = 'test-authorizedEntity';
-        const scope = 'test-scope';
         when(kMockMessagingPlatform.deleteToken()).thenReturn(null);
 
-        await messaging.deleteToken(
-            authorizedEntity: authorizedEntity, scope: scope);
+        await messaging.deleteToken();
 
-        verify(kMockMessagingPlatform.deleteToken(
-            authorizedEntity: authorizedEntity, scope: scope));
+        verify(kMockMessagingPlatform.deleteToken());
       });
     });
 
@@ -124,24 +120,13 @@ void main() {
     });
     group('getToken', () {
       test('verify delegate method is called with correct args', () async {
-        const authorizedEntity = 'test-authorizedEntity';
-        const scope = 'test-scope';
         const vapidKey = 'test-vapid-key';
-        when(kMockMessagingPlatform.getToken(
-                authorizedEntity: anyNamed('authorizedEntity'),
-                scope: anyNamed('scope'),
-                vapidKey: anyNamed('vapidKey')))
+        when(kMockMessagingPlatform.getToken(vapidKey: anyNamed('vapidKey')))
             .thenReturn(null);
 
-        await messaging.getToken(
-            authorizedEntity: authorizedEntity,
-            scope: scope,
-            vapidKey: vapidKey);
+        await messaging.getToken(vapidKey: vapidKey);
 
-        verify(kMockMessagingPlatform.getToken(
-            authorizedEntity: authorizedEntity,
-            scope: scope,
-            vapidKey: vapidKey));
+        verify(kMockMessagingPlatform.getToken(vapidKey: vapidKey));
       });
     });
 

@@ -73,16 +73,6 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     return _onMessageStream ??= StreamController<RemoteMessage>().stream;
   }
 
-  static Stream<SentMessage> _onMessageSentStream;
-
-  /// Returns a Stream that is called when a message being sent to FCM (via [sendMessage])
-  /// has successfully been sent.
-  ///
-  /// See [onSendError] to handle sending failures.
-  static Stream<SentMessage> get onMessageSent {
-    return _onMessageSentStream ??= StreamController<SentMessage>().stream;
-  }
-
   static Stream<RemoteMessage> _onNotificationOpenedAppStream;
 
   /// Returns a [Stream] that is called when a user presses a notification displayed
@@ -95,23 +85,6 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// see [initialNotification].
   static Stream<RemoteMessage> get onNotificationOpenedApp {
     return _onNotificationOpenedAppStream ??=
-        StreamController<RemoteMessage>().stream;
-  }
-
-  static Stream<void> _onDeletedMessagesStream;
-
-  /// Returns a Stream which is called when the FCM server deletes pending messages.
-  ///
-  /// This may be due to:
-  ///
-  /// 1.  Too many messages stored on the FCM server. This can occur when an
-  /// app's servers sends many non-collapsible messages to FCM servers while
-  /// the device is offline.
-  ///
-  /// 2. he device hasn't connected in a long time and the app server has recently
-  /// (within the last 4 weeks) sent a message to the app on that device.
-  static Stream<RemoteMessage> get onDeletedMessages {
-    return _onDeletedMessagesStream ??=
         StreamController<RemoteMessage>().stream;
   }
 
@@ -184,10 +157,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// Removes access to an FCM token previously authorized by it's scope.
   ///
   /// Messages sent by the server to this token will fail.
-  Future<void> deleteToken({
-    String authorizedEntity,
-    String scope,
-  }) {
+  Future<void> deleteToken() {
     throw UnimplementedError('deleteToken() is not implemented');
   }
 
@@ -197,13 +167,8 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('getAPNSToken() is not implemented');
   }
 
-  /// Returns an FCM token for this device.
-  ///
-  /// Optionally you can specify a custom authorized entity or scope to tailor
-  /// tokens to your own use-case.
+  /// Returns the default FCM token for this device.
   Future<String> getToken({
-    String authorizedEntity,
-    String scope,
     String vapidKey,
   }) {
     throw UnimplementedError('getToken() is not implemented');
