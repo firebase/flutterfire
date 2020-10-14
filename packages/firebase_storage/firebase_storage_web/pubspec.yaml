@@ -11,6 +11,7 @@ flutter:
         fileName: firebase_storage_web.dart
 
 dependencies:
+  async: ^2.4.2
   crypto: ^2.1.5
   firebase_core: ^0.5.0
   firebase_storage_platform_interface: ^1.0.0-dev.1
