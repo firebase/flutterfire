@@ -67,19 +67,11 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
     _backgroundFlutterEngine = [[FlutterEngine alloc] initWithName:@"firebase_messaging_background"
                                                            project:nil
                                             allowHeadlessExecution:YES];
-    _backgroundFlutterEngine.viewController = nil;
+
     _backgroundFlutterEngine.isGpuDisabled = YES;
     _backgroundChannel =
         [FlutterMethodChannel methodChannelWithName:kFLTFirebaseMessagingBackgroundChannelName
                                     binaryMessenger:[_backgroundFlutterEngine binaryMessenger]];
-
-    // Register with internal FlutterFire plugin registry.
-    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
-
-    [registrar addMethodCallDelegate:self channel:channel];
-#if !TARGET_OS_OSX
-    [registrar publish:self];  // iOS only supported
-#endif
   }
   return self;
 }
@@ -88,8 +80,15 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseMessagingChannelName
                                   binaryMessenger:[registrar messenger]];
-  [[FLTFirebaseMessagingPlugin alloc] initWithFlutterMethodChannel:channel
-                                         andFlutterPluginRegistrar:registrar];
+  id instance = [[FLTFirebaseMessagingPlugin alloc] initWithFlutterMethodChannel:channel
+                                                       andFlutterPluginRegistrar:registrar];
+  // Register with internal FlutterFire plugin registry.
+  [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
+
+  [registrar addMethodCallDelegate:instance channel:channel];
+#if !TARGET_OS_OSX
+  [registrar publish:instance];  // iOS only supported
+#endif
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
@@ -207,23 +206,25 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
 
   // Set UNUserNotificationCenter but preserve original delegate if necessary.
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-  UNUserNotificationCenter *notificationCenter =
-      [UNUserNotificationCenter currentNotificationCenter];
-  if (notificationCenter.delegate != nil) {
-    _originalNotificationCenterDelegate = notificationCenter.delegate;
-    _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
-        (unsigned int)[_originalNotificationCenterDelegate
-            respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
-    _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
-        (unsigned int)[_originalNotificationCenterDelegate
-            respondsToSelector:@selector(userNotificationCenter:
-                                        willPresentNotification:withCompletionHandler:)];
-    _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
-        (unsigned int)[_originalNotificationCenterDelegate
-            respondsToSelector:@selector(userNotificationCenter:
-                                   didReceiveNotificationResponse:withCompletionHandler:)];
+  if (@available(iOS 10.0, *)) {
+    UNUserNotificationCenter *notificationCenter =
+        [UNUserNotificationCenter currentNotificationCenter];
+    if (notificationCenter.delegate != nil) {
+      _originalNotificationCenterDelegate = notificationCenter.delegate;
+      _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
+          (unsigned int)[_originalNotificationCenterDelegate
+              respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
+      _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
+          (unsigned int)[_originalNotificationCenterDelegate
+              respondsToSelector:@selector(userNotificationCenter:
+                                          willPresentNotification:withCompletionHandler:)];
+      _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
+          (unsigned int)[_originalNotificationCenterDelegate
+              respondsToSelector:@selector(userNotificationCenter:
+                                     didReceiveNotificationResponse:withCompletionHandler:)];
+    }
+    notificationCenter.delegate = self;
   }
-  notificationCenter.delegate = self;
 #endif
 
   // We automatically register for remote notifications as
@@ -600,12 +601,6 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
 
 #pragma mark - Utilities
 
-/**
- * Retrieve UNNotificationSettings for the application.
- * Resolves a NSDictionary representation of UNNotificationSettings.
- *
- * @param block NSDictionary block
- */
 + (NSDictionary *)NSDictionaryFromUNNotificationSettings:
     (UNNotificationSettings *_Nonnull)settings {
   NSMutableDictionary *settingsDictionary = [NSMutableDictionary dictionary];
