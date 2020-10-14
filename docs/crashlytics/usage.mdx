@@ -3,15 +3,47 @@ title: Using Firebase Crashlytics
 sidebar_label: Usage
 ---
 
+## Getting started
+
+Enable Forebase Crashytlics in the Firebase console.
+
+![Crashytlics - Enable in the console](enable-firebase-crashlytics.png)
+
+Until an error has been reported, you will see this screen.
+
+![Crashytlics init screen](crashlytics-init.png)
+
 To start using Firebase Crashlytics within your project, import it at the top of your project files:
 
 ```dart
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 ```
 
+Run an example, such as...
+
+```dart
+//Init application
+await Firebase.initializeApp();
+
+//Elsehwere in your code
+FirebaseCrashlytics.instance.crash();
+```
+
+This will restart the application. If using an emulator, please re-run...
+
+```dart
+  flutter run
+```
+
+`or restart the app manually through the emulator.`
+
+Restarting the application will then update the Firebase console
+
+![Crashytlics ready](crashlytics-ready.png)
+
 ## Sending reports to Crashlytics
 
-To send report data to Crashlytics, the **application must be restarted**.  Crashlytics automatically sends any crash reports
+To send report data to Crashlytics, the **application must be restarted**. Crashlytics automatically sends any crash reports
 to Firebase the next time the application is launched.
 
 ## Toggle Crashlytics collection
