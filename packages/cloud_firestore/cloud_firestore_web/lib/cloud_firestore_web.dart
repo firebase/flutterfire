@@ -139,7 +139,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.enablePersistence(
           firestore_interop.PersistenceSettings(
-              synchronizeTabs: settings.synchronizeTabs));
+              synchronizeTabs: settings?.synchronizeTabs ?? false));
     } catch (e) {
       throw getFirebaseException(e);
     }
