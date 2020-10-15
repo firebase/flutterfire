@@ -198,8 +198,8 @@ class FirebaseOptions {
   /// The current instance as a [Map].
   Map<String, String> get asMap {
     return <String, String>{
-      'apiKey': apiKey ?? googleAppID,
-      'appId': appId,
+      'apiKey': apiKey,
+      'appId': appId ?? googleAppID,
       'messagingSenderId': messagingSenderId ?? gcmSenderID,
       'projectId': projectId ?? projectID,
       'authDomain': authDomain,
@@ -226,8 +226,8 @@ class FirebaseOptions {
   @override
   int get hashCode {
     return hashValues(
-      apiKey ?? googleAppID,
-      appId,
+      apiKey,
+      appId ?? googleAppID,
       messagingSenderId ?? gcmSenderID,
       projectId ?? projectID,
       authDomain,
