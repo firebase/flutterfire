@@ -95,10 +95,8 @@ firestore_interop.GetOptions convertGetOptions(GetOptions options) {
         source = 'server';
         break;
       default:
-        // TODO(helenaford): check if this is needed
-        // ignore everything else
-        assert(false);
-        source = null;
+       source = 'default';
+        break;
     }
   }
 
