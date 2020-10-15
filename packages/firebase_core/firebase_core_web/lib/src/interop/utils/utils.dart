@@ -9,7 +9,8 @@ import 'js_interop.dart' as js;
 import '../core.dart' show FirebaseError;
 
 /// Returns Dart representation from JS Object.
-dynamic dartify(Object jsObject) {
+dynamic dartify(Object jsObject,
+    [Object Function(Object object) customDartify]) {
   if (_isBasicType(jsObject)) {
     return jsObject;
   }
@@ -24,25 +25,27 @@ dynamic dartify(Object jsObject) {
     return jsDate;
   }
 
-  // Assume a map then...
-  return dartifyMap(jsObject);
-}
+  Object value = customDartify?.call(jsObject);
 
-Map<String, dynamic> dartifyMap(Object jsObject) {
-  var keys = js.objectKeys(jsObject);
-  var map = <String, dynamic>{};
-  for (var key in keys) {
-    map[key] = dartify(util.getProperty(jsObject, key));
+  if (value == null) {
+    var keys = js.objectKeys(jsObject);
+    var map = <String, dynamic>{};
+    for (var key in keys) {
+      map[key] = dartify(util.getProperty(jsObject, key), customDartify);
+    }
+    return map;
   }
-  return map;
+
+  return value;
 }
 
+// Converts an Iterable into a JS Array
 dynamic jsifyList(Iterable list) {
   return js.toJSArray(list.map(jsify).toList());
 }
 
 // Returns the JS implementation from Dart Object.
-dynamic jsify(Object dartObject) {
+dynamic jsify(Object dartObject, [Object Function(Object object) customJsify]) {
   if (_isBasicType(dartObject)) {
     return dartObject;
   }
@@ -54,7 +57,7 @@ dynamic jsify(Object dartObject) {
   if (dartObject is Map) {
     var jsMap = util.newObject();
     dartObject.forEach((key, value) {
-      util.setProperty(jsMap, key, jsify(value));
+      util.setProperty(jsMap, key, jsify(value, customJsify));
     });
     return jsMap;
   }
@@ -63,7 +66,13 @@ dynamic jsify(Object dartObject) {
     return allowInterop(dartObject);
   }
 
-  throw ArgumentError.value(dartObject, 'dartObject', 'Could not convert');
+  Object value = customJsify?.call(dartObject);
+
+  if (value == null) {
+    throw ArgumentError.value(dartObject, 'dartObject', 'Could not convert');
+  }
+
+  return value;
 }
 
 /// Calls [method] on JavaScript object [jsObject].

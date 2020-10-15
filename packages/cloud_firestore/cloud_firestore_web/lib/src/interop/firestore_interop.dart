@@ -91,6 +91,7 @@ class CollectionReferenceJsImpl extends QueryJsImpl {
   external bool isEqual(CollectionReferenceJsImpl other);
 }
 
+@anonymous
 @JS()
 class PersistenceSettings {
   external bool get synchronizeTabs;
@@ -534,6 +535,7 @@ abstract class SetOptions {
 /// (e.g. the desired behavior for server timestamps that have not yet been set to their final value).
 ///
 /// See: https://firebase.google.com/docs/reference/js/firebase.firestore.SnapshotOptions.
+@anonymous
 @JS()
 abstract class SnapshotOptions {
 // If set, controls the return value for server timestamps that have not yet been set to their final value.
