@@ -19,8 +19,10 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
   NSObject<FlutterPluginRegistrar> *_registrar;
   NSDictionary *_initialNotification;
 
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+#ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
+  API_AVAILABLE(ios(10), macosx(10.14))
   __weak id<UNUserNotificationCenterDelegate> _originalNotificationCenterDelegate;
+  API_AVAILABLE(ios(10), macosx(10.14))
   struct {
     unsigned int willPresentNotification : 1;
     unsigned int didReceiveNotificationResponse : 1;
@@ -109,9 +111,19 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
   } else if ([@"Messaging#getToken" isEqualToString:call.method]) {
     [self messagingGetToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getNotificationSettings" isEqualToString:call.method]) {
-    [self messagingGetNotificationSettings:call.arguments withMethodCallResult:methodCallResult];
+    if (@available(iOS 10, macOS 10.14, *)) {
+      [self messagingGetNotificationSettings:call.arguments withMethodCallResult:methodCallResult];
+    } else {
+      // Defaults handled in Dart.
+      methodCallResult.success(@{});
+    }
   } else if ([@"Messaging#requestPermission" isEqualToString:call.method]) {
-    [self messagingRequestPermission:call.arguments withMethodCallResult:methodCallResult];
+    if (@available(iOS 10, macOS 10.14, *)) {
+      [self messagingRequestPermission:call.arguments withMethodCallResult:methodCallResult];
+    } else {
+      // Defaults handled in Dart.
+      methodCallResult.success(@{});
+    }
   } else if ([@"Messaging#setAutoInitEnabled" isEqualToString:call.method]) {
     [self messagingSetAutoInitEnabled:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#subscribeToTopic" isEqualToString:call.method]) {
@@ -183,8 +195,7 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 #endif
 
   // Set UNUserNotificationCenter but preserve original delegate if necessary.
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-  if (@available(iOS 10.0, *)) {
+  if (@available(iOS 10.0, macOS 10.14, *)) {
     UNUserNotificationCenter *notificationCenter =
         [UNUserNotificationCenter currentNotificationCenter];
     if (notificationCenter.delegate != nil) {
@@ -203,7 +214,6 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
     }
     notificationCenter.delegate = self;
   }
-#endif
 
   // We automatically register for remote notifications as
   // application:didReceiveRemoteNotification:fetchCompletionHandler: will not get called unless
@@ -220,12 +230,13 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 
 #pragma mark - UNUserNotificationCenter Delegate Methods
 
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+#ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
 // Called when a notification is received whilst the app is in the foreground.
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
        willPresentNotification:(UNNotification *)notification
          withCompletionHandler:
-             (void (^)(UNNotificationPresentationOptions options))completionHandler {
+             (void (^)(UNNotificationPresentationOptions options))completionHandler
+    API_AVAILABLE(macos(10.14), ios(10.0)) {
   // We only want to handle FCM notifications.
   if (notification.request.content.userInfo[@"gcm.message_id"]) {
     NSDictionary *notificationDict =
@@ -252,7 +263,8 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 // Called when a use interacts with a notification.
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
     didReceiveNotificationResponse:(UNNotificationResponse *)response
-             withCompletionHandler:(void (^)(void))completionHandler {
+             withCompletionHandler:(void (^)(void))completionHandler
+    API_AVAILABLE(macos(10.14), ios(10.0)) {
   NSDictionary *remoteNotification = response.notification.request.content.userInfo;
   // We only want to handle FCM notifications.
   if (remoteNotification[@"gcm.message_id"]) {
@@ -278,7 +290,8 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 // We don't use this for FlutterFire, but for the purpose of forwarding to any original delegates we
 // implement this.
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
-    openSettingsForNotification:(nullable UNNotification *)notification {
+    openSettingsForNotification:(nullable UNNotification *)notification
+    API_AVAILABLE(macos(10.14), ios(10.0)) {
   // Forward on to any other delegates.
   if (_originalNotificationCenterDelegate != nil &&
       _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification) {
@@ -335,9 +348,9 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
 
     if ([NSApplication sharedApplication].isActive) {
-      [_channel invokeMethod:@"Messaging#onBackgroundMessage" arguments:notificationDict];
-    } else {
       [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+    } else {
+      [_channel invokeMethod:@"Messaging#onBackgroundMessage" arguments:notificationDict];
     }
   }
 }
@@ -457,7 +470,8 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 }
 
 - (void)messagingRequestPermission:(id)arguments
-              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+              withMethodCallResult:(FLTFirebaseMethodCallResult *)result
+    API_AVAILABLE(ios(10), macosx(10.14)) {
   NSDictionary *permissions = arguments[@"permissions"];
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
 
@@ -514,7 +528,8 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 }
 
 - (void)messagingGetNotificationSettings:(id)arguments
-                    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+                    withMethodCallResult:(FLTFirebaseMethodCallResult *)result
+    API_AVAILABLE(ios(10), macos(10.14)) {
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   [center getNotificationSettingsWithCompletionHandler:^(
               UNNotificationSettings *_Nonnull settings) {
@@ -581,8 +596,8 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 
 #pragma mark - Utilities
 
-+ (NSDictionary *)NSDictionaryFromUNNotificationSettings:
-    (UNNotificationSettings *_Nonnull)settings {
++ (NSDictionary *)NSDictionaryFromUNNotificationSettings:(UNNotificationSettings *_Nonnull)settings
+    API_AVAILABLE(ios(10), macos(10.14)) {
   NSMutableDictionary *settingsDictionary = [NSMutableDictionary dictionary];
 
   // authorizedStatus
@@ -652,8 +667,10 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
   return settingsDictionary;
 }
 
-+ (NSNumber *)NSNumberForUNNotificationSetting:(UNNotificationSetting)setting {
++ (NSNumber *)NSNumberForUNNotificationSetting:(UNNotificationSetting)setting
+    API_AVAILABLE(ios(10), macos(10.14)) {
   NSNumber *asNumber = @-1;
+
   if (setting == UNNotificationSettingNotSupported) {
     asNumber = @-1;
   } else if (setting == UNNotificationSettingDisabled) {
@@ -861,15 +878,6 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
   }
 
   return message;
-}
-
-- (int64_t)getCallbackHandle:(NSString *)key {
-  NSLog(@"FLTFirebaseMessaging: Getting callback handle for key %@", key);
-  id handle = [[NSUserDefaults standardUserDefaults] objectForKey:key];
-  if (handle == nil) {
-    return 0;
-  }
-  return [handle longLongValue];
 }
 
 - (nullable NSDictionary *)copyInitialNotification {
