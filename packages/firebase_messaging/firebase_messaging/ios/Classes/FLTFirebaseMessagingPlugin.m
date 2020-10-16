@@ -212,7 +212,8 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
               respondsToSelector:@selector(userNotificationCenter:
                                      didReceiveNotificationResponse:withCompletionHandler:)];
     }
-    notificationCenter.delegate = self;
+    __strong FLTFirebasePlugin<UNUserNotificationCenterDelegate> *strongSelf = self;
+    notificationCenter.delegate = strongSelf;
   }
 
   // We automatically register for remote notifications as
