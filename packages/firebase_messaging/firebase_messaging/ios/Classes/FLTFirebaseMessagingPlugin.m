@@ -11,24 +11,16 @@
 #import "Runner/GeneratedPluginRegistrant.h"
 
 NSString *const kFLTFirebaseMessagingChannelName = @"plugins.flutter.io/firebase_messaging";
-NSString *const kFLTFirebaseMessagingBackgroundChannelName =
-    @"plugins.flutter.io/firebase_messaging_background";
 
 NSString *const kMessagingArgumentCode = @"code";
 NSString *const kMessagingArgumentMessage = @"message";
 NSString *const kMessagingArgumentAdditionalData = @"additionalData";
-
-NSString *const kMessagingBackgroundSetupCallback = @"firebase_messaging_background_setup_callback";
-NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_callback";
 
 @implementation FLTFirebaseMessagingPlugin {
   FlutterMethodChannel *_channel;
   NSObject<FlutterPluginRegistrar> *_registrar;
 
   FlutterMethodChannel *_backgroundChannel;
-  // TODO use me
-  NSMutableArray<NSArray *> *_backgroundEventQueue;
-
   NSDictionary *_initialNotification;
   BOOL _backgroundFlutterEngineRunning;
   FlutterEngine *_backgroundFlutterEngine;
@@ -60,18 +52,6 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
            selector:@selector(application_onDidFinishLaunchingNotification:)
                name:UIApplicationDidFinishLaunchingNotification
              object:nil];
-
-    // Setup background event handling.
-    _backgroundFlutterEngineRunning = NO;
-    _backgroundEventQueue = [[NSMutableArray alloc] init];
-    _backgroundFlutterEngine = [[FlutterEngine alloc] initWithName:@"firebase_messaging_background"
-                                                           project:nil
-                                            allowHeadlessExecution:YES];
-
-    _backgroundFlutterEngine.isGpuDisabled = YES;
-    _backgroundChannel =
-        [FlutterMethodChannel methodChannelWithName:kFLTFirebaseMessagingBackgroundChannelName
-                                    binaryMessenger:[_backgroundFlutterEngine binaryMessenger]];
   }
   return self;
 }
@@ -252,12 +232,9 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
     if (!notificationDict[@"contentAvailable"]) {
       [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
     }
-
-    // TODO in a later version possibly allow customising completion options in Dart code.
-    completionHandler(UNNotificationPresentationOptionNone);
   }
 
-  // Forward on to any other delegates.
+  // Forward on to any other delegates amd allow them to control presentation behavior.
   if (_originalNotificationCenterDelegate != nil &&
       _originalNotificationCenterDelegateRespondsTo.willPresentNotification) {
     [_originalNotificationCenterDelegate userNotificationCenter:center
@@ -326,11 +303,7 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
 // Called when `registerForRemoteNotifications` fails to complete.
 - (void)application:(UIApplication *)application
     didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-  // TODO log an error? Not sending this anywhere
-  // TODO log an error? Not sending this anywhere
-  // TODO log an error? Not sending this anywhere
-  // TODO log an error? Not sending this anywhere
-  // TODO log an error? Not sending this anywhere
+  NSLog(@"%@", error.localizedDescription);
 }
 
 // Called when a remote notification is received via APNs.
@@ -360,49 +333,53 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
 
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+      __block BOOL completed = NO;
+
       // If app is in background state, register background task to guarantee async queues aren't
       // frozen.
       UIBackgroundTaskIdentifier __block backgroundTaskId =
           [application beginBackgroundTaskWithExpirationHandler:^{
-            if (backgroundTaskId != UIBackgroundTaskInvalid) {
-              [application endBackgroundTask:backgroundTaskId];
-              backgroundTaskId = UIBackgroundTaskInvalid;
+            @synchronized(self) {
+              if (completed == NO) {
+                completed = YES;
+                completionHandler(UIBackgroundFetchResultNewData);
+                if (backgroundTaskId != UIBackgroundTaskInvalid) {
+                  [application endBackgroundTask:backgroundTaskId];
+                  backgroundTaskId = UIBackgroundTaskInvalid;
+                }
+              }
             }
           }];
 
-      // TODO call completion handler directly from Dart when user Dart code complete
       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(25 * NSEC_PER_SEC)),
                      dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                       completionHandler(UIBackgroundFetchResultNewData);
-
-                       // Stop background task after the longest timeout, async queue is okay to
-                       // freeze again after handling period.
-                       if (backgroundTaskId != UIBackgroundTaskInvalid) {
-                         [application endBackgroundTask:backgroundTaskId];
-                         backgroundTaskId = UIBackgroundTaskInvalid;
+                       @synchronized(self) {
+                         if (completed == NO) {
+                           completed = YES;
+                           completionHandler(UIBackgroundFetchResultNewData);
+                           if (backgroundTaskId != UIBackgroundTaskInvalid) {
+                             [application endBackgroundTask:backgroundTaskId];
+                             backgroundTaskId = UIBackgroundTaskInvalid;
+                           }
+                         }
                        }
                      });
 
-      // TODO queue event
-      // TODO queue event
-      // TODO queue event
-      // TODO queue event
-      // TODO queue event
-
-      @synchronized(self) {
-        if (!_backgroundFlutterEngineRunning && ![_backgroundFlutterEngine run]) {
-          [self runBackgroundFlutterEngine];
-        }
-      }
-
-      // TODO send notificationDict to background channel
-      // TODO send notificationDict to background channel
-      // TODO send notificationDict to background channel
-      // TODO send notificationDict to background channel
-      // TODO send notificationDict to background channel
-      // TODO send notificationDict to background channel
+      [_channel invokeMethod:@"Messaging#onBackgroundMessage"
+                   arguments:notificationDict
+                      result:^(id _Nullable result) {
+                        @synchronized(self) {
+                          if (completed == NO) {
+                            completed = YES;
+                            completionHandler(UIBackgroundFetchResultNewData);
+                            if (backgroundTaskId != UIBackgroundTaskInvalid) {
+                              [application endBackgroundTask:backgroundTaskId];
+                              backgroundTaskId = UIBackgroundTaskInvalid;
+                            }
+                          }
+                        }
+                      }];
     } else {
-      // TODO check if this also needs queuing
       [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
       completionHandler(UIBackgroundFetchResultNoData);
     }
@@ -426,17 +403,11 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
 
 - (void)dartServiceInitialized:(id)arguments
           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  // TODO implement
-  // TODO implement
-  // TODO implement
-  // TODO implement
+  result.success(nil);
 }
 
 - (void)dartServiceStart:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  // TODO implement
-  // TODO implement
-  // TODO implement
-  // TODO implement
+  result.success(nil);
 }
 
 - (void)messagingUnsubscribeFromTopic:(id)arguments
@@ -881,24 +852,6 @@ NSString *const kMessagingBackgroundCallback = @"firebase_messaging_background_c
     return 0;
   }
   return [handle longLongValue];
-}
-
-- (void)runBackgroundFlutterEngine {
-  NSLog(@"FLTFirebaseMessaging: Starting background flutter engine...");
-
-  int64_t handle = [self getCallbackHandle:kMessagingBackgroundSetupCallback];
-  FlutterCallbackInformation *info = [FlutterCallbackCache lookupCallbackInformation:handle];
-  NSAssert(info != nil, @"FLTFirebaseMessaging: Failed to find callback.");
-
-  NSString *entrypoint = info.callbackName;
-  NSString *uri = info.callbackLibraryPath;
-
-  [_backgroundFlutterEngine runWithEntrypoint:entrypoint libraryURI:uri];
-  [_registrar addMethodCallDelegate:self channel:_backgroundChannel];
-
-  // Once our headless runner has been started, we need to register the application's plugins
-  // with the runner in order for them to work on the background isolate.
-  [GeneratedPluginRegistrant registerWithRegistry:_backgroundFlutterEngine];
 }
 
 - (nullable NSDictionary *)copyInitialNotification {

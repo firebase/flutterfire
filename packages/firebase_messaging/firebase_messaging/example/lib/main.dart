@@ -163,7 +163,7 @@ class _PushMessagingExampleState extends State<PushMessagingExample> {
       });
       print(_homeScreenText);
     });
-
+    // TODO should be async method
     if (FirebaseMessaging.instance.initialNotification != null) {
       print("initialNotification: _firebaseMessaging.initialNotification");
       // _navigateToItemDetail(FirebaseMessaging.instance.initialNotification);
@@ -184,12 +184,30 @@ class _PushMessagingExampleState extends State<PushMessagingExample> {
         ),
         // For testing -- simulate a message being received
         floatingActionButton: FloatingActionButton(
-          onPressed: () => _showItemDialog(<String, dynamic>{
-            "data": <String, String>{
-              "id": "2",
-              "status": "out of stock",
-            },
-          }),
+          onPressed: () async {
+            var permissions =
+                await FirebaseMessaging.instance.requestPermission();
+            print('-----PERMISSIONS------');
+            print(permissions.authorizationStatus);
+            print(permissions.alert);
+            print(permissions.sound);
+            print(permissions.badge);
+            print('----------------------');
+            print('-----APNS------');
+            var apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+            print(apnsToken);
+            print('---------------');
+            print('-----FCM------');
+            var fcmToken = await FirebaseMessaging.instance.getToken();
+            print(fcmToken);
+            print('--------------');
+            // return _showItemDialog(<String, dynamic>{
+            //   "data": <String, String>{
+            //     "id": "2",
+            //     "status": "out of stock",
+            //   },
+            // });
+          },
           tooltip: 'Simulate Message',
           child: const Icon(Icons.message),
         ),

@@ -20,6 +20,7 @@
                                                            UIApplicationDelegate>
 #else
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+API_AVAILABLE(ios(10.0))
 @interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
                                                            FLTFirebasePlugin,
                                                            FIRMessagingDelegate,

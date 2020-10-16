@@ -17,13 +17,23 @@ import 'utils/exception.dart';
 /// The entry point for accessing a Messaging.
 ///
 /// You can get an instance by calling [FirebaseMessaging.instance].
+// TODO initialNotification needs changing to a async function and removed from statics
+//       change to getInitialNotification
 class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   /// Create an instance of [MethodChannelFirebaseMessaging] with optional [FirebaseApp]
   MethodChannelFirebaseMessaging({FirebaseApp app}) : super(appInstance: app) {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
+      // TODO Messaging#onMessage
+      // TODO Messaging#onBackgroundMessage (iOS only, Android comes through the separate background channel,
+      //       both should call the same user registered function/callback, would shout return Future<void> when background work is completed.
+      // TODO Messaging#onNotificationOpenedApp
+      print('---- METHOD CALL ----');
+      print(call.method);
+      print(call.arguments);
+      print('----------------------');
       switch (call.method) {
-        case "Messaging#onToken":
+        case "Messaging#onTokenRefresh":
           _tokenStreamController.add(call.arguments);
           break;
         default:
