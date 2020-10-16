@@ -28,10 +28,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       // TODO Messaging#onBackgroundMessage (iOS only, Android comes through the separate background channel,
       //       both should call the same user registered function/callback, would shout return Future<void> when background work is completed.
       // TODO Messaging#onNotificationOpenedApp
-      print('---- METHOD CALL ----');
+      print('---- MethodChannelFirebaseMessaging -> setMethodCallHandler ----');
       print(call.method);
       print(call.arguments);
-      print('----------------------');
+      print('----------------------------------------------------------------');
       switch (call.method) {
         case "Messaging#onTokenRefresh":
           _tokenStreamController.add(call.arguments);

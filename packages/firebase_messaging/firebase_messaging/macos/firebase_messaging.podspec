@@ -27,15 +27,18 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
 
   s.source_files     = 'Classes/**/*.{h,m}'
-  s.public_header_files = 'Classes/*.h'
+  s.public_header_files = 'Classes/**/*.h'
 
-  s.ios.deployment_target = '9.0'
+  s.platform = :osx, '10.11'
 
-  s.dependency 'Flutter'
+  # Flutter dependencies
+  s.dependency 'FlutterMacOS'
 
+  # Firebase dependencies
   s.dependency 'firebase_core'
   s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
   s.dependency 'Firebase/Messaging', "~> #{firebase_sdk_version}"
+
   s.static_framework = true
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-fcm\\\"",

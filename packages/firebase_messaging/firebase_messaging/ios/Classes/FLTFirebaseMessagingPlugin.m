@@ -2,13 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import <FirebaseMessaging/NSError+FIRMessaging.h>
 #import <GoogleUtilities/GULAppDelegateSwizzler.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 #import <objc/message.h>
 
 #import "FLTFirebaseMessagingPlugin.h"
-#import "Runner/GeneratedPluginRegistrant.h"
 
 NSString *const kFLTFirebaseMessagingChannelName = @"plugins.flutter.io/firebase_messaging";
 
@@ -19,11 +17,7 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 @implementation FLTFirebaseMessagingPlugin {
   FlutterMethodChannel *_channel;
   NSObject<FlutterPluginRegistrar> *_registrar;
-
-  FlutterMethodChannel *_backgroundChannel;
   NSDictionary *_initialNotification;
-  BOOL _backgroundFlutterEngineRunning;
-  FlutterEngine *_backgroundFlutterEngine;
 
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
   __weak id<UNUserNotificationCenterDelegate> _originalNotificationCenterDelegate;
@@ -50,7 +44,11 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
     [[NSNotificationCenter defaultCenter]
         addObserver:self
            selector:@selector(application_onDidFinishLaunchingNotification:)
+#if TARGET_OS_OSX
+               name:NSApplicationDidFinishLaunchingNotification
+#else
                name:UIApplicationDidFinishLaunchingNotification
+#endif
              object:nil];
   }
   return self;
@@ -121,9 +119,9 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
   } else if ([@"Messaging#unsubscribeFromTopic" isEqualToString:call.method]) {
     [self messagingUnsubscribeFromTopic:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"FcmDartService#start" isEqualToString:call.method]) {
-    [self dartServiceStart:call.arguments withMethodCallResult:methodCallResult];
+    methodCallResult.success(nil);
   } else if ([@"FcmDartService#initialized" isEqualToString:call.method]) {
-    [self dartServiceInitialized:call.arguments withMethodCallResult:methodCallResult];
+    methodCallResult.success(nil);
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
@@ -211,7 +209,13 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
   // application:didReceiveRemoteNotification:fetchCompletionHandler: will not get called unless
   // registerForRemoteNotifications is called early on during app initialization, calling this from
   // Dart would be too late.
+#if TARGET_OS_OSX
+  if (@available(macOS 10.14, *)) {
+    [[NSApplication sharedApplication] registerForRemoteNotifications];
+  }
+#else
   [[UIApplication sharedApplication] registerForRemoteNotifications];
+#endif
 }
 
 #pragma mark - UNUserNotificationCenter Delegate Methods
@@ -290,9 +294,14 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 
 #pragma mark - AppDelegate Methods
 
+#if TARGET_OS_OSX
 // Called when `registerForRemoteNotifications` completes successfully.
+- (void)application:(NSApplication *)application
+    didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+#else
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+#endif
 #ifdef DEBUG
   [[FIRMessaging messaging] setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeSandbox];
 #else
@@ -300,30 +309,48 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 #endif
 }
 
+#if TARGET_OS_OSX
 // Called when `registerForRemoteNotifications` fails to complete.
+- (void)application:(NSApplication *)application
+    didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+#else
 - (void)application:(UIApplication *)application
     didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+#endif
   NSLog(@"%@", error.localizedDescription);
 }
 
 // Called when a remote notification is received via APNs.
 #if TARGET_OS_OSX
-- (void)application:(UIApplication *)application
-    didReceiveRemoteNotification:(NSDictionary *)userInfo
-          fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
-#else
+- (void)application:(NSApplication *)application
+    didReceiveRemoteNotification:(NSDictionary *)userInfo {
+#if __has_include(<FirebaseAuth/FirebaseAuth.h>)
+  if ([[FIRAuth auth] canHandleNotification:userInfo]) {
+    return YES;
+  }
+#endif
+  // Only handle notifications from FCM.
+  if (userInfo[@"gcm.message_id"]) {
+    NSDictionary *notificationDict =
+        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
+
+    if ([NSApplication sharedApplication].isActive) {
+      [_channel invokeMethod:@"Messaging#onBackgroundMessage" arguments:notificationDict];
+    } else {
+      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+    }
+  }
+}
+#endif
+
+#if !TARGET_OS_OSX
 - (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
-#endif
 #if __has_include(<FirebaseAuth/FirebaseAuth.h>)
   if ([[FIRAuth auth] canHandleNotification:userInfo]) {
     completionHandler(UIBackgroundFetchResultNoData);
-#if TARGET_OS_OSX
-    return;
-#else
     return YES;
-#endif
   }
 #endif
 
@@ -384,31 +411,13 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
       completionHandler(UIBackgroundFetchResultNoData);
     }
 
-#if TARGET_OS_OSX
-    return;
-#else
     return YES;
-#endif
   }  // if (userInfo[@"gcm.message_id"])
-
-  // Nothing to handle in FlutterFire messaging.
-#if TARGET_OS_OSX
-  return;
-#else
   return NO;
-#endif
 }  // didReceiveRemoteNotification
+#endif
 
 #pragma mark - Firebase Messaging API
-
-- (void)dartServiceInitialized:(id)arguments
-          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  result.success(nil);
-}
-
-- (void)dartServiceStart:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  result.success(nil);
-}
 
 - (void)messagingUnsubscribeFromTopic:(id)arguments
                  withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -630,8 +639,12 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
       [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.badgeSetting];
   settingsDictionary[@"sound"] =
       [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.soundSetting];
+#if TARGET_OS_OSX
+  settingsDictionary[@"carPlay"] = @-1;
+#else
   settingsDictionary[@"carPlay"] =
       [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.carPlaySetting];
+#endif
   settingsDictionary[@"lockScreen"] =
       [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.lockScreenSetting];
   settingsDictionary[@"notificationCenter"] = [FLTFirebaseMessagingPlugin
@@ -662,7 +675,12 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
   return [token copy];
 }
 
+#if TARGET_OS_OSX
++ (NSDictionary *)NSDictionaryFromUNNotification:(UNNotification *)notification
+    API_AVAILABLE(macos(10.14)) {
+#else
 + (NSDictionary *)NSDictionaryFromUNNotification:(UNNotification *)notification {
+#endif
   return [self remoteMessageUserInfoToDict:notification.request.content.userInfo];
 }
 
@@ -878,26 +896,26 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
     };
   }
 
-  // code
-  if (error.code == kFIRMessagingErrorCodeNetwork) {
+  // code - codes from taken from NSError+FIRMessaging.h
+  if (error.code == 4) {
     code = @"unavailable";
-  } else if (error.code == kFIRMessagingErrorCodeInvalidRequest) {
+  } else if (error.code == 7) {
     code = @"invalid-request";
-  } else if (error.code == kFIRMessagingErrorCodeInvalidTopicName) {
+  } else if (error.code == 8) {
     code = @"invalid-argument";
-  } else if (error.code == kFIRMessagingErrorCodeMissingDeviceID) {
+  } else if (error.code == 501) {
     code = @"missing-device-id";
-  } else if (error.code == kFIRMessagingErrorCodeServiceNotAvailable) {
+  } else if (error.code == 1001) {
     code = @"unavailable";
-  } else if (error.code == kFIRMessagingErrorCodeMissingTo) {
+  } else if (error.code == 1003) {
     code = @"invalid-argument";
-  } else if (error.code == kFIRMessagingErrorCodeSave) {
+  } else if (error.code == 1004) {
     code = @"save-failed";
-  } else if (error.code == kFIRMessagingErrorCodeSizeExceeded) {
+  } else if (error.code == 1005) {
     code = @"invalid-argument";
-  } else if (error.code == kFIRMessagingErrorCodeAlreadyConnected) {
+  } else if (error.code == 2001) {
     code = @"already-connected";
-  } else if (error.code == kFIRMessagingErrorCodePubSubOperationIsCancelled) {
+  } else if (error.code == 3005) {
     code = @"pubsub-operation-cancelled";
   }
 
