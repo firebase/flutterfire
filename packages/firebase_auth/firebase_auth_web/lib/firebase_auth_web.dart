@@ -120,9 +120,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> applyActionCode(String code) {
+  Future<void> applyActionCode(String code) async {
     try {
-      return _webAuth.applyActionCode(code);
+      await _webAuth.applyActionCode(code);
     } catch (e) {
       throw throwFirebaseAuthException(e);
     }
@@ -158,9 +158,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<List<String>> fetchSignInMethodsForEmail(String email) {
+  Future<List<String>> fetchSignInMethodsForEmail(String email) async {
     try {
-      return _webAuth.fetchSignInMethodsForEmail(email);
+      return await _webAuth.fetchSignInMethodsForEmail(email);
     } catch (e) {
       throw throwFirebaseAuthException(e);
     }
@@ -188,9 +188,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings actionCodeSettings]) {
+      [ActionCodeSettings actionCodeSettings]) async {
     try {
-      return _webAuth.sendPasswordResetEmail(
+      await _webAuth.sendPasswordResetEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
     } catch (e) {
       throw throwFirebaseAuthException(e);
@@ -199,9 +199,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> sendSignInLinkToEmail(String email,
-      [ActionCodeSettings actionCodeSettings]) {
+      [ActionCodeSettings actionCodeSettings]) async {
     try {
-      return _webAuth.sendSignInLinkToEmail(
+      await _webAuth.sendSignInLinkToEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
     } catch (e) {
       throw throwFirebaseAuthException(e);
@@ -222,7 +222,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<void> setPersistence(Persistence persistence) async {
     try {
-      return _webAuth.setPersistence(convertPlatformPersistence(persistence));
+      await _webAuth.setPersistence(convertPlatformPersistence(persistence));
     } catch (e) {
       throw throwFirebaseAuthException(e);
     }
@@ -317,18 +317,18 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> signOut() {
+  Future<void> signOut() async {
     try {
-      return _webAuth.signOut();
+      await _webAuth.signOut();
     } catch (e) {
       throw throwFirebaseAuthException(e);
     }
   }
 
   @override
-  Future<String> verifyPasswordResetCode(String code) {
+  Future<String> verifyPasswordResetCode(String code) async {
     try {
-      return _webAuth.verifyPasswordResetCode(code);
+      return await _webAuth.verifyPasswordResetCode(code);
     } catch (e) {
       throw throwFirebaseAuthException(e);
     }
