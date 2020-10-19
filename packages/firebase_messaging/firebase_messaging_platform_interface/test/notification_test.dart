@@ -7,46 +7,38 @@ import 'package:firebase_messaging_platform_interface/src/notification.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('$Notification', () {
-    test('toMap()', () {
+  group('Notification', () {
+    test('new instance', () {
       const testTitle = 'test notification';
       final notification = Notification(title: testTitle);
-      final notificationMap = notification.toMap();
-      expect(notificationMap, isA<Map<String, dynamic>>());
-      expect(notificationMap['title'], equals(testTitle));
+      expect(notification.title, equals(testTitle));
     });
   });
 
-  group('$AndroidNotification', () {
-    test('toMap()', () {
+  group('AndroidNotification', () {
+    test('new instance', () {
       const testChannelId = 'fooId';
       final notification = AndroidNotification(
           channelId: testChannelId,
           priority: AndroidNotificationPriority.lowPriority);
-      final notificationMap = notification.toMap();
-      expect(notificationMap, isA<Map<String, dynamic>>());
-      expect(notificationMap['channelId'], equals(testChannelId));
+      expect(notification.channelId, equals(testChannelId));
     });
   });
 
-  group('$AppleNotification', () {
-    test('toMap()', () {
+  group('AppleNotification', () {
+    test('new instance', () {
       const testSubtitle = 'bar';
       final notification = AppleNotification(subtitle: testSubtitle);
-      final notificationMap = notification.toMap();
-      expect(notificationMap, isA<Map<String, dynamic>>());
-      expect(notificationMap['subtitle'], equals(testSubtitle));
+      expect(notification.subtitle, equals(testSubtitle));
     });
   });
 
-  group('$AppleNotificationCriticalSound', () {
-    test('toMap()', () {
+  group('AppleNotificationCriticalSound', () {
+    test('new instance', () {
       const testCritical = false;
       final iosCriticalSound =
           AppleNotificationCriticalSound(critical: testCritical);
-      final iosCriticalSoundMap = iosCriticalSound.toMap();
-      expect(iosCriticalSoundMap, isA<Map<String, dynamic>>());
-      expect(iosCriticalSoundMap['critical'], equals(testCritical));
+      expect(iosCriticalSound, equals(testCritical));
     });
   });
 }

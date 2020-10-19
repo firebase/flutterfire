@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package io.flutter.plugins.firebasemessaging;
+package io.flutter.plugins.firebase.messaging;
 
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
@@ -35,16 +35,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/** FirebaseMessagingPlugin */
-public class FirebaseMessagingPlugin extends BroadcastReceiver
+/** FlutterFirebaseMessagingPlugin */
+public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     implements FlutterFirebasePlugin,
         MethodCallHandler,
         NewIntentListener,
         FlutterPlugin,
         ActivityAware {
-
-  private static final String CLICK_ACTION_VALUE = "FLUTTER_NOTIFICATION_CLICK";
-  private static final String TAG = "FirebaseMessagingPlugin";
 
   private MethodChannel channel;
   private Context applicationContext;
@@ -58,24 +55,17 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     channel = new MethodChannel(messenger, channelName);
     channel.setMethodCallHandler(this);
 
-    final MethodChannel backgroundCallbackChannel =
-        new MethodChannel(messenger, "plugins.flutter.io/firebase_messaging_background");
-
-    backgroundCallbackChannel.setMethodCallHandler(this);
-    FlutterFirebaseMessagingService.setBackgroundChannel(backgroundCallbackChannel);
-
     // Register broadcast receiver
     IntentFilter intentFilter = new IntentFilter();
-    intentFilter.addAction(FlutterFirebaseMessagingService.ACTION_TOKEN);
-    intentFilter.addAction(FlutterFirebaseMessagingService.ACTION_REMOTE_MESSAGE);
+    intentFilter.addAction(FlutterFirebaseMessagingConstants.ACTION_TOKEN);
+    intentFilter.addAction(FlutterFirebaseMessagingConstants.ACTION_REMOTE_MESSAGE);
     LocalBroadcastManager manager = LocalBroadcastManager.getInstance(applicationContext);
     manager.registerReceiver(this, intentFilter);
   }
 
   @SuppressWarnings("unused")
   public static void registerWith(Registrar registrar) {
-    FirebaseMessagingPlugin instance = new FirebaseMessagingPlugin();
-
+    FlutterFirebaseMessagingPlugin instance = new FlutterFirebaseMessagingPlugin();
     instance.setActivity(registrar.activity());
     registrar.addNewIntentListener(instance);
     instance.initInstance(registrar.context(), registrar.messenger());
@@ -96,8 +86,9 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   }
 
   @Override
-  public void onDetachedFromEngine(FlutterPluginBinding binding) {
-    LocalBroadcastManager.getInstance(binding.getApplicationContext()).unregisterReceiver(this);
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    LocalBroadcastManager.getInstance(ContextHolder.getApplicationContext())
+        .unregisterReceiver(this);
   }
 
   @Override
@@ -123,6 +114,16 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   }
 
   // BroadcastReceiver implementation.
+  // TODO rework
+  // TODO rework
+  // TODO rework
+  // TODO rework
+  // TODO rework
+  // TODO rework
+  // TODO rework
+  // TODO rework
+  // TODO rework
+  // TODO rework
   @Override
   public void onReceive(Context context, Intent intent) {
     String action = intent.getAction();
@@ -131,13 +132,14 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
       return;
     }
 
-    if (action.equals(FlutterFirebaseMessagingService.ACTION_TOKEN)) {
-      String token = intent.getStringExtra(FlutterFirebaseMessagingService.EXTRA_TOKEN);
+    if (action.equals(FlutterFirebaseMessagingConstants.ACTION_TOKEN)) {
+      String token = intent.getStringExtra(FlutterFirebaseMessagingConstants.EXTRA_TOKEN);
       channel.invokeMethod("onToken", token);
-    } else if (action.equals(FlutterFirebaseMessagingService.ACTION_REMOTE_MESSAGE)) {
+    } else if (action.equals(FlutterFirebaseMessagingConstants.ACTION_REMOTE_MESSAGE)) {
       RemoteMessage message =
-          intent.getParcelableExtra(FlutterFirebaseMessagingService.EXTRA_REMOTE_MESSAGE);
-      Map<String, Object> content = FlutterFirebaseMessagingSerializer.remoteMessageToMap(message);
+          intent.getParcelableExtra(FlutterFirebaseMessagingConstants.EXTRA_REMOTE_MESSAGE);
+      if (message == null) return;
+      Map<String, Object> content = FlutterFirebaseMessagingUtils.remoteMessageToMap(message);
       channel.invokeMethod("onMessage", content);
     }
   }
@@ -258,7 +260,9 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
           firebaseMessaging.setAutoInitEnabled(enabled);
           return new HashMap<String, Object>() {
             {
-              put(Constants.IS_AUTO_INIT_ENABLED, firebaseMessaging.isAutoInitEnabled());
+              put(
+                  FlutterFirebaseMessagingConstants.IS_AUTO_INIT_ENABLED,
+                  firebaseMessaging.isAutoInitEnabled());
             }
           };
         });
@@ -421,6 +425,12 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   }
 
   /** @return true if intent contained a message to send. */
+  // TODO on notification opened app event
+  // TODO on notification opened app event
+  // TODO on notification opened app event
+  // TODO on notification opened app event
+  // TODO on notification opened app event
+  // TODO on notification opened app event
   private boolean sendMessageFromIntent(String method, Intent intent) {
     if (CLICK_ACTION_VALUE.equals(intent.getAction())
         || CLICK_ACTION_VALUE.equals(intent.getStringExtra("click_action"))) {
@@ -483,18 +493,6 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
 
           FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
           constants.put("AUTO_INIT_ENABLED", firebaseMessaging.isAutoInitEnabled());
-
-          // TODO get initial notification, convert to Map
-          RemoteMessage remoteMessage = this.getInitialNotification();
-          Map<String, Object> initialNotification =
-              remoteMessage == null
-                  ? null
-                  : FlutterFirebaseMessagingSerializer.remoteMessageToMap(remoteMessage);
-
-          if (initialNotification != null) {
-            constants.put("INITIAL_NOTIFICATION", initialNotification);
-          }
-
           return constants;
         });
   }

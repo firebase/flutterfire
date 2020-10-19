@@ -4,8 +4,6 @@
 
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
-import 'utils.dart';
-
 class Notification {
   const Notification(
       {this.android,
@@ -38,19 +36,6 @@ class Notification {
 
   /// The native localization key for the notification body content.
   final String bodyLocKey;
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'android': android?.toMap(),
-      'apple': apple?.toMap(),
-      'title': title,
-      'titleLocArgs': titleLocArgs,
-      'titleLocKey': titleLocKey,
-      'body': body,
-      'bodyLocArgs': bodyLocArgs,
-      'bodyLocKey': bodyLocKey,
-    };
-  }
 }
 
 class AndroidNotification {
@@ -75,7 +60,6 @@ class AndroidNotification {
   /// The color of the notification.
   final String color;
 
-  ///
   final int count;
 
   final String imageUrl;
@@ -91,21 +75,6 @@ class AndroidNotification {
   final String ticker;
 
   final AndroidNotificationVisibility visibility;
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'channelId': channelId,
-      'clickAction': clickAction,
-      'color': color,
-      'imageUrl': imageUrl,
-      'link': link,
-      'priority': convertFromAndroidNotificationPriority(priority),
-      'smallIcon': smallIcon,
-      'sound': sound,
-      'ticker': ticker,
-      'visibility': visibility.index,
-    };
-  }
 }
 
 class AppleNotification {
@@ -128,17 +97,6 @@ class AppleNotification {
   final List<String> subtitleLocArgs;
 
   final String subtitleLocKey;
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'badge': badge,
-      'sound': sound,
-      'criticalSound': criticalSound?.toMap(),
-      'subtitle': subtitle,
-      'subtitleLocArgs': subtitleLocArgs,
-      'subtitleLocKey': subtitleLocKey,
-    };
-  }
 }
 
 class AppleNotificationCriticalSound {
@@ -149,12 +107,4 @@ class AppleNotificationCriticalSound {
   final String name;
 
   final num volume;
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'critical': critical,
-      'name': name,
-      'volume': volume,
-    };
-  }
 }

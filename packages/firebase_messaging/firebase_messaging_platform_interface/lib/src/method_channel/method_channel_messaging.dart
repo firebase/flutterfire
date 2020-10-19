@@ -107,7 +107,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
             badge: initialNotification['apple']['badge'],
             sound: initialNotification['apple']['sound'],
             subtitle: initialNotification['apple']['subtitle'],
-            subtitleLocArgs: initialNotification['apple']['subtitleLocArgs'],
+            subtitleLocArgs:
+                initialNotification['apple']['subtitleLocArgs'] ?? [],
             subtitleLocKey: initialNotification['apple']['subtitleLocKey'],
             criticalSound: initialNotification['apple']['criticalSound'] == null
                 ? null
@@ -121,10 +122,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
       _initialNotification = Notification(
         title: initialNotification['title'],
-        titleLocArgs: initialNotification['titleLocArgs'],
+        titleLocArgs: initialNotification['titleLocArgs'] ?? [],
         titleLocKey: initialNotification['titleLocKey'],
         body: initialNotification['body'],
-        bodyLocArgs: initialNotification['bodyLocArgs'],
+        bodyLocArgs: initialNotification['bodyLocArgs'] ?? [],
         bodyLocKey: initialNotification['bodyLocKey'],
         android: _android,
         apple: _apple,

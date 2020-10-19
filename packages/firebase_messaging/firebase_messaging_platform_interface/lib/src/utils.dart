@@ -22,25 +22,6 @@ AndroidNotificationPriority convertToAndroidNotificationPriority(int priority) {
   }
 }
 
-/// Converts an [AndroidNotificationPriority] into it's [int] representation.
-int convertFromAndroidNotificationPriority(
-    AndroidNotificationPriority priority) {
-  switch (priority) {
-    case AndroidNotificationPriority.minimumPriority:
-      return -2;
-    case AndroidNotificationPriority.lowPriority:
-      return -1;
-    case AndroidNotificationPriority.defaultPriority:
-      return 0;
-    case AndroidNotificationPriority.highPriority:
-      return 1;
-    case AndroidNotificationPriority.maximumPriority:
-      return 2;
-    default:
-      return 0;
-  }
-}
-
 /// Converts an [int] into it's [AndroidNotificationVisibility] representation.
 AndroidNotificationVisibility convertToAndroidNotificationVisibility(
     int visibility) {
@@ -56,23 +37,12 @@ AndroidNotificationVisibility convertToAndroidNotificationVisibility(
   }
 }
 
-/// Converts an [int] into it's [AndroidNotificationVisibility] representation.
-int convertFromAndroidNotificationVisibility(
-    AndroidNotificationVisibility visibility) {
-  switch (visibility) {
-    case AndroidNotificationVisibility.secret:
-      return -1;
-    case AndroidNotificationVisibility.private:
-      return 0;
-    case AndroidNotificationVisibility.public:
-      return 1;
-    default:
-      return 0;
-  }
-}
-
-/// Converts an [int] into it's [IOSAuthorizationStatus] representation.
+/// Converts an [int] into it's [AuthorizationStatus] representation.
 AuthorizationStatus convertToAuthorizationStatus(int status) {
+  // Can be null on unsupported platforms, e.g. iOS < 10.
+  if (status == null) {
+    return AuthorizationStatus.notDetermined;
+  }
   switch (status) {
     case -1:
       return AuthorizationStatus.notDetermined;
@@ -89,6 +59,10 @@ AuthorizationStatus convertToAuthorizationStatus(int status) {
 
 /// Converts an [int] into it's [AppleNotificationSetting] representation.
 AppleNotificationSetting convertToAppleNotificationSetting(int status) {
+  // Can be null on unsupported platforms, e.g. iOS < 10.
+  if (status == null) {
+    return AppleNotificationSetting.notSupported;
+  }
   switch (status) {
     case -1:
       return AppleNotificationSetting.notSupported;

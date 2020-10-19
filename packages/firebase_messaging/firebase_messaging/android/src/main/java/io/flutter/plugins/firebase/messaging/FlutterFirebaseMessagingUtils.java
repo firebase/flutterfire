@@ -1,11 +1,15 @@
-package io.flutter.plugins.firebasemessaging;
+package io.flutter.plugins.firebase.messaging;
 
+import android.app.ActivityManager;
+import android.app.KeyguardManager;
+import android.content.Context;
 import com.google.firebase.messaging.RemoteMessage;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class FlutterFirebaseMessagingSerializer {
+class FlutterFirebaseMessagingUtils {
   private static final String KEY_COLLAPSE_KEY = "collapseKey";
   private static final String KEY_DATA = "data";
   private static final String KEY_FROM = "from";
@@ -61,8 +65,8 @@ class FlutterFirebaseMessagingSerializer {
 
   private static Map<String, Object> remoteMessageNotificationToMap(
       RemoteMessage.Notification notification) {
-    Map notificationMap = new HashMap<>();
-    Map androidNotificationMap = new HashMap<>();
+    Map<String, Object> notificationMap = new HashMap<>();
+    Map<String, Object> androidNotificationMap = new HashMap<>();
 
     if (notification.getTitle() != null) {
       notificationMap.put("title", notification.getTitle());
@@ -72,10 +76,9 @@ class FlutterFirebaseMessagingSerializer {
       notificationMap.put("titleLocKey", notification.getTitleLocalizationKey());
     }
 
-    //    if (notification.getTitleLocalizationArgs() != null) {
-    //      notificationMap.put(
-    //          "titleLocArgs", Arguments.fromJavaArgs(notification.getTitleLocalizationArgs()));
-    //    }
+    if (notification.getTitleLocalizationArgs() != null) {
+      notificationMap.put("titleLocArgs", notification.getTitleLocalizationArgs());
+    }
 
     if (notification.getBody() != null) {
       notificationMap.put("body", notification.getBody());
@@ -85,10 +88,9 @@ class FlutterFirebaseMessagingSerializer {
       notificationMap.put("bodyLocKey", notification.getBodyLocalizationKey());
     }
 
-    //    if (notification.getBodyLocalizationArgs() != null) {
-    //      notificationMap.put(
-    //          "bodyLocArgs", Arguments.fromJavaArgs(notification.getBodyLocalizationArgs()));
-    //    }
+    if (notification.getBodyLocalizationArgs() != null) {
+      notificationMap.put("bodyLocArgs", notification.getBodyLocalizationArgs());
+    }
 
     if (notification.getChannelId() != null) {
       androidNotificationMap.put("channelId", notification.getChannelId());
@@ -136,5 +138,41 @@ class FlutterFirebaseMessagingSerializer {
 
     notificationMap.put("android", androidNotificationMap);
     return notificationMap;
+  }
+
+  /**
+   * Identify if the application is currently in a state where user interaction is possible. This
+   * method is called when a remote message is received to determine how the incoming message should
+   * be handled.
+   *
+   * @param context context.
+   * @return True if the application is currently in a state where user interaction is possible,
+   *     false otherwise.
+   */
+  static boolean isApplicationForeground(Context context) {
+    KeyguardManager keyguardManager =
+        (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+
+    if (keyguardManager != null && keyguardManager.isKeyguardLocked()) {
+      return false;
+    }
+
+    ActivityManager activityManager =
+        (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+    if (activityManager == null) return false;
+
+    List<ActivityManager.RunningAppProcessInfo> appProcesses =
+        activityManager.getRunningAppProcesses();
+    if (appProcesses == null) return false;
+
+    final String packageName = context.getPackageName();
+    for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+      if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+          && appProcess.processName.equals(packageName)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

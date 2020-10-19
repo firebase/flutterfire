@@ -13,23 +13,9 @@ void main() {
           isA<AndroidNotificationPriority>());
     });
 
-    test('convertFromAndroidNotificationPriority()', () {
-      expect(
-          convertFromAndroidNotificationPriority(
-              AndroidNotificationPriority.highPriority),
-          isA<int>());
-    });
-
     test('convertToAndroidNotificationVisibility()', () {
       expect(convertToAndroidNotificationVisibility(1),
           isA<AndroidNotificationVisibility>());
-    });
-
-    test('convertFromAndroidNotificationVisibility()', () {
-      expect(
-          convertFromAndroidNotificationVisibility(
-              AndroidNotificationVisibility.public),
-          isA<int>());
     });
 
     test('convertToIOSAuthorizationStatus()', () {
