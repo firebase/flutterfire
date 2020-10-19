@@ -4,13 +4,13 @@
 
 import 'dart:async';
 
-import 'package:firebase/firebase.dart' as firebase;
+import 'interop/auth.dart' as auth_interop;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:firebase_auth_web/firebase_auth_web_user_credential.dart';
+import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
 import 'package:intl/intl.dart';
 
 import 'firebase_auth_web_confirmation_result.dart';
-import 'utils.dart';
+import 'utils/web_utils.dart';
 
 /// The format of an incoming metadata string timestamp from the firebase-dart library
 final DateFormat _dateFormat = DateFormat('EEE, d MMM yyyy HH:mm:ss', 'en_US');
@@ -35,7 +35,7 @@ class UserWeb extends UserPlatform {
           'phoneNumber': _webUser.phoneNumber,
           'photoURL': _webUser.photoURL,
           'providerData': _webUser.providerData
-              .map((firebase.UserInfo webUserInfo) => <String, dynamic>{
+              .map((auth_interop.UserInfo webUserInfo) => <String, dynamic>{
                     'displayName': webUserInfo.displayName,
                     'email': webUserInfo.email,
                     'phoneNumber': webUserInfo.phoneNumber,
@@ -45,27 +45,28 @@ class UserWeb extends UserPlatform {
                   })
               .toList(),
           'refreshToken': _webUser.refreshToken,
-          'tenantId': null, // TODO: not supported on firebase-dart
+          'tenantId': _webUser
+              .tenantId, // TODO(helenaford): needs testing, wasn't supported on dart lib
           'uid': _webUser.uid,
         });
 
-  final firebase.User _webUser;
+  final auth_interop.User _webUser;
 
   @override
-  Future<void> delete() {
+  Future<void> delete() async {
     try {
-      return _webUser.delete();
+      await _webUser.delete();
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
-  Future<String> getIdToken(bool forceRefresh) {
+  Future<String> getIdToken(bool forceRefresh) async {
     try {
-      return _webUser.getIdToken(forceRefresh);
+      return await _webUser.getIdToken(forceRefresh);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -84,7 +85,7 @@ class UserWeb extends UserPlatform {
           await _webUser
               .linkWithCredential(convertPlatformCredential(credential)));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -93,12 +94,12 @@ class UserWeb extends UserPlatform {
       RecaptchaVerifierFactoryPlatform applicationVerifier) async {
     try {
       // Do not inline - type is not inferred & error is thrown.
-      firebase.RecaptchaVerifier verifier = applicationVerifier.delegate;
+      auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
 
       return ConfirmationResultWeb(
           this.auth, await _webUser.linkWithPhoneNumber(phoneNumber, verifier));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -106,12 +107,11 @@ class UserWeb extends UserPlatform {
   Future<UserCredentialPlatform> reauthenticateWithCredential(
       AuthCredential credential) async {
     try {
-      return UserCredentialWeb(
-          auth,
-          await _webUser.reauthenticateWithCredential(
-              convertPlatformCredential(credential)));
+      auth_interop.UserCredential userCredential = await _webUser
+          .reauthenticateWithCredential(convertPlatformCredential(credential));
+      return UserCredentialWeb(auth, userCredential);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -121,7 +121,7 @@ class UserWeb extends UserPlatform {
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -131,7 +131,7 @@ class UserWeb extends UserPlatform {
       return _webUser.sendEmailVerification(
           convertPlatformActionCodeSettings(actionCodeSettings));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -140,7 +140,7 @@ class UserWeb extends UserPlatform {
     try {
       return UserWeb(auth, await _webUser.unlink(providerId));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -151,7 +151,7 @@ class UserWeb extends UserPlatform {
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -162,7 +162,7 @@ class UserWeb extends UserPlatform {
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -174,21 +174,21 @@ class UserWeb extends UserPlatform {
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
   Future<void> updateProfile(Map<String, String> profile) async {
     try {
-      await _webUser.updateProfile(firebase.UserProfile(
+      await _webUser.updateProfile(auth_interop.UserProfile(
         displayName: profile['displayName'],
         photoURL: profile['photoURL'],
       ));
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 

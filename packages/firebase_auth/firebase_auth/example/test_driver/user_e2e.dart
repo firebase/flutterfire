@@ -67,7 +67,7 @@ void runUserTests() {
           fail('should have thrown a FirebaseAuthException error');
         }
         fail('should have thrown an error');
-      }, skip: kIsWeb);
+      });
     });
 
     group('getIdTokenResult()', () {
@@ -253,33 +253,33 @@ void runUserTests() {
         fail('should have thrown an error');
       });
 
-      // TODO(ehesp/Salakar): Re-enable once Web re-worked. Web currently returns a 'user-mismatch' code.
-      // test('should throw user-not-found ', () async {
-      //   // Setup
-      //   UserCredential userCredential =
-      //       await auth.createUserWithEmailAndPassword(
-      //           email: email, password: TEST_PASSWORD);
-      //   User user = userCredential.user;
+      //TODO(ehesp/Salakar): Re-enable once Web re-worked. Web currently returns a 'user-mismatch' code.
+      test('should throw user-not-found ', () async {
+        // Setup
+        UserCredential userCredential =
+            await auth.createUserWithEmailAndPassword(
+                email: email, password: TEST_PASSWORD);
+        User user = userCredential.user;
 
-      //   try {
-      //     // Test
-      //     AuthCredential credential = EmailAuthProvider.credential(
-      //         email: 'userdoesnotexist@foobar.com', password: TEST_PASSWORD);
-      //     await user.reauthenticateWithCredential(credential);
-      //   } on FirebaseAuthException catch (e) {
-      //     // Assertions
-      //     expect(e.code, equals("user-not-found"));
-      //     expect(
-      //         e.message,
-      //         equals(
-      //             "There is no user record corresponding to this identifier. The user may have been deleted."));
-      //     return;
-      //   } catch (e) {
-      //     fail('should have thrown an FirebaseAuthException');
-      //   }
+        try {
+          // Test
+          AuthCredential credential = EmailAuthProvider.credential(
+              email: 'userdoesnotexist@foobar.com', password: TEST_PASSWORD);
+          await user.reauthenticateWithCredential(credential);
+        } on FirebaseAuthException catch (e) {
+          // Assertions
+          expect(e.code, equals("user-not-found"));
+          expect(
+              e.message,
+              equals(
+                  "There is no user record corresponding to this identifier. The user may have been deleted."));
+          return;
+        } catch (e) {
+          fail('should have thrown an FirebaseAuthException');
+        }
 
-      //   fail('should have thrown an error');
-      // }, skip: kIsWeb);
+        fail('should have thrown an error');
+      });
 
       test('should throw invalid-email ', () async {
         // Setup
@@ -354,8 +354,6 @@ void runUserTests() {
         expect(auth.currentUser, isNotNull);
       });
 
-      // TODO(ehesp/Salakar): Re-enable for web once `firebase-dart` error fixed
-      //   NoSuchMethodError: method not found: 'split' (a.split is not a function)
       test('should work with actionCodeSettings', () async {
         // Setup
         ActionCodeSettings actionCodeSettings = ActionCodeSettings(
@@ -716,7 +714,7 @@ void runUserTests() {
 
         fail('should have thrown an error');
       });
-    }, skip: kIsWeb); // TODO: not supported on firebase-dart
+    }); // TODO: not supported on firebase-dart
 
     group('delete()', () {
       test('should delete a user', () async {
@@ -770,7 +768,7 @@ void runUserTests() {
         }
 
         fail('Should have thrown an error');
-      }, skip: kIsWeb); // TODO: Re-enable after web refactor.
+      }); // TODO: Re-enable after web refactor.
     });
   });
 }

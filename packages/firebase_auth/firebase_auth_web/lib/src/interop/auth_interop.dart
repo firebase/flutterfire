@@ -1,14 +1,17 @@
+// Copyright 2020 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 // ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, comment_references
 
 @JS('firebase.auth')
 library firebase.auth_interop;
 
 import 'package:js/js.dart';
-
-import '../func.dart';
-import 'app_interop.dart';
-import 'es6_interop.dart';
-import 'firebase_interop.dart';
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
+// import '../func.dart';
+// import 'app_interop.dart';
+// import 'es6_interop.dart';
 
 @JS('Auth')
 abstract class AuthJsImpl {
@@ -21,9 +24,11 @@ abstract class AuthJsImpl {
       String email, String password);
   external PromiseJsImpl<List> fetchSignInMethodsForEmail(String email);
   external UserJsImpl get currentUser;
-
+  external String get tenantId;
+  external set tenantId(String s);
   external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult();
   external bool isSignInWithEmailLink(String emailLink);
+  external AuthSettings get settings;
   external String get languageCode;
   external set languageCode(String s);
   external Func0 onAuthStateChanged(nextOrObserver,
@@ -55,6 +60,71 @@ abstract class AuthJsImpl {
   external PromiseJsImpl<void> signOut();
   external void useDeviceLanguage();
   external PromiseJsImpl<String> verifyPasswordResetCode(String code);
+}
+
+@anonymous
+@JS()
+abstract class IdTokenResultImpl {
+  external String get authTime;
+  external Object get claims;
+  external String get expirationTime;
+  external String get issuedAtTime;
+  external String get signInProvider;
+  external String get token;
+}
+
+@anonymous
+@JS()
+abstract class UserInfoJsImpl {
+  external String get displayName;
+  external String get email;
+  external String get phoneNumber;
+  external String get photoURL;
+  external String get providerId;
+  external String get uid;
+}
+
+/// https://firebase.google.com/docs/reference/js/firebase.User
+@anonymous
+@JS()
+abstract class UserJsImpl extends UserInfoJsImpl {
+  external bool get emailVerified;
+  external bool get isAnonymous;
+  external List<UserInfoJsImpl> get providerData;
+  external String get refreshToken;
+  external String get tenantId;
+  external UserMetadata get metadata;
+  external PromiseJsImpl<void> delete();
+  external PromiseJsImpl<String> getIdToken([bool opt_forceRefresh]);
+  external PromiseJsImpl<UserCredentialJsImpl> linkWithCredential(
+      OAuthCredential credential);
+  external PromiseJsImpl<ConfirmationResultJsImpl> linkWithPhoneNumber(
+      String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
+  external PromiseJsImpl<UserCredentialJsImpl> linkWithPopup(
+      AuthProviderJsImpl provider);
+  external PromiseJsImpl<void> linkWithRedirect(AuthProviderJsImpl provider);
+
+  external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithCredential(
+      OAuthCredential credential);
+  external PromiseJsImpl<ConfirmationResultJsImpl>
+      reauthenticateWithPhoneNumber(
+          String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
+  external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithPopup(
+      AuthProviderJsImpl provider);
+  external PromiseJsImpl<void> reauthenticateWithRedirect(
+      AuthProviderJsImpl provider);
+  external PromiseJsImpl<void> reload();
+  external PromiseJsImpl<void> sendEmailVerification(
+      [ActionCodeSettings actionCodeSettings]);
+  external PromiseJsImpl<UserJsImpl> unlink(String providerId);
+  external PromiseJsImpl<void> updateEmail(String newEmail);
+  external PromiseJsImpl<void> updatePassword(String newPassword);
+  external PromiseJsImpl<void> updatePhoneNumber(
+      OAuthCredential phoneCredential);
+  external PromiseJsImpl<void> updateProfile(UserProfile profile);
+  external PromiseJsImpl<IdTokenResultImpl> getIdTokenResult(
+      [bool forceRefresh]);
+  external Object toJSON();
 }
 
 /// An enumeration of the possible persistence mechanism types.
@@ -124,6 +194,8 @@ class EmailAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory EmailAuthProviderJsImpl();
   external static String get PROVIDER_ID;
   external static AuthCredential credential(String email, String password);
+  external static AuthCredential credentialWithLink(
+      String email, String emailLink);
 }
 
 @JS('FacebookAuthProvider')
@@ -221,6 +293,18 @@ abstract class UserMetadata {
   /// The date the user last signed in, formatted as a UTC string.
   /// For example, 'Fri, 22 Sep 2017 01:49:58 GMT'.
   external String get lastSignInTime;
+}
+
+/// A structure for [User]'s user profile.
+@JS()
+@anonymous
+class UserProfile {
+  external String get displayName;
+  external set displayName(String s);
+  external String get photoURL;
+  external set photoURL(String s);
+
+  external factory UserProfile({String displayName, String photoURL});
 }
 
 /// An authentication error.
@@ -337,4 +421,13 @@ class AdditionalUserInfoJsImpl {
   external Object get profile;
   external String get username;
   external bool get isNewUser;
+}
+
+/// https://firebase.google.com/docs/reference/js/firebase.auth#.AdditionalUserInfo
+@JS()
+@anonymous
+class AuthSettings {
+  external bool get appVerificationDisabledForTesting;
+  external set appVerificationDisabledForTesting(bool b);
+  // external factory AuthSettings({bool appVerificationDisabledForTesting});
 }

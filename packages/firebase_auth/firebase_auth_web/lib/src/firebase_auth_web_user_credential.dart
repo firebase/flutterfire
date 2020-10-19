@@ -2,17 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase/firebase.dart' as firebase;
+import 'interop/auth.dart' as auth_interop;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 import 'firebase_auth_web_user.dart';
-import 'utils.dart';
+import 'utils/web_utils.dart';
 
 /// Web delegate implementation of [UserCredentialPlatform].
 class UserCredentialWeb extends UserCredentialPlatform {
   /// Creates a new [UserCredentialWeb] instance.
   UserCredentialWeb(
-      FirebaseAuthPlatform auth, firebase.UserCredential webUserCredential)
+      FirebaseAuthPlatform auth, auth_interop.UserCredential webUserCredential)
       : super(
           auth: auth,
           additionalUserInfo: convertWebAdditionalUserInfo(
