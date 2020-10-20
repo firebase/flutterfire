@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 
 import './firebase_storage_web.dart';
 import './utils/metadata.dart';
+import './utils/errors.dart';
 
 /// The web implementation of a Firebase Storage 'ref'
 class ReferenceWeb extends ReferencePlatform {
@@ -42,7 +43,8 @@ class ReferenceWeb extends ReferencePlatform {
 
   /// Fetches a long lived download URL for this object.
   Future<String> getDownloadURL() {
-    return _ref.getDownloadURL().then((uri) => uri.toString());
+    return _ref.getDownloadURL().then((uri) => uri.toString(),
+        onError: (e) => fbFirebaseErrorToFirebaseException(e));
   }
 
   /// Fetches metadata for the object at this location, if one exists.

@@ -1,0 +1,24 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase/firebase.dart' as fb;
+
+String _parseErrorCode(String errorCode) {
+  return errorCode.split('/').last;
+}
+
+Map<String, String> _errorCodeToMessage = {
+  'unauthorized': 'User is not authorized to perform the desired action.',
+  'object-not-found': 'No object exists at the desired reference.'
+};
+
+String _getErrorMessage(String errorCode, String errorMessage) {
+  return _errorCodeToMessage[_parseErrorCode(errorCode)] ?? errorMessage;
+}
+
+/// Convert FirebaseErrors from the JS-interop layer into FirebaseExceptions for the plugin.
+FirebaseException fbFirebaseErrorToFirebaseException(fb.FirebaseError error) {
+  throw FirebaseException(
+    plugin: 'firebase_storage',
+    code: _parseErrorCode(error.code),
+    message: _getErrorMessage(error.code, error.message),
+  );
+}
