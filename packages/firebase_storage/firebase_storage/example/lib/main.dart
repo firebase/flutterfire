@@ -1,10 +1,14 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' as io;
 
-import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
+
+import 'save_as/save_as.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,20 +55,32 @@ class _TaskManager extends State<TaskManager> {
   List<firebase_storage.UploadTask> _uploadTasks = [];
 
   /// The user selects a file, and the task is added to the list.
-  firebase_storage.UploadTask uploadFile(File file) {
+  Future<firebase_storage.UploadTask> uploadFile(PickedFile file) async {
     if (file == null) {
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("No file was selected")));
       return null;
     }
 
+    firebase_storage.UploadTask uploadTask;
+
     // Create a Reference to the file
     firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
         .ref()
         .child('playground')
-        .child('/file-upload-test.txt');
+        .child('/some-image.jpg');
 
-    return ref.putFile(file);
+    final metadata = firebase_storage.SettableMetadata(contentType: 'image/jpeg', customMetadata: {
+      'picked-file-path': file.path
+    });
+
+    if (kIsWeb) {
+      uploadTask = ref.putData(await file.readAsBytes(), metadata);
+    } else {
+      uploadTask = ref.putFile(io.File(file.path), metadata);
+    }
+
+    return Future.value(uploadTask);
   }
 
   /// A new string is uploaded to storage.
@@ -94,8 +110,8 @@ class _TaskManager extends State<TaskManager> {
         });
         break;
       case UploadType.file:
-        File file = await FilePicker.getFile();
-        firebase_storage.UploadTask task = uploadFile(file);
+        PickedFile file = await ImagePicker().getImage(source: ImageSource.gallery);
+        firebase_storage.UploadTask task = await uploadFile(file);
         if (task != null) {
           setState(() {
             _uploadTasks = [..._uploadTasks, task];
@@ -116,9 +132,28 @@ class _TaskManager extends State<TaskManager> {
     });
   }
 
+  Future<void> _downloadBytes(firebase_storage.Reference ref) async {
+    final bytes = await ref.getData();
+    // Download...
+    await saveAsBytes(bytes, 'some-image.jpg');
+  }
+
+  Future<void> _downloadLink(firebase_storage.Reference ref) async {
+    final link = await ref.getDownloadURL();
+
+    await Clipboard.setData(ClipboardData(
+      text: link,
+    ));
+
+    Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(
+      'Success!\n Copied download URL to Clipboard!',
+    )));
+  }
+
   Future<void> _downloadFile(firebase_storage.Reference ref) async {
-    final Directory systemTempDir = Directory.systemTemp;
-    final File tempFile = File('${systemTempDir.path}/temp-${ref.name}');
+    final io.Directory systemTempDir = io.Directory.systemTemp;
+    final io.File tempFile = io.File('${systemTempDir.path}/temp-${ref.name}');
     if (tempFile.existsSync()) await tempFile.delete();
 
     await ref.writeToFile(tempFile);
@@ -160,8 +195,17 @@ class _TaskManager extends State<TaskManager> {
                 itemBuilder: (context, index) => UploadTaskListTile(
                     task: _uploadTasks[index],
                     onDismissed: () => _removeTaskAtIndex(index),
-                    onDownload: () =>
-                        _downloadFile(_uploadTasks[index].snapshot.ref))));
+                    onDownloadLink: () {
+                      return _downloadLink(_uploadTasks[index].snapshot.ref);
+                    },
+                    onDownload: () {
+                      if (kIsWeb) {
+                        return _downloadBytes(_uploadTasks[index].snapshot.ref);
+                      } else {
+                        return _downloadFile(_uploadTasks[index].snapshot.ref);
+                      }
+                    }))
+                        );
   }
 }
 
@@ -169,7 +213,7 @@ class _TaskManager extends State<TaskManager> {
 class UploadTaskListTile extends StatelessWidget {
   // ignore: public_member_api_docs
   const UploadTaskListTile(
-      {Key key, this.task, this.onDismissed, this.onDownload})
+      {Key key, this.task, this.onDismissed, this.onDownload, this.onDownloadLink})
       : super(key: key);
 
   /// The [UploadTask].
@@ -180,6 +224,9 @@ class UploadTaskListTile extends StatelessWidget {
 
   /// Triggered when the user presses the download button on a completed upload task.
   final VoidCallback onDownload;
+
+  /// Triggered when the user presses the "link" button on a completed upload task.
+  final VoidCallback onDownloadLink;
 
   /// Displays the current transferred bytes of the task.
   String _bytesTransferred(firebase_storage.TaskSnapshot snapshot) {
@@ -238,6 +285,11 @@ class UploadTaskListTile extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.file_download),
                       onPressed: () => onDownload(),
+                    ),
+                  if (state == firebase_storage.TaskState.success)
+                    IconButton(
+                      icon: Icon(Icons.link),
+                      onPressed: () => onDownloadLink(),
                     ),
                 ],
               ),

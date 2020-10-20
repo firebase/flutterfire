@@ -9,8 +9,10 @@ dependencies:
     path: ../
   firebase_core:
     path: ../../../firebase_core/firebase_core
-  file_picker: ^1.13.3
-
+  image_picker: ^0.6.7
+  image_picker_for_web: ^0.1.0
+  firebase_storage_web:
+    path: ../../firebase_storage_web
 
 dependency_overrides:
   firebase_core:
