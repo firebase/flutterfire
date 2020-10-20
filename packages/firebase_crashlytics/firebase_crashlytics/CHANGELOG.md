@@ -1,3 +1,8 @@
+## 0.2.1+1
+
+ - **FIX**: Change minimum version of stack_trace package (#3639).
+ - **DOCS**: README updates (#3768).
+
 ## 0.2.1
 
  - **REFACTOR**: changes context to reason (#1542) (#3334).

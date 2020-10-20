@@ -1,3 +1,8 @@
+## 0.14.1+3
+
+ - **FIX**: remove unused dart:async import (#3611).
+ - **FIX**: fix returning of transaction result (#3747).
+
 ## 0.14.1+2
 
  - Update a dependency to the latest release.

@@ -34,7 +34,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         convertSetOptions(options),
       );
     } catch (e) {
-      throw getFirebaseException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -43,7 +43,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     try {
       await _delegate.update(data: CodecUtility.encodeMapData(data));
     } catch (e) {
-      throw getFirebaseException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -54,7 +54,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
           await _delegate.get(convertGetOptions(options));
       return convertWebDocumentSnapshot(this.firestore, documentSnapshot);
     } catch (e) {
-      throw getFirebaseException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -63,7 +63,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     try {
       await _delegate.delete();
     } catch (e) {
-      throw getFirebaseException(e);
+      throw convertPlatformException(e);
     }
   }
 
@@ -80,7 +80,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         .map((webSnapshot) =>
             convertWebDocumentSnapshot(this.firestore, webSnapshot))
         .handleError((e) {
-      throw getFirebaseException(e);
+      throw convertPlatformException(e);
     });
   }
 }

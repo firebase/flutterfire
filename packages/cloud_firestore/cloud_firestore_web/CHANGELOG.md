@@ -1,3 +1,9 @@
+## 0.2.0+4
+
+ - **FIX**: bubble exceptions (#3701).
+ - **FIX**: fix returning of transaction result (#3747).
+ - **FIX**: ensure isCollectionGroupQuery is initialised (#3772).
+
 ## 0.2.0+3
 
  - **FIX**: dependency issue in pubspec.yaml (#3734).
