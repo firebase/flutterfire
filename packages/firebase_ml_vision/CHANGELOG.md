@@ -1,6 +1,7 @@
 ## 0.9.7+1
 
-* Added NSNull validation to driverLicenseDictionary to prevent errors when NSArray:addObject is called
+ - **FIX**: Added NSNull validation to driverLicenseDictionary to prevent errors when NSArray:addObject is called
+ - **DOCS**: Fixed analyze script on docs
 
 ## 0.9.7
 
