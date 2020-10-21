@@ -816,64 +816,64 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
           notification[@"bodyLocArgs"] = apsAlertDict[@"loc-args"];
         }
 
-        // iOS only
-        // message.notification.ios.subtitle
+        // Apple only
+        // message.notification.apple.subtitle
         if (apsAlertDict[@"subtitle"] != nil) {
           notificationIOS[@"subtitle"] = apsAlertDict[@"subtitle"];
         }
 
-        // iOS only
-        // message.notification.ios.subtitleLocKey
+        // Apple only
+        // message.notification.apple.subtitleLocKey
         if (apsAlertDict[@"subtitle-loc-key"] != nil) {
           notificationIOS[@"subtitleLocKey"] = apsAlertDict[@"subtitle-loc-key"];
         }
 
-        // iOS only
-        // message.notification.ios.subtitleLocArgs
+        // Apple only
+        // message.notification.apple.subtitleLocArgs
         if (apsAlertDict[@"subtitle-loc-args"] != nil) {
           notificationIOS[@"subtitleLocArgs"] = apsAlertDict[@"subtitle-loc-args"];
         }
 
-        // iOS only
-        // message.notification.ios.badge
+        // Apple only
+        // message.notification.apple.badge
         if (apsAlertDict[@"badge"] != nil) {
           notificationIOS[@"badge"] = apsAlertDict[@"badge"];
         }
       }
 
-      notification[@"ios"] = notificationIOS;
+      notification[@"apple"] = notificationIOS;
       message[@"notification"] = notification;
     }
 
-    // message.notification.ios.sound
+    // message.notification.apple.sound
     if (apsDict[@"sound"] != nil) {
       if ([apsDict[@"sound"] isKindOfClass:[NSString class]]) {
-        // message.notification.ios.sound
+        // message.notification.apple.sound
         notification[@"sound"] = apsDict[@"sound"];
       } else if ([apsDict[@"sound"] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *apsSoundDict = apsDict[@"sound"];
         NSMutableDictionary *notificationIOSSound = [[NSMutableDictionary alloc] init];
 
-        // message.notification.ios.sound.name String
+        // message.notification.apple.sound.name String
         if (apsSoundDict[@"name"] != nil) {
           notificationIOSSound[@"name"] = apsSoundDict[@"name"];
         }
 
-        // message.notification.ios.sound.critical Boolean
+        // message.notification.apple.sound.critical Boolean
         if (apsSoundDict[@"critical"] != nil) {
           notificationIOSSound[@"critical"] = @([apsSoundDict[@"critical"] boolValue]);
         }
 
-        // message.notification.ios.sound.volume Number
+        // message.notification.apple.sound.volume Number
         if (apsSoundDict[@"volume"] != nil) {
           notificationIOSSound[@"volume"] = apsSoundDict[@"volume"];
         }
 
-        // message.notification.ios.sound
+        // message.notification.apple.sound
         notificationIOS[@"sound"] = notificationIOSSound;
       }
 
-      notification[@"ios"] = notificationIOS;
+      notification[@"apple"] = notificationIOS;
       message[@"notification"] = notification;
     }
   }
