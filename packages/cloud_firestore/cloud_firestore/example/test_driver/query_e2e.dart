@@ -92,7 +92,7 @@ void runQueryTests() {
               (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
-        fail("Should have thrown a [FireebaseException]");
+        fail("Should have thrown a [FirebaseException]");
       });
     });
 

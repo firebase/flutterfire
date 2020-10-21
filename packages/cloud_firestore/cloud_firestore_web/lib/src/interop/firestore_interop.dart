@@ -102,16 +102,16 @@ class PersistenceSettings {
 }
 
 /// A [FieldPath] refers to a field in a document.
-/// The path may consist of a single field name (referring to a top-level
-/// field in the document), or a list of field names (referring to a nested
-/// field in the document).
+/// The path may consist of a single field name (referring to a top-level field
+/// in the document), or a list of field names (referring to a nested field in
+/// the document).
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.FieldPath>.
 @JS()
 class FieldPath {
   /// Creates a [FieldPath] from the provided field names. If more than one
-  /// field name is provided, the path will point to a nested field in
-  /// a document.
+  /// field name is provided, the path will point to a nested field in a
+  /// document.
   external factory FieldPath(String fieldName0,
       [String fieldName1,
       String fieldName2,
@@ -246,7 +246,8 @@ abstract class DocumentSnapshotJsImpl {
 
   external dynamic get(/*String|FieldPath*/ fieldPath);
 
-  /// Returns [true] if this [DocumentSnapshotJsImpl] is equal to the provided one.
+  /// Returns [true] if this [DocumentSnapshotJsImpl] is equal to the provided
+  /// one.
   external bool isEqual(DocumentSnapshotJsImpl other);
 }
 
@@ -316,7 +317,7 @@ abstract class QueryJsImpl {
 
 @JS('QuerySnapshot')
 abstract class QuerySnapshotJsImpl {
-  // TODO: [SnapshoListenOptions options]
+  // TODO: [SnapshotListenOptions] not currently used.
   external List<DocumentChangeJsImpl> docChanges(
       [SnapshotListenOptions options]);
 
@@ -470,20 +471,21 @@ abstract class Settings {
 @JS()
 abstract class SnapshotMetadata {
   /// [:true:] if the snapshot includes local writes (set() or update() calls)
-  /// that haven't been committed to the backend yet.
-  /// If your listener has opted into metadata updates via
-  /// onDocumentMetadataSnapshot, onQueryMetadataSnapshot or onMetadataSnapshot,
-  /// you receive another snapshot with [hasPendingWrites]
-  /// set to [:false:] once the writes have been committed to the backend.
+  /// that haven't been committed to the backend yet. If your listener has opted
+  /// into metadata updates via onDocumentMetadataSnapshot,
+  /// onQueryMetadataSnapshot or onMetadataSnapshot, you receive another
+  /// snapshot with [hasPendingWrites] set to [:false:] once the writes have
+  /// been committed to the backend.
   external bool get hasPendingWrites;
 
   external set hasPendingWrites(bool v);
 
-  /// [:true:] if the snapshot was created from cached data rather than guaranteed
-  /// up-to-date server data. If your listener has opted into metadata updates
-  /// (onDocumentMetadataSnapshot, onQueryMetadataSnapshot or onMetadataSnapshot)
-  /// you will receive another snapshot with [fromCache] set to [:false:] once
-  /// the client has received up-to-date data from the backend.
+  /// [:true:] if the snapshot was created from cached data rather than
+  /// guaranteed up-to-date server data. If your listener has opted into
+  /// metadata updates (onDocumentMetadataSnapshot, onQueryMetadataSnapshot or
+  /// onMetadataSnapshot) you will receive another snapshot with [fromCache] set
+  /// to [:false:] once the client has received up-to-date data from the
+  /// backend.
   external bool get fromCache;
 
   external set fromCache(bool v);
@@ -517,8 +519,8 @@ abstract class GetOptions {
 }
 
 /// An object to configure the [WriteBatch.set] behavior.
-/// Pass [: {merge: true} :] to only replace the values specified in
-/// the data argument. Fields omitted will remain untouched.
+/// Pass [: {merge: true} :] to only replace the values specified in the data
+/// argument. Fields omitted will remain untouched.
 @anonymous
 @JS()
 abstract class SetOptions {
@@ -534,15 +536,18 @@ abstract class SetOptions {
 }
 
 /// Options that configure how data is retrieved from a DocumentSnapshot
-/// (e.g. the desired behavior for server timestamps that have not yet been set to their final value).
+/// (e.g. the desired behavior for server timestamps that have not yet been set
+/// to their final value).
 ///
 /// See: https://firebase.google.com/docs/reference/js/firebase.firestore.SnapshotOptions.
 @anonymous
 @JS()
 abstract class SnapshotOptions {
-// If set, controls the return value for server timestamps that have not yet been set to their final value.
-// Possible values are "estimate", "previous" and "none".
-// If omitted or set to 'none', null will be returned by default until the server value becomes available.
+  /// If set, controls the return value for server timestamps that have not yet
+  /// been set to their final value. Possible values are "estimate", "previous"
+  /// and "none".
+  /// If omitted or set to 'none', null will be returned by default until the
+  /// server value becomes available.
   external String get serverTimestamps;
 
   external factory SnapshotOptions({String serverTimestamps});

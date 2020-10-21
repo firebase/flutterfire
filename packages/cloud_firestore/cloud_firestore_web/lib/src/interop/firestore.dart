@@ -295,7 +295,8 @@ class Query<T extends firestore_interop.QueryJsImpl>
           String /*'<'|'<='|'=='|'>='|'>'*/ opStr, value) =>
       Query.fromJsObject(jsObject.where(fieldPath, opStr, jsify(value)));
 
-  /// Calls js paginating [method] with [DocumentSnapshot] or List of [fieldValues].
+  /// Calls js paginating [method] with [DocumentSnapshot] or List of
+  /// [fieldValues].
   /// We need to call this method in all paginating methods to fix that Dart
   /// doesn't support varargs - we need to use [List] to call js function.
   S _wrapPaginatingFunctionCall<S>(
@@ -499,10 +500,9 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
           jsObject, data, fieldsAndValues, documentRef));
 }
 
-/// Mixin class for all classes with the [update()] method.
-/// We need to call [_wrapUpdateFunctionCall()] in all [update()] methods
-/// to fix that Dart doesn't support varargs - we need to use [List]
-/// to call js function.
+/// Mixin class for all classes with the [update()] method. We need to call
+/// [_wrapUpdateFunctionCall()] in all [update()] methods to fix that Dart
+/// doesn't support varargs - we need to use [List] to call js function.
 abstract class _Updatable {
   /// Calls js [:update():] method on [jsObject] with [data] or list of
   /// [fieldsAndValues] and optionally [documentRef].
@@ -609,8 +609,8 @@ abstract class FieldValue {
   static FieldValue arrayRemove(List elements) =>
       _FieldValueArrayRemove(elements);
   // If either the operand or the current field value uses floating point
-  // precision, all arithmetic follows IEEE 754 semantics. If both values
-  // are integers, values outside of JavaScript's safe number range
+  // precision, all arithmetic follows IEEE 754 semantics. If both values are
+  // integers, values outside of JavaScript's safe number range
   // (Number.MIN_SAFE_INTEGER to Number.MAX_SAFE_INTEGER) are also subject
   // to precision loss. Furthermore, once processed by the Firestore backend,
   // all integer operations are capped between -2^63 and 2^63-1.
