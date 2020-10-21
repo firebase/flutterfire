@@ -25,7 +25,7 @@ ListResultWeb fbListResultToListResultWeb(
   return ListResultWeb(
     storage,
     nextPageToken: result.nextPageToken,
-    items: result.items.map<String>((item) => item.fullPath),
-    prefixes: result.prefixes.map<String>((prefix) => prefix.fullPath),
+    items: result.items.map<String>((item) => item.fullPath).toList(),
+    prefixes: result.prefixes.map<String>((prefix) => prefix.fullPath).toList(),
   );
 }

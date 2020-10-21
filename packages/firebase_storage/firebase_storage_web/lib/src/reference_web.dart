@@ -43,13 +43,19 @@ class ReferenceWeb extends ReferencePlatform {
 
   /// Fetches a long lived download URL for this object.
   Future<String> getDownloadURL() {
-    return _ref.getDownloadURL().then((uri) => uri.toString(),
-        onError: (e) => fbFirebaseErrorToFirebaseException(e));
+    return _ref.getDownloadURL().then((uri) => uri.toString()).catchError((e) {
+      fbFirebaseErrorToFirebaseException(e);
+    });
   }
 
   /// Fetches metadata for the object at this location, if one exists.
   Future<FullMetadata> getMetadata() {
-    return _ref.getMetadata().then(fbFullMetadataToFullMetadata);
+    return _ref
+        .getMetadata()
+        .then(fbFullMetadataToFullMetadata)
+        .catchError((e) {
+      fbFirebaseErrorToFirebaseException(e);
+    });
   }
 
   /// List items (files) and prefixes (folders) under this storage reference.
@@ -66,7 +72,10 @@ class ReferenceWeb extends ReferencePlatform {
   Future<ListResultPlatform> list(ListOptions options) {
     return _ref
         .list(listOptionsToFbListOptions(options))
-        .then((result) => fbListResultToListResultWeb(storage, result));
+        .then((result) => fbListResultToListResultWeb(storage, result))
+        .catchError((e) {
+      fbFirebaseErrorToFirebaseException(e);
+    });
   }
 
   ///List all items (files) and prefixes (folders) under this storage reference.
@@ -82,7 +91,10 @@ class ReferenceWeb extends ReferencePlatform {
   Future<ListResultPlatform> listAll() {
     return _ref
         .listAll()
-        .then((result) => fbListResultToListResultWeb(storage, result));
+        .then((result) => fbListResultToListResultWeb(storage, result))
+        .catchError((e) {
+      fbFirebaseErrorToFirebaseException(e);
+    });
   }
 
   /// Asynchronously downloads the object at the StorageReference to a list in memory.
@@ -91,15 +103,17 @@ class ReferenceWeb extends ReferencePlatform {
   /// the operation will be canceled.
   Future<Uint8List> getData(int maxSize) async {
     if (maxSize > 0) {
-      final metadata = await _ref.getMetadata();
+      final metadata = await getMetadata();
       if (metadata.size > maxSize) {
         return null;
       }
     }
-    return _ref
-        .getDownloadURL()
+    return getDownloadURL()
         .then((uri) => uri.toString())
-        .then((downloadUri) => http.readBytes(downloadUri));
+        .then((downloadUri) => http.readBytes(downloadUri))
+        .catchError((e) {
+      fbFirebaseErrorToFirebaseException(e);
+    });
   }
 
   /// Uploads data to this reference's location.
@@ -166,9 +180,21 @@ class ReferenceWeb extends ReferencePlatform {
 
   /// Updates the metadata on a storage object.
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) {
+    // TODO: With the current SettableMetadata, we don't know if the user is
+    // attempting to delete a property, or simply not initializing it.
+    // https://firebase.google.com/docs/storage/web/file-metadata#update_file_metadata
+    //   "Only the properties specified in the metadata are updated, all others are left unmodified."
+    // Also: "You can delete a metadata property by setting it to `null`"
+    //
+    // Are we assuming that once a metadata field is set it can't be deleted/re-set ever?
+    //
+    // (This fails test "errors if metadata update removes existing data")
     return _ref
         .updateMetadata(settableMetadataToFbSettableMetadata(metadata))
-        .then(fbFullMetadataToFullMetadata);
+        .then(fbFullMetadataToFullMetadata)
+        .catchError((e) {
+      fbFirebaseErrorToFirebaseException(e);
+    });
   }
 
   // Purposefully left unimplemented because of lack of dart:io support in web:

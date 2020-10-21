@@ -7,6 +7,7 @@ import 'package:async/async.dart';
 
 import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
+import 'package:firebase_storage_web/src/utils/errors.dart';
 
 import '../firebase_storage_web.dart';
 import 'utils/task.dart';
@@ -32,9 +33,13 @@ class TaskWeb extends TaskPlatform {
     // The mobile version of the plugin pushes a "success" snapshot to the
     // onStateChanged stream, but the Firebase JS SDK does *not*.
     // We use a StreamGroup + Future.asStream to simulate that feature:
-    final onStateChangedStream = _task.onStateChanged.map<TaskSnapshotPlatform>(
+    final onStateChangedStream = _task.onStateChanged
+        .map<TaskSnapshotPlatform>(
       (snapshot) => fbUploadTaskSnapshotToTaskSnapshot(storage, snapshot),
-    );
+    )
+        .handleError((e) {
+      fbFirebaseErrorToFirebaseException(e);
+    });
 
     final group = StreamGroup<TaskSnapshotPlatform>.broadcast();
     group.add(onStateChangedStream);
