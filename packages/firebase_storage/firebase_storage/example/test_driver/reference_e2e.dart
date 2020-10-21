@@ -258,7 +258,7 @@ void runReferenceTests() {
           expect(error.message,
               'putBlob() is not supported on native platforms. Use [put], [putFile] or [putString] instead.');
         }
-      }, skip: !kIsWeb);
+      }, skip: kIsWeb);
     });
 
     group('putFile', () {
@@ -277,7 +277,7 @@ void runReferenceTests() {
         expect(complete.metadata.size, kTestString.length);
         expect(complete.metadata.contentLanguage, 'en');
         expect(complete.metadata.customMetadata['activity'], 'test');
-      });
+      }, skip: kIsWeb);
 
       test('errors if permission denied', () async {
         try {
@@ -294,7 +294,7 @@ void runReferenceTests() {
         }
 
         fail('Should have thrown an error');
-      });
+      }, skip: kIsWeb);
     });
 
     group('putString', () {
@@ -341,7 +341,7 @@ void runReferenceTests() {
       });
 
       test('errors if property does not exist', () async {
-        Reference ref = storage.ref('/not.jpeg');
+        Reference ref = storage.ref('/iDoNotExist.jpeg');
         try {
           await ref.updateMetadata(SettableMetadata(contentType: 'unknown'));
         } on FirebaseException catch (e) {
@@ -380,7 +380,7 @@ void runReferenceTests() {
         TaskSnapshot complete = await storage.ref('/ok.jpeg').writeToFile(file);
         expect(complete.bytesTransferred, complete.totalBytes);
         expect(complete.state, TaskState.success);
-      });
+      }, skip: kIsWeb);
 
       test('errors if permission denied', () async {
         try {
@@ -397,7 +397,7 @@ void runReferenceTests() {
         }
 
         fail('Should have thrown an error');
-      });
+      }, skip: kIsWeb);
     });
 
     test('toString', () async {
