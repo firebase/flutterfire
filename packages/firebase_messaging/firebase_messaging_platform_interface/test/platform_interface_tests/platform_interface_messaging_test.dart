@@ -52,13 +52,9 @@ void main() {
           app: app,
           pluginConstants: <dynamic, dynamic>{
             'AUTO_INIT_ENABLED': true,
-            'INITIAL_NOTIFICATION': <String, dynamic>{
-              'title': 'test notification'
-            }
           });
       expect(result, isA<FirebaseMessagingPlatform>());
       expect(result.isAutoInitEnabled, isA<bool>());
-      expect(result.initialNotification, isA<Notification>());
     });
 
     test('get.instance', () {
@@ -114,11 +110,11 @@ void main() {
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test('throws if initialNotification', () {
+    test('throws if getInitialNotification', () {
       try {
-        firebaseMessagingPlatform.initialNotification;
+        firebaseMessagingPlatform.getInitialNotification();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals('initialNotification is not implemented'));
+        expect(e.message, equals('getInitialNotification() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');

@@ -38,7 +38,6 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
         .delegateFor(app: app)
         .setInitialValues(
           isAutoInitEnabled: pluginConstants['AUTO_INIT_ENABLED'],
-          initialNotification: pluginConstants['INITIAL_NOTIFICATION'],
         );
   }
 
@@ -62,18 +61,20 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  static Stream<RemoteMessage> _onMessageStream;
+  static StreamController<RemoteMessage> _onMessageStreamController;
 
   /// Returns a Stream that is called when an incoming FCM payload is received whilst
   /// the Flutter instance is in the foreground.
   ///
   /// To handle messages whilst the app is in the background or terminated,
   /// see [onBackgroundMessage].
-  static Stream<RemoteMessage> get onMessage {
-    return _onMessageStream ??= StreamController<RemoteMessage>().stream;
+  static StreamController<RemoteMessage> get onMessage {
+    return _onMessageStreamController ??=
+        StreamController<RemoteMessage>.broadcast();
   }
 
-  static Stream<RemoteMessage> _onNotificationOpenedAppStream;
+  static StreamController<RemoteMessage>
+      _onNotificationOpenedAppStreamController;
 
   /// Returns a [Stream] that is called when a user presses a notification displayed
   /// via FCM.
@@ -82,10 +83,10 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// (not terminated).
   ///
   /// If your app is opened via a notification whilst the app is terminated,
-  /// see [initialNotification].
-  static Stream<RemoteMessage> get onNotificationOpenedApp {
-    return _onNotificationOpenedAppStream ??=
-        StreamController<RemoteMessage>().stream;
+  /// see [getInitialNotification].
+  static StreamController<RemoteMessage> get onNotificationOpenedApp {
+    return _onNotificationOpenedAppStreamController ??=
+        StreamController<RemoteMessage>.broadcast();
   }
 
   static BackgroundMessageHandler _onBackgroundMessageHandler;
@@ -122,7 +123,6 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   @protected
   FirebaseMessagingPlatform setInitialValues({
     bool isAutoInitEnabled,
-    Map<String, dynamic> initialNotification,
   }) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
@@ -132,17 +132,17 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('isAutoInitEnabled is not implemented');
   }
 
-  /// If the application has been opened from a terminated state via a [Notification],
-  /// it will be returned, otherwise it will be `null`.
+  /// If the application has been opened from a terminated state via a [RemoteMessage]
+  /// (containing a displayed notification), it will be returned, otherwise it will be `null`.
   ///
   /// Once the [Notification] has been consumed, it will be removed and further
-  /// calls to [initialNotification] will be `null`.
+  /// calls to [getInitialNotification] will be `null`.
   ///
   /// This should be used to determine whether specific notification interaction
   /// should open the app with a specific purpose (e.g. opening a chat message,
   /// specific screen etc).
-  Notification get initialNotification {
-    throw UnimplementedError('initialNotification is not implemented');
+  Future<RemoteMessage> getInitialNotification() {
+    throw UnimplementedError('getInitialNotification() is not implemented');
   }
 
   /// Allows delegates to create a background message handler implementation.
@@ -250,6 +250,46 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// Enable or disable auto-initialization of Firebase Cloud Messaging.
   Future<void> setAutoInitEnabled(bool enabled) async {
     throw UnimplementedError('setAutoInitEnabled() is not implemented');
+  }
+
+  /// Sets the presentation options for iOS based notifications when recieved in
+  /// the foreground.
+  ///
+  /// By default, on iOS devices notification messages are only shown when
+  /// the application is in the background or terminated. Calling this method
+  /// updates these settings to allow a notification to trigger feedback to the
+  /// user.
+  ///
+  /// Important: The requested permissions and those set by the user take priority
+  /// over these settings.
+  ///
+  /// - [alert] Causes a notification message to display in the foreground, overlaying
+  ///   the current application (heads up mode).
+  /// - [badge] The application badge count will be updated if the application is
+  ///   in the foreground.
+  /// - [sound] The device will trigger a sound if the application is in the foreground.
+  ///
+  /// If all arguments are `false`, a notification message will not be displayed in the
+  /// foreground.
+  Future<void> setForegroundNotificationPresentationOptions({
+    bool alert,
+    bool badge,
+    bool sound,
+  }) {
+    throw UnimplementedError(
+        'setForegroundNotificationPresentationOptions() is not implemented');
+  }
+
+  /// Send a new [RemoteMessage] to the FCM server.
+  Future<void> sendMessage({
+    String senderId,
+    Map<String, String> data,
+    String collapseKey,
+    String messageId,
+    String messageType,
+    int ttl,
+  }) {
+    throw UnimplementedError('sendMessage() is not implemented');
   }
 
   /// Subscribe to topic in background.

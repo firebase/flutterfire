@@ -62,7 +62,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// To handle messages whilst the app is in the background or terminated,
   /// see [onBackgroundMessage].
   static Stream<RemoteMessage> get onMessage {
-    Stream<RemoteMessage> onMessageStream = FirebaseMessagingPlatform.onMessage;
+    Stream<RemoteMessage> onMessageStream =
+        FirebaseMessagingPlatform.onMessage.stream;
 
     StreamController<RemoteMessage> streamController;
     streamController = StreamController<RemoteMessage>.broadcast(onListen: () {
@@ -79,10 +80,10 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// (not terminated).
   ///
   /// If your app is opened via a notification whilst the app is terminated,
-  /// see [initialNotification].
+  /// see [getInitialNotification].
   static Stream<RemoteMessage> get onNotificationOpenedApp {
     Stream<RemoteMessage> onNotificationOpenedAppStream =
-        FirebaseMessagingPlatform.onNotificationOpenedApp;
+        FirebaseMessagingPlatform.onNotificationOpenedApp.stream;
 
     StreamController<RemoteMessage> streamController;
     streamController = StreamController<RemoteMessage>.broadcast(onListen: () {
@@ -113,17 +114,17 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.isAutoInitEnabled;
   }
 
-  /// If the application has been opened from a terminated state via a [Notification],
-  /// it will be returned, otherwise it will be `null`.
+  /// If the application has been opened from a terminated state via a [RemoteMessage]
+  /// (containing a displayed notification), it will be returned, otherwise it will be `null`.
   ///
   /// Once the [Notification] has been consumed, it will be removed and further
-  /// calls to [initialNotification] will be `null`.
+  /// calls to [getInitialNotification] will be `null`.
   ///
   /// This should be used to determine whether specific notification interaction
   /// should open the app with a specific purpose (e.g. opening a chat message,
   /// specific screen etc).
-  Notification get initialNotification {
-    return _delegate.initialNotification;
+  Future<RemoteMessage> getInitialNotification() {
+    return _delegate.getInitialNotification();
   }
 
   /// Removes access to the default FCM token.
@@ -258,10 +259,64 @@ class FirebaseMessaging extends FirebasePluginPlatform {
         status == AuthorizationStatus.provisional;
   }
 
+  /// Send a new [RemoteMessage] to the FCM server.
+  Future<void> sendMessage({
+    String senderId,
+    Map<String, String> data,
+    String collapseKey,
+    String messageId,
+    String messageType,
+    int ttl,
+  }) {
+    if (ttl != null) {
+      assert(ttl >= 0);
+    }
+    return _delegate.sendMessage(
+      senderId:
+          senderId ?? '${app.options.messagingSenderId}@fcm.googleapis.com',
+      data: data,
+      collapseKey: collapseKey,
+      messageId: messageId,
+      messageType: messageType,
+      ttl: ttl,
+    );
+  }
+
   /// Enable or disable auto-initialization of Firebase Cloud Messaging.
   Future<void> setAutoInitEnabled(bool enabled) async {
     assert(enabled != null);
     return _delegate.setAutoInitEnabled(enabled);
+  }
+
+  /// Sets the presentation options for iOS based notifications when recieved in
+  /// the foreground.
+  ///
+  /// By default, on iOS devices notification messages are only shown when
+  /// the application is in the background or terminated. Calling this method
+  /// updates these settings to allow a notification to trigger feedback to the
+  /// user.
+  ///
+  /// Important: The requested permissions and those set by the user take priority
+  /// over these settings.
+  ///
+  /// - [alert] Causes a notification message to display in the foreground, overlaying
+  ///   the current application (heads up mode).
+  /// - [badge] The application badge count will be updated if the application is
+  ///   in the foreground.
+  /// - [sound] The device will trigger a sound if the application is in the foreground.
+  ///
+  /// If all arguments are `false`, a notification message will not be displayed in the
+  /// foreground.
+  Future<void> setForegroundNotificationPresentationOptions({
+    bool alert,
+    bool badge,
+    bool sound,
+  }) {
+    return _delegate.setForegroundNotificationPresentationOptions(
+      alert: alert ?? false,
+      badge: badge ?? false,
+      sound: sound ?? false,
+    );
   }
 
   /// Subscribe to topic in background.

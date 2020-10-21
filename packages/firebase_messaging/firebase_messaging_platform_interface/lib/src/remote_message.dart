@@ -20,6 +20,31 @@ class RemoteMessage {
       this.threadId,
       this.ttl});
 
+  factory RemoteMessage.fromMap(Map<String, dynamic> map) {
+    return RemoteMessage(
+      senderId: map['senderId'],
+      category: map['category'],
+      collapseKey: map['collapseKey'],
+      contentAvailable: map['contentAvailable'] ?? false,
+      data: map['data'] == null
+          ? <String, dynamic>{}
+          : Map<String, dynamic>.from(map['data']),
+      from: map['from'],
+      messageId: map['messageId'],
+      mutableContent: map['mutableContent'] ?? false,
+      notification: map['notification'] == null
+          ? null
+          : Notification.fromMap(
+              Map<String, dynamic>.from(map['notification'])),
+      sentTime: map['sentTime'] == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(map['sentTime']),
+      threadId: map['threadId'],
+      ttl: map['ttl'],
+    );
+  }
+
+  /// The ID of the upstream sender location.
   final String senderId;
 
   /// The iOS category this notification is assigned to.

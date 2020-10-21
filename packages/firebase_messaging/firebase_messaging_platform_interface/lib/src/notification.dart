@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
+import 'utils.dart';
 
 class Notification {
   const Notification(
@@ -15,8 +16,59 @@ class Notification {
       this.bodyLocArgs,
       this.bodyLocKey});
 
+  factory Notification.fromMap(Map<String, dynamic> map) {
+    AndroidNotification _android;
+    AppleNotification _apple;
+
+    if (map['android'] != null) {
+      _android = AndroidNotification(
+        channelId: map['android']['channelId'],
+        clickAction: map['android']['clickAction'],
+        color: map['android']['color'],
+        count: map['android']['count'],
+        imageUrl: map['android']['imageUrl'],
+        link: map['android']['link'],
+        priority:
+            convertToAndroidNotificationPriority(map['android']['priority']),
+        smallIcon: map['android']['smallIcon'],
+        sound: map['android']['sound'],
+        ticker: map['android']['ticker'],
+        visibility: convertToAndroidNotificationVisibility(
+            map['android']['visibility']),
+      );
+    }
+
+    if (map['apple'] != null) {
+      _apple = AppleNotification(
+          badge: map['apple']['badge'],
+          sound: map['apple']['sound'],
+          subtitle: map['apple']['subtitle'],
+          subtitleLocArgs: map['apple']['subtitleLocArgs'] ?? [],
+          subtitleLocKey: map['apple']['subtitleLocKey'],
+          criticalSound: map['apple']['criticalSound'] == null
+              ? null
+              : AppleNotificationCriticalSound(
+                  critical: map['apple']['criticalSound']['critical'],
+                  name: map['apple']['criticalSound']['name'],
+                  volume: map['apple']['criticalSound']['volume']));
+    }
+
+    return Notification(
+      title: map['title'],
+      titleLocArgs: map['titleLocArgs'] ?? [],
+      titleLocKey: map['titleLocKey'],
+      body: map['body'],
+      bodyLocArgs: map['bodyLocArgs'] ?? [],
+      bodyLocKey: map['bodyLocKey'],
+      android: _android,
+      apple: _apple,
+    );
+  }
+
+  /// Android specific notification properties.
   final AndroidNotification android;
 
+  /// Apple specific notification properties.
   final AppleNotification apple;
 
   /// The notification title.

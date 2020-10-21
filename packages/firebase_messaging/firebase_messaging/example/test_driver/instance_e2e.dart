@@ -75,7 +75,7 @@ void runInstanceTests() {
 
     group('initialNotification', () {
       test('returns null when no initial notification', () async {
-        expect(messaging.initialNotification, null);
+        expect(await messaging.getInitialNotification(), null);
       });
     });
 

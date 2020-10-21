@@ -52,9 +52,8 @@ setupFirebaseMessagingMocks() {
       .thenReturn(kMockMessagingPlatform);
   // ignore: invalid_use_of_protected_member
   when(kMockMessagingPlatform.setInitialValues(
-          isAutoInitEnabled: anyNamed("isAutoInitEnabled"),
-          initialNotification: anyNamed("initialNotification")))
-      .thenReturn(kMockMessagingPlatform);
+    isAutoInitEnabled: anyNamed("isAutoInitEnabled"),
+  )).thenReturn(kMockMessagingPlatform);
 }
 
 // Platform Interface Mock Classes
@@ -70,8 +69,4 @@ class MockFirebaseMessaging extends Mock
 
 class TestFirebaseMessagingPlatform extends FirebaseMessagingPlatform {
   TestFirebaseMessagingPlatform() : super();
-
-//   // FirebaseMessagingPlatform delegateFor({FirebaseApp app}) {
-//   //   return this;
-//   // }
 }

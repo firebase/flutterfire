@@ -81,19 +81,18 @@ void main() {
     });
 
     group('initialNotification', () {
-      test('verify delegate method is called', () {
-        const notificationTitle = 'test-notification';
-        Notification notification = Notification(title: notificationTitle);
-        when(kMockMessagingPlatform.initialNotification)
-            .thenReturn(notification);
+      test('verify delegate method is called', () async {
+        const senderId = 'test-notification';
+        RemoteMessage message = RemoteMessage(senderId: senderId);
+        when(kMockMessagingPlatform.getInitialNotification())
+            .thenReturn(Future.value(message));
 
-        // verify isAutoInitEnabled returns true
-        final result = messaging.initialNotification;
+        final result = await messaging.getInitialNotification();
 
-        expect(result, isA<Notification>());
-        expect(result.title, notificationTitle);
+        expect(result, isA<RemoteMessage>());
+        expect(result.senderId, senderId);
 
-        verify(kMockMessagingPlatform.initialNotification);
+        verify(kMockMessagingPlatform.getInitialNotification());
       });
     });
 
