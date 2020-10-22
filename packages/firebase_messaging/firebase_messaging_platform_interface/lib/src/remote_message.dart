@@ -4,7 +4,9 @@
 
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
+/// A class representing a message sent from Firebase Cloud Messaging.
 class RemoteMessage {
+  // ignore: public_member_api_docs
   const RemoteMessage(
       {this.senderId,
       this.category,
@@ -20,6 +22,7 @@ class RemoteMessage {
       this.threadId,
       this.ttl});
 
+  /// Constructs a [RemoteMessage] from a raw Map.
   factory RemoteMessage.fromMap(Map<String, dynamic> map) {
     return RemoteMessage(
       senderId: map['senderId'],
@@ -72,7 +75,7 @@ class RemoteMessage {
   /// allowing the app to modify the notification via app extensions.
   final bool mutableContent;
 
-  /// Additional Notification data sent with the message
+  /// Additional Notification data sent with the message.
   final RemoteNotification notification;
 
   /// The time the message was sent, represented as a [DateTime].
