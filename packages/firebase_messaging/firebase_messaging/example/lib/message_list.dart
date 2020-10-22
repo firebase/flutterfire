@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'message.dart';
 
+/// Listens for incoming foreground messages and displays them in a list.
 class MessageList extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _MessageList();
@@ -13,6 +14,7 @@ class _MessageList extends State<MessageList> {
 
   @override
   void initState() {
+    super.initState();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       setState(() {
         _messages = [..._messages, message];
@@ -35,7 +37,7 @@ class _MessageList extends State<MessageList> {
           return ListTile(
             title: Text(message.messageId),
             onTap: () => Navigator.pushNamed(context, '/message',
-                arguments: MessageArguments(message)),
+                arguments: MessageArguments(message, false)),
           );
         });
   }

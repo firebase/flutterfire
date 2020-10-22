@@ -1,12 +1,22 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
+/// Message route arguments.
 class MessageArguments {
+  /// The RemoteMessage
   final RemoteMessage message;
-  MessageArguments(this.message);
+
+  /// Whether this message caused the application to open.
+  final bool openedApplication;
+
+  // ignore: public_member_api_docs
+  MessageArguments(this.message, this.openedApplication)
+      : assert(message != null);
 }
 
+/// Displays information about a [RemoteMessage].
 class Message extends StatelessWidget {
+  /// A single data row.
   Widget row(String title, String value) {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
@@ -30,6 +40,7 @@ class Message extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(children: [
+          row("Triggered application open", args.openedApplication.toString()),
           row("Message ID", message.messageId),
           row("Sender ID", message.senderId),
           row("Category", message.category),

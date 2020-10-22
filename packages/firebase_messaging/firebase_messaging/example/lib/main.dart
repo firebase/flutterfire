@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'message.dart';
-import 'initial_notification.dart';
 
 import 'token_monitor.dart';
 import 'permissions.dart';
@@ -33,40 +32,22 @@ void main() async {
   // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
 
-  // Get a message which caused the application to open via user interaction (may be null)
-  // RemoteMessage initialMessage =
-  //     await FirebaseMessaging.instance.getInitialMessage();
-
-  // await FirebaseMessaging.instance.getInitialMessage();
-
-  // Pass the message to the application
-  runApp(MessagingExampleApp(null));
+  runApp(MessagingExampleApp());
 }
 
+/// Entry point for the example application.
 class MessagingExampleApp extends StatelessWidget {
-  MessagingExampleApp(this._initialMessage);
-
-  final RemoteMessage _initialMessage;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Messaging Example App',
       theme: ThemeData.dark(),
-      initialRoute: _initialMessage == null ? '/' : '/initial-notification',
       routes: {
         '/': (context) => Application(),
         '/message': (context) => Message(),
-        '/initial-notification': (context) =>
-            InitialNotification(_initialMessage?.notification),
       },
     );
   }
-}
-
-class Application extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _Application();
 }
 
 // Crude counter to make messages unique
@@ -78,14 +59,38 @@ String constructFCMPayload(String token) {
   return jsonEncode({
     'token': token,
     'data': {
-      'via': 'FlutterFire Cloud Messaging',
+      'via': 'FlutterFire Cloud Messaging!!!',
       'count': _messageCount.toString(),
     },
   });
 }
 
+/// Renders the example application.
+class Application extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _Application();
+}
+
 class _Application extends State<Application> {
   String _token;
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage message) {
+      if (message != null) {
+        Navigator.pushNamed(context, '/message',
+            arguments: MessageArguments(message, true));
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      Navigator.pushNamed(context, '/message',
+          arguments: MessageArguments(message, true));
+    });
+  }
 
   Future<void> sendPushMessage(BuildContext) async {
     if (_token == null) {
@@ -136,10 +141,12 @@ class _Application extends State<Application> {
   }
 }
 
+/// UI Widget for displaying metadata.
 class MetaCard extends StatelessWidget {
   final String _title;
   final Widget _children;
 
+  // ignore: public_member_api_docs
   MetaCard(this._title, this._children);
 
   @override
