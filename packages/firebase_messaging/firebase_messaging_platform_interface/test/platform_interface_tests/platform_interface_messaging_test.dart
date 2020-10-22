@@ -114,7 +114,8 @@ void main() {
       try {
         firebaseMessagingPlatform.getInitialNotification();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals('getInitialNotification() is not implemented'));
+        expect(
+            e.message, equals('getInitialNotification() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');

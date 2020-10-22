@@ -104,8 +104,7 @@ void main() {
       test('when isAutoInitEnabled is false', () {
         final testMessaging =
             TestMethodChannelFirebaseMessaging(Firebase.app());
-        final result = testMessaging.setInitialValues(
-            isAutoInitEnabled: false);
+        final result = testMessaging.setInitialValues(isAutoInitEnabled: false);
         expect(result, isA<FirebaseMessagingPlatform>());
         expect(result.isAutoInitEnabled, isFalse);
       });
