@@ -127,11 +127,14 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.getInitialNotification();
   }
 
-  /// Removes access to the default FCM token.
+  /// Removes access to an FCM token previously authorized with optional [senderId].
   ///
   /// Messages sent by the server to this token will fail.
-  Future<void> deleteToken() {
-    return _delegate.deleteToken();
+  Future<void> deleteToken({
+    String senderId,
+  }) {
+    return _delegate.deleteToken(
+        senderId: senderId ?? app.options.messagingSenderId);
   }
 
   /// On iOS, it is possible to get the users APNs token.
@@ -144,12 +147,14 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.getAPNSToken();
   }
 
-  /// Returns the default FCM token for this device.
+  /// Returns the default FCM token for this device and optionally a [senderId].
   Future<String> getToken({
+    String senderId,
     String vapidKey,
   }) {
     return _delegate.getToken(
       vapidKey: vapidKey,
+      senderId: senderId ?? app.options.messagingSenderId,
     );
   }
 
@@ -288,13 +293,13 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.setAutoInitEnabled(enabled);
   }
 
-  /// Sets the presentation options for iOS based notifications when recieved in
+  /// Sets the presentation options for Apple notifications when received in
   /// the foreground.
   ///
-  /// By default, on iOS devices notification messages are only shown when
+  /// By default, on Apple devices notification messages are only shown when
   /// the application is in the background or terminated. Calling this method
-  /// updates these settings to allow a notification to trigger feedback to the
-  /// user.
+  /// updates these options to allow customizing notification presentation behaviour whilst
+  /// the application is in the foreground.
   ///
   /// Important: The requested permissions and those set by the user take priority
   /// over these settings.
@@ -305,17 +310,17 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///   in the foreground.
   /// - [sound] The device will trigger a sound if the application is in the foreground.
   ///
-  /// If all arguments are `false`, a notification message will not be displayed in the
-  /// foreground.
+  /// If all arguments are `false` or are omitted, a notification will not be displayed in the
+  /// foreground, however you will still receive events relating to the notification.
   Future<void> setForegroundNotificationPresentationOptions({
-    bool alert,
-    bool badge,
-    bool sound,
+    bool alert = false,
+    bool badge = false,
+    bool sound = false,
   }) {
     return _delegate.setForegroundNotificationPresentationOptions(
-      alert: alert ?? false,
-      badge: badge ?? false,
-      sound: sound ?? false,
+      alert: alert,
+      badge: badge,
+      sound: sound,
     );
   }
 
