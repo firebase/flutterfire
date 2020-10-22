@@ -27,8 +27,8 @@ class RemoteMessage {
       collapseKey: map['collapseKey'],
       contentAvailable: map['contentAvailable'] ?? false,
       data: map['data'] == null
-          ? <String, dynamic>{}
-          : Map<String, dynamic>.from(map['data']),
+          ? <String, String>{}
+          : Map<String, String>.from(map['data']),
       from: map['from'],
       messageId: map['messageId'],
       mutableContent: map['mutableContent'] ?? false,

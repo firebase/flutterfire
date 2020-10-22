@@ -3,18 +3,27 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
+import 'message.dart';
 import 'initial_notification.dart';
+
 import 'token_monitor.dart';
 import 'permissions.dart';
 import 'message_list.dart';
 
-BackgroundMessageHandler backgroundMessageHandler = (RemoteMessage message) {
-  print(message);
+/// Define a top-level named hadler which background/terminated messages will
+/// call.
+///
+/// To verify things are working, check out the native platform logs.
+BackgroundMessageHandler backgroundMessageHandler =
+    (RemoteMessage message) async {
+  return "Handling background message ${message.messageId}";
 };
 
 void main() async {
@@ -25,11 +34,13 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
 
   // Get a message which caused the application to open via user interaction (may be null)
-  RemoteMessage initialNotification = null;
+  // RemoteMessage initialMessage =
+  //     await FirebaseMessaging.instance.getInitialMessage();
+
   // await FirebaseMessaging.instance.getInitialMessage();
 
   // Pass the message to the application
-  runApp(MessagingExampleApp(initialNotification));
+  runApp(MessagingExampleApp(null));
 }
 
 class MessagingExampleApp extends StatelessWidget {
@@ -45,6 +56,7 @@ class MessagingExampleApp extends StatelessWidget {
       initialRoute: _initialMessage == null ? '/' : '/initial-notification',
       routes: {
         '/': (context) => Application(),
+        '/message': (context) => Message(),
         '/initial-notification': (context) =>
             InitialNotification(_initialMessage?.notification),
       },
@@ -57,22 +69,67 @@ class Application extends StatefulWidget {
   State<StatefulWidget> createState() => _Application();
 }
 
+// Crude counter to make messages unique
+int _messageCount = 0;
+
+/// The API endpoint here accepts a raw FCM payload for demonstration purposes.
+String constructFCMPayload(String token) {
+  _messageCount++;
+  return jsonEncode({
+    'token': token,
+    'data': {
+      'via': 'FlutterFire Cloud Messaging',
+      'count': _messageCount.toString(),
+    },
+  });
+}
+
 class _Application extends State<Application> {
+  String _token;
+
+  Future<void> sendPushMessage(BuildContext) async {
+    if (_token == null) {
+      print('Unable to send FCM message, no token exists.');
+      return;
+    }
+
+    try {
+      await http.post(
+        'https://api.rnfirebase.io/messaging/send',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: constructFCMPayload(_token),
+      );
+      print('FCM request for device sent!');
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Cloud Messaging"),
       ),
+      floatingActionButton: Builder(
+        builder: (context) => FloatingActionButton(
+          onPressed: () => sendPushMessage(context),
+          child: Icon(Icons.send),
+          backgroundColor: Colors.white,
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(children: [
           MetaCard("Permissions", Permissions()),
-          MetaCard(
-              "FCM Token",
-              TokenMonitor((token) => token == null
-                  ? CircularProgressIndicator()
-                  : Text(token, style: TextStyle(fontSize: 12)))),
-          MetaCard("Message List", MessageList()),
+          MetaCard("FCM Token", TokenMonitor((token) {
+            _token = token;
+            return token == null
+                ? CircularProgressIndicator()
+                : Text(token, style: TextStyle(fontSize: 12));
+          })),
+          MetaCard("Message Stream", MessageList()),
         ]),
       ),
     );
@@ -88,7 +145,6 @@ class MetaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        
         width: double.infinity,
         margin: EdgeInsets.only(left: 8, right: 8, top: 8),
         child: Card(
@@ -102,264 +158,3 @@ class MetaCard extends StatelessWidget {
                 ]))));
   }
 }
-
-// final Map<String, Item> _items = <String, Item>{};
-
-// Item _itemForMessage(Map<String, dynamic> message) {
-//   final dynamic data = message['data'] ?? message;
-//   final String itemId = data['id'];
-//   final Item item = _items.putIfAbsent(itemId, () => Item(itemId: itemId))
-//     ..status = data['status'];
-//   return item;
-// }
-
-// class Item {
-//   Item({this.itemId});
-
-//   final String itemId;
-
-//   StreamController<Item> _controller = StreamController<Item>.broadcast();
-
-//   Stream<Item> get onChanged => _controller.stream;
-
-//   String _status;
-
-//   String get status => _status;
-
-//   set status(String value) {
-//     _status = value;
-//     _controller.add(this);
-//   }
-
-//   static final Map<String, Route<void>> routes = <String, Route<void>>{};
-
-//   Route<void> get route {
-//     final String routeName = '/detail/$itemId';
-//     return routes.putIfAbsent(
-//       routeName,
-//       () => MaterialPageRoute<void>(
-//         settings: RouteSettings(name: routeName),
-//         builder: (BuildContext context) => DetailPage(itemId),
-//       ),
-//     );
-//   }
-// }
-
-// class DetailPage extends StatefulWidget {
-//   DetailPage(this.itemId);
-
-//   final String itemId;
-
-//   @override
-//   _DetailPageState createState() => _DetailPageState();
-// }
-
-// class _DetailPageState extends State<DetailPage> {
-//   Item _item;
-//   StreamSubscription<Item> _subscription;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _item = _items[widget.itemId];
-//     _subscription = _item.onChanged.listen((Item item) {
-//       if (!mounted) {
-//         _subscription.cancel();
-//       } else {
-//         setState(() {
-//           _item = item;
-//         });
-//       }
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("Item ${_item.itemId}"),
-//       ),
-//       body: Material(
-//         child: Center(child: Text("Item status: ${_item.status}")),
-//       ),
-//     );
-//   }
-// }
-
-// class PushMessagingExample extends StatefulWidget {
-//   @override
-//   _PushMessagingExampleState createState() => _PushMessagingExampleState();
-// }
-
-// class _PushMessagingExampleState extends State<PushMessagingExample> {
-//   String _homeScreenText = "Waiting for token...";
-//   bool _topicButtonsDisabled = false;
-
-//   final TextEditingController _topicController =
-//       TextEditingController(text: 'topic');
-
-//   Widget _buildDialog(BuildContext context, Item item) {
-//     return AlertDialog(
-//       content: Text("Item ${item.itemId} has been updated"),
-//       actions: <Widget>[
-//         FlatButton(
-//           child: const Text('CLOSE'),
-//           onPressed: () {
-//             Navigator.pop(context, false);
-//           },
-//         ),
-//         FlatButton(
-//           child: const Text('SHOW'),
-//           onPressed: () {
-//             Navigator.pop(context, true);
-//           },
-//         ),
-//       ],
-//     );
-//   }
-
-//   void _showItemDialog(Map<String, dynamic> message) {
-//     showDialog<bool>(
-//       context: context,
-//       builder: (_) => _buildDialog(context, _itemForMessage(message)),
-//     ).then((bool shouldNavigate) {
-//       if (shouldNavigate == true) {
-//         _navigateToItemDetail(message);
-//       }
-//     });
-//   }
-
-//   void _navigateToItemDetail(Map<String, dynamic> message) {
-//     final Item item = _itemForMessage(message);
-//     // Clear away dialogs
-//     Navigator.popUntil(context, (Route<dynamic> route) => route is PageRoute);
-//     if (!item.route.isCurrent) {
-//       Navigator.push(context, item.route);
-//     }
-//   }
-
-//   // Define an async function to initialize FlutterFire
-//   Future<void> _initializeFlutterFire() async {
-//     await Firebase.initializeApp();
-//     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-//       print("onMessage: $message");
-//       // _showItemDialog(message);
-//     });
-//     FirebaseMessaging.onNotificationOpenedApp.listen((RemoteMessage message) {
-//       print("onNotificationOpenedApp: $message");
-//       // _navigateToItemDetail(message);
-//     });
-//     await FirebaseMessaging.instance.requestPermission(
-//         sound: true, badge: true, alert: true, provisional: true);
-//     await FirebaseMessaging.instance.getToken().then((String token) {
-//       assert(token != null);
-//       setState(() {
-//         _homeScreenText = "Push Messaging token: $token";
-//       });
-//       print(_homeScreenText);
-//     });
-//     // TODO should be async method
-//     if (FirebaseMessaging.instance.initialNotification != null) {
-//       print("initialNotification: _firebaseMessaging.initialNotification");
-//       // _navigateToItemDetail(FirebaseMessaging.instance.initialNotification);
-//     }
-//   }
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _initializeFlutterFire();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         appBar: AppBar(
-//           title: const Text('Cloud Messaging'),
-//         ),
-//         // For testing -- simulate a message being received
-//         floatingActionButton: FloatingActionButton(
-//           onPressed: () async {
-//             var permissions =
-//                 await FirebaseMessaging.instance.requestPermission();
-//             print('-----PERMISSIONS------');
-//             print(permissions.authorizationStatus);
-//             print(permissions.alert);
-//             print(permissions.sound);
-//             print(permissions.badge);
-//             print('----------------------');
-//             print('-----APNS------');
-//             var apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-//             print(apnsToken);
-//             print('---------------');
-//             print('-----FCM------');
-//             var fcmToken = await FirebaseMessaging.instance.getToken();
-//             print(fcmToken);
-//             print('--------------');
-//             // return _showItemDialog(<String, dynamic>{
-//             //   "data": <String, String>{
-//             //     "id": "2",
-//             //     "status": "out of stock",
-//             //   },
-//             // });
-//           },
-//           tooltip: 'Simulate Message',
-//           child: const Icon(Icons.message),
-//         ),
-//         body: Material(
-//           child: Column(
-//             children: <Widget>[
-//               Center(
-//                 child: Text(_homeScreenText),
-//               ),
-//               Row(children: <Widget>[
-//                 Expanded(
-//                   child: TextField(
-//                       controller: _topicController,
-//                       onChanged: (String v) {
-//                         setState(() {
-//                           _topicButtonsDisabled = v.isEmpty;
-//                         });
-//                       }),
-//                 ),
-//                 FlatButton(
-//                   child: const Text("subscribe"),
-//                   onPressed: _topicButtonsDisabled
-//                       ? null
-//                       : () {
-//                           FirebaseMessaging.instance
-//                               .subscribeToTopic(_topicController.text);
-//                           _clearTopicText();
-//                         },
-//                 ),
-//                 FlatButton(
-//                   child: const Text("unsubscribe"),
-//                   onPressed: _topicButtonsDisabled
-//                       ? null
-//                       : () {
-//                           FirebaseMessaging.instance
-//                               .unsubscribeFromTopic(_topicController.text);
-//                           _clearTopicText();
-//                         },
-//                 ),
-//               ])
-//             ],
-//           ),
-//         ));
-//   }
-
-//   void _clearTopicText() {
-//     setState(() {
-//       _topicController.text = "";
-//       _topicButtonsDisabled = true;
-//     });
-//   }
-// }
-
-// void main() {
-//   runApp(
-//     MaterialApp(
-//       home: PushMessagingExample(),
-//     ),
-//   );
-// }

@@ -8,6 +8,7 @@ dependencies:
     path: ../
   firebase_core:
     path: ../../../firebase_core/firebase_core
+  http: 0.12.2
 
 dependency_overrides:
   firebase_core:

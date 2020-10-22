@@ -1,6 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
+import 'message.dart';
+
 class MessageList extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _MessageList();
@@ -31,8 +33,9 @@ class _MessageList extends State<MessageList> {
           RemoteMessage message = _messages[index];
 
           return ListTile(
-            title: Text(message?.notification?.title ?? message.messageId),
-            onTap: () => {},
+            title: Text(message.messageId),
+            onTap: () => Navigator.pushNamed(context, '/message',
+                arguments: MessageArguments(message)),
           );
         });
   }

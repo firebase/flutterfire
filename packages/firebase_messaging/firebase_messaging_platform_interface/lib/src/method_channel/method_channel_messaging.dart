@@ -27,6 +27,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           _tokenStreamController.add(call.arguments as String);
           break;
         case "Messaging#onMessage":
+          print(call.arguments);
           Map<String, dynamic> messageMap =
               Map<String, dynamic>.from(call.arguments);
           FirebaseMessagingPlatform.onMessage
