@@ -84,15 +84,15 @@ void main() {
       test('verify delegate method is called', () async {
         const senderId = 'test-notification';
         RemoteMessage message = RemoteMessage(senderId: senderId);
-        when(kMockMessagingPlatform.getInitialNotification())
+        when(kMockMessagingPlatform.getInitialMessage())
             .thenReturn(Future.value(message));
 
-        final result = await messaging.getInitialNotification();
+        final result = await messaging.getInitialMessage();
 
         expect(result, isA<RemoteMessage>());
         expect(result.senderId, senderId);
 
-        verify(kMockMessagingPlatform.getInitialNotification());
+        verify(kMockMessagingPlatform.getInitialMessage());
       });
     });
 

@@ -73,9 +73,9 @@ void runInstanceTests() {
       }, skip: !Platform.isIOS);
     });
 
-    group('initialNotification', () {
-      test('returns null when no initial notification', () async {
-        expect(await messaging.getInitialNotification(), null);
+    group('getInitialMessage', () {
+      test('returns null when no initial message', () async {
+        expect(await messaging.getInitialMessage(), null);
       });
     });
 

@@ -27,14 +27,14 @@ class RemoteMessage {
       collapseKey: map['collapseKey'],
       contentAvailable: map['contentAvailable'] ?? false,
       data: map['data'] == null
-          ? <String, dynamic>{}
-          : Map<String, dynamic>.from(map['data']),
+          ? <String, String>{}
+          : Map<String, String>.from(map['data']),
       from: map['from'],
       messageId: map['messageId'],
       mutableContent: map['mutableContent'] ?? false,
       notification: map['notification'] == null
           ? null
-          : Notification.fromMap(
+          : RemoteNotification.fromMap(
               Map<String, dynamic>.from(map['notification'])),
       sentTime: map['sentTime'] == null
           ? null
@@ -73,7 +73,7 @@ class RemoteMessage {
   final bool mutableContent;
 
   /// Additional Notification data sent with the message
-  final Notification notification;
+  final RemoteNotification notification;
 
   /// The time the message was sent, represented as a [DateTime].
   final DateTime sentTime;

@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+/// Requests & displays the current user permissions for this device.
 class Permissions extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _Permissions();
@@ -96,7 +97,6 @@ const settingsMap = {
 
 /// Maps a [AppleShowPreviewSetting] to a string value.
 const previewMap = {
-  
   AppleShowPreviewSetting.always: 'Always',
   AppleShowPreviewSetting.never: 'Always',
   AppleShowPreviewSetting.notSupported: 'Not Supported',

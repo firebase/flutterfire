@@ -73,21 +73,21 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return streamController.stream;
   }
 
-  /// Returns a [Stream] that is called when a user presses a notification displayed
+  /// Returns a [Stream] that is called when a user presses a notification message displayed
   /// via FCM.
   ///
   /// A Stream event will be sent if the app has opened from a background state
   /// (not terminated).
   ///
   /// If your app is opened via a notification whilst the app is terminated,
-  /// see [getInitialNotification].
-  static Stream<RemoteMessage> get onNotificationOpenedApp {
-    Stream<RemoteMessage> onNotificationOpenedAppStream =
-        FirebaseMessagingPlatform.onNotificationOpenedApp.stream;
+  /// see [getInitialMessage].
+  static Stream<RemoteMessage> get onMessageOpenedApp {
+    Stream<RemoteMessage> onMessageOpenedAppStream =
+        FirebaseMessagingPlatform.onMessageOpenedApp.stream;
 
     StreamController<RemoteMessage> streamController;
     streamController = StreamController<RemoteMessage>.broadcast(onListen: () {
-      onNotificationOpenedAppStream.pipe(streamController);
+      onMessageOpenedAppStream.pipe(streamController);
     });
 
     return streamController.stream;
@@ -115,16 +115,16 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   }
 
   /// If the application has been opened from a terminated state via a [RemoteMessage]
-  /// (containing a displayed notification), it will be returned, otherwise it will be `null`.
+  /// (containing a [Notification]), it will be returned, otherwise it will be `null`.
   ///
-  /// Once the [Notification] has been consumed, it will be removed and further
-  /// calls to [getInitialNotification] will be `null`.
+  /// Once the [RemoteMesage] has been consumed, it will be removed and further
+  /// calls to [getInitialMessage] will be `null`.
   ///
   /// This should be used to determine whether specific notification interaction
   /// should open the app with a specific purpose (e.g. opening a chat message,
   /// specific screen etc).
-  Future<RemoteMessage> getInitialNotification() {
-    return _delegate.getInitialNotification();
+  Future<RemoteMessage> getInitialMessage() {
+    return _delegate.getInitialMessage();
   }
 
   /// Removes access to an FCM token previously authorized with optional [senderId].
