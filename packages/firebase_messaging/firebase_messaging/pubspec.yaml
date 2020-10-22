@@ -32,6 +32,7 @@ dev_dependencies:
   test: any
   mockito: ^4.1.1
   plugin_platform_interface: ^1.0.2
+  async: ^2.4.2 
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
