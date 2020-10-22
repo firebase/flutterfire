@@ -104,7 +104,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
 
-  if ([@"Messaging#getInitialNotification" isEqualToString:call.method]) {
+  if ([@"Messaging#getInitialMessage" isEqualToString:call.method]) {
     methodCallResult.success([self copyInitialNotification]);
   } else if ([@"Messaging#deleteToken" isEqualToString:call.method]) {
     [self messagingDeleteToken:call.arguments withMethodCallResult:methodCallResult];
@@ -310,7 +310,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   if (remoteNotification[@"gcm.message_id"]) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
-    [_channel invokeMethod:@"Messaging#onNotificationOpenedApp" arguments:notificationDict];
+    [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
     @synchronized(self) {
       _initialNotification = notificationDict;
     }
