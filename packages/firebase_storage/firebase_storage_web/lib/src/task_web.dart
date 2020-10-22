@@ -26,22 +26,33 @@ class TaskWeb extends TaskPlatform {
       : _storage = storage,
         _task = task,
         super() {
-    _onComplete = _task.future.then<TaskSnapshotPlatform>(
+    // This future represents the internal state of the Task.
+    // It not only signals when the Task is done, but also when it fails.
+    // The frontend Task uses _delegate.onComplete when implementing the
+    // Future interface, so we must ensure we reject with the correct
+    // type of Exception.
+    _onComplete = _task.future
+        .then<TaskSnapshotPlatform>(
       (snapshot) => fbUploadTaskSnapshotToTaskSnapshot(storage, snapshot),
-    );
+    )
+        .catchError((e) {
+      fbFirebaseErrorToFirebaseException(e);
+    });
 
     // The mobile version of the plugin pushes a "success" snapshot to the
     // onStateChanged stream, but the Firebase JS SDK does *not*.
     // We use a StreamGroup + Future.asStream to simulate that feature:
+    final group = StreamGroup<TaskSnapshotPlatform>.broadcast();
+
+    // This stream converts the UploadTask Snapshots from JS to the plugins'
+    // It can also throw a FirebaseError internally, so we handle it.
     final onStateChangedStream = _task.onStateChanged
         .map<TaskSnapshotPlatform>(
-      (snapshot) => fbUploadTaskSnapshotToTaskSnapshot(storage, snapshot),
-    )
+            (snapshot) => fbUploadTaskSnapshotToTaskSnapshot(storage, snapshot))
         .handleError((e) {
       fbFirebaseErrorToFirebaseException(e);
     });
 
-    final group = StreamGroup<TaskSnapshotPlatform>.broadcast();
     group.add(onStateChangedStream);
     group.add(_onComplete.asStream());
 
