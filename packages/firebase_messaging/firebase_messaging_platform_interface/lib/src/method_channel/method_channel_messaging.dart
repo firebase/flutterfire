@@ -120,11 +120,12 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<void> deleteToken() async {
+  Future<void> deleteToken({
+    String senderId,
+  }) async {
     try {
-      await channel.invokeMethod<String>('Messaging#deleteToken', {
-        'appName': app.name,
-      });
+      await channel.invokeMethod<String>(
+          'Messaging#deleteToken', {'appName': app.name, 'senderId': senderId});
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -147,11 +148,13 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<String> getToken({
+    String senderId,
     String vapidKey,
   }) async {
     try {
       return await channel.invokeMethod<String>('Messaging#getToken', {
         'appName': app.name,
+        'senderId': senderId,
       });
     } catch (e) {
       throw convertPlatformException(e);
@@ -235,7 +238,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     bool badge,
     bool sound,
   }) async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
+    if (defaultTargetPlatform != TargetPlatform.iOS &&
+        defaultTargetPlatform != TargetPlatform.macOS) {
       return;
     }
 

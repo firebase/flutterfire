@@ -13,6 +13,8 @@ NSString *const kFLTFirebaseMessagingChannelName = @"plugins.flutter.io/firebase
 NSString *const kMessagingArgumentCode = @"code";
 NSString *const kMessagingArgumentMessage = @"message";
 NSString *const kMessagingArgumentAdditionalData = @"additionalData";
+NSString *const kMessagingPresentationOptionsUserDefaults =
+    @"flutter_firebase_messaging_presentation_options";
 
 @implementation FLTFirebaseMessagingPlugin {
   FlutterMethodChannel *_channel;
@@ -102,13 +104,18 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
 
-  if ([@"Messaging#getInitialNotification" isEqualToString:call.method]) {
+  if ([@"Messaging#getInitialMessage" isEqualToString:call.method]) {
     methodCallResult.success([self copyInitialNotification]);
   } else if ([@"Messaging#deleteToken" isEqualToString:call.method]) {
     [self messagingDeleteToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getAPNSToken" isEqualToString:call.method]) {
     [self messagingGetAPNSToken:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Messaging#getToken" isEqualToString:call.method]) {
+  } else if ([@"Messaging#setForegroundNotificationPresentationOptions"
+                 isEqualToString:call.method]) {
+    [self messagingSetForegroundNotificationPresentationOptions:call.arguments
+                                           withMethodCallResult:methodCallResult];
+  }
+  if ([@"Messaging#getToken" isEqualToString:call.method]) {
     [self messagingGetToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getNotificationSettings" isEqualToString:call.method]) {
     if (@available(iOS 10, macOS 10.14, *)) {
@@ -137,6 +144,24 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
+}
+- (void)messagingSetForegroundNotificationPresentationOptions:(id)arguments
+                                         withMethodCallResult:
+                                             (FLTFirebaseMethodCallResult *)result {
+  NSMutableDictionary *persistedOptions = [NSMutableDictionary dictionary];
+  if ([arguments[@"alert"] isEqual:@(YES)]) {
+    persistedOptions[@"alert"] = @YES;
+  }
+  if ([arguments[@"badge"] isEqual:@(YES)]) {
+    persistedOptions[@"badge"] = @YES;
+  }
+  if ([arguments[@"sound"] isEqual:@(YES)]) {
+    persistedOptions[@"sound"] = @YES;
+  }
+
+  [[NSUserDefaults standardUserDefaults] setObject:persistedOptions
+                                            forKey:kMessagingPresentationOptionsUserDefaults];
+  result.success(nil);
 }
 
 #pragma mark - Firebase Messaging Delegate
@@ -257,7 +282,21 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
                                         willPresentNotification:notification
                                           withCompletionHandler:completionHandler];
   } else {
-    completionHandler(UNNotificationPresentationOptionNone);
+    UNNotificationPresentationOptions presentationOptions = UNNotificationPresentationOptionNone;
+    NSDictionary *persistedOptions = [[NSUserDefaults standardUserDefaults]
+        dictionaryForKey:kMessagingPresentationOptionsUserDefaults];
+    if (persistedOptions != nil) {
+      if ([persistedOptions[@"alert"] isEqual:@(YES)]) {
+        presentationOptions |= UNNotificationPresentationOptionAlert;
+      }
+      if ([persistedOptions[@"badge"] isEqual:@(YES)]) {
+        presentationOptions |= UNNotificationPresentationOptionBadge;
+      }
+      if ([persistedOptions[@"sound"] isEqual:@(YES)]) {
+        presentationOptions |= UNNotificationPresentationOptionSound;
+      }
+    }
+    completionHandler(presentationOptions);
   }
 }
 
@@ -271,7 +310,7 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
   if (remoteNotification[@"gcm.message_id"]) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
-    [_channel invokeMethod:@"Messaging#onNotificationOpenedApp" arguments:notificationDict];
+    [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
     @synchronized(self) {
       _initialNotification = notificationDict;
     }
@@ -540,13 +579,15 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 
 - (void)messagingGetToken:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRMessaging *messaging = [FIRMessaging messaging];
-  [messaging tokenWithCompletion:^(NSString *token, NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(token);
-    }
-  }];
+  NSString *senderId = arguments[@"senderId"] ?: [FIRApp defaultApp].options.GCMSenderID;
+  [messaging retrieveFCMTokenForSenderID:senderId
+                              completion:^(NSString *token, NSError *error) {
+                                if (error != nil) {
+                                  result.error(nil, nil, nil, error);
+                                } else {
+                                  result.success(token);
+                                }
+                              }];
 }
 
 - (void)messagingGetAPNSToken:(id)arguments
@@ -562,13 +603,15 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 - (void)messagingDeleteToken:(id)arguments
         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRMessaging *messaging = [FIRMessaging messaging];
-  [messaging deleteTokenWithCompletion:^(NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-  }];
+  NSString *senderId = arguments[@"senderId"] ?: [FIRApp defaultApp].options.GCMSenderID;
+  [messaging deleteFCMTokenForSenderID:senderId
+                            completion:^(NSError *error) {
+                              if (error != nil) {
+                                result.error(nil, nil, nil, error);
+                              } else {
+                                result.success(nil);
+                              }
+                            }];
 }
 
 #pragma mark - FLTFirebasePlugin

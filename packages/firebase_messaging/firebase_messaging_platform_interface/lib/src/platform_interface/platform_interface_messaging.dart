@@ -11,13 +11,13 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../method_channel/method_channel_messaging.dart';
 
-/// Defines an interface to work with Messaging on web and mobile
+/// Defines an interface to work with Messaging on web and mobile.
 abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
   @protected
   final FirebaseApp appInstance;
 
-  /// Create an instance using [app]
+  /// Create an instance using [app].
   FirebaseMessagingPlatform({this.appInstance}) : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
@@ -31,7 +31,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  /// Create an instance using [app] using the existing implementation
+  /// Create an instance with a [FirebaseApp] using an existing instance.
   factory FirebaseMessagingPlatform.instanceFor(
       {FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
     return FirebaseMessagingPlatform.instance
@@ -154,10 +154,12 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
         'registerBackgroundMessageHandler() is not implemented');
   }
 
-  /// Removes access to an FCM token previously authorized by it's scope.
+  /// Removes access to an FCM token previously authorized with optional [senderId].
   ///
   /// Messages sent by the server to this token will fail.
-  Future<void> deleteToken() {
+  Future<void> deleteToken({
+    String senderId,
+  }) {
     throw UnimplementedError('deleteToken() is not implemented');
   }
 
@@ -167,8 +169,9 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('getAPNSToken() is not implemented');
   }
 
-  /// Returns the default FCM token for this device.
+  /// Returns the default FCM token for this device and optionally [senderId].
   Future<String> getToken({
+    String senderId,
     String vapidKey,
   }) {
     throw UnimplementedError('getToken() is not implemented');
@@ -252,7 +255,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('setAutoInitEnabled() is not implemented');
   }
 
-  /// Sets the presentation options for iOS based notifications when recieved in
+  /// Sets the presentation options for iOS based notifications when received in
   /// the foreground.
   ///
   /// By default, on iOS devices notification messages are only shown when
