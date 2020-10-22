@@ -25,7 +25,7 @@ class _MessageList extends State<MessageList> {
   @override
   Widget build(BuildContext context) {
     if (_messages.isEmpty) {
-      return Text("No messages recieved");
+      return Text("No messages received");
     }
 
     return ListView.builder(
@@ -36,6 +36,7 @@ class _MessageList extends State<MessageList> {
 
           return ListTile(
             title: Text(message.messageId),
+            subtitle: Text(message.sentTime?.toString() ?? 'N/A'),
             onTap: () => Navigator.pushNamed(context, '/message',
                 arguments: MessageArguments(message, false)),
           );

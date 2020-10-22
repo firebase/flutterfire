@@ -73,8 +73,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
         StreamController<RemoteMessage>.broadcast();
   }
 
-  static StreamController<RemoteMessage>
-      _onMessageOpenedAppStreamController;
+  static StreamController<RemoteMessage> _onMessageOpenedAppStreamController;
 
   /// Returns a [Stream] that is called when a user presses a notification displayed
   /// via FCM.

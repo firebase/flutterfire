@@ -11,26 +11,27 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'message.dart';
-
-import 'token_monitor.dart';
-import 'permissions.dart';
 import 'message_list.dart';
+import 'permissions.dart';
+import 'token_monitor.dart';
 
-/// Define a top-level named hadler which background/terminated messages will
+/// Define a top-level named handler which background/terminated messages will
 /// call.
 ///
 /// To verify things are working, check out the native platform logs.
-BackgroundMessageHandler backgroundMessageHandler =
-    (RemoteMessage message) async {
-  return "Handling background message ${message.messageId}";
-};
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+  print("Handling a background message ${message.messageId}");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
   // Set the background messaging handler early on, as a named top-level function
-  FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(MessagingExampleApp());
 }
@@ -92,7 +93,7 @@ class _Application extends State<Application> {
     });
   }
 
-  Future<void> sendPushMessage(BuildContext) async {
+  Future<void> sendPushMessage() async {
     if (_token == null) {
       print('Unable to send FCM message, no token exists.');
       return;
@@ -120,7 +121,7 @@ class _Application extends State<Application> {
       ),
       floatingActionButton: Builder(
         builder: (context) => FloatingActionButton(
-          onPressed: () => sendPushMessage(context),
+          onPressed: () => sendPushMessage(),
           child: Icon(Icons.send),
           backgroundColor: Colors.white,
         ),

@@ -10,7 +10,9 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import com.google.firebase.messaging.RemoteMessage;
 import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.embedding.engine.FlutterShellArgs;
 import io.flutter.embedding.engine.dart.DartExecutor;
 import io.flutter.embedding.engine.dart.DartExecutor.DartCallback;
 import io.flutter.embedding.engine.plugins.shim.ShimPluginRegistry;
@@ -20,6 +22,9 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.view.FlutterCallbackInformation;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -30,6 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHandler {
   private static final String TAG = "FLTFireBGExecutor";
   private static final String CALLBACK_HANDLE_KEY = "callback_handle";
+  private static final String USER_CALLBACK_HANDLE_KEY = "user_callback_handle";
 
   private static io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback
       pluginRegistrantCallback;
@@ -59,10 +65,22 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    * Sets the Dart callback handle for the Dart method that is responsible for initializing the
    * background Dart isolate, preparing it to receive Dart callback tasks requests.
    */
-  public static void setCallbackDispatcher(Context context, long callbackHandle) {
+  public static void setCallbackDispatcher(long callbackHandle) {
+    Context context = ContextHolder.getApplicationContext();
     SharedPreferences prefs =
         context.getSharedPreferences(FlutterFirebaseMessagingConstants.SHARED_PREFERENCES_KEY, 0);
     prefs.edit().putLong(CALLBACK_HANDLE_KEY, callbackHandle).apply();
+  }
+
+  /**
+   * Sets the Dart callback handle for the users Dart handler that is responsible for handling
+   * messaging events in the background.
+   */
+  public static void setUserCallbackHandle(long callbackHandle) {
+    Context context = ContextHolder.getApplicationContext();
+    SharedPreferences prefs =
+        context.getSharedPreferences(FlutterFirebaseMessagingConstants.SHARED_PREFERENCES_KEY, 0);
+    prefs.edit().putLong(USER_CALLBACK_HANDLE_KEY, callbackHandle).apply();
   }
 
   /**
@@ -82,7 +100,7 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
   public void onMethodCall(MethodCall call, @NonNull Result result) {
     String method = call.method;
     try {
-      if (method.equals("FirebaseBackgroundMessaging#initialized")) {
+      if (method.equals("MessagingBackground#initialized")) {
         // This message is sent by the background method channel as soon as the background isolate
         // is running. From this point forward, the Android side of this plugin can send
         // callback handles through the background method channel, and the Dart side will execute
@@ -119,12 +137,13 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    *       PluginRegistrantException} will be thrown.
    * </ul>
    */
-  public void startBackgroundIsolate(Context context) {
+  public void startBackgroundIsolate() {
     if (isNotRunning()) {
+      Context context = ContextHolder.getApplicationContext();
       SharedPreferences p =
           context.getSharedPreferences(FlutterFirebaseMessagingConstants.SHARED_PREFERENCES_KEY, 0);
       long callbackHandle = p.getLong(CALLBACK_HANDLE_KEY, 0);
-      startBackgroundIsolate(context, callbackHandle);
+      startBackgroundIsolate(callbackHandle, null);
     }
   }
 
@@ -148,24 +167,32 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    *       PluginRegistrantException} will be thrown.
    * </ul>
    */
-  public void startBackgroundIsolate(Context context, long callbackHandle) {
+  public void startBackgroundIsolate(long callbackHandle, FlutterShellArgs shellArgs) {
     if (backgroundFlutterEngine != null) {
       Log.e(TAG, "Background isolate already started");
       return;
     }
 
+    Context context = ContextHolder.getApplicationContext();
     Log.i(TAG, "Starting FlutterFirebaseMessagingBackgroundService...");
     String appBundlePath = io.flutter.view.FlutterMain.findAppBundlePath();
     AssetManager assets = context.getAssets();
     if (isNotRunning()) {
-      backgroundFlutterEngine = new FlutterEngine(context);
-
+      if (shellArgs != null) {
+        Log.i(
+            TAG,
+            "Creating background FlutterEngine instance, with args: "
+                + Arrays.toString(shellArgs.toArray()));
+        backgroundFlutterEngine = new FlutterEngine(context, shellArgs.toArray());
+      } else {
+        Log.i(TAG, "Creating background FlutterEngine instance.");
+        backgroundFlutterEngine = new FlutterEngine(context);
+      }
       // We need to create an instance of `FlutterEngine` before looking up the
       // callback. If we don't, the callback cache won't be initialized and the
       // lookup will fail.
       FlutterCallbackInformation flutterCallback =
           FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
-
       DartExecutor executor = backgroundFlutterEngine.getDartExecutor();
       initializeMethodChannel(executor);
       DartCallback dartCallback = new DartCallback(assets, appBundlePath, flutterCallback);
@@ -187,11 +214,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    * corresponds to a callback registered with the Dart VM.
    */
   public void executeDartCallbackInBackgroundIsolate(Intent intent, final CountDownLatch latch) {
-    // Grab the handle for the onBackgroundMessage callback associated with this plugin. Pay close
-    // attention to the type of the callback handle as storing this value in a
-    // variable of the wrong size will cause the callback lookup to fail.
-    long callbackHandle = intent.getLongExtra("callbackHandle", 0);
-
     // If another thread is waiting, then wake that thread when the callback returns a result.
     Result result = null;
     if (latch != null) {
@@ -214,19 +236,28 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
           };
     }
 
-    // Handle the message event in Dart. Note that for this plugin, we don't
-    // care about the method name as we simply lookup and invoke the callback
-    // provided.
-    // TODO payload of message
-    // TODO payload of message
-    // TODO payload of message
-    // TODO payload of message
-    // TODO payload of message
-    // TODO payload of message
-    // TODO payload of message
-    // TODO payload of message
-    // TODO payload of message
-    backgroundChannel.invokeMethod("onBackgroundMessage", null /* TODO */, result);
+    // Handle the message event in Dart.
+    RemoteMessage remoteMessage =
+        intent.getParcelableExtra(FlutterFirebaseMessagingConstants.EXTRA_REMOTE_MESSAGE);
+    if (remoteMessage != null) {
+      SharedPreferences prefs =
+          ContextHolder.getApplicationContext()
+              .getSharedPreferences(FlutterFirebaseMessagingConstants.SHARED_PREFERENCES_KEY, 0);
+      long userCallbackHandle = prefs.getLong(USER_CALLBACK_HANDLE_KEY, 0);
+      Map<String, Object> remoteMessageMap =
+          FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
+      backgroundChannel.invokeMethod(
+          "MessagingBackground#onMessage",
+          new HashMap<String, Object>() {
+            {
+              put("userCallbackHandle", userCallbackHandle);
+              put("message", remoteMessageMap);
+            }
+          },
+          result);
+    } else {
+      Log.e(TAG, "RemoteMessage instance not found in Intent.");
+    }
   }
 
   private void initializeMethodChannel(BinaryMessenger isolate) {

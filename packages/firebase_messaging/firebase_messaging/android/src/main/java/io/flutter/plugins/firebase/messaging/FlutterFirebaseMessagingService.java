@@ -10,6 +10,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     // TODO new token intent
     // TODO new token intent
     // TODO new token intent
+
     // TODO new token intent
     // TODO new token intent
   }
@@ -18,6 +19,5 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
     // Added for commenting purposes;
     // We don't handle the message here as we already handle it in the receiver and don't want to duplicate.
-
   }
 }

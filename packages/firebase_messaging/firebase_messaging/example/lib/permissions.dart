@@ -64,7 +64,7 @@ class _Permissions extends State<Permissions> {
       row("Authorization Status", statusMap[_settings.authorizationStatus]),
       if (defaultTargetPlatform == TargetPlatform.iOS) ...[
         row("Alert", settingsMap[_settings.alert]),
-        row("Announcment", settingsMap[_settings.announcement]),
+        row("Announcement", settingsMap[_settings.announcement]),
         row("Badge", settingsMap[_settings.badge]),
         row("Car Play", settingsMap[_settings.carPlay]),
         row("Lock Screen", settingsMap[_settings.lockScreen]),
@@ -84,7 +84,7 @@ class _Permissions extends State<Permissions> {
 const statusMap = {
   AuthorizationStatus.authorized: 'Authorized',
   AuthorizationStatus.denied: 'Denied',
-  AuthorizationStatus.notDetermined: 'Not Dertmined',
+  AuthorizationStatus.notDetermined: 'Not Determined',
   AuthorizationStatus.provisional: 'Provisional',
 };
 

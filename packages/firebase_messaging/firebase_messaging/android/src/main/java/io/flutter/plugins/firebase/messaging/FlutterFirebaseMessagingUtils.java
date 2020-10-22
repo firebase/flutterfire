@@ -3,10 +3,12 @@ package io.flutter.plugins.firebase.messaging;
 import android.app.ActivityManager;
 import android.app.KeyguardManager;
 import android.content.Context;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 class FlutterFirebaseMessagingUtils {
@@ -16,7 +18,6 @@ class FlutterFirebaseMessagingUtils {
   private static final String KEY_MESSAGE_ID = "messageId";
   private static final String KEY_MESSAGE_TYPE = "messageType";
   private static final String KEY_SENT_TIME = "sentTime";
-  private static final String KEY_ERROR = "error";
   private static final String KEY_TO = "to";
   private static final String KEY_TTL = "ttl";
 
@@ -174,5 +175,56 @@ class FlutterFirebaseMessagingUtils {
     }
 
     return false;
+  }
+
+  // Extracted to handle multi-app support in the future.
+  // arguments.get("appName") - to get the Firebase app name.
+  static FirebaseMessaging getFirebaseMessagingForArguments(Map<String, Object> arguments) {
+    return FirebaseMessaging.getInstance();
+  }
+
+  /**
+   * Builds an instance of {@link RemoteMessage} from Flutter method channel call arguments.
+   *
+   * @param arguments Method channel call arguments.
+   * @return RemoteMessage
+   */
+  static RemoteMessage getRemoteMessageForArguments(Map<String, Object> arguments) {
+    @SuppressWarnings("unchecked")
+    Map<String, Object> messageMap =
+        (Map<String, Object>) Objects.requireNonNull(arguments.get("message"));
+
+    String to = (String) Objects.requireNonNull(messageMap.get("senderId"));
+    RemoteMessage.Builder builder = new RemoteMessage.Builder(to);
+
+    String collapseKey = (String) messageMap.get("collapseKey");
+    String messageId = (String) messageMap.get("messageId");
+    String messageType = (String) messageMap.get("messageType");
+    Integer ttl = (Integer) messageMap.get("ttl");
+
+    @SuppressWarnings("unchecked")
+    Map<String, String> data = (Map<String, String>) messageMap.get("data");
+
+    if (collapseKey != null) {
+      builder.setCollapseKey(collapseKey);
+    }
+
+    if (messageType != null) {
+      builder.setMessageId(messageId);
+    }
+
+    if (messageId != null) {
+      builder.setMessageId(messageId);
+    }
+
+    if (ttl != null) {
+      builder.setTtl(ttl);
+    }
+
+    if (data != null) {
+      builder.setData(data);
+    }
+
+    return builder.build();
   }
 }

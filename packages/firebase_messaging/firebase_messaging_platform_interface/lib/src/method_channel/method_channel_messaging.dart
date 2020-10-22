@@ -149,10 +149,13 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   Future<RemoteMessage> getInitialMessage() async {
     try {
       Map<String, dynamic> remoteMessageMap = await channel
-          .invokeMapMethod<String, dynamic>(
-              'Messaging#getInitialMessage', {
+          .invokeMapMethod<String, dynamic>('Messaging#getInitialMessage', {
         'appName': app.name,
       });
+
+      if (remoteMessageMap == null) {
+        return null;
+      }
 
       return RemoteMessage.fromMap(remoteMessageMap);
     } catch (e) {

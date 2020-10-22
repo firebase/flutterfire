@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
+import io.flutter.embedding.engine.FlutterShellArgs;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,13 +48,14 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
    *       PluginRegistrantException} will be thrown.
    * </ul>
    */
-  public static void startBackgroundIsolate(Context context, long callbackHandle) {
+  @SuppressWarnings("JavadocReference")
+  public static void startBackgroundIsolate(long callbackHandle, FlutterShellArgs shellArgs) {
     if (flutterBackgroundExecutor != null) {
       Log.w(TAG, "Attempted to start a duplicate background isolate. Returning...");
       return;
     }
     flutterBackgroundExecutor = new FlutterFirebaseMessagingBackgroundExecutor();
-    flutterBackgroundExecutor.startBackgroundIsolate(context, callbackHandle);
+    flutterBackgroundExecutor.startBackgroundIsolate(callbackHandle, shellArgs);
   }
 
   /**
@@ -79,21 +81,29 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
    * Sets the Dart callback handle for the Dart method that is responsible for initializing the
    * background Dart isolate, preparing it to receive Dart callback tasks requests.
    */
-  public static void setCallbackDispatcher(Context context, long callbackHandle) {
-    FlutterFirebaseMessagingBackgroundExecutor.setCallbackDispatcher(context, callbackHandle);
+  public static void setCallbackDispatcher(long callbackHandle) {
+    FlutterFirebaseMessagingBackgroundExecutor.setCallbackDispatcher(callbackHandle);
+  }
+
+  /**
+   * Sets the Dart callback handle for the users Dart handler that is responsible for handling
+   * messaging events in the background.
+   */
+  public static void setUserCallbackHandle(long callbackHandle) {
+    FlutterFirebaseMessagingBackgroundExecutor.setUserCallbackHandle(callbackHandle);
   }
 
   /**
    * Sets the {@link io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback} used to
    * register the plugins used by an application with the newly spawned background isolate.
    *
-   * <p>This should be invoked in {@link Application.onCreate} with {@link
+   * <p>This should be invoked in {@link MainApplication.onCreate} with {@link
    * GeneratedPluginRegistrant} in applications using the V1 embedding API in order to use other
    * plugins in the background isolate. For applications using the V2 embedding API, it is not
    * necessary to set a {@link io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback} as
    * plugins are registered automatically.
    */
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings({"deprecation", "JavadocReference"})
   public static void setPluginRegistrant(
       io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback callback) {
     // Indirectly set in FlutterFirebaseMessagingBackgroundExecutor for backwards compatibility.
@@ -106,8 +116,7 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
     if (flutterBackgroundExecutor == null) {
       flutterBackgroundExecutor = new FlutterFirebaseMessagingBackgroundExecutor();
     }
-    Context context = getApplicationContext();
-    flutterBackgroundExecutor.startBackgroundIsolate(context);
+    flutterBackgroundExecutor.startBackgroundIsolate();
   }
 
   /**
