@@ -130,11 +130,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// Removes access to an FCM token previously authorized with optional [senderId].
   ///
   /// Messages sent by the server to this token will fail.
-  Future<void> deleteToken({
-    String senderId,
-  }) {
-    return _delegate.deleteToken(
-        senderId: senderId ?? app.options.messagingSenderId);
+  Future<void> deleteToken() {
+    return _delegate.deleteToken();
   }
 
   /// On iOS, it is possible to get the users APNs token.
@@ -149,12 +146,10 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   /// Returns the default FCM token for this device and optionally a [senderId].
   Future<String> getToken({
-    String senderId,
     String vapidKey,
   }) {
     return _delegate.getToken(
       vapidKey: vapidKey,
-      senderId: senderId ?? app.options.messagingSenderId,
     );
   }
 
