@@ -73,17 +73,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
   }
 
   /**
-   * Sets the Dart callback handle for the users Dart handler that is responsible for handling
-   * messaging events in the background.
-   */
-  public static void setUserCallbackHandle(long callbackHandle) {
-    Context context = ContextHolder.getApplicationContext();
-    SharedPreferences prefs =
-        context.getSharedPreferences(FlutterFirebaseMessagingConstants.SHARED_PREFERENCES_KEY, 0);
-    prefs.edit().putLong(USER_CALLBACK_HANDLE_KEY, callbackHandle).apply();
-  }
-
-  /**
    * Returns true when the background isolate has started and is ready to handle background
    * messages.
    */
@@ -139,11 +128,10 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    */
   public void startBackgroundIsolate() {
     if (isNotRunning()) {
-      Context context = ContextHolder.getApplicationContext();
-      SharedPreferences p =
-          context.getSharedPreferences(FlutterFirebaseMessagingConstants.SHARED_PREFERENCES_KEY, 0);
-      long callbackHandle = p.getLong(CALLBACK_HANDLE_KEY, 0);
-      startBackgroundIsolate(callbackHandle, null);
+      long callbackHandle = getPluginCallbackHandle();
+      if (callbackHandle != 0) {
+        startBackgroundIsolate(callbackHandle, null);
+      }
     }
   }
 
@@ -169,12 +157,11 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    */
   public void startBackgroundIsolate(long callbackHandle, FlutterShellArgs shellArgs) {
     if (backgroundFlutterEngine != null) {
-      Log.e(TAG, "Background isolate already started");
+      Log.e(TAG, "Background isolate already started.");
       return;
     }
 
     Context context = ContextHolder.getApplicationContext();
-    Log.i(TAG, "Starting FlutterFirebaseMessagingBackgroundService...");
     String appBundlePath = io.flutter.view.FlutterMain.findAppBundlePath();
     AssetManager assets = context.getAssets();
     if (isNotRunning()) {
@@ -207,6 +194,10 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     }
   }
 
+  boolean isDartBackgroundHandlerRegistered() {
+    return getPluginCallbackHandle() != 0;
+  }
+
   /**
    * Executes the desired Dart callback in a background Dart isolate.
    *
@@ -214,13 +205,20 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    * corresponds to a callback registered with the Dart VM.
    */
   public void executeDartCallbackInBackgroundIsolate(Intent intent, final CountDownLatch latch) {
-    // If another thread is waiting, then wake that thread when the callback returns a result.
+    if (backgroundFlutterEngine == null) {
+      Log.i(
+          TAG,
+          "A background message could not be handled in Dart as no onBackgroundMessage handler has been registered.");
+      return;
+    }
+
     Result result = null;
     if (latch != null) {
       result =
           new Result() {
             @Override
             public void success(Object result) {
+              // If another thread is waiting, then wake that thread when the callback returns a result.
               latch.countDown();
             }
 
@@ -240,17 +238,13 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     RemoteMessage remoteMessage =
         intent.getParcelableExtra(FlutterFirebaseMessagingConstants.EXTRA_REMOTE_MESSAGE);
     if (remoteMessage != null) {
-      SharedPreferences prefs =
-          ContextHolder.getApplicationContext()
-              .getSharedPreferences(FlutterFirebaseMessagingConstants.SHARED_PREFERENCES_KEY, 0);
-      long userCallbackHandle = prefs.getLong(USER_CALLBACK_HANDLE_KEY, 0);
       Map<String, Object> remoteMessageMap =
           FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
       backgroundChannel.invokeMethod(
           "MessagingBackground#onMessage",
           new HashMap<String, Object>() {
             {
-              put("userCallbackHandle", userCallbackHandle);
+              put("userCallbackHandle", getUserCallbackHandle());
               put("message", remoteMessageMap);
             }
           },
@@ -258,6 +252,35 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     } else {
       Log.e(TAG, "RemoteMessage instance not found in Intent.");
     }
+  }
+
+  /**
+   * Get the users registered Dart callback handle for background messaging. Returns 0 if not set.
+   */
+  private long getUserCallbackHandle() {
+    SharedPreferences prefs =
+        ContextHolder.getApplicationContext()
+            .getSharedPreferences(FlutterFirebaseMessagingConstants.SHARED_PREFERENCES_KEY, 0);
+    return prefs.getLong(USER_CALLBACK_HANDLE_KEY, 0);
+  }
+
+  /** Get the registered Dart callback handle for the messaging plugin. Returns 0 if not set. */
+  private long getPluginCallbackHandle() {
+    SharedPreferences prefs =
+        ContextHolder.getApplicationContext()
+            .getSharedPreferences(FlutterFirebaseMessagingConstants.SHARED_PREFERENCES_KEY, 0);
+    return prefs.getLong(CALLBACK_HANDLE_KEY, 0);
+  }
+
+  /**
+   * Sets the Dart callback handle for the users Dart handler that is responsible for handling
+   * messaging events in the background.
+   */
+  public static void setUserCallbackHandle(long callbackHandle) {
+    Context context = ContextHolder.getApplicationContext();
+    SharedPreferences prefs =
+        context.getSharedPreferences(FlutterFirebaseMessagingConstants.SHARED_PREFERENCES_KEY, 0);
+    prefs.edit().putLong(USER_CALLBACK_HANDLE_KEY, callbackHandle).apply();
   }
 
   private void initializeMethodChannel(BinaryMessenger isolate) {

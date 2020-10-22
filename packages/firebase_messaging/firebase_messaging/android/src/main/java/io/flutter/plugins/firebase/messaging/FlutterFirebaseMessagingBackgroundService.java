@@ -65,7 +65,8 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
    * FirebaseMessaging.initialized} message. Processes all messaging events that came in while the
    * isolate was starting.
    */
-  /* package */ static void onInitialized() {
+  /* package */
+  static void onInitialized() {
     Log.i(TAG, "FlutterFirebaseMessagingBackgroundService started!");
     synchronized (messagingQueue) {
       // Handle all the message events received before the Dart isolate was
@@ -134,11 +135,18 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
    */
   @Override
   protected void onHandleWork(@NonNull final Intent intent) {
+    if (!flutterBackgroundExecutor.isDartBackgroundHandlerRegistered()) {
+      Log.w(
+          TAG,
+          "A background message could not be handled in Dart as no onBackgroundMessage handler has been registered.");
+      return;
+    }
+
     // If we're in the middle of processing queued messages, add the incoming
     // intent to the queue and return.
     synchronized (messagingQueue) {
       if (flutterBackgroundExecutor.isNotRunning()) {
-        Log.i(TAG, "FlutterFirebaseMessagingBackgroundService has not yet started.");
+        Log.i(TAG, "Service has not yet started, messages will be queued.");
         messagingQueue.add(intent);
         return;
       }
@@ -149,12 +157,7 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
     final CountDownLatch latch = new CountDownLatch(1);
     new Handler(getMainLooper())
         .post(
-            new Runnable() {
-              @Override
-              public void run() {
-                flutterBackgroundExecutor.executeDartCallbackInBackgroundIsolate(intent, latch);
-              }
-            });
+            () -> flutterBackgroundExecutor.executeDartCallbackInBackgroundIsolate(intent, latch));
 
     try {
       latch.await();
