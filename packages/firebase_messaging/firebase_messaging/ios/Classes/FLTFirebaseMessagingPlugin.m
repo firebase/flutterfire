@@ -137,9 +137,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     [self messagingSubscribeToTopic:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#unsubscribeFromTopic" isEqualToString:call.method]) {
     [self messagingUnsubscribeFromTopic:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"FcmDartService#start" isEqualToString:call.method]) {
-    methodCallResult.success(nil);
-  } else if ([@"FcmDartService#initialized" isEqualToString:call.method]) {
+  } else if ([@"Messaging#startBackgroundIsolate" isEqualToString:call.method]) {
     methodCallResult.success(nil);
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
