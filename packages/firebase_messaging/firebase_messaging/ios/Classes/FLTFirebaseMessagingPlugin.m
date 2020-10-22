@@ -890,7 +890,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     if (apsDict[@"sound"] != nil) {
       if ([apsDict[@"sound"] isKindOfClass:[NSString class]]) {
         // message.notification.apple.sound
-        notification[@"sound"] = apsDict[@"sound"];
+        notification[@"sound"] = @{
+          @"name" : apsDict[@"sound"],
+          @"critical" : @NO,
+          @"volume" : @1,
+        };
       } else if ([apsDict[@"sound"] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *apsSoundDict = apsDict[@"sound"];
         NSMutableDictionary *notificationIOSSound = [[NSMutableDictionary alloc] init];
