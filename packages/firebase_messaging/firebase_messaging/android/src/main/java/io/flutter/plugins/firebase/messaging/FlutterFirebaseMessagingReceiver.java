@@ -24,13 +24,12 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
     // Store the RemoteMessage if the message contains a notification payload.
     if (remoteMessage.getNotification() != null) {
       notifications.put(remoteMessage.getMessageId(), remoteMessage);
-      // TODO store message for later access
-      // TODO store message for later access
-
-      // TODO store message for later access
-      // TODO store message for later access
-      // TODO store message for later access
-      // TODO store message for later access
+      // TODO(Salakar) store message for reading in getInitialMessage when activities restart.
+      // TODO(Salakar) store message for reading in getInitialMessage when activities restart.
+      // TODO(Salakar) store message for reading in getInitialMessage when activities restart.
+      // TODO(Salakar) store message for reading in getInitialMessage when activities restart.
+      // TODO(Salakar) store message for reading in getInitialMessage when activities restart.
+      // TODO(Salakar) store message for reading in getInitialMessage when activities restart.
     }
 
     //  |-> ---------------------

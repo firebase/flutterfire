@@ -195,7 +195,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<String> getAPNSToken() async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
+    if (defaultTargetPlatform != TargetPlatform.iOS &&
+        defaultTargetPlatform != TargetPlatform.macOS) {
       return null;
     }
 
@@ -223,7 +224,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<NotificationSettings> getNotificationSettings() async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
+    if (defaultTargetPlatform != TargetPlatform.iOS &&
+        defaultTargetPlatform != TargetPlatform.macOS) {
       return androidNotificationSettings;
     }
 
@@ -248,7 +250,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       bool criticalAlert = false,
       bool provisional = false,
       bool sound = true}) async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
+    if (defaultTargetPlatform != TargetPlatform.iOS &&
+        defaultTargetPlatform != TargetPlatform.macOS) {
       return androidNotificationSettings;
     }
 
