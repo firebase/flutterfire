@@ -5,8 +5,8 @@
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'utils.dart';
 
-class Notification {
-  const Notification(
+class RemoteNotification {
+  const RemoteNotification(
       {this.android,
       this.apple,
       this.title,
@@ -16,7 +16,7 @@ class Notification {
       this.bodyLocArgs,
       this.bodyLocKey});
 
-  factory Notification.fromMap(Map<String, dynamic> map) {
+  factory RemoteNotification.fromMap(Map<String, dynamic> map) {
     AndroidNotification _android;
     AppleNotification _apple;
 
@@ -53,7 +53,7 @@ class Notification {
                   volume: map['apple']['criticalSound']['volume']));
     }
 
-    return Notification(
+    return RemoteNotification(
       title: map['title'],
       titleLocArgs: map['titleLocArgs'] ?? [],
       titleLocKey: map['titleLocKey'],

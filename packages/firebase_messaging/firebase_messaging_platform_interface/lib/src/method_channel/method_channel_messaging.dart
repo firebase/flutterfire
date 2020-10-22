@@ -32,10 +32,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           FirebaseMessagingPlatform.onMessage
               .add(RemoteMessage.fromMap(messageMap));
           break;
-        case "Messaging#onNotificationOpenedApp":
+        case "Messaging#onMessageOpenedApp":
           Map<String, dynamic> messageMap =
               Map<String, dynamic>.from(call.arguments);
-          FirebaseMessagingPlatform.onNotificationOpenedApp
+          FirebaseMessagingPlatform.onMessageOpenedApp
               .add(RemoteMessage.fromMap(messageMap));
           break;
         case "Messaging#onBackgroundMessage":

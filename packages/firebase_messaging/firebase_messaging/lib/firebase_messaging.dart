@@ -23,6 +23,7 @@ export 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
         AndroidNotificationPriority,
         AndroidNotificationVisibility,
         RemoteMessage,
+        RemoteNotification,
         SentMessage;
 
 part 'src/messaging.dart';

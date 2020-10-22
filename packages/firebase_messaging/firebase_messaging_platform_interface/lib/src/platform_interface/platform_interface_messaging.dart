@@ -74,7 +74,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   }
 
   static StreamController<RemoteMessage>
-      _onNotificationOpenedAppStreamController;
+      _onMessageOpenedAppStreamController;
 
   /// Returns a [Stream] that is called when a user presses a notification displayed
   /// via FCM.
@@ -83,9 +83,9 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// (not terminated).
   ///
   /// If your app is opened via a notification whilst the app is terminated,
-  /// see [getInitialNotification].
-  static StreamController<RemoteMessage> get onNotificationOpenedApp {
-    return _onNotificationOpenedAppStreamController ??=
+  /// see [getInitialMessage].
+  static StreamController<RemoteMessage> get onMessageOpenedApp {
+    return _onMessageOpenedAppStreamController ??=
         StreamController<RemoteMessage>.broadcast();
   }
 
@@ -133,16 +133,16 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   }
 
   /// If the application has been opened from a terminated state via a [RemoteMessage]
-  /// (containing a displayed notification), it will be returned, otherwise it will be `null`.
+  /// (containing a [Notification]), it will be returned, otherwise it will be `null`.
   ///
   /// Once the [Notification] has been consumed, it will be removed and further
-  /// calls to [getInitialNotification] will be `null`.
+  /// calls to [getInitialMessage] will be `null`.
   ///
   /// This should be used to determine whether specific notification interaction
   /// should open the app with a specific purpose (e.g. opening a chat message,
   /// specific screen etc).
-  Future<RemoteMessage> getInitialNotification() {
-    throw UnimplementedError('getInitialNotification() is not implemented');
+  Future<RemoteMessage> getInitialMessage() {
+    throw UnimplementedError('getInitialMessage() is not implemented');
   }
 
   /// Allows delegates to create a background message handler implementation.

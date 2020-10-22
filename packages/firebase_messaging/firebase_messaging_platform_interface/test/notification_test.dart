@@ -3,14 +3,13 @@
 // found in the LICENSE file.
 
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
-import 'package:firebase_messaging_platform_interface/src/notification.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Notification', () {
     test('new instance', () {
       const testTitle = 'test notification';
-      final notification = Notification(title: testTitle);
+      final notification = RemoteNotification(title: testTitle);
       expect(notification.title, equals(testTitle));
     });
   });

@@ -8,8 +8,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
+import 'initial_notification.dart';
 import 'token_monitor.dart';
 import 'permissions.dart';
+import 'message_list.dart';
 
 BackgroundMessageHandler backgroundMessageHandler = (RemoteMessage message) {
   print(message);
@@ -18,22 +20,35 @@ BackgroundMessageHandler backgroundMessageHandler = (RemoteMessage message) {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
-  runApp(MessagingExampleApp());
+
+  // Get a message which caused the application to open via user interaction (may be null)
+  RemoteMessage initialNotification = null;
+  // await FirebaseMessaging.instance.getInitialMessage();
+
+  // Pass the message to the application
+  runApp(MessagingExampleApp(initialNotification));
 }
 
 class MessagingExampleApp extends StatelessWidget {
+  MessagingExampleApp(this._initialMessage);
+
+  final RemoteMessage _initialMessage;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Messaging Example App',
-        theme: ThemeData.dark(),
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text("Cloud Messaging"),
-          ),
-          body: Application(),
-        ));
+      title: 'Messaging Example App',
+      theme: ThemeData.dark(),
+      initialRoute: _initialMessage == null ? '/' : '/initial-notification',
+      routes: {
+        '/': (context) => Application(),
+        '/initial-notification': (context) =>
+            InitialNotification(_initialMessage?.notification),
+      },
+    );
   }
 }
 
@@ -44,24 +59,23 @@ class Application extends StatefulWidget {
 
 class _Application extends State<Application> {
   @override
-  void initState() {
-    super.initState();
-    FirebaseMessaging.instance
-        .getInitialNotification()
-        .then((RemoteMessage message) {
-      print('INITIAL NOTIFICATION: $message');
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      MetaCard("Permissions", Permissions()),
-      MetaCard(
-          "FCM Token",
-          TokenMonitor((token) =>
-              Text(token ?? 'Loading...', style: TextStyle(fontSize: 12)))),
-    ]);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Cloud Messaging"),
+      ),
+      body: SingleChildScrollView(
+        child: Column(children: [
+          MetaCard("Permissions", Permissions()),
+          MetaCard(
+              "FCM Token",
+              TokenMonitor((token) => token == null
+                  ? CircularProgressIndicator()
+                  : Text(token, style: TextStyle(fontSize: 12)))),
+          MetaCard("Message List", MessageList()),
+        ]),
+      ),
+    );
   }
 }
 
@@ -74,6 +88,8 @@ class MetaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        
+        width: double.infinity,
         margin: EdgeInsets.only(left: 8, right: 8, top: 8),
         child: Card(
             child: Padding(
