@@ -46,85 +46,115 @@ void main() {
     }));
   }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
-  test('configure', () {
-    firebaseMessaging.configure();
-    verify(mockChannel.setMethodCallHandler(any));
-    verify(mockChannel.invokeMethod<void>('configure'));
-  });
+  void testsForSenderId(String senderId) {
+    group('senderId: ${senderId ?? 'default'}', () {
+      test('configure', () {
+        firebaseMessaging.configure(senderId: senderId);
+        verify(mockChannel.setMethodCallHandler(any));
+        verify(mockChannel.invokeMethod<void>('configure', senderId));
+      });
 
-  test('incoming token', () async {
-    firebaseMessaging.configure();
-    final dynamic handler =
-        verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
-    final String token1 = 'I am a super secret token';
-    final String token2 = 'I am the new token in town';
-    Future<String> tokenFromStream = firebaseMessaging.onTokenRefresh.first;
-    await handler(MethodCall('onToken', token1));
+      test('incoming token', () async {
+        firebaseMessaging.configure(senderId: senderId);
+        final dynamic handler =
+            verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
+        final String token1 = 'I am a super secret token';
+        final String token2 = 'I am the new token in town';
+        Future<String> tokenFromStream = firebaseMessaging.onTokenRefresh.first;
+        await handler(MethodCall('onToken', token1));
 
-    expect(await tokenFromStream, token1);
+        expect(await tokenFromStream, token1);
 
-    tokenFromStream = firebaseMessaging.onTokenRefresh.first;
-    await handler(MethodCall('onToken', token2));
+        tokenFromStream = firebaseMessaging.onTokenRefresh.first;
+        await handler(MethodCall('onToken', token2));
 
-    expect(await tokenFromStream, token2);
-  });
+        expect(await tokenFromStream, token2);
+      });
 
-  test('incoming iOS settings', () async {
-    firebaseMessaging.configure();
-    final dynamic handler =
-        verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
-    IosNotificationSettings iosSettings = const IosNotificationSettings();
+      test('incoming iOS settings', () async {
+        firebaseMessaging.configure(senderId: senderId);
+        final dynamic handler =
+            verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
+        IosNotificationSettings iosSettings = const IosNotificationSettings();
 
-    Future<IosNotificationSettings> iosSettingsFromStream =
-        firebaseMessaging.onIosSettingsRegistered.first;
-    await handler(MethodCall('onIosSettingsRegistered', iosSettings.toMap()));
-    expect((await iosSettingsFromStream).toMap(), iosSettings.toMap());
+        Future<IosNotificationSettings> iosSettingsFromStream =
+            firebaseMessaging.onIosSettingsRegistered.first;
+        await handler(MethodCall('onIosSettingsRegistered', iosSettings.toMap()));
+        expect((await iosSettingsFromStream).toMap(), iosSettings.toMap());
 
-    iosSettings = const IosNotificationSettings(sound: false);
-    iosSettingsFromStream = firebaseMessaging.onIosSettingsRegistered.first;
-    await handler(MethodCall('onIosSettingsRegistered', iosSettings.toMap()));
-    expect((await iosSettingsFromStream).toMap(), iosSettings.toMap());
-  }, skip: defaultTargetPlatform != TargetPlatform.iOS);
+        iosSettings = const IosNotificationSettings(sound: false);
+        iosSettingsFromStream = firebaseMessaging.onIosSettingsRegistered.first;
+        await handler(MethodCall('onIosSettingsRegistered', iosSettings.toMap()));
+        expect((await iosSettingsFromStream).toMap(), iosSettings.toMap());
+      }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
-  test('incoming messages', () async {
-    final Completer<dynamic> onMessage = Completer<dynamic>();
-    final Completer<dynamic> onLaunch = Completer<dynamic>();
-    final Completer<dynamic> onResume = Completer<dynamic>();
+      test('incoming messages', () async {
+        final Completer<dynamic> onMessage = Completer<dynamic>();
+        final Completer<dynamic> onLaunch = Completer<dynamic>();
+        final Completer<dynamic> onResume = Completer<dynamic>();
 
-    firebaseMessaging.configure(
-      onMessage: (dynamic m) async {
-        onMessage.complete(m);
-      },
-      onLaunch: (dynamic m) async {
-        onLaunch.complete(m);
-      },
-      onResume: (dynamic m) async {
-        onResume.complete(m);
-      },
-      onBackgroundMessage: validOnBackgroundMessage,
-    );
-    final dynamic handler =
-        verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
+        firebaseMessaging.configure(
+          senderId: senderId,
+          onMessage: (dynamic m) async {
+            onMessage.complete(m);
+          },
+          onLaunch: (dynamic m) async {
+            onLaunch.complete(m);
+          },
+          onResume: (dynamic m) async {
+            onResume.complete(m);
+          },
+          onBackgroundMessage: validOnBackgroundMessage,
+        );
+        final dynamic handler =
+            verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
 
-    final Map<String, dynamic> onMessageMessage = <String, dynamic>{};
-    final Map<String, dynamic> onLaunchMessage = <String, dynamic>{};
-    final Map<String, dynamic> onResumeMessage = <String, dynamic>{};
+        final Map<String, dynamic> onMessageMessage = <String, dynamic>{};
+        onMessageMessage['senderId'] = senderId;
+        final Map<String, dynamic> onLaunchMessage = <String, dynamic>{};
+        onLaunchMessage['senderId'] = senderId;
+        final Map<String, dynamic> onResumeMessage = <String, dynamic>{};
+        onResumeMessage['senderId'] = senderId;
 
-    await handler(MethodCall('onMessage', onMessageMessage));
-    expect(await onMessage.future, onMessageMessage);
-    expect(onLaunch.isCompleted, isFalse);
-    expect(onResume.isCompleted, isFalse);
+        await handler(MethodCall('onMessage', onMessageMessage));
+        expect(await onMessage.future, onMessageMessage);
+        expect(onLaunch.isCompleted, isFalse);
+        expect(onResume.isCompleted, isFalse);
 
-    await handler(MethodCall('onLaunch', onLaunchMessage));
-    expect(await onLaunch.future, onLaunchMessage);
-    expect(onResume.isCompleted, isFalse);
+        await handler(MethodCall('onLaunch', onLaunchMessage));
+        expect(await onLaunch.future, onLaunchMessage);
+        expect(onResume.isCompleted, isFalse);
 
-    await handler(MethodCall('onResume', onResumeMessage));
-    expect(await onResume.future, onResumeMessage);
-  });
+        await handler(MethodCall('onResume', onResumeMessage));
+        expect(await onResume.future, onResumeMessage);
+      });
+
+      test('getToken', () {
+        firebaseMessaging.getToken(senderId: senderId);
+        verify(mockChannel.invokeMethod<String>('getToken', senderId));
+      });
+
+      test('deleteInstanceID', () {
+        firebaseMessaging.deleteInstanceID(senderId: senderId);
+        verify(mockChannel.invokeMethod<bool>('deleteInstanceID', senderId));
+      });
+
+      test('configure bad onBackgroundMessage', () {
+        expect(
+          () => firebaseMessaging.configure(
+            senderId: senderId,
+            onBackgroundMessage: (dynamic message) => Future<dynamic>.value(),
+          ),
+          throwsArgumentError,
+        );
+      });
+    });
+  }
+
+  testsForSenderId(null); // Default use case
+  testsForSenderId("123456789012"); // Secondary senderId
 
   const String myTopic = 'Flutter';
-
   test('subscribe to topic', () async {
     await firebaseMessaging.subscribeToTopic(myTopic);
     verify(mockChannel.invokeMethod<void>('subscribeToTopic', myTopic));
@@ -133,16 +163,6 @@ void main() {
   test('unsubscribe from topic', () async {
     await firebaseMessaging.unsubscribeFromTopic(myTopic);
     verify(mockChannel.invokeMethod<void>('unsubscribeFromTopic', myTopic));
-  });
-
-  test('getToken', () {
-    firebaseMessaging.getToken();
-    verify(mockChannel.invokeMethod<String>('getToken'));
-  });
-
-  test('deleteInstanceID', () {
-    firebaseMessaging.deleteInstanceID();
-    verify(mockChannel.invokeMethod<bool>('deleteInstanceID'));
   });
 
   test('autoInitEnabled', () {
@@ -164,15 +184,6 @@ void main() {
     firebaseMessaging.setAutoInitEnabled(false);
 
     verify(mockChannel.invokeMethod<void>('setAutoInitEnabled', false));
-  });
-
-  test('configure bad onBackgroundMessage', () {
-    expect(
-      () => firebaseMessaging.configure(
-        onBackgroundMessage: (dynamic message) => Future<dynamic>.value(),
-      ),
-      throwsArgumentError,
-    );
   });
 }
 

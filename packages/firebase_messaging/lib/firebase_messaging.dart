@@ -50,6 +50,13 @@ void _fcmSetupBackgroundChannel(
   backgroundChannel.invokeMethod<void>('FcmDartService#initialized');
 }
 
+class FirebaseMessagingHandlers {
+  MessageHandler _onMessage;
+  MessageHandler _onBackgroundMessage;
+  MessageHandler _onLaunch;
+  MessageHandler _onResume;
+}
+
 /// Implementation of the Firebase Cloud Messaging API for Flutter.
 ///
 /// Your app should call [requestNotificationPermissions] first and then
@@ -64,11 +71,9 @@ class FirebaseMessaging {
       const MethodChannel('plugins.flutter.io/firebase_messaging'));
 
   final MethodChannel _channel;
+  bool _initialized = false;
 
-  MessageHandler _onMessage;
-  MessageHandler _onBackgroundMessage;
-  MessageHandler _onLaunch;
-  MessageHandler _onResume;
+  Map<String, FirebaseMessagingHandlers> _handlers = {};
 
   /// On iOS, prompts the user for notification permissions the first time
   /// it is called.
@@ -97,23 +102,33 @@ class FirebaseMessaging {
   }
 
   /// Sets up [MessageHandler] for incoming messages.
+  /// Use [senderId] to receive messages from another firebase app.
+  /// See [Firebase official documentation](https://firebase.google.com/docs/cloud-messaging/concept-options#receiving-messages-from-multiple-senders)
   void configure({
+    String senderId,
     MessageHandler onMessage,
     MessageHandler onBackgroundMessage,
     MessageHandler onLaunch,
     MessageHandler onResume,
   }) {
-    _onMessage = onMessage;
-    _onLaunch = onLaunch;
-    _onResume = onResume;
-    _channel.setMethodCallHandler(_handleMethod);
-    _channel.invokeMethod<void>('configure');
+    if (!_initialized) {
+      _channel.setMethodCallHandler(_handleMethod);
+      _initialized = true;
+    }
+
+    FirebaseMessagingHandlers handlers = FirebaseMessagingHandlers();
+    _handlers[senderId] = handlers;
+    handlers._onMessage = onMessage;
+    handlers._onLaunch = onLaunch;
+    handlers._onResume = onResume;
+
+    _channel.invokeMethod<void>('configure', senderId);
     if (onBackgroundMessage != null) {
-      _onBackgroundMessage = onBackgroundMessage;
+      handlers._onBackgroundMessage = onBackgroundMessage;
       final CallbackHandle backgroundSetupHandle =
           PluginUtilities.getCallbackHandle(_fcmSetupBackgroundChannel);
       final CallbackHandle backgroundMessageHandle =
-          PluginUtilities.getCallbackHandle(_onBackgroundMessage);
+          PluginUtilities.getCallbackHandle(handlers._onBackgroundMessage);
 
       if (backgroundMessageHandle == null) {
         throw ArgumentError(
@@ -123,13 +138,15 @@ class FirebaseMessaging {
         );
       }
 
-      _channel.invokeMethod<bool>(
-        'FcmDartService#start',
-        <String, dynamic>{
-          'setupHandle': backgroundSetupHandle.toRawHandle(),
-          'backgroundHandle': backgroundMessageHandle.toRawHandle()
-        },
-      );
+      if (!_initialized) {
+        _channel.invokeMethod<bool>(
+          'FcmDartService#start',
+          <String, dynamic>{
+            'setupHandle': backgroundSetupHandle.toRawHandle(),
+            'backgroundHandle': backgroundMessageHandle.toRawHandle()
+          },
+        );
+      }
     }
   }
 
@@ -142,8 +159,10 @@ class FirebaseMessaging {
   }
 
   /// Returns the FCM token.
-  Future<String> getToken() async {
-    return await _channel.invokeMethod<String>('getToken');
+  /// Use [senderId] to get the token from another sender.
+  /// See [Firebase official documentation](https://firebase.google.com/docs/cloud-messaging/concept-options#receiving-messages-from-multiple-senders)
+  Future<String> getToken({String senderId}) async {
+    return await _channel.invokeMethod<String>('getToken', senderId);
   }
 
   /// Subscribe to topic in background.
@@ -163,9 +182,11 @@ class FirebaseMessaging {
   ///
   /// A new Instance ID is generated asynchronously if Firebase Cloud Messaging auto-init is enabled.
   ///
-  /// returns true if the operations executed successfully and false if an error ocurred
-  Future<bool> deleteInstanceID() async {
-    return await _channel.invokeMethod<bool>('deleteInstanceID');
+  /// returns true if the operations executed successfully and false if an error occurred
+  /// Use [senderId] remove a secondary sender
+  Future<bool> deleteInstanceID({String senderId}) async {
+    _handlers.remove(senderId);
+    return await _channel.invokeMethod<bool>('deleteInstanceID', senderId);
   }
 
   /// Determine whether FCM auto-initialization is enabled or disabled.
@@ -189,11 +210,20 @@ class FirebaseMessaging {
             call.arguments.cast<String, bool>()));
         return null;
       case "onMessage":
-        return _onMessage(call.arguments.cast<String, dynamic>());
+        final args = call.arguments.cast<String, dynamic>();
+        String senderId = args['senderId'];
+        final handlers = _handlers[senderId];
+        return handlers._onMessage(args);
       case "onLaunch":
-        return _onLaunch(call.arguments.cast<String, dynamic>());
+        final args = call.arguments.cast<String, dynamic>();
+        String senderId = args['senderId'];
+        final handlers = _handlers[senderId];
+        return handlers._onLaunch(call.arguments.cast<String, dynamic>());
       case "onResume":
-        return _onResume(call.arguments.cast<String, dynamic>());
+        final args = call.arguments.cast<String, dynamic>();
+        String senderId = args['senderId'];
+        _handlers[senderId]._onResume(args);
+        return;
       default:
         throw UnsupportedError("Unrecognized JSON message");
     }

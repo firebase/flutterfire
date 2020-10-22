@@ -1,3 +1,5 @@
+- Support for multiple senderId
+
 ## 7.0.3
 
  - Update a dependency to the latest release.
