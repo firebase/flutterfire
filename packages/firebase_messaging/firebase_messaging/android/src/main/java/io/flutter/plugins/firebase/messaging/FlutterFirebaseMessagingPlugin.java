@@ -139,7 +139,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         () -> {
           FirebaseMessaging firebaseMessaging =
               FlutterFirebaseMessagingUtils.getFirebaseMessagingForArguments(arguments);
-          String senderId = (String) arguments.get("senderId");
           Tasks.await(firebaseMessaging.deleteToken());
           return null;
         });
@@ -151,7 +150,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         () -> {
           FirebaseMessaging firebaseMessaging =
               FlutterFirebaseMessagingUtils.getFirebaseMessagingForArguments(arguments);
-          String senderId = (String) arguments.get("senderId");
           return Tasks.await(firebaseMessaging.getToken());
         });
   }
@@ -246,17 +244,11 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
 
           // If we can't find a copy of the remote message in memory then check from our temporary store.
           if (remoteMessage == null) {
-            // TODO
-            // TODO
-            // TODO
-            // TODO
-            // TODO
-            // TODO
-            // TODO
-            //        ReactNativeFirebaseMessagingStore messagingStore = ReactNativeFirebaseMessagingStoreHelper
-            //          .getInstance().getMessagingStore();
-            //        remoteMessage = messagingStore.getFirebaseMessage(messageId);
-            //        messagingStore.clearFirebaseMessage(messageId);
+            // TODO(Salakar) read from persisted notifications.
+            // TODO(Salakar) read from persisted notifications.
+            // TODO(Salakar) read from persisted notifications.
+            // TODO(Salakar) read from persisted notifications.
+            // TODO(Salakar) read from persisted notifications.
           }
 
           if (remoteMessage == null) {
@@ -300,12 +292,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
       case "Messaging#getInitialMessage":
         methodCallTask = getInitialMessage(call.arguments());
         break;
-
-        // TODO check / cleanup
-        // TODO check / cleanup
-        // TODO check / cleanup
-        // TODO check / cleanup
-        // TODO check / cleanup
       case "Messaging#deleteToken":
         methodCallTask = deleteToken(call.arguments());
         break;
@@ -389,7 +375,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         cachedThreadPool,
         () -> {
           Map<String, Object> constants = new HashMap<>();
-
           FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
           constants.put("AUTO_INIT_ENABLED", firebaseMessaging.isAutoInitEnabled());
           return constants;
