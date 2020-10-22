@@ -32,12 +32,11 @@ void main() {
     });
   });
 
-  group('AppleNotificationCriticalSound', () {
+  group('AppleNotificationSound', () {
     test('new instance', () {
       const testCritical = false;
-      final iosCriticalSound =
-          AppleNotificationCriticalSound(critical: testCritical);
-      expect(iosCriticalSound, equals(testCritical));
+      final iosSound = AppleNotificationSound(critical: testCritical);
+      expect(iosSound, equals(testCritical));
     });
   });
 }

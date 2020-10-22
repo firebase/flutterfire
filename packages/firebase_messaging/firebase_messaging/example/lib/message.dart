@@ -134,7 +134,7 @@ class Message extends StatelessWidget {
                     ),
                     row(
                       "Sound",
-                      notification.apple.sound,
+                      notification.apple.sound?.name,
                     ),
                   ]
                 ]),
