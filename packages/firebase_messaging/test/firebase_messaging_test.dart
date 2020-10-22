@@ -57,7 +57,9 @@ void main() {
       test('incoming token', () async {
         firebaseMessaging.configure(senderId: senderId);
         final dynamic handler =
-            verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
+            verify(mockChannel.setMethodCallHandler(captureAny))
+                .captured
+                .single;
         final String token1 = 'I am a super secret token';
         final String token2 = 'I am the new token in town';
         Future<String> tokenFromStream = firebaseMessaging.onTokenRefresh.first;
@@ -74,17 +76,21 @@ void main() {
       test('incoming iOS settings', () async {
         firebaseMessaging.configure(senderId: senderId);
         final dynamic handler =
-            verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
+            verify(mockChannel.setMethodCallHandler(captureAny))
+                .captured
+                .single;
         IosNotificationSettings iosSettings = const IosNotificationSettings();
 
         Future<IosNotificationSettings> iosSettingsFromStream =
             firebaseMessaging.onIosSettingsRegistered.first;
-        await handler(MethodCall('onIosSettingsRegistered', iosSettings.toMap()));
+        await handler(
+            MethodCall('onIosSettingsRegistered', iosSettings.toMap()));
         expect((await iosSettingsFromStream).toMap(), iosSettings.toMap());
 
         iosSettings = const IosNotificationSettings(sound: false);
         iosSettingsFromStream = firebaseMessaging.onIosSettingsRegistered.first;
-        await handler(MethodCall('onIosSettingsRegistered', iosSettings.toMap()));
+        await handler(
+            MethodCall('onIosSettingsRegistered', iosSettings.toMap()));
         expect((await iosSettingsFromStream).toMap(), iosSettings.toMap());
       }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
@@ -107,7 +113,9 @@ void main() {
           onBackgroundMessage: validOnBackgroundMessage,
         );
         final dynamic handler =
-            verify(mockChannel.setMethodCallHandler(captureAny)).captured.single;
+            verify(mockChannel.setMethodCallHandler(captureAny))
+                .captured
+                .single;
 
         final Map<String, dynamic> onMessageMessage = <String, dynamic>{};
         onMessageMessage['senderId'] = senderId;

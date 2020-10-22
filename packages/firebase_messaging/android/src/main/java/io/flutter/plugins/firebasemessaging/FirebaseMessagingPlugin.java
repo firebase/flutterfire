@@ -260,8 +260,7 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
                   try {
                     if (senderId != null) {
                       FirebaseInstanceId.getInstance().deleteToken(senderId, FCM_VALUE);
-                    }
-                    else {
+                    } else {
                       FirebaseInstanceId.getInstance().deleteInstanceId();
                     }
 
@@ -303,33 +302,32 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   private Task<String> getToken(final String senderId) {
     if (senderId == null) {
       return FirebaseInstanceId.getInstance()
-      .getInstanceId()
-      .continueWithTask(new Continuation<InstanceIdResult, Task<String>>() {
-          @Override
-          public Task<String> then(@NonNull Task<InstanceIdResult> task) throws Exception {
-            if (!task.isSuccessful()) {
-                return Tasks.forException(task.getException());
-            }
-            InstanceIdResult result = task.getResult();
-            return Tasks.forResult(task.getResult().getToken());
-          }
-      });
-    }
-    else {
+          .getInstanceId()
+          .continueWithTask(
+              new Continuation<InstanceIdResult, Task<String>>() {
+                @Override
+                public Task<String> then(@NonNull Task<InstanceIdResult> task) throws Exception {
+                  if (!task.isSuccessful()) {
+                    return Tasks.forException(task.getException());
+                  }
+                  InstanceIdResult result = task.getResult();
+                  return Tasks.forResult(task.getResult().getToken());
+                }
+              });
+    } else {
       final TaskCompletionSource<String> task = new TaskCompletionSource<String>();
       new Thread(
-        new Runnable() {
-          @Override
-          public void run() {
-            try {
-                task.setResult(FirebaseInstanceId.getInstance().getToken(senderId, FCM_VALUE));
-            }
-            catch (IOException e) {
-                task.setException(e);
-            }
-          }
-        })
-      .start();
+              new Runnable() {
+                @Override
+                public void run() {
+                  try {
+                    task.setResult(FirebaseInstanceId.getInstance().getToken(senderId, FCM_VALUE));
+                  } catch (IOException e) {
+                    task.setException(e);
+                  }
+                }
+              })
+          .start();
       return task.getTask();
     }
   }
