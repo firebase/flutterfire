@@ -35,7 +35,9 @@ jobs:
         with:
           api-level: 28
           arch: x86_64
-          target: google_apis
+          # Firebase Storage works without Google Play Services, so we don't use the `googleapis`
+          # emulator target as it's considerably slower on CI.
+          target: default
           profile: Nexus 5X
           script: ./.github/workflows/scripts/drive-example.sh android
 
@@ -60,3 +62,20 @@ jobs:
         run: ./.github/workflows/scripts/build-example.sh macos
       - name: "Drive MacOS Example"
         run: ./.github/workflows/scripts/drive-example.sh macos
+
+# TODO: enable once web support lands.
+#  web:
+#    runs-on: ubuntu-latest
+#    timeout-minutes: 15
+#    steps:
+#      - uses: actions/checkout@v1
+#        with:
+#          fetch-depth: 0
+#      - name: "Install Flutter"
+#        run: ./.github/workflows/scripts/install-flutter.sh beta
+#      - name: "Install Tools"
+#        run: |
+#          ./.github/workflows/scripts/install-tools.sh
+#          flutter config --enable-web
+#      - name: "Drive Example"
+#        run: ./.github/workflows/scripts/drive-example.sh web

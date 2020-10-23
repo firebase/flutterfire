@@ -130,19 +130,24 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   /// Handles any incoming [authChanges] listener events.
+  // Duplicate setting of [currentUser] in [_handleAuthStateChangesListener] & [_handleIdTokenChangesListener]
+  // as iOS & Android do not guarantee correct ordering
   Future<void> _handleAuthStateChangesListener(
       Map<dynamic, dynamic> arguments) async {
     String appName = arguments['appName'];
     StreamController<UserPlatform> streamController =
         _authStateChangesListeners[appName];
+    MethodChannelFirebaseAuth instance =
+        _methodChannelFirebaseAuthInstances[appName];
 
     if (arguments['user'] == null) {
+      instance.currentUser = null;
       streamController.add(null);
     } else {
-      MethodChannelFirebaseAuth instance =
-          _methodChannelFirebaseAuthInstances[appName];
       final Map<String, dynamic> userMap =
           Map<String, dynamic>.from(arguments['user']);
+      MethodChannelUser user = MethodChannelUser(instance, userMap);
+      instance.currentUser = user;
       streamController.add(MethodChannelUser(instance, userMap));
     }
   }
@@ -158,19 +163,19 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         _idTokenChangesListeners[appName];
     StreamController<UserPlatform> userChangesStreamController =
         _userChangesListeners[appName];
+    MethodChannelFirebaseAuth instance =
+        _methodChannelFirebaseAuthInstances[appName];
 
     if (arguments['user'] == null) {
-      currentUser = null;
+      instance.currentUser = null;
       idTokenStreamController.add(null);
       userChangesStreamController.add(null);
     } else {
-      MethodChannelFirebaseAuth instance =
-          _methodChannelFirebaseAuthInstances[appName];
       final Map<String, dynamic> userMap =
           Map<String, dynamic>.from(arguments['user']);
 
       MethodChannelUser user = MethodChannelUser(instance, userMap);
-      currentUser = user;
+      instance.currentUser = user;
       idTokenStreamController.add(user);
       userChangesStreamController.add(user);
     }

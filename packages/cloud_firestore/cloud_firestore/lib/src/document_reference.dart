@@ -89,7 +89,7 @@ class DocumentReference {
     return set(data, options);
   }
 
-  /// Updates data on the documnent. Data will be merged with any existing
+  /// Updates data on the document. Data will be merged with any existing
   /// document data.
   ///
   /// If no document exists yet, the update will fail.
