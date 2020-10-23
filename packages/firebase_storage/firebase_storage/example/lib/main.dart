@@ -70,9 +70,9 @@ class _TaskManager extends State<TaskManager> {
         .child('playground')
         .child('/some-image.jpg');
 
-    final metadata = firebase_storage.SettableMetadata(contentType: 'image/jpeg', customMetadata: {
-      'picked-file-path': file.path
-    });
+    final metadata = firebase_storage.SettableMetadata(
+        contentType: 'image/jpeg',
+        customMetadata: {'picked-file-path': file.path});
 
     if (kIsWeb) {
       uploadTask = ref.putData(await file.readAsBytes(), metadata);
@@ -110,7 +110,8 @@ class _TaskManager extends State<TaskManager> {
         });
         break;
       case UploadType.file:
-        PickedFile file = await ImagePicker().getImage(source: ImageSource.gallery);
+        PickedFile file =
+            await ImagePicker().getImage(source: ImageSource.gallery);
         firebase_storage.UploadTask task = await uploadFile(file);
         if (task != null) {
           setState(() {
@@ -204,8 +205,7 @@ class _TaskManager extends State<TaskManager> {
                       } else {
                         return _downloadFile(_uploadTasks[index].snapshot.ref);
                       }
-                    }))
-                        );
+                    })));
   }
 }
 
@@ -213,7 +213,11 @@ class _TaskManager extends State<TaskManager> {
 class UploadTaskListTile extends StatelessWidget {
   // ignore: public_member_api_docs
   const UploadTaskListTile(
-      {Key key, this.task, this.onDismissed, this.onDownload, this.onDownloadLink})
+      {Key key,
+      this.task,
+      this.onDismissed,
+      this.onDownload,
+      this.onDownloadLink})
       : super(key: key);
 
   /// The [UploadTask].

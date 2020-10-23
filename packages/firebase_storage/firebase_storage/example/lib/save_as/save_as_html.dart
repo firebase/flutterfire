@@ -25,13 +25,12 @@ void _addElementToContainerAndClick(Element container, Element element) {
   element.click();
 }
 
-
 /// Present a dialog so the user can save as... a bunch of bytes.
 Future<void> saveAsBytes(Uint8List bytes, String suggestedName) async {
   // Convert bytes to an ObjectUrl through Blob
   final blob = Blob([bytes]);
   final path = Url.createObjectUrl(blob);
-  
+
   // Create a DOM container where we can host the anchor.
   final target = _ensureInitialized('__x_file_dom_element');
 

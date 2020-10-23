@@ -277,7 +277,7 @@ void runReferenceTests() {
         expect(complete.metadata.size, kTestString.length);
         expect(complete.metadata.contentLanguage, 'en');
         expect(complete.metadata.customMetadata['activity'], 'test');
-      }, skip: kIsWeb);
+      });
 
       test('errors if permission denied', () async {
         try {
@@ -294,8 +294,8 @@ void runReferenceTests() {
         }
 
         fail('Should have thrown an error');
-      }, skip: kIsWeb);
-    });
+      });
+    }, skip: kIsWeb);
 
     group('putString', () {
       test('uploads a string', () async {
@@ -380,7 +380,7 @@ void runReferenceTests() {
         TaskSnapshot complete = await storage.ref('/ok.jpeg').writeToFile(file);
         expect(complete.bytesTransferred, complete.totalBytes);
         expect(complete.state, TaskState.success);
-      }, skip: kIsWeb);
+      });
 
       test('errors if permission denied', () async {
         try {
@@ -397,8 +397,8 @@ void runReferenceTests() {
         }
 
         fail('Should have thrown an error');
-      }, skip: kIsWeb);
-    });
+      });
+    }, skip: kIsWeb);
 
     test('toString', () async {
       expect(storage.ref('/uploadNope.jpeg').toString(),

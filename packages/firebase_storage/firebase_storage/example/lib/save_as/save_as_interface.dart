@@ -4,4 +4,3 @@ import 'dart:typed_data';
 Future<void> saveAsBytes(Uint8List bytes, String suggestedName) async {
   return null;
 }
-
