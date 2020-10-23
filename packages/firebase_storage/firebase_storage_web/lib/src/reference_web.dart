@@ -9,6 +9,7 @@ import 'package:firebase_storage_platform_interface/firebase_storage_platform_in
 import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase_storage_web/src/task_web.dart';
 import 'package:firebase_storage_web/src/utils/list.dart';
+import 'package:firebase_storage_web/src/utils/metadata_cache.dart';
 import 'package:http/http.dart' as http;
 
 import './firebase_storage_web.dart';
@@ -17,8 +18,11 @@ import './utils/errors.dart';
 
 /// The web implementation of a Firebase Storage 'ref'
 class ReferenceWeb extends ReferencePlatform {
-  /// The js-interop layer for the ref that is wrapped by this class...
+  // The js-interop layer for the ref that is wrapped by this class...
   fb.StorageReference _ref;
+
+  // Remember what metadata has already been set on this ref.
+  final SettableMetadataCache _cache = SettableMetadataCache();
 
   // The path for the current ref
   final String _path;
@@ -127,7 +131,7 @@ class ReferenceWeb extends ReferencePlatform {
       _ref.put(
         data,
         settableMetadataToFbUploadMetadata(
-          metadata,
+          _cache.store(metadata),
           md5Hash: md5.convert(data).toString(),
         ),
       ),
@@ -143,7 +147,7 @@ class ReferenceWeb extends ReferencePlatform {
       _ref.put(
         data,
         settableMetadataToFbUploadMetadata(
-          metadata,
+          _cache.store(metadata),
           md5Hash: md5.convert(data).toString(),
         ),
       ),
@@ -171,7 +175,7 @@ class ReferenceWeb extends ReferencePlatform {
         data,
         putStringFormatToString(format),
         settableMetadataToFbUploadMetadata(
-          metadata,
+          _cache.store(metadata),
           md5Hash: md5.convert(data.codeUnits).toString(),
         ),
       ),
@@ -190,7 +194,8 @@ class ReferenceWeb extends ReferencePlatform {
     //
     // (This fails test "errors if metadata update removes existing data")
     return _ref
-        .updateMetadata(settableMetadataToFbSettableMetadata(metadata))
+        .updateMetadata(
+            settableMetadataToFbSettableMetadata(_cache.store(metadata)))
         .then(fbFullMetadataToFullMetadata)
         .catchError((e) {
       fbFirebaseErrorToFirebaseException(e);
