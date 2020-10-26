@@ -4,7 +4,6 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'utils/exception.dart';
-
 import 'utils/web_utils.dart';
 import 'utils/codec_utility.dart';
 import 'interop/firestore.dart' as firestore_interop;
@@ -34,7 +33,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         convertSetOptions(options),
       );
     } catch (e) {
-      throw convertPlatformException(e);
+      throw getFirebaseException(e);
     }
   }
 
@@ -43,7 +42,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     try {
       await _delegate.update(data: CodecUtility.encodeMapData(data));
     } catch (e) {
-      throw convertPlatformException(e);
+      throw getFirebaseException(e);
     }
   }
 
@@ -54,7 +53,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
           await _delegate.get(convertGetOptions(options));
       return convertWebDocumentSnapshot(this.firestore, documentSnapshot);
     } catch (e) {
-      throw convertPlatformException(e);
+      throw getFirebaseException(e);
     }
   }
 
@@ -63,7 +62,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     try {
       await _delegate.delete();
     } catch (e) {
-      throw convertPlatformException(e);
+      throw getFirebaseException(e);
     }
   }
 
@@ -80,7 +79,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         .map((webSnapshot) =>
             convertWebDocumentSnapshot(this.firestore, webSnapshot))
         .handleError((e) {
-      throw convertPlatformException(e);
+      throw getFirebaseException(e);
     });
   }
 }
