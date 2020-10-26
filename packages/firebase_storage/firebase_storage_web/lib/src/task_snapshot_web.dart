@@ -5,19 +5,20 @@
 import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 
-import 'reference_web.dart';
 import 'utils/metadata.dart';
 import 'utils/task.dart';
 
 /// Implementation for a [TaskSnapshotPlatform].
 class TaskSnapshotWeb extends TaskSnapshotPlatform {
   // ignore: public_member_api_docs
-  TaskSnapshotWeb(this.storage, TaskState state, fb.UploadTaskSnapshot snapshot)
-      : _snapshot = snapshot,
+  TaskSnapshotWeb(
+      ReferencePlatform ref, TaskState state, fb.UploadTaskSnapshot snapshot)
+      : _reference = ref,
+        _snapshot = snapshot,
         super(state, null);
 
   /// The [FirebaseStoragePlatform] used to create the task.
-  final FirebaseStoragePlatform storage;
+  final ReferencePlatform _reference;
 
   final fb.UploadTaskSnapshot _snapshot;
 
@@ -36,7 +37,7 @@ class TaskSnapshotWeb extends TaskSnapshotPlatform {
   /// The [Reference] for this snapshot.
   @override
   ReferencePlatform get ref {
-    return ReferenceWeb(storage, _snapshot.ref.fullPath);
+    return _reference;
   }
 
   /// The current task snapshot state.

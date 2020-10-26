@@ -22,6 +22,7 @@ class ReferenceWeb extends ReferencePlatform {
   fb.StorageReference _ref;
 
   // Remember what metadata has already been set on this ref.
+  // TODO: Should this be initialized with the metadata currently in firebase?
   final SettableMetadataCache _cache = SettableMetadataCache();
 
   // The path for the current ref
@@ -127,7 +128,7 @@ class ReferenceWeb extends ReferencePlatform {
   /// Optionally, you can also set metadata onto the uploaded object.
   TaskPlatform putData(Uint8List data, [SettableMetadata metadata]) {
     return TaskWeb(
-      storage,
+      this,
       _ref.put(
         data,
         settableMetadataToFbUploadMetadata(
@@ -143,7 +144,7 @@ class ReferenceWeb extends ReferencePlatform {
   /// Optionally, you can also set metadata onto the uploaded object.
   TaskPlatform putBlob(dynamic data, [SettableMetadata metadata]) {
     return TaskWeb(
-      storage,
+      this,
       _ref.put(
         data,
         settableMetadataToFbUploadMetadata(
@@ -170,7 +171,7 @@ class ReferenceWeb extends ReferencePlatform {
     SettableMetadata metadata,
   ]) {
     return TaskWeb(
-      storage,
+      this,
       _ref.putString(
         data,
         putStringFormatToString(format),

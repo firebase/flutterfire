@@ -9,21 +9,24 @@ import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:firebase_storage_web/src/utils/errors.dart';
 
-import '../firebase_storage_web.dart';
 import 'utils/task.dart';
 
-/// Doc
+/// The web platform implementation of an (Upload)Task.
+/// This class wraps a proper [fb.UploadTask] and exposes bindings
+/// to its functionality: Stream of changes, a Future notifying of
+/// success/errors, and pause/resume/cancel methods.
 class TaskWeb extends TaskPlatform {
-  final FirebaseStorageWeb _storage;
+  final ReferencePlatform _reference;
 
   final fb.UploadTask _task;
 
   Future<TaskSnapshotPlatform> _onComplete;
   Stream<TaskSnapshotPlatform> _snapshotEvents;
 
-  /// Doc
-  TaskWeb(FirebaseStorageWeb storage, fb.UploadTask task)
-      : _storage = storage,
+  /// Creates a Task for web from a [ReferencePlatform] object and a native [fb.UploadTask].
+  /// The `reference` is used when creating [TaskSnapshotWeb] of this task.
+  TaskWeb(ReferencePlatform reference, fb.UploadTask task)
+      : _reference = reference,
         _task = task,
         super() {
     // This future represents the internal state of the Task.
@@ -33,7 +36,7 @@ class TaskWeb extends TaskPlatform {
     // type of Exception.
     _onComplete = _task.future
         .then<TaskSnapshotPlatform>(
-      (snapshot) => fbUploadTaskSnapshotToTaskSnapshot(storage, snapshot),
+      (snapshot) => fbUploadTaskSnapshotToTaskSnapshot(_reference, snapshot),
     )
         .catchError((e) {
       fbFirebaseErrorToFirebaseException(e);
@@ -47,8 +50,8 @@ class TaskWeb extends TaskPlatform {
     // This stream converts the UploadTask Snapshots from JS to the plugins'
     // It can also throw a FirebaseError internally, so we handle it.
     final onStateChangedStream = _task.onStateChanged
-        .map<TaskSnapshotPlatform>(
-            (snapshot) => fbUploadTaskSnapshotToTaskSnapshot(storage, snapshot))
+        .map<TaskSnapshotPlatform>((snapshot) =>
+            fbUploadTaskSnapshotToTaskSnapshot(_reference, snapshot))
         .handleError((e) {
       fbFirebaseErrorToFirebaseException(e);
     });
@@ -72,7 +75,7 @@ class TaskWeb extends TaskPlatform {
   /// The latest [TaskSnapshot] for this task.
   @override
   TaskSnapshotPlatform get snapshot {
-    return fbUploadTaskSnapshotToTaskSnapshot(_storage, _task.snapshot);
+    return fbUploadTaskSnapshotToTaskSnapshot(_reference, _task.snapshot);
   }
 
   /// Returns a [Future] once the task has completed.

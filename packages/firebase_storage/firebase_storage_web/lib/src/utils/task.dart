@@ -22,11 +22,11 @@ TaskState fbTaskStateToTaskState(fb.TaskState state) {
 
 /// Converts UploadTaskSnapshot from the JS interop layer to TaskSnapshotWeb for the plugin.
 TaskSnapshotWeb fbUploadTaskSnapshotToTaskSnapshot(
-    FirebaseStoragePlatform storage, fb.UploadTaskSnapshot snapshot) {
+    ReferencePlatform reference, fb.UploadTaskSnapshot snapshot) {
   if (snapshot == null) {
     return null;
   }
 
   return TaskSnapshotWeb(
-      storage, fbTaskStateToTaskState(snapshot.state), snapshot);
+      reference, fbTaskStateToTaskState(snapshot.state), snapshot);
 }
