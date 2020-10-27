@@ -210,6 +210,87 @@ try {
 To learn more about how you can handle any errors which are thrown from the method, view the [Error Handling](error-handling)
 documentation.
 
+## Email Link Authentication
+
+You can use Firebase Authentication to sign in a user by sending them an email containing a link, which they can click to sign in. In the process, the user's email address is also verified.
+
+### Enable Email Link sign-in for your Firebase project
+
+Ensure that passwordless sign-in is enabled in the project. Follow the guide [here](https://firebase.google.com/docs/auth/android/email-link-auth#enable_email_link_sign-in_for_your_firebase_project).
+
+### Send an authentication link to the user's email address
+
+To initiate the authentication flow, present the user with an interface that prompts the user to provide their email address and then call sendSignInLinkToEmail to request that Firebase send the authentication link to the user's email.
+
+Construct the ActionCodeSettings object, which provides Firebase with instructions on how to construct the email link. Set the following fields:
+
+* `url`: The deep link to embed and any additional state to be passed along. The link's domain has to be whitelisted in the Firebase Console list of authorized domains, which can be found by going to the Sign-in method tab (Authentication -> Sign-in method). The link will redirect the user to this URL if the app is not installed on their device and the app was not able to be installed.
+
+* `androidPackageName` and `IOSBundleId`: The apps to use when the sign-in link is opened on an Android or iOS device. Learn more on how to configure Firebase Dynamic Links to open email action links via mobile apps.
+
+* `handleCodeInApp`: Set to true. The sign-in operation has to always be completed in the app unlike other out of band email actions (password reset and email verifications). This is because, at the end of the flow, the user is expected to be signed in and their Auth state persisted within the app.
+
+* `dynamicLinkDomain`: When multiple custom dynamic link domains are defined for a project, specify which one to use when the link is to be opened via a specified mobile app (for example, example.page.link). Otherwise the first domain is automatically selected.
+
+```dart
+var acs = ActionCodeSettings(
+    // URL you want to redirect back to. The domain (www.example.com) for this
+    // URL must be whitelisted in the Firebase Console.
+    url: "https://www.example.com/finishSignUp?cartId=1234",
+    // This must be true
+    handleCodeInApp: true,
+    iOSBundleId: "com.example.ios",
+    androidPackageName: "com.example.android",
+    // installIfNotAvailable
+    androidInstallApp: true,      
+    // minimumVersion
+    androidMinimumVersion: "12"); 
+```
+
+Ask the user for their email.
+
+Send the authentication link to the user's email, and save the user's email in case the user completes the email sign-in on the same device.
+
+```dart
+var emailAuth = "someemail@domain.com";
+FirebaseAuth.instance.sendSignInLinkToEmail(
+        email: emailAuth, actionCodeSettings: acs)
+    .catchError((onError) => print('Error sending email verification $onError'))
+    .then((value) => print('Successfully sent email verification'));
+});
+```
+
+### Verify email link and sign in
+
+Firebase Authentication uses Firebase Dynamic Links to send the email link to a mobile device. For sign-in completion via mobile application, the application has to be configured to detect the incoming application link, parse the underlying deep link and then complete the sign-in.
+
+Follow the setup process for Firebase Dynamic Links on Flutter in this [guide](https://pub.dev/packages/firebase_dynamic_links).
+
+After you received the link, verify that it is meant for email link authentication and complete the sign in.
+
+```dart
+var auth = FirebaseAuth.instance;
+// Retrieve the email from wherever you stored it
+var emailAuth = "someemail@domain.com";
+// Confirm the link is a sign-in with email link.
+if (auth.isSignInWithEmailLink(emailLink)) {
+  // The client SDK will parse the code from the link for you.
+  auth.signInWithEmailLink(email: emailAuth, emailLink: emailLink)
+    .catchError(
+      (onError) => print('Error signing in with email link $onError'))
+    .then((value) {
+    // You can access the new user via value.user
+    // Additional user info profile *not* available via:
+    // value.additionalUserInfo.profile == null
+    // You can check if the user is new or existing:
+    // value.additionalUserInfo.isNewUser;
+    var userEmail = value.user;
+    print('Successfully signed in with email link!');
+  });
+}
+
+```
+
 ## Signing Out
 
 To sign a user out, call the `signOut()` method:
@@ -314,7 +395,7 @@ String email = 'barry.allen@example.com';
 String password = 'SuperSecretPassword!';
 
 // Create a credential
-EmailAuthCredential credential = EmailAuthProvider.credential(email, password);
+EmailAuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
 
 // Reauthenticate
 await FirebaseAuth.instance.currentUser.reauthenticateWithCredential(credential);
