@@ -101,7 +101,7 @@ void main() {
 }
 
 class App extends StatelessWidget {
-  // Create the initilization Future outside of `build`:
+  // Create the initialization Future outside of `build`:
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
@@ -227,9 +227,9 @@ If you wish to change these versions, you can manually override the native SDK v
 In the `/android/app/build.gradle` file, you can provide your own versions using the options shown below:
 
 ```groovy
-project.ext {
+rootProject.ext {
   set('FlutterFire', [
-    FirebaseSDKVersion: '21.1.0'
+    FirebaseSDKVersion: '25.12.0'
   ])
 }
 ```
@@ -240,7 +240,7 @@ Open your `/ios/Podfile` or `/macos/Podfile` file and add any of the globals bel
 
 ```ruby
 # Override Firebase SDK Version
-$FirebaseSDKVersion = '6.30.0'
+$FirebaseSDKVersion = '6.33.0'
 ```
 
 ## Next Steps

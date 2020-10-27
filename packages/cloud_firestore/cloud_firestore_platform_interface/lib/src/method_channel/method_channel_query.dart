@@ -88,17 +88,22 @@ class MethodChannelQuery extends QueryPlatform {
   /// Fetch the documents for this query
   @override
   Future<QuerySnapshotPlatform> get([GetOptions options]) async {
-    final Map<String, dynamic> data = await MethodChannelFirebaseFirestore
-        .channel
-        .invokeMapMethod<String, dynamic>(
-      'Query#get',
-      <String, dynamic>{
-        'query': this,
-        'firestore': firestore,
-        'source': getSourceString(options.source),
-      },
-    ).catchError(catchPlatformException);
-    return MethodChannelQuerySnapshot(firestore, data);
+    try {
+      final Map<String, dynamic> data = await MethodChannelFirebaseFirestore
+          .channel
+          .invokeMapMethod<String, dynamic>(
+        'Query#get',
+        <String, dynamic>{
+          'query': this,
+          'firestore': firestore,
+          'source': getSourceString(options.source),
+        },
+      );
+
+      return MethodChannelQuerySnapshot(firestore, data);
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override

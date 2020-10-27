@@ -1,3 +1,16 @@
+## 2.1.1
+
+ - Update a dependency to the latest release.
+
+## 2.1.0
+
+ - **FIX**: fix IdTokenResult timestamps (web, ios) (#3357).
+ - **FEAT**: add support for linkWithPhoneNumber (#3436).
+ - **FEAT**: use named arguments for ActionCodeSettings (#3269).
+ - **FEAT**: implement signInWithPhoneNumber on web (#3205).
+ - **FEAT**: expose smsCode (android only) (#3308).
+ - **DOCS**: fixed signOut method documentation (#3342).
+
 ## 2.0.1
 
 * Fixed an incorrect assert when creating a `GoogleAuthCredential` instance. [(#3216)](https://github.com/FirebaseExtended/flutterfire/pull/3216/files#diff-be71096f90f1a879f17b7c94607b0885)

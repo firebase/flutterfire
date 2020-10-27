@@ -182,10 +182,10 @@ class _MyAppState extends State<MyApp> {
                               ));
                               throw 'error_example';
                             } catch (e, s) {
-                              // "context" will append the word "thrown" in the
+                              // "reason" will append the word "thrown" in the
                               // Crashlytics console.
                               await FirebaseCrashlytics.instance
-                                  .recordError(e, s, context: 'as an example');
+                                  .recordError(e, s, reason: 'as an example');
                             }
                           }),
                     ],
