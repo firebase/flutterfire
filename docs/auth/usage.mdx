@@ -395,7 +395,7 @@ String email = 'barry.allen@example.com';
 String password = 'SuperSecretPassword!';
 
 // Create a credential
-EmailAuthCredential credential = EmailAuthProvider.credential(email, password);
+EmailAuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
 
 // Reauthenticate
 await FirebaseAuth.instance.currentUser.reauthenticateWithCredential(credential);
