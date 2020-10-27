@@ -45,15 +45,22 @@ class UserWeb extends UserPlatform {
                   })
               .toList(),
           'refreshToken': _webUser.refreshToken,
-          'tenantId': _webUser
-              .tenantId, // TODO(helenaford): needs testing, wasn't supported on dart lib
+          'tenantId': _webUser.tenantId,
           'uid': _webUser.uid,
         });
 
   final auth_interop.User _webUser;
 
+  _assertCurrentUser(FirebaseAuthPlatform instance) {
+    if (instance.currentUser == null) {
+      throw FirebaseAuthException(
+          code: "no-current-user", message: "No user currently signed in.");
+    }
+  }
+
   @override
   Future<void> delete() async {
+    _assertCurrentUser(auth);
     try {
       await _webUser.delete();
     } catch (e) {
@@ -63,6 +70,8 @@ class UserWeb extends UserPlatform {
 
   @override
   Future<String> getIdToken(bool forceRefresh) async {
+    _assertCurrentUser(auth);
+
     try {
       return await _webUser.getIdToken(forceRefresh);
     } catch (e) {
@@ -72,6 +81,7 @@ class UserWeb extends UserPlatform {
 
   @override
   Future<IdTokenResult> getIdTokenResult(bool forceRefresh) async {
+    _assertCurrentUser(auth);
     return convertWebIdTokenResult(
         await _webUser.getIdTokenResult(forceRefresh));
   }
@@ -79,6 +89,7 @@ class UserWeb extends UserPlatform {
   @override
   Future<UserCredentialPlatform> linkWithCredential(
       AuthCredential credential) async {
+    _assertCurrentUser(auth);
     try {
       return UserCredentialWeb(
           auth,
@@ -92,6 +103,7 @@ class UserWeb extends UserPlatform {
   @override
   Future<ConfirmationResultPlatform> linkWithPhoneNumber(String phoneNumber,
       RecaptchaVerifierFactoryPlatform applicationVerifier) async {
+    _assertCurrentUser(auth);
     try {
       // Do not inline - type is not inferred & error is thrown.
       auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
@@ -106,6 +118,7 @@ class UserWeb extends UserPlatform {
   @override
   Future<UserCredentialPlatform> reauthenticateWithCredential(
       AuthCredential credential) async {
+    _assertCurrentUser(auth);
     try {
       auth_interop.UserCredential userCredential = await _webUser
           .reauthenticateWithCredential(convertPlatformCredential(credential));
@@ -117,6 +130,8 @@ class UserWeb extends UserPlatform {
 
   @override
   Future<void> reload() async {
+    _assertCurrentUser(auth);
+
     try {
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
@@ -127,6 +142,8 @@ class UserWeb extends UserPlatform {
 
   @override
   Future<void> sendEmailVerification(ActionCodeSettings actionCodeSettings) {
+    _assertCurrentUser(auth);
+
     try {
       return _webUser.sendEmailVerification(
           convertPlatformActionCodeSettings(actionCodeSettings));
@@ -137,6 +154,8 @@ class UserWeb extends UserPlatform {
 
   @override
   Future<UserPlatform> unlink(String providerId) async {
+    _assertCurrentUser(auth);
+
     try {
       return UserWeb(auth, await _webUser.unlink(providerId));
     } catch (e) {
@@ -146,6 +165,8 @@ class UserWeb extends UserPlatform {
 
   @override
   Future<void> updateEmail(String newEmail) async {
+    _assertCurrentUser(auth);
+
     try {
       await _webUser.updateEmail(newEmail);
       await _webUser.reload();
@@ -157,6 +178,8 @@ class UserWeb extends UserPlatform {
 
   @override
   Future<void> updatePassword(String newPassword) async {
+    _assertCurrentUser(auth);
+
     try {
       await _webUser.updatePassword(newPassword);
       await _webUser.reload();
@@ -168,6 +191,8 @@ class UserWeb extends UserPlatform {
 
   @override
   Future<void> updatePhoneNumber(PhoneAuthCredential phoneCredential) async {
+    _assertCurrentUser(auth);
+
     try {
       await _webUser
           .updatePhoneNumber(convertPlatformCredential(phoneCredential));
@@ -180,6 +205,8 @@ class UserWeb extends UserPlatform {
 
   @override
   Future<void> updateProfile(Map<String, String> profile) async {
+    _assertCurrentUser(auth);
+
     try {
       await _webUser.updateProfile(auth_interop.UserProfile(
         displayName: profile['displayName'],
@@ -192,8 +219,12 @@ class UserWeb extends UserPlatform {
     }
   }
 
-  // TODO: not supported on firebase-dart
-  // @override
-  // Future<void> verifyBeforeUpdateEmail(String newEmail,
-  //     [ActionCodeSettings actionCodeSettings]) async {}
+  @override
+  Future<void> verifyBeforeUpdateEmail(String newEmail,
+      [ActionCodeSettings actionCodeSettings]) async {
+    _assertCurrentUser(auth);
+
+    await _webUser.verifyBeforeUpdateEmail(
+        newEmail, convertPlatformActionCodeSettings(actionCodeSettings));
+  }
 }

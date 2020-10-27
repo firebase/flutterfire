@@ -11,21 +11,26 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
 ///
 /// The firebase-dart wrapper exposes a [core_interop.FirebaseError], allowing us to
 /// use the code and message and convert it into an expected [FirebaseAuthException].
-///
-/// TODO: The firebase-dart wrapper does not support email or credential properties.
 FirebaseAuthException getFirebaseAuthException(Object exception) {
   if (exception is! core_interop.FirebaseError) {
     return FirebaseAuthException(
         code: 'unknown', message: 'An unknown error occurred: ${exception}');
   }
 
-  core_interop.FirebaseError firebaseError =
-      exception as core_interop.FirebaseError;
+  auth_interop.AuthError firebaseError = exception as auth_interop.AuthError;
 
   String code = firebaseError.code.replaceFirst('auth/', '');
   String message =
       firebaseError.message.replaceFirst('(${firebaseError.code})', '');
-  return FirebaseAuthException(code: code, message: message);
+
+  return FirebaseAuthException(
+    code: code,
+    message: message,
+    email: firebaseError.email,
+    credential: convertWebAuthCredential(firebaseError.credential),
+    phoneNumber: firebaseError.phoneNumber,
+    tenantId: firebaseError.tenantId,
+  );
 }
 
 /// Converts a [auth_interop.ActionCodeInfo] into a [ActionCodeInfo].
@@ -34,9 +39,10 @@ ActionCodeInfo convertWebActionCodeInfo(
   if (webActionCodeInfo == null) {
     return null;
   }
-  // TODO: firebase-dart missing operation, previousEmail - defaulting to 'unknown'.
+
   return ActionCodeInfo(operation: 0, data: <String, dynamic>{
     'email': webActionCodeInfo.data.email,
+    'previousEmail': webActionCodeInfo.data.previousEmail,
   });
 }
 
@@ -179,6 +185,19 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
   return null;
 }
 
+/// Converts a [auth_interop.AuthCredential] into a [AuthCredential].
+AuthCredential convertWebAuthCredential(
+    auth_interop.AuthCredential authCredential) {
+  if (authCredential == null) {
+    return null;
+  }
+
+  return AuthCredential(
+    providerId: authCredential.providerId,
+    signInMethod: authCredential.signInMethod,
+  );
+}
+
 /// Converts a [auth_interop.OAuthCredential] into a [AuthCredential].
 AuthCredential convertWebOAuthCredential(
     auth_interop.OAuthCredential oAuthCredential) {
@@ -197,7 +216,6 @@ auth_interop.OAuthCredential convertPlatformCredential(
     AuthCredential credential) {
   if (credential is EmailAuthCredential) {
     if (credential.emailLink != null) {
-      // TODO(helenaford): test credentialWithLink(), wasn't supported by firebase-dart
       return auth_interop.EmailAuthProvider.credentialWithLink(
           credential.email, credential.emailLink);
     }

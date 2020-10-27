@@ -3,15 +3,13 @@
 // found in the LICENSE file.
 
 // ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, comment_references
+// ignore_for_file: public_member_api_docs
 
 @JS('firebase.auth')
 library firebase.auth_interop;
 
 import 'package:js/js.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-// import '../func.dart';
-// import 'app_interop.dart';
-// import 'es6_interop.dart';
 
 @JS('Auth')
 abstract class AuthJsImpl {
@@ -115,6 +113,8 @@ abstract class UserJsImpl extends UserInfoJsImpl {
       AuthProviderJsImpl provider);
   external PromiseJsImpl<void> reload();
   external PromiseJsImpl<void> sendEmailVerification(
+      [ActionCodeSettings actionCodeSettings]);
+  external PromiseJsImpl<void> verifyBeforeUpdateEmail(String newEmail,
       [ActionCodeSettings actionCodeSettings]);
   external PromiseJsImpl<UserJsImpl> unlink(String providerId);
   external PromiseJsImpl<void> updateEmail(String newEmail);
@@ -278,7 +278,7 @@ abstract class ConfirmationResultJsImpl {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.ActionCodeInfo>.
 @JS()
 abstract class ActionCodeInfo {
-  external ActionCodeEmail get data;
+  external ActionCodeData get data;
 }
 
 /// Interface representing a user's metadata.
@@ -316,12 +316,21 @@ abstract class AuthError {
   external set code(String s);
   external String get message;
   external set message(String s);
+  external String get email;
+  external set email(String s);
+  external AuthCredential get credential;
+  external set credential(AuthCredential c);
+  external String get tenantId;
+  external set tenantId(String s);
+  external String get phoneNumber;
+  external set phoneNumber(String s);
 }
 
 @JS()
 @anonymous
-class ActionCodeEmail {
+class ActionCodeData {
   external String get email;
+  external String get previousEmail;
 }
 
 /// This is the interface that defines the required continue/state URL with

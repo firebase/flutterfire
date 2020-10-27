@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 // ignore_for_file: non_constant_identifier_names
+// ignore_for_file: public_member_api_docs
 
 import 'dart:async';
 
@@ -15,16 +16,6 @@ import 'firebase_interop.dart' as firebase_interop;
 import 'utils/utils.dart';
 
 export 'auth_interop.dart';
-// show
-//     ActionCodeInfo,
-//     ActionCodeEmail,
-//     OAuthCredential,
-//     ActionCodeSettings,
-//     IosSettings,
-//     AndroidSettings,
-//     Persistence,
-//     UserMetadata;
-// export 'firebase_interop.dart' show UserProfile;
 
 /// Given an AppJSImp, return the Auth instance.
 Auth getAuthInstance([App app]) {
@@ -204,6 +195,13 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
           [auth_interop.ActionCodeSettings actionCodeSettings]) =>
       handleThenable(jsObject.sendEmailVerification(actionCodeSettings));
 
+  /// Sends a verification email to a new email address. The user's email will be updated to the new one
+  /// after being verified.
+  Future<void> verifyBeforeUpdateEmail(String newEmail,
+          [auth_interop.ActionCodeSettings actionCodeSettings]) =>
+      handleThenable(
+          jsObject.verifyBeforeUpdateEmail(newEmail, actionCodeSettings));
+
   /// Unlinks a provider with [providerId] from a user account.
   Future<User> unlink(String providerId) =>
       handleThenable(jsObject.unlink(providerId)).then(User.getInstance);
@@ -239,7 +237,6 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// Returns a JSON-serializable representation of this object.
   Map<String, dynamic> toJson() => dartify(jsObject.toJSON());
 
-  // TODO(helenaford): update toString() to match android/iOS
   @override
   String toString() => 'User: $uid';
 }

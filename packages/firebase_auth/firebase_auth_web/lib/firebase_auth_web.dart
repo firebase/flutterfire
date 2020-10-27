@@ -219,6 +219,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<void> setLanguageCode(String languageCode) {
     _webAuth.languageCode = languageCode;
+    return null;
   }
 
   @override
@@ -334,7 +335,6 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     }
   }
 
-  // TODO(helenaford): find out why await needed after return otherwise error is thrown that response is malformed
   @override
   Future<String> verifyPasswordResetCode(String code) async {
     try {

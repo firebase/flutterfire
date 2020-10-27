@@ -45,7 +45,6 @@ void runUserTests() {
         expect(token.length, greaterThan(24));
       });
 
-      // TODO(ehesp/Salakar): re-enable after Web refactor.
       test('should catch error', () async {
         // Setup
         User user;
@@ -253,7 +252,6 @@ void runUserTests() {
         fail('should have thrown an error');
       });
 
-      //TODO(ehesp/Salakar): Re-enable once Web re-worked. Web currently returns a 'user-mismatch' code.
       test('should throw user-not-found ', () async {
         // Setup
         UserCredential userCredential =
@@ -268,11 +266,21 @@ void runUserTests() {
           await user.reauthenticateWithCredential(credential);
         } on FirebaseAuthException catch (e) {
           // Assertions
-          expect(e.code, equals("user-not-found"));
-          expect(
-              e.message,
-              equals(
-                  "There is no user record corresponding to this identifier. The user may have been deleted."));
+
+          if (kIsWeb) {
+            // web throws user-mismatch instead of user-not-found
+            expect(e.code, equals("user-mismatch"));
+            expect(
+                e.message,
+                equals(
+                    "The supplied credentials do not correspond to the previously signed in user."));
+          } else {
+            expect(e.code, equals("user-not-found"));
+            expect(
+                e.message,
+                equals(
+                    "There is no user record corresponding to this identifier. The user may have been deleted."));
+          }
           return;
         } catch (e) {
           fail('should have thrown an FirebaseAuthException');
@@ -663,8 +671,6 @@ void runUserTests() {
           await auth.currentUser.updatePhoneNumber(PhoneAuthProvider.credential(
               verificationId: "", smsCode: TEST_SMS_CODE));
         } on FirebaseAuthException catch (e) {
-          print(e.code);
-          print(e.message);
           expect(e.code, "invalid-verification-id");
           expect(e.message,
               "The verification ID used to create the phone auth credential is invalid.");
@@ -714,7 +720,7 @@ void runUserTests() {
 
         fail('should have thrown an error');
       });
-    }); // TODO: not supported on firebase-dart
+    });
 
     group('delete()', () {
       test('should delete a user', () async {
@@ -768,7 +774,7 @@ void runUserTests() {
         }
 
         fail('Should have thrown an error');
-      }); // TODO: Re-enable after web refactor.
+      });
     });
   });
 }

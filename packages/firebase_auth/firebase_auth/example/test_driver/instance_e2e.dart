@@ -46,142 +46,145 @@ void runInstanceTests() {
       await auth.currentUser.delete();
     });
 
-    // TODO(helenaford): fix tests for web refactor
-    // group('authStateChanges()', () {
-    //   test('calls callback with the current user and when auth state changes',
-    //       () async {
-    //     await ensureSignedIn(regularTestEmail);
-    //     String uid = auth.currentUser.uid;
+    group('authStateChanges()', () {
+      StreamSubscription subscription;
+      StreamSubscription subscription2;
 
-    //     Stream<User> stream = auth.authStateChanges();
-    //     int call = 0;
+      tearDown(() async {
+        await subscription?.cancel();
+        await ensureSignedOut();
 
-    //     StreamSubscription subscription =
-    //         stream.listen(expectAsync1((User user) {
-    //       call++;
-    //       if (call == 1) {
-    //         expect(user.uid, isA<String>());
-    //         expect(user.uid, equals(uid)); // initial user
-    //       } else if (call == 2) {
-    //         expect(user, isNull); // logged out
-    //       } else if (call == 3) {
-    //         expect(user.uid, isA<String>());
-    //         expect(user.uid != uid, isTrue); // anonymous user
+        if (subscription2 != null) {
+          await Future.delayed(Duration(seconds: 5));
+          await subscription2.cancel();
+        }
+      });
+      test('calls callback with the current user and when auth state changes',
+          () async {
+        await ensureSignedIn(regularTestEmail);
+        String uid = auth.currentUser.uid;
 
-    //       } else {
-    //         fail("Should not have been called");
-    //       }
-    //     }, count: 3, reason: "Stream should only have been called 3 times"));
+        Stream<User> stream = auth.authStateChanges();
+        int call = 0;
 
-    //     // Prevent race condition where signOut is called before the stream hits
-    //     await auth.signOut();
-    //     await auth.signInAnonymously();
-    //     await subscription.cancel();
-    //     await ensureSignedOut();
-    //   });
+        subscription = stream.listen(expectAsync1((User user) {
+          call++;
+          if (call == 1) {
+            expect(user.uid, isA<String>());
+            expect(user.uid, equals(uid)); // initial user
+          } else if (call == 2) {
+            expect(user, isNull); // logged out
+          } else if (call == 3) {
+            expect(user.uid, isA<String>());
+            expect(user.uid != uid, isTrue); // anonymous user
+          } else {
+            fail("Should not have been called");
+          }
+        }, count: 3, reason: "Stream should only have been called 3 times"));
 
-    //   test('handles multiple subscribers', () async {
-    //     await ensureSignedOut();
+        // Prevent race condition where signOut is called before the stream hits
+        await auth.signOut();
+        await auth.signInAnonymously();
+      });
 
-    //     Stream<User> stream = auth.authStateChanges();
-    //     Stream<User> stream2 = auth.authStateChanges();
+      test('handles multiple subscribers', () async {
+        await ensureSignedOut();
 
-    //     StreamSubscription subscription =
-    //         stream.listen(expectAsync1((User user) {}, count: 2));
+        Stream<User> stream = auth.authStateChanges();
+        Stream<User> stream2 = auth.authStateChanges();
 
-    //     StreamSubscription subscription2 =
-    //         stream2.listen(expectAsync1((User user) {}, count: 3));
+        subscription = stream.listen(expectAsync1((User user) {}, count: 2));
 
-    //     await ensureSignedIn(regularTestEmail);
-    //     await subscription.cancel();
-    //     await ensureSignedOut();
-    //     await Future.delayed(Duration(seconds: 5));
-    //     await subscription2.cancel();
-    //   });
-    // });
+        subscription2 = stream2.listen(expectAsync1((User user) {}, count: 3));
 
-    // TODO(helenaford): fix tests for web refactor
-    // group('idTokenChanges()', () {
-    //   test('calls callback with the current user and when auth state changes',
-    //       () async {
-    //     await ensureSignedIn(regularTestEmail);
-    //     String uid = auth.currentUser.uid;
+        await ensureSignedIn(regularTestEmail);
+      }, skip: kIsWeb);
+    });
 
-    //     Stream<User> stream = auth.idTokenChanges();
-    //     int call = 0;
+    group('idTokenChanges()', () {
+      StreamSubscription subscription;
+      StreamSubscription subscription2;
 
-    //     StreamSubscription subscription =
-    //         stream.listen(expectAsync1((User user) {
-    //       call++;
-    //       if (call == 1) {
-    //         expect(user.uid, equals(uid)); // initial user
-    //       } else if (call == 2) {
-    //         expect(user, isNull); // logged out
-    //       } else if (call == 3) {
-    //         expect(user.uid, isA<String>());
-    //         expect(user.uid != uid, isTrue); // anonymous user
-    //       } else {
-    //         fail("Should not have been called");
-    //       }
-    //     }, count: 3, reason: "Stream should only have been called 3 times"));
+      tearDown(() async {
+        await subscription?.cancel();
+        await ensureSignedOut();
 
-    //     // Prevent race condition where signOut is called before the stream hits
-    //     await auth.signOut();
-    //     await auth.signInAnonymously();
-    //     await subscription.cancel();
-    //     await ensureSignedOut();
-    //   });
+        if (subscription2 != null) {
+          await Future.delayed(Duration(seconds: 5));
+          await subscription2.cancel();
+        }
+      });
 
-    //   test('handles multiple subscribers', () async {
-    //     await ensureSignedOut();
+      test('calls callback with the current user and when auth state changes',
+          () async {
+        await ensureSignedIn(regularTestEmail);
+        String uid = auth.currentUser.uid;
 
-    //     Stream<User> stream = auth.idTokenChanges();
-    //     Stream<User> stream2 = auth.idTokenChanges();
+        Stream<User> stream = auth.idTokenChanges();
+        int call = 0;
 
-    //     StreamSubscription subscription =
-    //         stream.listen(expectAsync1((User user) {}, count: 2));
+        subscription = stream.listen(expectAsync1((User user) {
+          call++;
+          if (call == 1) {
+            expect(user.uid, equals(uid)); // initial user
+          } else if (call == 2) {
+            expect(user, isNull); // logged out
+          } else if (call == 3) {
+            expect(user.uid, isA<String>());
+            expect(user.uid != uid, isTrue); // anonymous user
+          } else {
+            fail("Should not have been called");
+          }
+        }, count: 3, reason: "Stream should only have been called 3 times"));
 
-    //     StreamSubscription subscription2 =
-    //         stream2.listen(expectAsync1((User user) {}, count: 3));
+        // Prevent race condition where signOut is called before the stream hits
+        await auth.signOut();
+        await auth.signInAnonymously();
+      });
 
-    //     await ensureSignedIn(regularTestEmail);
-    //     await subscription.cancel();
-    //     await ensureSignedOut();
-    //     await Future.delayed(Duration(seconds: 5));
-    //     await subscription2.cancel();
-    //   });
-    // });
+      test('handles multiple subscribers', () async {
+        await ensureSignedOut();
 
-    // TODO(helenaford): fix tests for web refactor
-    // group('userChanges()', () {
-    //   StreamSubscription subscription;
-    //   tearDown(() async {
-    //     await subscription.cancel();
-    //   });
-    //   test('calls callback with the current user and when user state changes',
-    //       () async {
-    //     await ensureSignedIn(regularTestEmail);
+        Stream<User> stream = auth.idTokenChanges();
+        Stream<User> stream2 = auth.idTokenChanges();
 
-    //     Stream<User> stream = auth.userChanges();
-    //     int call = 0;
+        subscription = stream.listen(expectAsync1((User user) {}, count: 2));
 
-    //     subscription = stream.listen(expectAsync1((User user) {
-    //       call++;
-    //       if (call == 1) {
-    //         expect(user.displayName, isNull); // initial user
-    //       } else if (call == 2) {
-    //         expect(user.displayName, equals('updatedName')); // updated profile
-    //       } else {
-    //         fail("Should not have been called");
-    //       }
-    //     }, count: 2, reason: "Stream should only have been called 2 times"));
+        subscription2 = stream2.listen(expectAsync1((User user) {}, count: 3));
 
-    //     await auth.currentUser.updateProfile(displayName: 'updatedName');
+        await ensureSignedIn(regularTestEmail);
+      }, skip: kIsWeb); // TODO(helenaford): debug why test fails for web
+    });
 
-    //     await auth.currentUser.reload();
-    //     expect(auth.currentUser.displayName, equals('updatedName'));
-    //   });
-    // });
+    group('userChanges()', () {
+      StreamSubscription subscription;
+      tearDown(() async {
+        await subscription.cancel();
+      });
+      test('calls callback with the current user and when user state changes',
+          () async {
+        await ensureSignedIn(regularTestEmail);
+
+        Stream<User> stream = auth.userChanges();
+        int call = 0;
+
+        subscription = stream.listen(expectAsync1((User user) {
+          call++;
+          if (call == 1) {
+            expect(user.displayName, isNull); // initial user
+          } else if (call == 2) {
+            expect(user.displayName, equals('updatedName')); // updated profile
+          } else {
+            fail("Should not have been called");
+          }
+        }, count: 2, reason: "Stream should only have been called 2 times"));
+
+        await auth.currentUser.updateProfile(displayName: 'updatedName');
+
+        await auth.currentUser.reload();
+        expect(auth.currentUser.displayName, equals('updatedName'));
+      });
+    });
 
     group('currentUser', () {
       test('should return currentUser', () async {
@@ -324,17 +327,6 @@ void runInstanceTests() {
         }
       });
     });
-
-    // TODO(helenaford): rewrite test to successfully call getRedirectResult()
-    // group('getRedirectResult()', () {
-    //   test('throw an unimplemented error', () async {
-    //     try {
-    //       await auth.getRedirectResult();
-    //     } catch (e) {
-    //       fail('Should have ran successfully');
-    //     }
-    //   });
-    // }, skip: !kIsWeb);
 
     group('isSignInWithEmailLink()', () {
       test('should return true or false', () {
@@ -635,70 +627,35 @@ void runInstanceTests() {
       });
     });
 
-    // TODO(helenaford): test with the new web refactor
     // For manual testing only
     // group('signInWithEmailLink()', () {
-    //   // see: signInWithEmailLink test below
-    //   // to ensure an email is successfully sent using
-    //   // automated testing. Enable this manual test to
-    //   // ensure the link in the test email actually works
-    //   // and signs a user in.
-    //   test('should sign in user using link', () async {
-    //     const email = 'MANUAL TEST EMAIL HERE';
+    // see: signInWithEmailLink test below
+    // to ensure an email is successfully sent using
+    // automated testing. Enable this manual test to
+    // ensure the link in the test email actually works
+    // and signs a user in.
+    // test('should sign in user using link', () async {
+    //  const email = 'MANUAL TEST EMAIL HERE';
     //     const emailLink = 'MANUAL TEST CODE HERE';
 
-    //     var userCredential =
-    //         await auth.signInWithEmailLink(email: email, emailLink: emailLink);
+    //   var userCredential =
+    //       await auth.signInWithEmailLink(email: email, emailLink: emailLink);
 
-    //     expect(userCredential.user.email, equals(email));
-    //     // clean up
-    //     ensureSignedOut();
-    //   });
+    //   expect(userCredential.user.email, equals(email));
+    //   // clean up
+    //   ensureSignedOut();
     // });
 
-    // TODO(helenaford): works in example app, but in tests
-    group('signInWithPopup()', () {
-      // get NoSuchMethodError: The method '[]' was called on null.
-      // test('throws an error if identity configuration cannot be found',
-      //     () async {
-      //   try {
-      //     FacebookAuthProvider facebookProvider = FacebookAuthProvider();
-      //     facebookProvider.addScope('user_birthday');
-      //     facebookProvider.setCustomParameters({
-      //       'display': 'popup',
-      //     });
-
-      //     await auth.signInWithPopup(facebookProvider);
-      //   } on FirebaseAuthException catch (e) {
-      //     expect(e, isInstanceOf<FirebaseAuthException>());
-      //     expect(e.code, 'operation-not-allowed');
-      //   } on Exception catch (e) {
-      //     fail('Should have thrown a FirebaseAuthException');
-      //   }
-      // }, skip: !kIsWeb);
-
-      // TODO(helenaford): write a manual test to work with signInWithPopup
-      // test('should call successfully',
-      //     () async {
-      //
-      // }, skip: !kIsWeb);
-    });
-
-    // TODO(helenaford): works in example app, but not in tests
-    // group('signInWithRedirect()', () {
-    //   test('should call successfully', () async {
-    //     try {
-    //       FacebookAuthProvider facebookProvider = FacebookAuthProvider();
-    //       facebookProvider.addScope('user_birthday');
-    //       facebookProvider.setCustomParameters({
-    //         'display': 'popup',
-    //       });
-
-    //       await auth.signInWithRedirect(facebookProvider);
-    //     } catch (e) {
-    //       fail('Should have ran successfully');
-    //     }
-    //   }, skip: !kIsWeb);
+    // test('should throw argument-error', () async {
+    //   const email = 'test@email.com';
+    //   const emailLink = 'https://invalid.com';
+    //   try {
+    //     await auth.signInWithEmailLink(email: email, emailLink: emailLink);
+    //   } on FirebaseAuthException catch (e) {
+    //     expect(e.code, 'argument-error');
+    //     expect(e.message, 'Invalid email link!');
+    //   }
+    // });
     // });
 
     group('signOut()', () {
