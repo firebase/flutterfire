@@ -12,7 +12,6 @@ import 'package:js/js_util.dart' as util;
 import 'func.dart';
 import 'es6_interop.dart';
 import 'js_interop.dart' as js;
-import '../core.dart' show FirebaseError;
 
 /// Returns Dart representation from JS Object.
 dynamic dartify(Object jsObject,
@@ -96,16 +95,7 @@ bool _isBasicType(Object value) {
 
 /// Handles the [PromiseJsImpl] object.
 Future<T> handleThenable<T>(PromiseJsImpl<T> thenable) async {
-  T value;
-  try {
-    value = await util.promiseToFuture(thenable);
-  } catch (e) {
-    if (util.hasProperty(e, 'code')) {
-      throw _FirebaseErrorWrapper(e);
-    }
-    rethrow;
-  }
-  return value;
+  return util.promiseToFuture(thenable);
 }
 
 /// Handles the [Future] object with the provided [mapper] function.
@@ -120,29 +110,4 @@ PromiseJsImpl<S> handleFutureWithMapper<T, S>(
       resolve(mappedValue);
     }).catchError(reject);
   }));
-}
-
-
-class _FirebaseErrorWrapper extends Error implements FirebaseError {
-  final FirebaseError _source;
-
-  _FirebaseErrorWrapper(this._source);
-
-  @override
-  String get code => util.getProperty(_source, 'code');
-
-  @override
-  String get message => util.getProperty(_source, 'message');
-
-  @override
-  String get name => util.getProperty(_source, 'name');
-
-  @override
-  Object get serverResponse => util.getProperty(_source, 'serverResponse');
-
-  @override
-  String get stack => util.getProperty(_source, 'stack');
-
-  @override
-  String toString() => 'FirebaseError: $message ($code)';
 }
