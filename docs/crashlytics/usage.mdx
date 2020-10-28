@@ -29,13 +29,7 @@ await Firebase.initializeApp();
 FirebaseCrashlytics.instance.crash();
 ```
 
-This will restart the application. If using an emulator, please re-run:
-
-```bash
-  flutter run
-```
-
-`or restart the app manually through the emulator.`
+This will crash the currently running application. You will then need to manually re-open your application on your emulator for Crashlytics to submit the crash report to the Firebase Console.
 
 Restarting the application will then update the Firebase console:
 
@@ -200,4 +194,3 @@ of the app.
 ```dart
 FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 ```
-
