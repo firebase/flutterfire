@@ -27,6 +27,5 @@ TaskSnapshotWeb fbUploadTaskSnapshotToTaskSnapshot(
     return null;
   }
 
-  return TaskSnapshotWeb(
-      reference, fbTaskStateToTaskState(snapshot.state), snapshot);
+  return TaskSnapshotWeb(reference, snapshot);
 }
