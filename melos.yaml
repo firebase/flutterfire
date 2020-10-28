@@ -21,7 +21,7 @@ scripts:
   #  - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
   #  - Requires `git`.
   #  - Requires `clang-format` (can be installed via Brew on MacOS).
-  format: pub global run flutter_plugin_tools format
+  format: dart pub global run flutter_plugin_tools format
 
   # Build iOS plugin example apps.
   build:examples:ios: >
