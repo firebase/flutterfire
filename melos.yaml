@@ -15,7 +15,7 @@ scripts:
   #  - Requires `pub global activate tuneup`.
   analyze: >
     melos exec -c 1 --fail-fast -- \
-      pub global run tuneup check
+      dart pub global run tuneup check
 
   # Formats the code of all packages (Java, Objective-C, and Dart).
   #  - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
