@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// TODO: once Dart v1 support is dropped, use new Function syntax instead
-
 typedef Func0<R> = R Function();
 typedef Func1<A, R> = R Function(A a);
 typedef Func3<A, B, C, R> = R Function(A a, B b, C c);

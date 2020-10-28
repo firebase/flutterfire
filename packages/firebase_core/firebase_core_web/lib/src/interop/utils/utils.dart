@@ -1,3 +1,9 @@
+// Copyright 2020 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// ignore_for_file: public_member_api_docs
+
 import 'dart:async';
 
 import 'package:js/js.dart';
@@ -95,7 +101,7 @@ Future<T> handleThenable<T>(PromiseJsImpl<T> thenable) async {
     value = await util.promiseToFuture(thenable);
   } catch (e) {
     if (util.hasProperty(e, 'code')) {
-      //TODO throw _FirebaseErrorWrapper(e);
+      throw _FirebaseErrorWrapper(e);
     }
     rethrow;
   }
@@ -116,9 +122,6 @@ PromiseJsImpl<S> handleFutureWithMapper<T, S>(
   }));
 }
 
-/// Resolves error.
-// void Function(Object) resolveError(Completer c) =>
-//     allowInterop(c.completeError);
 
 class _FirebaseErrorWrapper extends Error implements FirebaseError {
   final FirebaseError _source;
