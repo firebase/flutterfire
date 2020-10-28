@@ -51,13 +51,6 @@ class UserWeb extends UserPlatform {
 
   final auth_interop.User _webUser;
 
-  _assertCurrentUser(FirebaseAuthPlatform instance) {
-    if (instance.currentUser == null) {
-      throw FirebaseAuthException(
-          code: "no-current-user", message: "No user currently signed in.");
-    }
-  }
-
   @override
   Future<void> delete() async {
     _assertCurrentUser(auth);
@@ -226,5 +219,16 @@ class UserWeb extends UserPlatform {
 
     await _webUser.verifyBeforeUpdateEmail(
         newEmail, convertPlatformActionCodeSettings(actionCodeSettings));
+  }
+}
+
+/// Keeps the platform logic the same as native. Since we can keep reference to
+/// a user, sign-out and then call a method on the user reference, we first check
+/// whether the user is signed out before calling a method. This replicates
+/// what happens on native since requests are sent over the method channel.
+_assertCurrentUser(FirebaseAuthPlatform instance) {
+  if (instance.currentUser == null) {
+    throw FirebaseAuthException(
+        code: "no-current-user", message: "No user currently signed in.");
   }
 }
