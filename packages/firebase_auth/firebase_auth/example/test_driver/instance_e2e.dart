@@ -724,7 +724,8 @@ void runInstanceTests() {
 
         PhoneAuthCredential credential = await getCredential();
         expect(credential, isA<PhoneAuthCredential>());
-      }, skip: defaultTargetPlatform != TargetPlatform.android);
+      }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
+      
     }, skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb);
   });
 }
