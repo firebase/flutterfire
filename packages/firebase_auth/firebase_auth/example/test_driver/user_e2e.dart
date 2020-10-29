@@ -252,7 +252,7 @@ void runUserTests() {
         fail('should have thrown an error');
       });
 
-      test('should throw user-not-found ', () async {
+      test('should throw user-not-found or user-mismatch ', () async {
         // Setup
         UserCredential userCredential =
             await auth.createUserWithEmailAndPassword(
@@ -265,22 +265,12 @@ void runUserTests() {
               email: 'userdoesnotexist@foobar.com', password: TEST_PASSWORD);
           await user.reauthenticateWithCredential(credential);
         } on FirebaseAuthException catch (e) {
-          // Assertions
-
-          if (kIsWeb) {
-            // web throws user-mismatch instead of user-not-found
-            expect(e.code, equals("user-mismatch"));
-            expect(
-                e.message,
-                equals(
-                    "The supplied credentials do not correspond to the previously signed in user."));
-          } else {
-            expect(e.code, equals("user-not-found"));
-            expect(
-                e.message,
-                equals(
-                    "There is no user record corresponding to this identifier. The user may have been deleted."));
+          // Platforms throw different errors. For now, leave them as is
+          // but in future we might want to edit them before sending to user.
+          if (e.code != 'user-mismatch' || e.code != 'user-not-found') {
+            fail('should have thrown a valid error code');
           }
+
           return;
         } catch (e) {
           fail('should have thrown an FirebaseAuthException');
