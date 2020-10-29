@@ -1,3 +1,7 @@
+## 0.9.8
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+
 ## 0.9.7
 
  - **FEAT**: rework (#3612).

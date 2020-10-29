@@ -1,3 +1,7 @@
+## 0.0.3
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+
 ## 0.0.2+1
 
  - **FIX**: local dependencies in example apps (#3319).
