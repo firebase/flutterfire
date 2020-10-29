@@ -86,19 +86,6 @@ void runInstanceTests() {
         await auth.signOut();
         await auth.signInAnonymously();
       });
-
-      test('handles multiple subscribers', () async {
-        await ensureSignedOut();
-
-        Stream<User> stream = auth.authStateChanges();
-        Stream<User> stream2 = auth.authStateChanges();
-
-        subscription = stream.listen(expectAsync1((User user) {}, count: 2));
-
-        subscription2 = stream2.listen(expectAsync1((User user) {}, count: 3));
-
-        await ensureSignedIn(regularTestEmail);
-      }, skip: kIsWeb);
     });
 
     group('idTokenChanges()', () {
@@ -141,19 +128,6 @@ void runInstanceTests() {
         await auth.signOut();
         await auth.signInAnonymously();
       });
-
-      test('handles multiple subscribers', () async {
-        await ensureSignedOut();
-
-        Stream<User> stream = auth.idTokenChanges();
-        Stream<User> stream2 = auth.idTokenChanges();
-
-        subscription = stream.listen(expectAsync1((User user) {}, count: 2));
-
-        subscription2 = stream2.listen(expectAsync1((User user) {}, count: 3));
-
-        await ensureSignedIn(regularTestEmail);
-      }, skip: kIsWeb); // TODO(helenaford): debug why test fails for web
     });
 
     group('userChanges()', () {
@@ -751,6 +725,6 @@ void runInstanceTests() {
         PhoneAuthCredential credential = await getCredential();
         expect(credential, isA<PhoneAuthCredential>());
       }, skip: defaultTargetPlatform != TargetPlatform.android);
-    }, skip: defaultTargetPlatform == TargetPlatform.macOS);
+    }, skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb);
   });
 }
