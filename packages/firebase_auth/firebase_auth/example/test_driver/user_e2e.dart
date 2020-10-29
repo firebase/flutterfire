@@ -267,8 +267,8 @@ void runUserTests() {
         } on FirebaseAuthException catch (e) {
           // Platforms throw different errors. For now, leave them as is
           // but in future we might want to edit them before sending to user.
-          if (e.code != 'user-mismatch' || e.code != 'user-not-found') {
-            fail('should have thrown a valid error code');
+          if (e.code != 'user-mismatch' && e.code != 'user-not-found') {
+            fail('should have thrown a valid error code (got ${e.code}');
           }
 
           return;
