@@ -61,7 +61,7 @@ scripts:
   # - Requires `flutter config --enable-web` enabled.
   test:e2e:web: >
     melos exec -c 1 --fail-fast --dir-exists=web --scope="*example*" --dir-exists=test_driver -- \
-      flutter drive --release -d chrome --no-pub --verbose-system-logs --browser-name=chrome --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+      flutter drive -d chrome --no-pub --verbose-system-logs --browser-name=chrome --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
 
   # Run all MacOS test driver e2e tests in the example apps.
   # - Requires `flutter config --enable-macos-desktop` enabled.
