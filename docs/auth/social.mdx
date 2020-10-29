@@ -16,6 +16,14 @@ Most configuration is already setup when using Google Sign-In with Firebase, how
 SHA1 key has been configured for use with Android. You can see how to generate the key on the
 [Installation](../installation/android#generating-firebase-credentials) documentation.
 
+For iOS, you need to set one place manually.
+Open Xcode and in GoogleService-Info.plist, add REVERSED_CLIENT_ID to the section called URL Schemes.
+See the link below for detailed instructions.
+
+- [`Firebase > Docs > Guides > Authenticate Using Google Sign-In on iOS - 2. Implement Google Sign-In`](https://firebase.google.com/docs/auth/ios/google-signin#2_implement_google_sign-in)
+- [`GitHub: googlesamples/google-services/issues/81`](https://github.com/googlesamples/google-services/issues/81#issuecomment-271095633)
+
+
 Ensure the "Google" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
 
 > If your user signs in with Google, after having already manually registered an account, their authentication provider will automatically
