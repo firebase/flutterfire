@@ -68,7 +68,8 @@ void runTaskTests() {
           verifyNever(uploadTask.onStateChanged);
         });
 
-        test('connects both to the underlying stream, but also to the future', () {
+        test('connects both to the underlying stream, but also to the future',
+            () {
           task.snapshotEvents;
 
           verify(uploadTask.onStateChanged);
