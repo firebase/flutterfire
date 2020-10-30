@@ -1,3 +1,9 @@
+## 0.6.1
+
+ - **FIX**: fixed issue with overwriting correct url with null one (#3567).
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
 ## 0.6.0+2
 
  - Update a dependency to the latest release.

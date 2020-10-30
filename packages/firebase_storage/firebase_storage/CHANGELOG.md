@@ -1,3 +1,8 @@
+## 5.0.0-dev.4
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
 ## 5.0.0-dev.3
 
  - **FEAT**: rework (#3612).

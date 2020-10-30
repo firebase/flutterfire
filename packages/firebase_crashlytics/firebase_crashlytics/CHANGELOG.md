@@ -1,3 +1,8 @@
+## 0.2.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
 ## 0.2.1+1
 
  - **FIX**: Change minimum version of stack_trace package (#3639).

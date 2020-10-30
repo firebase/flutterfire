@@ -1,3 +1,7 @@
+## 2.1.2
+
+ - **FIX**: fix firebase_auth listeners assigning of currentUser (#3737).
+
 ## 2.1.1
 
  - Update a dependency to the latest release.
