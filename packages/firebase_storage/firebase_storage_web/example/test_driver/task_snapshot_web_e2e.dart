@@ -6,13 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:firebase_storage_web/src/task_snapshot_web.dart';
 import 'package:mockito/mockito.dart';
-import 'package:test/fake.dart';
 
-class FakeRef extends Fake implements ReferencePlatform {}
-
-class MockUploadTaskSnapshot extends Mock implements fb.UploadTaskSnapshot {}
-
-class MockFullMetadata extends Mock implements fb.FullMetadata {}
+import 'mocks/mocks.dart';
 
 void runTaskSnapshotTests() {
   group('TaskSnapshotWeb', () {
