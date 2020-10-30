@@ -11,19 +11,19 @@ import 'package:firebase/firebase.dart' as fb;
 /// The Web implementation of the FirebaseStoragePlatform.
 class FirebaseStorageWeb extends FirebaseStoragePlatform {
   /// The js-interop layer for Firebase Storage
-  final fb.Storage storage;
+  final fb.Storage fbStorage;
 
   // The max download retry time
   // Same default as the method channel implementation
   int _maxDownloadRetryTime = Duration(minutes: 10).inMilliseconds;
 
   // Empty constructor. This is only used by the registerWith method.
-  FirebaseStorageWeb._nullInstance() : storage = null;
+  FirebaseStorageWeb._nullInstance() : fbStorage = null;
 
   /// Construct the plugin.
   /// (Web doesn't use the `bucket`, since the init happens in index.html)
   FirebaseStorageWeb({FirebaseApp app, String bucket})
-      : storage = fb.storage(fb.app(app?.name)),
+      : fbStorage = fb.storage(fb.app(app?.name)),
         super(appInstance: app, bucket: bucket);
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -39,12 +39,12 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   /// The maximum time to retry operations other than uploads or downloads in milliseconds.
   int get maxOperationRetryTime {
-    return storage?.maxOperationRetryTime;
+    return fbStorage?.maxOperationRetryTime;
   }
 
   /// The maximum time to retry uploads in milliseconds.
   int get maxUploadRetryTime {
-    return storage?.maxUploadRetryTime;
+    return fbStorage?.maxUploadRetryTime;
   }
 
   /// The maximum time to retry downloads in milliseconds.
@@ -63,12 +63,12 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   /// The new maximum operation retry time in milliseconds.
   void setMaxOperationRetryTime(int time) {
-    storage.setMaxOperationRetryTime(time);
+    fbStorage.setMaxOperationRetryTime(time);
   }
 
   /// The new maximum upload retry time in milliseconds.
   void setMaxUploadRetryTime(int time) {
-    storage.setMaxUploadRetryTime(time);
+    fbStorage.setMaxUploadRetryTime(time);
   }
 
   /// The new maximum download retry time in milliseconds.

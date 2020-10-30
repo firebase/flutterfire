@@ -16,6 +16,8 @@ import './firebase_storage_web.dart';
 import './utils/metadata.dart';
 import './utils/errors.dart';
 
+final _storageUrlPrefix = RegExp(r'^(?:gs|https?)://');
+
 /// The web implementation of a Firebase Storage 'ref'
 class ReferenceWeb extends ReferencePlatform {
   // The js-interop layer for the ref that is wrapped by this class...
@@ -29,24 +31,27 @@ class ReferenceWeb extends ReferencePlatform {
   final String _path;
 
   /// Constructor for this ref
+  @override
   ReferenceWeb(FirebaseStorageWeb storage, String path)
       : _path = path,
         super(storage, path) {
-    if (_path != null && _path.startsWith(r'^(?:gs|https?)://')) {
-      _ref = storage.storage.refFromURL(_path);
+    if (_path != null && _path.startsWith(_storageUrlPrefix)) {
+      _ref = storage.fbStorage.refFromURL(_path);
     } else {
-      _ref = storage.storage.ref(_path);
+      _ref = storage.fbStorage.ref(_path);
     }
   }
 
   // Platform overrides follow
 
   /// Deletes the object at this reference's location.
+  @override
   Future<void> delete() {
     return _ref.delete();
   }
 
   /// Fetches a long lived download URL for this object.
+  @override
   Future<String> getDownloadURL() {
     return _ref.getDownloadURL().then((uri) => uri.toString()).catchError((e) {
       fbFirebaseErrorToFirebaseException(e);
@@ -54,6 +59,7 @@ class ReferenceWeb extends ReferencePlatform {
   }
 
   /// Fetches metadata for the object at this location, if one exists.
+  @override
   Future<FullMetadata> getMetadata() {
     return _ref
         .getMetadata()
@@ -74,6 +80,7 @@ class ReferenceWeb extends ReferencePlatform {
   /// objects whose paths end with "/" or contain two consecutive "/"s. Firebase
   /// Storage List API will filter these unsupported objects. [list] may fail
   /// if there are too many unsupported objects in the bucket.
+  @override
   Future<ListResultPlatform> list(ListOptions options) {
     return _ref
         .list(listOptionsToFbListOptions(options))
@@ -93,6 +100,7 @@ class ReferenceWeb extends ReferencePlatform {
   ///
   /// Warning: [listAll] may potentially consume too many resources if there are
   /// too many results.
+  @override
   Future<ListResultPlatform> listAll() {
     return _ref
         .listAll()
@@ -106,6 +114,7 @@ class ReferenceWeb extends ReferencePlatform {
   ///
   /// Returns a [Uint8List] of the data. If the [maxSize] (in bytes) is exceeded,
   /// the operation will be canceled.
+  @override
   Future<Uint8List> getData(int maxSize) async {
     if (maxSize > 0) {
       final metadata = await getMetadata();
@@ -126,6 +135,7 @@ class ReferenceWeb extends ReferencePlatform {
   /// Use this method to upload fixed sized data as a [Uint8List].
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
+  @override
   TaskPlatform putData(Uint8List data, [SettableMetadata metadata]) {
     return TaskWeb(
       this,
@@ -142,6 +152,7 @@ class ReferenceWeb extends ReferencePlatform {
   /// Upload a [Blob]. Note; this is only supported on web platforms.
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
+  @override
   TaskPlatform putBlob(dynamic data, [SettableMetadata metadata]) {
     return TaskWeb(
       this,
@@ -165,6 +176,7 @@ class ReferenceWeb extends ReferencePlatform {
   ///     argument, the [mimeType] will be automatically set.
   ///   - [PutStringFormat.base64] will be encoded as a Base64 string.
   ///   - [PutStringFormat.base64Url] will be encoded as a Base64 string safe URL.
+  @override
   TaskPlatform putString(
     String data,
     PutStringFormat format, [
@@ -184,6 +196,7 @@ class ReferenceWeb extends ReferencePlatform {
   }
 
   /// Updates the metadata on a storage object.
+  @override
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) {
     // TODO: With the current SettableMetadata, we don't know if the user is
     // attempting to delete a property, or simply not initializing it.
