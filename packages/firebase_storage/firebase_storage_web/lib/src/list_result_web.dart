@@ -3,8 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 
-import 'reference_web.dart';
-
 /// The web implementation of a ListResultPlatform object
 class ListResultWeb extends ListResultPlatform {
   /// Build a ListResultWeb instance from a list of items and prefixes.
@@ -23,11 +21,11 @@ class ListResultWeb extends ListResultPlatform {
 
   @override
   List<ReferencePlatform> get items {
-    return _items.map((path) => ReferenceWeb(storage, path)).toList();
+    return _items.map((path) => storage.ref(path)).toList();
   }
 
   @override
   List<ReferencePlatform> get prefixes {
-    return _prefixes.map((path) => ReferenceWeb(storage, path)).toList();
+    return _prefixes.map((path) => storage.ref(path)).toList();
   }
 }
