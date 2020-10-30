@@ -144,7 +144,7 @@
       if ([operator isEqualToString:@"=="]) {
         query = [query queryWhereFieldPath:fieldPath isEqualTo:value];
       } else if ([operator isEqualToString:@"!="]) {
-        query = [query queryWhereFieldPath:fieldPath isNotEqualTo:value]; 
+        query = [query queryWhereFieldPath:fieldPath isNotEqualTo:value];
       } else if ([operator isEqualToString:@"<"]) {
         query = [query queryWhereFieldPath:fieldPath isLessThan:value];
       } else if ([operator isEqualToString:@"<="]) {
