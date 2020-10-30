@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:typed_data';
+import 'dart:html' as html;
 
 import 'package:crypto/crypto.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
@@ -11,6 +12,7 @@ import 'package:firebase_storage_web/src/task_web.dart';
 import 'package:firebase_storage_web/src/utils/list.dart';
 import 'package:firebase_storage_web/src/utils/metadata_cache.dart';
 import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
 
 import './firebase_storage_web.dart';
 import './utils/metadata.dart';
@@ -115,7 +117,11 @@ class ReferenceWeb extends ReferencePlatform {
   /// Returns a [Uint8List] of the data. If the [maxSize] (in bytes) is exceeded,
   /// the operation will be canceled.
   @override
-  Future<Uint8List> getData(int maxSize) async {
+  Future<Uint8List> getData(
+    int maxSize, {
+    @visibleForTesting
+        Future<Uint8List> Function(dynamic url) readBytes = http.readBytes,
+  }) async {
     if (maxSize > 0) {
       final metadata = await getMetadata();
       if (metadata.size > maxSize) {
@@ -124,7 +130,7 @@ class ReferenceWeb extends ReferencePlatform {
     }
     return getDownloadURL()
         .then((uri) => uri.toString())
-        .then((downloadUri) => http.readBytes(downloadUri))
+        .then((downloadUri) => readBytes(downloadUri))
         .catchError((e) {
       fbFirebaseErrorToFirebaseException(e);
     });
@@ -149,11 +155,13 @@ class ReferenceWeb extends ReferencePlatform {
     );
   }
 
-  /// Upload a [Blob]. Note; this is only supported on web platforms.
+  /// Upload a [html.Blob]. Note; this is only supported on web platforms.
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
   @override
   TaskPlatform putBlob(dynamic data, [SettableMetadata metadata]) {
+    assert(data is html.Blob, 'data must be a dart:html Blob object.');
+
     return TaskWeb(
       this,
       _ref.put(
@@ -198,15 +206,6 @@ class ReferenceWeb extends ReferencePlatform {
   /// Updates the metadata on a storage object.
   @override
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) {
-    // TODO: With the current SettableMetadata, we don't know if the user is
-    // attempting to delete a property, or simply not initializing it.
-    // https://firebase.google.com/docs/storage/web/file-metadata#update_file_metadata
-    //   "Only the properties specified in the metadata are updated, all others are left unmodified."
-    // Also: "You can delete a metadata property by setting it to `null`"
-    //
-    // Are we assuming that once a metadata field is set it can't be deleted/re-set ever?
-    //
-    // (This fails test "errors if metadata update removes existing data")
     return _ref
         .updateMetadata(
             settableMetadataToFbSettableMetadata(_cache.store(metadata)))

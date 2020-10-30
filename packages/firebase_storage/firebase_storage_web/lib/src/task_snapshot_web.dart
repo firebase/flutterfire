@@ -10,7 +10,7 @@ import 'utils/task.dart';
 
 /// Implementation for a [TaskSnapshotPlatform].
 class TaskSnapshotWeb extends TaskSnapshotPlatform {
-  // ignore: public_member_api_docs
+  /// Create a TaskSnapshotWeb from its [ReferencePlatform] and a native [fb.UploadTaskSnapshot]
   TaskSnapshotWeb(ReferencePlatform ref, fb.UploadTaskSnapshot snapshot)
       : _reference = ref,
         _snapshot = snapshot,

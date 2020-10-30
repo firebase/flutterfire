@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 // import 'firebase_storage_web_e2e.dart';
 import 'list_result_web_e2e.dart';
-// import 'reference_web_e2e.dart';
+import 'reference_web_e2e.dart';
 import 'task_web_e2e.dart';
 import 'task_snapshot_web_e2e.dart';
 
@@ -21,7 +21,7 @@ void testsMain() {
   });
 
   // runFirebaseStorageWebTests();
-  // runReferenceTests();
+  runReferenceTests();
   runListResultTests();
   runTaskTests();
   runTaskSnapshotTests();
