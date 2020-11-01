@@ -1,3 +1,7 @@
+## 1.0.0-dev.3
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.2
 
  - **FIX**: bubble exceptions (#3726).

@@ -1,3 +1,9 @@
+## 0.4.1
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+ - **CHORE**: bump perf example min android sdk for multidex purposes.
+
 ## 0.4.0+2
 
  - Update a dependency to the latest release.
