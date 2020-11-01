@@ -24,9 +24,10 @@ dependencies:
   firebase_core_platform_interface: ">=2.0.0 <2.1.0"
   firebase_auth_platform_interface: ^2.1.1
   firebase_auth_web: #^0.3.1+1  
-    git:
-      url: git://github.com/peerwaya/flutterfire.git
-      path: packages/firebase_auth/firebase_auth_web
+    path: ../firebase_auth_web
+    # git:
+    #   url: git://github.com/peerwaya/flutterfire.git
+    #   path: packages/firebase_auth/firebase_auth_web
   flutter:
     sdk: flutter
 

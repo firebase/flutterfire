@@ -15,13 +15,24 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  firebase: ^7.3.0
+  firebase: #^7.3.0
+    git:
+      url: https://github.com/peerwaya/firebase-dart.git
+      path: firebase
+    #path: ../../../../firebase-dart/firebase
   meta: ^1.1.7
   http_parser: ^3.1.3
   intl: ^0.16.1
   firebase_core: ^0.5.0+1
   firebase_auth_platform_interface: ^2.1.1
   js: ^0.6.1
+
+dependency_overrides:
+  firebase: #^7.3.0
+    git:
+      url: https://github.com/peerwaya/firebase-dart.git
+      path: firebase
+    #path: ../../../../firebase-dart/firebase
 
 dev_dependencies:
   pedantic: ^1.8.0

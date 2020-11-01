@@ -22,7 +22,32 @@ FirebaseAuthException throwFirebaseAuthException(Object exception) {
   String code = firebaseError.code.replaceFirst('auth/', '');
   String message =
       firebaseError.message.replaceFirst('(${firebaseError.code})', '');
-  return FirebaseAuthException(code: code, message: message);
+  AuthCredential credential;
+  if (firebaseError.credential != null) {
+    if (firebaseError.credential.providerId ==
+        firebase.TwitterAuthProvider.PROVIDER_ID) {
+      credential = TwitterAuthProvider.credential(
+          accessToken: firebaseError.credential.accessToken,
+          secret: firebaseError.credential.secret);
+    } else {
+      credential = OAuthCredential(
+        providerId: firebaseError.credential.providerId,
+        signInMethod: firebaseError.credential.signInMethod,
+        accessToken: firebaseError.credential.accessToken,
+        secret: firebaseError.credential.secret,
+        idToken: firebaseError.credential.idToken,
+        rawNonce: firebaseError.credential.rawNonce,
+      );
+    }
+  }
+  return FirebaseAuthException(
+    code: code,
+    message: message,
+    credential: credential,
+    email: firebaseError.email,
+    phoneNumber: firebaseError.phoneNumber,
+    tenantId: firebaseError.tenantId,
+  );
 }
 
 /// Converts a [firebase.ActionCodeInfo] into a [ActionCodeInfo].
@@ -211,11 +236,6 @@ firebase.OAuthCredential convertPlatformCredential(AuthCredential credential) {
   if (credential is GoogleAuthCredential) {
     return firebase.GoogleAuthProvider.credential(
         credential.idToken, credential.accessToken);
-  }
-
-  if (credential is OAuthCredential) {
-    return firebase.OAuthProvider(credential.providerId)
-        .credential(credential.idToken, credential.accessToken);
   }
 
   if (credential is TwitterAuthCredential) {

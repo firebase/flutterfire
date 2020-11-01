@@ -63,9 +63,12 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           StreamController<UserPlatform>.broadcast();
 
       _webAuth.onAuthStateChanged.map((firebase.User webUser) {
+        print("GOT WEB USER: $webUser");
         if (webUser == null) {
+          print("GOT WEB USER LOGOUT");
           return null;
         } else {
+          print("GOT WEB USER LOGIN");
           return UserWeb(this, webUser);
         }
       }).listen((UserWeb webUser) {
