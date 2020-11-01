@@ -81,7 +81,6 @@ By default background messaging is not enabled. To handle messages in the backgr
    import io.flutter.app.FlutterApplication;
    import io.flutter.plugin.common.PluginRegistry;
    import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
-   import io.flutter.plugins.GeneratedPluginRegistrant;
    import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
    import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin;
 
