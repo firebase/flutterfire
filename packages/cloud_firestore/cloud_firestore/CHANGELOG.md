@@ -1,3 +1,9 @@
+## 0.14.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+ - **CHORE**: update Firestore example app podfile.
+
 ## 0.14.1+3
 
  - **FIX**: remove unused dart:async import (#3611).
