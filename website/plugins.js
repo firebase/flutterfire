@@ -56,7 +56,7 @@ module.exports = [
     support: {
       web: false,
       mobile: true,
-      macos: false,
+      macos: true,
     },
   },
   {

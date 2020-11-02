@@ -20,6 +20,7 @@ The table below shows the recommended package versions for each plugin this migr
 |        `firebase_core` |        `^{{ plugins.firebase_core }}` |
 | `firebase_crashlytics` | `^{{ plugins.firebase_crashlytics }}` |
 |     `firebase_storage` |     `^{{ plugins.firebase_storage }}` |
+|   `firebase_messaging` |   `^{{ plugins.firebase_messaging }}` |
 
 ## Breaking Changes & Deprecations
 
@@ -49,7 +50,7 @@ Update the Firebase plugins you use in your project to versions that are compati
 
 Edit the plugin versions in your `pubspec.yaml` file within your project to match the versions below:
 
-```yaml {6,7,8,9,10} title="pubspec.yaml"
+```yaml {6,7,8,9,10,11} title="pubspec.yaml"
 dependencies:
   flutter:
     sdk: flutter
@@ -60,13 +61,13 @@ dependencies:
   cloud_firestore: "^{{ plugins.cloud_firestore }}"
   cloud_functions: "^{{ plugins.cloud_functions }}"
   firebase_storage: "^{{ plugins.firebase_storage }}"
+  firebase_messaging: "^{{ plugins.firebase_messaging }}"
   # Updated to work with new core only plugins (no new changes):
   firebase_admob: "^{{ plugins.firebase_admob }}"
   firebase_analytics: "^{{ plugins.firebase_analytics }}"
   firebase_database: "^{{ plugins.firebase_database }}"
   firebase_dynamic_links: "^{{ plugins.firebase_dynamic_links }}"
   firebase_in_app_messaging: "^{{ plugins.firebase_in_app_messaging }}"
-  firebase_messaging: "^{{ plugins.firebase_messaging }}"
   firebase_performance: "^{{ plugins.firebase_performance }}"
   firebase_remote_config: "^{{ plugins.firebase_remote_config }}"
 ```
@@ -99,11 +100,21 @@ show you how to set up a default Firebase application:
   - e.g. remove any lines similar to: `implementation 'com.google.firebase:firebase-{PRODUCT}:{VERSION}`
   - The reworked plugins now automatically manage the versions of the Firebase SDKs used internally so these are no longer required.
     - See the [overriding native sdk versions documentation](overview#overriding-native-sdk-versions) if this is something you require.
+
 - **Crashlytics only**: Remove the `maven { url 'https://maven.fabric.io/public' }` line from your projects `android/build.gradle` file.
 - **Crashlytics only**: Remove the `classpath 'io.fabric.tools:gradle:1.31.2'` line from your projects `android/build.gradle` file.
 - **Crashlytics only**: Remove the `apply plugin: 'io.fabric'` line from your projects `android/app/build.gradle` file.
 - **Crashlytics only**: Remove any dependencies referencing `*com.crashlytics.sdk.android:crashlytics*` line from your projects `android/app/build.gradle` file (inside the `dependencies { .. }` block).
 - **Crashlytics only**: Follow the new Android integration steps shown in the [FlutterFire Crashlytics installation documentation](https://firebase.flutter.dev/docs/crashlytics/overview#a-android).
+
+- **Messaging only**: If you added an `intent-filter` to your `android/app/src/main/AndroidManifest.xml` file, remove it:
+```diff
+- <intent-filter>
+-    <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+-    <category android:name="android.intent.category.DEFAULT" />
+- </intent-filter>
+```
+- **Messaging only**: TODO docs on Android v2 embedding
 
 #### B. [iOS Installation](installation/ios.mdx)
 
@@ -111,12 +122,15 @@ These steps can also apply to macOS.
 
 - If you manually import Firebase and configure it via `[FIRApp configure];` or `FirebaseApp.configure()` within your projects `ios/{projectName}/AppDelegate{.m/.swift}` file,
   you can now safely remove it - FlutterFire automatically handles this for you.
+
 - **Crashlytics only**: Open your `ios/Runner.xcworkspace` workspace file with Xcode.
   1.  From Xcode select `Runner` from the left hand side project navigation.
   2.  Select the `Build Phases` tab in the middle pane.
   3.  Find a script in the list of Build Phases that contains `${PODS_ROOT}/Fabric/run` as the shell script. Once located, press the `x` on the right of the row to remove that script. If you can't find one then you can ignore this step.
 - **Crashlytics only**: Follow the new iOS integration steps shown in the [FlutterFire Crashlytics installation documentation](https://firebase.flutter.dev/docs/crashlytics/overview#b-ios).
 - If you face CocoaPods issues when building, follow the steps below in the [CocoaPods could not find compatible versions for pod](#cocoapods-could-not-find-compatible-versions-for-pod) section.
+
+- **Messaging only**: TODO what to remove from messaging
 
 #### C. [Web Installation](installation/web.mdx)
 
@@ -315,27 +329,27 @@ Any Firestore specific errors now return a `FirebaseException` (see Core changes
 
 ### Functions
 
- - **`FirebaseFunctions`**:
-   - **DEPRECATED**: Class `CloudFunctions` is now deprecated. Use `FirebaseFunctions` instead.
-   - **DEPRECATED**: Calling `CloudFunctions.instance` or `CloudFunctions(app: app, region: region)` is now deprecated. Use `FirebaseFunctions.instance` or `FirebaseFunctions.instanceFor(app: app, region: region)` instead.
-   - **DEPRECATED**: Calling `getHttpsCallable(functionName: functionName)` is deprecated in favor of `httpsCallable(functionName)`
-   - **DEPRECATED**: `CloudFunctionsException` is deprecated in favor of `FirebaseFunctionsException`.
-   - **NEW**: `FirebaseFunctionsException` now exposes a `details` property to retrieve any additional data provided with the exception returned by a HTTPS callable function.
-   - **NEW**: Internally, instances of `FirebaseFunctions` are now cached and lazily loaded.
-   - **NEW**: `httpsCallable` accepts an instance of `HttpsCallableOptions` (see below).
+- **`FirebaseFunctions`**:
 
+  - **DEPRECATED**: Class `CloudFunctions` is now deprecated. Use `FirebaseFunctions` instead.
+  - **DEPRECATED**: Calling `CloudFunctions.instance` or `CloudFunctions(app: app, region: region)` is now deprecated. Use `FirebaseFunctions.instance` or `FirebaseFunctions.instanceFor(app: app, region: region)` instead.
+  - **DEPRECATED**: Calling `getHttpsCallable(functionName: functionName)` is deprecated in favor of `httpsCallable(functionName)`
+  - **DEPRECATED**: `CloudFunctionsException` is deprecated in favor of `FirebaseFunctionsException`.
+  - **NEW**: `FirebaseFunctionsException` now exposes a `details` property to retrieve any additional data provided with the exception returned by a HTTPS callable function.
+  - **NEW**: Internally, instances of `FirebaseFunctions` are now cached and lazily loaded.
+  - **NEW**: `httpsCallable` accepts an instance of `HttpsCallableOptions` (see below).
 
- - **`HttpsCallable`**:
-   - **DEPRECATED**: Setting `timeout` is deprecated in favor of using `HttpsCallableOptions` (see below).
+- **`HttpsCallable`**:
 
+  - **DEPRECATED**: Setting `timeout` is deprecated in favor of using `HttpsCallableOptions` (see below).
 
- - **`HttpsCallableResult`**:
-   - **BREAKING**: `data` is now read-only, only its getter is exposed.
-   - **FIX**: `HttpsCallableResult`'s `data` property can now return a Map, List or a primitive value. Previously the Web implementation incorrectly assumed that a Map was always returned by the HTTPS callable function.
+- **`HttpsCallableResult`**:
 
+  - **BREAKING**: `data` is now read-only, only its getter is exposed.
+  - **FIX**: `HttpsCallableResult`'s `data` property can now return a Map, List or a primitive value. Previously the Web implementation incorrectly assumed that a Map was always returned by the HTTPS callable function.
 
- - **`HttpsCallableOptions`**: 
-   - **NEW**: This new class has been created to support setting options for `httpsCallable` instances.
+- **`HttpsCallableOptions`**:
+  - **NEW**: This new class has been created to support setting options for `httpsCallable` instances.
 
 ### Authentication
 
