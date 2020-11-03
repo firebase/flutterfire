@@ -2,7 +2,7 @@
 
 A Flutter plugin to use the [Firebase Cloud Messaging API](https://firebase.google.com/docs/cloud-messaging).
 
-To learn more about Firebase  Cloud Messaging, please visit the [Firebase website](https://firebase.google.com/products/cloud-messaging)
+To learn more about Firebase Cloud Messaging, please visit the [Firebase website](https://firebase.google.com/products/cloud-messaging)
 
 [![pub package](https://img.shields.io/pub/v/firebase_messaging.svg)](https://pub.dev/packages/firebase_messaging)
 
