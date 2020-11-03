@@ -115,13 +115,14 @@ void runInstanceTests() {
 
     group('autoInitEnabled (deprecated)', () {
       test('returns correct value', () async {
-        expect(messaging.isAutoInitEnabled, isTrue);
+        // should now be false due to previous setAutoInitEnabled test.
+        expect(messaging.isAutoInitEnabled, isFalse);
         // ignore: deprecated_member_use
         expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
 
-        await messaging.setAutoInitEnabled(false);
+        await messaging.setAutoInitEnabled(true);
 
-        expect(messaging.isAutoInitEnabled, isFalse);
+        expect(messaging.isAutoInitEnabled, isTrue);
         // ignore: deprecated_member_use
         expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
       });
