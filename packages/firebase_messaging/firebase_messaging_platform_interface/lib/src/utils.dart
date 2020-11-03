@@ -75,7 +75,7 @@ AppleNotificationSetting convertToAppleNotificationSetting(int status) {
   }
 }
 
-/// Converts an [int] into it's [AppleShowPreviewSetting] representation.
+/// Converts an [int] into its [AppleShowPreviewSetting] representation.
 AppleShowPreviewSetting convertToAppleShowPreviewSetting(int status) {
   switch (status) {
     case -1:
