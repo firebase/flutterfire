@@ -222,7 +222,6 @@ void main() {
         expect(() => messaging.setAutoInitEnabled(null), throwsAssertionError);
       });
     });
-    // group('onIosSettingsRegistered', () {});
     group('subscribeToTopic', () {
       setUpAll(() {
         when(kMockMessagingPlatform.subscribeToTopic(any))
