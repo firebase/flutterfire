@@ -134,7 +134,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.deleteToken();
   }
 
-  /// On iOS, it is possible to get the users APNs token.
+  /// On iOS/MacOS, it is possible to get the users APNs token.
   ///
   /// This may be required if you want to send messages to your iOS/MacOS devices
   /// without using the FCM service.
