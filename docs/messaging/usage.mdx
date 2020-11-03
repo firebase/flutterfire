@@ -50,9 +50,9 @@ There are a few preconditions which must be met before the application can recei
 - On Android, if the user force quits the app from device settings, it must be manually reopened again for messages to start working.
 - On iOS & macOS, you must have [correctly setup your project](apple-integration.mdx) to integrate with FCM and APNs.
 
-### Requesting permission (iOS)
+### Requesting permission (Apple)
 
-On iOS & Web (coming soon), before FCM payloads can be received on your device, you must first ask the users permission. Android applications are not required
+On iOS, macOS & Web (coming soon), before FCM payloads can be received on your device, you must first ask the users permission. Android applications are not required
 to request permission.
 
 The `firebase_messaging` package provides a simple API for requesting permission via the [`requestPermission`](!cloud_messaging.FirebaseMessaging.requestPermission) method.
