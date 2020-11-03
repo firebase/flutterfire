@@ -20,8 +20,8 @@ void main() {
 
   group('$FirebaseMessaging', () {
     setUpAll(() async {
+      await Firebase.initializeApp();
       FirebaseMessagingPlatform.instance = kMockMessagingPlatform;
-
       messaging = FirebaseMessaging.instance;
     });
     group('instance', () {
