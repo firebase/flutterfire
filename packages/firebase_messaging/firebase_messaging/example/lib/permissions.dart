@@ -98,7 +98,7 @@ const settingsMap = {
 /// Maps a [AppleShowPreviewSetting] to a string value.
 const previewMap = {
   AppleShowPreviewSetting.always: 'Always',
-  AppleShowPreviewSetting.never: 'Always',
+  AppleShowPreviewSetting.never: 'Never',
   AppleShowPreviewSetting.notSupported: 'Not Supported',
   AppleShowPreviewSetting.whenAuthenticated: 'Only When Authenticated',
 };
