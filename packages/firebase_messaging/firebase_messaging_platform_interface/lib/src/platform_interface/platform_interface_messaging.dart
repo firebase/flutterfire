@@ -162,7 +162,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('deleteToken() is not implemented');
   }
 
-  /// On iOS, it is possible to get the users APNs token. This may be required
+  /// On iOS & MacOS, it is possible to get the users APNs token. This may be required
   /// if you want to send messages to your iOS devices without using the FCM service.
   Future<String> getAPNSToken() {
     throw UnimplementedError('getAPNSToken() is not implemented');
