@@ -58,6 +58,7 @@ void runReferenceTests() {
       });
 
       test('delete', () {
+        when(ref.delete()).thenAnswer((_) async => true);
         reference.delete();
         verify(ref.delete());
       });

@@ -49,7 +49,9 @@ class ReferenceWeb extends ReferencePlatform {
   /// Deletes the object at this reference's location.
   @override
   Future<void> delete() {
-    return _ref.delete();
+    return _ref.delete().catchError((e) {
+      fbFirebaseErrorToFirebaseException(e);
+    });
   }
 
   /// Fetches a long lived download URL for this object.
