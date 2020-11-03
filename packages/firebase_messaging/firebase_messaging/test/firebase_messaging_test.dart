@@ -83,7 +83,7 @@ void main() {
         const senderId = 'test-notification';
         RemoteMessage message = RemoteMessage(senderId: senderId);
         when(kMockMessagingPlatform.getInitialMessage())
-            .thenReturn(Future.value(message));
+            .thenAnswer((_) => Future.value(message));
 
         final result = await messaging.getInitialMessage();
 
@@ -96,7 +96,8 @@ void main() {
 
     group('deleteToken', () {
       test('verify delegate method is called with correct args', () async {
-        when(kMockMessagingPlatform.deleteToken()).thenReturn(null);
+        when(kMockMessagingPlatform.deleteToken())
+            .thenAnswer((_) => Future.value(null));
 
         await messaging.deleteToken();
 
