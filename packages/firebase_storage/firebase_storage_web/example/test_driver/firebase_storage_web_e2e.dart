@@ -42,7 +42,6 @@ void runFirebaseStorageWebTests() {
 
         verify(fbStorage.setMaxOperationRetryTime(1000));
       });
-
     });
 
     group('maxRetryTimes delegated to JS', () {
