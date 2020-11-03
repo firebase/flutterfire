@@ -6,7 +6,7 @@ import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// import 'firebase_storage_web_e2e.dart';
+import 'firebase_storage_web_e2e.dart';
 import 'list_result_web_e2e.dart';
 import 'reference_web_e2e.dart';
 import 'task_web_e2e.dart';
@@ -20,7 +20,7 @@ void testsMain() {
     await Firebase.initializeApp();
   });
 
-  // runFirebaseStorageWebTests();
+  runFirebaseStorageWebTests();
   runReferenceTests();
   runListResultTests();
   runTaskTests();

@@ -174,16 +174,17 @@ void runReferenceTests() {
           when(mockMetadata.bucket).thenReturn('some-bucket-for-testing');
           when(mockMetadata.updated).thenReturn(DateTime.now());
           when(mockMetadata.timeCreated)
-            .thenReturn(DateTime.now().subtract(Duration(seconds: 10)));
+              .thenReturn(DateTime.now().subtract(Duration(seconds: 10)));
 
-          when(ref.updateMetadata(captureAny)).thenAnswer((realInvocation) async => mockMetadata);
+          when(ref.updateMetadata(captureAny))
+              .thenAnswer((realInvocation) async => mockMetadata);
         });
 
         group('updateMetadata', () {
           test('returns metadata', () async {
             final metadata = await reference.updateMetadata(SettableMetadata(
-              // Returned data comes from the mock defined in the setup of this test, above.
-            ));
+                // Returned data comes from the mock defined in the setup of this test, above.
+                ));
 
             expect(metadata.bucket, 'some-bucket-for-testing');
           });
@@ -193,7 +194,8 @@ void runReferenceTests() {
               contentLanguage: 'ast',
             ));
 
-            fb.SettableMetadata captured = verify(ref.updateMetadata(captureAny)).captured.first;
+            fb.SettableMetadata captured =
+                verify(ref.updateMetadata(captureAny)).captured.first;
 
             expect(captured.contentLanguage, 'ast');
           });
@@ -209,7 +211,8 @@ void runReferenceTests() {
             ));
 
             // This test calls ref.updateMetadata twice, we now care about the second invocation.
-            fb.SettableMetadata captured = verify(ref.updateMetadata(captureAny)).captured.last;
+            fb.SettableMetadata captured =
+                verify(ref.updateMetadata(captureAny)).captured.last;
 
             expect(captured.contentLanguage, 'ast');
             expect(captured.contentType, 'text/plain');
@@ -222,12 +225,16 @@ void runReferenceTests() {
               contentLanguage: 'es',
             ));
 
-            await reference.putString('data', PutStringFormat.raw, SettableMetadata(
-              contentLanguage: 'en',
-              contentType: 'text/plain',
-            ));
+            await reference.putString(
+                'data',
+                PutStringFormat.raw,
+                SettableMetadata(
+                  contentLanguage: 'en',
+                  contentType: 'text/plain',
+                ));
 
-            fb.UploadMetadata captured = verify(ref.putString(any, any, captureAny)).captured.first;
+            fb.UploadMetadata captured =
+                verify(ref.putString(any, any, captureAny)).captured.first;
 
             expect(captured.contentLanguage, 'es');
             expect(captured.contentType, 'text/plain');
@@ -256,12 +263,15 @@ void runReferenceTests() {
               contentLanguage: 'es',
             ));
 
-            await reference.putBlob(blob, SettableMetadata(
-              contentLanguage: 'en',
-              contentType: 'text/plain',
-            ));
+            await reference.putBlob(
+                blob,
+                SettableMetadata(
+                  contentLanguage: 'en',
+                  contentType: 'text/plain',
+                ));
 
-            fb.UploadMetadata captured = verify(ref.put(any, captureAny)).captured.first;
+            fb.UploadMetadata captured =
+                verify(ref.put(any, captureAny)).captured.first;
 
             expect(captured.contentLanguage, 'es');
             expect(captured.contentType, 'text/plain');
@@ -272,7 +282,8 @@ void runReferenceTests() {
             final blob = html.Blob([79, 118, 105, 101, 100, 111]);
 
             await reference.putBlob(blob);
-            html.Blob captured = verify(ref.put(captureAny, any)).captured.first;
+            html.Blob captured =
+                verify(ref.put(captureAny, any)).captured.first;
 
             expect(captured, blob);
           });
@@ -286,12 +297,15 @@ void runReferenceTests() {
               contentLanguage: 'es',
             ));
 
-            await reference.putData(data, SettableMetadata(
-              contentLanguage: 'en',
-              contentType: 'text/plain',
-            ));
+            await reference.putData(
+                data,
+                SettableMetadata(
+                  contentLanguage: 'en',
+                  contentType: 'text/plain',
+                ));
 
-            fb.UploadMetadata captured = verify(ref.put(any, captureAny)).captured.first;
+            fb.UploadMetadata captured =
+                verify(ref.put(any, captureAny)).captured.first;
 
             expect(captured.contentLanguage, 'es');
             expect(captured.contentType, 'text/plain');
@@ -302,14 +316,13 @@ void runReferenceTests() {
             final data = Uint8List.fromList([79, 118, 105, 101, 100, 111]);
 
             await reference.putData(data);
-            Uint8List captured = verify(ref.put(captureAny, any)).captured.first;
+            Uint8List captured =
+                verify(ref.put(captureAny, any)).captured.first;
 
             expect(captured, data);
           });
         });
-
       });
-
     });
   });
 }
