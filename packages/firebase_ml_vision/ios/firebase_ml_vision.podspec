@@ -23,7 +23,7 @@ An SDK that brings Google's machine learning expertise to Android and iOS apps i
   s.dependency 'Flutter'
   s.dependency 'Firebase/Core'
   s.dependency 'Firebase/MLVision'
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
   s.static_framework = true
 
   s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{libraryVersion}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-ml-vis\\\"" }
