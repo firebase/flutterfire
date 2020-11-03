@@ -17,24 +17,12 @@ import './mock.dart';
 void main() {
   setupFirebaseMessagingMocks();
   FirebaseMessaging messaging;
-  FirebaseMessaging secondaryMessaging;
-  FirebaseApp secondaryApp;
 
   group('$FirebaseMessaging', () {
     setUpAll(() async {
       FirebaseMessagingPlatform.instance = kMockMessagingPlatform;
 
-      secondaryApp = await Firebase.initializeApp(
-          name: 'foo',
-          options: FirebaseOptions(
-            apiKey: '123',
-            appId: '123',
-            messagingSenderId: '123',
-            projectId: '123',
-          ));
-
       messaging = FirebaseMessaging.instance;
-      secondaryMessaging = FirebaseMessaging.instanceFor(app: secondaryApp);
     });
     group('instance', () {
       test('returns an instance', () async {
@@ -44,17 +32,6 @@ void main() {
       test('returns the correct $FirebaseApp', () {
         expect(messaging.app, isA<FirebaseApp>());
         expect(messaging.app.name, defaultFirebaseAppName);
-      });
-    });
-
-    group('instanceFor()', () {
-      test('returns an instance', () async {
-        expect(secondaryMessaging, isA<FirebaseMessaging>());
-      });
-
-      test('returns the correct $FirebaseApp', () {
-        expect(secondaryMessaging.app, isA<FirebaseApp>());
-        expect(secondaryMessaging.app.name, secondaryApp.name);
       });
     });
 

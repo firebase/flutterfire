@@ -6,19 +6,16 @@ import 'dart:io' show Platform;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import './test_utils.dart';
 
 bool SKIP_MANUAL_TESTS = false;
 
 void runInstanceTests() {
   group('$FirebaseMessaging.instance', () {
     FirebaseApp app;
-    FirebaseApp secondaryApp;
     FirebaseMessaging messaging;
 
     setUpAll(() async {
       app = await Firebase.initializeApp();
-      secondaryApp = await testInitializeSecondaryApp();
       messaging = FirebaseMessaging.instance;
     });
 
@@ -28,14 +25,6 @@ void runInstanceTests() {
       expect(messaging, isA<FirebaseMessaging>());
       expect(messaging.app, isA<FirebaseApp>());
       expect(messaging.app.name, defaultFirebaseAppName);
-    });
-
-    test('instanceFor', () {
-      FirebaseMessaging secondaryMessaging =
-          FirebaseMessaging.instanceFor(app: secondaryApp);
-      expect(messaging.app, isA<FirebaseApp>());
-      expect(secondaryMessaging, isA<FirebaseMessaging>());
-      expect(secondaryMessaging.app.name, secondaryApp.name);
     });
 
     group('app', () {
