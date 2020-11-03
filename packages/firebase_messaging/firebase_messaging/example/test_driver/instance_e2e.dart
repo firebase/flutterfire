@@ -7,7 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-bool SKIP_MANUAL_TESTS = false;
+const bool SKIP_MANUAL_TESTS = bool.fromEnvironment('CI', defaultValue: false);
 
 void runInstanceTests() {
   group('$FirebaseMessaging.instance', () {
