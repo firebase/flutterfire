@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io' show Platform;
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const bool SKIP_MANUAL_TESTS = bool.fromEnvironment('CI', defaultValue: false);
@@ -28,7 +28,7 @@ void runInstanceTests() {
     });
 
     group('app', () {
-      test('accessible from firebase.app()', () {
+      test('accessible from messaging.app', () {
         expect(messaging.app, isA<FirebaseApp>());
         expect(messaging.app.name, app.name);
       });
@@ -36,28 +36,32 @@ void runInstanceTests() {
 
     group('setAutoInitEnabled()', () {
       test('sets the value', () async {
-        expect(messaging.isAutoInitEnabled, isFalse);
-        await messaging.setAutoInitEnabled(true);
         expect(messaging.isAutoInitEnabled, isTrue);
+        await messaging.setAutoInitEnabled(false);
+        expect(messaging.isAutoInitEnabled, isFalse);
       });
     });
 
     group('requestPermission', () {
-      test('resolves 1 on android', () async {
+      test(
+          'authorizationStatus returns AuthorizationStatus.authorized on Android',
+          () async {
         final result = await messaging.requestPermission();
         expect(result, isA<NotificationSettings>());
         expect(result.authorizationStatus, AuthorizationStatus.authorized);
-      }, skip: !Platform.isAndroid);
+      }, skip: defaultTargetPlatform != TargetPlatform.android);
     });
 
     group('getAPNSToken', () {
       test('resolves null on android', () async {
         expect(await messaging.getAPNSToken(), null);
-      }, skip: !Platform.isAndroid);
+      }, skip: defaultTargetPlatform != TargetPlatform.android);
 
       test('resolves null on ios if using simulator', () async {
         expect(await messaging.getAPNSToken(), null);
-      }, skip: !Platform.isIOS);
+      },
+          skip: !(defaultTargetPlatform == TargetPlatform.iOS ||
+              defaultTargetPlatform != TargetPlatform.macOS));
     });
 
     group('getInitialMessage', () {
@@ -76,11 +80,8 @@ void runInstanceTests() {
     group('deleteToken()', () {
       test('generate a new token after deleting', () async {
         final token1 = await messaging.getToken();
-
         await messaging.deleteToken();
-
         final token2 = await messaging.getToken();
-
         expect(token1, isA<String>());
         expect(token2, isA<String>());
         expect(token1, isNot(token2));
@@ -90,7 +91,6 @@ void runInstanceTests() {
     group('subscribeToTopic()', () {
       test('successfully subscribes from topic', () async {
         final topic = 'test-topic';
-
         await messaging.subscribeToTopic(topic);
       });
     });
@@ -98,7 +98,6 @@ void runInstanceTests() {
     group('unsubscribeFromTopic()', () {
       test('successfully unsubscribes from topic', () async {
         final topic = 'test-topic';
-
         await messaging.unsubscribeFromTopic(topic);
       });
     });
@@ -114,17 +113,15 @@ void runInstanceTests() {
       });
     });
 
-    group('requestNotificationPermissions', () {});
-
     group('autoInitEnabled (deprecated)', () {
       test('returns correct value', () async {
-        expect(messaging.isAutoInitEnabled, isFalse);
+        expect(messaging.isAutoInitEnabled, isTrue);
         // ignore: deprecated_member_use
         expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
 
-        await messaging.setAutoInitEnabled(true);
+        await messaging.setAutoInitEnabled(false);
 
-        expect(messaging.isAutoInitEnabled, isTrue);
+        expect(messaging.isAutoInitEnabled, isFalse);
         // ignore: deprecated_member_use
         expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
       });
