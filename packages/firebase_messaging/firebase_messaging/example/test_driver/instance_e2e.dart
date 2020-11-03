@@ -45,7 +45,6 @@ void runInstanceTests() {
       });
     });
 
-    // group('configure', () {});
 
     group('setAutoInitEnabled()', () {
       test('sets the value', () async {
