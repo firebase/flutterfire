@@ -107,14 +107,17 @@ show you how to set up a default Firebase application:
 - **Crashlytics only**: Remove any dependencies referencing `*com.crashlytics.sdk.android:crashlytics*` line from your projects `android/app/build.gradle` file (inside the `dependencies { .. }` block).
 - **Crashlytics only**: Follow the new Android integration steps shown in the [FlutterFire Crashlytics installation documentation](https://firebase.flutter.dev/docs/crashlytics/overview#a-android).
 
-- **Messaging only**: If you added an `intent-filter` to your `android/app/src/main/AndroidManifest.xml` file, remove it:
+- **Messaging only**: Remove any dependencies referencing `*com.google.firebase:firebase-messaging*` line from your projects `android/app/build.gradle` file (inside the `dependencies { .. }` block).
+- **Messaging only**: If you added the previous versions `intent-filter` to your `android/app/src/main/AndroidManifest.xml` file, remove it:
 ```diff
 - <intent-filter>
 -    <action android:name="FLUTTER_NOTIFICATION_CLICK" />
 -    <category android:name="android.intent.category.DEFAULT" />
 - </intent-filter>
 ```
-- **Messaging only**: TODO docs on Android v2 embedding
+- **Messaging only**: Messaging now supports v2 embedding, it's recommended that you [upgrade your Flutter app to use v2 embedding](https://github.com/flutter/flutter/wiki/Upgrading-pre-1.12-Android-projects) if you haven't done so already.
+ - If your can't upgrade to v2 embedding yet, there are some additional manual steps you'll need to do before you can use messaging in your app. Please see the Android section of the [FlutterFire Messaging documentation](https://firebase.flutter.dev/docs/messaging/overview) for more information.
+ - If you were using v1 embedding on the previous version of messaging then note that the java class name has changed to `FlutterFirebaseMessagingBackgroundService` from `FlutterFirebaseMessagingService` and you may need to update this in your `MainActivity.java` file.
 
 #### B. [iOS Installation](installation/ios.mdx)
 
@@ -130,7 +133,8 @@ These steps can also apply to macOS.
 - **Crashlytics only**: Follow the new iOS integration steps shown in the [FlutterFire Crashlytics installation documentation](https://firebase.flutter.dev/docs/crashlytics/overview#b-ios).
 - If you face CocoaPods issues when building, follow the steps below in the [CocoaPods could not find compatible versions for pod](#cocoapods-could-not-find-compatible-versions-for-pod) section.
 
-- **Messaging only**: TODO what to remove from messaging
+- **Messaging only**: If you previously added the `FirebaseAppDelegateProxyEnabled` key with a `false` value to your `Info.plist` to disable swizzling; you can now remove it, the plugin now supports multiple delegates and will internally forward to any other plugins that may have previously registered a delegate.
+ - Additionally, swizzling is now no longer used on iOS and the plugin calls `addApplicationDelegate` on the FlutterPlugin Registrar instead. It is required for macOS however as the macOS registrar does not support `addApplicationDelegate`.
 
 #### C. [Web Installation](installation/web.mdx)
 
