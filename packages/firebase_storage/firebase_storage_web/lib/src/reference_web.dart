@@ -168,7 +168,7 @@ class ReferenceWeb extends ReferencePlatform {
         data,
         settableMetadataToFbUploadMetadata(
           _cache.store(metadata),
-          md5Hash: md5.convert(data).toString(),
+          // md5 is computed server-side, so we don't have to unpack a potentially huge Blob.
         ),
       ),
     );

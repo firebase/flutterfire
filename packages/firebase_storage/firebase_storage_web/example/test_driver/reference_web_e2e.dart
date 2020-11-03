@@ -1,3 +1,4 @@
+import 'dart:html' as html;
 import 'dart:typed_data';
 
 import 'package:firebase/firebase.dart' as fb;
@@ -165,6 +166,148 @@ void runReferenceTests() {
           expect(String.fromCharCodes(data), 'hello, world!');
           verifyNever(ref.getMetadata());
         });
+      });
+
+      group('put*', () {
+        setUp(() {
+          final mockMetadata = MockFullMetadata();
+          when(mockMetadata.bucket).thenReturn('some-bucket-for-testing');
+          when(mockMetadata.updated).thenReturn(DateTime.now());
+          when(mockMetadata.timeCreated)
+            .thenReturn(DateTime.now().subtract(Duration(seconds: 10)));
+
+          when(ref.updateMetadata(captureAny)).thenAnswer((realInvocation) async => mockMetadata);
+        });
+
+        group('updateMetadata', () {
+          test('returns metadata', () async {
+            final metadata = await reference.updateMetadata(SettableMetadata(
+              // Returned data comes from the mock defined in the setup of this test, above.
+            ));
+
+            expect(metadata.bucket, 'some-bucket-for-testing');
+          });
+
+          test('sets metadata', () async {
+            await reference.updateMetadata(SettableMetadata(
+              contentLanguage: 'ast',
+            ));
+
+            fb.SettableMetadata captured = verify(ref.updateMetadata(captureAny)).captured.first;
+
+            expect(captured.contentLanguage, 'ast');
+          });
+
+          test('preserves previously set metadata', () async {
+            await reference.updateMetadata(SettableMetadata(
+              contentLanguage: 'ast',
+            ));
+
+            await reference.updateMetadata(SettableMetadata(
+              contentLanguage: 'en',
+              contentType: 'text/plain',
+            ));
+
+            // This test calls ref.updateMetadata twice, we now care about the second invocation.
+            fb.SettableMetadata captured = verify(ref.updateMetadata(captureAny)).captured.last;
+
+            expect(captured.contentLanguage, 'ast');
+            expect(captured.contentType, 'text/plain');
+          });
+        });
+
+        group('String', () {
+          test('preserves previously set metadata', () async {
+            await reference.updateMetadata(SettableMetadata(
+              contentLanguage: 'es',
+            ));
+
+            await reference.putString('data', PutStringFormat.raw, SettableMetadata(
+              contentLanguage: 'en',
+              contentType: 'text/plain',
+            ));
+
+            fb.UploadMetadata captured = verify(ref.putString(any, any, captureAny)).captured.first;
+
+            expect(captured.contentLanguage, 'es');
+            expect(captured.contentType, 'text/plain');
+            expect(captured.md5Hash, '8d777f385d3dfec8815d20f7496026dc');
+          });
+
+          test('puts a raw string', () async {
+            await reference.putString('data', PutStringFormat.raw);
+            verify(ref.putString('data', 'raw', any));
+          });
+        });
+
+        group('Blob', () {
+          test('fails if parameter is not a blob', () async {
+            expect(() {
+              reference.putBlob([], null);
+            }, throwsAssertionError);
+
+            verifyNever(ref.put(any, null));
+          });
+
+          test('preserves previously set metadata', () async {
+            final blob = html.Blob([79, 118, 105, 101, 100, 111]);
+
+            await reference.updateMetadata(SettableMetadata(
+              contentLanguage: 'es',
+            ));
+
+            await reference.putBlob(blob, SettableMetadata(
+              contentLanguage: 'en',
+              contentType: 'text/plain',
+            ));
+
+            fb.UploadMetadata captured = verify(ref.put(any, captureAny)).captured.first;
+
+            expect(captured.contentLanguage, 'es');
+            expect(captured.contentType, 'text/plain');
+            expect(captured.md5Hash, null);
+          });
+
+          test('puts a blob', () async {
+            final blob = html.Blob([79, 118, 105, 101, 100, 111]);
+
+            await reference.putBlob(blob);
+            html.Blob captured = verify(ref.put(captureAny, any)).captured.first;
+
+            expect(captured, blob);
+          });
+        });
+
+        group('Data', () {
+          test('preserves previously set metadata', () async {
+            final data = Uint8List.fromList([79, 118, 105, 101, 100, 111]);
+
+            await reference.updateMetadata(SettableMetadata(
+              contentLanguage: 'es',
+            ));
+
+            await reference.putData(data, SettableMetadata(
+              contentLanguage: 'en',
+              contentType: 'text/plain',
+            ));
+
+            fb.UploadMetadata captured = verify(ref.put(any, captureAny)).captured.first;
+
+            expect(captured.contentLanguage, 'es');
+            expect(captured.contentType, 'text/plain');
+            expect(captured.md5Hash, '0ff2904040824573b0f23545db54ff30');
+          });
+
+          test('puts data', () async {
+            final data = Uint8List.fromList([79, 118, 105, 101, 100, 111]);
+
+            await reference.putData(data);
+            Uint8List captured = verify(ref.put(captureAny, any)).captured.first;
+
+            expect(captured, data);
+          });
+        });
+
       });
 
     });
