@@ -577,7 +577,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)messagingGetToken:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRMessaging *messaging = [FIRMessaging messaging];
-  NSString *senderId = arguments[@"senderId"] ?: [FIRApp defaultApp].options.GCMSenderID;
+  NSString *senderId = arguments[@"senderId"];
+  if ([senderId isEqual:[NSNull null]]) {
+    senderId = [FIRApp defaultApp].options.GCMSenderID;
+  }
   [messaging retrieveFCMTokenForSenderID:senderId
                               completion:^(NSString *token, NSError *error) {
                                 if (error != nil) {
@@ -601,7 +604,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)messagingDeleteToken:(id)arguments
         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRMessaging *messaging = [FIRMessaging messaging];
-  NSString *senderId = arguments[@"senderId"] ?: [FIRApp defaultApp].options.GCMSenderID;
+  NSString *senderId = arguments[@"senderId"];
+  if ([senderId isEqual:[NSNull null]]) {
+    senderId = [FIRApp defaultApp].options.GCMSenderID;
+  }
   [messaging deleteFCMTokenForSenderID:senderId
                             completion:^(NSError *error) {
                               if (error != nil) {
