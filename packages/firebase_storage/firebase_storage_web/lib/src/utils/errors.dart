@@ -7,7 +7,8 @@ String _parseErrorCode(String errorCode) {
 
 Map<String, String> _errorCodeToMessage = {
   'unauthorized': 'User is not authorized to perform the desired action.',
-  'object-not-found': 'No object exists at the desired reference.'
+  'object-not-found': 'No object exists at the desired reference.',
+  'invalid-argument': null, // let error pass-through
 };
 
 String _getErrorMessage(String errorCode, String errorMessage) {

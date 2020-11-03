@@ -5,8 +5,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:firebase_storage_web/src/reference_web.dart';
+import 'package:firebase_storage_web/src/utils/errors.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase/firebase.dart' as fb;
+import 'package:meta/meta.dart';
+
+/// The type for functions that implement the `ref` method of the [FirebaseStorageWeb] class.
+@visibleForTesting
+typedef ReferenceBuilder = ReferencePlatform Function(
+    FirebaseStorageWeb storage, String path);
 
 /// The Web implementation of the FirebaseStoragePlatform.
 class FirebaseStorageWeb extends FirebaseStoragePlatform {
@@ -26,28 +33,42 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
       : fbStorage = fb.storage(fb.app(app?.name)),
         super(appInstance: app, bucket: bucket);
 
-  /// Called by PluginRegistry to register this plugin for Flutter Web
+  /// Create a FirebaseStorageWeb injecting a [fb.Storage] object.
+  @visibleForTesting
+  FirebaseStorageWeb.forMock({this.fbStorage, String bucket, FirebaseApp app})
+      : super(appInstance: app, bucket: bucket);
+
+  /// Called by PluginRegistry to register this plugin for Flutter Web.
   static void registerWith(Registrar registrar) {
     FirebaseStoragePlatform.instance = FirebaseStorageWeb._nullInstance();
   }
 
   /// Returns a [FirebaseStorageWeb] with the provided arguments.
   @override
-  FirebaseStorageWeb delegateFor({FirebaseApp app, String bucket}) {
+  FirebaseStoragePlatform delegateFor({FirebaseApp app, String bucket}) {
+    if (bucket == null) {
+      throw FirebaseException(
+          message:
+              'No storage bucket could be found for the app \'${app.name}\'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.',
+          plugin: 'firebase_storage');
+    }
     return FirebaseStorageWeb(app: app, bucket: bucket);
   }
 
   /// The maximum time to retry operations other than uploads or downloads in milliseconds.
+  @override
   int get maxOperationRetryTime {
     return fbStorage?.maxOperationRetryTime;
   }
 
   /// The maximum time to retry uploads in milliseconds.
+  @override
   int get maxUploadRetryTime {
     return fbStorage?.maxUploadRetryTime;
   }
 
   /// The maximum time to retry downloads in milliseconds.
+  @override
   int get maxDownloadRetryTime {
     return _maxDownloadRetryTime;
   }
@@ -57,21 +78,40 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   /// [path] A relative path to initialize the reference with, for example
   ///   `path/to/image.jpg`. If not passed, the returned reference points to
   ///   the bucket root.
-  ReferencePlatform ref(String path) {
-    return ReferenceWeb(this, path);
+  @override
+  ReferencePlatform ref(
+    String path, {
+    @visibleForTesting ReferenceBuilder refBuilder,
+  }) {
+    ReferencePlatform ref;
+    try {
+      ReferenceBuilder refBuilderFunction = refBuilder ?? _createReference;
+      ref = refBuilderFunction(this, path);
+    } catch (e) {
+      fbFirebaseErrorToFirebaseException(e);
+    }
+    return ref;
+  }
+
+  // The default [ReferenceBuilder] function used by the [ref] method.
+  ReferencePlatform _createReference(FirebaseStorageWeb storage, String path) {
+    return ReferenceWeb(storage, path);
   }
 
   /// The new maximum operation retry time in milliseconds.
+  @override
   void setMaxOperationRetryTime(int time) {
     fbStorage.setMaxOperationRetryTime(time);
   }
 
   /// The new maximum upload retry time in milliseconds.
+  @override
   void setMaxUploadRetryTime(int time) {
     fbStorage.setMaxUploadRetryTime(time);
   }
 
   /// The new maximum download retry time in milliseconds.
+  @override
   void setMaxDownloadRetryTime(int time) {
     _maxDownloadRetryTime = time;
   }
