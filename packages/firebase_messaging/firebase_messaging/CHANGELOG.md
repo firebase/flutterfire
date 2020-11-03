@@ -11,7 +11,90 @@
 
 ## 8.0.0-dev.1
 
- - Changelog coming soon.
+This plugin is now federated to allow integration with other platforms, along with upgrading underlying SDK versions.
+
+We've also added lots of features which can be seen in the changelog below, however notably the biggest changes are:
+
+- Removed all manual native code changes that were originally required for integration - this plugin works
+  out of the box once configured with Firebase & APNs.
+- Support for macOS.
+- iOS background handler support.
+- Android background handler debugging and logging support.
+- Android V2 embedding support.
+- Reworked API for message handling (Streams + explicit handlers).
+- Fully typed Message & Notification classes (vs raw Maps).
+- New Apple notification permissions & support.
+- Detailed documentation.
+
+- **`FirebaseMessaging`**:
+
+  - **BREAKING**: `configure()` has been removed in favor of calling specific static methods which return Streams.
+    - **Why?**: The previous implementation of `configure()` caused unintended side effects if called multiple
+      times (either to register a different handler, or remove handlers). This change allows developers to be more
+      explicit about registering handlers and removing them without effecting others via Streams.
+  - **DEPRECATED**: Calling `FirebaseMessaging()` has been deprecated in favor of `FirebaseMessaging.instance`
+    & `FirebaseMessaging.instanceFor()`.
+  - **DEPRECATED**: `requestNotificationPermissions()` has been deprecated in favor of `requestPermission()`.
+  - **DEPRECATED**: `deleteInstanceID()` has been deprecated in favor of `deleteToken()`.
+  - **DEPRECATED**: `autoInitEnabled()` has been deprecated in favor of `isAutoInitEnabled`.
+  - **NEW**: Added support for `isAutoInitEnabled` as a synchronous getter.
+  - **NEW**: Added support for `getInitialMessage()`. This API has been added to detect whether a messaging containing
+    a notification has caused the application to be opened via users interaction.
+  - **NEW**: Added support for `deleteToken()`.
+  - **NEW**: Added support for `getToken()`.
+  - **NEW**: [Apple] Added support for `getAPNSToken()`.
+  - **NEW**: [Apple] Added support for `getNotificationSettings()`. See `NotificationSettings` below.
+  - **NEW**: [Apple] Added support for `requestPermission()`. See `NotificationSettings` below. New permissions such
+    as `carPlay`, `crtiticalAlert`, `announcement` are now supported.
+  - **NEW**: [Android] Added support for `sendMessage()`. The `sendMessage()` API enables support for sending FCM
+    payloads back to a custom server from the device.
+  - **NEW**: [Android] When receiving background messages on the separate background Dart executor whilst in debug,
+    you should now see flutter logs and be able to debug/add breakpoints your Dart background message handler.
+  - **NEW**: [Apple] Added support for `setForegroundNotificationPresentationOptions()`. By default, iOS devices will
+    not show notifications in the foreground. Use this API to override the defaults. See documentation for Android
+    foreground notifications.
+  - **NEW** - [Android] Firebase Cloud Messages that contain a notification are now always sent to Dart regardless of
+    whether the app was in the foreground or background. Previously, if a message came through that contained a
+    notification whilst your app was in the foreground then FCM would not notify the plugin messaging service of the
+    message (and subsequently your handlers in Dart) until the user interacted with it.
+
+- **Event handling**:
+
+  - Event handling has been reworked to provide a more intuitive API for developers. Foreground based events can now
+    be accessed via Streams:
+    - **NEW**: `FirebaseMessaging.onMessage` Returns a Stream that is called when an incoming FCM payload is
+      received whilst the Flutter instance is in the foreground, containing a [RemoteMessage].
+    - **NEW**: `FirebaseMessaging.onMessageOpenedApp` Returns a [Stream] that is called when a user presses a
+      notification displayed via FCM. This replaces the previous `onLaunch` and `onResume` handlers.
+    - **NEW**: `FirebaseMessaging.onBackgroundMessage()` Sets a background message handler to trigger when the app
+      is in the background or terminated.
+
+- `IosNotificationSettings`:
+
+  - **DEPRECATED**: Usage of the `IosNotificationSettings` class is now deprecated (currently used with the now
+    deprecated  `requestNotificationPermissions()` method).
+    - Instead of this class, use named arguments when calling `requestPermission()` and read the permissions back
+      via the returned `NotificationSettings` instance.
+
+- `NotificationSettings`:
+
+  - **NEW**: A `NotificationSettings` class is returned from calls to `requestPermission()`
+    and `getNotificationSettings()`. It contains information such as the authorization status, along with the platform
+    specific settings.
+
+- `RemoteMessage`:
+
+  - **NEW**: Incoming FCM payloads are now represented as a `RemoteMessage` rather than a raw `Map`.
+
+- `RemoteNotification`:
+  - **NEW**:When a message includes a notification payload, the `RemoteMessage` includes a `RemoteNotification` rather
+    than a raw `Map`.
+
+- **Other**:
+
+  - Additional types are available throughout messaging to aid with the latest changes:
+    - `BackgroundMessageHandler`, `AppleNotificationSetting`, `AppleShowPreviewSetting`, `AuthorizationStatus`
+      , `AndroidNotificationPriority`, `AndroidNotificationVisibility`
 
 ## 7.0.3
 
