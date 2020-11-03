@@ -45,7 +45,6 @@ void runInstanceTests() {
       });
     });
 
-
     group('setAutoInitEnabled()', () {
       test('sets the value', () async {
         expect(messaging.isAutoInitEnabled, isFalse);

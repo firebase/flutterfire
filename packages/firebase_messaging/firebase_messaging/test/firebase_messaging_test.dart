@@ -58,7 +58,6 @@ void main() {
       });
     });
 
-
     group('get.isAutoInitEnabled', () {
       test('verify delegate method is called', () {
         // verify isAutoInitEnabled returns true

@@ -36,7 +36,7 @@ void main() {
     test('new instance', () {
       const testCritical = false;
       final iosSound = AppleNotificationSound(critical: testCritical);
-      expect(iosSound, equals(testCritical));
+      expect(iosSound.critical, equals(testCritical));
     });
   });
 }

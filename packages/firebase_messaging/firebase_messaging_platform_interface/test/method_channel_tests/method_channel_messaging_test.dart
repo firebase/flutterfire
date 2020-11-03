@@ -38,7 +38,16 @@ void main() {
             return 'test_token';
           case 'Messaging#hasPermission':
           case 'Messaging#requestPermission':
-            return 1;
+            return {
+              'authorizationStatus': 1,
+              'alert': 1,
+              'announcement': 0,
+              'badge': 1,
+              'carPlay': 0,
+              'criticalAlert': 0,
+              'provisional': 0,
+              'sound': 1,
+            };
           case 'Messaging#setAutoInitEnabled':
             return {
               'isAutoInitEnabled': true,
@@ -120,8 +129,7 @@ void main() {
           'Messaging#deleteToken',
           arguments: <String, dynamic>{
             'appName': defaultFirebaseAppName,
-            'authorizedEntity': null,
-            'scope': null,
+            'senderId': null,
           },
         ),
       ]);
@@ -152,8 +160,7 @@ void main() {
           'Messaging#getToken',
           arguments: <String, dynamic>{
             'appName': defaultFirebaseAppName,
-            'authorizedEntity': null,
-            'scope': null
+            'senderId': null,
           },
         ),
       ]);
@@ -161,15 +168,18 @@ void main() {
 
     test('requestPermission', () async {
       // test android response
-      final androidStatus = await messaging.requestPermission();
-      expect(androidStatus, equals(AuthorizationStatus.authorized));
+      final androidPermissions = await messaging.requestPermission();
+      expect(androidPermissions.authorizationStatus,
+          equals(AuthorizationStatus.authorized));
       // clear log
       log.clear();
 
       // test other platforms
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final iosStatus = await messaging.requestPermission();
-      expect(iosStatus, isA<AuthorizationStatus>());
+      expect(iosStatus.authorizationStatus, isA<AuthorizationStatus>());
+      expect(iosStatus.authorizationStatus,
+          equals(AuthorizationStatus.authorized));
 
       // check native method was called
       expect(log, <Matcher>[
