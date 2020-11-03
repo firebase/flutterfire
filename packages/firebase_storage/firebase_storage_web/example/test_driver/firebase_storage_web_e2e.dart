@@ -22,8 +22,8 @@ void runFirebaseStorageWebTests() {
       );
     });
 
-    group('maxDownloadRetryTime', () {
-      test('get/set', () {
+    group('maxRetryTimes kept track by the plugin', () {
+      test('maxDownloadRetryTime get/set', () {
         int defaultMaxDownloadRetryTime = Duration(minutes: 10).inMilliseconds;
 
         expect(storage.maxDownloadRetryTime, defaultMaxDownloadRetryTime);
@@ -32,6 +32,17 @@ void runFirebaseStorageWebTests() {
 
         expect(storage.maxDownloadRetryTime, 1000);
       });
+
+      test('maxOperationRetryTime get/set', () {
+        int defaultMaxOperationRetryTime = Duration(minutes: 2).inMilliseconds;
+
+        expect(storage.maxOperationRetryTime, defaultMaxOperationRetryTime);
+
+        storage.setMaxOperationRetryTime(1000);
+
+        verify(fbStorage.setMaxOperationRetryTime(1000));
+      });
+
     });
 
     group('maxRetryTimes delegated to JS', () {
@@ -40,14 +51,6 @@ void runFirebaseStorageWebTests() {
       setUp(() {
         when(fbStorage.maxOperationRetryTime).thenReturn(default_retry_time);
         when(fbStorage.maxUploadRetryTime).thenReturn(default_retry_time);
-      });
-
-      test('maxOperationRetryTime get/set', () {
-        expect(storage.maxOperationRetryTime, default_retry_time);
-
-        storage.setMaxOperationRetryTime(1000);
-
-        verify(fbStorage.setMaxOperationRetryTime(1000));
       });
 
       test('maxUploadRetryTime get/set', () {

@@ -20,9 +20,11 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   /// The js-interop layer for Firebase Storage
   final fb.Storage fbStorage;
 
-  // The max download retry time
   // Same default as the method channel implementation
   int _maxDownloadRetryTime = Duration(minutes: 10).inMilliseconds;
+
+  // Same default as the method channel implementation
+  int _maxOperationRetryTime = Duration(minutes: 2).inMilliseconds;
 
   // Empty constructor. This is only used by the registerWith method.
   FirebaseStorageWeb._nullInstance() : fbStorage = null;
@@ -58,13 +60,13 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   /// The maximum time to retry operations other than uploads or downloads in milliseconds.
   @override
   int get maxOperationRetryTime {
-    return fbStorage?.maxOperationRetryTime;
+    return _maxOperationRetryTime;
   }
 
   /// The maximum time to retry uploads in milliseconds.
   @override
   int get maxUploadRetryTime {
-    return fbStorage?.maxUploadRetryTime;
+    return fbStorage.maxUploadRetryTime;
   }
 
   /// The maximum time to retry downloads in milliseconds.
@@ -101,6 +103,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   /// The new maximum operation retry time in milliseconds.
   @override
   void setMaxOperationRetryTime(int time) {
+    _maxOperationRetryTime = time;
     fbStorage.setMaxOperationRetryTime(time);
   }
 
