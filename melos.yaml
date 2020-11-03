@@ -51,9 +51,8 @@ scripts:
 
   # Run all test driver e2e tests in the example apps, use this for mobile.
   # Will target Android/iOS depending on what emulator/simulator you have running.
-  # TODO(Salakar): ignoring cloud functions as has no tests
   test:e2e: >
-    melos exec -c 1 --fail-fast --scope="*example*" --ignore=cloud_functions_example --dir-exists=test_driver -- \
+    melos exec -c 1 --fail-fast --scope="*example*" --dir-exists=test_driver -- \
       flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
 
   # Run all web test driver e2e tests in the example apps.
@@ -66,9 +65,8 @@ scripts:
   # Run all MacOS test driver e2e tests in the example apps.
   # - Requires `flutter config --enable-macos-desktop` enabled.
   # - Requires `flutter channel master && flutter upgrade`.
-  # TODO(Salakar): ignoring cloud functions as has no tests
   test:e2e:macos: >
-    melos exec -c 1 --fail-fast --dir-exists=macos --scope="*example*" --ignore=cloud_functions_example --dir-exists=test_driver -- \
+    melos exec -c 1 --fail-fast --dir-exists=macos --scope="*example*" --dir-exists=test_driver -- \
       flutter drive -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
 
   # Check pubspecs are valid and publishable in each package.
@@ -76,7 +74,7 @@ scripts:
     melos exec -c 5 --fail-fast --no-private --ignore="*example*" -- \
       pub publish --dry-run
 
-  # MacOS only. Ignores stub iOS podspecs in web federated plugins.
+  # MacOS hosts only. Ignores stub iOS podspecs in web federated plugins.
   lint:podspecs: >
     melos exec -c 1 --ignore="*web*" --fail-fast --file-exists=ios/\$MELOS_PACKAGE_NAME.podspec -- \
       pod lib lint ./ios/\$MELOS_PACKAGE_NAME.podspec \
