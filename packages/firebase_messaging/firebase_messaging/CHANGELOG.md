@@ -1,3 +1,7 @@
+## 8.0.0-dev.5
+
+ - **FIX**: crash when senderId null (fixes #4024) (#4025).
+
 ## 8.0.0-dev.4
 
  - **FEAT**: roadmap rework (#4012).
