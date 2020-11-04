@@ -1,3 +1,3 @@
-## 0.1.0-dev
+## 0.5.0
 
 * Initial open source release.
