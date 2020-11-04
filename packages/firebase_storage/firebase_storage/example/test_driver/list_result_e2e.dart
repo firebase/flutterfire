@@ -7,11 +7,11 @@ void runListResultTests() {
     ListResult result;
     setUpAll(() async {
       storage = FirebaseStorage.instance;
-      Reference ref = storage.ref('/');
+      Reference ref = storage.ref('/list');
       // Needs to be > half of the # of items in the storage,
       // so there's a chance of picking up some items and some
       // prefixes.
-      result = await ref.list(ListOptions(maxResults: 5));
+      result = await ref.list(ListOptions(maxResults: 3));
     });
 
     test('items', () async {

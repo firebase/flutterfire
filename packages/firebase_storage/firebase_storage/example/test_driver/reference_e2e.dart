@@ -69,9 +69,7 @@ void runReferenceTests() {
 
     group('delete()', () {
       setUpAll(() async {
-        File file = await createFile('deleteMe.jpeg');
-        await storage.ref('/ok.jpeg').writeToFile(file);
-        await storage.ref('/deleteMe.jpeg').putFile(file);
+        await storage.ref('/deleteMe.jpeg').putString('To Be Deleted :)');
       });
 
       test('should delete a file', () async {
@@ -258,6 +256,7 @@ void runReferenceTests() {
           expect(error.message,
               'putBlob() is not supported on native platforms. Use [put], [putFile] or [putString] instead.');
         }
+        // This *must* be skipped in web, the test is intended for native platforms.
       }, skip: kIsWeb);
     });
 
@@ -295,6 +294,7 @@ void runReferenceTests() {
 
         fail('Should have thrown an error');
       });
+      // putFile is not supported in web.
     }, skip: kIsWeb);
 
     group('putString', () {
@@ -398,6 +398,7 @@ void runReferenceTests() {
 
         fail('Should have thrown an error');
       });
+      // writeToFile is not supported in web
     }, skip: kIsWeb);
 
     test('toString', () async {
