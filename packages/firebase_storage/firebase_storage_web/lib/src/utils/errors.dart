@@ -9,6 +9,7 @@ Map<String, String> _errorCodeToMessage = {
   'unauthorized': 'User is not authorized to perform the desired action.',
   'object-not-found': 'No object exists at the desired reference.',
   'invalid-argument': null, // let error pass-through
+  'canceled': null,
 };
 
 String _getErrorMessage(String errorCode, String errorMessage) {

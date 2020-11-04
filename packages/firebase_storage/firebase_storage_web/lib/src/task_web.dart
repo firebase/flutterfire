@@ -97,7 +97,16 @@ class TaskWeb extends TaskPlatform {
   /// state.
   @override
   Future<bool> pause() async {
-    return _task.pause();
+    if (snapshot.state == TaskState.paused) {
+      return true;
+    }
+
+    final paused = _task.pause();
+    // Wait until the snapshot is paused, then return the value of paused...
+    return snapshotEvents
+        .takeWhile((snapshot) => snapshot.state != TaskState.paused)
+        .last
+        .then<bool>((_) => paused);
   }
 
   /// Resumes the current task.
@@ -115,6 +124,15 @@ class TaskWeb extends TaskPlatform {
   /// and stream ([streamEvents]) will trigger an error with a [FirebaseException].
   @override
   Future<bool> cancel() async {
-    return _task.cancel();
+    if (snapshot.state == TaskState.canceled) {
+      return true;
+    }
+
+    final canceled = _task.cancel();
+    // The snapshotEvents will eventually throw an exception when the user cancels.
+    // Wait for that signal, and then return the value of "canceled" (or true).
+    return snapshotEvents
+        .drain()
+        .then<bool>((_) => canceled, onError: (_) => canceled);
   }
 }

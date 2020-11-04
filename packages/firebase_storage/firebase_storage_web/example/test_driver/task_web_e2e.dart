@@ -92,6 +92,38 @@ void runTaskTests() {
           expect((await snapshot).ref, ref);
         });
       });
+
+      group('cancel + pause', () {
+        test('cancel', () {
+          final canceled = task.cancel();
+
+          verify(uploadTask.cancel());
+
+          // eventually, the stream will carry an error...
+          controller.addError(FakeFbError()
+            ..code = 'storage/canceled'
+            ..message = 'Firebase Storage: User canceled the upload/download.');
+
+          expect(canceled, completes);
+        });
+
+        test('pause', () {
+          final progressEvent = MockUploadTaskSnapshot();
+          final pauseEvent = MockUploadTaskSnapshot();
+          when(progressEvent.state).thenReturn(fb.TaskState.RUNNING);
+          when(pauseEvent.state).thenReturn(fb.TaskState.PAUSED);
+
+          final paused = task.pause();
+
+          verify(uploadTask.pause());
+
+          controller.add(progressEvent);
+          controller.add(progressEvent);
+          controller.add(pauseEvent);
+
+          expect(paused, completes);
+        });
+      });
     });
 
     group('forwards calls: ', () {
@@ -99,16 +131,6 @@ void runTaskTests() {
         final snapshot = task.snapshot;
         verify(uploadTask.snapshot);
         expect(snapshot.ref, ref);
-      });
-
-      test('cancel', () {
-        task.cancel();
-        verify(uploadTask.cancel());
-      });
-
-      test('pause', () {
-        task.pause();
-        verify(uploadTask.pause());
       });
 
       test('resume', () {
