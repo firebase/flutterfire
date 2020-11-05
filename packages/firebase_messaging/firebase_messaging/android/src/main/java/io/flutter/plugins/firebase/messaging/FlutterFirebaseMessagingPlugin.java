@@ -305,6 +305,8 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         FlutterFirebaseMessagingBackgroundService.setUserCallbackHandle(userCallbackHandle);
         FlutterFirebaseMessagingBackgroundService.startBackgroundIsolate(
             pluginCallbackHandle, shellArgs);
+        methodCallTask = Tasks.forResult(null);
+        break;
       case "Messaging#getInitialMessage":
         methodCallTask = getInitialMessage(call.arguments());
         break;

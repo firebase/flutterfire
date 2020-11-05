@@ -176,7 +176,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           _firebaseMessagingCallbackDispatcher);
       final CallbackHandle userHandle =
           PluginUtilities.getCallbackHandle(handler);
-      await channel.invokeMethod<bool>('Messaging#startBackgroundIsolate', {
+      await channel.invokeMapMethod('Messaging#startBackgroundIsolate', {
         'pluginCallbackHandle': bgHandle.toRawHandle(),
         'userCallbackHandle': userHandle.toRawHandle(),
       });
