@@ -608,7 +608,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                                 if (error != nil) {
                                   result.error(nil, nil, nil, error);
                                 } else {
-                                  result.success(token);
+                                  result.success(@{@"token" : token});
                                 }
                               }];
 }
@@ -617,9 +617,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSData *apnsToken = [FIRMessaging messaging].APNSToken;
   if (apnsToken) {
-    result.success([FLTFirebaseMessagingPlugin APNSTokenFromNSData:apnsToken]);
+    result.success(@{@"token" : [FLTFirebaseMessagingPlugin APNSTokenFromNSData:apnsToken]});
   } else {
-    result.success([NSNull null]);
+    result.success(@{@"token" : [NSNull null]});
   }
 }
 
