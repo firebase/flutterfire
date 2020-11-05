@@ -1,3 +1,8 @@
+## 8.0.0-dev.6
+
+ - **REFACTOR**: use invokeMapMethod instead of invokeMethod (#4048).
+ - **FIX**: don't replace `UNUserNotificationCenter` delegate when protocol conforms to `FlutterApplicationLifeCycleDelegate` (#4043).
+
 ## 8.0.0-dev.5
 
  - **FIX**: crash when senderId null (fixes #4024) (#4025).

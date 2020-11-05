@@ -1,3 +1,7 @@
+## 1.0.0-dev.4
+
+ - **REFACTOR**: use invokeMapMethod instead of invokeMethod (#4048).
+
 ## 1.0.0-dev.3
 
  - **FEAT**: roadmap rework (#4012).
