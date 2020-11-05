@@ -126,7 +126,7 @@ class _Application extends State<Application> {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.data['type'] == 'chat') {
         Navigator.pushNamed(context, '/chat',
-          arguments: ChatArguments(initialMessage));
+          arguments: ChatArguments(message));
       }
     });
   }
