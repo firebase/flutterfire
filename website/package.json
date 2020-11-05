@@ -12,7 +12,6 @@
   "dependencies": {
     "@docusaurus/core": "^2.0.0-alpha.66",
     "@docusaurus/module-type-aliases": "^2.0.0-alpha.66",
-    "@docusaurus/plugin-ideal-image": "^2.0.0-alpha.66",
     "@docusaurus/preset-classic": "^2.0.0-alpha.66",
     "@types/classnames": "^2.2.10",
     "@types/lodash.get": "^4.4.6",
