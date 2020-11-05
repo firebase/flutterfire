@@ -227,7 +227,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #if !TARGET_OS_OSX
       // If there's an existing delegate and it is a FlutterApplicationLifeCycleDelegate then we
       // don't want to replace it on iOS as the earlier call to `[_registrar
-      // addApplicationDelegate:self];` will automatically delgate calls to this plugin. If we
+      // addApplicationDelegate:self];` will automatically delegate calls to this plugin. If we
       // replace it, it will cause a stack overflow as our original delegate forwarding handler
       // below causes an infinite loop of forwarding. See
       // https://github.com/FirebaseExtended/flutterfire/issues/4026.
