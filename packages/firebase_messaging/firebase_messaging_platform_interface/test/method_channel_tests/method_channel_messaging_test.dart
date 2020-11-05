@@ -35,7 +35,9 @@ void main() {
             return null;
           case 'Messaging#getAPNSToken':
           case 'Messaging#getToken':
-            return 'test_token';
+            return {
+              'token': 'test_token',
+            };
           case 'Messaging#hasPermission':
           case 'Messaging#requestPermission':
             return {

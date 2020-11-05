@@ -619,7 +619,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   if (apnsToken) {
     result.success(@{@"token" : [FLTFirebaseMessagingPlugin APNSTokenFromNSData:apnsToken]});
   } else {
-    result.success([NSNull null]);
+    result.success(@{@"token" : [NSNull null]});
   }
 }
 
