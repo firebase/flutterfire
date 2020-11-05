@@ -118,8 +118,6 @@ export default {
 
     const withZoom = (children: React.ReactNode) => <Zoom>{children}</Zoom>;
 
-    console.log(image);
-
     return (
       <figure className={styles.figure}>
         {zoom && withZoom(<img src={image} />)}
