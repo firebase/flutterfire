@@ -155,7 +155,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         });
   }
 
-  private Task<String> getToken(Map<String, Object> arguments) {
+  private Task<Map<String, Object>> getToken(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
@@ -163,7 +163,14 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
               arguments.get("senderId") != null
                   ? (String) arguments.get("senderId")
                   : Metadata.getDefaultSenderId(FirebaseApp.getInstance());
-          return FirebaseInstanceId.getInstance().getToken(senderId, "*");
+          String token = FirebaseInstanceId.getInstance().getToken(senderId, "*");
+          return new HashMap<String, Object>() {
+            {
+              put(
+                "token",
+                token);
+            }
+          };
         });
   }
 
