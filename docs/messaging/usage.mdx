@@ -22,6 +22,10 @@ Messaging currently only supports usage with the default Firebase App instance.
 
 ## Receiving messages
 
+:::caution iOS Simulators
+FCM via APNs does not work on iOS Simulators. To receive messages & notifications a real device is required.
+:::
+
 The Cloud Messaging package connects applications to the [Firebase Cloud Messaging (FCM)](https://firebase.google.com/docs/cloud-messaging)
 service. You can send message payloads directly to devices at no cost. Each message payload can be up to 4KB in size, containing pre-defined
 or custom data to suit your applications requirements.
@@ -37,11 +41,11 @@ Common use-cases for using messages could be:
 Depending on a devices state, incoming messages are handled differently. To understand these scenarios & how to integrate FCM into your own application, it is first
 important to establish the various states a device can be in:
 
-| State          | Description                                                                                                                                                                                                                                      |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Foreground** | When the application is open, in view & in use.                                                                                                                                                                                                  |
+| State          | Description                                                                                                                                                                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Foreground** | When the application is open, in view & in use.                                                                                                                                                                                                              |
 | **Background** | When the application is open, however in the background (minimised). This typically occurs when the user has pressed the "home" button on the device, has switched to another app via the app switcher or has the application open on a different tab (web). |
-| **Terminated** | When the device is locked or the application is not running. The user can terminate an app by "swiping it away" via the app switcher UI on the device or closing a tab (web).                                                                    |
+| **Terminated** | When the device is locked or the application is not running. The user can terminate an app by "swiping it away" via the app switcher UI on the device or closing a tab (web).                                                                                |
 
 There are a few preconditions which must be met before the application can receive message payloads via FCM:
 
@@ -243,9 +247,9 @@ admin.messaging().send({
       },
     },
     headers: {
-      'apns-push-type': 'background',
-      'apns-priority': '5', // Must be `5` when `contentAvailable` is set to true.
-      'apns-topic': 'io.flutter.plugins.firebase.messaging', // bundle identifier
+      "apns-push-type": "background",
+      "apns-priority": "5", // Must be `5` when `contentAvailable` is set to true.
+      "apns-topic": "io.flutter.plugins.firebase.messaging", // bundle identifier
     },
   },
 });
