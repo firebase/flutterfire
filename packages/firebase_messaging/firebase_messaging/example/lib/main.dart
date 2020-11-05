@@ -138,7 +138,9 @@ class _Application extends State<Application> {
                 channel.id,
                 channel.name,
                 channel.description,
-                icon: android?.smallIcon,
+                // TODO add a proper drawable resource to android, for now using
+                //      one that already exists in example app.
+                icon: 'launch_background',
               ),
             ));
       }

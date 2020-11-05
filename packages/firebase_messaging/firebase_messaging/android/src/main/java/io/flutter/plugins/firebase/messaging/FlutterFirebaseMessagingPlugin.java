@@ -166,9 +166,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
           String token = FirebaseInstanceId.getInstance().getToken(senderId, "*");
           return new HashMap<String, Object>() {
             {
-              put(
-                "token",
-                token);
+              put("token", token);
             }
           };
         });
