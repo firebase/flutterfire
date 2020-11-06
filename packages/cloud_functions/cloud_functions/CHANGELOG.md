@@ -1,3 +1,7 @@
+## 0.7.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 0.7.0-dev.3
 
  - **FEAT**: bump compileSdkVersion to 29 (#3975).

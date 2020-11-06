@@ -1,0 +1,272 @@
+---
+title: FCM via APNs Integration
+sidebar_label: Apple Integration
+description: iOS & macOS require additional configuration steps to be completed before you can receive messages.
+---
+
+:::caution
+This guide applies to both iOS & macOS Flutter apps, repeat each step for the platforms you require. E.g. if you support iOS & macOS then you will need to integrate twice, once per platform Xcode project.
+:::
+
+Integrating the Cloud Messaging plugin on iOS & macOS devices requires additional setup before your devices receive messages.
+There are also a number of prerequisites which are required to be able to enable messaging:
+
+- You must have an active [Apple Developer Account](https://developer.apple.com/membercenter/index.action).
+- For iOS; you must have a physical iOS device to receive messages.
+  - Firebase Cloud Messaging integrates with the [Apple Push Notification service (APNs)](https://developer.apple.com/notifications/),
+    however APNs only works with real devices.
+
+## Configuring your app
+
+Before your application can start to receive messages, you must explicitly enable "Push Notifications" and "Background Modes"
+within Xcode.
+
+Open your project workspace file via Xcode (`/{ios|macos}/Runner.xcworkspace`). Once open, follow the steps below:
+
+1. Select your project.
+2. Select the project target.
+3. Select the "Signing & Capabilities" tab.
+
+<Image
+  src="ios-signing-capabilities.png"
+  alt="Xcode - Navigate to Signing & Capabilities"
+/>
+
+### Enable Push Notifications
+
+Next the "Push Notifications" capability needs to be added to the project. This can be done via the "Capability" option on the
+"Signing & Capabilities" tab:
+
+1. Click on the "+ Capabilities" button.
+2. Search for "Push Notifications".
+
+<Image
+  src="ios-enable-push-notifications.png"
+  alt="Xcode - Enabling the Push Notification capability"
+/>
+
+Once selected, the capability will be shown below the other enabled capabilities. If no option appears when searching, the
+capability may already be enabled.
+
+### Enable Background Modes (iOS only)
+
+Next the "Background Modes" capability needs to be enabled, along with both the "Background fetch" and "Remote notifications" sub-modes.
+This can be added via the "Capability" option on the "Signing & Capabilities" tab:
+
+1. Click on the "+ Capabilities" button.
+2. Search for "Background Modes".
+
+<Image
+  src="ios-enable-background-capability.png"
+  alt="Xcode - Enabling Background Modes capability"
+/>
+
+Once selected, the capability will be shown below the other enabled capabilities. If no option appears when searching, the
+capability may already be enabled.
+
+Now ensure that both the "Background fetch" and the "Remote notifications" sub-modes are enabled:
+
+<Image
+  src="https://images.prismic.io/invertase/3a618574-dd9f-4478-9f39-9834d142b2e5_xcode-background-modes-check.gif?auto=compress,format"
+  alt="Xcode - Enabling Background Modes"
+/>
+
+## Linking APNs with FCM
+
+> Note: APNs is required for both `foreground` and `background` messaging to function correctly on iOS.
+
+A few steps are required:
+
+1. [Registering a key](#1-registering-a-key).
+2. [Registering an App Identifier](#2-registering-an-app-identifier).
+3. [Generating a provisioning profile](#3-generating-a-provisioning-profile).
+
+All of these steps require you to have access to your [Apple Developer](https://developer.apple.com/membercenter/index.action) account.
+Once on the account, navigate to the [Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/certificates/list)
+tab on the account sidebar:
+
+<Image
+  src="ios-apple-dev-menu.png"
+  alt="Apple Developer portal - Certificates, Identifiers & Profiles"
+/>
+
+### 1. Registering a key
+
+A key can be generated which gives the FCM full access over the Apple Push Notification service (APNs). On the "Keys" menu item,
+register a new key. The name of the key can be anything, however you must ensure the APNs service
+is enabled:
+
+<Image
+  src="ios-apple-dev-enable-apns.png"
+  alt="Apple Developer portal - Enable Apple Push Notification (APNs)"
+/>
+
+Click "Continue" & then "Save". Once saved, you will be presented with a screen displaying the private "Key ID" & the ability
+to download the key. Copy the ID, and download the file to your local machine:
+
+<Image
+  src="ios-apple-dev-copy-download.png"
+  alt="Copy Key ID & Download File"
+/>
+
+The file & Key ID can now be added to your Firebase Project. On the [Firebase Console](https://console.firebase.google.com/project/_/settings/cloudmessaging),
+navigate to the "Project settings" and select the "Cloud Messaging" tab. Select your iOS application under the "iOS app configuration" heading.
+
+Upload the downloaded file and enter the Key & Team IDs;
+
+<Image
+  src="https://images.prismic.io/invertase/74bd1df4-c9e9-465c-9e0f-cacf6e26d68c_7539b8ec-c310-40dd-91e5-69f19009786f_apple-fcm-upload-key.gif?auto=compress,format"
+  alt="Firebase Console - Upload key"
+/>
+
+### 2. Registering an App Identifier
+
+For messaging to work when your app is built for production, you must create a new App Identifier which is linked to the
+application that you're developing.
+
+On the Apple Developer portal:
+
+1. Click the "Identifiers" side menu item.
+2. Click the plus button to register a App Identifier.
+3. Select the "App IDs" option and click "Continue".
+4. Select the "App" type option and click "Continue".
+
+<Image
+  src="https://images.prismic.io/invertase/944b25ff-8360-456f-8a43-da8c3cd80644_ios-apple-dev-register-app-id2.gif"
+  alt="Apple Developer portal - Register a new identifier"
+/>
+
+The "Register an App ID" page allows you to link the identifier to your application via the "Bundle ID". This is a unique string
+which was generated when starting your new Flutter project. Your Bundle ID can be obtained within Xcode, under the
+"General" tab for your project target:
+
+<Image src="ios-xcode-bundle-id.png" alt="Xcode - View Bundle ID" />
+
+On the Apple Developer portal "Register an App ID" page, follow these steps to create your identifier:
+
+1. Enter a description for the identifier.
+2. Enter the "Bundle ID" copied from Xcode.
+3. Scroll down and enable the "Push Notifications" capability (along with any others your app uses).
+
+<Image
+  src="https://images.prismic.io/invertase/0e711691-ccd2-43ab-9c0c-7696b6790153_apple-identifier.gif?auto=format"
+  alt="Apple Developer portal - Register an App ID"
+/>
+
+Save the identifier, it'll be used when creating a provisioning profile in the next step.
+
+### 3. Generating a provisioning profile
+
+A provisioning profile enables signed communicate between Apple and your application. Since messaging can only be used on
+real devices, a signed certificate ensures that the app being installed on a device is genuine and has the correct
+permissions enabled.
+
+On the "Profiles" menu item, register a new Profile. Select the "iOS App Development" (or macOS) checkbox and click "Continue".
+
+If you followed [Step 2](#2-registering-an-app-identifier) correctly, your App Identifier will be available in the drop down
+provided:
+
+<Image
+  src="ios-apple-dev-select-app-id.png"
+  alt="Apple Developer portal - Select App ID"
+/>
+
+Click "Continue". On the next screen you will be presented with the Certificates on your Apple account. Select the user
+certificates that you wish to assign this provisioning profile too. If you have not yet created a Certificate, you must set
+one up on your account.
+
+To create a new Certificate, follow the [Apple documentation](https://help.apple.com/developer-account/#/devbfa00fef7). Once
+the Certificate has been downloaded, upload it to the Apple Developer console via the "Certificates" menu item.
+
+The created provisioning profile can now be used when building your application (in both debug and release mode) onto a
+real device (using Xcode). Back within Xcode, select your project target and select the "Signing & Capabilities" tab.
+If Xcode (via Preferences) is linked to your Apple Account, Xcode can automatically sync the profile created above. Otherwise,
+you must manually add the profile from the Apple Developer console:
+
+1. Select the project (usually called 'Runner') in the left hand side project navigator.
+2. Select the project target under the 'Targets' heading, usually called 'Runner'.
+3. Select the Signing & Capabilities tab.
+4. Assign the provisioning profile in the 'Signing' section.
+
+<Image
+  src="ios-xcode-assign-provisioning-profile.png"
+  alt="Xcode - Assign provisioning profile"
+/>
+
+## (Advanced, Optional) Allowing Notification Images
+
+> If you want to know more about the specifics of this setup read the [official Firebase docs](https://firebase.google.com/docs/cloud-messaging/ios/send-image).
+
+On Apple devices, in order for incoming FCM [Notifications](notifications.mdx) to display images from the FCM payload, you must add an additional notification
+service extension. This is not a required step.
+
+### Step 1 - Add a notification service extension
+
+- From Xcode top menu go to: **File > New > Target...**
+- A modal will present a list of possible targets, scroll down or use the filter to select "Notification Service Extension". Press Next.
+- Add a product name (use `ImageNotification` to follow along) and click **Finish**.
+- Enable the scheme by clicking **Activate**.
+
+<Image
+  src="ios-notification-images-step-1.gif"
+  alt="Xcode - Add a notification service extension"
+/>
+
+### Step 2 - Add target to the Podfile
+
+Ensure that your new extension has access to Firebase/Messaging pod by adding it in the Podfile:
+
+- From the Navigator open the Podfile: Pods > Podfile
+- Scroll down to the bottom of the file and add:
+
+```ruby
+target 'ImageNotification' do
+  pod 'Firebase/Messaging'
+end
+```
+
+- Install or update your pods using `pod install` from the `ios` and/or `macos` directory.
+
+<Image
+  src="ios-notification-images-step-2.gif"
+  alt="Xcode - Add target to the Podfile"
+/>
+
+### Step 3 - Use the extension helper
+
+At this point everything should still be running normally. This is the final step which is invoking the extension helper.
+
+- From the navigator select your `ImageNotification` extension
+- Open the `NotificationService.m` file
+- At the top of the file import `FirebaseMessaging.h` right after the `NotificationService.h` as shown below:
+
+```diff
+#import "NotificationService.h"
++ #import "FirebaseMessaging.h"
+```
+
+- Replace everything from line 25 to 28 with the extension helper:
+
+```diff
+- // Modify the notification content here...
+- self.bestAttemptContent.title = [NSString stringWithFormat:@"%@ [modified]", self.bestAttemptContent.title];
+
+- self.contentHandler(self.bestAttemptContent);
++ [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
+```
+
+<Image
+  src="ios-notification-images-step-3.gif"
+  alt="Xcode - Use the extension helper"
+/>
+
+### Step 4
+
+Your device can now display images in a notification by specifying the `imageUrl` option in your FCM payload. Keep in mind that a 300KB max image size is enforced by the device.
+
+## Next steps
+
+Once the above has been completed, you're ready to get started receiving messages on your iOS and/or macOS device for both
+testing and production.
+
+View the [Usage documentation](usage.mdx) to get started.

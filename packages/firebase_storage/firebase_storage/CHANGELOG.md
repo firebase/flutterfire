@@ -1,3 +1,7 @@
+## 5.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 5.0.0-dev.4
 
  - **FEAT**: bump compileSdkVersion to 29 (#3975).
