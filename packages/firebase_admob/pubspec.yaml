@@ -2,7 +2,7 @@ name: firebase_admob
 description: Flutter plugin for Firebase AdMob, supporting
   banner, interstitial (full-screen), and rewarded video ads
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_admob
-version: 0.10.1
+version: 0.10.2
 
 flutter:
   plugin:
@@ -17,7 +17,7 @@ dependencies:
   meta: ^1.0.4
   flutter:
     sdk: flutter
-  firebase_core: ^0.5.1
+  firebase_core: ^0.5.2
 dev_dependencies:
   pedantic: ^1.8.0
   flutter_driver:

@@ -1,3 +1,7 @@
+## 8.0.0-dev.7
+
+ - Update a dependency to the latest release.
+
 ## 8.0.0-dev.6
 
  - **REFACTOR**: use invokeMapMethod instead of invokeMethod (#4048).

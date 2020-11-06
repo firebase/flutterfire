@@ -1,6 +1,6 @@
 name: firebase_ml_custom
 description: Flutter plugin for Firebase Machine Learning Custom Model support.
-version: 0.0.3
+version: 0.0.4
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_ml_custom
 
 environment:

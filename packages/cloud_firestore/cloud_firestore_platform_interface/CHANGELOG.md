@@ -1,3 +1,9 @@
+## 2.2.0
+
+ - **FEAT**: migrate firebase interop files to local repository (#3973).
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 2.1.3
 
  - Update a dependency to the latest release.
