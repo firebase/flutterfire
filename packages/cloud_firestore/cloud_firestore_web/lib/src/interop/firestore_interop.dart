@@ -41,6 +41,8 @@ abstract class FirestoreJsImpl {
   external PromiseJsImpl<Null> enablePersistence(
       [PersistenceSettings settings]);
 
+  external void Function() onSnapshotsInSync(observer);
+
   external PromiseJsImpl<Null> clearPersistence();
 
   external PromiseJsImpl<void> runTransaction(

@@ -9,12 +9,12 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
-import 'package:cloud_firestore_web/src/collection_reference_web.dart';
-import 'package:cloud_firestore_web/src/field_value_factory_web.dart';
-import 'package:cloud_firestore_web/src/document_reference_web.dart';
-import 'package:cloud_firestore_web/src/query_web.dart';
-import 'package:cloud_firestore_web/src/transaction_web.dart';
-import 'package:cloud_firestore_web/src/write_batch_web.dart';
+import 'src/collection_reference_web.dart';
+import 'src/field_value_factory_web.dart';
+import 'src/document_reference_web.dart';
+import 'src/query_web.dart';
+import 'src/transaction_web.dart';
+import 'src/write_batch_web.dart';
 
 import 'src/interop/firestore.dart' as firestore_interop;
 
@@ -88,10 +88,10 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     }
   }
 
-  // @override
-  // Stream<void> snapshotsInSync() {
-  //   // TODO(ehesp): not supported on firebase-dart
-  // }
+  @override
+  Stream<void> snapshotsInSync() {
+    return _webFirestore.snapshotsInSync();
+  }
 
   @override
   Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,

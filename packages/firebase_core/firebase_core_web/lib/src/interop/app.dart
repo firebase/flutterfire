@@ -32,30 +32,6 @@ class App extends JsObjectWrapper<AppJsImpl> {
 
   App._fromJsObject(AppJsImpl jsObject) : super.fromJsObject(jsObject);
 
-  // /// Returns [Auth] service.
-  // Auth auth() => Auth.getInstance(jsObject.auth());
-
-  // /// Returns [Database] service.
-  // Database database() => Database.getInstance(jsObject.database());
-
   /// Deletes the app and frees resources of all App's services.
   Future delete() => handleThenable(jsObject.delete());
-
-  /// Returns [Storage] service optionally initialized with a custom storage bucket.
-  // Storage storage([String url]) {
-  //   var jsObjectStorage =
-  //       (url != null) ? jsObject.storage(url) : jsObject.storage();
-  //   return Storage.getInstance(jsObjectStorage);
-  // }
-
-  // /// Returns [Firestore] service.
-  // Firestore firestore() => Firestore.getInstance(jsObject.firestore());
-
-  // /// Returns [Functions] service.
-  // Functions functions([String region]) {
-  //   if (region == null) {
-  //     return Functions.getInstance(jsObject.functions());
-  //   }
-  //   return Functions.getInstance(jsObject.functions(region));
-  // }
 }

@@ -9,16 +9,14 @@ import 'package:firebase_auth_web/src/utils/web_utils.dart';
 import 'src/interop/auth.dart' as auth_interop;
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-// import 'package:firebase_auth_web/firebase_auth_web_confirmation_result.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:meta/meta.dart';
 
-import 'package:firebase_auth_web/src/firebase_auth_web_user.dart';
-import 'package:firebase_auth_web/src/firebase_auth_web_recaptcha_verifier_factory.dart';
-import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
-import 'package:firebase_auth_web/src/firebase_auth_web_confirmation_result.dart';
-// import 'utils.dart';
+import 'src/firebase_auth_web_user.dart';
+import 'src/firebase_auth_web_recaptcha_verifier_factory.dart';
+import 'src/firebase_auth_web_user_credential.dart';
+import 'src/firebase_auth_web_confirmation_result.dart';
 
 /// The web delegate implementation for [FirebaseAuth].
 class FirebaseAuthWeb extends FirebaseAuthPlatform {

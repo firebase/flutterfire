@@ -17,8 +17,6 @@ void runInstanceTests() {
     });
 
     test('snapshotsInSync()', () async {
-      if (kIsWeb) return;
-
       DocumentReference documentReference =
           firestore.doc('flutter-tests/insync');
 

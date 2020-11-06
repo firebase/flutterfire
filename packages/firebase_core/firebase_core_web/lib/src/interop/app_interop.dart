@@ -15,10 +15,5 @@ import 'utils/es6_interop.dart';
 abstract class AppJsImpl {
   external String get name;
   external FirebaseOptions get options;
-  // external AuthJsImpl auth();
-  // external DatabaseJsImpl database();
   external PromiseJsImpl<void> delete();
-  // external StorageJsImpl storage([String url]);
-  // external FirestoreJsImpl firestore();
-  // external FunctionsJsImpl functions([String region]);
 }

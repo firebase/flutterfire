@@ -3,9 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_web/src/utils/web_utils.dart';
 
 import 'interop/firestore.dart' as firestore_interop;
+import 'utils/web_utils.dart';
 import 'utils/exception.dart';
 import 'utils/codec_utility.dart';
 

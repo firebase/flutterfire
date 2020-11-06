@@ -5,11 +5,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_platform_interface/src/persistence_settings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import '../persistence_settings.dart';
 import '../method_channel/method_channel_firestore.dart';
 
 /// Defines an interface to work with Cloud Firestore on web and mobile

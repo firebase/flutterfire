@@ -58,6 +58,35 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
           [firestore_interop.PersistenceSettings settings]) =>
       handleThenable(jsObject.enablePersistence(settings));
 
+  StreamController<void> _onSnapshotsInSyncController;
+
+  Stream<void> snapshotsInSync() {
+    if (_onSnapshotsInSyncController == null) {
+      var nextWrapper =
+          allowInterop((firestore_interop.DocumentSnapshotJsImpl snapshot) {
+        _onSnapshotsInSyncController.add(null);
+      });
+
+      ZoneCallback onSnapshotsInSyncUnsubscribe;
+
+      void startListen() {
+        onSnapshotsInSyncUnsubscribe = jsObject.onSnapshotsInSync(nextWrapper);
+      }
+
+      void stopListen() {
+        onSnapshotsInSyncUnsubscribe();
+        onSnapshotsInSyncUnsubscribe = null;
+      }
+
+      _onSnapshotsInSyncController = StreamController<void>.broadcast(
+        onListen: startListen,
+        onCancel: stopListen,
+      );
+    }
+
+    return _onSnapshotsInSyncController.stream;
+  }
+
   Future<Null> clearPersistence() =>
       handleThenable(jsObject.clearPersistence());
 
