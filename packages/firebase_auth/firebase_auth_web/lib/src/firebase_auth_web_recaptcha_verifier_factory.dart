@@ -1,13 +1,13 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'dart:async';
 import 'dart:html';
 
-import 'package:firebase/firebase.dart' as firebase;
+import 'interop/auth.dart' as auth_interop;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:firebase_auth_web/utils.dart';
+import 'utils/web_utils.dart';
 
 const String _kInvisibleElementId = '__ff-recaptcha-container';
 
@@ -16,7 +16,7 @@ const String _kInvisibleElementId = '__ff-recaptcha-container';
 /// This factory class is implemented to the user facing code has no underlying knowledge
 /// of the delegate implementation.
 class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
-  firebase.RecaptchaVerifier _delegate;
+  auth_interop.RecaptchaVerifier _delegate;
 
   /// Returns a stub instance of the class.
   ///
@@ -55,7 +55,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
 
     if (onError != null) {
       parameters['error-callback'] = (Object error) {
-        onError(throwFirebaseAuthException(error));
+        onError(getFirebaseAuthException(error));
       };
     }
 
@@ -84,7 +84,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
       element = container;
     }
 
-    _delegate = firebase.RecaptchaVerifier(element, parameters);
+    _delegate = auth_interop.RecaptchaVerifier(element, parameters);
   }
 
   @override
@@ -105,7 +105,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   }
 
   @override
-  firebase.ApplicationVerifier get delegate {
+  auth_interop.ApplicationVerifier get delegate {
     return _delegate;
   }
 
@@ -122,7 +122,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
     try {
       return _delegate.verify();
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -131,7 +131,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
     try {
       return (await _delegate.render()) as int;
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 }

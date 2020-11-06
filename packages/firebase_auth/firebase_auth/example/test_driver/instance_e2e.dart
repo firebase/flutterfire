@@ -47,6 +47,18 @@ void runInstanceTests() {
     });
 
     group('authStateChanges()', () {
+      StreamSubscription subscription;
+      StreamSubscription subscription2;
+
+      tearDown(() async {
+        await subscription?.cancel();
+        await ensureSignedOut();
+
+        if (subscription2 != null) {
+          await Future.delayed(Duration(seconds: 5));
+          await subscription2.cancel();
+        }
+      });
       test('calls callback with the current user and when auth state changes',
           () async {
         await ensureSignedIn(regularTestEmail);
@@ -55,8 +67,7 @@ void runInstanceTests() {
         Stream<User> stream = auth.authStateChanges();
         int call = 0;
 
-        StreamSubscription subscription =
-            stream.listen(expectAsync1((User user) {
+        subscription = stream.listen(expectAsync1((User user) {
           call++;
           if (call == 1) {
             expect(user.uid, isA<String>());
@@ -66,7 +77,6 @@ void runInstanceTests() {
           } else if (call == 3) {
             expect(user.uid, isA<String>());
             expect(user.uid != uid, isTrue); // anonymous user
-
           } else {
             fail("Should not have been called");
           }
@@ -75,31 +85,23 @@ void runInstanceTests() {
         // Prevent race condition where signOut is called before the stream hits
         await auth.signOut();
         await auth.signInAnonymously();
-        await subscription.cancel();
-        await ensureSignedOut();
-      });
-
-      test('handles multiple subscribers', () async {
-        await ensureSignedOut();
-
-        Stream<User> stream = auth.authStateChanges();
-        Stream<User> stream2 = auth.authStateChanges();
-
-        StreamSubscription subscription =
-            stream.listen(expectAsync1((User user) {}, count: 2));
-
-        StreamSubscription subscription2 =
-            stream2.listen(expectAsync1((User user) {}, count: 3));
-
-        await ensureSignedIn(regularTestEmail);
-        await subscription.cancel();
-        await ensureSignedOut();
-        await Future.delayed(Duration(seconds: 5));
-        await subscription2.cancel();
       });
     });
 
     group('idTokenChanges()', () {
+      StreamSubscription subscription;
+      StreamSubscription subscription2;
+
+      tearDown(() async {
+        await subscription?.cancel();
+        await ensureSignedOut();
+
+        if (subscription2 != null) {
+          await Future.delayed(Duration(seconds: 5));
+          await subscription2.cancel();
+        }
+      });
+
       test('calls callback with the current user and when auth state changes',
           () async {
         await ensureSignedIn(regularTestEmail);
@@ -108,8 +110,7 @@ void runInstanceTests() {
         Stream<User> stream = auth.idTokenChanges();
         int call = 0;
 
-        StreamSubscription subscription =
-            stream.listen(expectAsync1((User user) {
+        subscription = stream.listen(expectAsync1((User user) {
           call++;
           if (call == 1) {
             expect(user.uid, equals(uid)); // initial user
@@ -126,27 +127,6 @@ void runInstanceTests() {
         // Prevent race condition where signOut is called before the stream hits
         await auth.signOut();
         await auth.signInAnonymously();
-        await subscription.cancel();
-        await ensureSignedOut();
-      });
-
-      test('handles multiple subscribers', () async {
-        await ensureSignedOut();
-
-        Stream<User> stream = auth.idTokenChanges();
-        Stream<User> stream2 = auth.idTokenChanges();
-
-        StreamSubscription subscription =
-            stream.listen(expectAsync1((User user) {}, count: 2));
-
-        StreamSubscription subscription2 =
-            stream2.listen(expectAsync1((User user) {}, count: 3));
-
-        await ensureSignedIn(regularTestEmail);
-        await subscription.cancel();
-        await ensureSignedOut();
-        await Future.delayed(Duration(seconds: 5));
-        await subscription2.cancel();
       });
     });
 
@@ -322,17 +302,6 @@ void runInstanceTests() {
       });
     });
 
-    group('getRedirectResult()', () {
-      test('throw an unimplemented error', () async {
-        try {
-          await auth.getRedirectResult();
-          fail('Should have thrown');
-        } catch (e) {
-          expect(e, isInstanceOf<UnimplementedError>());
-        }
-      });
-    }, skip: !kIsWeb);
-
     group('isSignInWithEmailLink()', () {
       test('should return true or false', () {
         const emailLink1 =
@@ -382,7 +351,7 @@ void runInstanceTests() {
       });
     });
 
-    group('sendSignInWithEmailLink()', () {
+    group('sendSignInLinkToEmail()', () {
       test('should send email successfully', () async {
         var email = generateRandomEmail();
         await auth.createUserWithEmailAndPassword(
@@ -429,12 +398,19 @@ void runInstanceTests() {
         expect(auth.languageCode, equals('en'));
       });
 
-      test('should allow null value', () async {
+      test('should allow null value and default the device language code',
+          () async {
         await auth.setLanguageCode(null);
 
         expect(auth.languageCode,
             isNotNull); // default to the device language or the Firebase projects default language
-      });
+      }, skip: kIsWeb);
+
+      test('should allow null value and set to null', () async {
+        await auth.setLanguageCode(null);
+
+        expect(auth.languageCode, null);
+      }, skip: !kIsWeb);
     });
 
     group('setPersistence()', () {
@@ -444,6 +420,14 @@ void runInstanceTests() {
           fail('Should have thrown');
         } catch (e) {
           expect(e, isInstanceOf<UnimplementedError>());
+        }
+      }, skip: kIsWeb);
+
+      test('should set persistence', () async {
+        try {
+          await auth.setPersistence(Persistence.LOCAL);
+        } catch (e) {
+          fail('unexpected error thrown');
         }
       }, skip: !kIsWeb);
     });
@@ -618,56 +602,35 @@ void runInstanceTests() {
     });
 
     // For manual testing only
-    group('signInWithEmailAndLink()', () {
-      // see: sendSignInWithEmailLink test below
-      // to ensure an email is successfully sent using
-      // automated testing. Enable this manual test to
-      // ensure the link in the test email actually works
-      // and signs a user in.
-//      test('should sign in user using link', () async {
-//        const email = 'MANUAL TEST EMAIL HERE';
-//        const emailLink = 'MANUAL TEST CODE HERE';
-//
-//        var userCredential =
-//            await auth.signInWithEmailLink(email: email, emailLink: emailLink);
-//
-//        expect(userCredential.user.email, equals(email));
-//        // clean up
-//        ensureSignedOut();
-//      });
-    });
+    // group('signInWithEmailLink()', () {
+    // see: signInWithEmailLink test below
+    // to ensure an email is successfully sent using
+    // automated testing. Enable this manual test to
+    // ensure the link in the test email actually works
+    // and signs a user in.
+    // test('should sign in user using link', () async {
+    //  const email = 'MANUAL TEST EMAIL HERE';
+    //     const emailLink = 'MANUAL TEST CODE HERE';
 
-    group('signInWithPopup()', () {
-      test('throws an unimplemented error', () async {
-        try {
-          FacebookAuthProvider facebookProvider = FacebookAuthProvider();
-          facebookProvider.addScope('user_birthday');
-          facebookProvider.setCustomParameters({
-            'display': 'popup',
-          });
+    //   var userCredential =
+    //       await auth.signInWithEmailLink(email: email, emailLink: emailLink);
 
-          await auth.signInWithPopup(facebookProvider);
-        } catch (e) {
-          expect(e, isInstanceOf<UnimplementedError>());
-        }
-      }, skip: !kIsWeb);
-    });
+    //   expect(userCredential.user.email, equals(email));
+    //   // clean up
+    //   ensureSignedOut();
+    // });
 
-    group('signInWithRedirect()', () {
-      test('throws an unimplemented error', () async {
-        try {
-          FacebookAuthProvider facebookProvider = FacebookAuthProvider();
-          facebookProvider.addScope('user_birthday');
-          facebookProvider.setCustomParameters({
-            'display': 'popup',
-          });
-
-          await auth.signInWithRedirect(facebookProvider);
-        } catch (e) {
-          expect(e, isInstanceOf<UnimplementedError>());
-        }
-      }, skip: !kIsWeb);
-    });
+    // test('should throw argument-error', () async {
+    //   const email = 'test@email.com';
+    //   const emailLink = 'https://invalid.com';
+    //   try {
+    //     await auth.signInWithEmailLink(email: email, emailLink: emailLink);
+    //   } on FirebaseAuthException catch (e) {
+    //     expect(e.code, 'argument-error');
+    //     expect(e.message, 'Invalid email link!');
+    //   }
+    // });
+    // });
 
     group('signOut()', () {
       test('should sign out', () async {
@@ -761,7 +724,7 @@ void runInstanceTests() {
 
         PhoneAuthCredential credential = await getCredential();
         expect(credential, isA<PhoneAuthCredential>());
-      }, skip: defaultTargetPlatform != TargetPlatform.android);
-    }, skip: defaultTargetPlatform == TargetPlatform.macOS);
+      }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
+    }, skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb);
   });
 }
