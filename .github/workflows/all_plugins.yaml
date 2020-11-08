@@ -1,0 +1,103 @@
+name: all_plugins
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "docs/**"
+
+jobs:
+  analyze:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          flutter pub global activate tuneup
+      - name: "Bootstrap Workspace"
+        run: melos bootstrap
+      - name: "Dart Analyze"
+        run: |
+          melos exec -c 3 -- \
+            tuneup check
+      - name: "Pub Check"
+        run: |
+          melos exec -c 1 --no-private --ignore="*example*" -- \
+            pub publish --dry-run
+
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          curl -sL https://github.com/google/google-java-format/releases/download/google-java-format-1.3/google-java-format-1.3-all-deps.jar -o $HOME/google-java-format.jar
+      - name: "Bootstrap Workspace"
+        run: melos bootstrap
+      - name: "Dart"
+        run: |
+          melos exec -c 1 -- \
+            flutter format .
+          ./.github/workflows/scripts/validate-formatting.sh
+      - name: "Objective-C"
+        if: ${{ success() || failure() }}
+        run: |
+          melos exec -c 4 --ignore="*platform_interface*" --ignore="*web*" -- \
+            find . -maxdepth 3 -name "*.h" -o -name "*.m" -print0 \| xargs -0 clang-format -i --style=Google --verbose
+          ./.github/workflows/scripts/validate-formatting.sh
+      - name: "Java"
+        if: ${{ success() || failure() }}
+        run: |
+          melos exec -c 4 --ignore="*platform_interface*" --ignore="*web*" -- \
+            find . -maxdepth 12 -name "*.java" -print0 \| xargs -0 java -jar $HOME/google-java-format.jar --replace
+          ./.github/workflows/scripts/validate-formatting.sh
+
+  build_examples_dart:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh
+      - name: "Bootstrap Workspace"
+        run: melos bootstrap
+      - name: "Build Example Snapshots"
+        run: |
+          melos exec -c 1 --scope="*example*" -- \
+            flutter build aot
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh
+      - name: "Bootstrap Workspace"
+        run: melos bootstrap
+      - name: "Flutter Test"
+        run: |
+          melos exec -c 3 --dir-exists=test --ignore="*example*" --ignore="*web*" -- \
+            flutter test

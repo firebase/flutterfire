@@ -1,3 +1,46 @@
+## 6.2.0
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 6.1.0
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
+## 6.0.2
+
+ - **FIX**: remove unused dart:async import (#3611).
+
+## 6.0.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **CHORE**: intellij cleanup (#3326).
+
+## 6.0.0
+
+* Firebase iOS SDK versions are now locked to use the same version defined in
+  `firebase_core`.
+* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
+  to specify individual SDK versions. BoM version is also sourced from
+  `firebase_core`.
+* Allow iOS plugin to be imported as a module.
+
+## 5.0.16
+
+* Endorse `firebase_analytics_web`.
+* Add web support to the example app.
+
+## 5.0.15
+
+* Use the platform interface.
+
+## 5.0.14
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 5.0.13
 
 * Fix for missing UserAgent.h compilation failures.

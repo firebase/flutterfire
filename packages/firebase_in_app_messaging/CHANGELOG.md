@@ -1,3 +1,44 @@
+## 0.2.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.2.1
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
+## 0.2.0+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+2
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **CHORE**: fix pod install error on example FIAM app (#3116).
+
+## 0.2.0+1
+
+* Fixed issue #3227 (Invalid podspec). 
+
+## 0.2.0
+
+* Depend on `firebase_core` pre-release.
+* Firebase iOS SDK versions are now locked to use the same version defined in
+  `firebase_core`.
+* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
+  to specify individual SDK versions. BoM version is also sourced from
+  `firebase_core`.
+* Allow iOS to be imported as a module.
+* Updated package of Android from `com.example.firebase_in_app_messaging` to
+  `io.flutter.plugins.firebase.inappmessaging`.
+
+## 0.1.2
+
+* Update lower bound of dart dependency to 2.0.0.
+
 ## 0.1.1+3
 
 * Replace deprecated `getFlutterEngine` call on Android.

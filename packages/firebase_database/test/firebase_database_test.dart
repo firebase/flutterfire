@@ -9,24 +9,37 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'test_common.dart';
+
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  initializeMethodChannel();
+  FirebaseApp app;
+
+  setUpAll(() async {
+    app = await Firebase.initializeApp(
+      name: 'testApp',
+      options: const FirebaseOptions(
+        appId: '1:1234567890:ios:42424242424242',
+        apiKey: '123',
+        projectId: '123',
+        messagingSenderId: '1234567890',
+      ),
+    );
+  });
 
   group('$FirebaseDatabase', () {
     const MethodChannel channel = MethodChannel(
       'plugins.flutter.io/firebase_database',
     );
-
     int mockHandleId = 0;
     final List<MethodCall> log = <MethodCall>[];
-    final FirebaseApp app = FirebaseApp(
-      name: 'testApp',
-    );
+
     final String databaseURL = 'https://fake-database-url2.firebaseio.com';
-    final FirebaseDatabase database =
-        FirebaseDatabase(app: app, databaseURL: databaseURL);
+    FirebaseDatabase database;
 
     setUp(() async {
+      database = FirebaseDatabase(app: app, databaseURL: databaseURL);
+
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
@@ -181,9 +194,13 @@ void main() {
     group('$DatabaseReference', () {
       test('set', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
+        final dynamic serverValue = <String, dynamic>{
+          'qux': ServerValue.increment(8)
+        };
         final int priority = 42;
         await database.reference().child('foo').set(value);
         await database.reference().child('bar').set(value, priority: priority);
+        await database.reference().child('baz').set(serverValue);
         expect(
           log,
           <Matcher>[
@@ -205,6 +222,20 @@ void main() {
                 'path': 'bar',
                 'value': value,
                 'priority': priority,
+              },
+            ),
+            isMethodCall(
+              'DatabaseReference#set',
+              arguments: <String, dynamic>{
+                'app': app.name,
+                'databaseURL': databaseURL,
+                'path': 'baz',
+                'value': {
+                  'qux': {
+                    '.sv': {'increment': 8}
+                  }
+                },
+                'priority': null,
               },
             ),
           ],
@@ -397,7 +428,6 @@ void main() {
     });
 
     group('$Query', () {
-      // TODO(jackson): Write more tests for queries
       test('keepSynced, simple query', () async {
         final String path = 'foo';
         final Query query = database.reference().child(path);

@@ -1,0 +1,35 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="io.flutter.plugins.firebase.messaging">
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <application>
+    <service
+      android:name=".FlutterFirebaseMessagingBackgroundService"
+      android:permission="android.permission.BIND_JOB_SERVICE"
+      android:exported="false"/>
+    <service android:name=".FlutterFirebaseMessagingService"
+      android:exported="false">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+      </intent-filter>
+    </service>
+    <receiver
+      android:name=".FlutterFirebaseMessagingReceiver"
+      android:exported="true"
+      android:permission="com.google.android.c2dm.permission.SEND">
+      <intent-filter>
+        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+      </intent-filter>
+    </receiver>
+    <service android:name="com.google.firebase.components.ComponentDiscoveryService">
+      <meta-data android:name="com.google.firebase.components:io.flutter.plugins.firebase.messaging.FlutterFirebaseAppRegistrar"
+                 android:value="com.google.firebase.components.ComponentRegistrar" />
+    </service>
+    <provider
+      android:name=".FlutterFirebaseMessagingInitProvider"
+      android:authorities="${applicationId}.flutterfirebasemessaginginitprovider"
+      android:exported="false"
+      android:initOrder="99" /> <!-- Firebase = 100, using 99 to run after Firebase initialises (highest first) -->
+  </application>
+</manifest>

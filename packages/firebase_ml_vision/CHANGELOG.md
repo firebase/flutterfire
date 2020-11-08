@@ -1,11 +1,51 @@
-## 0.1.1
-
-* Update lower bound of dart dependency to 2.0.0.
-
-## 0.1.0
+## 0.10.0
 
 * **Breaking Change** Update Android firebase-ml-vision dependencies to latest.
 * Add `rawBytes` property to `Barcode`.
+
+## 0.9.9
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.9.8
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+
+## 0.9.7
+
+ - **FEAT**: rework (#3612).
+ - **DOCS**: fix typo in the documentation of firebase_ml_vision(#3603).
+
+## 0.9.6+3
+
+ - **FIX**: local dependencies in example apps (#3319).
+
+## 0.9.6+2
+
+* Add options for cloud document text recognition.
+
+## 0.9.6+1
+
+* Add options for cloud text recognition.
+
+## 0.9.6
+
+* Add recognition of text in document images through `DocumentTextRecognizer`. See `README.md` for more information.
+
+## 0.9.5+1
+
+* Add options for cloud text recognition.
+
+## 0.9.5
+
+* Fix for error if confidence is 1 or 0.
+
+## 0.9.4
+
+* Update lower bound of dart dependency to 2.0.0.
 
 ## 0.9.3+9
 
@@ -143,7 +183,7 @@ You should now call `detector.close()` when a detector will no longer be used.
 * **Breaking Change** Removed on-device model dependencies from plugin.
   `Android` now requires adding the on-device label detector dependency manually.
   `iOS` now requires adding the on-device barcode/face/label/text detector dependencies manually.
-  See the `README.md` for more details. https://pub.dartlang.org/packages/firebase_ml_vision#-readme-tab-
+  See the `README.md` for more details. https://pub.dev/packages/firebase_ml_vision#-readme-tab-
 
 ## 0.5.1+2
 

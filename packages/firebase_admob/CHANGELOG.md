@@ -1,3 +1,55 @@
+## 0.10.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.10.1
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
+## 0.10.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.10.0+1
+
+ - **FIX**: remove `platform` package usage (#3729).
+
+## 0.10.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 0.10.0-dev.2
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **FEAT**: integrate Admob with new core (#3347).
+ - **CHORE**: intellij cleanup (#3326).
+
+## 0.10.0-dev.1
+
+* Depend on `firebase_core` 0.5.0.
+* Firebase iOS SDK versions are now locked to use the same version defined in
+  `firebase_core`.
+* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
+  to specify individual SDK versions. BoM version is also sourced from
+  `firebase_core`.
+
+## 0.9.3+4
+
+* Bump Dart version requirement.
+
+## 0.9.3+3
+
+* Provide a default `MobileAdTargetingInfo` for `RewardedVideoAd.load()`. `RewardedVideoAd.load()`
+would inadvertently cause a crash if `MobileAdTargetingInfo` was excluded.
+
+## 0.9.3+2
+
+* Fixed bug related to simultaneous ad loading behavior on iOS.
+
 ## 0.9.3+1
 
 * Modified README to reflect supporting Native Ads.
