@@ -7,7 +7,7 @@ pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
 libraryVersion = pubspec['version'].gsub('+', '-')
 
 Pod::Spec.new do |s|
-  s.name             = 'firebase_ml_vision_raw_bytes'
+  s.name             = 'firebase_ml_vision'
   s.version          = '0.1.1'
   s.summary          = 'Flutter plugin for Google ML Vision for Firebase.'
   s.description      = <<-DESC

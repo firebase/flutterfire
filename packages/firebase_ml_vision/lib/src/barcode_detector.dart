@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_ml_vision_raw_bytes;
+part of firebase_ml_vision;
 
 /// Enumeration of supported barcode content value types for [Barcode.valueType].
 ///

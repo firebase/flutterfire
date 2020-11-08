@@ -8,7 +8,7 @@ dependencies:
 
   image_picker: ^0.6.0
   cupertino_icons: ^0.1.2
-  firebase_ml_vision_raw_bytes:
+  firebase_ml_vision:
     path: ../
   firebase_core:
     path: ../../firebase_core/firebase_core

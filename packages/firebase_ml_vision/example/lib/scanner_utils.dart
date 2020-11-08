@@ -7,7 +7,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:camera/camera.dart';
-import 'package:firebase_ml_vision_raw_bytes/firebase_ml_vision_raw_bytes.dart';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/foundation.dart';
 
 class ScannerUtils {

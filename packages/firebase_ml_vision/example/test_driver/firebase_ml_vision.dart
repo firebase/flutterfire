@@ -9,7 +9,7 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter_driver/driver_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_ml_vision_raw_bytes/firebase_ml_vision_raw_bytes.dart';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
