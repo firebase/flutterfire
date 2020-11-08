@@ -165,48 +165,51 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
 
     Handler mainHandler = new Handler(Looper.getMainLooper());
     Runnable myRunnable =
-        () ->
-            io.flutter.view.FlutterMain.startInitialization(ContextHolder.getApplicationContext());
-    mainHandler.post(myRunnable);
-
-    io.flutter.view.FlutterMain.ensureInitializationCompleteAsync(
-        ContextHolder.getApplicationContext(),
-        null,
-        mainHandler,
         () -> {
-          String appBundlePath = io.flutter.view.FlutterMain.findAppBundlePath();
-          AssetManager assets = ContextHolder.getApplicationContext().getAssets();
-          if (isNotRunning()) {
-            if (shellArgs != null) {
-              Log.i(
-                  TAG,
-                  "Creating background FlutterEngine instance, with args: "
-                      + Arrays.toString(shellArgs.toArray()));
-              backgroundFlutterEngine =
-                  new FlutterEngine(ContextHolder.getApplicationContext(), shellArgs.toArray());
-            } else {
-              Log.i(TAG, "Creating background FlutterEngine instance.");
-              backgroundFlutterEngine = new FlutterEngine(ContextHolder.getApplicationContext());
-            }
-            // We need to create an instance of `FlutterEngine` before looking up the
-            // callback. If we don't, the callback cache won't be initialized and the
-            // lookup will fail.
-            FlutterCallbackInformation flutterCallback =
-                FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
-            DartExecutor executor = backgroundFlutterEngine.getDartExecutor();
-            initializeMethodChannel(executor);
-            DartCallback dartCallback = new DartCallback(assets, appBundlePath, flutterCallback);
+          io.flutter.view.FlutterMain.startInitialization(ContextHolder.getApplicationContext());
+          io.flutter.view.FlutterMain.ensureInitializationCompleteAsync(
+              ContextHolder.getApplicationContext(),
+              null,
+              mainHandler,
+              () -> {
+                String appBundlePath = io.flutter.view.FlutterMain.findAppBundlePath();
+                AssetManager assets = ContextHolder.getApplicationContext().getAssets();
+                if (isNotRunning()) {
+                  if (shellArgs != null) {
+                    Log.i(
+                        TAG,
+                        "Creating background FlutterEngine instance, with args: "
+                            + Arrays.toString(shellArgs.toArray()));
+                    backgroundFlutterEngine =
+                        new FlutterEngine(
+                            ContextHolder.getApplicationContext(), shellArgs.toArray());
+                  } else {
+                    Log.i(TAG, "Creating background FlutterEngine instance.");
+                    backgroundFlutterEngine =
+                        new FlutterEngine(ContextHolder.getApplicationContext());
+                  }
+                  // We need to create an instance of `FlutterEngine` before looking up the
+                  // callback. If we don't, the callback cache won't be initialized and the
+                  // lookup will fail.
+                  FlutterCallbackInformation flutterCallback =
+                      FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
+                  DartExecutor executor = backgroundFlutterEngine.getDartExecutor();
+                  initializeMethodChannel(executor);
+                  DartCallback dartCallback =
+                      new DartCallback(assets, appBundlePath, flutterCallback);
 
-            executor.executeDartCallback(dartCallback);
+                  executor.executeDartCallback(dartCallback);
 
-            // The pluginRegistrantCallback should only be set in the V1 embedding as
-            // plugin registration is done via reflection in the V2 embedding.
-            if (pluginRegistrantCallback != null) {
-              pluginRegistrantCallback.registerWith(
-                  new ShimPluginRegistry(backgroundFlutterEngine));
-            }
-          }
-        });
+                  // The pluginRegistrantCallback should only be set in the V1 embedding as
+                  // plugin registration is done via reflection in the V2 embedding.
+                  if (pluginRegistrantCallback != null) {
+                    pluginRegistrantCallback.registerWith(
+                        new ShimPluginRegistry(backgroundFlutterEngine));
+                  }
+                }
+              });
+        };
+    mainHandler.post(myRunnable);
   }
 
   boolean isDartBackgroundHandlerRegistered() {
