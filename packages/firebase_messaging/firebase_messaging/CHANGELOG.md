@@ -1,3 +1,7 @@
+## 8.0.0-dev.8
+
+ - **FIX**: potential crash (fixes #4032) (#4071).
+
 ## 8.0.0-dev.7
 
  - Update a dependency to the latest release.
