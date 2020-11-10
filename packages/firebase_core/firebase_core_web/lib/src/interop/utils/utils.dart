@@ -22,7 +22,7 @@ dynamic dartify(Object jsObject,
 
   // Handle list
   if (jsObject is Iterable) {
-    return jsObject.map(dartify).toList();
+    return jsObject.map((item) => dartify(item, customDartify)).toList();
   }
 
   var jsDate = js.dartifyDate(jsObject);
@@ -45,8 +45,8 @@ dynamic dartify(Object jsObject,
 }
 
 // Converts an Iterable into a JS Array
-dynamic jsifyList(Iterable list) {
-  return js.toJSArray(list.map(jsify).toList());
+dynamic jsifyList(Iterable list, [Object Function(Object object) customJsify]) {
+  return js.toJSArray(list.map((item) => jsify(item, customJsify)).toList());
 }
 
 // Returns the JS implementation from Dart Object.
@@ -56,7 +56,7 @@ dynamic jsify(Object dartObject, [Object Function(Object object) customJsify]) {
   }
 
   if (dartObject is Iterable) {
-    return jsifyList(dartObject);
+    return jsifyList(dartObject, customJsify);
   }
 
   if (dartObject is Map) {
