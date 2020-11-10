@@ -137,15 +137,32 @@ correctly. Once complete, trigger the sign-in flow, create a Facebook credential
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 Future<UserCredential> signInWithFacebook() async {
-  // Trigger the sign-in flow
-  final LoginResult result = await FacebookAuth.instance.login();
+     try {
+        // by default the login method has the next permissions ['email','public_profile']
+      AccessToken accessToken = await FacebookAuth.instance.login();
+        // Create a credential from the access token
+      final FacebookAuthCredential facebookAuthCredential =
+      FacebookAuthProvider.credential(accessToken.token);
 
-  // Create a credential from the access token
-  final FacebookAuthCredential facebookAuthCredential =
-    FacebookAuthProvider.credential(result.accessToken.token);
-
-  // Once signed in, return the UserCredential
-  return await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+      // Once signed in, return the UserCredential
+      return await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    } catch (e, s) {
+      if (e is FacebookAuthException) {
+        print(e.message);
+        switch (e.errorCode) {
+          case FacebookAuthErrorCode.OPERATION_IN_PROGRESS:
+            print("You have a previous login operation in progress");
+            break;
+          case FacebookAuthErrorCode.CANCELLED:
+            print("login cancelled");
+            break;
+          case FacebookAuthErrorCode.FAILED:
+            print("login failed");
+            break;
+        }
+      }
+      return null;
+    }
 }
 ```
 
