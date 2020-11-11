@@ -511,13 +511,13 @@ public class FlutterFirebaseAuthPlugin
                     event.put(Constants.USER, parseFirebaseUser(user));
                   }
 
-                  if(initialAuthState){
+                  if (initialAuthState) {
                     initialAuthState = false;
                   } else {
                     channel.invokeMethod(
-                      "Auth#authStateChanges",
-                      event,
-                      getMethodChannelResultHandler("Auth#authStateChanges"));
+                        "Auth#authStateChanges",
+                        event,
+                        getMethodChannelResultHandler("Auth#authStateChanges"));
                   }
                 };
 

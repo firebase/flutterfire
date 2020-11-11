@@ -909,11 +909,11 @@ BOOL static initialAuthState = true;
       initialAuthState = false;
     } else {
       [weakSelf.channel
-        invokeMethod:@"Auth#authStateChanges"
-          arguments:@{
-            @"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:auth.app.name],
-            @"user" : user != nil ? [weakSelf getNSDictionaryFromUser:user] : [NSNull null]
-          }];
+          invokeMethod:@"Auth#authStateChanges"
+             arguments:@{
+               @"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:auth.app.name],
+               @"user" : user != nil ? [weakSelf getNSDictionaryFromUser:user] : [NSNull null]
+             }];
     }
   };
 
