@@ -223,8 +223,10 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
       _userEmail = _emailController.text;
       Map<String, dynamic> iosAppInfoMap = new HashMap();
       Map<String, dynamic> androidAppInfoMap = new HashMap();
-      iosAppInfoMap.putIfAbsent("bundleId", () => "io.flutter.plugins.firebaseAuthExample");
-      androidAppInfoMap.putIfAbsent("packageName", () => "io.flutter.plugins.firebaseauthexample");
+      iosAppInfoMap.putIfAbsent(
+          "bundleId", () => "io.flutter.plugins.firebaseAuthExample");
+      androidAppInfoMap.putIfAbsent(
+          "packageName", () => "io.flutter.plugins.firebaseauthexample");
 
       await _auth.sendSignInLinkToEmail(
           email: _userEmail,
