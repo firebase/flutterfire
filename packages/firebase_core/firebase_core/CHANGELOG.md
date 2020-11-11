@@ -1,3 +1,17 @@
+## 0.5.2
+
+ - **FEAT**: add not-in & != query support (#3748).
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.5.1
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase Android SDK BoM version to 25.12.0 (from 25.3.1).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
 ## 0.5.0+1
 
  - **FIX**: remove unused dart:async import (#3611).

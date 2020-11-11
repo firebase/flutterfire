@@ -45,7 +45,6 @@ void runUserTests() {
         expect(token.length, greaterThan(24));
       });
 
-      // TODO(ehesp/Salakar): re-enable after Web refactor.
       test('should catch error', () async {
         // Setup
         User user;
@@ -67,7 +66,7 @@ void runUserTests() {
           fail('should have thrown a FirebaseAuthException error');
         }
         fail('should have thrown an error');
-      }, skip: kIsWeb);
+      });
     });
 
     group('getIdTokenResult()', () {
@@ -253,33 +252,32 @@ void runUserTests() {
         fail('should have thrown an error');
       });
 
-      // TODO(ehesp/Salakar): Re-enable once Web re-worked. Web currently returns a 'user-mismatch' code.
-      // test('should throw user-not-found ', () async {
-      //   // Setup
-      //   UserCredential userCredential =
-      //       await auth.createUserWithEmailAndPassword(
-      //           email: email, password: TEST_PASSWORD);
-      //   User user = userCredential.user;
+      test('should throw user-not-found or user-mismatch ', () async {
+        // Setup
+        UserCredential userCredential =
+            await auth.createUserWithEmailAndPassword(
+                email: email, password: TEST_PASSWORD);
+        User user = userCredential.user;
 
-      //   try {
-      //     // Test
-      //     AuthCredential credential = EmailAuthProvider.credential(
-      //         email: 'userdoesnotexist@foobar.com', password: TEST_PASSWORD);
-      //     await user.reauthenticateWithCredential(credential);
-      //   } on FirebaseAuthException catch (e) {
-      //     // Assertions
-      //     expect(e.code, equals("user-not-found"));
-      //     expect(
-      //         e.message,
-      //         equals(
-      //             "There is no user record corresponding to this identifier. The user may have been deleted."));
-      //     return;
-      //   } catch (e) {
-      //     fail('should have thrown an FirebaseAuthException');
-      //   }
+        try {
+          // Test
+          AuthCredential credential = EmailAuthProvider.credential(
+              email: 'userdoesnotexist@foobar.com', password: TEST_PASSWORD);
+          await user.reauthenticateWithCredential(credential);
+        } on FirebaseAuthException catch (e) {
+          // Platforms throw different errors. For now, leave them as is
+          // but in future we might want to edit them before sending to user.
+          if (e.code != 'user-mismatch' && e.code != 'user-not-found') {
+            fail('should have thrown a valid error code (got ${e.code}');
+          }
 
-      //   fail('should have thrown an error');
-      // }, skip: kIsWeb);
+          return;
+        } catch (e) {
+          fail('should have thrown an FirebaseAuthException');
+        }
+
+        fail('should have thrown an error');
+      });
 
       test('should throw invalid-email ', () async {
         // Setup
@@ -354,8 +352,6 @@ void runUserTests() {
         expect(auth.currentUser, isNotNull);
       });
 
-      // TODO(ehesp/Salakar): Re-enable for web once `firebase-dart` error fixed
-      //   NoSuchMethodError: method not found: 'split' (a.split is not a function)
       test('should work with actionCodeSettings', () async {
         // Setup
         ActionCodeSettings actionCodeSettings = ActionCodeSettings(
@@ -665,8 +661,6 @@ void runUserTests() {
           await auth.currentUser.updatePhoneNumber(PhoneAuthProvider.credential(
               verificationId: "", smsCode: TEST_SMS_CODE));
         } on FirebaseAuthException catch (e) {
-          print(e.code);
-          print(e.message);
           expect(e.code, "invalid-verification-id");
           expect(e.message,
               "The verification ID used to create the phone auth credential is invalid.");
@@ -716,7 +710,7 @@ void runUserTests() {
 
         fail('should have thrown an error');
       });
-    }, skip: kIsWeb); // TODO: not supported on firebase-dart
+    });
 
     group('delete()', () {
       test('should delete a user', () async {
@@ -770,7 +764,7 @@ void runUserTests() {
         }
 
         fail('Should have thrown an error');
-      }, skip: kIsWeb); // TODO: Re-enable after web refactor.
+      });
     });
   });
 }

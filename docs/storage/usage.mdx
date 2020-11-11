@@ -303,7 +303,7 @@ import 'package:path_provider/path_provider.dart';
 
 Future<void> downloadFileExample() async {
   Directory appDocDir = await getApplicationDocumentsDirectory();
-  File downloadToFile = File('${appDocDir.absolute}/download-logo.png');
+  File downloadToFile = File('${appDocDir.path}/download-logo.png');
 
   try {
     await firebase_storage.FirebaseStorage.instance
@@ -366,7 +366,7 @@ Future<void> handleTaskExample2(String filePath) async {
     print('Task state: ${snapshot.state}');
     print(
         'Progress: ${(snapshot.totalBytes / snapshot.bytesTransferred) * 100} %');
-  }, onError: (firebase_core.FirebaseException e) {
+  }, onError: (e) {
     // The final snapshot is also available on the task via `.snapshot`,
     // this can include 2 additional states, `TaskState.error` & `TaskState.canceled`
     print(task.snapshot);
