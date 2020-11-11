@@ -43,6 +43,8 @@ NSString *const kErrCodeInvalidCredential = @"invalid-credential";
 NSString *const kErrMsgInvalidCredential =
     @"The supplied auth credential is malformed, has expired or is not currently supported.";
 
+BOOL static initialAuthState = true;
+
 @interface FLTFirebaseAuthPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @end
@@ -903,12 +905,16 @@ NSString *const kErrMsgInvalidCredential =
   __weak __typeof__(self) weakSelf = self;
 
   id authStateChangeListener = ^(FIRAuth *_Nonnull auth, FIRUser *_Nullable user) {
-    [weakSelf.channel
+    if (initialAuthState) {
+      initialAuthState = false;
+    } else {
+      [weakSelf.channel
         invokeMethod:@"Auth#authStateChanges"
-           arguments:@{
-             @"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:auth.app.name],
-             @"user" : user != nil ? [weakSelf getNSDictionaryFromUser:user] : [NSNull null]
-           }];
+          arguments:@{
+            @"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:auth.app.name],
+            @"user" : user != nil ? [weakSelf getNSDictionaryFromUser:user] : [NSNull null]
+          }];
+    }
   };
 
   @synchronized(self->_authChangeListeners) {

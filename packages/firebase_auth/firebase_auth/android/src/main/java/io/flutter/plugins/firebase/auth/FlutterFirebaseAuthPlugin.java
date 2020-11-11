@@ -77,6 +77,7 @@ public class FlutterFirebaseAuthPlugin
   private PluginRegistry.Registrar registrar;
   private MethodChannel channel;
   private Activity activity;
+  private static Boolean initialAuthState = true;
 
   @SuppressWarnings("unused")
   public static void registerWith(PluginRegistry.Registrar registrar) {
@@ -510,10 +511,14 @@ public class FlutterFirebaseAuthPlugin
                     event.put(Constants.USER, parseFirebaseUser(user));
                   }
 
-                  channel.invokeMethod(
+                  if(initialAuthState){
+                    initialAuthState = false;
+                  } else {
+                    channel.invokeMethod(
                       "Auth#authStateChanges",
                       event,
                       getMethodChannelResultHandler("Auth#authStateChanges"));
+                  }
                 };
 
             firebaseAuth.addAuthStateListener(newAuthStateListener);
