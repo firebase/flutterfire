@@ -64,7 +64,7 @@ module.exports = [
     pub: 'firebase_storage',
     firebase: 'storage',
     support: {
-      web: false,
+      web: true,
       mobile: true,
       macos: true,
     },

@@ -171,7 +171,7 @@ videos. [[Learn More][storage_product]]
 
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |   ✔️   |     |
+|    ✔️    |  ✔️  |   ✔️   |  ✔️  |
 
 ----
 
