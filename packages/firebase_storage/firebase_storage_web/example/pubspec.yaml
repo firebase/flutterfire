@@ -1,4 +1,4 @@
-name: firebase_storage_example
+name: firebase_storage_web_example
 description: Demonstrates how to use the firebase_storage plugin.
 author: Flutter Team <flutter-dev@googlegroups.com>
 
@@ -6,17 +6,19 @@ dependencies:
   flutter:
     sdk: flutter
   firebase_storage:
-    path: ../
+    path: ../../firebase_storage
   firebase_core:
     path: ../../../firebase_core/firebase_core
   image_picker: ^0.6.7
   image_picker_for_web: ^0.1.0
+  firebase_storage_web:
+    path: ../
 
 dependency_overrides:
   firebase_core:
     path: ../../../firebase_core/firebase_core
   firebase_storage:
-    path: ../
+    path: ../../firebase_storage
   firebase_storage_platform_interface:
     path: ../../firebase_storage_platform_interface
 
@@ -27,11 +29,12 @@ dev_dependencies:
     sdk: flutter
   test: any
   e2e: ^0.6.1
+  mockito: ^4.1.3
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/hello.txt
+  # assets:
+  #   - assets/hello.txt
 
 environment:
   sdk: ">=2.3.0 <3.0.0"
