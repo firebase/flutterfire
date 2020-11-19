@@ -11,11 +11,6 @@ dependencies:
     path: ../../../firebase_core/firebase_core
   image_picker: ^0.6.7
   image_picker_for_web: ^0.1.0
-  firebase_storage_web:
-    git:
-      url: https://github.com/ditman/flutterfire.git
-      ref: firebase-storage-web
-      path: packages/firebase_storage/firebase_storage_web
 
 dependency_overrides:
   firebase_core:
