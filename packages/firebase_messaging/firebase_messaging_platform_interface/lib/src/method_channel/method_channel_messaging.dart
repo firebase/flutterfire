@@ -176,7 +176,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           _firebaseMessagingCallbackDispatcher);
       final CallbackHandle userHandle =
           PluginUtilities.getCallbackHandle(handler);
-      await channel.invokeMethod<bool>('Messaging#startBackgroundIsolate', {
+      await channel.invokeMapMethod('Messaging#startBackgroundIsolate', {
         'pluginCallbackHandle': bgHandle.toRawHandle(),
         'userCallbackHandle': userHandle.toRawHandle(),
       });
@@ -188,7 +188,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     String senderId,
   }) async {
     try {
-      await channel.invokeMethod<String>(
+      await channel.invokeMapMethod(
           'Messaging#deleteToken', {'appName': app.name, 'senderId': senderId});
     } catch (e) {
       throw convertPlatformException(e);
@@ -203,9 +203,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     }
 
     try {
-      return await channel.invokeMethod<String>('Messaging#getAPNSToken', {
+      return (await channel
+          .invokeMapMethod<String, String>('Messaging#getAPNSToken', {
         'appName': app.name,
-      });
+      }))['token'];
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -217,10 +218,11 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     String vapidKey, // not used yet; web only property
   }) async {
     try {
-      return await channel.invokeMethod<String>('Messaging#getToken', {
+      return (await channel
+          .invokeMapMethod<String, String>('Messaging#getToken', {
         'appName': app.name,
         'senderId': senderId,
-      });
+      }))['token'];
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -311,7 +313,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     }
 
     try {
-      await channel.invokeMethod(
+      await channel.invokeMapMethod(
           'Messaging#setForegroundNotificationPresentationOptions', {
         'appName': app.name,
         'alert': alert,
@@ -338,7 +340,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     }
 
     try {
-      await channel.invokeMethod('Messaging#sendMessage', {
+      await channel.invokeMapMethod('Messaging#sendMessage', {
         'appName': app.name,
         'to': to,
         'data': data,
@@ -355,7 +357,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   @override
   Future<void> subscribeToTopic(String topic) async {
     try {
-      await channel.invokeMethod<String>('Messaging#subscribeToTopic', {
+      await channel.invokeMapMethod('Messaging#subscribeToTopic', {
         'appName': app.name,
         'topic': topic,
       });
@@ -367,7 +369,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   @override
   Future<void> unsubscribeFromTopic(String topic) async {
     try {
-      await channel.invokeMethod<String>('Messaging#unsubscribeFromTopic', {
+      await channel.invokeMapMethod('Messaging#unsubscribeFromTopic', {
         'appName': app.name,
         'topic': topic,
       });

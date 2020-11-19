@@ -330,8 +330,7 @@ console, and then track performance in Google Analytics for Firebase. [[Learn Mo
 
 ## Issues
 
-Please file FlutterFire specific issues, bugs, or feature requests in
-our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new/choose).
 
 Plugin issues that are not specific to FlutterFire can be filed in
 the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).

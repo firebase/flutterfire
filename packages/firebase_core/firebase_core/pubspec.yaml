@@ -2,7 +2,7 @@ name: firebase_core
 description: Flutter plugin for Firebase Core, enabling connecting to multiple
   Firebase apps.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_core/firebase_core
-version: 0.5.1
+version: 0.5.2
 
 flutter:
   plugin:
@@ -23,8 +23,7 @@ dependencies:
     sdk: flutter
   quiver: ">=2.0.0 <3.0.0"
   meta: ^1.1.8
-  firebase_core_web: ^0.2.0
-
+  firebase_core_web: ^0.2.1
 dev_dependencies:
   pedantic: ^1.8.0
   plugin_platform_interface: ^1.0.2

@@ -1,3 +1,11 @@
+## 0.5.2
+
+ - **FEAT**: add not-in & != query support (#3748).
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 0.5.1
 
  - **FEAT**: bump compileSdkVersion to 29 (#3975).

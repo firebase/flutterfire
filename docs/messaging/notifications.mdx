@@ -5,6 +5,10 @@ title: Notifications
 Notifications are an important tool used on the majority of applications, aimed at improve user experience & used to engage users
 with your application. The Cloud Messaging module provides basic support for displaying and handling notifications.
 
+:::caution iOS Simulators
+FCM via APNs does not work on iOS Simulators. To receive messages & notifications a real device is required.
+:::
+
 ## Displaying notifications
 
 As mentioned in the [Usage](usage.mdx) documentation, message payloads can include a `notification` property which the Firebase SDKs
@@ -122,7 +126,7 @@ class _Application extends State<Application> {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.data['type'] == 'chat') {
         Navigator.pushNamed(context, '/chat',
-          arguments: ChatArguments(initialMessage));
+          arguments: ChatArguments(message));
       }
     });
   }

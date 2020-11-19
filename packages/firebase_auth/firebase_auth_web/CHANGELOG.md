@@ -1,3 +1,12 @@
+## 0.3.2
+
+ - **FEAT**: migrate firebase interop files to local repository (#3973).
+ - **FEAT** [WEB] adds support for `EmailAuthProvider.credentialWithLink`
+ - **FEAT** [WEB] adds support for `FirebaseAuth.setSettings`
+ - **FEAT** [WEB] adds support for `User.tenantId`
+ - **FEAT** [WEB] `FirebaseAuthException` now supports `email` & `credential` properties
+ - **FEAT** [WEB] `ActionCodeInfo` now supports `previousEmail` field
+
 ## 0.3.1+2
 
  - Update a dependency to the latest release.
