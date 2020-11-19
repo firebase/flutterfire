@@ -15,13 +15,13 @@ scripts:
   #  - Requires `pub global activate tuneup`.
   analyze: >
     melos exec -c 1 --fail-fast -- \
-      pub global run tuneup check
+      dart pub global run tuneup check
 
   # Formats the code of all packages (Java, Objective-C, and Dart).
   #  - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
   #  - Requires `git`.
   #  - Requires `clang-format` (can be installed via Brew on MacOS).
-  format: pub global run flutter_plugin_tools format
+  format: dart pub global run flutter_plugin_tools format
 
   # Build iOS plugin example apps.
   build:examples:ios: >
@@ -60,7 +60,7 @@ scripts:
   # - Requires `flutter config --enable-web` enabled.
   test:e2e:web: >
     melos exec -c 1 --fail-fast --dir-exists=web --scope="*example*" --dir-exists=test_driver -- \
-      flutter drive --release -d chrome --no-pub --verbose-system-logs --browser-name=chrome --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+      flutter drive -d chrome --no-pub --verbose-system-logs --browser-name=chrome --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
 
   # Run all MacOS test driver e2e tests in the example apps.
   # - Requires `flutter config --enable-macos-desktop` enabled.

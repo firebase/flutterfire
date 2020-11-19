@@ -1,3 +1,10 @@
+## 0.6.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 0.6.1
 
  - **FIX**: fixed issue with overwriting correct url with null one (#3567).

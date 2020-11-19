@@ -37,13 +37,6 @@ class FirestoreExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseFirestore.instance
-        .collection('playground')
-        .doc('not-in')
-        .collection('not-in')
-        .where('foo', whereNotIn: ['123'])
-        .get()
-        .then((value) => print(value));
     return withMaterialApp(Center(child: FilmList()));
   }
 }
@@ -319,7 +312,8 @@ class _Likes extends State<Likes> {
       setState(() {
         _likes = newLikes;
       });
-    } catch (e) {
+    } catch (e, s) {
+      print(s);
       print("Failed to update likes for document! $e");
 
       // If the transaction fails, revert back to the old count

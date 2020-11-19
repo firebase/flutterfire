@@ -92,7 +92,7 @@ void runQueryTests() {
               (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
-        fail("Should have thrown a [FireebaseException]");
+        fail("Should have thrown a [FirebaseException]");
       });
     });
 
@@ -753,7 +753,7 @@ void runQueryTests() {
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc2'));
         expect(snapshot2.docs[1].id, equals('doc1'));
-      }, skip: kIsWeb);
+      });
     });
 
     /**

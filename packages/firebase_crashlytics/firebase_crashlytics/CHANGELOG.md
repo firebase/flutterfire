@@ -1,3 +1,10 @@
+## 0.2.3
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 0.2.2
 
  - **FEAT**: bump compileSdkVersion to 29 (#3975).

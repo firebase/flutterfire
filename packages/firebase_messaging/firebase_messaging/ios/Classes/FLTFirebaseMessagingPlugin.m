@@ -219,24 +219,46 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
   // Set UNUserNotificationCenter but preserve original delegate if necessary.
   if (@available(iOS 10.0, macOS 10.14, *)) {
+    BOOL shouldReplaceDelegate = YES;
     UNUserNotificationCenter *notificationCenter =
         [UNUserNotificationCenter currentNotificationCenter];
+
     if (notificationCenter.delegate != nil) {
-      _originalNotificationCenterDelegate = notificationCenter.delegate;
-      _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
-          (unsigned int)[_originalNotificationCenterDelegate
-              respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
-      _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
-          (unsigned int)[_originalNotificationCenterDelegate
-              respondsToSelector:@selector(userNotificationCenter:
-                                          willPresentNotification:withCompletionHandler:)];
-      _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
-          (unsigned int)[_originalNotificationCenterDelegate
-              respondsToSelector:@selector(userNotificationCenter:
-                                     didReceiveNotificationResponse:withCompletionHandler:)];
+#if !TARGET_OS_OSX
+      // If the App delegate exists and it conforms to UNUserNotificationCenterDelegate then we
+      // don't want to replace it on iOS as the earlier call to `[_registrar
+      // addApplicationDelegate:self];` will automatically delegate calls to this plugin. If we
+      // replace it, it will cause a stack overflow as our original delegate forwarding handler
+      // below causes an infinite loop of forwarding. See
+      // https://github.com/FirebaseExtended/flutterfire/issues/4026.
+      if ([GULApplication sharedApplication].delegate != nil &&
+          [[GULApplication sharedApplication].delegate
+              conformsToProtocol:@protocol(UNUserNotificationCenterDelegate)]) {
+        // Note this one only executes if Firebase swizzling is **enabled**.
+        shouldReplaceDelegate = NO;
+      }
+#endif
+
+      if (shouldReplaceDelegate) {
+        _originalNotificationCenterDelegate = notificationCenter.delegate;
+        _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
+        _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:
+                                            willPresentNotification:withCompletionHandler:)];
+        _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:
+                                       didReceiveNotificationResponse:withCompletionHandler:)];
+      }
     }
-    __strong FLTFirebasePlugin<UNUserNotificationCenterDelegate> *strongSelf = self;
-    notificationCenter.delegate = strongSelf;
+
+    if (shouldReplaceDelegate) {
+      __strong FLTFirebasePlugin<UNUserNotificationCenterDelegate> *strongSelf = self;
+      notificationCenter.delegate = strongSelf;
+    }
   }
 
   // We automatically register for remote notifications as
@@ -586,7 +608,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                                 if (error != nil) {
                                   result.error(nil, nil, nil, error);
                                 } else {
-                                  result.success(token);
+                                  result.success(@{@"token" : token});
                                 }
                               }];
 }
@@ -595,9 +617,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSData *apnsToken = [FIRMessaging messaging].APNSToken;
   if (apnsToken) {
-    result.success([FLTFirebaseMessagingPlugin APNSTokenFromNSData:apnsToken]);
+    result.success(@{@"token" : [FLTFirebaseMessagingPlugin APNSTokenFromNSData:apnsToken]});
   } else {
-    result.success([NSNull null]);
+    result.success(@{@"token" : [NSNull null]});
   }
 }
 

@@ -4,13 +4,13 @@
 
 import 'dart:async';
 
-import 'package:firebase/firebase.dart' as firebase;
+import 'interop/auth.dart' as auth_interop;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:firebase_auth_web/firebase_auth_web_user_credential.dart';
+import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
 import 'package:intl/intl.dart';
 
 import 'firebase_auth_web_confirmation_result.dart';
-import 'utils.dart';
+import 'utils/web_utils.dart';
 
 /// The format of an incoming metadata string timestamp from the firebase-dart library
 final DateFormat _dateFormat = DateFormat('EEE, d MMM yyyy HH:mm:ss', 'en_US');
@@ -35,7 +35,7 @@ class UserWeb extends UserPlatform {
           'phoneNumber': _webUser.phoneNumber,
           'photoURL': _webUser.photoURL,
           'providerData': _webUser.providerData
-              .map((firebase.UserInfo webUserInfo) => <String, dynamic>{
+              .map((auth_interop.UserInfo webUserInfo) => <String, dynamic>{
                     'displayName': webUserInfo.displayName,
                     'email': webUserInfo.email,
                     'phoneNumber': webUserInfo.phoneNumber,
@@ -45,32 +45,36 @@ class UserWeb extends UserPlatform {
                   })
               .toList(),
           'refreshToken': _webUser.refreshToken,
-          'tenantId': null, // TODO: not supported on firebase-dart
+          'tenantId': _webUser.tenantId,
           'uid': _webUser.uid,
         });
 
-  final firebase.User _webUser;
+  final auth_interop.User _webUser;
 
   @override
-  Future<void> delete() {
+  Future<void> delete() async {
+    _assertCurrentUser(auth);
     try {
-      return _webUser.delete();
+      await _webUser.delete();
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
-  Future<String> getIdToken(bool forceRefresh) {
+  Future<String> getIdToken(bool forceRefresh) async {
+    _assertCurrentUser(auth);
+
     try {
-      return _webUser.getIdToken(forceRefresh);
+      return await _webUser.getIdToken(forceRefresh);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
   Future<IdTokenResult> getIdTokenResult(bool forceRefresh) async {
+    _assertCurrentUser(auth);
     return convertWebIdTokenResult(
         await _webUser.getIdTokenResult(forceRefresh));
   }
@@ -78,122 +82,153 @@ class UserWeb extends UserPlatform {
   @override
   Future<UserCredentialPlatform> linkWithCredential(
       AuthCredential credential) async {
+    _assertCurrentUser(auth);
     try {
       return UserCredentialWeb(
           auth,
           await _webUser
               .linkWithCredential(convertPlatformCredential(credential)));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
   Future<ConfirmationResultPlatform> linkWithPhoneNumber(String phoneNumber,
       RecaptchaVerifierFactoryPlatform applicationVerifier) async {
+    _assertCurrentUser(auth);
     try {
       // Do not inline - type is not inferred & error is thrown.
-      firebase.RecaptchaVerifier verifier = applicationVerifier.delegate;
+      auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
 
       return ConfirmationResultWeb(
           this.auth, await _webUser.linkWithPhoneNumber(phoneNumber, verifier));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
   Future<UserCredentialPlatform> reauthenticateWithCredential(
       AuthCredential credential) async {
+    _assertCurrentUser(auth);
     try {
-      return UserCredentialWeb(
-          auth,
-          await _webUser.reauthenticateWithCredential(
-              convertPlatformCredential(credential)));
+      auth_interop.UserCredential userCredential = await _webUser
+          .reauthenticateWithCredential(convertPlatformCredential(credential));
+      return UserCredentialWeb(auth, userCredential);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
   Future<void> reload() async {
+    _assertCurrentUser(auth);
+
     try {
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
   Future<void> sendEmailVerification(ActionCodeSettings actionCodeSettings) {
+    _assertCurrentUser(auth);
+
     try {
       return _webUser.sendEmailVerification(
           convertPlatformActionCodeSettings(actionCodeSettings));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
   Future<UserPlatform> unlink(String providerId) async {
+    _assertCurrentUser(auth);
+
     try {
       return UserWeb(auth, await _webUser.unlink(providerId));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
   Future<void> updateEmail(String newEmail) async {
+    _assertCurrentUser(auth);
+
     try {
       await _webUser.updateEmail(newEmail);
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
   Future<void> updatePassword(String newPassword) async {
+    _assertCurrentUser(auth);
+
     try {
       await _webUser.updatePassword(newPassword);
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
   Future<void> updatePhoneNumber(PhoneAuthCredential phoneCredential) async {
+    _assertCurrentUser(auth);
+
     try {
       await _webUser
           .updatePhoneNumber(convertPlatformCredential(phoneCredential));
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
   Future<void> updateProfile(Map<String, String> profile) async {
+    _assertCurrentUser(auth);
+
     try {
-      await _webUser.updateProfile(firebase.UserProfile(
+      await _webUser.updateProfile(auth_interop.UserProfile(
         displayName: profile['displayName'],
         photoURL: profile['photoURL'],
       ));
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
-  // TODO: not supported on firebase-dart
-  // @override
-  // Future<void> verifyBeforeUpdateEmail(String newEmail,
-  //     [ActionCodeSettings actionCodeSettings]) async {}
+  @override
+  Future<void> verifyBeforeUpdateEmail(String newEmail,
+      [ActionCodeSettings actionCodeSettings]) async {
+    _assertCurrentUser(auth);
+
+    await _webUser.verifyBeforeUpdateEmail(
+        newEmail, convertPlatformActionCodeSettings(actionCodeSettings));
+  }
+}
+
+/// Keeps the platform logic the same as native. Since we can keep reference to
+/// a user, sign-out and then call a method on the user reference, we first check
+/// whether the user is signed out before calling a method. This replicates
+/// what happens on native since requests are sent over the method channel.
+_assertCurrentUser(FirebaseAuthPlatform instance) {
+  if (instance.currentUser == null) {
+    throw FirebaseAuthException(
+        code: "no-current-user", message: "No user currently signed in.");
+  }
 }
