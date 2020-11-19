@@ -33,15 +33,18 @@ class RemoteMessage {
           ? <String, dynamic>{}
           : Map<String, dynamic>.from(map['data']),
       from: map['from'],
-      messageId: map['messageId'],
+      // Note: using toString on messageId as it can be an int or string when being sent from native.
+      messageId: map['messageId'] == null ? null : map['messageId'].toString(),
       mutableContent: map['mutableContent'] ?? false,
       notification: map['notification'] == null
           ? null
           : RemoteNotification.fromMap(
               Map<String, dynamic>.from(map['notification'])),
+      // Note: using toString on sentTime as it can be an int or string when being sent from native.
       sentTime: map['sentTime'] == null
           ? null
-          : DateTime.fromMillisecondsSinceEpoch(map['sentTime']),
+          : DateTime.fromMillisecondsSinceEpoch(
+              int.parse(map['sentTime'].toString())),
       threadId: map['threadId'],
       ttl: map['ttl'],
     );
