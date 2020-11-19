@@ -90,7 +90,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
       ReferenceBuilder refBuilderFunction = refBuilder ?? _createReference;
       ref = refBuilderFunction(this, path);
     } catch (e) {
-      fbFirebaseErrorToFirebaseException(e);
+      throw getFirebaseException(e);
     }
     return ref;
   }

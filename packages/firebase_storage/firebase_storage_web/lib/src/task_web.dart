@@ -51,7 +51,7 @@ class TaskWeb extends TaskPlatform {
           .map<TaskSnapshotPlatform>((snapshot) =>
               fbUploadTaskSnapshotToTaskSnapshot(_reference, snapshot))
           .handleError((e) {
-        fbFirebaseErrorToFirebaseException(e);
+        throw getFirebaseException(e);
       });
 
       group.add(onStateChangedStream);
@@ -79,7 +79,7 @@ class TaskWeb extends TaskPlatform {
         (snapshot) => fbUploadTaskSnapshotToTaskSnapshot(_reference, snapshot),
       )
           .catchError((e) {
-        fbFirebaseErrorToFirebaseException(e);
+        throw getFirebaseException(e);
       });
     }
     return _onComplete;

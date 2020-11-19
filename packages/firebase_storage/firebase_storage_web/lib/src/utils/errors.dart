@@ -21,8 +21,8 @@ String _getErrorMessage(String errorCode, String errorMessage) {
 }
 
 /// Convert FirebaseErrors from the JS-interop layer into FirebaseExceptions for the plugin.
-FirebaseException fbFirebaseErrorToFirebaseException(fb.FirebaseError error) {
-  throw FirebaseException(
+FirebaseException getFirebaseException(fb.FirebaseError error) {
+  return FirebaseException(
     plugin: 'firebase_storage',
     code: _parseErrorCode(error.code),
     message: _getErrorMessage(error.code, error.message),
