@@ -30,8 +30,8 @@ class RemoteMessage {
       collapseKey: map['collapseKey'],
       contentAvailable: map['contentAvailable'] ?? false,
       data: map['data'] == null
-          ? <String, String>{}
-          : Map<String, String>.from(map['data']),
+          ? <String, dynamic>{}
+          : Map<String, dynamic>.from(map['data']),
       from: map['from'],
       messageId: map['messageId'],
       mutableContent: map['mutableContent'] ?? false,
@@ -60,7 +60,7 @@ class RemoteMessage {
   final bool contentAvailable;
 
   /// Any additional data sent with the message.
-  final Map<String, String> data;
+  final Map<String, dynamic> data;
 
   /// The topic name or message identifier.
   final String from;
