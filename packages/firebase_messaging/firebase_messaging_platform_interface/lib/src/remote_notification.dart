@@ -50,6 +50,7 @@ class RemoteNotification {
           subtitle: map['apple']['subtitle'],
           subtitleLocArgs: map['apple']['subtitleLocArgs'] ?? [],
           subtitleLocKey: map['apple']['subtitleLocKey'],
+          imageUrl: map['apple']['imageUrl'],
           sound: map['apple']['sound'] == null
               ? null
               : AppleNotificationSound(
@@ -162,6 +163,7 @@ class AppleNotification {
   const AppleNotification(
       {this.badge,
       this.sound,
+      this.imageUrl,
       this.subtitle,
       this.subtitleLocArgs,
       this.subtitleLocKey});
@@ -171,6 +173,11 @@ class AppleNotification {
 
   /// Sound values for the incoming notification.
   final AppleNotificationSound sound;
+
+  /// The image URL for the notification.
+  ///
+  /// Will be `null` if the notification did not include an image.
+  final String imageUrl;
 
   /// Any subtile text on the notification.
   final String subtitle;

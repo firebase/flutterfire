@@ -820,6 +820,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     if ([key isEqualToString:@"aps"] || [key hasPrefix:@"gcm."] || [key hasPrefix:@"google."]) {
       continue;
     }
+
+    // message.apple.imageUrl
+    if ([key isEqualToString:@"fcm_options"]) {
+      if (userInfo[key] != nil && userInfo[key][@"image"] != nil) {
+        notificationIOS[@"imageUrl"] = userInfo[key][@"image"];
+      }
+      continue;
+    }
+
     data[key] = userInfo[key];
   }
   message[@"data"] = data;
