@@ -22,6 +22,7 @@ dependencies:
     sdk: flutter
   firebase_core: ^0.5.2
   firebase_core_platform_interface: ^2.0.0
+  firebase_storage_web: ^0.1.0
   firebase_storage_platform_interface: ^1.0.1
   quiver: ^2.1.3
 
