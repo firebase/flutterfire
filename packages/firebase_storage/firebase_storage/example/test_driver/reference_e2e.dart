@@ -69,9 +69,7 @@ void runReferenceTests() {
 
     group('delete()', () {
       setUpAll(() async {
-        File file = await createFile('deleteMe.jpeg');
-        await storage.ref('/ok.jpeg').writeToFile(file);
-        await storage.ref('/deleteMe.jpeg').putFile(file);
+        await storage.ref('/deleteMe.jpeg').putString('To Be Deleted :)');
       });
 
       test('should delete a file', () async {
@@ -258,7 +256,8 @@ void runReferenceTests() {
           expect(error.message,
               'putBlob() is not supported on native platforms. Use [put], [putFile] or [putString] instead.');
         }
-      }, skip: !kIsWeb);
+        // This *must* be skipped in web, the test is intended for native platforms.
+      }, skip: kIsWeb);
     });
 
     group('putFile', () {
@@ -295,7 +294,8 @@ void runReferenceTests() {
 
         fail('Should have thrown an error');
       });
-    });
+      // putFile is not supported in web.
+    }, skip: kIsWeb);
 
     group('putString', () {
       test('uploads a string', () async {
@@ -341,7 +341,7 @@ void runReferenceTests() {
       });
 
       test('errors if property does not exist', () async {
-        Reference ref = storage.ref('/not.jpeg');
+        Reference ref = storage.ref('/iDoNotExist.jpeg');
         try {
           await ref.updateMetadata(SettableMetadata(contentType: 'unknown'));
         } on FirebaseException catch (e) {
@@ -398,7 +398,8 @@ void runReferenceTests() {
 
         fail('Should have thrown an error');
       });
-    });
+      // writeToFile is not supported in web
+    }, skip: kIsWeb);
 
     test('toString', () async {
       expect(storage.ref('/uploadNope.jpeg').toString(),
