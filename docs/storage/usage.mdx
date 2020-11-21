@@ -365,7 +365,7 @@ Future<void> handleTaskExample2(String filePath) async {
   task.snapshotEvents.listen((firebase_storage.TaskSnapshot snapshot) {
     print('Task state: ${snapshot.state}');
     print(
-        'Progress: ${(snapshot.totalBytes / snapshot.bytesTransferred) * 100} %');
+        'Progress: ${(snapshot.bytesTransferred / snapshot.totalBytes) * 100} %');
   }, onError: (e) {
     // The final snapshot is also available on the task via `.snapshot`,
     // this can include 2 additional states, `TaskState.error` & `TaskState.canceled`
