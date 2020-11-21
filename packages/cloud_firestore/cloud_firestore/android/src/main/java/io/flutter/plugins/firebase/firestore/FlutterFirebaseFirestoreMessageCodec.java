@@ -317,6 +317,8 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
         if ("==".equals(operator)) {
           query = query.whereEqualTo(fieldPath, value);
+        } else if ("!=".equals(operator)) {
+          query = query.whereNotEqualTo(fieldPath, value);
         } else if ("<".equals(operator)) {
           query = query.whereLessThan(fieldPath, value);
         } else if ("<=".equals(operator)) {
@@ -335,6 +337,10 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
           @SuppressWarnings("unchecked")
           List<Object> listValues = (List<Object>) value;
           query = query.whereIn(fieldPath, listValues);
+        } else if ("not-in".equals(operator)) {
+          @SuppressWarnings("unchecked")
+          List<Object> listValues = (List<Object>) value;
+          query = query.whereNotIn(fieldPath, listValues);
         } else {
           Log.w(
               "FLTFirestoreMsgCodec",

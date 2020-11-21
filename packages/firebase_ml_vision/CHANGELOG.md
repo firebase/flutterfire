@@ -1,3 +1,23 @@
+## 0.9.9
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.9.8
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+
+## 0.9.7
+
+ - **FEAT**: rework (#3612).
+ - **DOCS**: fix typo in the documentation of firebase_ml_vision(#3603).
+
+## 0.9.6+3
+
+ - **FIX**: local dependencies in example apps (#3319).
+
 ## 0.9.6+2
 
 * Add options for cloud document text recognition.

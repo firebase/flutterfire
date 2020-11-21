@@ -143,6 +143,8 @@
       id value = condition[2];
       if ([operator isEqualToString:@"=="]) {
         query = [query queryWhereFieldPath:fieldPath isEqualTo:value];
+      } else if ([operator isEqualToString:@"!="]) {
+        query = [query queryWhereFieldPath:fieldPath isNotEqualTo:value];
       } else if ([operator isEqualToString:@"<"]) {
         query = [query queryWhereFieldPath:fieldPath isLessThan:value];
       } else if ([operator isEqualToString:@"<="]) {
@@ -157,6 +159,8 @@
         query = [query queryWhereFieldPath:fieldPath arrayContainsAny:value];
       } else if ([operator isEqualToString:@"in"]) {
         query = [query queryWhereFieldPath:fieldPath in:value];
+      } else if ([operator isEqualToString:@"not-in"]) {
+        query = [query queryWhereFieldPath:fieldPath notIn:value];
       } else {
         NSLog(@"FLTFirebaseFirestore: An invalid query operator %@ was received but not handled.",
               operator);

@@ -1,26 +1,27 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:firebase/firebase.dart' as firebase;
-// import 'package:firebase_auth_web/firebase_auth_web_confirmation_result.dart';
-import 'package:firebase_auth_web/firebase_auth_web_user.dart';
+import 'package:firebase_auth_web/src/utils/web_utils.dart';
+import 'src/interop/auth.dart' as auth_interop;
+import 'package:firebase_core_web/firebase_core_web_interop.dart'
+    as core_interop;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:meta/meta.dart';
 
-import 'firebase_auth_web_recaptcha_verifier_factory.dart';
-import 'firebase_auth_web_user_credential.dart';
-import 'firebase_auth_web_confirmation_result.dart';
-import 'utils.dart';
+import 'src/firebase_auth_web_user.dart';
+import 'src/firebase_auth_web_recaptcha_verifier_factory.dart';
+import 'src/firebase_auth_web_user_credential.dart';
+import 'src/firebase_auth_web_confirmation_result.dart';
 
 /// The web delegate implementation for [FirebaseAuth].
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
   /// instance of Auth from the web plugin
-  final firebase.Auth _webAuth;
+  final auth_interop.Auth _webAuth;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -51,7 +52,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   /// The entry point for the [FirebaseAuthWeb] class.
   FirebaseAuthWeb({FirebaseApp app})
-      : _webAuth = firebase.auth(firebase.app(app?.name)),
+      : _webAuth = auth_interop.getAuthInstance(core_interop.app(app?.name)),
         super(appInstance: app) {
     if (app != null) {
       // Create a app instance broadcast stream for both delegate listener events
@@ -62,7 +63,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       _idTokenChangesListeners[app.name] =
           StreamController<UserPlatform>.broadcast();
 
-      _webAuth.onAuthStateChanged.map((firebase.User webUser) {
+      _webAuth.onAuthStateChanged.map((auth_interop.User webUser) {
         if (webUser == null) {
           return null;
         } else {
@@ -73,7 +74,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       });
 
       // Also triggers `userChanged` events
-      _webAuth.onIdTokenChanged.map((firebase.User webUser) {
+      _webAuth.onIdTokenChanged.map((auth_interop.User webUser) {
         if (webUser == null) {
           return null;
         } else {
@@ -102,7 +103,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   UserPlatform get currentUser {
-    firebase.User webCurrentUser = _webAuth.currentUser;
+    auth_interop.User webCurrentUser = _webAuth.currentUser;
 
     if (webCurrentUser == null) {
       return null;
@@ -120,11 +121,11 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> applyActionCode(String code) {
+  Future<void> applyActionCode(String code) async {
     try {
-      return _webAuth.applyActionCode(code);
+      await _webAuth.applyActionCode(code);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -133,7 +134,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return convertWebActionCodeInfo(await _webAuth.checkActionCode(code));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -142,7 +143,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       await _webAuth.confirmPasswordReset(code, newPassword);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -153,16 +154,16 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return UserCredentialWeb(
           this, await _webAuth.createUserWithEmailAndPassword(email, password));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
-  Future<List<String>> fetchSignInMethodsForEmail(String email) {
+  Future<List<String>> fetchSignInMethodsForEmail(String email) async {
     try {
-      return _webAuth.fetchSignInMethodsForEmail(email);
+      return await _webAuth.fetchSignInMethodsForEmail(email);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -171,7 +172,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return UserCredentialWeb(this, await _webAuth.getRedirectResult());
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -188,43 +189,50 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings actionCodeSettings]) {
+      [ActionCodeSettings actionCodeSettings]) async {
     try {
-      return _webAuth.sendPasswordResetEmail(
+      await _webAuth.sendPasswordResetEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
   Future<void> sendSignInLinkToEmail(String email,
-      [ActionCodeSettings actionCodeSettings]) {
+      [ActionCodeSettings actionCodeSettings]) async {
     try {
-      return _webAuth.sendSignInLinkToEmail(
+      await _webAuth.sendSignInLinkToEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
-  Future<void> setLanguageCode(String languageCode) async {
-    _webAuth.languageCode = languageCode;
+  String get languageCode {
+    return _webAuth.languageCode;
   }
 
-  // TODO: not supported in firebase-dart
-  // @override
-  // Future<void> setSettings({bool appVerificationDisabledForTesting}) async {
-  //   //
-  // }
+  @override
+  Future<void> setLanguageCode(String languageCode) {
+    _webAuth.languageCode = languageCode;
+    return null;
+  }
+
+  @override
+  Future<void> setSettings(
+      {bool appVerificationDisabledForTesting, String userAccessGroup}) async {
+    _webAuth.settings.appVerificationDisabledForTesting =
+        appVerificationDisabledForTesting;
+  }
 
   @override
   Future<void> setPersistence(Persistence persistence) async {
     try {
       return _webAuth.setPersistence(convertPlatformPersistence(persistence));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -233,7 +241,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return UserCredentialWeb(this, await _webAuth.signInAnonymously());
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -245,7 +253,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           await _webAuth
               .signInWithCredential(convertPlatformCredential(credential)));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -255,7 +263,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return UserCredentialWeb(
           this, await _webAuth.signInWithCustomToken(token));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -266,7 +274,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return UserCredentialWeb(
           this, await _webAuth.signInWithEmailAndPassword(email, password));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -277,7 +285,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return UserCredentialWeb(
           this, await _webAuth.signInWithEmailLink(email, emailLink));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -286,12 +294,12 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       RecaptchaVerifierFactoryPlatform applicationVerifier) async {
     try {
       // Do not inline - type is not inferred & error is thrown.
-      firebase.RecaptchaVerifier verifier = applicationVerifier.delegate;
+      auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
 
       return ConfirmationResultWeb(
           this, await _webAuth.signInWithPhoneNumber(phoneNumber, verifier));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -303,7 +311,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           await _webAuth
               .signInWithPopup(convertPlatformAuthProvider(provider)));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
@@ -312,25 +320,25 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return _webAuth.signInWithRedirect(convertPlatformAuthProvider(provider));
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
-  Future<void> signOut() {
+  Future<void> signOut() async {
     try {
-      return _webAuth.signOut();
+      await _webAuth.signOut();
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 
   @override
-  Future<String> verifyPasswordResetCode(String code) {
+  Future<String> verifyPasswordResetCode(String code) async {
     try {
-      return _webAuth.verifyPasswordResetCode(code);
+      return await _webAuth.verifyPasswordResetCode(code);
     } catch (e) {
-      throw throwFirebaseAuthException(e);
+      throw getFirebaseAuthException(e);
     }
   }
 

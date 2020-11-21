@@ -10,14 +10,18 @@ melos bootstrap
 if [ "$ACTION" == "android" ]
 then
   melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
-    flutter build apk --debug --target="$TARGET_FILE"
-  exit
+    flutter build apk --debug --target="$TARGET_FILE" --dart-define=CI=true
+  MELOS_EXIT_CODE=$?
+  pkill dart || true
+  pkill java || true
+  pkill -f '.*GradleDaemon.*' || true
+  exit $MELOS_EXIT_CODE
 fi
 
 if [ "$ACTION" == "ios" ]
 then
   melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
-    flutter build ios --no-codesign --simulator --debug --target="$TARGET_FILE"
+    flutter build ios --no-codesign --simulator --debug --target="$TARGET_FILE" --dart-define=CI=true
   exit
 fi
 
@@ -27,6 +31,6 @@ then
   echo "TODO: Skipping macOS testing due to Flutter dev branch issue."
   exit
   melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
-    flutter build macos --debug --target="$TARGET_FILE"
+    flutter build macos --debug --target="$TARGET_FILE" --dart-define=CI=true
   exit
 fi

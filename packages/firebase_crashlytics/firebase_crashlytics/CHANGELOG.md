@@ -1,26 +1,27 @@
-## 0.2.0-dev.5
+## 0.2.3
 
-* Bump to update changelog.
-* See the version `0.2.0-dev.1` changelog for accumulated changes in this dev release.
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
 
-## 0.2.0-dev.4
+## 0.2.2
 
-* Fixed an error when hot restarting on iOS/macOS (#3432).
-* See the version `0.2.0-dev.1` changelog for accumulated changes in this dev release.
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
 
-## 0.2.0-dev.3
+## 0.2.1+1
 
-* Fixed an issue with iOS logs appearing as `null` on the Firebase Console.
-* Ensure cosmetic Android exception classes keep their name when app obfuscated.
-* Fixed an error when hot restarting on Android (#3432).
-* See the version `0.2.0-dev.1` changelog for accumulated changes in this dev release.
+ - **FIX**: Change minimum version of stack_trace package (#3639).
+ - **DOCS**: README updates (#3768).
 
-## 0.2.0-dev.2
+## 0.2.1
 
-* Fixed an iOS variable naming collision that could cause builds to fail when used alongside `firebase_auth`.
-* See the version `0.2.0-dev.1` changelog for accumulated changes in this dev release.
+ - **REFACTOR**: changes context to reason (#1542) (#3334).
+ - **FEAT**: rework (#3420).
+ - **CHORE**: firebase_crashlytics v0.2.0 release.
 
-## 0.2.0-dev.1
+## 0.2.0
 
 For help migrating to this release please see the [migration guide](https://firebase.flutter.dev/docs/migration).
 

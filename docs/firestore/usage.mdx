@@ -208,7 +208,7 @@ To determine whether the document exists, use the [`exists`](!cloud_firestore.Do
 ```dart
 FirebaseFirestore.instance
     .collection('users')
-    .document(userId)
+    .doc(userId)
     .get()
     .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
@@ -542,7 +542,7 @@ should be used.
 When using transactions, note that:
 
 - Read operations must come before write operations
-- Transactions will fail is the client is offline, they cannot use cached data
+- Transactions will fail when the client is offline, they cannot use cached data
 
 An example of where a transaction could be used would be in an application where a user can subscribe to a channel. When
 a user presses the subscribe button, a "subscribers" field in a document increments. Without using Transactions, we would
@@ -571,6 +571,9 @@ return Firestore.instance.runTransaction((transaction) async {
   }
 
   // Update the follower count based on the current count
+  // Note: this could be done without a transaction
+  // by updating the population using FieldValue.increment()
+
   int newFollowerCount = snapshot.data()['followers'] + 1;
 
   // Perform an update on the document
