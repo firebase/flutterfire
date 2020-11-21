@@ -61,9 +61,8 @@ abstract class HttpsCallableResultJsImpl {
 abstract class HttpsErrorJsImpl {
   external ErrorJsImpl get error;
   external set error(ErrorJsImpl e);
-  external dynamic /*|'ok'|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/ get code;
-  external set code(
-      /*|'ok'|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/ v);
+  external dynamic get code;
+  external set code(v);
   external dynamic get details;
   external set details(dynamic d);
   external String get message;

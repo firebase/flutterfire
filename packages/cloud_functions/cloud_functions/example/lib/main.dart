@@ -12,8 +12,8 @@ import 'package:flutter/material.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  FirebaseFunctions.instance
-      .useFunctionsEmulator(origin: 'http://localhost:5001');
+  // FirebaseFunctions.instance
+  //     .useFunctionsEmulator(origin: 'http://localhost:5001');
   runApp(MyApp());
 }
 

@@ -4,11 +4,22 @@
 
 // ignore_for_file: public_member_api_docs
 
+// TODO(ehesp): remove import once nullability updates dart sdk
+import 'dart:async';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'functions_interop.dart' as functions_interop;
 import 'firebase_interop.dart' as firebase_interop;
 
 export 'functions_interop.dart' show HttpsCallableOptions;
+
+/// Given an AppJSImp, return the Functions instance.
+Functions getFunctionsInstance(App app, String region) {
+  functions_interop.FunctionsJsImpl jsObject =
+      region == null ? app.functions() : app.functions(region);
+
+  return Functions.getInstance(jsObject);
+}
 
 class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
   static final _expando = Expando<Functions>();

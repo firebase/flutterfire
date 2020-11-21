@@ -16,4 +16,6 @@ abstract class AppJsImpl {
   external String get name;
   external FirebaseOptions get options;
   external PromiseJsImpl<void> delete();
+
+  external dynamic functions([String region]);
 }
