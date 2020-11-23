@@ -64,9 +64,9 @@ class _MyAppState extends State<MyApp> {
                 });
               });
             }).catchError((e) {
-              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                content: Text("ERROR: $e"),
-              ));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("ERROR: $e")),
+              );
             });
           },
           label: Text('Call Function'),
