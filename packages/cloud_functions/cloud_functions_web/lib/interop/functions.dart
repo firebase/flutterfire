@@ -9,7 +9,6 @@ import 'dart:async';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'functions_interop.dart' as functions_interop;
-import 'firebase_interop.dart' as firebase_interop;
 
 export 'functions_interop.dart' show HttpsCallableOptions;
 

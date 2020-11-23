@@ -7,7 +7,7 @@ import 'dart:js_util' as util;
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:cloud_functions_web/utils.dart';
-import 'package:firebase/src/utils.dart' show dartify;
+import 'package:firebase_core_web/firebase_core_web_interop.dart' show dartify;
 import 'interop/functions.dart' as functions_interop;
 
 /// A web specific implementation of [HttpsCallable].

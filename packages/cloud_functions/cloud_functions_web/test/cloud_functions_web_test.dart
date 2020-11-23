@@ -7,7 +7,6 @@ import 'dart:js' show allowInterop;
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:cloud_functions_web/cloud_functions_web.dart';
-import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -79,23 +78,6 @@ void main() {
               print('Unimplemented. Supposed to emulate at $url');
             }),
           ));
-    });
-
-    test('setUp wires up mock objects properly', () async {
-      log.clear();
-
-      firebase.App app = firebase.app('[DEFAULT]');
-      expect(app.options.appId, equals('123'));
-      firebase.Functions fs = firebase.functions(app);
-      firebase.HttpsCallable callable = fs.httpsCallable('foobie');
-      await callable.call();
-      expect(log, <Matcher>[
-        equals(<String, dynamic>{
-          'appName': '[DEFAULT]',
-          'functionName': 'foobie',
-          'region': null
-        }),
-      ]);
     });
   });
 }
