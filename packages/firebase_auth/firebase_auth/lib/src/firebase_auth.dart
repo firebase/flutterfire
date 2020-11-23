@@ -517,11 +517,18 @@ class FirebaseAuth extends FirebasePluginPlatform {
 
   /// Starts a sign-in flow for a phone number.
   ///
+  /// You can optionally provide a [RecaptchaVerifier] instance to control the
+  /// reCAPTCHA widget apperance and behaviour.
+  ///
+  /// Once the reCAPTCHA verification has completed, called [ConfirmationResult.confirm]
+  /// with the users SMS verification code to complete the authentication flow.
+  ///
   /// This method is only available on web based platforms.
-  Future<ConfirmationResult> signInWithPhoneNumber(
-      String phoneNumber, RecaptchaVerifier verifier) async {
+  Future<ConfirmationResult> signInWithPhoneNumber(String phoneNumber,
+      [RecaptchaVerifier verifier]) async {
     assert(phoneNumber != null);
-    assert(verifier != null);
+    assert(phoneNumber.isNotEmpty);
+    verifier ??= RecaptchaVerifier();
     return ConfirmationResult._(this,
         await _delegate.signInWithPhoneNumber(phoneNumber, verifier.delegate));
   }
@@ -547,7 +554,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
 
   /// Signs out the current user.
   ///
-  /// If successful, it also signs the user in into the app and updates
+  /// If successful, it also updates
   /// any [authStateChanges], [idTokenChanges] or [userChanges] stream
   /// listeners.
   Future<void> signOut() async {

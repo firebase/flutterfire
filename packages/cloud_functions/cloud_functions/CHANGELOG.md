@@ -1,19 +1,61 @@
-## 0.6.0-dev.3
+## 0.7.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.7.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 0.7.0-dev.3
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
+## 0.7.0-dev.2
+
+ - **DOCS**: update package readme.
+ - **DOCS**: update pubspec description to meet minumum length requirement.
+
+## 0.7.0-dev.1
+
+Along with the below changes, the plugin has been reworked to bring it inline with the federated plugin setup along with documentation and additional unit and end-to-end tests. The API has mainly been kept the same, however there are some breaking changes.
+
+ - **`FirebaseFunctions`**:
+   - **DEPRECATED**: Class `CloudFunctions` is now deprecated. Use `FirebaseFunctions` instead.
+   - **DEPRECATED**: Calling `CloudFunctions.instance` or `CloudFunctions(app: app, region: region)` is now deprecated. Use `FirebaseFunctions.instance` or `FirebaseFunctions.instanceFor(app: app, region: region)` instead.
+   - **DEPRECATED**: Calling `getHttpsCallable(functionName: functionName)` is deprecated in favor of `httpsCallable(functionName)`
+   - **DEPRECATED**: `CloudFunctionsException` is deprecated in favor of `FirebaseFunctionsException`.
+   - **NEW**: `FirebaseFunctionsException` now exposes a `details` property to retrieve any additional data provided with the exception returned by a HTTPS callable function.
+   - **NEW**: Internally, instances of `FirebaseFunctions` are now cached and lazily loaded.
+   - **NEW**: `httpsCallable` accepts an instance of `HttpsCallableOptions` (see below).
+
+
+ - **`HttpsCallable`**:
+   - **DEPRECATED**: Setting `timeout` is deprecated in favor of using `HttpsCallableOptions` (see below).
+
+
+ - **`HttpsCallableResult`**:
+   - **BREAKING**: `data` is now read-only, only its getter is exposed.
+   - **FIX**: `HttpsCallableResult`'s `data` property can now return a Map, List or a primitive value. Previously the Web implementation incorrectly assumed that a Map was always returned by the HTTPS callable function.
+
+
+ - **`HttpsCallableOptions`**: 
+   - **NEW**: This new class has been created to support setting options for `httpsCallable` instances.
+
+## 0.6.0+1
+
+ - **FIX**: local dependencies in example apps (#3319).
+
+## 0.6.0
 
 * Fix HttpsCallable#call not working with parameters of non-Map type.
-
-## 0.6.0-dev.2
-
 * Firebase iOS SDK versions are now locked to use the same version defined in
   `firebase_core`.
 * Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
   to specify individual SDK versions. BoM version is also sourced from
   `firebase_core`.
 * Allow iOS & MacOS plugins to be imported as modules.
-
-## 0.6.0-dev.1
-
-* Update to v1 core plugin.
+* Update to depend on `firebase_core` plugin.
 
 ## 0.5.0
 

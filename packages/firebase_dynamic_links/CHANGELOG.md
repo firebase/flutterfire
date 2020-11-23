@@ -1,6 +1,28 @@
-## 0.5.4-dev.1
+## 0.6.2
 
-* Depend on `firebase_core` pre-release.
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.6.1
+
+ - **FIX**: fixed issue with overwriting correct url with null one (#3567).
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
+## 0.6.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.6.0+1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **CHORE**: intellij cleanup (#3326).
+
+## 0.6.0
+
+* Depend on new `firebase_core` plugin.
 * Firebase iOS SDK versions are now locked to use the same version defined in
   `firebase_core`.
 * Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)

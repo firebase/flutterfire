@@ -151,16 +151,15 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     writeValue(stream, querySnapshotMap);
   }
 
+  @SuppressWarnings("ConstantConditions")
   private void writeDocumentSnapshot(ByteArrayOutputStream stream, DocumentSnapshot value) {
     Map<String, Object> snapshotMap = new HashMap<>();
 
     snapshotMap.put("path", value.getReference().getPath());
 
     if (value.exists()) {
-      // noinspection ConstantConditions
       snapshotMap.put("data", value.getData());
     } else {
-      // noinspection ConstantConditions
       snapshotMap.put("data", null);
     }
 
@@ -318,6 +317,8 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
         if ("==".equals(operator)) {
           query = query.whereEqualTo(fieldPath, value);
+        } else if ("!=".equals(operator)) {
+          query = query.whereNotEqualTo(fieldPath, value);
         } else if ("<".equals(operator)) {
           query = query.whereLessThan(fieldPath, value);
         } else if ("<=".equals(operator)) {
@@ -336,6 +337,10 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
           @SuppressWarnings("unchecked")
           List<Object> listValues = (List<Object>) value;
           query = query.whereIn(fieldPath, listValues);
+        } else if ("not-in".equals(operator)) {
+          @SuppressWarnings("unchecked")
+          List<Object> listValues = (List<Object>) value;
+          query = query.whereNotIn(fieldPath, listValues);
         } else {
           Log.w(
               "FLTFirestoreMsgCodec",

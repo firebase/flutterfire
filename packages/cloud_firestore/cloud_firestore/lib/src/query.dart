@@ -41,7 +41,8 @@ class Query {
     return (operator == '<' ||
         operator == '<=' ||
         operator == '>' ||
-        operator == '>=');
+        operator == '>=' ||
+        operator == '!=');
   }
 
   /// Asserts that a [DocumentSnapshot] can be used within the current
@@ -110,7 +111,8 @@ class Query {
 
   /// Asserts that the query [field] is either a String or a [FieldPath].
   void _assertValidFieldType(dynamic field) {
-    assert(field is String || field is FieldPath,
+    assert(
+        field is String || field is FieldPath || field == FieldPath.documentId,
         'Supported [field] types are [String] and [FieldPath].');
   }
 
@@ -215,6 +217,7 @@ class Query {
   ///
   /// After a [FieldPath.documentId] order by call, you cannot add any more [orderBy]
   /// calls.
+  ///
   /// Furthermore, you may not use [orderBy] on the [FieldPath.documentId] [field] when
   /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
   /// or [endAtDocument] because the order by clause on the document id
@@ -233,9 +236,13 @@ class Query {
     assert(orders.where((List<dynamic> item) => field == item[0]).isEmpty,
         "OrderBy field '$field' already exists in this query");
 
-    FieldPath fieldPath = field is String ? FieldPath.fromString(field) : field;
-
-    orders.add([fieldPath, descending]);
+    if (field == FieldPath.documentId) {
+      orders.add([field, descending]);
+    } else {
+      FieldPath fieldPath =
+          field is String ? FieldPath.fromString(field) : field;
+      orders.add([fieldPath, descending]);
+    }
 
     final List<List<dynamic>> conditions =
         List<List<dynamic>>.from(parameters['where']);
@@ -333,6 +340,7 @@ class Query {
   Query where(
     dynamic field, {
     dynamic isEqualTo,
+    dynamic isNotEqualTo,
     dynamic isLessThan,
     dynamic isLessThanOrEqualTo,
     dynamic isGreaterThan,
@@ -340,6 +348,7 @@ class Query {
     dynamic arrayContains,
     List<dynamic> arrayContainsAny,
     List<dynamic> whereIn,
+    List<dynamic> whereNotIn,
     bool isNull,
   }) {
     _assertValidFieldType(field);
@@ -350,9 +359,17 @@ class Query {
 
     // Conditions can be chained from other [Query] instances
     void addCondition(dynamic field, String operator, dynamic value) {
-      FieldPath fieldPath =
-          field is String ? FieldPath.fromString(field) : field as FieldPath;
-      final List<dynamic> condition = <dynamic>[fieldPath, operator, value];
+      List<dynamic> condition;
+      value = _CodecUtility.valueEncode(value);
+
+      if (field == FieldPath.documentId) {
+        condition = <dynamic>[field, operator, value];
+      } else {
+        FieldPath fieldPath =
+            field is String ? FieldPath.fromString(field) : field as FieldPath;
+        condition = <dynamic>[fieldPath, operator, value];
+      }
+
       assert(
           conditions
               .where((List<dynamic> item) => equality.equals(condition, item))
@@ -362,6 +379,7 @@ class Query {
     }
 
     if (isEqualTo != null) addCondition(field, '==', isEqualTo);
+    if (isNotEqualTo != null) addCondition(field, '!=', isNotEqualTo);
     if (isLessThan != null) addCondition(field, '<', isLessThan);
     if (isLessThanOrEqualTo != null) {
       addCondition(field, '<=', isLessThanOrEqualTo);
@@ -377,6 +395,7 @@ class Query {
       addCondition(field, 'array-contains-any', arrayContainsAny);
     }
     if (whereIn != null) addCondition(field, 'in', whereIn);
+    if (whereNotIn != null) addCondition(field, 'not-in', whereNotIn);
     if (isNull != null) {
       assert(
           isNull,
@@ -387,13 +406,15 @@ class Query {
 
     dynamic hasInequality;
     bool hasIn = false;
+    bool hasNotIn = false;
+    bool hasNotEqualTo = false;
     bool hasArrayContains = false;
     bool hasArrayContainsAny = false;
 
     // Once all conditions have been set, we must now check them to ensure the
     // query is valid.
     for (dynamic condition in conditions) {
-      FieldPath field = condition[0];
+      dynamic field = condition[0]; // FieldPath or FieldPathType
       String operator = condition[1];
       dynamic value = condition[2];
 
@@ -410,7 +431,9 @@ class Query {
             'You can only perform equals comparisons on null.');
       }
 
-      if (operator == 'in' || operator == 'array-contains-any') {
+      if (operator == 'in' ||
+          operator == 'array-contains-any' ||
+          operator == 'not-in') {
         assert(value is List,
             "A non-empty [List] is required for '$operator' filters.");
         assert((value as List).length <= 10,
@@ -421,8 +444,20 @@ class Query {
             "'$operator' filters cannot contain 'null' in the [List].");
       }
 
+      if (operator == '!=') {
+        assert(!hasNotEqualTo, "You cannot use '!=' filters more than once.");
+        assert(!hasNotIn, "You cannot use '!=' filters with 'not-in' filters.");
+        hasNotEqualTo = true;
+      }
+
+      if (operator == 'not-in') {
+        assert(!hasNotIn, "You cannot use 'not-in' filters more than once.");
+        assert(!hasNotEqualTo,
+            "You cannot use 'not-in' filters with '!=' filters.");
+      }
+
       if (operator == 'in') {
-        assert(!hasIn, "You cannot use 'in' filters more than once.");
+        assert(!hasIn, "You cannot use 'whereIn' filters more than once.");
         hasIn = true;
       }
 

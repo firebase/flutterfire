@@ -3,8 +3,6 @@ package io.flutter.plugins.firebase.auth;
 import static io.flutter.plugins.firebase.auth.FlutterFirebaseAuthPlugin.parseAuthCredential;
 
 import androidx.annotation.NonNull;
-import com.google.firebase.FirebaseNetworkException;
-import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -52,14 +50,6 @@ public class FlutterFirebaseAuthPluginException extends Exception {
 
       if (authCredential != null) {
         additionalData.put("authCredential", parseAuthCredential(authCredential));
-      }
-    }
-
-    if ("UNKNOWN".equals(code)) {
-      if (nativeException instanceof FirebaseNetworkException) {
-        code = "NETWORK_REQUEST_FAILED";
-      } else if (nativeException instanceof FirebaseTooManyRequestsException) {
-        code = "TOO_MANY_REQUESTS";
       }
     }
 

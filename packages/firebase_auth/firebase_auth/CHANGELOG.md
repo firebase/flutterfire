@@ -1,8 +1,49 @@
-## 0.18.0-dev.2
+## 0.18.3
 
-* Point `firebase_auth_web` dependency to version `0.3.0-dev.1`
+ - **FEAT**: migrate firebase interop files to local repository (#3973).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **FEAT** [WEB] adds support for `EmailAuthProvider.credentialWithLink`
+ - **FEAT** [WEB] adds support for `FirebaseAuth.setSettings`
+ - **FEAT** [WEB] adds support for `User.tenantId`
+ - **FEAT** [WEB] `FirebaseAuthException` now supports `email` & `credential` properties
+ - **FEAT** [WEB] `ActionCodeInfo` now supports `previousEmail` field
 
-## 0.18.0-dev.1
+## 0.18.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
+## 0.18.1+2
+
+ - **FIX**: on iOS use sendEmailVerificationWithActionCodeSettings instead of sendEmailVerificationWithCompletion (#3686).
+ - **DOCS**: README updates (#3768).
+
+## 0.18.1+1
+
+ - **FIX**: Optional params for "signInWithCredential" method are converted to "nil" if "null" for iOS (#3731).
+
+## 0.18.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **FIX**: fix IdTokenResult timestamps (web, ios) (#3357).
+ - **FIX**: pub.dev score fixes (#3318).
+ - **FIX**: use unknown APNS token type (#3345).
+ - **FIX**: update FLTFirebaseAuthPlugin.m (#3360).
+ - **FIX**: use correct FIRAuth instance on listeners (#3316).
+ - **FEAT**: add support for linkWithPhoneNumber (#3436).
+ - **FEAT**: use named arguments for ActionCodeSettings (#3269).
+ - **FEAT**: implement signInWithPhoneNumber on web (#3205).
+ - **FEAT**: expose smsCode (android only) (#3308).
+ - **DOCS**: fixed signOut method documentation (#3342).
+
+## 0.18.0+1
+
+* Fixed an Android issue where certain network related Firebase Auth error codes would come through as `unknown`. [(#3217)](https://github.com/FirebaseExtended/flutterfire/pull/3217)
+* Added missing deprecations: `FirebaseUser` class and `photoUrl` getter.
+* Bump `firebase_auth_platform_interface` dependency to fix an assertion issue when creating Google sign-in credentials.
+* Bump `firebase_auth_web` dependency to `^0.3.0+1`.
+
+## 0.18.0
 
 Overall, Firebase Auth has been heavily reworked to bring it inline with the federated plugin setup along with adding new features, documentation and many more unit and end-to-end tests. The API has mainly been kept the same, however there are some breaking changes.
 

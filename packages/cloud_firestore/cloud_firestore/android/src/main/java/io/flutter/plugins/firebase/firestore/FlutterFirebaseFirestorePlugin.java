@@ -134,7 +134,11 @@ public class FlutterFirebaseFirestorePlugin
   private void removeEventListeners() {
     for (int i = 0; i < listenerRegistrations.size(); i++) {
       int key = listenerRegistrations.keyAt(i);
-      listenerRegistrations.get(key).remove();
+      ListenerRegistration listenerRegistration = listenerRegistrations.get(key);
+
+      if (listenerRegistration != null) {
+        listenerRegistration.remove();
+      }
     }
     listenerRegistrations.clear();
   }
@@ -230,7 +234,7 @@ public class FlutterFirebaseFirestorePlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          // noinspection unchecked
+          @SuppressWarnings("unchecked")
           List<Map<String, Object>> writes =
               (List<Map<String, Object>>) Objects.requireNonNull(arguments.get("writes"));
           FirebaseFirestore firestore =
@@ -240,7 +244,7 @@ public class FlutterFirebaseFirestorePlugin
           for (Map<String, Object> write : writes) {
             String type = (String) Objects.requireNonNull(write.get("type"));
             String path = (String) Objects.requireNonNull(write.get("path"));
-            // noinspection unchecked
+            @SuppressWarnings("unchecked")
             Map<String, Object> data = (Map<String, Object>) write.get("data");
 
             DocumentReference documentReference = firestore.document(path);
@@ -253,7 +257,7 @@ public class FlutterFirebaseFirestorePlugin
                 batch = batch.update(documentReference, Objects.requireNonNull(data));
                 break;
               case "SET":
-                // noinspection unchecked
+                @SuppressWarnings("unchecked")
                 Map<String, Object> options =
                     (Map<String, Object>) Objects.requireNonNull(write.get("options"));
 
@@ -262,7 +266,7 @@ public class FlutterFirebaseFirestorePlugin
                       batch.set(
                           documentReference, Objects.requireNonNull(data), SetOptions.merge());
                 } else if (options.get("mergeFields") != null) {
-                  // noinspection unchecked
+                  @SuppressWarnings("unchecked")
                   List<FieldPath> fieldPathList =
                       (List<FieldPath>) Objects.requireNonNull(options.get("mergeFields"));
                   batch =
@@ -344,6 +348,7 @@ public class FlutterFirebaseFirestorePlugin
         });
   }
 
+  @SuppressWarnings("ConstantConditions")
   private Task<Void> documentAddSnapshotListener(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -376,7 +381,6 @@ public class FlutterFirebaseFirestorePlugin
                       eventMap.put("error", exceptionMap);
                       channel.invokeMethod("DocumentSnapshot#error", eventMap);
                     } else {
-                      // noinspection ConstantConditions
                       eventMap.put("snapshot", documentSnapshot);
                       channel.invokeMethod("DocumentSnapshot#event", eventMap);
                     }
@@ -406,10 +410,10 @@ public class FlutterFirebaseFirestorePlugin
           DocumentReference documentReference =
               (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
 
-          // noinspection unchecked
+          @SuppressWarnings("unchecked")
           Map<String, Object> data =
               (Map<String, Object>) Objects.requireNonNull(arguments.get("data"));
-          // noinspection unchecked
+          @SuppressWarnings("unchecked")
           Map<String, Object> options =
               (Map<String, Object>) Objects.requireNonNull(arguments.get("options"));
 
@@ -418,7 +422,7 @@ public class FlutterFirebaseFirestorePlugin
           if (options.get("merge") != null && (boolean) options.get("merge")) {
             setTask = documentReference.set(data, SetOptions.merge());
           } else if (options.get("mergeFields") != null) {
-            // noinspection unchecked
+            @SuppressWarnings("unchecked")
             List<FieldPath> fieldPathList =
                 (List<FieldPath>) Objects.requireNonNull(options.get("mergeFields"));
             setTask = documentReference.set(data, SetOptions.mergeFieldPaths(fieldPathList));
@@ -436,7 +440,7 @@ public class FlutterFirebaseFirestorePlugin
         () -> {
           DocumentReference documentReference =
               (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
-          // noinspection unchecked
+          @SuppressWarnings("unchecked")
           Map<String, Object> data =
               (Map<String, Object>) Objects.requireNonNull(arguments.get("data"));
 
@@ -493,8 +497,10 @@ public class FlutterFirebaseFirestorePlugin
     switch (call.method) {
       case "Firestore#removeListener":
         int handle = Objects.requireNonNull(call.argument("handle"));
-        listenerRegistrations.get(handle).remove();
-        listenerRegistrations.remove(handle);
+        if (listenerRegistrations.get(handle) != null) {
+          listenerRegistrations.get(handle).remove();
+          listenerRegistrations.remove(handle);
+        }
         result.success(null);
         return;
       case "Firestore#disableNetwork":
@@ -640,7 +646,7 @@ public class FlutterFirebaseFirestorePlugin
         () -> {
           removeEventListeners();
           // Context is ignored by API so we don't send it over even though annotated non-null.
-          // noinspection ConstantConditions
+
           for (FirebaseApp app : FirebaseApp.getApps(null)) {
             FirebaseFirestore firestore = FirebaseFirestore.getInstance(app);
             Tasks.await(firestore.terminate());

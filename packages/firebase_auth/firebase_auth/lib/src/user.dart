@@ -64,6 +64,15 @@ class User {
     return _delegate.photoURL;
   }
 
+  /// Returns a photo URL for the user.
+  ///
+  /// This property will be populated if the user has signed in or been linked
+  /// with a 3rd party OAuth provider (such as Google).
+  @Deprecated("Deprecated in favor of 'photoURL'.")
+  String get photoUrl {
+    return _delegate.photoURL;
+  }
+
   /// Returns a list of user information for each linked provider.
   List<UserInfo> get providerData {
     return _delegate.providerData;
@@ -179,6 +188,41 @@ class User {
     assert(credential != null);
     return UserCredential._(
         _auth, await _delegate.linkWithCredential(credential));
+  }
+
+  /// Links the user account with the given phone number.
+  ///
+  /// This method is only supported on web platforms. Use [verifyPhoneNumber] and
+  /// then [linkWithCredential] on these platforms.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **provider-already-linked**:
+  ///  - Thrown if the provider has already been linked to the user. This error
+  ///    is thrown even if this is not the same provider's account that is
+  ///    currently linked to the user.
+  /// - **captcha-check-failed**:
+  ///  - Thrown if the reCAPTCHA response token was invalid, expired, or if this
+  ///    method was called from a non-whitelisted domain.
+  /// - **invalid-phone-number**:
+  ///  - Thrown if the phone number has an invalid format.
+  /// - **quota-exceeded**:
+  ///  - Thrown if the SMS quota for the Firebase project has been exceeded.
+  /// - **user-disabled**:
+  ///  - Thrown if the user corresponding to the given phone number has been disabled.
+  /// - **credential-already-in-use**:
+  ///  - Thrown if the account corresponding to the phone number already exists
+  ///    among your users, or is already linked to a Firebase User.
+  /// - **operation-not-allowed**:
+  ///  - Thrown if you have not enabled the phone authentication provider in the
+  ///  Firebase Console. Go to the Firebase Console for your project, in the Auth
+  ///  section and the Sign in Method tab and configure the provider.
+  Future<ConfirmationResult> linkWithPhoneNumber(String phoneNumber,
+      [RecaptchaVerifier verifier]) async {
+    assert(phoneNumber != null);
+    assert(phoneNumber.isNotEmpty);
+    verifier ??= RecaptchaVerifier();
+    return ConfirmationResult._(this._auth,
+        await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate));
   }
 
   /// Re-authenticates a user using a fresh credential.
@@ -320,4 +364,11 @@ class User {
   String toString() {
     return '$User(displayName: $displayName, email: $email, emailVerified: $emailVerified, isAnonymous: $isAnonymous, metadata: ${metadata.toString()}, phoneNumber: $phoneNumber, photoURL: $photoURL, providerData, ${providerData.toString()}, refreshToken: $refreshToken, tenantId: $tenantId, uid: $uid)';
   }
+}
+
+@Deprecated(
+    "Deprecated in favor of `User`. When updating your code it is recommended to namespace your 'firebase_auth' import to avoid class naming conflicts if you already have a 'User' class in your project e.g. `import 'package:firebase_auth/firebase_auth.dart' as auth;`, `User` then becomes `auth.User`.")
+// ignore: public_member_api_docs
+class FirebaseUser extends User {
+  FirebaseUser._(FirebaseAuth auth, UserPlatform user) : super._(auth, user);
 }

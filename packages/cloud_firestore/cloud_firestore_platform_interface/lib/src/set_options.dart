@@ -5,7 +5,7 @@
 import 'field_path.dart';
 
 /// An options class that configures the behavior of set() calls in [DocumentReference],
-/// [WriteBatcerh] and [Transaction].
+/// [WriteBatch] and [Transaction].
 class SetOptions {
   /// Changes the behavior of a set() call to only replace the values specified
   /// in its data argument.

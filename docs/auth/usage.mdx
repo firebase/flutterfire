@@ -9,7 +9,7 @@ Once installed, you can access the [`firebase_auth`](!firebase_auth) plugin by i
 import 'package:firebase_auth/firebase_auth.dart';
 ```
 
-Before using Firebase Auth, you must first have ensured you have [initialized FlutterFire](overview#initializing-flutterfire).
+Before using Firebase Auth, you must first have ensured you have [initialized FlutterFire](../overview.mdx#initializing-flutterfire).
 
 To create a new Firebase Auth instance, call the [`instance`](!firebase_auth.FirebaseAuth.instance) getter on [`FirebaseAuth`](!firebase_auth.FirebaseAuth):
 
@@ -32,7 +32,7 @@ Flutter application. In many cases, you will need to know about the authenticati
 logged in or logged out.
 
 Firebase Auth enables you to subscribe in realtime to this state via a [`Stream`](https://api.flutter.dev/flutter/dart-async/Stream-class.html).
-Once called, the stream provides an immediate event of the users current authentication state, and then provides subsequent events whenever
+Once called, the stream provides an immediate event of the user's current authentication state, and then provides subsequent events whenever
 the authentication state changes.
 
 To subscribe to these changes, call the `authStateChanges()` method on your [`FirebaseAuth`](!firebase_auth.FirebaseAuth) instance:
@@ -52,19 +52,23 @@ FirebaseAuth.instance
 The stream returns a [`User`](!firebase_auth.User) class if the user is signed in, or `null` if they are not. You can read more
 about managing your users below.
 
-If you also need authentication state change events along with any user token refresh events, you can subscribe via the
+If you need authentication state change events along with any user token refresh events, you can subscribe via the
 `idTokenChanges()` method instead.
+
+Alternatively, if you need all user change events which also include authentication state changes and id token changes, you can subscribe via the
+`userChanges()` method. This stream provides realtime updates to the `User` class without having to call `reload()`, such as when credentials are linked,
+unlinked and when the user's profile is updated.
 
 ## Persisting authentication state
 
-The Firebase SDKs for all platforms provide out of the box support for ensuring that your users authentication state is persisted across
+The Firebase SDKs for all platforms provide out of the box support for ensuring that your user's authentication state is persisted across
 app restarts or page reloads.
 
-On native platforms such as Android & iOS, this behaviour is not configurable and the users authenticate state will be persisted on-device
+On native platforms such as Android & iOS, this behaviour is not configurable and the user's authentication state will be persisted on-device
 between app restarts. The user can clear the apps cached data via the device settings which will wipe any existing state being stored.
 
-On web platforms, the users authentication state is stored in [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
-If required you can change this default behaviour to only persist authentication state for the current session, or not at all. To configure
+On web platforms, the user's authentication state is stored in [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
+If required, you can change this default behaviour to only persist authentication state for the current session, or not at all. To configure
 these settings, call the `setPersistence()` method (note; on native platforms an [`UnimplementedError`](https://api.flutter.dev/flutter/dart-core/UnimplementedError-class.html))
 will be thrown):
 
@@ -113,23 +117,23 @@ an existing account with `signInWithEmailAndPassword()`.
 
 ### Registration
 
-To create a new account on your Firebase project call the `createUserWithEmailAndPassword()` method with the users email address
+To create a new account on your Firebase project call the `createUserWithEmailAndPassword()` method with the user's email address
 and password:
 
 ```dart
 try {
-  UserCredential user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
     email: "barry.allen@example.com",
     password: "SuperSecretPassword!"
   );
-} catch on FirebaseAuthException (e) {
+} on FirebaseAuthException catch (e) {
   if (e.code == 'weak-password') {
     print('The password provided is too weak.');
   } else if (e.code == 'email-already-in-use') {
     print('The account already exists for that email.');
   }
 } catch (e) {
-  print(e.toString());
+  print(e);
 }
 ```
 
@@ -146,11 +150,11 @@ To sign-in to an existing account, call the `signInWithEmailAndPassword()` metho
 
 ```dart
 try {
-  UserCredential user = await FirebaseAuth.instance.signInWithEmailAndPassword(
+  UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
     email: "barry.allen@example.com",
     password: "SuperSecretPassword!"
   );
-} catch on FirebaseAuthException (e) {
+} on FirebaseAuthException catch (e) {
   if (e.code == 'user-not-found') {
     print('No user found for that email.');
   } else if (e.code == 'wrong-password') {
@@ -181,22 +185,54 @@ if (!user.emailVerified) {
 }
 ```
 
-Firebase will send an automated email to the user with a unique code. This code can then be entered via the `applyActionCode()` method.
-You can first check whether the code is valid by using the `checkActionCode()` method:
+Firebase will send an automated email to the user with a link. User's email will be verified when the link is opened in a browser.
+
+#### Open link in app
+
+You can pass state via a continue URL when sending email actions for verifying a user's email. This provides the user the ability to go back to the app after the action is completed. In addition, you can specify whether to handle the email action link directly from a mobile application when it is installed instead of a web page.
+
+The following example illustrates how to send an email verification link that will open in a mobile app first as a Firebase Dynamic Link using the custom dynamic link domain example.page.link (iOS app com.example.ios or Android app com.example.android where the app will install if not already installed and the minimum version is 12). The deep link will contain the continue URL payload https://www.example.com/?email=user@example.com.
+
+```dart
+
+User user = FirebaseAuth.instance.currentUser;
+
+if (!user.emailVerified) {
+
+var actionCodeSettings = ActionCodeSettings(
+        url: 'https://www.example.com/?email=${user.email}',
+        dynamicLinkDomain: "example.page.link",
+        android: {
+          "packageName": "com.example.android",
+          "installApp": true,
+          "minimumVersion": "12"
+        },
+        iOS: {"bundleId": "com.example.ios"},
+        handleCodeInApp: true);
+
+await user.sendEmailVerification(actionCodeSettings);
+
+}
+```
+
+The code then can be received in app by parsing the Firebase Dynamic Link. Refer - [Handling email actions in a mobile application](https://firebase.google.com/docs/auth/web/passing-state-in-email-actions#handling_email_actions_in_a_mobile_application) to know how to handle the link in app.
+You can use
+[firebase_dynamic_links](https://pub.dev/packages/firebase_dynamic_links) flutter package to get the `oobCode` from the link and apply actionCode as follow.
 
 ```dart
 FirebaseAuth auth = FirebaseAuth.instance;
 
-// Get the code from the email:
-String code = 'xxxxxxx';
+//Get actionCode from the dynamicLink
+final Uri deepLink = dynamicLink?.link;
+var actionCode = deepLink.queryParameters['oobCode'];
 
 try {
-  await auth.checkActionCode(code);
-  await auth.applyActionCode(code);
+  await auth.checkActionCode(actionCode);
+  await auth.applyActionCode(actionCode);
 
   // If successful, reload the user:
   auth.currentUser.reload();
-} catch on FirebaseAuthException (e) {
+} on FirebaseAuthException catch (e) {
   if (e.code == 'invalid-action-code') {
     print('The code is invalid.');
   }
@@ -205,6 +241,87 @@ try {
 
 To learn more about how you can handle any errors which are thrown from the method, view the [Error Handling](error-handling)
 documentation.
+
+## Email Link Authentication
+
+You can use Firebase Authentication to sign in a user by sending them an email containing a link, which they can click to sign in. In the process, the user's email address is also verified.
+
+### Enable Email Link sign-in for your Firebase project
+
+Ensure that passwordless sign-in is enabled in the project. Follow the guide [here](https://firebase.google.com/docs/auth/android/email-link-auth#enable_email_link_sign-in_for_your_firebase_project).
+
+### Send an authentication link to the user's email address
+
+To initiate the authentication flow, present the user with an interface that prompts the user to provide their email address and then call sendSignInLinkToEmail to request that Firebase send the authentication link to the user's email.
+
+Construct the ActionCodeSettings object, which provides Firebase with instructions on how to construct the email link. Set the following fields:
+
+* `url`: The deep link to embed and any additional state to be passed along. The link's domain has to be whitelisted in the Firebase Console list of authorized domains, which can be found by going to the Sign-in method tab (Authentication -> Sign-in method). The link will redirect the user to this URL if the app is not installed on their device and the app was not able to be installed.
+
+* `androidPackageName` and `IOSBundleId`: The apps to use when the sign-in link is opened on an Android or iOS device. Learn more on how to configure Firebase Dynamic Links to open email action links via mobile apps.
+
+* `handleCodeInApp`: Set to true. The sign-in operation has to always be completed in the app unlike other out of band email actions (password reset and email verifications). This is because, at the end of the flow, the user is expected to be signed in and their Auth state persisted within the app.
+
+* `dynamicLinkDomain`: When multiple custom dynamic link domains are defined for a project, specify which one to use when the link is to be opened via a specified mobile app (for example, example.page.link). Otherwise the first domain is automatically selected.
+
+```dart
+var acs = ActionCodeSettings(
+    // URL you want to redirect back to. The domain (www.example.com) for this
+    // URL must be whitelisted in the Firebase Console.
+    url: "https://www.example.com/finishSignUp?cartId=1234",
+    // This must be true
+    handleCodeInApp: true,
+    iOSBundleId: "com.example.ios",
+    androidPackageName: "com.example.android",
+    // installIfNotAvailable
+    androidInstallApp: true,      
+    // minimumVersion
+    androidMinimumVersion: "12"); 
+```
+
+Ask the user for their email.
+
+Send the authentication link to the user's email, and save the user's email in case the user completes the email sign-in on the same device.
+
+```dart
+var emailAuth = "someemail@domain.com";
+FirebaseAuth.instance.sendSignInLinkToEmail(
+        email: emailAuth, actionCodeSettings: acs)
+    .catchError((onError) => print('Error sending email verification $onError'))
+    .then((value) => print('Successfully sent email verification'));
+});
+```
+
+### Verify email link and sign in
+
+Firebase Authentication uses Firebase Dynamic Links to send the email link to a mobile device. For sign-in completion via mobile application, the application has to be configured to detect the incoming application link, parse the underlying deep link and then complete the sign-in.
+
+Follow the setup process for Firebase Dynamic Links on Flutter in this [guide](https://pub.dev/packages/firebase_dynamic_links).
+
+After you received the link, verify that it is meant for email link authentication and complete the sign in.
+
+```dart
+var auth = FirebaseAuth.instance;
+// Retrieve the email from wherever you stored it
+var emailAuth = "someemail@domain.com";
+// Confirm the link is a sign-in with email link.
+if (auth.isSignInWithEmailLink(emailLink)) {
+  // The client SDK will parse the code from the link for you.
+  auth.signInWithEmailLink(email: emailAuth, emailLink: emailLink)
+    .catchError(
+      (onError) => print('Error signing in with email link $onError'))
+    .then((value) {
+    // You can access the new user via value.user
+    // Additional user info profile *not* available via:
+    // value.additionalUserInfo.profile == null
+    // You can check if the user is new or existing:
+    // value.additionalUserInfo.isNewUser;
+    var userEmail = value.user;
+    print('Successfully signed in with email link!');
+  });
+}
+
+```
 
 ## Signing Out
 
@@ -299,7 +416,7 @@ try {
 
 ### Reauthenticating a user
 
-As mentioned above, some operations such as deleting the user, updating their email address or provide require the user to have recently
+As mentioned above, some operations such as deleting the user, updating their email address or providers require the user to have recently
 signed in. Rather than signing the user out and back in again, the `reauthenticateWithCredential()` method can be called. If a recent login
 is required, create a new [`AuthCredential`](!firebase_auth_platform_interface.AuthCredential) and pass it to the method. For example,
 to reauthenticate with email & password, create a new [`EmailAuthCredential`](!firebase_auth_platform_interface.EmailAuthCredential):
@@ -310,10 +427,54 @@ String email = 'barry.allen@example.com';
 String password = 'SuperSecretPassword!';
 
 // Create a credential
-EmailAuthCredential credential = EmailAuthProvider.credential(email, password);
+EmailAuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
 
 // Reauthenticate
 await FirebaseAuth.instance.currentUser.reauthenticateWithCredential(credential);
 ```
 
 Reauthentication also works if you are using an OAuth credential instead.
+
+### Linking user accounts
+
+You can allow your users to sign into your application using multiple providers by linking authentication credentials to
+existing user accounts. Users can then be identified using their Firebase UID, regardless of the provider they used to sign in.
+
+The user must first be logged in to one of the accounts you want to link the new provider to. You can then log the user into the second provider,
+and pass that `AuthCredential` to the `linkWithCredential` method from the first UserCredential:
+
+```dart
+Future<void> linkGoogleAndTwitter() async {
+  // Trigger the Google Authentication flow.
+  final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+  // Obtain the auth details from the request.
+  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+  // Create a new credential.
+  final GoogleAuthCredential googleCredential = GoogleAuthProvider.credential(
+    accessToken: googleAuth.accessToken,
+    idToken: googleAuth.idToken,
+  );
+  // Sign in to Firebase with the Google [UserCredential].
+  final UserCredential googleUserCredential =
+    await FirebaseAuth.instance.signInWithCredential(googleCredential);
+
+  // Now let's link Twitter to the currently signed in account.
+  // Create a [TwitterLogin] instance.
+  final TwitterLogin twitterLogin = new TwitterLogin(
+    consumerKey: consumerKey,
+    consumerSecret: consumerSecret
+  );
+  // Trigger the sign-in flow.
+  final TwitterLoginResult loginResult = await twitterLogin.authorize();
+  // Get the logged in session.
+  final TwitterSession twitterSession = loginResult.session;
+  // Create a [AuthCredential] from the access token.
+  final AuthCredential twitterAuthCredential =
+    TwitterAuthProvider.credential(
+      accessToken: twitterSession.token,
+      secret: twitterSession.secret
+     );
+  // Link the Twitter account to the Google account.
+  await googleUserCredential.user.linkWithCredential(twitterAuthCredential);
+}
+```

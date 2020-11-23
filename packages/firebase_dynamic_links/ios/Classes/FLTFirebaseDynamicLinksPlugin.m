@@ -130,7 +130,9 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
   } else {
     if (error) {
       _flutterError = getFlutterError(error);
-    } else {
+    } else if (dynamicLink.url != nil || _initialLink == nil) {
+      // We'd like to overwrite initial link only if it's
+      // the first time or if we overwrite it with url that is not nil
       _initialLink = dynamicLink;
     }
   }

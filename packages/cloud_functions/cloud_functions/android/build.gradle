@@ -2,21 +2,21 @@ group 'io.flutter.plugins.firebase.cloudfunctions'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
+  repositories {
+    google()
+    jcenter()
+  }
 
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
-    }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:3.5.0'
+  }
 }
 
 rootProject.allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
+  repositories {
+    google()
+    jcenter()
+  }
 }
 
 apply plugin: 'com.android.library'
@@ -35,21 +35,24 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 }
 
 android {
-    compileSdkVersion 28
-
-    defaultConfig {
-        minSdkVersion 16
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-    lintOptions {
-        disable 'InvalidPackage'
-    }
-    dependencies {
-        api firebaseCoreProject
-        implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
-        implementation 'com.google.firebase:firebase-functions'
-        implementation 'androidx.annotation:annotation:1.0.0'
-    }
+  compileSdkVersion 29
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  defaultConfig {
+    minSdkVersion 16
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+  lintOptions {
+    disable 'InvalidPackage'
+  }
+  dependencies {
+    api firebaseCoreProject
+    implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
+    implementation 'com.google.firebase:firebase-functions'
+    implementation 'androidx.annotation:annotation:1.0.0'
+  }
 }
 
 apply from: file("./user-agent.gradle")

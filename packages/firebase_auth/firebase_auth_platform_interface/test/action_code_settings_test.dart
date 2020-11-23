@@ -13,24 +13,18 @@ void main() {
   final bool kMockHandleCodeInApp = true;
   final String kMockUrl = 'https://test.url';
   final String kMockMinimumVersion = '8.0';
-  final Map<String, dynamic> kMockInstallApp = <String, dynamic>{};
-
-  final Map<String, dynamic> kMockAndroid = <String, dynamic>{
-    'packageName': kMockPackageName,
-    'installApp': kMockInstallApp,
-    'minimumVersion': kMockMinimumVersion,
-  };
-  final Map<String, dynamic> kMockIOS = <String, dynamic>{
-    'bundleId': kMockBundleId
-  };
+  final bool kMockInstallApp = true;
 
   group('$ActionCodeSettings', () {
     ActionCodeSettings actionCodeSettings = ActionCodeSettings(
-        android: kMockAndroid,
+        androidPackageName: kMockPackageName,
+        androidMinimumVersion: kMockMinimumVersion,
+        androidInstallApp: kMockInstallApp,
         dynamicLinkDomain: kMockDynamicLinkDomain,
         handleCodeInApp: kMockHandleCodeInApp,
-        iOS: kMockIOS,
+        iOSBundleId: kMockBundleId,
         url: kMockUrl);
+
     group('Constructor', () {
       test('returns an instance of [ActionCodeInfo]', () {
         expect(actionCodeSettings, isA<ActionCodeSettings>());
@@ -39,77 +33,120 @@ void main() {
             equals(kMockDynamicLinkDomain));
         expect(
             actionCodeSettings.handleCodeInApp, equals(kMockHandleCodeInApp));
-        expect(actionCodeSettings.android, equals(kMockAndroid));
-        expect(actionCodeSettings.android['packageName'],
-            equals(kMockPackageName));
-        expect(actionCodeSettings.iOS, equals(kMockIOS));
-        expect(actionCodeSettings.iOS['bundleId'], equals(kMockBundleId));
+        expect(actionCodeSettings.androidPackageName, equals(kMockPackageName));
+        expect(actionCodeSettings.androidMinimumVersion,
+            equals(kMockMinimumVersion));
+        expect(actionCodeSettings.androidInstallApp, equals(kMockInstallApp));
+        expect(actionCodeSettings.iOSBundleId, equals(kMockBundleId));
       });
       test('throws [AssertionError] when url is null', () {
         expect(() => ActionCodeSettings(url: null), throwsAssertionError);
       });
 
-      test('throws [AssertionError] when android.packageName is null', () {
-        expect(
-            () => ActionCodeSettings(
-                url: kMockUrl, android: <String, dynamic>{'packageName': null}),
-            throwsAssertionError);
+      group('asMap', () {
+        test('returns the current instance as a [Map]', () {
+          final result = actionCodeSettings.asMap();
+
+          expect(result, isA<Map<String, dynamic>>());
+
+          expect(result['url'], equals(kMockUrl));
+          expect(result['dynamicLinkDomain'], equals(kMockDynamicLinkDomain));
+          expect(result['handleCodeInApp'], equals(kMockHandleCodeInApp));
+
+          expect(result['android'], isNotNull);
+          expect(result['iOS'], isNotNull);
+
+          expect(result['android']['packageName'], equals(kMockPackageName));
+          expect(result['android']['installApp'], equals(kMockInstallApp));
+          expect(
+              result['android']['minimumVersion'], equals(kMockMinimumVersion));
+          expect(result['iOS']['bundleId'], equals(kMockBundleId));
+        });
+
+        test('handles deprecated properties', () {
+          ActionCodeSettings deprecatedSettings = ActionCodeSettings(
+              // ignore: deprecated_member_use_from_same_package
+              android: <String, dynamic>{
+                'packageName': kMockPackageName,
+                'minimumVersion': kMockMinimumVersion,
+                'installApp': true,
+              },
+              // ignore: deprecated_member_use_from_same_package
+              iOS: <String, dynamic>{
+                'bundleId': kMockBundleId,
+              },
+              dynamicLinkDomain: kMockDynamicLinkDomain,
+              handleCodeInApp: kMockHandleCodeInApp,
+              url: kMockUrl);
+
+          final result = deprecatedSettings.asMap();
+          expect(result, isA<Map<String, dynamic>>());
+
+          expect(result['url'], equals(kMockUrl));
+          expect(result['dynamicLinkDomain'], equals(kMockDynamicLinkDomain));
+          expect(result['handleCodeInApp'], equals(kMockHandleCodeInApp));
+
+          expect(result['android'], isNotNull);
+          expect(result['iOS'], isNotNull);
+
+          expect(result['android']['packageName'], equals(kMockPackageName));
+          expect(result['android']['installApp'], equals(kMockInstallApp));
+          expect(
+              result['android']['minimumVersion'], equals(kMockMinimumVersion));
+          expect(result['iOS']['bundleId'], equals(kMockBundleId));
+        });
+
+        test('handles mixed deprecated properties', () {
+          ActionCodeSettings deprecatedSettings = ActionCodeSettings(
+              // ignore: deprecated_member_use_from_same_package
+              android: <String, dynamic>{
+                'packageName': kMockPackageName,
+                'minimumVersion': kMockMinimumVersion,
+                'installApp': true,
+              },
+              androidPackageName: kMockPackageName + '!',
+              // ignore: deprecated_member_use_from_same_package
+              iOS: <String, dynamic>{
+                'bundleId': kMockBundleId,
+              },
+              iOSBundleId: kMockBundleId + '!',
+              dynamicLinkDomain: kMockDynamicLinkDomain,
+              handleCodeInApp: kMockHandleCodeInApp,
+              url: kMockUrl);
+
+          final result = deprecatedSettings.asMap();
+          expect(result, isA<Map<String, dynamic>>());
+
+          expect(result['url'], equals(kMockUrl));
+          expect(result['dynamicLinkDomain'], equals(kMockDynamicLinkDomain));
+          expect(result['handleCodeInApp'], equals(kMockHandleCodeInApp));
+
+          expect(result['android'], isNotNull);
+          expect(result['iOS'], isNotNull);
+
+          expect(
+              result['android']['packageName'], equals(kMockPackageName + '!'));
+          expect(result['android']['installApp'], equals(kMockInstallApp));
+          expect(
+              result['android']['minimumVersion'], equals(kMockMinimumVersion));
+          expect(result['iOS']['bundleId'], equals(kMockBundleId + '!'));
+        });
+
+        test('expects android/iOS Maps to be null', () {
+          ActionCodeSettings testActionCodeSettings =
+              ActionCodeSettings(url: kMockUrl);
+
+          final result = testActionCodeSettings.asMap();
+          expect(result, isA<Map<String, dynamic>>());
+          expect(result['android'], isNull);
+          expect(result['iOS'], isNull);
+        });
       });
 
-      test('throws [AssertionError] when iOS.bundleId is null', () {
-        expect(
-            () => ActionCodeSettings(
-                url: kMockUrl,
-                android: kMockAndroid,
-                iOS: <String, dynamic>{'bundleId': null}),
-            throwsAssertionError);
+      test('toString', () {
+        expect(actionCodeSettings.toString(),
+            equals('$ActionCodeSettings(${actionCodeSettings.asMap})'));
       });
-    });
-
-    group('asMap', () {
-      test('returns the current instance as a [Map]', () {
-        final result = actionCodeSettings.asMap();
-
-        expect(result, isA<Map<String, dynamic>>());
-
-        expect(result['url'], equals(kMockUrl));
-        expect(result['dynamicLinkDomain'], equals(kMockDynamicLinkDomain));
-        expect(result['handleCodeInApp'], equals(kMockHandleCodeInApp));
-        expect(result['android'], equals(kMockAndroid));
-        expect(result['android']['packageName'], equals(kMockPackageName));
-        expect(result['android']['installApp'], equals(kMockInstallApp));
-        expect(
-            result['android']['minimumVersion'], equals(kMockMinimumVersion));
-        expect(result['iOS'], equals(kMockIOS));
-        expect(result['iOS']['bundleId'], equals(kMockBundleId));
-      });
-
-      test('sets android to null', () {
-        ActionCodeSettings testActionCodeSettings =
-            ActionCodeSettings(url: kMockUrl, android: null, iOS: kMockIOS);
-
-        final result = testActionCodeSettings.asMap();
-
-        expect(result, isA<Map<String, dynamic>>());
-
-        expect(result['android'], isNull);
-      });
-
-      test('sets iOS to null', () {
-        ActionCodeSettings testActionCodeSettings =
-            ActionCodeSettings(url: kMockUrl, android: kMockAndroid, iOS: null);
-
-        final result = testActionCodeSettings.asMap();
-
-        expect(result, isA<Map<String, dynamic>>());
-
-        expect(result['iOS'], isNull);
-      });
-    });
-
-    test('toString', () {
-      expect(actionCodeSettings.toString(),
-          equals('$ActionCodeSettings(${actionCodeSettings.asMap})'));
     });
   });
 }

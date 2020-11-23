@@ -50,7 +50,7 @@ module.exports = function sourceApiReference() {
     // server and client environments
     configureWebpack() {
       const reference = fs.readFileSync(
-        `${__dirname}/../.docusaurus/@flutterfire/source-api-reference/reference.txt`,
+        `${__dirname}/../.docusaurus/@flutterfire/source-api-reference/default/reference.txt`,
         'utf8',
       );
 

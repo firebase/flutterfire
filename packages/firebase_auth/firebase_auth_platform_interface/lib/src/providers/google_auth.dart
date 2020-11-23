@@ -76,9 +76,9 @@ class GoogleAuthProvider extends AuthProvider {
     return this;
   }
 
-  /// Create a new [GithubAuthCredential] from a provided [accessToken].
+  /// Create a new [GoogleAuthCredential] from a provided [accessToken].
   static OAuthCredential credential({String idToken, String accessToken}) {
-    assert(accessToken != null && idToken != null,
+    assert(accessToken != null || idToken != null,
         "At least one of ID token and access token is required");
     return GoogleAuthCredential._credential(
       idToken: idToken,

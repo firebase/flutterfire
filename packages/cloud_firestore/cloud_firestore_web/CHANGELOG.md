@@ -1,4 +1,40 @@
-## 0.2.0-dev.1
+## 0.2.1
+
+ - **FEAT**: migrate firebase interop files to local repository (#3973).
+ - **FEAT** [WEB] `FirebaseFirestore.enablePersistence` now accepts `PersistenceSettings`
+ - **FEAT** [WEB] adds `PersistenceSettings` class
+ - **FEAT** [WEB] adds support for `FirebaseFirestore.clearPersistence`
+ - **FEAT** [WEB] adds support for `FirebaseFirestore.terminate`
+ - **FEAT** [WEB] adds support for `FirebaseFirestore.waitForPendingWrites`
+ - **FEAT** [WEB] adds support for `SetOptions.mergeFields`
+ - **FEAT** [WEB] adds `GetOptions` support for querying against server/cache
+ - **FEAT** [WEB] adds support for `Query.limitToLast`
+ - **FEAT** [WEB] adds support for `FirebaseFirestore.snapshotsInSync`
+
+## 0.2.0+5
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+4
+
+ - **FIX**: bubble exceptions (#3701).
+ - **FIX**: fix returning of transaction result (#3747).
+ - **FIX**: ensure isCollectionGroupQuery is initialised (#3772).
+
+## 0.2.0+3
+
+ - **FIX**: dependency issue in pubspec.yaml (#3734).
+
+## 0.2.0+2
+
+ - **FIX**: fix dependency in pubspec.yaml (#3713).
+
+## 0.2.0+1
+
+* Fixed issue #3210 (`Query.orderBy(FieldPath.documentId)` throws exception).
+* Bump `cloud_firestore_platform_interface` dependency.
+
+## 0.2.0
 
 * See `cloud_firestore` plugin changelog.
 

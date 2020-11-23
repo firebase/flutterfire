@@ -182,13 +182,6 @@ abstract class UserPlatform extends PlatformInterface {
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
   ///    to the Firebase Console for your project, in the Auth section and the
   ///    Sign in Method tab and configure the provider.
-  /// - **invalid-email**:
-  ///  - Thrown if the email used in a [EmailAuthProvider.credential] is
-  ///    invalid.
-  /// - **invalid-email**:
-  ///  - Thrown if the password used in a [EmailAuthProvider.credential] is not
-  ///    correct or when the user associated with the email does not have a
-  ///    password.
   /// - **invalid-verification-code**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification code of the credential is not valid.
@@ -197,6 +190,34 @@ abstract class UserPlatform extends PlatformInterface {
   ///    verification ID of the credential is not valid.
   Future<UserCredentialPlatform> linkWithCredential(AuthCredential credential) {
     throw UnimplementedError("linkWithCredential() is not implemented");
+  }
+
+  /// Links the user account with the given phone number.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **provider-already-linked**:
+  ///  - Thrown if the provider has already been linked to the user. This error
+  ///    is thrown even if this is not the same provider's account that is
+  ///    currently linked to the user.
+  /// - **captcha-check-failed**:
+  ///  - Thrown if the reCAPTCHA response token was invalid, expired, or if this
+  ///    method was called from a non-whitelisted domain.
+  /// - **invalid-phone-number**:
+  ///  - Thrown if the phone number has an invalid format.
+  /// - **quota-exceeded**:
+  ///  - Thrown if the SMS quota for the Firebase project has been exceeded.
+  /// - **user-disabled**:
+  ///  - Thrown if the user corresponding to the given phone number has been disabled.
+  /// - **credential-already-in-use**:
+  ///  - Thrown if the account corresponding to the phone number already exists
+  ///    among your users, or is already linked to a Firebase User.
+  /// - **operation-not-allowed**:
+  ///  - Thrown if you have not enabled the phone authentication provider in the
+  ///  Firebase Console. Go to the Firebase Console for your project, in the Auth
+  ///  section and the Sign in Method tab and configure the provider.
+  Future<ConfirmationResultPlatform> linkWithPhoneNumber(String phoneNumber,
+      RecaptchaVerifierFactoryPlatform applicationVerifier) {
+    throw UnimplementedError("linkWithPhoneNumber() is not implemented");
   }
 
   /// Re-authenticates a user using a fresh credential.

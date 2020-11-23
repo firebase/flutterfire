@@ -1,17 +1,17 @@
-// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
 import 'package:cloud_firestore_web/src/utils/exception.dart';
-import 'package:firebase/firestore.dart' as web;
 
-import 'package:cloud_firestore_web/src/utils/web_utils.dart';
+import 'interop/firestore.dart' as firestore_interop;
+import 'utils/web_utils.dart';
 
 /// Web implementation of Firestore [QueryPlatform].
 class QueryWeb extends QueryPlatform {
-  final web.Query _webQuery;
+  final firestore_interop.Query _webQuery;
   final FirebaseFirestorePlatform _firestore;
   final String _path;
 
@@ -37,8 +37,8 @@ class QueryWeb extends QueryPlatform {
   }
 
   /// Builds a [web.Query] from given [parameters].
-  web.Query _buildWebQueryWithParameters() {
-    web.Query query = _webQuery;
+  firestore_interop.Query _buildWebQueryWithParameters() {
+    firestore_interop.Query query = _webQuery;
 
     for (List<dynamic> order in parameters['orderBy']) {
       query = query.orderBy(
@@ -69,10 +69,9 @@ class QueryWeb extends QueryPlatform {
       query = query.limit(parameters['limit']);
     }
 
-    // TODO(ehesp): Not supported on web platform (firebase-dart)
-    // if (parameters['limitToLast'] != null) {
-    //   query = query.limitToLast(parameters['limitToLast']);
-    // }
+    if (parameters['limitToLast'] != null) {
+      query = query.limitToLast(parameters['limitToLast']);
+    }
 
     for (List<dynamic> condition in parameters['where']) {
       dynamic fieldPath = CodecUtility.valueEncode(condition[0]);
@@ -88,8 +87,8 @@ class QueryWeb extends QueryPlatform {
   @override
   QueryPlatform endAtDocument(List<dynamic> orders, List<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': CodecUtility.valueEncode(orders),
-      'endAt': CodecUtility.valueEncode(values),
+      'orderBy': orders,
+      'endAt': values,
       'endBefore': null,
     });
   }
@@ -97,7 +96,7 @@ class QueryWeb extends QueryPlatform {
   @override
   QueryPlatform endAt(List<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
-      'endAt': CodecUtility.valueEncode(fields),
+      'endAt': fields,
       'endBefore': null,
     });
   }
@@ -105,9 +104,9 @@ class QueryWeb extends QueryPlatform {
   @override
   QueryPlatform endBeforeDocument(List<dynamic> orders, List<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': CodecUtility.valueEncode(orders),
+      'orderBy': orders,
       'endAt': null,
-      'endBefore': CodecUtility.valueEncode(values),
+      'endBefore': values,
     });
   }
 
@@ -115,16 +114,15 @@ class QueryWeb extends QueryPlatform {
   QueryPlatform endBefore(List<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
       'endAt': null,
-      'endBefore': CodecUtility.valueEncode(fields),
+      'endBefore': fields,
     });
   }
 
   @override
   Future<QuerySnapshotPlatform> get([GetOptions options]) async {
-    // TODO(ehesp): web implementation not handling options
     try {
-      return convertWebQuerySnapshot(
-          firestore, await _buildWebQueryWithParameters().get());
+      return convertWebQuerySnapshot(firestore,
+          await _buildWebQueryWithParameters().get(convertGetOptions(options)));
     } catch (e) {
       throw getFirebaseException(e);
     }
@@ -138,20 +136,19 @@ class QueryWeb extends QueryPlatform {
     });
   }
 
-  // TODO(ehesp): Not supported on web platform (firebase-dart)
-  // @override
-  // QueryPlatform limitToLast(int limit) {
-  //   return _copyWithParameters(<String, dynamic>{
-  //     'limit': null,
-  //     'limitToLast': limit,
-  //   });
-  // }
+  @override
+  QueryPlatform limitToLast(int limit) {
+    return _copyWithParameters(<String, dynamic>{
+      'limit': null,
+      'limitToLast': limit,
+    });
+  }
 
   @override
   Stream<QuerySnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    Stream<web.QuerySnapshot> querySnapshots;
+    Stream<firestore_interop.QuerySnapshot> querySnapshots;
     if (includeMetadataChanges) {
       querySnapshots = _buildWebQueryWithParameters().onSnapshotMetadata;
     } else {
@@ -175,7 +172,7 @@ class QueryWeb extends QueryPlatform {
     return _copyWithParameters(<String, dynamic>{
       'orderBy': orders,
       'startAt': null,
-      'startAfter': CodecUtility.valueEncode(values),
+      'startAfter': values,
     });
   }
 
@@ -183,7 +180,7 @@ class QueryWeb extends QueryPlatform {
   QueryPlatform startAfter(List<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
       'startAt': null,
-      'startAfter': CodecUtility.valueEncode(fields),
+      'startAfter': fields,
     });
   }
 
@@ -191,7 +188,7 @@ class QueryWeb extends QueryPlatform {
   QueryPlatform startAtDocument(List<dynamic> orders, List<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
       'orderBy': orders,
-      'startAt': CodecUtility.valueEncode(values),
+      'startAt': values,
       'startAfter': null,
     });
   }
@@ -199,7 +196,7 @@ class QueryWeb extends QueryPlatform {
   @override
   QueryPlatform startAt(List<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
-      'startAt': CodecUtility.valueEncode(fields),
+      'startAt': fields,
       'startAfter': null,
     });
   }
@@ -207,7 +204,7 @@ class QueryWeb extends QueryPlatform {
   @override
   QueryPlatform where(List<List<dynamic>> conditions) {
     return _copyWithParameters(<String, dynamic>{
-      'where': CodecUtility.valueEncode(conditions),
+      'where': conditions,
     });
   }
 }
