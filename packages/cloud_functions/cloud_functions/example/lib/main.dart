@@ -15,7 +15,7 @@ Future<void> main() async {
   FirebaseFunctions.instance
       .useFunctionsEmulator(origin: 'http://localhost:5001');
   runApp(MyApp());
-} 
+}
 
 // ignore: public_member_api_docs
 class MyApp extends StatefulWidget {
