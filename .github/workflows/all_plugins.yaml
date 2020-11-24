@@ -33,6 +33,23 @@ jobs:
           melos exec -c 1 --no-private --ignore="*example*" -- \
             pub publish --dry-run
 
+  pub_get_check:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+      - name: "Flutter Pub Get"
+        run: |
+          melos exec -c 1 -- \
+            "flutter --suppress-analytics pub get"
+
   format:
     runs-on: ubuntu-latest
     timeout-minutes: 15
