@@ -11,13 +11,18 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'package:js/js.dart';
 
+@JS()
+abstract class FunctionsAppJsImpl extends AppJsImpl {
+  external FunctionsJsImpl functions(String region);
+}
+
 /// The Cloud Functions for Firebase service interface.
 ///
 /// Do not call this constructor directly. Instead, use firebase.functions().
 /// See: <https://firebase.google.com/docs/reference/js/firebase.functions.Functions>.
 @JS('Functions')
 abstract class FunctionsJsImpl {
-  external FunctionsJsImpl get functions;
+  external FunctionsAppJsImpl get app;
   external HttpsCallableJsImpl httpsCallable(String name,
       [HttpsCallableOptions options]);
   external void useFunctionsEmulator(String url);

@@ -8,15 +8,20 @@
 import 'dart:async';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+
+import 'firebase_interop.dart' as firebase_interop;
 import 'functions_interop.dart' as functions_interop;
 
 export 'functions_interop.dart' show HttpsCallableOptions;
 
 /// Given an AppJSImp, return the Functions instance.
 Functions getFunctionsInstance(App app, String region) {
-  functions_interop.FunctionsJsImpl jsObject =
-      region == null ? app.functions() : app.functions(region);
-
+  functions_interop.FunctionsJsImpl jsObject;
+  if (region != null) {
+    jsObject = firebase_interop.functions(app.jsObject);
+  } else {
+    jsObject = firebase_interop.functions(app.jsObject).app.functions(region);
+  }
   return Functions.getInstance(jsObject);
 }
 
@@ -35,6 +40,8 @@ class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
       : super.fromJsObject(jsObject);
 
   Functions get functions => getInstance(jsObject);
+
+  functions_interop.FunctionsAppJsImpl get app => jsObject.app;
 
   HttpsCallable httpsCallable(String name,
       [functions_interop.HttpsCallableOptions options]) {
