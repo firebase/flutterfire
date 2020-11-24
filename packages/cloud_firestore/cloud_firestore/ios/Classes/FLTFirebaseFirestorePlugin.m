@@ -153,8 +153,6 @@ NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =
     [self documentDelete:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DocumentReference#get" isEqualToString:call.method]) {
     [self documentGet:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Query#addSnapshotListener" isEqualToString:call.method]) {
-    [self queryAddSnapshotListener:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DocumentReference#addSnapshotListener" isEqualToString:call.method]) {
     [self documentAddSnapshotListener:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Query#get" isEqualToString:call.method]) {
@@ -448,50 +446,6 @@ NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =
   };
 
   [document getDocumentWithSource:source completion:completion];
-}
-
-- (void)queryAddSnapshotListener:(id)arguments
-            withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  __weak __typeof__(self) weakSelf = self;
-  FIRQuery *query = arguments[@"query"];
-
-  if (query == nil) {
-    result.error(@"sdk-error",
-                 @"An error occurred while parsing query arguments, see native logs for more "
-                 @"information. Please report this issue.",
-                 nil, nil);
-    return;
-  }
-
-  NSNumber *handle = arguments[@"handle"];
-  NSNumber *includeMetadataChanges = arguments[@"includeMetadataChanges"];
-
-  id listener = ^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
-    if (error != nil) {
-      NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
-      [weakSelf.channel
-          invokeMethod:@"QuerySnapshot#error"
-             arguments:@{
-               @"handle" : handle,
-               @"error" : @{@"code" : codeAndMessage[0], @"message" : codeAndMessage[1]},
-             }];
-    } else if (snapshot != nil) {
-      [weakSelf.channel invokeMethod:@"QuerySnapshot#event"
-                           arguments:@{
-                             @"handle" : handle,
-                             @"snapshot" : snapshot,
-                           }];
-    }
-  };
-
-  id<FIRListenerRegistration> listenerRegistration =
-      [query addSnapshotListenerWithIncludeMetadataChanges:includeMetadataChanges.boolValue
-                                                  listener:listener];
-
-  @synchronized(_listeners) {
-    _listeners[handle] = listenerRegistration;
-  }
-  result.success(nil);
 }
 
 - (void)documentAddSnapshotListener:(id)arguments
