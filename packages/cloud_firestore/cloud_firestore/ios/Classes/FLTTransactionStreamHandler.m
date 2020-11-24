@@ -52,13 +52,6 @@
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       events(@{ @"attempt": transactionAttemptArguments });
-      
-//      [weakSelf.channel invokeMethod:@"Transaction#attempt"
-//                           arguments:transactionAttemptArguments
-//                              result:^(id dartAttemptTransactionResult) {
-//                                attemptedTransactionResponse = dartAttemptTransactionResult;
-//                                dispatch_semaphore_signal(semaphore);
-//                              }];
     });
 
     long timedOut = dispatch_semaphore_wait(
@@ -119,17 +112,12 @@
 }
 
 - (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
-//  NSNumber *handle = arguments[@"handle"];
-//
-//  @synchronized(_listeners) {
-//    [_listeners[handle] remove];
-//    [_listeners removeObjectForKey:handle];
-//  }
-
+  // TODO: Transaction can be cancelled? Definitely will need to do some cleanups.
   return nil;
 }
 
 - (void)receiveTransactionResponse:(NSNumber *)transactionId response:(NSDictionary *)response {
+  // TODO: Return a error when no record of the transaction attempt exists?
   _attemptedTransactionResponses[transactionId] = response;
 
   @synchronized (_semaphores) {
