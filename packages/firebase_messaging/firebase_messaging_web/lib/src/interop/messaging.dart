@@ -52,8 +52,6 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
             }));
 
   StreamController<MessagePayload> _onMessageController;
-  StreamController<Null> _onTokenRefresh;
-  StreamController<MessagePayload> _onBackgroundMessage;
 
   /// When a push message is received and the user is currently on a page for your origin,
   /// the message is passed to the page and an [onMessage] event is dispatched with the payload of the push message.
@@ -80,42 +78,6 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
     }
     return controller.stream;
   }
-
-  // Stream<Payload> _createBackgroundMessagedStream(
-  //     StreamController<Payload> controller) {
-  //   if (controller == null) {
-  //     controller = StreamController.broadcast(sync: true);
-  //     final nextWrapper = allowInterop((payload) {
-  //       controller.add(Payload._fromJsObject(payload));
-  //     });
-  //     jsObject.setBackgroundMessageHandler(nextWrapper);
-  //   }
-  //   return controller.stream;
-  // }
-
-  // Stream<Null> _createNullStream(StreamController controller) {
-  //   if (controller == null) {
-  //     final nextWrapper = allowInterop((_) => null);
-  //     final errorWrapper = allowInterop((e) {
-  //       controller.addError(e);
-  //     });
-  //     ZoneCallback onSnapshotUnsubscribe;
-
-  //     void startListen() {
-  //       onSnapshotUnsubscribe =
-  //           jsObject.onTokenRefresh(nextWrapper, errorWrapper);
-  //     }
-
-  //     void stopListen() {
-  //       onSnapshotUnsubscribe();
-  //       onSnapshotUnsubscribe = null;
-  //     }
-
-  //     controller = StreamController<Null>.broadcast(
-  //         onListen: startListen, onCancel: stopListen, sync: true);
-  //   }
-  //   return controller.stream;
-  // }
 }
 
 class NotificationPayload
