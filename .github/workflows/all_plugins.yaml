@@ -21,7 +21,7 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
-          flutter pub global activate tuneup
+          flutter --suppress-analytics pub global activate tuneup
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Dart Analyze"
@@ -47,7 +47,7 @@ jobs:
           ./.github/workflows/scripts/install-tools.sh
       - name: "Flutter Pub Get"
         run: |
-          melos exec -c 1 -- \
+          melos exec -c 1 --scope="*example*" -- \
             "flutter --suppress-analytics pub get"
 
   format:
@@ -68,7 +68,7 @@ jobs:
       - name: "Dart"
         run: |
           melos exec -c 1 -- \
-            flutter format .
+            "flutter --suppress-analytics format ."
           ./.github/workflows/scripts/validate-formatting.sh
       - name: "Objective-C"
         if: ${{ success() || failure() }}
@@ -99,7 +99,7 @@ jobs:
       - name: "Build Example Snapshots"
         run: |
           melos exec -c 1 --scope="*example*" -- \
-            flutter build aot
+            "flutter --suppress-analytics build aot"
 
   test:
     runs-on: ubuntu-latest
@@ -117,4 +117,4 @@ jobs:
       - name: "Flutter Test"
         run: |
           melos exec -c 3 --dir-exists=test --ignore="*example*" --ignore="*web*" -- \
-            flutter test
+            "flutter --suppress-analytics test"
