@@ -7,14 +7,16 @@ void runListResultTests() {
     ListResult result;
     setUpAll(() async {
       storage = FirebaseStorage.instance;
-      Reference ref = storage.ref('/');
-      result = await ref.list(ListOptions(maxResults: 1));
+      Reference ref = storage.ref('/list');
+      // Needs to be > half of the # of items in the storage,
+      // so there's a chance of picking up some items and some
+      // prefixes.
+      result = await ref.list(ListOptions(maxResults: 3));
     });
 
     test('items', () async {
+      expect(result.items, isA<List<Reference>>());
       expect(result.items.length, greaterThan(0));
-      expect(result.prefixes, isA<List<Reference>>());
-      expect(result.prefixes.length, greaterThan(0));
     });
 
     test('nextPageToken', () async {
@@ -22,7 +24,6 @@ void runListResultTests() {
     });
 
     test('prefixes', () async {
-      expect(result.items.length, greaterThan(0));
       expect(result.prefixes, isA<List<Reference>>());
       expect(result.prefixes.length, greaterThan(0));
     });

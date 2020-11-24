@@ -199,86 +199,116 @@ Future<UserCredential> signInWithFacebook() async {
 Apple [announced](https://developer.apple.com/news/?id=09122019b) that any applications using 3rd party login
 services (such as Facebook, Twitter, Google etc) must also have an Apple Sign-In method. Apple Sign-In is not required for Android devices.
 
-To integrate Apple Sign-In on your iOS application, you will need to install a 3rd party library to authenticate with Apple.
-Once authentication is successful, a Firebase credential can then be used to sign the user into Firebase with their Apple account
+<Tabs
+  defaultValue="apple"
+  values={[
+    { label: 'iOS/macOS', value: 'apple', },
+    { label: 'Android', value: 'android', },
+    { label: 'Web', value: 'web', },
+  ]
+}>
 
-The example below is based on [sign_in_with_apple](https://pub.dev/packages/sign_in_with_apple) Flutter package.
+<TabItem value="apple">
 
-```dart
-import 'dart:math';
-import 'dart:convert';
-import 'dart:io';
-import 'package:crypto/crypto.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+Before you begin [configure Sign In with Apple](https://firebase.google.com/docs/auth/ios/apple#configure-sign-in-with-apple)
+and [enable Apple as a sign-in provider](https://firebase.google.com/docs/auth/ios/apple#enable-apple-as-a-sign-in-provider).
 
-String _createNonce(int length) {
-  final random = Random();
-  final charCodes = List<int>.generate(length, (_) {
-    int codeUnit;
+Next, make sure that your `Runner` apps have the "Sign in with Apple" capability.
 
-    switch (random.nextInt(3)) {
-      case 0:
-        codeUnit = random.nextInt(10) + 48;
-        break;
-      case 1:
-        codeUnit = random.nextInt(26) + 65;
-        break;
-      case 2:
-        codeUnit = random.nextInt(26) + 97;
-        break;
-    }
+Install the [`sign_in_with_apple`](https://pub.dev/packages/sign_in_with_apple) plugin, as well as the
+[`crypto`](https://pub.dev/packages/crypto) package:
 
-    return codeUnit;
-  });
-
-  return String.fromCharCodes(charCodes);
-}
-
-Future<OAuthCredential> _createAppleOAuthCred() async {
-  final nonce = _createNonce(32);
-  final nativeAppleCred = Platform.isIOS
-      ? await SignInWithApple.getAppleIDCredential(
-          scopes: [
-            AppleIDAuthorizationScopes.email,
-            AppleIDAuthorizationScopes.fullName,
-          ],
-          nonce: sha256.convert(utf8.encode(nonce)).toString(),
-        )
-      : await SignInWithApple.getAppleIDCredential(
-          scopes: [
-            AppleIDAuthorizationScopes.email,
-            AppleIDAuthorizationScopes.fullName,
-          ],
-          webAuthenticationOptions: WebAuthenticationOptions(
-            redirectUri: Uri.parse(
-                'https://your-project-name.firebaseapp.com/__/auth/handler'),
-            clientId: 'your.app.bundle.name',
-          ),
-          nonce: sha256.convert(utf8.encode(nonce)).toString(),
-        );
-
-  return new OAuthCredential(
-    providerId: "apple.com", // MUST be "apple.com"
-    signInMethod: "oauth",   // MUST be "oauth"
-    accessToken: nativeAppleCred.identityToken, // propagate Apple ID token to BOTH accessToken and idToken parameters
-    idToken: nativeAppleCred.identityToken,
-    rawNonce: nonce,
-  );
-}
-
-// sign in with Apple OAuth2 credential:
-
-final oauthCred = await _createAppleOAuthCred();
-await FirebaseAuth.instance.signInWithCredential(oauthCred);
-
-// or link Apple OAuth2 credential to existing account:
-
-final oauthCred = await _createAppleOAuthCred();
-await FirebaseAuth.instance.currentUser.linkWithCredential(oauthCred);
-
+```yaml title="pubspec.yaml"
+dependencies:
+  sign_in_with_apple: ^2.5.2
+  crypto: ^2.1.5
 ```
 
+```dart
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:crypto/crypto.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
+/// Generates a cryptographically secure random nonce, to be included in a
+/// credential request.
+String generateNonce([int length = 32]) {
+  final charset =
+      '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+  final random = Random.secure();
+  return List.generate(length, (_) => charset[random.nextInt(charset.length)])
+      .join();
+}
+
+/// Returns the sha256 hash of [input] in hex notation.
+String sha256ofString(String input) {
+  final bytes = utf8.encode(input);
+  final digest = sha256.convert(bytes);
+  return digest.toString();
+}
+
+Future<UserCredential> signInWithApple() async {
+  // To prevent replay attacks with the credential returned from Apple, we
+  // include a nonce in the credential request. When signing in in with
+  // Firebase, the nonce in the id token returned by Apple, is expected to
+  // match the sha256 hash of `rawNonce`.
+  final rawNonce = generateNonce();
+  final nonce = sha256ofString(rawNonce);
+
+  // Request credential for the currently signed in Apple account.
+  final appleCredential = await SignInWithApple.getAppleIDCredential(
+    scopes: [
+      AppleIDAuthorizationScopes.email,
+      AppleIDAuthorizationScopes.fullName,
+    ],
+    nonce: nonce,
+  );
+
+  // Create an `OAuthCredential` from the credential returned by Apple.
+  final oauthCredential = OAuthProvider("apple.com").credential(
+    idToken: appleCredential.identityToken,
+    rawNonce: rawNonce,
+  );
+
+  // Sign in the user with Firebase. If the nonce we generated earlier does
+  // not match the nonce in `appleCredential.identityToken`, sign in will fail.
+  return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+}
+```
+</TabItem>
+
+<TabItem value="android">
+
+  At the moment, the preferable solution is blocked by this
+  [issue](https://github.com/FirebaseExtended/flutterfire/issues/2691).
+
+</TabItem>
+
+<TabItem value="web">
+
+Before you begin [configure Sign In with Apple](https://firebase.google.com/docs/auth/web/apple#configure-sign-in-with-apple)
+and [enable Apple as a sign-in provider](https://firebase.google.com/docs/auth/web/apple#enable-apple-as-a-sign-in-provider).
+
+```dart
+import 'package:firebase_auth/firebase_auth.dart';
+
+Future<UserCredential> signInWithApple() async {
+  // Create and configure an OAuthProvider for Sign In with Apple.
+  final provider = OAuthProvider("apple.com")
+    ..addScope('email')
+    ..addScope('name');
+
+  // Sign in the user with Firebase.
+  return await FirebaseAuth.instance.signInWithPopup(provider);
+}
+```
+
+An alternative is to use `signInWithRedirect`. In that case the browser will navigate away from your app
+and you have to use `getRedirectResult` to check for authentication results during app startup.
+</TabItem>
+</Tabs>
 
 ## Twitter
 

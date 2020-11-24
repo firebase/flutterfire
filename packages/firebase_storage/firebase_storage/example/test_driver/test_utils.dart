@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 
 final String kTestString = List(pow(2, 12)).join(_getRandomString(8));
 final String kTestStorageBucket = 'react-native-firebase-testing.appspot.com';
@@ -28,7 +29,7 @@ Future<FirebaseApp> testInitializeSecondaryApp(
       withDefaultBucket ? 'testapp' : 'testapp-no-bucket';
 
   FirebaseOptions testAppOptions;
-  if (Platform.isIOS || Platform.isMacOS) {
+  if (!kIsWeb && (Platform.isIOS || Platform.isMacOS)) {
     testAppOptions = FirebaseOptions(
       appId: '1:448618578101:ios:0b650370bb29e29cac3efc',
       apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',

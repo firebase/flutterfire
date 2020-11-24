@@ -1,3 +1,16 @@
+## 0.7.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.7.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 0.7.0-dev.3
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
 ## 0.7.0-dev.2
 
  - **DOCS**: update package readme.

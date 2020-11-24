@@ -18,7 +18,6 @@ void runTaskTests() {
 
     setUpAll(() async {
       storage = FirebaseStorage.instance;
-      file = await createFile('ok.jpeg');
       uploadRef = storage.ref('/playground').child('flt-ok.txt');
       downloadRef = storage.ref('/smallFileTest.png'); // 15mb
     });
@@ -73,13 +72,14 @@ void runTaskTests() {
       };
 
       test('successfully pauses and resumes a download task', () async {
+        file = await createFile('ok.jpeg');
         task = downloadRef.writeToFile(file);
         await _testPauseTask('Download');
-      });
+        // There's no DownloadTask in web.
+      }, skip: kIsWeb);
 
       test('successfully pauses and resumes a upload task', () async {
-        await downloadRef.writeToFile(file);
-        task = uploadRef.putFile(file);
+        task = uploadRef.putString('This is an upload task!');
         await _testPauseTask('Upload');
       });
 
@@ -121,6 +121,7 @@ void runTaskTests() {
 
     group('snapshot', () {
       test('returns the latest snapshot for download task', () async {
+        file = await createFile('ok.jpeg');
         final downloadTask = downloadRef.writeToFile(file);
 
         expect(downloadTask.snapshot, isNotNull);
@@ -133,10 +134,11 @@ void runTaskTests() {
         expect(snapshot.bytesTransferred, completedSnapshot.bytesTransferred);
         expect(snapshot.totalBytes, completedSnapshot.totalBytes);
         expect(snapshot.metadata, isNull);
-      });
+        // There's no DownloadTask in web.
+      }, skip: kIsWeb);
 
       test('returns the latest snapshot for upload task', () async {
-        final uploadTask = uploadRef.putFile(file);
+        final uploadTask = uploadRef.putString('This is an upload task!');
         expect(uploadTask.snapshot, isNotNull);
 
         TaskSnapshot completedSnapshot = await uploadTask;
@@ -190,12 +192,14 @@ void runTaskTests() {
       };
 
       test('successfully cancels download task', () async {
+        file = await createFile('ok.jpeg');
         task = downloadRef.writeToFile(file);
         await _testCancelTask();
-      });
+        // There's no DownloadTask in web.
+      }, skip: kIsWeb);
 
       test('successfully cancels upload task', () async {
-        task = uploadRef.putFile(file);
+        task = uploadRef.putString('This is an upload task!');
         await _testCancelTask();
       });
     });
