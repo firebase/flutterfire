@@ -19,6 +19,8 @@ dependency_overrides:
     path: ../
   firebase_storage_platform_interface:
     path: ../../firebase_storage_platform_interface
+  firebase_storage_web:
+    path: ../../firebase_storage_web
 
 dev_dependencies:
   pedantic: ^1.8.0
