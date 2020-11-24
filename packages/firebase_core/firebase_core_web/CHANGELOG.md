@@ -1,7 +1,3 @@
-## 0.2.1+1
-
-- **FIX**: ensure list items are converted.
-
 ## 0.2.1
 
  - **FEAT**: migrate firebase interop files to local repository (#3973).
