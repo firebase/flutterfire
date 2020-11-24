@@ -81,7 +81,17 @@ Read the integration documentation on how to [setup iOS or macOS with Firebase C
 
 ### 5. (Web Only) Add the SDK
 
-> Web is currently not supported. See the [FlutterFire roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582).
+If using FlutterFire on the web, add the `firebase-messaging` JavaScript SDK to your index.html file:
+
+```html {5} title="web/index.html"
+<html>
+  ...
+  <body>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-messaging.js"></script>
+  </body>
+</html>
+```
 
 ### 6. Rebuild your app
 

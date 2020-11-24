@@ -53,10 +53,11 @@ There are a few preconditions which must be met before the application can recei
 - On iOS, if the user swipes away the application from app Switcher, it must be manually reopened again for background messages to start working again.
 - On Android, if the user force quits the app from device settings, it must be manually reopened again for messages to start working.
 - On iOS & macOS, you must have [correctly setup your project](apple-integration.mdx) to integrate with FCM and APNs.
+- On web, you push have requested a token (via `getToken`) with the key of a "Web Push certificate".
 
-### Requesting permission (Apple)
+### Requesting permission (Apple & Web)
 
-On iOS, macOS & Web (coming soon), before FCM payloads can be received on your device, you must first ask the users permission. Android applications are not required
+On iOS, macOS & web, before FCM payloads can be received on your device, you must first ask the users permission. Android applications are not required
 to request permission.
 
 The `firebase_messaging` package provides a simple API for requesting permission via the [`requestPermission`](!cloud_messaging.FirebaseMessaging.requestPermission) method.
@@ -104,6 +105,22 @@ For further information, view the [Permissions](permissions.mdx) documentation.
 
 Once permission has been granted & the different types of device state have been understood, your application can now start to handle the incoming
 FCM payloads.
+
+### Web Tokens
+
+On the web, before a message can be sent to the browser you must have first created an initial handshake with Firebase. This can be carried out via the
+`getToken` method, passing in the public `vapidKey`. Head over to the [Firebase Console](https://console.firebase.google.com/project/_/settings/cloudmessaging) and create a new "Web Push Certificate". A key will be 
+provided, which you can provide to the method:
+
+```dart
+FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+NotificationSettings settings = await messaging.getToken(
+  vapidKey: "BGpdLRs......",
+);
+```
+
+### Message types
 
 A message payload can be viewed as one of three types:
 
@@ -161,6 +178,18 @@ documentation.
 
 ### Background messages
 
+The process of handling background messages is currently different on Android/Apple & web based platforms. We're working to see if 
+it's possible to align these flows.
+
+<Tabs
+  defaultValue="js"
+  values={[
+    { label: 'Android/Apple', value: 'native', },
+    { label: 'Web', value: 'web', },
+  ]
+}>
+<TabItem value="native">
+
 Handling messages whilst your application is in the background is a little different. Messages can
 be handled via the [`onBackgroundMessage`](!cloud_messaging.FirebaseMessaging.onBackgroundMessage) handler. When received, an
 isolate is spawned (Android only, iOS/macOS does not require a separate isolate) allowing you to handle messages even when your application is not running.
@@ -191,6 +220,62 @@ application state or execute any UI impacting logic. You can however perform log
 
 It also also recommended to complete your logic as soon as possible. Running long intensive tasks impacts device performance
 and may cause the OS to terminate the process. If tasks run for longer than 30 seconds, the device may automatically kill the process.
+
+</TabItem>
+<TabItem value="web">
+
+Web requires regeristing a JavaScript [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) which runs in the background.
+
+Unfortunately we haven't yet been able to establish a proper way of communicating with the Service Worker and Flutter applications. Right now, all web 
+background code must be executed in the JavaScript Service Worker file.
+
+To get started, create a new file:
+
+```js title=web/firebase-messaging-sw.js
+importScripts("https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-messaging.js");
+
+firebase.initializeApp({
+  apiKey: "...",
+  authDomain: "...",
+  databaseURL: "...",
+  projectId: "...",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "...",
+});
+
+const messaging = firebase.messaging();
+
+// Optional:
+messaging.onBackgroundMessage((message) => {
+  console.log("onBackgroundMessage", message);
+});
+```
+
+The file must import both the app and messaging SDKs, initialize Firebase and expose the `messaging` variable.
+
+Next, the worker must be registered. Within the entry file, **after** the `main.dart.js` file has loaded, register your worker:
+
+```js {9} title=web/index.html
+<html>
+<body>
+  ...
+  <script src="main.dart.js" type="application/javascript"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/flutter_service_worker.js");
+        navigator.serviceWorker.register("/firebase-messaging-sw.js");
+      });
+    }
+  </script>
+```
+
+Next restart your Flutter application, the worker will be registered and any background messages will be handled via this file.
+
+</TabItem>
+</Tabs>
 
 #### Notifications
 
