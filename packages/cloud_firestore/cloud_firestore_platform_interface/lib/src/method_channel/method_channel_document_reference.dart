@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
@@ -104,32 +105,78 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     StreamController<DocumentSnapshotPlatform>
         controller; // ignore: close_sinks
-    controller = StreamController<DocumentSnapshotPlatform>.broadcast(
-      onListen: () async {
-        MethodChannelFirebaseFirestore.documentObservers[handle] = controller;
-        await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-          'DocumentReference#addSnapshotListener',
-          <String, dynamic>{
-            'handle': handle,
-            'firestore': firestore,
-            'reference': this,
-            'includeMetadataChanges': includeMetadataChanges,
-          },
-        );
 
-        if (!onListenComplete.isCompleted) {
-          onListenComplete.complete();
-        }
-      },
-      onCancel: () async {
-        await onListenComplete.future;
-        await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-          'Firestore#removeListener',
-          <String, dynamic>{'handle': handle},
-        );
-        MethodChannelFirebaseFirestore.documentObservers.remove(handle);
-      },
-    );
+    if (Platform.isIOS) {
+      StreamSubscription<dynamic> snapshotStream;
+      controller = StreamController<DocumentSnapshotPlatform>.broadcast(
+        onListen: () async {
+          snapshotStream = MethodChannelFirebaseFirestore
+              .documentSnapshotChannel
+              .receiveBroadcastStream(
+            <String, dynamic>{
+              'handle': handle,
+              'firestore': firestore,
+              'reference': this,
+              'includeMetadataChanges': includeMetadataChanges,
+            },
+          ).listen((event) {
+            if (event.containsKey('error')) {
+              MethodChannelFirebaseFirestore.forwardErrorToController(
+                controller,
+                event,
+              );
+            } else {
+              final snapshotMap = event['snapshot'];
+              controller.add(
+                DocumentSnapshotPlatform(
+                  firestore,
+                  snapshotMap['path'],
+                  <String, dynamic>{
+                    'data': snapshotMap['data'],
+                    'metadata': snapshotMap['metadata'],
+                  },
+                ),
+              );
+            }
+          }, onError: (error, stack) {
+            // TODO: Handle these conditions
+          });
+        },
+        onCancel: () {
+          snapshotStream?.cancel();
+        },
+      );
+
+      return controller.stream;
+    } else {
+      controller = StreamController<DocumentSnapshotPlatform>.broadcast(
+        onListen: () async {
+          MethodChannelFirebaseFirestore.documentObservers[handle] = controller;
+          await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
+            'DocumentReference#addSnapshotListener',
+            <String, dynamic>{
+              'handle': handle,
+              'firestore': firestore,
+              'reference': this,
+              'includeMetadataChanges': includeMetadataChanges,
+            },
+          );
+
+          if (!onListenComplete.isCompleted) {
+            onListenComplete.complete();
+          }
+        },
+        onCancel: () async {
+          await onListenComplete.future;
+          await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
+            'Firestore#removeListener',
+            <String, dynamic>{'handle': handle},
+          );
+          MethodChannelFirebaseFirestore.documentObservers.remove(handle);
+        },
+      );
+    }
+
     return controller.stream;
   }
 }

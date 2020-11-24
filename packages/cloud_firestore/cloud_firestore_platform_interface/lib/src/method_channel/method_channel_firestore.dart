@@ -209,6 +209,12 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     StandardMethodCodec(FirestoreMessageCodec()),
   );
 
+  /// The [EventChannel] used for document snapshots
+  static EventChannel documentSnapshotChannel = EventChannel(
+    'plugins.flutter.io/firebase_firestore/document',
+    StandardMethodCodec(FirestoreMessageCodec()),
+  );
+
   /// A map containing all the pending Query Observers, keyed by their id.
   /// This is shared amongst all [MethodChannelQuery] objects, and the `QuerySnapshot`
   /// `MethodCall` handler initialized in the constructor of this class.

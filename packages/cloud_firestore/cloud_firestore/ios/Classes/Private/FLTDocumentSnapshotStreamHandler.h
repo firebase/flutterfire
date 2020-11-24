@@ -1,5 +1,5 @@
 //
-//  FLTQuerySnapshotStreamHandler.h
+//  FLTDocumentSnapshotStreamHandler.h
 //  cloud_firestore
 //
 //  Created by Sebastian Roth on 24/11/2020.
@@ -15,7 +15,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FLTQuerySnapshotStreamHandler : NSObject <FlutterStreamHandler>
+@interface FLTDocumentSnapshotStreamHandler : NSObject<FlutterStreamHandler>
 
 @end
 

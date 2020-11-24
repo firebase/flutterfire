@@ -6,12 +6,15 @@
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
 #import "Private/FLTFirebaseFirestoreUtils.h"
+#import "Private/FLTDocumentSnapshotStreamHandler.h"
 #import "Private/FLTQuerySnapshotStreamHandler.h"
 #import "Public/FLTFirebaseFirestorePlugin.h"
 
 NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase_firestore";
 NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =
     @"plugins.flutter.io/firebase_firestore/query";
+NSString *const kFLTFirebaseFirestoreDocumentSnapshotEventChannelName =
+    @"plugins.flutter.io/firebase_firestore/document";
 
 @interface FLTFirebaseFirestorePlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
@@ -59,13 +62,22 @@ NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =
   instance.channel = channel;
   [registrar addMethodCallDelegate:instance channel:channel];
 
-  FlutterEventChannel *eventChannel =
+  FlutterEventChannel *querySnapshotChannel =
       [FlutterEventChannel eventChannelWithName:kFLTFirebaseFirestoreQuerySnapshotEventChannelName
                                 binaryMessenger:registrar.messenger
                                           codec:[FlutterStandardMethodCodec
                                                     codecWithReaderWriter:firestoreReaderWriter]];
 
-  [eventChannel setStreamHandler:[[FLTQuerySnapshotStreamHandler alloc] init]];
+  [querySnapshotChannel setStreamHandler:[[FLTQuerySnapshotStreamHandler alloc] init]];
+  
+  FlutterEventChannel *documentSnapshotChannel =
+      [FlutterEventChannel eventChannelWithName:kFLTFirebaseFirestoreDocumentSnapshotEventChannelName
+                                binaryMessenger:registrar.messenger
+                                          codec:[FlutterStandardMethodCodec
+                                                    codecWithReaderWriter:firestoreReaderWriter]];
+
+  [documentSnapshotChannel setStreamHandler:[[FLTDocumentSnapshotStreamHandler alloc] init]];
+
 
 #if TARGET_OS_OSX
 // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.
@@ -153,8 +165,6 @@ NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =
     [self documentDelete:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DocumentReference#get" isEqualToString:call.method]) {
     [self documentGet:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"DocumentReference#addSnapshotListener" isEqualToString:call.method]) {
-    [self documentAddSnapshotListener:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Query#get" isEqualToString:call.method]) {
     [self queryGet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Firestore#removeListener" isEqualToString:call.method]) {
@@ -446,43 +456,6 @@ NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =
   };
 
   [document getDocumentWithSource:source completion:completion];
-}
-
-- (void)documentAddSnapshotListener:(id)arguments
-               withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  __weak __typeof__(self) weakSelf = self;
-
-  NSNumber *handle = arguments[@"handle"];
-  NSNumber *includeMetadataChanges = arguments[@"includeMetadataChanges"];
-
-  FIRDocumentReference *document = arguments[@"reference"];
-
-  id listener = ^(FIRDocumentSnapshot *snapshot, NSError *_Nullable error) {
-    if (error != nil) {
-      NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
-      [weakSelf.channel
-          invokeMethod:@"DocumentSnapshot#error"
-             arguments:@{
-               @"handle" : handle,
-               @"error" : @{@"code" : codeAndMessage[0], @"message" : codeAndMessage[1]},
-             }];
-    } else if (snapshot != nil) {
-      [weakSelf.channel invokeMethod:@"DocumentSnapshot#event"
-                           arguments:@{
-                             @"handle" : handle,
-                             @"snapshot" : snapshot,
-                           }];
-    }
-  };
-
-  id<FIRListenerRegistration> listenerRegistration =
-      [document addSnapshotListenerWithIncludeMetadataChanges:includeMetadataChanges.boolValue
-                                                     listener:listener];
-
-  @synchronized(_listeners) {
-    _listeners[handle] = listenerRegistration;
-  }
-  result.success(nil);
 }
 
 - (void)queryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
