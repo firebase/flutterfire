@@ -222,6 +222,12 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     StandardMethodCodec(FirestoreMessageCodec()),
   );
 
+  /// The [EventChannel] used for transaction
+  static EventChannel transactionChannel = EventChannel(
+    'plugins.flutter.io/firebase_firestore/transaction',
+    StandardMethodCodec(FirestoreMessageCodec()),
+  );
+
   /// A map containing all the pending Query Observers, keyed by their id.
   /// This is shared amongst all [MethodChannelQuery] objects, and the `QuerySnapshot`
   /// `MethodCall` handler initialized in the constructor of this class.
@@ -392,46 +398,115 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         'Transaction timeout must be more than 0 milliseconds');
 
     final int transactionId = _transactionHandlerId++;
-    StreamController streamController = StreamController();
 
-    _transactionHandlers[transactionId] = transactionHandler;
-    _transactionStreamControllerHandlers[transactionId] = streamController;
+    if (Platform.isIOS || Platform.isMacOS) {
+      StreamSubscription<dynamic> snapshotStream;
+      StreamController streamController = StreamController();
 
-    T result;
-    Object exception;
+      _transactionHandlers[transactionId] = transactionHandler;
+      _transactionStreamControllerHandlers[transactionId] = streamController;
 
-    // If the uses [TransactionHandler] throws an error, the stream broadcasts
-    // it so we don't lose it's context.
-    StreamSubscription subscription =
-        streamController.stream.listen((Object data) {
-      result = data;
-    }, onError: (Object e) {
-      exception = e;
-    });
+      streamController = StreamController<T>.broadcast(
+        onListen: () async {
+          snapshotStream = MethodChannelFirebaseFirestore.transactionChannel
+              .receiveBroadcastStream(
+            <String, dynamic>{
+              'firestore': this,
+              'transactionId': transactionId,
+              'timeout': timeout.inMilliseconds
+            },
+          ).listen((event) async {
+            if (event.containsKey('attempt')) {
+              final attempt = event['attempt'];
+              final int transactionId = attempt['transactionId'];
+              final TransactionPlatform transaction =
+                  MethodChannelTransaction(transactionId, attempt["appName"]);
 
-    // The #create call only resolves once all transaction attempts have succeeded
-    // or something failed.
-    await channel.invokeMethod<T>('Transaction#create', <String, dynamic>{
-      'firestore': this,
-      'transactionId': transactionId,
-      'timeout': timeout.inMilliseconds
-    }).catchError((Object e) {
-      exception = e;
-    });
+              try {
+                dynamic result =
+                    await _transactionHandlers[transactionId](transaction);
 
-    // The transaction has completed (may have errored), cleanup the stream
-    await subscription.cancel();
-    _transactionStreamControllerHandlers.remove(transactionId);
+                // TODO: What should happen with the result?
 
-    if (exception != null) {
-      if (exception is PlatformException) {
-        return Future.error(platformExceptionToFirebaseException(exception));
-      } else {
-        return Future.error(exception);
+                await MethodChannelFirebaseFirestore.channel
+                    .invokeMethod('Transaction#storeResult', <String, dynamic>{
+                  'transactionId': transactionId,
+                  'result': {
+                    'type': 'SUCCESS',
+                    'commands': transaction.commands,
+                  },
+                });
+
+                streamController.add(result);
+              } catch (error) {
+                // Allow the [runTransaction] method to listen to an error.
+                streamController.addError(error);
+
+                // Signal native that a user error occurred, and finish the
+                // transaction
+                await MethodChannelFirebaseFirestore.channel
+                    .invokeMethod('Transaction#storeResult', <String, dynamic>{
+                  'transactionId': transactionId,
+                  'result': {
+                    'type': 'ERROR',
+                  }
+                });
+              }
+            } else {
+              // controller.add(event);
+            }
+          }, onError: (error, stack) {
+            // TODO: Handle these conditions
+          });
+        },
+        onCancel: () {
+          snapshotStream?.cancel();
+        },
+      );
+
+      return streamController.stream.first;
+    } else {
+      StreamController streamController = StreamController();
+
+      _transactionHandlers[transactionId] = transactionHandler;
+      _transactionStreamControllerHandlers[transactionId] = streamController;
+
+      T result;
+      Object exception;
+
+      // If the uses [TransactionHandler] throws an error, the stream broadcasts
+      // it so we don't lose it's context.
+      StreamSubscription subscription =
+          streamController.stream.listen((Object data) {
+        result = data;
+      }, onError: (Object e) {
+        exception = e;
+      });
+
+      // The #create call only resolves once all transaction attempts have succeeded
+      // or something failed.
+      await channel.invokeMethod<T>('Transaction#create', <String, dynamic>{
+        'firestore': this,
+        'transactionId': transactionId,
+        'timeout': timeout.inMilliseconds
+      }).catchError((Object e) {
+        exception = e;
+      });
+
+      // The transaction has completed (may have errored), cleanup the stream
+      await subscription.cancel();
+      _transactionStreamControllerHandlers.remove(transactionId);
+
+      if (exception != null) {
+        if (exception is PlatformException) {
+          return Future.error(platformExceptionToFirebaseException(exception));
+        } else {
+          return Future.error(exception);
+        }
       }
-    }
 
-    return result;
+      return result;
+    }
   }
 
   @override

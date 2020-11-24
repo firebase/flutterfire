@@ -9,6 +9,7 @@
 #import "Private/FLTDocumentSnapshotStreamHandler.h"
 #import "Private/FLTQuerySnapshotStreamHandler.h"
 #import "Private/FLTSnapshotsInSyncStreamHandler.h"
+#import "Private/FLTTransactionStreamHandler.h"
 
 #import "Public/FLTFirebaseFirestorePlugin.h"
 
@@ -19,14 +20,17 @@ NSString *const kFLTFirebaseFirestoreDocumentSnapshotEventChannelName =
     @"plugins.flutter.io/firebase_firestore/document";
 NSString *const kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName =
     @"plugins.flutter.io/firebase_firestore/snapshotsInSync";
+NSString *const kFLTFirebaseFirestoreTransactionChannelName =
+    @"plugins.flutter.io/firebase_firestore/transaction";
 
 @interface FLTFirebaseFirestorePlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
+@property(nonatomic, retain) FLTTransactionStreamHandler *transactionHandler;
+@property(nonatomic, retain) NSMutableDictionary* transactions;
 @end
 
 @implementation FLTFirebaseFirestorePlugin {
   NSMutableDictionary<NSNumber *, id<FIRListenerRegistration>> *_listeners;
-  NSMutableDictionary *_transactions;
 }
 
 #pragma mark - FlutterPlugin
@@ -89,6 +93,15 @@ NSString *const kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName =
                                                     codecWithReaderWriter:firestoreReaderWriter]];
 
   [snapshotsInSyncChannel setStreamHandler:[[FLTSnapshotsInSyncStreamHandler alloc] init]];
+
+  FlutterEventChannel *transactionChannel =
+      [FlutterEventChannel eventChannelWithName:kFLTFirebaseFirestoreTransactionChannelName
+                                binaryMessenger:registrar.messenger
+                                          codec:[FlutterStandardMethodCodec
+                                                    codecWithReaderWriter:firestoreReaderWriter]];
+
+  instance.transactionHandler = [[FLTTransactionStreamHandler alloc] init:instance.transactions];
+  [transactionChannel setStreamHandler:instance.transactionHandler];
 
 #if TARGET_OS_OSX
 // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.
@@ -168,6 +181,8 @@ NSString *const kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName =
     [self transactionCreate:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Transaction#get" isEqualToString:call.method]) {
     [self transactionGet:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Transaction#storeResult" isEqualToString:call.method]) {
+    [self transactionStoreResult:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DocumentReference#set" isEqualToString:call.method]) {
     [self documentSet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DocumentReference#update" isEqualToString:call.method]) {
@@ -383,6 +398,16 @@ NSString *const kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName =
     }
   });
 }
+
+- (void)transactionStoreResult:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSNumber *transactionId = arguments[@"transactionId"];
+  NSDictionary *transactionResult = arguments[@"result"];
+
+  [self.transactionHandler receiveTransactionResponse:transactionId response:transactionResult];
+  
+  result.success(nil);
+}
+
 
 - (void)documentSet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   id data = arguments[@"data"];
