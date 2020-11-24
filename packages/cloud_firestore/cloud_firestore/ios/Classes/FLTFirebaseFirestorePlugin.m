@@ -24,7 +24,6 @@ NSString *const kFLTFirebaseFirestoreTransactionChannelName =
     @"plugins.flutter.io/firebase_firestore/transaction";
 
 @interface FLTFirebaseFirestorePlugin ()
-@property(nonatomic, retain) FlutterMethodChannel *channel;
 @property(nonatomic, retain) FLTTransactionStreamHandler *transactionHandler;
 @property(nonatomic, retain) NSMutableDictionary* transactions;
 @end
@@ -67,7 +66,6 @@ NSString *const kFLTFirebaseFirestoreTransactionChannelName =
                                                       codecWithReaderWriter:firestoreReaderWriter]];
 
   FLTFirebaseFirestorePlugin *instance = [FLTFirebaseFirestorePlugin sharedInstance];
-  instance.channel = channel;
   [registrar addMethodCallDelegate:instance channel:channel];
 
   FlutterEventChannel *querySnapshotChannel =
@@ -149,7 +147,6 @@ NSString *const kFLTFirebaseFirestoreTransactionChannelName =
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   [self cleanupWithCompletion:nil];
-  self.channel = nil;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
