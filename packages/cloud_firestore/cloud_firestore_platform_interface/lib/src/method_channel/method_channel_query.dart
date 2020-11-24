@@ -150,9 +150,18 @@ class MethodChannelQuery extends QueryPlatform {
               'includeMetadataChanges': includeMetadataChanges,
             },
           ).listen((event) {
-            controller.add(
-              MethodChannelQuerySnapshot(firestore, event['snapshot']),
-            );
+            if (event.containsKey('error')) {
+              MethodChannelFirebaseFirestore.forwardErrorToController(
+                controller,
+                event,
+              );
+            } else {
+              controller.add(
+                MethodChannelQuerySnapshot(firestore, event['snapshot']),
+              );
+            }
+          }, onError: (error, stack) {
+            // TODO: Handle these conditions
           });
         },
         onCancel: () {

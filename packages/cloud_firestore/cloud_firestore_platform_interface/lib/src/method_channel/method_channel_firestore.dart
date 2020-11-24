@@ -89,7 +89,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// When a [QuerySnapshot] error event is fired on the [MethodChannel],
   /// send the [StreamController] the arguments to throw a [FirebaseException].
   void _handleQuerySnapshotError(Map<dynamic, dynamic> arguments) {
-    _handleError(queryObservers[arguments['handle']], arguments);
+    forwardErrorToController(queryObservers[arguments['handle']], arguments);
   }
 
   /// When a [DocumentSnapshot] event is fired on the [MethodChannel],
@@ -122,7 +122,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// When a [DocumentSnapshot] error event is fired on the [MethodChannel],
   /// send the [StreamController] the arguments to throw a [FirebaseException].
   void _handleDocumentSnapshotError(Map<dynamic, dynamic> arguments) {
-    _handleError(documentObservers[arguments['handle']], arguments);
+    forwardErrorToController(documentObservers[arguments['handle']], arguments);
   }
 
   /// When a transaction is attempted, it sends a [MethodChannel] call.
@@ -166,7 +166,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   /// Attach a [FirebaseException] to a given [StreamController].
-  void _handleError(
+  static void forwardErrorToController(
       StreamController controller, Map<dynamic, dynamic> arguments) async {
     if (controller == null) {
       return;
