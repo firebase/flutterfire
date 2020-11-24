@@ -11,7 +11,6 @@ import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
 import 'method_channel_query_snapshot.dart';
-import 'utils/firestore_message_codec.dart';
 import 'utils/source.dart';
 import 'utils/exception.dart';
 

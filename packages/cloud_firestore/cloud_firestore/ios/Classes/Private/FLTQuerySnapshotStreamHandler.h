@@ -18,7 +18,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FLTQuerySnapshotStreamHandler : NSObject<FlutterStreamHandler>
+@interface FLTQuerySnapshotStreamHandler : NSObject <FlutterStreamHandler>
 
 @end
 

@@ -10,7 +10,8 @@
 #import "Public/FLTFirebaseFirestorePlugin.h"
 
 NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase_firestore";
-NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName = @"plugins.flutter.io/firebase_firestore/query";
+NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =
+    @"plugins.flutter.io/firebase_firestore/query";
 
 @interface FLTFirebaseFirestorePlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
@@ -57,14 +58,15 @@ NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName = @"plugins.f
   FLTFirebaseFirestorePlugin *instance = [FLTFirebaseFirestorePlugin sharedInstance];
   instance.channel = channel;
   [registrar addMethodCallDelegate:instance channel:channel];
-  
+
   FlutterEventChannel *eventChannel =
       [FlutterEventChannel eventChannelWithName:kFLTFirebaseFirestoreQuerySnapshotEventChannelName
                                 binaryMessenger:registrar.messenger
-                                          codec:[FlutterStandardMethodCodec codecWithReaderWriter:firestoreReaderWriter]];
-  
+                                          codec:[FlutterStandardMethodCodec
+                                                    codecWithReaderWriter:firestoreReaderWriter]];
+
   [eventChannel setStreamHandler:[[FLTQuerySnapshotStreamHandler alloc] init]];
-    
+
 #if TARGET_OS_OSX
 // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.
 #else
