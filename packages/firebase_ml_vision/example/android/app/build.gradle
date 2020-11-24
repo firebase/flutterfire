@@ -47,8 +47,17 @@ android {
     }
 
     dependencies {
-        api 'com.google.firebase:firebase-ml-vision-image-label-model:17.0.2'
-        api 'com.google.firebase:firebase-ml-vision-face-model:17.0.2'
+
+        implementation platform("com.google.firebase:firebase-bom:25.13.0")
+        implementation "com.google.firebase:firebase-ml-vision"
+
+        implementation 'com.google.android.gms:play-services-vision:20.1.1'
+        implementation 'com.google.android.gms:play-services-vision-common:19.1.1'
+        implementation 'com.google.android.gms:play-services-vision-face-contour-internal:16.0.3'
+        implementation 'com.google.android.gms:play-services-vision-image-labeling-internal:16.0.5'
+        implementation 'com.google.android.gms:play-services-vision-image-label:18.0.5'
+        implementation 'com.google.firebase:firebase-ml-vision-face-model:20.0.2'
+        implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.4'
         androidTestImplementation 'androidx.test:runner:1.2.0'
         androidTestImplementation 'androidx.test:rules:1.2.0'
         androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

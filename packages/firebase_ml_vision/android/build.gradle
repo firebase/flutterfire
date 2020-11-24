@@ -32,8 +32,18 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-        api 'com.google.firebase:firebase-ml-vision:20.0.0'
-        implementation 'com.google.firebase:firebase-common:16.1.0'
+        implementation platform("com.google.firebase:firebase-bom:25.13.0")
+        implementation 'com.google.firebase:firebase-common'
+        api "com.google.firebase:firebase-ml-vision"
+
+        implementation 'com.google.android.gms:play-services-vision:20.1.1'
+        implementation 'com.google.android.gms:play-services-vision-common:19.1.1'
+        implementation 'com.google.android.gms:play-services-vision-face-contour-internal:16.0.3'
+        implementation 'com.google.android.gms:play-services-vision-image-labeling-internal:16.0.5'
+        implementation 'com.google.android.gms:play-services-vision-image-label:18.0.5'
+        implementation 'com.google.firebase:firebase-ml-vision-face-model:20.0.2'
+        implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.4'
+
         implementation 'androidx.annotation:annotation:1.0.0'
         implementation 'androidx.exifinterface:exifinterface:1.0.0'
     }
