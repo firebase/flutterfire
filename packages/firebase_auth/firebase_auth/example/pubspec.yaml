@@ -3,6 +3,7 @@ description: Demonstrates how to use the firebase_auth plugin.
 author: Flutter Team <flutter-dev@googlegroups.com>
 
 dependencies:
+  http: any
   flutter:
     sdk: flutter
   firebase_auth:
