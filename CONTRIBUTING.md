@@ -215,4 +215,4 @@ Some things to keep in mind before publishing the release:
   from people that immediately adopt it, and uncovering and resolving those
   support issues will take more time if you're unavailable.
 
-TODO(ehesp): detail melos release process
+<!-- TODO(ehesp): detail melos release process -->

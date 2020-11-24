@@ -84,8 +84,7 @@ scripts:
 
   # Additional cleanup lifecycle script, executed when `melos clean` is ran.
   postclean: >
-    melos exec -- \
-      rm -rf ./build ./android/.gradle ./ios/.symlinks ./ios/Pods ./android/.idea ./.idea ./.dart-tool/build
+    melos exec -c 5 -- "flutter clean"
 
 dev_dependencies:
   pedantic: 1.8.0
