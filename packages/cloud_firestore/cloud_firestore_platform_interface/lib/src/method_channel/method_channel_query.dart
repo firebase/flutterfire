@@ -3,12 +3,15 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
+import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
 import 'method_channel_query_snapshot.dart';
+import 'utils/firestore_message_codec.dart';
 import 'utils/source.dart';
 import 'utils/exception.dart';
 
@@ -127,39 +130,69 @@ class MethodChannelQuery extends QueryPlatform {
     bool includeMetadataChanges = false,
   }) {
     assert(includeMetadataChanges != null);
+
     int handle = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
-    Completer<void> onListenComplete = Completer<void>();
 
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     StreamController<QuerySnapshotPlatform> controller; // ignore: close_sinks
-    controller = StreamController<QuerySnapshotPlatform>.broadcast(
-      onListen: () async {
-        MethodChannelFirebaseFirestore.queryObservers[handle] = controller;
-        await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-          'Query#addSnapshotListener',
-          <String, dynamic>{
-            'query': this,
-            'handle': handle,
-            'firestore': firestore,
-            'includeMetadataChanges': includeMetadataChanges,
-          },
-        );
 
-        if (!onListenComplete.isCompleted) {
-          onListenComplete.complete();
-        }
-      },
-      onCancel: () async {
-        await onListenComplete.future;
-        await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-          'Firestore#removeListener',
-          <String, dynamic>{'handle': handle},
-        );
-        MethodChannelFirebaseFirestore.queryObservers.remove(handle);
-      },
-    );
-    return controller.stream;
+    if (Platform.isIOS) {
+      StreamSubscription<dynamic> querySnapshotStream;
+      controller = StreamController<QuerySnapshotPlatform>.broadcast(
+        onListen: () async {
+          querySnapshotStream = MethodChannelFirebaseFirestore
+              .querySnapshotChannel
+              .receiveBroadcastStream(
+            <String, dynamic>{
+              'query': this,
+              'handle': handle,
+              'firestore': firestore,
+              'includeMetadataChanges': includeMetadataChanges,
+            },
+          ).listen((event) {
+            controller.add(
+              MethodChannelQuerySnapshot(firestore, event['snapshot']),
+            );
+          });
+        },
+        onCancel: () {
+          querySnapshotStream?.cancel();
+        },
+      );
+
+      return controller.stream;
+    } else {
+      Completer<void> onListenComplete = Completer<void>();
+
+      controller = StreamController<QuerySnapshotPlatform>.broadcast(
+        onListen: () async {
+          MethodChannelFirebaseFirestore.queryObservers[handle] = controller;
+          await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
+            'Query#addSnapshotListener',
+            <String, dynamic>{
+              'query': this,
+              'handle': handle,
+              'firestore': firestore,
+              'includeMetadataChanges': includeMetadataChanges,
+            },
+          );
+
+          if (!onListenComplete.isCompleted) {
+            onListenComplete.complete();
+          }
+        },
+        onCancel: () async {
+          await onListenComplete.future;
+          await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
+            'Firestore#removeListener',
+            <String, dynamic>{'handle': handle},
+          );
+          MethodChannelFirebaseFirestore.queryObservers.remove(handle);
+        },
+      );
+      return controller.stream;
+    }
   }
 
   @override
