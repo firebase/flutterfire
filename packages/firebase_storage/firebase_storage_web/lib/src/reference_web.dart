@@ -7,13 +7,13 @@ import 'dart:html' as html;
 
 import 'package:crypto/crypto.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
-import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase_storage_web/src/task_web.dart';
 import 'package:firebase_storage_web/src/utils/list.dart';
 import 'package:firebase_storage_web/src/utils/metadata_cache.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
+import 'interop/storage.dart' as storage_interop;
 import './firebase_storage_web.dart';
 import './utils/metadata.dart';
 import './utils/errors.dart';
@@ -23,7 +23,7 @@ final _storageUrlPrefix = RegExp(r'^(?:gs|https?)://');
 /// The web implementation of a Firebase Storage 'ref'
 class ReferenceWeb extends ReferencePlatform {
   // The js-interop layer for the ref that is wrapped by this class...
-  fb.StorageReference _ref;
+  storage_interop.StorageReference _ref;
 
   // Remember what metadata has already been set on this ref.
   // TODO: Should this be initialized with the metadata currently in firebase?
@@ -38,9 +38,9 @@ class ReferenceWeb extends ReferencePlatform {
       : _path = path,
         super(storage, path) {
     if (_path != null && _path.startsWith(_storageUrlPrefix)) {
-      _ref = storage.fbStorage.refFromURL(_path);
+      _ref = storage.webStorage.refFromURL(_path);
     } else {
-      _ref = storage.fbStorage.ref(_path);
+      _ref = storage.webStorage.ref(_path);
     }
   }
 
@@ -71,7 +71,7 @@ class ReferenceWeb extends ReferencePlatform {
   @override
   Future<FullMetadata> getMetadata() async {
     try {
-      fb.FullMetadata fullMetadata = await _ref.getMetadata();
+      storage_interop.FullMetadata fullMetadata = await _ref.getMetadata();
       return fbFullMetadataToFullMetadata(fullMetadata);
     } catch (e) {
       throw getFirebaseException(e);
@@ -92,7 +92,7 @@ class ReferenceWeb extends ReferencePlatform {
   @override
   Future<ListResultPlatform> list(ListOptions options) async {
     try {
-      fb.ListResult listResult =
+      storage_interop.ListResult listResult =
           await _ref.list(listOptionsToFbListOptions(options));
       return fbListResultToListResultWeb(storage, listResult);
     } catch (e) {
@@ -113,7 +113,7 @@ class ReferenceWeb extends ReferencePlatform {
   @override
   Future<ListResultPlatform> listAll() async {
     try {
-      fb.ListResult listResult = await _ref.listAll();
+      storage_interop.ListResult listResult = await _ref.listAll();
       return fbListResultToListResultWeb(storage, listResult);
     } catch (e) {
       throw getFirebaseException(e);
@@ -216,7 +216,7 @@ class ReferenceWeb extends ReferencePlatform {
   @override
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) async {
     try {
-      fb.FullMetadata fullMetadata = await _ref.updateMetadata(
+      storage_interop.FullMetadata fullMetadata = await _ref.updateMetadata(
           settableMetadataToFbSettableMetadata(_cache.store(metadata)));
       return fbFullMetadataToFullMetadata(fullMetadata);
     } catch (e) {

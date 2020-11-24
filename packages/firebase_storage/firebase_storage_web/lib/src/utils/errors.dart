@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase/firebase.dart' as fb;
+import 'package:firebase_core_web/firebase_core_web_interop.dart'
+    as core_interop;
 
 String _parseErrorCode(String errorCode) {
   return errorCode.split('/').last;
@@ -21,10 +22,20 @@ String _getErrorMessage(String errorCode, String errorMessage) {
 }
 
 /// Convert FirebaseErrors from the JS-interop layer into FirebaseExceptions for the plugin.
-FirebaseException getFirebaseException(fb.FirebaseError error) {
+FirebaseException getFirebaseException(Object object) {
+  if (object is! core_interop.FirebaseError) {
+    return FirebaseException(
+        plugin: 'firebase_storage',
+        code: 'unknown',
+        message: object.toString());
+  }
+
+  core_interop.FirebaseError firebaseError =
+      object as core_interop.FirebaseError;
+
   return FirebaseException(
     plugin: 'firebase_storage',
-    code: _parseErrorCode(error.code),
-    message: _getErrorMessage(error.code, error.message),
+    code: _parseErrorCode(firebaseError.code),
+    message: _getErrorMessage(firebaseError.code, firebaseError.message),
   );
 }
