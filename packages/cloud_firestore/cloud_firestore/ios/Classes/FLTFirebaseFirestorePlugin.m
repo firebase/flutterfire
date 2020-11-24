@@ -8,6 +8,8 @@
 #import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTDocumentSnapshotStreamHandler.h"
 #import "Private/FLTQuerySnapshotStreamHandler.h"
+#import "Private/FLTSnapshotsInSyncStreamHandler.h"
+
 #import "Public/FLTFirebaseFirestorePlugin.h"
 
 NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase_firestore";
@@ -15,6 +17,8 @@ NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =
     @"plugins.flutter.io/firebase_firestore/query";
 NSString *const kFLTFirebaseFirestoreDocumentSnapshotEventChannelName =
     @"plugins.flutter.io/firebase_firestore/document";
+NSString *const kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName =
+    @"plugins.flutter.io/firebase_firestore/snapshotsInSync";
 
 @interface FLTFirebaseFirestorePlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
@@ -78,6 +82,13 @@ NSString *const kFLTFirebaseFirestoreDocumentSnapshotEventChannelName =
 
   [documentSnapshotChannel setStreamHandler:[[FLTDocumentSnapshotStreamHandler alloc] init]];
 
+  FlutterEventChannel *snapshotsInSyncChannel =
+      [FlutterEventChannel eventChannelWithName:kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName
+                                binaryMessenger:registrar.messenger
+                                          codec:[FlutterStandardMethodCodec
+                                                    codecWithReaderWriter:firestoreReaderWriter]];
+
+  [snapshotsInSyncChannel setStreamHandler:[[FLTSnapshotsInSyncStreamHandler alloc] init]];
 
 #if TARGET_OS_OSX
 // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.
@@ -181,8 +192,6 @@ NSString *const kFLTFirebaseFirestoreDocumentSnapshotEventChannelName =
     [self clearPersistence:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Firestore#waitForPendingWrites" isEqualToString:call.method]) {
     [self waitForPendingWrites:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Firestore#addSnapshotsInSyncListener" isEqualToString:call.method]) {
-    [self addSnapshotsInSyncListener:call.arguments withMethodCallResult:methodCallResult];
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
@@ -211,27 +220,6 @@ NSString *const kFLTFirebaseFirestoreDocumentSnapshotEventChannelName =
 }
 
 #pragma mark - Firestore API
-
-- (void)addSnapshotsInSyncListener:(id)arguments
-              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  __weak __typeof__(self) weakSelf = self;
-  NSNumber *handle = arguments[@"handle"];
-  FIRFirestore *firestore = arguments[@"firestore"];
-
-  id listener = ^() {
-    [weakSelf.channel invokeMethod:@"Firestore#snapshotsInSync"
-                         arguments:@{
-                           @"handle" : handle,
-                         }];
-  };
-
-  id<FIRListenerRegistration> listenerRegistration =
-      [firestore addSnapshotsInSyncListener:listener];
-  @synchronized(_listeners) {
-    _listeners[handle] = listenerRegistration;
-  }
-  result.success(nil);
-}
 
 - (void)waitForPendingWrites:(id)arguments
         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
