@@ -30,5 +30,5 @@ dev_dependencies:
   js: ^0.6.0
 
 environment:
-  sdk: ">=2.10.0 <3.0.0"
+  sdk: ">=2.0.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.4 <2.0.0"
