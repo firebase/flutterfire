@@ -1,3 +1,7 @@
+## 0.2.1+1
+
+- Use `instanceof` checks in dartify.
+
 ## 0.2.1
 
  - **FEAT**: migrate firebase interop files to local repository (#3973).
