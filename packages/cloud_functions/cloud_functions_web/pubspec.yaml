@@ -12,6 +12,7 @@ flutter:
 
 dependencies:
   firebase_core: ^0.5.2
+  firebase_core_web: ^0.2.0
   cloud_functions_platform_interface: ^3.0.1
   flutter:
     sdk: flutter
@@ -21,7 +22,6 @@ dependencies:
   meta: ^1.1.7
 
 dev_dependencies:
-  firebase_core_web: ^0.2.0
   firebase_core_platform_interface: ^2.0.0
   pedantic: ^1.8.0
   flutter_test:
