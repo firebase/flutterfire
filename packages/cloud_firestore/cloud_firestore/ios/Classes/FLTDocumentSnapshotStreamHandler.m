@@ -15,6 +15,15 @@
   NSMutableDictionary<NSNumber *, id<FIRListenerRegistration>> *_listeners;
 }
 
+- (instancetype)init
+{
+  self = [super init];
+  if (self) {
+    _listeners = [NSMutableDictionary dictionary];
+  }
+  return self;
+}
+
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
   
