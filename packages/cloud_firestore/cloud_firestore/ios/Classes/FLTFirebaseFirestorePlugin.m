@@ -177,9 +177,7 @@ NSString *const kFLTFirebaseFirestoreTransactionChannelName =
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
 
-  if ([@"Transaction#create" isEqualToString:call.method]) {
-    [self transactionCreate:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Transaction#get" isEqualToString:call.method]) {
+  if ([@"Transaction#get" isEqualToString:call.method]) {
     [self transactionGet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Transaction#storeResult" isEqualToString:call.method]) {
     [self transactionStoreResult:call.arguments withMethodCallResult:methodCallResult];
@@ -291,92 +289,6 @@ NSString *const kFLTFirebaseFirestoreTransactionChannelName =
       result.success(nil);
     }
   }];
-}
-
-- (void)transactionCreate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRFirestore *firestore = arguments[@"firestore"];
-  NSNumber *transactionId = arguments[@"transactionId"];
-  NSNumber *transactionTimeout = arguments[@"timeout"];
-
-  __weak __typeof__(self) weakSelf = self;
-  NSDictionary *transactionAttemptArguments = @{
-    @"transactionId" : transactionId,
-    @"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:firestore.app.name]
-  };
-
-  id transactionRunBlock = ^id(FIRTransaction *transaction, NSError **pError) {
-    @synchronized(self->_transactions) {
-      self->_transactions[transactionId] = transaction;
-    }
-
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    __block NSDictionary *attemptedTransactionResponse;
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-      [weakSelf.channel invokeMethod:@"Transaction#attempt"
-                           arguments:transactionAttemptArguments
-                              result:^(id dartAttemptTransactionResult) {
-                                attemptedTransactionResponse = dartAttemptTransactionResult;
-                                dispatch_semaphore_signal(semaphore);
-                              }];
-    });
-
-    long timedOut = dispatch_semaphore_wait(
-        semaphore,
-        dispatch_time(DISPATCH_TIME_NOW, [transactionTimeout integerValue] * NSEC_PER_MSEC));
-    NSString *dartResponseType =
-        attemptedTransactionResponse ? attemptedTransactionResponse[@"type"] : @"ERROR";
-
-    if (timedOut) {
-      *pError = [NSError errorWithDomain:FIRFirestoreErrorDomain
-                                    code:FIRFirestoreErrorCodeDeadlineExceeded
-                                userInfo:@{}];
-      return nil;
-    }
-
-    if ([@"ERROR" isEqualToString:dartResponseType]) {
-      // Do nothing - already handled in Dart land.
-      return nil;
-    }
-
-    NSArray<NSDictionary *> *commands = attemptedTransactionResponse[@"commands"];
-    for (NSDictionary *command in commands) {
-      NSString *commandType = command[@"type"];
-      NSString *documentPath = command[@"path"];
-      FIRDocumentReference *reference = [firestore documentWithPath:documentPath];
-      if ([@"DELETE" isEqualToString:commandType]) {
-        [transaction deleteDocument:reference];
-      } else if ([@"UPDATE" isEqualToString:commandType]) {
-        NSDictionary *data = command[@"data"];
-        [transaction updateData:data forDocument:reference];
-      } else if ([@"SET" isEqualToString:commandType]) {
-        NSDictionary *data = command[@"data"];
-        NSDictionary *options = command[@"options"];
-        if ([options[@"merge"] isEqual:@YES]) {
-          [transaction setData:data forDocument:reference merge:YES];
-        } else if (![options[@"mergeFields"] isEqual:[NSNull null]]) {
-          [transaction setData:data forDocument:reference mergeFields:options[@"mergeFields"]];
-        } else {
-          [transaction setData:data forDocument:reference];
-        }
-      }
-    }
-
-    return nil;
-  };
-
-  id transactionCompleteBlock = ^(id transactionResult, NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-    @synchronized(self->_transactions) {
-      [self->_transactions removeObjectForKey:transactionId];
-    }
-  };
-
-  [firestore runTransactionWithBlock:transactionRunBlock completion:transactionCompleteBlock];
 }
 
 - (void)transactionGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
