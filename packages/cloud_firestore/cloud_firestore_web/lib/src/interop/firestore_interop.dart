@@ -133,6 +133,9 @@ class FieldPath {
   external bool isEqual(Object other);
 }
 
+@JS('GeoPoint')
+external get GeoPointConstructor;
+
 /// An immutable object representing a geo point in Cloud Firestore.
 /// The geo point is represented as latitude/longitude pair.
 ///
@@ -155,6 +158,9 @@ class GeoPoint {
   /// Returns `true` if this [GeoPoint] is equal to the provided [other].
   external bool isEqual(Object other);
 }
+
+@JS('Blob')
+external get BlobConstructor;
 
 @JS('Blob')
 @anonymous
@@ -190,6 +196,9 @@ abstract class DocumentChangeJsImpl {
 
   external set newIndex(num v);
 }
+
+@JS('DocumentReference')
+external get DocumentReferenceJsConstructor;
 
 @JS('DocumentReference')
 abstract class DocumentReferenceJsImpl {
@@ -364,6 +373,9 @@ abstract class TransactionJsImpl {
   external TransactionJsImpl update(
       DocumentReferenceJsImpl documentRef, dataOrFieldsAndValues);
 }
+
+@JS('Timestamp')
+external get TimestampJsConstructor;
 
 @JS('Timestamp')
 abstract class TimestampJsImpl {
