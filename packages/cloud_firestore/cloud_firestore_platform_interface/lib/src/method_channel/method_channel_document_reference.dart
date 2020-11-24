@@ -106,7 +106,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     StreamController<DocumentSnapshotPlatform>
         controller; // ignore: close_sinks
 
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isMacOS) {
       StreamSubscription<dynamic> snapshotStream;
       controller = StreamController<DocumentSnapshotPlatform>.broadcast(
         onListen: () async {

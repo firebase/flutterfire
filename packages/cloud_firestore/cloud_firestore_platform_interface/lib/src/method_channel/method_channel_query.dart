@@ -136,7 +136,7 @@ class MethodChannelQuery extends QueryPlatform {
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     StreamController<QuerySnapshotPlatform> controller; // ignore: close_sinks
 
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isMacOS) {
       StreamSubscription<dynamic> querySnapshotStream;
       controller = StreamController<QuerySnapshotPlatform>.broadcast(
         onListen: () async {

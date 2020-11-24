@@ -323,7 +323,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   Stream<void> snapshotsInSync() {
     int handle = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
 
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isMacOS) {
       StreamSubscription<dynamic> querySnapshotStream;
       StreamController<void> controller; // ignore: close_sinks
 
@@ -378,7 +378,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           );
         },
       );
-      
+
       return controller.stream;
     }
   }
