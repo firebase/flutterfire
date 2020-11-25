@@ -254,7 +254,8 @@ class User {
   /// - **invalid-verification-id**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
-  Future<UserCredential> reauthenticateWithCredential(AuthCredential credential) async {
+  Future<UserCredential> reauthenticateWithCredential(
+      AuthCredential credential) async {
     assert(credential != null);
     return UserCredential._(
         _auth, await _delegate.reauthenticateWithCredential(credential));
@@ -268,7 +269,8 @@ class User {
   /// Sends a verification email to a user.
   ///
   /// The verification process is completed by calling [applyActionCode].
-  Future<void> sendEmailVerification([ActionCodeSettings actionCodeSettings]) async {
+  Future<void> sendEmailVerification(
+      [ActionCodeSettings actionCodeSettings]) async {
     await _delegate.sendEmailVerification(actionCodeSettings);
   }
 
@@ -360,9 +362,7 @@ class User {
 
   @override
   String toString() {
-    return '$User(displayName: $displayName, email: $email, emailVerified: $emailVerified, isAnonymous: $isAnonymous, metadata: ${metadata
-        .toString()}, phoneNumber: $phoneNumber, photoURL: $photoURL, providerData, ${providerData
-        .toString()}, refreshToken: $refreshToken, tenantId: $tenantId, uid: $uid)';
+    return '$User(displayName: $displayName, email: $email, emailVerified: $emailVerified, isAnonymous: $isAnonymous, metadata: ${metadata.toString()}, phoneNumber: $phoneNumber, photoURL: $photoURL, providerData, ${providerData.toString()}, refreshToken: $refreshToken, tenantId: $tenantId, uid: $uid)';
   }
 }
 
