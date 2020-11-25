@@ -1,3 +1,11 @@
+## 0.18.3+1
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FIX**: stop authStateChange firing twice for initial event (#4099).
+ - **FIX**: updated email link signin to use latest format for ActionCodeSettings (#3425).
+ - **CHORE**: add missing dependency to example app.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
 ## 0.18.3
 
  - **FEAT**: migrate firebase interop files to local repository (#3973).

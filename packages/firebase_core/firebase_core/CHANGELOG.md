@@ -1,3 +1,7 @@
+## 0.5.2+1
+
+ - Update a dependency to the latest release.
+
 ## 0.5.2
 
  - **FEAT**: add not-in & != query support (#3748).

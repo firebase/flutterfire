@@ -7,7 +7,7 @@ homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/f
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^0.5.2
+  firebase_core: ^0.5.2+1
 dev_dependencies:
   pedantic: ^1.8.0
   flutter_driver:
