@@ -16,7 +16,7 @@ class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
     return MethodChannelFirebaseFunctions._();
   }
 
-  /// The [MethodChannelFirebaseAuth] method channel.
+  /// The [MethodChannelFirebaseFunctions] method channel.
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/firebase_functions',
   );
