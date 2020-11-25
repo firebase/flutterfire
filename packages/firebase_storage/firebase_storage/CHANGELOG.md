@@ -1,3 +1,7 @@
+## 5.1.1
+
+ - **CHORE**: Remove obsolete `use_frameworks!` instruction in example.
+
 ## 5.1.0
 
  - **TEST**: skip ios pause/resume check.

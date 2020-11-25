@@ -1,3 +1,7 @@
+## 0.9.10
+
+ - **CHORE**: Migrate iOS example project
+
 ## 0.9.9
 
  - **FEAT**: bump compileSdkVersion to 29 (#3975).

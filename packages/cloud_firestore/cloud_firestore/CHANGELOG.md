@@ -1,3 +1,7 @@
+## 0.14.3+2
+
+ - **CHORE**: Migrate iOS example project
+
 ## 0.14.3+1
 
  - Update a dependency to the latest release.
