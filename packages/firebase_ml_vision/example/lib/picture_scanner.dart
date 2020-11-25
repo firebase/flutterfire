@@ -154,7 +154,7 @@ class _PictureScannerState extends State<PictureScanner> {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: Image.file(_imageFile).image,
-          fit: BoxFit.fill,
+          fit: BoxFit.cover,
         ),
       ),
       child: _imageSize == null || _scanResults == null
