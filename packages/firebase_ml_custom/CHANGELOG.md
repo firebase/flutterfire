@@ -1,9 +1,3 @@
-## 0.0.5
-
- - **CHORE**: Remove obsolete `use_frameworks!` instruction.
- - **CHORE**: Migrate iOS example project
- - **FEAT**: Bump iOS `Firebase/MLModelInterpreter` dependency
-
 ## 0.0.4
 
  - **FEAT**: bump compileSdkVersion to 29 (#3975).
