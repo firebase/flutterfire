@@ -336,7 +336,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       controller = StreamController<void>.broadcast(
         onListen: () async {
           querySnapshotStream = MethodChannelFirebaseFirestore
-              .querySnapshotChannel
+              .snapshotsInSyncChannel
               .receiveBroadcastStream(
             <String, dynamic>{
               'handle': handle,
