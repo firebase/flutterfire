@@ -60,10 +60,17 @@ If you're using one of the on-device APIs, include the corresponding ML Kit libr
 `Podfile`. Then run `pod update` in a terminal within the same directory as your `Podfile`.
 
 ```
-pod 'Firebase/MLVisionBarcodeModel'
-pod 'Firebase/MLVisionFaceModel'
-pod 'Firebase/MLVisionLabelModel'
-pod 'Firebase/MLVisionTextModel'
+target 'Runner' do
+  ...
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  
+  pod 'Firebase/MLVisionBarcodeModel'
+  pod 'Firebase/MLVisionFaceModel'
+  pod 'Firebase/MLVisionLabelModel'
+  pod 'Firebase/MLVisionTextModel'
+  
+end
 ```
 
 ## Using an ML Vision Detector
