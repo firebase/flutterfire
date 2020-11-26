@@ -28,35 +28,20 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 class FlutterFirebaseFirestoreTransactionHandler {
-  static final SparseArray<Transaction> transactions = new SparseArray<>();
   private MethodChannel channel;
   private WeakReference<Activity> activityRef;
   private int transactionId;
+  final SparseArray<Transaction> transactions;
 
   FlutterFirebaseFirestoreTransactionHandler(
-      MethodChannel channel, Activity activity, int transactionId) {
+    MethodChannel channel, Activity activity, int transactionId,
+    SparseArray<Transaction> transactions) {
     this.channel = channel;
     this.activityRef = new WeakReference<>(activity);
     this.transactionId = transactionId;
+    this.transactions = transactions;
   }
 
-  static void dispose(int transactionId) {
-    transactions.delete(transactionId);
-  }
-
-  // Gets a transaction document
-  // Throws an exception if the handler does not exist
-  static DocumentSnapshot getDocument(int transactionId, DocumentReference documentReference)
-      throws Exception {
-    Transaction transaction = transactions.get(transactionId);
-
-    if (transaction == null) {
-      throw new Exception(
-          "Transaction.getDocument(): No transaction handler exists for ID: " + transactionId);
-    }
-
-    return transaction.get(documentReference);
-  }
 
   Task<FlutterFirebaseFirestoreTransactionResult> create(
       FirebaseFirestore firestore, Long timeout) {

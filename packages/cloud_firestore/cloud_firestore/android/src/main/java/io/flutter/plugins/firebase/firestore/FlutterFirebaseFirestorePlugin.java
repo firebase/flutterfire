@@ -17,11 +17,11 @@ import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Source;
+import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -38,12 +38,14 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
 import io.flutter.plugins.firebase.firestore.streamhandler.DocumentSnapshotsStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
+import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class FlutterFirebaseFirestorePlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware {
@@ -54,7 +56,9 @@ public class FlutterFirebaseFirestorePlugin
       new SparseArray<>();
 
   private MethodChannel channel;
-  private Activity activity;
+  private final AtomicReference<Activity> activity = new AtomicReference<>(null);
+  private TransactionStreamHandler transactionStreamHandler;
+  static final SparseArray<Transaction> transactions = new SparseArray<>();
 
   protected static FirebaseFirestore getCachedFirebaseFirestoreInstanceForKey(String key) {
     synchronized (firestoreInstanceCache) {
@@ -89,7 +93,7 @@ public class FlutterFirebaseFirestorePlugin
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
     FlutterFirebaseFirestorePlugin instance = new FlutterFirebaseFirestorePlugin();
-    instance.activity = registrar.activity();
+    instance.activity.set(registrar.activity());
     instance.initInstance(registrar.messenger());
   }
 
@@ -127,11 +131,11 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   private void attachToActivity(ActivityPluginBinding activityPluginBinding) {
-    activity = activityPluginBinding.getActivity();
+    activity.set(activityPluginBinding.getActivity());
   }
 
   private void detachToActivity() {
-    activity = null;
+    activity.set(null);
   }
 
   // Ensure any Firestore listeners are removed when the app
@@ -168,50 +172,36 @@ public class FlutterFirebaseFirestorePlugin
         });
   }
 
-  private Task<Object> transactionCreate(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          FirebaseFirestore firestore =
-              (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-          int transactionId = (int) Objects.requireNonNull(arguments.get("transactionId"));
-
-          Object value = arguments.get("timeout");
-          Long timeout;
-
-          if (value instanceof Long) {
-            timeout = (Long) value;
-          } else if (value instanceof Integer) {
-            timeout = Long.valueOf((Integer) value);
-          } else {
-            timeout = 5000L;
-          }
-
-          FlutterFirebaseFirestoreTransactionResult transactionResult =
-              Tasks.await(
-                  new FlutterFirebaseFirestoreTransactionHandler(channel, activity, transactionId)
-                      .create(firestore, timeout));
-
-          FlutterFirebaseFirestoreTransactionHandler.dispose(transactionId);
-
-          if (transactionResult.exception != null) {
-            throw transactionResult.exception;
-          } else {
-            return null;
-          }
-        });
-  }
-
   private Task<DocumentSnapshot> transactionGet(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
           DocumentReference documentReference = (DocumentReference) arguments.get("reference");
-          return FlutterFirebaseFirestoreTransactionHandler.getDocument(
-              (int) Objects.requireNonNull(arguments.get("transactionId")), documentReference);
+          int transactionId = (int) Objects.requireNonNull(arguments.get("transactionId"));
+
+            Transaction transaction = transactions.get(transactionId);
+
+            if (transaction == null) {
+              throw new Exception(
+                "Transaction.getDocument(): No transaction handler exists for ID: " + transactionId);
+            }
+
+          return transaction.get(documentReference);
         });
   }
 
+  private Task<Void> transactionStoreResult(Map<String, Object> arguments) {
+    return Tasks.call(
+      cachedThreadPool,
+      () -> {
+        int transactionId = (int) Objects.requireNonNull(arguments.get("transactionId"));
+        @SuppressWarnings("unchecked") Map<String, Object> result = (Map<String, Object>) Objects.requireNonNull(arguments.get("result"));
+
+        transactionStreamHandler.receiveTransactionResponse(transactionId, result);
+
+        return null;
+      });
+  }
   private Task<Void> batchCommit(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -400,11 +390,11 @@ public class FlutterFirebaseFirestorePlugin
       case "Firestore#enableNetwork":
         methodCallTask = enableNetwork(call.arguments());
         break;
-      case "Transaction#create":
-        methodCallTask = transactionCreate(call.arguments());
-        break;
       case "Transaction#get":
         methodCallTask = transactionGet(call.arguments());
+        break;
+      case "Transaction#storeResult":
+        methodCallTask = transactionStoreResult(call.arguments());
         break;
       case "WriteBatch#commit":
         methodCallTask = batchCommit(call.arguments());
@@ -496,6 +486,16 @@ public class FlutterFirebaseFirestorePlugin
         new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
 
     documentSnapshotEventChannel.setStreamHandler(new DocumentSnapshotsStreamHandler());
+
+    String transactionSnapshotEventChannelName = "plugins.flutter.io/firebase_firestore/transaction";
+    EventChannel transactionSnapshotEventChannel =
+      new EventChannel(
+        messenger,
+        transactionSnapshotEventChannelName,
+        new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
+
+    transactionStreamHandler = new TransactionStreamHandler(activity, transactions);
+    transactionSnapshotEventChannel.setStreamHandler(transactionStreamHandler);
 
     FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
   }
