@@ -128,10 +128,6 @@ void main() {
       expect(MethodChannelFirebaseFirestore.documentObservers,
           isInstanceOf<Map<int, StreamController<DocumentSnapshotPlatform>>>());
     });
-    test('snapshotInSyncObservers', () {
-      expect(MethodChannelFirebaseFirestore.snapshotInSyncObservers,
-          isInstanceOf<Map<int, StreamController<void>>>());
-    });
 
     group('delegateFor()', () {
       test('returns a [FirestorePlatform] with no arguments', () {

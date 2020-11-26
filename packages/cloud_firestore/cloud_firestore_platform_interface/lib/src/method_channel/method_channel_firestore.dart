@@ -26,9 +26,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
-        case 'Firestore#snapshotsInSync':
-          return _handleSnapshotsInSync(call.arguments);
-          break;
         case 'QuerySnapshot#event':
           return _handleQuerySnapshotEvent(call.arguments);
           break;
@@ -58,16 +55,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   /// Increments and returns the next channel ID handler for Firestore.
   static int get nextMethodChannelHandleId => _methodChannelHandleId++;
-
-  /// When a [snapshotsInSync] event is fired on the [MethodChannel], trigger
-  /// a new Stream event.
-  void _handleSnapshotsInSync(Map<dynamic, dynamic> arguments) async {
-    if (!snapshotInSyncObservers.containsKey(arguments['handle'])) {
-      return;
-    }
-
-    snapshotInSyncObservers[arguments['handle']].add(null);
-  }
 
   /// When a [QuerySnapshot] event is fired on the [MethodChannel],
   /// add a [MethodChannelQuerySnapshot] to the [StreamController].
@@ -240,10 +227,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static final Map<int, StreamController<DocumentSnapshotPlatform>>
       documentObservers = <int, StreamController<DocumentSnapshotPlatform>>{};
 
-  /// A map containing all observes for the [snapshotsInSync] method.
-  static final Map<int, StreamController<void>> snapshotInSyncObservers =
-      <int, StreamController<void>>{};
-
   /// Stores the users [TransactionHandlers] for usage when a transaction is
   /// running.
   static final Map<int, TransactionHandler> _transactionHandlers =
@@ -329,64 +312,37 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   Stream<void> snapshotsInSync() {
     int handle = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
 
-    if (Platform.isIOS || Platform.isMacOS) {
-      StreamSubscription<dynamic> querySnapshotStream;
-      StreamController<void> controller; // ignore: close_sinks
+    StreamSubscription<dynamic> querySnapshotStream;
+    StreamController<void> controller; // ignore: close_sinks
 
-      controller = StreamController<void>.broadcast(
-        onListen: () async {
-          querySnapshotStream = MethodChannelFirebaseFirestore
-              .snapshotsInSyncChannel
-              .receiveBroadcastStream(
-            <String, dynamic>{
-              'handle': handle,
-              'firestore': this,
-            },
-          ).listen((event) {
-            if (event.containsKey('error')) {
-              MethodChannelFirebaseFirestore.forwardErrorToController(
-                controller,
-                event,
-              );
-            } else {
-              controller.add(null);
-            }
-          }, onError: (error, stack) {
-            // TODO: Handle these conditions
-          });
-        },
-        onCancel: () {
-          querySnapshotStream?.cancel();
-        },
-      );
+    controller = StreamController<void>.broadcast(
+      onListen: () async {
+        querySnapshotStream = MethodChannelFirebaseFirestore
+            .snapshotsInSyncChannel
+            .receiveBroadcastStream(
+          <String, dynamic>{
+            'handle': handle,
+            'firestore': this,
+          },
+        ).listen((event) {
+          if (event.containsKey('error')) {
+            MethodChannelFirebaseFirestore.forwardErrorToController(
+              controller,
+              event,
+            );
+          } else {
+            controller.add(null);
+          }
+        }, onError: (error, stack) {
+          // TODO: Handle these conditions
+        });
+      },
+      onCancel: () {
+        querySnapshotStream?.cancel();
+      },
+    );
 
-      return controller.stream;
-    } else {
-      StreamController<QuerySnapshotPlatform> controller; // ignore: close_sinks
-
-      controller = StreamController<QuerySnapshotPlatform>.broadcast(
-        onListen: () {
-          MethodChannelFirebaseFirestore.snapshotInSyncObservers[handle] =
-              controller;
-          MethodChannelFirebaseFirestore.channel.invokeMethod<int>(
-            'Firestore#addSnapshotsInSyncListener',
-            <String, dynamic>{
-              'handle': handle,
-              'firestore': this,
-            },
-          );
-        },
-        onCancel: () async {
-          MethodChannelFirebaseFirestore.snapshotInSyncObservers.remove(handle);
-          await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-            'Firestore#removeListener',
-            <String, dynamic>{'handle': handle},
-          );
-        },
-      );
-
-      return controller.stream;
-    }
+    return controller.stream;
   }
 
   @override

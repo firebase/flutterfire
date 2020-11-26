@@ -27,6 +27,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -34,6 +35,7 @@ import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
+import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +45,7 @@ import java.util.WeakHashMap;
 
 public class FlutterFirebaseFirestorePlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware {
+
   protected static final WeakHashMap<String, WeakReference<FirebaseFirestore>>
       firestoreInstanceCache = new WeakHashMap<>();
   private static final SparseArray<ListenerRegistration> listenerRegistrations =
@@ -160,29 +163,6 @@ public class FlutterFirebaseFirestorePlugin
           FirebaseFirestore firestore =
               (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
           return Tasks.await(firestore.enableNetwork());
-        });
-  }
-
-  private Task<Integer> addSnapshotsInSyncListener(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FirebaseFirestore firestore =
-              (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-
-          Runnable snapshotsInSyncRunnable =
-              () -> {
-                Map<String, Integer> data = new HashMap<>();
-                data.put("handle", handle);
-                activity.runOnUiThread(
-                    () -> channel.invokeMethod("Firestore#snapshotsInSync", data));
-              };
-
-          listenerRegistrations.put(
-              handle, firestore.addSnapshotsInSyncListener(snapshotsInSyncRunnable));
-
-          return handle;
         });
   }
 
@@ -509,9 +489,6 @@ public class FlutterFirebaseFirestorePlugin
       case "Firestore#enableNetwork":
         methodCallTask = enableNetwork(call.arguments());
         break;
-      case "Firestore#addSnapshotsInSyncListener":
-        methodCallTask = addSnapshotsInSyncListener(call.arguments());
-        break;
       case "Transaction#create":
         methodCallTask = transactionCreate(call.arguments());
         break;
@@ -587,6 +564,16 @@ public class FlutterFirebaseFirestorePlugin
             new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
 
     channel.setMethodCallHandler(this);
+
+    String snapshotsInSyncStreamName = "plugins.flutter.io/firebase_firestore/snapshotsInSync";
+    EventChannel snapshotsInSyncEventChannel =
+        new EventChannel(
+            messenger,
+            snapshotsInSyncStreamName,
+            new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
+
+    snapshotsInSyncEventChannel.setStreamHandler(new SnapshotsInSyncStreamHandler());
+
     FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
   }
 
