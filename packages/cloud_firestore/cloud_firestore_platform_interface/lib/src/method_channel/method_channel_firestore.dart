@@ -26,12 +26,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
-        case 'QuerySnapshot#event':
-          return _handleQuerySnapshotEvent(call.arguments);
-          break;
-        case 'QuerySnapshot#error':
-          return _handleQuerySnapshotError(call.arguments);
-          break;
         case 'DocumentSnapshot#event':
           return _handleDocumentSnapshotEvent(call.arguments);
           break;
@@ -55,30 +49,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   /// Increments and returns the next channel ID handler for Firestore.
   static int get nextMethodChannelHandleId => _methodChannelHandleId++;
-
-  /// When a [QuerySnapshot] event is fired on the [MethodChannel],
-  /// add a [MethodChannelQuerySnapshot] to the [StreamController].
-  void _handleQuerySnapshotEvent(Map<dynamic, dynamic> arguments) async {
-    if (!queryObservers.containsKey(arguments['handle'])) {
-      return;
-    }
-
-    try {
-      queryObservers[arguments['handle']]
-          .add(MethodChannelQuerySnapshot(this, arguments['snapshot']));
-    } catch (error) {
-      _handleQuerySnapshotError(<dynamic, dynamic>{
-        'handle': arguments['handle'],
-        'error': error,
-      });
-    }
-  }
-
-  /// When a [QuerySnapshot] error event is fired on the [MethodChannel],
-  /// send the [StreamController] the arguments to throw a [FirebaseException].
-  void _handleQuerySnapshotError(Map<dynamic, dynamic> arguments) {
-    forwardErrorToController(queryObservers[arguments['handle']], arguments);
-  }
 
   /// When a [DocumentSnapshot] event is fired on the [MethodChannel],
   /// add a [DocumentSnapshotPlatform] to the [StreamController].
@@ -214,12 +184,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     'plugins.flutter.io/firebase_firestore/transaction',
     StandardMethodCodec(FirestoreMessageCodec()),
   );
-
-  /// A map containing all the pending Query Observers, keyed by their id.
-  /// This is shared amongst all [MethodChannelQuery] objects, and the `QuerySnapshot`
-  /// `MethodCall` handler initialized in the constructor of this class.
-  static final Map<int, StreamController<QuerySnapshotPlatform>>
-      queryObservers = <int, StreamController<QuerySnapshotPlatform>>{};
 
   /// A map containing all the pending Document Observers, keyed by their id.
   /// This is shared amongst all [MethodChannelDocumentReference] objects, and the

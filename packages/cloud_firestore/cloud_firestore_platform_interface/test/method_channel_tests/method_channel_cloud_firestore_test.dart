@@ -119,11 +119,6 @@ void main() {
       nextMockHandleId;
     });
 
-    test('queryObservers', () {
-      expect(MethodChannelFirebaseFirestore.queryObservers,
-          isInstanceOf<Map<int, StreamController<QuerySnapshotPlatform>>>());
-    });
-
     test('documentObservers', () {
       expect(MethodChannelFirebaseFirestore.documentObservers,
           isInstanceOf<Map<int, StreamController<DocumentSnapshotPlatform>>>());

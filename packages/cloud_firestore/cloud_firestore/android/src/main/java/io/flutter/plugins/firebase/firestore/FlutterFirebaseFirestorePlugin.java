@@ -35,6 +35,7 @@ import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
+import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -573,6 +574,15 @@ public class FlutterFirebaseFirestorePlugin
             new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
 
     snapshotsInSyncEventChannel.setStreamHandler(new SnapshotsInSyncStreamHandler());
+
+    String querySnapshotEventChannelName = "plugins.flutter.io/firebase_firestore/query";
+    EventChannel querySnapshotEventChannel =
+      new EventChannel(
+        messenger,
+        querySnapshotEventChannelName,
+        new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
+
+    querySnapshotEventChannel.setStreamHandler(new QuerySnapshotsStreamHandler());
 
     FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
   }

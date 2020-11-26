@@ -136,71 +136,39 @@ class MethodChannelQuery extends QueryPlatform {
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     StreamController<QuerySnapshotPlatform> controller; // ignore: close_sinks
 
-    if (Platform.isIOS || Platform.isMacOS) {
-      StreamSubscription<dynamic> querySnapshotStream;
-      controller = StreamController<QuerySnapshotPlatform>.broadcast(
-        onListen: () async {
-          querySnapshotStream = MethodChannelFirebaseFirestore
-              .querySnapshotChannel
-              .receiveBroadcastStream(
-            <String, dynamic>{
-              'query': this,
-              'handle': handle,
-              'firestore': firestore,
-              'includeMetadataChanges': includeMetadataChanges,
-            },
-          ).listen((event) {
-            if (event.containsKey('error')) {
-              MethodChannelFirebaseFirestore.forwardErrorToController(
-                controller,
-                event,
-              );
-            } else {
-              controller.add(
-                MethodChannelQuerySnapshot(firestore, event['snapshot']),
-              );
-            }
-          }, onError: (error, stack) {
-            // TODO: Handle these conditions
-          });
-        },
-        onCancel: () {
-          querySnapshotStream?.cancel();
-        },
-      );
-
-      return controller.stream;
-    } else {
-      Completer<void> onListenComplete = Completer<void>();
-
-      controller = StreamController<QuerySnapshotPlatform>.broadcast(
-        onListen: () async {
-          MethodChannelFirebaseFirestore.queryObservers[handle] = controller;
-          await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-            'Query#addSnapshotListener',
-            <String, dynamic>{
-              'query': this,
-              'handle': handle,
-              'firestore': firestore,
-              'includeMetadataChanges': includeMetadataChanges,
-            },
-          );
-
-          if (!onListenComplete.isCompleted) {
-            onListenComplete.complete();
+    StreamSubscription<dynamic> querySnapshotStream;
+    controller = StreamController<QuerySnapshotPlatform>.broadcast(
+      onListen: () async {
+        querySnapshotStream = MethodChannelFirebaseFirestore
+            .querySnapshotChannel
+            .receiveBroadcastStream(
+          <String, dynamic>{
+            'query': this,
+            'handle': handle,
+            'firestore': firestore,
+            'includeMetadataChanges': includeMetadataChanges,
+          },
+        ).listen((event) {
+          if (event.containsKey('error')) {
+            MethodChannelFirebaseFirestore.forwardErrorToController(
+              controller,
+              event,
+            );
+          } else {
+            controller.add(
+              MethodChannelQuerySnapshot(firestore, event['snapshot']),
+            );
           }
-        },
-        onCancel: () async {
-          await onListenComplete.future;
-          await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-            'Firestore#removeListener',
-            <String, dynamic>{'handle': handle},
-          );
-          MethodChannelFirebaseFirestore.queryObservers.remove(handle);
-        },
-      );
-      return controller.stream;
-    }
+        }, onError: (error, stack) {
+          // TODO: Handle these conditions
+        });
+      },
+      onCancel: () {
+        querySnapshotStream?.cancel();
+      },
+    );
+
+    return controller.stream;
   }
 
   @override
