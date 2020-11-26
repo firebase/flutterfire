@@ -119,11 +119,6 @@ void main() {
       nextMockHandleId;
     });
 
-    test('documentObservers', () {
-      expect(MethodChannelFirebaseFirestore.documentObservers,
-          isInstanceOf<Map<int, StreamController<DocumentSnapshotPlatform>>>());
-    });
-
     group('delegateFor()', () {
       test('returns a [FirestorePlatform] with no arguments', () {
         expect(firestore.delegateFor(),

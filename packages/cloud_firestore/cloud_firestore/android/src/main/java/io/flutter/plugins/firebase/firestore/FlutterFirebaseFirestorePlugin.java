@@ -35,6 +35,7 @@ import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
+import io.flutter.plugins.firebase.firestore.streamhandler.DocumentSnapshotsStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
 import java.lang.ref.WeakReference;
@@ -282,50 +283,6 @@ public class FlutterFirebaseFirestorePlugin
         });
   }
 
-  @SuppressWarnings("ConstantConditions")
-  private Task<Void> documentAddSnapshotListener(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-
-          MetadataChanges metadataChanges =
-              (Boolean) Objects.requireNonNull(arguments.get("includeMetadataChanges"))
-                  ? MetadataChanges.INCLUDE
-                  : MetadataChanges.EXCLUDE;
-
-          DocumentReference documentReference =
-              (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
-
-          ListenerRegistration listenerRegistration =
-              documentReference.addSnapshotListener(
-                  metadataChanges,
-                  (documentSnapshot, exception) -> {
-                    Map<String, Object> eventMap = new HashMap<>();
-
-                    eventMap.put("handle", handle);
-
-                    if (exception != null) {
-                      Map<String, Object> exceptionMap = new HashMap<>();
-                      FlutterFirebaseFirestoreException firestoreException =
-                          new FlutterFirebaseFirestoreException(exception, exception.getCause());
-
-                      exceptionMap.put("code", firestoreException.getCode());
-                      exceptionMap.put("message", firestoreException.getMessage());
-                      eventMap.put("error", exceptionMap);
-                      channel.invokeMethod("DocumentSnapshot#error", eventMap);
-                    } else {
-                      eventMap.put("snapshot", documentSnapshot);
-                      channel.invokeMethod("DocumentSnapshot#event", eventMap);
-                    }
-                  });
-
-          listenerRegistrations.put(handle, listenerRegistration);
-
-          return null;
-        });
-  }
-
   private Task<DocumentSnapshot> documentGet(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -455,9 +412,6 @@ public class FlutterFirebaseFirestorePlugin
       case "Query#get":
         methodCallTask = queryGet(call.arguments());
         break;
-      case "DocumentReference#addSnapshotListener":
-        methodCallTask = documentAddSnapshotListener(call.arguments());
-        break;
       case "DocumentReference#get":
         methodCallTask = documentGet(call.arguments());
         break;
@@ -533,6 +487,15 @@ public class FlutterFirebaseFirestorePlugin
         new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
 
     querySnapshotEventChannel.setStreamHandler(new QuerySnapshotsStreamHandler());
+
+    String documentSnapshotEventChannelName = "plugins.flutter.io/firebase_firestore/document";
+    EventChannel documentSnapshotEventChannel =
+      new EventChannel(
+        messenger,
+        documentSnapshotEventChannelName,
+        new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
+
+    documentSnapshotEventChannel.setStreamHandler(new DocumentSnapshotsStreamHandler());
 
     FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
   }

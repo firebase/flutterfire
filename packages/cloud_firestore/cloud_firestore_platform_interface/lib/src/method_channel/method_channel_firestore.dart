@@ -11,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'method_channel_collection_reference.dart';
 import 'method_channel_document_reference.dart';
 import 'method_channel_query.dart';
-import 'method_channel_query_snapshot.dart';
 import 'method_channel_transaction.dart';
 import 'method_channel_write_batch.dart';
 import 'utils/firestore_message_codec.dart';
@@ -26,12 +25,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
-        case 'DocumentSnapshot#event':
-          return _handleDocumentSnapshotEvent(call.arguments);
-          break;
-        case 'DocumentSnapshot#error':
-          return _handleDocumentSnapshotError(call.arguments);
-          break;
         case 'Transaction#attempt':
           return _handleTransactionAttempt(call.arguments);
           break;
@@ -49,39 +42,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   /// Increments and returns the next channel ID handler for Firestore.
   static int get nextMethodChannelHandleId => _methodChannelHandleId++;
-
-  /// When a [DocumentSnapshot] event is fired on the [MethodChannel],
-  /// add a [DocumentSnapshotPlatform] to the [StreamController].
-  void _handleDocumentSnapshotEvent(Map<dynamic, dynamic> arguments) async {
-    if (!documentObservers.containsKey(arguments['handle'])) {
-      return;
-    }
-
-    try {
-      Map<String, dynamic> snapshotMap =
-          Map<String, dynamic>.from(arguments['snapshot']);
-      final DocumentSnapshotPlatform snapshot = DocumentSnapshotPlatform(
-        this,
-        snapshotMap['path'],
-        <String, dynamic>{
-          'data': snapshotMap['data'],
-          'metadata': snapshotMap['metadata'],
-        },
-      );
-      documentObservers[arguments['handle']].add(snapshot);
-    } catch (error) {
-      _handleDocumentSnapshotError(<dynamic, dynamic>{
-        'handle': arguments['handle'],
-        'error': error,
-      });
-    }
-  }
-
-  /// When a [DocumentSnapshot] error event is fired on the [MethodChannel],
-  /// send the [StreamController] the arguments to throw a [FirebaseException].
-  void _handleDocumentSnapshotError(Map<dynamic, dynamic> arguments) {
-    forwardErrorToController(documentObservers[arguments['handle']], arguments);
-  }
 
   /// When a transaction is attempted, it sends a [MethodChannel] call.
   /// The user handler is executed, and the result or error is emitted via
@@ -184,12 +144,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     'plugins.flutter.io/firebase_firestore/transaction',
     StandardMethodCodec(FirestoreMessageCodec()),
   );
-
-  /// A map containing all the pending Document Observers, keyed by their id.
-  /// This is shared amongst all [MethodChannelDocumentReference] objects, and the
-  /// `DocumentSnapshot` `MethodCall` handler initialized in the constructor of this class.
-  static final Map<int, StreamController<DocumentSnapshotPlatform>>
-      documentObservers = <int, StreamController<DocumentSnapshotPlatform>>{};
 
   /// Stores the users [TransactionHandlers] for usage when a transaction is
   /// running.

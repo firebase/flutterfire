@@ -99,83 +99,50 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
       {bool includeMetadataChanges = false}) {
     assert(includeMetadataChanges != null);
     int handle = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
-    Completer<void> onListenComplete = Completer<void>();
 
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     StreamController<DocumentSnapshotPlatform>
         controller; // ignore: close_sinks
 
-    if (Platform.isIOS || Platform.isMacOS) {
-      StreamSubscription<dynamic> snapshotStream;
-      controller = StreamController<DocumentSnapshotPlatform>.broadcast(
-        onListen: () async {
-          snapshotStream = MethodChannelFirebaseFirestore
-              .documentSnapshotChannel
-              .receiveBroadcastStream(
-            <String, dynamic>{
-              'handle': handle,
-              'firestore': firestore,
-              'reference': this,
-              'includeMetadataChanges': includeMetadataChanges,
-            },
-          ).listen((event) {
-            if (event.containsKey('error')) {
-              MethodChannelFirebaseFirestore.forwardErrorToController(
-                controller,
-                event,
-              );
-            } else {
-              final snapshotMap = event['snapshot'];
-              controller.add(
-                DocumentSnapshotPlatform(
-                  firestore,
-                  snapshotMap['path'],
-                  <String, dynamic>{
-                    'data': snapshotMap['data'],
-                    'metadata': snapshotMap['metadata'],
-                  },
-                ),
-              );
-            }
-          }, onError: (error, stack) {
-            // TODO: Handle these conditions
-          });
-        },
-        onCancel: () {
-          snapshotStream?.cancel();
-        },
-      );
-
-      return controller.stream;
-    } else {
-      controller = StreamController<DocumentSnapshotPlatform>.broadcast(
-        onListen: () async {
-          MethodChannelFirebaseFirestore.documentObservers[handle] = controller;
-          await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-            'DocumentReference#addSnapshotListener',
-            <String, dynamic>{
-              'handle': handle,
-              'firestore': firestore,
-              'reference': this,
-              'includeMetadataChanges': includeMetadataChanges,
-            },
-          );
-
-          if (!onListenComplete.isCompleted) {
-            onListenComplete.complete();
+    StreamSubscription<dynamic> snapshotStream;
+    controller = StreamController<DocumentSnapshotPlatform>.broadcast(
+      onListen: () async {
+        snapshotStream = MethodChannelFirebaseFirestore.documentSnapshotChannel
+            .receiveBroadcastStream(
+          <String, dynamic>{
+            'handle': handle,
+            'firestore': firestore,
+            'reference': this,
+            'includeMetadataChanges': includeMetadataChanges,
+          },
+        ).listen((event) {
+          if (event.containsKey('error')) {
+            MethodChannelFirebaseFirestore.forwardErrorToController(
+              controller,
+              event,
+            );
+          } else {
+            final snapshotMap = event['snapshot'];
+            controller.add(
+              DocumentSnapshotPlatform(
+                firestore,
+                snapshotMap['path'],
+                <String, dynamic>{
+                  'data': snapshotMap['data'],
+                  'metadata': snapshotMap['metadata'],
+                },
+              ),
+            );
           }
-        },
-        onCancel: () async {
-          await onListenComplete.future;
-          await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-            'Firestore#removeListener',
-            <String, dynamic>{'handle': handle},
-          );
-          MethodChannelFirebaseFirestore.documentObservers.remove(handle);
-        },
-      );
-    }
+        }, onError: (error, stack) {
+          // TODO: Handle these conditions
+        });
+      },
+      onCancel: () {
+        snapshotStream?.cancel();
+      },
+    );
 
     return controller.stream;
   }
