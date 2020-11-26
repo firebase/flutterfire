@@ -22,38 +22,38 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
     final int handle = (int) Objects.requireNonNull(argumentsMap.get("handle"));
 
     MetadataChanges metadataChanges =
-      (Boolean) Objects.requireNonNull(argumentsMap.get("includeMetadataChanges"))
-        ? MetadataChanges.INCLUDE
-        : MetadataChanges.EXCLUDE;
+        (Boolean) Objects.requireNonNull(argumentsMap.get("includeMetadataChanges"))
+            ? MetadataChanges.INCLUDE
+            : MetadataChanges.EXCLUDE;
 
     Query query = (Query) argumentsMap.get("query");
 
     if (query == null) {
       throw new IllegalArgumentException(
-        "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.");
+          "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.");
     }
 
     ListenerRegistration listenerRegistration =
-      query.addSnapshotListener(
-        metadataChanges,
-        (querySnapshot, exception) -> {
-          Map<String, Object> querySnapshotMap = new HashMap<>();
+        query.addSnapshotListener(
+            metadataChanges,
+            (querySnapshot, exception) -> {
+              Map<String, Object> querySnapshotMap = new HashMap<>();
 
-          querySnapshotMap.put("handle", handle);
+              querySnapshotMap.put("handle", handle);
 
-          if (exception != null) {
-            Map<String, Object> exceptionMap = new HashMap<>();
-            FlutterFirebaseFirestoreException firestoreException =
-              new FlutterFirebaseFirestoreException(exception, exception.getCause());
-            exceptionMap.put("code", firestoreException.getCode());
-            exceptionMap.put("message", firestoreException.getMessage());
-            querySnapshotMap.put("error", exceptionMap);
-          } else {
-            querySnapshotMap.put("snapshot", querySnapshot);
-          }
+              if (exception != null) {
+                Map<String, Object> exceptionMap = new HashMap<>();
+                FlutterFirebaseFirestoreException firestoreException =
+                    new FlutterFirebaseFirestoreException(exception, exception.getCause());
+                exceptionMap.put("code", firestoreException.getCode());
+                exceptionMap.put("message", firestoreException.getMessage());
+                querySnapshotMap.put("error", exceptionMap);
+              } else {
+                querySnapshotMap.put("snapshot", querySnapshot);
+              }
 
-          events.success(querySnapshotMap);
-        });
+              events.success(querySnapshotMap);
+            });
 
     listenerRegistrations.put(handle, listenerRegistration);
   }

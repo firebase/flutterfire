@@ -12,7 +12,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -34,14 +33,15 @@ class FlutterFirebaseFirestoreTransactionHandler {
   final SparseArray<Transaction> transactions;
 
   FlutterFirebaseFirestoreTransactionHandler(
-    MethodChannel channel, Activity activity, int transactionId,
-    SparseArray<Transaction> transactions) {
+      MethodChannel channel,
+      Activity activity,
+      int transactionId,
+      SparseArray<Transaction> transactions) {
     this.channel = channel;
     this.activityRef = new WeakReference<>(activity);
     this.transactionId = transactionId;
     this.transactions = transactions;
   }
-
 
   Task<FlutterFirebaseFirestoreTransactionResult> create(
       FirebaseFirestore firestore, Long timeout) {

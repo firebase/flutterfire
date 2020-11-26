@@ -8,15 +8,14 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-#import "Private/FLTQuerySnapshotStreamHandler.h"
 #import "Private/FLTFirebaseFirestoreUtils.h"
+#import "Private/FLTQuerySnapshotStreamHandler.h"
 
 @implementation FLTQuerySnapshotStreamHandler {
   NSMutableDictionary<NSNumber *, id<FIRListenerRegistration>> *_listeners;
 }
 
-- (instancetype)init
-{
+- (instancetype)init {
   self = [super init];
   if (self) {
     _listeners = [NSMutableDictionary dictionary];

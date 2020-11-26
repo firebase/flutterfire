@@ -42,8 +42,8 @@ public class FlutterFirebaseFirestoreException extends Exception {
   private final String code;
   private final String message;
 
-  public FlutterFirebaseFirestoreException(FirebaseFirestoreException nativeException,
-    Throwable cause) {
+  public FlutterFirebaseFirestoreException(
+      FirebaseFirestoreException nativeException, Throwable cause) {
     super(nativeException != null ? nativeException.getMessage() : "", cause);
 
     String code = null;

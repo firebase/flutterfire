@@ -5,8 +5,8 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-#import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTDocumentSnapshotStreamHandler.h"
+#import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTQuerySnapshotStreamHandler.h"
 #import "Private/FLTSnapshotsInSyncStreamHandler.h"
 #import "Private/FLTTransactionStreamHandler.h"
@@ -25,7 +25,7 @@ NSString *const kFLTFirebaseFirestoreTransactionChannelName =
 
 @interface FLTFirebaseFirestorePlugin ()
 @property(nonatomic, retain) FLTTransactionStreamHandler *transactionHandler;
-@property(nonatomic, retain) NSMutableDictionary* transactions;
+@property(nonatomic, retain) NSMutableDictionary *transactions;
 @end
 
 @implementation FLTFirebaseFirestorePlugin {
@@ -75,12 +75,12 @@ NSString *const kFLTFirebaseFirestoreTransactionChannelName =
                                                     codecWithReaderWriter:firestoreReaderWriter]];
 
   [querySnapshotChannel setStreamHandler:[[FLTQuerySnapshotStreamHandler alloc] init]];
-  
-  FlutterEventChannel *documentSnapshotChannel =
-      [FlutterEventChannel eventChannelWithName:kFLTFirebaseFirestoreDocumentSnapshotEventChannelName
-                                binaryMessenger:registrar.messenger
-                                          codec:[FlutterStandardMethodCodec
-                                                    codecWithReaderWriter:firestoreReaderWriter]];
+
+  FlutterEventChannel *documentSnapshotChannel = [FlutterEventChannel
+      eventChannelWithName:kFLTFirebaseFirestoreDocumentSnapshotEventChannelName
+           binaryMessenger:registrar.messenger
+                     codec:[FlutterStandardMethodCodec
+                               codecWithReaderWriter:firestoreReaderWriter]];
 
   [documentSnapshotChannel setStreamHandler:[[FLTDocumentSnapshotStreamHandler alloc] init]];
 
@@ -308,15 +308,15 @@ NSString *const kFLTFirebaseFirestoreTransactionChannelName =
   });
 }
 
-- (void)transactionStoreResult:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)transactionStoreResult:(id)arguments
+          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSNumber *transactionId = arguments[@"transactionId"];
   NSDictionary *transactionResult = arguments[@"result"];
 
   [self.transactionHandler receiveTransactionResponse:transactionId response:transactionResult];
-  
+
   result.success(nil);
 }
-
 
 - (void)documentSet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   id data = arguments[@"data"];

@@ -22,34 +22,34 @@ public class DocumentSnapshotsStreamHandler implements StreamHandler {
     final int handle = (int) Objects.requireNonNull(argumentsMap.get("handle"));
 
     MetadataChanges metadataChanges =
-      (Boolean) Objects.requireNonNull(argumentsMap.get("includeMetadataChanges"))
-        ? MetadataChanges.INCLUDE
-        : MetadataChanges.EXCLUDE;
+        (Boolean) Objects.requireNonNull(argumentsMap.get("includeMetadataChanges"))
+            ? MetadataChanges.INCLUDE
+            : MetadataChanges.EXCLUDE;
 
     DocumentReference documentReference =
-      (DocumentReference) Objects.requireNonNull(argumentsMap.get("reference"));
+        (DocumentReference) Objects.requireNonNull(argumentsMap.get("reference"));
 
     ListenerRegistration listenerRegistration =
-      documentReference.addSnapshotListener(
-        metadataChanges,
-        (documentSnapshot, exception) -> {
-          Map<String, Object> eventMap = new HashMap<>();
+        documentReference.addSnapshotListener(
+            metadataChanges,
+            (documentSnapshot, exception) -> {
+              Map<String, Object> eventMap = new HashMap<>();
 
-          eventMap.put("handle", handle);
+              eventMap.put("handle", handle);
 
-          if (exception != null) {
-            Map<String, Object> exceptionMap = new HashMap<>();
-            FlutterFirebaseFirestoreException firestoreException =
-              new FlutterFirebaseFirestoreException(exception, exception.getCause());
+              if (exception != null) {
+                Map<String, Object> exceptionMap = new HashMap<>();
+                FlutterFirebaseFirestoreException firestoreException =
+                    new FlutterFirebaseFirestoreException(exception, exception.getCause());
 
-            exceptionMap.put("code", firestoreException.getCode());
-            exceptionMap.put("message", firestoreException.getMessage());
-            eventMap.put("error", exceptionMap);
-          } else {
-            eventMap.put("snapshot", documentSnapshot);
-          }
-          events.success(eventMap);
-        });
+                exceptionMap.put("code", firestoreException.getCode());
+                exceptionMap.put("message", firestoreException.getMessage());
+                eventMap.put("error", exceptionMap);
+              } else {
+                eventMap.put("snapshot", documentSnapshot);
+              }
+              events.success(eventMap);
+            });
 
     listenerRegistrations.put(handle, listenerRegistration);
   }

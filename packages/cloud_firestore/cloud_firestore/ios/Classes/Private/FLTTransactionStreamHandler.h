@@ -15,10 +15,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FLTTransactionStreamHandler : NSObject<FlutterStreamHandler>
+@interface FLTTransactionStreamHandler : NSObject <FlutterStreamHandler>
 
 - (instancetype)init:(NSMutableDictionary<NSNumber *, FIRTransaction *> *)transactions;
-- (void)receiveTransactionResponse:(NSNumber*)transactionId response:(NSDictionary*)response;
+- (void)receiveTransactionResponse:(NSNumber *)transactionId response:(NSDictionary *)response;
 
 @end
 

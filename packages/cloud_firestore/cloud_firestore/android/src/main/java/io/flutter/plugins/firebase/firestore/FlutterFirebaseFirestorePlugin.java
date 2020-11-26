@@ -179,12 +179,13 @@ public class FlutterFirebaseFirestorePlugin
           DocumentReference documentReference = (DocumentReference) arguments.get("reference");
           int transactionId = (int) Objects.requireNonNull(arguments.get("transactionId"));
 
-            Transaction transaction = transactions.get(transactionId);
+          Transaction transaction = transactions.get(transactionId);
 
-            if (transaction == null) {
-              throw new Exception(
-                "Transaction.getDocument(): No transaction handler exists for ID: " + transactionId);
-            }
+          if (transaction == null) {
+            throw new Exception(
+                "Transaction.getDocument(): No transaction handler exists for ID: "
+                    + transactionId);
+          }
 
           return transaction.get(documentReference);
         });
@@ -192,16 +193,19 @@ public class FlutterFirebaseFirestorePlugin
 
   private Task<Void> transactionStoreResult(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        int transactionId = (int) Objects.requireNonNull(arguments.get("transactionId"));
-        @SuppressWarnings("unchecked") Map<String, Object> result = (Map<String, Object>) Objects.requireNonNull(arguments.get("result"));
+        cachedThreadPool,
+        () -> {
+          int transactionId = (int) Objects.requireNonNull(arguments.get("transactionId"));
+          @SuppressWarnings("unchecked")
+          Map<String, Object> result =
+              (Map<String, Object>) Objects.requireNonNull(arguments.get("result"));
 
-        transactionStreamHandler.receiveTransactionResponse(transactionId, result);
+          transactionStreamHandler.receiveTransactionResponse(transactionId, result);
 
-        return null;
-      });
+          return null;
+        });
   }
+
   private Task<Void> batchCommit(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -471,28 +475,29 @@ public class FlutterFirebaseFirestorePlugin
 
     String querySnapshotEventChannelName = "plugins.flutter.io/firebase_firestore/query";
     EventChannel querySnapshotEventChannel =
-      new EventChannel(
-        messenger,
-        querySnapshotEventChannelName,
-        new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
+        new EventChannel(
+            messenger,
+            querySnapshotEventChannelName,
+            new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
 
     querySnapshotEventChannel.setStreamHandler(new QuerySnapshotsStreamHandler());
 
     String documentSnapshotEventChannelName = "plugins.flutter.io/firebase_firestore/document";
     EventChannel documentSnapshotEventChannel =
-      new EventChannel(
-        messenger,
-        documentSnapshotEventChannelName,
-        new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
+        new EventChannel(
+            messenger,
+            documentSnapshotEventChannelName,
+            new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
 
     documentSnapshotEventChannel.setStreamHandler(new DocumentSnapshotsStreamHandler());
 
-    String transactionSnapshotEventChannelName = "plugins.flutter.io/firebase_firestore/transaction";
+    String transactionSnapshotEventChannelName =
+        "plugins.flutter.io/firebase_firestore/transaction";
     EventChannel transactionSnapshotEventChannel =
-      new EventChannel(
-        messenger,
-        transactionSnapshotEventChannelName,
-        new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
+        new EventChannel(
+            messenger,
+            transactionSnapshotEventChannelName,
+            new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
 
     transactionStreamHandler = new TransactionStreamHandler(activity, transactions);
     transactionSnapshotEventChannel.setStreamHandler(transactionStreamHandler);

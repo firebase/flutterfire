@@ -8,17 +8,17 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-#import "Private/FLTTransactionStreamHandler.h"
 #import "Private/FLTFirebaseFirestoreUtils.h"
+#import "Private/FLTTransactionStreamHandler.h"
 
 @implementation FLTTransactionStreamHandler {
   NSMutableDictionary<NSNumber *, id<FIRListenerRegistration>> *_listeners;
   NSMutableDictionary<NSNumber *, FIRTransaction *> *_transactions;
   NSMutableDictionary<NSNumber *, dispatch_semaphore_t> *_semaphores;
-  NSMutableDictionary<NSNumber *, NSDictionary*> *_attemptedTransactionResponses;
+  NSMutableDictionary<NSNumber *, NSDictionary *> *_attemptedTransactionResponses;
 }
 
--(instancetype) init:(NSMutableDictionary<NSNumber *,FIRTransaction *> *)transactions {
+- (instancetype)init:(NSMutableDictionary<NSNumber *, FIRTransaction *> *)transactions {
   self = [super init];
   if (self) {
     _listeners = [NSMutableDictionary dictionary];
@@ -31,7 +31,6 @@
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
-  
   FIRFirestore *firestore = arguments[@"firestore"];
   NSNumber *transactionId = arguments[@"transactionId"];
   NSNumber *transactionTimeout = arguments[@"timeout"];
@@ -46,18 +45,18 @@
       self->_transactions[transactionId] = transaction;
     }
 
-    @synchronized (self->_semaphores) {
+    @synchronized(self->_semaphores) {
       self->_semaphores[transactionId] = dispatch_semaphore_create(0);
     }
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-      events(@{ @"attempt": transactionAttemptArguments });
+      events(@{@"attempt" : transactionAttemptArguments});
     });
 
     long timedOut = dispatch_semaphore_wait(
         self->_semaphores[transactionId],
         dispatch_time(DISPATCH_TIME_NOW, [transactionTimeout integerValue] * NSEC_PER_MSEC));
-    
+
     if (timedOut) {
       *pError = [NSError errorWithDomain:FIRFirestoreErrorDomain
                                     code:FIRFirestoreErrorCodeDeadlineExceeded
@@ -65,7 +64,8 @@
       return nil;
     }
 
-    NSDictionary *attemptedTransactionResponse = self->_attemptedTransactionResponses[transactionId];
+    NSDictionary *attemptedTransactionResponse =
+        self->_attemptedTransactionResponses[transactionId];
     NSString *dartResponseType =
         attemptedTransactionResponse ? attemptedTransactionResponse[@"type"] : @"ERROR";
 
@@ -120,7 +120,7 @@
   // TODO: Return a error when no record of the transaction attempt exists?
   _attemptedTransactionResponses[transactionId] = response;
 
-  @synchronized (_semaphores) {
+  @synchronized(_semaphores) {
     dispatch_semaphore_signal(_semaphores[transactionId]);
   }
 }
