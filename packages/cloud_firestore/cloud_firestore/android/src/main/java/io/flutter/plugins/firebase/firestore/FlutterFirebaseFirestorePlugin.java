@@ -266,53 +266,6 @@ public class FlutterFirebaseFirestorePlugin
         });
   }
 
-  private Task<Void> queryAddSnapshotListener(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-
-          MetadataChanges metadataChanges =
-              (Boolean) Objects.requireNonNull(arguments.get("includeMetadataChanges"))
-                  ? MetadataChanges.INCLUDE
-                  : MetadataChanges.EXCLUDE;
-
-          Query query = (Query) arguments.get("query");
-
-          if (query == null) {
-            throw new IllegalArgumentException(
-                "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.");
-          }
-
-          ListenerRegistration listenerRegistration =
-              query.addSnapshotListener(
-                  metadataChanges,
-                  (querySnapshot, exception) -> {
-                    Map<String, Object> querySnapshotMap = new HashMap<>();
-
-                    querySnapshotMap.put("handle", handle);
-
-                    if (exception != null) {
-                      Map<String, Object> exceptionMap = new HashMap<>();
-                      FlutterFirebaseFirestoreException firestoreException =
-                          new FlutterFirebaseFirestoreException(exception, exception.getCause());
-                      exceptionMap.put("code", firestoreException.getCode());
-                      exceptionMap.put("message", firestoreException.getMessage());
-                      querySnapshotMap.put("error", exceptionMap);
-
-                      channel.invokeMethod("QuerySnapshot#error", querySnapshotMap);
-                    } else {
-                      //noinspection ConstantConditions
-                      querySnapshotMap.put("snapshot", querySnapshot);
-                      channel.invokeMethod("QuerySnapshot#event", querySnapshotMap);
-                    }
-                  });
-
-          listenerRegistrations.put(handle, listenerRegistration);
-          return null;
-        });
-  }
-
   private Task<QuerySnapshot> queryGet(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -498,9 +451,6 @@ public class FlutterFirebaseFirestorePlugin
         break;
       case "WriteBatch#commit":
         methodCallTask = batchCommit(call.arguments());
-        break;
-      case "Query#addSnapshotListener":
-        methodCallTask = queryAddSnapshotListener(call.arguments());
         break;
       case "Query#get":
         methodCallTask = queryGet(call.arguments());
