@@ -3,7 +3,7 @@ require 'yaml'
 pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
 library_version = pubspec['version'].gsub('+', '-')
 
-firebase_sdk_version = '6.33.0'
+firebase_sdk_version = '7.1.0'
 if defined?($FirebaseSDKVersion)
   Pod::UI.puts "#{pubspec['name']}: Using user specified Firebase SDK version '#{$FirebaseSDKVersion}'"
   firebase_sdk_version = $FirebaseSDKVersion
@@ -26,12 +26,12 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*'
-  
+
   s.platform = :osx, '10.11'
 
   # Flutter dependencies
   s.dependency 'FlutterMacOS'
-  
+
   # Firebase dependencies
   s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
 
