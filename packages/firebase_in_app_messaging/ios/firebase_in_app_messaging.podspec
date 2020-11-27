@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
   s.dependency 'Firebase/InAppMessaging', firebase_sdk_version
   s.static_framework = true
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.pod_target_xcconfig = {
     # TODO(Salakar): Enable once plugin refactored to support.
