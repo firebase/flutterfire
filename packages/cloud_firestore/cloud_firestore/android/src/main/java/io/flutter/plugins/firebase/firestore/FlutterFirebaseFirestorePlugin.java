@@ -56,6 +56,11 @@ public class FlutterFirebaseFirestorePlugin
       new SparseArray<>();
 
   private MethodChannel channel;
+  private EventChannel snapshotsInSyncEventChannel;
+  private EventChannel querySnapshotEventChannel;
+  private EventChannel documentSnapshotEventChannel;
+  private EventChannel transactionSnapshotEventChannel;
+
   private final AtomicReference<Activity> activity = new AtomicReference<>(null);
   private TransactionStreamHandler transactionStreamHandler;
   static final SparseArray<Transaction> transactions = new SparseArray<>();
@@ -107,6 +112,18 @@ public class FlutterFirebaseFirestorePlugin
     removeEventListeners();
     channel.setMethodCallHandler(null);
     channel = null;
+
+    snapshotsInSyncEventChannel.setStreamHandler(null);
+    snapshotsInSyncEventChannel = null;
+
+    querySnapshotEventChannel.setStreamHandler(null);
+    querySnapshotEventChannel = null;
+
+    documentSnapshotEventChannel.setStreamHandler(null);
+    documentSnapshotEventChannel = null;
+
+    transactionSnapshotEventChannel.setStreamHandler(null);
+    transactionSnapshotEventChannel = null;
   }
 
   @Override
@@ -455,54 +472,40 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   private void initInstance(BinaryMessenger messenger) {
-    String channelName = "plugins.flutter.io/firebase_firestore";
-    channel =
-        new MethodChannel(
-            messenger,
-            "plugins.flutter.io/firebase_firestore",
-            new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
+    final StandardMethodCodec codec =
+        new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE);
+    final String methodChannelName = "plugins.flutter.io/firebase_firestore";
 
+    channel = new MethodChannel(messenger, methodChannelName, codec);
     channel.setMethodCallHandler(this);
 
-    String snapshotsInSyncStreamName = "plugins.flutter.io/firebase_firestore/snapshotsInSync";
-    EventChannel snapshotsInSyncEventChannel =
-        new EventChannel(
-            messenger,
-            snapshotsInSyncStreamName,
-            new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
+    final String snapshotsInSyncStreamName =
+        "plugins.flutter.io/firebase_firestore/snapshotsInSync";
 
+    snapshotsInSyncEventChannel = new EventChannel(messenger, snapshotsInSyncStreamName, codec);
     snapshotsInSyncEventChannel.setStreamHandler(new SnapshotsInSyncStreamHandler());
 
-    String querySnapshotEventChannelName = "plugins.flutter.io/firebase_firestore/query";
-    EventChannel querySnapshotEventChannel =
-        new EventChannel(
-            messenger,
-            querySnapshotEventChannelName,
-            new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
+    final String querySnapshotEventChannelName = "plugins.flutter.io/firebase_firestore/query";
 
+    querySnapshotEventChannel = new EventChannel(messenger, querySnapshotEventChannelName, codec);
     querySnapshotEventChannel.setStreamHandler(new QuerySnapshotsStreamHandler());
 
-    String documentSnapshotEventChannelName = "plugins.flutter.io/firebase_firestore/document";
-    EventChannel documentSnapshotEventChannel =
-        new EventChannel(
-            messenger,
-            documentSnapshotEventChannelName,
-            new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
+    final String documentSnapshotEventChannelName =
+        "plugins.flutter.io/firebase_firestore/document";
 
+    documentSnapshotEventChannel =
+        new EventChannel(messenger, documentSnapshotEventChannelName, codec);
     documentSnapshotEventChannel.setStreamHandler(new DocumentSnapshotsStreamHandler());
 
-    String transactionSnapshotEventChannelName =
+    final String transactionSnapshotEventChannelName =
         "plugins.flutter.io/firebase_firestore/transaction";
-    EventChannel transactionSnapshotEventChannel =
-        new EventChannel(
-            messenger,
-            transactionSnapshotEventChannelName,
-            new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
 
+    transactionSnapshotEventChannel =
+        new EventChannel(messenger, transactionSnapshotEventChannelName, codec);
     transactionStreamHandler = new TransactionStreamHandler(activity, transactions);
     transactionSnapshotEventChannel.setStreamHandler(transactionStreamHandler);
 
-    FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
+    FlutterFirebasePluginRegistry.registerPlugin(methodChannelName, this);
   }
 
   private Map<String, String> getExceptionDetails(Exception exception) {
