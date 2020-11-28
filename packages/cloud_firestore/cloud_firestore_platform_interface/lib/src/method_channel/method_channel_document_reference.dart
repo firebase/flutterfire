@@ -110,12 +110,16 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         snapshotStream = MethodChannelFirebaseFirestore.documentSnapshotChannel
             .receiveBroadcastStream(
           <String, dynamic>{
+            'reference': this,
             'handle': handle,
             'firestore': firestore,
-            'reference': this,
             'includeMetadataChanges': includeMetadataChanges,
           },
         ).listen((event) {
+          if (event['handle'] != handle) {
+            return;
+          }
+
           if (event.containsKey('error')) {
             MethodChannelFirebaseFirestore.forwardErrorToController(
               controller,
