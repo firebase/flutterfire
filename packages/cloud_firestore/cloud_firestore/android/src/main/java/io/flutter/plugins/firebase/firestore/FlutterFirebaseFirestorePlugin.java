@@ -16,7 +16,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
@@ -52,8 +51,6 @@ public class FlutterFirebaseFirestorePlugin
 
   protected static final WeakHashMap<String, WeakReference<FirebaseFirestore>>
       firestoreInstanceCache = new WeakHashMap<>();
-  private static final SparseArray<ListenerRegistration> listenerRegistrations =
-      new SparseArray<>();
 
   private MethodChannel channel;
   private EventChannel snapshotsInSyncEventChannel;
@@ -109,7 +106,6 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    removeEventListeners();
     channel.setMethodCallHandler(null);
     channel = null;
 
@@ -153,20 +149,6 @@ public class FlutterFirebaseFirestorePlugin
 
   private void detachToActivity() {
     activity.set(null);
-  }
-
-  // Ensure any Firestore listeners are removed when the app
-  // is detached from the FlutterEngine
-  private void removeEventListeners() {
-    for (int i = 0; i < listenerRegistrations.size(); i++) {
-      int key = listenerRegistrations.keyAt(i);
-      ListenerRegistration listenerRegistration = listenerRegistrations.get(key);
-
-      if (listenerRegistration != null) {
-        listenerRegistration.remove();
-      }
-    }
-    listenerRegistrations.clear();
   }
 
   private Task<Void> disableNetwork(Map<String, Object> arguments) {
@@ -397,14 +379,6 @@ public class FlutterFirebaseFirestorePlugin
     Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Firestore#removeListener":
-        int handle = Objects.requireNonNull(call.argument("handle"));
-        if (listenerRegistrations.get(handle) != null) {
-          listenerRegistrations.get(handle).remove();
-          listenerRegistrations.remove(handle);
-        }
-        result.success(null);
-        return;
       case "Firestore#disableNetwork":
         methodCallTask = disableNetwork(call.arguments());
         break;
@@ -562,7 +536,6 @@ public class FlutterFirebaseFirestorePlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          removeEventListeners();
           // Context is ignored by API so we don't send it over even though annotated non-null.
 
           for (FirebaseApp app : FirebaseApp.getApps(null)) {

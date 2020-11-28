@@ -57,7 +57,6 @@ void main() {
           mockTransactionHandleId++;
           return Future.delayed(Duration.zero);
         case 'Firestore#addSnapshotsInSyncListener':
-        case 'Firestore#removeListener':
         case 'Firestore#waitForPendingWrites':
         case 'Firestore#terminate':
         case 'Firestore#settings':
@@ -261,10 +260,6 @@ void main() {
                 'handle': handle,
                 'firestore': firestore,
               },
-            ),
-            isMethodCall(
-              'Firestore#removeListener',
-              arguments: <String, dynamic>{'handle': handle},
             ),
           ]),
         );

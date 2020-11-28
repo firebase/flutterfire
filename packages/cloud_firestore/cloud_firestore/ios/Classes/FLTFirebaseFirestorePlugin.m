@@ -188,8 +188,6 @@ NSString *const kFLTFirebaseFirestoreTransactionChannelName =
     [self documentGet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Query#get" isEqualToString:call.method]) {
     [self queryGet:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Firestore#removeListener" isEqualToString:call.method]) {
-    [self removeListener:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"WriteBatch#commit" isEqualToString:call.method]) {
     [self batchCommit:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Firestore#terminate" isEqualToString:call.method]) {
@@ -400,17 +398,6 @@ NSString *const kFLTFirebaseFirestoreTransactionChannelName =
                          result.success(snapshot);
                        }
                      }];
-}
-
-- (void)removeListener:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSNumber *handle = arguments[@"handle"];
-  @synchronized(_listeners) {
-    if (_listeners[handle] != nil) {
-      [_listeners[handle] remove];
-      [_listeners removeObjectForKey:handle];
-    }
-  }
-  result.success(nil);
 }
 
 - (void)batchCommit:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {

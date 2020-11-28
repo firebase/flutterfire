@@ -231,7 +231,6 @@ void main() {
         await subscription.cancel();
         await Future<void>.delayed(Duration.zero);
         expect(log[0].method, 'Query#addSnapshotListener');
-        expect(log[1].method, 'Firestore#removeListener');
         expect(log[0].arguments, <String, dynamic>{
           'query': isInstanceOf<MethodChannelQuery>(),
           'handle': handleId,
