@@ -50,9 +50,10 @@
 
     if (timedOut) {
       NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils
-                                 ErrorCodeAndMessageFromNSError:[NSError errorWithDomain:FIRFirestoreErrorDomain
-                                                                                    code:FIRFirestoreErrorCodeDeadlineExceeded
-                                                                                userInfo:@{}]];
+          ErrorCodeAndMessageFromNSError:[NSError
+                                             errorWithDomain:FIRFirestoreErrorDomain
+                                                        code:FIRFirestoreErrorCodeDeadlineExceeded
+                                                    userInfo:@{}]];
 
       dispatch_async(dispatch_get_main_queue(), ^{
         events(@{
@@ -117,7 +118,7 @@
       });
     } else {
       dispatch_async(dispatch_get_main_queue(), ^{
-        events(@{@"complete" : [NSNumber numberWithBool:YES] });
+        events(@{@"complete" : [NSNumber numberWithBool:YES]});
       });
     }
 
