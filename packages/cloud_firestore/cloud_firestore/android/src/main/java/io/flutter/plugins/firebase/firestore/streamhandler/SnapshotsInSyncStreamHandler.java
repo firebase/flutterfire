@@ -34,6 +34,10 @@ public class SnapshotsInSyncStreamHandler implements StreamHandler {
 
   @Override
   public void onCancel(Object arguments) {
+    if (arguments == null) {
+      return;
+    }
+
     @SuppressWarnings("unchecked")
     Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
     int handle = (int) Objects.requireNonNull(argumentsMap.get("handle"));

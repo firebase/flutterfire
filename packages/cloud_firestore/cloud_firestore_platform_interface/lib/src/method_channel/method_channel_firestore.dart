@@ -85,25 +85,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     StandardMethodCodec(FirestoreMessageCodec()),
   );
 
-  /// The [EventChannel] used for transaction
-  static EventChannel transactionChannel = EventChannel(
-    'plugins.flutter.io/firebase_firestore/transaction',
-    StandardMethodCodec(FirestoreMessageCodec()),
-  );
-
-  /// Stores the users [TransactionHandlers] for usage when a transaction is
-  /// running.
-  static final Map<int, TransactionHandler> _transactionHandlers =
-      <int, TransactionHandler>{};
-
-  /// Stores a transactions [StreamController]
-  static final Map<int, StreamController> _transactionStreamControllerHandlers =
-      <int, StreamController>{};
-
-  /// A locally stored index of the transactions. This is incrememented each
-  /// time a user calls [runTransaction].
-  static int _transactionHandlerId = 0;
-
   /// Gets a [FirebaseFirestorePlatform] with specific arguments such as a different
   /// [FirebaseApp].
   @override
@@ -217,73 +198,80 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds');
 
-    final int transactionId = _transactionHandlerId++;
+    final String transactionId =
+        await MethodChannelFirebaseFirestore.channel.invokeMethod<String>(
+      'Transaction#create',
+    );
 
     StreamSubscription<dynamic> snapshotStream;
-    StreamController streamController = StreamController();
 
-    _transactionHandlers[transactionId] = transactionHandler;
-    _transactionStreamControllerHandlers[transactionId] = streamController;
+    Completer<T> completer = Completer();
 
-    streamController = StreamController<T>.broadcast(
-      onListen: () async {
-        snapshotStream = MethodChannelFirebaseFirestore.transactionChannel
-            .receiveBroadcastStream(
-          <String, dynamic>{
-            'firestore': this,
+    // Will be set by the `transactionHandler`.
+    dynamic result;
+
+    final eventChannel = EventChannel(
+      'plugins.flutter.io/firebase_firestore/transaction/$transactionId',
+      StandardMethodCodec(FirestoreMessageCodec()),
+    );
+
+    snapshotStream = eventChannel.receiveBroadcastStream(
+      <String, dynamic>{'firestore': this, 'timeout': timeout.inMilliseconds},
+    ).listen(
+      (event) async {
+        if (event['error'] != null) {
+          completer.completeError(
+            FirebaseException(
+              plugin: 'cloud_firestore',
+              code: event['error']['code'],
+              message: event['error']['message'],
+            ),
+          );
+          return;
+        } else if (event['complete'] == true) {
+          completer.complete(result);
+          return;
+        }
+
+        final TransactionPlatform transaction =
+            MethodChannelTransaction(transactionId, event["appName"]);
+
+        // If the transaction fails on Dart side, then forward the error
+        // right away and only inform native side of the error.
+        try {
+          result = await transactionHandler(transaction);
+        } catch (error) {
+          // Signal native that a user error occurred, and finish the
+          // transaction
+          await MethodChannelFirebaseFirestore.channel
+              .invokeMethod('Transaction#storeResult', <String, dynamic>{
             'transactionId': transactionId,
-            'timeout': timeout.inMilliseconds
-          },
-        ).listen((event) async {
-          if (event.containsKey('attempt')) {
-            final attempt = event['attempt'];
-            final int transactionId = attempt['transactionId'];
-            final TransactionPlatform transaction =
-                MethodChannelTransaction(transactionId, attempt["appName"]);
-
-            try {
-              dynamic result =
-                  await _transactionHandlers[transactionId](transaction);
-
-              // TODO: What should happen with the result?
-
-              await MethodChannelFirebaseFirestore.channel
-                  .invokeMethod('Transaction#storeResult', <String, dynamic>{
-                'transactionId': transactionId,
-                'result': {
-                  'type': 'SUCCESS',
-                  'commands': transaction.commands,
-                },
-              });
-
-              streamController.add(result);
-            } catch (error) {
-              // Allow the [runTransaction] method to listen to an error.
-              streamController.addError(error);
-
-              // Signal native that a user error occurred, and finish the
-              // transaction
-              await MethodChannelFirebaseFirestore.channel
-                  .invokeMethod('Transaction#storeResult', <String, dynamic>{
-                'transactionId': transactionId,
-                'result': {
-                  'type': 'ERROR',
-                }
-              });
+            'result': {
+              'type': 'ERROR',
             }
-          } else {
-            // controller.add(event);
-          }
-        }, onError: (error, stack) {
-          // TODO: Handle these conditions
+          });
+
+          // Allow the [runTransaction] method to listen to an error.
+          completer.completeError(error);
+
+          return;
+        }
+
+        // Send the transaction commands to Dart.
+        await MethodChannelFirebaseFirestore.channel
+            .invokeMethod('Transaction#storeResult', <String, dynamic>{
+          'transactionId': transactionId,
+          'result': {
+            'type': 'SUCCESS',
+            'commands': transaction.commands,
+          },
         });
-      },
-      onCancel: () {
-        snapshotStream?.cancel();
       },
     );
 
-    return streamController.stream.first;
+    return completer.future.whenComplete(() {
+      snapshotStream?.cancel();
+    });
   }
 
   @override

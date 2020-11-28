@@ -37,18 +37,18 @@ void testsMain() {
     }
   });
 
-  runInstanceTests();
+  // runInstanceTests();
 
-  runCollectionReferenceTests();
-  runDocumentChangeTests();
-  runDocumentReferenceTests();
-  runFieldValueTests();
-  runGeoPointTests();
-  runQueryTests();
-  runSnapshotMetadataTests();
-  runTimestampTests();
+  // runCollectionReferenceTests();
+  // runDocumentChangeTests();
+  // runDocumentReferenceTests();
+  // runFieldValueTests();
+  // runGeoPointTests();
+  // runQueryTests();
+  // runSnapshotMetadataTests();
+  // runTimestampTests();
   runTransactionTests();
-  runWriteBatchTests();
+  // runWriteBatchTests();
 }
 
 void main() => drive.main(testsMain);

@@ -56,6 +56,10 @@ public class DocumentSnapshotsStreamHandler implements StreamHandler {
 
   @Override
   public void onCancel(Object arguments) {
+    if (arguments == null) {
+      return;
+    }
+
     @SuppressWarnings("unchecked")
     Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
     final int handle = (int) Objects.requireNonNull(argumentsMap.get("handle"));
