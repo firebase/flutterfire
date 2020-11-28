@@ -42,18 +42,28 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
           properties.put(
               "lastFetchStatus", mapLastFetchStatus(firebaseRemoteConfigInfo.getLastFetchStatus()));
           properties.put(
-              "inDebugMode", firebaseRemoteConfigInfo.getConfigSettings().isDeveloperModeEnabled());
+              "minimumFetchInterval",
+              firebaseRemoteConfigInfo.getConfigSettings().getMinimumFetchIntervalInSeconds());
+          properties.put(
+              "fetchTimeout",
+              firebaseRemoteConfigInfo.getConfigSettings().getFetchTimeoutInSeconds());
           properties.put("parameters", getConfigParameters());
           result.success(properties);
           break;
         }
       case "RemoteConfig#setConfigSettings":
         {
-          boolean debugMode = call.argument("debugMode");
           final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-          FirebaseRemoteConfigSettings settings =
-              new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(debugMode).build();
-          firebaseRemoteConfig.setConfigSettings(settings);
+          FirebaseRemoteConfigSettings.Builder configSettingsBuilder =
+              new FirebaseRemoteConfigSettings.Builder();
+          if (call.argument("minimumFetchInterval") != null) {
+            configSettingsBuilder.setMinimumFetchIntervalInSeconds(
+                (int) call.argument("minimumFetchInterval"));
+          }
+          if (call.argument("fetchTimeout") != null) {
+            configSettingsBuilder.setFetchTimeoutInSeconds((int) call.argument("fetchTimeout"));
+          }
+          firebaseRemoteConfig.setConfigSettingsAsync(configSettingsBuilder.build());
           result.success(null);
           break;
         }

@@ -37,7 +37,3 @@ post_install do |installer|
   end
 end
 
-pod 'Firebase/MLVisionBarcodeModel'
-pod 'Firebase/MLVisionFaceModel'
-pod 'Firebase/MLVisionLabelModel'
-pod 'Firebase/MLVisionTextModel'
