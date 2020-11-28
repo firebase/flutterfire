@@ -12,19 +12,20 @@
 #import "Private/FLTTransactionStreamHandler.h"
 
 @implementation FLTTransactionStreamHandler {
-  NSMutableDictionary<NSNumber *, id<FIRListenerRegistration>> *_listeners;
-  NSMutableDictionary<NSNumber *, FIRTransaction *> *_transactions;
-  NSMutableDictionary<NSNumber *, dispatch_semaphore_t> *_semaphores;
-  NSMutableDictionary<NSNumber *, NSDictionary *> *_attemptedTransactionResponses;
+  NSString *_transactionId;
+  NSMutableDictionary<NSString *, FIRTransaction *> *_transactions;
+  dispatch_semaphore_t _semaphore;
+  NSDictionary *_response;
 }
 
-- (instancetype)init:(NSMutableDictionary<NSNumber *, FIRTransaction *> *)transactions {
+- (instancetype)initWithId:(NSString *)transactionId
+      existingTransactions:(NSMutableDictionary<NSString *, FIRTransaction *> *)transactions {
   self = [super init];
   if (self) {
-    _listeners = [NSMutableDictionary dictionary];
+    _transactionId = transactionId;
     _transactions = transactions;
-    _semaphores = [NSMutableDictionary dictionary];
-    _attemptedTransactionResponses = [NSMutableDictionary dictionary];
+    _semaphore = dispatch_semaphore_create(0);
+    _response = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -32,29 +33,19 @@
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
   FIRFirestore *firestore = arguments[@"firestore"];
-  NSNumber *transactionId = arguments[@"transactionId"];
   NSNumber *transactionTimeout = arguments[@"timeout"];
-
-  NSDictionary *transactionAttemptArguments = @{
-    @"transactionId" : transactionId,
-    @"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:firestore.app.name]
-  };
 
   id transactionRunBlock = ^id(FIRTransaction *transaction, NSError **pError) {
     @synchronized(self->_transactions) {
-      self->_transactions[transactionId] = transaction;
-    }
-
-    @synchronized(self->_semaphores) {
-      self->_semaphores[transactionId] = dispatch_semaphore_create(0);
+      self->_transactions[self->_transactionId] = transaction;
     }
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-      events(@{@"attempt" : transactionAttemptArguments});
+      events(@{@"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:firestore.app.name]});
     });
 
     long timedOut = dispatch_semaphore_wait(
-        self->_semaphores[transactionId],
+        self->_semaphore,
         dispatch_time(DISPATCH_TIME_NOW, [transactionTimeout integerValue] * NSEC_PER_MSEC));
 
     if (timedOut) {
@@ -64,17 +55,20 @@
       return nil;
     }
 
-    NSDictionary *attemptedTransactionResponse =
-        self->_attemptedTransactionResponses[transactionId];
-    NSString *dartResponseType =
-        attemptedTransactionResponse ? attemptedTransactionResponse[@"type"] : @"ERROR";
+    NSDictionary *response = self->_response;
+
+    if (response.count == 0) {
+      return nil;
+    }
+
+    NSString *dartResponseType = response[@"type"];
 
     if ([@"ERROR" isEqualToString:dartResponseType]) {
       // Do nothing - already handled in Dart land.
       return nil;
     }
 
-    NSArray<NSDictionary *> *commands = attemptedTransactionResponse[@"commands"];
+    NSArray<NSDictionary *> *commands = response[@"commands"];
     for (NSDictionary *command in commands) {
       NSString *commandType = command[@"type"];
       NSString *documentPath = command[@"path"];
@@ -101,8 +95,29 @@
   };
 
   id transactionCompleteBlock = ^(id transactionResult, NSError *error) {
+    if (error) {
+      NSArray *details = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
+
+      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        events(@{
+          @"error" : @{
+            @"code" : details[0],
+            @"message" : details[1],
+          }
+        });
+      });
+    } else {
+      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        events(@{@"complete" : [NSNumber numberWithBool:YES] });
+      });
+    }
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      events(FlutterEndOfEventStream);
+    });
+
     @synchronized(self->_transactions) {
-      [self->_transactions removeObjectForKey:transactionId];
+      [self->_transactions removeObjectForKey:self->_transactionId];
     }
   };
 
@@ -112,17 +127,15 @@
 }
 
 - (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
-  // TODO: Transaction can be cancelled? Definitely will need to do some cleanups.
+  dispatch_semaphore_signal(_semaphore);
+
   return nil;
 }
 
-- (void)receiveTransactionResponse:(NSNumber *)transactionId response:(NSDictionary *)response {
-  // TODO: Return a error when no record of the transaction attempt exists?
-  _attemptedTransactionResponses[transactionId] = response;
+- (void)receiveTransactionResponse:(NSDictionary *)response {
+  _response = response;
 
-  @synchronized(_semaphores) {
-    dispatch_semaphore_signal(_semaphores[transactionId]);
-  }
+  dispatch_semaphore_signal(_semaphore);
 }
 
 @end
