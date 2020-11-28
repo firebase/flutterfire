@@ -54,8 +54,7 @@ public class FlutterFirebaseFirestorePlugin
   public static final String DEFAULT_ERROR_CODE = "firebase_firestore";
 
   final StandardMethodCodec MESSAGE_CODEC =
-    new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE);
-
+      new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE);
 
   private BinaryMessenger binaryMessenger;
   private MethodChannel channel;
@@ -202,12 +201,12 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   private void transactionStoreResult(Map<String, Object> arguments) {
-          String transactionId = (String) Objects.requireNonNull(arguments.get("transactionId"));
-          @SuppressWarnings("unchecked")
-          Map<String, Object> result =
-              (Map<String, Object>) Objects.requireNonNull(arguments.get("result"));
+    String transactionId = (String) Objects.requireNonNull(arguments.get("transactionId"));
+    @SuppressWarnings("unchecked")
+    Map<String, Object> result =
+        (Map<String, Object>) Objects.requireNonNull(arguments.get("result"));
 
-          transactionHandlers.get(transactionId).receiveTransactionResponse(result);
+    transactionHandlers.get(transactionId).receiveTransactionResponse(result);
   }
 
   private Task<Void> batchCommit(Map<String, Object> arguments) {
@@ -393,19 +392,20 @@ public class FlutterFirebaseFirestorePlugin
       case "Transaction#get":
         methodCallTask = transactionGet(call.arguments());
         break;
-    case "Transaction#create":
-      String transactionId = UUID.randomUUID().toString().toLowerCase(Locale.US);
+      case "Transaction#create":
+        String transactionId = UUID.randomUUID().toString().toLowerCase(Locale.US);
 
-      final String channelName =
-        "plugins.flutter.io/firebase_firestore/transaction/"+transactionId;
+        final String channelName =
+            "plugins.flutter.io/firebase_firestore/transaction/" + transactionId;
 
-      EventChannel channel = new EventChannel(binaryMessenger, channelName, MESSAGE_CODEC);
-      TransactionStreamHandler handler = new TransactionStreamHandler(transactionId, activity, transactions);
-      channel.setStreamHandler(handler);
-      transactionHandlers.put(transactionId, handler);
-      result.success(transactionId);
-return;
-    case "Transaction#storeResult":
+        EventChannel channel = new EventChannel(binaryMessenger, channelName, MESSAGE_CODEC);
+        TransactionStreamHandler handler =
+            new TransactionStreamHandler(transactionId, activity, transactions);
+        channel.setStreamHandler(handler);
+        transactionHandlers.put(transactionId, handler);
+        result.success(transactionId);
+        return;
+      case "Transaction#storeResult":
         transactionStoreResult(call.arguments());
         result.success(null);
         return;
@@ -459,7 +459,6 @@ return;
   private void initInstance(BinaryMessenger messenger) {
     binaryMessenger = messenger;
 
-
     final String methodChannelName = "plugins.flutter.io/firebase_firestore";
 
     channel = new MethodChannel(messenger, methodChannelName, MESSAGE_CODEC);
@@ -468,14 +467,14 @@ return;
     final String snapshotsInSyncStreamName =
         "plugins.flutter.io/firebase_firestore/snapshotsInSync";
 
-    snapshotsInSyncEventChannel = new EventChannel(messenger, snapshotsInSyncStreamName,
-      MESSAGE_CODEC);
+    snapshotsInSyncEventChannel =
+        new EventChannel(messenger, snapshotsInSyncStreamName, MESSAGE_CODEC);
     snapshotsInSyncEventChannel.setStreamHandler(new SnapshotsInSyncStreamHandler());
 
     final String querySnapshotEventChannelName = "plugins.flutter.io/firebase_firestore/query";
 
-    querySnapshotEventChannel = new EventChannel(messenger, querySnapshotEventChannelName,
-      MESSAGE_CODEC);
+    querySnapshotEventChannel =
+        new EventChannel(messenger, querySnapshotEventChannelName, MESSAGE_CODEC);
     querySnapshotEventChannel.setStreamHandler(new QuerySnapshotsStreamHandler());
 
     final String documentSnapshotEventChannelName =

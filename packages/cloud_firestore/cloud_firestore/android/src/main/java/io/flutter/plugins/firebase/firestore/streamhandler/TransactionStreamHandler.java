@@ -28,8 +28,9 @@ public class TransactionStreamHandler implements StreamHandler {
   final String transactionId;
 
   public TransactionStreamHandler(
-    String transactionId, AtomicReference<Activity> activityRef,
-    Map<String, Transaction> transactions) {
+      String transactionId,
+      AtomicReference<Activity> activityRef,
+      Map<String, Transaction> transactions) {
     this.transactionId = transactionId;
     this.activityRef = activityRef;
     this.transactions = transactions;
@@ -43,10 +44,8 @@ public class TransactionStreamHandler implements StreamHandler {
     @SuppressWarnings("unchecked")
     Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
 
-    Log.i("TSH", "onListen: " + argumentsMap);
-
     FirebaseFirestore firestore =
-      (FirebaseFirestore) Objects.requireNonNull(argumentsMap.get("firestore"));
+        (FirebaseFirestore) Objects.requireNonNull(argumentsMap.get("firestore"));
 
     Object value = argumentsMap.get("timeout");
     Long timeout;
@@ -60,144 +59,112 @@ public class TransactionStreamHandler implements StreamHandler {
     }
 
     firestore
-      .runTransaction(
-        transaction -> {
-          transactions.put(transactionId, transaction);
+        .runTransaction(
+            transaction -> {
+              transactions.put(transactionId, transaction);
 
-          Map<String, Object> attemptMap = new HashMap<>();
-          attemptMap.put("appName", firestore.getApp().getName());
+              Map<String, Object> attemptMap = new HashMap<>();
+              attemptMap.put("appName", firestore.getApp().getName());
 
-          activityRef.get().runOnUiThread(() -> events.success(attemptMap));
+              activityRef.get().runOnUiThread(() -> events.success(attemptMap));
 
-          try {
-            Log.i("TSH", "acquire semaphore: " + transactionId);
-            if (!semaphore.tryAcquire(timeout, TimeUnit.MILLISECONDS)) {
-              Log.i("TSH", "acquire semaphore - failed");
-              return FlutterFirebaseFirestoreTransactionResult.failed(
-               new FirebaseFirestoreException(
-                "timed out", Code.DEADLINE_EXCEEDED));
-            }
-          } catch (InterruptedException e) {
-            return FlutterFirebaseFirestoreTransactionResult.failed(
-            new FirebaseFirestoreException("interrupted", Code.DEADLINE_EXCEEDED));
-          }
+              try {
+                if (!semaphore.tryAcquire(timeout, TimeUnit.MILLISECONDS)) {
+                  return FlutterFirebaseFirestoreTransactionResult.failed(
+                      new FirebaseFirestoreException("timed out", Code.DEADLINE_EXCEEDED));
+                }
+              } catch (InterruptedException e) {
+                return FlutterFirebaseFirestoreTransactionResult.failed(
+                    new FirebaseFirestoreException("interrupted", Code.DEADLINE_EXCEEDED));
+              }
 
-          Log.i("TSH", "response: " + response);
+              if (response.isEmpty()) {
+                return FlutterFirebaseFirestoreTransactionResult.complete();
+              }
+              final String resultType = (String) response.get("type");
 
-          if (response.isEmpty()) {
-            return FlutterFirebaseFirestoreTransactionResult.complete();
-          }
-          final String resultType = (String) response.get("type");
+              if ("ERROR".equalsIgnoreCase(resultType)) {
+                return FlutterFirebaseFirestoreTransactionResult.complete();
+              }
 
-          if ("ERROR".equalsIgnoreCase(resultType)) {
-            return FlutterFirebaseFirestoreTransactionResult.complete();
-          }
+              List<Map<String, Object>> commands =
+                  (List<Map<String, Object>>) response.get("commands");
 
-          Log.i("TSH", "commands: " + response.get("commands"));
+              for (Map<String, Object> command : commands) {
+                String type = (String) Objects.requireNonNull(command.get("type"));
+                String path = (String) Objects.requireNonNull(command.get("path"));
+                DocumentReference documentReference = firestore.document(path);
 
-          List<Map<String, Object>> commands =
-            (List<Map<String, Object>>) response.get("commands");
-
-          for (Map<String, Object> command : commands) {
-            String type = (String) Objects.requireNonNull(command.get("type"));
-            String path = (String) Objects.requireNonNull(command.get("path"));
-            DocumentReference documentReference = firestore.document(path);
-
-            @SuppressWarnings("unchecked")
-            Map<String, Object> data = (Map<String, Object>) command.get("data");
-
-            switch (type) {
-            case "DELETE":
-              transaction.delete(documentReference);
-              break;
-            case "UPDATE":
-              transaction.update(documentReference, Objects.requireNonNull(data));
-              break;
-            case "SET": {
-              @SuppressWarnings("unchecked")
-              Map<String, Object> options =
-                (Map<String, Object>) Objects.requireNonNull(command.get("options"));
-              SetOptions setOptions = null;
-
-              if (options.get("merge") != null && (boolean) options.get("merge")) {
-                setOptions = SetOptions.merge();
-              } else if (options.get("mergeFields") != null) {
                 @SuppressWarnings("unchecked")
-                List<FieldPath> fieldPathList =
-                  (List<FieldPath>) Objects.requireNonNull(options.get("mergeFields"));
-                setOptions = SetOptions.mergeFieldPaths(fieldPathList);
-              }
+                Map<String, Object> data = (Map<String, Object>) command.get("data");
 
-              if (setOptions == null) {
-                transaction.set(documentReference, Objects.requireNonNull(data));
+                switch (type) {
+                  case "DELETE":
+                    transaction.delete(documentReference);
+                    break;
+                  case "UPDATE":
+                    transaction.update(documentReference, Objects.requireNonNull(data));
+                    break;
+                  case "SET":
+                    {
+                      @SuppressWarnings("unchecked")
+                      Map<String, Object> options =
+                          (Map<String, Object>) Objects.requireNonNull(command.get("options"));
+                      SetOptions setOptions = null;
+
+                      if (options.get("merge") != null && (boolean) options.get("merge")) {
+                        setOptions = SetOptions.merge();
+                      } else if (options.get("mergeFields") != null) {
+                        @SuppressWarnings("unchecked")
+                        List<FieldPath> fieldPathList =
+                            (List<FieldPath>) Objects.requireNonNull(options.get("mergeFields"));
+                        setOptions = SetOptions.mergeFieldPaths(fieldPathList);
+                      }
+
+                      if (setOptions == null) {
+                        transaction.set(documentReference, Objects.requireNonNull(data));
+                      } else {
+                        transaction.set(
+                            documentReference, Objects.requireNonNull(data), setOptions);
+                      }
+
+                      break;
+                    }
+                }
+              }
+              return FlutterFirebaseFirestoreTransactionResult.complete();
+            })
+        .addOnCompleteListener(
+            task -> {
+              if (!task.isSuccessful()) {
+                final Exception exception = task.getException();
+                final HashMap<String, Object> errorMap = new HashMap<>();
+                errorMap.put("appName", firestore.getApp().getName());
+                errorMap.put("error", ExceptionConverter.createDetails(exception));
+                activityRef.get().runOnUiThread(() -> events.success(errorMap));
+              } else if (task.getResult().exception != null) {
+                final HashMap<String, Object> errorMap = new HashMap<>();
+                errorMap.put("appName", firestore.getApp().getName());
+                errorMap.put("error", ExceptionConverter.createDetails(task.getResult().exception));
+                activityRef.get().runOnUiThread(() -> events.success(errorMap));
+
               } else {
-                transaction.set(
-                  documentReference, Objects.requireNonNull(data), setOptions);
+                Map<String, Object> resultMap = new HashMap<>();
+                resultMap.put("complete", true);
+                activityRef.get().runOnUiThread(() -> events.success(resultMap));
               }
 
-              break;
-            }
-            }
-
-          }
-          return FlutterFirebaseFirestoreTransactionResult.complete();
-        })
-      .addOnCompleteListener(
-        task -> {
-          if (!task.isSuccessful()) {
-            final Exception exception = task.getException();
-            Log.i("TSH", "not successful, so send a error", exception);
-            final HashMap<String, Object> errorMap = new HashMap<>();
-            errorMap.put("appName", firestore.getApp().getName());
-            errorMap.put("error", ExceptionConverter.createDetails(exception));
-            activityRef
-              .get()
-              .runOnUiThread(
-                () ->
-                  events.success(errorMap));
-          } else if(task.getResult().exception != null) {
-            final HashMap<String, Object> errorMap = new HashMap<>();
-            errorMap.put("appName", firestore.getApp().getName());
-            errorMap.put("error", ExceptionConverter.createDetails(task.getResult().exception));
-            activityRef
-              .get()
-              .runOnUiThread(
-                () ->
-                  events.success(errorMap));
-
-          } else {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("complete", true);
-            activityRef
-              .get()
-              .runOnUiThread(() ->
-                events.success(resultMap)
-              );
-
-          }
-
-          activityRef
-            .get()
-            .runOnUiThread(
-              events::endOfStream
-            );
-        });
+              activityRef.get().runOnUiThread(events::endOfStream);
+            });
   }
 
   @Override
   public void onCancel(Object arguments) {
-    releaseSemaphore();
+    semaphore.release();
   }
 
   public void receiveTransactionResponse(Map<String, Object> result) {
-    Log.i("TSH", "received the response: " + result);
-
     response.putAll(result);
-    releaseSemaphore();
-  }
-
-  private void releaseSemaphore() {
-    Log.i("TSH", "release semaphore: " + transactionId);
     semaphore.release();
   }
 }
