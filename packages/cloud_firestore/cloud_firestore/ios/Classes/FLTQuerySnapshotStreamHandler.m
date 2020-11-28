@@ -39,17 +39,21 @@
   NSNumber *includeMetadataChanges = arguments[@"includeMetadataChanges"];
 
   id listener = ^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
-    if (error != nil) {
+    if (error) {
       NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
 
-      events(@{
-        @"handle" : handle,
-        @"error" : @{@"code" : codeAndMessage[0], @"message" : codeAndMessage[1]},
+      dispatch_async(dispatch_get_main_queue(), ^{
+        events(@{
+          @"handle" : handle,
+          @"error" : @{@"code" : codeAndMessage[0], @"message" : codeAndMessage[1]},
+        });
       });
-    } else if (snapshot != nil) {
-      events(@{
-        @"handle" : handle,
-        @"snapshot" : snapshot,
+    } else if (snapshot) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        events(@{
+          @"handle" : handle,
+          @"snapshot" : snapshot,
+        });
       });
     }
   };
@@ -68,9 +72,11 @@
 - (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
   NSNumber *handle = arguments[@"handle"];
 
-  @synchronized(_listeners) {
-    [_listeners[handle] remove];
-    [_listeners removeObjectForKey:handle];
+  if (handle) {
+    @synchronized(_listeners) {
+      [_listeners[handle] remove];
+      [_listeners removeObjectForKey:handle];
+    }
   }
 
   return nil;

@@ -29,7 +29,9 @@
   FIRFirestore *firestore = arguments[@"firestore"];
 
   id listener = ^() {
-    events(@{@"handle" : handle});
+    dispatch_async(dispatch_get_main_queue(), ^{
+      events(@{@"handle" : handle});
+    });
   };
 
   id<FIRListenerRegistration> listenerRegistration =

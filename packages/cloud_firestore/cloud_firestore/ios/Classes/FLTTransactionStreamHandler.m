@@ -40,7 +40,7 @@
       self->_transactions[self->_transactionId] = transaction;
     }
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
       events(@{@"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:firestore.app.name]});
     });
 
@@ -49,10 +49,19 @@
         dispatch_time(DISPATCH_TIME_NOW, [transactionTimeout integerValue] * NSEC_PER_MSEC));
 
     if (timedOut) {
-      *pError = [NSError errorWithDomain:FIRFirestoreErrorDomain
-                                    code:FIRFirestoreErrorCodeDeadlineExceeded
-                                userInfo:@{}];
-      return nil;
+      NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils
+                                 ErrorCodeAndMessageFromNSError:[NSError errorWithDomain:FIRFirestoreErrorDomain
+                                                                                    code:FIRFirestoreErrorCodeDeadlineExceeded
+                                                                                userInfo:@{}]];
+
+      dispatch_async(dispatch_get_main_queue(), ^{
+        events(@{
+          @"error" : @{
+            @"code" : codeAndMessage[0],
+            @"message" : codeAndMessage[1],
+          }
+        });
+      });
     }
 
     NSDictionary *response = self->_response;
@@ -98,7 +107,7 @@
     if (error) {
       NSArray *details = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
 
-      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      dispatch_async(dispatch_get_main_queue(), ^{
         events(@{
           @"error" : @{
             @"code" : details[0],
@@ -107,12 +116,12 @@
         });
       });
     } else {
-      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      dispatch_async(dispatch_get_main_queue(), ^{
         events(@{@"complete" : [NSNumber numberWithBool:YES] });
       });
     }
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
       events(FlutterEndOfEventStream);
     });
 
