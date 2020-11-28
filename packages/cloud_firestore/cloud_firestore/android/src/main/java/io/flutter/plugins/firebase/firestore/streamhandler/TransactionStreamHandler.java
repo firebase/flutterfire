@@ -1,7 +1,6 @@
 package io.flutter.plugins.firebase.firestore.streamhandler;
 
 import android.app.Activity;
-import android.util.Log;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
