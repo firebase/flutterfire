@@ -121,7 +121,7 @@ class User {
   /// Returns the current token if it has not expired. Otherwise, this will
   /// refresh the token and return a new one.
   ///
-  /// If [forceRefresh] is `true`, the token returned will be refresh regardless
+  /// If [forceRefresh] is `true`, the token returned will be refreshed regardless
   /// of token expiration.
   Future<String> getIdToken([bool forceRefresh = false]) {
     return _delegate.getIdToken(forceRefresh);
@@ -130,7 +130,7 @@ class User {
   /// Returns a [IdTokenResult] containing the users JSON Web Token (JWT) and
   /// other metadata.
   ///
-  /// If [forceRefresh] is `true`, the token returned will be refresh regardless
+  /// If [forceRefresh] is `true`, the token returned will be refreshed regardless
   /// of token expiration.
   Future<IdTokenResult> getIdTokenResult([bool forceRefresh = false]) {
     return _delegate.getIdTokenResult(forceRefresh);
