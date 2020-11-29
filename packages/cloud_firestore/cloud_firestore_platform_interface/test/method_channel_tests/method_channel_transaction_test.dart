@@ -14,7 +14,7 @@ import '../utils/test_common.dart';
 
 class MockDocumentReference extends Mock implements DocumentReferencePlatform {}
 
-const _kTransactionId = 1022;
+const _kTransactionId = '1022';
 const Map<String, dynamic> kMockSnapshotMetadata = <String, dynamic>{
   "hasPendingWrites": false,
   "isFromCache": false,
