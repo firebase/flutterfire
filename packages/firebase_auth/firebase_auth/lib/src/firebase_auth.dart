@@ -71,6 +71,39 @@ class FirebaseAuth extends FirebasePluginPlatform {
     return null;
   }
 
+  /// Changes this instance to point to an Auth emulator running locally.
+  ///
+  /// Set the [origin] of the local emulator, such as "http://localhost:9099"
+  ///
+  /// Note: Must be called immediately, prior to accessing auth methods.
+  /// Do not use with production credentials as emulator traffic is not encrypted.
+  Future<void> useEmulator(String origin) async {
+    assert(origin.isNotEmpty);
+    String mappedOrigin = origin;
+
+    // Android considers localhost as 10.0.2.2 - automatically handle this for users.
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      if (mappedOrigin.startsWith('http://localhost')) {
+        mappedOrigin =
+            mappedOrigin.replaceFirst('http://localhost', 'http://10.0.2.2');
+      } else if (mappedOrigin.startsWith('http://127.0.0.1')) {
+        mappedOrigin =
+            mappedOrigin.replaceFirst('http://127.0.0.1', 'http://10.0.2.2');
+      }
+    }
+
+    // Native calls take the host and port split out
+    final hostPortRegex = RegExp(r'^http:\/\/([\w\d.]+):(\d+)$');
+    final RegExpMatch? match = hostPortRegex.firstMatch(mappedOrigin);
+    if (match == null) {
+      throw ArgumentError('firebase.auth().useEmulator() origin format error');
+    }
+    // Two non-empty groups in RegExp match - which is null-tested - these are non-null now
+    final String host = match.group(1)!;
+    final int port = int.parse(match.group(2)!);
+    await _delegate.useEmulator(host, port);
+  }
+
   /// Applies a verification code sent to the user by email or other out-of-band
   /// mechanism.
   ///

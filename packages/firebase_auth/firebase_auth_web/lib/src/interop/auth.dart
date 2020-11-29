@@ -609,6 +609,15 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Signs out the current user.
   Future signOut() => handleThenable(jsObject.signOut());
 
+  /// Configures the Auth instance to work with a local emulator
+  ///
+  /// Call with [origin] like 'http://localhost:9099'
+  ///
+  /// Note: must be called before using auth methods, do not use
+  /// with production credentials as local connections are unencrypted
+  Future useEmulator(String origin) =>
+      handleThenable(jsObject.useEmulator(origin));
+
   /// Sets the current language to the default device/browser preference.
   void useDeviceLanguage() => jsObject.useDeviceLanguage();
 

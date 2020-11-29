@@ -333,6 +333,13 @@ void main() {
       );
     });
 
+    test('throws if useEmulator', () async {
+      await expectLater(
+        () => firebaseAuthPlatform.useEmulator('http://localhost', 9099),
+        throwsUnimplementedError,
+      );
+    });
+
     test('throws if verifyPasswordResetCode()', () async {
       await expectLater(
         () => firebaseAuthPlatform.verifyPasswordResetCode('test'),
