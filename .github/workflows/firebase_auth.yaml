@@ -9,7 +9,7 @@ on:
     branches:
       - master
     paths-ignore:
-    - "docs/**"
+      - "docs/**"
 
 env:
   FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_auth*"
@@ -27,9 +27,13 @@ jobs:
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh dev
       - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          sudo npm i -g firebase-tools
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -51,9 +55,12 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
+          sudo npm i -g firebase-tools
           flutter config --enable-macos-desktop
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive iOS Example"
         run: ./.github/workflows/scripts/drive-example.sh ios
       - name: "Build MacOS Example"
@@ -62,7 +69,9 @@ jobs:
         run: ./.github/workflows/scripts/drive-example.sh macos
 
   web:
-    runs-on: ubuntu-latest
+    # Using macos instead of ubuntu as Web app can't connect to Firebase emulator
+    # when running on ubuntu.
+    runs-on: macos-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v1
@@ -74,5 +83,8 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-web
+          sudo npm i -g firebase-tools
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
         run: ./.github/workflows/scripts/drive-example.sh web
