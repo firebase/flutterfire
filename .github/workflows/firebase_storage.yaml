@@ -10,6 +10,7 @@ on:
       - master
     paths-ignore:
       - "docs/**"
+      - "**/*.md"
 
 env:
   FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_storage*"
@@ -21,15 +22,33 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v1
+      - uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          retry_wait_seconds: 60
+          max_attempts: 3
+          command: ./.github/workflows/scripts/install-flutter.sh dev
       - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          retry_wait_seconds: 60
+          max_attempts: 3
+          command: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          retry_wait_seconds: 60
+          max_attempts: 3
+          command: ./.github/workflows/scripts/build-example.sh android
       - name: "Drive Example"
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -40,26 +59,66 @@ jobs:
           target: default
           profile: Nexus 5X
           script: ./.github/workflows/scripts/drive-example.sh android
+      - name: Compress Emulator Log
+        if: always()
+        run: gzip -9 adb-log.txt
+        shell: bash
+      - name: Upload Emulator Log
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: adb_logs
+          path: adb-log.txt.gz
 
   apple:
     runs-on: macos-latest
     timeout-minutes: 35
     steps:
-      - uses: actions/checkout@v1
+      - uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          retry_wait_seconds: 60
+          max_attempts: 3
+          command: ./.github/workflows/scripts/install-flutter.sh dev
       - name: "Install Tools"
-        run: |
-          ./.github/workflows/scripts/install-tools.sh
-          flutter config --enable-macos-desktop
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          retry_wait_seconds: 60
+          max_attempts: 3
+          command: ./.github/workflows/scripts/install-tools.sh && flutter config --enable-macos-desktop
       - name: "Build iOS Example"
-        run: ./.github/workflows/scripts/build-example.sh ios
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          retry_wait_seconds: 60
+          max_attempts: 3
+          command: ./.github/workflows/scripts/build-example.sh ios
       - name: "Drive iOS Example"
         run: ./.github/workflows/scripts/drive-example.sh ios
+      - name: Compress Simulator Log
+        if: always()
+        run: gzip -9 simulator.log
+      - name: Upload Simulator Log
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: simulator_logs
+          path: simulator.log.gz
       - name: "Build MacOS Example"
-        run: ./.github/workflows/scripts/build-example.sh macos
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          retry_wait_seconds: 60
+          max_attempts: 3
+          command: ./.github/workflows/scripts/build-example.sh macos
       - name: "Drive MacOS Example"
         run: ./.github/workflows/scripts/drive-example.sh macos
 
@@ -67,14 +126,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v1
+      - uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh beta
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          retry_wait_seconds: 60
+          max_attempts: 3
+          command: ./.github/workflows/scripts/install-flutter.sh beta
       - name: "Install Tools"
-        run: |
-          ./.github/workflows/scripts/install-tools.sh
-          flutter config --enable-web
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          retry_wait_seconds: 60
+          max_attempts: 3
+          command: ./.github/workflows/scripts/install-tools.sh && flutter config --enable-web
       - name: "Drive Example"
         run: ./.github/workflows/scripts/drive-example.sh web

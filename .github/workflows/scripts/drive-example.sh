@@ -6,6 +6,10 @@ if [ "$ACTION" == "android" ]
 then
   # Sleep to allow emulator to settle.
   sleep 15
+
+  # Create an emulator log for troubleshooting, will be uploaded as an artifact
+  nohup sh -c "$ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt" &
+
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
     flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart --dart-define=CI=true
   exit
@@ -19,8 +23,10 @@ then
   xcrun simctl logverbose "$SIMULATOR" enable
   # Sleep to allow simulator to settle.
   sleep 15
-  # Uncomment following line to have simulator logs printed out for debugging purposes.
-  # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
+
+  # Create a simulator log for troubleshooting, will be uploaded as an artifact
+  nohup sh -c "sleep 30 && xcrun simctl spawn booted log stream --level debug --style compact > simulator.log 2>&1 &"
+
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
     flutter drive -d \"$SIMULATOR\" --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart --dart-define=CI=true
   MELOS_EXIT_CODE=$?
