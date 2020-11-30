@@ -17,9 +17,9 @@ There are a few extra steps required for the Android integration. Enable the Goo
 ```gradle
 dependencies {
   // Example existing classpath
-  classpath 'com.android.tools.build:gradle:3.3.0'
+  classpath 'com.android.tools.build:gradle:3.5.4'
   // Add the google services classpath
-  classpath 'com.google.gms:google-services:4.3.0'
+  classpath 'com.google.gms:google-services:4.3.4'
 }
 ```
 
