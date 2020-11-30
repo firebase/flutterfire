@@ -105,10 +105,8 @@ class Application extends StatefulWidget {
 }
 
 class _Application extends State<Application> {
-  @override
-  void initState() async {
-    super.initState();
-
+  
+  getMessages()async{
     // Get any messages which caused the application to open from
     // a terminated state.
     RemoteMessage initialMessage =
@@ -129,6 +127,12 @@ class _Application extends State<Application> {
           arguments: ChatArguments(message));
       }
     });
+  }
+  
+  @override
+  void initState() async {
+    super.initState();
+    getMessages();
   }
 
   @override
