@@ -318,12 +318,17 @@ public class FlutterFirebaseFirestorePlugin
                       exceptionMap.put("code", firestoreException.getCode());
                       exceptionMap.put("message", firestoreException.getMessage());
                       querySnapshotMap.put("error", exceptionMap);
-
-                      channel.invokeMethod("QuerySnapshot#error", querySnapshotMap);
+                      
+                      if(channel != null) {
+                        channel.invokeMethod("QuerySnapshot#error", querySnapshotMap);                      
+                      }
                     } else {
                       //noinspection ConstantConditions
                       querySnapshotMap.put("snapshot", querySnapshot);
-                      channel.invokeMethod("QuerySnapshot#event", querySnapshotMap);
+                      if(channel != null) {
+                        channel.invokeMethod("QuerySnapshot#event", querySnapshotMap);
+                      }
+                      
                     }
                   });
 
