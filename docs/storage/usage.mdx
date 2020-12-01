@@ -145,7 +145,7 @@ retrieve a long-lived download URL which can be used. To request a download URL,
 ```dart
 Future<void> downloadURLExample() async {
   String downloadURL = await firebase_storage.FirebaseStorage.instance
-      .ref('users/123/avatar.jpg')
+      .ref().child('users/123/avatar.jpg')
       .getDownloadURL();
 
   // Within your widgets:
