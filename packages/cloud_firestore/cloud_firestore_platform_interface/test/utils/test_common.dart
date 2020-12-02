@@ -68,12 +68,14 @@ void handleMethodCall(MethodCallCallback methodCallCallback) =>
       return await methodCallCallback(call);
     });
 
-void handleDocumentSnapshotsEventChannel(final String id) {
+void handleDocumentSnapshotsEventChannel(
+    final String id, List<MethodCall> log) {
   final name = 'plugins.flutter.io/firebase_firestore/document/$id';
   final codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
   MethodChannel(name, codec)
       .setMockMethodCallHandler((MethodCall methodCall) async {
+    log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
         await ServicesBinding.instance.defaultBinaryMessenger

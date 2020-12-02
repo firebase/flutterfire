@@ -239,6 +239,7 @@ void main() {
           'firestore': isInstanceOf<FirebaseFirestorePlatform>(),
           'includeMetadataChanges': false,
         });
+        expect(log[2].method, 'cancel');
       });
     });
 

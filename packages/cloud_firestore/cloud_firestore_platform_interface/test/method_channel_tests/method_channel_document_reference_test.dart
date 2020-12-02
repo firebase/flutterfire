@@ -2,7 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -79,20 +82,41 @@ void main() {
           reason: "DocumentReference.delete was not called");
     });
 
-    test("snapshots", () async {
+    group('snapshots', () {
+      final List<MethodCall> log = <MethodCall>[];
+
       final String mockObserverId = 'DOCUMENT1';
-      bool isMethodCalled = false;
-      handleMethodCall((call) {
-        if (call.method == "DocumentReference#snapshots") {
-          isMethodCalled = true;
-          handleDocumentSnapshotsEventChannel(mockObserverId);
-          return mockObserverId;
-        }
-        return 0;
+
+      setUp(() {
+        log.clear();
+
+        handleMethodCall((MethodCall call) async {
+          log.add(call);
+          if (call.method == "DocumentReference#snapshots") {
+            handleDocumentSnapshotsEventChannel(mockObserverId, log);
+            return Future.value(mockObserverId);
+          }
+        });
       });
-      _documentReference.snapshots().listen((_) {});
-      expect(isMethodCalled, isTrue,
-          reason: "DocumentReference.addSnapshotListener was not called");
+
+      test('onListen and onCancel invokes native methods with correct args',
+          () async {
+        final Stream<DocumentSnapshotPlatform> stream =
+            _documentReference.snapshots();
+        final StreamSubscription<DocumentSnapshotPlatform> subscription =
+            await stream.listen((DocumentSnapshotPlatform snapshot) {});
+
+        await subscription.cancel();
+        await Future<void>.delayed(Duration.zero);
+        expect(log[0].method, 'DocumentReference#snapshots');
+        expect(log[1].method, 'listen');
+        expect(log[1].arguments, <String, dynamic>{
+          'reference': isInstanceOf<MethodChannelDocumentReference>(),
+          'firestore': isInstanceOf<FirebaseFirestorePlatform>(),
+          'includeMetadataChanges': false,
+        });
+        expect(log[2].method, 'cancel');
+      });
     });
   });
 }
