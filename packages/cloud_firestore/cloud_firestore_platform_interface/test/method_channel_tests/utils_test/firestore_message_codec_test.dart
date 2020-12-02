@@ -98,6 +98,10 @@ void main() {
     test('encode and decode FieldPath', () {
       _checkEncodeDecode<dynamic>(codec, FieldPath.documentId);
     });
+
+    test('encode and decode MethodChannelFirebaseFirestore', () {
+      _checkEncodeDecode<dynamic>(codec, firestore);
+    });
   });
 }
 

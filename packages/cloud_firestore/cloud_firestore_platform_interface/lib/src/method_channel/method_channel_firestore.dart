@@ -250,6 +250,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           });
 
           // Allow the [runTransaction] method to listen to an error.
+
           completer.completeError(error);
 
           return;

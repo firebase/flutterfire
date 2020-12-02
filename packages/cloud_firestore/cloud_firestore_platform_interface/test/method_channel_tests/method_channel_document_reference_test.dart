@@ -80,10 +80,13 @@ void main() {
     });
 
     test("snapshots", () async {
+      final String mockObserverId = 'DOCUMENT1';
       bool isMethodCalled = false;
       handleMethodCall((call) {
-        if (call.method == "DocumentReference#addSnapshotListener") {
+        if (call.method == "DocumentReference#snapshots") {
           isMethodCalled = true;
+          handleDocumentSnapshotsEventChannel(mockObserverId);
+          return mockObserverId;
         }
         return 0;
       });
