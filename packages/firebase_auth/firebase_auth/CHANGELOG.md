@@ -1,3 +1,26 @@
+## 0.18.3+1
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FIX**: stop authStateChange firing twice for initial event (#4099).
+ - **FIX**: updated email link signin to use latest format for ActionCodeSettings (#3425).
+ - **CHORE**: add missing dependency to example app.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 0.18.3
+
+ - **FEAT**: migrate firebase interop files to local repository (#3973).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **FEAT** [WEB] adds support for `EmailAuthProvider.credentialWithLink`
+ - **FEAT** [WEB] adds support for `FirebaseAuth.setSettings`
+ - **FEAT** [WEB] adds support for `User.tenantId`
+ - **FEAT** [WEB] `FirebaseAuthException` now supports `email` & `credential` properties
+ - **FEAT** [WEB] `ActionCodeInfo` now supports `previousEmail` field
+
+## 0.18.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
 ## 0.18.1+2
 
  - **FIX**: on iOS use sendEmailVerificationWithActionCodeSettings instead of sendEmailVerificationWithCompletion (#3686).

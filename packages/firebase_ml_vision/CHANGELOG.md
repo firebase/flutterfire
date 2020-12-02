@@ -1,7 +1,17 @@
-## 0.9.7+1
+## 0.9.9+1
 
  - **FIX**: Added NSNull validation to driverLicenseDictionary to prevent errors when NSArray:addObject is called
  - **DOCS**: Fixed analyze script on docs
+
+## 0.9.9
+
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.9.8
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
 
 ## 0.9.7
 

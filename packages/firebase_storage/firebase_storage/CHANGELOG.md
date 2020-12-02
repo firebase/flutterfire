@@ -1,3 +1,25 @@
+## 5.1.0
+
+ - **TEST**: skip ios pause/resume check.
+ - **TEST**: skip ios pause/resume check.
+ - **TEST**: Opt-out from null safety. (#4204).
+ - **FEAT**: web support (#3917).
+ - **FEAT**: Tweaks to firebase_storage for the upcoming web version. (#4028).
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 5.0.1
+
+ - Update a dependency to the latest release.
+
+## 5.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 5.0.0-dev.4
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
 ## 5.0.0-dev.3
 
  - **FEAT**: rework (#3612).

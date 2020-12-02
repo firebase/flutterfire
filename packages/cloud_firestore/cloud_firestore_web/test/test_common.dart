@@ -8,7 +8,7 @@ import 'package:cloud_firestore_web/cloud_firestore_web.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:mockito/mockito.dart';
-import 'package:firebase/firestore.dart' as web;
+import 'package:cloud_firestore_web/src/interop/firestore.dart' as web;
 
 import 'package:cloud_firestore_web/src/document_reference_web.dart';
 import 'package:cloud_firestore_web/src/query_web.dart';

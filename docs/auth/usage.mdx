@@ -185,18 +185,50 @@ if (!user.emailVerified) {
 }
 ```
 
-Firebase will send an automated email to the user with a unique code. This code can then be entered via the `applyActionCode()` method.
-You can first check whether the code is valid by using the `checkActionCode()` method:
+Firebase will send an automated email to the user with a link. User's email will be verified when the link is opened in a browser.
+
+#### Open link in app
+
+You can pass state via a continue URL when sending email actions for verifying a user's email. This provides the user the ability to go back to the app after the action is completed. In addition, you can specify whether to handle the email action link directly from a mobile application when it is installed instead of a web page.
+
+The following example illustrates how to send an email verification link that will open in a mobile app first as a Firebase Dynamic Link using the custom dynamic link domain example.page.link (iOS app com.example.ios or Android app com.example.android where the app will install if not already installed and the minimum version is 12). The deep link will contain the continue URL payload https://www.example.com/?email=user@example.com.
+
+```dart
+
+User user = FirebaseAuth.instance.currentUser;
+
+if (!user.emailVerified) {
+
+var actionCodeSettings = ActionCodeSettings(
+        url: 'https://www.example.com/?email=${user.email}',
+        dynamicLinkDomain: "example.page.link",
+        android: {
+          "packageName": "com.example.android",
+          "installApp": true,
+          "minimumVersion": "12"
+        },
+        iOS: {"bundleId": "com.example.ios"},
+        handleCodeInApp: true);
+
+await user.sendEmailVerification(actionCodeSettings);
+
+}
+```
+
+The code then can be received in app by parsing the Firebase Dynamic Link. Refer - [Handling email actions in a mobile application](https://firebase.google.com/docs/auth/web/passing-state-in-email-actions#handling_email_actions_in_a_mobile_application) to know how to handle the link in app.
+You can use
+[firebase_dynamic_links](https://pub.dev/packages/firebase_dynamic_links) flutter package to get the `oobCode` from the link and apply actionCode as follow.
 
 ```dart
 FirebaseAuth auth = FirebaseAuth.instance;
 
-// Get the code from the email:
-String code = 'xxxxxxx';
+//Get actionCode from the dynamicLink
+final Uri deepLink = dynamicLink?.link;
+var actionCode = deepLink.queryParameters['oobCode'];
 
 try {
-  await auth.checkActionCode(code);
-  await auth.applyActionCode(code);
+  await auth.checkActionCode(actionCode);
+  await auth.applyActionCode(actionCode);
 
   // If successful, reload the user:
   auth.currentUser.reload();
@@ -306,11 +338,11 @@ listeners.
 
 Firebase also supports authenticating with external provides. To learn more, view the documentation for your authentication method:
 
-- [Apple Sign-In.](../social#apple)
-- [Facebook Sign-In.](../social#facebook)
-- [Twitter Sign-In.](../social#twitter)
-- [Google Sign-In.](../social#google)
-- [Phone Number Sign-In.](../phone)
+- [Apple Sign-In.](social#apple)
+- [Facebook Sign-In.](social#facebook)
+- [Twitter Sign-In.](social#twitter)
+- [Google Sign-In.](social#google)
+- [Phone Number Sign-In.](phone)
 
 ## User management
 

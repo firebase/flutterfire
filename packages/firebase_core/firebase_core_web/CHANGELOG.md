@@ -1,3 +1,14 @@
+## 0.2.1+1
+
+ - **REFACTOR**: ignore typedefs.
+ - **FIX**: ensure list items are converted (#4076).
+
+## 0.2.1
+
+ - **FEAT**: migrate firebase interop files to local repository (#3973).
+ - **CHORE**: promote to stable version.
+ - **CHORE**: remove android directory from web plugins (#3199).
+
 ## 0.2.0
 
 * DEPRECATED: `FirebaseApp.configure` method is now deprecated in favor of the `Firebase.initializeApp` method.

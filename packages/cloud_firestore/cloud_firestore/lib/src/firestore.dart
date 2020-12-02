@@ -92,9 +92,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Enable persistence of Firestore data.
-  /// This is a web only method. Use [Settings.persistenceEnabled] for non Web platforms.
-  Future<void> enablePersistence() async {
-    return _delegate.enablePersistence();
+  ///
+  /// This is a web-only method. Use [Settings.persistenceEnabled] for non-web platforms.
+  Future<void> enablePersistence(
+      [PersistenceSettings persistenceSettings]) async {
+    return _delegate.enablePersistence(persistenceSettings);
   }
 
   /// Gets a [Query] for the specified collection group.

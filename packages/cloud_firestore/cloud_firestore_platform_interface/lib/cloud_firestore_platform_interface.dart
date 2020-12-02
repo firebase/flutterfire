@@ -27,6 +27,7 @@ export 'src/timestamp.dart';
 export 'src/settings.dart';
 export 'src/get_options.dart';
 export 'src/set_options.dart';
+export 'src/persistence_settings.dart';
 
 /// Helper method exposed to determine whether a given [collectionPath] points to
 /// a valid Firestore collection.
