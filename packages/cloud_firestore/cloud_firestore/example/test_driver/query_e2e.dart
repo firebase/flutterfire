@@ -127,6 +127,30 @@ void runQueryTests() {
         }, count: 1, reason: "Stream should only have been called once."));
       });
 
+      test('listens to multiple queries', () async {
+        CollectionReference collection1 =
+            await initializeTest('document-snapshot-1');
+        CollectionReference collection2 =
+            await initializeTest('document-snapshot-2');
+
+        await collection1.add({'test': 'value1'});
+        await collection2.add({'test': 'value2'});
+
+        Stream<QuerySnapshot> stream1 = collection1.snapshots();
+        Stream<QuerySnapshot> stream2 = collection2.snapshots();
+
+        final completer1 = Completer<String>();
+        final completer2 = Completer<String>();
+
+        stream1.listen((s) => completer1.complete(s.docs.first.data()['test']));
+        stream2.listen((s) => completer2.complete(s.docs.first.data()['test']));
+
+        expect(
+          await Future.wait([completer1.future, completer2.future]),
+          ['value1', 'value2'],
+        );
+      });
+
       test('listens to a multiple changes response', () async {
         CollectionReference collection = await initializeTest('get-multiple');
         await collection.add({'foo': 'bar'});
