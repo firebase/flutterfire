@@ -324,7 +324,7 @@ void main() {
           try {
             await firestore.runTransaction(transactionHandler);
             fail('Should have thrown exception');
-          } on FirebaseException catch (e) {
+          } on FirebaseException catch (_) {
             return;
           } catch (_) {
             fail("Transaction threw invalid exeption");
