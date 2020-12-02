@@ -108,16 +108,6 @@ void main() {
       });
     });
 
-    test('nextMethodChannelHandleId', () {
-      final handleId = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
-
-      expect(MethodChannelFirebaseFirestore.nextMethodChannelHandleId,
-          handleId + 1);
-
-      nextMockHandleId;
-      nextMockHandleId;
-    });
-
     group('delegateFor()', () {
       test('returns a [FirestorePlatform] with no arguments', () {
         expect(firestore.delegateFor(),

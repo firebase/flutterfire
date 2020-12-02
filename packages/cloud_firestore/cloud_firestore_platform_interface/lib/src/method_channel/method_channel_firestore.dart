@@ -22,18 +22,18 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// Create an instance of [MethodChannelFirebaseFirestore] with optional [FirebaseApp]
   MethodChannelFirebaseFirestore({FirebaseApp app}) : super(appInstance: app);
 
-  static int _methodChannelHandleId = 0;
-
   /// The [Settings] for this [MethodChannelFirebaseFirestore] instance.
   Settings _settings = Settings();
 
-  /// Increments and returns the next channel ID handler for Firestore.
-  static int get nextMethodChannelHandleId => _methodChannelHandleId++;
-
   /// Attach a [FirebaseException] to a given [StreamController].
   static void forwardErrorToController(
-      StreamController controller, Map<dynamic, dynamic> arguments) async {
+      StreamController controller, dynamic arguments) async {
     if (controller == null) {
+      return;
+    }
+
+    if (!(arguments is Map)) {
+      controller.addError('Internal Error');
       return;
     }
 
@@ -67,22 +67,28 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   );
 
   /// The [EventChannel] used for query snapshots
-  static EventChannel querySnapshotChannel = EventChannel(
-    'plugins.flutter.io/firebase_firestore/query',
-    StandardMethodCodec(FirestoreMessageCodec()),
-  );
+  static EventChannel querySnapshotChannel(String id) {
+    return EventChannel(
+      'plugins.flutter.io/firebase_firestore/query/$id',
+      StandardMethodCodec(FirestoreMessageCodec()),
+    );
+  }
 
   /// The [EventChannel] used for document snapshots
-  static EventChannel documentSnapshotChannel = EventChannel(
-    'plugins.flutter.io/firebase_firestore/document',
-    StandardMethodCodec(FirestoreMessageCodec()),
-  );
+  static EventChannel documentSnapshotChannel(String id) {
+    return EventChannel(
+      'plugins.flutter.io/firebase_firestore/document/$id',
+      StandardMethodCodec(FirestoreMessageCodec()),
+    );
+  }
 
   /// The [EventChannel] used for snapshotsInSync
-  static EventChannel snapshotsInSyncChannel = EventChannel(
-    'plugins.flutter.io/firebase_firestore/snapshotsInSync',
-    StandardMethodCodec(FirestoreMessageCodec()),
-  );
+  static EventChannel snapshotsInSyncChannel(String id) {
+    return EventChannel(
+      'plugins.flutter.io/firebase_firestore/snapshotsInSync/$id',
+      StandardMethodCodec(FirestoreMessageCodec()),
+    );
+  }
 
   /// Gets a [FirebaseFirestorePlatform] with specific arguments such as a different
   /// [FirebaseApp].
@@ -154,35 +160,28 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Stream<void> snapshotsInSync() {
-    int handle = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
-
-    StreamSubscription<dynamic> querySnapshotStream;
+    StreamSubscription<dynamic> snapshotStream;
     StreamController<void> controller; // ignore: close_sinks
 
     controller = StreamController<void>.broadcast(
       onListen: () async {
-        querySnapshotStream = MethodChannelFirebaseFirestore
-            .snapshotsInSyncChannel
-            .receiveBroadcastStream(
+        final observerId = await MethodChannelFirebaseFirestore.channel
+            .invokeMethod<String>('SnapshotsInSync#setup');
+
+        snapshotStream =
+            MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId)
+                .receiveBroadcastStream(
           <String, dynamic>{
-            'handle': handle,
             'firestore': this,
           },
         ).listen((event) {
-          if (event.containsKey('error')) {
-            MethodChannelFirebaseFirestore.forwardErrorToController(
-              controller,
-              event,
-            );
-          } else {
-            controller.add(null);
-          }
+          controller.add(null);
         }, onError: (error, stack) {
-          // TODO: Handle these conditions
+          forwardErrorToController(controller, error);
         });
       },
       onCancel: () {
-        querySnapshotStream?.cancel();
+        snapshotStream?.cancel();
       },
     );
 

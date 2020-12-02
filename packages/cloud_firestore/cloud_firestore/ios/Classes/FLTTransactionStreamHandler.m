@@ -11,19 +11,25 @@
 #import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTTransactionStreamHandler.h"
 
+@interface FLTTransactionStreamHandler ()
+@property(nonatomic, copy, nonnull) void (^started)(FIRTransaction *);
+@property(nonatomic, copy, nonnull) void (^ended)(void);
+@end
+
 @implementation FLTTransactionStreamHandler {
   NSString *_transactionId;
-  NSMutableDictionary<NSString *, FIRTransaction *> *_transactions;
   dispatch_semaphore_t _semaphore;
   NSDictionary *_response;
 }
 
 - (instancetype)initWithId:(NSString *)transactionId
-      existingTransactions:(NSMutableDictionary<NSString *, FIRTransaction *> *)transactions {
+                   started:(void (^)(FIRTransaction *))startedListener
+                     ended:(void (^)(void))endedListener {
   self = [super init];
   if (self) {
     _transactionId = transactionId;
-    _transactions = transactions;
+    self.started = startedListener;
+    self.ended = endedListener;
     _semaphore = dispatch_semaphore_create(0);
     _response = [NSMutableDictionary dictionary];
   }
@@ -36,9 +42,7 @@
   NSNumber *transactionTimeout = arguments[@"timeout"];
 
   id transactionRunBlock = ^id(FIRTransaction *transaction, NSError **pError) {
-    @synchronized(self->_transactions) {
-      self->_transactions[self->_transactionId] = transaction;
-    }
+    self.started(transaction);
 
     dispatch_async(dispatch_get_main_queue(), ^{
       events(@{@"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:firestore.app.name]});
@@ -126,9 +130,7 @@
       events(FlutterEndOfEventStream);
     });
 
-    @synchronized(self->_transactions) {
-      [self->_transactions removeObjectForKey:self->_transactionId];
-    }
+    self.ended();
   };
 
   [firestore runTransactionWithBlock:transactionRunBlock completion:transactionCompleteBlock];

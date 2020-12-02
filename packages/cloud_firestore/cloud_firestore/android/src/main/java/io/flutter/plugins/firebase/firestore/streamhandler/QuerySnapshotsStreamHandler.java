@@ -1,25 +1,24 @@
 package io.flutter.plugins.firebase.firestore.streamhandler;
 
+import static io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.DEFAULT_ERROR_CODE;
+
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
-import io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreException;
-import java.util.HashMap;
+import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import java.util.Map;
 import java.util.Objects;
 
 public class QuerySnapshotsStreamHandler implements StreamHandler {
 
-  final HashMap<Integer, ListenerRegistration> listenerRegistrations = new HashMap<>();
+  ListenerRegistration listenerRegistration;
 
   @Override
   public void onListen(Object arguments, EventSink events) {
     @SuppressWarnings("unchecked")
     Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
-
-    final int handle = (int) Objects.requireNonNull(argumentsMap.get("handle"));
 
     MetadataChanges metadataChanges =
         (Boolean) Objects.requireNonNull(argumentsMap.get("includeMetadataChanges"))
@@ -33,44 +32,24 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
           "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.");
     }
 
-    ListenerRegistration listenerRegistration =
+    listenerRegistration =
         query.addSnapshotListener(
             metadataChanges,
             (querySnapshot, exception) -> {
-              Map<String, Object> querySnapshotMap = new HashMap<>();
-
-              querySnapshotMap.put("handle", handle);
-
               if (exception != null) {
-                Map<String, Object> exceptionMap = new HashMap<>();
-                FlutterFirebaseFirestoreException firestoreException =
-                    new FlutterFirebaseFirestoreException(exception, exception.getCause());
-                exceptionMap.put("code", firestoreException.getCode());
-                exceptionMap.put("message", firestoreException.getMessage());
-                querySnapshotMap.put("error", exceptionMap);
+                Map<String, String> exceptionDetails = ExceptionConverter.createDetails(exception);
+                events.error(DEFAULT_ERROR_CODE, exception.getMessage(), exceptionDetails);
               } else {
-                querySnapshotMap.put("snapshot", querySnapshot);
+                events.success(querySnapshot);
               }
-
-              events.success(querySnapshotMap);
             });
-
-    listenerRegistrations.put(handle, listenerRegistration);
   }
 
   @Override
   public void onCancel(Object arguments) {
-    if (arguments == null) {
-      return;
-    }
-
-    @SuppressWarnings("unchecked")
-    Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
-    final int handle = (int) Objects.requireNonNull(argumentsMap.get("handle"));
-
-    ListenerRegistration registration = listenerRegistrations.remove(handle);
-    if (registration != null) {
-      registration.remove();
+    if (listenerRegistration != null) {
+      listenerRegistration.remove();
+      listenerRegistration = null;
     }
   }
 }

@@ -129,8 +129,6 @@ class MethodChannelQuery extends QueryPlatform {
   }) {
     assert(includeMetadataChanges != null);
 
-    int handle = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
-
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     StreamController<QuerySnapshotPlatform> controller; // ignore: close_sinks
@@ -138,31 +136,21 @@ class MethodChannelQuery extends QueryPlatform {
     StreamSubscription<dynamic> snapshotStream;
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
       onListen: () async {
-        snapshotStream = MethodChannelFirebaseFirestore.querySnapshotChannel
-            .receiveBroadcastStream(
+        final observerId = await MethodChannelFirebaseFirestore.channel
+            .invokeMethod<String>('Query#snapshots');
+
+        snapshotStream =
+            MethodChannelFirebaseFirestore.querySnapshotChannel(observerId)
+                .receiveBroadcastStream(
           <String, dynamic>{
             'query': this,
-            'handle': handle,
             'firestore': firestore,
             'includeMetadataChanges': includeMetadataChanges,
           },
-        ).listen((event) {
-          if (event['handle'] != handle) {
-            return;
-          }
-
-          if (event.containsKey('error')) {
-            MethodChannelFirebaseFirestore.forwardErrorToController(
-              controller,
-              event,
-            );
-          } else {
-            controller.add(
-              MethodChannelQuerySnapshot(firestore, event['snapshot']),
-            );
-          }
+        ).listen((snapshot) {
+          controller.add(MethodChannelQuerySnapshot(firestore, snapshot));
         }, onError: (error, stack) {
-          // TODO: Handle these conditions
+          controller.addError(convertPlatformException(error));
         });
       },
       onCancel: () {

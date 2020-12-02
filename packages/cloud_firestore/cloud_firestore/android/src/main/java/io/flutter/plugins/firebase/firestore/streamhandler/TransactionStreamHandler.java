@@ -22,17 +22,19 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class TransactionStreamHandler implements StreamHandler {
 
+  /** Callback when the transaction has been started. */
+  public interface OnTransactionStartedListener {
+    void onStarted(Transaction transaction);
+  }
+
   final AtomicReference<Activity> activityRef;
-  final Map<String, Transaction> transactions;
-  final String transactionId;
+  final OnTransactionStartedListener onTransactionStartedListener;
 
   public TransactionStreamHandler(
-      String transactionId,
       AtomicReference<Activity> activityRef,
-      Map<String, Transaction> transactions) {
-    this.transactionId = transactionId;
+      OnTransactionStartedListener onTransactionStartedListener) {
     this.activityRef = activityRef;
-    this.transactions = transactions;
+    this.onTransactionStartedListener = onTransactionStartedListener;
   }
 
   final Semaphore semaphore = new Semaphore(0);
@@ -60,7 +62,7 @@ public class TransactionStreamHandler implements StreamHandler {
     firestore
         .runTransaction(
             transaction -> {
-              transactions.put(transactionId, transaction);
+              onTransactionStartedListener.onStarted(transaction);
 
               Map<String, Object> attemptMap = new HashMap<>();
               attemptMap.put("appName", firestore.getApp().getName());

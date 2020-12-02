@@ -24,6 +24,7 @@ import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -51,21 +52,24 @@ public class FlutterFirebaseFirestorePlugin
 
   protected static final WeakHashMap<String, WeakReference<FirebaseFirestore>>
       firestoreInstanceCache = new WeakHashMap<>();
+
   public static final String DEFAULT_ERROR_CODE = "firebase_firestore";
+
+  private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_firestore";
 
   final StandardMethodCodec MESSAGE_CODEC =
       new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE);
 
   private BinaryMessenger binaryMessenger;
   private MethodChannel channel;
-  private EventChannel snapshotsInSyncEventChannel;
-  private EventChannel querySnapshotEventChannel;
-  private EventChannel documentSnapshotEventChannel;
 
   private final AtomicReference<Activity> activity = new AtomicReference<>(null);
+
+  // TODO(ened): No need to be static anymore.
   static final Map<String, Transaction> transactions = new HashMap<>();
 
-  private final Map<String, EventChannel> transactionChannels = new HashMap<>();
+  private final Map<String, EventChannel> eventChannels = new HashMap<>();
+  private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
   private final Map<String, TransactionStreamHandler> transactionHandlers = new HashMap<>();
 
   protected static FirebaseFirestore getCachedFirebaseFirestoreInstanceForKey(String key) {
@@ -115,19 +119,15 @@ public class FlutterFirebaseFirestorePlugin
     channel.setMethodCallHandler(null);
     channel = null;
 
-    snapshotsInSyncEventChannel.setStreamHandler(null);
-    snapshotsInSyncEventChannel = null;
-
-    querySnapshotEventChannel.setStreamHandler(null);
-    querySnapshotEventChannel = null;
-
-    documentSnapshotEventChannel.setStreamHandler(null);
-    documentSnapshotEventChannel = null;
-
-    for (String transactionId : transactionChannels.keySet()) {
-      transactionChannels.get(transactionId).setStreamHandler(null);
+    for (String identifier : eventChannels.keySet()) {
+      eventChannels.get(identifier).setStreamHandler(null);
     }
-    transactionChannels.clear();
+    eventChannels.clear();
+
+    for (String identifier : streamHandlers.keySet()) {
+      streamHandlers.get(identifier).onCancel(null);
+    }
+    streamHandlers.clear();
 
     binaryMessenger = null;
   }
@@ -393,15 +393,12 @@ public class FlutterFirebaseFirestorePlugin
         methodCallTask = transactionGet(call.arguments());
         break;
       case "Transaction#create":
-        String transactionId = UUID.randomUUID().toString().toLowerCase(Locale.US);
+        final String transactionId = UUID.randomUUID().toString().toLowerCase(Locale.US);
+        final TransactionStreamHandler handler =
+            new TransactionStreamHandler(
+                activity, transaction -> transactions.put(transactionId, transaction));
 
-        final String channelName =
-            "plugins.flutter.io/firebase_firestore/transaction/" + transactionId;
-
-        EventChannel channel = new EventChannel(binaryMessenger, channelName, MESSAGE_CODEC);
-        TransactionStreamHandler handler =
-            new TransactionStreamHandler(transactionId, activity, transactions);
-        channel.setStreamHandler(handler);
+        registerEventChannel(METHOD_CHANNEL_NAME + "/transaction", transactionId, handler);
         transactionHandlers.put(transactionId, handler);
         result.success(transactionId);
         return;
@@ -415,6 +412,22 @@ public class FlutterFirebaseFirestorePlugin
       case "Query#get":
         methodCallTask = queryGet(call.arguments());
         break;
+      case "Query#snapshots":
+        result.success(
+            registerEventChannel(
+                METHOD_CHANNEL_NAME + "/query", new QuerySnapshotsStreamHandler()));
+        return;
+      case "DocumentReference#snapshots":
+        result.success(
+            registerEventChannel(
+                METHOD_CHANNEL_NAME + "/document", new DocumentSnapshotsStreamHandler()));
+        return;
+      case "SnapshotsInSync#setup":
+        result.success(
+            registerEventChannel(
+                METHOD_CHANNEL_NAME + "/snapshotsInSync", new SnapshotsInSyncStreamHandler()));
+        return;
+
       case "DocumentReference#get":
         methodCallTask = documentGet(call.arguments());
         break;
@@ -459,32 +472,10 @@ public class FlutterFirebaseFirestorePlugin
   private void initInstance(BinaryMessenger messenger) {
     binaryMessenger = messenger;
 
-    final String methodChannelName = "plugins.flutter.io/firebase_firestore";
-
-    channel = new MethodChannel(messenger, methodChannelName, MESSAGE_CODEC);
+    channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME, MESSAGE_CODEC);
     channel.setMethodCallHandler(this);
 
-    final String snapshotsInSyncStreamName =
-        "plugins.flutter.io/firebase_firestore/snapshotsInSync";
-
-    snapshotsInSyncEventChannel =
-        new EventChannel(messenger, snapshotsInSyncStreamName, MESSAGE_CODEC);
-    snapshotsInSyncEventChannel.setStreamHandler(new SnapshotsInSyncStreamHandler());
-
-    final String querySnapshotEventChannelName = "plugins.flutter.io/firebase_firestore/query";
-
-    querySnapshotEventChannel =
-        new EventChannel(messenger, querySnapshotEventChannelName, MESSAGE_CODEC);
-    querySnapshotEventChannel.setStreamHandler(new QuerySnapshotsStreamHandler());
-
-    final String documentSnapshotEventChannelName =
-        "plugins.flutter.io/firebase_firestore/document";
-
-    documentSnapshotEventChannel =
-        new EventChannel(messenger, documentSnapshotEventChannelName, MESSAGE_CODEC);
-    documentSnapshotEventChannel.setStreamHandler(new DocumentSnapshotsStreamHandler());
-
-    FlutterFirebasePluginRegistry.registerPlugin(methodChannelName, this);
+    FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this);
   }
 
   private Source getSource(Map<String, Object> arguments) {
@@ -520,5 +511,47 @@ public class FlutterFirebaseFirestorePlugin
           }
           return null;
         });
+  }
+
+  /**
+   * Registers a unique event channel based on a channel prefix.
+   *
+   * <p>Once registered, the plugin will take care of removing the stream handler and cleaning up,
+   * if the engine is detached.
+   *
+   * <p>This function generates a random ID.
+   *
+   * @param prefix Channel prefix onto which the unique ID will be appended on. The convention is
+   *     "namespace/component" whereas the last / is added internally.
+   * @param handler The handler object for responding to channel events and submitting data.
+   * @return The generated identifier.
+   * @see #registerEventChannel(String, String, StreamHandler)
+   */
+  private String registerEventChannel(String prefix, StreamHandler handler) {
+    String identifier = UUID.randomUUID().toString().toLowerCase(Locale.US);
+    return registerEventChannel(prefix, identifier, handler);
+  }
+
+  /**
+   * Registers a unique event channel based on a channel prefix.
+   *
+   * <p>Once registered, the plugin will take care of removing the stream handler and cleaning up,
+   * if the engine is detached.
+   *
+   * @param prefix Channel prefix onto which the unique ID will be appended on. The convention is
+   *     "namespace/component" whereas the last / is added internally.
+   * @param identifier A identifier which will be appended to the prefix.
+   * @param handler The handler object for responding to channel events and submitting data.
+   * @return The passed identifier.
+   */
+  private String registerEventChannel(String prefix, String identifier, StreamHandler handler) {
+    final String channelName = prefix + "/" + identifier;
+
+    EventChannel channel = new EventChannel(binaryMessenger, channelName, MESSAGE_CODEC);
+    channel.setStreamHandler(handler);
+    eventChannels.put(identifier, channel);
+    streamHandlers.put(identifier, handler);
+
+    return identifier;
   }
 }

@@ -11,17 +11,11 @@
 #import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTQuerySnapshotStreamHandler.h"
 
-@implementation FLTQuerySnapshotStreamHandler {
-  NSMutableDictionary<NSNumber *, id<FIRListenerRegistration>> *_listeners;
-}
+@interface FLTQuerySnapshotStreamHandler ()
+@property(readwrite, strong) id<FIRListenerRegistration> listenerRegistration;
+@end
 
-- (instancetype)init {
-  self = [super init];
-  if (self) {
-    _listeners = [NSMutableDictionary dictionary];
-  }
-  return self;
-}
+@implementation FLTQuerySnapshotStreamHandler
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
@@ -35,49 +29,40 @@
               details:nil];
   }
 
-  NSNumber *handle = arguments[@"handle"];
   NSNumber *includeMetadataChanges = arguments[@"includeMetadataChanges"];
 
   id listener = ^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
     if (error) {
       NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
-
+      NSString *code = codeAndMessage[0];
+      NSString *message = codeAndMessage[1];
+      NSDictionary *details = @{
+        @"code" : code,
+        @"message" : message,
+      };
       dispatch_async(dispatch_get_main_queue(), ^{
-        events(@{
-          @"handle" : handle,
-          @"error" : @{@"code" : codeAndMessage[0], @"message" : codeAndMessage[1]},
-        });
+        events([FLTFirebasePlugin createFlutterErrorFromCode:code
+                                                     message:message
+                                             optionalDetails:details
+                                          andOptionalNSError:error]);
       });
-    } else if (snapshot) {
+    } else {
       dispatch_async(dispatch_get_main_queue(), ^{
-        events(@{
-          @"handle" : handle,
-          @"snapshot" : snapshot,
-        });
+        events(snapshot);
       });
     }
   };
 
-  id<FIRListenerRegistration> listenerRegistration =
+  self.listenerRegistration =
       [query addSnapshotListenerWithIncludeMetadataChanges:includeMetadataChanges.boolValue
                                                   listener:listener];
-
-  @synchronized(_listeners) {
-    _listeners[handle] = listenerRegistration;
-  }
 
   return nil;
 }
 
 - (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
-  NSNumber *handle = arguments[@"handle"];
-
-  if (handle) {
-    @synchronized(_listeners) {
-      [_listeners[handle] remove];
-      [_listeners removeObjectForKey:handle];
-    }
-  }
+  [self.listenerRegistration remove];
+  self.listenerRegistration = nil;
 
   return nil;
 }

@@ -94,10 +94,10 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   }
 
   @override
-  Stream<DocumentSnapshotPlatform> snapshots(
-      {bool includeMetadataChanges = false}) {
+  Stream<DocumentSnapshotPlatform> snapshots({
+    bool includeMetadataChanges = false,
+  }) {
     assert(includeMetadataChanges != null);
-    int handle = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
 
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
@@ -107,39 +107,29 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     StreamSubscription<dynamic> snapshotStream;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () async {
-        snapshotStream = MethodChannelFirebaseFirestore.documentSnapshotChannel
-            .receiveBroadcastStream(
+        final observerId = await MethodChannelFirebaseFirestore.channel
+            .invokeMethod<String>('DocumentReference#snapshots');
+        snapshotStream =
+            MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
+                .receiveBroadcastStream(
           <String, dynamic>{
             'reference': this,
-            'handle': handle,
             'firestore': firestore,
             'includeMetadataChanges': includeMetadataChanges,
           },
-        ).listen((event) {
-          if (event['handle'] != handle) {
-            return;
-          }
-
-          if (event.containsKey('error')) {
-            MethodChannelFirebaseFirestore.forwardErrorToController(
-              controller,
-              event,
-            );
-          } else {
-            final snapshotMap = event['snapshot'];
-            controller.add(
-              DocumentSnapshotPlatform(
-                firestore,
-                snapshotMap['path'],
-                <String, dynamic>{
-                  'data': snapshotMap['data'],
-                  'metadata': snapshotMap['metadata'],
-                },
-              ),
-            );
-          }
+        ).listen((snapshot) {
+          controller.add(
+            DocumentSnapshotPlatform(
+              firestore,
+              snapshot['path'],
+              <String, dynamic>{
+                'data': snapshot['data'],
+                'metadata': snapshot['metadata'],
+              },
+            ),
+          );
         }, onError: (error, stack) {
-          // TODO: Handle these conditions
+          controller.addError(convertPlatformException(error));
         });
       },
       onCancel: () {

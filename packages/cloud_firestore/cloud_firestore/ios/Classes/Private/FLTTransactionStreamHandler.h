@@ -11,6 +11,8 @@
 #import <Flutter/Flutter.h>
 #endif
 
+#import <Firebase/Firebase.h>
+
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -18,7 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FLTTransactionStreamHandler : NSObject <FlutterStreamHandler>
 
 - (instancetype)initWithId:(NSString *)transactionId
-      existingTransactions:(NSMutableDictionary<NSString *, FIRTransaction *> *)transactions;
+                   started:(void (^)(FIRTransaction*))startedListener
+                     ended:(void (^)(void))endedListener;
 - (void)receiveTransactionResponse:(NSDictionary *)response;
 
 @end
