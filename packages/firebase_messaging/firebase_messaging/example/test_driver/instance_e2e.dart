@@ -41,7 +41,7 @@ void runInstanceTests() {
         expect(messaging.isAutoInitEnabled, isTrue);
         await messaging.setAutoInitEnabled(false);
         expect(messaging.isAutoInitEnabled, isFalse);
-      });
+      }, skip: kIsWeb);
     });
 
     group('requestPermission', () {
