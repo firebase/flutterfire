@@ -1,3 +1,7 @@
+## 3.0.2
+
+ - **DOCS**: update code doc typo (#4214).
+
 ## 3.0.1
 
  - Update a dependency to the latest release.

@@ -1,3 +1,12 @@
+## 5.1.0
+
+ - **TEST**: skip ios pause/resume check.
+ - **TEST**: skip ios pause/resume check.
+ - **TEST**: Opt-out from null safety. (#4204).
+ - **FEAT**: web support (#3917).
+ - **FEAT**: Tweaks to firebase_storage for the upcoming web version. (#4028).
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
 ## 5.0.1
 
  - Update a dependency to the latest release.

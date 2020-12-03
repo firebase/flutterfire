@@ -1,3 +1,7 @@
+## 1.0.0-dev.6
+
+ - **FIX**: various data types issues in remote message (#4150).
+
 ## 1.0.0-dev.5
 
  - Update a dependency to the latest release.

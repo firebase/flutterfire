@@ -1,3 +1,8 @@
+## 0.2.1+1
+
+ - **REFACTOR**: ignore typedefs.
+ - **FIX**: ensure list items are converted (#4076).
+
 ## 0.2.1
 
  - **FEAT**: migrate firebase interop files to local repository (#3973).

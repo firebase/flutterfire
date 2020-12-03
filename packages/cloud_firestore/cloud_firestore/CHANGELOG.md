@@ -1,3 +1,7 @@
+## 0.14.3+1
+
+ - Update a dependency to the latest release.
+
 ## 0.14.3
 
  - **FEAT**: migrate firebase interop files to local repository (#3973).

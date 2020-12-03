@@ -1,3 +1,10 @@
+## 8.0.0-dev.9
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FIX**: various data types issues in remote message (#4150).
+ - **FIX**: java String arrays should be converted to a List (fixes #4072) (#4092).
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
 ## 8.0.0-dev.8
 
  - **FIX**: potential crash (fixes #4032) (#4071).
