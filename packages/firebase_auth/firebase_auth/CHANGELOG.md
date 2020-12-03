@@ -1,3 +1,8 @@
+## 0.18.4
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **DOCS**: Fixed two typos in method documentation (#4219).
+
 ## 0.18.3+1
 
  - **TEST**: Explicitly opt-out from null safety.
