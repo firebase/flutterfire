@@ -1,6 +1,6 @@
 // @dart = 2.9
 
-// Copyright 2020, the Chromium project messagingors.  Please see the MESSAGINGORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -41,7 +41,7 @@ void runInstanceTests() {
         expect(messaging.isAutoInitEnabled, isTrue);
         await messaging.setAutoInitEnabled(false);
         expect(messaging.isAutoInitEnabled, isFalse);
-      });
+      }, skip: kIsWeb);
     });
 
     group('requestPermission', () {
@@ -51,7 +51,17 @@ void runInstanceTests() {
         final result = await messaging.requestPermission();
         expect(result, isA<NotificationSettings>());
         expect(result.authorizationStatus, AuthorizationStatus.authorized);
-      }, skip: defaultTargetPlatform != TargetPlatform.android);
+      }, skip: defaultTargetPlatform != TargetPlatform.android || kIsWeb);
+    });
+
+    group('requestPermission', () {
+      test(
+          'authorizationStatus returns AuthorizationStatus.notDetermined on Web',
+          () async {
+        final result = await messaging.requestPermission();
+        expect(result, isA<NotificationSettings>());
+        expect(result.authorizationStatus, AuthorizationStatus.notDetermined);
+      }, skip: !kIsWeb);
     });
 
     group('getAPNSToken', () {
@@ -94,14 +104,14 @@ void runInstanceTests() {
       test('successfully subscribes from topic', () async {
         final topic = 'test-topic';
         await messaging.subscribeToTopic(topic);
-      });
+      }, skip: kIsWeb);
     });
 
     group('unsubscribeFromTopic()', () {
       test('successfully unsubscribes from topic', () async {
         final topic = 'test-topic';
         await messaging.unsubscribeFromTopic(topic);
-      });
+      }, skip: kIsWeb);
     });
 
     // deprecated methods
@@ -127,7 +137,7 @@ void runInstanceTests() {
         expect(messaging.isAutoInitEnabled, isTrue);
         // ignore: deprecated_member_use
         expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
-      });
+      }, skip: kIsWeb);
     });
   });
 }

@@ -14,6 +14,8 @@ flutter:
         pluginClass: FLTFirebaseMessagingPlugin
       macos:
         pluginClass: FLTFirebaseMessagingPlugin
+      web:
+        default_package: firebase_messaging_web
 
 dependencies:
   meta: ^1.0.4
@@ -22,6 +24,7 @@ dependencies:
   firebase_core: ^0.5.2+1
   firebase_core_platform_interface: ^2.1.0
   firebase_messaging_platform_interface: ^1.0.0-dev.6
+  firebase_messaging_web: ^0.1.0
 dev_dependencies:
   pedantic: ^1.8.0
   flutter_test:
@@ -31,7 +34,7 @@ dev_dependencies:
   test: any
   mockito: ^4.1.1
   plugin_platform_interface: ^1.0.2
-  async: ^2.4.2 
+  async: ^2.4.2
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
