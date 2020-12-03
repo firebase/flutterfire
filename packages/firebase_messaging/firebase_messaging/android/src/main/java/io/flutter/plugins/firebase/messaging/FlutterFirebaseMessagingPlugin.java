@@ -291,13 +291,23 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         @SuppressWarnings("unchecked")
         Map<String, Object> arguments = ((Map<String, Object>) call.arguments);
 
+        long pluginCallbackHandle = 0;
+        long userCallbackHandle = 0;
+
         Object arg1 = arguments.get("pluginCallbackHandle");
         Object arg2 = arguments.get("userCallbackHandle");
 
-        long pluginCallbackHandle =
-          (arg1 instanceof Long) ? (Long) arg1 : Long.valueOf((Integer) arg1);
-        long userCallbackHandle =
-          (arg2 instanceof Long) ? (Long) arg2 : Long.valueOf((Integer) arg2);
+        if (arg1 instanceof Long) {
+          pluginCallbackHandle = (Long) arg1;
+        } else {
+          pluginCallbackHandle = Long.valueOf((Integer) arg1);
+        }
+
+        if (arg2 instanceof Long) {
+          userCallbackHandle = (Long) arg2;
+        } else {
+          userCallbackHandle = Long.valueOf((Integer) arg2);
+        }
 
         FlutterShellArgs shellArgs = null;
         if (mainActivity != null) {
