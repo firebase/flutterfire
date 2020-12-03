@@ -29,7 +29,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   static bool _initialized = false;
 
-  /// Builds an instance of [FirebaseFirestoreWeb] with an optional [FirebaseApp] instance
+  /// Builds an instance of [FirebaseMessagingWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
   FirebaseMessagingWeb({FirebaseApp app})
       : _webMessaging =
@@ -49,7 +49,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   @override
   void registerBackgroundMessageHandler(handler) {
-    // TODO(ehesp): check if needs setting
+    // no-op
   }
 
   @override
@@ -146,7 +146,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
     throw UnimplementedError('''
       subscribeToTopic() is not supported on the web clients.
 
-      To learn how to manage subscriptions for web users, visit the 
+      To learn how to manage subscriptions for web users, visit the
       official Firebase documentation:
 
       https://firebase.google.com/docs/cloud-messaging/js/topic-messaging
@@ -158,7 +158,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
     throw UnimplementedError('''
       unsubscribeFromTopic() is not supported on the web clients.
 
-      To learn how to manage subscriptions for web users, visit the 
+      To learn how to manage subscriptions for web users, visit the
       official Firebase documentation:
 
       https://firebase.google.com/docs/cloud-messaging/js/topic-messaging

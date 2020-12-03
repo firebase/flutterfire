@@ -58,11 +58,6 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
   Stream<MessagePayload> get onMessage =>
       _createOnMessageStream(_onMessageController);
 
-  /// FCM directs push messages to your web page's [onMessage] callback if the user currently has it open.
-  /// Otherwise, it calls your callback passed into [onBackgroundMessage].
-  // Stream<Payload> get onBackgroundMessage =>
-  //     _createBackgroundMessagedStream(_onBackgroundMessage);
-
   Stream<MessagePayload> _createOnMessageStream(
       StreamController<MessagePayload> controller) {
     if (controller == null) {
