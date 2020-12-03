@@ -294,8 +294,10 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         Object arg1 = arguments.get("pluginCallbackHandle");
         Object arg2 = arguments.get("userCallbackHandle");
 
-        long pluginCallbackHandle = (arg1 instanceof Long) ? (Long) arg1 : Long.valueOf((Integer) arg1);
-        long userCallbackHandle = (arg2 instanceof Long) ? (Long) arg2 : Long.valueOf((Integer) arg2);
+        long pluginCallbackHandle =
+          (arg1 instanceof Long) ? (Long) arg1 : Long.valueOf((Integer) arg1);
+        long userCallbackHandle =
+          (arg2 instanceof Long) ? (Long) arg2 : Long.valueOf((Integer) arg2);
 
         FlutterShellArgs shellArgs = null;
         if (mainActivity != null) {
