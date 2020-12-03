@@ -1,7 +1,3 @@
-## 0.1.1
+## 0.1.0-dev.1
 
- - **FEAT**: web implementation (#4206).
-
-## 0.1.0
-
-`firebase_messaging_web` implementation
+- Initial release of `firebase_messaging_web`.
