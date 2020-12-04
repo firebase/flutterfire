@@ -115,7 +115,8 @@ provided, which you can provide to the method:
 ```dart
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-NotificationSettings settings = await messaging.getToken(
+// use the returned token to send messages to users from your custom server
+String token = await messaging.getToken(
   vapidKey: "BGpdLRs......",
 );
 ```
@@ -229,7 +230,7 @@ Web requires you to register a JavaScript [Service Worker](https://developer.moz
 > Unfortunately we haven't yet been able to establish a proper way of communicating with the Service Worker and Flutter applications. Right now, all web
 background code must be executed in the JavaScript Service Worker file.
 
-To get started, create a new file:
+To get started, create a new file in the your `web` directory, and call it `firebase-messaging-sw.js`:
 
 ```js title=web/firebase-messaging-sw.js
 importScripts("https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js");
