@@ -1,3 +1,7 @@
+## 0.18.4+1
+
+ - Update a dependency to the latest release.
+
 ## 0.18.4
 
  - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).

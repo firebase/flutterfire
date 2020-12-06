@@ -1,3 +1,7 @@
+## 0.3.2+3
+
+ - **FIX**: web now fires once on authStateListener initialisation (#4312).
+
 ## 0.3.2+2
 
  - Update a dependency to the latest release.

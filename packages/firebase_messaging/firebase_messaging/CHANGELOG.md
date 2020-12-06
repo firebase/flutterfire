@@ -1,3 +1,11 @@
+## 8.0.0-dev.11
+
+ - **REFACTOR**: initial web release as pre-release version.
+ - **FIX**: manually create a `FlutterShellArgs` instance from Android activity intent (fixes #4078) (#4341).
+ - **FIX**: fixed callback handler type casting on Android (#4313).
+ - **FIX**: macOS should not use `FIRAuth canHandleNotification` as it's iOS only (fixes #4136) (#4340).
+ - **FIX**: some iOS methods could result in an `no implementation found` error (#4339).
+
 ## 8.0.0-dev.10
 
  - **FEAT**: web implementation (#4206).
