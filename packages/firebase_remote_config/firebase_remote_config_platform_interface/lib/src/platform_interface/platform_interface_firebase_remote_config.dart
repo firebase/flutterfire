@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 import 'package:firebase_remote_config_platform_interface/src/method_channel/method_channel_firebase_remote_config.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
@@ -20,6 +21,21 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
     }
 
     return _instance;
+  }
+
+  static set instance(FirebaseRemoteConfigPlatform instance) {
+    assert(instance != null);
+    PlatformInterface.verifyToken(instance, _token);
+    _instance = instance;
+  }
+
+  factory FirebaseRemoteConfigPlatform.instanceFor({FirebaseApp app}) {
+    return FirebaseRemoteConfigPlatform.instance.delegateFor(app: app);
+  }
+
+  @protected
+  FirebaseRemoteConfigPlatform delegateFor({FirebaseApp app}) {
+    throw UnimplementedError('delegateFor() is not implemented');
   }
 
   Future<void> activate() {
