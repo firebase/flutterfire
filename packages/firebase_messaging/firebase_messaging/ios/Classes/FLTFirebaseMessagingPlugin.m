@@ -396,11 +396,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #if TARGET_OS_OSX
 - (void)application:(NSApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo {
-#if __has_include(<FirebaseAuth/FirebaseAuth.h>)
-  if ([[FIRAuth auth] canHandleNotification:userInfo]) {
-    return YES;
-  }
-#endif
   // Only handle notifications from FCM.
   if (userInfo[@"gcm.message_id"]) {
     NSDictionary *notificationDict =
