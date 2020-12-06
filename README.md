@@ -154,7 +154,7 @@ cost. [[Learn More][messaging_product]]
 
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |  ✔️  |     |
+|    ✔️    |  ✔️  |  ✔️  |   ✔️   |
 
 ----
 

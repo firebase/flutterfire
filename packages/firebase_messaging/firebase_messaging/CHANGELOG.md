@@ -1,3 +1,8 @@
+## 8.0.0-dev.10
+
+ - **FEAT**: web implementation (#4206).
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+
 ## 8.0.0-dev.9
 
  - **TEST**: Explicitly opt-out from null safety.

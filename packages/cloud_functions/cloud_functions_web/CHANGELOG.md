@@ -1,3 +1,7 @@
+## 3.1.1
+
+ - **FIX**: issue when specifying a functions region #4226 (#4266).
+
 ## 3.1.0
 
  - **FEAT**: migrate interop files (#4191).

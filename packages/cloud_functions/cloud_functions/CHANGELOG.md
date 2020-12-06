@@ -1,3 +1,7 @@
+## 0.7.2
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+
 ## 0.7.1
 
  - **TEST**: Explicitly opt-out from null safety.

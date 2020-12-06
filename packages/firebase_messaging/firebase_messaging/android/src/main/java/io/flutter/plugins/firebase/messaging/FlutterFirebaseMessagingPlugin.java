@@ -289,11 +289,25 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         // method channels.
       case "Messaging#startBackgroundIsolate":
         @SuppressWarnings("unchecked")
-        long pluginCallbackHandle =
-            (long) ((Map<String, Object>) call.arguments).get("pluginCallbackHandle");
-        @SuppressWarnings("unchecked")
-        long userCallbackHandle =
-            (long) ((Map<String, Object>) call.arguments).get("userCallbackHandle");
+        Map<String, Object> arguments = ((Map<String, Object>) call.arguments);
+
+        long pluginCallbackHandle = 0;
+        long userCallbackHandle = 0;
+
+        Object arg1 = arguments.get("pluginCallbackHandle");
+        Object arg2 = arguments.get("userCallbackHandle");
+
+        if (arg1 instanceof Long) {
+          pluginCallbackHandle = (Long) arg1;
+        } else {
+          pluginCallbackHandle = Long.valueOf((Integer) arg1);
+        }
+
+        if (arg2 instanceof Long) {
+          userCallbackHandle = (Long) arg2;
+        } else {
+          userCallbackHandle = Long.valueOf((Integer) arg2);
+        }
 
         FlutterShellArgs shellArgs = null;
         if (mainActivity != null) {
