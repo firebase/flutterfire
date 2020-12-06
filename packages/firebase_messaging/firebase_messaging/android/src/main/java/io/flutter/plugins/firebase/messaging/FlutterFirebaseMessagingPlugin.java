@@ -311,8 +311,11 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
 
         FlutterShellArgs shellArgs = null;
         if (mainActivity != null) {
-          shellArgs =
-              ((io.flutter.embedding.android.FlutterActivity) mainActivity).getFlutterShellArgs();
+          // Supports both Flutter Activity types:
+          //    io.flutter.embedding.android.FlutterFragmentActivity
+          //    io.flutter.embedding.android.FlutterActivity
+          // We could use `getFlutterShellArgs()` but this is only available on `FlutterActivity`.
+          shellArgs = FlutterShellArgs.fromIntent(mainActivity.getIntent());
         }
 
         FlutterFirebaseMessagingBackgroundService.setCallbackDispatcher(pluginCallbackHandle);
