@@ -114,8 +114,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                  isEqualToString:call.method]) {
     [self messagingSetForegroundNotificationPresentationOptions:call.arguments
                                            withMethodCallResult:methodCallResult];
-  }
-  if ([@"Messaging#getToken" isEqualToString:call.method]) {
+  } else if ([@"Messaging#getToken" isEqualToString:call.method]) {
     [self messagingGetToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getNotificationSettings" isEqualToString:call.method]) {
     if (@available(iOS 10, macOS 10.14, *)) {
