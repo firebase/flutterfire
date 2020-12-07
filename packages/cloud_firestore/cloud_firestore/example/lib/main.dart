@@ -121,7 +121,7 @@ class _FilmListState extends State<FilmList> {
               Text('Firestore Example: Movies'),
 
               // This is a example use for "snapshots in sync".
-              // The view will reflects the time of the last Firestore sync; which happens any time a field is updated.
+              // The view reflects the time of the last Firestore sync; which happens any time a field is updated.
               StreamBuilder(
                 stream: FirebaseFirestore.instance.snapshotsInSync(),
                 builder: (context, _) {
