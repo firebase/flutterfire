@@ -94,7 +94,6 @@ void runTransactionTests() {
         expect(e.code, equals('permission-denied'));
         return;
       } catch (e) {
-        print(e);
         fail("Transaction threw invalid exeption");
       }
     });
