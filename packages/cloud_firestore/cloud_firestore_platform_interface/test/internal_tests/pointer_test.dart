@@ -7,9 +7,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('$Pointer', () {
-    test('fails assertion if path is null', () {
-      expect(() => Pointer(null), throwsAssertionError);
-    });
+    // TODO(ehesp): remove once null-safety lands
+    // test('fails assertion if path is null', () {
+    //   expect(() => Pointer(null), throwsAssertionError);
+    // });
 
     test('returns a path and components', () {
       expect(Pointer('foo/bar').path, 'foo/bar');
