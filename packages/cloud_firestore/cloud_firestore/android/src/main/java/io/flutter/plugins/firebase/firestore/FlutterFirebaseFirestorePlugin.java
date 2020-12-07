@@ -65,9 +65,7 @@ public class FlutterFirebaseFirestorePlugin
 
   private final AtomicReference<Activity> activity = new AtomicReference<>(null);
 
-  // TODO(ened): No need to be static anymore.
-  static final Map<String, Transaction> transactions = new HashMap<>();
-
+  private final Map<String, Transaction> transactions = new HashMap<>();
   private final Map<String, EventChannel> eventChannels = new HashMap<>();
   private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
   private final Map<String, TransactionStreamHandler> transactionHandlers = new HashMap<>();

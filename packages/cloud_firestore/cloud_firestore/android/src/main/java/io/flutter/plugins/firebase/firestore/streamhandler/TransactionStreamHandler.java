@@ -1,6 +1,7 @@
 package io.flutter.plugins.firebase.firestore.streamhandler;
 
 import android.app.Activity;
+import androidx.annotation.Nullable;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -137,22 +138,19 @@ public class TransactionStreamHandler implements StreamHandler {
             })
         .addOnCompleteListener(
             task -> {
-              if (!task.isSuccessful()) {
-                final Exception exception = task.getException();
-                final HashMap<String, Object> errorMap = new HashMap<>();
-                errorMap.put("appName", firestore.getApp().getName());
-                errorMap.put("error", ExceptionConverter.createDetails(exception));
-                activityRef.get().runOnUiThread(() -> events.success(errorMap));
-              } else if (task.getResult().exception != null) {
-                final HashMap<String, Object> errorMap = new HashMap<>();
-                errorMap.put("appName", firestore.getApp().getName());
-                errorMap.put("error", ExceptionConverter.createDetails(task.getResult().exception));
-                activityRef.get().runOnUiThread(() -> events.success(errorMap));
+              if (task.getResult() != null) {
+                final @Nullable Exception exception =
+                    !task.isSuccessful() ? task.getException() : task.getResult().exception;
 
-              } else {
-                Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("complete", true);
-                activityRef.get().runOnUiThread(() -> events.success(resultMap));
+                final HashMap<String, Object> map = new HashMap<>();
+                if (exception != null) {
+                  map.put("appName", firestore.getApp().getName());
+                  map.put("error", ExceptionConverter.createDetails(exception));
+                } else {
+                  map.put("complete", true);
+                }
+
+                activityRef.get().runOnUiThread(() -> events.success(map));
               }
 
               activityRef.get().runOnUiThread(events::endOfStream);
