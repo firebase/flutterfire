@@ -11,8 +11,8 @@ import './mock.dart';
 
 void main() {
   setupCloudFirestoreMocks();
-  FirebaseFirestore firestore;
-  Query query;
+  /*late*/ FirebaseFirestore firestore;
+  /*late*/ Query query;
 
   group("$Query", () {
     setUpAll(() async {

@@ -6,16 +6,17 @@ import './mock.dart';
 
 void main() {
   setupCloudFirestoreMocks();
-  FirebaseFirestore firestore;
+  /*late*/ FirebaseFirestore firestore;
 
   setUpAll(() async {
     await Firebase.initializeApp();
     firestore = FirebaseFirestore.instance;
   });
 
-  group("$Transaction", () {
-    test('throws if invalid transactionHandler passed', () async {
-      expect(() => firestore.runTransaction(null), throwsAssertionError);
-    });
-  });
+  // TODO(ehesp): Remove when null safety lands
+  // group("$Transaction", () {
+  //   test('throws if invalid transactionHandler passed', () async {
+  //     expect(() => firestore.runTransaction(null), throwsAssertionError);
+  //   });
+  // });
 }
