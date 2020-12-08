@@ -95,7 +95,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T/*?*/> runTransaction<T>(TransactionHandler<T> transactionHandler,
+  Future<T /*?*/ > runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
     try {
       await _webFirestore.runTransaction((transaction) async {
@@ -136,7 +136,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   /// Enable persistence of Firestore data.
   @override
-  Future<void> enablePersistence([PersistenceSettings/*?*/ settings]) async {
+  Future<void> enablePersistence([PersistenceSettings /*?*/ settings]) async {
     try {
       await _webFirestore.enablePersistence(
           firestore_interop.PersistenceSettings(

@@ -346,10 +346,10 @@ class Query {
     dynamic isGreaterThan,
     dynamic isGreaterThanOrEqualTo,
     dynamic arrayContains,
-    List<dynamic>/*?*/ arrayContainsAny,
-    List<dynamic>/*?*/ whereIn,
-    List<dynamic>/*?*/ whereNotIn,
-    bool/*?*/ isNull,
+    List<dynamic> /*?*/ arrayContainsAny,
+    List<dynamic> /*?*/ whereIn,
+    List<dynamic> /*?*/ whereNotIn,
+    bool /*?*/ isNull,
   }) {
     _assertValidFieldType(field);
 

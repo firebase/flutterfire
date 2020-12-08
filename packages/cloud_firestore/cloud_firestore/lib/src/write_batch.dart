@@ -53,7 +53,7 @@ class WriteBatch {
   @Deprecated("Deprecated in favor of `.set`")
   // ignore: public_member_api_docs
   void setData(DocumentReference document, Map<String, dynamic> data,
-      [SetOptions/*?*/ options]) {
+      [SetOptions /*?*/ options]) {
     return set(document, data, options);
   }
 
