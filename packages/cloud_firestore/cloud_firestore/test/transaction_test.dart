@@ -4,16 +4,16 @@ import 'package:flutter_test/flutter_test.dart';
 
 import './mock.dart';
 
+// TODO(ehesp): Remove when null safety lands
 void main() {
   setupCloudFirestoreMocks();
-  /*late*/ FirebaseFirestore firestore;
+  // /*late*/ FirebaseFirestore firestore;
 
   setUpAll(() async {
     await Firebase.initializeApp();
-    firestore = FirebaseFirestore.instance;
+    // firestore = FirebaseFirestore.instance;
   });
 
-  // TODO(ehesp): Remove when null safety lands
   // group("$Transaction", () {
   //   test('throws if invalid transactionHandler passed', () async {
   //     expect(() => firestore.runTransaction(null), throwsAssertionError);
