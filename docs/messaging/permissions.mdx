@@ -20,7 +20,7 @@ permissions from the device Settings UI (or via a custom UI).
 ## Requesting permissions
 
 As explained in the [Usage documentation](usage.mdx), permission must be requested from your users in order to display
-remote notifications from FCM, via the [`requestPermission`](!cloud_messaging.FirebaseMessaging.requestPermission) API:
+remote notifications from FCM, via the [`requestPermission`](!firebase_messaging.FirebaseMessaging.requestPermission) API:
 
 ```dart
 FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -65,12 +65,12 @@ The full list of permission settings can be seen in the table below along with t
 | `announcement` | `false` | If enabled, Siri will read the notification content out when devices are connected to AirPods.                                |
 | `badge`        | `true`  | Sets whether a notification dot will appear next to the app icon on the device when there are unread notifications.           |
 | `carPlay`      | `true`  | Sets whether notifications will appear when the device is connected to [CarPlay](https://www.apple.com/ios/carplay/).         |
-| `provisional`  | `false` | Sets whether provisional permissions are granted. See [Provisional permission](#provisional-permission) for more information. |
+| `provisional`  | `false` | Sets whether provisional permissions are granted. See [Provisional authorization](#provisional-authorization) for more information. |
 | `sound`        | `true`  | Sets whether a sound will be played when a notification is displayed on the device.                                           |
 
 The settings provided will be stored by the device and will be visible in the iOS Settings UI for your application.
 
-You can also read the current permissions without attempting to request them via the [`getNotificationSettings`](!cloud_messaging.FirebaseMessaging.getNotificationSettings)
+You can also read the current permissions without attempting to request them via the [`getNotificationSettings`](!firebase_messaging.FirebaseMessaging.getNotificationSettings)
 method:
 
 ```dart

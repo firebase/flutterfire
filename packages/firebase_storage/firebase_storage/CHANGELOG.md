@@ -1,3 +1,8 @@
+## 5.2.0
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: Migrate iOS example projects (#4222).
+
 ## 5.1.0
 
  - **TEST**: skip ios pause/resume check.

@@ -1,7 +1,13 @@
-## 0.9.9+1
+## 0.9.10+1
 
  - **FIX**: Added NSNull validation to driverLicenseDictionary to prevent errors when NSArray:addObject is called
  - **DOCS**: Fixed analyze script on docs
+ 
+## 0.9.10
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: Migrate iOS example projects (#4222).
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
 
 ## 0.9.9
 
