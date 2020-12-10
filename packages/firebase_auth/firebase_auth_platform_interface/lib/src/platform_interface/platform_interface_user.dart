@@ -70,7 +70,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// This property will be `null` if the user has not signed in or been has
   /// their phone number linked.
-  String get phoneNumber {
+  String /*?*/ get phoneNumber {
     return _user['phoneNumber'];
   }
 
@@ -78,7 +78,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// This property will be populated if the user has signed in or been linked
   /// with a 3rd party OAuth provider (such as Google).
-  String get photoURL {
+  String /*?*/ get photoURL {
     return _user['photoURL'];
   }
 
