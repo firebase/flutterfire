@@ -214,7 +214,7 @@ class UserWeb extends UserPlatform {
 
   @override
   Future<void> verifyBeforeUpdateEmail(String newEmail,
-      [ActionCodeSettings/*?*/ actionCodeSettings]) async {
+      [ActionCodeSettings /*?*/ actionCodeSettings]) async {
     _assertCurrentUser(auth);
 
     await _webUser.verifyBeforeUpdateEmail(

@@ -21,7 +21,7 @@ import 'src/firebase_auth_web_confirmation_result.dart';
 /// The web delegate implementation for [FirebaseAuth].
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
   /// instance of Auth from the web plugin
-  final auth_interop.Auth/*?*/ _webAuth;
+  final auth_interop.Auth /*?*/ _webAuth;
 
   static bool _initialAuthState = true;
 
@@ -108,8 +108,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  UserPlatform/*?*/ get currentUser {
-    auth_interop.User/*?*/ webCurrentUser = _webAuth.currentUser;
+  UserPlatform /*?*/ get currentUser {
+    auth_interop.User /*?*/ webCurrentUser = _webAuth.currentUser;
 
     if (webCurrentUser == null) {
       return null;
@@ -119,7 +119,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  void sendAuthChangesEvent(String appName, UserPlatform/*?*/ userPlatform) {
+  void sendAuthChangesEvent(String appName, UserPlatform /*?*/ userPlatform) {
     assert(appName != null);
     assert(_userChangesListeners[appName] != null);
 
@@ -136,7 +136,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<ActionCodeInfo/*!*/> checkActionCode(String code) async {
+  Future<ActionCodeInfo /*!*/ > checkActionCode(String code) async {
     try {
       return convertWebActionCodeInfo(await _webAuth.checkActionCode(code));
     } catch (e) {
@@ -195,7 +195,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings/*?*/ actionCodeSettings]) async {
+      [ActionCodeSettings /*?*/ actionCodeSettings]) async {
     try {
       await _webAuth.sendPasswordResetEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
@@ -206,7 +206,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> sendSignInLinkToEmail(String email,
-      [ActionCodeSettings/*?*/ actionCodeSettings]) async {
+      [ActionCodeSettings /*?*/ actionCodeSettings]) async {
     try {
       await _webAuth.sendSignInLinkToEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));

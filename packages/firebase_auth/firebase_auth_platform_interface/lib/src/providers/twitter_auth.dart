@@ -91,8 +91,8 @@ class TwitterAuthProvider extends AuthProvider {
 /// [TwitterAuthProvider.credential].
 class TwitterAuthCredential extends OAuthCredential {
   TwitterAuthCredential._({
-    @required String/*!*/ accessToken,
-    @required String/*!*/ secret,
+    @required String /*!*/ accessToken,
+    @required String /*!*/ secret,
   }) : super(
             providerId: _kProviderId,
             signInMethod: _kProviderId,
