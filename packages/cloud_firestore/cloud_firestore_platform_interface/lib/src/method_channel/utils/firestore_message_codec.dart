@@ -1,15 +1,16 @@
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-import 'dart:convert';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-
 import 'package:cloud_firestore_platform_interface/src/internal/field_path_type.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
+
+import '../method_channel_query.dart';
+import '../method_channel_firestore.dart';
 
 /// The codec utilized to encode data back and forth between
 /// the Dart application and the native platform.
@@ -29,6 +30,13 @@ class FirestoreMessageCodec extends StandardMessageCodec {
   static const int _kIncrementDouble = 137;
   static const int _kIncrementInteger = 138;
   static const int _kDocumentId = 139;
+  static const int _kFieldPath = 140;
+  static const int _kNaN = 141;
+  static const int _kInfinity = 142;
+  static const int _kNegativeInfinity = 143;
+  static const int _kFirestoreInstance = 144;
+  static const int _kFirestoreQuery = 145;
+  static const int _kFirestoreSettings = 146;
 
   static const Map<FieldValueType, int> _kFieldValueCodes =
       <FieldValueType, int>{
@@ -59,12 +67,8 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       buffer.putFloat64(value.longitude);
     } else if (value is DocumentReferencePlatform) {
       buffer.putUint8(_kDocumentReference);
-      final List<int> appName = utf8.encoder.convert(value.firestore.app.name);
-      writeSize(buffer, appName.length);
-      buffer.putUint8List(appName);
-      final List<int> bytes = utf8.encoder.convert(value.path);
-      writeSize(buffer, bytes.length);
-      buffer.putUint8List(bytes);
+      writeValue(buffer, value.firestore);
+      writeValue(buffer, value.path);
     } else if (value is Blob) {
       buffer.putUint8(_kBlob);
       writeSize(buffer, value.bytes.length);
@@ -75,10 +79,37 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       assert(code != null);
       buffer.putUint8(code);
       if (delegate.value != null) writeValue(buffer, delegate.value);
-    } else if (value is FieldPath) {
-      final int code = _kFieldPathCodes[value.type];
+    } else if (value is FieldPathType) {
+      final int code = _kFieldPathCodes[value];
       assert(code != null);
       buffer.putUint8(code);
+    } else if (value is FieldPath) {
+      buffer.putUint8(_kFieldPath);
+      writeSize(buffer, value.components.length);
+      for (final String item in value.components) {
+        writeValue(buffer, item);
+      }
+    } else if (value is MethodChannelFirebaseFirestore) {
+      buffer.putUint8(_kFirestoreInstance);
+      writeValue(buffer, value.app.name);
+      writeValue(buffer, value.settings);
+    } else if (value is MethodChannelQuery) {
+      buffer.putUint8(_kFirestoreQuery);
+      writeValue(buffer, <String, dynamic>{
+        'firestore': value.firestore,
+        'path': value.path,
+        'isCollectionGroup': value.isCollectionGroupQuery,
+        'parameters': value.parameters,
+      });
+    } else if (value is Settings) {
+      buffer.putUint8(_kFirestoreSettings);
+      writeValue(buffer, value.asMap);
+    } else if (value == double.nan) {
+      buffer.putUint8(_kNaN);
+    } else if (value == double.infinity) {
+      buffer.putUint8(_kInfinity);
+    } else if (value == double.negativeInfinity) {
+      buffer.putUint8(_kNegativeInfinity);
     } else {
       super.writeValue(buffer, value);
     }
@@ -94,30 +125,35 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       case _kGeoPoint:
         return GeoPoint(buffer.getFloat64(), buffer.getFloat64());
       case _kDocumentReference:
-        final int appNameLength = readSize(buffer);
-        final String appName =
-            utf8.decoder.convert(buffer.getUint8List(appNameLength));
-        final FirebaseApp app = FirebaseApp(name: appName);
-        final FirestorePlatform firestore =
-            FirestorePlatform.instanceFor(app: app);
-        final int pathLength = readSize(buffer);
-        final String path =
-            utf8.decoder.convert(buffer.getUint8List(pathLength));
-        return firestore.document(path);
+        final String appName = readValue(buffer);
+        final String path = readValue(buffer);
+        final FirebaseApp app = Firebase.app(appName);
+        final FirebaseFirestorePlatform firestore =
+            FirebaseFirestorePlatform.instanceFor(app: app);
+        return firestore.doc(path);
       case _kBlob:
         final int length = readSize(buffer);
         final List<int> bytes = buffer.getUint8List(length);
         return Blob(bytes);
       case _kDocumentId:
         return FieldPath.documentId;
+      case _kNaN:
+        return double.nan;
+      case _kInfinity:
+        return double.infinity;
+      case _kNegativeInfinity:
+        return double.negativeInfinity;
+      // These cases are only needed on tests, and therefore handled
+      // by [TestFirestoreMessageCodec], a subclass of this codec.
+      case _kFirestoreInstance:
+      case _kFirestoreQuery:
+      case _kFirestoreSettings:
       case _kArrayUnion:
       case _kArrayRemove:
       case _kDelete:
       case _kServerTimestamp:
       case _kIncrementDouble:
       case _kIncrementInteger:
-      // These cases are only needed on tests, and therefore handled
-      // by [TestFirestoreMessageCodec], a subclass of this codec.
       default:
         return super.readValueOfType(type, buffer);
     }

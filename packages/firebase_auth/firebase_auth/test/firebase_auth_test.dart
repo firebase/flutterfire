@@ -1,6 +1,6 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
 
@@ -9,883 +9,734 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import './mock.dart';
 
-const String kMockProviderId = 'firebase';
-const String kMockUid = '12345';
-const String kMockDisplayName = 'Flutter Test User';
-const String kMockPhotoUrl = 'http://www.example.com/';
-const String kMockEmail = 'test@example.com';
-const String kMockPassword = 'passw0rd';
-const String kMockIdToken = '12345';
-const String kMockAccessToken = '67890';
-const String kMockGithubToken = 'github';
-const String kMockAuthToken = '23456';
-const String kMockAuthTokenSecret = '78901';
-const String kMockCustomToken = '12345';
-const String kMockPhoneNumber = '5555555555';
-const String kMockVerificationId = '12345';
-const String kMockSmsCode = '123456';
-const String kMockLanguage = 'en';
-const String kMockIdTokenResultSignInProvider = 'password';
-const String kMockOobCode = 'oobcode';
-const Map<dynamic, dynamic> kMockIdTokenResultClaims = <dynamic, dynamic>{
-  'claim1': 'value1',
-};
-const int kMockIdTokenResultExpirationTimestamp = 123456;
-const int kMockIdTokenResultAuthTimestamp = 1234567;
-const int kMockIdTokenResultIssuedAtTimestamp = 12345678;
-const PlatformIdTokenResult kMockIdTokenResult = PlatformIdTokenResult(
-  token: kMockIdToken,
-  expirationTimestamp: kMockIdTokenResultExpirationTimestamp,
-  authTimestamp: kMockIdTokenResultAuthTimestamp,
-  issuedAtTimestamp: kMockIdTokenResultIssuedAtTimestamp,
-  signInProvider: kMockIdTokenResultSignInProvider,
-  claims: kMockIdTokenResultClaims,
-);
+import 'package:mockito/mockito.dart';
 
-final int kMockCreationTimestamp = DateTime(2019, 1, 1).millisecondsSinceEpoch;
-final int kMockLastSignInTimestamp =
-    DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
-// ignore: missing_required_param_with_details
-final PlatformUser kMockUser = PlatformUser(
-  providerId: 'foo',
-  uid: 'bar',
-  isAnonymous: true,
-  isEmailVerified: false,
-  creationTimestamp: kMockCreationTimestamp,
-  lastSignInTimestamp: kMockLastSignInTimestamp,
-  providerData: <PlatformUserInfo>[
-    const PlatformUserInfo(
-      providerId: kMockProviderId,
-      uid: kMockUid,
-      displayName: kMockDisplayName,
-      photoUrl: kMockPhotoUrl,
-      email: kMockEmail,
-    )
-  ],
-);
-final PlatformAdditionalUserInfo kMockAdditionalUserInfo =
-    const PlatformAdditionalUserInfo(
-  isNewUser: false,
-  username: 'flutterUser',
-  providerId: 'testProvider',
-  profile: <String, dynamic>{'foo': 'bar'},
-);
-final PlatformAuthResult kMockAuthResult = PlatformAuthResult(
-  user: kMockUser,
-  additionalUserInfo: kMockAdditionalUserInfo,
-);
+MockFirebaseAuth mockAuthPlatform = MockFirebaseAuth();
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  setupFirebaseAuthMocks();
 
-  group('$FirebaseAuth', () {
-    final String appName = 'testApp';
-    final FirebaseApp app = FirebaseApp(name: appName);
-    final FirebaseAuth auth = FirebaseAuth.fromApp(app);
-    MockFirebaseAuth mock;
+  FirebaseAuth auth;
 
-    setUp(() {
-      mock = MockFirebaseAuth();
-      when(mock.getIdToken(any, any)).thenAnswer(
-          (_) => Future<PlatformIdTokenResult>.value(kMockIdTokenResult));
-      when(mock.isSignInWithEmailLink(any, any))
-          .thenAnswer((_) => Future<bool>.value(true));
-      when(mock.getCurrentUser(any))
-          .thenAnswer((_) => Future<PlatformUser>.value(kMockUser));
-      when(mock.fetchSignInMethodsForEmail(any, any))
-          .thenAnswer((_) => Future<List<String>>.value(<String>[]));
-      when(mock.signInAnonymously(any))
-          .thenAnswer((_) => Future<PlatformAuthResult>.value(kMockAuthResult));
-      when(mock.signInWithEmailAndLink(any, any, any))
-          .thenAnswer((_) => Future<PlatformAuthResult>.value(kMockAuthResult));
-      when(mock.createUserWithEmailAndPassword(any, any, any))
-          .thenAnswer((_) => Future<PlatformAuthResult>.value(kMockAuthResult));
-      when(mock.linkWithCredential(any, any))
-          .thenAnswer((_) => Future<PlatformAuthResult>.value(kMockAuthResult));
-      when(mock.signInWithCredential(any, any))
-          .thenAnswer((_) => Future<PlatformAuthResult>.value(kMockAuthResult));
-      when(mock.reauthenticateWithCredential(any, any))
-          .thenAnswer((_) => Future<PlatformAuthResult>.value(kMockAuthResult));
-      when(mock.signInWithCustomToken(any, any))
-          .thenAnswer((_) => Future<PlatformAuthResult>.value(kMockAuthResult));
-      FirebaseAuthPlatform.instance = mock;
+  const String kMockActionCode = '12345';
+  const String kMockEmail = 'test@example.com';
+  const String kMockPassword = 'passw0rd';
+  const String kMockIdToken = '12345';
+  const String kMockAccessToken = '67890';
+  const String kMockGithubToken = 'github';
+  const String kMockCustomToken = '12345';
+  const String kMockPhoneNumber = '5555555555';
+  const String kMockVerificationId = '12345';
+  const String kMockSmsCode = '123456';
+  const String kMockLanguage = 'en';
+  const String kMockOobCode = 'oobcode';
+  const String kMockURL = 'http://www.example.com';
+
+  final ActionCodeSettings kMockActionCodeSettings =
+      ActionCodeSettings(url: kMockURL);
+  final TestAuthProvider testAuthProvider = TestAuthProvider();
+  final int kMockCreationTimestamp =
+      DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
+  final int kMockLastSignInTimestamp =
+      DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
+
+  Map<String, dynamic> kMockUser = <String, dynamic>{
+    'isAnonymous': true,
+    'emailVerified': false,
+    'displayName': 'displayName',
+    'metadata': <String, int>{
+      'creationTime': kMockCreationTimestamp,
+      'lastSignInTime': kMockLastSignInTimestamp,
+    },
+    'providerData': <Map<String, String>>[
+      <String, String>{
+        'providerId': 'firebase',
+        'uid': '12345',
+        'displayName': 'Flutter Test User',
+        'photoURL': 'http://www.example.com/',
+        'email': 'test@example.com',
+      },
+    ],
+  };
+
+  MockUserPlatform mockUserPlatform;
+  MockUserCredentialPlatform mockUserCredPlatform;
+  MockConfirmationResultPlatform mockConfirmationResultPlatform;
+  MockRecaptchaVerifier mockVerifier;
+  AdditionalUserInfo mockAdditionalUserInfo;
+  EmailAuthCredential mockCredential;
+
+  group("$FirebaseAuth", () {
+    Map<String, dynamic> user;
+    FirebaseAuthPlatform.instance = mockAuthPlatform;
+
+    setUpAll(() async {
+      await Firebase.initializeApp();
+
+      auth = FirebaseAuth.instance;
+      user = kMockUser;
+
+      mockUserPlatform = MockUserPlatform(mockAuthPlatform, user);
+      mockConfirmationResultPlatform = MockConfirmationResultPlatform();
+      mockUserCredPlatform = MockUserCredentialPlatform(
+          FirebaseAuthPlatform.instance,
+          mockAdditionalUserInfo,
+          mockCredential,
+          mockUserPlatform);
+      mockVerifier = MockRecaptchaVerifier();
+      mockAdditionalUserInfo = AdditionalUserInfo(
+        isNewUser: false,
+        username: 'flutterUser',
+        providerId: 'testProvider',
+        profile: <String, dynamic>{'foo': 'bar'},
+      );
+      mockCredential =
+          EmailAuthProvider.credential(email: 'test', password: 'test');
+
+      when(mockAuthPlatform.signInAnonymously()).thenAnswer(
+          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+
+      when(mockAuthPlatform.signInWithCredential(any)).thenAnswer(
+          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+
+      when(mockAuthPlatform.currentUser).thenReturn(mockUserPlatform);
+
+      when(mockAuthPlatform.instanceFor(
+              app: anyNamed("app"),
+              pluginConstants: anyNamed("pluginConstants")))
+          .thenAnswer((_) => mockUserPlatform);
+
+      when(mockAuthPlatform.delegateFor(
+        app: anyNamed("app"),
+      )).thenAnswer((_) => mockAuthPlatform);
+
+      when(mockAuthPlatform.setInitialValues(
+        currentUser: anyNamed("currentUser"),
+        languageCode: anyNamed("languageCode"),
+      )).thenAnswer((_) => mockAuthPlatform);
+
+      when(mockAuthPlatform.createUserWithEmailAndPassword(any, any))
+          .thenAnswer((_) =>
+              Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+
+      when(mockAuthPlatform.getRedirectResult()).thenAnswer(
+          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+
+      when(mockAuthPlatform.signInWithCustomToken(any)).thenAnswer(
+          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+
+      when(mockAuthPlatform.signInWithEmailAndPassword(any, any)).thenAnswer(
+          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+
+      when(mockAuthPlatform.signInWithEmailLink(any, any)).thenAnswer(
+          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+
+      when(mockAuthPlatform.signInWithPhoneNumber(any, any)).thenAnswer((_) =>
+          Future<ConfirmationResultPlatform>.value(
+              mockConfirmationResultPlatform));
+      when(mockVerifier.delegate).thenReturn(mockVerifier.mockDelegate);
+
+      when(mockAuthPlatform.signInWithPopup(any)).thenAnswer(
+          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+
+      when(mockAuthPlatform.signInWithRedirect(any)).thenAnswer(
+          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+
+      when(mockAuthPlatform.authStateChanges()).thenAnswer((_) =>
+          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]));
+
+      when(mockAuthPlatform.idTokenChanges()).thenAnswer((_) =>
+          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]));
+
+      when(mockAuthPlatform.userChanges()).thenAnswer((_) =>
+          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]));
+
+      MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
+        switch (call.method) {
+          default:
+            return <String, dynamic>{'user': user};
+        }
+      });
     });
 
-    void verifyUser(FirebaseUser user) {
-      expect(user, isNotNull);
-      expect(user.isAnonymous, isTrue);
-      expect(user.isEmailVerified, isFalse);
-      expect(user.providerData.length, 1);
-      final UserInfo userInfo = user.providerData[0];
-      expect(userInfo.providerId, kMockProviderId);
-      expect(userInfo.uid, kMockUid);
-      expect(userInfo.displayName, kMockDisplayName);
-      expect(userInfo.photoUrl, kMockPhotoUrl);
-      expect(userInfo.email, kMockEmail);
-      expect(user.metadata.creationTime.millisecondsSinceEpoch,
-          kMockCreationTimestamp);
-      expect(user.metadata.lastSignInTime.millisecondsSinceEpoch,
-          kMockLastSignInTimestamp);
-    }
+    setUp(() async {
+      user = kMockUser;
+      await auth.signInAnonymously();
+    });
 
-    void verifyAuthResult(AuthResult result) {
-      verifyUser(result.user);
-      final AdditionalUserInfo additionalUserInfo = result.additionalUserInfo;
-      expect(additionalUserInfo.isNewUser, kMockAdditionalUserInfo.isNewUser);
-      expect(additionalUserInfo.username, kMockAdditionalUserInfo.username);
-      expect(additionalUserInfo.providerId, kMockAdditionalUserInfo.providerId);
-      expect(additionalUserInfo.profile, kMockAdditionalUserInfo.profile);
-    }
+    group('currentUser', () {
+      test('get currentUser', () {
+        User user = auth.currentUser;
+        verify(mockAuthPlatform.currentUser);
+        expect(user, isA<User>());
+      });
+    });
 
-    test('getIdToken', () async {
-      void verifyIdTokenResult(IdTokenResult idTokenResult) {
-        expect(idTokenResult.token, equals(kMockIdToken));
+    group('languageCode', () {
+      test('.languageCode should call delegate method', () {
+        auth.languageCode;
+        verify(mockAuthPlatform.languageCode);
+      });
+
+      test('setLanguageCode() should call delegate method', () async {
+        await auth.setLanguageCode(kMockLanguage);
+        verify(mockAuthPlatform.setLanguageCode(kMockLanguage));
+      });
+    });
+
+    group('checkActionCode()', () {
+      test('should throw if null', () {
+        expect(() => auth.checkActionCode(null), throwsAssertionError);
+      });
+
+      test('should call delegate method', () async {
+        await auth.checkActionCode(kMockActionCode);
+        verify(mockAuthPlatform.checkActionCode(kMockActionCode));
+      });
+    });
+
+    group('confirmPasswordReset()', () {
+      test('should throw if null', () {
+        expect(() => auth.confirmPasswordReset(code: null, newPassword: null),
+            throwsAssertionError);
+      });
+
+      test('should call delegate method', () async {
+        await auth.confirmPasswordReset(
+            code: kMockActionCode, newPassword: kMockPassword);
+        verify(mockAuthPlatform.confirmPasswordReset(
+            kMockActionCode, kMockPassword));
+      });
+    });
+
+    group('createUserWithEmailAndPassword()', () {
+      test('should throw if null', () {
         expect(
-            idTokenResult.expirationTime,
-            equals(DateTime.fromMillisecondsSinceEpoch(
-                kMockIdTokenResultExpirationTimestamp * 1000)));
+            () => auth.createUserWithEmailAndPassword(
+                email: null, password: null),
+            throwsAssertionError);
+      });
+
+      test('should call delegate method', () async {
+        await auth.createUserWithEmailAndPassword(
+            email: kMockEmail, password: kMockPassword);
+        verify(mockAuthPlatform.createUserWithEmailAndPassword(
+            kMockEmail, kMockPassword));
+      });
+    });
+
+    group('fetchSignInMethodsForEmail()', () {
+      test('should throw if null', () {
         expect(
-            idTokenResult.authTime,
-            equals(DateTime.fromMillisecondsSinceEpoch(
-                kMockIdTokenResultAuthTimestamp * 1000)));
+            () => auth.fetchSignInMethodsForEmail(null), throwsAssertionError);
+      });
+
+      test('should call delegate method', () async {
+        await auth.fetchSignInMethodsForEmail(kMockEmail);
+        verify(mockAuthPlatform.fetchSignInMethodsForEmail(kMockEmail));
+      });
+    });
+
+    group('getRedirectResult()', () {
+      test('should call delegate method', () async {
+        await auth.getRedirectResult();
+        verify(mockAuthPlatform.getRedirectResult());
+      });
+    });
+
+    group('isSignInWithEmailLink()', () {
+      test('should throw if null', () {
+        expect(() => auth.isSignInWithEmailLink(null), throwsAssertionError);
+      });
+
+      test('should call delegate method', () async {
+        await auth.isSignInWithEmailLink(kMockURL);
+        verify(mockAuthPlatform.isSignInWithEmailLink(kMockURL));
+      });
+    });
+
+    group('authStateChanges()', () {
+      test('should stream changes', () async {
+        final StreamQueue<User> changes =
+            StreamQueue<User>(auth.authStateChanges());
+        expect(await changes.next, isA<User>());
+      });
+    });
+
+    group('idTokenChanges()', () {
+      test('should stream changes', () async {
+        final StreamQueue<User> changes =
+            StreamQueue<User>(auth.idTokenChanges());
+        expect(await changes.next, isA<User>());
+      });
+    });
+
+    group('userChanges()', () {
+      test('should stream changes', () async {
+        final StreamQueue<User> changes = StreamQueue<User>(auth.userChanges());
+        expect(await changes.next, isA<User>());
+      });
+    });
+
+    group('sendPasswordResetEmail()', () {
+      test('should throw if null', () {
+        expect(() => auth.sendPasswordResetEmail(email: null),
+            throwsAssertionError);
+      });
+
+      test('should call delegate method', () async {
+        await auth.sendPasswordResetEmail(email: kMockEmail);
+        verify(mockAuthPlatform.sendPasswordResetEmail(kMockEmail));
+      });
+    });
+
+    group('sendPasswordResetEmail()', () {
+      test('should throw if null', () {
+        expect(() => auth.sendPasswordResetEmail(email: null),
+            throwsAssertionError);
+      });
+
+      test('should call delegate method', () async {
+        await auth.sendPasswordResetEmail(email: kMockEmail);
+        verify(mockAuthPlatform.sendPasswordResetEmail(kMockEmail));
+      });
+    });
+
+    group('sendSignInLinkToEmail()', () {
+      test('should throw if email null', () {
         expect(
-            idTokenResult.issuedAtTime,
-            equals(DateTime.fromMillisecondsSinceEpoch(
-                kMockIdTokenResultIssuedAtTimestamp * 1000)));
-        expect(idTokenResult.signInProvider,
-            equals(kMockIdTokenResultSignInProvider));
-        expect(idTokenResult.claims, equals(kMockIdTokenResultClaims));
-      }
+            () => auth.sendSignInLinkToEmail(
+                email: null, actionCodeSettings: kMockActionCodeSettings),
+            throwsAssertionError);
+      });
 
-      final FirebaseUser user = await auth.currentUser();
-      verifyIdTokenResult(await user.getIdToken());
-      verifyIdTokenResult(await user.getIdToken(refresh: true));
-      // It's ugly to specify types for mockito verifications
-      // ignore: always_specify_types
-      verifyInOrder([
-        mock.getCurrentUser(auth.app.name),
-        mock.getIdToken(auth.app.name, false),
-        mock.getIdToken(auth.app.name, true),
-      ]);
+      test('should throw if actionCodeSettings null', () {
+        expect(
+            () => auth.sendSignInLinkToEmail(
+                email: kMockEmail, actionCodeSettings: null),
+            throwsAssertionError);
+      });
+
+      test('should throw if email and actionCodeSettings are null', () {
+        expect(
+            () => auth.sendSignInLinkToEmail(
+                email: null, actionCodeSettings: null),
+            throwsAssertionError);
+      });
+
+      test('should throw if actionCodeSettings.handleCodeInApp is not true',
+          () async {
+        final ActionCodeSettings kMockActionCodeSettingsNull =
+            ActionCodeSettings(url: kMockURL, handleCodeInApp: null);
+        final ActionCodeSettings kMockActionCodeSettingsFalse =
+            ActionCodeSettings(url: kMockURL, handleCodeInApp: false);
+
+        // when handleCodeInApp is null
+        expect(
+            () => auth.sendSignInLinkToEmail(
+                email: kMockEmail,
+                actionCodeSettings: kMockActionCodeSettingsNull),
+            throwsArgumentError);
+        // when handleCodeInApp is false
+        expect(
+            () => auth.sendSignInLinkToEmail(
+                email: kMockEmail,
+                actionCodeSettings: kMockActionCodeSettingsFalse),
+            throwsArgumentError);
+      });
+
+      test('should call delegate method', () async {
+        final ActionCodeSettings kMockActionCodeSettingsValid =
+            ActionCodeSettings(url: kMockURL, handleCodeInApp: true);
+        await auth.sendSignInLinkToEmail(
+            email: kMockEmail,
+            actionCodeSettings: kMockActionCodeSettingsValid);
+        verify(mockAuthPlatform.sendSignInLinkToEmail(
+            kMockEmail, kMockActionCodeSettingsValid));
+      });
     });
 
-    test('signInAnonymously', () async {
-      final AuthResult result = await auth.signInAnonymously();
-      verifyAuthResult(result);
-      verify(mock.signInAnonymously(auth.app.name));
+    group('setSettings()', () {
+      test('should call delegate method', () async {
+        await auth.setSettings(
+            appVerificationDisabledForTesting: true, userAccessGroup: null);
+        verify(mockAuthPlatform.setSettings(
+            appVerificationDisabledForTesting: true, userAccessGroup: null));
+      });
     });
 
-    test('sendSignInWithEmailLink', () async {
-      await auth.sendSignInWithEmailLink(
-        email: 'test@example.com',
-        url: 'http://www.example.com/',
-        handleCodeInApp: true,
-        iOSBundleID: 'com.example.app',
-        androidPackageName: 'com.example.app',
-        androidInstallIfNotAvailable: false,
-        androidMinimumVersion: "12",
-      );
-      expect(
-        verify(mock.sendLinkToEmail(
-          auth.app.name,
-          email: captureAnyNamed('email'),
-          url: captureAnyNamed('url'),
-          handleCodeInApp: captureAnyNamed('handleCodeInApp'),
-          iOSBundleID: captureAnyNamed('iOSBundleID'),
-          androidPackageName: captureAnyNamed('androidPackageName'),
-          androidInstallIfNotAvailable:
-              captureAnyNamed('androidInstallIfNotAvailable'),
-          androidMinimumVersion: captureAnyNamed('androidMinimumVersion'),
-        )).captured,
-        <dynamic>[
-          'test@example.com',
-          'http://www.example.com/',
-          true,
-          'com.example.app',
-          'com.example.app',
-          false,
-          '12',
-        ],
-      );
+    group('setPersistence()', () {
+      test('should throw if null', () {
+        expect(() => auth.setPersistence(null), throwsAssertionError);
+      });
+
+      test('should call delegate method', () async {
+        await auth.setPersistence(Persistence.LOCAL);
+        verify(mockAuthPlatform.setPersistence(Persistence.LOCAL));
+      });
     });
 
-    test('isSignInWithEmailLink', () async {
-      final bool result = await auth.isSignInWithEmailLink('foo');
-      expect(result, true);
-      verify(mock.isSignInWithEmailLink(app.name, 'foo'));
+    group('signInAnonymously()', () {
+      test('should call delegate method', () async {
+        await auth.signInAnonymously();
+        verify(mockAuthPlatform.signInAnonymously());
+      });
     });
 
-    test('signInWithEmailAndLink', () async {
-      final AuthResult result = await auth.signInWithEmailAndLink(
-        email: 'test@example.com',
-        link: '<Url with domain from your Firebase project>',
-      );
-      verifyAuthResult(result);
-      verify(mock.signInWithEmailAndLink(
-        app.name,
-        'test@example.com',
-        '<Url with domain from your Firebase project>',
-      ));
+    group('signInWithCredential()', () {
+      test('GithubAuthProvider signInWithCredential', () async {
+        final AuthCredential credential =
+            GithubAuthProvider.credential(kMockGithubToken);
+        await auth.signInWithCredential(credential);
+        final GithubAuthCredential captured =
+            verify(mockAuthPlatform.signInWithCredential(captureAny))
+                .captured
+                .single;
+        expect(captured.providerId, equals('github.com'));
+        expect(captured.accessToken, equals(kMockGithubToken));
+      });
+
+      test('EmailAuthProvider (withLink) signInWithCredential', () async {
+        final AuthCredential credential = EmailAuthProvider.credentialWithLink(
+          email: 'test@example.com',
+          emailLink: '<Url with domain from your Firebase project>',
+        );
+        await auth.signInWithCredential(credential);
+        final EmailAuthCredential captured =
+            verify(mockAuthPlatform.signInWithCredential(captureAny))
+                .captured
+                .single;
+        expect(captured.providerId, equals('password'));
+        expect(captured.email, equals('test@example.com'));
+        expect(captured.emailLink,
+            equals('<Url with domain from your Firebase project>'));
+      });
+
+      test('TwitterAuthProvider signInWithCredential', () async {
+        final AuthCredential credential = TwitterAuthProvider.credential(
+          accessToken: kMockIdToken,
+          secret: kMockAccessToken,
+        );
+        await auth.signInWithCredential(credential);
+        final TwitterAuthCredential captured =
+            verify(mockAuthPlatform.signInWithCredential(captureAny))
+                .captured
+                .single;
+        expect(captured.providerId, equals('twitter.com'));
+        expect(captured.accessToken, equals(kMockIdToken));
+        expect(captured.secret, equals(kMockAccessToken));
+      });
+
+      test('GoogleAuthProvider signInWithCredential', () async {
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          idToken: kMockIdToken,
+          accessToken: kMockAccessToken,
+        );
+        await auth.signInWithCredential(credential);
+        final GoogleAuthCredential captured =
+            verify(mockAuthPlatform.signInWithCredential(captureAny))
+                .captured
+                .single;
+        expect(captured.providerId, equals('google.com'));
+        expect(captured.idToken, equals(kMockIdToken));
+        expect(captured.accessToken, equals(kMockAccessToken));
+      });
+
+      test('OAuthProvider signInWithCredential for Apple', () async {
+        OAuthProvider oAuthProvider = OAuthProvider("apple.com");
+        final AuthCredential credential = oAuthProvider.credential(
+          idToken: kMockIdToken,
+          accessToken: kMockAccessToken,
+        );
+        await auth.signInWithCredential(credential);
+        final OAuthCredential captured =
+            verify(mockAuthPlatform.signInWithCredential(captureAny))
+                .captured
+                .single;
+        expect(captured.providerId, equals('apple.com'));
+        expect(captured.idToken, equals(kMockIdToken));
+        expect(captured.accessToken, equals(kMockAccessToken));
+      });
+
+      test('PhoneAuthProvider signInWithCredential', () async {
+        final AuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: kMockVerificationId,
+          smsCode: kMockSmsCode,
+        );
+        await auth.signInWithCredential(credential);
+        final PhoneAuthCredential captured =
+            verify(mockAuthPlatform.signInWithCredential(captureAny))
+                .captured
+                .single;
+        expect(captured.providerId, equals('phone'));
+        expect(captured.verificationId, equals(kMockVerificationId));
+        expect(captured.smsCode, equals(kMockSmsCode));
+      });
+
+      test('FacebookAuthProvider signInWithCredential', () async {
+        final AuthCredential credential =
+            FacebookAuthProvider.credential(kMockAccessToken);
+        await auth.signInWithCredential(credential);
+        final FacebookAuthCredential captured =
+            verify(mockAuthPlatform.signInWithCredential(captureAny))
+                .captured
+                .single;
+        expect(captured.providerId, equals('facebook.com'));
+        expect(captured.accessToken, equals(kMockAccessToken));
+      });
     });
 
-    test('createUserWithEmailAndPassword', () async {
-      final AuthResult result = await auth.createUserWithEmailAndPassword(
-        email: kMockEmail,
-        password: kMockPassword,
-      );
-      verifyAuthResult(result);
-      verify(mock.createUserWithEmailAndPassword(
-        auth.app.name,
-        kMockEmail,
-        kMockPassword,
-      ));
+    group('signInWithCustomToken()', () {
+      test('should throw if token null', () {
+        expect(() => auth.signInWithCustomToken(null), throwsAssertionError);
+      });
+      test('should call delegate method', () async {
+        await auth.signInWithCustomToken(kMockCustomToken);
+        verify(mockAuthPlatform.signInWithCustomToken(kMockCustomToken));
+      });
     });
 
-    test('fetchSignInMethodsForEmail', () async {
-      final List<String> providers =
-          await auth.fetchSignInMethodsForEmail(email: kMockEmail);
-      expect(providers, isNotNull);
-      expect(providers.length, 0);
-      verify(mock.fetchSignInMethodsForEmail(
-        auth.app.name,
-        kMockEmail,
-      ));
+    group('signInWithEmailAndPassword()', () {
+      test('should throw if email or password are null', () {
+        expect(
+            () => auth.signInWithEmailAndPassword(email: null, password: null),
+            throwsAssertionError);
+      });
+      test('should call delegate method', () async {
+        await auth.signInWithEmailAndPassword(
+            email: kMockEmail, password: kMockPassword);
+        verify(mockAuthPlatform.signInWithEmailAndPassword(
+            kMockEmail, kMockPassword));
+      });
     });
 
-    test('EmailAuthProvider (withLink) linkWithCredential', () async {
-      final AuthCredential credential = EmailAuthProvider.getCredentialWithLink(
-        email: 'test@example.com',
-        link: '<Url with domain from your Firebase project>',
-      );
-      final FirebaseUser user = await auth.currentUser();
-      final AuthResult result = await user.linkWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final EmailAuthCredential captured =
-          verify(mock.linkWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('password'));
-      expect(captured.email, equals('test@example.com'));
-      expect(captured.link,
-          equals('<Url with domain from your Firebase project>'));
+    group('signInWithEmailLink()', () {
+      test('should throw if email or link are null', () {
+        expect(() => auth.signInWithEmailLink(email: null, emailLink: null),
+            throwsAssertionError);
+      });
+      test('should call delegate method', () async {
+        await auth.signInWithEmailLink(email: kMockEmail, emailLink: kMockURL);
+        verify(mockAuthPlatform.signInWithEmailLink(kMockEmail, kMockURL));
+      });
     });
 
-    test('EmailAuthProvider (withLink) signInWithCredential', () async {
-      final AuthCredential credential = EmailAuthProvider.getCredentialWithLink(
-        email: 'test@example.com',
-        link: '<Url with domain from your Firebase project>',
-      );
-      final AuthResult result = await auth.signInWithCredential(credential);
-      verifyAuthResult(result);
-      final EmailAuthCredential captured =
-          verify(mock.signInWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('password'));
-      expect(captured.email, equals('test@example.com'));
-      expect(captured.link,
-          equals('<Url with domain from your Firebase project>'));
+    group('signInWithPhoneNumber()', () {
+      test('should throw if phoneNumber or verifier are null', () {
+        expect(
+            () => auth.signInWithPhoneNumber(null, null), throwsAssertionError);
+      });
+
+      test('should call delegate method', () async {
+        await auth.signInWithPhoneNumber(kMockPhoneNumber, mockVerifier);
+        verify(mockAuthPlatform.signInWithPhoneNumber(kMockPhoneNumber, any));
+      });
     });
 
-    test('EmailAuthProvider (withLink) reauthenticateWithCredential', () async {
-      final FirebaseUser user = await auth.currentUser();
-      final AuthCredential credential = EmailAuthProvider.getCredentialWithLink(
-        email: 'test@example.com',
-        link: '<Url with domain from your Firebase project>',
-      );
-      await user.reauthenticateWithCredential(credential);
-      verify(mock.getCurrentUser(auth.app.name));
-      final EmailAuthCredential captured =
-          verify(mock.reauthenticateWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('password'));
-      expect(captured.email, equals('test@example.com'));
-      expect(captured.link,
-          equals('<Url with domain from your Firebase project>'));
+    group('signInWithPopup()', () {
+      test('should call delegate method', () async {
+        await auth.signInWithPopup(testAuthProvider);
+        verify(mockAuthPlatform.signInWithPopup(testAuthProvider));
+      });
     });
 
-    test('TwitterAuthProvider linkWithCredential', () async {
-      final AuthCredential credential = TwitterAuthProvider.getCredential(
-        authToken: kMockIdToken,
-        authTokenSecret: kMockAccessToken,
-      );
-      final FirebaseUser user = await auth.currentUser();
-      final AuthResult result = await user.linkWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final TwitterAuthCredential captured =
-          verify(mock.linkWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('twitter.com'));
-      expect(captured.authToken, equals(kMockIdToken));
-      expect(captured.authTokenSecret, equals(kMockAccessToken));
+    group('signInWithRedirect()', () {
+      test('should call delegate method', () async {
+        await auth.signInWithRedirect(testAuthProvider);
+        verify(mockAuthPlatform.signInWithRedirect(testAuthProvider));
+      });
     });
 
-    test('TwitterAuthProvider signInWithCredential', () async {
-      final AuthCredential credential = TwitterAuthProvider.getCredential(
-        authToken: kMockIdToken,
-        authTokenSecret: kMockAccessToken,
-      );
-      final AuthResult result = await auth.signInWithCredential(credential);
-      verifyAuthResult(result);
-      final TwitterAuthCredential captured =
-          verify(mock.signInWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('twitter.com'));
-      expect(captured.authToken, equals(kMockIdToken));
-      expect(captured.authTokenSecret, equals(kMockAccessToken));
+    group('signOut()', () {
+      test('should call delegate method', () async {
+        await auth.signOut();
+        verify(mockAuthPlatform.signOut());
+      });
     });
 
-    test('GithubAuthProvider linkWithCredential', () async {
-      final AuthCredential credential = GithubAuthProvider.getCredential(
-        token: kMockGithubToken,
-      );
-      final FirebaseUser user = await auth.currentUser();
-      final AuthResult result = await user.linkWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final GithubAuthCredential captured =
-          verify(mock.linkWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('github.com'));
-      expect(captured.token, equals(kMockGithubToken));
+    group('verifyPasswordResetCode()', () {
+      test('should throw if phoneNumber or verifier are null', () {
+        expect(() => auth.verifyPasswordResetCode(null), throwsAssertionError);
+      });
+      test('should call delegate method', () async {
+        await auth.verifyPasswordResetCode(kMockOobCode);
+        verify(mockAuthPlatform.verifyPasswordResetCode(kMockOobCode));
+      });
     });
 
-    test('GitHubAuthProvider signInWithCredential', () async {
-      final AuthCredential credential = GithubAuthProvider.getCredential(
-        token: kMockGithubToken,
-      );
-      final AuthResult result = await auth.signInWithCredential(credential);
-      verifyAuthResult(result);
-      final GithubAuthCredential captured =
-          verify(mock.signInWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('github.com'));
-      expect(captured.token, equals(kMockGithubToken));
+    group('verifyPhoneNumber()', () {
+      test('should throw if null', () {
+        expect(
+            () => auth.verifyPhoneNumber(
+                phoneNumber: null,
+                verificationCompleted: null,
+                verificationFailed: null,
+                codeSent: null,
+                codeAutoRetrievalTimeout: null,
+                autoRetrievedSmsCodeForTesting: null),
+            throwsAssertionError);
+      });
+
+      test('should call delegate method', () async {
+        final PhoneVerificationCompleted verificationCompleted =
+            (PhoneAuthCredential phoneAuthCredential) {};
+        final PhoneVerificationFailed verificationFailed =
+            (FirebaseAuthException authException) {};
+        final PhoneCodeSent codeSent =
+            (String verificationId, [int forceResendingToken]) async {};
+        final PhoneCodeAutoRetrievalTimeout autoRetrievalTimeout =
+            (String verificationId) {};
+
+        await auth.verifyPhoneNumber(
+            phoneNumber: kMockPhoneNumber,
+            verificationCompleted: verificationCompleted,
+            verificationFailed: verificationFailed,
+            codeSent: codeSent,
+            codeAutoRetrievalTimeout: autoRetrievalTimeout);
+
+        verify(mockAuthPlatform.verifyPhoneNumber(
+            phoneNumber: kMockPhoneNumber,
+            timeout: Duration(seconds: 30),
+            forceResendingToken: null,
+            verificationCompleted: verificationCompleted,
+            verificationFailed: verificationFailed,
+            codeSent: codeSent,
+            codeAutoRetrievalTimeout: autoRetrievalTimeout));
+      });
     });
 
-    test('EmailAuthProvider linkWithCredential', () async {
-      final AuthCredential credential = EmailAuthProvider.getCredential(
-        email: kMockEmail,
-        password: kMockPassword,
-      );
-      final FirebaseUser user = await auth.currentUser();
-      final AuthResult result = await user.linkWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final EmailAuthCredential captured =
-          verify(mock.linkWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('password'));
-      expect(captured.email, equals(kMockEmail));
-      expect(captured.password, equals(kMockPassword));
-    });
-
-    test('GoogleAuthProvider signInWithCredential', () async {
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-        idToken: kMockIdToken,
-        accessToken: kMockAccessToken,
-      );
-      final AuthResult result = await auth.signInWithCredential(credential);
-      verifyAuthResult(result);
-      final GoogleAuthCredential captured =
-          verify(mock.signInWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('google.com'));
-      expect(captured.idToken, equals(kMockIdToken));
-      expect(captured.accessToken, equals(kMockAccessToken));
-    });
-
-    test('OAuthProvider signInWithCredential for Apple', () async {
-      OAuthProvider oAuthProvider = OAuthProvider(providerId: "apple.com");
-      final AuthCredential credential = oAuthProvider.getCredential(
-        idToken: kMockIdToken,
-        accessToken: kMockAccessToken,
-      );
-      final AuthResult result = await auth.signInWithCredential(credential);
-      verifyAuthResult(result);
-      final OAuthCredential captured =
-          verify(mock.signInWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('apple.com'));
-      expect(captured.idToken, equals(kMockIdToken));
-      expect(captured.accessToken, equals(kMockAccessToken));
-    });
-
-    test('PhoneAuthProvider signInWithCredential', () async {
-      final AuthCredential credential = PhoneAuthProvider.getCredential(
-        verificationId: kMockVerificationId,
-        smsCode: kMockSmsCode,
-      );
-      final AuthResult result = await auth.signInWithCredential(credential);
-      verifyAuthResult(result);
-      final PhoneAuthCredential captured =
-          verify(mock.signInWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('phone'));
-      expect(captured.verificationId, equals(kMockVerificationId));
-      expect(captured.smsCode, equals(kMockSmsCode));
-    });
-
-    test('verifyPhoneNumber', () async {
-      await auth.verifyPhoneNumber(
-          phoneNumber: kMockPhoneNumber,
-          timeout: const Duration(seconds: 5),
-          verificationCompleted: null,
-          verificationFailed: null,
-          codeSent: null,
-          codeAutoRetrievalTimeout: null);
-      final List<dynamic> captured = verify(mock.verifyPhoneNumber(
-        auth.app.name,
-        phoneNumber: captureAnyNamed('phoneNumber'),
-        timeout: captureAnyNamed('timeout'),
-        verificationCompleted: anyNamed('verificationCompleted'),
-        verificationFailed: anyNamed('verificationFailed'),
-        codeSent: anyNamed('codeSent'),
-        codeAutoRetrievalTimeout: anyNamed('codeAutoRetrievalTimeout'),
-      )).captured;
-      expect(captured, <dynamic>[
-        kMockPhoneNumber,
-        const Duration(seconds: 5),
-      ]);
-    });
-
-    test('EmailAuthProvider reauthenticateWithCredential', () async {
-      final FirebaseUser user = await auth.currentUser();
-      final AuthCredential credential = EmailAuthProvider.getCredential(
-        email: kMockEmail,
-        password: kMockPassword,
-      );
-      final AuthResult result =
-          await user.reauthenticateWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final EmailAuthCredential captured =
-          verify(mock.reauthenticateWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('password'));
-      expect(captured.email, equals(kMockEmail));
-      expect(captured.password, equals(kMockPassword));
-    });
-
-    test('GoogleAuthProvider reauthenticateWithCredential', () async {
-      final FirebaseUser user = await auth.currentUser();
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-        idToken: kMockIdToken,
-        accessToken: kMockAccessToken,
-      );
-      final AuthResult result =
-          await user.reauthenticateWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final GoogleAuthCredential captured =
-          verify(mock.reauthenticateWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('google.com'));
-      expect(captured.idToken, equals(kMockIdToken));
-      expect(captured.accessToken, equals(kMockAccessToken));
-    });
-
-    test('OAuthProvider reauthenticateWithCredential for Apple', () async {
-      final FirebaseUser user = await auth.currentUser();
-      OAuthProvider oAuthProvider = OAuthProvider(providerId: "apple.com");
-      final AuthCredential credential = oAuthProvider.getCredential(
-        idToken: kMockIdToken,
-        accessToken: kMockAccessToken,
-      );
-      final AuthResult result =
-          await user.reauthenticateWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final OAuthCredential captured =
-          verify(mock.reauthenticateWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('apple.com'));
-      expect(captured.idToken, equals(kMockIdToken));
-      expect(captured.accessToken, equals(kMockAccessToken));
-    });
-
-    test('FacebookAuthProvider reauthenticateWithCredential', () async {
-      final FirebaseUser user = await auth.currentUser();
-      final AuthCredential credential = FacebookAuthProvider.getCredential(
-        accessToken: kMockAccessToken,
-      );
-      final AuthResult result =
-          await user.reauthenticateWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final FacebookAuthCredential captured =
-          verify(mock.reauthenticateWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('facebook.com'));
-      expect(captured.accessToken, equals(kMockAccessToken));
-    });
-
-    test('TwitterAuthProvider reauthenticateWithCredential', () async {
-      final FirebaseUser user = await auth.currentUser();
-      final AuthCredential credential = TwitterAuthProvider.getCredential(
-        authToken: kMockAuthToken,
-        authTokenSecret: kMockAuthTokenSecret,
-      );
-      final AuthResult result =
-          await user.reauthenticateWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final TwitterAuthCredential captured =
-          verify(mock.reauthenticateWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('twitter.com'));
-      expect(captured.authToken, equals(kMockAuthToken));
-      expect(captured.authTokenSecret, equals(kMockAuthTokenSecret));
-    });
-
-    test('GithubAuthProvider reauthenticateWithCredential', () async {
-      final FirebaseUser user = await auth.currentUser();
-      final AuthCredential credential = GithubAuthProvider.getCredential(
-        token: kMockGithubToken,
-      );
-      final AuthResult result =
-          await user.reauthenticateWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final GithubAuthCredential captured =
-          verify(mock.reauthenticateWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('github.com'));
-      expect(captured.token, equals(kMockGithubToken));
-    });
-
-    test('GoogleAuthProvider linkWithCredential', () async {
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-        idToken: kMockIdToken,
-        accessToken: kMockAccessToken,
-      );
-      final FirebaseUser user = await auth.currentUser();
-      final AuthResult result = await user.linkWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final GoogleAuthCredential captured =
-          verify(mock.linkWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('google.com'));
-      expect(captured.idToken, equals(kMockIdToken));
-      expect(captured.accessToken, equals(kMockAccessToken));
-    });
-
-    test('OAuthProvider linkWithCredential for Apple', () async {
-      OAuthProvider oAuthProvider = OAuthProvider(providerId: "apple.com");
-      final AuthCredential credential = oAuthProvider.getCredential(
-        idToken: kMockIdToken,
-        accessToken: kMockAccessToken,
-      );
-      final FirebaseUser user = await auth.currentUser();
-      final AuthResult result = await user.linkWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final OAuthCredential captured =
-          verify(mock.linkWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('apple.com'));
-      expect(captured.idToken, equals(kMockIdToken));
-      expect(captured.accessToken, equals(kMockAccessToken));
-    });
-
-    test('FacebookAuthProvider linkWithCredential', () async {
-      final AuthCredential credential = FacebookAuthProvider.getCredential(
-        accessToken: kMockAccessToken,
-      );
-      final FirebaseUser user = await auth.currentUser();
-      final AuthResult result = await user.linkWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final FacebookAuthCredential captured =
-          verify(mock.linkWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('facebook.com'));
-      expect(captured.accessToken, equals(kMockAccessToken));
-    });
-
-    test('FacebookAuthProvider signInWithCredential', () async {
-      final AuthCredential credential = FacebookAuthProvider.getCredential(
-        accessToken: kMockAccessToken,
-      );
-      final AuthResult result = await auth.signInWithCredential(credential);
-      verifyAuthResult(result);
-      final FacebookAuthCredential captured =
-          verify(mock.signInWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('facebook.com'));
-      expect(captured.accessToken, equals(kMockAccessToken));
-    });
-
-    test('TwitterAuthProvider linkWithCredential', () async {
-      final AuthCredential credential = TwitterAuthProvider.getCredential(
-        authToken: kMockAuthToken,
-        authTokenSecret: kMockAuthTokenSecret,
-      );
-      final FirebaseUser user = await auth.currentUser();
-      final AuthResult result = await user.linkWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final TwitterAuthCredential captured =
-          verify(mock.linkWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('twitter.com'));
-      expect(captured.authToken, equals(kMockAuthToken));
-      expect(captured.authTokenSecret, equals(kMockAuthTokenSecret));
-    });
-
-    test('TwitterAuthProvider signInWithCredential', () async {
-      final AuthCredential credential = TwitterAuthProvider.getCredential(
-        authToken: kMockAuthToken,
-        authTokenSecret: kMockAuthTokenSecret,
-      );
-      final AuthResult result = await auth.signInWithCredential(credential);
-      verifyAuthResult(result);
-      final TwitterAuthCredential captured =
-          verify(mock.signInWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('twitter.com'));
-      expect(captured.authToken, equals(kMockAuthToken));
-      expect(captured.authTokenSecret, equals(kMockAuthTokenSecret));
-    });
-
-    test('GithubAuthProvider linkWithCredential', () async {
-      final AuthCredential credential = GithubAuthProvider.getCredential(
-        token: kMockGithubToken,
-      );
-      final FirebaseUser user = await auth.currentUser();
-      final AuthResult result = await user.linkWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final GithubAuthCredential captured =
-          verify(mock.linkWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('github.com'));
-      expect(captured.token, equals(kMockGithubToken));
-    });
-
-    test('GithubAuthProvider signInWithCredential', () async {
-      final AuthCredential credential = GithubAuthProvider.getCredential(
-        token: kMockGithubToken,
-      );
-      final AuthResult result = await auth.signInWithCredential(credential);
-      verifyAuthResult(result);
-      final GithubAuthCredential captured =
-          verify(mock.signInWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('github.com'));
-      expect(captured.token, equals(kMockGithubToken));
-    });
-
-    test('EmailAuthProvider linkWithCredential', () async {
-      final AuthCredential credential = EmailAuthProvider.getCredential(
-        email: kMockEmail,
-        password: kMockPassword,
-      );
-      final FirebaseUser user = await auth.currentUser();
-      final AuthResult result = await user.linkWithCredential(credential);
-      verifyAuthResult(result);
-      verify(mock.getCurrentUser(auth.app.name));
-      final EmailAuthCredential captured =
-          verify(mock.linkWithCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('password'));
-      expect(captured.email, equals('test@example.com'));
-      expect(captured.password, equals(kMockPassword));
-    });
-
-    test('sendEmailVerification', () async {
-      final FirebaseUser user = await auth.currentUser();
-      await user.sendEmailVerification();
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.sendEmailVerification(auth.app.name));
-    });
-
-    test('reload', () async {
-      final FirebaseUser user = await auth.currentUser();
-      await user.reload();
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.reload(auth.app.name));
-    });
-
-    test('delete', () async {
-      final FirebaseUser user = await auth.currentUser();
-      await user.delete();
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.delete(auth.app.name));
-    });
-
-    test('sendPasswordResetEmail', () async {
-      await auth.sendPasswordResetEmail(
-        email: kMockEmail,
-      );
-      verify(mock.sendPasswordResetEmail(auth.app.name, kMockEmail));
-    });
-
-    test('updateEmail', () async {
-      final FirebaseUser user = await auth.currentUser();
-      await user.updateEmail(kMockEmail);
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.updateEmail(auth.app.name, kMockEmail));
-    });
-
-    test('updatePhoneNumberCredential', () async {
-      final FirebaseUser user = await auth.currentUser();
-      final AuthCredential credentials = PhoneAuthProvider.getCredential(
-        verificationId: kMockVerificationId,
-        smsCode: kMockSmsCode,
-      );
-      await user.updatePhoneNumberCredential(credentials);
-      verify(mock.getCurrentUser(auth.app.name));
-      final PhoneAuthCredential captured =
-          verify(mock.updatePhoneNumberCredential(auth.app.name, captureAny))
-              .captured
-              .single;
-      expect(captured.providerId, equals('phone'));
-      expect(captured.verificationId, equals(kMockVerificationId));
-      expect(captured.smsCode, equals(kMockSmsCode));
-    });
-
-    test('updatePassword', () async {
-      final FirebaseUser user = await auth.currentUser();
-      await user.updatePassword(kMockPassword);
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.updatePassword(auth.app.name, kMockPassword));
-    });
-
-    test('updateProfile', () async {
-      final UserUpdateInfo userUpdateInfo = UserUpdateInfo();
-      userUpdateInfo.photoUrl = kMockPhotoUrl;
-      userUpdateInfo.displayName = kMockDisplayName;
-
-      final FirebaseUser user = await auth.currentUser();
-      await user.updateProfile(userUpdateInfo);
-      verify(mock.getCurrentUser(auth.app.name));
-      final List<dynamic> captured = verify(
-        mock.updateProfile(
-          auth.app.name,
-          displayName: captureAnyNamed('displayName'),
-          photoUrl: captureAnyNamed('photoUrl'),
-        ),
-      ).captured;
-      expect(captured, equals(<String>[kMockDisplayName, kMockPhotoUrl]));
-    });
-
-    test('EmailAuthProvider unlinkFromProvider', () async {
-      final FirebaseUser user = await auth.currentUser();
-      await user.unlinkFromProvider(EmailAuthProvider.providerId);
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.unlinkFromProvider(auth.app.name, 'password'));
-    });
-
-    test('GoogleAuthProvider unlinkFromProvider', () async {
-      final FirebaseUser user = await auth.currentUser();
-      await user.unlinkFromProvider(GoogleAuthProvider.providerId);
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.unlinkFromProvider(auth.app.name, 'google.com'));
-    });
-
-    test('OAuthProvider unlinkFromProvider for Apple', () async {
-      final FirebaseUser user = await auth.currentUser();
-      OAuthProvider oAuthProvider = OAuthProvider(providerId: "apple.com");
-      await user.unlinkFromProvider(oAuthProvider.providerId);
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.unlinkFromProvider(auth.app.name, 'apple.com'));
-    });
-
-    test('FacebookAuthProvider unlinkFromProvider', () async {
-      final FirebaseUser user = await auth.currentUser();
-      await user.unlinkFromProvider(FacebookAuthProvider.providerId);
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.unlinkFromProvider(auth.app.name, 'facebook.com'));
-    });
-
-    test('PhoneAuthProvider unlinkFromProvider', () async {
-      final FirebaseUser user = await auth.currentUser();
-      await user.unlinkFromProvider(PhoneAuthProvider.providerId);
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.unlinkFromProvider(auth.app.name, 'phone'));
-    });
-
-    test('TwitterAuthProvider unlinkFromProvider', () async {
-      final FirebaseUser user = await auth.currentUser();
-      await user.unlinkFromProvider(TwitterAuthProvider.providerId);
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.unlinkFromProvider(auth.app.name, 'twitter.com'));
-    });
-
-    test('GithubAuthProvider unlinkFromProvider', () async {
-      final FirebaseUser user = await auth.currentUser();
-      await user.unlinkFromProvider(GithubAuthProvider.providerId);
-      verify(mock.getCurrentUser(auth.app.name));
-      verify(mock.unlinkFromProvider(auth.app.name, 'github.com'));
-    });
-
-    test('signInWithCustomToken', () async {
-      final AuthResult result =
-          await auth.signInWithCustomToken(token: kMockCustomToken);
-      verifyAuthResult(result);
-      verify(mock.signInWithCustomToken(auth.app.name, kMockCustomToken));
-    });
-
-    test('onAuthStateChanged', () async {
-      when(mock.onAuthStateChanged(auth.app.name)).thenAnswer((_) =>
-          Stream<PlatformUser>.fromIterable(<PlatformUser>[null, kMockUser]));
-
-      // Wrap onAuthStateChanged in a StreamQueue so we can request events.
-      final StreamQueue<FirebaseUser> changes =
-          StreamQueue<FirebaseUser>(auth.onAuthStateChanged);
-
-      expect(await changes.next, isNull);
-
-      final FirebaseUser user2 = await changes.next;
-      verifyUser(user2);
-
-      changes.cancel();
-    });
-
-    test('setLanguageCode', () async {
-      await auth.setLanguageCode(kMockLanguage);
-      verify(mock.setLanguageCode(auth.app.name, kMockLanguage));
-    });
-
-    test('confirmPasswordReset', () async {
-      await auth.confirmPasswordReset(kMockOobCode, kMockPassword);
-      verify(mock.confirmPasswordReset(
-          auth.app.name, kMockOobCode, kMockPassword));
+    test('toString()', () async {
+      expect(auth.toString(), equals('FirebaseAuth(app: [DEFAULT])'));
     });
   });
 }
 
 class MockFirebaseAuth extends Mock
     with MockPlatformInterfaceMixin
-    implements FirebaseAuthPlatform {}
+    implements TestFirebaseAuthPlatform {
+  MockFirebaseAuth();
+}
+
+class MockUserPlatform extends Mock
+    with MockPlatformInterfaceMixin
+    implements TestUserPlatform {
+  MockUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> _user) {
+    TestUserPlatform(auth, _user);
+  }
+}
+
+class MockUserCredentialPlatform extends Mock
+    with MockPlatformInterfaceMixin
+    implements TestUserCredentialPlatform {
+  MockUserCredentialPlatform(
+      FirebaseAuthPlatform auth,
+      AdditionalUserInfo additionalUserInfo,
+      AuthCredential credential,
+      UserPlatform userPlatform) {
+    TestUserCredentialPlatform(
+        auth, additionalUserInfo, credential, userPlatform);
+  }
+}
+
+class MockConfirmationResultPlatform extends Mock
+    with MockPlatformInterfaceMixin
+    implements TestConfirmationResultPlatform {
+  MockConfirmationResultPlatform() {
+    TestConfirmationResultPlatform();
+  }
+}
+
+class TestConfirmationResultPlatform extends ConfirmationResultPlatform {
+  TestConfirmationResultPlatform() : super('TEST');
+}
+
+class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
+  TestFirebaseAuthPlatform() : super();
+
+  instanceFor({FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {}
+
+  FirebaseAuthPlatform delegateFor({FirebaseApp app}) {
+    return this;
+  }
+
+  @override
+  FirebaseAuthPlatform setInitialValues(
+      {Map<String, dynamic> currentUser, String languageCode}) {
+    return this;
+  }
+}
+
+class MockRecaptchaVerifier extends Mock
+    with MockPlatformInterfaceMixin
+    implements TestRecaptchaVerifier {
+  MockRecaptchaVerifier() {
+    TestRecaptchaVerifier();
+  }
+
+  RecaptchaVerifierFactoryPlatform get mockDelegate {
+    return MockRecaptchaVerifierFactoryPlatform(); //this.delegate;
+  }
+}
+
+class MockRecaptchaVerifierFactoryPlatform extends Mock
+    with MockPlatformInterfaceMixin
+    implements TestRecaptchaVerifierFactoryPlatform {
+  MockRecaptchaVerifier() {
+    TestRecaptchaVerifierFactoryPlatform();
+  }
+}
+
+class TestRecaptchaVerifier implements RecaptchaVerifier {
+  TestRecaptchaVerifier() : super();
+
+  @override
+  void clear() {}
+
+  @override
+  RecaptchaVerifierFactoryPlatform get delegate =>
+      TestRecaptchaVerifierFactoryPlatform();
+
+  @override
+  Future<int> render() {
+    throw UnimplementedError();
+  }
+
+  @override
+  String get type => throw UnimplementedError();
+
+  @override
+  Future<String> verify() {
+    throw UnimplementedError();
+  }
+}
+
+class TestRecaptchaVerifierFactoryPlatform
+    extends RecaptchaVerifierFactoryPlatform {
+  TestRecaptchaVerifierFactoryPlatform() : super();
+}
+
+class TestAuthProvider extends AuthProvider {
+  TestAuthProvider() : super("TEST");
+}
+
+class TestUserPlatform extends UserPlatform {
+  TestUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> data)
+      : super(auth, data);
+}
+
+class TestUserCredentialPlatform extends UserCredentialPlatform {
+  TestUserCredentialPlatform(
+      FirebaseAuthPlatform auth,
+      AdditionalUserInfo additionalUserInfo,
+      AuthCredential credential,
+      UserPlatform userPlatform)
+      : super(
+            auth: auth,
+            additionalUserInfo: additionalUserInfo,
+            credential: credential,
+            user: userPlatform);
+}

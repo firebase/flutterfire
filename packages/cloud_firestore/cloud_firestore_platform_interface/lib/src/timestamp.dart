@@ -31,14 +31,14 @@ class Timestamp implements Comparable<Timestamp> {
 
   /// Create a [Timestamp] fromMillisecondsSinceEpoch
   factory Timestamp.fromMillisecondsSinceEpoch(int milliseconds) {
-    final int seconds = (milliseconds / _kThousand).floor();
+    final int seconds = (milliseconds ~/ _kThousand).floor();
     final int nanoseconds = (milliseconds - seconds * _kThousand) * _kMillion;
     return Timestamp(seconds, nanoseconds);
   }
 
   /// Create a [Timestamp] fromMicrosecondsSinceEpoch
   factory Timestamp.fromMicrosecondsSinceEpoch(int microseconds) {
-    final int seconds = (microseconds / _kMillion).floor();
+    final int seconds = (microseconds ~/ _kMillion).floor();
     final int nanoseconds = (microseconds - seconds * _kMillion) * _kThousand;
     return Timestamp(seconds, nanoseconds);
   }
@@ -68,11 +68,11 @@ class Timestamp implements Comparable<Timestamp> {
 
   // ignore: public_member_api_docs
   int get millisecondsSinceEpoch =>
-      (seconds * _kThousand + nanoseconds / _kMillion).floor();
+      (seconds * _kThousand + nanoseconds ~/ _kMillion);
 
   // ignore: public_member_api_docs
   int get microsecondsSinceEpoch =>
-      (seconds * _kMillion + nanoseconds / _kThousand).floor();
+      (seconds * _kMillion + nanoseconds ~/ _kThousand);
 
   /// Converts [Timestamp] to [DateTime]
   DateTime toDate() {
@@ -81,9 +81,11 @@ class Timestamp implements Comparable<Timestamp> {
 
   @override
   int get hashCode => hashValues(seconds, nanoseconds);
+
   @override
   bool operator ==(dynamic o) =>
       o is Timestamp && o.seconds == seconds && o.nanoseconds == nanoseconds;
+
   @override
   int compareTo(Timestamp other) {
     if (seconds == other.seconds) {

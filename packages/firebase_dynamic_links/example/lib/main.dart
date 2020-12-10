@@ -4,8 +4,8 @@
 
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,14 +40,6 @@ class _MainScreenState extends State<_MainScreen> {
   }
 
   void initDynamicLinks() async {
-    final PendingDynamicLinkData data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
-
-    if (deepLink != null) {
-      Navigator.pushNamed(context, deepLink.path);
-    }
-
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
       final Uri deepLink = dynamicLink?.link;
@@ -59,6 +51,14 @@ class _MainScreenState extends State<_MainScreen> {
       print('onLinkError');
       print(e.message);
     });
+
+    final PendingDynamicLinkData data =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null) {
+      Navigator.pushNamed(context, deepLink.path);
+    }
   }
 
   Future<void> _createDynamicLink(bool short) async {

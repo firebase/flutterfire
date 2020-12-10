@@ -7,7 +7,7 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 ## Usage
 
 ### Import the firebase_in_app_messaging plugin
-To use the firebase_in_app_messaging plugin, follow the [plugin installation instructions](https://pub.dartlang.org/packages/firebase_in_app_messaging#pub-pkg-tab-installing).
+To use the firebase_in_app_messaging plugin, follow the [plugin installation instructions](https://pub.dev/packages/firebase_in_app_messaging#pub-pkg-tab-installing).
 
 ### Android integration
 
@@ -17,9 +17,9 @@ There are a few extra steps required for the Android integration. Enable the Goo
 ```gradle
 dependencies {
   // Example existing classpath
-  classpath 'com.android.tools.build:gradle:3.3.0'
+  classpath 'com.android.tools.build:gradle:3.5.4'
   // Add the google services classpath
-  classpath 'com.google.gms:google-services:4.3.0'
+  classpath 'com.google.gms:google-services:4.3.4'
 }
 ```
 
@@ -84,10 +84,10 @@ for a complete sample app using the Firebase In-App Messaging.
 
 ## Issues and feedback
 
-Please file Flutterfire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
 Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
-please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md),
-and send a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).

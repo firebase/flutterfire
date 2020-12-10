@@ -1,0 +1,52 @@
+---
+title: Remote Config
+sidebar_label: Overview
+---
+
+##  What does it do?
+
+Firebase Remote Config is a cloud service that lets you change the behavior and appearance of your app without requiring users to
+download an app update. When using Remote Config, you create in-app default values that control the behavior and appearance of your
+app. Then, you can later use the Firebase console or the Remote Config backend APIs to override in-app default values for all app
+users or for segments of your user base. Your app controls when updates are applied, and it can frequently check for updates and
+apply them with a negligible impact on performance.
+
+<YouTube id="_CXXVFPO6f0"/>
+
+## Installation
+
+### 1. Add dependency
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  firebase_remote_config: "^{{ plugins.firebase_remote_config }}"
+```
+
+### 2. Download dependency
+
+```
+$ flutter pub get
+```
+
+### 3. (Web Only) Add the SDK
+
+> Web is currently not supported. See the [FlutterFire roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582).
+
+### 4. Rebuild your app
+
+Once complete, rebuild your Flutter application:
+
+```bash
+$ flutter run
+```
+
+## Next Steps
+
+Once installed, you're ready to start using Remote Config in your Flutter Project.
+
+> Additional documentation will be available once the Firebase Remote Config plugin update lands as part of the [FlutterFire roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582).
+
+<!-- View the [Usage documentation](usage.mdx) to get started. -->

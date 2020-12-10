@@ -31,6 +31,8 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
   final TextRecognizer _recognizer = FirebaseVision.instance.textRecognizer();
   final TextRecognizer _cloudRecognizer =
       FirebaseVision.instance.cloudTextRecognizer();
+  final DocumentTextRecognizer _cloudDocumentRecognizer =
+      FirebaseVision.instance.cloudDocumentTextRecognizer();
 
   @override
   void initState() {
@@ -76,6 +78,8 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
         return _recognizer.processImage;
       case Detector.cloudText:
         return _cloudRecognizer.processImage;
+      case Detector.cloudDocumentText:
+        return _cloudDocumentRecognizer.processImage;
       case Detector.barcode:
         return _barcodeDetector.detectInImage;
       case Detector.label:
@@ -208,6 +212,10 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
               const PopupMenuItem<Detector>(
                 child: Text('Detect Cloud Text'),
                 value: Detector.cloudText,
+              ),
+              const PopupMenuItem<Detector>(
+                child: Text('Detect Document Text'),
+                value: Detector.cloudDocumentText,
               ),
             ],
           ),

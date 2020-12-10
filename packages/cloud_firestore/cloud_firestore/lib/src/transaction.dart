@@ -1,4 +1,4 @@
-// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -6,58 +6,64 @@ part of cloud_firestore;
 
 /// The [TransactionHandler] may be executed multiple times; it should be able
 /// to handle multiple executions.
-typedef Future<dynamic> TransactionHandler(Transaction transaction);
+typedef Future<T> TransactionHandler<T>(Transaction transaction);
 
+/// Transaction class which is created from a call to [runTransaction()].
 class Transaction {
-  final Firestore _firestore;
+  final FirebaseFirestore _firestore;
+  final TransactionPlatform _delegate;
 
-  Transaction._(this._delegate, this._firestore) {
-    platform.TransactionPlatform.verifyExtends(_delegate);
+  Transaction._(this._firestore, this._delegate) {
+    TransactionPlatform.verifyExtends(_delegate);
   }
 
-  platform.TransactionPlatform _delegate;
-
-  // ignore: unused_element
-  Future<void> _finish() => _delegate.finish();
-
-  /// Reads the document referenced by the provided DocumentReference.
+  /// Reads the document referenced by the provided [DocumentReference].
+  ///
+  /// If the document changes whilst the transaction is in progress, it will
+  /// be re-tried up to five times.
   Future<DocumentSnapshot> get(DocumentReference documentReference) async {
-    final result = await _delegate.get(documentReference._delegate);
-    if (result != null) {
-      return DocumentSnapshot._(result, _firestore);
-    } else {
-      return null;
-    }
+    DocumentSnapshotPlatform documentSnapshotPlatform =
+        await _delegate.get(documentReference.path);
+
+    return DocumentSnapshot._(_firestore, documentSnapshotPlatform);
   }
 
   /// Deletes the document referred to by the provided [documentReference].
-  ///
-  /// Awaiting the returned [Future] is optional and will be done automatically
-  /// when the transaction handler completes.
-  Future<void> delete(DocumentReference documentReference) {
-    return _delegate.delete(documentReference._delegate);
+  Transaction delete(DocumentReference documentReference) {
+    assert(documentReference != null);
+    assert(documentReference.firestore == _firestore,
+        "the document provided is from a different Firestore instance");
+
+    return Transaction._(_firestore, _delegate.delete(documentReference.path));
   }
 
   /// Updates fields in the document referred to by [documentReference].
   /// The update will fail if applied to a document that does not exist.
-  ///
-  /// Awaiting the returned [Future] is optional and will be done automatically
-  /// when the transaction handler completes.
-  Future<void> update(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
-    return _delegate.update(documentReference._delegate,
-        _CodecUtility.replaceValueWithDelegatesInMap(data));
+  Transaction update(
+      DocumentReference documentReference, Map<String, dynamic> data) {
+    assert(documentReference != null);
+    assert(data != null);
+    assert(documentReference.firestore == _firestore,
+        "the document provided is from a different Firestore instance");
+
+    return Transaction._(
+        _firestore,
+        _delegate.update(documentReference.path,
+            _CodecUtility.replaceValueWithDelegatesInMap(data)));
   }
 
   /// Writes to the document referred to by the provided [DocumentReference].
   /// If the document does not exist yet, it will be created. If you pass
-  /// SetOptions, the provided data can be merged into the existing document.
-  ///
-  /// Awaiting the returned [Future] is optional and will be done automatically
-  /// when the transaction handler completes.
-  Future<void> set(
-      DocumentReference documentReference, Map<String, dynamic> data) {
-    return _delegate.set(documentReference._delegate,
-        _CodecUtility.replaceValueWithDelegatesInMap(data));
+  /// [SetOptions], the provided data can be merged into the existing document.
+  Transaction set(
+      DocumentReference documentReference, Map<String, dynamic> data,
+      [SetOptions options]) {
+    assert(documentReference.firestore == _firestore,
+        "the document provided is from a different Firestore instance");
+
+    return Transaction._(
+        _firestore,
+        _delegate.set(documentReference.path,
+            _CodecUtility.replaceValueWithDelegatesInMap(data), options));
   }
 }

@@ -1,0 +1,57 @@
+---
+title: Cloud Firestore
+sidebar_label: Overview
+---
+
+##  What does it do?
+
+Firestore is a flexible, scalable NoSQL cloud database to store and sync data.
+It keeps your data in sync across client apps through realtime listeners and offers offline support so you can build responsive apps that work regardless of network latency or Internet connectivity.
+
+<YouTube id="QcsAb2RR52c"/>
+
+## Installation
+
+### 1. Add dependency
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  cloud_firestore: "^{{ plugins.cloud_firestore }}"
+```
+
+### 2. Download dependency
+
+```
+$ flutter pub get
+```
+
+### 3. (Web Only) Add the SDK
+
+If using FlutterFire on the web, add the `firebase-firestore` JavaScript SDK to your `index.html` file:
+
+```html {5} title="web/index.html"
+<html>
+  ...
+  <body>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-firestore.js"></script>
+  </body>
+</html>
+```
+
+
+### 4. Rebuild your app
+
+Once complete, rebuild your Flutter application:
+
+```bash
+$ flutter run
+```
+
+## Next Steps
+
+Once installed, you're ready to start using Cloud Firestore in your Flutter Project. View the
+[Usage documentation](./usage.mdx) to get started.

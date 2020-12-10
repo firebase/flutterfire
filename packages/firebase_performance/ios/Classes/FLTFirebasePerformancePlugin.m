@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 #import "FLTFirebasePerformancePlugin+Internal.h"
-#import "UserAgent.h"
 
 @implementation FLTFirebasePerformancePlugin
 static NSMutableDictionary<NSNumber *, id<MethodCallHandler>> *methodHandlers;
@@ -26,14 +25,6 @@ static NSMutableDictionary<NSNumber *, id<MethodCallHandler>> *methodHandlers;
 
 - (instancetype)init {
   self = [super init];
-  if (self) {
-    if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
-      NSLog(@"Configuring the default Firebase app...");
-      [FIRApp configure];
-      NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    }
-  }
-
   return self;
 }
 

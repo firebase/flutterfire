@@ -1,4 +1,4 @@
-// Copyright 2019, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -6,12 +6,11 @@ part of cloud_functions;
 
 /// A reference to a particular Callable HTTPS trigger in Cloud Functions.
 ///
-/// You can get an instance by calling [CloudFunctions.instance.getHTTPSCallable].
+/// You can get an instance by calling [FirebaseFunctions.instance.httpsCallable].
 class HttpsCallable {
-  HttpsCallable._(this._cloudFunctions, this._functionName);
+  HttpsCallable._(this._delegate);
 
-  final CloudFunctions _cloudFunctions;
-  final String _functionName;
+  final HttpsCallablePlatform _delegate;
 
   /// Executes this Callable HTTPS trigger asynchronously.
   ///
@@ -27,32 +26,34 @@ class HttpsCallable {
   /// automatically includes a Firebase Instance ID token to identify the app
   /// instance. If a user is logged in with Firebase Auth, an auth ID token for
   /// the user is also automatically included.
-  Future<HttpsCallableResult> call([dynamic parameters]) {
-    try {
-      return CloudFunctionsPlatform.instance
-          .callCloudFunction(
-            appName: _cloudFunctions._app.name,
-            region: _cloudFunctions._region,
-            origin: _cloudFunctions._origin,
-            timeout: timeout,
-            functionName: _functionName,
-            parameters: parameters,
-          )
-          .then((response) => HttpsCallableResult._(response));
-    } on PlatformException catch (e) {
-      if (e.code == 'functionsError') {
-        final String code = e.details['code'];
-        final String message = e.details['message'];
-        final dynamic details = e.details['details'];
-        throw CloudFunctionsException._(code, message, details);
-      } else {
-        throw Exception('Unable to call function ' + _functionName);
-      }
-    } catch (e) {
-      rethrow;
-    }
+  Future<HttpsCallableResult<T>> call<T>([dynamic parameters]) async {
+    _assertValidParameterType(parameters);
+    assert(_delegate != null);
+    return HttpsCallableResult<T>._(await _delegate.call(parameters));
   }
 
-  /// The timeout to use when calling the function. Defaults to 60 seconds.
-  Duration timeout;
+  @Deprecated(
+      "Setting the timeout is deprecated in favor of using [HttpsCallableOptions]")
+  // ignore: public_member_api_docs
+  set timeout(Duration duration) {
+    _delegate.timeout = duration;
+  }
+}
+
+/// Asserts whether a given call parameter is a valid type.
+void _assertValidParameterType(dynamic parameter, [bool isRoot = true]) {
+  if (parameter is List) {
+    return parameter
+        .forEach((element) => _assertValidParameterType(element, false));
+  }
+
+  if (parameter is Map) {
+    return parameter
+        .forEach((_, value) => _assertValidParameterType(value, false));
+  }
+
+  assert(parameter == null ||
+      parameter is String ||
+      parameter is num ||
+      parameter is bool);
 }

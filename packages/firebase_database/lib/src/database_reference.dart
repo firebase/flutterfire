@@ -193,6 +193,14 @@ class ServerValue {
   static const Map<String, String> timestamp = <String, String>{
     '.sv': 'timestamp'
   };
+
+  /// Returns a placeholder value that can be used to atomically increment the
+  /// current database value by the provided delta.
+  static Map<dynamic, dynamic> increment(int delta) {
+    return <dynamic, dynamic>{
+      '.sv': {'increment': delta}
+    };
+  }
 }
 
 typedef Future<MutableData> TransactionHandler(MutableData mutableData);

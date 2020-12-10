@@ -7,7 +7,6 @@ import 'dart:js' show allowInterop;
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:cloud_functions_web/cloud_functions_web.dart';
-import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,7 +17,7 @@ import 'mock/firebase_mock.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('$CloudFunctionsWeb', () {
+  group('$FirebaseFunctionsWeb', () {
     final List<Map<String, dynamic>> log = <Map<String, dynamic>>[];
 
     Map<String, dynamic> loggingCall(
@@ -60,8 +59,8 @@ void main() {
                 ))),
       ));
 
-      FirebaseCorePlatform.instance = FirebaseCoreWeb();
-      CloudFunctionsPlatform.instance = CloudFunctionsWeb();
+      FirebasePlatform.instance = FirebaseCoreWeb();
+      FirebaseFunctionsPlatform.instance = FirebaseFunctionsWeb();
 
       // install loggingCall on the HttpsCallable mock as the thing that gets
       // executed when its call method is invoked
@@ -79,50 +78,6 @@ void main() {
               print('Unimplemented. Supposed to emulate at $url');
             }),
           ));
-    });
-
-    test('setUp wires up mock objects properly', () async {
-      log.clear();
-
-      firebase.App app = firebase.app('[DEFAULT]');
-      expect(app.options.appId, equals('123'));
-      firebase.Functions fs = firebase.functions(app);
-      firebase.HttpsCallable callable = fs.httpsCallable('foobie');
-      await callable.call();
-      expect(log, <Matcher>[
-        equals(<String, dynamic>{
-          'appName': '[DEFAULT]',
-          'functionName': 'foobie',
-          'region': null
-        }),
-      ]);
-    });
-
-    test('callCloudFunction calls down to Firebase API', () async {
-      log.clear();
-
-      CloudFunctionsPlatform cfp = CloudFunctionsPlatform.instance;
-      expect(cfp, isA<CloudFunctionsWeb>());
-
-      await cfp.callCloudFunction(
-          appName: '[DEFAULT]', functionName: 'baz', region: 'space');
-      await cfp.callCloudFunction(appName: 'mock', functionName: 'mumble');
-
-      expect(
-        log,
-        <Matcher>[
-          equals(<String, dynamic>{
-            'appName': '[DEFAULT]',
-            'functionName': 'baz',
-            'region': 'space'
-          }),
-          equals(<String, dynamic>{
-            'appName': 'mock',
-            'functionName': 'mumble',
-            'region': null
-          }),
-        ],
-      );
     });
   });
 }

@@ -1,0 +1,127 @@
+name: FlutterFire
+
+packages:
+  - packages/**
+
+scripts:
+  analyze:
+    run: |
+      melos exec -c 5 --fail-fast -- \
+        dart analyze .
+    description: |
+      Run `dart analyze` in all packages.
+       - Note: you can also rely on your IDEs Dart Analysis / Issues window.
+
+  format:
+    run: dart pub global run flutter_plugin_tools format
+    description: |
+      Build a specific example app for Android.
+       - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
+       - Requires `clang-format` (can be installed via Brew on macOS).
+
+  build:example_android:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter build apk --no-pub"
+    description: Build a specific example app for Android.
+    select-package:
+      dir-exists:
+        - android
+      scope: '*example*'
+
+  build:example_ios:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter build ios --no-codesign --no-pub"
+    description: Build a specific example app for iOS.
+    select-package:
+      dir-exists:
+        - ios
+      scope: '*example*'
+
+  build:example_macos:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter build macos --no-pub"
+    description: |
+      Build a specific example app for macOS.
+       - Requires `flutter channel master`.
+       - Requires `flutter config --enable-macos-desktop` set.
+    select-package:
+      dir-exists:
+        - macos
+      scope: '*example*'
+
+  test:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter test --no-pub"
+    description: Run `flutter test` for a specific package.
+    select-package:
+      dir-exists:
+        - test
+      ignore:
+        - '*web*'
+        - '*example*'
+
+  test:web:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter test --no-pub --platform=chrome"
+    description: Run `flutter test --platform=chrome` for a specific '*web' package.
+    select-package:
+      dir-exists:
+        - test
+      scope: '*web*'
+
+  test:mobile_e2e:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
+    description: |
+      Run all Android or iOS test driver e2e tests in a specific example app.
+       - Requires an Android emulator or iOS simulator.
+    select-package:
+      dir-exists:
+        - test_driver
+      scope: '*example*'
+
+  test:web_e2e:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter drive -d web --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
+    description: |
+      Run all Web test driver e2e tests in a specific example app.
+       - Requires `flutter channel master` (or beta).
+       - Requires `flutter config --enable-web` set.
+       - Requires chromedriver running on port 4444.
+    select-package:
+      dir-exists:
+        - web
+        - test_driver
+      scope: '*example*'
+
+  test:macos_e2e:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter drive -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
+    description: |
+      Run all MacOS test driver e2e tests in a specific example app.
+       - Requires `flutter channel master`.
+       - Requires `flutter config --enable-macos-desktop` set.
+    select-package:
+      dir-exists:
+        - macos
+        - test_driver
+      scope: '*example*'
+
+  # Additional cleanup lifecycle script, executed when `melos clean` is ran.
+  postclean: >
+    melos exec -c 5 -- "flutter clean"
+
+dev_dependencies:
+  pedantic: 1.8.0
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"

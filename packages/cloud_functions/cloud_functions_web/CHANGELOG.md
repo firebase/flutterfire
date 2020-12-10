@@ -1,3 +1,39 @@
+## 3.1.1
+
+ - **FIX**: issue when specifying a functions region #4226 (#4266).
+
+## 3.1.0
+
+ - **FEAT**: migrate interop files (#4191).
+
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 3.0.0-dev.3
+
+ - Update a dependency to the latest release.
+
+## 3.0.0-dev.2
+
+ - Update a dependency to the latest release.
+
+## 3.0.0-dev.1
+
+See `cloud_functions` `0.7.0-dev.1` changelog for details.
+
+## 2.0.0
+
+* Update to depend on `firebase_core` plugin.
+
+## 1.1.0
+
+* Change environment SDK requirement from `>=2.0.0-dev.28.0` to `>=2.0.0` to fix 'publishable' CI stage.
+
 ## 1.0.4
 
 * Make the pedantic dev_dependency explicit.
