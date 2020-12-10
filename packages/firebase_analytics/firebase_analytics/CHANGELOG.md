@@ -1,3 +1,10 @@
+## 6.3.0
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: publish packages.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
 ## 6.2.0
 
  - **FEAT**: bump compileSdkVersion to 29 (#3975).

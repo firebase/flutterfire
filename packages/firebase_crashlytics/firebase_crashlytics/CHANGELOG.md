@@ -1,3 +1,11 @@
+## 0.2.4
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+
+## 0.2.3+1
+
+ - Update a dependency to the latest release.
+
 ## 0.2.3
 
  - **FEAT**: bump compileSdkVersion to 29 (#3975).

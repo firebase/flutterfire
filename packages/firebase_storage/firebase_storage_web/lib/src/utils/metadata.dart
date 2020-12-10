@@ -3,10 +3,11 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
-import 'package:firebase/firebase.dart' as fb;
+import '../interop/storage.dart' as storage_interop;
 
 /// Converts FullMetadata coming from the JS Interop layer to FullMetadata for the plugin.
-FullMetadata fbFullMetadataToFullMetadata(fb.FullMetadata metadata) {
+FullMetadata fbFullMetadataToFullMetadata(
+    storage_interop.FullMetadata metadata) {
   if (metadata == null) {
     return null;
   }
@@ -32,13 +33,13 @@ FullMetadata fbFullMetadataToFullMetadata(fb.FullMetadata metadata) {
 }
 
 /// Converts SettableMetadata from the plugin to SettableMetadata for the JS Interop layer.
-fb.SettableMetadata settableMetadataToFbSettableMetadata(
+storage_interop.SettableMetadata settableMetadataToFbSettableMetadata(
     SettableMetadata metadata) {
   if (metadata == null) {
     return null;
   }
 
-  return fb.SettableMetadata(
+  return storage_interop.SettableMetadata(
     cacheControl: metadata.cacheControl,
     contentDisposition: metadata.contentDisposition,
     contentEncoding: metadata.contentEncoding,
@@ -49,13 +50,14 @@ fb.SettableMetadata settableMetadataToFbSettableMetadata(
 }
 
 /// Converts SettableMetadata from the plugin and an additional MD5 hash (as String) to an UploadMetadata for the JS Interop layer.
-fb.UploadMetadata settableMetadataToFbUploadMetadata(SettableMetadata metadata,
+storage_interop.UploadMetadata settableMetadataToFbUploadMetadata(
+    SettableMetadata metadata,
     {String md5Hash}) {
   if (metadata == null) {
     return null;
   }
 
-  return fb.UploadMetadata(
+  return storage_interop.UploadMetadata(
     cacheControl: metadata.cacheControl,
     contentDisposition: metadata.contentDisposition,
     contentEncoding: metadata.contentEncoding,
@@ -67,10 +69,10 @@ fb.UploadMetadata settableMetadataToFbUploadMetadata(SettableMetadata metadata,
 }
 
 Map<PutStringFormat, String> _putStringFormatToFbStringFormat = {
-  PutStringFormat.base64: fb.StringFormat.BASE64,
-  PutStringFormat.base64Url: fb.StringFormat.BASE64URL,
-  PutStringFormat.dataUrl: fb.StringFormat.DATA_URL,
-  PutStringFormat.raw: fb.StringFormat.RAW,
+  PutStringFormat.base64: storage_interop.StringFormat.BASE64,
+  PutStringFormat.base64Url: storage_interop.StringFormat.BASE64URL,
+  PutStringFormat.dataUrl: storage_interop.StringFormat.DATA_URL,
+  PutStringFormat.raw: storage_interop.StringFormat.RAW,
 };
 
 /// Converts PutStringFormat from the plugin to the correct StringFormat for the JS interop layer.

@@ -1,6 +1,12 @@
-## 0.4.3
+## 0.4.4
 
 - **FEAT**: configurable `fetchTimeout` config
+
+## 0.4.3
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: publish packages.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
 
 ## 0.4.2
 
