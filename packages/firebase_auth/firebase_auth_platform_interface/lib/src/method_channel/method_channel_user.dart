@@ -27,7 +27,7 @@ class MethodChannelUser extends UserPlatform {
   }
 
   @override
-  Future<String> getIdToken(bool forceRefresh) async {
+  Future<String/*!*/> getIdToken(bool forceRefresh) async {
     Map<String, dynamic> data = await MethodChannelFirebaseAuth.channel
         .invokeMapMethod<String, dynamic>('User#getIdToken', <String, dynamic>{
       'appName': auth.app.name,
@@ -107,7 +107,7 @@ class MethodChannelUser extends UserPlatform {
   }
 
   @override
-  Future<UserPlatform> unlink(String providerId) async {
+  Future<UserPlatform/*!*/> unlink(String providerId) async {
     Map<String, dynamic> data = await MethodChannelFirebaseAuth.channel
         .invokeMapMethod<String, dynamic>('User#unlink', <String, dynamic>{
       'appName': auth.app.name,
@@ -181,7 +181,7 @@ class MethodChannelUser extends UserPlatform {
 
   @override
   Future<void> verifyBeforeUpdateEmail(String newEmail,
-      [ActionCodeSettings actionCodeSettings]) async {
+      [ActionCodeSettings/*?*/ actionCodeSettings]) async {
     return MethodChannelFirebaseAuth.channel
         .invokeMethod<void>('User#verifyBeforeUpdateEmail', <String, dynamic>{
       'appName': auth.app.name,

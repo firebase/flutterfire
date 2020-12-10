@@ -10,7 +10,7 @@ void main() {
   final String kMockSignInMethod = 'password';
   final int kMockToken = 123;
   group('$AuthCredential', () {
-    AuthCredential authCredential;
+    /*late*/ AuthCredential authCredential;
 
     setUpAll(() {
       authCredential = AuthCredential(

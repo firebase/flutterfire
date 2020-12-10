@@ -12,7 +12,7 @@ import '../mock.dart';
 void main() {
   setupFirebaseAuthMocks();
 
-  FirebaseAuthPlatform auth;
+  /*late*/ FirebaseAuthPlatform auth;
   final String kMockUid = '12345';
   final String kMockUsername = 'fluttertestuser';
   final String kMockEmail = 'test@example.com';
@@ -23,10 +23,10 @@ void main() {
     'email': kMockEmail,
   };
   group('$UserCredentialPlatform()', () {
-    AdditionalUserInfo kMockAdditionalUserInfo;
-    AuthCredential kMockCredential;
-    UserPlatform kMockUser;
-    TestUserCredentialPlatform userCredentialPlatform;
+    /*late*/ AdditionalUserInfo kMockAdditionalUserInfo;
+    /*late*/ AuthCredential kMockCredential;
+    /*late*/ UserPlatform kMockUser;
+    /*late*/ TestUserCredentialPlatform userCredentialPlatform;
 
     setUpAll(() async {
       await Firebase.initializeApp();

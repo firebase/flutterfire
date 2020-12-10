@@ -66,7 +66,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   MethodChannelFirebaseAuth._() : super(appInstance: null);
 
   /// Creates a new instance with a given [FirebaseApp].
-  MethodChannelFirebaseAuth({FirebaseApp app}) : super(appInstance: app) {
+  MethodChannelFirebaseAuth({/*required*/ FirebaseApp app}) : super(appInstance: app) {
     // Send a request to start listening to change listeners straight away
     channel
         .invokeMethod<void>('Auth#registerChangeListeners', <String, dynamic>{
@@ -84,7 +84,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     if (_initialized) return;
 
     channel.setMethodCallHandler((MethodCall call) async {
-      Map<dynamic, dynamic> arguments = call.arguments;
+      Map<dynamic, dynamic>/*!*/ arguments = call.arguments;
 
       switch (call.method) {
         case 'Auth#authStateChanges':
@@ -134,10 +134,10 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   // as iOS & Android do not guarantee correct ordering
   Future<void> _handleAuthStateChangesListener(
       Map<dynamic, dynamic> arguments) async {
-    String appName = arguments['appName'];
-    StreamController<UserPlatform> streamController =
+    String/*!*/ appName = arguments['appName'];
+    StreamController<UserPlatform>/*!*/ streamController =
         _authStateChangesListeners[appName];
-    MethodChannelFirebaseAuth instance =
+    MethodChannelFirebaseAuth/*!*/ instance =
         _methodChannelFirebaseAuthInstances[appName];
 
     if (arguments['user'] == null) {
@@ -158,12 +158,12 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// to any [userChanges] stream subscribers.
   Future<void> _handleIdTokenChangesListener(
       Map<dynamic, dynamic> arguments) async {
-    String appName = arguments['appName'];
-    StreamController<UserPlatform> idTokenStreamController =
+    String/*!*/ appName = arguments['appName'];
+    StreamController<UserPlatform>/*!*/ idTokenStreamController =
         _idTokenChangesListeners[appName];
-    StreamController<UserPlatform> userChangesStreamController =
+    StreamController<UserPlatform>/*!*/ userChangesStreamController =
         _userChangesListeners[appName];
-    MethodChannelFirebaseAuth instance =
+    MethodChannelFirebaseAuth/*!*/ instance =
         _methodChannelFirebaseAuthInstances[appName];
 
     if (arguments['user'] == null) {
@@ -183,9 +183,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   Future<void> _handlePhoneVerificationCompleted(
       Map<dynamic, dynamic> arguments) async {
-    final int handle = arguments['handle'];
+    final int/*!*/ handle = arguments['handle'];
     final int token = arguments['token'];
-    final String smsCode = arguments['smsCode'];
+    final String/*!*/ smsCode = arguments['smsCode'];
 
     PhoneAuthCredential phoneAuthCredential =
         PhoneAuthProvider.credentialFromToken(token, smsCode: smsCode);
@@ -210,7 +210,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   Future<void> _handlePhoneCodeSent(Map<dynamic, dynamic> arguments) async {
-    final int handle = arguments['handle'];
+    final int/*!*/ handle = arguments['handle'];
     final String verificationId = arguments['verificationId'];
     final int forceResendingToken = arguments['forceResendingToken'];
 
@@ -220,7 +220,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   Future<void> _handlePhoneCodeAutoRetrievalTimeout(
       Map<dynamic, dynamic> arguments) async {
-    final int handle = arguments['handle'];
+    final int/*!*/ handle = arguments['handle'];
     final String verificationId = arguments['verificationId'];
 
     PhoneAuthCallbacks callbacks = _phoneAuthCallbacks[handle];
@@ -232,7 +232,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   ///
   /// Instances are cached and reused for incoming event handlers.
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor({FirebaseApp/*!*/ app}) {
     if (!_methodChannelFirebaseAuthInstances.containsKey(app.name)) {
       _methodChannelFirebaseAuthInstances[app.name] =
           MethodChannelFirebaseAuth(app: app);
@@ -328,7 +328,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   Future<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings actionCodeSettings]) {
+      [ActionCodeSettings/*?*/ actionCodeSettings]) {
     return channel
         .invokeMethod<void>('Auth#sendPasswordResetEmail', <String, dynamic>{
       'appName': app.name,
@@ -474,7 +474,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     currentUser = null;
   }
 
-  Future<String> verifyPasswordResetCode(String code) async {
+  Future<String/*!*/> verifyPasswordResetCode(String code) async {
     Map<String, dynamic> data = await channel.invokeMapMethod<String, dynamic>(
         'Auth#verifyPasswordResetCode', <String, dynamic>{
       'appName': app.name,
@@ -485,11 +485,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   Future<void> verifyPhoneNumber({
-    String phoneNumber,
-    PhoneVerificationCompleted verificationCompleted,
-    PhoneVerificationFailed verificationFailed,
-    PhoneCodeSent codeSent,
-    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
+    String/*!*/ phoneNumber,
+    /*required*/ PhoneVerificationCompleted verificationCompleted,
+    /*required*/ PhoneVerificationFailed verificationFailed,
+    /*required*/ PhoneCodeSent codeSent,
+    /*required*/ PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
     String autoRetrievedSmsCodeForTesting,
     Duration timeout = const Duration(seconds: 30),
     int forceResendingToken,

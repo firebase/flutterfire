@@ -11,8 +11,8 @@ import '../mock.dart';
 void main() {
   setupFirebaseAuthMocks();
 
-  TestUserPlatform userPlatform;
-  FirebaseAuthPlatform auth;
+  /*late*/ TestUserPlatform userPlatform;
+  /*late*/ FirebaseAuthPlatform auth;
   final String kMockProviderId = 'firebase';
   final String kMockUid = '12345';
   final String kMockDisplayName = 'Flutter Test User';

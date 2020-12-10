@@ -13,7 +13,7 @@ import '../mock.dart';
 void main() {
   setupFirebaseAuthMocks();
 
-  FirebaseAuthPlatform auth;
+  /*late*/ FirebaseAuthPlatform auth;
   final String kMockUid = '12345';
   final String kMockUsername = 'fluttertestuser';
   final String kMockEmail = 'test@example.com';
@@ -38,8 +38,8 @@ void main() {
   };
 
   group('$MethodChannelUserCredential()', () {
-    MethodChannelUserCredential userCredential;
-    Map<String, dynamic> userData = kMockInitialUserData;
+    /*late*/ MethodChannelUserCredential userCredential;
+    /*late*/ Map<String, dynamic> userData = kMockInitialUserData;
 
     setUpAll(() async {
       await Firebase.initializeApp();

@@ -27,7 +27,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   FirebaseAuthPlatform({this.appInstance}) : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
-  FirebaseApp get app {
+  FirebaseApp/*!*/ get app {
     if (appInstance == null) {
       return Firebase.app();
     }
@@ -71,7 +71,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseAuthPlatform delegateFor({FirebaseApp app}) {
+  FirebaseAuthPlatform/*!*/ delegateFor({FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -261,7 +261,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// email to the given email address, which must correspond to an existing
   /// user of your app.
   Future<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings actionCodeSettings]) {
+      [ActionCodeSettings/*?*/ actionCodeSettings]) {
     throw UnimplementedError('sendPasswordResetEmail() is not implemented');
   }
 
@@ -277,7 +277,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **user-not-found**:
   ///  - Thrown if there is no user corresponding to the email address.
   Future<void> sendSignInLinkToEmail(
-      String email, ActionCodeSettings actionCodeSettings) {
+      String email, ActionCodeSettings/*!*/ actionCodeSettings) {
     throw UnimplementedError('sendSignInLinkToEmail() is not implemented');
   }
 
@@ -405,7 +405,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.id.
   Future<UserCredentialPlatform> signInWithCredential(
-      AuthCredential credential) async {
+      AuthCredential/*!*/ credential) async {
     throw UnimplementedError('signInWithCredential() is not implemented');
   }
 
@@ -480,7 +480,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///
   /// This method is only available on web based platforms.
   Future<ConfirmationResultPlatform> signInWithPhoneNumber(String phoneNumber,
-      RecaptchaVerifierFactoryPlatform applicationVerifier) async {
+      RecaptchaVerifierFactoryPlatform/*!*/ applicationVerifier) async {
     throw UnimplementedError('signInWithPhoneNumber() is not implemented');
   }
 
@@ -491,7 +491,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// credential.
   ///
   /// This method is only available on web based platforms.
-  Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) {
+  Future<UserCredentialPlatform> signInWithPopup(AuthProvider/*!*/ provider) {
     throw UnimplementedError('signInWithPopup() is not implemented');
   }
 
@@ -499,7 +499,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///
   /// To handle the results and errors for this operation, refer to
   /// [getRedirectResult].
-  Future<void> signInWithRedirect(AuthProvider provider) {
+  Future<void> signInWithRedirect(AuthProvider/*!*/ provider) {
     throw UnimplementedError('signInWithRedirect() is not implemented');
   }
 
@@ -529,7 +529,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  - Thrown if there is no user corresponding to the password reset code.
   ///    This may have happened if the user was deleted between when the code
   ///    was issued and when this method was called.
-  Future<String> verifyPasswordResetCode(String code) {
+  Future<String/*!*/> verifyPasswordResetCode(String code) {
     throw UnimplementedError('verifyPasswordResetCode() is not implemented');
   }
 
@@ -575,11 +575,11 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// [codeAutoRetrievalTimeout] Triggered when SMS auto-retrieval times out and
   ///   provide a [verificationId].
   Future<void> verifyPhoneNumber(
-      {@required String phoneNumber,
-      @required PhoneVerificationCompleted verificationCompleted,
-      @required PhoneVerificationFailed verificationFailed,
-      @required PhoneCodeSent codeSent,
-      @required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
+      {@required String/*!*/ phoneNumber,
+      @required PhoneVerificationCompleted/*!*/ verificationCompleted,
+      @required PhoneVerificationFailed/*!*/ verificationFailed,
+      @required PhoneCodeSent/*!*/ codeSent,
+      @required PhoneCodeAutoRetrievalTimeout/*!*/ codeAutoRetrievalTimeout,
       @visibleForTesting String autoRetrievedSmsCodeForTesting,
       Duration timeout = const Duration(seconds: 30),
       int forceResendingToken}) {
