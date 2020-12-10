@@ -21,7 +21,7 @@ import '../method_channel/method_channel_firebase_auth.dart';
 abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
   @protected
-  final FirebaseApp appInstance;
+  final FirebaseApp /*?*/ appInstance;
 
   /// Create an instance using [app]
   FirebaseAuthPlatform({this.appInstance}) : super(token: _token);
@@ -94,12 +94,12 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// You should not use this getter to determine the users current state,
   /// instead use [authStateChanges], [idTokenChanges] or [userChanges] to
   /// subscribe to updates.
-  UserPlatform get currentUser {
+  UserPlatform /*?*/ get currentUser {
     throw UnimplementedError("get.currentUser is not implemented");
   }
 
   /// Sets the current user for the instance.
-  set currentUser(UserPlatform userPlatform) {
+  set currentUser(UserPlatform /*?*/ userPlatform) {
     throw UnimplementedError("set.currentUser is not implemented");
   }
 
