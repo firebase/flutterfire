@@ -5,14 +5,13 @@
  
 ## 0.9.10
 
- - **FEAT**: bump compileSdkVersion to 29 (#3975).
  - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
  - **CHORE**: Migrate iOS example projects (#4222).
  - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
 
 ## 0.9.9
 
- - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+- **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement (#3975).
  - **CHORE**: publish packages.
  - **CHORE**: publish packages.
 
