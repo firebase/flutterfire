@@ -14,7 +14,7 @@ String TEST_PASSWORD = 'testpassword';
 // each time.
 String TEST_PHONE_NUMBER = '+447111555666';
 String TEST_SMS_CODE = '123456';
-String generateRandomEmail({prefix = '', suffix = '@foo.bar'}) {
+String /*!*/ generateRandomEmail({prefix = '', suffix = '@foo.bar'}) {
   var uuid = Uuid().v1();
   var testEmail = prefix + uuid + suffix;
 
