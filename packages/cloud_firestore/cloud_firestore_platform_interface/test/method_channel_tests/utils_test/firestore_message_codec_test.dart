@@ -118,7 +118,7 @@ void _checkEncodeDecode<T>(
     final ByteData encodedAgain = codec.encodeMessage(decoded) /*!*/;
     expect(
       encodedAgain.buffer.asUint8List(),
-      orderedEquals(encoded /*!*/ /*!*/ .buffer.asUint8List()),
+      orderedEquals(encoded /*!*/ .buffer.asUint8List()),
     );
   }
 }
