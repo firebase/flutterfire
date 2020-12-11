@@ -34,6 +34,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         'plugins.flutter.io/firebase_auth', constantInitializor);
   }
 
+  /// Called during initializeApp() to instantiate plugin constants before the user's code
+  /// executes. We listen fr initial auth state event so we're sure web app
+  /// is initialized
   static Future<Map<String, dynamic>> constantInitializor(app) async {
     auth_interop.Auth authInstance =
         auth_interop.getAuthInstance(core_interop.app(app.name));
