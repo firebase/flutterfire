@@ -31,27 +31,21 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         RecaptchaVerifierFactoryWeb.instance;
 
     FirebaseCoreWeb.setPluginConstantInitializor(
-        'plugins.flutter.io/firebase_auth', constantInitializor);
+        methodChannelName, constantInitializor);
   }
 
   /// Called during initializeApp() to instantiate plugin constants before the user's code
-  /// executes. We listen fr initial auth state event so we're sure web app
+  /// executes. We listen for first auth state event so we're sure web app
   /// is initialized
   static Future<Map<String, dynamic>> constantInitializor(app) async {
     auth_interop.Auth authInstance =
         auth_interop.getAuthInstance(core_interop.app(app.name));
-    StreamSubscription<auth_interop.User> stream;
-    Completer completer = Completer<Map<String, dynamic>>();
 
-    stream = authInstance.onAuthStateChanged.listen((event) {
-      auth_interop.User user = authInstance.currentUser;
+    return authInstance.onAuthStateChanged.first.then((user) {
       String languageCode = authInstance.languageCode;
-      stream.cancel();
-      completer.complete(
-          {'APP_LANGUAGE_CODE': languageCode, 'APP_CURRENT_USER': user});
-    });
 
-    return completer.future;
+      return {'APP_LANGUAGE_CODE': languageCode, 'APP_CURRENT_USER': user};
+    });
   }
 
   static Map<String, StreamController<UserPlatform>>
@@ -129,23 +123,21 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       this.currentUser = UserWeb(this, currentUser);
     }
 
+    this.setLanguageCode(languageCode);
+
     return this;
   }
 
+  UserWeb _currentUser;
+
   @override
   UserPlatform get currentUser {
-    auth_interop.User webCurrentUser = _webAuth.currentUser;
-
-    if (webCurrentUser == null) {
-      return null;
-    }
-
-    return UserWeb(this, _webAuth.currentUser);
+    return _currentUser;
   }
 
   @override
   set currentUser(UserPlatform userPlatform) {
-    this.currentUser = userPlatform;
+    _currentUser = userPlatform;
   }
 
   @override
