@@ -196,7 +196,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   Future<void> _handlePhoneVerificationFailed(
       Map<dynamic, dynamic> arguments) async {
-    final int handle = arguments['handle'];
+    final int/*!*/ handle = arguments['handle'];
     final Map<dynamic, dynamic> error = arguments['error'];
     final Map<dynamic, dynamic> details = error['details'];
 
