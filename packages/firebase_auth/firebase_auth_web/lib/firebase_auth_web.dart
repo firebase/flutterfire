@@ -90,6 +90,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           return UserWeb(this, webUser);
         }
       }).listen((UserWeb webUser) {
+        currentUser = webUser;
+
         if (_initialAuthState) {
           _initialAuthState = false;
         } else {
