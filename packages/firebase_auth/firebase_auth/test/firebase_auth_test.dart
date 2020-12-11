@@ -665,7 +665,7 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 
   @override
   FirebaseAuthPlatform setInitialValues(
-      {Map<String, dynamic> currentUser, String languageCode}) {
+      {dynamic currentUser, String languageCode}) {
     return this;
   }
 }
