@@ -31,7 +31,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   FirebaseApp app;
 
   FirebaseAuth._({this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_auth');
+      : super(app.name, methodChannelName);
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseAuth get instance {

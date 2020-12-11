@@ -15,6 +15,7 @@ typedef Future<Map<String, dynamic>> PluginConstantInitializor(
 class FirebaseCoreWeb extends FirebasePlatform {
   static Map<String, PluginConstantInitializor> _pluginConstantInitializors =
       {};
+  static bool isCoreInitialized = false;
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
   static void registerWith(Registrar registrar) {
@@ -35,6 +36,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
   Future<void> _initializeCore() async {
     await Future.forEach<FirebaseAppPlatform>(
         apps, _getPluginConstantsForFirebaseApp);
+
+    isCoreInitialized = true;
   }
 
   void _getPluginConstantsForFirebaseApp(FirebaseAppPlatform app) async {
@@ -111,7 +114,13 @@ class FirebaseCoreWeb extends FirebasePlatform {
         throw _catchJSError(e);
       }
     }
-    await _initializeCore();
+
+    /// Ensure that core has been initialized on the first usage of
+    /// initializeApp. We use this chance to initialize any constants from each
+    /// plugin to each app instance
+    if (!isCoreInitialized) {
+      await _initializeCore();
+    }
 
     return _createFromJsApp(app);
   }

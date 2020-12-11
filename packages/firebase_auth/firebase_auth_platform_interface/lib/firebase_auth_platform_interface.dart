@@ -29,3 +29,6 @@ export 'src/providers/oauth.dart';
 export 'src/providers/saml_auth.dart';
 export 'src/providers/phone_auth.dart';
 export 'src/providers/twitter_auth.dart';
+
+///method channel name used by both delegates
+const String methodChannelName = 'plugins.flutter.io/firebase_auth';
