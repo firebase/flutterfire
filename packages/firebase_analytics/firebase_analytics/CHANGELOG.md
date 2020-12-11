@@ -1,3 +1,22 @@
+## 6.3.0
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: publish packages.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 6.2.0
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 6.1.0
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
 ## 6.0.2
 
  - **FIX**: remove unused dart:async import (#3611).

@@ -25,6 +25,17 @@ void main() {
       expect(e.toString(), '[foo/baz] bar');
     });
 
+    test('should return a formatted message with a stack trace', () async {
+      FirebaseException e = FirebaseException(
+          plugin: 'foo',
+          message: 'bar',
+          code: 'baz',
+          stackTrace: StackTrace.current);
+
+      // Anything with a stack trace adds 2 blanks lines following the message.
+      expect(e.toString(), startsWith('[foo/baz] bar\n\n'));
+    });
+
     test('should override the == operator', () async {
       FirebaseException e1 =
           FirebaseException(plugin: 'foo', message: 'bar', code: 'baz');

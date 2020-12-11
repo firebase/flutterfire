@@ -1,3 +1,23 @@
+## 3.1.1
+
+ - **FIX**: issue when specifying a functions region #4226 (#4266).
+
+## 3.1.0
+
+ - **FEAT**: migrate interop files (#4191).
+
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 3.0.0-dev.3
+
+ - Update a dependency to the latest release.
+
 ## 3.0.0-dev.2
 
  - Update a dependency to the latest release.

@@ -4,14 +4,16 @@
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:cloud_functions_web/https_callable_web.dart';
-import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:firebase_core_web/firebase_core_web_interop.dart'
+    as core_interop;
+import 'interop/functions.dart' as functions_interop;
 
 /// Web implementation of [FirebaseFunctionsPlatform].
 class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   /// Instance of functions from the web plugin
-  final firebase.Functions _webFunctions;
+  final functions_interop.Functions _webFunctions;
 
   /// Create the default instance of the [FirebaseFunctionsPlatform] as a [FirebaseFunctionsWeb]
   static void registerWith(Registrar registrar) {
@@ -31,7 +33,8 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
 
   /// The entry point for the [FirebaseFunctionsWeb] class.
   FirebaseFunctionsWeb({FirebaseApp app, String region})
-      : _webFunctions = firebase.app(app?.name).functions(region),
+      : _webFunctions = functions_interop.getFunctionsInstance(
+            core_interop.app(app?.name), region),
         super(app, region);
 
   @override

@@ -14,6 +14,7 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
 - An IDE such as [Android Studio](https://developer.android.com/studio) or [Visual Studio Code](https://code.visualstudio.com/).
 - [`flutter_plugin_tools`](https://pub.dev/packages/flutter_plugin_tools) locally activated.
 - [`tuneup`](https://pub.dev/packages/tuneup) locally activated.
+- [`clang-format`](https://clang.llvm.org/docs/ClangFormat.html) (available via brew on macOS, apt on Ubuntu, maybe via llvm on chocolatey for Windows)
 
 ## 2. Forking & cloning the repository
 
@@ -215,4 +216,4 @@ Some things to keep in mind before publishing the release:
   from people that immediately adopt it, and uncovering and resolving those
   support issues will take more time if you're unavailable.
 
-TODO(ehesp): detail melos release process
+<!-- TODO(ehesp): detail melos release process -->

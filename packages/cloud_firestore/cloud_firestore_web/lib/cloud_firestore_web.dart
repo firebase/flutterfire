@@ -4,23 +4,25 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/exception.dart';
-import 'package:firebase/firebase.dart' as firebase;
-import 'package:firebase/firestore.dart' as web;
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web_interop.dart'
+    as core_interop;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
-import 'package:cloud_firestore_web/src/collection_reference_web.dart';
-import 'package:cloud_firestore_web/src/field_value_factory_web.dart';
-import 'package:cloud_firestore_web/src/document_reference_web.dart';
-import 'package:cloud_firestore_web/src/query_web.dart';
-import 'package:cloud_firestore_web/src/transaction_web.dart';
-import 'package:cloud_firestore_web/src/write_batch_web.dart';
+import 'src/collection_reference_web.dart';
+import 'src/field_value_factory_web.dart';
+import 'src/document_reference_web.dart';
+import 'src/query_web.dart';
+import 'src/transaction_web.dart';
+import 'src/write_batch_web.dart';
+
+import 'src/interop/firestore.dart' as firestore_interop;
 
 /// Web implementation for [FirebaseFirestorePlatform]
 /// delegates calls to firestore web plugin
 class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// instance of Firestore from the web plugin
-  final web.Firestore _webFirestore;
+  final firestore_interop.Firestore _webFirestore;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -30,7 +32,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// Builds an instance of [FirebaseFirestoreWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
   FirebaseFirestoreWeb({FirebaseApp app})
-      : _webFirestore = firebase.firestore(firebase.app(app?.name)),
+      : _webFirestore =
+            firestore_interop.getFirestoreInstance(core_interop.app(app?.name)),
         super(appInstance: app) {
     FieldValueFactoryPlatform.instance = FieldValueFactoryWeb();
   }
@@ -48,10 +51,14 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   @override
   WriteBatchPlatform batch() => WriteBatchWeb(_webFirestore);
 
-  // @override
-  // Future<void> clearPersistence() async {
-  //   // TODO(ehesp): not supported on firebase-dart
-  // }
+  @override
+  Future<void> clearPersistence() async {
+    try {
+      await _webFirestore.clearPersistence();
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
+  }
 
   @override
   QueryPlatform collectionGroup(String path) {
@@ -64,7 +71,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.disableNetwork();
     } catch (e) {
-      throw convertPlatformException(e);
+      throw getFirebaseException(e);
     }
   }
 
@@ -77,14 +84,14 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.enableNetwork();
     } catch (e) {
-      throw convertPlatformException(e);
+      throw getFirebaseException(e);
     }
   }
 
-  // @override
-  // Stream<void> snapshotsInSync() {
-  //   // TODO(ehesp): not supported on firebase-dart
-  // }
+  @override
+  Stream<void> snapshotsInSync() {
+    return _webFirestore.snapshotsInSync();
+  }
 
   @override
   Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
@@ -94,10 +101,11 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
         return transactionHandler(
             TransactionWeb(this, _webFirestore, transaction));
       }).timeout(timeout);
-
+      // Workaround for 'Runtime type information not available for type_variable_local'
+      // See: https://github.com/dart-lang/sdk/issues/29722
       return null;
     } catch (e) {
-      throw convertPlatformException(e);
+      throw getFirebaseException(e);
     }
   }
 
@@ -115,34 +123,43 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     }
 
     if (settings.host != null && settings.sslEnabled != null) {
-      _webFirestore.settings(web.Settings(
+      _webFirestore.settings(firestore_interop.Settings(
           cacheSizeBytes: cacheSizeBytes,
           host: settings.host,
           ssl: settings.sslEnabled));
     } else {
-      _webFirestore.settings(web.Settings(cacheSizeBytes: cacheSizeBytes));
+      _webFirestore
+          .settings(firestore_interop.Settings(cacheSizeBytes: cacheSizeBytes));
     }
   }
 
-  /// Enable persistence of Firestore data. Web only.
-  Future<void> enablePersistence() async {
-    // TODO(salakar): this should accept a [PersistenceSettings] argument
-    // but it is currently unsupported on the 'firebase-dart' package.
-    // See https://firebase.google.com/docs/reference/js/firebase.firestore.PersistenceSettings
+  /// Enable persistence of Firestore data.
+  @override
+  Future<void> enablePersistence([PersistenceSettings settings]) async {
     try {
-      await _webFirestore.enablePersistence();
+      await _webFirestore.enablePersistence(
+          firestore_interop.PersistenceSettings(
+              synchronizeTabs: settings?.synchronizeTabs ?? false));
     } catch (e) {
-      throw convertPlatformException(e);
+      throw getFirebaseException(e);
     }
   }
 
-  // @override
-  // Future<void> terminate() async {
-  //   // TODO(ehesp): not supported on firebase-dart
-  // }
+  @override
+  Future<void> terminate() async {
+    try {
+      await _webFirestore.terminate();
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
+  }
 
-  // @override
-  // Future<void> waitForPendingWrites() async {
-  //   // TODO(ehesp): not supported on firebase-dart
-  // }
+  @override
+  Future<void> waitForPendingWrites() async {
+    try {
+      await _webFirestore.waitForPendingWrites();
+    } catch (e) {
+      throw getFirebaseException(e);
+    }
+  }
 }
