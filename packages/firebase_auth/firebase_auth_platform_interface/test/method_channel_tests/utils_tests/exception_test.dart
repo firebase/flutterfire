@@ -13,26 +13,24 @@ void main() {
       AssertionError assertionError = AssertionError();
 
       try {
-        await catchPlatformException(assertionError);
+        throw convertPlatformException(assertionError);
       } on FirebaseAuthException catch (_) {
         fail('should have thrown the original exception');
       } catch (_) {
         return;
       }
-      fail('should have thrown an exception');
     });
 
     test('should catch a [PlatformException] and throw a [FirebaseException]',
         () async {
       PlatformException platformException = PlatformException(code: 'UNKNOWN');
       try {
-        await catchPlatformException(platformException);
+        throw convertPlatformException(platformException);
       } on FirebaseAuthException catch (_) {
         return;
       } catch (_) {
         fail('should have thrown an FirebaseAuthException');
       }
-      fail('should have thrown an exception');
     });
   });
   group('platformExceptionToFirebaseAuthException()', () {

@@ -1,3 +1,7 @@
+## 0.1.1+1
+
+ - Update a dependency to the latest release.
+
 ## 0.1.1
 
  - **REFACTOR**: move web example app (currently not functioning or in use on CI).
