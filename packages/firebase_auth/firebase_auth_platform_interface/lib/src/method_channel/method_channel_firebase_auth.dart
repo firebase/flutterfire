@@ -243,11 +243,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   MethodChannelFirebaseAuth setInitialValues({
-    Map<String, dynamic> currentUser,
+    dynamic currentUser,
     String languageCode,
   }) {
     if (currentUser != null) {
-      this.currentUser = MethodChannelUser(this, currentUser);
+      this.currentUser = MethodChannelUser(this, Map<String, dynamic>.from(currentUser));
     }
 
     this.languageCode = languageCode;

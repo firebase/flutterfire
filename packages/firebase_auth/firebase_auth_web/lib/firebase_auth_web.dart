@@ -10,6 +10,7 @@ import 'src/interop/auth.dart' as auth_interop;
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:meta/meta.dart';
 
@@ -28,6 +29,26 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     FirebaseAuthPlatform.instance = FirebaseAuthWeb.instance;
     RecaptchaVerifierFactoryPlatform.instance =
         RecaptchaVerifierFactoryWeb.instance;
+
+    FirebaseCoreWeb.setPluginConstantInitializor(
+        'plugins.flutter.io/firebase_auth', constantInitializor);
+  }
+
+  static Future<Map<String, dynamic>> constantInitializor(app) async {
+    auth_interop.Auth authInstance =
+        auth_interop.getAuthInstance(core_interop.app(app.name));
+    StreamSubscription<auth_interop.User> stream;
+    Completer completer = Completer<Map<String, dynamic>>();
+
+    stream = authInstance.onAuthStateChanged.listen((event) {
+      auth_interop.User user = authInstance.currentUser;
+      String languageCode = authInstance.languageCode;
+      stream.cancel();
+      completer.complete(
+          {'APP_LANGUAGE_CODE': languageCode, 'APP_CURRENT_USER': user});
+    });
+
+    return completer.future;
   }
 
   static Map<String, StreamController<UserPlatform>>
@@ -92,12 +113,19 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     return FirebaseAuthWeb(app: app);
   }
 
+  /// currentUser is stored as auth_interop.User. It has to
+  /// be passed via setInitialValues as a dynamic type because it
+  /// shares the same pluginConstant logic found on the
+  /// FirebasePluginPlatform class
   @override
   FirebaseAuthWeb setInitialValues({
-    Map<String, dynamic> currentUser,
+    dynamic currentUser,
     String languageCode,
   }) {
-    // Values are already set on web
+    if (currentUser != null) {
+      this.currentUser = UserWeb(this, currentUser);
+    }
+
     return this;
   }
 
@@ -110,6 +138,11 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     }
 
     return UserWeb(this, _webAuth.currentUser);
+  }
+
+  @override
+  set currentUser(UserPlatform userPlatform) {
+    _webAuth.currentUser = userPlatform;
   }
 
   @override

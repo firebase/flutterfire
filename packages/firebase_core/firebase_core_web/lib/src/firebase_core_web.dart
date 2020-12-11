@@ -4,19 +4,49 @@
 
 part of firebase_core_web;
 
+/// Register callback for each plugin (if set in "registerWith" method). This updates plugin specific constants
+/// i.e. "firebase_auth" ought to have language code and current user available for each app
+typedef Future<Map<String, dynamic>> PluginConstantInitializor(
+    FirebaseAppWeb app);
+
 /// The entry point for accessing Firebase.
 ///
 /// You can get an instance by calling [FirebaseCore.instance].
 class FirebaseCoreWeb extends FirebasePlatform {
+  static Map<String, PluginConstantInitializor> _pluginConstantInitializors =
+      {};
+
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
   static void registerWith(Registrar registrar) {
     FirebasePlatform.instance = FirebaseCoreWeb();
+  }
+
+  static void setPluginConstantInitializor(
+      String methodChannelName, PluginConstantInitializor function) {
+    _pluginConstantInitializors[methodChannelName] = function;
   }
 
   /// Returns all created [FirebaseAppPlatform] instances.
   @override
   List<FirebaseAppPlatform> get apps {
     return firebase.apps.map(_createFromJsApp).toList(growable: false);
+  }
+
+  Future<void> _initializeCore() async {
+    await Future.forEach<FirebaseAppPlatform>(
+        apps, _getPluginConstantsForFirebaseApp);
+  }
+
+  void _getPluginConstantsForFirebaseApp(FirebaseAppPlatform app) async {
+    await Future.forEach(_pluginConstantInitializors.keys,
+        (String methodChannelName) async {
+      PluginConstantInitializor getPluginConstantsInitializor =
+          _pluginConstantInitializors[methodChannelName];
+      Map<String, dynamic> constants = await getPluginConstantsInitializor(app);
+
+      FirebasePluginPlatform.setConstantsForPluginApps(
+          app.name, methodChannelName, constants);
+    });
   }
 
   /// Initializes a new [FirebaseAppPlatform] instance by [name] and [options] and returns
@@ -81,6 +111,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
         throw _catchJSError(e);
       }
     }
+    await _initializeCore();
 
     return _createFromJsApp(app);
   }
