@@ -19,7 +19,7 @@ class AdditionalUserInfo {
   /// provider.
   final Map<String, dynamic> /*!*/ profile;
 
-  /// The  federated identity provider ID.
+  /// The federated identity provider ID.
   final String providerId;
 
   /// The username given from the federated identity provider.
