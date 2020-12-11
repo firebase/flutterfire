@@ -574,15 +574,17 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///
   /// [codeAutoRetrievalTimeout] Triggered when SMS auto-retrieval times out and
   ///   provide a [verificationId].
-  Future<void> verifyPhoneNumber(
-      {@required String /*!*/ phoneNumber,
-      @required PhoneVerificationCompleted /*!*/ verificationCompleted,
-      @required PhoneVerificationFailed /*!*/ verificationFailed,
-      @required PhoneCodeSent /*!*/ codeSent,
-      @required PhoneCodeAutoRetrievalTimeout /*!*/ codeAutoRetrievalTimeout,
-      @visibleForTesting String autoRetrievedSmsCodeForTesting,
-      Duration timeout = const Duration(seconds: 30),
-      int forceResendingToken}) {
+  Future<void> verifyPhoneNumber({
+    @required String /*!*/ phoneNumber,
+    @required PhoneVerificationCompleted /*!*/ verificationCompleted,
+    @required PhoneVerificationFailed /*!*/ verificationFailed,
+    @required PhoneCodeSent /*!*/ codeSent,
+    @required PhoneCodeAutoRetrievalTimeout /*!*/ codeAutoRetrievalTimeout,
+    Duration timeout = const Duration(seconds: 30),
+    int forceResendingToken,
+    // ignore: invalid_use_of_visible_for_testing_member
+    @visibleForTesting String autoRetrievedSmsCodeForTesting,
+  }) {
     throw UnimplementedError('verifyPhoneNumber() is not implemented');
   }
 }
