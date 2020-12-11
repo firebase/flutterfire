@@ -247,7 +247,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     String languageCode,
   }) {
     if (currentUser != null) {
-      this.currentUser = MethodChannelUser(this, Map<String, dynamic>.from(currentUser));
+      this.currentUser =
+          MethodChannelUser(this, Map<String, dynamic>.from(currentUser));
     }
 
     this.languageCode = languageCode;

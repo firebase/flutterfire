@@ -21,9 +21,10 @@ abstract class FirebasePluginPlatform extends PlatformInterface {
   /// requires that the value is synchronously available for use after initialization.
   static Map<dynamic, dynamic> _constantsForPluginApps = {};
 
-  static void setConstantsForPluginApps(String appName, String methodChannelName, Map<String, dynamic> constants){
-    if(_constantsForPluginApps[appName] == null){
-    _constantsForPluginApps[appName] = {};
+  static void setConstantsForPluginApps(String appName,
+      String methodChannelName, Map<String, dynamic> constants) {
+    if (_constantsForPluginApps[appName] == null) {
+      _constantsForPluginApps[appName] = {};
     }
     _constantsForPluginApps[appName][methodChannelName] = constants;
   }

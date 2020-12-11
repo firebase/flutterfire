@@ -40,7 +40,6 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// Create an instance using [app] using the existing implementation
   factory FirebaseAuthPlatform.instanceFor(
       {FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
-
     return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
         languageCode: pluginConstants['APP_LANGUAGE_CODE'],
         currentUser: pluginConstants['APP_CURRENT_USER']);
