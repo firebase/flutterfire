@@ -22,8 +22,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
   }
 
   static void setPluginConstantInitializor(
-      String methodChannelName, PluginConstantInitializor function) {
-    _pluginConstantInitializors[methodChannelName] = function;
+      String methodChannelName, PluginConstantInitializor callback) {
+    _pluginConstantInitializors[methodChannelName] = callback;
   }
 
   /// Returns all created [FirebaseAppPlatform] instances.
