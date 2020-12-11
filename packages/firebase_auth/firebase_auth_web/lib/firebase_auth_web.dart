@@ -113,7 +113,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     return FirebaseAuthWeb(app: app);
   }
 
-  /// currentUser is stored as auth_interop.User. It has to
+  /// currentUser param is stored as auth_interop.User. It has to
   /// be passed via setInitialValues as a dynamic type because it
   /// shares the same pluginConstant logic found on the
   /// FirebasePluginPlatform class
@@ -142,7 +142,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   set currentUser(UserPlatform userPlatform) {
-    _webAuth.currentUser = userPlatform;
+    this.currentUser = userPlatform;
   }
 
   @override
