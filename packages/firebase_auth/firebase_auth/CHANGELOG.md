@@ -1,3 +1,20 @@
+## 0.18.4+1
+
+ - Update a dependency to the latest release.
+
+## 0.18.4
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **DOCS**: Fixed two typos in method documentation (#4219).
+
+## 0.18.3+1
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FIX**: stop authStateChange firing twice for initial event (#4099).
+ - **FIX**: updated email link signin to use latest format for ActionCodeSettings (#3425).
+ - **CHORE**: add missing dependency to example app.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
 ## 0.18.3
 
  - **FEAT**: migrate firebase interop files to local repository (#3973).

@@ -1,3 +1,8 @@
+## 2.1.0
+
+ - **FEAT**: add FirebaseException.stackTrace support (#4095).
+ - **CHORE**: promote to stable version.
+
 ## 2.0.0
 
 * DEPRECATED: `FirebaseApp.configure` method is now deprecated in favor of the `Firebase.initializeApp` method.

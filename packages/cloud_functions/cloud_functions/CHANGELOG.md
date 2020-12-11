@@ -1,3 +1,13 @@
+## 0.7.2
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+
+## 0.7.1
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FEAT**: migrate interop files (#4191).
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
 ## 0.7.0+1
 
  - Update a dependency to the latest release.

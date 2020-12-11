@@ -3,17 +3,17 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
-import 'package:firebase/firebase.dart' as fb;
+import '../interop/storage.dart' as storage_interop;
 
 import '../list_result_web.dart';
 
 /// Converts ListOptions from the plugin to ListOptions for the JS interop layer.
-fb.ListOptions listOptionsToFbListOptions(ListOptions options) {
+storage_interop.ListOptions listOptionsToFbListOptions(ListOptions options) {
   if (options == null) {
     return null;
   }
 
-  return fb.ListOptions(
+  return storage_interop.ListOptions(
     maxResults: options.maxResults,
     pageToken: options.pageToken,
   );
@@ -21,7 +21,7 @@ fb.ListOptions listOptionsToFbListOptions(ListOptions options) {
 
 /// Converts a ListResult from the JS interop layer to a ListResultWeb for the plugin.
 ListResultWeb fbListResultToListResultWeb(
-    FirebaseStoragePlatform storage, fb.ListResult result) {
+    FirebaseStoragePlatform storage, storage_interop.ListResult result) {
   if (result == null) {
     return null;
   }

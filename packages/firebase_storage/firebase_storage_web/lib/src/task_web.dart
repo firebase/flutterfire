@@ -5,27 +5,27 @@
 import 'dart:async';
 import 'package:async/async.dart';
 
-import 'package:firebase/firebase.dart' as fb;
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:firebase_storage_web/src/utils/errors.dart';
 
+import 'interop/storage.dart' as storage_interop;
 import 'utils/task.dart';
 
 /// The web platform implementation of an (Upload)Task.
-/// This class wraps a proper [fb.UploadTask] and exposes bindings
+/// This class wraps a proper [storage_interop.UploadTask] and exposes bindings
 /// to its functionality: Stream of changes, a Future notifying of
 /// success/errors, and pause/resume/cancel methods.
 class TaskWeb extends TaskPlatform {
   final ReferencePlatform _reference;
 
-  final fb.UploadTask _task;
+  final storage_interop.UploadTask _task;
 
   Future<TaskSnapshotPlatform> _onComplete;
   Stream<TaskSnapshotPlatform> _snapshotEvents;
 
-  /// Creates a Task for web from a [ReferencePlatform] object and a native [fb.UploadTask].
+  /// Creates a Task for web from a [ReferencePlatform] object and a native [storage_interop.UploadTask].
   /// The `reference` is used when creating [TaskSnapshotWeb] of this task.
-  TaskWeb(ReferencePlatform reference, fb.UploadTask task)
+  TaskWeb(ReferencePlatform reference, storage_interop.UploadTask task)
       : _reference = reference,
         _task = task,
         super();

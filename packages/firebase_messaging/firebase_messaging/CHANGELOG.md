@@ -1,3 +1,23 @@
+## 8.0.0-dev.11
+
+ - **REFACTOR**: initial web release as pre-release version.
+ - **FIX**: manually create a `FlutterShellArgs` instance from Android activity intent (fixes #4078) (#4341).
+ - **FIX**: fixed callback handler type casting on Android (#4313).
+ - **FIX**: macOS should not use `FIRAuth canHandleNotification` as it's iOS only (fixes #4136) (#4340).
+ - **FIX**: some iOS methods could result in an `no implementation found` error (#4339).
+
+## 8.0.0-dev.10
+
+ - **FEAT**: web implementation (#4206).
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+
+## 8.0.0-dev.9
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FIX**: various data types issues in remote message (#4150).
+ - **FIX**: java String arrays should be converted to a List (fixes #4072) (#4092).
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
 ## 8.0.0-dev.8
 
  - **FIX**: potential crash (fixes #4032) (#4071).
