@@ -193,10 +193,10 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
             list.add(createBundleFromMap((Map<String, Object>) item));
           } else {
             throw new IllegalArgumentException(
-              "Unsupported value type: "
-                + value.getClass().getCanonicalName()
-                + " in list at key "
-                + key);
+                "Unsupported value type: "
+                    + value.getClass().getCanonicalName()
+                    + " in list at key "
+                    + key);
           }
         }
 
