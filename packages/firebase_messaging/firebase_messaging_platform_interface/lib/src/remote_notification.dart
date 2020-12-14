@@ -209,7 +209,7 @@ class AppleNotificationSound {
 // Utility to correctly cast lists
 List<String> _toList(dynamic value) {
   if (value == null) {
-    return List<String>(0);
+    return <String>[];
   }
 
   return List<String>.from(value);
