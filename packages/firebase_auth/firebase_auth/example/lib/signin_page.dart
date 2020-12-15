@@ -220,17 +220,15 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
   void _signInWithEmailAndLink() async {
     try {
       _userEmail = _emailController.text;
+
       await _auth.sendSignInLinkToEmail(
           email: _userEmail,
           actionCodeSettings: ActionCodeSettings(
-            url:
-                'https://react-native-firebase-testing.firebaseapp.com/emailSignin',
-            handleCodeInApp: true,
-            iOSBundleId: 'io.flutter.plugins.firebaseAuthExample',
-            androidPackageName: 'io.flutter.plugins.firebaseauthexample',
-            androidInstallApp: true,
-            androidMinimumVersion: "1",
-          ));
+              url:
+                  'https://react-native-firebase-testing.firebaseapp.com/emailSignin',
+              handleCodeInApp: true,
+              iOSBundleId: 'io.flutter.plugins.firebaseAuthExample',
+              androidPackageName: 'io.flutter.plugins.firebaseauthexample'));
 
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("An email has been sent to ${_userEmail}"),

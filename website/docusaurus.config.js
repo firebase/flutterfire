@@ -40,7 +40,7 @@ module.exports = {
         alt: 'FlutterFire Logo',
         src: '/img/flutterfire_300x.png',
       },
-      links: [
+      items: [
         {
           to: 'docs/overview',
           activeBasePath: 'docs',
@@ -123,8 +123,6 @@ module.exports = {
   },
   plugins: [
     require.resolve('docusaurus-plugin-sass'),
-    require.resolve('@docusaurus/plugin-ideal-image'),
-    require.resolve('@docusaurus/plugin-google-gtag'),
     path.resolve(__dirname, './docusaurus-plugins/favicon-tags'),
     path.resolve(__dirname, './docusaurus-plugins/source-versions'),
     path.resolve(__dirname, './docusaurus-plugins/source-api-reference'),

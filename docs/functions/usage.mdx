@@ -74,6 +74,19 @@ FirebaseFunctions.instance
   .httpsCallable('myCloudFunction');
 ```
 
+
+### iOS
+
+When using the Firebase emulator while debugging an iOS application, you may receive an error regarding App Transport Security. To fix it, please use the following steps:
+
+1. Open ios/Runner.xcworkspace in Xcode.
+2. Open Runner/info.plist.
+3. Add a property called App Transport Security Settings.
+4. Right click on that property and click Add Row.
+5. Add a property called Allows Local Networking and enter its value as YES.
+
+### Android
+
 If you are targeting apps using Android 8.0+, the platform will block the http endpoint.  The simplest solution is to change
 this in your **debug** builds by adding the following to your `android/app/src/main/AndroidManifest.xml` file:
 
@@ -82,5 +95,6 @@ this in your **debug** builds by adding the following to your `android/app/src/m
   android:usesCleartextTraffic="true"
 />
 ```
+
 
 If you are concerned about security, you can set a more advanced [per-host network security file](https://developer.android.com/training/articles/security-config)

@@ -312,7 +312,8 @@ class _Likes extends State<Likes> {
       setState(() {
         _likes = newLikes;
       });
-    } catch (e) {
+    } catch (e, s) {
+      print(s);
       print("Failed to update likes for document! $e");
 
       // If the transaction fails, revert back to the old count

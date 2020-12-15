@@ -1,0 +1,36 @@
+name: firebase_storage_web
+description: The web implementation of firebase_storage
+repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_storage/firebase_storage_web
+version: 0.1.1+1
+
+flutter:
+  plugin:
+    platforms:
+      web:
+        pluginClass: FirebaseStorageWeb
+        fileName: firebase_storage_web.dart
+
+dependencies:
+  async: ^2.4.2
+  crypto: ^2.1.5
+  firebase_core: ^0.5.3
+  firebase_core_web: ^0.2.1+1
+  firebase_storage_platform_interface: ^1.0.2
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  http: ^0.12.2
+  js: ^0.6.1
+  meta: ^1.1.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  pedantic: ^1.8.0
+  firebase_core_platform_interface: ^2.0.0
+  mockito: ^4.1.1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.20.0 <2.0.0"

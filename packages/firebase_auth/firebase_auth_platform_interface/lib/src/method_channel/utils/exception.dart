@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -12,12 +10,12 @@ import '../../firebase_auth_exception.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseAuthException]
 /// if it was intentionally caught on the native platform.
-FutureOr<Map<String, dynamic>> catchPlatformException(Object exception) async {
+Exception convertPlatformException(Object exception) {
   if (exception is! Exception || exception is! PlatformException) {
-    throw exception;
+    return exception;
   }
 
-  throw platformExceptionToFirebaseAuthException(
+  return platformExceptionToFirebaseAuthException(
       exception as PlatformException);
 }
 

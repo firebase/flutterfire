@@ -184,7 +184,7 @@ you have subscribed throughout your application.
 
 The reCAPTCHA widget is a fully managed flow which provides security to your web application.
 
-![reCAPTCHA Widget Example](recaptcha-widget.jpg)
+<Image src="recaptcha-widget.jpg" alt="reCAPTCHA Widget Example" />
 
 The second argument of `signInWithPhoneNumber` accepts an optional `RecaptchaVerifier` instance which can be used
 to manage the widget. By default, the widget will render as an invisible widget when the sign-in flow is triggered.
@@ -192,7 +192,10 @@ An "invisible" widget will appear as a full-page modal on-top of your applicatio
 
 It is however possible to display an inline widget which the user has to explicitly press to verify themselves.
 
-![Inline reCAPTCHA Widget Example](recaptcha-widget-inline.jpg)
+<Image
+  src="recaptcha-widget-inline.jpg"
+  alt="Inline reCAPTCHA Widget Example"
+/>
 
 To add an inline widget, specify a DOM element ID to the `container` argument of the `RecaptchaVerifier` instance.
 The element must exist and be empty otherwise an error will be thrown.
