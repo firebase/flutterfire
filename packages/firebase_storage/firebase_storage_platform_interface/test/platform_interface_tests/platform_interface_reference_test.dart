@@ -12,9 +12,9 @@ import '../mock.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  TestReferencePlatform referencePlatform;
-  FirebaseApp app;
-  FirebaseStoragePlatform firebaseStoragePlatform;
+  /*late*/ TestReferencePlatform referencePlatform;
+  /*late*/ FirebaseApp app;
+  /*late*/ FirebaseStoragePlatform firebaseStoragePlatform;
 
   group('$ReferencePlatform()', () {
     setUpAll(() async {

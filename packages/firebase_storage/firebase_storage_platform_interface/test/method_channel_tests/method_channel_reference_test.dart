@@ -17,13 +17,13 @@ import 'package:flutter/services.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  FirebaseStoragePlatform storage;
-  ReferencePlatform ref;
+  /*late*/ FirebaseStoragePlatform storage;
+  /*late*/ ReferencePlatform ref;
   final List<MethodCall> log = <MethodCall>[];
 
   // mock props
   bool mockPlatformExceptionThrown = false;
-  File kFile;
+  /*late*/ File kFile;
   final kMetadata = SettableMetadata(
       contentLanguage: 'en',
       customMetadata: <String, String>{'activity': 'test'});
