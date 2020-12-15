@@ -8,9 +8,9 @@ import 'test_utils.dart';
 
 void runInstanceTests() {
   group('$FirebaseStorage', () {
-    FirebaseStorage storage;
-    FirebaseApp secondaryApp;
-    FirebaseApp secondaryAppWithoutBucket;
+    /*late*/ FirebaseStorage storage;
+    /*late*/ FirebaseApp secondaryApp;
+    /*late*/ FirebaseApp secondaryAppWithoutBucket;
 
     setUpAll(() async {
       await Firebase.initializeApp();
