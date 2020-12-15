@@ -8,237 +8,82 @@ part of firebase_remote_config;
 ///
 /// You can get an instance by calling [RemoteConfig.instance]. Note
 /// [RemoteConfig.instance] is async.
-class RemoteConfig extends ChangeNotifier {
-  @visibleForTesting
-  static const MethodChannel channel =
-      MethodChannel('plugins.flutter.io/firebase_remote_config');
+class RemoteConfig extends FirebasePluginPlatform {
 
-  static const String defaultValueForString = '';
-  static const int defaultValueForInt = 0;
-  static const double defaultValueForDouble = 0.0;
-  static const bool defaultValueForBool = false;
+  static final Map<String, RemoteConfig> _firebaseRemoteConfigInstances = {};
 
-  Map<String, RemoteConfigValue> _parameters;
+  FirebaseRemoteConfigPlatform _delegatePackingProperty;
 
-  DateTime _lastFetchTime;
-  LastFetchStatus _lastFetchStatus;
-  RemoteConfigSettings _remoteConfigSettings;
-
-  DateTime get lastFetchTime => _lastFetchTime;
-  LastFetchStatus get lastFetchStatus => _lastFetchStatus;
-  RemoteConfigSettings get remoteConfigSettings => _remoteConfigSettings;
-
-  static Completer<RemoteConfig> _instanceCompleter = Completer<RemoteConfig>();
-
-  /// Gets the instance of RemoteConfig for the default Firebase app.
-  static Future<RemoteConfig> get instance async {
-    if (!_instanceCompleter.isCompleted) {
-      _instanceCompleter.complete(await _getRemoteConfigInstance());
+  FirebaseRemoteConfigPlatform get _delegate {
+    if (_delegatePackingProperty == null) {
+      _delegatePackingProperty = FirebaseRemoteConfigPlatform.instanceFor(app: app, pluginConstants: pluginConstants);
     }
-    return _instanceCompleter.future;
+    return _delegatePackingProperty;
   }
 
-  static Future<RemoteConfig> _getRemoteConfigInstance() async {
-    final Map<String, dynamic> properties =
-        await channel.invokeMapMethod<String, dynamic>('RemoteConfig#instance');
+  final FirebaseApp app;
 
-    final RemoteConfig instance = RemoteConfig();
+  RemoteConfig._({this.app})
+      : super(app.name, 'plugins.flutter.io/firebase_remote_config');
 
-    instance._lastFetchTime =
-        DateTime.fromMillisecondsSinceEpoch(properties['lastFetchTime']);
-    instance._lastFetchStatus =
-        _parseLastFetchStatus(properties['lastFetchStatus']);
-    final RemoteConfigSettings remoteConfigSettings = RemoteConfigSettings(
-        minimumFetchIntervalMillis: (properties['minimumFetchInterval'] * 1000),
-        fetchTimeoutMillis: (properties['fetchTimeout'] * 1000));
-    instance._remoteConfigSettings = remoteConfigSettings;
-    instance._parameters =
-        _parseRemoteConfigParameters(parameters: properties['parameters']);
-    return instance;
+  static RemoteConfig get instance {
+     RemoteConfig.instanceFor(app: Firebase.app());
   }
 
-  static Map<String, RemoteConfigValue> _parseRemoteConfigParameters(
-      {Map<dynamic, dynamic> parameters}) {
-    final Map<String, RemoteConfigValue> parsedParameters =
-        <String, RemoteConfigValue>{};
-    parameters.forEach((dynamic key, dynamic value) {
-      final ValueSource valueSource = _parseValueSource(value['source']);
-      final RemoteConfigValue remoteConfigValue =
-          RemoteConfigValue._(value['value']?.cast<int>(), valueSource);
-      parsedParameters[key] = remoteConfigValue;
-    });
-    return parsedParameters;
-  }
+  static RemoteConfig instanceFor({FirebaseApp app}) {
+    assert(app != null);
 
-  static ValueSource _parseValueSource(String sourceStr) {
-    switch (sourceStr) {
-      case 'static':
-        return ValueSource.valueStatic;
-      case 'default':
-        return ValueSource.valueDefault;
-      case 'remote':
-        return ValueSource.valueRemote;
-      default:
-        return null;
+    if (_firebaseRemoteConfigInstances.containsKey(app.name)) {
+      return _firebaseRemoteConfigInstances[app.name];
     }
+
+    RemoteConfig newInstance = RemoteConfig._(app: app);
+    _firebaseRemoteConfigInstances[app.name] = newInstance;
+
+    return newInstance;
   }
 
-  static LastFetchStatus _parseLastFetchStatus(String statusStr) {
-    switch (statusStr) {
-      case 'success':
-        return LastFetchStatus.success;
-      case 'failure':
-        return LastFetchStatus.failure;
-      case 'throttled':
-        return LastFetchStatus.throttled;
-      case 'noFetchYet':
-        return LastFetchStatus.noFetchYet;
-      default:
-        return LastFetchStatus.failure;
-    }
+  Future<void> activate() {
+    _delegate.activate();
   }
 
-  /// Set the configuration settings for this [RemoteConfig] instance.
-  ///
-  /// This can be used to set minimum fetch time and fetch timeout.
-  Future<void> setConfigSettings(
-      RemoteConfigSettings remoteConfigSettings) async {
-    await channel
-        .invokeMethod<void>('RemoteConfig#setConfigSettings', <String, dynamic>{
-      'minimumFetchInterval':
-          (remoteConfigSettings.minimumFetchIntervalMillis ~/ 1000),
-      'fetchTimeout': (remoteConfigSettings.fetchTimeoutMillis ~/ 1000)
-    });
-    _remoteConfigSettings = remoteConfigSettings;
+  Future<void> insureInitialized() {
+    return _delegate.ensureInitialized();
   }
 
-  /// Fetches parameter values for your app.
-  ///
-  /// Parameter values may be from Default Config (local cache) or Remote
-  /// Config if enough time has elapsed since parameter values were last
-  /// fetched from the server. The default expiration time is 12 hours.
-  /// Expiration must be defined in seconds.
-  Future<void> fetch({Duration expiration = const Duration(hours: 12)}) async {
-    try {
-      final Map<String, dynamic> properties = await channel
-          .invokeMapMethod<String, dynamic>('RemoteConfig#fetch',
-              <dynamic, dynamic>{'expiration': expiration.inSeconds});
-      _lastFetchTime =
-          DateTime.fromMillisecondsSinceEpoch(properties['lastFetchTime']);
-      _lastFetchStatus = _parseLastFetchStatus(properties['lastFetchStatus']);
-    } on PlatformException catch (e) {
-      _lastFetchTime =
-          DateTime.fromMillisecondsSinceEpoch(e.details['lastFetchTime']);
-      _lastFetchStatus = _parseLastFetchStatus(e.details['lastFetchStatus']);
-      if (e.code == 'fetchFailedThrottled') {
-        final int fetchThrottleEnd = e.details['fetchThrottledEnd'];
-        throw FetchThrottledException._(endTimeInMills: fetchThrottleEnd);
-      } else {
-        throw Exception(e.message);
-      }
-    }
+  Future<void> fetch() {
+    return _delegate.fetch();
   }
 
-  /// Activates the fetched config, makes fetched key-values take effect.
-  ///
-  /// The returned Future completes true if the fetched config is different
-  /// from the currently activated config, it contains false otherwise.
-  Future<bool> activateFetched() async {
-    final Map<String, dynamic> properties =
-        await channel.invokeMapMethod<String, dynamic>('RemoteConfig#activate');
-    final Map<dynamic, dynamic> rawParameters = properties['parameters'];
-    final bool newConfig = properties['newConfig'];
-    final Map<String, RemoteConfigValue> fetchedParameters =
-        _parseRemoteConfigParameters(parameters: rawParameters);
-    _parameters = fetchedParameters;
-    notifyListeners();
-    return newConfig;
+  Future<bool> fetchAndActivate() {
+    return _delegate.fetchAndActivate();
   }
 
-  /// Sets the default config.
-  ///
-  /// Default config parameters should be set then when changes are needed the
-  /// parameters should be updated in the Firebase console.
-  Future<void> setDefaults(Map<String, dynamic> defaults) async {
-    assert(defaults != null);
-    // Make defaults available even if fetch fails.
-    defaults.forEach((String key, dynamic value) {
-      if (!_parameters.containsKey(key)) {
-        final RemoteConfigValue remoteConfigValue = RemoteConfigValue._(
-          const Utf8Codec().encode(value.toString()),
-          ValueSource.valueDefault,
-        );
-        _parameters[key] = remoteConfigValue;
-      }
-    });
-    await channel.invokeMethod<void>(
-        'RemoteConfig#setDefaults', <String, dynamic>{'defaults': defaults});
-  }
-
-  /// Gets the value corresponding to the [key] as a String.
-  ///
-  /// If there is no parameter with corresponding [key] then the default
-  /// String value is returned.
-  String getString(String key) {
-    if (_parameters.containsKey(key)) {
-      return _parameters[key].asString();
-    } else {
-      return defaultValueForString;
-    }
-  }
-
-  /// Gets the value corresponding to the [key] as an int.
-  ///
-  /// If there is no parameter with corresponding [key] then the default
-  /// int value is returned.
-  int getInt(String key) {
-    if (_parameters.containsKey(key)) {
-      return _parameters[key].asInt();
-    } else {
-      return defaultValueForInt;
-    }
-  }
-
-  /// Gets the value corresponding to the [key] as a double.
-  ///
-  /// If there is no parameter with corresponding [key] then the default double
-  /// value is returned.
-  double getDouble(String key) {
-    if (_parameters.containsKey(key)) {
-      return _parameters[key].asDouble();
-    } else {
-      return defaultValueForDouble;
-    }
-  }
-
-  /// Gets the value corresponding to the [key] as a bool.
-  ///
-  /// If there is no parameter with corresponding [key] then the default bool
-  /// value is returned.
-  bool getBool(String key) {
-    if (_parameters.containsKey(key)) {
-      return _parameters[key].asBool();
-    } else {
-      return defaultValueForBool;
-    }
-  }
-
-  /// Gets the [RemoteConfigValue] corresponding to the [key].
-  ///
-  /// If there is no parameter with corresponding key then a [RemoteConfigValue]
-  /// with a null value and static source is returned.
-  RemoteConfigValue getValue(String key) {
-    if (_parameters.containsKey(key)) {
-      return _parameters[key];
-    } else {
-      return RemoteConfigValue._(null, ValueSource.valueStatic);
-    }
-  }
-
-  /// Gets all [RemoteConfigValue].
-  ///
-  /// This includes all remote and default values
   Map<String, RemoteConfigValue> getAll() {
-    return Map<String, RemoteConfigValue>.unmodifiable(_parameters);
+    return _delegate.getAll();
+  }
+
+  bool getBool(String key) {
+    return _delegate.getBool(key);
+  }
+
+  int getInt(String key) {
+    return _delegate.getInt(key);
+  }
+
+  double getDouble(String key) {
+    return _delegate.getDouble(key);
+  }
+
+  String getString(String key) {
+    return _delegate.getString(key);
+  }
+
+  RemoteConfigValue getValue(String key) {
+    return _delegate.getValue(key);
+  }
+
+  Future<void> setConfigSettings(RemoteConfigSettings remoteConfigSettings) {
+    _delegate.setConfigSettings(remoteConfigSettings);
   }
 }

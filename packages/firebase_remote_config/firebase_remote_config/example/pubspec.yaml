@@ -10,11 +10,11 @@ dependencies:
   firebase_remote_config:
     path: ../
   firebase_core:
-    path: ../../firebase_core/firebase_core
+    path: ../../../firebase_core/firebase_core
 
 dependency_overrides:
   firebase_core:
-    path: ../../firebase_core/firebase_core
+    path: ../../../firebase_core/firebase_core
 
 dev_dependencies:
   pedantic: ^1.8.0

@@ -5,13 +5,11 @@
 library firebase_remote_config;
 
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart' show FirebasePluginPlatform;
 
 part 'src/remote_config.dart';
-part 'src/remote_config_settings.dart';
-part 'src/remote_config_value.dart';
 part 'src/remote_config_fetch_throttled_exception.dart';
 part 'src/remote_config_last_fetch_status.dart';

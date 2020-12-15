@@ -9,7 +9,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   static final Object _token = Object();
 
-  FirebaseRemoteConfigPlatform(this.app) : super(token: _token);
+  FirebaseRemoteConfigPlatform({this.app}) : super(token: _token);
 
   static FirebaseRemoteConfigPlatform _instance;
 
@@ -29,13 +29,22 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  factory FirebaseRemoteConfigPlatform.instanceFor({FirebaseApp app}) {
-    return FirebaseRemoteConfigPlatform.instance.delegateFor(app: app);
+  factory FirebaseRemoteConfigPlatform.instanceFor({FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
+    return FirebaseRemoteConfigPlatform.instance.delegateFor(app: app).setInitialValues(
+        activeParameters: pluginConstants == null
+            ? Map<String, RemoteConfigValue>()
+            : Map<String, RemoteConfigValue>.from(pluginConstants)
+    );
   }
 
   @protected
   FirebaseRemoteConfigPlatform delegateFor({FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
+  }
+
+  @protected
+  FirebaseRemoteConfigPlatform setInitialValues({Map<String, RemoteConfigValue> activeParameters}) {
+    throw UnimplementedError('setInitialValues() is not implemented');
   }
 
   Future<void> activate() {
@@ -74,12 +83,12 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
     throw UnimplementedError('getString() is not implemented');
   }
 
-  RemoteConfigValue getValue() {
+  RemoteConfigValue getValue(String key) {
     throw UnimplementedError('getValue() is not implemented');
   }
 
-  Future<void> setLogLevel() {
-    throw UnimplementedError('setLogLevel() is not implemented');
+  Future<void> setConfigSettings(RemoteConfigSettings remoteConfigSettings) {
+    throw UnimplementedError('setConfigSettings() is not implemented');
   }
 
 }
