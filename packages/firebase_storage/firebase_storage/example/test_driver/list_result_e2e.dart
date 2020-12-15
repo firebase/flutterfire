@@ -6,8 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 void runListResultTests() {
   group('$ListResult', () {
     /*late*/ FirebaseStorage storage;
-    /*late*/ListResult result;
-    
+    /*late*/ ListResult result;
+
     setUpAll(() async {
       storage = FirebaseStorage.instance;
       Reference ref = storage.ref('/list');

@@ -92,7 +92,7 @@ void runTaskTests() {
       });
 
       test('handles errors, e.g. if permission denied', () async {
-       /*late*/ FirebaseException streamError;
+        /*late*/ FirebaseException streamError;
 
         List<int> list = utf8.encode('hello world');
         Uint8List data = Uint8List.fromList(list);
@@ -159,7 +159,7 @@ void runTaskTests() {
     });
 
     group('cancel()', () {
-      /*late*/ Task/*!*/ task;
+      /*late*/ Task /*!*/ task;
 
       final _testCancelTask = () async {
         List<TaskSnapshot> snapshots = [];

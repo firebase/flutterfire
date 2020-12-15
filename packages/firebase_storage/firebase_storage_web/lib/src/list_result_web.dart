@@ -9,7 +9,7 @@ class ListResultWeb extends ListResultPlatform {
   /// Build a ListResultWeb instance from a list of items and prefixes.
   ListResultWeb(
     FirebaseStoragePlatform storage, {
-    String/*?*/ nextPageToken,
+    String /*?*/ nextPageToken,
     List<String> items,
     List<String> prefixes,
   })  : _items = items ?? [],

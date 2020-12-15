@@ -54,7 +54,7 @@ class Reference {
   /// A reference pointing to the parent location of this reference, or `null`
   /// if this reference is the root.
   Reference get parent {
-    ReferencePlatform/*?*/ referenceParentPlatform = _delegate.parent;
+    ReferencePlatform /*?*/ referenceParentPlatform = _delegate.parent;
 
     if (referenceParentPlatform == null) {
       return null;
@@ -107,7 +107,7 @@ class Reference {
   /// objects whose paths end with "/" or contain two consecutive "/"s. Firebase
   /// Storage List API will filter these unsupported objects. [list] may fail
   /// if there are too many unsupported objects in the bucket.
-  Future<ListResult> list([ListOptions/*?*/ options]) async {
+  Future<ListResult> list([ListOptions /*?*/ options]) async {
     if (options?.maxResults != null) {
       assert(options.maxResults > 0);
       assert(options.maxResults <= 1000);
