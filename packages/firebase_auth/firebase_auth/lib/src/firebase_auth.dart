@@ -653,8 +653,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
       verificationFailed: verificationFailed,
       codeSent: codeSent,
       codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
-      // ignore: invalid_use_of_visible_for_testing_member
       // TODO(ehesp): should be nullable after platform migration
+      // ignore: invalid_use_of_visible_for_testing_member
       autoRetrievedSmsCodeForTesting: autoRetrievedSmsCodeForTesting,
     );
   }
