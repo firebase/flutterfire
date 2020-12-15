@@ -112,7 +112,7 @@ abstract class QueryPlatform extends PlatformInterface {
 
   /// Performs a query and returns a [QuerySnapshotPlatform] containing
   /// all documents which match the query.
-  Future<QuerySnapshotPlatform> get([GetOptions /*!*/ options]) {
+  Future<QuerySnapshotPlatform> get([GetOptions /*?*/ options]) {
     throw UnimplementedError("get() is not implemented");
   }
 
