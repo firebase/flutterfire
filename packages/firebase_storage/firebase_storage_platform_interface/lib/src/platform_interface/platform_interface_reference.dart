@@ -50,7 +50,7 @@ abstract class ReferencePlatform extends PlatformInterface {
 
   /// A reference pointing to the parent location of this reference, or `null`
   /// if this reference is the root.
-  ReferencePlatform get parent {
+  ReferencePlatform /*?*/ get parent {
     String parentPath = _pointer.parent;
 
     if (parentPath == null) {
@@ -99,7 +99,7 @@ abstract class ReferencePlatform extends PlatformInterface {
   /// objects whose paths end with "/" or contain two consecutive "/"s. Firebase
   /// Storage List API will filter these unsupported objects. [list] may fail
   /// if there are too many unsupported objects in the bucket.
-  Future<ListResultPlatform> list(ListOptions options) {
+  Future<ListResultPlatform> list([ListOptions /*?*/ options]) {
     throw UnimplementedError('list() is not implemented');
   }
 

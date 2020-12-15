@@ -35,8 +35,8 @@ MockDownloadTaskPlatform mockDownloadTaskPlatform = MockDownloadTaskPlatform();
 
 void main() async {
   setupFirebaseStorageMocks();
-  FirebaseStorage storage;
-  Reference testRef;
+  /*late*/ FirebaseStorage storage;
+  /*late*/ Reference testRef;
   FullMetadata testFullMetadata = FullMetadata(testMetadataMap);
   ListOptions testListOptions =
       ListOptions(maxResults: testMaxResults, pageToken: testPageToken);

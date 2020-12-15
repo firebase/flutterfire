@@ -79,7 +79,7 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  Future<ListResultPlatform> list(ListOptions options) async {
+  Future<ListResultPlatform> list([ListOptions /*?*/ options]) async {
     try {
       Map<String, dynamic> data = await MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>('Reference#list', <String, dynamic>{

@@ -90,7 +90,7 @@ class ReferenceWeb extends ReferencePlatform {
   /// Storage List API will filter these unsupported objects. [list] may fail
   /// if there are too many unsupported objects in the bucket.
   @override
-  Future<ListResultPlatform> list(ListOptions options) async {
+  Future<ListResultPlatform> list([ListOptions /*?*/ options]) async {
     try {
       storage_interop.ListResult listResult =
           await _ref.list(listOptionsToFbListOptions(options));

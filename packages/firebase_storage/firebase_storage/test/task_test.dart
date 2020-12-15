@@ -20,8 +20,8 @@ MockTaskSnapshotPlatform mockTaskSnapshotPlatform = MockTaskSnapshotPlatform();
 void main() {
   setupFirebaseStorageMocks();
 
-  FirebaseStorage storage;
-  UploadTask uploadTask;
+  /*late*/ FirebaseStorage storage;
+  /*late*/ UploadTask uploadTask;
 
   group('Task', () {
     setUpAll(() async {
