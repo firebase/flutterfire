@@ -159,7 +159,7 @@ class StorageReference
   /// Uploads data [blob] to the actual location with optional [metadata].
   /// Returns the [UploadTask] which can be used to monitor and manage
   /// the upload.
-  UploadTask put(blob, [UploadMetadata metadata]) {
+  UploadTask put(blob, [UploadMetadata/*?*/ metadata]) {
     storage_interop.UploadTaskJsImpl taskImpl;
     if (metadata != null) {
       taskImpl = jsObject.put(blob, metadata.jsObject);
@@ -176,7 +176,7 @@ class StorageReference
   ///
   /// Returns the [UploadTask] which can be used to monitor and manage
   /// the upload.
-  UploadTask putString(String data, [String format, UploadMetadata metadata]) {
+  UploadTask putString(String data, [String/*?*/ format, UploadMetadata/*?*/ metadata]) {
     storage_interop.UploadTaskJsImpl taskImpl;
     if (metadata != null) {
       taskImpl = jsObject.putString(data, format, metadata.jsObject);

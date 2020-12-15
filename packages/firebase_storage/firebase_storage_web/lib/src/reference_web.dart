@@ -151,7 +151,7 @@ class ReferenceWeb extends ReferencePlatform {
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
   @override
-  TaskPlatform putData(Uint8List data, [SettableMetadata metadata]) {
+  TaskPlatform putData(Uint8List data, [SettableMetadata/*?*/ metadata]) {
     return TaskWeb(
       this,
       _ref.put(
@@ -168,7 +168,7 @@ class ReferenceWeb extends ReferencePlatform {
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
   @override
-  TaskPlatform putBlob(dynamic data, [SettableMetadata metadata]) {
+  TaskPlatform putBlob(dynamic data, [SettableMetadata/*?*/ metadata]) {
     assert(data is html.Blob, 'data must be a dart:html Blob object.');
 
     return TaskWeb(
@@ -197,7 +197,7 @@ class ReferenceWeb extends ReferencePlatform {
   TaskPlatform putString(
     String data,
     PutStringFormat format, [
-    SettableMetadata metadata,
+    SettableMetadata/*?*/ metadata,
   ]) {
     return TaskWeb(
       this,

@@ -50,7 +50,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   /// Returns a [FirebaseStorageWeb] with the provided arguments.
   @override
-  FirebaseStoragePlatform delegateFor({FirebaseApp app, String bucket}) {
+  FirebaseStoragePlatform delegateFor({FirebaseApp app, String/*!*/ bucket}) {
     if (bucket == null) {
       throw FirebaseException(
           message:
