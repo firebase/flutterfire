@@ -125,7 +125,7 @@ class ReferenceWeb extends ReferencePlatform {
   /// Returns a [Uint8List] of the data. If the [maxSize] (in bytes) is exceeded,
   /// the operation will be canceled.
   @override
-  Future<Uint8List> getData(
+  Future<Uint8List /*?*/ > getData(
     int maxSize, {
     @visibleForTesting
         Future<Uint8List> Function(dynamic url) readBytes = http.readBytes,

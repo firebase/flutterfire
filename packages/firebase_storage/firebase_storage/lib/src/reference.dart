@@ -137,7 +137,7 @@ class Reference {
   ///
   /// If the [maxSize] (in bytes) is exceeded, the operation will be canceled. By
   /// default the [maxSize] is 10mb (10485760 bytes).
-  Future<Uint8List> getData([int maxSize]) async {
+  Future<Uint8List /*?*/ > getData([int maxSize]) async {
     maxSize ??= 10485760;
     assert(maxSize > 0);
     return _delegate.getData(maxSize);

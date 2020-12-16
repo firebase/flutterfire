@@ -131,7 +131,7 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  Future<Uint8List /*!*/ > getData(int maxSize) {
+  Future<Uint8List /*?*/ > getData(int maxSize) {
     try {
       return MethodChannelFirebaseStorage.channel
           .invokeMethod<Uint8List>('Reference#getData', <String, dynamic>{
