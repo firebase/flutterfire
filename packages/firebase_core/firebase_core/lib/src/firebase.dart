@@ -15,7 +15,7 @@ class Firebase {
   // ignore: public_member_api_docs
   static FirebasePlatform delegatePackingProperty;
 
-  static FirebasePlatform/*!*/ get _delegate {
+  static FirebasePlatform /*!*/ get _delegate {
     if (delegatePackingProperty == null) {
       delegatePackingProperty = FirebasePlatform.instance;
     }
@@ -38,7 +38,7 @@ class Firebase {
   /// The default app instance cannot be initialized here and should be created
   /// using the platform Firebase integration.
   static Future<FirebaseApp> initializeApp(
-      {String/*?*/ name, FirebaseOptions/*?*/ options}) async {
+      {String /*?*/ name, FirebaseOptions /*?*/ options}) async {
     // TODO(ehesp): Should be nullable post platform migration
     FirebaseAppPlatform app =
         await _delegate.initializeApp(name: name, options: options);

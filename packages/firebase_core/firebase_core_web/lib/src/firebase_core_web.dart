@@ -26,8 +26,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// using the platform Firebase integration.
   @override
   Future<FirebaseAppPlatform> initializeApp(
-      {String/*?*/ name, FirebaseOptions/*?*/ options}) async {
-    firebase.App/*?*/ app;
+      {String /*?*/ name, FirebaseOptions /*?*/ options}) async {
+    firebase.App /*?*/ app;
 
     if (name == defaultFirebaseAppName) {
       throw noDefaultAppInitialization();

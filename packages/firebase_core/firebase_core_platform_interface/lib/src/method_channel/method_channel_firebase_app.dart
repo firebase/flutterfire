@@ -15,7 +15,7 @@ part of firebase_core_platform_interface;
 class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   // ignore: public_member_api_docs
   MethodChannelFirebaseApp(
-    String/*!*/ name,
+    String /*!*/ name,
     FirebaseOptions options, {
     isAutomaticDataCollectionEnabled,
   }) : super(name, options) {
