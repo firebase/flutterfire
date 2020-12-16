@@ -2,51 +2,42 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:stack_trace/stack_trace.dart';
+
+final _obfuscatedStackTraceLineRegExp =
+    RegExp(r'^\s*#\d{2} abs [\da-f]+ virt [\da-f]+ .*$');
+
 /// Returns a [List] containing detailed output of each line in a stack trace.
-List<Map<String, String>> getStackTraceElements(List<String> lines) {
+List<Map<String, String>> getStackTraceElements(StackTrace stackTrace) {
+  final Trace trace = Trace.from(stackTrace).terse;
   final List<Map<String, String>> elements = <Map<String, String>>[];
 
-  // This warning is included in stack traces if the app is obfuscated.
-  final bool isObfuscated = lines.contains(
-      'Warning: This VM has been configured to produce stack traces that violate the Dart standard.');
-
-  for (String line in lines) {
-    if (isObfuscated) {
-      final Map<String, String> element = <String, String>{
-        'file': null,
-        'line': '0',
-        'method': line,
-      };
-      elements.add(element);
-    } else {
-      final List<String> lineParts = line.split(RegExp('\\s+'));
-
-      try {
-        final String fileName = lineParts.first;
-
-        // Sometimes the trace looks like [<file>,<methodField>] and doesn't contain a line field
-        final String lineNumber =
-            lineParts.length > 2 ? lineParts[1].split(":").first : "0";
-
-        final Map<String, String> element = <String, String>{
-          'file': fileName,
-          'line': lineNumber,
-        };
-
-        final List<String> methodField = lineParts.last.split(".");
-
-        final String methodName = methodField.last.trim();
-        element['method'] = methodName;
-
-        if (methodField.length > 1) {
-          final String className = methodField.first.trim();
-          element['class'] = className;
+  for (Frame frame in trace.frames) {
+    try {
+      if (frame is UnparsedFrame) {
+        if (_obfuscatedStackTraceLineRegExp.hasMatch(frame.member)) {
+          elements.add(<String, String>{
+            'file': null,
+            'line': '0',
+            'method': frame.member,
+          });
         }
-
+      } else {
+        final Map<String, String> element = <String, String>{
+          'file': frame.library,
+          'line': frame.line?.toString() ?? '0',
+        };
+        final List<String> members = frame.member.split('.');
+        if (members.length > 1) {
+          element['method'] = members.sublist(1).join('.');
+          element['class'] = members.first;
+        } else {
+          element['method'] = frame.member;
+        }
         elements.add(element);
-      } catch (e) {
-        print(e.toString());
       }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
