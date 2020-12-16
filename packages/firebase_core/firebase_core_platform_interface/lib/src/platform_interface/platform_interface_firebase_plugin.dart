@@ -20,6 +20,7 @@ abstract class FirebasePluginPlatform extends PlatformInterface {
   /// here. For example, calling [FirebaseAppPlatform.isAutomaticDataCollectionEnabled]
   /// requires that the value is synchronously available for use after initialization.
   static Map<dynamic, dynamic> _constantsForPluginApps = {};
+
   /// Sets the plugin constants per app, per plugin for web, ios & android.
   static void setConstantsForPluginApps(String appName,
       String methodChannelName, Map<String, dynamic> constants) {
