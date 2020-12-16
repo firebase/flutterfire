@@ -23,7 +23,7 @@ abstract class FirebasePluginPlatform extends PlatformInterface {
 
   /// Sets the plugin constants per app, per plugin for web, ios & android.
   static void setConstantsForPluginApps(String appName,
-      String methodChannelName, Map<String, dynamic> constants) {
+      String methodChannelName, Map<dynamic, dynamic> constants) {
     if (_constantsForPluginApps[appName] == null) {
       _constantsForPluginApps[appName] = {};
     }
