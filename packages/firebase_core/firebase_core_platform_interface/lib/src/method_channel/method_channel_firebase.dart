@@ -37,7 +37,7 @@ class MethodChannelFirebase extends FirebasePlatform {
 
   /// Creates and attaches a new [MethodChannelFirebaseApp] to the [MethodChannelFirebase]
   /// and adds any constants to the [FirebasePluginPlatform] class.
-  void _initializeFirebaseAppFromMap(Map<dynamic, dynamic> map) {
+  void _initializeFirebaseAppFromMap(Map map) {
     MethodChannelFirebaseApp methodChannelFirebaseApp =
         MethodChannelFirebaseApp(
       map['name'],
@@ -51,7 +51,7 @@ class MethodChannelFirebase extends FirebasePlatform {
     Map<dynamic, dynamic> constants = map['pluginConstants'];
 
     if (constants != null) {
-      map['pluginConstants'].forEach((methodChannelName, constants) {
+      constants.forEach((methodChannelName, constants) {
         FirebasePluginPlatform.setConstantsForPluginApps(
             methodChannelFirebaseApp.name, methodChannelName, constants);
       });
