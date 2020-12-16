@@ -48,10 +48,14 @@ class MethodChannelFirebase extends FirebasePlatform {
     MethodChannelFirebase.appInstances[methodChannelFirebaseApp.name] =
         methodChannelFirebaseApp;
 
-    map['pluginConstants'].forEach((methodChannelName, constants) {
-      FirebasePluginPlatform.setConstantsForPluginApps(
-          methodChannelFirebaseApp.name, methodChannelName, constants);
-    });
+    Map<dynamic, dynamic> constants = map['pluginConstants'];
+
+    if (constants != null) {
+      map['pluginConstants'].forEach((methodChannelName, constants) {
+        FirebasePluginPlatform.setConstantsForPluginApps(
+            methodChannelFirebaseApp.name, methodChannelName, constants);
+      });
+    }
   }
 
   /// Returns the created [FirebaseAppPlatform] instances.
