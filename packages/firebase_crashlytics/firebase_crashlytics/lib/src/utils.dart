@@ -6,34 +6,47 @@
 List<Map<String, String>> getStackTraceElements(List<String> lines) {
   final List<Map<String, String>> elements = <Map<String, String>>[];
 
+  // This warning is included in stack traces if the app is obfuscated.
+  final bool isObfuscated = lines.contains(
+      'Warning: This VM has been configured to produce stack traces that violate the Dart standard.');
+
   for (String line in lines) {
-    final List<String> lineParts = line.split(RegExp('\\s+'));
-
-    try {
-      final String fileName = lineParts.first;
-
-      // Sometimes the trace looks like [<file>,<methodField>] and doesn't contain a line field
-      final String lineNumber =
-          lineParts.length > 2 ? lineParts[1].split(":").first : "0";
-
+    if (isObfuscated) {
       final Map<String, String> element = <String, String>{
-        'file': fileName,
-        'line': lineNumber,
+        'file': null,
+        'line': '0',
+        'method': line,
       };
-
-      final List<String> methodField = lineParts.last.split(".");
-
-      final String methodName = methodField.last.trim();
-      element['method'] = methodName;
-
-      if (methodField.length > 1) {
-        final String className = methodField.first.trim();
-        element['class'] = className;
-      }
-
       elements.add(element);
-    } catch (e) {
-      print(e.toString());
+    } else {
+      final List<String> lineParts = line.split(RegExp('\\s+'));
+
+      try {
+        final String fileName = lineParts.first;
+
+        // Sometimes the trace looks like [<file>,<methodField>] and doesn't contain a line field
+        final String lineNumber =
+            lineParts.length > 2 ? lineParts[1].split(":").first : "0";
+
+        final Map<String, String> element = <String, String>{
+          'file': fileName,
+          'line': lineNumber,
+        };
+
+        final List<String> methodField = lineParts.last.split(".");
+
+        final String methodName = methodField.last.trim();
+        element['method'] = methodName;
+
+        if (methodField.length > 1) {
+          final String className = methodField.first.trim();
+          element['class'] = className;
+        }
+
+        elements.add(element);
+      } catch (e) {
+        print(e.toString());
+      }
     }
   }
 
