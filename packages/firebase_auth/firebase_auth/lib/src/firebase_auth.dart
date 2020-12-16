@@ -30,8 +30,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// The [FirebaseApp] for this current Auth instance.
   FirebaseApp app;
 
-  FirebaseAuth._({this.app})
-      : super(app.name, methodChannelName);
+  FirebaseAuth._({this.app}) : super(app.name, methodChannelName);
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseAuth get instance {

@@ -15,6 +15,8 @@ typedef Future<Map<String, dynamic>> PluginConstantInitializor(
 class FirebaseCoreWeb extends FirebasePlatform {
   static Map<String, PluginConstantInitializor> _pluginConstantInitializors =
       {};
+
+  /// Flag used to check if _initializeCore() method has been called already
   static bool isCoreInitialized = false;
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
@@ -22,6 +24,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     FirebasePlatform.instance = FirebaseCoreWeb();
   }
 
+  /// Each plugin can register a callback to set its app constants
   static void setPluginConstantInitializor(
       String methodChannelName, PluginConstantInitializor callback) {
     _pluginConstantInitializors[methodChannelName] = callback;
