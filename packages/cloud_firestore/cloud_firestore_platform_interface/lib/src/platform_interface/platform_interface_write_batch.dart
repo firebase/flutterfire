@@ -48,7 +48,7 @@ abstract class WriteBatchPlatform extends PlatformInterface {
   /// If [SetOptions] are provided, the [data] will be merged into an existing
   /// document instead of overwriting.
   void set(String documentPath, Map<String, dynamic> data,
-      [SetOptions options]) {
+      [SetOptions /*?*/ options]) {
     throw UnimplementedError("set() is not implemented");
   }
 

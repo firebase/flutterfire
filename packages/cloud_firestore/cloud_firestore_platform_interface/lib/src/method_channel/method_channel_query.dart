@@ -22,13 +22,13 @@ class MethodChannelQuery extends QueryPlatform {
   MethodChannelQuery(
     FirebaseFirestorePlatform _firestore,
     String path, {
-    Map<String, dynamic> parameters,
+    /*required*/ Map<String, dynamic> /*!*/ parameters,
     this.isCollectionGroupQuery = false,
   }) : super(_firestore, parameters) {
     _pointer = Pointer(path);
   }
 
-  Pointer _pointer;
+  /*late*/ Pointer _pointer;
 
   /// Returns the Document path that that this query relates to.
   String get path {
@@ -87,7 +87,7 @@ class MethodChannelQuery extends QueryPlatform {
 
   /// Fetch the documents for this query
   @override
-  Future<QuerySnapshotPlatform> get([GetOptions options]) async {
+  Future<QuerySnapshotPlatform> get([GetOptions /*?*/ options]) async {
     try {
       final Map<String, dynamic> data = await MethodChannelFirebaseFirestore
           .channel

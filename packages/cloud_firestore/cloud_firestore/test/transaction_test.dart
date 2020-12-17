@@ -1,21 +1,22 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import './mock.dart';
 
+// TODO(ehesp): Remove when null safety lands
 void main() {
   setupCloudFirestoreMocks();
-  FirebaseFirestore firestore;
+  // /*late*/ FirebaseFirestore firestore;
 
   setUpAll(() async {
     await Firebase.initializeApp();
-    firestore = FirebaseFirestore.instance;
+    // firestore = FirebaseFirestore.instance;
   });
 
-  group("$Transaction", () {
-    test('throws if invalid transactionHandler passed', () async {
-      expect(() => firestore.runTransaction(null), throwsAssertionError);
-    });
-  });
+  // group("$Transaction", () {
+  //   test('throws if invalid transactionHandler passed', () async {
+  //     expect(() => firestore.runTransaction(null), throwsAssertionError);
+  //   });
+  // });
 }

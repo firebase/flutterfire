@@ -61,7 +61,7 @@ class Pointer {
   }
 
   /// Returns a path pointing to the parent of the current path.
-  String parentPath() {
+  String /*?*/ parentPath() {
     if (components.length < 2) {
       return null;
     }

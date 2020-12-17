@@ -269,10 +269,10 @@ class Movie extends StatelessWidget {
 /// Displays and manages the movie "like" count.
 class Likes extends StatefulWidget {
   /// The [DocumentReference] relating to the counter.
-  final DocumentReference reference;
+  final DocumentReference /*!*/ reference;
 
   /// The number of current likes (before manipulation).
-  final num currentLikes;
+  final num /*!*/ currentLikes;
 
   /// Constructs a new [Likes] instance with a given [DocumentReference] and
   /// current like count.
@@ -285,7 +285,7 @@ class Likes extends StatefulWidget {
 }
 
 class _Likes extends State<Likes> {
-  int _likes;
+  int /*!*/ _likes;
 
   _onLike(int current) async {
     // Increment the "like" count straight away to show feedback to the user.
