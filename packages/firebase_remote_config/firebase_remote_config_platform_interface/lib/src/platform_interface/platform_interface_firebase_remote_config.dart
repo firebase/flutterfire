@@ -4,9 +4,10 @@ import 'package:firebase_remote_config_platform_interface/firebase_remote_config
 import 'package:firebase_remote_config_platform_interface/src/method_channel/method_channel_firebase_remote_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
+abstract class FirebaseRemoteConfigPlatform extends PlatformInterface with ChangeNotifier {
   static final Object _token = Object();
 
   FirebaseRemoteConfigPlatform({this.app}) : super(token: _token);
@@ -89,6 +90,10 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
 
   Future<void> setConfigSettings(RemoteConfigSettings remoteConfigSettings) {
     throw UnimplementedError('setConfigSettings() is not implemented');
+  }
+
+  void setDefaults(Map<String, dynamic> defaultParameters) {
+    throw UnimplementedError('setDefaults() is not implemented');
   }
 
 }

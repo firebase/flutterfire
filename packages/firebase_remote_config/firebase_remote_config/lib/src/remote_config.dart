@@ -86,4 +86,8 @@ class RemoteConfig extends FirebasePluginPlatform {
   Future<void> setConfigSettings(RemoteConfigSettings remoteConfigSettings) {
     _delegate.setConfigSettings(remoteConfigSettings);
   }
+
+  Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
+    _delegate.setDefaults(defaultParameters);
+  }
 }

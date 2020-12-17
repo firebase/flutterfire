@@ -50,7 +50,9 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
 
   @override
   Future<void> activate() async {
-    await channel.invokeMethod<void>('RemoteConfig#activate');
+    Map<dynamic, dynamic> parameters = await channel.invokeMapMethod<String, dynamic>('RemoteConfig#activate');
+    _activeParameters = Map<String, RemoteConfigValue>.from(parameters);
+    notifyListeners();
   }
 
   @override
@@ -60,7 +62,13 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
 
   @override
   Future<bool> fetchAndActivate() async {
-    await channel.invokeMethod<void>('RemoteConfig#fetchAndActivate');
+    bool configChanged = await channel.invokeMethod<bool>('RemoteConfig#fetchAndActivate');
+    if (configChanged) {
+      Map<dynamic, dynamic> parameters = await channel.invokeMapMethod<String, dynamic>('RemoteConfig#getAll');
+      _activeParameters = Map<String, RemoteConfigValue>.from(parameters);
+      notifyListeners();
+    }
+    return configChanged;
   }
 
   @override
@@ -99,5 +107,12 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       'fetchTimeout': remoteConfigSettings.fetchTimeout,
       'minimumFetchInterval': remoteConfigSettings.minimumFetchInterval,
     });
+  }
+
+  @override
+  void setDefaults(Map<String, dynamic> defaultParameters) {
+    for (var key in defaultParameters.keys) {
+      _activeParameters[key] = RemoteConfigValue(defaultParameters[key], ValueSource.valueDefault);
+    }
   }
 }

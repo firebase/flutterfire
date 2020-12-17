@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:firebase_remote_config_platform_interface/src/remote_config_settings.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -39,8 +40,10 @@ class WelcomeWidget extends AnimatedWidget {
           onPressed: () async {
             try {
               // Using default duration to force fetching from remote server.
-              await remoteConfig.fetch(expiration: const Duration(seconds: 0));
-              await remoteConfig.activateFetched();
+              await remoteConfig.setConfigSettings(RemoteConfigSettings(
+                Duration(seconds: 10), Duration.zero
+              ));
+              await remoteConfig.activate();
             } on FetchThrottledException catch (exception) {
               // Fetch throttled.
               print(exception);
@@ -57,9 +60,9 @@ class WelcomeWidget extends AnimatedWidget {
 Future<RemoteConfig> setupRemoteConfig() async {
   await Firebase.initializeApp();
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
-  // Allow a fetch every millisecond. Default is 12 hours.
-  remoteConfig
-      .setConfigSettings(RemoteConfigSettings(minimumFetchIntervalMillis: 1));
+  remoteConfig.setConfigSettings(RemoteConfigSettings(
+      Duration(seconds: 10), Duration(hours: 0)
+  ));
   remoteConfig.setDefaults(<String, dynamic>{
     'welcome': 'default welcome',
     'hello': 'default hello',

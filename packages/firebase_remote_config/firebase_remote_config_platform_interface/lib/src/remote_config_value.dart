@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 /// ValueSource defines the possible sources of a config parameter value.
 enum ValueSource { valueStatic, valueDefault, valueRemote }
 
@@ -15,7 +17,8 @@ class RemoteConfigValue {
   /// Default value for Bool
   static const bool defaultValueForBool = false;
 
-  RemoteConfigValue._(this._value, this.source) : assert(source != null);
+  @protected
+  RemoteConfigValue(this._value, this.source) : assert(source != null);
 
   List<int> _value;
 
