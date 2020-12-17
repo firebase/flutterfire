@@ -31,14 +31,14 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
 
   @override
   MethodChannelFirebaseCrashlytics setInitialValues({
-    bool/*!*/ isCrashlyticsCollectionEnabled,
+    bool /*!*/ isCrashlyticsCollectionEnabled,
   }) {
     this._isCrashlyticsCollectionEnabled = isCrashlyticsCollectionEnabled;
     return this;
   }
 
   @override
-  Future<bool/*!*/> checkForUnsentReports() async {
+  Future<bool /*!*/ > checkForUnsentReports() async {
     try {
       Map<String, dynamic> data =
           await channel.invokeMapMethod<String, dynamic>(
@@ -69,7 +69,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   }
 
   @override
-  Future<bool/*!*/> didCrashOnPreviousExecution() async {
+  Future<bool /*!*/ > didCrashOnPreviousExecution() async {
     try {
       Map<String, dynamic> data =
           await channel.invokeMapMethod<String, dynamic>(
@@ -83,10 +83,10 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
 
   @override
   Future<void> recordError({
-    String/*!*/ exception,
-    String/*!*/ information,
-    String/*?*/ reason,
-    List<Map<String, String>>/*?*/ stackTraceElements,
+    String /*!*/ exception,
+    String /*!*/ information,
+    String /*?*/ reason,
+    List<Map<String, String>> /*?*/ stackTraceElements,
   }) async {
     try {
       await channel
