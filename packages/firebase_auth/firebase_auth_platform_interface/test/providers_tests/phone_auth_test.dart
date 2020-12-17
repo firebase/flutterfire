@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  TestPhoneAuthProvider phoneAuthProvider;
+  /*late*/ TestPhoneAuthProvider phoneAuthProvider;
   final String kMockProviderId = 'phone';
   setUpAll(() {
     phoneAuthProvider = TestPhoneAuthProvider();

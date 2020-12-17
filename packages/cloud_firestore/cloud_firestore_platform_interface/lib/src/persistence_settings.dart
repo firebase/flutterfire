@@ -14,6 +14,6 @@ class PersistenceSettings {
 
   /// Creates a [PersistenceSettings] instance.
   const PersistenceSettings({
-    this.synchronizeTabs,
+    /*required*/ this.synchronizeTabs,
   }) : assert(synchronizeTabs != null);
 }

@@ -21,7 +21,9 @@ import 'src/firebase_auth_web_confirmation_result.dart';
 /// The web delegate implementation for [FirebaseAuth].
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
   /// instance of Auth from the web plugin
-  final auth_interop.Auth _webAuth;
+  final auth_interop.Auth /*?*/ _webAuth;
+
+  static bool _initialAuthState = true;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -46,6 +48,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
+  // TODO(ehesp): check this is valid after platform migration:
+  //    The `appInstance` property is now marked as nullable
   FirebaseAuthWeb._()
       : _webAuth = null,
         super(appInstance: null);
@@ -54,41 +58,43 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   FirebaseAuthWeb({FirebaseApp app})
       : _webAuth = auth_interop.getAuthInstance(core_interop.app(app?.name)),
         super(appInstance: app) {
-    if (app != null) {
-      // Create a app instance broadcast stream for both delegate listener events
-      _userChangesListeners[app.name] =
-          StreamController<UserPlatform>.broadcast();
-      _authStateChangesListeners[app.name] =
-          StreamController<UserPlatform>.broadcast();
-      _idTokenChangesListeners[app.name] =
-          StreamController<UserPlatform>.broadcast();
+    // Create a app instance broadcast stream for both delegate listener events
+    _userChangesListeners[app.name] =
+        StreamController<UserPlatform>.broadcast();
+    _authStateChangesListeners[app.name] =
+        StreamController<UserPlatform>.broadcast();
+    _idTokenChangesListeners[app.name] =
+        StreamController<UserPlatform>.broadcast();
 
-      _webAuth.onAuthStateChanged.map((auth_interop.User webUser) {
-        if (webUser == null) {
-          return null;
-        } else {
-          return UserWeb(this, webUser);
-        }
-      }).listen((UserWeb webUser) {
+    _webAuth.onAuthStateChanged.map((auth_interop.User webUser) {
+      if (webUser == null) {
+        return null;
+      } else {
+        return UserWeb(this, webUser);
+      }
+    }).listen((UserWeb webUser) {
+      if (_initialAuthState) {
+        _initialAuthState = false;
+      } else {
         _authStateChangesListeners[app.name].add(webUser);
-      });
+      }
+    });
 
-      // Also triggers `userChanged` events
-      _webAuth.onIdTokenChanged.map((auth_interop.User webUser) {
-        if (webUser == null) {
-          return null;
-        } else {
-          return UserWeb(this, webUser);
-        }
-      }).listen((UserWeb webUser) {
-        _idTokenChangesListeners[app.name].add(webUser);
-        _userChangesListeners[app.name].add(webUser);
-      });
-    }
+    // Also triggers `userChanged` events
+    _webAuth.onIdTokenChanged.map((auth_interop.User webUser) {
+      if (webUser == null) {
+        return null;
+      } else {
+        return UserWeb(this, webUser);
+      }
+    }).listen((UserWeb webUser) {
+      _idTokenChangesListeners[app.name].add(webUser);
+      _userChangesListeners[app.name].add(webUser);
+    });
   }
 
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor({@required FirebaseApp app}) {
     return FirebaseAuthWeb(app: app);
   }
 
@@ -102,8 +108,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  UserPlatform get currentUser {
-    auth_interop.User webCurrentUser = _webAuth.currentUser;
+  UserPlatform /*?*/ get currentUser {
+    auth_interop.User /*?*/ webCurrentUser = _webAuth.currentUser;
 
     if (webCurrentUser == null) {
       return null;
@@ -113,7 +119,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  void sendAuthChangesEvent(String appName, UserPlatform userPlatform) {
+  void sendAuthChangesEvent(String appName, UserPlatform /*?*/ userPlatform) {
     assert(appName != null);
     assert(_userChangesListeners[appName] != null);
 
@@ -130,7 +136,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<ActionCodeInfo> checkActionCode(String code) async {
+  Future<ActionCodeInfo /*!*/ > checkActionCode(String code) async {
     try {
       return convertWebActionCodeInfo(await _webAuth.checkActionCode(code));
     } catch (e) {
@@ -189,7 +195,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings actionCodeSettings]) async {
+      [ActionCodeSettings /*?*/ actionCodeSettings]) async {
     try {
       await _webAuth.sendPasswordResetEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
@@ -200,7 +206,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> sendSignInLinkToEmail(String email,
-      [ActionCodeSettings actionCodeSettings]) async {
+      [ActionCodeSettings /*?*/ actionCodeSettings]) async {
     try {
       await _webAuth.sendSignInLinkToEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
@@ -215,9 +221,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> setLanguageCode(String languageCode) {
+  Future<void> setLanguageCode(String languageCode) async {
     _webAuth.languageCode = languageCode;
-    return null;
   }
 
   @override

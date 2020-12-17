@@ -14,10 +14,10 @@ import 'package:mockito/mockito.dart';
 
 void main() {
   setupFirebaseStorageMocks();
-  FirebaseApp app;
-  FirebaseStorage storage;
-  FirebaseStorage storageSecondary;
-  FirebaseApp secondaryApp;
+  /*late*/ FirebaseApp app;
+  /*late*/ FirebaseStorage storage;
+  /*late*/ FirebaseStorage storageSecondary;
+  /*late*/ FirebaseApp secondaryApp;
 
   group('$FirebaseStorage', () {
     setUpAll(() async {

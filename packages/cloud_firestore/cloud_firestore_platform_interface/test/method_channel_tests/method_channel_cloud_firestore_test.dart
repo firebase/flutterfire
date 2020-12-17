@@ -17,8 +17,8 @@ import '../utils/test_common.dart';
 
 void main() {
   initializeMethodChannel();
-  MethodChannelFirebaseFirestore firestore;
-  FirebaseApp secondaryApp;
+  /*late*/ MethodChannelFirebaseFirestore firestore;
+  /*late*/ FirebaseApp secondaryApp;
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
   String mockTransactionId = 'TRANSACTION1';

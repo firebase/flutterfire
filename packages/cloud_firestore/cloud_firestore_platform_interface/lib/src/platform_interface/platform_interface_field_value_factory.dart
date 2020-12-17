@@ -46,7 +46,7 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// added to the end. If the field being modified is not already an array it
   /// will be overwritten with an array containing exactly the specified
   /// elements.
-  dynamic arrayUnion(List<dynamic> elements) {
+  dynamic arrayUnion(List<dynamic> /*!*/ elements) {
     throw UnimplementedError("arrayUnion() is not implemented");
   }
 
@@ -56,7 +56,7 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// All instances of each element specified will be removed from the array.
   /// If the field being modified is not already an array it will be overwritten
   /// with an empty array.
-  dynamic arrayRemove(List<dynamic> elements) {
+  dynamic arrayRemove(List<dynamic> /*!*/ elements) {
     throw UnimplementedError("arrayRemove() is not implemented");
   }
 
@@ -73,7 +73,7 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
 
   /// Returns a special value for use with set() or update() that tells the
   /// server to increment the field’s current value by the given value.
-  dynamic increment(num value) {
+  dynamic increment(num /*!*/ value) {
     throw UnimplementedError("increment() is not implemented");
   }
 }

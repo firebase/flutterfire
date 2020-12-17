@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  TestGoogleAuthProvider googleAuthProvider;
+  /*late*/ TestGoogleAuthProvider googleAuthProvider;
   final String kMockProviderId = 'google.com';
   setUpAll(() {
     googleAuthProvider = TestGoogleAuthProvider();

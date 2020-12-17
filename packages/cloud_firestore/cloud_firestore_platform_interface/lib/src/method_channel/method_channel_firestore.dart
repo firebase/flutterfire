@@ -20,7 +20,7 @@ import 'utils/exception.dart';
 /// You can get an instance by calling [FirebaseFirestore.instance].
 class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// Create an instance of [MethodChannelFirebaseFirestore] with optional [FirebaseApp]
-  MethodChannelFirebaseFirestore({FirebaseApp app}) : super(appInstance: app);
+  MethodChannelFirebaseFirestore({FirebaseApp /*!*/ app}) : super(appInstance: app);
 
   /// The [Settings] for this [MethodChannelFirebaseFirestore] instance.
   Settings _settings = Settings();
@@ -93,7 +93,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// Gets a [FirebaseFirestorePlatform] with specific arguments such as a different
   /// [FirebaseApp].
   @override
-  FirebaseFirestorePlatform delegateFor({FirebaseApp app}) {
+  FirebaseFirestorePlatform delegateFor({/*required*/ FirebaseApp app}) {
     return MethodChannelFirebaseFirestore(app: app);
   }
 
@@ -114,7 +114,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Future<void> enablePersistence(
-      [PersistenceSettings persistenceSettings]) async {
+      [PersistenceSettings /*?*/ persistenceSettings]) async {
     throw UnimplementedError(
         'enablePersistence() is only available for Web. Use [Settings.persistenceEnabled] for other platforms.');
   }
@@ -189,7 +189,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T> runTransaction<T>(
+  Future<T /*?*/ > runTransaction<T>(
     TransactionHandler<T> transactionHandler, {
     Duration timeout = const Duration(seconds: 30),
   }) async {
@@ -206,7 +206,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     Completer<T> completer = Completer();
 
     // Will be set by the `transactionHandler`.
-    dynamic result;
+    T /*?*/ result;
 
     final eventChannel = EventChannel(
       'plugins.flutter.io/firebase_firestore/transaction/$transactionId',

@@ -13,7 +13,7 @@ import '../mock.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  MethodChannelListResult testListResult;
+  /*late*/ MethodChannelListResult testListResult;
 
   group('$MethodChannelListResult', () {
     setUpAll(() async {

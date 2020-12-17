@@ -108,8 +108,8 @@ class OAuthCredential extends AuthCredential {
   final String rawNonce;
 
   @override
-  Map<String, dynamic> asMap() {
-    return <String, dynamic>{
+  Map<String, String /*?*/ > asMap() {
+    return <String, String /*?*/ >{
       'providerId': providerId,
       'signInMethod': signInMethod,
       'idToken': idToken,

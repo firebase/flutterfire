@@ -12,13 +12,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   // Cached and lazily loaded instance of [FirebaseAuthPlatform] to avoid
   // creating a [MethodChannelFirebaseAuth] when not needed or creating an
   // instance with the default app before a user specifies an app.
-  FirebaseAuthPlatform _delegatePackingProperty;
+  FirebaseAuthPlatform /*?*/ _delegatePackingProperty;
 
   /// Returns the underlying delegate implementation.
   ///
   /// If called and no [_delegatePackingProperty] exists, it will first be
   /// created and assigned before returning the delegate.
-  FirebaseAuthPlatform get _delegate {
+  FirebaseAuthPlatform /*!*/ get _delegate {
     if (_delegatePackingProperty == null) {
       _delegatePackingProperty = FirebaseAuthPlatform.instanceFor(
           app: app, pluginConstants: pluginConstants);
@@ -29,11 +29,11 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// The [FirebaseApp] for this current Auth instance.
   FirebaseApp app;
 
-  FirebaseAuth._({this.app})
+  FirebaseAuth._({/*required*/ this.app})
       : super(app.name, 'plugins.flutter.io/firebase_auth');
 
   /// Returns an instance using the default [FirebaseApp].
-  static FirebaseAuth get instance {
+  static FirebaseAuth /*!*/ get instance {
     FirebaseApp defaultAppInstance = Firebase.app();
 
     if (!_firebaseAuthInstances.containsKey(defaultAppInstance.name)) {
@@ -46,7 +46,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  factory FirebaseAuth.instanceFor({FirebaseApp app}) {
+  factory FirebaseAuth.instanceFor({/*required*/ FirebaseApp app}) {
     assert(app != null);
 
     if (!_firebaseAuthInstances.containsKey(app.name)) {
@@ -66,7 +66,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
 
   @Deprecated('Deprecated in favor of `authStateChanges`')
   // ignore: public_member_api_docs
-  Stream<User> get onAuthStateChanged {
+  Stream<User /*?*/ > get onAuthStateChanged {
     return authStateChanges();
   }
 
@@ -76,7 +76,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// You should not use this getter to determine the users current state,
   /// instead use [authStateChanges], [idTokenChanges] or [userChanges] to
   /// subscribe to updates.
-  User get currentUser {
+  User /*?*/ get currentUser {
     if (_delegate.currentUser != null) {
       return User._(this, _delegate.currentUser);
     }
@@ -87,7 +87,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// The current Auth instance's language code.
   ///
   /// See [setLanguageCode] to update the language code.
-  String get languageCode {
+  String /*?*/ get languageCode {
     if (_delegate.languageCode != null) {
       return _delegate.languageCode;
     }
@@ -157,7 +157,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///    issued and when this method was called.
   /// - **weak-password**:
   ///  - Thrown if the new password is not strong enough.
-  Future<void> confirmPasswordReset({String code, String newPassword}) async {
+  Future<void> confirmPasswordReset(
+      {/*required*/ String code, /*required*/ String newPassword}) async {
     assert(code != null);
     assert(newPassword != null);
     await _delegate.confirmPasswordReset(code, newPassword);
@@ -221,7 +222,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
 
   /// Internal helper which pipes internal [Stream] events onto
   /// a users own Stream.
-  Stream<User> _pipeStreamChanges(Stream<UserPlatform> stream) {
+  Stream<User> _pipeStreamChanges(Stream<UserPlatform /*?*/ > stream) {
     Stream<User> streamSync = stream.map((delegateUser) {
       if (delegateUser == null) {
         return null;
@@ -266,6 +267,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// user of your app.
   Future<void> sendPasswordResetEmail({
     @required String email,
+    // TODO(ehesp): Should be nullable after platform migration
     ActionCodeSettings actionCodeSettings,
   }) {
     assert(email != null);
@@ -342,7 +344,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///   settings > Capabilities). To learn more, visit the
   ///   [Apple documentation](https://developer.apple.com/documentation/security/keychain_services/keychain_items/sharing_access_to_keychain_items_among_a_collection_of_apps).
   Future<void> setSettings(
-      {bool appVerificationDisabledForTesting, String userAccessGroup}) {
+      {bool /*?*/ appVerificationDisabledForTesting,
+      String /*?*/ userAccessGroup}) {
     return _delegate.setSettings(
       appVerificationDisabledForTesting: appVerificationDisabledForTesting,
       userAccessGroup: userAccessGroup,
@@ -525,7 +528,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///
   /// This method is only available on web based platforms.
   Future<ConfirmationResult> signInWithPhoneNumber(String phoneNumber,
-      [RecaptchaVerifier verifier]) async {
+      [RecaptchaVerifier /*?*/ verifier]) async {
     assert(phoneNumber != null);
     assert(phoneNumber.isNotEmpty);
     verifier ??= RecaptchaVerifier();
@@ -630,9 +633,9 @@ class FirebaseAuth extends FirebasePluginPlatform {
     @required PhoneVerificationFailed verificationFailed,
     @required PhoneCodeSent codeSent,
     @required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
-    @visibleForTesting String autoRetrievedSmsCodeForTesting,
+    @visibleForTesting String /*?*/ autoRetrievedSmsCodeForTesting,
     Duration timeout = const Duration(seconds: 30),
-    int forceResendingToken,
+    int /*?*/ forceResendingToken,
   }) {
     assert(phoneNumber != null);
     assert(timeout != null);
@@ -644,11 +647,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
     return _delegate.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       timeout: timeout,
+      // TODO(ehesp): should be nullable after platform migration
       forceResendingToken: forceResendingToken,
       verificationCompleted: verificationCompleted,
       verificationFailed: verificationFailed,
       codeSent: codeSent,
       codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+      // TODO(ehesp): should be nullable after platform migration
       // ignore: invalid_use_of_visible_for_testing_member
       autoRetrievedSmsCodeForTesting: autoRetrievedSmsCodeForTesting,
     );

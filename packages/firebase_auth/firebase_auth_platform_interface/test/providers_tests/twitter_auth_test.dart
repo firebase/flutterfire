@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  TestTwitterAuthProvider twitterAuthProvider;
+  /*late*/ TestTwitterAuthProvider twitterAuthProvider;
   final String kMockProviderId = 'twitter.com';
   setUpAll(() {
     twitterAuthProvider = TestTwitterAuthProvider();

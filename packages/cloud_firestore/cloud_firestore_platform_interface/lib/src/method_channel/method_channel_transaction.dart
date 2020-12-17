@@ -14,9 +14,9 @@ import 'method_channel_firestore.dart';
 /// communicate with Firebase plugins.
 class MethodChannelTransaction extends TransactionPlatform {
   /// [FirebaseApp] name used for this [MethodChannelTransaction]
-  final String appName;
+  final String /*!*/ appName;
   String _transactionId;
-  FirebaseFirestorePlatform _firestore;
+  FirebaseFirestorePlatform /*!*/ _firestore;
 
   /// Constructor.
   MethodChannelTransaction(String transactionId, this.appName)
