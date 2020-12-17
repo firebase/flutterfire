@@ -12,7 +12,7 @@ import '../mock.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  TestTaskPlatform taskPlatform;
+  /*late*/ TestTaskPlatform taskPlatform;
 
   group('$TaskPlatform()', () {
     setUpAll(() async {

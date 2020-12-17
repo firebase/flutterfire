@@ -12,7 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runWriteBatchTests() {
   group('$WriteBatch', () {
-    FirebaseFirestore firestore;
+    /*late*/ FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;

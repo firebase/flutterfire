@@ -10,7 +10,7 @@ void main() {
   String kMockVerificationId = 'test-id';
 
   group('$ConfirmationResultPlatform()', () {
-    TestConfirmationResultPlatform confirmationResultPlatform;
+    /*late*/ TestConfirmationResultPlatform confirmationResultPlatform;
 
     setUpAll(() async {
       confirmationResultPlatform =

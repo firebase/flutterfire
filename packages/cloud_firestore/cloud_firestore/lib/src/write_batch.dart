@@ -38,19 +38,22 @@ class WriteBatch {
   /// If [SetOptions] are provided, the data will be merged into an existing
   /// document instead of overwriting.
   void set(DocumentReference document, Map<String, dynamic> data,
-      [SetOptions options]) {
+      [SetOptions /*?*/ options]) {
     assert(document != null);
     assert(data != null);
     assert(document.firestore == _firestore,
         "the document provided is from a different Firestore instance");
-    return _delegate.set(document.path,
-        _CodecUtility.replaceValueWithDelegatesInMap(data), options);
+    return _delegate.set(
+        document.path,
+        // TODO(ehesp): `options` should be nullable after platform interface null safe is available
+        _CodecUtility.replaceValueWithDelegatesInMap(data),
+        options);
   }
 
   @Deprecated("Deprecated in favor of `.set`")
   // ignore: public_member_api_docs
   void setData(DocumentReference document, Map<String, dynamic> data,
-      [SetOptions options]) {
+      [SetOptions /*?*/ options]) {
     return set(document, data, options);
   }
 

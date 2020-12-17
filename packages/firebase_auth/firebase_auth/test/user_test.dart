@@ -21,7 +21,7 @@ MockFirebaseAuth mockAuthPlatform = MockFirebaseAuth();
 void main() {
   setupFirebaseAuthMocks();
 
-  FirebaseAuth auth;
+  /*late*/ FirebaseAuth auth;
 
   const Map<String, dynamic> kMockIdTokenResult = <String, dynamic>{
     'token': '12345',

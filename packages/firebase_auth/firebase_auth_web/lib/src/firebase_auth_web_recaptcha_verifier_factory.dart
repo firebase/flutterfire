@@ -61,7 +61,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
 
     if (container == null || container.isEmpty) {
       parameters['size'] = 'invisible';
-      Element el = window.document.getElementById(_kInvisibleElementId);
+      Element /*?*/ el = window.document.getElementById(_kInvisibleElementId);
 
       // If an existing element exists, something may have already been rendered.
       if (el != null) {
@@ -105,7 +105,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   }
 
   @override
-  auth_interop.ApplicationVerifier get delegate {
+  auth_interop.ApplicationVerifier /*!*/ get delegate {
     return _delegate;
   }
 

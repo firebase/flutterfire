@@ -48,7 +48,7 @@ class RemoteNotification {
       _apple = AppleNotification(
           badge: map['apple']['badge'],
           subtitle: map['apple']['subtitle'],
-          subtitleLocArgs: map['apple']['subtitleLocArgs'] ?? [],
+          subtitleLocArgs: _toList(map['apple']['subtitleLocArgs']),
           subtitleLocKey: map['apple']['subtitleLocKey'],
           imageUrl: map['apple']['imageUrl'],
           sound: map['apple']['sound'] == null
@@ -61,10 +61,10 @@ class RemoteNotification {
 
     return RemoteNotification(
       title: map['title'],
-      titleLocArgs: map['titleLocArgs'] ?? [],
+      titleLocArgs: _toList(map['titleLocArgs']),
       titleLocKey: map['titleLocKey'],
       body: map['body'],
-      bodyLocArgs: map['bodyLocArgs'] ?? [],
+      bodyLocArgs: _toList(map['bodyLocArgs']),
       bodyLocKey: map['bodyLocKey'],
       android: _android,
       apple: _apple,
@@ -204,4 +204,13 @@ class AppleNotificationSound {
   ///
   /// This value is a number between 0.0 & 1.0.
   final num volume;
+}
+
+// Utility to correctly cast lists
+List<String> _toList(dynamic value) {
+  if (value == null) {
+    return <String>[];
+  }
+
+  return List<String>.from(value);
 }

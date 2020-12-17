@@ -5,6 +5,8 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 part of firebase_core_platform_interface;
 
+// TODO(ehesp): Remove Deprecations with null safety
+
 /// The options used to configure a Firebase app.
 ///
 /// ```dart
@@ -102,20 +104,20 @@ class FirebaseOptions {
   /// An API key used for authenticating requests from your app, for example
   /// "AIzaSyDdVgKwhZl0sTTTLZ7iTmt1r3N2cJLnaDk", used to identify your app to
   /// Google servers.
-  final String apiKey;
+  final String /*!*/ apiKey;
 
   /// The Google App ID that is used to uniquely identify an instance of an app.
   ///
   /// This property is required cannot be `null`.
-  final String appId;
+  final String /*!*/ appId;
 
   /// The unique sender ID value used in messaging to identify your app.
   ///
   /// This property is required cannot be `null`.
-  final String messagingSenderId;
+  final String /*!*/ messagingSenderId;
 
   /// The Project ID from the Firebase console, for example "my-awesome-app".
-  final String projectId;
+  final String /*!*/ projectId;
 
   /// The auth domain used to handle redirects from OAuth provides on web
   /// platforms, for example "my-awesome-app.firebaseapp.com".

@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  TestSAMLAuthProvider samlAuthProvider;
+  /*late*/ TestSAMLAuthProvider samlAuthProvider;
   final String kMockProviderId = 'saml';
   setUpAll(() {
     samlAuthProvider = TestSAMLAuthProvider(kMockProviderId);

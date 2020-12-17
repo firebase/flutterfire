@@ -13,7 +13,7 @@ class MethodChannelTaskSnapshot extends TaskSnapshotPlatform {
       : super(state, _data);
 
   /// The [FirebaseStoragePlatform] used to create the task.
-  final FirebaseStoragePlatform storage;
+  final FirebaseStoragePlatform /*!*/ storage;
 
   final Map<String, dynamic> _data;
 

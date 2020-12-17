@@ -20,7 +20,7 @@ MockFirebaseAuth mockAuthPlatform = MockFirebaseAuth();
 void main() {
   setupFirebaseAuthMocks();
 
-  FirebaseAuth auth;
+  /*late*/ FirebaseAuth auth;
 
   const String kMockActionCode = '12345';
   const String kMockEmail = 'test@example.com';
@@ -63,12 +63,12 @@ void main() {
     ],
   };
 
-  MockUserPlatform mockUserPlatform;
-  MockUserCredentialPlatform mockUserCredPlatform;
-  MockConfirmationResultPlatform mockConfirmationResultPlatform;
-  MockRecaptchaVerifier mockVerifier;
-  AdditionalUserInfo mockAdditionalUserInfo;
-  EmailAuthCredential mockCredential;
+  /*late*/ MockUserPlatform mockUserPlatform;
+  /*late*/ MockUserCredentialPlatform mockUserCredPlatform;
+  /*late*/ MockConfirmationResultPlatform mockConfirmationResultPlatform;
+  /*late*/ MockRecaptchaVerifier mockVerifier;
+  /*late*/ AdditionalUserInfo mockAdditionalUserInfo;
+  /*late*/ EmailAuthCredential mockCredential;
 
   group("$FirebaseAuth", () {
     Map<String, dynamic> user;

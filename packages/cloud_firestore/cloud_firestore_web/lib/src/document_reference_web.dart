@@ -26,7 +26,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         super(firestore, path);
 
   @override
-  Future<void> set(Map<String, dynamic> data, [SetOptions options]) async {
+  Future<void> set(Map<String, dynamic> data,
+      [SetOptions /*?*/ options]) async {
     try {
       await _delegate.set(
         CodecUtility.encodeMapData(data),
@@ -47,7 +48,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   }
 
   @override
-  Future<DocumentSnapshotPlatform> get([GetOptions options]) async {
+  Future<DocumentSnapshotPlatform> get([GetOptions /*?*/ options]) async {
     try {
       firestore_interop.DocumentSnapshot documentSnapshot =
           await _delegate.get(convertGetOptions(options));

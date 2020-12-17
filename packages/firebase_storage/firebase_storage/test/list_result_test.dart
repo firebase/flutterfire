@@ -16,8 +16,8 @@ void main() {
 
   const String kNextPageToken = 'next-page-token';
 
-  FirebaseStorage storage;
-  ListResult listResult;
+  /*late*/ FirebaseStorage storage;
+  /*late*/ ListResult listResult;
   MockReferencePlatform mockReference = MockReferencePlatform();
   MockListResultPlatform mockList = MockListResultPlatform();
 

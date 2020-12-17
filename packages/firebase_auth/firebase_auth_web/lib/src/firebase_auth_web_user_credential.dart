@@ -15,8 +15,10 @@ class UserCredentialWeb extends UserCredentialPlatform {
       FirebaseAuthPlatform auth, auth_interop.UserCredential webUserCredential)
       : super(
           auth: auth,
+          // TODO(ehesp): confirm after platform migration this is nullable
           additionalUserInfo: convertWebAdditionalUserInfo(
               webUserCredential.additionalUserInfo),
+          // TODO(ehesp): confirm after platform migration this is nullable
           credential: convertWebOAuthCredential(webUserCredential.credential),
           user: UserWeb(auth, webUserCredential.user),
         );

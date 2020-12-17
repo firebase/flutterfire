@@ -32,7 +32,8 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   App get app => App.getInstance(jsObject.app);
 
   /// Creates a new Firestore from a [jsObject].
-  static Firestore getInstance(firestore_interop.FirestoreJsImpl jsObject) {
+  static Firestore getInstance(
+      firestore_interop.FirestoreJsImpl /*?*/ jsObject) {
     if (jsObject == null) {
       return null;
     }

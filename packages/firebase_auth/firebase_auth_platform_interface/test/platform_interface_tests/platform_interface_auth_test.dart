@@ -12,10 +12,10 @@ import '../mock.dart';
 void main() {
   setupFirebaseAuthMocks();
 
-  TestFirebaseAuthPlatform firebaseAuthPlatform;
+  /*late*/ TestFirebaseAuthPlatform firebaseAuthPlatform;
 
-  FirebaseApp app;
-  FirebaseApp secondaryApp;
+  /*late*/ FirebaseApp app;
+  /*late*/ FirebaseApp secondaryApp;
   group('$FirebaseAuthPlatform()', () {
     setUpAll(() async {
       app = await Firebase.initializeApp();

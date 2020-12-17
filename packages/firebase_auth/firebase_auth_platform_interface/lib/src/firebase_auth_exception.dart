@@ -13,7 +13,7 @@ class FirebaseAuthException extends FirebaseException implements Exception {
   @protected
   FirebaseAuthException(
       {@required this.message,
-      this.code,
+      @required this.code,
       this.email,
       this.credential,
       this.phoneNumber,

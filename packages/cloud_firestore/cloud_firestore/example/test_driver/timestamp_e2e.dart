@@ -11,7 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runTimestampTests() {
   group('$Timestamp', () {
-    FirebaseFirestore firestore;
+    /*late*/ FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
