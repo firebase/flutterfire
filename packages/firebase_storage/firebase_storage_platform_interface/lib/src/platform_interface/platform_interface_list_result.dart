@@ -32,7 +32,7 @@ abstract class ListResultPlatform extends PlatformInterface {
   }
 
   /// If set, there might be more results for this list. Use this token to resume the list.
-  final String nextPageToken;
+  final String /*?*/ nextPageToken;
 
   /// References to prefixes (sub-folders). You can call [list] on them to get its contents.
   ///

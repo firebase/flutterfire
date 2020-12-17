@@ -11,7 +11,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
   // instance with the default app before a user specifies an app.
   FirebaseStoragePlatform _delegatePackingProperty;
 
-  FirebaseStoragePlatform get _delegate {
+  FirebaseStoragePlatform /*!*/ get _delegate {
     if (_delegatePackingProperty == null) {
       _delegatePackingProperty = FirebaseStoragePlatform.instanceFor(
         app: app,
@@ -25,7 +25,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
   FirebaseApp app;
 
   /// The storage bucket of this instance.
-  String bucket;
+  String /*!*/ bucket;
 
   /// The maximum time to retry operations other than uploads or downloads in milliseconds.
   Duration get maxOperationRetryTime {
@@ -58,7 +58,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
   ///
   /// If [app] is not provided, the default Firebase app will be used.
   /// If [bucket] is not provided, the default storage bucket will be used.
-  static FirebaseStorage instanceFor({
+  static FirebaseStorage /*!*/ instanceFor({
     FirebaseApp app,
     String bucket,
   }) {
@@ -68,6 +68,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
     bucket ??= app.options.storageBucket;
 
     // A bucket must exist at this point
+    // TODO(ehesp): Check whether `app.options.storageBucket` can be nullable post migration
     if (bucket == null) {
       if (app.name == defaultFirebaseAppName) {
         _throwNoBucketError(
@@ -108,7 +109,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
   ///
   /// If the [path] is empty, the reference will point to the root of the
   /// storage bucket.
-  Reference ref([String path]) {
+  Reference ref([String /*?*/ path]) {
     path ??= '/';
     path = path.isEmpty ? '/' : path;
     return Reference._(this, _delegate.ref(path));

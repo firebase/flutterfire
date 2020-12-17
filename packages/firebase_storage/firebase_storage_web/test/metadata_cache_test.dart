@@ -21,7 +21,7 @@ void main() {
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  SettableMetadataCache cache;
+  /*late*/ SettableMetadataCache cache;
 
   setUp(() {
     cache = SettableMetadataCache();
