@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-abstract class FirebaseRemoteConfigPlatform extends PlatformInterface with ChangeNotifier {
+abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   FirebaseRemoteConfigPlatform({this.app}) : super(token: _token);
@@ -48,7 +48,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface with Chang
     throw UnimplementedError('setInitialValues() is not implemented');
   }
 
-  Future<void> activate() {
+  Future<bool> activate() {
     throw UnimplementedError('activate() is not implemented');
   }
 

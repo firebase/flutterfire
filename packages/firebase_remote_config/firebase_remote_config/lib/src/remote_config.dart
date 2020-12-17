@@ -8,7 +8,7 @@ part of firebase_remote_config;
 ///
 /// You can get an instance by calling [RemoteConfig.instance]. Note
 /// [RemoteConfig.instance] is async.
-class RemoteConfig extends FirebasePluginPlatform {
+class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
 
   static final Map<String, RemoteConfig> _firebaseRemoteConfigInstances = {};
 
@@ -43,8 +43,12 @@ class RemoteConfig extends FirebasePluginPlatform {
     return newInstance;
   }
 
-  Future<void> activate() {
-    _delegate.activate();
+  Future<bool> activate() async {
+    bool configChanged = await _delegate.activate();
+    if (configChanged) {
+      notifyListeners();
+    }
+    return configChanged;
   }
 
   Future<void> insureInitialized() {
@@ -55,8 +59,12 @@ class RemoteConfig extends FirebasePluginPlatform {
     return _delegate.fetch();
   }
 
-  Future<bool> fetchAndActivate() {
-    return _delegate.fetchAndActivate();
+  Future<bool> fetchAndActivate() async {
+    bool configChanged = await _delegate.fetchAndActivate();
+    if (configChanged) {
+      notifyListeners();
+    }
+    return configChanged;
   }
 
   Map<String, RemoteConfigValue> getAll() {

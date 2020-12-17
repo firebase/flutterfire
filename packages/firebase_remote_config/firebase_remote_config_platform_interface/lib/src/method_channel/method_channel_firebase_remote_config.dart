@@ -49,10 +49,17 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   }
 
   @override
-  Future<void> activate() async {
-    Map<dynamic, dynamic> parameters = await channel.invokeMapMethod<String, dynamic>('RemoteConfig#activate');
+  Future<bool> activate() async {
+    bool configChanged = await channel.invokeMethod<bool>('RemoteConfig#activate');
+    if (configChanged) {
+      await _updateActiveParameters();
+    }
+    return configChanged;
+  }
+
+  Future<void> _updateActiveParameters() async {
+    Map<dynamic, dynamic> parameters = await channel.invokeMapMethod<String, dynamic>('RemoteConfig#getAll');
     _activeParameters = Map<String, RemoteConfigValue>.from(parameters);
-    notifyListeners();
   }
 
   @override
@@ -64,9 +71,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   Future<bool> fetchAndActivate() async {
     bool configChanged = await channel.invokeMethod<bool>('RemoteConfig#fetchAndActivate');
     if (configChanged) {
-      Map<dynamic, dynamic> parameters = await channel.invokeMapMethod<String, dynamic>('RemoteConfig#getAll');
-      _activeParameters = Map<String, RemoteConfigValue>.from(parameters);
-      notifyListeners();
+      await _updateActiveParameters();
     }
     return configChanged;
   }
