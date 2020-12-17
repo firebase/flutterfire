@@ -14,11 +14,11 @@ import 'sample.dart' as data;
 
 void main() {
   setupFirebaseFunctionsMocks();
-  FirebaseApp app;
+  /*late*/ FirebaseApp app;
 
-  FirebaseFunctions functions;
-  HttpsCallable kHttpsCallable;
-
+  /*late*/ FirebaseFunctions functions;
+  /*late*/ HttpsCallable kHttpsCallable;
+  
   group('$HttpsCallable', () {
     setUpAll(() async {
       app = await Firebase.initializeApp();

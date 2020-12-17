@@ -13,10 +13,10 @@ import 'package:mockito/mockito.dart';
 
 void main() {
   setupFirebaseFunctionsMocks();
-  FirebaseFunctions functions;
-  FirebaseFunctions functionsSecondary;
-  FirebaseApp app;
-  FirebaseApp secondaryApp;
+  /*late*/ FirebaseFunctions functions;
+  /*late*/ FirebaseFunctions functionsSecondary;
+  /*late*/ FirebaseApp app;
+  /*late*/ FirebaseApp secondaryApp;
 
   group('$FirebaseFunctions', () {
     setUpAll(() async {

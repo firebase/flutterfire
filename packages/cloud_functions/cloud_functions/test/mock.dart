@@ -15,7 +15,7 @@ typedef Callback(MethodCall call);
 final String kTestString = 'Hello World';
 final String kBucket = 'gs://fake-storage-bucket-url.com';
 final String kSecondaryBucket = 'gs://fake-storage-bucket-url-2.com';
-MockFirebaseFunctionsPlatform kMockFirebaseFunctionsPlatform;
+/*late*/ MockFirebaseFunctionsPlatform kMockFirebaseFunctionsPlatform;
 final MockHttpsCallablePlatform kMockHttpsCallablePlatform =
     MockHttpsCallablePlatform();
 
