@@ -2,20 +2,18 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseException] if
 /// it was intentionally caught on the native platform.
-FutureOr<Map<String, dynamic>> convertPlatformException(Object exception,
-    [StackTrace /*?*/ stackTrace]) async {
+Exception convertPlatformException(Object exception,
+    [StackTrace /*?*/ stackTrace]) {
   if (exception is! Exception || exception is! PlatformException) {
     throw exception;
   }
 
-  throw platformExceptionToFirebaseException(
+  return platformExceptionToFirebaseException(
       exception as PlatformException, stackTrace);
 }
 
