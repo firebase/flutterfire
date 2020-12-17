@@ -92,7 +92,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       }
     }).listen((UserWeb webUser) {
       currentUser = webUser;
-      
+
       if (_initialAuthState) {
         _initialAuthState = false;
       } else {
@@ -141,7 +141,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   UserPlatform /*?*/ get currentUser {
     return _currentUser;
-    }
+  }
 
   @override
   set currentUser(UserPlatform userPlatform) {
