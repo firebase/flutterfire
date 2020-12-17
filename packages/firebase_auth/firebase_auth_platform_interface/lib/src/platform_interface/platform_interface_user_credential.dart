@@ -12,7 +12,10 @@ import '../../firebase_auth_platform_interface.dart';
 abstract class UserCredentialPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
   UserCredentialPlatform(
-      {this.auth, this.additionalUserInfo, this.credential, this.user})
+      {/*required*/ this.auth,
+      this.additionalUserInfo,
+      this.credential,
+      this.user})
       : super(token: _token);
 
   static final Object _token = Object();
@@ -25,7 +28,7 @@ abstract class UserCredentialPlatform extends PlatformInterface {
   }
 
   /// The current FirebaseAuth instance.
-  final FirebaseAuthPlatform auth;
+  final FirebaseAuthPlatform /*!*/ auth;
 
   /// Returns additional information about the user, such as whether they are a
   /// newly created one.
