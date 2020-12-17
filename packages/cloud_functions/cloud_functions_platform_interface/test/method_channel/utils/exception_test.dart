@@ -17,7 +17,7 @@ void main() {
       AssertionError assertionError = AssertionError();
 
       try {
-        await convertPlatformException(assertionError);
+        throw convertPlatformException(assertionError);
       } on FirebaseFunctionsException catch (_) {
         fail('should have thrown the original exception');
       } on AssertionError catch (_) {
@@ -25,8 +25,6 @@ void main() {
       } catch (e) {
         fail('should have thrown an Exception and not a ${e.runtimeType}');
       }
-
-      fail('should have thrown an exception');
     });
 
     test('should catch a [PlatformException] and throw a [FirebaseException]',
@@ -36,15 +34,13 @@ void main() {
           message: testMessage,
           details: {'additionalData': testAdditionalData});
       try {
-        await convertPlatformException(platformException);
+        throw convertPlatformException(platformException);
       } on FirebaseFunctionsException catch (_) {
         return;
       } catch (e) {
         fail(
             'should have thrown an FirebaseFunctionsException and not a ${e.runtimeType}');
       }
-
-      fail('should have thrown an exception');
     });
   });
 
