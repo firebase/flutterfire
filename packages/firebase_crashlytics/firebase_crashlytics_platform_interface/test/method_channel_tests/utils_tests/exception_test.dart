@@ -13,7 +13,7 @@ void main() {
       AssertionError assertionError = AssertionError();
 
       try {
-        await catchPlatformException(assertionError);
+        await convertPlatformException(assertionError);
       } on FirebaseException catch (_) {
         fail('should have thrown the original exception');
       } catch (_) {
@@ -26,7 +26,7 @@ void main() {
         () async {
       PlatformException platformException = PlatformException(code: 'UNKNOWN');
       try {
-        await catchPlatformException(platformException);
+        await convertPlatformException(platformException);
       } on FirebaseException catch (_) {
         return;
       } catch (_) {
