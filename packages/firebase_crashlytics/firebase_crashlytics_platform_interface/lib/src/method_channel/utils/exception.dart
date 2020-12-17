@@ -2,19 +2,19 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseException] if
 /// it was intentionally caught on the native platform.
-FutureOr<Map<String, dynamic>> catchPlatformException(Object exception) async {
+Exception convertPlatformException(Object exception,
+    [StackTrace /*?*/ stackTrace]) {
   if (exception is! Exception || exception is! PlatformException) {
     throw exception;
   }
 
-  throw platformExceptionToFirebaseException(exception as PlatformException);
+  return platformExceptionToFirebaseException(
+      exception as PlatformException, stackTrace);
 }
 
 /// Converts a [PlatformException] into a [FirebaseException].
@@ -23,13 +23,14 @@ FutureOr<Map<String, dynamic>> catchPlatformException(Object exception) async {
 /// `details` of the exception exist. Firebase returns specific codes and messages
 /// which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseException(
-    PlatformException platformException) {
-  Map<String, String> details = platformException.details != null
+    PlatformException platformException,
+    [StackTrace /*?*/ stackTrace]) {
+  Map<String, String> /*?*/ details = platformException.details != null
       ? Map<String, String>.from(platformException.details)
       : null;
 
   String code = 'unknown';
-  String message = platformException.message;
+  String message = platformException.message ?? '';
 
   if (details != null) {
     code = details['code'] ?? code;
@@ -37,5 +38,8 @@ FirebaseException platformExceptionToFirebaseException(
   }
 
   return FirebaseException(
-      plugin: 'firebase_crashlytics', code: code, message: message);
+      plugin: 'firebase_crashlytics',
+      code: code,
+      message: message,
+      stackTrace: stackTrace);
 }

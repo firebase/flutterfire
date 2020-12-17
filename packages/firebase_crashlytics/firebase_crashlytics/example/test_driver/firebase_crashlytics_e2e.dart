@@ -12,7 +12,7 @@ void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
   group('$FirebaseCrashlytics', () {
-    FirebaseCrashlytics crashlytics;
+    /*late*/ FirebaseCrashlytics crashlytics;
 
     setUpAll(() async {
       await Firebase.initializeApp();

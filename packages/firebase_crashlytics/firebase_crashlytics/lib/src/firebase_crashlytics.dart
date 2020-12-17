@@ -8,7 +8,7 @@ part of firebase_crashlytics;
 /// You can get an instance by calling [FirebaseCrashlytics.instance].
 class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Cached instance of [FirebaseCrashlytics];
-  static FirebaseCrashlytics _instance;
+  static /*late*/ FirebaseCrashlytics _instance;
 
   // Cached and lazily loaded instance of [FirebaseCrashlyticsPlatform] to avoid
   // creating a [MethodChannelFirebaseCrashlytics] when not needed or creating an
@@ -93,7 +93,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   Future<void> recordError(dynamic exception, StackTrace stack,
       {dynamic reason,
       Iterable<DiagnosticsNode> information,
-      bool printDetails}) async {
+      bool /*?*/ printDetails}) async {
     // If [null] is provided, use the debug flag instead.
     printDetails ??= kDebugMode;
 
