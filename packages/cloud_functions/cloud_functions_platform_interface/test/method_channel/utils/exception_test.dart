@@ -17,7 +17,7 @@ void main() {
       AssertionError assertionError = AssertionError();
 
       try {
-        await catchPlatformException(assertionError);
+        await convertPlatformException(assertionError);
       } on FirebaseFunctionsException catch (_) {
         fail('should have thrown the original exception');
       } on AssertionError catch (_) {
@@ -36,7 +36,7 @@ void main() {
           message: testMessage,
           details: {'additionalData': testAdditionalData});
       try {
-        await catchPlatformException(platformException);
+        await convertPlatformException(platformException);
       } on FirebaseFunctionsException catch (_) {
         return;
       } catch (e) {
