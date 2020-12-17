@@ -29,10 +29,11 @@ class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
 
   /// Creates a new [MethodChannelFirebaseFunctions] instance with an [app] and/or
   /// [region].
-  MethodChannelFirebaseFunctions({FirebaseApp/*!*/ app, String/*!*/ region})
+  MethodChannelFirebaseFunctions({FirebaseApp /*!*/ app, String /*!*/ region})
       : super(app, region);
 
-  FirebaseFunctionsPlatform delegateFor({FirebaseApp/*!*/ app, String/*!*/ region}) {
+  FirebaseFunctionsPlatform delegateFor(
+      {FirebaseApp /*!*/ app, String /*!*/ region}) {
     return MethodChannelFirebaseFunctions(app: app, region: region);
   }
 

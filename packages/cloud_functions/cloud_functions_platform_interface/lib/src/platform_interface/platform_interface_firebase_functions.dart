@@ -29,12 +29,12 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   static FirebaseFunctionsPlatform _instance;
 
   /// The [FirebaseApp] this instance was initialized with
-  FirebaseApp/*!*/ get app {
+  FirebaseApp /*!*/ get app {
     return _app;
   }
 
   /// The region for the HTTPS trigger, such as "us-central1".
-  String/*!*/ get region {
+  String /*!*/ get region {
     return _region;
   }
 

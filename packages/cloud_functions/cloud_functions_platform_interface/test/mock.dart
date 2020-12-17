@@ -14,7 +14,7 @@ typedef Callback(MethodCall call);
 int mockHandleId = 0;
 int get nextMockHandleId => mockHandleId++;
 
-setupFirebaseFunctionsMocks([Callback/*?*/ customHandlers]) {
+setupFirebaseFunctionsMocks([Callback /*?*/ customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {

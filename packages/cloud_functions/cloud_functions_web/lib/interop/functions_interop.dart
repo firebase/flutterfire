@@ -24,7 +24,7 @@ abstract class FunctionsAppJsImpl extends AppJsImpl {
 abstract class FunctionsJsImpl {
   external FunctionsAppJsImpl get app;
   external HttpsCallableJsImpl httpsCallable(String name,
-      [HttpsCallableOptions/*?*/ options]);
+      [HttpsCallableOptions /*?*/ options]);
   external void useFunctionsEmulator(String url);
 }
 

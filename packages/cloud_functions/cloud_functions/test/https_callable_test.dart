@@ -18,7 +18,7 @@ void main() {
 
   /*late*/ FirebaseFunctions functions;
   /*late*/ HttpsCallable kHttpsCallable;
-  
+
   group('$HttpsCallable', () {
     setUpAll(() async {
       app = await Firebase.initializeApp();

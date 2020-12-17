@@ -13,7 +13,7 @@ class FirebaseFunctions extends FirebasePluginPlatform {
   // instance with the default app before a user specifies an app.
   FirebaseFunctionsPlatform _delegatePackingProperty;
 
-  FirebaseFunctionsPlatform/*!*/ get _delegate {
+  FirebaseFunctionsPlatform /*!*/ get _delegate {
     if (_delegatePackingProperty == null) {
       _delegatePackingProperty =
           FirebaseFunctionsPlatform.instanceFor(app: app, region: _region);
@@ -24,7 +24,7 @@ class FirebaseFunctions extends FirebasePluginPlatform {
   /// The [FirebaseApp] for this current [FirebaseFunctions] instance.
   final FirebaseApp app;
 
-  FirebaseFunctions._({this.app, String/*?*/ region})
+  FirebaseFunctions._({this.app, String /*?*/ region})
       : _region = region ??= 'us-central1',
         super(app.name, 'plugins.flutter.io/firebase_functions');
 
@@ -38,7 +38,7 @@ class FirebaseFunctions extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp] & region.
-  static FirebaseFunctions/*!*/ instanceFor({FirebaseApp app, String region}) {
+  static FirebaseFunctions /*!*/ instanceFor({FirebaseApp app, String region}) {
     app ??= Firebase.app();
     region ??= 'us-central1';
     String cachedKey = '${app.name}_$region';
@@ -66,7 +66,8 @@ class FirebaseFunctions extends FirebasePluginPlatform {
   String /*?*/ _origin;
 
   /// A reference to the Callable HTTPS trigger with the given name.
-  HttpsCallable httpsCallable(String name, {HttpsCallableOptions/*?*/ options}) {
+  HttpsCallable httpsCallable(String name,
+      {HttpsCallableOptions /*?*/ options}) {
     assert(name != null);
     assert(name.isNotEmpty);
     options ??= HttpsCallableOptions();
