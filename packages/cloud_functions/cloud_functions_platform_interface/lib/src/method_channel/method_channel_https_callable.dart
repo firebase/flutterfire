@@ -12,8 +12,8 @@ import 'utils/exception.dart';
 /// Method Channel delegate for [HttpsCallablePlatform].
 class MethodChannelHttpsCallable extends HttpsCallablePlatform {
   /// Creates a new [MethodChannelHttpsCallable] instance.
-  MethodChannelHttpsCallable(FirebaseFunctionsPlatform functions, String origin,
-      String name, HttpsCallableOptions options)
+  MethodChannelHttpsCallable(FirebaseFunctionsPlatform/*!*/ functions, String origin,
+      String name, HttpsCallableOptions/*!*/ options)
       : super(functions, origin, name, options);
 
   @override
@@ -25,7 +25,7 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
         'functionName': name,
         'origin': origin,
         'region': functions.region,
-        'timeout': timeout?.inMilliseconds,
+        'timeout': timeout.inMilliseconds,
         'parameters': parameters,
       });
     } catch (e, s) {

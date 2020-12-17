@@ -9,5 +9,5 @@ class HttpsCallableOptions {
   HttpsCallableOptions({this.timeout = const Duration(seconds: 60)});
 
   /// Returns the timeout for this instance
-  Duration timeout;
+  Duration/*!*/ timeout;
 }

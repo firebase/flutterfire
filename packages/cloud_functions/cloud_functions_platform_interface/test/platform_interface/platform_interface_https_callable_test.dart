@@ -12,9 +12,9 @@ import '../mock.dart';
 void main() {
   setupFirebaseFunctionsMocks();
 
-  TestFirebaseFunctionsPlatform firebaseFunctionsPlatform;
-  TestHttpsCallablePlatform httpsCallablePlatform;
-  FirebaseApp app;
+  /*late*/ TestFirebaseFunctionsPlatform firebaseFunctionsPlatform;
+  /*late*/ TestHttpsCallablePlatform httpsCallablePlatform;
+  /*late*/ FirebaseApp app;
 
   group('$HttpsCallablePlatform()', () {
     setUpAll(() async {

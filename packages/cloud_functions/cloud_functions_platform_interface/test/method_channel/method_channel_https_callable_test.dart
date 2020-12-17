@@ -14,8 +14,8 @@ import '../mock.dart';
 void main() {
   setupFirebaseFunctionsMocks();
 
-  MethodChannelFirebaseFunctions functions;
-  MethodChannelHttpsCallable httpsCallable;
+  /*late*/ MethodChannelFirebaseFunctions functions;
+  /*late*/ MethodChannelHttpsCallable httpsCallable;
   final List<MethodCall> logger = <MethodCall>[];
 
   // mock props

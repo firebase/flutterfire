@@ -8,7 +8,8 @@ import 'package:flutter/services.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseFunctionsException]
 /// if it was intentionally caught on the native platform.
-Exception convertPlatformException(Object exception, [StackTrace stackTrace]) {
+Exception convertPlatformException(Object exception,
+    [StackTrace /*?*/ stackTrace]) {
   if (exception is! Exception || exception is! PlatformException) {
     throw exception;
   }
@@ -24,14 +25,14 @@ Exception convertPlatformException(Object exception, [StackTrace stackTrace]) {
 /// messages which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseFunctionsException(
     PlatformException platformException,
-    [StackTrace stackTrace]) {
+    [StackTrace /*?*/ stackTrace]) {
   Map<String, dynamic> details = platformException.details != null
       ? Map<String, dynamic>.from(platformException.details)
       : null;
   dynamic additionalData = details != null ? details['additionalData'] : null;
 
   String code = 'unknown';
-  String message = platformException.message;
+  String message = platformException.message ?? '';
 
   if (details != null) {
     code = details['code'] ?? code;

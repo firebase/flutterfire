@@ -20,15 +20,23 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Create an instance using [app] and [region]
-  FirebaseFunctionsPlatform(this.app, this.region) : super(token: _token);
+  FirebaseFunctionsPlatform(this._app, this._region) : super(token: _token);
+
+  final FirebaseApp /*?*/ _app;
+
+  final String /*?*/ _region;
 
   static FirebaseFunctionsPlatform _instance;
 
   /// The [FirebaseApp] this instance was initialized with
-  final FirebaseApp app;
+  FirebaseApp/*!*/ get app {
+    return _app;
+  }
 
   /// The region for the HTTPS trigger, such as "us-central1".
-  final String region;
+  String/*!*/ get region {
+    return _region;
+  }
 
   /// The current default [FirebaseFunctionsPlatform] instance.
   ///
@@ -51,7 +59,7 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
 
   /// Create an instance using [app] using the existing implementation
   factory FirebaseFunctionsPlatform.instanceFor(
-      {FirebaseApp app, String region}) {
+      {FirebaseApp /*!*/ app, String /*!*/ region}) {
     return FirebaseFunctionsPlatform.instance
         .delegateFor(app: app, region: region);
   }
@@ -59,13 +67,14 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance or region is required by the user.
   @protected
-  FirebaseFunctionsPlatform delegateFor({FirebaseApp app, String region}) {
+  FirebaseFunctionsPlatform delegateFor(
+      {FirebaseApp /*!*/ app, String /*!*/ region}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
   /// Creates a [HttpsCallablePlatform] instance
   HttpsCallablePlatform httpsCallable(
-      String origin, String name, HttpsCallableOptions options) {
+      String origin, String name, HttpsCallableOptions /*!*/ options) {
     throw UnimplementedError('httpsCallable() is not implemented');
   }
 }

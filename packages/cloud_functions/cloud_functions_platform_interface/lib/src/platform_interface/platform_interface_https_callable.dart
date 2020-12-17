@@ -37,7 +37,7 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   final String name;
 
   /// Used to set the options for this instance.
-  HttpsCallableOptions options;
+  HttpsCallableOptions /*!*/ options;
 
   /// Executes this Callable HTTPS trigger asynchronously.
   ///
@@ -58,12 +58,15 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   }
 
   /// Returns the timeout for this instance.
-  Duration get timeout {
-    return options?.timeout;
+  Duration /*!*/ get timeout {
+    return options.timeout;
   }
 
   /// Changes the timeout for calls from this instances.
-  set timeout(Duration duration) {
+  ///
+  /// Passing `null` as the [duration] resets the timeout duration to the default.
+  // TODO(ehesp): Remove once deprecation is also removed
+  set timeout(Duration /*?*/ duration) {
     options = HttpsCallableOptions(timeout: duration);
   }
 }
