@@ -16,7 +16,7 @@ String kTestFunctionCustomRegion = 'testFunctionCustomRegion';
 String kTestFunctionTimeout = 'testFunctionTimeout';
 
 void testsMain() {
-  HttpsCallable callable;
+  /*late*/ HttpsCallable callable;
   setUpAll(() async {
     await Firebase.initializeApp();
     FirebaseFunctions.instance
@@ -27,8 +27,7 @@ void testsMain() {
 
   group('HttpsCallable', () {
     test('returns a [HttpsCallableResult]', () async {
-      var result = await callable();
-      expect(result, isA<HttpsCallableResult>());
+      expect(await callable(), isA<HttpsCallableResult>());
     });
 
     test('accepts no arguments', () async {
@@ -119,7 +118,7 @@ void testsMain() {
   });
 
   group('region', () {
-    HttpsCallable customRegionCallable;
+    /*late*/ HttpsCallable customRegionCallable;
     setUpAll(() async {
       customRegionCallable =
           FirebaseFunctions.instanceFor(region: 'europe-west1')
@@ -133,7 +132,7 @@ void testsMain() {
   });
 
   group('HttpsCallableOptions', () {
-    HttpsCallable timeoutCallable;
+    /*late*/ HttpsCallable timeoutCallable;
 
     setUpAll(() async {
       timeoutCallable = FirebaseFunctions.instance.httpsCallable(
