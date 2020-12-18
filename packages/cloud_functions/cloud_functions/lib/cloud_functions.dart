@@ -15,8 +15,10 @@ import 'package:meta/meta.dart';
 
 export 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart'
     show
+        /*melos-nullsafety-remove-start*/
         // ignore: deprecated_member_use
         CloudFunctionsException,
+        /*melos-nullsafety-remove-end*/
         HttpsCallableOptions,
         FirebaseFunctionsException;
 
