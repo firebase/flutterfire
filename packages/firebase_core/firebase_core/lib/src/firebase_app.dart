@@ -28,41 +28,6 @@ class FirebaseApp {
   }
 
   /*melos-nullsafety-remove-start*/
-  @Deprecated("Deprecated in favor of Firebase.app()")
-  // ignore: public_member_api_docs
-  static FirebaseApp appNamed(String name) {
-    return Firebase.app(name);
-  }
-  /*melos-nullsafety-remove-end*/
-
-  /*melos-nullsafety-remove-start*/
-  @Deprecated("Deprecated in favor of Firebase.apps")
-  // ignore: public_member_api_docs
-  static Future<List<FirebaseApp>> allApps() async {
-    return Firebase.apps;
-  }
-  /*melos-nullsafety-remove-end*/
-
-  /*melos-nullsafety-remove-start*/
-  @Deprecated("Deprecated in favor of Firebase.initializeApp()")
-  // ignore: public_member_api_docs
-  static Future<FirebaseApp> configure({
-    @required String name,
-    @required FirebaseOptions options,
-  }) {
-    return Firebase.initializeApp(name: name, options: options);
-  }
-  /*melos-nullsafety-remove-end*/
-
-  /*melos-nullsafety-remove-start*/
-  @Deprecated("Deprecated in favor of Firebase.app()")
-  // ignore: public_member_api_docs
-  static FirebaseApp get instance {
-    return Firebase.app();
-  }
-  /*melos-nullsafety-remove-end*/
-
-  /*melos-nullsafety-remove-start*/
   @Deprecated("Deprecated in favor of defaultFirebaseAppName")
   // ignore: public_member_api_docs
   static String get defaultAppName {

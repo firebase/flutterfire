@@ -107,21 +107,6 @@ void main() {
       });
     });
 
-    /*melos-nullsafety-remove-start*/
-    group('timeout', () {
-      test('set value', () {
-        httpsCallable.timeout = Duration(minutes: 2);
-        expect(httpsCallable.timeout, isInstanceOf<Duration>());
-        expect(httpsCallable.timeout.inMinutes, 2);
-      });
-
-      test('handles null value', () {
-        httpsCallable.timeout = null;
-        expect(httpsCallable.timeout, isNull);
-      });
-    });
-    /*melos-nullsafety-remove-end*/
-
     group('call', () {
       test('invokes native method with correct args', () async {
         final result = await httpsCallable.call(kParameters);
@@ -144,29 +129,6 @@ void main() {
           ),
         ]);
       });
-
-      /*melos-nullsafety-remove-start*/
-      test('invokes native method when timeout is null', () async {
-        httpsCallable.timeout = null;
-
-        await httpsCallable.call(kParameters);
-
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'FirebaseFunctions#call',
-            arguments: <String, dynamic>{
-              'appName': functions.app.name,
-              'functionName': httpsCallable.name,
-              'origin': httpsCallable.origin,
-              'region': functions.region,
-              'timeout': null,
-              'parameters': kParameters,
-            },
-          ),
-        ]);
-      });
-      /*melos-nullsafety-remove-end*/
 
       test('invokes native method when options is null', () async {
         httpsCallable.options = null;

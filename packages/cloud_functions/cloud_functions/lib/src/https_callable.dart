@@ -31,15 +31,6 @@ class HttpsCallable {
     assert(_delegate != null);
     return HttpsCallableResult<T>._(await _delegate.call(parameters));
   }
-
-  /*melos-nullsafety-remove-start*/
-  @Deprecated(
-      "Setting the timeout is deprecated in favor of using [HttpsCallableOptions]")
-  // ignore: public_member_api_docs
-  set timeout(Duration duration) {
-    _delegate.timeout = duration;
-  }
-  /*melos-nullsafety-remove-end*/
 }
 
 /// Asserts whether a given call parameter is a valid type.

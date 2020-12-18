@@ -61,11 +61,4 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   Duration get timeout {
     return options?.timeout;
   }
-
-  /*melos-nullsafety-remove-start*/
-  /// Changes the timeout for calls from this instances.
-  set timeout(Duration duration) {
-    options = HttpsCallableOptions(timeout: duration);
-  }
-  /*melos-nullsafety-remove-end*/
 }

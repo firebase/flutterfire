@@ -36,10 +36,4 @@ class DocumentChange {
   /// Returns the [DocumentSnapshot] for this instance.
   DocumentSnapshot get doc =>
       DocumentSnapshot._(_firestore, _delegate.document);
-
-  /*melos-nullsafety-remove-start*/
-  @Deprecated("Deprecated in favor of .doc")
-  // ignore: public_member_api_docs
-  DocumentSnapshot get document => doc;
-  /*melos-nullsafety-remove-end*/
 }

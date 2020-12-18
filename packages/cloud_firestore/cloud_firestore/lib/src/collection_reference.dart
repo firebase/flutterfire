@@ -63,12 +63,6 @@ class CollectionReference extends Query {
     return DocumentReference._(firestore, _delegate.doc(path));
   }
 
-  /*melos-nullsafety-remove-start*/
-  @Deprecated("Deprecated in favor of `.doc()`")
-  // ignore: public_member_api_docs
-  DocumentReference document([String path]) => doc(path);
-  /*melos-nullsafety-remove-end*/
-
   @override
   bool operator ==(dynamic o) =>
       o is CollectionReference && o.firestore == firestore && o.path == path;

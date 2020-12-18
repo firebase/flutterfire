@@ -17,10 +17,4 @@ class FieldValuePlatform {
   /// through to the underlying implementation.
   static dynamic getDelegate(FieldValuePlatform fieldValue) =>
       fieldValue._delegate;
-
-  /*melos-nullsafety-remove-start*/
-  /// No-op method kept in place to avoid a breaking change.
-  @Deprecated('It is no longer necessary to call this method.')
-  static void verifyExtends(FieldValuePlatform instance) {}
-  /*melos-nullsafety-remove-end*/
 }

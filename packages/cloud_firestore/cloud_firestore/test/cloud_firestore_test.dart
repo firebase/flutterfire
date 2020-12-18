@@ -46,12 +46,6 @@ void main() {
         expect(firestore.collection('foo'), isA<CollectionReference>());
       });
 
-      /*melos-nullsafety-remove-start*/
-      test('does not expect a null path', () {
-        expect(() => firestore.collection(null), throwsAssertionError);
-      });
-      /*melos-nullsafety-remove-end*/
-
       test('does not expect an empty path', () {
         expect(() => firestore.collection(''), throwsAssertionError);
       });
@@ -67,12 +61,6 @@ void main() {
         expect(firestore.collectionGroup('foo'), isA<Query>());
       });
 
-      /*melos-nullsafety-remove-start*/
-      test('does not expect a null path', () {
-        expect(() => firestore.collectionGroup(null), throwsAssertionError);
-      });
-      /*melos-nullsafety-remove-end*/
-
       test('does not expect an empty path', () {
         expect(() => firestore.collectionGroup(''), throwsAssertionError);
       });
@@ -87,12 +75,6 @@ void main() {
       test('returns a $DocumentReference', () {
         expect(firestore.doc('foo/bar'), isA<DocumentReference>());
       });
-
-      /*melos-nullsafety-remove-start*/
-      test('does not expect a null path', () {
-        expect(() => firestore.doc(null), throwsAssertionError);
-      });
-      /*melos-nullsafety-remove-end*/
 
       test('does not expect an empty path', () {
         expect(() => firestore.doc(''), throwsAssertionError);

@@ -113,33 +113,5 @@ void runInstanceTests() {
         await messaging.unsubscribeFromTopic(topic);
       }, skip: kIsWeb);
     });
-
-    /*melos-nullsafety-remove-start*/
-    // deprecated methods
-    group('FirebaseMessaging (deprecated)', () {
-      test('returns an instance with the current [FirebaseApp]', () async {
-        // ignore: deprecated_member_use
-        final testInstance = FirebaseMessaging();
-        expect(testInstance, isA<FirebaseMessaging>());
-        expect(testInstance.app, isA<FirebaseApp>());
-        expect(testInstance.app.name, defaultFirebaseAppName);
-      });
-    });
-
-    group('autoInitEnabled (deprecated)', () {
-      test('returns correct value', () async {
-        // should now be false due to previous setAutoInitEnabled test.
-        expect(messaging.isAutoInitEnabled, isFalse);
-        // ignore: deprecated_member_use
-        expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
-
-        await messaging.setAutoInitEnabled(true);
-
-        expect(messaging.isAutoInitEnabled, isTrue);
-        // ignore: deprecated_member_use
-        expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
-      }, skip: kIsWeb);
-    });
-    /*melos-nullsafety-remove-end*/
   });
 }

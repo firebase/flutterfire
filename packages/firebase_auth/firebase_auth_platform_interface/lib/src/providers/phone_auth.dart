@@ -41,18 +41,6 @@ class PhoneAuthProvider extends AuthProvider {
     assert(token != null);
     return PhoneAuthCredential._credentialFromToken(token, smsCode: smsCode);
   }
-
-  /*melos-nullsafety-remove-start*/
-  @Deprecated('Deprecated in favor of `PhoneAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential({
-    @required String verificationId,
-    @required String smsCode,
-  }) {
-    return PhoneAuthProvider.credential(
-        verificationId: verificationId, smsCode: smsCode);
-  }
-  /*melos-nullsafety-remove-end*/
 }
 
 /// The auth credential returned from calling

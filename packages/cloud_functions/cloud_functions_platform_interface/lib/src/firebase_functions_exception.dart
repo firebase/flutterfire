@@ -21,9 +21,3 @@ class FirebaseFunctionsException extends FirebaseException
   /// Additional data provided with the exception.
   final dynamic details;
 }
-
-/*melos-nullsafety-remove-start*/
-@Deprecated("Deprecated in favor of FirebaseFunctionsException")
-// ignore: public_member_api_docs
-class CloudFunctionsException extends FirebaseFunctionsException {}
-/*melos-nullsafety-remove-end*/
