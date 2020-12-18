@@ -103,12 +103,14 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     FirebaseMessagingPlatform.onBackgroundMessage = handler;
   }
 
+  /*melos-nullsafety-remove-start*/
   // ignore: public_member_api_docs
   @Deprecated(
       "Constructing Messaging is deprecated, use 'FirebaseMessaging.instance' instead")
   factory FirebaseMessaging() {
     return FirebaseMessaging.instance;
   }
+  /*melos-nullsafety-remove-end*/
 
   /// Returns whether messaging auto initialization is enabled or disabled for the device.
   bool get isAutoInitEnabled {
@@ -234,6 +236,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     );
   }
 
+  /*melos-nullsafety-remove-start*/
   /// Prompts the user for notification permissions.
   ///
   /// On iOS, a dialog is shown requesting the users permission.
@@ -258,6 +261,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return status == AuthorizationStatus.authorized ||
         status == AuthorizationStatus.provisional;
   }
+  /*melos-nullsafety-remove-end*/
 
   /// Send a new [RemoteMessage] to the FCM server. Android only.
   Future<void> sendMessage({
@@ -334,6 +338,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.unsubscribeFromTopic(topic);
   }
 
+  /*melos-nullsafety-remove-start*/
   /// Resets Instance ID and revokes all tokens.
   ///
   /// A new Instance ID is generated asynchronously if Firebase Cloud Messaging
@@ -350,13 +355,16 @@ class FirebaseMessaging extends FirebasePluginPlatform {
       return false;
     }
   }
+  /*melos-nullsafety-remove-end*/
 
+  /*melos-nullsafety-remove-start*/
   /// Determine whether FCM auto-initialization is enabled or disabled.
   @Deprecated(
       "autoInitEnabled() is deprecated. Use [isAutoInitEnabled] instead")
   Future<bool> autoInitEnabled() async {
     return isAutoInitEnabled;
   }
+  /*melos-nullsafety-remove-end*/
 }
 
 _assertTopicName(String topic) {
