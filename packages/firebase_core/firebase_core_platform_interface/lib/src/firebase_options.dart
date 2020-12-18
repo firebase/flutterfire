@@ -99,7 +99,7 @@ class FirebaseOptions {
         iosClientId = map['iosClientId'],
         iosBundleId = map['iosBundleId'],
         appGroupId = map['appGroupId']
-        ,/*melos-nullsafety-remove-start*/
+        /*melos-nullsafety-remove-start*/,
         trackingID = map['trackingID'] ?? map['trackingId'],
         googleAppID = map['googleAppID'] ?? map['appId'],
         projectID = map['projectID'] ?? map['projectId'],
