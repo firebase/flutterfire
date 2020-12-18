@@ -1,3 +1,4 @@
+// melos-nullsafety-delete-file
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import './mock.dart';
 
 void main() {
-  /*melos-nullsafety-remove-start*/
   setupCloudFirestoreMocks();
   /*late*/ FirebaseFirestore firestore;
 
@@ -19,5 +19,4 @@ void main() {
       expect(() => firestore.runTransaction(null), throwsAssertionError);
     });
   });
-  /*melos-nullsafety-remove-end*/
 }
