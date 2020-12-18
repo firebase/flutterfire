@@ -145,6 +145,7 @@ void main() {
         ]);
       });
 
+      /*melos-nullsafety-remove-start*/
       test('invokes native method when timeout is null', () async {
         httpsCallable.timeout = null;
 
@@ -165,6 +166,7 @@ void main() {
           ),
         ]);
       });
+      /*melos-nullsafety-remove-end*/
 
       test('invokes native method when options is null', () async {
         httpsCallable.options = null;
