@@ -54,6 +54,14 @@ class FirebaseFunctions extends FirebasePluginPlatform {
     return newInstance;
   }
 
+  /*melos-nullsafety-remove-start*/
+  // ignore: public_member_api_docs
+  @Deprecated(
+      "Constructing CloudFunctions is deprecated, use 'FirebaseFunctions.instance' or 'FirebaseFunctions.instanceFor' instead")
+  factory FirebaseFunctions({FirebaseApp app, String region}) {
+    return FirebaseFunctions.instanceFor(app: app, region: region);
+  }
+  /*melos-nullsafety-remove-end*/
 
   final String _region;
 
@@ -67,6 +75,13 @@ class FirebaseFunctions extends FirebasePluginPlatform {
     return HttpsCallable._(_delegate.httpsCallable(_origin, name, options));
   }
 
+  /*melos-nullsafety-remove-start*/
+  @Deprecated("Deprecated in favor of httpsCallable()")
+  // ignore: public_member_api_docs
+  HttpsCallable getHttpsCallable({@required String functionName}) {
+    return httpsCallable(functionName);
+  }
+  /*melos-nullsafety-remove-end*/
 
   /// Changes this instance to point to a Cloud Functions emulator running locally.
   ///
@@ -90,3 +105,22 @@ class FirebaseFunctions extends FirebasePluginPlatform {
   }
 }
 
+/*melos-nullsafety-remove-start*/
+@Deprecated("Deprecated in favor of FirebaseFunctions")
+// ignore: public_member_api_docs
+class CloudFunctions extends FirebaseFunctions {
+  /// Returns an instance using the default [FirebaseApp].
+  static FirebaseFunctions get instance {
+    return FirebaseFunctions.instanceFor(
+      app: Firebase.app(),
+    );
+  }
+
+  // ignore: public_member_api_docs
+  @Deprecated(
+      "Constructing CloudFunctions is deprecated, use 'FirebaseFunctions.instance' or 'FirebaseFunctions.instanceFor' instead")
+  factory CloudFunctions({FirebaseApp app, String region}) {
+    return FirebaseFunctions.instanceFor(app: app, region: region);
+  }
+}
+/*melos-nullsafety-remove-end*/

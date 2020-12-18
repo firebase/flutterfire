@@ -85,6 +85,9 @@ void main() {
 
     test('path must be a non-empty string', () {
       CollectionReference ref = firestore.collection('foo');
+      /*melos-nullsafety-remove-start*/
+      expect(() => firestore.doc(null), throwsAssertionError);
+      /*melos-nullsafety-remove-end*/
       expect(() => firestore.doc(''), throwsAssertionError);
       expect(() => ref.doc(''), throwsAssertionError);
     });
@@ -108,5 +111,11 @@ void main() {
           throwsAssertionError);
     });
 
+    /*melos-nullsafety-remove-start*/
+    test('data must not be null', () {
+      DocumentReference ref = firestore.collection('foo').doc();
+      expect(() => ref.set(null), throwsAssertionError);
+    });
+    /*melos-nullsafety-remove-end*/
   });
 }

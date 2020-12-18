@@ -63,6 +63,15 @@ class OAuthProvider extends AuthProvider {
     );
   }
 
+  /*melos-nullsafety-remove-start*/
+  @Deprecated('Deprecated in favor of `OAuthProvider.credential()`')
+  // ignore: public_member_api_docs
+  OAuthCredential getCredential(
+      {@required String accessToken, String idToken, String rawNonce}) {
+    return credential(
+        accessToken: accessToken, idToken: idToken, rawNonce: rawNonce);
+  }
+  /*melos-nullsafety-remove-end*/
 }
 
 /// A generic OAuth credential.

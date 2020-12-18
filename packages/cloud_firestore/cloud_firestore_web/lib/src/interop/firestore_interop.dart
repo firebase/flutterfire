@@ -459,11 +459,27 @@ abstract class Settings {
 
   external set ssl(bool v);
 
+  /*melos-nullsafety-remove-start*/
+  @Deprecated(
+    'This setting will be removed in a future release. You should update '
+    'your code to expect Timestamp objects and stop using the '
+    'timestampsInSnapshots setting.',
+  )
+  external set timestampsInSnapshots(bool v);
+  /*melos-nullsafety-remove-end*/
 
   external factory Settings({
     int cacheSizeBytes,
     String host,
     bool ssl,
+    /*melos-nullsafety-remove-start*/
+    @Deprecated(
+      'This setting will be removed in a future release. You should update '
+      'your code to expect Timestamp objects and stop using the '
+      'timestampsInSnapshots setting.',
+    )
+        bool timestampsInSnapshots,
+    /*melos-nullsafety-remove-end*/
   });
 }
 
