@@ -87,13 +87,6 @@ class GithubAuthProvider extends AuthProvider {
     );
   }
 
-  /*melos-nullsafety-remove-start*/
-  @Deprecated('Deprecated in favor of `GithubAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential(String token) {
-    return GithubAuthProvider.credential(token);
-  }
-  /*melos-nullsafety-remove-end*/
 }
 
 /// The auth credential returned from calling

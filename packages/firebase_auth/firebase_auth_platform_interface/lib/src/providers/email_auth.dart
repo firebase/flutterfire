@@ -50,27 +50,7 @@ abstract class EmailAuthProvider extends AuthProvider {
     return EmailAuthCredential._credentialWithLink(email, emailLink);
   }
 
-  /*melos-nullsafety-remove-start*/
-  @Deprecated('Deprecated in favor of `EmailAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential({
-    @required String email,
-    @required String password,
-  }) {
-    return EmailAuthProvider.credential(email: email, password: password);
-  }
-  /*melos-nullsafety-remove-end*/
 
-  /*melos-nullsafety-remove-start*/
-  @Deprecated('Deprecated in favor of `EmailAuthProvider.credentialWithLink()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredentialWithLink({
-    @required String email,
-    @required String link,
-  }) {
-    return EmailAuthProvider.credentialWithLink(email: email, emailLink: link);
-  }
-  /*melos-nullsafety-remove-end*/
 }
 
 /// The auth credential returned from calling

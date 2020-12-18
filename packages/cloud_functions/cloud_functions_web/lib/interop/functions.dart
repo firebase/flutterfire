@@ -4,9 +4,6 @@
 
 // ignore_for_file: public_member_api_docs
 
-/*melos-nullsafety-remove-start*/
-import 'dart:async';
-/*melos-nullsafety-remove-end*/
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
