@@ -10,26 +10,32 @@ class ActionCodeSettings {
   // ignore: public_member_api_docs
   @protected
   ActionCodeSettings({
+    /*melos-nullsafety-remove-start*/
     @Deprecated("Deprecated in favor of using named args instead ([androidPackageName], [androidMinimumVersion], [androidInstallApp])")
         // ignore: deprecated_member_use_from_same_package
         this.android,
+    /*melos-nullsafety-remove-end*/
     this.androidPackageName,
     this.androidMinimumVersion,
     this.androidInstallApp,
     this.dynamicLinkDomain,
     this.handleCodeInApp,
+    /*melos-nullsafety-remove-start*/
     @Deprecated("Deprecated in favor of using named args instead ([iOSBundleId])")
         // ignore: deprecated_member_use_from_same_package
         this.iOS,
+    /*melos-nullsafety-remove-end*/
     this.iOSBundleId,
     /*required*/ @required
         this.url,
   }) : assert(url != null);
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated(
       "Deprecated in favor of using named args instead ([androidPackageName], [androidMinimumVersion], [androidInstallApp])")
   // ignore: public_member_api_docs
   Map<String, dynamic> /*?*/ android;
+  /*melos-nullsafety-remove-end*/
 
   /// The Android package name of the application to open when the URL is pressed.
   final String androidPackageName;
@@ -56,9 +62,11 @@ class ActionCodeSettings {
   /// app if installed.
   final bool handleCodeInApp;
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated("Deprecated in favor of using named args instead ([iOSBundleId])")
   // ignore: public_member_api_docs
   Map<String, dynamic> iOS;
+  /*melos-nullsafety-remove-end*/
 
   /// Sets the link continue/state URL
   final String url;

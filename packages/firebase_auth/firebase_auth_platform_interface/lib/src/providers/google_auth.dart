@@ -86,12 +86,14 @@ class GoogleAuthProvider extends AuthProvider {
     );
   }
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated('Deprecated in favor of `GoogleAuthProvider.credential()`')
   // ignore: public_member_api_docs
   static AuthCredential getCredential({String idToken, String accessToken}) {
     return GoogleAuthProvider.credential(
         idToken: idToken, accessToken: accessToken);
   }
+  /*melos-nullsafety-remove-end*/
 }
 
 /// The auth credential returned from calling

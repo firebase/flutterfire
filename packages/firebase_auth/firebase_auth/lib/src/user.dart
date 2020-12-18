@@ -367,9 +367,11 @@ class User {
   }
 }
 
+/*melos-nullsafety-remove-start*/
 @Deprecated(
     "Deprecated in favor of `User`. When updating your code it is recommended to namespace your 'firebase_auth' import to avoid class naming conflicts if you already have a 'User' class in your project e.g. `import 'package:firebase_auth/firebase_auth.dart' as auth;`, `User` then becomes `auth.User`.")
 // ignore: public_member_api_docs
 class FirebaseUser extends User {
   FirebaseUser._(FirebaseAuth auth, UserPlatform user) : super._(auth, user);
 }
+/*melos-nullsafety-remove-end*/

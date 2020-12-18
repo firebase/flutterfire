@@ -78,6 +78,7 @@ class TwitterAuthProvider extends AuthProvider {
     );
   }
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated('Deprecated in favor of `TwitterAuthProvider.credential()`')
   // ignore: public_member_api_docs
   static AuthCredential getCredential(
@@ -85,6 +86,7 @@ class TwitterAuthProvider extends AuthProvider {
     return TwitterAuthProvider.credential(
         accessToken: accessToken, secret: secret);
   }
+  /*melos-nullsafety-remove-end*/
 }
 
 /// The auth credential returned from calling
