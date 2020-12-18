@@ -71,10 +71,11 @@ void main() {
     verify(kMockFirebaseFunctionsPlatform.httpsCallable(any, 'testName', any));
   });
 
-//
+  /*melos-nullsafety-remove-start*/
   test('getHttpsCallable()', () {
     // ignore: deprecated_member_use_from_same_package
     functions.getHttpsCallable(functionName: 'testName');
     verify(kMockFirebaseFunctionsPlatform.httpsCallable(any, 'testName', any));
   });
+  /*melos-nullsafety-remove-end*/
 }
