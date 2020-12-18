@@ -57,12 +57,14 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return newInstance;
   }
 
+  /*melos-nullsafety-remove-start*/
   // ignore: public_member_api_docs
   @Deprecated(
       "Constructing Firestore is deprecated, use 'FirebaseFirestore.instance' or 'FirebaseFirestore.instanceFor' instead")
   factory FirebaseFirestore({/*required*/ FirebaseApp app}) {
     return FirebaseFirestore.instanceFor(app: app);
   }
+  /*melos-nullsafety-remove-end*/
 
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference collection(String collectionPath) {
@@ -132,9 +134,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return DocumentReference._(this, _delegate.doc(documentPath));
   }
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated("Deprecated in favor of `.doc()`")
   // ignore: public_member_api_docs
   DocumentReference document(String documentPath) => doc(documentPath);
+  /*melos-nullsafety-remove-end*/
 
   /// Enables the network for this instance. Any pending local-only writes
   /// will be written to the remote servers.
@@ -236,6 +240,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   String toString() => '$FirebaseFirestore(app: ${app.name})';
 }
 
+/*melos-nullsafety-remove-start*/
 /// Extends the [FirebaseFirestore] class to allow for deprecated usage of
 /// using [Firebase] directly.
 @Deprecated("Class Firestore is deprecated, use 'FirebaseFirestore' instead.")
@@ -257,3 +262,4 @@ class Firestore extends FirebaseFirestore {
     return FirebaseFirestore.instanceFor(app: app);
   }
 }
+/*melos-nullsafety-remove-end*/

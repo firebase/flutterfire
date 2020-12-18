@@ -23,9 +23,11 @@ class DocumentReference {
   /// This document's given ID within the collection.
   String get id => _delegate.id;
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated("Deprecated in favor of `.id`")
   // ignore: public_member_api_docs
   String get documentID => id;
+  /*melos-nullsafety-remove-end*/
 
   /// The parent [CollectionReference] of this document.
   CollectionReference get parent =>
@@ -85,11 +87,13 @@ class DocumentReference {
         options);
   }
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated("Deprecated in favor of `.set()`")
   // ignore: public_member_api_docs
   Future<void> setData(Map<String, dynamic> data, [SetOptions /*?*/ options]) {
     return set(data, options);
   }
+  /*melos-nullsafety-remove-end*/
 
   /// Updates data on the document. Data will be merged with any existing
   /// document data.
@@ -101,11 +105,13 @@ class DocumentReference {
         .update(_CodecUtility.replaceValueWithDelegatesInMap(data) /*!*/);
   }
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated("Deprecated in favor of `.update()`")
   // ignore: public_member_api_docs
   Future<void> updateData(Map<String, dynamic> data) {
     return update(data);
   }
+  /*melos-nullsafety-remove-end*/
 
   @override
   bool operator ==(dynamic o) =>

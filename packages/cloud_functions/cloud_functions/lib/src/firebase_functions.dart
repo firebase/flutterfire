@@ -101,6 +101,7 @@ class FirebaseFunctions extends FirebasePluginPlatform {
   }
 }
 
+/*melos-nullsafety-remove-start*/
 @Deprecated("Deprecated in favor of FirebaseFunctions")
 // ignore: public_member_api_docs
 class CloudFunctions extends FirebaseFunctions {
@@ -118,3 +119,4 @@ class CloudFunctions extends FirebaseFunctions {
     return FirebaseFunctions.instanceFor(app: app, region: region);
   }
 }
+/*melos-nullsafety-remove-end*/
