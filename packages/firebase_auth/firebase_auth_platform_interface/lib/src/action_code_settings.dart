@@ -73,37 +73,67 @@ class ActionCodeSettings {
 
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() {
+    /*melos-nullsafety-remove-start*/
     // ignore: deprecated_member_use_from_same_package
     android ??= {};
     // ignore: deprecated_member_use_from_same_package
     iOS ??= {};
+    /*melos-nullsafety-remove-end*/
 
     Map<String, dynamic> androidMap;
     Map<String, dynamic> iOSMap;
 
+    /*melos-nullsafety-remove-start*/
     // ignore: deprecated_member_use_from_same_package
-    if (androidPackageName != null || android['packageName'] != null) {
+    /*melos-nullsafety-remove-end*/
+    if (androidPackageName != null
+        /*melos-nullsafety-remove-start*/
+        || android['packageName'] != null
+        /*melos-nullsafety-remove-end*/
+     ) {
       androidMap = {};
       androidMap['packageName'] =
+          /*melos-nullsafety-remove-start*/
           // ignore: deprecated_member_use_from_same_package
-          androidPackageName ?? android['packageName'].toString();
+          /*melos-nullsafety-remove-end*/
+          androidPackageName
+          /*melos-nullsafety-remove-start*/
+          ?? android['packageName'].toString()
+          /*melos-nullsafety-remove-end*/
+          ;
       androidMap['minimumVersion'] =
+          /*melos-nullsafety-remove-start*/
           // ignore: deprecated_member_use_from_same_package
-          androidMinimumVersion ?? android['minimumVersion']?.toString();
+          /*melos-nullsafety-remove-end*/
+          androidMinimumVersion
+          /*melos-nullsafety-remove-start*/
+          ?? android['minimumVersion']?.toString()
+          /*melos-nullsafety-remove-end*/
+          ;
       androidMap['installApp'] = androidInstallApp;
 
+       /*melos-nullsafety-remove-start*/
       // ignore: deprecated_member_use_from_same_package
       if (androidMap['installApp'] == null && android['installApp'] is bool) {
         // ignore: deprecated_member_use_from_same_package
         androidMap['installApp'] = android['installApp'];
       }
+      /*melos-nullsafety-remove-end*/
     }
 
     // ignore: deprecated_member_use_from_same_package
-    if (iOSBundleId != null || iOS['bundleId'] != null) {
+    if (iOSBundleId != null
+        /*melos-nullsafety-remove-start*/
+        || iOS['bundleId'] != null
+        /*melos-nullsafety-remove-end*/
+       ) {
       iOSMap = {};
       // ignore: deprecated_member_use_from_same_package
-      iOSMap['bundleId'] = iOSBundleId ?? iOS['bundleId'].toString();
+      iOSMap['bundleId'] = iOSBundleId
+        /*melos-nullsafety-remove-start*/
+        ?? iOS['bundleId'].toString()
+        /*melos-nullsafety-remove-end*/
+        ;
     }
 
     return <String, dynamic>{
