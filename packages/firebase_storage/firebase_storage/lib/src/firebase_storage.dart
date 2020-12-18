@@ -98,12 +98,14 @@ class FirebaseStorage extends FirebasePluginPlatform {
     return newInstance;
   }
 
+  /*melos-nullsafety-remove-start*/
   // ignore: public_member_api_docs
   @Deprecated(
       "Constructing Storage is deprecated, use 'FirebaseStorage.instance' or 'FirebaseStorage.instanceFor' instead")
   factory FirebaseStorage({FirebaseApp app, String storageBucket}) {
     return FirebaseStorage.instanceFor(app: app, bucket: storageBucket);
   }
+  /*melos-nullsafety-remove-end*/
 
   /// Returns a new [Reference].
   ///
@@ -146,29 +148,37 @@ class FirebaseStorage extends FirebasePluginPlatform {
         .ref(path);
   }
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated("Deprecated in favor of refFromURL")
   // ignore: public_member_api_docs
   Future<Reference> getReferenceFromUrl(String url) async {
     return refFromURL(url);
   }
+  /*melos-nullsafety-remove-end*/
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated("Deprecated in favor of get.maxOperationRetryTime")
   // ignore: public_member_api_docs
   Future<int> getMaxOperationRetryTimeMillis() async {
     return maxOperationRetryTime.inMilliseconds;
   }
+  /*melos-nullsafety-remove-end*/
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated("Deprecated in favor of get.maxUploadRetryTime")
   // ignore: public_member_api_docs
   Future<int> getMaxUploadRetryTimeMillis() async {
     return maxUploadRetryTime.inMilliseconds;
   }
+  /*melos-nullsafety-remove-end*/
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated("Deprecated in favor of get.maxDownloadRetryTime")
   // ignore: public_member_api_docs
   Future<int> getMaxDownloadRetryTimeMillis() async {
     return maxDownloadRetryTime.inMilliseconds;
   }
+  /*melos-nullsafety-remove-end*/
 
   /// Sets the new maximum operation retry time.
   void setMaxOperationRetryTime(Duration time) {
@@ -177,11 +187,13 @@ class FirebaseStorage extends FirebasePluginPlatform {
     return _delegate.setMaxOperationRetryTime(time.inMilliseconds);
   }
 
+  /*melos-nullsafety-remove-start*/
   /// Sets the new maximum operation retry time in milliseconds.
   @Deprecated("Deprecated in favor of setMaxUploadRetryTime()")
   Future<void> setMaxOperationRetryTimeMillis(int time) async {
     return setMaxOperationRetryTime(Duration(milliseconds: time));
   }
+  /*melos-nullsafety-remove-end*/
 
   /// Sets the new maximum upload retry time.
   void setMaxUploadRetryTime(Duration time) {
@@ -190,11 +202,13 @@ class FirebaseStorage extends FirebasePluginPlatform {
     return _delegate.setMaxUploadRetryTime(time.inMilliseconds);
   }
 
+  /*melos-nullsafety-remove-start*/
   /// Sets the new maximum upload retry time in milliseconds.
   @Deprecated("Deprecated in favor of setMaxUploadRetryTime()")
   Future<void> setMaxUploadRetryTimeMillis(int time) async {
     return setMaxUploadRetryTime(Duration(milliseconds: time));
   }
+  /*melos-nullsafety-remove-end*/
 
   /// Sets the new maximum download retry time.
   void setMaxDownloadRetryTime(Duration time) {
@@ -203,11 +217,13 @@ class FirebaseStorage extends FirebasePluginPlatform {
     return _delegate.setMaxDownloadRetryTime(time.inMilliseconds);
   }
 
+  /*melos-nullsafety-remove-start*/
   /// Sets the new maximum download retry time in milliseconds.
   @Deprecated("Deprecated in favor of setMaxDownloadRetryTime()")
   Future<void> setMaxDownloadRetryTimeMillis(int time) async {
     return setMaxDownloadRetryTime(Duration(milliseconds: time));
   }
+  /*melos-nullsafety-remove-end*/
 
   @override
   bool operator ==(dynamic o) =>

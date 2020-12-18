@@ -15,11 +15,13 @@ abstract class Task implements Future<TaskSnapshot> {
     TaskPlatform.verifyExtends(_delegate);
   }
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated('events has been deprecated in favor of snapshotEvents')
   // ignore: public_member_api_docs
   Stream<dynamic> get events {
     return snapshotEvents;
   }
+  /*melos-nullsafety-remove-end*/
 
   /// Returns a [Stream] of [TaskSnapshot] events.
   ///
@@ -33,9 +35,11 @@ abstract class Task implements Future<TaskSnapshot> {
         .map((snapshotDelegate) => TaskSnapshot._(storage, snapshotDelegate));
   }
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated("Deprecated in favor of [snapshot]")
   // ignore: public_member_api_docs
   TaskSnapshot get lastSnapshot => snapshot;
+  /*melos-nullsafety-remove-end*/
 
   /// The latest [TaskSnapshot] for this task.
   TaskSnapshot get snapshot {
