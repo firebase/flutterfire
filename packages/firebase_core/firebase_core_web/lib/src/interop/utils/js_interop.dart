@@ -10,7 +10,6 @@ library firebase_interop.core.js;
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
 
-// TODO(ehesp): Break into own package?
 @JS('JSON.stringify')
 external String stringify(Object obj);
 

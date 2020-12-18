@@ -7,10 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('$Pointer', () {
-    // TODO(ehesp): remove once null-safety lands
+    /*melos-nullsafety-remove-start*/
     // test('fails assertion if path is null', () {
     //   expect(() => Pointer(null), throwsAssertionError);
     // });
+    /*melos-nullsafety-remove-end*/
 
     test('returns a path and components', () {
       expect(Pointer('foo/bar').path, 'foo/bar');
