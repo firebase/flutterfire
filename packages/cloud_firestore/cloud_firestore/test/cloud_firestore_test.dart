@@ -70,6 +70,7 @@ void main() {
       /*melos-nullsafety-remove-start*/
       test('does not expect a null path', () {
         expect(() => firestore.collectionGroup(null), throwsAssertionError);
+      });
       /*melos-nullsafety-remove-end*/
 
       test('does not expect an empty path', () {
@@ -90,6 +91,7 @@ void main() {
       /*melos-nullsafety-remove-start*/
       test('does not expect a null path', () {
         expect(() => firestore.doc(null), throwsAssertionError);
+      });
       /*melos-nullsafety-remove-end*/
 
       test('does not expect an empty path', () {
