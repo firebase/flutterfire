@@ -107,6 +107,7 @@ void main() {
       });
     });
 
+    /*melos-nullsafety-remove-start*/
     group('timeout', () {
       test('set value', () {
         httpsCallable.timeout = Duration(minutes: 2);
@@ -119,6 +120,7 @@ void main() {
         expect(httpsCallable.timeout, isNull);
       });
     });
+    /*melos-nullsafety-remove-end*/
 
     group('call', () {
       test('invokes native method with correct args', () async {
