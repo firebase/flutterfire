@@ -63,6 +63,7 @@ void main() {
           expect(result['iOS']['bundleId'], equals(kMockBundleId));
         });
 
+        /*melos-nullsafety-remove-start*/
         test('handles deprecated properties', () {
           ActionCodeSettings deprecatedSettings = ActionCodeSettings(
               // ignore: deprecated_member_use_from_same_package
@@ -95,7 +96,9 @@ void main() {
               result['android']['minimumVersion'], equals(kMockMinimumVersion));
           expect(result['iOS']['bundleId'], equals(kMockBundleId));
         });
+        /*melos-nullsafety-remove-end*/
 
+        /*melos-nullsafety-remove-start*/
         test('handles mixed deprecated properties', () {
           ActionCodeSettings deprecatedSettings = ActionCodeSettings(
               // ignore: deprecated_member_use_from_same_package
@@ -131,6 +134,7 @@ void main() {
               result['android']['minimumVersion'], equals(kMockMinimumVersion));
           expect(result['iOS']['bundleId'], equals(kMockBundleId + '!'));
         });
+        /*melos-nullsafety-remove-end*/
 
         test('expects android/iOS Maps to be null', () {
           ActionCodeSettings testActionCodeSettings =

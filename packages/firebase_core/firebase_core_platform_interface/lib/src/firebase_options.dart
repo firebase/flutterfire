@@ -50,6 +50,7 @@ class FirebaseOptions {
     this.iosClientId,
     this.iosBundleId,
     this.appGroupId,
+    /*melos-nullsafety-remove-start*/
     // deprecated
     @Deprecated("Deprecated in favor of 'appId'") this.googleAppID,
     @Deprecated("Deprecated in favor of 'projectId'") this.projectID,
@@ -58,13 +59,18 @@ class FirebaseOptions {
         this.clientID,
     @Deprecated("Deprecated in favor of 'trackingId'") this.trackingID,
     @Deprecated("Deprecated in favor of 'messagingSenderId'") this.gcmSenderID,
-  })  : assert(apiKey != null, "'apiKey' cannot be null"),
+    /*melos-nullsafety-remove-end*/
+  })  
+    /*melos-nullsafety-remove-start*/
+    : assert(apiKey != null, "'apiKey' cannot be null"),
         assert(appId != null || googleAppID != null,
             "'appId' and 'googleAppID' cannot be null."),
         assert(messagingSenderId != null || gcmSenderID != null,
             "'messagingSenderId' and 'gcmSenderID' cannot be null."),
         assert(projectId != null || projectID != null,
-            "'projectId' and 'projectID' cannot be null.");
+            "'projectId' and 'projectID' cannot be null.")
+     /*melos-nullsafety-remove-end*/     
+     ;
 
   /// Named constructor to create [FirebaseOptions] from a Map.
   ///
@@ -81,8 +87,8 @@ class FirebaseOptions {
             "'projectId' and 'projectID' cannot be null."),
         apiKey = map['apiKey'],
         appId = map['appId'] ?? map['googleAppID'],
-        messagingSenderId = map['messagingSenderId'] ?? map['gcmSenderID'],
-        projectId = map['projectId'] ?? map['projectID'],
+        messagingSenderId = map['messagingSenderId']/*melos-nullsafety-remove-start*/?? map['gcmSenderID']/*melos-nullsafety-remove-end*/,
+        projectId = map['projectId']/*melos-nullsafety-remove-start*/ ?? map['projectID']/*melos-nullsafety-remove-end*/,
         authDomain = map['authDomain'],
         databaseURL = map['databaseURL'],
         storageBucket = map['storageBucket'],
@@ -92,14 +98,17 @@ class FirebaseOptions {
         androidClientId = map['androidClientId'],
         iosClientId = map['iosClientId'],
         iosBundleId = map['iosBundleId'],
-        appGroupId = map['appGroupId'],
+        appGroupId = map['appGroupId']
+        ,/*melos-nullsafety-remove-start*/
         trackingID = map['trackingID'] ?? map['trackingId'],
         googleAppID = map['googleAppID'] ?? map['appId'],
         projectID = map['projectID'] ?? map['projectId'],
         bundleID = map['bundleID'] ?? map['iosBundleId'],
         clientID =
             map['clientID'] ?? map['androidClientId'] ?? map['iosClientId'],
-        gcmSenderID = map['gcmSenderID'] ?? map['messagingSenderId'];
+        gcmSenderID = map['gcmSenderID'] ?? map['messagingSenderId']
+        /*melos-nullsafety-remove-end*/  
+        ;
 
   /// An API key used for authenticating requests from your app, for example
   /// "AIzaSyDdVgKwhZl0sTTTLZ7iTmt1r3N2cJLnaDk", used to identify your app to
@@ -171,6 +180,7 @@ class FirebaseOptions {
   /// This property is used on iOS only.
   final String appGroupId;
 
+  /*melos-nullsafety-remove-start*/
   @Deprecated("Deprecated in favor of 'appId'")
   // ignore: public_member_api_docs
   final String googleAppID;
@@ -194,23 +204,24 @@ class FirebaseOptions {
   @Deprecated("Deprecated in favor of 'messagingSenderId'")
   // ignore: public_member_api_docs
   final String gcmSenderID;
-
+  /*melos-nullsafety-remove-end*/
+  
   /// The current instance as a [Map].
   Map<String, String> get asMap {
     return <String, String>{
-      'apiKey': apiKey ?? googleAppID,
+      'apiKey': apiKey/*melos-nullsafety-remove-start*/ ?? googleAppID/*melos-nullsafety-remove-end*/,
       'appId': appId,
-      'messagingSenderId': messagingSenderId ?? gcmSenderID,
-      'projectId': projectId ?? projectID,
+      'messagingSenderId': messagingSenderId/*melos-nullsafety-remove-start*/ ?? gcmSenderID,
+      'projectId': projectId/*melos-nullsafety-remove-start*/ ?? projectID/*melos-nullsafety-remove-end*/,
       'authDomain': authDomain,
       'databaseURL': databaseURL,
       'storageBucket': storageBucket,
       'measurementId': measurementId,
-      'trackingId': trackingId ?? trackingID,
+      'trackingId': trackingId/*melos-nullsafety-remove-start*/ ?? trackingID/*melos-nullsafety-remove-end*/,
       'deepLinkURLScheme': deepLinkURLScheme,
-      'androidClientId': androidClientId ?? clientID,
-      'iosClientId': iosClientId ?? clientID,
-      'iosBundleId': iosBundleId ?? bundleID,
+      'androidClientId': androidClientId/*melos-nullsafety-remove-start*/ ?? clientID/*melos-nullsafety-remove-end*/,
+      'iosClientId': iosClientId/*melos-nullsafety-remove-start*/ ?? clientID/*melos-nullsafety-remove-end*/,
+      'iosBundleId': iosBundleId/*melos-nullsafety-remove-start*/ ?? bundleID/*melos-nullsafety-remove-end*/,
       'appGroupId': appGroupId,
     };
   }

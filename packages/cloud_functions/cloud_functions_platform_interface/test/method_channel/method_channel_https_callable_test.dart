@@ -107,6 +107,7 @@ void main() {
       });
     });
 
+    /*melos-nullsafety-remove-start*/
     group('timeout', () {
       test('set value', () {
         httpsCallable.timeout = Duration(minutes: 2);
@@ -119,6 +120,7 @@ void main() {
         expect(httpsCallable.timeout, isNull);
       });
     });
+    /*melos-nullsafety-remove-end*/
 
     group('call', () {
       test('invokes native method with correct args', () async {
@@ -143,6 +145,7 @@ void main() {
         ]);
       });
 
+      /*melos-nullsafety-remove-start*/
       test('invokes native method when timeout is null', () async {
         httpsCallable.timeout = null;
 
@@ -163,6 +166,7 @@ void main() {
           ),
         ]);
       });
+      /*melos-nullsafety-remove-end*/
 
       test('invokes native method when options is null', () async {
         httpsCallable.options = null;

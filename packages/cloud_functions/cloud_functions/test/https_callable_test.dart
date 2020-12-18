@@ -103,6 +103,7 @@ void main() {
       });
     });
 
+    /*melos-nullsafety-remove-start*/
     group('set.timeout (deprecated)', () {
       test('sets timeout value', () async {
         // ignore: deprecated_member_use_from_same_package
@@ -111,5 +112,6 @@ void main() {
         verify(kMockHttpsCallablePlatform.timeout = Duration(minutes: 2));
       });
     });
+    /*melos-nullsafety-remove-end*/
   });
 }
