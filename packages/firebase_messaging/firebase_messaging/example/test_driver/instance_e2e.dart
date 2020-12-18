@@ -114,6 +114,7 @@ void runInstanceTests() {
       }, skip: kIsWeb);
     });
 
+    /*melos-nullsafety-remove-start*/
     // deprecated methods
     group('FirebaseMessaging (deprecated)', () {
       test('returns an instance with the current [FirebaseApp]', () async {
@@ -139,5 +140,6 @@ void runInstanceTests() {
         expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
       }, skip: kIsWeb);
     });
+    /*melos-nullsafety-remove-end*/
   });
 }
