@@ -39,11 +39,11 @@ class WelcomeWidget extends AnimatedWidget {
           child: const Icon(Icons.refresh),
           onPressed: () async {
             try {
-              // Using default duration to force fetching from remote server.
+              // Using zero duration to force fetching from remote server.
               await remoteConfig.setConfigSettings(RemoteConfigSettings(
                 Duration(seconds: 10), Duration.zero
               ));
-              await remoteConfig.activate();
+              await remoteConfig.fetchAndActivate();
             } on FetchThrottledException catch (exception) {
               // Fetch throttled.
               print(exception);
@@ -60,10 +60,10 @@ class WelcomeWidget extends AnimatedWidget {
 Future<RemoteConfig> setupRemoteConfig() async {
   await Firebase.initializeApp();
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
-  remoteConfig.setConfigSettings(RemoteConfigSettings(
+  await remoteConfig.setConfigSettings(RemoteConfigSettings(
       Duration(seconds: 10), Duration(hours: 0)
   ));
-  remoteConfig.setDefaults(<String, dynamic>{
+  await remoteConfig.setDefaults(<String, dynamic>{
     'welcome': 'default welcome',
     'hello': 'default hello',
   });

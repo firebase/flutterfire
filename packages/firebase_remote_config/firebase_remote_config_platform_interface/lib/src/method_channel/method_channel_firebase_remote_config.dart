@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -20,9 +22,9 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     return MethodChannelFirebaseRemoteConfig._();
   }
 
-  MethodChannelFirebaseRemoteConfig._() : super(app: null);
+  MethodChannelFirebaseRemoteConfig._() : super(appInstance: null);
 
-  MethodChannelFirebaseRemoteConfig({FirebaseApp app}) : super(app: app);
+  MethodChannelFirebaseRemoteConfig({FirebaseApp app}) : super(appInstance: app);
 
   Map<String, RemoteConfigValue> _activeParameters;
 
@@ -41,6 +43,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   FirebaseRemoteConfigPlatform setInitialValues(
       {Map<String, RemoteConfigValue> activeParameters}) {
     this._activeParameters = activeParameters;
+    return this;
   }
 
   @override
@@ -109,15 +112,23 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   @override
   Future<void> setConfigSettings(RemoteConfigSettings remoteConfigSettings) async {
     await channel.invokeMethod('RemoteConfig#setConfigSettings', <String, dynamic>{
-      'fetchTimeout': remoteConfigSettings.fetchTimeout,
-      'minimumFetchInterval': remoteConfigSettings.minimumFetchInterval,
+      'appName': app.name,
+      'fetchTimeout': remoteConfigSettings.fetchTimeout.inSeconds,
+      'minimumFetchInterval': remoteConfigSettings.minimumFetchInterval.inSeconds,
     });
   }
 
   @override
-  void setDefaults(Map<String, dynamic> defaultParameters) {
+  Future<void> setDefaults(Map<String, dynamic> defaultParameters) async {
     for (var key in defaultParameters.keys) {
-      _activeParameters[key] = RemoteConfigValue(defaultParameters[key], ValueSource.valueDefault);
+      _activeParameters[key] = RemoteConfigValue(
+        Utf8Codec().encode(defaultParameters[key].toString()),
+        ValueSource.valueDefault,
+      );
     }
+    await channel.invokeMethod('RemoteConfig#setDefaults', <String, dynamic>{
+      'appName': app.name,
+      'defaults': defaultParameters
+    });
   }
 }

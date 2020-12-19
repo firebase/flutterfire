@@ -7,15 +7,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+///
 abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   static final Object _token = Object();
 
-  FirebaseRemoteConfigPlatform({this.app}) : super(token: _token);
+  @protected
+  final FirebaseApp appInstance;
+
+  ///
+  FirebaseRemoteConfigPlatform({this.appInstance}) : super(token: _token);
+
+  ///
+  FirebaseApp get app {
+    if (appInstance == null) {
+      return Firebase.app();
+    }
+    return appInstance;
+  }
 
   static FirebaseRemoteConfigPlatform _instance;
 
-  final FirebaseApp app;
-
+  ///
   static FirebaseRemoteConfigPlatform get instance {
     if (_instance == null) {
       _instance = MethodChannelFirebaseRemoteConfig.instance;
@@ -34,8 +46,30 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
     return FirebaseRemoteConfigPlatform.instance.delegateFor(app: app).setInitialValues(
         activeParameters: pluginConstants == null
             ? Map<String, RemoteConfigValue>()
-            : Map<String, RemoteConfigValue>.from(pluginConstants)
+            : _parseParameters(pluginConstants)
     );
+  }
+
+  static Map<String, RemoteConfigValue> _parseParameters(Map<dynamic, dynamic> rawParameters) {
+    Map<String, RemoteConfigValue> parameters = Map();
+    for (String key in rawParameters.keys) {
+      final rawValue = rawParameters[key];
+      parameters[key] = RemoteConfigValue(rawValue['value'], _parseValueSource(rawValue['source']));
+    }
+    return parameters;
+  }
+
+  static ValueSource _parseValueSource(String sourceStr) {
+    switch (sourceStr) {
+      case 'static':
+        return ValueSource.valueStatic;
+      case 'default':
+        return ValueSource.valueDefault;
+      case 'remote':
+        return ValueSource.valueRemote;
+      default:
+        return ValueSource.valueStatic;
+    }
   }
 
   @protected
@@ -92,7 +126,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
     throw UnimplementedError('setConfigSettings() is not implemented');
   }
 
-  void setDefaults(Map<String, dynamic> defaultParameters) {
+  Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
     throw UnimplementedError('setDefaults() is not implemented');
   }
 

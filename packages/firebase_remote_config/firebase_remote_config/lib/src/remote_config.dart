@@ -27,7 +27,7 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
       : super(app.name, 'plugins.flutter.io/firebase_remote_config');
 
   static RemoteConfig get instance {
-     RemoteConfig.instanceFor(app: Firebase.app());
+     return RemoteConfig.instanceFor(app: Firebase.app());
   }
 
   static RemoteConfig instanceFor({FirebaseApp app}) {
@@ -92,10 +92,10 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   }
 
   Future<void> setConfigSettings(RemoteConfigSettings remoteConfigSettings) {
-    _delegate.setConfigSettings(remoteConfigSettings);
+    return _delegate.setConfigSettings(remoteConfigSettings);
   }
 
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
-    _delegate.setDefaults(defaultParameters);
+    return _delegate.setDefaults(defaultParameters);
   }
 }
