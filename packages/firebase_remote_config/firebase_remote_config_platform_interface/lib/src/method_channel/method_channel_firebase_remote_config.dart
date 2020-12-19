@@ -48,12 +48,16 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
 
   @override
   Future<void> ensureInitialized() async {
-    await channel.invokeMethod<void>('RemoteConfig#ensureInitialized');
+    await channel.invokeMethod<void>('RemoteConfig#ensureInitialized', <String, dynamic>{
+      'appName': app.name,
+    });
   }
 
   @override
   Future<bool> activate() async {
-    bool configChanged = await channel.invokeMethod<bool>('RemoteConfig#activate');
+    bool configChanged = await channel.invokeMethod<bool>('RemoteConfig#activate', <String, dynamic>{
+      'appName': app.name,
+    });
     if (configChanged) {
       await _updateActiveParameters();
     }
@@ -61,18 +65,24 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   }
 
   Future<void> _updateActiveParameters() async {
-    Map<dynamic, dynamic> parameters = await channel.invokeMapMethod<String, dynamic>('RemoteConfig#getAll');
-    _activeParameters = Map<String, RemoteConfigValue>.from(parameters);
+    Map<dynamic, dynamic> parameters = await channel.invokeMapMethod<String, dynamic>('RemoteConfig#getAll', <String, dynamic>{
+      'appName': app.name,
+    });
+    _activeParameters = FirebaseRemoteConfigPlatform.parseParameters(parameters);
   }
 
   @override
   Future<void> fetch() async {
-    await channel.invokeMethod<void>('RemoteConfig#fetch');
+    await channel.invokeMethod<void>('RemoteConfig#fetch', <String, dynamic>{
+      'appName': app.name,
+    });
   }
 
   @override
   Future<bool> fetchAndActivate() async {
-    bool configChanged = await channel.invokeMethod<bool>('RemoteConfig#fetchAndActivate');
+    bool configChanged = await channel.invokeMethod<bool>('RemoteConfig#fetchAndActivate', <String, dynamic>{
+      'appName': app.name,
+    });
     if (configChanged) {
       await _updateActiveParameters();
     }
@@ -86,26 +96,41 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
 
   @override
   bool getBool(String key) {
+    if (!_activeParameters.containsKey(key)) {
+      return RemoteConfigValue.defaultValueForBool;
+    }
     return _activeParameters[key].asBool();
   }
 
   @override
   int getInt(String key) {
+    if (!_activeParameters.containsKey(key)) {
+      return RemoteConfigValue.defaultValueForInt;
+    }
     return _activeParameters[key].asInt();
   }
 
   @override
   double getDouble(String key) {
+    if (!_activeParameters.containsKey(key)) {
+      return RemoteConfigValue.defaultValueForDouble;
+    }
     return _activeParameters[key].asDouble();
   }
 
   @override
   String getString(String key) {
+    if (!_activeParameters.containsKey(key)) {
+      return RemoteConfigValue.defaultValueForString;
+    }
     return _activeParameters[key].asString();
   }
 
   @override
   RemoteConfigValue getValue(String key) {
+    if (!_activeParameters.containsKey(key)) {
+      return RemoteConfigValue(null, ValueSource.valueStatic);
+    }
     return _activeParameters[key];
   }
 
@@ -120,15 +145,10 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
 
   @override
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) async {
-    for (var key in defaultParameters.keys) {
-      _activeParameters[key] = RemoteConfigValue(
-        Utf8Codec().encode(defaultParameters[key].toString()),
-        ValueSource.valueDefault,
-      );
-    }
     await channel.invokeMethod('RemoteConfig#setDefaults', <String, dynamic>{
       'appName': app.name,
       'defaults': defaultParameters
     });
+    await _updateActiveParameters();
   }
 }

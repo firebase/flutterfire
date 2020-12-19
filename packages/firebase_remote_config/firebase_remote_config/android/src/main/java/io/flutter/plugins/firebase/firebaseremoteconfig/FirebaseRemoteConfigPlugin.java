@@ -4,9 +4,6 @@
 
 package io.flutter.plugins.firebase.firebaseremoteconfig;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
@@ -30,7 +27,7 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 /** FirebaseRemoteConfigPlugin */
 public class FirebaseRemoteConfigPlugin implements FlutterFirebasePlugin, MethodChannel.MethodCallHandler, FlutterPlugin {
 
-  static final String TAG = "FirebaseRemoteConfigPlugin";
+  static final String TAG = "FRCPlugin";
   static final String METHOD_CHANNEL = "plugins.flutter.io/firebase_remote_config";
 
   private MethodChannel channel;
@@ -89,12 +86,12 @@ public class FirebaseRemoteConfigPlugin implements FlutterFirebasePlugin, Method
         methodCallTask = remoteConfig.ensureInitialized();
         break;
       }
-      case "RemoteConfgi#activate":
+      case "RemoteConfig#activate":
       {
         methodCallTask = remoteConfig.activate();
         break;
       }
-      case "RemoteConfgi#getAll":
+      case "RemoteConfig#getAll":
       {
         methodCallTask = Tasks.forResult(parseParameters(remoteConfig.getAll()));
         break;

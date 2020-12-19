@@ -34,7 +34,15 @@ class WelcomeWidget extends AnimatedWidget {
       appBar: AppBar(
         title: const Text('Remote Config Example'),
       ),
-      body: Center(child: Text('Welcome ${remoteConfig.getString('welcome')}')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Welcome ${remoteConfig.getString('welcome')}'),
+            Text('(${remoteConfig.getValue('welcome').source})'),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.refresh),
           onPressed: () async {
@@ -51,8 +59,10 @@ class WelcomeWidget extends AnimatedWidget {
               print(
                   'Unable to fetch remote config. Cached or default values will be '
                   'used');
+              print(exception);
             }
-          }),
+          }
+      ),
     );
   }
 }
@@ -61,7 +71,7 @@ Future<RemoteConfig> setupRemoteConfig() async {
   await Firebase.initializeApp();
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
   await remoteConfig.setConfigSettings(RemoteConfigSettings(
-      Duration(seconds: 10), Duration(hours: 0)
+      Duration(seconds: 10), Duration(hours: 1)
   ));
   await remoteConfig.setDefaults(<String, dynamic>{
     'welcome': 'default welcome',

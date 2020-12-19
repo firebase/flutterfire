@@ -1,6 +1,9 @@
 name: firebase_remote_config_example
 description: Demonstrates how to use the firebase_remote_config plugin.
 
+flutter:
+  uses-material-design: true
+
 dependencies:
   flutter:
     sdk: flutter

@@ -46,11 +46,12 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
     return FirebaseRemoteConfigPlatform.instance.delegateFor(app: app).setInitialValues(
         activeParameters: pluginConstants == null
             ? Map<String, RemoteConfigValue>()
-            : _parseParameters(pluginConstants)
+            : parseParameters(pluginConstants)
     );
   }
 
-  static Map<String, RemoteConfigValue> _parseParameters(Map<dynamic, dynamic> rawParameters) {
+  @protected
+  static Map<String, RemoteConfigValue> parseParameters(Map<dynamic, dynamic> rawParameters) {
     Map<String, RemoteConfigValue> parameters = Map();
     for (String key in rawParameters.keys) {
       final rawValue = rawParameters[key];
