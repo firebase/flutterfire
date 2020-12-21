@@ -40,6 +40,7 @@ class WelcomeWidget extends AnimatedWidget {
           children: [
             Text('Welcome ${remoteConfig.getString('welcome')}'),
             Text('(${remoteConfig.getValue('welcome').source})'),
+            // TODO(kroikie): Expose the fetch time
           ],
         ),
       ),

@@ -8,5 +8,8 @@
 #import <Flutter/Flutter.h>
 #endif
 
-@interface FirebaseRemoteConfigPlugin : NSObject <FlutterPlugin>
+#import <Foundation/Foundation.h>
+#import <firebase_core/FLTFirebasePlugin.h>
+
+@interface FirebaseRemoteConfigPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
 @end
