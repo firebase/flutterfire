@@ -4,7 +4,9 @@
 
 library firebase_performance;
 
+/*melos-nullsafety-remove-start*/
 import 'dart:async';
+/*melos-nullsafety-remove-end*/
 
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';

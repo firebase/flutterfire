@@ -4,7 +4,9 @@
 
 library firebase_storage;
 
+/*melos-nullsafety-remove-start*/
 import 'dart:async';
+/*melos-nullsafety-remove-end*/
 import 'dart:typed_data' show Uint8List;
 import 'dart:io' show File;
 import 'dart:convert' show utf8, base64;

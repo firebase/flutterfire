@@ -4,7 +4,9 @@
 
 library firebase_dynamic_links;
 
+/*melos-nullsafety-remove-start*/
 import 'dart:async';
+/*melos-nullsafety-remove-end*/
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';

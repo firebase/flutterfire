@@ -2,7 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+/*melos-nullsafety-remove-start*/
 import 'dart:async';
+/*melos-nullsafety-remove-end*/
 import 'dart:core';
 
 import 'package:cloud_functions/cloud_functions.dart';

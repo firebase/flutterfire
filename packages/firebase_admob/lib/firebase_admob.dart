@@ -12,7 +12,9 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: curly_braces_in_flow_control_structures
 
+/*melos-nullsafety-remove-start*/
 import 'dart:async';
+/*melos-nullsafety-remove-end*/
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';

@@ -4,7 +4,9 @@
 
 library firebase_auth;
 
+/*melos-nullsafety-remove-start*/
 import 'dart:async';
+/*melos-nullsafety-remove-end*/
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';

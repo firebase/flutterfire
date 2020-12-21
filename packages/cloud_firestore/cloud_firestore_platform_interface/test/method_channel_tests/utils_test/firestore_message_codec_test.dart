@@ -1,4 +1,6 @@
-// import 'dart:async';
+// /*melos-nullsafety-remove-start*/
+import 'dart:async';
+/*melos-nullsafety-remove-end*/
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';

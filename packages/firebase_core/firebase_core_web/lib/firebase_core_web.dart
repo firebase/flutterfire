@@ -4,7 +4,9 @@
 
 library firebase_core_web;
 
+/*melos-nullsafety-remove-start*/
 import 'dart:async';
+/*melos-nullsafety-remove-end*/
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
