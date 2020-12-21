@@ -5,8 +5,6 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 part of firebase_core_platform_interface;
 
-// TODO(ehesp): Remove Deprecations with null safety
-
 /// The options used to configure a Firebase app.
 ///
 /// ```dart
@@ -61,16 +59,16 @@ class FirebaseOptions {
     @Deprecated("Deprecated in favor of 'messagingSenderId'") this.gcmSenderID,
     /*melos-nullsafety-remove-end*/
   })  
-    /*melos-nullsafety-remove-start*/
-    : assert(apiKey != null, "'apiKey' cannot be null"),
+  /*melos-nullsafety-remove-start*/
+  : assert(apiKey != null, "'apiKey' cannot be null"),
         assert(appId != null || googleAppID != null,
             "'appId' and 'googleAppID' cannot be null."),
         assert(messagingSenderId != null || gcmSenderID != null,
             "'messagingSenderId' and 'gcmSenderID' cannot be null."),
         assert(projectId != null || projectID != null,
             "'projectId' and 'projectID' cannot be null.")
-     /*melos-nullsafety-remove-end*/     
-     ;
+  /*melos-nullsafety-remove-end*/
+  ;
 
   /// Named constructor to create [FirebaseOptions] from a Map.
   ///
@@ -87,8 +85,11 @@ class FirebaseOptions {
             "'projectId' and 'projectID' cannot be null."),
         apiKey = map['apiKey'],
         appId = map['appId'] ?? map['googleAppID'],
-        messagingSenderId = map['messagingSenderId']/*melos-nullsafety-remove-start*/?? map['gcmSenderID']/*melos-nullsafety-remove-end*/,
-        projectId = map['projectId']/*melos-nullsafety-remove-start*/ ?? map['projectID']/*melos-nullsafety-remove-end*/,
+        messagingSenderId =
+            map['messagingSenderId'] /*melos-nullsafety-remove-start*/ ??
+                map['gcmSenderID'] /*melos-nullsafety-remove-end*/,
+        projectId = map['projectId'] /*melos-nullsafety-remove-start*/ ??
+            map['projectID'] /*melos-nullsafety-remove-end*/,
         authDomain = map['authDomain'],
         databaseURL = map['databaseURL'],
         storageBucket = map['storageBucket'],
@@ -107,8 +108,8 @@ class FirebaseOptions {
         clientID =
             map['clientID'] ?? map['androidClientId'] ?? map['iosClientId'],
         gcmSenderID = map['gcmSenderID'] ?? map['messagingSenderId']
-        /*melos-nullsafety-remove-end*/  
-        ;
+  /*melos-nullsafety-remove-end*/
+  ;
 
   /// An API key used for authenticating requests from your app, for example
   /// "AIzaSyDdVgKwhZl0sTTTLZ7iTmt1r3N2cJLnaDk", used to identify your app to
@@ -205,23 +206,30 @@ class FirebaseOptions {
   // ignore: public_member_api_docs
   final String gcmSenderID;
   /*melos-nullsafety-remove-end*/
-  
+
   /// The current instance as a [Map].
   Map<String, String> get asMap {
     return <String, String>{
-      'apiKey': apiKey/*melos-nullsafety-remove-start*/ ?? googleAppID/*melos-nullsafety-remove-end*/,
+      'apiKey': apiKey /*melos-nullsafety-remove-start*/ ??
+          googleAppID /*melos-nullsafety-remove-end*/,
       'appId': appId,
-      'messagingSenderId': messagingSenderId/*melos-nullsafety-remove-start*/ ?? gcmSenderID,
-      'projectId': projectId/*melos-nullsafety-remove-start*/ ?? projectID/*melos-nullsafety-remove-end*/,
+      'messagingSenderId':
+          messagingSenderId /*melos-nullsafety-remove-start*/ ?? gcmSenderID,
+      'projectId': projectId /*melos-nullsafety-remove-start*/ ??
+          projectID /*melos-nullsafety-remove-end*/,
       'authDomain': authDomain,
       'databaseURL': databaseURL,
       'storageBucket': storageBucket,
       'measurementId': measurementId,
-      'trackingId': trackingId/*melos-nullsafety-remove-start*/ ?? trackingID/*melos-nullsafety-remove-end*/,
+      'trackingId': trackingId /*melos-nullsafety-remove-start*/ ??
+          trackingID /*melos-nullsafety-remove-end*/,
       'deepLinkURLScheme': deepLinkURLScheme,
-      'androidClientId': androidClientId/*melos-nullsafety-remove-start*/ ?? clientID/*melos-nullsafety-remove-end*/,
-      'iosClientId': iosClientId/*melos-nullsafety-remove-start*/ ?? clientID/*melos-nullsafety-remove-end*/,
-      'iosBundleId': iosBundleId/*melos-nullsafety-remove-start*/ ?? bundleID/*melos-nullsafety-remove-end*/,
+      'androidClientId': androidClientId /*melos-nullsafety-remove-start*/ ??
+          clientID /*melos-nullsafety-remove-end*/,
+      'iosClientId': iosClientId /*melos-nullsafety-remove-start*/ ??
+          clientID /*melos-nullsafety-remove-end*/,
+      'iosBundleId': iosBundleId /*melos-nullsafety-remove-start*/ ??
+          bundleID /*melos-nullsafety-remove-end*/,
       'appGroupId': appGroupId,
     };
   }

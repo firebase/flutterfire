@@ -68,7 +68,7 @@ class FirebaseApp {
   static String get defaultAppName {
     return defaultFirebaseAppName;
   }
-  /*melos-nullsafety-remove-start*/
+  /*melos-nullsafety-remove-end*/
 
   /// The name of this [FirebaseApp].
   String get name => _delegate.name;
