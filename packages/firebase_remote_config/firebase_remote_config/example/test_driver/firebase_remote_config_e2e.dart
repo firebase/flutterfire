@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:e2e/e2e.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 
 void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
@@ -12,9 +13,8 @@ void main() {
     setUp(() async {
       await Firebase.initializeApp();
       remoteConfig = await RemoteConfig.instance;
-      // Set our config to no minimum fetch interval so that settings change immediately
-      await remoteConfig.setConfigSettings(RemoteConfigSettings(
-          minimumFetchIntervalMillis: 0, fetchTimeoutMillis: 30 * 1000));
+      await remoteConfig
+          .setConfigSettings(RemoteConfigSettings(Duration(seconds: 10), Duration.zero));
       await remoteConfig.setDefaults(<String, dynamic>{
         'welcome': 'default welcome',
         'hello': 'default hello',
@@ -22,12 +22,13 @@ void main() {
     });
 
     testWidgets('fetch', (WidgetTester tester) async {
-      final DateTime lastFetchTime = remoteConfig.lastFetchTime;
-      expect(lastFetchTime.isBefore(DateTime.now()), true);
-      await remoteConfig.fetch(expiration: const Duration(seconds: 0));
-      expect(remoteConfig.lastFetchStatus, LastFetchStatus.success);
-      final activated = await remoteConfig.activateFetched();
-      expect(activated, true);
+      // TODO(kroikie): test lastFetchTime
+      // final DateTime lastFetchTime = remoteConfig.lastFetchTime;
+      // expect(lastFetchTime.isBefore(DateTime.now()), true);
+      await remoteConfig.fetchAndActivate();
+      // TODO(kroikie): test lastFetchStatus
+      // expect(remoteConfig.lastFetchStatus, LastFetchStatus.success);
+      // await remoteConfig.activateFetched();
 
       // TODO should verify that our config settings actually took
       expect(remoteConfig.getString('welcome'), 'Earth, welcome! Hello!');
