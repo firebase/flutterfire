@@ -373,7 +373,7 @@ public class FlutterFirebaseAuthPlugin
     output.put(Constants.EMAIL_VERIFIED, firebaseUser.isEmailVerified());
     output.put(Constants.IS_ANONYMOUS, firebaseUser.isAnonymous());
     final FirebaseUserMetadata userMetadata = firebaseUser.getMetadata();
-    if(userMetadata != null) {
+    if (userMetadata != null) {
       metadata.put(Constants.CREATION_TIME, userMetadata.getCreationTimestamp());
       metadata.put(Constants.LAST_SIGN_IN_TIME, userMetadata.getLastSignInTimestamp());
     }
