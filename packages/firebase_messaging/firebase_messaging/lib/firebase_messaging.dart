@@ -4,9 +4,7 @@
 
 library firebase_messaging;
 
-/*melos-nullsafety-remove-start*/
-import 'dart:async';
-/*melos-nullsafety-remove-end*/
+import 'dart:async' show StreamController;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
