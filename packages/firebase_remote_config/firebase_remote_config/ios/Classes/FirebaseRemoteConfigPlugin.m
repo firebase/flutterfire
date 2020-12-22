@@ -154,6 +154,16 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
   FIRRemoteConfig  *firebaseRemoteConfig = [FIRRemoteConfig remoteConfigWithApp:firebase_app];
+  NSNumber *fetchTimeout = @([[firebaseRemoteConfig configSettings] fetchTimeout]);
+  NSNumber *minimumFetchInterval = @([[firebaseRemoteConfig configSettings] minimumFetchInterval]);
+  double lastFetchMillis = [[firebaseRemoteConfig lastFetchTime] timeIntervalSince1970] * 1000;
+  
+  NSMutableDictionary *configValues = [[NSMutableDictionary alloc] init];
+  [configValues setValue:@([fetchTimeout intValue]) forKey:@"fetchTimeout"];
+  [configValues setValue:@([minimumFetchInterval intValue]) forKey:@"minimumFetchInterval"];
+  [configValues setValue:@(lastFetchMillis) forKey:@"lastFetchTime"];
+  [configValues setValue:[self mapLastFetchStatus:[firebaseRemoteConfig lastFetchStatus]] forKey:@"lastFetchStatus"];
+  [configValues setValue:[self getAllParameters:firebaseRemoteConfig] forKey:@"parameters"];
   return [self getAllParameters:firebaseRemoteConfig];
 }
 

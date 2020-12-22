@@ -50,7 +50,15 @@ public class FirebaseRemoteConfigPlugin implements FlutterFirebasePlugin, Method
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(final FirebaseApp firebaseApp) {
     FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance(firebaseApp);
-    return Tasks.call(cachedThreadPool, () -> parseParameters(remoteConfig.getAll()));
+    return Tasks.call(cachedThreadPool, () -> {
+      Map<String, Object> configValues = new HashMap<>();
+      configValues.put("fetchTimeout", remoteConfig.getInfo().getConfigSettings().getFetchTimeoutInSeconds());
+      configValues.put("minimumFetchInterval", remoteConfig.getInfo().getConfigSettings().getMinimumFetchIntervalInSeconds());
+      configValues.put("lastFetchTime", remoteConfig.getInfo().getFetchTimeMillis());
+      configValues.put("lastFetchStatus", mapLastFetchStatus(remoteConfig.getInfo().getLastFetchStatus()));
+      configValues.put("parameters", parseParameters(remoteConfig.getAll()));
+      return configValues;
+    });
   }
 
   @Override

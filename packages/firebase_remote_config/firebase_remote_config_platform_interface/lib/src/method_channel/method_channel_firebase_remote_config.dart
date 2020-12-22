@@ -45,16 +45,32 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   @override
   FirebaseRemoteConfigPlatform setInitialValues(
       {Map<String, dynamic> remoteConfigValues}) {
-    final fetchTimeout = remoteConfigValues['fetchTimeout'];
-    final minimumFetchInterval = remoteConfigValues['minimumFetchInterval'];
+    final fetchTimeout = Duration(seconds: remoteConfigValues['fetchTimeout']);
+    final minimumFetchInterval = Duration(seconds: remoteConfigValues['minimumFetchInterval']);
     final lastFetchMillis = remoteConfigValues['lastFetchTime'];
+    final lastFetchStatus = remoteConfigValues['lastFetchStatus'];
 
     _settings = RemoteConfigSettings(fetchTimeout, minimumFetchInterval);
     _lastFetchTime = DateTime.fromMillisecondsSinceEpoch(lastFetchMillis);
+    _lastFetchStatus = _parseFetchStatus(lastFetchStatus);
     _activeParameters = remoteConfigValues['parameters'];
     return this;
   }
 
+  RemoteConfigFetchStatus _parseFetchStatus(String status) {
+    switch(status) {
+      case 'noFetchYet':
+        return RemoteConfigFetchStatus.noFetchYet;
+      case 'success':
+        return RemoteConfigFetchStatus.success;
+      case 'failure':
+        return RemoteConfigFetchStatus.failure;
+      case 'throttle':
+        return RemoteConfigFetchStatus.throttle;
+      default:
+        return RemoteConfigFetchStatus.noFetchYet;
+    }
+  }
 
   @override
   DateTime get lastFetchTime => _lastFetchTime;
