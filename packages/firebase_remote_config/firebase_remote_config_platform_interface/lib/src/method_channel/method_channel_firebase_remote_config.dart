@@ -27,6 +27,9 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   MethodChannelFirebaseRemoteConfig({FirebaseApp app}) : super(appInstance: app);
 
   Map<String, RemoteConfigValue> _activeParameters;
+  RemoteConfigSettings _settings;
+  DateTime _lastFetchTime;
+  RemoteConfigFetchStatus _lastFetchStatus;
 
   @override
   FirebaseRemoteConfigPlatform delegateFor({FirebaseApp app}) {
@@ -41,9 +44,30 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
 
   @override
   FirebaseRemoteConfigPlatform setInitialValues(
-      {Map<String, RemoteConfigValue> activeParameters}) {
-    this._activeParameters = activeParameters;
+      {Map<String, dynamic> remoteConfigValues}) {
+    final fetchTimeout = remoteConfigValues['fetchTimeout'];
+    final minimumFetchInterval = remoteConfigValues['minimumFetchInterval'];
+    final lastFetchMillis = remoteConfigValues['lastFetchTime'];
+
+    _settings = RemoteConfigSettings(fetchTimeout, minimumFetchInterval);
+    _lastFetchTime = DateTime.fromMillisecondsSinceEpoch(lastFetchMillis);
+    _activeParameters = remoteConfigValues['parameters'];
     return this;
+  }
+
+
+  @override
+  DateTime get lastFetchTime => _lastFetchTime;
+
+  @override
+  RemoteConfigFetchStatus get lastFetchStatus => _lastFetchStatus;
+
+  @override
+  RemoteConfigSettings get settings => _settings;
+
+  @override
+  set settings(RemoteConfigSettings remoteConfigSettings) {
+    _settings = remoteConfigSettings;
   }
 
   @override
@@ -59,12 +83,12 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       'appName': app.name,
     });
     if (configChanged) {
-      await _updateActiveParameters();
+      await _updateConfigValues();
     }
     return configChanged;
   }
 
-  Future<void> _updateActiveParameters() async {
+  Future<void> _updateConfigValues() async {
     Map<dynamic, dynamic> parameters = await channel.invokeMapMethod<String, dynamic>('RemoteConfig#getAll', <String, dynamic>{
       'appName': app.name,
     });
@@ -84,7 +108,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       'appName': app.name,
     });
     if (configChanged) {
-      await _updateActiveParameters();
+      await _updateConfigValues();
     }
     return configChanged;
   }
@@ -149,6 +173,6 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       'appName': app.name,
       'defaults': defaultParameters
     });
-    await _updateActiveParameters();
+    await _updateConfigValues();
   }
 }

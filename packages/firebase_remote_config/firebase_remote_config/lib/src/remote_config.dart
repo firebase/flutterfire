@@ -43,6 +43,18 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
     return newInstance;
   }
 
+  DateTime get lastFetchTime {
+    return _delegate.lastFetchTime;
+  }
+
+  RemoteConfigFetchStatus get lastFetchStatus {
+    return _delegate.lastFetchStatus;
+  }
+
+  RemoteConfigSettings get settings {
+    return _delegate.settings;
+  }
+
   Future<bool> activate() async {
     bool configChanged = await _delegate.activate();
     if (configChanged) {

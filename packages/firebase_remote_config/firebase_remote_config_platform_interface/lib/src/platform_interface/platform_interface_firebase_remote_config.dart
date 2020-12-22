@@ -44,8 +44,8 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
 
   factory FirebaseRemoteConfigPlatform.instanceFor({FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
     return FirebaseRemoteConfigPlatform.instance.delegateFor(app: app).setInitialValues(
-        activeParameters: pluginConstants == null
-            ? Map<String, RemoteConfigValue>()
+        remoteConfigValues: pluginConstants == null
+            ? Map<String, dynamic>()
             : parseParameters(pluginConstants)
     );
   }
@@ -79,8 +79,24 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   }
 
   @protected
-  FirebaseRemoteConfigPlatform setInitialValues({Map<String, RemoteConfigValue> activeParameters}) {
+  FirebaseRemoteConfigPlatform setInitialValues({Map<String, dynamic> remoteConfigValues}) {
     throw UnimplementedError('setInitialValues() is not implemented');
+  }
+
+  DateTime get lastFetchTime {
+    throw UnimplementedError('lastFetchTime getter not implemented');
+  }
+
+  RemoteConfigFetchStatus get lastFetchStatus {
+    throw UnimplementedError('lastFetchStatus getter not implemented');
+  }
+
+  RemoteConfigSettings get settings {
+    throw UnimplementedError('settings getter not implemented');
+  }
+
+  set settings(RemoteConfigSettings remoteConfigSettings) {
+    throw UnimplementedError('settings setter not implemented');
   }
 
   Future<bool> activate() {
