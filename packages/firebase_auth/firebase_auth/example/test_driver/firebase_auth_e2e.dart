@@ -21,6 +21,7 @@ void testsMain() {
 
   runInstanceTests();
   runUserTests();
+  print('Finished');
 }
 
 void main() => drive.main(testsMain);
