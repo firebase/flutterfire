@@ -24,6 +24,7 @@ class MethodChannelUser extends UserPlatform {
       await MethodChannelFirebaseAuth.channel
           .invokeMethod<void>('User#delete', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
       });
     } catch (e) {
       throw convertPlatformException(e);
@@ -37,6 +38,7 @@ class MethodChannelUser extends UserPlatform {
           .invokeMapMethod<String, dynamic>(
               'User#getIdToken', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
         'forceRefresh': forceRefresh,
         'tokenOnly': true,
       });
@@ -54,6 +56,7 @@ class MethodChannelUser extends UserPlatform {
           .invokeMapMethod<String, dynamic>(
               'User#getIdToken', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
         'forceRefresh': forceRefresh,
         'tokenOnly': false,
       });
@@ -72,6 +75,7 @@ class MethodChannelUser extends UserPlatform {
           .invokeMapMethod<String, dynamic>(
               'User#linkWithCredential', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
         'credential': credential.asMap(),
       });
 
@@ -93,6 +97,7 @@ class MethodChannelUser extends UserPlatform {
           .invokeMapMethod<String, dynamic>(
               'User#reauthenticateUserWithCredential', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
         'credential': credential.asMap(),
       });
 
@@ -112,6 +117,7 @@ class MethodChannelUser extends UserPlatform {
       Map<String, dynamic> data = await MethodChannelFirebaseAuth.channel
           .invokeMapMethod<String, dynamic>('User#reload', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
       });
 
       MethodChannelUser user = MethodChannelUser(auth, data);
@@ -126,9 +132,10 @@ class MethodChannelUser extends UserPlatform {
   Future<void> sendEmailVerification(
       ActionCodeSettings actionCodeSettings) async {
     try {
-      await MethodChannelFirebaseAuth.channel.invokeMethod<void>(
-          'User#sendEmailVerification', <String, dynamic>{
+      await MethodChannelFirebaseAuth.channel
+          .invokeMethod<void>('User#sendEmailVerification', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
         'actionCodeSettings': actionCodeSettings?.asMap()
       });
     } catch (e) {
@@ -142,6 +149,7 @@ class MethodChannelUser extends UserPlatform {
       Map<String, dynamic> data = await MethodChannelFirebaseAuth.channel
           .invokeMapMethod<String, dynamic>('User#unlink', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
         'providerId': providerId,
       });
 
@@ -165,6 +173,7 @@ class MethodChannelUser extends UserPlatform {
           .invokeMapMethod<String, dynamic>(
               'User#updateEmail', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
         'newEmail': newEmail,
       });
 
@@ -183,6 +192,7 @@ class MethodChannelUser extends UserPlatform {
           .invokeMapMethod<String, dynamic>(
               'User#updatePassword', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
         'newPassword': newPassword,
       });
 
@@ -201,6 +211,7 @@ class MethodChannelUser extends UserPlatform {
           .invokeMapMethod<String, dynamic>(
               'User#updatePhoneNumber', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
         'credential': phoneCredential.asMap(),
       });
 
@@ -219,6 +230,7 @@ class MethodChannelUser extends UserPlatform {
           .invokeMapMethod<String, dynamic>(
               'User#updateProfile', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
         'profile': profile,
       });
 
@@ -237,6 +249,7 @@ class MethodChannelUser extends UserPlatform {
       await MethodChannelFirebaseAuth.channel
           .invokeMethod<void>('User#verifyBeforeUpdateEmail', <String, dynamic>{
         'appName': auth.app.name,
+        'tenantId': auth.tenantId,
         'newEmail': newEmail,
         'actionCodeSettings': actionCodeSettings?.asMap(),
       });

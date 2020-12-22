@@ -23,6 +23,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   @protected
   final FirebaseApp /*?*/ appInstance;
 
+  /// The current Auth instance's tenant ID.
+  String /*?*/ _tenantId;
+
   /// Create an instance using [app]
   FirebaseAuthPlatform({this.appInstance}) : super(token: _token);
 
@@ -108,6 +111,21 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// See [setLanguageCode] to update the language code.
   String get languageCode {
     throw UnimplementedError("languageCode is not implemented");
+  }
+
+  /// The current Auth instance's tenant ID.
+  String /*?*/ get tenantId {
+    return _tenantId;
+  }
+
+  /// Set the current Auth instance's tenant ID.
+  ///
+  /// When you set the tenant ID of an Auth instance, all future sign-in/sign-up
+  /// operations will pass this tenant ID and sign in or sign up users to the
+  /// specified tenant project. When set to null, users are signed in to the
+  /// parent project. By default, this is set to `null`.
+  set tenantId(String /*?*/ tenantId) {
+    _tenantId = tenantId;
   }
 
   /// Sends a Stream event to a [authStateChanges] stream controller.

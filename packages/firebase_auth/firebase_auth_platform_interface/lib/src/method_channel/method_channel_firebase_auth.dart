@@ -261,6 +261,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       await channel
           .invokeMethod<void>('Auth#applyActionCode', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'code': code,
       });
     } catch (e) {
@@ -275,6 +276,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           .invokeMapMethod<String, dynamic>(
               'Auth#checkActionCode', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'code': code,
       });
 
@@ -293,6 +295,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       await channel
           .invokeMethod<void>('Auth#confirmPasswordReset', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'code': code,
         'newPassword': newPassword,
       });
@@ -309,6 +312,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           .invokeMapMethod<String, dynamic>(
               'Auth#createUserWithEmailAndPassword', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'email': email,
         'password': password,
       });
@@ -330,6 +334,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           .invokeMapMethod<String, dynamic>(
               'Auth#fetchSignInMethodsForEmail', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'email': email,
       });
 
@@ -357,6 +362,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       await channel
           .invokeMethod<void>('Auth#sendPasswordResetEmail', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'email': email,
         'actionCodeSettings': actionCodeSettings?.asMap(),
       });
@@ -372,6 +378,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       await channel
           .invokeMethod<void>('Auth#sendSignInLinkToEmail', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'email': email,
         'actionCodeSettings': actionCodeSettings.asMap(),
       });
@@ -387,6 +394,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           .invokeMapMethod<String, dynamic>(
               'Auth#setLanguageCode', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'languageCode': languageCode,
       });
 
@@ -402,6 +410,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     try {
       await channel.invokeMethod('Auth#setSettings', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'appVerificationDisabledForTesting': appVerificationDisabledForTesting,
         'userAccessGroup': userAccessGroup,
       });
@@ -423,6 +432,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           .invokeMapMethod<String, dynamic>(
               'Auth#signInAnonymously', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
       });
 
       MethodChannelUserCredential userCredential =
@@ -443,6 +453,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           .invokeMapMethod<String, dynamic>(
               'Auth#signInWithCredential', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'credential': credential.asMap(),
       });
 
@@ -463,6 +474,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           .invokeMapMethod<String, dynamic>(
               'Auth#signInWithCustomToken', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'token': token,
       });
 
@@ -484,6 +496,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           .invokeMapMethod<String, dynamic>(
               'Auth#signInWithEmailAndPassword', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'email': email,
         'password': password,
       });
@@ -506,6 +519,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           .invokeMapMethod<String, dynamic>(
               'Auth#signInWithEmailLink', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'email': email,
         'emailLink': emailLink,
       });
@@ -550,6 +564,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           .invokeMapMethod<String, dynamic>(
               'Auth#verifyPasswordResetCode', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'code': code,
       });
 
@@ -583,6 +598,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       await channel
           .invokeMethod<void>('Auth#verifyPhoneNumber', <String, dynamic>{
         'appName': app.name,
+        'tenantId': tenantId,
         'handle': handle,
         'phoneNumber': phoneNumber,
         'timeout': timeout.inMilliseconds,

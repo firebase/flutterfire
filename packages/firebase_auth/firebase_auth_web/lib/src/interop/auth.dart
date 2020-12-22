@@ -286,6 +286,14 @@ class IdTokenResult extends JsObjectWrapper<auth_interop.IdTokenResultImpl> {
 class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   static final _expando = Expando<Auth>();
 
+  String /*?*/ get tenantId {
+    return jsObject.tenantId;
+  }
+
+  set tenantId(String /*?*/ tenantId) {
+    jsObject.tenantId = tenantId;
+  }
+
   /// App for this instance of auth service.
   App get app => App.getInstance(jsObject.app);
 
