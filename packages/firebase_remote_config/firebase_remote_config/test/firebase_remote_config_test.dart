@@ -2,57 +2,102 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
-import 'package:firebase_remote_config_platform_interface/src/method_channel/method_channel_firebase_remote_config.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+import 'package:mockito/mockito.dart';
+
+import 'mock.dart';
+
+MockFirebaseRemoteConfig mockRemoteConfigPlatform = MockFirebaseRemoteConfig();
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  setupFirebaseRemoteConfigMocks();
 
-  final int lastFetchTime = 1520618753782;
-  Map<String, dynamic> getDefaultInstance() {
-    return <String, dynamic>{
-      'lastFetchTime': lastFetchTime,
-      'lastFetchStatus': 'success',
-      'parameters': <String, dynamic>{
-        'param1': <String, dynamic>{
-          'source': 'static',
-          'value': <int>[118, 97, 108, 49], // UTF-8 encoded 'val1'
-        },
-      },
-    };
-  }
+  RemoteConfig remoteConfig;
+
+  DateTime mockLastFetchTime;
+  RemoteConfigFetchStatus mockLastFetchStatus;
+  RemoteConfigSettings mockRemoteConfigSettings;
+  Map<String, RemoteConfigValue> mockParameters;
+  Map<String, dynamic> mockDefaultParameters;
+  RemoteConfigValue mockRemoteConfigValue;
 
   group('$RemoteConfig', () {
-    final List<MethodCall> log = <MethodCall>[];
+    FirebaseRemoteConfigPlatform.instance = mockRemoteConfigPlatform;
 
-    setUp(() async {
-      MethodChannelFirebaseRemoteConfig.channel
-          .setMockMethodCallHandler((MethodCall methodCall) async {
-        log.add(methodCall);
-        switch (methodCall.method) {
-          case 'RemoteConfig#instance':
-            return getDefaultInstance();
-          default:
-            return true;
-        }
-      });
-    });
+    setUpAll(() async {
+      await Firebase.initializeApp();
+      remoteConfig = RemoteConfig.instance;
 
-    test('instance', () async {
-      final RemoteConfig remoteConfig = await RemoteConfig.instance;
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall('RemoteConfig#instance', arguments: null),
-        ],
+      mockLastFetchTime = DateTime(2020, 1, 1);
+      mockLastFetchStatus = RemoteConfigFetchStatus.noFetchYet;
+      mockRemoteConfigSettings = RemoteConfigSettings(
+        Duration(seconds: 10),
+        Duration(hours: 1),
       );
-      expect(remoteConfig.settings, true);
-      expect(remoteConfig.lastFetchTime,
-          DateTime.fromMillisecondsSinceEpoch(lastFetchTime));
-      expect(remoteConfig.lastFetchStatus, RemoteConfigFetchStatus.noFetchYet);
+      mockParameters = <String, RemoteConfigValue>{};
+      mockDefaultParameters = <String, dynamic>{};
+      mockRemoteConfigValue = RemoteConfigValue(
+          <int>[],
+          ValueSource.valueStatic,
+      );
+
+      when(mockRemoteConfigPlatform.instanceFor(
+        app: anyNamed('app'),
+        pluginConstants: anyNamed('pluginConstants')
+      )).thenAnswer((_) => mockRemoteConfigPlatform);
+
+      when(mockRemoteConfigPlatform.delegateFor(
+          app: anyNamed('app'),
+      )).thenAnswer((_) => mockRemoteConfigPlatform);
+
+      when(mockRemoteConfigPlatform.setInitialValues(
+        remoteConfigValues: anyNamed('remoteConfigValues')
+      )).thenAnswer((_) => mockRemoteConfigPlatform);
+
+      when(mockRemoteConfigPlatform.lastFetchTime)
+          .thenReturn(mockLastFetchTime);
+
+      when(mockRemoteConfigPlatform.lastFetchStatus)
+          .thenReturn(mockLastFetchStatus);
+
+      when(mockRemoteConfigPlatform.settings)
+          .thenReturn(mockRemoteConfigSettings);
+
+      when(mockRemoteConfigPlatform.setConfigSettings(any))
+          .thenAnswer((_) => null);
+
+      when(mockRemoteConfigPlatform.activate())
+          .thenAnswer((_) => Future.value(true));
+
+      when(mockRemoteConfigPlatform.ensureInitialized())
+          .thenAnswer((_) => Future.value());
+
+      when(mockRemoteConfigPlatform.fetch())
+          .thenAnswer((_) => Future.value());
+
+      when(mockRemoteConfigPlatform.fetchAndActivate())
+          .thenAnswer((_) => Future.value(true));
+
+      when(mockRemoteConfigPlatform.getAll()).thenReturn(mockParameters);
+
+      when(mockRemoteConfigPlatform.getBool('foo')).thenReturn(true);
+
+      when(mockRemoteConfigPlatform.getInt('foo')).thenReturn(8);
+
+      when(mockRemoteConfigPlatform.getDouble('foo')).thenReturn(8.8);
+
+      when(mockRemoteConfigPlatform.getString('foo')).thenReturn('bar');
+
+      when(mockRemoteConfigPlatform.getValue('foo'))
+          .thenReturn(mockRemoteConfigValue);
+
+      when(mockRemoteConfigPlatform.setDefaults(any))
+          .thenAnswer((_) => Future.value());
     });
 
     test('doubleInstance', () async {
@@ -62,174 +107,167 @@ void main() {
       ];
       expect(remoteConfigs[0], remoteConfigs[1]);
     });
-  });
 
-  group('$RemoteConfig', () {
-    final List<MethodCall> log = <MethodCall>[];
-
-    final int lastFetchTime = 1520618753782;
-    RemoteConfig remoteConfig;
-
-    setUp(() async {
-      MethodChannelFirebaseRemoteConfig.channel
-          .setMockMethodCallHandler((MethodCall methodCall) async {
-        log.add(methodCall);
-        switch (methodCall.method) {
-          case 'RemoteConfig#setDefaults':
-            return null;
-          case 'RemoteConfig#fetch':
-            return <String, dynamic>{
-              'lastFetchTime': lastFetchTime,
-              'lastFetchStatus': 'success',
-            };
-          case 'RemoteConfig#instance':
-            return getDefaultInstance();
-          case 'RemoteConfig#activate':
-            return <String, dynamic>{
-              'parameters': <String, dynamic>{
-                'param1': <String, dynamic>{
-                  'source': 'remote',
-                  'value': <int>[118, 97, 108, 49], // UTF-8 encoded 'val1'
-                },
-                'param2': <String, dynamic>{
-                  'source': 'remote',
-                  'value': <int>[49, 50, 51, 52, 53], // UTF-8 encoded '12345'
-                },
-                'param3': <String, dynamic>{
-                  'source': 'default',
-                  'value': <int>[51, 46, 49, 52], // UTF-8 encoded '3.14'
-                },
-                'param4': <String, dynamic>{
-                  'source': 'remote',
-                  'value': <int>[116, 114, 117, 101], // UTF-8 encoded 'true'
-                },
-                'param5': <String, dynamic>{
-                  'source': 'default',
-                  'value': <int>[
-                    102,
-                    97,
-                    108,
-                    115,
-                    101
-                  ], // UTF-8 encoded 'false'
-                },
-                'param6': <String, dynamic>{'source': 'default', 'value': null}
-              },
-              'newConfig': true,
-            };
-          case 'RemoteConfig#setConfigSettings':
-            return null;
-          default:
-            return true;
-        }
-      });
-      remoteConfig = await RemoteConfig.instance;
-      log.clear();
-    });
-
-    test('setDefaults', () async {
-      await remoteConfig.setDefaults(<String, dynamic>{
-        'foo': 'bar',
-      });
-      expect(log, <Matcher>[
-        isMethodCall(
-          'RemoteConfig#setDefaults',
-          arguments: <String, dynamic>{
-            'defaults': <String, dynamic>{
-              'foo': 'bar',
-            },
-          },
-        ),
-      ]);
-    });
-
-    test('fetch', () async {
-      await remoteConfig.fetch();
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'RemoteConfig#fetch',
-            arguments: null,
-          ),
-        ],
-      );
-    });
-
-    test('activate', () async {
-      final bool newConfig = await remoteConfig.activate();
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'RemoteConfig#activate',
-            arguments: null,
-          ),
-        ],
-      );
-      expect(newConfig, true);
-      expect(remoteConfig.getString('param1'), 'val1');
-      expect(remoteConfig.getInt('param2'), 12345);
-      expect(remoteConfig.getDouble('param3'), 3.14);
-      expect(remoteConfig.getBool('param4'), true);
-      expect(remoteConfig.getBool('param5'), false);
-      expect(remoteConfig.getInt('param6'), 0);
-
-      remoteConfig.getAll().forEach((String key, RemoteConfigValue value) {
-        switch (key) {
-          case 'param1':
-            expect(value.asString(), 'val1');
-            break;
-          case 'param2':
-            expect(value.asInt(), 12345);
-            break;
-          case 'param3':
-            expect(value.asDouble(), 3.14);
-            break;
-          case 'param4':
-            expect(value.asBool(), true);
-            break;
-          case 'param5':
-            expect(value.asBool(), false);
-            break;
-          case 'param6':
-            expect(value.asInt(), 0);
-            break;
-          default:
-        }
-      });
-
-      final Map<String, ValueSource> resultAllSources = remoteConfig
-          .getAll()
-          .map((String key, RemoteConfigValue value) =>
-              MapEntry<String, ValueSource>(key, value.source));
-      expect(resultAllSources, <String, ValueSource>{
-        'param1': ValueSource.valueRemote,
-        'param2': ValueSource.valueRemote,
-        'param3': ValueSource.valueDefault,
-        'param4': ValueSource.valueRemote,
-        'param5': ValueSource.valueDefault,
-        'param6': ValueSource.valueDefault,
+    group('lastFetchTime', () {
+      test('get lastFetchTime', () {
+        DateTime lastFetchTime = remoteConfig.lastFetchTime;
+        verify(mockRemoteConfigPlatform.lastFetchTime);
       });
     });
 
-    test('setConfigSettings', () async {
-      final RemoteConfigSettings remoteConfigSettings =
-          RemoteConfigSettings(Duration(seconds: 10), Duration.zero);
-      await remoteConfig.setConfigSettings(remoteConfigSettings);
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'RemoteConfig#setConfigSettings',
-            arguments: <String, dynamic>{
-              'appName': remoteConfig.app.name,
-              'fetchTimeout': Duration(seconds: 10).inSeconds,
-              'minimumFetchInterval': Duration.zero.inSeconds,
-            },
-          ),
-        ],
-      );
+    group('lastFetchStatus', () {
+      test('get lastFetchStatus', () {
+        RemoteConfigFetchStatus lastFetchStatus = remoteConfig.lastFetchStatus;
+        verify(mockRemoteConfigPlatform.lastFetchStatus);
+      });
+    });
+
+    group('settings', () {
+      test('get settings', () {
+        RemoteConfigSettings settings = remoteConfig.settings;
+        verify(mockRemoteConfigPlatform.settings);
+      });
+
+      test('set settings', () async {
+        final remoteConfigSettings = RemoteConfigSettings(
+          Duration(seconds: 8),
+          Duration.zero
+        );
+        await remoteConfig.setConfigSettings(remoteConfigSettings);
+        verify(
+            mockRemoteConfigPlatform.setConfigSettings(remoteConfigSettings));
+      });
+
+      test('should throw if settings is null', () async {
+        expect(
+          () => remoteConfig.setConfigSettings(null),
+          throwsAssertionError,
+        );
+      });
+    });
+
+    group('activate()', () {
+      test('should call delegate method', () async {
+        await remoteConfig.activate();
+        verify(mockRemoteConfigPlatform.activate());
+      });
+    });
+
+    group('ensureEnitialized()', () {
+      test('should call delegate method', () async {
+        await remoteConfig.ensureInitialized();
+        verify(mockRemoteConfigPlatform.ensureInitialized());
+      });
+    });
+
+    group('fetch()', () {
+      test('should call delegate method', () async {
+        await remoteConfig.fetch();
+        verify(mockRemoteConfigPlatform.fetch());
+      });
+    });
+
+    group('fetchAndActivate()', () {
+      test('should call delegate method', () async {
+        await remoteConfig.fetchAndActivate();
+        verify(mockRemoteConfigPlatform.fetchAndActivate());
+      });
+    });
+
+    group('getAll()', () {
+      test('should call delegate method', () {
+        Map<String, RemoteConfigValue> parameters = remoteConfig.getAll();
+        verify(mockRemoteConfigPlatform.getAll());
+      });
+    });
+
+    group('getBool()', () {
+      test('should call delegate method', () {
+        bool parameterValue = remoteConfig.getBool('foo');
+        verify(mockRemoteConfigPlatform.getBool('foo'));
+      });
+
+      test('should throw if key is null', () {
+        expect(() => remoteConfig.getBool(null), throwsAssertionError);
+      });
+    });
+
+    group('getInt()', () {
+      test('should call delegate method', () {
+        remoteConfig.getInt('foo');
+        verify(mockRemoteConfigPlatform.getInt('foo'));
+      });
+
+      test('should throw if key is null', () {
+        expect(() => remoteConfig.getInt(null), throwsAssertionError);
+      });
+    });
+
+    group('getDouble()', () {
+      test('should call delegate method', () {
+        remoteConfig.getDouble('foo');
+        verify(mockRemoteConfigPlatform.getDouble('foo'));
+      });
+
+      test('should throw if key is null', () {
+        expect(() => remoteConfig.getDouble(null), throwsAssertionError);
+      });
+    });
+
+    group('getString()', () {
+      test('should call delegate method', () {
+        remoteConfig.getString('foo');
+        verify(mockRemoteConfigPlatform.getString('foo'));
+      });
+
+      test('should throw if key is null', () {
+        expect(() => remoteConfig.getString(null), throwsAssertionError);
+      });
+    });
+
+    group('getValue()', () {
+      test('should call delegate method', () {
+        remoteConfig.getValue('foo');
+        verify(mockRemoteConfigPlatform.getValue('foo'));
+      });
+
+      test('should throw if key is null', () {
+        expect(() => remoteConfig.getValue(null), throwsAssertionError);
+      });
+    });
+
+    group('setDefaults()', () {
+      test('should call delegate method', () {
+        remoteConfig.setDefaults(mockParameters);
+        verify(mockRemoteConfigPlatform.setDefaults(mockDefaultParameters));
+      });
+
+      test('should throw if parameters are null', () {
+        expect(() => remoteConfig.setDefaults(null), throwsAssertionError);
+      });
     });
   });
+}
+
+class MockFirebaseRemoteConfig extends Mock
+    with MockPlatformInterfaceMixin
+    implements TestFirebaseRemoteConfigPlatform {
+  MockFirebaseRemoteConfig();
+}
+
+class TestFirebaseRemoteConfigPlatform extends FirebaseRemoteConfigPlatform {
+  TestFirebaseRemoteConfigPlatform() : super();
+
+  instanceFor({FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {}
+
+  FirebaseRemoteConfigPlatform delegateFor({FirebaseApp app}) {
+    return this;
+  }
+
+  @override
+  FirebaseRemoteConfigPlatform setInitialValues(
+      {Map<String, dynamic> remoteConfigValues}) {
+
+    return this;
+  }
 }

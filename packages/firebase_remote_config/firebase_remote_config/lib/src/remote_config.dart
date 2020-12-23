@@ -63,7 +63,7 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
     return configChanged;
   }
 
-  Future<void> insureInitialized() {
+  Future<void> ensureInitialized() {
     return _delegate.ensureInitialized();
   }
 
@@ -84,30 +84,39 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   }
 
   bool getBool(String key) {
+    assert(key != null);
     return _delegate.getBool(key);
   }
 
   int getInt(String key) {
+    assert(key != null);
     return _delegate.getInt(key);
   }
 
   double getDouble(String key) {
+    assert(key != null);
     return _delegate.getDouble(key);
   }
 
   String getString(String key) {
+    assert(key != null);
     return _delegate.getString(key);
   }
 
   RemoteConfigValue getValue(String key) {
+    assert(key != null);
     return _delegate.getValue(key);
   }
 
   Future<void> setConfigSettings(RemoteConfigSettings remoteConfigSettings) {
+    assert(remoteConfigSettings != null);
+    assert(remoteConfigSettings.fetchTimeout != null);
+    assert(remoteConfigSettings.minimumFetchInterval != null);
     return _delegate.setConfigSettings(remoteConfigSettings);
   }
 
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
+    assert(defaultParameters != null);
     return _delegate.setDefaults(defaultParameters);
   }
 }
