@@ -14,7 +14,7 @@ void main() {
       await Firebase.initializeApp();
       remoteConfig = await RemoteConfig.instance;
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 10),
+        fetchTimeout: Duration(seconds: 8),
         minimumFetchInterval: Duration.zero,
       ));
       await remoteConfig.setDefaults(<String, dynamic>{
@@ -24,10 +24,11 @@ void main() {
     });
 
     testWidgets('fetch', (WidgetTester tester) async {
-      final DateTime lastFetchTime = remoteConfig.lastFetchTime;
-      expect(lastFetchTime.isBefore(DateTime.now()), true);
+      final mark = DateTime.now();
+      expect(remoteConfig.lastFetchTime.isBefore(mark), true);
       await remoteConfig.fetchAndActivate();
       expect(remoteConfig.lastFetchStatus, RemoteConfigFetchStatus.success);
+      expect(remoteConfig.lastFetchTime.isAfter(mark), true);
 
       // TODO should verify that our config settings actually took
       expect(remoteConfig.getString('welcome'), 'Earth, welcome! Hello!');
@@ -42,6 +43,17 @@ void main() {
         remoteConfig.getValue('nonexisting').source,
         ValueSource.valueStatic,
       );
+    });
+
+    testWidgets('settings', (WidgetTester tester) async {
+      expect(remoteConfig.settings.fetchTimeout, Duration(seconds:8));
+      expect(remoteConfig.settings.minimumFetchInterval, Duration.zero);
+      await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: Duration.zero,
+        minimumFetchInterval: Duration(seconds: 8),
+      ));
+      expect(remoteConfig.settings.fetchTimeout, Duration.zero);
+      expect(remoteConfig.settings.minimumFetchInterval, Duration(seconds: 8));
     });
   });
 }

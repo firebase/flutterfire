@@ -85,8 +85,8 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
     NSNumber *fetchTimeout = call.arguments[@"fetchTimeout"];
     NSNumber *minimumFetchInterval = call.arguments[@"minimumFetchInterval"];
     FIRRemoteConfigSettings *remoteConfigSettings = [[FIRRemoteConfigSettings alloc] init];
-    remoteConfigSettings.fetchTimeout = [fetchTimeout intValue];
-    remoteConfigSettings.minimumFetchInterval = [minimumFetchInterval intValue];
+    remoteConfigSettings.fetchTimeout = [fetchTimeout intValue] > 0 ? [fetchTimeout intValue] / 1000 : 0;
+    remoteConfigSettings.minimumFetchInterval = [minimumFetchInterval intValue] > 0 ? [minimumFetchInterval intValue] / 1000 : 0;
     [remoteConfig setConfigSettings:remoteConfigSettings];
     result(nil);
   } else if ([@"RemoteConfig#setDefaults" isEqualToString:call.method]) {

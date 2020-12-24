@@ -172,8 +172,8 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   Future<void> setConfigSettings(RemoteConfigSettings remoteConfigSettings) async {
     await channel.invokeMethod('RemoteConfig#setConfigSettings', <String, dynamic>{
       'appName': app.name,
-      'fetchTimeout': remoteConfigSettings.fetchTimeout.inSeconds,
-      'minimumFetchInterval': remoteConfigSettings.minimumFetchInterval.inSeconds,
+      'fetchTimeout': remoteConfigSettings.fetchTimeout.inMilliseconds,
+      'minimumFetchInterval': remoteConfigSettings.minimumFetchInterval.inMilliseconds ,
     });
     await _updateConfigProperties();
   }

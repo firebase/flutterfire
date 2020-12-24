@@ -128,8 +128,8 @@ public class FirebaseRemoteConfigPlugin implements FlutterFirebasePlugin, Method
         int fetchTimeout = call.argument("fetchTimeout");
         int minimumFetchInterval = call.argument("minimumFetchInterval");
         FirebaseRemoteConfigSettings settings = new FirebaseRemoteConfigSettings.Builder()
-          .setFetchTimeoutInSeconds(fetchTimeout)
-          .setMinimumFetchIntervalInSeconds(minimumFetchInterval)
+          .setFetchTimeoutInSeconds(fetchTimeout > 0 ? fetchTimeout / 1000 : 0)
+          .setMinimumFetchIntervalInSeconds(minimumFetchInterval > 0 ? minimumFetchInterval / 1000 : 0)
           .build();
         methodCallTask = remoteConfig.setConfigSettingsAsync(settings);
         break;
