@@ -67,7 +67,7 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
       result(@(configActivated));
     }];
   } else if ([@"RemoteConfig#getAll" isEqualToString:call.method]) {
-    NSDictionary *parameters = [self getAllParameters:remoteConfig];
+    NSDictionary *parameters = [self getAllParametersForInstance:remoteConfig];
     result(parameters);
   } else if ([@"RemoteConfig#fetch" isEqualToString:call.method] ) {
     [remoteConfig fetchWithCompletionHandler:^(FIRRemoteConfigFetchStatus status, NSError *error) {
@@ -84,23 +84,24 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
   } else if ([@"RemoteConfig#setConfigSettings" isEqualToString:call.method]) {
     NSNumber *fetchTimeout = call.arguments[@"fetchTimeout"];
     NSNumber *minimumFetchInterval = call.arguments[@"minimumFetchInterval"];
-    NSLog(@"fetchTimeout: %@", fetchTimeout);
-    NSLog(@"minimumFetchInterval: %@", minimumFetchInterval);
     FIRRemoteConfigSettings *remoteConfigSettings = [[FIRRemoteConfigSettings alloc] init];
     remoteConfigSettings.fetchTimeout = [fetchTimeout intValue];
     remoteConfigSettings.minimumFetchInterval = [minimumFetchInterval intValue];
     [remoteConfig setConfigSettings:remoteConfigSettings];
     result(nil);
-  } else if ([@"RemoteConfig#setDefaults" isEqualToString:call.method]){
+  } else if ([@"RemoteConfig#setDefaults" isEqualToString:call.method]) {
     NSDictionary *defaults = call.arguments[@"defaults"];
     [remoteConfig setDefaults:defaults];
     result(nil);
+  } else if ([@"RemoteConfig#getProperties" isEqualToString:call.method]) {
+    NSDictionary *configProperties = [self configPropertiesForInstance:remoteConfig];
+    result(configProperties);
   } else {
     result(FlutterMethodNotImplemented);
   }
 }
 
-- (NSDictionary *)getAllParameters:(FIRRemoteConfig *)remoteConfig {
+- (NSDictionary *)getAllParametersForInstance:(FIRRemoteConfig *)remoteConfig {
   NSMutableSet *keySet = [[NSMutableSet alloc] init];
   [keySet addObjectsFromArray:[remoteConfig allKeysFromSource:FIRRemoteConfigSourceStatic]];
   [keySet addObjectsFromArray:[remoteConfig allKeysFromSource:FIRRemoteConfigSourceDefault]];
@@ -154,17 +155,25 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
   FIRRemoteConfig  *firebaseRemoteConfig = [FIRRemoteConfig remoteConfigWithApp:firebase_app];
-  NSNumber *fetchTimeout = @([[firebaseRemoteConfig configSettings] fetchTimeout]);
-  NSNumber *minimumFetchInterval = @([[firebaseRemoteConfig configSettings] minimumFetchInterval]);
-  double lastFetchMillis = [[firebaseRemoteConfig lastFetchTime] timeIntervalSince1970] * 1000;
-  
+  NSDictionary *configProperties = [self configPropertiesForInstance:firebaseRemoteConfig];
+
   NSMutableDictionary *configValues = [[NSMutableDictionary alloc] init];
-  [configValues setValue:@([fetchTimeout intValue]) forKey:@"fetchTimeout"];
-  [configValues setValue:@([minimumFetchInterval intValue]) forKey:@"minimumFetchInterval"];
-  [configValues setValue:@(lastFetchMillis) forKey:@"lastFetchTime"];
-  [configValues setValue:[self mapLastFetchStatus:[firebaseRemoteConfig lastFetchStatus]] forKey:@"lastFetchStatus"];
-  [configValues setValue:[self getAllParameters:firebaseRemoteConfig] forKey:@"parameters"];
-  return [self getAllParameters:firebaseRemoteConfig];
+  [configValues addEntriesFromDictionary:configProperties];
+  [configValues setValue:[self getAllParametersForInstance:firebaseRemoteConfig] forKey:@"parameters"];
+  return configValues;
+}
+
+- (NSDictionary *_Nonnull)configPropertiesForInstance:(FIRRemoteConfig *)remoteConfig {
+  NSNumber *fetchTimeout = @([[remoteConfig configSettings] fetchTimeout]);
+  NSNumber *minimumFetchInterval = @([[remoteConfig configSettings] minimumFetchInterval]);
+  int lastFetchMillis = (int) ([[remoteConfig lastFetchTime] timeIntervalSince1970] * 1000);
+
+  NSMutableDictionary *configProperties = [[NSMutableDictionary alloc] init];
+  [configProperties setValue:@([fetchTimeout intValue]) forKey:@"fetchTimeout"];
+  [configProperties setValue:@([minimumFetchInterval intValue]) forKey:@"minimumFetchInterval"];
+  [configProperties setValue:@(lastFetchMillis) forKey:@"lastFetchTime"];
+  [configProperties setValue:[self mapLastFetchStatus:[remoteConfig lastFetchStatus]] forKey:@"lastFetchStatus"];
+  return configProperties;
 }
 
 - (NSString *_Nonnull)firebaseLibraryName {

@@ -13,8 +13,10 @@ void main() {
     setUp(() async {
       await Firebase.initializeApp();
       remoteConfig = await RemoteConfig.instance;
-      await remoteConfig
-          .setConfigSettings(RemoteConfigSettings(Duration(seconds: 10), Duration.zero));
+      await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: Duration(seconds: 10),
+        minimumFetchInterval: Duration.zero,
+      ));
       await remoteConfig.setDefaults(<String, dynamic>{
         'welcome': 'default welcome',
         'hello': 'default hello',
@@ -22,13 +24,10 @@ void main() {
     });
 
     testWidgets('fetch', (WidgetTester tester) async {
-      // TODO(kroikie): test lastFetchTime
-      // final DateTime lastFetchTime = remoteConfig.lastFetchTime;
-      // expect(lastFetchTime.isBefore(DateTime.now()), true);
+      final DateTime lastFetchTime = remoteConfig.lastFetchTime;
+      expect(lastFetchTime.isBefore(DateTime.now()), true);
       await remoteConfig.fetchAndActivate();
-      // TODO(kroikie): test lastFetchStatus
-      // expect(remoteConfig.lastFetchStatus, LastFetchStatus.success);
-      // await remoteConfig.activateFetched();
+      expect(remoteConfig.lastFetchStatus, RemoteConfigFetchStatus.success);
 
       // TODO should verify that our config settings actually took
       expect(remoteConfig.getString('welcome'), 'Earth, welcome! Hello!');

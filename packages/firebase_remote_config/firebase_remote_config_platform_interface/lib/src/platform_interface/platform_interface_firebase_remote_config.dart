@@ -45,32 +45,9 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   factory FirebaseRemoteConfigPlatform.instanceFor({FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
     return FirebaseRemoteConfigPlatform.instance.delegateFor(app: app).setInitialValues(
         remoteConfigValues: pluginConstants == null
-            ? Map<String, dynamic>()
-            : parseParameters(pluginConstants)
+            ? Map<dynamic, dynamic>()
+            : pluginConstants
     );
-  }
-
-  @protected
-  static Map<String, RemoteConfigValue> parseParameters(Map<dynamic, dynamic> rawParameters) {
-    Map<String, RemoteConfigValue> parameters = Map();
-    for (String key in rawParameters.keys) {
-      final rawValue = rawParameters[key];
-      parameters[key] = RemoteConfigValue(rawValue['value'], _parseValueSource(rawValue['source']));
-    }
-    return parameters;
-  }
-
-  static ValueSource _parseValueSource(String sourceStr) {
-    switch (sourceStr) {
-      case 'static':
-        return ValueSource.valueStatic;
-      case 'default':
-        return ValueSource.valueDefault;
-      case 'remote':
-        return ValueSource.valueRemote;
-      default:
-        return ValueSource.valueStatic;
-    }
   }
 
   @protected
@@ -79,7 +56,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   }
 
   @protected
-  FirebaseRemoteConfigPlatform setInitialValues({Map<String, dynamic> remoteConfigValues}) {
+  FirebaseRemoteConfigPlatform setInitialValues({Map<dynamic, dynamic> remoteConfigValues}) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
 

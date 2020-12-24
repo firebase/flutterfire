@@ -36,8 +36,8 @@ void main() {
       mockLastFetchTime = DateTime(2020, 1, 1);
       mockLastFetchStatus = RemoteConfigFetchStatus.noFetchYet;
       mockRemoteConfigSettings = RemoteConfigSettings(
-        Duration(seconds: 10),
-        Duration(hours: 1),
+        fetchTimeout: Duration(seconds: 10),
+        minimumFetchInterval: Duration(hours: 1),
       );
       mockParameters = <String, RemoteConfigValue>{};
       mockDefaultParameters = <String, dynamic>{};
@@ -130,8 +130,8 @@ void main() {
 
       test('set settings', () async {
         final remoteConfigSettings = RemoteConfigSettings(
-          Duration(seconds: 8),
-          Duration.zero
+          fetchTimeout: Duration(seconds: 8),
+          minimumFetchInterval: Duration.zero,
         );
         await remoteConfig.setConfigSettings(remoteConfigSettings);
         verify(
@@ -266,8 +266,7 @@ class TestFirebaseRemoteConfigPlatform extends FirebaseRemoteConfigPlatform {
 
   @override
   FirebaseRemoteConfigPlatform setInitialValues(
-      {Map<String, dynamic> remoteConfigValues}) {
-
+      {Map<dynamic, dynamic> remoteConfigValues}) {
     return this;
   }
 }
