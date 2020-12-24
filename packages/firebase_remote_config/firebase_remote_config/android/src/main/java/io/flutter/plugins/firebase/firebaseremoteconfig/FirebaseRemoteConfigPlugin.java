@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -51,14 +52,22 @@ public class FirebaseRemoteConfigPlugin implements FlutterFirebasePlugin, Method
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(final FirebaseApp firebaseApp) {
     FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance(firebaseApp);
     return Tasks.call(cachedThreadPool, () -> {
+      Map<String, Object> configProperties = getConfigProperties(remoteConfig);
       Map<String, Object> configValues = new HashMap<>();
-      configValues.put("fetchTimeout", remoteConfig.getInfo().getConfigSettings().getFetchTimeoutInSeconds());
-      configValues.put("minimumFetchInterval", remoteConfig.getInfo().getConfigSettings().getMinimumFetchIntervalInSeconds());
-      configValues.put("lastFetchTime", remoteConfig.getInfo().getFetchTimeMillis());
-      configValues.put("lastFetchStatus", mapLastFetchStatus(remoteConfig.getInfo().getLastFetchStatus()));
+      configValues.putAll(configProperties);
       configValues.put("parameters", parseParameters(remoteConfig.getAll()));
+      Log.d(TAG, "KeySet: " + configValues.keySet());
       return configValues;
     });
+  }
+
+  private Map<String, Object> getConfigProperties(FirebaseRemoteConfig remoteConfig) {
+    Map<String, Object> configProperties = new HashMap<>();
+    configProperties.put("fetchTimeout", remoteConfig.getInfo().getConfigSettings().getFetchTimeoutInSeconds());
+    configProperties.put("minimumFetchInterval", remoteConfig.getInfo().getConfigSettings().getMinimumFetchIntervalInSeconds());
+    configProperties.put("lastFetchTime", remoteConfig.getInfo().getFetchTimeMillis());
+    configProperties.put("lastFetchStatus", mapLastFetchStatus(remoteConfig.getInfo().getLastFetchStatus()));
+    return configProperties;
   }
 
   @Override
@@ -129,6 +138,12 @@ public class FirebaseRemoteConfigPlugin implements FlutterFirebasePlugin, Method
       {
         Map<String, Object> defaults = call.argument("defaults");
         methodCallTask = remoteConfig.setDefaultsAsync(defaults);
+        break;
+      }
+      case "RemoteConfig#getProperties":
+      {
+        Map<String, Object> configProperties = getConfigProperties(remoteConfig);
+        methodCallTask = Tasks.forResult(configProperties);
         break;
       }
       default:
