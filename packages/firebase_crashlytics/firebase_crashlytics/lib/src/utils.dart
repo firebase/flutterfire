@@ -5,7 +5,7 @@
 import 'package:stack_trace/stack_trace.dart';
 
 final _obfuscatedStackTraceLineRegExp =
-    RegExp(r'^(\s*#\d{2} abs )([\da-f]+)( virt [\da-f]+ .*)$');
+    RegExp(r'^(\s*#\d{2} abs )([\da-f]+)((?: virt [\da-f]+)?(?: .*)?)$');
 
 /// Returns a [List] containing detailed output of each line in a stack trace.
 List<Map<String, String>> getStackTraceElements(StackTrace stackTrace) {

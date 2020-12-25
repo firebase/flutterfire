@@ -264,7 +264,7 @@ void main() {
         });
       });
 
-      test('with obfuscated stack trace', () async {
+      test('with android obfuscated stack trace', () async {
         final List<String> lines = <String>[
           'Warning: This VM has been configured to produce stack traces that violate the Dart standard.',
           '*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***',
@@ -279,6 +279,25 @@ void main() {
         expect(elements.first, <String, String>{
           'method':
               '    #00 abs 0 virt 00000000001af27b _kDartIsolateSnapshotInstructions+0x1a127b',
+          'file': null,
+          'line': '0',
+        });
+      });
+
+      test('with ios obfuscated stack trace', () async {
+        final List<String> lines = <String>[
+          'Warning: This VM has been configured to produce stack traces that violate the Dart standard.',
+          '*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***',
+          'pid: 1357, tid: 1415, name 1.ui',
+          'isolate_dso_base: 75f178181000, vm_dso_base: 75f178181000',
+          'isolate_instructions: 75f17818f000, vm_instructions: 75f178183000',
+          '    #00 abs 000075f17833027b _kDartIsolateSnapshotInstructions+0x1a127b',
+        ];
+        final StackTrace trace = StackTrace.fromString(lines.join('\n'));
+        final List<Map<String, String>> elements = getStackTraceElements(trace);
+        expect(elements.length, 1);
+        expect(elements.first, <String, String>{
+          'method': '    #00 abs 0 _kDartIsolateSnapshotInstructions+0x1a127b',
           'file': null,
           'line': '0',
         });
