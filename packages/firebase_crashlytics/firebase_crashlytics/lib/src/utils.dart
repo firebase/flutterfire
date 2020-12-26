@@ -28,7 +28,7 @@ List<Map<String, String>> getStackTraceElements(StackTrace stackTrace) {
               _obfuscatedStackTraceLineRegExp,
               (match) => '${match.group(1)}0${match.group(3)}');
           elements.add(<String, String>{
-            'file': null,
+            'file': '',
             'line': '0',
             'method': method,
           });
