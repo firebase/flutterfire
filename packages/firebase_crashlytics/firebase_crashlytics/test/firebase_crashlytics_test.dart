@@ -279,7 +279,7 @@ void main() {
         expect(elements.first, <String, String>{
           'method':
               '    #00 abs 0 virt 00000000001af27b _kDartIsolateSnapshotInstructions+0x1a127b',
-          'file': null,
+          'file': '',
           'line': '0',
         });
       });
@@ -298,7 +298,7 @@ void main() {
         expect(elements.length, 1);
         expect(elements.first, <String, String>{
           'method': '    #00 abs 0 _kDartIsolateSnapshotInstructions+0x1a127b',
-          'file': null,
+          'file': '',
           'line': '0',
         });
       });
