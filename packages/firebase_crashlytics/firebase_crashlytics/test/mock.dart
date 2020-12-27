@@ -11,7 +11,7 @@ typedef Callback(MethodCall call);
 
 final List<MethodCall> methodCallLog = <MethodCall>[];
 
-setupFirebaseCrashlyticsMocks([Callback customHandlers]) {
+setupFirebaseCrashlyticsMocks([Callback /*?*/ customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
