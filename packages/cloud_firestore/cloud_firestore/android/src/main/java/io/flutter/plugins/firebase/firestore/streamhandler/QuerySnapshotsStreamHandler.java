@@ -39,6 +39,9 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
               if (exception != null) {
                 Map<String, String> exceptionDetails = ExceptionConverter.createDetails(exception);
                 events.error(DEFAULT_ERROR_CODE, exception.getMessage(), exceptionDetails);
+                events.endOfStream();
+
+                onCancel(null);
               } else {
                 events.success(querySnapshot);
               }
