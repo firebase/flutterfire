@@ -33,6 +33,7 @@ import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
 import io.flutter.plugins.firebase.firestore.streamhandler.DocumentSnapshotsStreamHandler;
+import io.flutter.plugins.firebase.firestore.streamhandler.OnTransactionResultListener;
 import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
@@ -68,7 +69,7 @@ public class FlutterFirebaseFirestorePlugin
   private final Map<String, Transaction> transactions = new HashMap<>();
   private final Map<String, EventChannel> eventChannels = new HashMap<>();
   private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
-  private final Map<String, TransactionStreamHandler> transactionHandlers = new HashMap<>();
+  private final Map<String, OnTransactionResultListener> transactionHandlers = new HashMap<>();
 
   protected static FirebaseFirestore getCachedFirebaseFirestoreInstanceForKey(String key) {
     synchronized (firestoreInstanceCache) {
@@ -127,9 +128,6 @@ public class FlutterFirebaseFirestorePlugin
     }
     streamHandlers.clear();
 
-    for (String identifier : transactionHandlers.keySet()) {
-      transactionHandlers.get(identifier).onCancel(null);
-    }
     transactionHandlers.clear();
 
     binaryMessenger = null;

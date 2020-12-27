@@ -21,7 +21,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class TransactionStreamHandler implements StreamHandler {
+public class TransactionStreamHandler implements OnTransactionResultListener, StreamHandler {
 
   /** Callback when the transaction has been started. */
   public interface OnTransactionStartedListener {
@@ -158,6 +158,7 @@ public class TransactionStreamHandler implements StreamHandler {
     semaphore.release();
   }
 
+  @Override
   public void receiveTransactionResponse(Map<String, Object> result) {
     response.putAll(result);
     semaphore.release();
