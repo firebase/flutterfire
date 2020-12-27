@@ -236,7 +236,6 @@ void main() {
         expect(log[1].method, 'listen');
         expect(log[1].arguments, <String, dynamic>{
           'query': isInstanceOf<MethodChannelQuery>(),
-          'firestore': isInstanceOf<FirebaseFirestorePlatform>(),
           'includeMetadataChanges': false,
         });
         expect(log[2].method, 'cancel');

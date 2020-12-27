@@ -114,7 +114,6 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
                 .receiveBroadcastStream(
           <String, dynamic>{
             'reference': this,
-            'firestore': firestore,
             'includeMetadataChanges': includeMetadataChanges,
           },
         ).listen((snapshot) {

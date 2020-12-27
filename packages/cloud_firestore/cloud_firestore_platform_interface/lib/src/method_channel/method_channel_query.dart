@@ -144,7 +144,6 @@ class MethodChannelQuery extends QueryPlatform {
                 .receiveBroadcastStream(
           <String, dynamic>{
             'query': this,
-            'firestore': firestore,
             'includeMetadataChanges': includeMetadataChanges,
           },
         ).listen((snapshot) {
