@@ -141,7 +141,7 @@ public class TransactionStreamHandler implements StreamHandler {
               final HashMap<String, Object> map = new HashMap<>();
               if (task.getException() != null || task.getResult().exception != null) {
                 final @Nullable Exception exception =
-                  task.getException() != null ? task.getException() : task.getResult().exception;
+                    task.getException() != null ? task.getException() : task.getResult().exception;
                 map.put("appName", firestore.getApp().getName());
                 map.put("error", ExceptionConverter.createDetails(exception));
               } else if (task.getResult() != null) {
