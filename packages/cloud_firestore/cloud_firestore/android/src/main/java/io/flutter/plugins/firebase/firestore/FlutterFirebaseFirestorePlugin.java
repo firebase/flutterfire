@@ -127,6 +127,11 @@ public class FlutterFirebaseFirestorePlugin
     }
     streamHandlers.clear();
 
+    for (String identifier : transactionHandlers.keySet()) {
+      transactionHandlers.get(identifier).onCancel(null);
+    }
+    transactionHandlers.clear();
+
     binaryMessenger = null;
   }
 
