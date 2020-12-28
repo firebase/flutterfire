@@ -12,4 +12,3 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'package:flutter/foundation.dart';
 
 part 'src/remote_config.dart';
-part 'src/remote_config_fetch_throttled_exception.dart';

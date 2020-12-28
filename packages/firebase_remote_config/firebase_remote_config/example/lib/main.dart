@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_remote_config_platform_interface/src/remote_config_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,8 +40,10 @@ class WelcomeWidget extends AnimatedWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Welcome ${remoteConfig.getString('welcome')}'),
+            SizedBox(height: 20,),
             Text('(${remoteConfig.getValue('welcome').source})'),
-            // TODO(kroikie): Expose the fetch time
+            Text('(${remoteConfig.lastFetchTime})'),
+            Text('(${remoteConfig.lastFetchStatus})'),
           ],
         ),
       ),
@@ -54,8 +57,8 @@ class WelcomeWidget extends AnimatedWidget {
                 minimumFetchInterval: Duration.zero,
               ));
               await remoteConfig.fetchAndActivate();
-            } on FetchThrottledException catch (exception) {
-              // Fetch throttled.
+            } on PlatformException catch (exception) {
+              // Fetch exception.
               print(exception);
             } catch (exception) {
               print(

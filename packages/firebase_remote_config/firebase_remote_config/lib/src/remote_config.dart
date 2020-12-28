@@ -57,9 +57,7 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
 
   Future<bool> activate() async {
     bool configChanged = await _delegate.activate();
-    if (configChanged) {
-      notifyListeners();
-    }
+    notifyListeners();
     return configChanged;
   }
 
@@ -73,9 +71,7 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
 
   Future<bool> fetchAndActivate() async {
     bool configChanged = await _delegate.fetchAndActivate();
-    if (configChanged) {
-      notifyListeners();
-    }
+    notifyListeners();
     return configChanged;
   }
 
