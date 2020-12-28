@@ -39,7 +39,9 @@ class WelcomeWidget extends AnimatedWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Welcome ${remoteConfig.getString('welcome')}'),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Text('(${remoteConfig.getValue('welcome').source})'),
             Text('(${remoteConfig.lastFetchTime})'),
             Text('(${remoteConfig.lastFetchStatus})'),
@@ -65,8 +67,7 @@ class WelcomeWidget extends AnimatedWidget {
                   'used');
               print(exception);
             }
-          }
-      ),
+          }),
     );
   }
 }
@@ -75,8 +76,8 @@ Future<RemoteConfig> setupRemoteConfig() async {
   await Firebase.initializeApp();
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
   await remoteConfig.setConfigSettings(RemoteConfigSettings(
-      fetchTimeout: Duration(seconds: 10),
-      minimumFetchInterval: Duration(hours: 1),
+    fetchTimeout: Duration(seconds: 10),
+    minimumFetchInterval: Duration(hours: 1),
   ));
   await remoteConfig.setDefaults(<String, dynamic>{
     'welcome': 'default welcome',

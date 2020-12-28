@@ -45,7 +45,7 @@ void main() {
     });
 
     testWidgets('settings', (WidgetTester tester) async {
-      expect(remoteConfig.settings.fetchTimeout, Duration(seconds:8));
+      expect(remoteConfig.settings.fetchTimeout, Duration(seconds: 8));
       expect(remoteConfig.settings.minimumFetchInterval, Duration.zero);
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: Duration.zero,

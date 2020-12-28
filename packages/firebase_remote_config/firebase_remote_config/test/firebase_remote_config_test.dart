@@ -42,22 +42,22 @@ void main() {
       mockParameters = <String, RemoteConfigValue>{};
       mockDefaultParameters = <String, dynamic>{};
       mockRemoteConfigValue = RemoteConfigValue(
-          <int>[],
-          ValueSource.valueStatic,
+        <int>[],
+        ValueSource.valueStatic,
       );
 
       when(mockRemoteConfigPlatform.instanceFor(
-        app: anyNamed('app'),
-        pluginConstants: anyNamed('pluginConstants')
-      )).thenAnswer((_) => mockRemoteConfigPlatform);
+              app: anyNamed('app'),
+              pluginConstants: anyNamed('pluginConstants')))
+          .thenAnswer((_) => mockRemoteConfigPlatform);
 
       when(mockRemoteConfigPlatform.delegateFor(
-          app: anyNamed('app'),
+        app: anyNamed('app'),
       )).thenAnswer((_) => mockRemoteConfigPlatform);
 
       when(mockRemoteConfigPlatform.setInitialValues(
-        remoteConfigValues: anyNamed('remoteConfigValues')
-      )).thenAnswer((_) => mockRemoteConfigPlatform);
+              remoteConfigValues: anyNamed('remoteConfigValues')))
+          .thenAnswer((_) => mockRemoteConfigPlatform);
 
       when(mockRemoteConfigPlatform.lastFetchTime)
           .thenReturn(mockLastFetchTime);
@@ -77,8 +77,7 @@ void main() {
       when(mockRemoteConfigPlatform.ensureInitialized())
           .thenAnswer((_) => Future.value());
 
-      when(mockRemoteConfigPlatform.fetch())
-          .thenAnswer((_) => Future.value());
+      when(mockRemoteConfigPlatform.fetch()).thenAnswer((_) => Future.value());
 
       when(mockRemoteConfigPlatform.fetchAndActivate())
           .thenAnswer((_) => Future.value(true));

@@ -9,14 +9,14 @@ part of firebase_remote_config;
 /// You can get an instance by calling [RemoteConfig.instance]. Note
 /// [RemoteConfig.instance] is async.
 class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
-
   static final Map<String, RemoteConfig> _firebaseRemoteConfigInstances = {};
 
   FirebaseRemoteConfigPlatform _delegatePackingProperty;
 
   FirebaseRemoteConfigPlatform get _delegate {
     if (_delegatePackingProperty == null) {
-      _delegatePackingProperty = FirebaseRemoteConfigPlatform.instanceFor(app: app, pluginConstants: pluginConstants);
+      _delegatePackingProperty = FirebaseRemoteConfigPlatform.instanceFor(
+          app: app, pluginConstants: pluginConstants);
     }
     return _delegatePackingProperty;
   }
@@ -27,7 +27,7 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
       : super(app.name, 'plugins.flutter.io/firebase_remote_config');
 
   static RemoteConfig get instance {
-     return RemoteConfig.instanceFor(app: Firebase.app());
+    return RemoteConfig.instanceFor(app: Firebase.app());
   }
 
   static RemoteConfig instanceFor({FirebaseApp app}) {

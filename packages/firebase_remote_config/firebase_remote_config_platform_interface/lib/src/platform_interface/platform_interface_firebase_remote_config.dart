@@ -56,12 +56,14 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   }
 
   /// Create instance using [app] using the existing implementation.
-  factory FirebaseRemoteConfigPlatform.instanceFor({FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
-    return FirebaseRemoteConfigPlatform.instance.delegateFor(app: app).setInitialValues(
-        remoteConfigValues: pluginConstants == null
-            ? Map<dynamic, dynamic>()
-            : pluginConstants
-    );
+  factory FirebaseRemoteConfigPlatform.instanceFor(
+      {FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
+    return FirebaseRemoteConfigPlatform.instance
+        .delegateFor(app: app)
+        .setInitialValues(
+            remoteConfigValues: pluginConstants == null
+                ? Map<dynamic, dynamic>()
+                : pluginConstants);
   }
 
   /// Enables delegates to create new instances of themselves if a none
@@ -77,7 +79,8 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// available before the instance has initialized to prevent unnecessary
   /// async calls.
   @protected
-  FirebaseRemoteConfigPlatform setInitialValues({Map<dynamic, dynamic> remoteConfigValues}) {
+  FirebaseRemoteConfigPlatform setInitialValues(
+      {Map<dynamic, dynamic> remoteConfigValues}) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
 
@@ -169,5 +172,4 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
     throw UnimplementedError('setDefaults() is not implemented');
   }
-
 }
