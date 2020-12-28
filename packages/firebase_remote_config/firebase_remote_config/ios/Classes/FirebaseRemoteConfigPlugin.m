@@ -166,7 +166,7 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
 - (NSDictionary *_Nonnull)configPropertiesForInstance:(FIRRemoteConfig *)remoteConfig {
   NSNumber *fetchTimeout = @([[remoteConfig configSettings] fetchTimeout]);
   NSNumber *minimumFetchInterval = @([[remoteConfig configSettings] minimumFetchInterval]);
-  int lastFetchMillis = (int) ([[remoteConfig lastFetchTime] timeIntervalSince1970] * 1000);
+  NSInteger lastFetchMillis = round([[remoteConfig lastFetchTime] timeIntervalSince1970] * 1000);
 
   NSMutableDictionary *configProperties = [[NSMutableDictionary alloc] init];
   [configProperties setValue:@([fetchTimeout intValue]) forKey:@"fetchTimeout"];
