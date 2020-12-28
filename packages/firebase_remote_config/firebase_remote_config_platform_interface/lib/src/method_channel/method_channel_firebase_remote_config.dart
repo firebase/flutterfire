@@ -3,13 +3,17 @@ import 'dart:async';
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:meta/meta.dart';
 
+/// Method Channel delegate for [FirebaseRemoteConfigPlatform].
 class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
-
+  /// Keeps an internal handle ID for the channel.
   static int _methodChannelHandleId = 0;
 
+  /// Increments and returns the next channel ID handler for RemoteConfig.
   static int get nextMethodChannelHandleId => _methodChannelHandleId++;
 
+  /// The [MethodChannelRemoteConfig] method channel.
   static const MethodChannel channel = MethodChannel(
       'plugins.flutter.io/firebase_remote_config'
   );
@@ -18,19 +22,30 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       _methodChannelFirebaseRemoteConfigInstances =
       <String, MethodChannelFirebaseRemoteConfig>{};
 
+  /// Returns a stub instance to allow the platform interface to access
+  /// the class instance statically.
   static MethodChannelFirebaseRemoteConfig get instance {
     return MethodChannelFirebaseRemoteConfig._();
   }
 
+  /// Internal stub class initializer.
+  ///
+  /// When the user code calls a Remote Config method, the real instance
+  /// is initialized via the [delegateFor] method.
   MethodChannelFirebaseRemoteConfig._() : super(appInstance: null);
 
-  MethodChannelFirebaseRemoteConfig({FirebaseApp app}) : super(appInstance: app);
+  /// Creates a new instance for a given [FirebaseApp].
+  MethodChannelFirebaseRemoteConfig({@required FirebaseApp app}) : super(appInstance: app);
 
   Map<String, RemoteConfigValue> _activeParameters;
   RemoteConfigSettings _settings;
   DateTime _lastFetchTime;
   RemoteConfigFetchStatus _lastFetchStatus;
 
+  /// Gets a [FirebaseRemoteConfigPlatform] instance for a specific
+  /// [FirebaseApp].
+  ///
+  /// Instances are cached and reused for incoming event handlers.
   @override
   FirebaseRemoteConfigPlatform delegateFor({FirebaseApp app}) {
     if (_methodChannelFirebaseRemoteConfigInstances.containsKey(app.name)) {
