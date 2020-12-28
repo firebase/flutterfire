@@ -6,7 +6,6 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:firebase_remote_config_platform_interface/src/remote_config_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -83,5 +82,6 @@ Future<RemoteConfig> setupRemoteConfig() async {
     'welcome': 'default welcome',
     'hello': 'default hello',
   });
+  RemoteConfigValue(null, ValueSource.valueStatic);
   return remoteConfig;
 }
