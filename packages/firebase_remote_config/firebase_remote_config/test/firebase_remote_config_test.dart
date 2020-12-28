@@ -110,21 +110,21 @@ void main() {
 
     group('lastFetchTime', () {
       test('get lastFetchTime', () {
-        DateTime lastFetchTime = remoteConfig.lastFetchTime;
+        remoteConfig.lastFetchTime;
         verify(mockRemoteConfigPlatform.lastFetchTime);
       });
     });
 
     group('lastFetchStatus', () {
       test('get lastFetchStatus', () {
-        RemoteConfigFetchStatus lastFetchStatus = remoteConfig.lastFetchStatus;
+        remoteConfig.lastFetchStatus;
         verify(mockRemoteConfigPlatform.lastFetchStatus);
       });
     });
 
     group('settings', () {
       test('get settings', () {
-        RemoteConfigSettings settings = remoteConfig.settings;
+        remoteConfig.settings;
         verify(mockRemoteConfigPlatform.settings);
       });
 
@@ -176,14 +176,14 @@ void main() {
 
     group('getAll()', () {
       test('should call delegate method', () {
-        Map<String, RemoteConfigValue> parameters = remoteConfig.getAll();
+        remoteConfig.getAll();
         verify(mockRemoteConfigPlatform.getAll());
       });
     });
 
     group('getBool()', () {
       test('should call delegate method', () {
-        bool parameterValue = remoteConfig.getBool('foo');
+        remoteConfig.getBool('foo');
         verify(mockRemoteConfigPlatform.getBool('foo'));
       });
 
