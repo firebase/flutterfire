@@ -5,6 +5,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:io';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:e2e/e2e.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';

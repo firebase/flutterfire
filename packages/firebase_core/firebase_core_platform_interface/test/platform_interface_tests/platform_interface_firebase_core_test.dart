@@ -4,6 +4,7 @@
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 

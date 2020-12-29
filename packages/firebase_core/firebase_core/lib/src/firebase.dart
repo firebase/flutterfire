@@ -39,7 +39,6 @@ class Firebase {
   /// using the platform Firebase integration.
   static Future<FirebaseApp> initializeApp(
       {String /*?*/ name, FirebaseOptions /*?*/ options}) async {
-    // TODO(ehesp): Should be nullable post platform migration
     FirebaseAppPlatform app =
         await _delegate.initializeApp(name: name, options: options);
     return FirebaseApp._(app);
