@@ -4,6 +4,8 @@
 
 package io.flutter.plugins.firebase.firebaseremoteconfig;
 
+import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
@@ -11,11 +13,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -23,11 +20,13 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
-
-import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /** FirebaseRemoteConfigPlugin */
-public class FirebaseRemoteConfigPlugin implements FlutterFirebasePlugin, MethodChannel.MethodCallHandler, FlutterPlugin {
+public class FirebaseRemoteConfigPlugin
+    implements FlutterFirebasePlugin, MethodChannel.MethodCallHandler, FlutterPlugin {
 
   static final String TAG = "FRCPlugin";
   static final String METHOD_CHANNEL = "plugins.flutter.io/firebase_remote_config";
@@ -52,22 +51,28 @@ public class FirebaseRemoteConfigPlugin implements FlutterFirebasePlugin, Method
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(final FirebaseApp firebaseApp) {
     FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance(firebaseApp);
-    return Tasks.call(cachedThreadPool, () -> {
-      Map<String, Object> configProperties = getConfigProperties(remoteConfig);
-      Map<String, Object> configValues = new HashMap<>();
-      configValues.putAll(configProperties);
-      configValues.put("parameters", parseParameters(remoteConfig.getAll()));
-      Log.d(TAG, "KeySet: " + configValues.keySet());
-      return configValues;
-    });
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          Map<String, Object> configProperties = getConfigProperties(remoteConfig);
+          Map<String, Object> configValues = new HashMap<>();
+          configValues.putAll(configProperties);
+          configValues.put("parameters", parseParameters(remoteConfig.getAll()));
+          Log.d(TAG, "KeySet: " + configValues.keySet());
+          return configValues;
+        });
   }
 
   private Map<String, Object> getConfigProperties(FirebaseRemoteConfig remoteConfig) {
     Map<String, Object> configProperties = new HashMap<>();
-    configProperties.put("fetchTimeout", remoteConfig.getInfo().getConfigSettings().getFetchTimeoutInSeconds());
-    configProperties.put("minimumFetchInterval", remoteConfig.getInfo().getConfigSettings().getMinimumFetchIntervalInSeconds());
+    configProperties.put(
+        "fetchTimeout", remoteConfig.getInfo().getConfigSettings().getFetchTimeoutInSeconds());
+    configProperties.put(
+        "minimumFetchInterval",
+        remoteConfig.getInfo().getConfigSettings().getMinimumFetchIntervalInSeconds());
     configProperties.put("lastFetchTime", remoteConfig.getInfo().getFetchTimeMillis());
-    configProperties.put("lastFetchStatus", mapLastFetchStatus(remoteConfig.getInfo().getLastFetchStatus()));
+    configProperties.put(
+        "lastFetchStatus", mapLastFetchStatus(remoteConfig.getInfo().getLastFetchStatus()));
     return configProperties;
   }
 
@@ -100,77 +105,81 @@ public class FirebaseRemoteConfigPlugin implements FlutterFirebasePlugin, Method
 
     switch (call.method) {
       case "RemoteConfig#ensureInitialized":
-      {
-        methodCallTask = remoteConfig.ensureInitialized();
-        break;
-      }
+        {
+          methodCallTask = remoteConfig.ensureInitialized();
+          break;
+        }
       case "RemoteConfig#activate":
-      {
-        methodCallTask = remoteConfig.activate();
-        break;
-      }
+        {
+          methodCallTask = remoteConfig.activate();
+          break;
+        }
       case "RemoteConfig#getAll":
-      {
-        methodCallTask = Tasks.forResult(parseParameters(remoteConfig.getAll()));
-        break;
-      }
+        {
+          methodCallTask = Tasks.forResult(parseParameters(remoteConfig.getAll()));
+          break;
+        }
       case "RemoteConfig#fetch":
-      {
-        methodCallTask = remoteConfig.fetch();
-        break;
-      }
+        {
+          methodCallTask = remoteConfig.fetch();
+          break;
+        }
       case "RemoteConfig#fetchAndActivate":
-      {
-        methodCallTask = remoteConfig.fetchAndActivate();
-        break;
-      }
+        {
+          methodCallTask = remoteConfig.fetchAndActivate();
+          break;
+        }
       case "RemoteConfig#setConfigSettings":
-      {
-        int fetchTimeout = call.argument("fetchTimeout");
-        int minimumFetchInterval = call.argument("minimumFetchInterval");
-        FirebaseRemoteConfigSettings settings = new FirebaseRemoteConfigSettings.Builder()
-          .setFetchTimeoutInSeconds(fetchTimeout > 0 ? fetchTimeout / 1000 : 0)
-          .setMinimumFetchIntervalInSeconds(minimumFetchInterval > 0 ? minimumFetchInterval / 1000 : 0)
-          .build();
-        methodCallTask = remoteConfig.setConfigSettingsAsync(settings);
-        break;
-      }
+        {
+          int fetchTimeout = call.argument("fetchTimeout");
+          int minimumFetchInterval = call.argument("minimumFetchInterval");
+          FirebaseRemoteConfigSettings settings =
+              new FirebaseRemoteConfigSettings.Builder()
+                  .setFetchTimeoutInSeconds(fetchTimeout > 0 ? fetchTimeout / 1000 : 0)
+                  .setMinimumFetchIntervalInSeconds(
+                      minimumFetchInterval > 0 ? minimumFetchInterval / 1000 : 0)
+                  .build();
+          methodCallTask = remoteConfig.setConfigSettingsAsync(settings);
+          break;
+        }
       case "RemoteConfig#setDefaults":
-      {
-        Map<String, Object> defaults = call.argument("defaults");
-        methodCallTask = remoteConfig.setDefaultsAsync(defaults);
-        break;
-      }
+        {
+          Map<String, Object> defaults = call.argument("defaults");
+          methodCallTask = remoteConfig.setDefaultsAsync(defaults);
+          break;
+        }
       case "RemoteConfig#getProperties":
-      {
-        Map<String, Object> configProperties = getConfigProperties(remoteConfig);
-        methodCallTask = Tasks.forResult(configProperties);
-        break;
-      }
+        {
+          Map<String, Object> configProperties = getConfigProperties(remoteConfig);
+          methodCallTask = Tasks.forResult(configProperties);
+          break;
+        }
       default:
-      {
-        result.notImplemented();
-        return;
-      }
+        {
+          result.notImplemented();
+          return;
+        }
     }
 
     methodCallTask.addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          result.success(task.getResult());
-        } else {
-          Exception exception = task.getException();
-          Map<String, Object> details = new HashMap<>();
-          if (exception instanceof FirebaseRemoteConfigFetchThrottledException) {
-            details.put("throttleEndTimeMillis", ((FirebaseRemoteConfigFetchThrottledException) exception).getThrottleEndTimeMillis());
+        task -> {
+          if (task.isSuccessful()) {
+            result.success(task.getResult());
+          } else {
+            Exception exception = task.getException();
+            Map<String, Object> details = new HashMap<>();
+            if (exception instanceof FirebaseRemoteConfigFetchThrottledException) {
+              details.put(
+                  "throttleEndTimeMillis",
+                  ((FirebaseRemoteConfigFetchThrottledException) exception)
+                      .getThrottleEndTimeMillis());
+            }
+            result.error(
+                "firebase_remote_config",
+                exception != null ? exception.getMessage() : null,
+                details);
           }
-          result.error(
-            "firebase_remote_config",
-            exception != null ? exception.getMessage() : null,
-            details);
-        }
-      }
-    );
+        });
   }
 
   private Map<String, Object> parseParameters(Map<String, FirebaseRemoteConfigValue> parameters) {
@@ -182,7 +191,7 @@ public class FirebaseRemoteConfigPlugin implements FlutterFirebasePlugin, Method
   }
 
   private Map<String, Object> createRemoteConfigValueMap(
-    FirebaseRemoteConfigValue remoteConfigValue) {
+      FirebaseRemoteConfigValue remoteConfigValue) {
     Map<String, Object> valueMap = new HashMap<>();
     valueMap.put("value", remoteConfigValue.asByteArray());
     valueMap.put("source", mapValueSource(remoteConfigValue.getSource()));

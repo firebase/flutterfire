@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import <firebase_core/FLTFirebasePluginRegistry.h>
 #import <Firebase/Firebase.h>
+#import <firebase_core/FLTFirebasePluginRegistry.h>
 
 #import "FirebaseRemoteConfigPlugin.h"
 
@@ -46,7 +46,7 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
   }
 }
 
-- (void)detachFromEngineForRegistrar:(NSObject <FlutterPluginRegistrar> *)registrar {
+- (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   self.channel = nil;
 }
 
@@ -59,22 +59,23 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
   FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:call.arguments];
   if ([@"RemoteConfig#ensureInitialized" isEqualToString:call.method]) {
-    [remoteConfig ensureInitializedWithCompletionHandler:^(NSError * _Nullable initializationError) {
+    [remoteConfig ensureInitializedWithCompletionHandler:^(NSError *_Nullable initializationError) {
       result(nil);
     }];
-  } else if([@"RemoteConfig#activate" isEqualToString:call.method]) {
+  } else if ([@"RemoteConfig#activate" isEqualToString:call.method]) {
     [remoteConfig activateWithCompletion:^(BOOL configActivated, NSError *_Nullable activateError) {
       result(@(configActivated));
     }];
   } else if ([@"RemoteConfig#getAll" isEqualToString:call.method]) {
     NSDictionary *parameters = [self getAllParametersForInstance:remoteConfig];
     result(parameters);
-  } else if ([@"RemoteConfig#fetch" isEqualToString:call.method] ) {
+  } else if ([@"RemoteConfig#fetch" isEqualToString:call.method]) {
     [remoteConfig fetchWithCompletionHandler:^(FIRRemoteConfigFetchStatus status, NSError *error) {
       result(nil);
     }];
   } else if ([@"RemoteConfig#fetchAndActivate" isEqualToString:call.method]) {
-    [remoteConfig fetchAndActivateWithCompletionHandler:^(FIRRemoteConfigFetchAndActivateStatus status, NSError *error) {
+    [remoteConfig fetchAndActivateWithCompletionHandler:^(
+                      FIRRemoteConfigFetchAndActivateStatus status, NSError *error) {
       if (status == FIRRemoteConfigFetchAndActivateStatusSuccessFetchedFromRemote) {
         result([NSNumber numberWithBool:TRUE]);
       } else {
@@ -85,8 +86,10 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
     NSNumber *fetchTimeout = call.arguments[@"fetchTimeout"];
     NSNumber *minimumFetchInterval = call.arguments[@"minimumFetchInterval"];
     FIRRemoteConfigSettings *remoteConfigSettings = [[FIRRemoteConfigSettings alloc] init];
-    remoteConfigSettings.fetchTimeout = [fetchTimeout intValue] > 0 ? [fetchTimeout intValue] / 1000 : 0;
-    remoteConfigSettings.minimumFetchInterval = [minimumFetchInterval intValue] > 0 ? [minimumFetchInterval intValue] / 1000 : 0;
+    remoteConfigSettings.fetchTimeout =
+        [fetchTimeout intValue] > 0 ? [fetchTimeout intValue] / 1000 : 0;
+    remoteConfigSettings.minimumFetchInterval =
+        [minimumFetchInterval intValue] > 0 ? [minimumFetchInterval intValue] / 1000 : 0;
     [remoteConfig setConfigSettings:remoteConfigSettings];
     result(nil);
   } else if ([@"RemoteConfig#setDefaults" isEqualToString:call.method]) {
@@ -109,7 +112,7 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
 
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
   for (NSString *key in keySet) {
-    parameters[key] = [self createRemoteConfigValueDict: [remoteConfig configValueForKey:key]];
+    parameters[key] = [self createRemoteConfigValueDict:[remoteConfig configValueForKey:key]];
   }
   return parameters;
 }
@@ -154,12 +157,13 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
 }
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
-  FIRRemoteConfig  *firebaseRemoteConfig = [FIRRemoteConfig remoteConfigWithApp:firebase_app];
+  FIRRemoteConfig *firebaseRemoteConfig = [FIRRemoteConfig remoteConfigWithApp:firebase_app];
   NSDictionary *configProperties = [self configPropertiesForInstance:firebaseRemoteConfig];
 
   NSMutableDictionary *configValues = [[NSMutableDictionary alloc] init];
   [configValues addEntriesFromDictionary:configProperties];
-  [configValues setValue:[self getAllParametersForInstance:firebaseRemoteConfig] forKey:@"parameters"];
+  [configValues setValue:[self getAllParametersForInstance:firebaseRemoteConfig]
+                  forKey:@"parameters"];
   return configValues;
 }
 
@@ -172,7 +176,8 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
   [configProperties setValue:@([fetchTimeout intValue]) forKey:@"fetchTimeout"];
   [configProperties setValue:@([minimumFetchInterval intValue]) forKey:@"minimumFetchInterval"];
   [configProperties setValue:@(lastFetchMillis) forKey:@"lastFetchTime"];
-  [configProperties setValue:[self mapLastFetchStatus:[remoteConfig lastFetchStatus]] forKey:@"lastFetchStatus"];
+  [configProperties setValue:[self mapLastFetchStatus:[remoteConfig lastFetchStatus]]
+                      forKey:@"lastFetchStatus"];
   return configProperties;
 }
 
