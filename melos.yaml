@@ -7,12 +7,12 @@ nullsafety:
   filter:
     scope:
       - '*cloud_firestore*'
-      - '*cloud_functions*'
       - '*firebase_auth*'
       - '*firebase_core*'
-      - '*firebase_crashlytics*'
-      - '*firebase_messaging*'
-      - '*firebase_storage*'
+      - '*cloud_functions*'
+#      - '*firebase_storage*'
+#      - '*firebase_crashlytics*'
+#      - '*firebase_messaging*'
   environment:
     sdk: ">=2.12.0-0 <3.0.0"
     # flutter: ">=1.24.0-10.2.pre" # TODO confirm requirements
