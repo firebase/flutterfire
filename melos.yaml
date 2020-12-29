@@ -19,7 +19,7 @@ nullsafety:
   filter:
     scope:
       - '*firebase_core*'
-  #      - '*cloud_firestore*'
+      - '*cloud_firestore*'
   #      - '*cloud_functions*'
   #      - '*firebase_auth*'
   #      - '*firebase_storage*'
