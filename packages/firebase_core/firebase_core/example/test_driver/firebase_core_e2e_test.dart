@@ -5,6 +5,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:e2e/e2e_driver.dart' as e2e;
+import 'package:drive/drive_driver.dart' as drive;
 
-Future<void> main() async => e2e.main();
+void main() => drive.main();
