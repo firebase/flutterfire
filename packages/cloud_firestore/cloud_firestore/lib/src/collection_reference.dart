@@ -59,7 +59,6 @@ class CollectionReference extends Query {
       assert(!path.contains("//"), "a document path must not contain '//'");
       assert(path != '/', "a document path must point to a valid document");
     }
-    // TODO(ehesp): null saftey check adds a `!` to the path?
     return DocumentReference._(firestore, _delegate.doc(path));
   }
 
