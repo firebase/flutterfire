@@ -18,9 +18,9 @@ nullsafety:
     #    google_sign_in_web: # TODO no nullsafety version
   filter:
     scope:
-      - '*cloud_firestore*'
       - '*firebase_core*'
-      - '*cloud_functions*'
+  #      - '*cloud_firestore*'
+  #      - '*cloud_functions*'
   #      - '*firebase_auth*'
   #      - '*firebase_storage*'
   #      - '*firebase_crashlytics*'
