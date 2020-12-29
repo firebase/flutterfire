@@ -2,15 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:e2e/e2e.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_test/flutter_test.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  E2EWidgetsFlutterBinding.ensureInitialized();
-
   group('$FirebaseCrashlytics', () {
     /*late*/ FirebaseCrashlytics crashlytics;
 
@@ -65,10 +64,11 @@ void main() {
             exception: 'foo exception',
             stack: StackTrace.fromString(''),
             context: DiagnosticsNode.message('bar reason'),
-            informationCollector: () => <DiagnosticsNode>[
-                  DiagnosticsNode.message('first message'),
-                  DiagnosticsNode.message('second message')
-                ]));
+            informationCollector: () =>
+            <DiagnosticsNode>[
+              DiagnosticsNode.message('first message'),
+              DiagnosticsNode.message('second message')
+            ]));
       });
     });
 
@@ -121,9 +121,11 @@ void main() {
     group('setCustomKey', () {
       test('should throw if null', () async {
         expect(
-            () => crashlytics.setCustomKey(null, null), throwsAssertionError);
+                () => crashlytics.setCustomKey(null, null),
+            throwsAssertionError);
         expect(
-            () => crashlytics.setCustomKey('foo', null), throwsAssertionError);
+                () => crashlytics.setCustomKey('foo', null),
+            throwsAssertionError);
         expect(() => crashlytics.setCustomKey('foo', []), throwsAssertionError);
         expect(() => crashlytics.setCustomKey('foo', {}), throwsAssertionError);
       });
