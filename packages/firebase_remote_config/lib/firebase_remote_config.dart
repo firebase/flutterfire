@@ -4,9 +4,7 @@
 
 library firebase_remote_config;
 
-/*melos-nullsafety-remove-start*/
 import 'dart:async';
-/*melos-nullsafety-remove-end*/
 import 'dart:convert';
 
 import 'package:flutter/services.dart';

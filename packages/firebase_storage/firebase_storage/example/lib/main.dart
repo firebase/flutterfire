@@ -1,6 +1,4 @@
-/*melos-nullsafety-remove-start*/
 import 'dart:async';
-/*melos-nullsafety-remove-end*/
 import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart';

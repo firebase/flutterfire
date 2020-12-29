@@ -2,9 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/*melos-nullsafety-remove-start*/
 import 'dart:async';
-/*melos-nullsafety-remove-end*/
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';

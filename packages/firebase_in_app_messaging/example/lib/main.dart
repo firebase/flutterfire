@@ -2,9 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/*melos-nullsafety-remove-start*/
 import 'dart:async';
-/*melos-nullsafety-remove-end*/
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';

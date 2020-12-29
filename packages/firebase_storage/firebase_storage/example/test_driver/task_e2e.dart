@@ -1,8 +1,6 @@
 // @dart = 2.9
 
-/*melos-nullsafety-remove-start*/
 import 'dart:async';
-/*melos-nullsafety-remove-end*/
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';

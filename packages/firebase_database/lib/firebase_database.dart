@@ -4,9 +4,7 @@
 
 library firebase_database;
 
-/*melos-nullsafety-remove-start*/
 import 'dart:async';
-/*melos-nullsafety-remove-end*/
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';

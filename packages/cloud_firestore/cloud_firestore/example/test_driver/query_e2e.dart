@@ -5,9 +5,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:math';
-/*melos-nullsafety-remove-start*/
 import 'dart:async';
-/*melos-nullsafety-remove-end*/
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';

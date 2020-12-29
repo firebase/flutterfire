@@ -4,9 +4,7 @@
 
 library firebase_ml_vision;
 
-/*melos-nullsafety-remove-start*/
 import 'dart:async';
-/*melos-nullsafety-remove-end*/
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';

@@ -1,6 +1,4 @@
-/*melos-nullsafety-remove-start*/
 import 'dart:async';
-/*melos-nullsafety-remove-end*/
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
