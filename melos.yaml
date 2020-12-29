@@ -4,15 +4,27 @@ packages:
   - packages/**
 
 nullsafety:
+  dependencies:
+    mockito: ^5.0.0-nullsafety.0
+    plugin_platform_interface: ^1.1.0-nullsafety.1
+    meta: ^1.3.0-nullsafety.6
+    quiver: ^3.0.0-nullsafety.2
+    intl: ^0.17.0-nullsafety.2
+    #    e2e: # TODO no nullsafety version, try remove usages in FlutterFire project.
+    #    http: # TODO no nullsafety version
+    #    uuid: # TODO no nullsafety version
+    #    flutter_signin_button: # TODO no nullsafety version
+    #    google_sign_in: # TODO no nullsafety version
+    #    google_sign_in_web: # TODO no nullsafety version
   filter:
     scope:
       - '*cloud_firestore*'
       - '*firebase_auth*'
       - '*firebase_core*'
       - '*cloud_functions*'
-#      - '*firebase_storage*'
-#      - '*firebase_crashlytics*'
-#      - '*firebase_messaging*'
+  #      - '*firebase_storage*'
+  #      - '*firebase_crashlytics*'
+  #      - '*firebase_messaging*'
   environment:
     sdk: ">=2.12.0-0 <3.0.0"
     # flutter: ">=1.24.0-10.2.pre" # TODO confirm requirements
