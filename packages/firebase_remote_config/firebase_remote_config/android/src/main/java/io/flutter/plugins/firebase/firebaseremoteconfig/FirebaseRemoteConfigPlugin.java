@@ -65,18 +65,13 @@ public class FirebaseRemoteConfigPlugin
   private Map<String, Object> getConfigProperties(FirebaseRemoteConfig remoteConfig) {
     Map<String, Object> configProperties = new HashMap<>();
     configProperties.put(
-        "fetchTimeout",
-        remoteConfig.getInfo().getConfigSettings().getFetchTimeoutInSeconds()
-    );
+        "fetchTimeout", remoteConfig.getInfo().getConfigSettings().getFetchTimeoutInSeconds());
     configProperties.put(
         "minimumFetchInterval",
-        remoteConfig.getInfo().getConfigSettings().getMinimumFetchIntervalInSeconds()
-    );
+        remoteConfig.getInfo().getConfigSettings().getMinimumFetchIntervalInSeconds());
     configProperties.put("lastFetchTime", remoteConfig.getInfo().getFetchTimeMillis());
     configProperties.put(
-        "lastFetchStatus",
-        mapLastFetchStatus(remoteConfig.getInfo().getLastFetchStatus())
-    );
+        "lastFetchStatus", mapLastFetchStatus(remoteConfig.getInfo().getLastFetchStatus()));
     Log.d(TAG, "Sending fetchTimeout: " + configProperties.get("fetchTimeout"));
     return configProperties;
   }
@@ -135,12 +130,12 @@ public class FirebaseRemoteConfigPlugin
           break;
         }
       case "RemoteConfig#setConfigSettings":
-      {
+        {
           int fetchTimeout = call.argument("fetchTimeout");
           // To be insistent with iOS fetchTimeout is set to the default 1 minute (60 seconds)
           // if an attempt is made to set it to zero.
           if (fetchTimeout <= 0) {
-              fetchTimeout = 60;
+            fetchTimeout = 60;
           }
           int minimumFetchInterval = call.argument("minimumFetchInterval");
           FirebaseRemoteConfigSettings settings =
