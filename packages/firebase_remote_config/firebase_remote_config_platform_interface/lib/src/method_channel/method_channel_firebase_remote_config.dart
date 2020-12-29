@@ -5,6 +5,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
+import 'utils/exception.dart';
+
 /// Method Channel delegate for [FirebaseRemoteConfigPlatform].
 class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   /// Keeps an internal handle ID for the channel.
@@ -107,39 +109,61 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
 
   @override
   Future<void> ensureInitialized() async {
-    await channel
-        .invokeMethod<void>('RemoteConfig#ensureInitialized', <String, dynamic>{
-      'appName': app.name,
-    });
+    try {
+      await channel
+          .invokeMethod<void>(
+          'RemoteConfig#ensureInitialized', <String, dynamic>{
+        'appName': app.name,
+      });
+    } catch(e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
   Future<bool> activate() async {
-    bool configChanged = await channel
-        .invokeMethod<bool>('RemoteConfig#activate', <String, dynamic>{
-      'appName': app.name,
-    });
-    await _updateConfigParameters();
-    return configChanged;
+    try {
+      bool configChanged = await channel
+          .invokeMethod<bool>('RemoteConfig#activate', <String, dynamic>{
+        'appName': app.name,
+      });
+      await _updateConfigParameters();
+      return configChanged;
+    } catch(e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
   Future<void> fetch() async {
-    await channel.invokeMethod<void>('RemoteConfig#fetch', <String, dynamic>{
-      'appName': app.name,
-    });
-    await _updateConfigProperties();
+    try {
+      await channel.invokeMethod<void>('RemoteConfig#fetch', <String, dynamic>{
+        'appName': app.name,
+      });
+      await _updateConfigProperties();
+    } catch(e) {
+      // Ensure that fetch status is updated.
+      await _updateConfigProperties();
+      throw convertPlatformException(e);
+    }
   }
 
   @override
   Future<bool> fetchAndActivate() async {
-    bool configChanged = await channel
-        .invokeMethod<bool>('RemoteConfig#fetchAndActivate', <String, dynamic>{
-      'appName': app.name,
-    });
-    await _updateConfigProperties();
-    await _updateConfigParameters();
-    return configChanged;
+    try {
+      bool configChanged = await channel
+          .invokeMethod<bool>(
+          'RemoteConfig#fetchAndActivate', <String, dynamic>{
+        'appName': app.name,
+      });
+      await _updateConfigParameters();
+      await _updateConfigProperties();
+      return configChanged;
+    } catch(e) {
+      // Ensure that fetch status is updated.
+      await _updateConfigProperties();
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -190,21 +214,32 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   @override
   Future<void> setConfigSettings(
       RemoteConfigSettings remoteConfigSettings) async {
-    await channel
-        .invokeMethod('RemoteConfig#setConfigSettings', <String, dynamic>{
-      'appName': app.name,
-      'fetchTimeout': remoteConfigSettings.fetchTimeout.inSeconds,
-      'minimumFetchInterval':
-          remoteConfigSettings.minimumFetchInterval.inSeconds,
-    });
-    await _updateConfigProperties();
+    try {
+      await channel
+          .invokeMethod('RemoteConfig#setConfigSettings', <String, dynamic>{
+        'appName': app.name,
+        'fetchTimeout': remoteConfigSettings.fetchTimeout.inSeconds,
+        'minimumFetchInterval':
+        remoteConfigSettings.minimumFetchInterval.inSeconds,
+      });
+      await _updateConfigProperties();
+    } catch(e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) async {
-    await channel.invokeMethod('RemoteConfig#setDefaults',
-        <String, dynamic>{'appName': app.name, 'defaults': defaultParameters});
-    await _updateConfigParameters();
+    try {
+      await channel.invokeMethod('RemoteConfig#setDefaults',
+          <String, dynamic>{
+            'appName': app.name,
+            'defaults': defaultParameters
+          });
+      await _updateConfigParameters();
+    } catch(e) {
+      throw convertPlatformException(e);
+    }
   }
 
   Future<void> _updateConfigParameters() async {
