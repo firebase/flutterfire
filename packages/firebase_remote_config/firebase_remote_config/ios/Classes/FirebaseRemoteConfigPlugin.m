@@ -86,10 +86,8 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
     NSNumber *fetchTimeout = call.arguments[@"fetchTimeout"];
     NSNumber *minimumFetchInterval = call.arguments[@"minimumFetchInterval"];
     FIRRemoteConfigSettings *remoteConfigSettings = [[FIRRemoteConfigSettings alloc] init];
-    remoteConfigSettings.fetchTimeout =
-        [fetchTimeout intValue] > 0 ? [fetchTimeout intValue] / 1000 : 0;
-    remoteConfigSettings.minimumFetchInterval =
-        [minimumFetchInterval intValue] > 0 ? [minimumFetchInterval intValue] / 1000 : 0;
+    remoteConfigSettings.fetchTimeout = [fetchTimeout doubleValue];
+    remoteConfigSettings.minimumFetchInterval = [minimumFetchInterval doubleValue];
     [remoteConfig setConfigSettings:remoteConfigSettings];
     result(nil);
   } else if ([@"RemoteConfig#setDefaults" isEqualToString:call.method]) {
@@ -170,12 +168,12 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
 - (NSDictionary *_Nonnull)configPropertiesForInstance:(FIRRemoteConfig *)remoteConfig {
   NSNumber *fetchTimeout = @([[remoteConfig configSettings] fetchTimeout]);
   NSNumber *minimumFetchInterval = @([[remoteConfig configSettings] minimumFetchInterval]);
-  NSInteger lastFetchMillis = round([[remoteConfig lastFetchTime] timeIntervalSince1970] * 1000);
+  NSNumber *lastFetchMillis = @([[remoteConfig lastFetchTime] timeIntervalSince1970] * 1000);
 
   NSMutableDictionary *configProperties = [[NSMutableDictionary alloc] init];
-  [configProperties setValue:@([fetchTimeout intValue]) forKey:@"fetchTimeout"];
-  [configProperties setValue:@([minimumFetchInterval intValue]) forKey:@"minimumFetchInterval"];
-  [configProperties setValue:@(lastFetchMillis) forKey:@"lastFetchTime"];
+  [configProperties setValue:@([fetchTimeout longValue]) forKey:@"fetchTimeout"];
+  [configProperties setValue:@([minimumFetchInterval longValue]) forKey:@"minimumFetchInterval"];
+  [configProperties setValue:@([lastFetchMillis longValue]) forKey:@"lastFetchTime"];
   [configProperties setValue:[self mapLastFetchStatus:[remoteConfig lastFetchStatus]]
                       forKey:@"lastFetchStatus"];
   return configProperties;
