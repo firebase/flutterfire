@@ -51,8 +51,7 @@ class Firebase {
   /// Throws if the app does not exist.
   static FirebaseApp app([String name = defaultFirebaseAppName]) {
     FirebaseAppPlatform app = _delegate.app(name);
-    // TODO(ehesp): Is the null check required? Wouldn't it throw?
-    return app == null ? null : FirebaseApp._(app);
+    return FirebaseApp._(app);
   }
 
   @override

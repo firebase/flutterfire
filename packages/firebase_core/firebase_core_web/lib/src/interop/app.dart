@@ -24,9 +24,11 @@ class App extends JsObjectWrapper<AppJsImpl> {
 
   /// Creates a new App from a [jsObject].
   static App getInstance(AppJsImpl jsObject) {
+    /*melos-nullsafety-remove-start*/
     if (jsObject == null) {
       return null;
     }
+    /*melos-nullsafety-remove-end*/
     return _expando[jsObject] ??= App._fromJsObject(jsObject);
   }
 

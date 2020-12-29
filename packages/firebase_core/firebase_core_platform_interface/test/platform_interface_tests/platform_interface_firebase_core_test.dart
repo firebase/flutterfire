@@ -20,12 +20,13 @@ void main() {
       FirebasePlatform.instance = ExtendsFirebasePlatform();
     });
 
+    /*melos-nullsafety-remove-start*/
     test('Cannot be implemented with `implements`', () {
       expect(() {
         FirebasePlatform.instance = ImplementsFirebasePlatform();
       }, throwsNoSuchMethodError);
     });
-
+    /*melos-nullsafety-remove-end*/
     test('Can be mocked with `implements`', () {
       final FirebaseCoreMockPlatform mock = FirebaseCoreMockPlatform();
       FirebasePlatform.instance = mock;
@@ -33,6 +34,7 @@ void main() {
   });
 }
 
+/*melos-nullsafety-remove-start*/
 class ImplementsFirebasePlatform implements FirebasePlatform {
   @override
   Future<FirebaseAppPlatform> initializeApp(
@@ -47,6 +49,7 @@ class ImplementsFirebasePlatform implements FirebasePlatform {
   @override
   List<FirebaseAppPlatform> get apps => null;
 }
+/*melos-nullsafety-remove-end*/
 
 class ExtendsFirebasePlatform extends FirebasePlatform {}
 

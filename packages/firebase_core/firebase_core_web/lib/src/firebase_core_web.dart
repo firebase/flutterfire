@@ -46,10 +46,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
         rethrow;
       }
 
-      // TODO(ehesp): Is this required? It would throw before getting here?
+      /*melos-nullsafety-remove-start*/
       if (app == null) {
         throw coreNotInitialized();
       }
+      /*melos-nullsafety-remove-end*/
     } else {
       assert(options != null,
           "FirebaseOptions cannot be null when creating a secondary Firebase app.");

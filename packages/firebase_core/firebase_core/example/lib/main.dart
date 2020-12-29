@@ -20,7 +20,9 @@ class MyApp extends StatelessWidget {
 
   Future<void> initializeDefault() async {
     FirebaseApp app = await Firebase.initializeApp();
+    /*melos-nullsafety-remove-start*/
     assert(app != null);
+    /*melos-nullsafety-remove-end*/
     print('Initialized default app $app');
   }
 
@@ -28,7 +30,9 @@ class MyApp extends StatelessWidget {
     FirebaseApp app =
         await Firebase.initializeApp(name: name, options: firebaseOptions);
 
+    /*melos-nullsafety-remove-start*/
     assert(app != null);
+    /*melos-nullsafety-remove-end*/
     print('Initialized $app');
   }
 
@@ -39,13 +43,13 @@ class MyApp extends StatelessWidget {
 
   void options() {
     final FirebaseApp app = Firebase.app(name);
-    final FirebaseOptions options = app?.options;
+    final FirebaseOptions options = app.options;
     print('Current options for app $name: $options');
   }
 
   Future<void> delete() async {
     final FirebaseApp app = Firebase.app(name);
-    await app?.delete();
+    await app.delete();
     print('App $name deleted');
   }
 

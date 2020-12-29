@@ -60,7 +60,9 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   /// Sets whether automatic data collection is enabled or disabled.
   @override
   Future<void> setAutomaticDataCollectionEnabled(bool enabled) async {
+    /*melos-nullsafety-remove-start*/
     assert(enabled != null);
+    /*melos-nullsafety-remove-end*/
     await MethodChannelFirebase.channel.invokeMethod<void>(
       'FirebaseApp#setAutomaticDataCollectionEnabled',
       <String, dynamic>{'appName': name, 'enabled': enabled},
@@ -72,7 +74,9 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   /// Sets whether automatic resource management is enabled or disabled.
   @override
   Future<void> setAutomaticResourceManagementEnabled(bool enabled) async {
+    /*melos-nullsafety-remove-start*/
     assert(enabled != null);
+    /*melos-nullsafety-remove-end*/
     await MethodChannelFirebase.channel.invokeMethod<void>(
       'FirebaseApp#setAutomaticResourceManagementEnabled',
       <String, dynamic>{'appName': name, 'enabled': enabled},
