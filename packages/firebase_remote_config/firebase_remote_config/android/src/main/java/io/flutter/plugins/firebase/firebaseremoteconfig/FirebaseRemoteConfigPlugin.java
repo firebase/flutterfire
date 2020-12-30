@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigClientException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
@@ -173,15 +174,16 @@ public class FirebaseRemoteConfigPlugin
             Exception exception = task.getException();
             Map<String, Object> details = new HashMap<>();
             if (exception instanceof FirebaseRemoteConfigFetchThrottledException) {
-              details.put(
-                  "throttleEndTimeMillis",
-                  ((FirebaseRemoteConfigFetchThrottledException) exception)
-                      .getThrottleEndTimeMillis());
+              details.put("code", "throttled");
+              details.put("message", "frequency of requests exceeds throttled limits");
+            } else if (exception instanceof FirebaseRemoteConfigClientException) {
+              details.put("code", "internal");
+              details.put("message", "internal remote config fetch error");
+            } else {
+              details.put("code", "unknown");
+              details.put("message", "unknown remote config error");
             }
-            result.error(
-                "firebase_remote_config",
-                exception != null ? exception.getMessage() : null,
-                details);
+            result.error(null, exception != null ? exception.getMessage() : null, details);
           }
         });
   }

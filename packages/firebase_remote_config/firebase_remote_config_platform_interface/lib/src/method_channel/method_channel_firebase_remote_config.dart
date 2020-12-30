@@ -110,12 +110,11 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   @override
   Future<void> ensureInitialized() async {
     try {
-      await channel
-          .invokeMethod<void>(
+      await channel.invokeMethod<void>(
           'RemoteConfig#ensureInitialized', <String, dynamic>{
         'appName': app.name,
       });
-    } catch(e) {
+    } catch (e) {
       throw convertPlatformException(e);
     }
   }
@@ -129,7 +128,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       });
       await _updateConfigParameters();
       return configChanged;
-    } catch(e) {
+    } catch (e) {
       throw convertPlatformException(e);
     }
   }
@@ -141,7 +140,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
         'appName': app.name,
       });
       await _updateConfigProperties();
-    } catch(e) {
+    } catch (e) {
       // Ensure that fetch status is updated.
       await _updateConfigProperties();
       throw convertPlatformException(e);
@@ -151,15 +150,14 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   @override
   Future<bool> fetchAndActivate() async {
     try {
-      bool configChanged = await channel
-          .invokeMethod<bool>(
+      bool configChanged = await channel.invokeMethod<bool>(
           'RemoteConfig#fetchAndActivate', <String, dynamic>{
         'appName': app.name,
       });
       await _updateConfigParameters();
       await _updateConfigProperties();
       return configChanged;
-    } catch(e) {
+    } catch (e) {
       // Ensure that fetch status is updated.
       await _updateConfigProperties();
       throw convertPlatformException(e);
@@ -220,10 +218,10 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
         'appName': app.name,
         'fetchTimeout': remoteConfigSettings.fetchTimeout.inSeconds,
         'minimumFetchInterval':
-        remoteConfigSettings.minimumFetchInterval.inSeconds,
+            remoteConfigSettings.minimumFetchInterval.inSeconds,
       });
       await _updateConfigProperties();
-    } catch(e) {
+    } catch (e) {
       throw convertPlatformException(e);
     }
   }
@@ -231,13 +229,12 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   @override
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) async {
     try {
-      await channel.invokeMethod('RemoteConfig#setDefaults',
-          <String, dynamic>{
-            'appName': app.name,
-            'defaults': defaultParameters
-          });
+      await channel.invokeMethod('RemoteConfig#setDefaults', <String, dynamic>{
+        'appName': app.name,
+        'defaults': defaultParameters
+      });
       await _updateConfigParameters();
-    } catch(e) {
+    } catch (e) {
       throw convertPlatformException(e);
     }
   }

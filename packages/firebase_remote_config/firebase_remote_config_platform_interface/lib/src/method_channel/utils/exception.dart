@@ -19,7 +19,7 @@ Exception convertPlatformException(Object exception) {
 FirebaseException platformExceptionToFirebaseException(
     PlatformException platformException) {
   Map<String, String> details = platformException.details != null
-      ? Map<String, String>.from(platformException.details)
+      ? Map<String, dynamic>.from(platformException.details)
       : null;
 
   String code = 'unknown';

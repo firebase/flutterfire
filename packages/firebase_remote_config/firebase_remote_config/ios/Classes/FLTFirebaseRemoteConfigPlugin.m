@@ -5,22 +5,23 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-#import "FirebaseRemoteConfigPlugin.h"
+#import "FLTFirebaseRemoteConfigPlugin.h"
+#import "FLTFirebaseRemoteConfigUtils.h"
 
 NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase_remote_config";
 
-@interface FirebaseRemoteConfigPlugin ()
+@interface FLTFirebaseRemoteConfigPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @end
 
-@implementation FirebaseRemoteConfigPlugin
+@implementation FLTFirebaseRemoteConfigPlugin
 
 + (instancetype)sharedInstance {
   static dispatch_once_t onceToken;
-  static FirebaseRemoteConfigPlugin *instance;
+  static FLTFirebaseRemoteConfigPlugin *instance;
 
   dispatch_once(&onceToken, ^{
-    instance = [[FirebaseRemoteConfigPlugin alloc] init];
+    instance = [[FLTFirebaseRemoteConfigPlugin alloc] init];
     [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
   });
 
@@ -36,7 +37,7 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFirebaseRemoteConfigChannelName
                                   binaryMessenger:[registrar messenger]];
-  FirebaseRemoteConfigPlugin *instance = [FirebaseRemoteConfigPlugin sharedInstance];
+  FLTFirebaseRemoteConfigPlugin *instance = [FLTFirebaseRemoteConfigPlugin sharedInstance];
 
   [registrar addMethodCallDelegate:instance channel:channel];
 
@@ -50,56 +51,125 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
   self.channel = nil;
 }
 
+- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
+  FLTFirebaseMethodCallErrorBlock errorBlock =
+      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
+        NSError *_Nullable error) {
+        if (code == nil) {
+          details = [FLTFirebaseRemoteConfigUtils ErrorCodeAndMessageFromNSError:error];
+        }
+        if ([@"unknown" isEqualToString:code]) {
+          NSLog(@"FLTFirebaseRemoteConfig: An error occurred while calling method %@", call.method);
+        }
+        flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
+                                                            message:message
+                                                    optionalDetails:details
+                                                 andOptionalNSError:error]);
+      };
+
+  FLTFirebaseMethodCallResult *methodCallResult =
+      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
+
+  if ([@"RemoteConfig#ensureInitialized" isEqualToString:call.method]) {
+    [self ensureInitialized:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"RemoteConfig#activate" isEqualToString:call.method]) {
+    [self activate:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"RemoteConfig#getAll" isEqualToString:call.method]) {
+    [self getAll:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"RemoteConfig#fetch" isEqualToString:call.method]) {
+    [self fetch:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"RemoteConfig#fetchAndActivate" isEqualToString:call.method]) {
+    [self fetchAndActivate:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"RemoteConfig#setConfigSettings" isEqualToString:call.method]) {
+    [self setConfigSettings:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"RemoteConfig#setDefaults" isEqualToString:call.method]) {
+    [self setDefaults:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"RemoteConfig#getProperties" isEqualToString:call.method]) {
+    [self getProperties:call.arguments withMethodCallResult:methodCallResult];
+  } else {
+    methodCallResult.success(FlutterMethodNotImplemented);
+  }
+}
+
+#pragma mark - Remote Config API
+- (void)ensureInitialized:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
+  [remoteConfig ensureInitializedWithCompletionHandler:^(NSError *initializationError) {
+    if (initializationError != nil) {
+      result.error(nil, nil, nil, initializationError);
+    } else {
+      result.success(nil);
+    }
+  }];
+}
+
+- (void)activate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
+  [remoteConfig activateWithCompletion:^(BOOL changed, NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(@(changed));
+    }
+  }];
+}
+
+- (void)getAll:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
+  NSDictionary *parameters = [self getAllParametersForInstance:remoteConfig];
+  result.success(parameters);
+}
+
+- (void)fetch:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
+  [remoteConfig fetchWithCompletionHandler:^(FIRRemoteConfigFetchStatus status, NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
+    }
+  }];
+}
+
+- (void)getProperties:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
+  NSDictionary *configProperties = [self configPropertiesForInstance:remoteConfig];
+  result.success(configProperties);
+}
+
+- (void)setDefaults:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
+  [remoteConfig setDefaults:arguments[@"defaults"]];
+  result.success(nil);
+}
+
+- (void)setConfigSettings:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSNumber *fetchTimeout = arguments[@"fetchTimeout"];
+  NSNumber *minimumFetchInterval = arguments[@"minimumFetchInterval"];
+  FIRRemoteConfigSettings *remoteConfigSettings = [[FIRRemoteConfigSettings alloc] init];
+  remoteConfigSettings.fetchTimeout = [fetchTimeout doubleValue];
+  remoteConfigSettings.minimumFetchInterval = [minimumFetchInterval doubleValue];
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
+  [remoteConfig setConfigSettings:remoteConfigSettings];
+  result.success(nil);
+}
+
+- (void)fetchAndActivate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
+  [remoteConfig fetchAndActivateWithCompletionHandler:^(
+                    FIRRemoteConfigFetchAndActivateStatus status, NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
+    }
+  }];
+}
+
 - (FIRRemoteConfig *_Nullable)getFIRRemoteConfigFromArguments:(NSDictionary *)arguments {
   NSString *appName = arguments[@"appName"];
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appName];
   return [FIRRemoteConfig remoteConfigWithApp:app];
-}
-
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
-  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:call.arguments];
-  if ([@"RemoteConfig#ensureInitialized" isEqualToString:call.method]) {
-    [remoteConfig ensureInitializedWithCompletionHandler:^(NSError *_Nullable initializationError) {
-      result(nil);
-    }];
-  } else if ([@"RemoteConfig#activate" isEqualToString:call.method]) {
-    [remoteConfig activateWithCompletion:^(BOOL configActivated, NSError *_Nullable activateError) {
-      result(@(configActivated));
-    }];
-  } else if ([@"RemoteConfig#getAll" isEqualToString:call.method]) {
-    NSDictionary *parameters = [self getAllParametersForInstance:remoteConfig];
-    result(parameters);
-  } else if ([@"RemoteConfig#fetch" isEqualToString:call.method]) {
-    [remoteConfig fetchWithCompletionHandler:^(FIRRemoteConfigFetchStatus status, NSError *error) {
-      result(nil);
-    }];
-  } else if ([@"RemoteConfig#fetchAndActivate" isEqualToString:call.method]) {
-    [remoteConfig fetchAndActivateWithCompletionHandler:^(
-                      FIRRemoteConfigFetchAndActivateStatus status, NSError *error) {
-      if (status == FIRRemoteConfigFetchAndActivateStatusSuccessFetchedFromRemote) {
-        result([NSNumber numberWithBool:TRUE]);
-      } else {
-        result([NSNumber numberWithBool:FALSE]);
-      }
-    }];
-  } else if ([@"RemoteConfig#setConfigSettings" isEqualToString:call.method]) {
-    NSNumber *fetchTimeout = call.arguments[@"fetchTimeout"];
-    NSNumber *minimumFetchInterval = call.arguments[@"minimumFetchInterval"];
-    FIRRemoteConfigSettings *remoteConfigSettings = [[FIRRemoteConfigSettings alloc] init];
-    remoteConfigSettings.fetchTimeout = [fetchTimeout doubleValue];
-    remoteConfigSettings.minimumFetchInterval = [minimumFetchInterval doubleValue];
-    [remoteConfig setConfigSettings:remoteConfigSettings];
-    result(nil);
-  } else if ([@"RemoteConfig#setDefaults" isEqualToString:call.method]) {
-    NSDictionary *defaults = call.arguments[@"defaults"];
-    [remoteConfig setDefaults:defaults];
-    result(nil);
-  } else if ([@"RemoteConfig#getProperties" isEqualToString:call.method]) {
-    NSDictionary *configProperties = [self configPropertiesForInstance:remoteConfig];
-    result(configProperties);
-  } else {
-    result(FlutterMethodNotImplemented);
-  }
 }
 
 - (NSDictionary *)getAllParametersForInstance:(FIRRemoteConfig *)remoteConfig {
