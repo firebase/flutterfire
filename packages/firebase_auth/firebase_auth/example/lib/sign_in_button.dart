@@ -4,9 +4,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// A simple widget which displays a button with an icon.
 class SignInButtonBuilder extends StatelessWidget {
+  /// Icon displayed next to the button
   final IconData icon;
+
+  /// The background color of the button
   final MaterialColor backgroundColor;
+
+  /// Text displayed next to the icon
   final String text;
+
+  /// The callback trigggered when the button is pressed
   final VoidCallback onPressed;
 
   /// SignInButtonBuilder
