@@ -6,9 +6,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+
+import 'sign_in_button.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -119,8 +120,8 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                 Container(
                   padding: const EdgeInsets.only(top: 16.0),
                   alignment: Alignment.center,
-                  child: SignInButton(
-                    Buttons.Email,
+                  child: SignInButtonBuilder(
+                    icon: Icons.email,
                     text: "Sign In",
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
@@ -202,7 +203,7 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
                 child: SignInButtonBuilder(
                   icon: Icons.insert_link,
                   text: "Sign In",
-                  backgroundColor: Colors.blueGrey[700],
+                  backgroundColor: Colors.blueGrey,
                   onPressed: () async {
                     await _signInWithEmailAndLink();
                   },
@@ -377,7 +378,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
                 alignment: Alignment.center,
                 child: SignInButtonBuilder(
                   icon: Icons.contact_phone,
-                  backgroundColor: Colors.deepOrangeAccent[700],
+                  backgroundColor: Colors.deepOrange,
                   text: "Verify Number",
                   onPressed: () async {
                     _verifyPhoneNumber();
@@ -394,7 +395,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
                 alignment: Alignment.center,
                 child: SignInButtonBuilder(
                     icon: Icons.phone,
-                    backgroundColor: Colors.deepOrangeAccent[400],
+                    backgroundColor: Colors.deepOrange,
                     onPressed: () async {
                       _signInWithPhoneNumber();
                     },
@@ -561,14 +562,15 @@ class _OtherProvidersSignInSectionState
                         onChanged: _handleRadioButtonSelected,
                       ),
                     ),
-                    ListTile(
-                      title: Text('Google'),
-                      leading: Radio<int>(
-                        value: 3,
-                        groupValue: _selection,
-                        onChanged: _handleRadioButtonSelected,
-                      ),
-                    ),
+                    // TODO(ehesp): Re-enabled when google_sign_in has a null safety release
+                    // ListTile(
+                    //   title: Text('Google'),
+                    //   leading: Radio<int>(
+                    //     value: 3,
+                    //     groupValue: _selection,
+                    //     onChanged: _handleRadioButtonSelected,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -591,19 +593,8 @@ class _OtherProvidersSignInSectionState
               Container(
                 padding: const EdgeInsets.only(top: 16.0),
                 alignment: Alignment.center,
-                child: SignInButton(
-                  _provider == "GitHub"
-                      ? Buttons.GitHub
-                      : (_provider == "Facebook"
-                          ? Buttons.Facebook
-                          : (_provider == "Twitter"
-                              ? Buttons.Twitter
-                              : Buttons.GoogleDark)),
-                  text: "Sign In",
-                  onPressed: () async {
-                    _signInWithOtherProvider();
-                  },
-                ),
+                child:
+                    SignInButton(_provider, () => _signInWithOtherProvider()),
               ),
             ],
           )),
@@ -741,34 +732,35 @@ class _OtherProvidersSignInSectionState
 
   //Example code of how to sign in with Google.
   void _signInWithGoogle() async {
-    try {
-      UserCredential userCredential;
+    // TODO(ehesp): Re-enabled when google_sign_in has a null safety release
+    // try {
+    //   UserCredential userCredential;
 
-      if (kIsWeb) {
-        GoogleAuthProvider googleProvider = GoogleAuthProvider();
-        userCredential = await _auth.signInWithPopup(googleProvider);
-      } else {
-        final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
-        final GoogleAuthCredential googleAuthCredential =
-            GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-        userCredential = await _auth.signInWithCredential(googleAuthCredential);
-      }
+    //   if (kIsWeb) {
+    //     GoogleAuthProvider googleProvider = GoogleAuthProvider();
+    //     userCredential = await _auth.signInWithPopup(googleProvider);
+    //   } else {
+    //     final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    //     final GoogleSignInAuthentication googleAuth =
+    //         await googleUser.authentication;
+    //     final GoogleAuthCredential googleAuthCredential =
+    //         GoogleAuthProvider.credential(
+    //       accessToken: googleAuth.accessToken,
+    //       idToken: googleAuth.idToken,
+    //     );
+    //     userCredential = await _auth.signInWithCredential(googleAuthCredential);
+    //   }
 
-      final user = userCredential.user;
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text("Sign In ${user.uid} with Google"),
-      ));
-    } catch (e) {
-      print(e);
+    //   final user = userCredential.user;
+    //   Scaffold.of(context).showSnackBar(SnackBar(
+    //     content: Text("Sign In ${user.uid} with Google"),
+    //   ));
+    // } catch (e) {
+    //   print(e);
 
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text("Failed to sign in with Google: ${e}"),
-      ));
-    }
+    //   Scaffold.of(context).showSnackBar(SnackBar(
+    //     content: Text("Failed to sign in with Google: ${e}"),
+    //   ));
+    // }
   }
 }

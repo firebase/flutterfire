@@ -64,11 +64,10 @@ void main() {
             exception: 'foo exception',
             stack: StackTrace.fromString(''),
             context: DiagnosticsNode.message('bar reason'),
-            informationCollector: () =>
-            <DiagnosticsNode>[
-              DiagnosticsNode.message('first message'),
-              DiagnosticsNode.message('second message')
-            ]));
+            informationCollector: () => <DiagnosticsNode>[
+                  DiagnosticsNode.message('first message'),
+                  DiagnosticsNode.message('second message')
+                ]));
       });
     });
 
@@ -121,11 +120,9 @@ void main() {
     group('setCustomKey', () {
       test('should throw if null', () async {
         expect(
-                () => crashlytics.setCustomKey(null, null),
-            throwsAssertionError);
+            () => crashlytics.setCustomKey(null, null), throwsAssertionError);
         expect(
-                () => crashlytics.setCustomKey('foo', null),
-            throwsAssertionError);
+            () => crashlytics.setCustomKey('foo', null), throwsAssertionError);
         expect(() => crashlytics.setCustomKey('foo', []), throwsAssertionError);
         expect(() => crashlytics.setCustomKey('foo', {}), throwsAssertionError);
       });

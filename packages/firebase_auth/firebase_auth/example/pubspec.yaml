@@ -9,7 +9,7 @@ dependencies:
   firebase_auth:
     path: ../
   google_sign_in: ^4.5.1
-  flutter_signin_button: ^1.0.0
+  font_awesome_flutter: ^8.11.0
   firebase_core:
     path: ../../../firebase_core/firebase_core
   firebase_dynamic_links:
