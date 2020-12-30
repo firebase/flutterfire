@@ -39,7 +39,9 @@ class SignInButtonBuilder extends StatelessWidget {
 
 /// A class to render a pre-defined Button
 class SignInButton extends StatelessWidget {
+  // ignore: public_member_api_docs
   final String provider;
+  // ignore: public_member_api_docs
   final VoidCallback onPressed;
 
   /// Accepts a provider & onPressed callback
