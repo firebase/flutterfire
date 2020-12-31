@@ -142,7 +142,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// The user handler is executed, and the result or error is emitted via
   /// a stream to the [runTransaction] handler. Once the handler has completed,
   /// a response to continue (with commands) or abort the transaction is sent.
-  Future<Map<String, dynamic>> _handleTransactionAttempt(
+  Future<dynamic> _handleTransactionAttempt(
       Map<dynamic, dynamic> arguments) async {
     final int /*!*/ transactionId = arguments['transactionId'];
     final TransactionPlatform transaction =

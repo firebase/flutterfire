@@ -18,7 +18,7 @@ void main() {
   final List<MethodCall> log = <MethodCall>[];
 
   setUpAll(() async {
-    firestore = MethodChannelFirebaseFirestore();
+    firestore = MethodChannelFirebaseFirestore(app: Firebase.app());
     await Firebase.initializeApp();
 
     handleMethodCall((MethodCall call) {

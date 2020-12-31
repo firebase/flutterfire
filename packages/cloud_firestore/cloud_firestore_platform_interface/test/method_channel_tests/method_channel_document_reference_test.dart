@@ -94,7 +94,7 @@ void main() {
   });
 }
 
-void _assertGetMethodCalled(DocumentReferencePlatform documentReference,
+Future<void> _assertGetMethodCalled(DocumentReferencePlatform documentReference,
     Source /*?*/ source, String expectedSourceString) async {
   bool isMethodCalled = false;
   handleMethodCall((call) {

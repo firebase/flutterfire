@@ -286,7 +286,7 @@ void main() {
     });
 
     group('runTransaction()', () {
-      /*late*/ TransactionHandler transactionHandler;
+      TransactionHandler transactionHandler = (_) async => {};
       int handleId;
       setUp(() {
         handleId = mockTransactionHandleId;

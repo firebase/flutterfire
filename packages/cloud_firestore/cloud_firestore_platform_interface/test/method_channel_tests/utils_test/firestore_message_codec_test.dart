@@ -18,7 +18,7 @@ void main() {
   /*late*/ MethodChannelFirebaseFirestore firestore;
 
   setUpAll(() async {
-    firestore = MethodChannelFirebaseFirestore();
+    firestore = MethodChannelFirebaseFirestore(app: Firebase.app());
     await Firebase.initializeApp();
   });
   group('$FirestoreMessageCodec', () {
