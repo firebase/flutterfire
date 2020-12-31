@@ -14,8 +14,8 @@ import 'func.dart';
 import 'js_interop.dart' as js;
 
 /// Returns Dart representation from JS Object.
-dynamic dartify(Object /*?*/ jsObject,
-    [Object /*?*/ Function(Object /*?*/ object) /*?*/ customDartify]) {
+dynamic dartify(dynamic jsObject,
+    [dynamic Function(dynamic object) /*?*/ customDartify]) {
   if (_isBasicType(jsObject)) {
     return jsObject;
   }
@@ -30,7 +30,7 @@ dynamic dartify(Object /*?*/ jsObject,
     return jsDate;
   }
 
-  Object /*?*/ value = customDartify?.call(jsObject);
+  dynamic value = customDartify?.call(jsObject);
 
   if (value == null) {
     var keys = js.objectKeys(jsObject);
@@ -52,7 +52,7 @@ dynamic jsifyList(Iterable list,
 
 // Returns the JS implementation from Dart Object.
 dynamic jsify(Object dartObject,
-    [Object /*?*/ Function(Object object) /*?*/ customJsify]) {
+    [dynamic Function(dynamic object) /*?*/ customJsify]) {
   if (_isBasicType(dartObject)) {
     return dartObject;
   }
@@ -73,7 +73,7 @@ dynamic jsify(Object dartObject,
     return allowInterop(dartObject);
   }
 
-  Object /*?*/ value = customJsify?.call(dartObject);
+  dynamic value = customJsify?.call(dartObject);
 
   if (value == null) {
     throw ArgumentError.value(dartObject, 'dartObject', 'Could not convert');
@@ -88,7 +88,7 @@ dynamic callMethod(Object jsObject, String method, List<dynamic> args) =>
 
 /// Returns `true` if the [value] is a very basic built-in type - e.g.
 /// `null`, [num], [bool] or [String]. It returns `false` in the other case.
-bool _isBasicType(Object /*?*/ value) {
+bool _isBasicType(dynamic value) {
   if (value == null || value is num || value is bool || value is String) {
     return true;
   }
