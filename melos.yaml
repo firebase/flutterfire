@@ -20,7 +20,7 @@ nullsafety:
     scope:
       - '*firebase_core*'
       - '*cloud_firestore*'
-      - '*firebase_auth*'
+  #      - '*firebase_auth*'
   #      - '*cloud_functions*'
   #      - '*firebase_storage*'
   #      - '*firebase_crashlytics*'
