@@ -10,13 +10,12 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/collection_reference_web.dart';
-import 'src/field_value_factory_web.dart';
 import 'src/document_reference_web.dart';
+import 'src/field_value_factory_web.dart';
+import 'src/interop/firestore.dart' as firestore_interop;
 import 'src/query_web.dart';
 import 'src/transaction_web.dart';
 import 'src/write_batch_web.dart';
-
-import 'src/interop/firestore.dart' as firestore_interop;
 
 /// Web implementation for [FirebaseFirestorePlatform]
 /// delegates calls to firestore web plugin
@@ -34,7 +33,6 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   FirebaseFirestoreWeb({FirebaseApp /*?*/ app})
       : _webFirestore =
             firestore_interop.getFirestoreInstance(core_interop.app(app?.name)),
-        // TODO(ehesp): Why is a `!` being added with null safety?
         super(appInstance: app) {
     FieldValueFactoryPlatform.instance = FieldValueFactoryWeb();
   }
@@ -114,7 +112,11 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   set settings(Settings settings) {
     int cacheSizeBytes;
 
-    if (settings.cacheSizeBytes == null) {
+    // TODO `aNullValue` is a workaround nullsafety migration not picking up
+    // TODO      `settings.cacheSizeBytes` as nullable even though it's hinted.
+    // ignore: avoid_init_to_null
+    dynamic aNullValue = null;
+    if (settings.cacheSizeBytes == aNullValue) {
       cacheSizeBytes = 40000000;
     } else if (settings.cacheSizeBytes == Settings.CACHE_SIZE_UNLIMITED) {
       // https://github.com/firebase/firebase-js-sdk/blob/e67affba53a53d28492587b2f60521a00166db60/packages/firestore/src/local/lru_garbage_collector.ts#L175
