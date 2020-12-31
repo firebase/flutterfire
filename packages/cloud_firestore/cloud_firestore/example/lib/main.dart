@@ -285,7 +285,7 @@ class Likes extends StatefulWidget {
 }
 
 class _Likes extends State<Likes> {
-  /*late*/ int /*!*/ _likes;
+  int /*?*/ _likes;
 
   _onLike(int current) async {
     // Increment the "like" count straight away to show feedback to the user.

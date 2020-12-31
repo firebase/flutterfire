@@ -259,7 +259,7 @@ void runDocumentReferenceTests() {
         });
 
         DocumentSnapshot snapshot = await document.get();
-        Map<String, dynamic> data = snapshot.data();
+        Map<String, dynamic> /*?*/ data = snapshot.data();
 
         expect(data['string'], equals('foo bar'));
         expect(data['number_32'], equals(123));

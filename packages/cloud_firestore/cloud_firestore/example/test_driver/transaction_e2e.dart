@@ -62,7 +62,7 @@ void runTransactionTests() {
         fail("Should have thrown");
       } catch (e) {
         expect(e, isA<FirebaseException>());
-        expect(e.code, equals('deadline-exceeded'));
+        expect((e as FirebaseException).code, equals('deadline-exceeded'));
       }
     });
 

@@ -124,7 +124,7 @@ void runInstanceTests() {
       } on FirebaseException catch (e) {
         expect(e.code, equals("failed-precondition"));
       } catch (e) {
-        fail(e);
+        fail(e.toString());
       }
 
       await firestore.terminate();
