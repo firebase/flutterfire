@@ -163,19 +163,17 @@ class DocumentReference
 
   String get id => jsObject.id;
 
-  CollectionReference get parent =>
+  CollectionReference /*?*/ get parent =>
       CollectionReference.getInstance(jsObject.parent);
 
   String get path => jsObject.path;
 
   /// Creates a new DocumentReference from a [jsObject].
-  static DocumentReference getInstance(
-      firestore_interop.DocumentReferenceJsImpl jsObject) {
-    /*melos-nullsafety-remove-start*/
+  static DocumentReference /*?*/ getInstance(
+      firestore_interop.DocumentReferenceJsImpl /*?*/ jsObject) {
     if (jsObject == null) {
       return null;
     }
-    /*melos-nullsafety-remove-end*/
     return _expando[jsObject] ??= DocumentReference._fromJsObject(jsObject);
   }
 
@@ -355,19 +353,17 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
 
   String get id => jsObject.id;
 
-  DocumentReference get parent =>
+  DocumentReference /*?*/ get parent =>
       DocumentReference.getInstance(jsObject.parent);
 
   String get path => jsObject.path;
 
   /// Creates a new CollectionReference from a [jsObject].
-  static CollectionReference getInstance(
-      firestore_interop.CollectionReferenceJsImpl jsObject) {
-    /*melos-nullsafety-remove-start*/
+  static CollectionReference /*?*/ getInstance(
+      firestore_interop.CollectionReferenceJsImpl /*?*/ jsObject) {
     if (jsObject == null) {
       return null;
     }
-    /*melos-nullsafety-remove-end*/
     return _expando[jsObject] ??= CollectionReference._fromJsObject(jsObject);
   }
 
