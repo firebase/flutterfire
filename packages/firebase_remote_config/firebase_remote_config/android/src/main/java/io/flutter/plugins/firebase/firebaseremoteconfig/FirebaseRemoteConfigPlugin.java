@@ -133,11 +133,6 @@ public class FirebaseRemoteConfigPlugin
       case "RemoteConfig#setConfigSettings":
         {
           int fetchTimeout = call.argument("fetchTimeout");
-          // To be insistent with iOS fetchTimeout is set to the default 1 minute (60 seconds)
-          // if an attempt is made to set it to zero.
-          if (fetchTimeout <= 0) {
-            fetchTimeout = 60;
-          }
           int minimumFetchInterval = call.argument("minimumFetchInterval");
           FirebaseRemoteConfigSettings settings =
               new FirebaseRemoteConfigSettings.Builder()
