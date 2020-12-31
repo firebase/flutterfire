@@ -181,13 +181,13 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// By default transactions are limited to 5 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
-  Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
+  Future<T /*!*/ > runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
     /*melos-nullsafety-remove-start*/
     assert(transactionHandler != null, "transactionHandler cannot be null");
     /*melos-nullsafety-remove-end*/
 
-    T output;
+    T /*!*/ output;
     await _delegate.runTransaction((transaction) async {
       output = await transactionHandler(Transaction._(this, transaction));
     }, timeout: timeout);
