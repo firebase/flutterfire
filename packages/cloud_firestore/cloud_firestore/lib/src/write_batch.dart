@@ -25,7 +25,9 @@ class WriteBatch {
 
   /// Deletes the document referred to by [document].
   void delete(DocumentReference document) {
+    /*melos-nullsafety-remove-start*/
     assert(document != null);
+    /*melos-nullsafety-remove-end*/
     assert(document.firestore == _firestore,
         "the document provided is from a different Firestore instance");
     return _delegate.delete(document.path);
@@ -39,15 +41,14 @@ class WriteBatch {
   /// document instead of overwriting.
   void set(DocumentReference document, Map<String, dynamic> data,
       [SetOptions /*?*/ options]) {
+    /*melos-nullsafety-remove-start*/
     assert(document != null);
     assert(data != null);
+    /*melos-nullsafety-remove-end*/
     assert(document.firestore == _firestore,
         "the document provided is from a different Firestore instance");
-    return _delegate.set(
-        document.path,
-        // TODO(ehesp): `options` should be nullable after platform interface null safe is available
-        _CodecUtility.replaceValueWithDelegatesInMap(data),
-        options);
+    return _delegate.set(document.path,
+        _CodecUtility.replaceValueWithDelegatesInMap(data), options);
   }
 
   /*melos-nullsafety-remove-start*/
@@ -63,8 +64,10 @@ class WriteBatch {
   ///
   /// If the document does not yet exist, an exception will be thrown.
   void update(DocumentReference document, Map<String, dynamic> data) {
+    /*melos-nullsafety-remove-start*/
     assert(document != null);
     assert(data != null);
+    /*melos-nullsafety-remove-end*/
     assert(document.firestore == _firestore,
         "the document provided is from a different Firestore instance");
     return _delegate.update(

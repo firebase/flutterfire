@@ -46,7 +46,9 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Returns an instance using a specified [FirebaseApp].
   static FirebaseFirestore /*!*/ instanceFor({FirebaseApp app}) {
+    /*melos-nullsafety-remove-start*/
     assert(app != null);
+    /*melos-nullsafety-remove-end*/
     if (_cachedInstances.containsKey(app.name)) {
       return _cachedInstances[app.name];
     }
@@ -68,9 +70,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference collection(String collectionPath) {
+    /*melos-nullsafety-remove-start*/
     assert(collectionPath != null, "a collection path cannot be null");
     assert(collectionPath.isNotEmpty,
         "a collectionPath path must be a non-empty string");
+    /*melos-nullsafety-remove-end*/
     assert(!collectionPath.contains("//"),
         "a collection path must not contain '//'");
     assert(isValidCollectionPath(collectionPath),
@@ -103,9 +107,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [Query] for the specified collection group.
   Query collectionGroup(String collectionPath) {
+    /*melos-nullsafety-remove-start*/
     assert(collectionPath != null, "a collection path cannot be null");
     assert(collectionPath.isNotEmpty,
         "a collection path must be a non-empty string");
+    /*melos-nullsafety-remove-end*/
     assert(!collectionPath.contains("/"),
         "a collection path passed to collectionGroup() cannot contain '/'");
 
@@ -123,9 +129,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [DocumentReference] for the specified Firestore path.
   DocumentReference doc(String documentPath) {
+    /*melos-nullsafety-remove-start*/
     assert(documentPath != null, "a document path cannot be null");
     assert(
         documentPath.isNotEmpty, "a document path must be a non-empty string");
+    /*melos-nullsafety-remove-end*/
     assert(!documentPath.contains("//"),
         "a collection path must not contain '//'");
     assert(isValidDocumentPath(documentPath),
@@ -175,7 +183,9 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// timeout can be adjusted by setting the timeout parameter.
   Future<T /*?*/ > runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
+    /*melos-nullsafety-remove-start*/
     assert(transactionHandler != null, "transactionHandler cannot be null");
+    /*melos-nullsafety-remove-end*/
 
     T output;
     await _delegate.runTransaction((transaction) async {

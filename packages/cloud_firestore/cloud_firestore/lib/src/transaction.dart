@@ -30,7 +30,9 @@ class Transaction {
 
   /// Deletes the document referred to by the provided [documentReference].
   Transaction delete(DocumentReference documentReference) {
+    /*melos-nullsafety-remove-start*/
     assert(documentReference != null);
+    /*melos-nullsafety-remove-end*/
     assert(documentReference.firestore == _firestore,
         "the document provided is from a different Firestore instance");
 
@@ -41,8 +43,10 @@ class Transaction {
   /// The update will fail if applied to a document that does not exist.
   Transaction update(
       DocumentReference documentReference, Map<String, dynamic> data) {
+        /*melos-nullsafety-remove-start*/
     assert(documentReference != null);
     assert(data != null);
+    /*melos-nullsafety-remove-end*/
     assert(documentReference.firestore == _firestore,
         "the document provided is from a different Firestore instance");
 
