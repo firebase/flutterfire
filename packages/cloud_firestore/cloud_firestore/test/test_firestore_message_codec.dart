@@ -2,13 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 
 /// This codec is able to decode FieldValues.
 /// This ability is only required in tests, hence why
@@ -16,6 +15,7 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/utils/fire
 class TestFirestoreMessageCodec extends FirestoreMessageCodec {
   /// Constructor.
   const TestFirestoreMessageCodec();
+
   static const int _kDocumentReference = 130;
   static const int _kArrayUnion = 132;
   static const int _kArrayRemove = 133;
@@ -62,7 +62,8 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
       case _kFirestoreQuery:
         Map<dynamic, dynamic> values = readValue(buffer);
         return MethodChannelQuery(
-            MethodChannelFirebaseFirestore(app: null), values['path']);
+            MethodChannelFirebaseFirestore(app: Firebase.app()),
+            values['path']);
       case _kFirestoreSettings:
         readValue(buffer);
         return Settings();
