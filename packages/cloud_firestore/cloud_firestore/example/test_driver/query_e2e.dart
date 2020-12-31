@@ -52,8 +52,8 @@ void runQueryTests() {
             .orderBy('foo', descending: true)
             .get();
         expect(groupSnapshot.size, equals(2));
-        expect(groupSnapshot.docs[0].data()['foo'], equals(2));
-        expect(groupSnapshot.docs[1].data()['foo'], equals(1));
+        expect(groupSnapshot.docs[0]['foo'], equals(2));
+        expect(groupSnapshot.docs[1]['foo'], equals(1));
       });
     });
 
@@ -120,7 +120,7 @@ void runQueryTests() {
             expect(snapshot.docs.length, equals(1));
             expect(snapshot.docs[0], isA<QueryDocumentSnapshot>());
             QueryDocumentSnapshot documentSnapshot = snapshot.docs[0];
-            expect(documentSnapshot.data()['foo'], equals('bar'));
+            expect(documentSnapshot['foo'], equals('bar'));
           } else {
             fail("Should not have been called");
           }
@@ -140,12 +140,12 @@ void runQueryTests() {
           if (call == 1) {
             expect(snapshot.docs.length, equals(1));
             QueryDocumentSnapshot documentSnapshot = snapshot.docs[0];
-            expect(documentSnapshot.data()['foo'], equals('bar'));
+            expect(documentSnapshot['foo'], equals('bar'));
           } else if (call == 2) {
             expect(snapshot.docs.length, equals(2));
             QueryDocumentSnapshot documentSnapshot =
                 snapshot.docs.firstWhere((doc) => doc.id == 'doc1');
-            expect(documentSnapshot.data()['bar'], equals('baz'));
+            expect(documentSnapshot['bar'], equals('baz'));
           } else if (call == 3) {
             expect(snapshot.docs.length, equals(1));
             expect(
@@ -154,12 +154,12 @@ void runQueryTests() {
             expect(snapshot.docs.length, equals(2));
             QueryDocumentSnapshot documentSnapshot =
                 snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
-            expect(documentSnapshot.data()['foo'], equals('bar'));
+            expect(documentSnapshot['foo'], equals('bar'));
           } else if (call == 5) {
             expect(snapshot.docs.length, equals(2));
             QueryDocumentSnapshot documentSnapshot =
                 snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
-            expect(documentSnapshot.data()['foo'], equals('baz'));
+            expect(documentSnapshot['foo'], equals('baz'));
           } else {
             fail("Should not have been called");
           }
@@ -863,7 +863,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()['foo'], equals(rand));
+          expect(doc['foo'], equals(rand));
         });
       });
 
@@ -889,7 +889,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(1));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()['foo'], equals(rand + 1));
+          expect(doc['foo'], equals(rand + 1));
         });
       });
 
@@ -918,7 +918,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()['foo'] > rand, isTrue);
+          expect(doc['foo'] > rand, isTrue);
         });
       });
 
@@ -947,7 +947,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(3));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()['foo'] >= rand, isTrue);
+          expect(doc['foo'] >= rand, isTrue);
         });
       });
 
@@ -973,7 +973,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()['foo'] < rand, isTrue);
+          expect(doc['foo'] < rand, isTrue);
         });
       });
 
@@ -1002,7 +1002,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(3));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()['foo'] <= rand, isTrue);
+          expect(doc['foo'] <= rand, isTrue);
         });
       });
 
@@ -1028,7 +1028,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()['foo'], equals([1, '2', '$rand']));
+          expect(doc['foo'], equals([1, '2', '$rand']));
         });
       });
 
@@ -1055,7 +1055,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(3));
         snapshot.docs.forEach((doc) {
-          String status = doc.data()['status'];
+          String status = doc['status'];
           expect(status == 'Ready to Ship' || status == 'Ordered', isTrue);
         });
       });
@@ -1083,7 +1083,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(3));
         snapshot.docs.forEach((doc) {
-          String status = doc.data()['status'];
+          String status = doc['status'];
           expect(status == 'Ready to Ship' || status == 'Ordered', isTrue);
         });
       });
@@ -1111,7 +1111,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(1));
         snapshot.docs.forEach((doc) {
-          String status = doc.data()['status'];
+          String status = doc['status'];
           expect(status == 'Incomplete', isTrue);
         });
       });

@@ -29,7 +29,7 @@ void runTimestampTests() {
 
       await doc.set({'foo': Timestamp.fromDate(date)});
       DocumentSnapshot snapshot = await doc.get();
-      Timestamp timestamp = snapshot.data()['foo'];
+      Timestamp timestamp = snapshot['foo'];
       expect(timestamp, isA<Timestamp>());
       expect(timestamp.millisecondsSinceEpoch,
           equals(date.millisecondsSinceEpoch));
@@ -41,7 +41,7 @@ void runTimestampTests() {
       await doc.set({'foo': DateTime.utc(3000, 01, 01)});
       await doc.update({'foo': date});
       DocumentSnapshot snapshot = await doc.get();
-      Timestamp timestamp = snapshot.data()['foo'];
+      Timestamp timestamp = snapshot['foo'];
       expect(timestamp, isA<Timestamp>());
       expect(timestamp.millisecondsSinceEpoch,
           equals(date.millisecondsSinceEpoch));

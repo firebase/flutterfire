@@ -103,7 +103,7 @@ void runInstanceTests() {
       // Get data from cache
       DocumentSnapshot documentSnapshot = await documentReference.get();
       expect(documentSnapshot.metadata.isFromCache, isTrue);
-      expect(documentSnapshot.data()['foo'], equals('bar'));
+      expect(documentSnapshot['foo'], equals('bar'));
 
       // Go back online once test complete
       await firestore.enableNetwork();

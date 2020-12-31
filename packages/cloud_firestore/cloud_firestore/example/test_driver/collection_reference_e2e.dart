@@ -6,8 +6,8 @@
 
 import 'dart:math';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void runCollectionReferenceTests() {
   group('$CollectionReference', () {
@@ -36,7 +36,7 @@ void runCollectionReferenceTests() {
         'value': randNum,
       });
       DocumentSnapshot snapshot = await doc.get();
-      expect(randNum, equals(snapshot.data()['value']));
+      expect(randNum, equals(snapshot['value']));
     });
   });
 }

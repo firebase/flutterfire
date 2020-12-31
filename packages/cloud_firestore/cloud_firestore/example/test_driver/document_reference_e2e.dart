@@ -6,9 +6,9 @@
 
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runDocumentReferenceTests() {
   group('$DocumentReference', () {
@@ -59,15 +59,15 @@ void runDocumentReferenceTests() {
             expect(snapshot.exists, isFalse);
           } else if (call == 2) {
             expect(snapshot.exists, isTrue);
-            expect(snapshot.data()['bar'], equals('baz'));
+            expect(snapshot['bar'], equals('baz'));
           } else if (call == 3) {
             expect(snapshot.exists, isFalse);
           } else if (call == 4) {
             expect(snapshot.exists, isTrue);
-            expect(snapshot.data()['foo'], equals('bar'));
+            expect(snapshot['foo'], equals('bar'));
           } else if (call == 5) {
             expect(snapshot.exists, isTrue);
-            expect(snapshot.data()['foo'], equals('baz'));
+            expect(snapshot['foo'], equals('baz'));
           } else {
             fail("Should not have been called");
           }

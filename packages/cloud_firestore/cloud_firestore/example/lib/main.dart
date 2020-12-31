@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 
 /// Requires that a Firestore emulator is running locally.
 /// See https://firebase.flutter.dev/docs/firestore/usage#emulator-usage
@@ -57,7 +57,7 @@ class _FilmListState extends State<FilmList> {
     Query query =
         FirebaseFirestore.instance.collection('firestore-example-app');
 
-    void _onActionSelected(String value) async {
+    Future<void> _onActionSelected(String value) async {
       if (value == "batch_reset_likes") {
         WriteBatch batch = FirebaseFirestore.instance.batch();
 
@@ -186,7 +186,7 @@ class Movie extends StatelessWidget {
   Movie(this.snapshot);
 
   /// Returns the [DocumentSnapshot] data as a a [Map].
-  Map<String, dynamic> get movie {
+  Map<String, dynamic> /*?*/ get movie {
     return snapshot.data();
   }
 
@@ -285,7 +285,7 @@ class Likes extends StatefulWidget {
 }
 
 class _Likes extends State<Likes> {
-  int /*!*/ _likes;
+  /*late*/ int /*!*/ _likes;
 
   _onLike(int current) async {
     // Increment the "like" count straight away to show feedback to the user.
@@ -303,7 +303,7 @@ class _Likes extends State<Likes> {
           throw Exception("Document does not exist!");
         }
 
-        int updatedLikes = (txSnapshot.data()['likes'] ?? 0) + 1;
+        int updatedLikes = (txSnapshot['likes'] ?? 0) + 1;
         transaction.update(widget.reference, {'likes': updatedLikes});
         return updatedLikes;
       });

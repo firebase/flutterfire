@@ -27,7 +27,7 @@ void runGeoPointTests() {
       DocumentReference doc = await initializeTest('geo-point');
       await doc.set({'foo': GeoPoint(10, -10)});
       DocumentSnapshot snapshot = await doc.get();
-      GeoPoint geopoint = snapshot.data()['foo'];
+      GeoPoint geopoint = snapshot['foo'];
       expect(geopoint, isA<GeoPoint>());
       expect(geopoint.latitude, equals(10));
       expect(geopoint.longitude, equals(-10));
@@ -38,7 +38,7 @@ void runGeoPointTests() {
       await doc.set({'foo': GeoPoint(10, -10)});
       await doc.update({'foo': GeoPoint(-10, 10)});
       DocumentSnapshot snapshot = await doc.get();
-      GeoPoint geopoint = snapshot.data()['foo'];
+      GeoPoint geopoint = snapshot['foo'];
       expect(geopoint, isA<GeoPoint>());
       expect(geopoint.latitude, equals(-10));
       expect(geopoint.longitude, equals(10));

@@ -49,7 +49,7 @@ void runDocumentChangeTests() {
           expect(change.newIndex, equals(0));
           expect(change.oldIndex, equals(-1));
           expect(change.type, equals(DocumentChangeType.added));
-          expect(change.doc.data()['name'], equals('doc1'));
+          expect(change.doc['name'], equals('doc1'));
         } else if (call == 2) {
           expect(snapshot.docs.length, equals(0));
           expect(snapshot.docChanges.length, equals(1));
@@ -58,7 +58,7 @@ void runDocumentChangeTests() {
           expect(change.newIndex, equals(-1));
           expect(change.oldIndex, equals(0));
           expect(change.type, equals(DocumentChangeType.removed));
-          expect(change.doc.data()['name'], equals('doc1'));
+          expect(change.doc['name'], equals('doc1'));
         } else {
           fail("Should not have been called");
         }
@@ -95,7 +95,7 @@ void runDocumentChangeTests() {
             expect(change.oldIndex, equals(-1));
             expect(change.newIndex, equals(index));
             expect(change.type, equals(DocumentChangeType.added));
-            expect(change.doc.data()['value'], equals(index + 1));
+            expect(change.doc['value'], equals(index + 1));
           });
         } else if (call == 2) {
           expect(snapshot.docs.length, equals(3));

@@ -50,7 +50,7 @@ void runTransactionTests() {
         fail("Should have thrown");
       } catch (e) {
         DocumentSnapshot snapshot = await documentReference.get();
-        expect(snapshot.data()['foo'], equals('bar'));
+        expect(snapshot['foo'], equals('bar'));
       }
     });
 
@@ -157,14 +157,14 @@ void runTransactionTests() {
           DocumentSnapshot documentSnapshot =
               await transaction.get(documentReference);
           transaction.update(documentReference, {
-            'bar': documentSnapshot.data()['bar'] + 1,
+            'bar': documentSnapshot['bar'] + 1,
           });
         });
 
         DocumentSnapshot snapshot = await documentReference.get();
         expect(snapshot.exists, isTrue);
-        expect(snapshot.data()['bar'], equals(2));
-        expect(snapshot.data()['foo'], equals('bar'));
+        expect(snapshot['bar'], equals(2));
+        expect(snapshot['foo'], equals('bar'));
       });
     });
 
@@ -179,7 +179,7 @@ void runTransactionTests() {
           DocumentSnapshot documentSnapshot =
               await transaction.get(documentReference);
           transaction.set(documentReference, {
-            'bar': documentSnapshot.data()['bar'] + 1,
+            'bar': documentSnapshot['bar'] + 1,
           });
         });
 
@@ -204,15 +204,15 @@ void runTransactionTests() {
           transaction.set(
               documentReference,
               {
-                'bar': documentSnapshot.data()['bar'] + 1,
+                'bar': documentSnapshot['bar'] + 1,
               },
               SetOptions(merge: true));
         });
 
         DocumentSnapshot snapshot = await documentReference.get();
         expect(snapshot.exists, isTrue);
-        expect(snapshot.data()['bar'], equals(2));
-        expect(snapshot.data()['foo'], equals('bar'));
+        expect(snapshot['bar'], equals(2));
+        expect(snapshot['foo'], equals('bar'));
       });
 
       test('merges fields a document with set', () async {
@@ -227,7 +227,7 @@ void runTransactionTests() {
           transaction.set(
               documentReference,
               {
-                'bar': documentSnapshot.data()['bar'] + 1,
+                'bar': documentSnapshot['bar'] + 1,
                 'baz': 'ben',
               },
               SetOptions(mergeFields: ['bar']));
@@ -256,7 +256,7 @@ void runTransactionTests() {
             await transaction.get(documentReference);
 
         transaction.set(documentReference, {
-          'foo': documentSnapshot.data()['foo'] + 1,
+          'foo': documentSnapshot['foo'] + 1,
         });
 
         transaction.update(documentReference, {'bar': 'baz'});
