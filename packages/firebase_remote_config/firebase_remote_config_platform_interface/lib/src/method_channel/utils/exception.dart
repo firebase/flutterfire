@@ -31,5 +31,9 @@ FirebaseException platformExceptionToFirebaseException(
   }
 
   return FirebaseException(
-      plugin: 'firebase_remote_config', code: code, message: message);
+    plugin: 'firebase_remote_config',
+    code: code,
+    message: message,
+    stackTrace: StackTrace.current,
+  );
 }
