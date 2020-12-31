@@ -101,7 +101,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// This is a web-only method. Use [Settings.persistenceEnabled] for non-web platforms.
   Future<void> enablePersistence(
-      [PersistenceSettings persistenceSettings]) async {
+      [PersistenceSettings /*?*/ persistenceSettings]) async {
     return _delegate.enablePersistence(persistenceSettings);
   }
 
@@ -181,7 +181,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// By default transactions are limited to 5 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
-  Future<T /*?*/ > runTransaction<T>(TransactionHandler<T> transactionHandler,
+  Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
     /*melos-nullsafety-remove-start*/
     assert(transactionHandler != null, "transactionHandler cannot be null");

@@ -333,7 +333,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T /*?*/ > runTransaction<T>(
+  Future<T> runTransaction<T>(
     TransactionHandler<T> transactionHandler, {
     Duration timeout = const Duration(seconds: 30),
   }) async {

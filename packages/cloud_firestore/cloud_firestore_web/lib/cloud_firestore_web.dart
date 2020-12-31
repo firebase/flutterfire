@@ -93,7 +93,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T /*?*/ > runTransaction<T>(TransactionHandler<T> transactionHandler,
+  Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
     try {
       await _webFirestore.runTransaction((transaction) async {
