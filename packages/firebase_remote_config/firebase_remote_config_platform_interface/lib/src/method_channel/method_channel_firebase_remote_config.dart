@@ -103,11 +103,6 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   RemoteConfigSettings get settings => _settings;
 
   @override
-  set settings(RemoteConfigSettings remoteConfigSettings) {
-    _settings = remoteConfigSettings;
-  }
-
-  @override
   Future<void> ensureInitialized() async {
     try {
       await channel.invokeMethod<void>(

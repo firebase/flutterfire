@@ -102,11 +102,6 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
     throw UnimplementedError('settings getter not implemented');
   }
 
-  /// Sets the [RemoteConfigSettings] of the current instance.
-  set settings(RemoteConfigSettings remoteConfigSettings) {
-    throw UnimplementedError('settings setter not implemented');
-  }
-
   /// Makes the last fetched config available to getters.
   ///
   /// Returns a [bool] that is true if the config parameters
