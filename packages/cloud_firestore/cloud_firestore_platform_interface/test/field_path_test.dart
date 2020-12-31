@@ -16,10 +16,12 @@ void main() {
     });
 
     test('throws is invalid path is provided', () {
-      expect(() => FieldPath(null), throwsAssertionError);
       expect(() => FieldPath([]), throwsAssertionError);
+      /*melos-nullsafety-remove-start*/
+      expect(() => FieldPath(null), throwsAssertionError);
       expect(() => FieldPath([null]), throwsAssertionError);
       expect(() => FieldPath(['123', null]), throwsAssertionError);
+      /*melos-nullsafety-remove-end*/
     });
 
     test('returns a [List] of components', () {

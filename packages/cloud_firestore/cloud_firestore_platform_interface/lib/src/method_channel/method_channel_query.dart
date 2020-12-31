@@ -126,7 +126,9 @@ class MethodChannelQuery extends QueryPlatform {
   Stream<QuerySnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
+    /*melos-nullsafety-remove-start*/
     assert(includeMetadataChanges != null);
+    /*melos-nullsafety-remove-end*/
     int handle = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
     Completer<void> onListenComplete = Completer<void>();
 

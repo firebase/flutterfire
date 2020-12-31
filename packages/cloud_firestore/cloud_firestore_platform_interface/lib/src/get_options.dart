@@ -33,5 +33,6 @@ class GetOptions {
   /// Creates a [GetOptions] instance.
   const GetOptions({
     this.source = Source.serverAndCache,
-  }) : assert(source != null);
+  }) /*melos-nullsafety-remove-start*/
+  : assert(source != null) /*melos-nullsafety-remove-end*/;
 }

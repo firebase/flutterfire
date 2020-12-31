@@ -4,18 +4,18 @@
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import '../utils/test_common.dart';
 
 void main() {
   initializeMethodChannel();
-  /*late*/ MethodChannelQuery query;
+  /*late*/
+  MethodChannelQuery query;
   const Map<String, dynamic> kMockSnapshotMetadata = <String, dynamic>{
     "hasPendingWrites": false,
     "isFromCache": false,
@@ -249,10 +249,12 @@ void main() {
         fail("Default value not set for includeMetadataChanges");
       }
     });
+    /*melos-nullsafety-remove-start*/
     test('should throw if includeMetadataChanges is null', () {
       expect(() => query.snapshots(includeMetadataChanges: null),
           throwsAssertionError);
     });
+    /*melos-nullsafety-remove-end*/
 
     test("startAfterDocument()", () {
       List<List<dynamic>> orders = List.from([

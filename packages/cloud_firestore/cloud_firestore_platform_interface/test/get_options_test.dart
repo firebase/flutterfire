@@ -7,9 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('$GetOptions', () {
+    /*melos-nullsafety-remove-start*/
     test('throws if source is a null value', () {
       expect(() => GetOptions(source: null), throwsAssertionError);
     });
+    /*melos-nullsafety-remove-end*/
 
     test('provides a default source if none provided', () {
       expect(GetOptions().source, equals(Source.serverAndCache));

@@ -17,8 +17,10 @@ class FieldPath {
   final List<String /*!*/ > /*!*/ components;
 
   /// Creates a new [FieldPath].
-  FieldPath(this.components) {
+  FieldPath(this.components /*!*/) {
+    /*melos-nullsafety-remove-start*/
     assert(components != null);
+    /*melos-nullsafety-remove-end*/
     assert(components.isNotEmpty);
     assert(
         components

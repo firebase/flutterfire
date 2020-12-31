@@ -18,7 +18,11 @@ class TestDocumentChange extends DocumentChangePlatform {
           _kDocumentChangeType,
           _kOldIndex,
           _kNewIndex,
-          null,
+          DocumentSnapshotPlatform(
+            FirebaseFirestorePlatform.instance,
+            'document',
+            {},
+          ),
         );
 }
 
