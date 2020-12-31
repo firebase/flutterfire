@@ -5,12 +5,13 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
 import 'package:js/js.dart';
 
-import 'firestore_interop.dart' as firestore_interop;
 import 'firebase_interop.dart' as firebase_interop;
+import 'firestore_interop.dart' as firestore_interop;
 import 'utils/utils.dart';
 
 export 'firestore_interop.dart';
@@ -26,17 +27,18 @@ Firestore getFirestoreInstance([App app]) {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.Firestore>.
 class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
-  static final _expando = Expando<Firestore>();
+  static final _expando = Expando<Firestore /*?*/ >();
 
   /// Non-null App for this instance of firestore service.
   App get app => App.getInstance(jsObject.app);
 
   /// Creates a new Firestore from a [jsObject].
-  static Firestore getInstance(
-      firestore_interop.FirestoreJsImpl /*?*/ jsObject) {
+  static Firestore getInstance(firestore_interop.FirestoreJsImpl jsObject) {
+    /*melos-nullsafety-remove-start*/
     if (jsObject == null) {
       return null;
     }
+    /*melos-nullsafety-remove-end*/
 
     return _expando[jsObject] ??= Firestore._fromJsObject(jsObject);
   }
@@ -115,13 +117,15 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
 
 class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
     with _Updatable {
-  static final _expando = Expando<WriteBatch>();
+  static final _expando = Expando<WriteBatch /*?*/ >();
 
   /// Creates a new WriteBatch from a [jsObject].
   static WriteBatch getInstance(firestore_interop.WriteBatchJsImpl jsObject) {
+    /*melos-nullsafety-remove-start*/
     if (jsObject == null) {
       return null;
     }
+    /*melos-nullsafety-remove-end*/
     return _expando[jsObject] ??= WriteBatch._fromJsObject(jsObject);
   }
 
@@ -151,7 +155,7 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
 class DocumentReference
     extends JsObjectWrapper<firestore_interop.DocumentReferenceJsImpl>
     with _Updatable {
-  static final _expando = Expando<DocumentReference>();
+  static final _expando = Expando<DocumentReference /*?*/ >();
 
   /// Non-null [Firestore] the document is in.
   /// This is useful for performing transactions, for example.
@@ -167,9 +171,11 @@ class DocumentReference
   /// Creates a new DocumentReference from a [jsObject].
   static DocumentReference getInstance(
       firestore_interop.DocumentReferenceJsImpl jsObject) {
+    /*melos-nullsafety-remove-start*/
     if (jsObject == null) {
       return null;
     }
+    /*melos-nullsafety-remove-end*/
     return _expando[jsObject] ??= DocumentReference._fromJsObject(jsObject);
   }
 
@@ -345,7 +351,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
 class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
     extends Query<T> {
-  static final _expando = Expando<CollectionReference>();
+  static final _expando = Expando<CollectionReference /*?*/ >();
 
   String get id => jsObject.id;
 
@@ -357,9 +363,11 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
   /// Creates a new CollectionReference from a [jsObject].
   static CollectionReference getInstance(
       firestore_interop.CollectionReferenceJsImpl jsObject) {
+    /*melos-nullsafety-remove-start*/
     if (jsObject == null) {
       return null;
     }
+    /*melos-nullsafety-remove-end*/
     return _expando[jsObject] ??= CollectionReference._fromJsObject(jsObject);
   }
 
@@ -386,7 +394,7 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
 
 class DocumentChange
     extends JsObjectWrapper<firestore_interop.DocumentChangeJsImpl> {
-  static final _expando = Expando<DocumentChange>();
+  static final _expando = Expando<DocumentChange /*?*/ >();
 
   String get type => jsObject.type;
 
@@ -399,9 +407,11 @@ class DocumentChange
   /// Creates a new DocumentChange from a [jsObject].
   static DocumentChange getInstance(
       firestore_interop.DocumentChangeJsImpl jsObject) {
+    /*melos-nullsafety-remove-start*/
     if (jsObject == null) {
       return null;
     }
+    /*melos-nullsafety-remove-end*/
     return _expando[jsObject] ??= DocumentChange._fromJsObject(jsObject);
   }
 
@@ -411,7 +421,7 @@ class DocumentChange
 
 class DocumentSnapshot
     extends JsObjectWrapper<firestore_interop.DocumentSnapshotJsImpl> {
-  static final _expando = Expando<DocumentSnapshot>();
+  static final _expando = Expando<DocumentSnapshot /*?*/ >();
 
   bool get exists => jsObject.exists;
 
@@ -424,9 +434,11 @@ class DocumentSnapshot
   /// Creates a new DocumentSnapshot from a [jsObject].
   static DocumentSnapshot getInstance(
       firestore_interop.DocumentSnapshotJsImpl jsObject) {
+    /*melos-nullsafety-remove-start*/
     if (jsObject == null) {
       return null;
     }
+    /*melos-nullsafety-remove-end*/
     return _expando[jsObject] ??= DocumentSnapshot._fromJsObject(jsObject);
   }
 
@@ -444,7 +456,7 @@ class DocumentSnapshot
 
 class QuerySnapshot
     extends JsObjectWrapper<firestore_interop.QuerySnapshotJsImpl> {
-  static final _expando = Expando<QuerySnapshot>();
+  static final _expando = Expando<QuerySnapshot /*?*/ >();
 
   // TODO: [SnapshotListenOptions options]
   List<DocumentChange> docChanges(
@@ -474,9 +486,11 @@ class QuerySnapshot
 
   static QuerySnapshot getInstance(
       firestore_interop.QuerySnapshotJsImpl jsObject) {
+    /*melos-nullsafety-remove-start*/
     if (jsObject == null) {
       return null;
     }
+    /*melos-nullsafety-remove-end*/
     return _expando[jsObject] ??= QuerySnapshot._fromJsObject(jsObject);
   }
 
@@ -494,13 +508,15 @@ class QuerySnapshot
 
 class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
     with _Updatable {
-  static final _expando = Expando<Transaction>();
+  static final _expando = Expando<Transaction /*?*/ >();
 
   /// Creates a new Transaction from a [jsObject].
   static Transaction getInstance(firestore_interop.TransactionJsImpl jsObject) {
+    /*melos-nullsafety-remove-start*/
     if (jsObject == null) {
       return null;
     }
+    /*melos-nullsafety-remove-end*/
     return _expando[jsObject] ??= Transaction._fromJsObject(jsObject);
   }
 
@@ -633,11 +649,15 @@ abstract class FieldValue {
   }
 
   static FieldValue serverTimestamp() => _serverTimestamp;
+
   static FieldValue delete() => _delete;
+
   static FieldValue arrayUnion(List elements) =>
       _FieldValueArrayUnion(elements);
+
   static FieldValue arrayRemove(List elements) =>
       _FieldValueArrayRemove(elements);
+
   // If either the operand or the current field value uses floating point
   // precision, all arithmetic follows IEEE 754 semantics. If both values are
   // integers, values outside of JavaScript's safe number range
@@ -645,6 +665,7 @@ abstract class FieldValue {
   // to precision loss. Furthermore, once processed by the Firestore backend,
   // all integer operations are capped between -2^63 and 2^63-1.
   static FieldValue increment(num n) => _FieldValueIncrement(n);
+
   FieldValue._();
 
   static final FieldValue _serverTimestamp = _FieldValueServerTimestamp();

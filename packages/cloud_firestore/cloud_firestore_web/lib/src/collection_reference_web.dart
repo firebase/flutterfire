@@ -5,8 +5,8 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:meta/meta.dart';
 
-import 'interop/firestore.dart' as firestore_interop;
 import 'document_reference_web.dart';
+import 'interop/firestore.dart' as firestore_interop;
 import 'query_web.dart';
 
 /// Web implementation for Firestore [CollectionReferencePlatform].
@@ -45,7 +45,7 @@ class CollectionReferenceWeb extends QueryWeb
   String get id => _delegate.id;
 
   @override
-  DocumentReferencePlatform get parent {
+  DocumentReferencePlatform /*?*/ get parent {
     firestore_interop.DocumentReference documentReference = _delegate.parent;
 
     if (documentReference == null) {

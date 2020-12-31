@@ -9,13 +9,13 @@ import 'dart:async';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
 
-import 'func.dart';
 import 'es6_interop.dart';
+import 'func.dart';
 import 'js_interop.dart' as js;
 
 /// Returns Dart representation from JS Object.
 dynamic dartify(Object /*?*/ jsObject,
-    [Object Function(Object /*?*/ object) /*?*/ customDartify]) {
+    [Object /*?*/ Function(Object /*?*/ object) /*?*/ customDartify]) {
   if (_isBasicType(jsObject)) {
     return jsObject;
   }
@@ -52,7 +52,7 @@ dynamic jsifyList(Iterable list,
 
 // Returns the JS implementation from Dart Object.
 dynamic jsify(Object dartObject,
-    [Object Function(Object object) /*?*/ customJsify]) {
+    [Object /*?*/ Function(Object object) /*?*/ customJsify]) {
   if (_isBasicType(dartObject)) {
     return dartObject;
   }

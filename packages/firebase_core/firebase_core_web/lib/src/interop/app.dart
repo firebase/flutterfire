@@ -14,7 +14,7 @@ import 'utils/utils.dart';
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.app>.
 class App extends JsObjectWrapper<AppJsImpl> {
-  static final _expando = Expando<App>();
+  static final _expando = Expando<App /*?*/ >();
 
   /// Name of the app.
   String get name => jsObject.name;
