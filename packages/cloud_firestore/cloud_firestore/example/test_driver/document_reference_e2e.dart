@@ -259,21 +259,20 @@ void runDocumentReferenceTests() {
         });
 
         DocumentSnapshot snapshot = await document.get();
-        Map<String, dynamic> /*?*/ data = snapshot.data();
 
-        expect(data['string'], equals('foo bar'));
-        expect(data['number_32'], equals(123));
-        expect(data['number_64'], equals(9007199254740991));
-        expect(data['bool_true'], isTrue);
-        expect(data['bool_false'], isFalse);
+        expect(snapshot['string'], equals('foo bar'));
+        expect(snapshot['number_32'], equals(123));
+        expect(snapshot['number_64'], equals(9007199254740991));
+        expect(snapshot['bool_true'], isTrue);
+        expect(snapshot['bool_false'], isFalse);
         expect(
-            data['map'],
+            snapshot['map'],
             equals(<String, dynamic>{
               'foo': 'bar',
               'bar': {'baz': 'ben'}
             }));
         expect(
-            data['list'],
+            snapshot['list'],
             equals([
               1,
               '2',
@@ -281,16 +280,16 @@ void runDocumentReferenceTests() {
               false,
               {'foo': 'bar'}
             ]));
-        expect(data['null'], equals(null));
-        expect(data['timestamp'], isA<Timestamp>());
-        expect(data['geopoint'], isA<GeoPoint>());
-        expect((data['geopoint'] as GeoPoint).latitude, equals(1));
-        expect((data['geopoint'] as GeoPoint).longitude, equals(2));
-        expect(data['reference'], isA<DocumentReference>());
-        expect((data['reference'] as DocumentReference).id, equals('bar'));
-        expect(data['nan'].isNaN, equals(true));
-        expect(data['infinity'], equals(double.infinity));
-        expect(data['negative_infinity'], equals(double.negativeInfinity));
+        expect(snapshot['null'], equals(null));
+        expect(snapshot['timestamp'], isA<Timestamp>());
+        expect(snapshot['geopoint'], isA<GeoPoint>());
+        expect((snapshot['geopoint'] as GeoPoint).latitude, equals(1));
+        expect((snapshot['geopoint'] as GeoPoint).longitude, equals(2));
+        expect(snapshot['reference'], isA<DocumentReference>());
+        expect((snapshot['reference'] as DocumentReference).id, equals('bar'));
+        expect(snapshot['nan'].isNaN, equals(true));
+        expect(snapshot['infinity'], equals(double.infinity));
+        expect(snapshot['negative_infinity'], equals(double.negativeInfinity));
       });
     });
 
@@ -313,7 +312,7 @@ void runDocumentReferenceTests() {
           fail("Should have thrown");
         } catch (e) {
           expect(e, isA<FirebaseException>());
-          expect(e.code, equals('not-found'));
+          expect((e as FirebaseException).code, equals('not-found'));
         }
       });
     });
