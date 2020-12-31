@@ -19,7 +19,9 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   /// Creates a [DocumentReferencePlatform] that is implemented using [MethodChannel].
   MethodChannelDocumentReference(
       FirebaseFirestorePlatform firestore, String path)
-      : assert(firestore != null),
+      : /*melos-nullsafety-remove-end*/
+        assert(firestore != null),
+        /*melos-nullsafety-remove-start*/
         super(firestore, path) {
     _pointer = Pointer(path);
   }
@@ -96,7 +98,9 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   @override
   Stream<DocumentSnapshotPlatform> snapshots(
       {bool includeMetadataChanges = false}) {
+    /*melos-nullsafety-remove-start*/
     assert(includeMetadataChanges != null);
+    /*melos-nullsafety-remove-end*/
     int handle = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
     Completer<void> onListenComplete = Completer<void>();
 

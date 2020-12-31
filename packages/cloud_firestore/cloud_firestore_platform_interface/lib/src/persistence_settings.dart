@@ -15,5 +15,6 @@ class PersistenceSettings {
   /// Creates a [PersistenceSettings] instance.
   const PersistenceSettings({
     /*required*/ this.synchronizeTabs,
-  }) : assert(synchronizeTabs != null);
+  }) /*melos-nullsafety-remove-start*/ : assert(
+            synchronizeTabs != null) /*melos-nullsafety-remove-end*/;
 }

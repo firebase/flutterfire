@@ -36,7 +36,9 @@ void main() {
             'data': <String, dynamic>{'key1': 'val1'},
             'metadata': kMockSnapshotMetadata,
           };
+          /*melos-nullsafety-remove-start*/
           break;
+        /*melos-nullsafety-remove-end*/
         default:
           return null;
       }

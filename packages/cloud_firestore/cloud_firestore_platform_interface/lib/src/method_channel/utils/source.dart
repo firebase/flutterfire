@@ -6,7 +6,9 @@ import 'package:cloud_firestore_platform_interface/src/source.dart';
 
 /// Converts [Source] to [String]
 String getSourceString(Source source) {
+  /*melos-nullsafety-remove-start*/
   assert(source != null);
+  /*melos-nullsafety-remove-end*/
   switch (source) {
     case Source.server:
       return 'server';

@@ -28,22 +28,34 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       switch (call.method) {
         case 'Firestore#snapshotsInSync':
           return _handleSnapshotsInSync(call.arguments);
+          /*melos-nullsafety-remove-start*/
           break;
+        /*melos-nullsafety-remove-end*/
         case 'QuerySnapshot#event':
           return _handleQuerySnapshotEvent(call.arguments);
+          /*melos-nullsafety-remove-start*/
           break;
+        /*melos-nullsafety-remove-end*/
         case 'QuerySnapshot#error':
           return _handleQuerySnapshotError(call.arguments);
+          /*melos-nullsafety-remove-start*/
           break;
+        /*melos-nullsafety-remove-end*/
         case 'DocumentSnapshot#event':
           return _handleDocumentSnapshotEvent(call.arguments);
+          /*melos-nullsafety-remove-start*/
           break;
+        /*melos-nullsafety-remove-end*/
         case 'DocumentSnapshot#error':
           return _handleDocumentSnapshotError(call.arguments);
+          /*melos-nullsafety-remove-start*/
           break;
+        /*melos-nullsafety-remove-end*/
         case 'Transaction#attempt':
           return _handleTransactionAttempt(call.arguments);
+          /*melos-nullsafety-remove-start*/
           break;
+        /*melos-nullsafety-remove-end*/
         default:
           throw UnimplementedError("${call.method} has not been implemented");
       }
@@ -333,7 +345,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T> runTransaction<T>(
+  Future<T /*!*/ > runTransaction<T>(
     TransactionHandler<T> transactionHandler, {
     Duration timeout = const Duration(seconds: 30),
   }) async {

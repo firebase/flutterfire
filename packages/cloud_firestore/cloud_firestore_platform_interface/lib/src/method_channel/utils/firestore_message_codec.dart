@@ -76,12 +76,16 @@ class FirestoreMessageCodec extends StandardMessageCodec {
     } else if (value is FieldValuePlatform) {
       MethodChannelFieldValue delegate = FieldValuePlatform.getDelegate(value);
       final int code = _kFieldValueCodes[delegate.type];
+      /*melos-nullsafety-remove-start*/
       assert(code != null);
+      /*melos-nullsafety-remove-end*/
       buffer.putUint8(code);
       if (delegate.value != null) writeValue(buffer, delegate.value);
     } else if (value is FieldPathType) {
       final int code = _kFieldPathCodes[value];
+      /*melos-nullsafety-remove-start*/
       assert(code != null);
+      /*melos-nullsafety-remove-end*/
       buffer.putUint8(code);
     } else if (value is FieldPath) {
       buffer.putUint8(_kFieldPath);

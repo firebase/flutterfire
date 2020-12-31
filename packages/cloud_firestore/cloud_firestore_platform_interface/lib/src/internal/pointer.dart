@@ -10,7 +10,9 @@
 class Pointer {
   /// Create instance of [Pointer]
   Pointer(String path)
-      : assert(path != null),
+      : /*melos-nullsafety-remove-start*/
+        assert(path != null),
+        /*melos-nullsafety-remove-end*/
         components =
             path.split('/').where((element) => element.isNotEmpty).toList();
 

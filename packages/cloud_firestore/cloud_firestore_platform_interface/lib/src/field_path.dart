@@ -24,9 +24,13 @@ class FieldPath {
     assert(components.isNotEmpty);
     assert(
         components
-            .where((component) => component == null || component.isEmpty)
+            .where((component) =>
+                /*melos-nullsafety-remove-start*/
+                component == null ||
+                /*melos-nullsafety-remove-end*/
+                component.isEmpty)
             .isEmpty,
-        "Expected all FieldPath components to be non-null or non-empty strings.");
+        "Expected all FieldPath components to be non-empty strings.");
   }
 
   /// Returns a special sentinel `FieldPath` to refer to the ID of a document.

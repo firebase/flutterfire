@@ -83,7 +83,8 @@ void main() {
   group("$MethodChannelFirebaseFirestore", () {
     group('constructor', () {
       test('should create an instance with no args', () {
-        MethodChannelFirebaseFirestore test = MethodChannelFirebaseFirestore();
+        MethodChannelFirebaseFirestore test =
+            MethodChannelFirebaseFirestore(app: Firebase.app());
         expect(test.app, equals(Firebase.app()));
       });
 
@@ -99,7 +100,8 @@ void main() {
       });
 
       test('allow multiple instances', () {
-        MethodChannelFirebaseFirestore test1 = MethodChannelFirebaseFirestore();
+        MethodChannelFirebaseFirestore test1 =
+            MethodChannelFirebaseFirestore(app: Firebase.app());
         MethodChannelFirebaseFirestore test2 =
             MethodChannelFirebaseFirestore(app: secondaryApp);
         expect(test1.app, equals(Firebase.app()));
