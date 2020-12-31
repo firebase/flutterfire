@@ -187,12 +187,9 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     assert(transactionHandler != null, "transactionHandler cannot be null");
     /*melos-nullsafety-remove-end*/
 
-    T /*!*/ output;
-    await _delegate.runTransaction((transaction) async {
-      output = await transactionHandler(Transaction._(this, transaction));
+    return _delegate.runTransaction((transaction) async {
+      return transactionHandler(Transaction._(this, transaction));
     }, timeout: timeout);
-
-    return output;
   }
 
   /// Specifies custom settings to be used to configure this [FirebaseFirestore] instance.
