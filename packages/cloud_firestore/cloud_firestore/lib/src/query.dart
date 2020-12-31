@@ -53,7 +53,9 @@ class Query {
   /// passed to the query.
   Map<String, dynamic> _assertQueryCursorSnapshot(
       DocumentSnapshot documentSnapshot) {
+    /*melos-nullsafety-remove-start*/
     assert(documentSnapshot != null);
+    /*melos-nullsafety-remove-end*/
     assert(documentSnapshot.exists,
         "a document snapshot must exist to be used within a query");
 
@@ -100,7 +102,9 @@ class Query {
 
   /// Common handler for all non-document based cursor queries.
   List<dynamic> _assertQueryCursorValues(List<dynamic> fields) {
+    /*melos-nullsafety-remove-start*/
     assert(fields != null);
+    /*melos-nullsafety-remove-end*/
     List<List<dynamic>> orders = List.from(parameters['orderBy']);
 
     assert(fields.length <= orders.length,
@@ -225,7 +229,11 @@ class Query {
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
   Query orderBy(dynamic field, {bool descending = false}) {
-    assert(field != null && descending != null);
+    assert(field != null
+      /*melos-nullsafety-remove-start*/
+      && descending != null
+      /*melos-nullsafety-remove-end*/
+    );
     _assertValidFieldType(field);
     assert(!_hasStartCursor(),
         "Invalid query. You must not call startAt(), startAtDocument(), startAfter() or startAfterDocument() before calling orderBy()");

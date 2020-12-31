@@ -41,7 +41,9 @@ class CollectionReference extends Query {
   /// The unique key generated is prefixed with a client-generated timestamp
   /// so that the resulting list will be chronologically-sorted.
   Future<DocumentReference> add(Map<String, dynamic> data) async {
+    /*melos-nullsafety-remove-start*/
     assert(data != null);
+    /*melos-nullsafety-remove-end*/
     final DocumentReference newDocument = doc();
     await newDocument.set(data);
     return newDocument;
