@@ -19,9 +19,9 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   /// Creates a [DocumentReferencePlatform] that is implemented using [MethodChannel].
   MethodChannelDocumentReference(
       FirebaseFirestorePlatform firestore, String path)
-      : /*melos-nullsafety-remove-end*/
+      : /*melos-nullsafety-remove-start*/
         assert(firestore != null),
-        /*melos-nullsafety-remove-start*/
+        /*melos-nullsafety-remove-end*/
         super(firestore, path) {
     _pointer = Pointer(path);
   }
