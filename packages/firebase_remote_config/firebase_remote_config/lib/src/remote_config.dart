@@ -143,6 +143,8 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
     assert(remoteConfigSettings != null);
     assert(remoteConfigSettings.fetchTimeout != null);
     assert(remoteConfigSettings.minimumFetchInterval != null);
+    assert(!remoteConfigSettings.fetchTimeout.isNegative);
+    assert(!remoteConfigSettings.minimumFetchInterval.isNegative);
     // To be consistent with iOS fetchTimeout is set to the default
     // 1 minute (60 seconds) if an attempt is made to set it to zero seconds.
     if (remoteConfigSettings.fetchTimeout.inSeconds == 0) {
