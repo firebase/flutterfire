@@ -109,8 +109,8 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
           'RemoteConfig#ensureInitialized', <String, dynamic>{
         'appName': app.name,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (exception, stackTrace) {
+      throw convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -123,8 +123,8 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       });
       await _updateConfigParameters();
       return configChanged;
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (exception, stackTrace) {
+      throw convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -135,10 +135,10 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
         'appName': app.name,
       });
       await _updateConfigProperties();
-    } catch (e) {
+    } catch (exception, stackTrace) {
       // Ensure that fetch status is updated.
       await _updateConfigProperties();
-      throw convertPlatformException(e);
+      throw convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -152,10 +152,10 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       await _updateConfigParameters();
       await _updateConfigProperties();
       return configChanged;
-    } catch (e) {
+    } catch (exception, stackTrace) {
       // Ensure that fetch status is updated.
       await _updateConfigProperties();
-      throw convertPlatformException(e);
+      throw convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -216,8 +216,8 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
             remoteConfigSettings.minimumFetchInterval.inSeconds,
       });
       await _updateConfigProperties();
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (exception, stackTrace) {
+      throw convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -229,8 +229,8 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
         'defaults': defaultParameters
       });
       await _updateConfigParameters();
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (exception, stackTrace) {
+      throw convertPlatformException(exception, stackTrace);
     }
   }
 

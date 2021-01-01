@@ -3,12 +3,15 @@ import 'package:flutter/services.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseException] if
 /// it was intentionally caught on the native platform.
-Exception convertPlatformException(Object exception) {
+Exception convertPlatformException(Object exception, [StackTrace stackTrace]) {
   if (exception is! Exception || exception is! PlatformException) {
     throw exception;
   }
 
-  return platformExceptionToFirebaseException(exception as PlatformException);
+  return platformExceptionToFirebaseException(
+    exception as PlatformException,
+    stackTrace,
+  );
 }
 
 /// Converts a [PlatformException] into a [FirebaseException].
@@ -17,7 +20,8 @@ Exception convertPlatformException(Object exception) {
 /// `details` of the exception exist. Firebase returns specific codes and messages
 /// which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseException(
-    PlatformException platformException) {
+    PlatformException platformException,
+    [StackTrace stackTrace]) {
   Map<String, String> details = platformException.details != null
       ? Map<String, dynamic>.from(platformException.details)
       : null;
@@ -34,6 +38,6 @@ FirebaseException platformExceptionToFirebaseException(
     plugin: 'firebase_remote_config',
     code: code,
     message: message,
-    stackTrace: StackTrace.current,
+    stackTrace: stackTrace,
   );
 }
