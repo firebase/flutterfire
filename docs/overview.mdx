@@ -97,6 +97,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() {
+  // Add ensureInitialized as we call async function in main
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(App());
 }
 
