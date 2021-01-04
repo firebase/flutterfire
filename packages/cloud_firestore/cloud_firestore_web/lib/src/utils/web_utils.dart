@@ -83,7 +83,9 @@ firestore_interop.GetOptions /*?*/ convertGetOptions(GetOptions /*?*/ options) {
   if (options == null) return null;
 
   var source;
+  /*melos-nullsafety-remove-start*/
   if (options.source != null) {
+    /*melos-nullsafety-remove-end*/
     switch (options.source) {
       case Source.serverAndCache:
         source = 'default';
@@ -98,7 +100,9 @@ firestore_interop.GetOptions /*?*/ convertGetOptions(GetOptions /*?*/ options) {
         source = 'default';
         break;
     }
+    /*melos-nullsafety-remove-start*/
   }
+  /*melos-nullsafety-remove-end*/
 
   return firestore_interop.GetOptions(source: source);
 }
@@ -112,7 +116,7 @@ firestore_interop.SetOptions /*?*/ convertSetOptions(SetOptions options) {
     parsedOptions = firestore_interop.SetOptions(merge: options.merge);
   } else if (options.mergeFields != null) {
     parsedOptions = firestore_interop.SetOptions(
-        mergeFields: options.mergeFields
+        mergeFields: options.mergeFields /*!*/
             .map((e) => e.components.toList().join('.'))
             .toList());
   }

@@ -359,15 +359,15 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     _transactionHandlers[transactionId] = transactionHandler;
     _transactionStreamControllerHandlers[transactionId] = streamController;
 
-    T /*?*/ result;
-    Object /*?*/ exception;
+    /*late*/ T result;
+    dynamic exception;
 
     // If the uses [TransactionHandler] throws an error, the stream broadcasts
     // it so we don't lose it's context.
     StreamSubscription subscription =
-        streamController.stream.listen((Object data) {
-      result = data;
-    }, onError: (Object /*?*/ e) {
+        streamController.stream.listen((dynamic data) {
+      result = data as T;
+    }, onError: (dynamic e) {
       exception = e;
     });
 

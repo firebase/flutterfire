@@ -29,10 +29,17 @@ class CollectionReferenceWeb extends QueryWeb
   CollectionReferenceWeb(
       this._firestorePlatform, this._webFirestore, String path)
       : _delegate = _webFirestore.collection(path),
-        super(_firestorePlatform, path, _webFirestore.collection(path));
+        super(_firestorePlatform, path, _webFirestore.collection(path),
+            parameters: {});
 
   @override
   String get path => _delegate.path;
+
+  @override
+  bool operator ==(dynamic o) =>
+      o is CollectionReferencePlatform &&
+      o.firestore == firestore &&
+      o.path == path;
 
   @override
   DocumentReferencePlatform doc([String /*?*/ path]) {

@@ -7,6 +7,8 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:cloud_firestore_web/cloud_firestore_web.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
+// TODO even if pubspec set to a nullsafe mockito version this still warns
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:mockito/mockito.dart';
 import 'package:cloud_firestore_web/src/interop/firestore.dart' as web;
 

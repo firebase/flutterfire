@@ -48,6 +48,12 @@ class MethodChannelCollectionReference extends MethodChannelQuery
   String get path => _pointer.path;
 
   @override
+  bool operator ==(dynamic o) =>
+      o is CollectionReferencePlatform &&
+      o.firestore == firestore &&
+      o.path == path;
+
+  @override
   DocumentReferencePlatform doc([String path]) {
     String documentPath;
 

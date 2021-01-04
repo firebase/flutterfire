@@ -61,8 +61,13 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   QueryPlatform collectionGroup(String path) {
-    return QueryWeb(this, path, _webFirestore.collectionGroup(path),
-        isCollectionGroupQuery: true);
+    return QueryWeb(
+      this,
+      path,
+      _webFirestore.collectionGroup(path),
+      isCollectionGroupQuery: true,
+      parameters: {},
+    );
   }
 
   @override
@@ -95,14 +100,13 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   @override
   Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
+    /*late*/ T result;
     try {
       await _webFirestore.runTransaction((transaction) async {
-        return transactionHandler(
+        result = await transactionHandler(
             TransactionWeb(this, _webFirestore, transaction));
       }).timeout(timeout);
-      // Workaround for 'Runtime type information not available for type_variable_local'
-      // See: https://github.com/dart-lang/sdk/issues/29722
-      return null;
+      return result;
     } catch (e) {
       throw getFirebaseException(e);
     }
@@ -112,17 +116,13 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   set settings(Settings settings) {
     int cacheSizeBytes;
 
-    // TODO `aNullValue` is a workaround nullsafety migration not picking up
-    // TODO      `settings.cacheSizeBytes` as nullable even though it's hinted.
-    // ignore: avoid_init_to_null
-    dynamic aNullValue = null;
-    if (settings.cacheSizeBytes == aNullValue) {
+    if (settings.cacheSizeBytes == null) {
       cacheSizeBytes = 40000000;
     } else if (settings.cacheSizeBytes == Settings.CACHE_SIZE_UNLIMITED) {
       // https://github.com/firebase/firebase-js-sdk/blob/e67affba53a53d28492587b2f60521a00166db60/packages/firestore/src/local/lru_garbage_collector.ts#L175
       cacheSizeBytes = -1;
     } else {
-      cacheSizeBytes = settings.cacheSizeBytes;
+      cacheSizeBytes = settings.cacheSizeBytes /*!*/;
     }
 
     if (settings.host != null && settings.sslEnabled != null) {
