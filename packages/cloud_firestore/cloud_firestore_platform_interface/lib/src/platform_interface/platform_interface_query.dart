@@ -33,7 +33,7 @@ abstract class QueryPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  /// Returns whether the current query is targetted at a collection group.
+  /// Returns whether the current query is targeted at a collection group.
   bool get isCollectionGroupQuery {
     throw UnimplementedError("isCollectionGroupQuery is not implemented");
   }
