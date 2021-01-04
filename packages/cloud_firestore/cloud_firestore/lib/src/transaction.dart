@@ -43,7 +43,7 @@ class Transaction {
   /// The update will fail if applied to a document that does not exist.
   Transaction update(
       DocumentReference documentReference, Map<String, dynamic> data) {
-        /*melos-nullsafety-remove-start*/
+    /*melos-nullsafety-remove-start*/
     assert(documentReference != null);
     assert(data != null);
     /*melos-nullsafety-remove-end*/

@@ -230,10 +230,11 @@ class Query {
   /// is added by these methods implicitly.
   Query orderBy(dynamic field, {bool descending = false}) {
     assert(field != null
-      /*melos-nullsafety-remove-start*/
-      && descending != null
-      /*melos-nullsafety-remove-end*/
-    );
+            /*melos-nullsafety-remove-start*/
+            &&
+            descending != null
+        /*melos-nullsafety-remove-end*/
+        );
     _assertValidFieldType(field);
     assert(!_hasStartCursor(),
         "Invalid query. You must not call startAt(), startAtDocument(), startAfter() or startAfterDocument() before calling orderBy()");

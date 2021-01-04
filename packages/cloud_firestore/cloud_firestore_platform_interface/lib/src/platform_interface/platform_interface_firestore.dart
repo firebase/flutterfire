@@ -9,8 +9,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import '../persistence_settings.dart';
 import '../method_channel/method_channel_firestore.dart';
+import '../persistence_settings.dart';
 
 /// Defines an interface to work with Cloud Firestore on web and mobile
 abstract class FirebaseFirestorePlatform extends PlatformInterface {
@@ -19,7 +19,9 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   final FirebaseApp /*?*/ appInstance;
 
   /// Create an instance using [app]
-  FirebaseFirestorePlatform({this.appInstance /*?*/}) : super(token: _token);
+  FirebaseFirestorePlatform({this.appInstance /*?*/
+      })
+      : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp /*!*/ get app {
@@ -79,7 +81,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
 
   /// Enable persistence of Firestore data. Web only.
   Future<void> enablePersistence(
-      [PersistenceSettings /*!*/ persistenceSettings]) async {
+      [PersistenceSettings /*?*/ persistenceSettings]) async {
     throw UnimplementedError('enablePersistence() is not implemented');
   }
 
