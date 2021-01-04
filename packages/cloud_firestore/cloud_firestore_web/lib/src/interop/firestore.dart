@@ -27,7 +27,7 @@ Firestore getFirestoreInstance([App app]) {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.Firestore>.
 class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
-  static final _expando = Expando<Firestore>();
+  static final _expando = Expando<Firestore/*?*/>();
 
   /// Non-null App for this instance of firestore service.
   App get app => App.getInstance(jsObject.app);
@@ -117,7 +117,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
 
 class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
     with _Updatable {
-  static final _expando = Expando<WriteBatch>();
+  static final _expando = Expando<WriteBatch/*?*/>();
 
   /// Creates a new WriteBatch from a [jsObject].
   static WriteBatch getInstance(firestore_interop.WriteBatchJsImpl jsObject) {
@@ -155,7 +155,7 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
 class DocumentReference
     extends JsObjectWrapper<firestore_interop.DocumentReferenceJsImpl>
     with _Updatable {
-  static final _expando = Expando<DocumentReference>();
+  static final _expando = Expando<DocumentReference/*?*/>();
 
   /// Non-null [Firestore] the document is in.
   /// This is useful for performing transactions, for example.
@@ -349,7 +349,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
 class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
     extends Query<T> {
-  static final _expando = Expando<CollectionReference>();
+  static final _expando = Expando<CollectionReference/*?*/>();
 
   String get id => jsObject.id;
 
