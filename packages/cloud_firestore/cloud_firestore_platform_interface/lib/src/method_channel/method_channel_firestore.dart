@@ -13,8 +13,8 @@ import 'method_channel_query.dart';
 import 'method_channel_query_snapshot.dart';
 import 'method_channel_transaction.dart';
 import 'method_channel_write_batch.dart';
-import 'utils/firestore_message_codec.dart';
 import 'utils/exception.dart';
+import 'utils/firestore_message_codec.dart';
 
 /// The entry point for accessing a Firestore.
 ///
@@ -283,7 +283,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   QueryPlatform collectionGroup(String path) {
-    return MethodChannelQuery(this, path, isCollectionGroupQuery: true);
+    return MethodChannelQuery(this, path,
+        isCollectionGroupQuery: true, parameters: {});
   }
 
   @override
@@ -345,7 +346,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T /*!*/ > runTransaction<T>(
+  Future<T> runTransaction<T>(
     TransactionHandler<T> transactionHandler, {
     Duration timeout = const Duration(seconds: 30),
   }) async {
