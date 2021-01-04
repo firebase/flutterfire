@@ -13,10 +13,10 @@ import './test_utils.dart';
 
 void runTaskTests() {
   group('Task', () {
-    FirebaseStorage storage;
-    File file;
-    Reference uploadRef;
-    Reference downloadRef;
+    /*late*/ FirebaseStorage storage;
+    /*late*/ File file;
+    /*late*/ Reference uploadRef;
+    /*late*/ Reference downloadRef;
 
     setUpAll(() async {
       storage = FirebaseStorage.instance;
@@ -25,7 +25,7 @@ void runTaskTests() {
     });
 
     group('pause() resume() onComplete()', () {
-      Task task;
+      /*late*/ Task task;
 
       setUp(() {
         task = null;
@@ -92,7 +92,7 @@ void runTaskTests() {
       });
 
       test('handles errors, e.g. if permission denied', () async {
-        FirebaseException streamError;
+        /*late*/ FirebaseException streamError;
 
         List<int> list = utf8.encode('hello world');
         Uint8List data = Uint8List.fromList(list);
@@ -159,11 +159,7 @@ void runTaskTests() {
     });
 
     group('cancel()', () {
-      Task task;
-
-      setUp(() {
-        task = null;
-      });
+      /*late*/ Task /*!*/ task;
 
       final _testCancelTask = () async {
         List<TaskSnapshot> snapshots = [];

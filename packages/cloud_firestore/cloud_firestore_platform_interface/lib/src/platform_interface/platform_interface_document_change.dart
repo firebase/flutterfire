@@ -52,15 +52,15 @@ class DocumentChangePlatform extends PlatformInterface {
   /// have been applied).
   ///
   /// -1 for [DocumentChangeType.added] events.
-  final int oldIndex;
+  final int /*!*/ oldIndex;
 
   /// The index of the changed document in the result set immediately after this
   /// DocumentChange (i.e. supposing that all prior [DocumentChangePlatform] objects
   /// and the current [DocumentChangePlatform] object have been applied).
   ///
   /// -1 for [DocumentChangeType.removed] events.
-  final int newIndex;
+  final int /*!*/ newIndex;
 
   /// The document affected by this change.
-  final DocumentSnapshotPlatform document;
+  final DocumentSnapshotPlatform /*!*/ document;
 }

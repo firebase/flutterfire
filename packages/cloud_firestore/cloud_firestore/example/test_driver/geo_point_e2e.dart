@@ -11,7 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runGeoPointTests() {
   group('$GeoPoint', () {
-    FirebaseFirestore firestore;
+    /*late*/ FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;

@@ -18,7 +18,7 @@ import '../method_channel/method_channel_crashlytics.dart';
 abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
   @protected
-  final FirebaseApp appInstance;
+  final FirebaseApp /*?*/ appInstance;
 
   /// Create an instance using [app]
   FirebaseCrashlyticsPlatform({this.appInstance}) : super(token: _token);
@@ -44,7 +44,7 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
     );
   }
 
-  static FirebaseCrashlyticsPlatform _instance;
+  static /*late*/ FirebaseCrashlyticsPlatform _instance;
 
   /// The current default [FirebaseCrashlyticsPlatform] instance.
   ///
@@ -105,10 +105,10 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
 
   /// Submits a Crashlytics report of a caught error.
   Future<void> recordError({
-    String exception,
-    String reason,
-    String information,
-    List<Map<String, String>> stackTraceElements,
+    String /*!*/ exception,
+    String /*!*/ information,
+    String /*?*/ reason,
+    List<Map<String, String>> /*?*/ stackTraceElements,
   }) {
     throw UnimplementedError('recordError() is not implemented');
   }

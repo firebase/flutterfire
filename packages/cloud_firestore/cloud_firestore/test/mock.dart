@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 typedef Callback(MethodCall call);
 
-setupCloudFirestoreMocks([Callback customHandlers]) {
+setupCloudFirestoreMocks([Callback /*?*/ customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {

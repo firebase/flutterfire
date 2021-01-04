@@ -174,7 +174,7 @@ class Query {
   ///
   /// To modify how the query is fetched, the [options] parameter can be provided
   /// with a [GetOptions] instance.
-  Future<QuerySnapshot> get([GetOptions options]) async {
+  Future<QuerySnapshot> get([GetOptions /*?*/ options]) async {
     QuerySnapshotPlatform snapshotDelegate =
         await _delegate.get(options ?? const GetOptions());
     return QuerySnapshot._(firestore, snapshotDelegate);
@@ -346,10 +346,10 @@ class Query {
     dynamic isGreaterThan,
     dynamic isGreaterThanOrEqualTo,
     dynamic arrayContains,
-    List<dynamic> arrayContainsAny,
-    List<dynamic> whereIn,
-    List<dynamic> whereNotIn,
-    bool isNull,
+    List<dynamic> /*?*/ arrayContainsAny,
+    List<dynamic> /*?*/ whereIn,
+    List<dynamic> /*?*/ whereNotIn,
+    bool /*?*/ isNull,
   }) {
     _assertValidFieldType(field);
 

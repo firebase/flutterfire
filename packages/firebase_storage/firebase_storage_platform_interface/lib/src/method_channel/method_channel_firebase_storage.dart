@@ -19,7 +19,8 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   /// Returns a unique key to identify the instance by [FirebaseApp] name and
   /// any custom storage buckets.
-  static String _getInstanceKey(String appName, String bucket) {
+  static String _getInstanceKey(
+      String /*!*/ /*!*/ appName, String /*!*/ bucket) {
     return '${appName}|${bucket ?? ''}';
   }
 
@@ -55,14 +56,14 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   /// Creates a new [MethodChannelFirebaseStorage] instance with an [app] and/or
   /// [bucket].
-  MethodChannelFirebaseStorage({FirebaseApp app, String bucket})
+  MethodChannelFirebaseStorage({FirebaseApp /*!*/ app, String bucket})
       : super(appInstance: app, bucket: bucket) {
     // The channel setMethodCallHandler callback is not app specific, so there
     // is no need to register the caller more than once.
     if (_initialized) return;
 
     channel.setMethodCallHandler((MethodCall call) async {
-      Map<dynamic, dynamic> arguments = call.arguments;
+      Map<dynamic, dynamic> /*!*/ arguments = call.arguments;
 
       switch (call.method) {
         case 'Task#onProgress':
@@ -117,7 +118,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     taskObservers[arguments['handle']].add(snapshot);
   }
 
-  void _sendTaskException(int handle, FirebaseException exception) {
+  void _sendTaskException(int /*!*/ handle, FirebaseException exception) {
     taskObservers[handle].addError(exception);
   }
 

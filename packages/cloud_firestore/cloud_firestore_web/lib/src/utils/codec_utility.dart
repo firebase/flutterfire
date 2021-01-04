@@ -13,7 +13,7 @@ import '../field_value_web.dart';
 /// Class containing static utility methods to encode/decode firestore data.
 class CodecUtility {
   /// Encodes a Map of values from their proper types to a serialized version.
-  static Map<String, dynamic> encodeMapData(Map<String, dynamic> data) {
+  static Map<String, dynamic> encodeMapData(Map<String, dynamic> /*?*/ data) {
     if (data == null) {
       return null;
     }
@@ -23,7 +23,7 @@ class CodecUtility {
   }
 
   /// Encodes an Array of values from their proper types to a serialized version.
-  static List<dynamic> encodeArrayData(List<dynamic> data) {
+  static List<dynamic> encodeArrayData(List<dynamic> /*?*/ data) {
     if (data == null) {
       return null;
     }
@@ -124,7 +124,7 @@ class CodecUtility {
   }
 
   /// Decodes the values on an incoming Map to their proper types.
-  static Map<String, dynamic> decodeMapData(Map<String, dynamic> data) {
+  static Map<String, dynamic> decodeMapData(Map<String, dynamic> /*?*/ data) {
     if (data == null) {
       return null;
     }
@@ -134,7 +134,7 @@ class CodecUtility {
   }
 
   /// Decodes the values on an incoming Array to their proper types.
-  static List<dynamic> decodeArrayData(List<dynamic> data) {
+  static List<dynamic> decodeArrayData(List<dynamic> /*?*/ data) {
     if (data == null) {
       return null;
     }

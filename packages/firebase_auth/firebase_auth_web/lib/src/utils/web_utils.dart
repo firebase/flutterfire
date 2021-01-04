@@ -7,7 +7,7 @@ import '../interop/auth.dart' as auth_interop;
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 
-/// Given a web error, a [FirebaseAuthException] is returned.
+/// Given a web error, an [Exception] is returned.
 ///
 /// The firebase-dart wrapper exposes a [core_interop.FirebaseError], allowing us to
 /// use the code and message and convert it into an expected [FirebaseAuthException].
@@ -35,7 +35,7 @@ FirebaseAuthException getFirebaseAuthException(Object exception) {
 
 /// Converts a [auth_interop.ActionCodeInfo] into a [ActionCodeInfo].
 ActionCodeInfo convertWebActionCodeInfo(
-    auth_interop.ActionCodeInfo webActionCodeInfo) {
+    auth_interop.ActionCodeInfo /*?*/ webActionCodeInfo) {
   if (webActionCodeInfo == null) {
     return null;
   }
@@ -48,7 +48,7 @@ ActionCodeInfo convertWebActionCodeInfo(
 
 /// Converts a [auth_interop.AdditionalUserInfo] into a [AdditionalUserInfo].
 AdditionalUserInfo convertWebAdditionalUserInfo(
-    auth_interop.AdditionalUserInfo webAdditionalUserInfo) {
+    auth_interop.AdditionalUserInfo /*?*/ webAdditionalUserInfo) {
   if (webAdditionalUserInfo == null) {
     return null;
   }
@@ -78,7 +78,7 @@ IdTokenResult convertWebIdTokenResult(
 
 /// Converts a [ActionCodeSettings] into a [auth_interop.ActionCodeSettings].
 auth_interop.ActionCodeSettings convertPlatformActionCodeSettings(
-    ActionCodeSettings actionCodeSettings) {
+    ActionCodeSettings /*?*/ actionCodeSettings) {
   if (actionCodeSettings == null) {
     return null;
   }
@@ -187,7 +187,7 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
 
 /// Converts a [auth_interop.AuthCredential] into a [AuthCredential].
 AuthCredential convertWebAuthCredential(
-    auth_interop.AuthCredential authCredential) {
+    auth_interop.AuthCredential /*?*/ authCredential) {
   if (authCredential == null) {
     return null;
   }
@@ -200,7 +200,7 @@ AuthCredential convertWebAuthCredential(
 
 /// Converts a [auth_interop.OAuthCredential] into a [AuthCredential].
 AuthCredential convertWebOAuthCredential(
-    auth_interop.OAuthCredential oAuthCredential) {
+    auth_interop.OAuthCredential /*?*/ oAuthCredential) {
   if (oAuthCredential == null) {
     return null;
   }
@@ -215,6 +215,7 @@ AuthCredential convertWebOAuthCredential(
 auth_interop.OAuthCredential convertPlatformCredential(
     AuthCredential credential) {
   if (credential is EmailAuthCredential) {
+    // TODO(ehesp): confirm after platform migration this is nulllable
     if (credential.emailLink != null) {
       return auth_interop.EmailAuthProvider.credentialWithLink(
           credential.email, credential.emailLink);

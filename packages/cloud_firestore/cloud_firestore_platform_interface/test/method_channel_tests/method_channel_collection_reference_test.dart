@@ -16,7 +16,7 @@ const _kDocumentId = "document";
 void main() {
   initializeMethodChannel();
 
-  MethodChannelCollectionReference _testCollection;
+  /*late*/ MethodChannelCollectionReference _testCollection;
 
   setUpAll(() async {
     await Firebase.initializeApp(

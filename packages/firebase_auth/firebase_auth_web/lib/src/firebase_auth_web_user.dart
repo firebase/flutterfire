@@ -214,7 +214,7 @@ class UserWeb extends UserPlatform {
 
   @override
   Future<void> verifyBeforeUpdateEmail(String newEmail,
-      [ActionCodeSettings actionCodeSettings]) async {
+      [ActionCodeSettings /*?*/ actionCodeSettings]) async {
     _assertCurrentUser(auth);
 
     await _webUser.verifyBeforeUpdateEmail(
@@ -227,6 +227,7 @@ class UserWeb extends UserPlatform {
 /// whether the user is signed out before calling a method. This replicates
 /// what happens on native since requests are sent over the method channel.
 _assertCurrentUser(FirebaseAuthPlatform instance) {
+  // TODO(ehesp): confirm after platform migration this is nullable
   if (instance.currentUser == null) {
     throw FirebaseAuthException(
         code: "no-current-user", message: "No user currently signed in.");

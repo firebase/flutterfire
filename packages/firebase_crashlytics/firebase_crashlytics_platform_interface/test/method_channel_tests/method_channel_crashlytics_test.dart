@@ -13,7 +13,7 @@ import '../mock.dart';
 void main() {
   setupFirebaseCrashlyticsMocks();
 
-  FirebaseCrashlyticsPlatform crashlytics;
+  /*late*/ FirebaseCrashlyticsPlatform crashlytics;
   final List<MethodCall> logger = <MethodCall>[];
 
   // mock props

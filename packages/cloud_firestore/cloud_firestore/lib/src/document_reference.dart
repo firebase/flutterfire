@@ -58,7 +58,7 @@ class DocumentReference {
   /// By providing [options], this method can be configured to fetch results only
   /// from the server, only from the local cache or attempt to fetch results
   /// from the server and fall back to the cache (which is the default).
-  Future<DocumentSnapshot> get([GetOptions options]) async {
+  Future<DocumentSnapshot> get([GetOptions /*?*/ options]) async {
     return DocumentSnapshot._(
         firestore, await _delegate.get(options ?? const GetOptions()));
   }
@@ -77,15 +77,17 @@ class DocumentReference {
   ///
   /// If [SetOptions] are provided, the data will be merged into an existing
   /// document instead of overwriting.
-  Future<void> set(Map<String, dynamic> data, [SetOptions options]) {
+  Future<void> set(Map<String, dynamic> data, [SetOptions /*?*/ options]) {
     assert(data != null);
     return _delegate.set(
-        _CodecUtility.replaceValueWithDelegatesInMap(data), options);
+        // TODO(ehesp): `options` should be nullable after platform interface null safe is available
+        _CodecUtility.replaceValueWithDelegatesInMap(data) /*!*/,
+        options);
   }
 
   @Deprecated("Deprecated in favor of `.set()`")
   // ignore: public_member_api_docs
-  Future<void> setData(Map<String, dynamic> data, [SetOptions options]) {
+  Future<void> setData(Map<String, dynamic> data, [SetOptions /*?*/ options]) {
     return set(data, options);
   }
 
@@ -95,7 +97,8 @@ class DocumentReference {
   /// If no document exists yet, the update will fail.
   Future<void> update(Map<String, dynamic> data) {
     assert(data != null);
-    return _delegate.update(_CodecUtility.replaceValueWithDelegatesInMap(data));
+    return _delegate
+        .update(_CodecUtility.replaceValueWithDelegatesInMap(data) /*!*/);
   }
 
   @Deprecated("Deprecated in favor of `.update()`")

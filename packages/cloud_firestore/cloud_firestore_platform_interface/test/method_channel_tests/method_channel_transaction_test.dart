@@ -53,7 +53,7 @@ void main() {
         }
       });
     });
-    TransactionPlatform transaction;
+    /*late*/ TransactionPlatform transaction;
     final mockDocumentReference = MockDocumentReference();
     when(mockDocumentReference.path).thenReturn("$kCollectionId/$kDocumentId");
     when(mockDocumentReference.id).thenReturn("$kDocumentId");

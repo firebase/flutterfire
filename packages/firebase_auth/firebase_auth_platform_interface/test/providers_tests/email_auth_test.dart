@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  TestEmailAuthProvider emailAuthProvider;
+  /*late*/ TestEmailAuthProvider emailAuthProvider;
   final String kMockEmail = 'test-email';
   final String kMockPassword = 'test-password';
   final String kMockEmailLink = 'https://www.emaillink.com';

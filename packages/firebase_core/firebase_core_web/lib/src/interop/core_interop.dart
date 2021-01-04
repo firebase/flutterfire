@@ -21,10 +21,10 @@ external List<AppJsImpl> get apps;
 external String get SDK_VERSION;
 
 @JS()
-external AppJsImpl initializeApp(FirebaseOptions options, [String name]);
+external AppJsImpl initializeApp(FirebaseOptions options, [String /*?*/ name]);
 
 @JS()
-external AppJsImpl app([String name]);
+external AppJsImpl app([String /*?*/ name]);
 
 /// FirebaseError is a subclass of the standard Error object.
 /// In addition to a message string, it contains a string-valued code.

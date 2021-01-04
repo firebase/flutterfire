@@ -37,7 +37,7 @@ abstract class TaskPlatform extends PlatformInterface {
   }
 
   /// The latest [TaskSnapshot] for this task.
-  TaskSnapshotPlatform get snapshot {
+  TaskSnapshotPlatform /*!*/ get snapshot {
     throw UnimplementedError('snapshot is not implemented');
   }
 

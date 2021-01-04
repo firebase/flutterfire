@@ -13,7 +13,7 @@ import './test_utils.dart';
 
 void runReferenceTests() {
   group('$Reference', () {
-    FirebaseStorage storage;
+    /*late*/ FirebaseStorage storage;
 
     setUpAll(() async {
       storage = FirebaseStorage.instance;

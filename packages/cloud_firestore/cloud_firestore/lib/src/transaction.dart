@@ -57,13 +57,16 @@ class Transaction {
   /// [SetOptions], the provided data can be merged into the existing document.
   Transaction set(
       DocumentReference documentReference, Map<String, dynamic> data,
-      [SetOptions options]) {
+      [SetOptions /*?*/ options]) {
     assert(documentReference.firestore == _firestore,
         "the document provided is from a different Firestore instance");
 
     return Transaction._(
         _firestore,
-        _delegate.set(documentReference.path,
-            _CodecUtility.replaceValueWithDelegatesInMap(data), options));
+        _delegate.set(
+            documentReference.path,
+            // TODO(ehesp): `options` should be nullable after platform interface null safe is available
+            _CodecUtility.replaceValueWithDelegatesInMap(data),
+            options));
   }
 }

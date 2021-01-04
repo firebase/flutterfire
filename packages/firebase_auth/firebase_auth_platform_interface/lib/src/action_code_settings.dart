@@ -22,14 +22,14 @@ class ActionCodeSettings {
         // ignore: deprecated_member_use_from_same_package
         this.iOS,
     this.iOSBundleId,
-    @required
+    /*required*/ @required
         this.url,
   }) : assert(url != null);
 
   @Deprecated(
       "Deprecated in favor of using named args instead ([androidPackageName], [androidMinimumVersion], [androidInstallApp])")
   // ignore: public_member_api_docs
-  Map<String, dynamic> android;
+  Map<String, dynamic> /*?*/ android;
 
   /// The Android package name of the application to open when the URL is pressed.
   final String androidPackageName;

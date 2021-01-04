@@ -15,8 +15,8 @@ void main() {
   initializeMethodChannel();
 
   group("$MethodChannelDocumentReference()", () {
-    MethodChannelDocumentReference _documentReference;
-    FieldValuePlatform mockFieldValue;
+    /*late*/ MethodChannelDocumentReference _documentReference;
+    /*late*/ FieldValuePlatform mockFieldValue;
 
     setUpAll(() async {
       await Firebase.initializeApp(
@@ -95,7 +95,7 @@ void main() {
 }
 
 void _assertGetMethodCalled(DocumentReferencePlatform documentReference,
-    Source source, String expectedSourceString) async {
+    Source /*?*/ source, String expectedSourceString) async {
   bool isMethodCalled = false;
   handleMethodCall((call) {
     if (call.method == "DocumentReference#get") {
@@ -118,7 +118,7 @@ void _assertGetMethodCalled(DocumentReferencePlatform documentReference,
 }
 
 void _assertSetDataMethodCalled(DocumentReferencePlatform documentReference,
-    bool expectedMergeValue, FieldValuePlatform fieldValue) async {
+    bool /*?*/ expectedMergeValue, FieldValuePlatform /*?*/ fieldValue) async {
   bool isMethodCalled = false;
   final Map<String, dynamic> data = {"test": "test"};
   if (fieldValue != null) {

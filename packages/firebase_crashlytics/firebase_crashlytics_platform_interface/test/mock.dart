@@ -10,7 +10,7 @@ import 'package:firebase_crashlytics_platform_interface/src/method_channel/metho
 typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
 typedef Callback(MethodCall call);
 
-setupFirebaseCrashlyticsMocks([Callback customHandlers]) {
+setupFirebaseCrashlyticsMocks([Callback /*?*/ customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {

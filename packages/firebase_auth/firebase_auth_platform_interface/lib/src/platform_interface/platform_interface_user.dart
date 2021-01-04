@@ -27,7 +27,7 @@ abstract class UserPlatform extends PlatformInterface {
   }
 
   /// The [FirebaseAuthPlatform] instance.
-  final FirebaseAuthPlatform auth;
+  final FirebaseAuthPlatform /*!*/ auth;
 
   Map<String, dynamic> _user;
 
@@ -51,12 +51,12 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// Once verified, call [reload] to ensure the latest user information is
   /// retrieved from Firebase.
-  bool get emailVerified {
+  bool /*!*/ get emailVerified {
     return _user['emailVerified'];
   }
 
   /// Returns whether the user is a anonymous.
-  bool get isAnonymous {
+  bool /*!*/ get isAnonymous {
     return _user['isAnonymous'];
   }
 
@@ -70,7 +70,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// This property will be `null` if the user has not signed in or been has
   /// their phone number linked.
-  String get phoneNumber {
+  String /*?*/ get phoneNumber {
     return _user['phoneNumber'];
   }
 
@@ -78,7 +78,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// This property will be populated if the user has signed in or been linked
   /// with a 3rd party OAuth provider (such as Google).
-  String get photoURL {
+  String /*?*/ get photoURL {
     return _user['photoURL'];
   }
 
@@ -107,7 +107,7 @@ abstract class UserPlatform extends PlatformInterface {
   }
 
   /// The user's unique ID.
-  String get uid {
+  String /*!*/ get uid {
     return _user['uid'];
   }
 
@@ -134,7 +134,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// If [forceRefresh] is `true`, the token returned will be refresh regardless
   /// of token expiration.
-  Future<String> getIdToken(bool forceRefresh) {
+  Future<String /*!*/ > getIdToken(bool forceRefresh) {
     throw UnimplementedError("getIdToken() is not implemented");
   }
 
@@ -274,7 +274,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// - **no-such-provider**:
   ///  - Thrown if the user does not have this provider linked or when the
   ///    provider ID given does not exist.
-  Future<UserPlatform> unlink(String providerId) async {
+  Future<UserPlatform /*!*/ > unlink(String providerId) async {
     throw UnimplementedError("unlink() is not implemented");
   }
 
@@ -343,7 +343,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// If you have a custom email action handler, you can complete the
   /// verification process by calling [applyActionCode].
   Future<void> verifyBeforeUpdateEmail(String newEmail,
-      [ActionCodeSettings actionCodeSettings]) async {
+      [ActionCodeSettings /*?*/ actionCodeSettings]) async {
     throw UnimplementedError("verifyBeforeUpdateEmail() is not implemented");
   }
 }

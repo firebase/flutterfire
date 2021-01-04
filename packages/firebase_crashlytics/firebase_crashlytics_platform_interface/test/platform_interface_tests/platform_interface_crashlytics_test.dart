@@ -12,10 +12,10 @@ import '../mock.dart';
 void main() {
   setupFirebaseCrashlyticsMocks();
 
-  TestFirebaseCrashlyticsPlatform firebaseCrashlyticsPlatform;
+  /*late*/ TestFirebaseCrashlyticsPlatform firebaseCrashlyticsPlatform;
 
-  FirebaseApp app;
-  FirebaseApp secondaryApp;
+  /*late*/ FirebaseApp app;
+  /*late*/ FirebaseApp secondaryApp;
 
   group('$FirebaseCrashlyticsPlatform()', () {
     setUpAll(() async {

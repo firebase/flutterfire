@@ -15,7 +15,7 @@ part of firebase_core_platform_interface;
 class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   // ignore: public_member_api_docs
   MethodChannelFirebaseApp(
-    String name,
+    String /*!*/ name,
     FirebaseOptions options, {
     isAutomaticDataCollectionEnabled,
   }) : super(name, options) {
@@ -26,7 +26,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   /// Keeps track of whether this app has been deleted by the user.
   bool _isDeleted = false;
 
-  bool _isAutomaticDataCollectionEnabled;
+  /*late*/ bool _isAutomaticDataCollectionEnabled;
 
   /// Returns whether automatic data collection enabled or disabled.
   @override

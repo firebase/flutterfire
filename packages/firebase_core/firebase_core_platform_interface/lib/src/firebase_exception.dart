@@ -49,7 +49,7 @@ class FirebaseException implements Exception {
 
   /// The stack trace which provides information to the user about the call
   /// sequence that triggered an exception
-  final StackTrace stackTrace;
+  final StackTrace /*?*/ stackTrace;
 
   @override
   bool operator ==(dynamic other) {
