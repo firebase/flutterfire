@@ -41,7 +41,7 @@ void main() {
       ),
     );
 
-    firestore = MethodChannelFirebaseFirestore();
+    firestore = MethodChannelFirebaseFirestore(app: Firebase.app());
 
     handleMethodCall((MethodCall call) {
       log.add(call);
@@ -135,7 +135,7 @@ void main() {
 
     group('delegateFor()', () {
       test('returns a [FirestorePlatform] with no arguments', () {
-        expect(firestore.delegateFor(),
+        expect(firestore.delegateFor(app: Firebase.app()),
             equals(FirebaseFirestorePlatform.instance));
       });
       test('returns a [FirestorePlatform] with arguments', () {
