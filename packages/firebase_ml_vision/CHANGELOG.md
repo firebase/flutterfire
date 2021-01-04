@@ -1,8 +1,11 @@
 ## 0.9.10+1
 
- - **FIX**: Added NSNull validation to driverLicenseDictionary to prevent errors when NSArray:addObject is called
+ - **FIX**: Added NSNull validation to `driverLicenseDictionary, visionBarcodeWiFiToDictionary, visionBarcodeEmailToDictionary,
+        visionBarcodePhoneToDictionary, visionBarcodeSMSToDictionary, visionBarcodeURLToDictionary` to prevent errors when
+        NSArray:addObject is called.
+ - **ENHANCEMENT**: Changed ternary notation at `visionBarcodeToDictionary and barcodeContactInfoToDictionary` to improve readability.
  - **DOCS**: Fixed analyze script on docs
- 
+
 ## 0.9.10
 
  - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
