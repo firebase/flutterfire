@@ -86,10 +86,7 @@ NSDictionary *visionBarcodeEmailToDictionary(FIRVisionBarcodeEmail *email) {
 }
 
 NSDictionary *visionBarcodePhoneToDictionary(FIRVisionBarcodePhone *phone) {
-  return @{
-    @"number" : phone.number ?: [NSNull null],
-    @"type" : @(phone.type)
-  };
+  return @{@"number" : phone.number ?: [NSNull null], @"type" : @(phone.type)};
 }
 
 NSDictionary *visionBarcodeSMSToDictionary(FIRVisionBarcodeSMS *sms) {
@@ -100,17 +97,11 @@ NSDictionary *visionBarcodeSMSToDictionary(FIRVisionBarcodeSMS *sms) {
 }
 
 NSDictionary *visionBarcodeURLToDictionary(FIRVisionBarcodeURLBookmark *url) {
-  return @{
-    @"title" : url.title ?: [NSNull null],
-    @"url" : url.url ?: [NSNull null]
-  };
+  return @{@"title" : url.title ?: [NSNull null], @"url" : url.url ?: [NSNull null]};
 }
 
 NSDictionary *visionBarcodeGeoPointToDictionary(FIRVisionBarcodeGeoPoint *geo) {
-  return @{
-    @"longitude" : @(geo.longitude),
-    @"latitude" : @(geo.latitude)
-  };
+  return @{@"longitude" : @(geo.longitude), @"latitude" : @(geo.latitude)};
 }
 
 NSDictionary *barcodeContactInfoToDictionary(FIRVisionBarcodeContactInfo *contact) {
@@ -122,10 +113,7 @@ NSDictionary *barcodeContactInfoToDictionary(FIRVisionBarcodeContactInfo *contac
                                                        NSUInteger idx, BOOL *_Nonnull stop) {
       [addressLines addObject:addressLine];
     }];
-    [addresses addObject:@{
-      @"addressLines" : addressLines,
-      @"type" : @(address.type)
-    }];
+    [addresses addObject:@{@"addressLines" : addressLines, @"type" : @(address.type)}];
   }];
 
   __block NSMutableArray<NSDictionary *> *emails = [NSMutableArray array];
@@ -133,8 +121,7 @@ NSDictionary *barcodeContactInfoToDictionary(FIRVisionBarcodeContactInfo *contac
                                                NSUInteger idx, BOOL *_Nonnull stop) {
     [emails addObject:@{
       @"address" : email.address ?: [NSNull null],
-      @"body" : email.body ?: [NSNull null]
-      @"subject" : email.subject ?: [NSNull null],
+      @"body" : email.body ?: [NSNull null] @"subject" : email.subject ?: [NSNull null],
       @"type" : @(email.type)
     }];
   }];
@@ -142,10 +129,7 @@ NSDictionary *barcodeContactInfoToDictionary(FIRVisionBarcodeContactInfo *contac
   __block NSMutableArray<NSDictionary *> *phones = [NSMutableArray array];
   [contact.phones enumerateObjectsUsingBlock:^(FIRVisionBarcodePhone *_Nonnull phone,
                                                NSUInteger idx, BOOL *_Nonnull stop) {
-    [phones addObject:@{
-      @"number" : phone.number ?: [NSNull null],
-      @"type" : @(phone.type)
-    }];
+    [phones addObject:@{@"number" : phone.number ?: [NSNull null], @"type" : @(phone.type)}];
   }];
 
   __block NSMutableArray<NSString *> *urls = [NSMutableArray array];
