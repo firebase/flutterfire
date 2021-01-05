@@ -248,11 +248,11 @@ class DocumentReference
 }
 
 class Query<T extends firestore_interop.QueryJsImpl /*!*/ >
-    extends JsObjectWrapper<T> {
+    extends JsObjectWrapper<T /*!*/ > {
   Firestore get firestore => Firestore.getInstance(jsObject.firestore);
 
   /// Creates a new Query from a [jsObject].
-  Query.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  Query.fromJsObject(T /*!*/ jsObject) : super.fromJsObject(jsObject);
 
   Query endAt({DocumentSnapshot snapshot, List<dynamic> fieldValues}) =>
       Query.fromJsObject(
