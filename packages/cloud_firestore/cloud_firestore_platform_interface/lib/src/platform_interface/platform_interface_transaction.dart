@@ -9,7 +9,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// The [TransactionHandler] may be executed multiple times, it should be able
 /// to handle multiple executions.
-typedef TransactionHandler<T> = Future<T> Function(TransactionPlatform);
+typedef TransactionHandler<T> = Future<T /*!*/ > Function(TransactionPlatform);
 
 /// A [TransactionPlatform] is a set of read and write operations on one or more documents.
 abstract class TransactionPlatform extends PlatformInterface {

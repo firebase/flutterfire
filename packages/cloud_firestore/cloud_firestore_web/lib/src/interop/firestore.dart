@@ -247,7 +247,7 @@ class DocumentReference
       handleThenable(_wrapUpdateFunctionCall(jsObject, data, fieldsAndValues));
 }
 
-class Query<T extends firestore_interop.QueryJsImpl>
+class Query<T extends firestore_interop.QueryJsImpl /*!*/ >
     extends JsObjectWrapper<T> {
   Firestore get firestore => Firestore.getInstance(jsObject.firestore);
 

@@ -16,7 +16,7 @@ class WriteBatchWeb extends WriteBatchPlatform {
 
   /// Constructor.
   WriteBatchWeb(this._webFirestoreDelegate)
-      : _webWriteBatchDelegate = _webFirestoreDelegate.batch() /*!*/,
+      : _webWriteBatchDelegate = _webFirestoreDelegate.batch(),
         super();
 
   @override
