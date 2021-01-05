@@ -9,7 +9,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-void main() {
+void testsMain() {
   group('$FirebaseCrashlytics', () {
     /*late*/ FirebaseCrashlytics crashlytics;
 
@@ -137,3 +137,5 @@ void main() {
     });
   });
 }
+
+void main() => drive.main(testsMain);
