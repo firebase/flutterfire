@@ -27,7 +27,7 @@ Firestore getFirestoreInstance([App app]) {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.Firestore>.
 class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
-  static final _expando = Expando<Firestore /*?*/ >();
+  static final _expando = Expando<Firestore>();
 
   /// Non-null App for this instance of firestore service.
   App get app => App.getInstance(jsObject.app);
@@ -117,7 +117,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
 
 class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
     with _Updatable {
-  static final _expando = Expando<WriteBatch /*?*/ >();
+  static final _expando = Expando<WriteBatch>();
 
   /// Creates a new WriteBatch from a [jsObject].
   static WriteBatch getInstance(firestore_interop.WriteBatchJsImpl jsObject) {
@@ -155,7 +155,7 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
 class DocumentReference
     extends JsObjectWrapper<firestore_interop.DocumentReferenceJsImpl>
     with _Updatable {
-  static final _expando = Expando<DocumentReference /*?*/ >();
+  static final _expando = Expando<DocumentReference>();
 
   /// Non-null [Firestore] the document is in.
   /// This is useful for performing transactions, for example.
@@ -349,7 +349,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
 class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
     extends Query<T> {
-  static final _expando = Expando<CollectionReference /*?*/ >();
+  static final _expando = Expando<CollectionReference>();
 
   String get id => jsObject.id;
 
@@ -390,7 +390,7 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
 
 class DocumentChange
     extends JsObjectWrapper<firestore_interop.DocumentChangeJsImpl> {
-  static final _expando = Expando<DocumentChange /*?*/ >();
+  static final _expando = Expando<DocumentChange>();
 
   String get type => jsObject.type;
 
@@ -417,7 +417,7 @@ class DocumentChange
 
 class DocumentSnapshot
     extends JsObjectWrapper<firestore_interop.DocumentSnapshotJsImpl> {
-  static final _expando = Expando<DocumentSnapshot /*?*/ >();
+  static final _expando = Expando<DocumentSnapshot>();
 
   bool get exists => jsObject.exists;
 
@@ -452,7 +452,7 @@ class DocumentSnapshot
 
 class QuerySnapshot
     extends JsObjectWrapper<firestore_interop.QuerySnapshotJsImpl> {
-  static final _expando = Expando<QuerySnapshot /*?*/ >();
+  static final _expando = Expando<QuerySnapshot>();
 
   // TODO: [SnapshotListenOptions options]
   List<DocumentChange> docChanges(
@@ -504,7 +504,7 @@ class QuerySnapshot
 
 class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
     with _Updatable {
-  static final _expando = Expando<Transaction /*?*/ >();
+  static final _expando = Expando<Transaction>();
 
   /// Creates a new Transaction from a [jsObject].
   static Transaction getInstance(firestore_interop.TransactionJsImpl jsObject) {
