@@ -57,6 +57,8 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
         NSError *_Nullable error) {
         if (code == nil) {
           details = [FLTFirebaseRemoteConfigUtils ErrorCodeAndMessageFromNSError:error];
+          code = [details valueForKey:@"code"];
+          message = [details valueForKey:@"message"];
         }
         if ([@"unknown" isEqualToString:code]) {
           NSLog(@"FLTFirebaseRemoteConfig: An error occurred while calling method %@", call.method);
