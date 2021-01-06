@@ -304,8 +304,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
         query = firestore.collection(path);
       }
 
-      if (parameters == null || parameters.isEmpty()) return query;
-      
+      if (parameters == null) return query;
       // "where" filters
       @SuppressWarnings("unchecked")
       List<List<Object>> filters =

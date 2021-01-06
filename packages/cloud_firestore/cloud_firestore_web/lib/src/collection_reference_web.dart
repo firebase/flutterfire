@@ -29,8 +29,7 @@ class CollectionReferenceWeb extends QueryWeb
   CollectionReferenceWeb(
       this._firestorePlatform, this._webFirestore, String path)
       : _delegate = _webFirestore.collection(path),
-        super(_firestorePlatform, path, _webFirestore.collection(path),
-            parameters: {});
+        super(_firestorePlatform, path, _webFirestore.collection(path));
 
   @override
   String get path => _delegate.path;

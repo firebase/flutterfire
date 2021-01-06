@@ -284,7 +284,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   QueryPlatform collectionGroup(String path) {
     return MethodChannelQuery(this, path,
-        isCollectionGroupQuery: true, parameters: {});
+        isCollectionGroupQuery: true);
   }
 
   @override

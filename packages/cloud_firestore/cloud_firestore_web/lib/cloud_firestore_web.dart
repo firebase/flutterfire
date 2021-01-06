@@ -61,13 +61,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   QueryPlatform collectionGroup(String path) {
-    return QueryWeb(
-      this,
-      path,
-      _webFirestore.collectionGroup(path),
-      isCollectionGroupQuery: true,
-      parameters: {},
-    );
+    return QueryWeb(this, path, _webFirestore.collectionGroup(path),
+        isCollectionGroupQuery: true);
   }
 
   @override

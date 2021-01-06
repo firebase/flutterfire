@@ -25,7 +25,7 @@ class MethodChannelCollectionReference extends MethodChannelQuery
   /// Create a [MethodChannelCollectionReference] instance.
   MethodChannelCollectionReference(
       FirebaseFirestorePlatform firestore, String path)
-      : super(firestore, path, parameters: {}) {
+      : super(firestore, path) {
     _pointer = Pointer(path);
   }
 
