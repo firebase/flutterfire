@@ -180,10 +180,6 @@ class Query {
     return QuerySnapshot._(firestore, snapshotDelegate);
   }
 
-  @Deprecated("Deprecated in favor of `.get()`")
-  // ignore: public_member_api_docs
-  Future<QuerySnapshot> getDocuments([GetOptions options]) => get(options);
-
   /// Creates and returns a new Query that's additionally limited to only return up
   /// to the specified number of documents.
   Query limit(int limit) {
