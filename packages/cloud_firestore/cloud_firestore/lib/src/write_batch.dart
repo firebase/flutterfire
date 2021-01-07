@@ -50,13 +50,6 @@ class WriteBatch {
         options);
   }
 
-  @Deprecated("Deprecated in favor of `.set`")
-  // ignore: public_member_api_docs
-  void setData(DocumentReference document, Map<String, dynamic> data,
-      [SetOptions /*?*/ options]) {
-    return set(document, data, options);
-  }
-
   /// Updates a given [document].
   ///
   /// If the document does not yet exist, an exception will be thrown.
@@ -67,11 +60,5 @@ class WriteBatch {
         "the document provided is from a different Firestore instance");
     return _delegate.update(
         document.path, _CodecUtility.replaceValueWithDelegatesInMap(data));
-  }
-
-  @Deprecated("Deprecated in favor of `.update`")
-  // ignore: public_member_api_docs
-  void updateData(DocumentReference document, Map<String, dynamic> data) {
-    return update(document, data);
   }
 }
