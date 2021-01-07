@@ -214,7 +214,7 @@ void main() {
           log.add(call);
           if (call.method == "Query#snapshots") {
             handleQuerySnapshotsEventChannel(mockObserverId, log);
-            return Future.value(mockObserverId);
+            return mockObserverId;
           }
         });
       });

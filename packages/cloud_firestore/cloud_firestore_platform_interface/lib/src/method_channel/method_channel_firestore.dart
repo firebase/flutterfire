@@ -26,37 +26,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// The [Settings] for this [MethodChannelFirebaseFirestore] instance.
   Settings _settings = Settings();
 
-  /// Attach a [FirebaseException] to a given [StreamController].
-  static void forwardErrorToController(
-      StreamController controller, dynamic arguments) async {
-    if (controller == null) {
-      return;
-    }
-
-    if (!(arguments is Map)) {
-      controller.addError('Internal Error');
-      return;
-    }
-
-    if (arguments['error'] is Map) {
-      // Map means its an error from Native.
-      Map<String, dynamic> errorMap =
-          Map<String, dynamic>.from(arguments['error']);
-
-      FirebaseException exception = FirebaseException(
-        plugin: 'cloud_firestore',
-        code: errorMap['code'],
-        message: errorMap['message'],
-      );
-      controller.addError(exception);
-    } else {
-      // A non-map value means the error occurred in Dart, e.g. a type conversion issue,
-      // this means it is most likely a library issue that should be reported so
-      // it can be fixed.
-      controller.addError(arguments['error']);
-    }
-  }
-
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
   /// If null, the default [FirebaseApp] is used.
@@ -178,7 +147,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         ).listen((event) {
           controller.add(null);
         }, onError: (error, stack) {
-          forwardErrorToController(controller, error);
+          controller.addError(convertPlatformException(error), stack);
         });
       },
       onCancel: () {
@@ -239,7 +208,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         // right away and only inform native side of the error.
         try {
           result = await transactionHandler(transaction);
-        } catch (error) {
+        } catch (error, stack) {
           // Signal native that a user error occurred, and finish the
           // transaction
           await MethodChannelFirebaseFirestore.channel
@@ -252,7 +221,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
           // Allow the [runTransaction] method to listen to an error.
 
-          completer.completeError(error);
+          completer.completeError(error, stack);
 
           return;
         }

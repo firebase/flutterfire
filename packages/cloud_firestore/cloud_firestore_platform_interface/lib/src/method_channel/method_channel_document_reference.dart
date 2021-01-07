@@ -128,7 +128,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
             ),
           );
         }, onError: (error, stack) {
-          controller.addError(convertPlatformException(error));
+          controller.addError(convertPlatformException(error), stack);
         });
       },
       onCancel: () {

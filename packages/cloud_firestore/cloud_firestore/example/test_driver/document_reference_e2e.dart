@@ -53,19 +53,11 @@ void runDocumentReferenceTests() {
         await doc1.set({'test': 'value1'});
         await doc2.set({'test': 'value2'});
 
-        Stream<DocumentSnapshot> stream1 = doc1.snapshots();
-        Stream<DocumentSnapshot> stream2 = doc2.snapshots();
+        final value1 = doc1.snapshots().first.then((s) => s.data()['test']);
+        final value2 = doc2.snapshots().first.then((s) => s.data()['test']);
 
-        final completer1 = Completer<String>();
-        final completer2 = Completer<String>();
-
-        stream1.listen((s) => completer1.complete(s.data()['test']));
-        stream2.listen((s) => completer2.complete(s.data()['test']));
-
-        expect(
-          await Future.wait([completer1.future, completer2.future]),
-          ['value1', 'value2'],
-        );
+        await expectLater(value1, completion('value1'));
+        await expectLater(value2, completion('value2'));
       });
 
       test('listens to a multiple changes response', () async {

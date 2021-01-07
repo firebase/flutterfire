@@ -149,7 +149,7 @@ class MethodChannelQuery extends QueryPlatform {
         ).listen((snapshot) {
           controller.add(MethodChannelQuerySnapshot(firestore, snapshot));
         }, onError: (error, stack) {
-          controller.addError(convertPlatformException(error));
+          controller.addError(convertPlatformException(error), stack);
         });
       },
       onCancel: () {
