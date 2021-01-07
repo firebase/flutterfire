@@ -130,22 +130,25 @@ dependencies:
   flutter_facebook_auth: "{{ external.flutter_facebook_auth }}"
 ```
 
-You will need to follow the steps in the plugin documentation to ensure that both the Android & iOS Facebook SDKs have been initialized
-correctly. Once complete, trigger the sign-in flow, create a Facebook credential and sign the user in:
+You will need to follow the steps in the plugin [`documentation`](https://pub.dev/packages/flutter_facebook_auth) to ensure that both the Android & iOS Facebook SDKs have been initialized correctly. Once complete, trigger the sign-in flow, create a Facebook credential and sign the user in:
 
 ```dart
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 Future<UserCredential> signInWithFacebook() async {
-  // Trigger the sign-in flow
-  final LoginResult result = await FacebookAuth.instance.login();
-
-  // Create a credential from the access token
-  final FacebookAuthCredential facebookAuthCredential =
-    FacebookAuthProvider.credential(result.accessToken.token);
-
-  // Once signed in, return the UserCredential
-  return await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  try {
+   final AccessToken accessToken = await FacebookAuth.instance.login();
+   
+   // Create a credential from the access token
+   final FacebookAuthCredential credential = FacebookAuthProvider.credential(accessToken.token);
+   // Once signed in, return the UserCredential
+   return await FirebaseAuth.instance.signInWithCredential(credential);
+ } on FacebookAuthException catch (e) {
+   // handle the FacebookAuthException
+ } on FirebaseAuthException catch (e) {
+   // handle the FirebaseAuthException
+ } finally {}
+   return null;
 }
 ```
 
