@@ -170,7 +170,7 @@ scripts:
   postclean: >
     melos exec -c 6 -- "flutter clean"
 
-  # Run all targets generally exected in CI for a full local quality check
+  # Run all targets generally expected in CI for a full local quality check
   qualitycheck: >
     melos run clean:deep && melos clean && melos bootstrap && melos run lint:all && melos run build:all && melos run test:all
 
