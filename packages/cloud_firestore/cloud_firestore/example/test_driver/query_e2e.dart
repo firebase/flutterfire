@@ -136,19 +136,17 @@ void runQueryTests() {
         await collection1.add({'test': 'value1'});
         await collection2.add({'test': 'value2'});
 
-        Stream<QuerySnapshot> stream1 = collection1.snapshots();
-        Stream<QuerySnapshot> stream2 = collection2.snapshots();
+        final value1 = collection1
+            .snapshots()
+            .first
+            .then((s) => s.docs.first.data()['test']);
+        final value2 = collection2
+            .snapshots()
+            .first
+            .then((s) => s.docs.first.data()['test']);
 
-        final completer1 = Completer<String>();
-        final completer2 = Completer<String>();
-
-        stream1.listen((s) => completer1.complete(s.docs.first.data()['test']));
-        stream2.listen((s) => completer2.complete(s.docs.first.data()['test']));
-
-        expect(
-          await Future.wait([completer1.future, completer2.future]),
-          ['value1', 'value2'],
-        );
+        await expectLater(value1, completion('value1'));
+        await expectLater(value2, completion('value2'));
       });
 
       test('listens to a multiple changes response', () async {
