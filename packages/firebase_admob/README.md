@@ -20,6 +20,8 @@ to do so will result in a crash on launch of your app.  The line should look lik
 where `[ADMOB_APP_ID]` is your App ID.  You must pass the same value when you 
 initialize the plugin in your Dart code.
 
+The meta-data above should be in the `<application>`.
+
 See https://goo.gl/fQ2neu for more information about configuring `AndroidManifest.xml`
 and setting up your App ID.
 
