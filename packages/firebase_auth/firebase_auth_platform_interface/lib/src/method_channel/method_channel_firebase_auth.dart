@@ -34,6 +34,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     'plugins.flutter.io/firebase_auth',
   );
 
+  /// Event channel exclusively for receiving ID token changes.
+  static const EventChannel idTokenEventChannel = EventChannel(
+    'plugins.flutter.io/firebase_auth/id_token',
+  );
+
   static Map<String, MethodChannelFirebaseAuth>
       _methodChannelFirebaseAuthInstances =
       <String, MethodChannelFirebaseAuth>{};
@@ -343,9 +348,12 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Stream<UserPlatform> authStateChanges() =>
       _authStateChangesListeners[app.name].stream;
 
+  Stream<UserPlatform> _idTokenChanges;
+
   @override
-  Stream<UserPlatform> idTokenChanges() =>
-      _idTokenChangesListeners[app.name].stream;
+  Stream<UserPlatform> idTokenChanges() {
+    return _idTokenChanges ??= idTokenEventChannel.receiveBroadcastStream();
+  }
 
   @override
   Stream<UserPlatform> userChanges() => _userChangesListeners[app.name].stream;
