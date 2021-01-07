@@ -54,13 +54,6 @@ class FirebaseFunctions extends FirebasePluginPlatform {
     return newInstance;
   }
 
-  // ignore: public_member_api_docs
-  @Deprecated(
-      "Constructing CloudFunctions is deprecated, use 'FirebaseFunctions.instance' or 'FirebaseFunctions.instanceFor' instead")
-  factory FirebaseFunctions({FirebaseApp app, String region}) {
-    return FirebaseFunctions.instanceFor(app: app, region: region);
-  }
-
   final String _region;
 
   String _origin;
@@ -71,12 +64,6 @@ class FirebaseFunctions extends FirebasePluginPlatform {
     assert(name.isNotEmpty);
     options ??= HttpsCallableOptions();
     return HttpsCallable._(_delegate.httpsCallable(_origin, name, options));
-  }
-
-  @Deprecated("Deprecated in favor of httpsCallable()")
-  // ignore: public_member_api_docs
-  HttpsCallable getHttpsCallable({@required String functionName}) {
-    return httpsCallable(functionName);
   }
 
   /// Changes this instance to point to a Cloud Functions emulator running locally.
@@ -98,23 +85,5 @@ class FirebaseFunctions extends FirebasePluginPlatform {
     }
 
     _origin = origin;
-  }
-}
-
-@Deprecated("Deprecated in favor of FirebaseFunctions")
-// ignore: public_member_api_docs
-class CloudFunctions extends FirebaseFunctions {
-  /// Returns an instance using the default [FirebaseApp].
-  static FirebaseFunctions get instance {
-    return FirebaseFunctions.instanceFor(
-      app: Firebase.app(),
-    );
-  }
-
-  // ignore: public_member_api_docs
-  @Deprecated(
-      "Constructing CloudFunctions is deprecated, use 'FirebaseFunctions.instance' or 'FirebaseFunctions.instanceFor' instead")
-  factory CloudFunctions({FirebaseApp app, String region}) {
-    return FirebaseFunctions.instanceFor(app: app, region: region);
   }
 }
