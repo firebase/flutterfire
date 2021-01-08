@@ -73,11 +73,12 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// Creates a new instance with a given [FirebaseApp].
   MethodChannelFirebaseAuth({/*required*/ FirebaseApp app})
       : super(appInstance: app) {
-    // Send a request to start listening to change listeners straight away
-    channel
-        .invokeMethod<void>('Auth#registerChangeListeners', <String, dynamic>{
-      'appName': app.name,
-    });
+    // TODO: open the stream connections now - even though this is not efficient.
+    // // Send a request to start listening to change listeners straight away
+    // channel
+    //     .invokeMethod<void>('Auth#registerChangeListeners', <String, dynamic>{
+    //   'appName': app.name,
+    // });
 
     // Create a app instance broadcast stream for native listener events
     _authStateChangesListeners[app.name] =
@@ -93,10 +94,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       Map<dynamic, dynamic> /*!*/ arguments = call.arguments;
 
       switch (call.method) {
-        case 'Auth#authStateChanges':
-          return _handleAuthStateChangesListener(arguments);
-        case 'Auth#idTokenChanges':
-          return _handleIdTokenChangesListener(arguments);
         case 'Auth#phoneVerificationCompleted':
           return _handlePhoneVerificationCompleted(arguments);
         case 'Auth#phoneVerificationFailed':
