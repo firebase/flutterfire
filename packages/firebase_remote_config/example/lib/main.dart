@@ -57,8 +57,9 @@ class WelcomeWidget extends AnimatedWidget {
 Future<RemoteConfig> setupRemoteConfig() async {
   await Firebase.initializeApp();
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
-  // Enable developer mode to relax fetch throttling
-  remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
+  // Allow a fetch every millisecond. Default is 12 hours.
+  remoteConfig
+      .setConfigSettings(RemoteConfigSettings(minimumFetchIntervalMillis: 1));
   remoteConfig.setDefaults(<String, dynamic>{
     'welcome': 'default welcome',
     'hello': 'default hello',

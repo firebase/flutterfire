@@ -12,8 +12,9 @@ void main() {
     setUp(() async {
       await Firebase.initializeApp();
       remoteConfig = await RemoteConfig.instance;
-      await remoteConfig
-          .setConfigSettings(RemoteConfigSettings(debugMode: true));
+      // Set our config to no minimum fetch interval so that settings change immediately
+      await remoteConfig.setConfigSettings(RemoteConfigSettings(
+          minimumFetchIntervalMillis: 0, fetchTimeoutMillis: 30 * 1000));
       await remoteConfig.setDefaults(<String, dynamic>{
         'welcome': 'default welcome',
         'hello': 'default hello',
@@ -25,14 +26,18 @@ void main() {
       expect(lastFetchTime.isBefore(DateTime.now()), true);
       await remoteConfig.fetch(expiration: const Duration(seconds: 0));
       expect(remoteConfig.lastFetchStatus, LastFetchStatus.success);
-      await remoteConfig.activateFetched();
+      final activated = await remoteConfig.activateFetched();
+      expect(activated, true);
 
+      // TODO should verify that our config settings actually took
       expect(remoteConfig.getString('welcome'), 'Earth, welcome! Hello!');
+      expect(remoteConfig.getValue('welcome').source, ValueSource.valueRemote);
+
       expect(remoteConfig.getString('hello'), 'default hello');
+      expect(remoteConfig.getValue('hello').source, ValueSource.valueDefault);
+
       expect(remoteConfig.getInt('nonexisting'), 0);
 
-      expect(remoteConfig.getValue('welcome').source, ValueSource.valueRemote);
-      expect(remoteConfig.getValue('hello').source, ValueSource.valueDefault);
       expect(
         remoteConfig.getValue('nonexisting').source,
         ValueSource.valueStatic,

@@ -48,8 +48,9 @@ class RemoteConfig extends ChangeNotifier {
         DateTime.fromMillisecondsSinceEpoch(properties['lastFetchTime']);
     instance._lastFetchStatus =
         _parseLastFetchStatus(properties['lastFetchStatus']);
-    final RemoteConfigSettings remoteConfigSettings =
-        RemoteConfigSettings(debugMode: properties['inDebugMode']);
+    final RemoteConfigSettings remoteConfigSettings = RemoteConfigSettings(
+        minimumFetchIntervalMillis: (properties['minimumFetchInterval'] * 1000),
+        fetchTimeoutMillis: (properties['fetchTimeout'] * 1000));
     instance._remoteConfigSettings = remoteConfigSettings;
     instance._parameters =
         _parseRemoteConfigParameters(parameters: properties['parameters']);
@@ -99,12 +100,14 @@ class RemoteConfig extends ChangeNotifier {
 
   /// Set the configuration settings for this [RemoteConfig] instance.
   ///
-  /// This can be used for enabling developer mode.
+  /// This can be used to set minimum fetch time and fetch timeout.
   Future<void> setConfigSettings(
       RemoteConfigSettings remoteConfigSettings) async {
     await channel
         .invokeMethod<void>('RemoteConfig#setConfigSettings', <String, dynamic>{
-      'debugMode': remoteConfigSettings.debugMode,
+      'minimumFetchInterval':
+          (remoteConfigSettings.minimumFetchIntervalMillis ~/ 1000),
+      'fetchTimeout': (remoteConfigSettings.fetchTimeoutMillis ~/ 1000)
     });
     _remoteConfigSettings = remoteConfigSettings;
   }

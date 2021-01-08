@@ -35,24 +35,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// then no crash reporting data is sent to Firebase.
   ///
   /// See [setCrashlyticsCollectionEnabled] for toggling collection status.
-  @Deprecated(
-      "enableInDevMode getter is deprecated, use 'isCrashlyticsCollectionEnabled' instead")
-  bool get enableInDevMode {
-    return _delegate.isCrashlyticsCollectionEnabled;
-  }
-
-  /// Whether the current Crashlytics instance is collecting reports. If false,
-  /// then no crash reporting data is sent to Firebase.
-  @Deprecated(
-      "enableInDevMode setter is deprecated, use 'setCrashlyticsCollectionEnabled(bool)' instead")
-  set enableInDevMode(bool enabled) {
-    _delegate.setCrashlyticsCollectionEnabled(enabled).then((value) => null);
-  }
-
-  /// Whether the current Crashlytics instance is collecting reports. If false,
-  /// then no crash reporting data is sent to Firebase.
-  ///
-  /// See [setCrashlyticsCollectionEnabled] for toggling collection status.
   bool get isCrashlyticsCollectionEnabled {
     return _delegate.isCrashlyticsCollectionEnabled;
   }
@@ -218,22 +200,4 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     assert(value is int || value is num || value is String || value is bool);
     return _delegate.setCustomKey(key, value.toString());
   }
-}
-
-/// Extends the [FirebaseCrashlytics] class to allow for deprecated usage of
-/// using [Crashlytics] directly.
-@Deprecated(
-    "Class Crashlytics is deprecated. Use 'FirebaseCrashlytics' instead.")
-class Crashlytics extends FirebaseCrashlytics {
-  // ignore: public_member_api_docs
-  @Deprecated(
-      "Constructing Crashlytics is deprecated, use 'FirebaseCrashlytics.instance' instead")
-  factory Crashlytics() {
-    return FirebaseCrashlytics.instance;
-  }
-
-  @Deprecated(
-      "Accessing Crashlytics.instance is deprecated, use 'FirebaseCrashlytics.instance' instead")
-  // ignore: public_member_api_docs
-  static FirebaseCrashlytics get instance => FirebaseCrashlytics.instance;
 }

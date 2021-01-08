@@ -58,18 +58,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
     return _firebaseAuthInstances[app.name];
   }
 
-  @Deprecated('Deprecated in favor of `FirebaseAuth.instanceFor`')
-  // ignore: public_member_api_docs
-  factory FirebaseAuth.fromApp(FirebaseApp app) {
-    return FirebaseAuth.instanceFor(app: app);
-  }
-
-  @Deprecated('Deprecated in favor of `authStateChanges`')
-  // ignore: public_member_api_docs
-  Stream<User /*?*/ > get onAuthStateChanged {
-    return authStateChanges();
-  }
-
   /// Returns the current [User] if they are currently signed-in, or `null` if
   /// not.
   ///
