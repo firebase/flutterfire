@@ -38,7 +38,6 @@ import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.auth.PhoneMultiFactorInfo;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
@@ -47,6 +46,8 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -55,7 +56,6 @@ import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -66,19 +66,18 @@ import java.util.concurrent.TimeUnit;
 public class FlutterFirebaseAuthPlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware {
 
+  private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_auth";
+
   // Stores the instances of native AuthCredentials by their hashCode
   static final HashMap<Integer, AuthCredential> authCredentials = new HashMap<>();
 
-  private static final HashMap<String, FirebaseAuth.AuthStateListener> authListeners =
-      new HashMap<>();
-  private static final HashMap<String, FirebaseAuth.IdTokenListener> idTokenListeners =
-      new HashMap<>();
   private static final HashMap<Integer, PhoneAuthProvider.ForceResendingToken>
       forceResendingTokens = new HashMap<>();
   private PluginRegistry.Registrar registrar;
   private MethodChannel channel;
   private Activity activity;
-  private static Boolean initialAuthState = true;
+
+  private final Map<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
 
   @SuppressWarnings("unused")
   public static void registerWith(PluginRegistry.Registrar registrar) {
@@ -105,9 +104,8 @@ public class FlutterFirebaseAuthPlugin
   }
 
   private void initInstance(BinaryMessenger messenger) {
-    String channelName = "plugins.flutter.io/firebase_auth";
-    registerPlugin(channelName, this);
-    channel = new MethodChannel(messenger, channelName);
+    registerPlugin(METHOD_CHANNEL_NAME, this);
+    channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
     channel.setMethodCallHandler(this);
   }
 
@@ -118,9 +116,16 @@ public class FlutterFirebaseAuthPlugin
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    removeEventListeners();
     channel.setMethodCallHandler(null);
     channel = null;
+
+    for (EventChannel eventChannel : streamHandlers.keySet()) {
+      StreamHandler streamHandler = streamHandlers.get(eventChannel);
+      streamHandler.onCancel(null);
+      eventChannel.setStreamHandler(null);
+    }
+
+    streamHandlers.clear();
   }
 
   @Override
@@ -141,35 +146,6 @@ public class FlutterFirebaseAuthPlugin
   @Override
   public void onDetachedFromActivity() {
     activity = null;
-  }
-
-  // Ensure any listeners are removed when the app
-  // is detached from the FlutterEngine
-  private void removeEventListeners() {
-    Iterator<?> authListenerIterator = authListeners.entrySet().iterator();
-
-    while (authListenerIterator.hasNext()) {
-      Map.Entry<?, ?> pair = (Map.Entry<?, ?>) authListenerIterator.next();
-      String appName = (String) pair.getKey();
-      FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
-      FirebaseAuth firebaseAuth = FirebaseAuth.getInstance(firebaseApp);
-      FirebaseAuth.AuthStateListener authListener =
-          (FirebaseAuth.AuthStateListener) pair.getValue();
-      firebaseAuth.removeAuthStateListener(authListener);
-      authListenerIterator.remove();
-    }
-
-    Iterator<?> idTokenListenerIterator = idTokenListeners.entrySet().iterator();
-
-    while (idTokenListenerIterator.hasNext()) {
-      Map.Entry<?, ?> pair = (Map.Entry<?, ?>) idTokenListenerIterator.next();
-      String appName = (String) pair.getKey();
-      FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
-      FirebaseAuth firebaseAuth = FirebaseAuth.getInstance(firebaseApp);
-      FirebaseAuth.IdTokenListener authListener = (FirebaseAuth.IdTokenListener) pair.getValue();
-      firebaseAuth.removeIdTokenListener(authListener);
-      idTokenListenerIterator.remove();
-    }
   }
 
   // Only access activity with this method.
@@ -360,7 +336,7 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @SuppressWarnings("ConstantConditions")
-  private Map<String, Object> parseFirebaseUser(FirebaseUser firebaseUser) {
+  static Map<String, Object> parseFirebaseUser(FirebaseUser firebaseUser) {
     if (firebaseUser == null) {
       return null;
     }
@@ -385,7 +361,7 @@ public class FlutterFirebaseAuthPlugin
     return output;
   }
 
-  private List<Map<String, Object>> parseUserInfoList(List<? extends UserInfo> userInfoList) {
+  private static List<Map<String, Object>> parseUserInfoList(List<? extends UserInfo> userInfoList) {
     List<Map<String, Object>> output = new ArrayList<>();
 
     for (UserInfo userInfo : userInfoList) {
@@ -398,7 +374,7 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @SuppressWarnings("ConstantConditions")
-  private Map<String, Object> parseUserInfo(@NonNull UserInfo userInfo) {
+  private static Map<String, Object> parseUserInfo(@NonNull UserInfo userInfo) {
     Map<String, Object> output = new HashMap<>();
 
     output.put(Constants.DISPLAY_NAME, userInfo.getDisplayName());
@@ -411,7 +387,7 @@ public class FlutterFirebaseAuthPlugin
     return output;
   }
 
-  private String parsePhotoUrl(Uri photoUri) {
+  private static String parsePhotoUrl(Uri photoUri) {
     if (photoUri == null) {
       return null;
     }
@@ -485,70 +461,6 @@ public class FlutterFirebaseAuthPlugin
     output.put(Constants.TOKEN, tokenResult.getToken());
 
     return output;
-  }
-
-  @SuppressWarnings("ConstantConditions")
-  private Task<Void> registerChangeListeners(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          String appName = (String) Objects.requireNonNull(arguments.get(Constants.APP_NAME));
-          FirebaseAuth firebaseAuth = getAuth(arguments);
-
-          FirebaseAuth.AuthStateListener authStateListener = authListeners.get(appName);
-          FirebaseAuth.IdTokenListener idTokenListener = idTokenListeners.get(appName);
-
-          Map<String, Object> event = new HashMap<>();
-          event.put(Constants.APP_NAME, appName);
-
-          if (authStateListener == null) {
-            FirebaseAuth.AuthStateListener newAuthStateListener =
-                auth -> {
-                  FirebaseUser user = auth.getCurrentUser();
-
-                  if (user == null) {
-                    event.put(Constants.USER, null);
-                  } else {
-                    event.put(Constants.USER, parseFirebaseUser(user));
-                  }
-
-                  if (initialAuthState) {
-                    initialAuthState = false;
-                  } else {
-                    channel.invokeMethod(
-                        "Auth#authStateChanges",
-                        event,
-                        getMethodChannelResultHandler("Auth#authStateChanges"));
-                  }
-                };
-
-            firebaseAuth.addAuthStateListener(newAuthStateListener);
-            authListeners.put(appName, newAuthStateListener);
-          }
-
-          if (idTokenListener == null) {
-            FirebaseAuth.IdTokenListener newIdTokenChangeListener =
-                auth -> {
-                  FirebaseUser user = auth.getCurrentUser();
-
-                  if (user == null) {
-                    event.put(Constants.USER, null);
-                  } else {
-                    event.put(Constants.USER, parseFirebaseUser(user));
-                  }
-
-                  channel.invokeMethod(
-                      "Auth#idTokenChanges",
-                      event,
-                      getMethodChannelResultHandler("Auth#idTokenChanges"));
-                };
-
-            firebaseAuth.addIdTokenListener(newIdTokenChangeListener);
-            idTokenListeners.put(appName, newIdTokenChangeListener);
-          }
-
-          return null;
-        });
   }
 
   private Task<Void> applyActionCode(Map<String, Object> arguments) {
@@ -1137,14 +1049,31 @@ public class FlutterFirebaseAuthPlugin
         });
   }
 
+
+
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Auth#registerChangeListeners":
-        methodCallTask = registerChangeListeners(call.arguments());
-        break;
+    case "Auth#registerIdTokenListener": {
+      final FirebaseAuth auth = getAuth(call.arguments());
+      final IdTokenChannelStreamHandler handler = new IdTokenChannelStreamHandler(auth);
+      final String name = METHOD_CHANNEL_NAME + "/id-token/" + auth.getApp().getName();
+      final EventChannel channel = new EventChannel(registrar.messenger(), name);
+      channel.setStreamHandler(handler);
+      streamHandlers.put(channel, handler);
+      result.success(name);
+    }
+    case "Auth#registerAuthStateListener": {
+      final FirebaseAuth auth = getAuth(call.arguments());
+      final AuthStateChannelStreamHandler handler = new AuthStateChannelStreamHandler(auth);
+      final String name = METHOD_CHANNEL_NAME + "/auth-state/" + auth.getApp().getName();
+      final EventChannel channel = new EventChannel(registrar.messenger(), name);
+      channel.setStreamHandler(handler);
+      streamHandlers.put(channel, handler);
+      result.success(name);
+    }
       case "Auth#applyActionCode":
         methodCallTask = applyActionCode(call.arguments());
         break;
@@ -1356,7 +1285,8 @@ public class FlutterFirebaseAuthPlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          removeEventListeners();
+          // TODO: not sure if this is applicable here.
+//          removeEventListeners();
           authCredentials.clear();
           forceResendingTokens.clear();
           return null;
