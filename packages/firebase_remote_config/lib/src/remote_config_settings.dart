@@ -6,13 +6,20 @@ part of firebase_remote_config;
 
 /// RemoteConfigSettings can be used to configure how Remote Config operates.
 class RemoteConfigSettings {
-  RemoteConfigSettings({this.debugMode = false});
+  RemoteConfigSettings(
+      {this.minimumFetchIntervalMillis = 43200000,
+      this.fetchTimeoutMillis = 60000});
 
-  /// Enable or disable developer mode for Remote Config.
+  /// Set the minimum fetch interval for Remote Config, in milliseconds
   ///
-  /// When set to true developer mode is enabled, when set to false developer
-  /// mode is disabled. When developer mode is enabled fetch throttling is
-  /// relaxed to allow many more fetch calls per hour to the remote server than
-  /// the 5 per hour that is enforced when developer mode is disabled.
-  final bool debugMode;
+  /// Indicates the default value in milliseconds to set for the minimum
+  /// interval that needs to elapse before a fetch request can again be made
+  /// to the Remote Config server. Defaults to 43200000 (Twelve hours).
+  final int minimumFetchIntervalMillis;
+
+  /// Set the fetch timeout for Remote Config, in milliseconds
+  ///
+  /// Indicates the default value in milliseconds to abandon a pending fetch
+  /// request made to the Remote Config server. Defaults to 60000 (One minute).
+  final int fetchTimeoutMillis;
 }

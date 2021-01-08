@@ -459,23 +459,10 @@ abstract class Settings {
 
   external set ssl(bool v);
 
-  @Deprecated(
-    'This setting will be removed in a future release. You should update '
-    'your code to expect Timestamp objects and stop using the '
-    'timestampsInSnapshots setting.',
-  )
-  external set timestampsInSnapshots(bool v);
-
   external factory Settings({
     int cacheSizeBytes,
     String host,
     bool ssl,
-    @Deprecated(
-      'This setting will be removed in a future release. You should update '
-      'your code to expect Timestamp objects and stop using the '
-      'timestampsInSnapshots setting.',
-    )
-        bool timestampsInSnapshots,
   });
 }
 

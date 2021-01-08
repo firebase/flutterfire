@@ -25,13 +25,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-rootProject.ext {
-  set('FlutterFire', [
-    FirebaseSDKVersion: '25.12.0'
-  ])
-}
-
-
 android {
     compileSdkVersion 29
 
