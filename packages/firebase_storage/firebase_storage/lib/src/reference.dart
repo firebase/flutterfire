@@ -12,12 +12,6 @@ class Reference {
   /// The storage service associated with this reference.
   final FirebaseStorage storage;
 
-  @Deprecated("Deprecated in favor of get.storage")
-  // ignore: public_member_api_docs
-  FirebaseStorage getStorage() {
-    return storage;
-  }
-
   Reference._(this.storage, this._delegate) {
     ReferencePlatform.verifyExtends(_delegate);
   }
@@ -25,31 +19,13 @@ class Reference {
   /// The name of the bucket containing this reference's object.
   String get bucket => _delegate.bucket;
 
-  @Deprecated("Deprecated in favor of get.bucket")
-  // ignore: public_member_api_docs
-  Future<String> getBucket() async {
-    return bucket;
-  }
-
   /// The full path of this object.
   String get fullPath => _delegate.fullPath;
-
-  @Deprecated("Deprecated in favor of get.fullPath")
-  // ignore: public_member_api_docs
-  Future<String> getPath() async {
-    return fullPath;
-  }
 
   /// The short name of this object, which is the last component of the full path.
   ///
   /// For example, if fullPath is 'full/path/image.png', name is 'image.png'.
   String get name => _delegate.name;
-
-  @Deprecated("Deprecated in favor of get.name")
-  // ignore: public_member_api_docs
-  Future<String> getName() async {
-    return name;
-  }
 
   /// A reference pointing to the parent location of this reference, or `null`
   /// if this reference is the root.
@@ -63,20 +39,8 @@ class Reference {
     return Reference._(storage, referenceParentPlatform);
   }
 
-  @Deprecated("Deprecated in favor of get.parent")
-  // ignore: public_member_api_docs
-  Reference getParent() {
-    return parent;
-  }
-
   /// A reference to the root of this reference's bucket.
   Reference get root => Reference._(storage, _delegate.root);
-
-  @Deprecated("Deprecated in favor of get.root")
-  // ignore: public_member_api_docs
-  Reference getRoot() {
-    return root;
-  }
 
   /// Returns a reference to a relative path from this reference.
   ///

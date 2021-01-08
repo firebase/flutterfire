@@ -20,10 +20,6 @@ class DocumentSnapshot {
   /// This document's given ID for this snapshot.
   String get id => _delegate.id;
 
-  @Deprecated("Deprecated in favor of `.id`")
-  // ignore: public_member_api_docs
-  String get documentID => id;
-
   /// Returns the [DocumentReference] of this snapshot.
   DocumentReference get reference => _firestore.doc(_delegate.reference.path);
 
