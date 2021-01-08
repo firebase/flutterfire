@@ -9,6 +9,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -20,7 +21,8 @@ void main() {
   /*late*/ FirebaseApp secondaryApp;
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
-  int mockTransactionHandleId = 0;
+  String mockTransactionId = 'TRANSACTION1';
+  String mockSnapshotInSyncId = 'ID1';
   final List<MethodCall> log = <MethodCall>[];
 
   setUpAll(() async {
@@ -49,15 +51,11 @@ void main() {
       log.add(call);
       switch (call.method) {
         case 'Transaction#create':
-          if (mockExceptionThrown) {
-            throw Exception();
-          } else if (mockPlatformExceptionThrown) {
-            throw PlatformException(code: 'UNKNOWN');
-          }
-          mockTransactionHandleId++;
-          return Future.delayed(Duration.zero);
-        case 'Firestore#addSnapshotsInSyncListener':
-        case 'Firestore#removeListener':
+          return Future.value(mockTransactionId);
+
+        case 'SnapshotsInSync#setup':
+          handleSnapshotsInSyncEventChannel(mockSnapshotInSyncId);
+          return Future.value(mockSnapshotInSyncId);
         case 'Firestore#waitForPendingWrites':
         case 'Firestore#terminate':
         case 'Firestore#settings':
@@ -107,30 +105,6 @@ void main() {
         expect(test1.app, equals(Firebase.app()));
         expect(test2.app, equals(secondaryApp));
       });
-    });
-
-    test('nextMethodChannelHandleId', () {
-      final handleId = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
-
-      expect(MethodChannelFirebaseFirestore.nextMethodChannelHandleId,
-          handleId + 1);
-
-      nextMockHandleId;
-      nextMockHandleId;
-    });
-
-    test('queryObservers', () {
-      expect(MethodChannelFirebaseFirestore.queryObservers,
-          isInstanceOf<Map<int, StreamController<QuerySnapshotPlatform>>>());
-    });
-
-    test('documentObservers', () {
-      expect(MethodChannelFirebaseFirestore.documentObservers,
-          isInstanceOf<Map<int, StreamController<DocumentSnapshotPlatform>>>());
-    });
-    test('snapshotInSyncObservers', () {
-      expect(MethodChannelFirebaseFirestore.snapshotInSyncObservers,
-          isInstanceOf<Map<int, StreamController<void>>>());
     });
 
     group('delegateFor()', () {
@@ -247,10 +221,6 @@ void main() {
     });
 
     group('snapshotsInSync()', () {
-      int handle;
-      setUp(() {
-        handle = nextMockHandleId;
-      });
       test('returns a [Stream]', () {
         final stream = firestore.snapshotsInSync();
 
@@ -260,86 +230,106 @@ void main() {
       test('onListen and onCancel invokes native methods with correct args',
           () async {
         final Stream<void> stream = firestore.snapshotsInSync();
-        final StreamSubscription<QuerySnapshotPlatform> subscription =
-            await stream.listen((event) {});
+        final Completer<void> receivedSync = Completer<void>();
 
+        final StreamSubscription<void> subscription =
+            await stream.listen((event) {
+          receivedSync.complete();
+        });
+
+        await receivedSync.future;
         await subscription.cancel();
         await Future<void>.delayed(Duration.zero);
 
         expect(
           log,
           equals(<Matcher>[
-            isMethodCall(
-              'Firestore#addSnapshotsInSyncListener',
-              arguments: <String, dynamic>{
-                'handle': handle,
-                'firestore': firestore,
-              },
-            ),
-            isMethodCall(
-              'Firestore#removeListener',
-              arguments: <String, dynamic>{'handle': handle},
-            ),
+            isMethodCall('SnapshotsInSync#setup', arguments: null),
           ]),
         );
       });
     });
 
     group('runTransaction()', () {
-      /*late*/ TransactionHandler transactionHandler;
-      int handleId;
-      setUp(() {
-        handleId = mockTransactionHandleId;
+      TransactionHandler transactionHandler = (transaction) {
+        return null;
+      };
+
+      group('common', () {
+        setUp(() {
+          handleTransactionEventChannel(
+            mockTransactionId,
+            app: FirebaseAppPlatform(
+                Firebase.app().name, Firebase.app().options),
+            throwException: false,
+          );
+        });
+
+        test('throws [AssertionError] for timeout more than 0 ms', () {
+          expect(
+              firestore.runTransaction(transactionHandler,
+                  timeout: Duration.zero),
+              throwsAssertionError);
+        });
+
+        test('sets timeout to a default value', () async {
+          final transactionFuture =
+              firestore.runTransaction(transactionHandler);
+          expect(transactionFuture, isInstanceOf<Future>());
+        });
       });
 
-      test('throws [AssertionError] for timeout more than 0 ms', () {
-        expect(
-            firestore.runTransaction(transactionHandler,
-                timeout: Duration.zero),
-            throwsAssertionError);
+      group('successful', () {
+        setUp(() {
+          handleTransactionEventChannel(
+            mockTransactionId,
+            app: FirebaseAppPlatform(
+                Firebase.app().name, Firebase.app().options),
+            throwException: false,
+          );
+        });
+
+        test('returns result of a successful transaction', () async {
+          await firestore.runTransaction((TransactionPlatform tx) async {},
+              timeout: const Duration(seconds: 3));
+
+          expect(log, <Matcher>[
+            isMethodCall('Transaction#create', arguments: null),
+            isMethodCall('Transaction#storeResult',
+                arguments: <String, dynamic>{
+                  'transactionId': 'TRANSACTION1',
+                  'result': {
+                    'type': 'SUCCESS',
+                    'commands': <String>[],
+                  }
+                }),
+          ]);
+        });
       });
 
-      test('sets timeout to a default value', () async {
-        final transactionFuture = firestore.runTransaction(transactionHandler);
-        expect(transactionFuture, isInstanceOf<Future>());
-      });
+      group('errors', () {
+        setUp(() {
+          handleTransactionEventChannel(
+            mockTransactionId,
+            app: FirebaseAppPlatform(
+                Firebase.app().name, Firebase.app().options),
+            throwException: true,
+          );
+        });
 
-      test('returns result of a successful transaction', () async {
-        await firestore.runTransaction((TransactionPlatform tx) async {},
-            timeout: const Duration(seconds: 3));
-
-        expect(log, <Matcher>[
-          isMethodCall('Transaction#create', arguments: <String, dynamic>{
-            'firestore': firestore,
-            'transactionId': handleId,
-            'timeout': 3000
-          }),
-        ]);
-      });
-
-      test(
-          'catches [PlatformException] from Transaction#create and throws a [FirebaseException]',
-          () async {
-        mockPlatformExceptionThrown = true;
-        try {
-          await firestore.runTransaction(transactionHandler);
-        } on FirebaseException catch (_) {
-          return;
-        } catch (_) {
-          fail("Transaction threw invalid exeption");
-        }
-      });
-
-      test('catches and throws a [Exception] from Transaction#create',
-          () async {
-        mockExceptionThrown = true;
-        try {
-          await firestore.runTransaction(transactionHandler);
-        } on Exception catch (_) {
-          return;
-        } catch (_) {
-          fail("Transaction threw invalid exeption");
-        }
+        test(
+            'catches exceptions thrown by handler and throws [FirebaseException]',
+            () async {
+          mockPlatformExceptionThrown = true;
+          try {
+            await firestore.runTransaction(transactionHandler);
+            fail('Should have thrown exception');
+          } on FirebaseException catch (_) {
+            return;
+          } catch (_) {
+            fail("Transaction threw invalid exeption");
+          }
+        });
       });
     });
 

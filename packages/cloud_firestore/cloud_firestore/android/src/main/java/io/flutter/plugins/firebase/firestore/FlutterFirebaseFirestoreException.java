@@ -8,7 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class FlutterFirebaseFirestoreException extends Exception {
+public class FlutterFirebaseFirestoreException extends Exception {
   private static final String ERROR_ABORTED =
       "The operation was aborted, typically due to a concurrency issue like transaction aborts, etc.";
   private static final String ERROR_ALREADY_EXISTS =
@@ -42,7 +42,8 @@ class FlutterFirebaseFirestoreException extends Exception {
   private final String code;
   private final String message;
 
-  FlutterFirebaseFirestoreException(FirebaseFirestoreException nativeException, Throwable cause) {
+  public FlutterFirebaseFirestoreException(
+      FirebaseFirestoreException nativeException, Throwable cause) {
     super(nativeException != null ? nativeException.getMessage() : "", cause);
 
     String code = null;
