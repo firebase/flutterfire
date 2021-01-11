@@ -1,3 +1,7 @@
+## 0.2.1+2
+
+ - Update a dependency to the latest release.
+
 ## 0.2.1+1
 
  - **REFACTOR**: ignore typedefs.

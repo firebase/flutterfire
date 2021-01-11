@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FLTTransactionStreamHandler : NSObject <FlutterStreamHandler>
 
 - (instancetype)initWithId:(NSString *)transactionId
-                   started:(void (^)(FIRTransaction*))startedListener
+                   started:(void (^)(FIRTransaction *))startedListener
                      ended:(void (^)(void))endedListener;
 - (void)receiveTransactionResponse:(NSDictionary *)response;
 
