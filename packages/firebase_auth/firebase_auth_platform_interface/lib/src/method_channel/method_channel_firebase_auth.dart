@@ -34,17 +34,14 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     'plugins.flutter.io/firebase_auth',
   );
 
-  /// Event channel exclusively for receiving ID token changes.
-  static const EventChannel idTokenEventChannel = EventChannel(
-    'plugins.flutter.io/firebase_auth/id_token',
-  );
-
   static Map<String, MethodChannelFirebaseAuth>
       _methodChannelFirebaseAuthInstances =
       <String, MethodChannelFirebaseAuth>{};
 
   static Map<String, StreamController<UserPlatform>>
       _authStateChangesListeners = <String, StreamController<UserPlatform>>{};
+
+  StreamSubscription<UserPlatform> _idTokenSubscription;
 
   static Map<String, StreamController<UserPlatform>> _idTokenChangesListeners =
       <String, StreamController<UserPlatform>>{};
@@ -73,12 +70,16 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// Creates a new instance with a given [FirebaseApp].
   MethodChannelFirebaseAuth({/*required*/ FirebaseApp app})
       : super(appInstance: app) {
-    // TODO: open the stream connections now - even though this is not efficient.
-    // // Send a request to start listening to change listeners straight away
-    // channel
-    //     .invokeMethod<void>('Auth#registerChangeListeners', <String, dynamic>{
-    //   'appName': app.name,
-    // });
+    channel.invokeMethod<String>('Auth#registerIdTokenListener', {
+      'appName': app.name,
+    }).then((channelName) {
+      final events = EventChannel(channelName);
+      _idTokenSubscription = events.receiveBroadcastStream().listen(
+        (arguments) {
+          _handleIdTokenChangesListener(arguments);
+        },
+      );
+    });
 
     // Create a app instance broadcast stream for native listener events
     _authStateChangesListeners[app.name] =
@@ -345,12 +346,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Stream<UserPlatform> authStateChanges() =>
       _authStateChangesListeners[app.name].stream;
 
-  Stream<UserPlatform> _idTokenChanges;
-
   @override
-  Stream<UserPlatform> idTokenChanges() {
-    return _idTokenChanges ??= idTokenEventChannel.receiveBroadcastStream();
-  }
+  Stream<UserPlatform> idTokenChanges() =>
+      _idTokenChangesListeners[app.name].stream;
 
   @override
   Stream<UserPlatform> userChanges() => _userChangesListeners[app.name].stream;
