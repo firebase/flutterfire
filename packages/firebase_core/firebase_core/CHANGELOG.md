@@ -1,3 +1,13 @@
+## 0.6.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: bump firebase-android-sdk to v26.2.0.
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+ - **CHORE**: harmonize dependencies and version handling.
+
 ## 0.5.3
 
  - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
@@ -118,7 +128,7 @@
 
 ## 0.4.1+4
 
-* Remove visibleForTesting annotation from FirebaseApp constructor. 
+* Remove visibleForTesting annotation from FirebaseApp constructor.
 
 ## 0.4.1+3
 

@@ -1,3 +1,12 @@
+## 0.19.0
+
+> Note: This release has breaking changes.
+
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
 ## 0.18.4+1
 
  - Update a dependency to the latest release.

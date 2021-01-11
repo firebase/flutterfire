@@ -1,3 +1,15 @@
+## 0.15.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Add missing sdk version constraints inside example pubspec.yaml (#4604).
+ - **FIX**: ensure web FieldValue types are converted (#4247).
+ - **FEAT**: Move Snapshot handling into a EventChannel (#4209).
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+ - **CHORE**: harmonize dependencies and version handling.
+
 ## 0.14.4
 
  - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
