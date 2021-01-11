@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.dependency 'firebase_core'
   s.dependency 'Google-Mobile-Ads-SDK'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.static_framework = true
 

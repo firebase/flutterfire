@@ -5,8 +5,6 @@
 package io.flutter.plugins.firebase.firestore;
 
 import android.app.Activity;
-import android.util.Log;
-import android.util.SparseArray;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -15,18 +13,18 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Source;
+import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -34,22 +32,44 @@ import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
+import io.flutter.plugins.firebase.firestore.streamhandler.DocumentSnapshotsStreamHandler;
+import io.flutter.plugins.firebase.firestore.streamhandler.OnTransactionResultListener;
+import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamHandler;
+import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
+import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
+import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class FlutterFirebaseFirestorePlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware {
+
   protected static final WeakHashMap<String, WeakReference<FirebaseFirestore>>
       firestoreInstanceCache = new WeakHashMap<>();
-  private static final SparseArray<ListenerRegistration> listenerRegistrations =
-      new SparseArray<>();
 
+  public static final String DEFAULT_ERROR_CODE = "firebase_firestore";
+
+  private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_firestore";
+
+  final StandardMethodCodec MESSAGE_CODEC =
+      new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE);
+
+  private BinaryMessenger binaryMessenger;
   private MethodChannel channel;
-  private Activity activity;
+
+  private final AtomicReference<Activity> activity = new AtomicReference<>(null);
+
+  private final Map<String, Transaction> transactions = new HashMap<>();
+  private final Map<String, EventChannel> eventChannels = new HashMap<>();
+  private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
+  private final Map<String, OnTransactionResultListener> transactionHandlers = new HashMap<>();
 
   protected static FirebaseFirestore getCachedFirebaseFirestoreInstanceForKey(String key) {
     synchronized (firestoreInstanceCache) {
@@ -84,7 +104,7 @@ public class FlutterFirebaseFirestorePlugin
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
     FlutterFirebaseFirestorePlugin instance = new FlutterFirebaseFirestorePlugin();
-    instance.activity = registrar.activity();
+    instance.activity.set(registrar.activity());
     instance.initInstance(registrar.messenger());
   }
 
@@ -95,9 +115,22 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    removeEventListeners();
     channel.setMethodCallHandler(null);
     channel = null;
+
+    for (String identifier : eventChannels.keySet()) {
+      eventChannels.get(identifier).setStreamHandler(null);
+    }
+    eventChannels.clear();
+
+    for (String identifier : streamHandlers.keySet()) {
+      streamHandlers.get(identifier).onCancel(null);
+    }
+    streamHandlers.clear();
+
+    transactionHandlers.clear();
+
+    binaryMessenger = null;
   }
 
   @Override
@@ -122,25 +155,11 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   private void attachToActivity(ActivityPluginBinding activityPluginBinding) {
-    activity = activityPluginBinding.getActivity();
+    activity.set(activityPluginBinding.getActivity());
   }
 
   private void detachToActivity() {
-    activity = null;
-  }
-
-  // Ensure any Firestore listeners are removed when the app
-  // is detached from the FlutterEngine
-  private void removeEventListeners() {
-    for (int i = 0; i < listenerRegistrations.size(); i++) {
-      int key = listenerRegistrations.keyAt(i);
-      ListenerRegistration listenerRegistration = listenerRegistrations.get(key);
-
-      if (listenerRegistration != null) {
-        listenerRegistration.remove();
-      }
-    }
-    listenerRegistrations.clear();
+    activity.set(null);
   }
 
   private Task<Void> disableNetwork(Map<String, Object> arguments) {
@@ -163,71 +182,32 @@ public class FlutterFirebaseFirestorePlugin
         });
   }
 
-  private Task<Integer> addSnapshotsInSyncListener(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FirebaseFirestore firestore =
-              (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-
-          Runnable snapshotsInSyncRunnable =
-              () -> {
-                Map<String, Integer> data = new HashMap<>();
-                data.put("handle", handle);
-                activity.runOnUiThread(
-                    () -> channel.invokeMethod("Firestore#snapshotsInSync", data));
-              };
-
-          listenerRegistrations.put(
-              handle, firestore.addSnapshotsInSyncListener(snapshotsInSyncRunnable));
-
-          return handle;
-        });
-  }
-
-  private Task<Object> transactionCreate(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          FirebaseFirestore firestore =
-              (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-          int transactionId = (int) Objects.requireNonNull(arguments.get("transactionId"));
-
-          Object value = arguments.get("timeout");
-          Long timeout;
-
-          if (value instanceof Long) {
-            timeout = (Long) value;
-          } else if (value instanceof Integer) {
-            timeout = Long.valueOf((Integer) value);
-          } else {
-            timeout = 5000L;
-          }
-
-          FlutterFirebaseFirestoreTransactionResult transactionResult =
-              Tasks.await(
-                  new FlutterFirebaseFirestoreTransactionHandler(channel, activity, transactionId)
-                      .create(firestore, timeout));
-
-          FlutterFirebaseFirestoreTransactionHandler.dispose(transactionId);
-
-          if (transactionResult.exception != null) {
-            throw transactionResult.exception;
-          } else {
-            return null;
-          }
-        });
-  }
-
   private Task<DocumentSnapshot> transactionGet(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
           DocumentReference documentReference = (DocumentReference) arguments.get("reference");
-          return FlutterFirebaseFirestoreTransactionHandler.getDocument(
-              (int) Objects.requireNonNull(arguments.get("transactionId")), documentReference);
+          String transactionId = (String) Objects.requireNonNull(arguments.get("transactionId"));
+
+          Transaction transaction = transactions.get(transactionId);
+
+          if (transaction == null) {
+            throw new Exception(
+                "Transaction.getDocument(): No transaction handler exists for ID: "
+                    + transactionId);
+          }
+
+          return transaction.get(documentReference);
         });
+  }
+
+  private void transactionStoreResult(Map<String, Object> arguments) {
+    String transactionId = (String) Objects.requireNonNull(arguments.get("transactionId"));
+    @SuppressWarnings("unchecked")
+    Map<String, Object> result =
+        (Map<String, Object>) Objects.requireNonNull(arguments.get("result"));
+
+    transactionHandlers.get(transactionId).receiveTransactionResponse(result);
   }
 
   private Task<Void> batchCommit(Map<String, Object> arguments) {
@@ -285,53 +265,6 @@ public class FlutterFirebaseFirestorePlugin
         });
   }
 
-  private Task<Void> queryAddSnapshotListener(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-
-          MetadataChanges metadataChanges =
-              (Boolean) Objects.requireNonNull(arguments.get("includeMetadataChanges"))
-                  ? MetadataChanges.INCLUDE
-                  : MetadataChanges.EXCLUDE;
-
-          Query query = (Query) arguments.get("query");
-
-          if (query == null) {
-            throw new IllegalArgumentException(
-                "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.");
-          }
-
-          ListenerRegistration listenerRegistration =
-              query.addSnapshotListener(
-                  metadataChanges,
-                  (querySnapshot, exception) -> {
-                    Map<String, Object> querySnapshotMap = new HashMap<>();
-
-                    querySnapshotMap.put("handle", handle);
-
-                    if (exception != null) {
-                      Map<String, Object> exceptionMap = new HashMap<>();
-                      FlutterFirebaseFirestoreException firestoreException =
-                          new FlutterFirebaseFirestoreException(exception, exception.getCause());
-                      exceptionMap.put("code", firestoreException.getCode());
-                      exceptionMap.put("message", firestoreException.getMessage());
-                      querySnapshotMap.put("error", exceptionMap);
-
-                      channel.invokeMethod("QuerySnapshot#error", querySnapshotMap);
-                    } else {
-                      //noinspection ConstantConditions
-                      querySnapshotMap.put("snapshot", querySnapshot);
-                      channel.invokeMethod("QuerySnapshot#event", querySnapshotMap);
-                    }
-                  });
-
-          listenerRegistrations.put(handle, listenerRegistration);
-          return null;
-        });
-  }
-
   private Task<QuerySnapshot> queryGet(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -345,50 +278,6 @@ public class FlutterFirebaseFirestorePlugin
           }
 
           return Tasks.await(query.get(source));
-        });
-  }
-
-  @SuppressWarnings("ConstantConditions")
-  private Task<Void> documentAddSnapshotListener(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-
-          MetadataChanges metadataChanges =
-              (Boolean) Objects.requireNonNull(arguments.get("includeMetadataChanges"))
-                  ? MetadataChanges.INCLUDE
-                  : MetadataChanges.EXCLUDE;
-
-          DocumentReference documentReference =
-              (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
-
-          ListenerRegistration listenerRegistration =
-              documentReference.addSnapshotListener(
-                  metadataChanges,
-                  (documentSnapshot, exception) -> {
-                    Map<String, Object> eventMap = new HashMap<>();
-
-                    eventMap.put("handle", handle);
-
-                    if (exception != null) {
-                      Map<String, Object> exceptionMap = new HashMap<>();
-                      FlutterFirebaseFirestoreException firestoreException =
-                          new FlutterFirebaseFirestoreException(exception, exception.getCause());
-
-                      exceptionMap.put("code", firestoreException.getCode());
-                      exceptionMap.put("message", firestoreException.getMessage());
-                      eventMap.put("error", exceptionMap);
-                      channel.invokeMethod("DocumentSnapshot#error", eventMap);
-                    } else {
-                      eventMap.put("snapshot", documentSnapshot);
-                      channel.invokeMethod("DocumentSnapshot#event", eventMap);
-                    }
-                  });
-
-          listenerRegistrations.put(handle, listenerRegistration);
-
-          return null;
         });
   }
 
@@ -495,41 +384,51 @@ public class FlutterFirebaseFirestorePlugin
     Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Firestore#removeListener":
-        int handle = Objects.requireNonNull(call.argument("handle"));
-        if (listenerRegistrations.get(handle) != null) {
-          listenerRegistrations.get(handle).remove();
-          listenerRegistrations.remove(handle);
-        }
-        result.success(null);
-        return;
       case "Firestore#disableNetwork":
         methodCallTask = disableNetwork(call.arguments());
         break;
       case "Firestore#enableNetwork":
         methodCallTask = enableNetwork(call.arguments());
         break;
-      case "Firestore#addSnapshotsInSyncListener":
-        methodCallTask = addSnapshotsInSyncListener(call.arguments());
-        break;
-      case "Transaction#create":
-        methodCallTask = transactionCreate(call.arguments());
-        break;
       case "Transaction#get":
         methodCallTask = transactionGet(call.arguments());
         break;
+      case "Transaction#create":
+        final String transactionId = UUID.randomUUID().toString().toLowerCase(Locale.US);
+        final TransactionStreamHandler handler =
+            new TransactionStreamHandler(
+                activity, transaction -> transactions.put(transactionId, transaction));
+
+        registerEventChannel(METHOD_CHANNEL_NAME + "/transaction", transactionId, handler);
+        transactionHandlers.put(transactionId, handler);
+        result.success(transactionId);
+        return;
+      case "Transaction#storeResult":
+        transactionStoreResult(call.arguments());
+        result.success(null);
+        return;
       case "WriteBatch#commit":
         methodCallTask = batchCommit(call.arguments());
-        break;
-      case "Query#addSnapshotListener":
-        methodCallTask = queryAddSnapshotListener(call.arguments());
         break;
       case "Query#get":
         methodCallTask = queryGet(call.arguments());
         break;
-      case "DocumentReference#addSnapshotListener":
-        methodCallTask = documentAddSnapshotListener(call.arguments());
-        break;
+      case "Query#snapshots":
+        result.success(
+            registerEventChannel(
+                METHOD_CHANNEL_NAME + "/query", new QuerySnapshotsStreamHandler()));
+        return;
+      case "DocumentReference#snapshots":
+        result.success(
+            registerEventChannel(
+                METHOD_CHANNEL_NAME + "/document", new DocumentSnapshotsStreamHandler()));
+        return;
+      case "SnapshotsInSync#setup":
+        result.success(
+            registerEventChannel(
+                METHOD_CHANNEL_NAME + "/snapshotsInSync", new SnapshotsInSyncStreamHandler()));
+        return;
+
       case "DocumentReference#get":
         methodCallTask = documentGet(call.arguments());
         break;
@@ -562,16 +461,9 @@ public class FlutterFirebaseFirestorePlugin
             result.success(task.getResult());
           } else {
             Exception exception = task.getException();
-            Map<String, String> exceptionDetails = getExceptionDetails(exception);
-            if (exceptionDetails.containsKey("code")
-                && Objects.requireNonNull(exceptionDetails.get("code")).equals("unknown")) {
-              Log.e(
-                  "FLTFirebaseFirestore",
-                  "An unknown error occurred calling method " + call.method,
-                  exception);
-            }
+            Map<String, String> exceptionDetails = ExceptionConverter.createDetails(exception);
             result.error(
-                "firebase_firestore",
+                DEFAULT_ERROR_CODE,
                 exception != null ? exception.getMessage() : null,
                 exceptionDetails);
           }
@@ -579,46 +471,12 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   private void initInstance(BinaryMessenger messenger) {
-    String channelName = "plugins.flutter.io/firebase_firestore";
-    channel =
-        new MethodChannel(
-            messenger,
-            "plugins.flutter.io/firebase_firestore",
-            new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE));
+    binaryMessenger = messenger;
 
+    channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME, MESSAGE_CODEC);
     channel.setMethodCallHandler(this);
-    FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
-  }
 
-  private Map<String, String> getExceptionDetails(Exception exception) {
-    Map<String, String> details = new HashMap<>();
-
-    if (exception == null) {
-      return details;
-    }
-
-    FlutterFirebaseFirestoreException firestoreException = null;
-
-    if (exception instanceof FirebaseFirestoreException) {
-      firestoreException =
-          new FlutterFirebaseFirestoreException(
-              (FirebaseFirestoreException) exception, exception.getCause());
-    } else if (exception.getCause() != null
-        && exception.getCause() instanceof FirebaseFirestoreException) {
-      firestoreException =
-          new FlutterFirebaseFirestoreException(
-              (FirebaseFirestoreException) exception.getCause(),
-              exception.getCause().getCause() != null
-                  ? exception.getCause().getCause()
-                  : exception.getCause());
-    }
-
-    if (firestoreException != null) {
-      details.put("code", firestoreException.getCode());
-      details.put("message", firestoreException.getMessage());
-    }
-
-    return details;
+    FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this);
   }
 
   private Source getSource(Map<String, Object> arguments) {
@@ -644,7 +502,6 @@ public class FlutterFirebaseFirestorePlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          removeEventListeners();
           // Context is ignored by API so we don't send it over even though annotated non-null.
 
           for (FirebaseApp app : FirebaseApp.getApps(null)) {
@@ -655,5 +512,47 @@ public class FlutterFirebaseFirestorePlugin
           }
           return null;
         });
+  }
+
+  /**
+   * Registers a unique event channel based on a channel prefix.
+   *
+   * <p>Once registered, the plugin will take care of removing the stream handler and cleaning up,
+   * if the engine is detached.
+   *
+   * <p>This function generates a random ID.
+   *
+   * @param prefix Channel prefix onto which the unique ID will be appended on. The convention is
+   *     "namespace/component" whereas the last / is added internally.
+   * @param handler The handler object for responding to channel events and submitting data.
+   * @return The generated identifier.
+   * @see #registerEventChannel(String, String, StreamHandler)
+   */
+  private String registerEventChannel(String prefix, StreamHandler handler) {
+    String identifier = UUID.randomUUID().toString().toLowerCase(Locale.US);
+    return registerEventChannel(prefix, identifier, handler);
+  }
+
+  /**
+   * Registers a unique event channel based on a channel prefix.
+   *
+   * <p>Once registered, the plugin will take care of removing the stream handler and cleaning up,
+   * if the engine is detached.
+   *
+   * @param prefix Channel prefix onto which the unique ID will be appended on. The convention is
+   *     "namespace/component" whereas the last / is added internally.
+   * @param identifier A identifier which will be appended to the prefix.
+   * @param handler The handler object for responding to channel events and submitting data.
+   * @return The passed identifier.
+   */
+  private String registerEventChannel(String prefix, String identifier, StreamHandler handler) {
+    final String channelName = prefix + "/" + identifier;
+
+    EventChannel channel = new EventChannel(binaryMessenger, channelName, MESSAGE_CODEC);
+    channel.setStreamHandler(handler);
+    eventChannels.put(identifier, channel);
+    streamHandlers.put(identifier, handler);
+
+    return identifier;
   }
 }

@@ -7,8 +7,9 @@ package io.flutter.plugins.firebase.firestore;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-class FlutterFirebaseFirestoreTransactionResult {
-  final @Nullable Exception exception;
+public class FlutterFirebaseFirestoreTransactionResult {
+
+  public final @Nullable Exception exception;
 
   private FlutterFirebaseFirestoreTransactionResult(@NonNull Exception failureException) {
     exception = failureException;
@@ -18,11 +19,11 @@ class FlutterFirebaseFirestoreTransactionResult {
     exception = null;
   }
 
-  static FlutterFirebaseFirestoreTransactionResult failed(@NonNull Exception exception) {
+  public static FlutterFirebaseFirestoreTransactionResult failed(@NonNull Exception exception) {
     return new FlutterFirebaseFirestoreTransactionResult(exception);
   }
 
-  static FlutterFirebaseFirestoreTransactionResult complete() {
+  public static FlutterFirebaseFirestoreTransactionResult complete() {
     return new FlutterFirebaseFirestoreTransactionResult();
   }
 }

@@ -86,12 +86,6 @@ class GithubAuthProvider extends AuthProvider {
       accessToken,
     );
   }
-
-  @Deprecated('Deprecated in favor of `GithubAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential(String token) {
-    return GithubAuthProvider.credential(token);
-  }
 }
 
 /// The auth credential returned from calling
