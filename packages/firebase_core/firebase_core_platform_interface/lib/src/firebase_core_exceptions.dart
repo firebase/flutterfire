@@ -41,19 +41,19 @@ FirebaseException coreNotInitialized() {
     message =
         '''Firebase has not been correctly initialized. Have you added the Firebase import scripts to your index.html file? 
     
-    View the Web Installation documentation for more information: https://firebaseextended.github.io/flutterfire/docs/installation/web
+    View the Web Installation documentation for more information: https://firebase.flutter.dev/docs/installation/web
     ''';
   } else if (defaultTargetPlatform == TargetPlatform.android) {
     message =
         '''Firebase has not been correctly initialized. Have you added the "google-services.json" file to the project? 
     
-    View the Android Installation documentation for more information: https://firebaseextended.github.io/flutterfire/docs/installation/android
+    View the Android Installation documentation for more information: https://firebase.flutter.dev/docs/installation/android
     ''';
   } else if (defaultTargetPlatform == TargetPlatform.iOS) {
     message =
         '''Firebase has not been correctly initialized. Have you added the "GoogleService-Info.plist" file to the project? 
     
-    View the iOS Installation documentation for more information: https://firebaseextended.github.io/flutterfire/docs/installation/ios
+    View the iOS Installation documentation for more information: https://firebase.flutter.dev/docs/installation/ios
     ''';
   } else {
     message =
