@@ -15,7 +15,7 @@ void main() {
   const String kMockEmail = 'test@example.com';
 
   final String kMockPhoneNumber = TEST_PHONE_NUMBER;
-  final Map<String, dynamic> kMockData = <String, dynamic>{
+  final Map<String, String?> kMockData = <String, String?>{
     'providerId': kMockProviderId,
     'uid': kMockUid,
     'displayName': kMockDisplayName,
@@ -40,8 +40,16 @@ void main() {
     });
 
     test('toString()', () {
-      expect(userInfo.toString(),
-          '$UserInfo(displayName: $kMockDisplayName, email: $kMockEmail, phoneNumber: $kMockPhoneNumber, photoURL: $kMockPhotoURL, providerId: $kMockProviderId, uid: $kMockUid)');
+      expect(
+        userInfo.toString(),
+        '$UserInfo('
+        'displayName: $kMockDisplayName, '
+        'email: $kMockEmail, '
+        'phoneNumber: $kMockPhoneNumber, '
+        'photoURL: $kMockPhotoURL, '
+        'providerId: $kMockProviderId, '
+        'uid: $kMockUid)',
+      );
     });
   });
 }

@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  /*late*/ TestGoogleAuthProvider googleAuthProvider;
+  late TestGoogleAuthProvider googleAuthProvider;
   final String kMockProviderId = 'google.com';
   setUpAll(() {
     googleAuthProvider = TestGoogleAuthProvider();
@@ -47,10 +47,6 @@ void main() {
         expect(result.scopes.length, 1);
         expect(result.scopes[0], equals(kMockScope));
       });
-
-      test('throws [AssertionError] when scope is null', () {
-        expect(() => googleAuthProvider.addScope(null), throwsAssertionError);
-      });
     });
 
     group('setCustomParameters()', () {
@@ -63,11 +59,6 @@ void main() {
         expect(result, isA<GoogleAuthProvider>());
         expect(result.parameters['login_hint'], isA<String>());
         expect(result.parameters['login_hint'], equals('user@example.com'));
-      });
-
-      test('throws [AssertionError] when customOAuthParameters is null', () {
-        expect(() => googleAuthProvider.setCustomParameters(null),
-            throwsAssertionError);
       });
     });
 

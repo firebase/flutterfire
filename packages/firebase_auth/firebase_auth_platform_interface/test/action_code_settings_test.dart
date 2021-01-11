@@ -39,9 +39,6 @@ void main() {
         expect(actionCodeSettings.androidInstallApp, equals(kMockInstallApp));
         expect(actionCodeSettings.iOSBundleId, equals(kMockBundleId));
       });
-      test('throws [AssertionError] when url is null', () {
-        expect(() => ActionCodeSettings(url: null), throwsAssertionError);
-      });
 
       group('asMap', () {
         test('returns the current instance as a [Map]', () {

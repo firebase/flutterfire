@@ -8,14 +8,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../mock.dart';
+import '../providers_tests/email_auth_test.dart';
 
 void main() {
   setupFirebaseAuthMocks();
 
-  /*late*/ TestFirebaseAuthPlatform firebaseAuthPlatform;
+  late TestFirebaseAuthPlatform firebaseAuthPlatform;
 
-  /*late*/ FirebaseApp app;
-  /*late*/ FirebaseApp secondaryApp;
+  late FirebaseApp app;
+  late FirebaseApp secondaryApp;
   group('$FirebaseAuthPlatform()', () {
     setUpAll(() async {
       app = await Firebase.initializeApp();
@@ -56,7 +57,7 @@ void main() {
           });
       expect(result, isA<FirebaseAuthPlatform>());
       expect(result.currentUser, isA<UserPlatform>());
-      expect(result.currentUser.uid, '1234');
+      expect(result.currentUser!.uid, '1234');
       expect(result.languageCode, equals('en'));
     });
 
@@ -73,16 +74,11 @@ void main() {
         expect(FirebaseAuthPlatform.instance, isA<FirebaseAuthPlatform>());
         expect(FirebaseAuthPlatform.instance.app.name, equals('testApp2'));
       });
-
-      test('throws an [AssertionError] if instance is null', () {
-        expect(
-            () => FirebaseAuthPlatform.instance = null, throwsAssertionError);
-      });
     });
 
     test('throws if .delegateFor', () {
       try {
-        firebaseAuthPlatform.testDelegateFor();
+        firebaseAuthPlatform.testDelegateFor(app: Firebase.app());
       } on UnimplementedError catch (e) {
         expect(e.message, equals('delegateFor() is not implemented'));
         return;
@@ -229,10 +225,6 @@ void main() {
               equals(element['expected']));
         });
       });
-      test('throws a assertion error when email is null', () {
-        expect(() => firebaseAuthPlatform.isSignInWithEmailLink(null),
-            throwsAssertionError);
-      });
     });
 
     test('throws if authStateChanges()', () {
@@ -279,7 +271,9 @@ void main() {
     test('throws if sendSignInLinkToEmail()', () async {
       try {
         await firebaseAuthPlatform.sendSignInLinkToEmail(
-            'test@email.com', null);
+          'test@email.com',
+          ActionCodeSettings(url: '/'),
+        );
       } on UnimplementedError catch (e) {
         expect(e.message, equals('sendSignInLinkToEmail() is not implemented'));
         return;
@@ -329,7 +323,12 @@ void main() {
 
     test('throws if signInWithCredential()', () async {
       try {
-        await firebaseAuthPlatform.signInWithCredential(null);
+        await firebaseAuthPlatform.signInWithCredential(
+          AuthCredential(
+            providerId: 'provider',
+            signInMethod: 'method',
+          ),
+        );
       } on UnimplementedError catch (e) {
         expect(e.message, equals('signInWithCredential() is not implemented'));
         return;
@@ -373,7 +372,7 @@ void main() {
 
     test('throws if signInWithPopup()', () async {
       try {
-        await firebaseAuthPlatform.signInWithPopup(null);
+        await firebaseAuthPlatform.signInWithPopup(TestEmailAuthProvider());
       } on UnimplementedError catch (e) {
         expect(e.message, equals('signInWithPopup() is not implemented'));
         return;
@@ -383,7 +382,7 @@ void main() {
 
     test('throws if signInWithRedirect()', () async {
       try {
-        await firebaseAuthPlatform.signInWithRedirect(null);
+        await firebaseAuthPlatform.signInWithRedirect(TestEmailAuthProvider());
       } on UnimplementedError catch (e) {
         expect(e.message, equals('signInWithRedirect() is not implemented'));
         return;
@@ -415,11 +414,11 @@ void main() {
     test('throws if verifyPhoneNumber()', () async {
       try {
         await firebaseAuthPlatform.verifyPhoneNumber(
-          phoneNumber: null,
-          verificationCompleted: null,
-          verificationFailed: null,
-          codeAutoRetrievalTimeout: null,
-          codeSent: null,
+          phoneNumber: '',
+          verificationCompleted: (_) {},
+          verificationFailed: (_) {},
+          codeAutoRetrievalTimeout: (_) {},
+          codeSent: (_, __) {},
         );
       } on UnimplementedError catch (e) {
         expect(e.message, equals('verifyPhoneNumber() is not implemented'));
@@ -432,8 +431,8 @@ void main() {
 
 class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   TestFirebaseAuthPlatform(FirebaseApp app) : super(appInstance: app);
-  FirebaseAuthPlatform testDelegateFor({FirebaseApp app}) {
-    return this.delegateFor();
+  FirebaseAuthPlatform testDelegateFor({required FirebaseApp app}) {
+    return this.delegateFor(app: app);
   }
 
   FirebaseAuthPlatform testSetInitialValues() {

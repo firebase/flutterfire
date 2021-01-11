@@ -49,16 +49,16 @@ void main() {
           });
 
       FirebaseAuthException result =
-          platformExceptionToFirebaseAuthException(platformException);
+          platformExceptionToFirebaseAuthException(platformException) as FirebaseAuthException;
       expect(result.code, equals('unknown'));
       expect(result.message, equals('PlatformException Message'));
       expect(result.email, isNull);
 
       expect(result.credential, isA<AuthCredential>());
-      expect(result.credential.providerId, equals(authCredential.providerId));
-      expect(result.credential.token, equals(authCredential.token));
+      expect(result.credential!.providerId, equals(authCredential.providerId));
+      expect(result.credential!.token, equals(authCredential.token));
       expect(
-          result.credential.signInMethod, equals(authCredential.signInMethod));
+          result.credential!.signInMethod, equals(authCredential.signInMethod));
     });
 
     test('sets correct values from additionalData', () {
@@ -76,16 +76,16 @@ void main() {
       });
 
       FirebaseAuthException result =
-          platformExceptionToFirebaseAuthException(platformException);
+          platformExceptionToFirebaseAuthException(platformException) as FirebaseAuthException;
       expect(result.code, equals('A Known Code'));
       expect(result.message, equals('A Known Message'));
       expect(result.email, 'test@email.com');
 
       expect(result.credential, isA<AuthCredential>());
-      expect(result.credential.providerId, equals(authCredential.providerId));
-      expect(result.credential.token, equals(authCredential.token));
+      expect(result.credential!.providerId, equals(authCredential.providerId));
+      expect(result.credential!.token, equals(authCredential.token));
       expect(
-          result.credential.signInMethod, equals(authCredential.signInMethod));
+          result.credential!.signInMethod, equals(authCredential.signInMethod));
     });
 
     test('details = null', () {
@@ -93,7 +93,7 @@ void main() {
           code: 'native', message: 'a message', details: null);
 
       FirebaseAuthException result =
-          platformExceptionToFirebaseAuthException(platformException);
+          platformExceptionToFirebaseAuthException(platformException) as FirebaseAuthException;
       expect(result.code, equals('unknown'));
       expect(result.message, equals('a message'));
       expect(result.email, null);
@@ -108,7 +108,7 @@ void main() {
           details: {'additionalData': null});
 
       FirebaseAuthException result =
-          platformExceptionToFirebaseAuthException(platformException);
+          platformExceptionToFirebaseAuthException(platformException) as FirebaseAuthException;
       expect(result.code, equals('unknown'));
       expect(result.message, equals('a message'));
       expect(result.email, isNull);
@@ -125,7 +125,7 @@ void main() {
       });
 
       FirebaseAuthException result =
-          platformExceptionToFirebaseAuthException(platformException);
+          platformExceptionToFirebaseAuthException(platformException) as FirebaseAuthException;
       expect(result.code, equals('A Known Code'));
       expect(result.message, equals('A Known Message'));
       expect(result.email, 'test@email.com');

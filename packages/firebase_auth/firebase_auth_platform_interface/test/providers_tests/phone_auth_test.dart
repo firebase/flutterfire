@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  /*late*/ TestPhoneAuthProvider phoneAuthProvider;
+  late TestPhoneAuthProvider phoneAuthProvider;
   final String kMockProviderId = 'phone';
   setUpAll(() {
     phoneAuthProvider = TestPhoneAuthProvider();
@@ -38,20 +38,6 @@ void main() {
         expect(result.token, isNull);
         expect(result.providerId, equals(kMockProviderId));
         expect(result.signInMethod, equals(kMockProviderId));
-      });
-
-      test('throws [AssertionError] when verificationId is null', () {
-        expect(
-            () => PhoneAuthProvider.credential(
-                verificationId: null, smsCode: kMockSmsCode),
-            throwsAssertionError);
-      });
-
-      test('throws [AssertionError] when smsCode is null', () {
-        expect(
-            () => PhoneAuthProvider.credential(
-                verificationId: kMockVerificationId, smsCode: null),
-            throwsAssertionError);
       });
     });
   });

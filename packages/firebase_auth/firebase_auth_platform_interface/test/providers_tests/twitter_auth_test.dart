@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  /*late*/ TestTwitterAuthProvider twitterAuthProvider;
+  late TestTwitterAuthProvider twitterAuthProvider;
   final String kMockProviderId = 'twitter.com';
   setUpAll(() {
     twitterAuthProvider = TestTwitterAuthProvider();
@@ -43,11 +43,6 @@ void main() {
         expect(result.parameters['lang'], isA<String>());
         expect(result.parameters['lang'], equals('es'));
       });
-
-      test('throws [AssertionError] when customOAuthParameters is null', () {
-        expect(() => twitterAuthProvider.setCustomParameters(null),
-            throwsAssertionError);
-      });
     });
 
     group('TwitterAuthProvider.credential()', () {
@@ -62,20 +57,6 @@ void main() {
         expect(result.accessToken, kMockAccessToken);
         expect(result.providerId, equals(kMockProviderId));
         expect(result.signInMethod, equals(kMockProviderId));
-      });
-
-      test('throws [AssertionError] when accessToken is null', () {
-        expect(
-            () => TwitterAuthProvider.credential(
-                accessToken: null, secret: kMockSecret),
-            throwsAssertionError);
-      });
-
-      test('throws [AssertionError] when secret is null', () {
-        expect(
-            () => TwitterAuthProvider.credential(
-                accessToken: kMockAccessToken, secret: null),
-            throwsAssertionError);
       });
     });
   });

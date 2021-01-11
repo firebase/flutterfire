@@ -39,7 +39,7 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
   /// Creates a new [RecaptchaVerifierFactoryPlatform] instance.
   RecaptchaVerifierFactoryPlatform() : super(token: _token);
 
-  static RecaptchaVerifierFactoryPlatform _instance;
+  static RecaptchaVerifierFactoryPlatform? _instance;
 
   static final Object _token = Object();
 
@@ -52,22 +52,18 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
       throw UnimplementedError("RecaptchaVerifier is not implemented");
     }
 
-    return _instance;
+    return _instance!;
   }
 
   /// Sets a factory delegate as the current [RecaptchaVerifierFactoryPlatform]
   /// instance.
   static set instance(RecaptchaVerifierFactoryPlatform instance) {
-    assert(instance != null);
-
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
 
   /// Ensures that a delegate class extends [RecaptchaVerifierFactoryPlatform].
   static verifyExtends(RecaptchaVerifierFactoryPlatform instance) {
-    assert(instance != null);
-
     PlatformInterface.verifyToken(instance, _token);
   }
 
@@ -81,12 +77,12 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
   /// Underlying implementations can use this method to create the underlying
   /// implementation of a Recaptcha Verifier.
   RecaptchaVerifierFactoryPlatform delegateFor({
-    String container,
+    String? container,
     RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
     RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,
-    RecaptchaVerifierOnSuccess onSuccess,
-    RecaptchaVerifierOnError onError,
-    RecaptchaVerifierOnExpired onExpired,
+    RecaptchaVerifierOnSuccess? onSuccess,
+    RecaptchaVerifierOnError? onError,
+    RecaptchaVerifierOnExpired? onExpired,
   }) {
     throw UnimplementedError("delegateFor() is not implemented");
   }

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +19,7 @@ final String TEST_PHONE_NUMBER = '5555555555';
 int mockHandleId = 0;
 int get nextMockHandleId => mockHandleId++;
 
-setupFirebaseAuthMocks([Callback customHandlers]) {
+setupFirebaseAuthMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
@@ -57,8 +59,8 @@ void handleMethodCall(MethodCallCallback methodCallCallback) =>
       return await methodCallCallback(call);
     });
 
-Future<void> simulateEvent(String name, Map<String, dynamic> user) async {
-  await ServicesBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
+Future<void> simulateEvent(String name, Map<String, dynamic>? user) async {
+  await ServicesBinding.instance!.defaultBinaryMessenger.handlePlatformMessage(
     MethodChannelFirebaseAuth.channel.name,
     MethodChannelFirebaseAuth.channel.codec.encodeMethodCall(
       MethodCall(
@@ -70,22 +72,35 @@ Future<void> simulateEvent(String name, Map<String, dynamic> user) async {
   );
 }
 
-Future<void> testExceptionHandling(String type, Function testMethod) async {
-  try {
-    await testMethod();
-  } on FirebaseAuthException catch (_) {
-    if (type == 'PLATFORM' || type == 'EXCEPTION') {
-      return;
-    }
-    fail(
-        'testExceptionHandling: ${testMethod} threw unexpected FirebaseAuthException');
-  } catch (e) {
-    fail('testExceptionHandling: ${testMethod} threw invalid exception ${e}');
-  }
+Future<void> testExceptionHandling(
+  String type,
+  void Function() testMethod,
+) async {
+  await expectLater(
+    () async => testMethod(),
+    anyOf([
+      completes,
+      if (type == 'PLATFORM' || type == 'EXCEPTION')
+        throwsA(isA<FirebaseAuthException>())
+    ]),
+  );
+  // try {
+  //   await testMethod();
+  // } on FirebaseAuthException catch (_) {
+  //   if (type == 'PLATFORM' || type == 'EXCEPTION') {
+  //     return;
+  //   }
+  //   fail(
+  //       'testExceptionHandling: ${testMethod} threw unexpected FirebaseAuthException');
+  // } catch (e) {
+  //   fail('testExceptionHandling: ${testMethod} threw invalid exception ${e}');
+  // }
 }
 
 Map<String, dynamic> generateUser(
-    Map<String, dynamic> user, Map<String, dynamic> updatedInfo) {
+  Map<String, dynamic> user,
+  Map<String, dynamic> updatedInfo,
+) {
   Map<String, dynamic> kMockUpdatedUser = Map<String, dynamic>.from(user);
   kMockUpdatedUser.addAll(updatedInfo);
   return kMockUpdatedUser;

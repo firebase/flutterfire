@@ -18,8 +18,6 @@ abstract class ConfirmationResultPlatform extends PlatformInterface {
 
   /// Ensures that any delegate instances extend this class.
   static verifyExtends(ConfirmationResultPlatform instance) {
-    assert(instance != null);
-
     PlatformInterface.verifyToken(instance, _token);
   }
 

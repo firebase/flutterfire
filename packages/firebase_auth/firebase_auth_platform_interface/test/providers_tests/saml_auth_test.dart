@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  /*late*/ TestSAMLAuthProvider samlAuthProvider;
+  late TestSAMLAuthProvider samlAuthProvider;
   final String kMockProviderId = 'saml';
   setUpAll(() {
     samlAuthProvider = TestSAMLAuthProvider(kMockProviderId);
@@ -19,14 +19,10 @@ void main() {
         expect(samlAuthProvider, isA<AuthProvider>());
         expect(samlAuthProvider.providerId, equals(kMockProviderId));
       });
-
-      test('throws [AssertionError] when providerId is null', () {
-        expect(() => TestSAMLAuthProvider(null), throwsAssertionError);
-      });
     });
   });
 }
 
 class TestSAMLAuthProvider extends SAMLAuthProvider {
-  TestSAMLAuthProvider(providerId) : super(providerId);
+  TestSAMLAuthProvider(String providerId) : super(providerId);
 }

@@ -8,8 +8,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 void main() {
   group('$RecaptchaVerifierFactoryPlatform()', () {
-    /*late*/ TestRecaptchaVerifierFactoryPlatform
-        recaptchaVerifierFactoryPlatform;
+    late TestRecaptchaVerifierFactoryPlatform recaptchaVerifierFactoryPlatform;
 
     setUpAll(() async {
       recaptchaVerifierFactoryPlatform = TestRecaptchaVerifierFactoryPlatform();
@@ -29,11 +28,6 @@ void main() {
         } catch (_) {
           fail('thrown an unexpected error');
         }
-      });
-
-      test('throws an [AssertionError] exception when instance is null', () {
-        expect(() => RecaptchaVerifierFactoryPlatform.instance = null,
-            throwsAssertionError);
       });
     });
 
@@ -57,11 +51,6 @@ void main() {
         } catch (_) {
           fail('thrown an unexpected exception');
         }
-      });
-
-      test('throws an [AssertionError] exception when instance is null', () {
-        expect(() => RecaptchaVerifierFactoryPlatform.verifyExtends(null),
-            throwsAssertionError);
       });
     });
 
@@ -99,7 +88,7 @@ void main() {
 
     test('throws if clear()', () async {
       try {
-        await recaptchaVerifierFactoryPlatform.clear();
+        recaptchaVerifierFactoryPlatform.clear();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('clear() is not implemented'));
         return;

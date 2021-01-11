@@ -11,8 +11,7 @@ class MethodChannelUserCredential extends UserCredentialPlatform {
   // ignore: public_member_api_docs
   MethodChannelUserCredential(
       FirebaseAuthPlatform auth, Map<String, dynamic> data)
-      : assert(data != null),
-        super(
+      : super(
           auth: auth,
           additionalUserInfo: data['additionalUserInfo'] == null
               ? null

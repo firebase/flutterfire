@@ -11,8 +11,8 @@ import '../mock.dart';
 void main() {
   setupFirebaseAuthMocks();
 
-  /*late*/ TestUserPlatform userPlatform;
-  /*late*/ FirebaseAuthPlatform auth;
+  late TestUserPlatform userPlatform;
+  late FirebaseAuthPlatform auth;
   final String kMockProviderId = 'firebase';
   final String kMockUid = '12345';
   final String kMockDisplayName = 'Flutter Test User';
@@ -64,10 +64,6 @@ void main() {
       test('creates a new instance of [UserPlatform]', () {
         expect(userPlatform, isA<UserPlatform>());
       });
-
-      test('throws [AssertionError] when user is null', () {
-        expect(() => TestUserPlatform(auth, null), throwsAssertionError);
-      });
     });
 
     group('verifyExtends()', () {
@@ -78,10 +74,6 @@ void main() {
         } catch (_) {
           fail('thrown an unexpected exception');
         }
-      });
-
-      test('throws an [AssertionError] exception when instance is null', () {
-        expect(() => UserPlatform.verifyExtends(null), throwsAssertionError);
       });
     });
 
@@ -106,9 +98,9 @@ void main() {
 
     test('UserPlatform.metadata', () {
       expect(userPlatform.metadata, isA<UserMetadata>());
-      expect(userPlatform.metadata.creationTime.millisecondsSinceEpoch,
+      expect(userPlatform.metadata.creationTime!.millisecondsSinceEpoch,
           equals(kMockCreationTimestamp));
-      expect(userPlatform.metadata.lastSignInTime.millisecondsSinceEpoch,
+      expect(userPlatform.metadata.lastSignInTime!.millisecondsSinceEpoch,
           equals(kMockLastSignInTimestamp));
     });
     test('UserPlatform.phoneNumber', () {
@@ -251,7 +243,8 @@ void main() {
 
     test('throws if .updatePhoneNumber', () async {
       PhoneAuthCredential phoneCredential = PhoneAuthProvider.credential(
-          verificationId: 'verificationId', smsCode: '12345');
+          verificationId: 'verificationId',
+          smsCode: '12345') as PhoneAuthCredential;
       try {
         await userPlatform.updatePhoneNumber(phoneCredential);
       } on UnimplementedError catch (e) {

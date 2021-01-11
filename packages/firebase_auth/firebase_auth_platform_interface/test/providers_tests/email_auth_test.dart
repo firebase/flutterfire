@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  /*late*/ TestEmailAuthProvider emailAuthProvider;
+  late TestEmailAuthProvider emailAuthProvider;
   final String kMockEmail = 'test-email';
   final String kMockPassword = 'test-password';
   final String kMockEmailLink = 'https://www.emaillink.com';
@@ -44,19 +44,6 @@ void main() {
         expect(result.token, isNull);
         expect(result.signInMethod, equals('password'));
       });
-
-      test('throws [AssertionError] when email is null', () {
-        expect(
-            () => EmailAuthProvider.credential(
-                email: null, password: kMockPassword),
-            throwsAssertionError);
-      });
-      test('throws [AssertionError] when password is null', () {
-        expect(
-            () =>
-                EmailAuthProvider.credential(email: kMockEmail, password: null),
-            throwsAssertionError);
-      });
     });
 
     group('EmailAuthProvider.credentialWithLink()', () {
@@ -66,19 +53,6 @@ void main() {
         expect(result, isA<AuthCredential>());
         expect(result.token, isNull);
         expect(result.signInMethod, equals('emailLink'));
-      });
-
-      test('throws [AssertionError] when email is null', () {
-        expect(
-            () => EmailAuthProvider.credentialWithLink(
-                email: null, emailLink: kMockEmailLink),
-            throwsAssertionError);
-      });
-      test('throws [AssertionError] when emailLink is null', () {
-        expect(
-            () => EmailAuthProvider.credentialWithLink(
-                email: kMockEmail, emailLink: null),
-            throwsAssertionError);
       });
     });
   });

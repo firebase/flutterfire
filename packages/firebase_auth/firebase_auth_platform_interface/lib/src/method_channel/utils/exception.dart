@@ -10,13 +10,13 @@ import '../../firebase_auth_exception.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseAuthException]
 /// if it was intentionally caught on the native platform.
-Exception convertPlatformException(Object exception) {
+Object convertPlatformException(Object exception) {
   if (exception is! Exception || exception is! PlatformException) {
+    // TODO(rrousselGit): Is this dead code?
     return exception;
   }
 
-  return platformExceptionToFirebaseAuthException(
-      exception as PlatformException);
+  return platformExceptionToFirebaseAuthException(exception);
 }
 
 /// Converts a [PlatformException] into a [FirebaseAuthException].
@@ -25,15 +25,16 @@ Exception convertPlatformException(Object exception) {
 /// the `details` of the exception exist. Firebase returns specific codes and
 /// messages which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseAuthException(
-    PlatformException platformException) {
-  Map<String, dynamic> details = platformException.details != null
+  PlatformException platformException,
+) {
+  Map<String, dynamic>? details = platformException.details != null
       ? Map<String, dynamic>.from(platformException.details)
       : null;
 
   String code = 'unknown';
-  String /*!*/ message = platformException.message;
-  String email;
-  AuthCredential credential;
+  String? message = platformException.message;
+  String? email;
+  AuthCredential? credential;
 
   if (details != null) {
     code = details['code'] ?? code;
@@ -55,5 +56,9 @@ FirebaseException platformExceptionToFirebaseAuthException(
     }
   }
   return FirebaseAuthException(
-      code: code, message: message, email: email, credential: credential);
+    code: code,
+    message: message,
+    email: email,
+    credential: credential,
+  );
 }

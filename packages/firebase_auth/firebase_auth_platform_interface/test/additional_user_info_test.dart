@@ -40,19 +40,6 @@ void main() {
             equals(
                 '$AdditionalUserInfo(isNewUser: $kMockIsNewUser, profile: ${kMockProfile.toString()}, providerId: $kMockProviderId, username: $kMockUsername)'));
       });
-
-      test('returns expected string when profile is null', () {
-        AdditionalUserInfo additionalUserInfo = AdditionalUserInfo(
-            isNewUser: kMockIsNewUser,
-            profile: null,
-            providerId: kMockProviderId,
-            username: kMockUsername);
-
-        expect(
-            additionalUserInfo.toString(),
-            equals(
-                '$AdditionalUserInfo(isNewUser: $kMockIsNewUser, profile: null, providerId: $kMockProviderId, username: $kMockUsername)'));
-      });
     });
   });
 }

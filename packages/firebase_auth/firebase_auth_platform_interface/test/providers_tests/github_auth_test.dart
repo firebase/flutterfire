@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  /*late*/ TestGithubAuthProvider githubAuthProvider;
+  late TestGithubAuthProvider githubAuthProvider;
   final String kMockProviderId = 'github.com';
   setUpAll(() {
     githubAuthProvider = TestGithubAuthProvider();
@@ -46,10 +46,6 @@ void main() {
         expect(result.scopes.length, 1);
         expect(result.scopes[0], equals(kMockScope));
       });
-
-      test('throws [AssertionError] when scope is null', () {
-        expect(() => githubAuthProvider.addScope(null), throwsAssertionError);
-      });
     });
 
     group('setCustomParameters()', () {
@@ -63,11 +59,6 @@ void main() {
         expect(result.parameters['allow_signup'], isA<String>());
         expect(result.parameters['allow_signup'], equals('false'));
       });
-
-      test('throws [AssertionError] when customOAuthParameters is null', () {
-        expect(() => githubAuthProvider.setCustomParameters(null),
-            throwsAssertionError);
-      });
     });
 
     group('GithubAuthProvider.credential()', () {
@@ -80,10 +71,6 @@ void main() {
         expect(result.accessToken, kMockAccessToken);
         expect(result.providerId, equals(kMockProviderId));
         expect(result.signInMethod, equals(kMockProviderId));
-      });
-
-      test('throws [AssertionError] when accessToken is null', () {
-        expect(() => GithubAuthProvider.credential(null), throwsAssertionError);
       });
     });
   });

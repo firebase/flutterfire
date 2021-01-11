@@ -21,25 +21,27 @@ import '../method_channel/method_channel_firebase_auth.dart';
 abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
   @protected
-  final FirebaseApp /*?*/ appInstance;
+  final FirebaseApp? appInstance;
 
   /// Create an instance using [app]
   FirebaseAuthPlatform({this.appInstance}) : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
-  FirebaseApp /*!*/ get app {
+  FirebaseApp get app {
     if (appInstance == null) {
       return Firebase.app();
     }
 
-    return appInstance;
+    return appInstance!;
   }
 
   static final Object _token = Object();
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseAuthPlatform.instanceFor(
-      {FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
+  factory FirebaseAuthPlatform.instanceFor({
+    required FirebaseApp app,
+    required Map<dynamic, dynamic> pluginConstants,
+  }) {
     return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
         languageCode: pluginConstants['APP_LANGUAGE_CODE'],
         currentUser: pluginConstants['APP_CURRENT_USER'] == null
@@ -56,14 +58,13 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
       _instance = MethodChannelFirebaseAuth.instance;
     }
 
-    return _instance;
+    return _instance!;
   }
 
-  static FirebaseAuthPlatform _instance;
+  static FirebaseAuthPlatform? _instance;
 
   /// Sets the [FirebaseAuthPlatform.instance]
   static set instance(FirebaseAuthPlatform instance) {
-    assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
@@ -71,7 +72,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseAuthPlatform /*!*/ delegateFor({FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -82,8 +83,8 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// calls.
   @protected
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic> currentUser,
-    String languageCode,
+    Map<String, dynamic>? currentUser,
+    String? languageCode,
   }) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
@@ -94,24 +95,24 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// You should not use this getter to determine the users current state,
   /// instead use [authStateChanges], [idTokenChanges] or [userChanges] to
   /// subscribe to updates.
-  UserPlatform /*?*/ get currentUser {
+  UserPlatform? get currentUser {
     throw UnimplementedError("get.currentUser is not implemented");
   }
 
   /// Sets the current user for the instance.
-  set currentUser(UserPlatform /*?*/ userPlatform) {
+  set currentUser(UserPlatform? userPlatform) {
     throw UnimplementedError("set.currentUser is not implemented");
   }
 
   /// The current Auth instance's language code.
   ///
   /// See [setLanguageCode] to update the language code.
-  String get languageCode {
+  String? get languageCode {
     throw UnimplementedError("languageCode is not implemented");
   }
 
   /// Sends a Stream event to a [authStateChanges] stream controller.
-  void sendAuthChangesEvent(String appName, UserPlatform userPlatform) {
+  void sendAuthChangesEvent(String appName, UserPlatform? userPlatform) {
     throw UnimplementedError("sendAuthChangesEvent() is not implemented");
   }
 
@@ -226,7 +227,6 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Checks if an incoming link is a sign-in with email link.
   bool isSignInWithEmailLink(String emailLink) {
-    assert(emailLink != null);
     return (emailLink.contains('mode=signIn') ||
             emailLink.contains('mode%3DsignIn')) &&
         (emailLink.contains('oobCode=') || emailLink.contains('oobCode%3D'));
@@ -234,14 +234,14 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Notifies about changes to the user's sign-in state (such as sign-in or
   /// sign-out).
-  Stream<UserPlatform> authStateChanges() {
+  Stream<UserPlatform?> authStateChanges() {
     throw UnimplementedError('authStateChanges() is not implemented');
   }
 
   /// Notifies about changes to the user's sign-in state (such as sign-in or
   /// sign-out)
   /// and also token refresh events.
-  Stream<UserPlatform> idTokenChanges() {
+  Stream<UserPlatform?> idTokenChanges() {
     throw UnimplementedError('idTokenChanges() is not implemented');
   }
 
@@ -253,7 +253,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// this Stream is to for listening to realtime updates to the user without
   /// manually having to call [reload] and then rehydrating changes to your
   /// application.
-  Stream<UserPlatform> userChanges() {
+  Stream<UserPlatform?> userChanges() {
     throw UnimplementedError('userChanges() is not implemented');
   }
 
@@ -261,7 +261,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// email to the given email address, which must correspond to an existing
   /// user of your app.
   Future<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings /*?*/ actionCodeSettings]) {
+      [ActionCodeSettings? actionCodeSettings]) {
     throw UnimplementedError('sendPasswordResetEmail() is not implemented');
   }
 
@@ -277,7 +277,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **user-not-found**:
   ///  - Thrown if there is no user corresponding to the email address.
   Future<void> sendSignInLinkToEmail(
-      String email, ActionCodeSettings /*!*/ actionCodeSettings) {
+    String email,
+    ActionCodeSettings actionCodeSettings,
+  ) {
     throw UnimplementedError('sendSignInLinkToEmail() is not implemented');
   }
 
@@ -322,7 +324,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///   settings > Capabilities). To learn more, visit the
   ///   [Apple documentation](https://developer.apple.com/documentation/security/keychain_services/keychain_items/sharing_access_to_keychain_items_among_a_collection_of_apps).
   Future<void> setSettings(
-      {bool appVerificationDisabledForTesting, String userAccessGroup}) {
+      {bool? appVerificationDisabledForTesting, String? userAccessGroup}) {
     throw UnimplementedError('setSettings() is not implemented');
   }
 
@@ -405,7 +407,8 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.id.
   Future<UserCredentialPlatform> signInWithCredential(
-      AuthCredential /*!*/ credential) async {
+    AuthCredential credential,
+  ) async {
     throw UnimplementedError('signInWithCredential() is not implemented');
   }
 
@@ -479,8 +482,10 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// with the users SMS verification code to complete the authentication flow.
   ///
   /// This method is only available on web based platforms.
-  Future<ConfirmationResultPlatform> signInWithPhoneNumber(String phoneNumber,
-      RecaptchaVerifierFactoryPlatform /*!*/ applicationVerifier) async {
+  Future<ConfirmationResultPlatform> signInWithPhoneNumber(
+    String phoneNumber,
+    RecaptchaVerifierFactoryPlatform? applicationVerifier,
+  ) async {
     throw UnimplementedError('signInWithPhoneNumber() is not implemented');
   }
 
@@ -491,7 +496,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// credential.
   ///
   /// This method is only available on web based platforms.
-  Future<UserCredentialPlatform> signInWithPopup(AuthProvider /*!*/ provider) {
+  Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) {
     throw UnimplementedError('signInWithPopup() is not implemented');
   }
 
@@ -499,7 +504,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///
   /// To handle the results and errors for this operation, refer to
   /// [getRedirectResult].
-  Future<void> signInWithRedirect(AuthProvider /*!*/ provider) {
+  Future<void> signInWithRedirect(AuthProvider provider) {
     throw UnimplementedError('signInWithRedirect() is not implemented');
   }
 
@@ -529,7 +534,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  - Thrown if there is no user corresponding to the password reset code.
   ///    This may have happened if the user was deleted between when the code
   ///    was issued and when this method was called.
-  Future<String /*!*/ > verifyPasswordResetCode(String code) {
+  Future<String> verifyPasswordResetCode(String code) {
     throw UnimplementedError('verifyPasswordResetCode() is not implemented');
   }
 
@@ -575,15 +580,15 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// [codeAutoRetrievalTimeout] Triggered when SMS auto-retrieval times out and
   ///   provide a [verificationId].
   Future<void> verifyPhoneNumber({
-    @required String /*!*/ phoneNumber,
-    @required PhoneVerificationCompleted /*!*/ verificationCompleted,
-    @required PhoneVerificationFailed /*!*/ verificationFailed,
-    @required PhoneCodeSent /*!*/ codeSent,
-    @required PhoneCodeAutoRetrievalTimeout /*!*/ codeAutoRetrievalTimeout,
+    required String phoneNumber,
+    required PhoneVerificationCompleted verificationCompleted,
+    required PhoneVerificationFailed verificationFailed,
+    required PhoneCodeSent codeSent,
+    required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
     Duration timeout = const Duration(seconds: 30),
-    int forceResendingToken,
+    int? forceResendingToken,
     // ignore: invalid_use_of_visible_for_testing_member
-    @visibleForTesting String autoRetrievedSmsCodeForTesting,
+    @visibleForTesting String? autoRetrievedSmsCodeForTesting,
   }) {
     throw UnimplementedError('verifyPhoneNumber() is not implemented');
   }

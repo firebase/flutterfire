@@ -13,7 +13,7 @@ import '../mock.dart';
 void main() {
   setupFirebaseAuthMocks();
 
-  /*late*/ FirebaseAuthPlatform auth;
+  late FirebaseAuthPlatform auth;
   final String kMockUid = '12345';
   final String kMockUsername = 'fluttertestuser';
   final String kMockEmail = 'test@example.com';
@@ -38,8 +38,8 @@ void main() {
   };
 
   group('$MethodChannelUserCredential()', () {
-    /*late*/ MethodChannelUserCredential userCredential;
-    /*late*/ Map<String, dynamic> userData = kMockInitialUserData;
+    late MethodChannelUserCredential userCredential;
+    late Map<String, dynamic> userData = kMockInitialUserData;
 
     setUpAll(() async {
       await Firebase.initializeApp();
@@ -61,9 +61,9 @@ void main() {
       test('sets values correctly', () {
         expect(userCredential.auth, isA<FirebaseAuthPlatform>());
 
-        final additionalUserInfo = userCredential.additionalUserInfo;
-        final credential = userCredential.credential;
-        final user = userCredential.user;
+        final additionalUserInfo = userCredential.additionalUserInfo!;
+        final credential = userCredential.credential!;
+        final user = userCredential.user!;
 
         expect(additionalUserInfo, isA<AdditionalUserInfo>());
 
@@ -82,11 +82,6 @@ void main() {
         expect(user.email, equals(kMockEmail));
       });
 
-      test('throws [AssertionError] when data is null', () {
-        expect(() => MethodChannelUserCredential(auth, null),
-            throwsAssertionError);
-      });
-
       test('set additionalUserInfo to null', () {
         userData['additionalUserInfo'] = null;
         MethodChannelUserCredential testUser =
@@ -102,8 +97,8 @@ void main() {
 
         expect(testUser.additionalUserInfo, isA<AdditionalUserInfo>());
         expect(
-            testUser.additionalUserInfo.profile, isA<Map<String, dynamic>>());
-        expect(testUser.additionalUserInfo.profile, isEmpty);
+            testUser.additionalUserInfo!.profile, isA<Map<String, dynamic>>());
+        expect(testUser.additionalUserInfo!.profile, isEmpty);
       });
 
       test('set authCredential to null', () {

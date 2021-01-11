@@ -13,35 +13,32 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 abstract class UserPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
   UserPlatform(this.auth, Map<String, dynamic> user)
-      : assert(user != null),
-        _user = user,
+      : _user = user,
         super(token: _token);
 
   static final Object _token = Object();
 
   /// Ensures that any delegate class has extended a [UserPlatform].
   static verifyExtends(UserPlatform instance) {
-    assert(instance != null);
-
     PlatformInterface.verifyToken(instance, _token);
   }
 
   /// The [FirebaseAuthPlatform] instance.
-  final FirebaseAuthPlatform /*!*/ auth;
+  final FirebaseAuthPlatform auth;
 
   Map<String, dynamic> _user;
 
   /// The users display name.
   ///
   /// Will be `null` if signing in anonymously or via password authentication.
-  String get displayName {
+  String? get displayName {
     return _user['displayName'];
   }
 
   /// The users email address.
   ///
   /// Will be `null` if signing in anonymously.
-  String get email {
+  String? get email {
     return _user['email'];
   }
 
@@ -51,12 +48,12 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// Once verified, call [reload] to ensure the latest user information is
   /// retrieved from Firebase.
-  bool /*!*/ get emailVerified {
+  bool get emailVerified {
     return _user['emailVerified'];
   }
 
   /// Returns whether the user is a anonymous.
-  bool /*!*/ get isAnonymous {
+  bool get isAnonymous {
     return _user['isAnonymous'];
   }
 
@@ -70,7 +67,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// This property will be `null` if the user has not signed in or been has
   /// their phone number linked.
-  String /*?*/ get phoneNumber {
+  String? get phoneNumber {
     return _user['phoneNumber'];
   }
 
@@ -78,14 +75,14 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// This property will be populated if the user has signed in or been linked
   /// with a 3rd party OAuth provider (such as Google).
-  String /*?*/ get photoURL {
+  String? get photoURL {
     return _user['photoURL'];
   }
 
   /// Returns a list of user information for each linked provider.
   List<UserInfo> get providerData {
     return List.from(_user['providerData'])
-        .map((data) => UserInfo(Map<String, dynamic>.from(data)))
+        .map((data) => UserInfo(Map<String, String?>.from(data)))
         .toList();
   }
 
@@ -93,7 +90,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// This property maybe `null` or empty if the underlying platform does not
   /// support providing refresh tokens.
-  String get refreshToken {
+  String? get refreshToken {
     return _user['refreshToken'];
   }
 
@@ -102,12 +99,12 @@ abstract class UserPlatform extends PlatformInterface {
   /// This is a read-only property, which indicates the tenant ID used to sign
   /// in the current user. This is `null` if the user is signed in from the
   /// parent project.
-  String get tenantId {
+  String? get tenantId {
     return _user['tenantId'];
   }
 
   /// The user's unique ID.
-  String /*!*/ get uid {
+  String get uid {
     return _user['uid'];
   }
 
@@ -134,7 +131,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// If [forceRefresh] is `true`, the token returned will be refresh regardless
   /// of token expiration.
-  Future<String /*!*/ > getIdToken(bool forceRefresh) {
+  Future<String> getIdToken(bool forceRefresh) {
     throw UnimplementedError("getIdToken() is not implemented");
   }
 
@@ -264,7 +261,8 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// The verification process is completed by calling [applyActionCode].
   Future<void> sendEmailVerification(
-      ActionCodeSettings actionCodeSettings) async {
+    ActionCodeSettings? actionCodeSettings,
+  ) async {
     throw UnimplementedError("sendEmailVerification() is not implemented");
   }
 
@@ -274,7 +272,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// - **no-such-provider**:
   ///  - Thrown if the user does not have this provider linked or when the
   ///    provider ID given does not exist.
-  Future<UserPlatform /*!*/ > unlink(String providerId) async {
+  Future<UserPlatform> unlink(String providerId) async {
     throw UnimplementedError("unlink() is not implemented");
   }
 
@@ -343,7 +341,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// If you have a custom email action handler, you can complete the
   /// verification process by calling [applyActionCode].
   Future<void> verifyBeforeUpdateEmail(String newEmail,
-      [ActionCodeSettings /*?*/ actionCodeSettings]) async {
+      [ActionCodeSettings? actionCodeSettings]) async {
     throw UnimplementedError("verifyBeforeUpdateEmail() is not implemented");
   }
 }

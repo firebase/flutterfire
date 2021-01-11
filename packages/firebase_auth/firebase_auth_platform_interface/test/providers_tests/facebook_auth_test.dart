@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  /*late*/ TestFacebookAuthProvider facebookAuthProvider;
+  late TestFacebookAuthProvider facebookAuthProvider;
   final String kMockProviderId = 'facebook.com';
   setUpAll(() {
     facebookAuthProvider = TestFacebookAuthProvider();
@@ -47,10 +47,6 @@ void main() {
         expect(result.scopes.length, 1);
         expect(result.scopes[0], equals(kMockScope));
       });
-
-      test('throws [AssertionError] when scope is null', () {
-        expect(() => facebookAuthProvider.addScope(null), throwsAssertionError);
-      });
     });
 
     group('setCustomParameters()', () {
@@ -64,11 +60,6 @@ void main() {
         expect(result.parameters['display'], isA<String>());
         expect(result.parameters['display'], equals('popup'));
       });
-
-      test('throws [AssertionError] when customOAuthParameters is null', () {
-        expect(() => facebookAuthProvider.setCustomParameters(null),
-            throwsAssertionError);
-      });
     });
 
     group('FacebookAuthProvider.credential()', () {
@@ -81,11 +72,6 @@ void main() {
         expect(result.accessToken, kMockAccessToken);
         expect(result.providerId, equals(kMockProviderId));
         expect(result.signInMethod, equals(kMockProviderId));
-      });
-
-      test('throws [AssertionError] when accessToken is null', () {
-        expect(
-            () => FacebookAuthProvider.credential(null), throwsAssertionError);
       });
     });
   });
