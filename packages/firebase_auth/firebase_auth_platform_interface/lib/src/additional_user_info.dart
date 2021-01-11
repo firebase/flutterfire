@@ -13,13 +13,13 @@ class AdditionalUserInfo {
       {this.isNewUser, this.profile, this.providerId, this.username});
 
   /// Whether the user account has been recently created.
-  final bool isNewUser;
+  final bool /*!*/ isNewUser;
 
   /// A [Map] containing additional profile information from the identity
   /// provider.
-  final Map<String, dynamic> profile;
+  final Map<String, dynamic> /*!*/ profile;
 
-  /// The  federated identity provider ID.
+  /// The federated identity provider ID.
   final String providerId;
 
   /// The username given from the federated identity provider.

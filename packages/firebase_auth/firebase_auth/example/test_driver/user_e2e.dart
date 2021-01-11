@@ -14,7 +14,7 @@ import './test_utils.dart';
 
 void runUserTests() {
   group('$User', () {
-    FirebaseAuth auth;
+    /*late*/ FirebaseAuth auth;
     String email = generateRandomEmail();
 
     setUpAll(() async {

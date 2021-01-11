@@ -24,8 +24,8 @@ MockTaskSnapshotPlatform mockTaskSnapshotPlatform = MockTaskSnapshotPlatform();
 
 void main() {
   setupFirebaseStorageMocks();
-  FirebaseStorage storage;
-  TaskSnapshot taskSnapshot;
+  /*late*/ FirebaseStorage storage;
+  /*late*/ TaskSnapshot taskSnapshot;
   FullMetadata fullMetadata = FullMetadata(testMetadata);
 
   group('$TaskSnapshot', () {

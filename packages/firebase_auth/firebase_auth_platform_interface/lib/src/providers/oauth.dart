@@ -62,14 +62,6 @@ class OAuthProvider extends AuthProvider {
       rawNonce: rawNonce,
     );
   }
-
-  @Deprecated('Deprecated in favor of `OAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  OAuthCredential getCredential(
-      {@required String accessToken, String idToken, String rawNonce}) {
-    return credential(
-        accessToken: accessToken, idToken: idToken, rawNonce: rawNonce);
-  }
 }
 
 /// A generic OAuth credential.
@@ -108,8 +100,8 @@ class OAuthCredential extends AuthCredential {
   final String rawNonce;
 
   @override
-  Map<String, dynamic> asMap() {
-    return <String, dynamic>{
+  Map<String, String /*?*/ > asMap() {
+    return <String, String /*?*/ >{
       'providerId': providerId,
       'signInMethod': signInMethod,
       'idToken': idToken,

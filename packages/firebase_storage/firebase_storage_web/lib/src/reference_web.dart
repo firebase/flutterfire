@@ -90,7 +90,7 @@ class ReferenceWeb extends ReferencePlatform {
   /// Storage List API will filter these unsupported objects. [list] may fail
   /// if there are too many unsupported objects in the bucket.
   @override
-  Future<ListResultPlatform> list(ListOptions options) async {
+  Future<ListResultPlatform> list([ListOptions /*?*/ options]) async {
     try {
       storage_interop.ListResult listResult =
           await _ref.list(listOptionsToFbListOptions(options));
@@ -125,7 +125,7 @@ class ReferenceWeb extends ReferencePlatform {
   /// Returns a [Uint8List] of the data. If the [maxSize] (in bytes) is exceeded,
   /// the operation will be canceled.
   @override
-  Future<Uint8List> getData(
+  Future<Uint8List /*?*/ > getData(
     int maxSize, {
     @visibleForTesting
         Future<Uint8List> Function(dynamic url) readBytes = http.readBytes,
@@ -151,7 +151,7 @@ class ReferenceWeb extends ReferencePlatform {
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
   @override
-  TaskPlatform putData(Uint8List data, [SettableMetadata metadata]) {
+  TaskPlatform putData(Uint8List data, [SettableMetadata /*?*/ metadata]) {
     return TaskWeb(
       this,
       _ref.put(
@@ -168,7 +168,7 @@ class ReferenceWeb extends ReferencePlatform {
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
   @override
-  TaskPlatform putBlob(dynamic data, [SettableMetadata metadata]) {
+  TaskPlatform putBlob(dynamic data, [SettableMetadata /*?*/ metadata]) {
     assert(data is html.Blob, 'data must be a dart:html Blob object.');
 
     return TaskWeb(
@@ -197,7 +197,7 @@ class ReferenceWeb extends ReferencePlatform {
   TaskPlatform putString(
     String data,
     PutStringFormat format, [
-    SettableMetadata metadata,
+    SettableMetadata /*?*/ metadata,
   ]) {
     return TaskWeb(
       this,

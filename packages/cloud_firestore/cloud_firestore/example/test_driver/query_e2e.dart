@@ -13,7 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runQueryTests() {
   group('$Query', () {
-    FirebaseFirestore firestore;
+    /*late*/ FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -125,6 +125,28 @@ void runQueryTests() {
             fail("Should not have been called");
           }
         }, count: 1, reason: "Stream should only have been called once."));
+      });
+
+      test('listens to multiple queries', () async {
+        CollectionReference collection1 =
+            await initializeTest('document-snapshot-1');
+        CollectionReference collection2 =
+            await initializeTest('document-snapshot-2');
+
+        await collection1.add({'test': 'value1'});
+        await collection2.add({'test': 'value2'});
+
+        final value1 = collection1
+            .snapshots()
+            .first
+            .then((s) => s.docs.first.data()['test']);
+        final value2 = collection2
+            .snapshots()
+            .first
+            .then((s) => s.docs.first.data()['test']);
+
+        await expectLater(value1, completion('value1'));
+        await expectLater(value2, completion('value2'));
       });
 
       test('listens to a multiple changes response', () async {

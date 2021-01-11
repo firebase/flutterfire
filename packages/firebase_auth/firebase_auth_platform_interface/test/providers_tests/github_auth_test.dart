@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  TestGithubAuthProvider githubAuthProvider;
+  /*late*/ TestGithubAuthProvider githubAuthProvider;
   final String kMockProviderId = 'github.com';
   setUpAll(() {
     githubAuthProvider = TestGithubAuthProvider();

@@ -18,7 +18,7 @@ import 'utils/utils.dart';
 export 'auth_interop.dart';
 
 /// Given an AppJSImp, return the Auth instance.
-Auth getAuthInstance([App app]) {
+Auth getAuthInstance([App /*?*/ app]) {
   return Auth.getInstance(app != null
       ? firebase_interop.auth(app.jsObject)
       : firebase_interop.auth());
@@ -30,16 +30,16 @@ Auth getAuthInstance([App app]) {
 class UserInfo<T extends auth_interop.UserInfoJsImpl>
     extends JsObjectWrapper<T> {
   /// User's display name.
-  String get displayName => jsObject.displayName;
+  String /*?*/ get displayName => jsObject.displayName;
 
   /// User's e-mail address.
-  String get email => jsObject.email;
+  String /*?*/ get email => jsObject.email;
 
   /// The user's E.164 formatted phone number (if available).
-  String get phoneNumber => jsObject.phoneNumber;
+  String /*?*/ get phoneNumber => jsObject.phoneNumber;
 
   /// User's profile picture URL.
-  String get photoURL => jsObject.photoURL;
+  String /*?*/ get photoURL => jsObject.photoURL;
 
   /// User's authentication provider ID.
   String get providerId => jsObject.providerId;
@@ -66,7 +66,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// If the user is anonymous.
   bool get isAnonymous => jsObject.isAnonymous;
 
-  String get tenantId => jsObject.tenantId;
+  String /*?*/ get tenantId => jsObject.tenantId;
 
   /// Non-null additional metadata about the user.
   auth_interop.UserMetadata get metadata => jsObject.metadata;
@@ -88,7 +88,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// returned instead of creating a new instance.
   ///
   /// If [jsObject] is `null`, `null` is returned.
-  static User getInstance(auth_interop.UserJsImpl jsObject) {
+  static User getInstance(auth_interop.UserJsImpl /*?*/ jsObject) {
     if (jsObject == null) {
       return null;
     }
@@ -143,7 +143,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// Re-authenticates a user using a fresh credential, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> reauthenticateWithCredential(
-          auth_interop.OAuthCredential credential) =>
+          auth_interop.OAuthCredential /*!*/ credential) =>
       handleThenable(jsObject.reauthenticateWithCredential(credential))
           .then((o) => UserCredential.fromJsObject(o));
 
@@ -235,7 +235,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   }
 
   /// Returns a JSON-serializable representation of this object.
-  Map<String, dynamic> toJson() => dartify(jsObject.toJSON());
+  Map<String, dynamic> /*!*/ toJson() => dartify(jsObject.toJSON());
 
   @override
   String toString() => 'User: $uid';
@@ -290,7 +290,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   App get app => App.getInstance(jsObject.app);
 
   /// Currently signed-in [User].
-  User get currentUser => User.getInstance(jsObject.currentUser);
+  User /*?*/ get currentUser => User.getInstance(jsObject.currentUser);
 
   /// The current Auth instance's language code.
   /// When set to [:null:], the default Firebase Console language setting
@@ -323,7 +323,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// If the value is `null`, there is no signed-in user.
   Stream<User> get onAuthStateChanged {
     if (_changeController == null) {
-      var nextWrapper = allowInterop((auth_interop.UserJsImpl user) {
+      var nextWrapper = allowInterop((auth_interop.UserJsImpl /*?*/ user) {
         _changeController.add(User.getInstance(user));
       });
 
@@ -357,7 +357,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// If the value is `null`, there is no signed-in user.
   Stream<User> get onIdTokenChanged {
     if (_idTokenChangedController == null) {
-      var nextWrapper = allowInterop((auth_interop.UserJsImpl user) {
+      var nextWrapper = allowInterop((auth_interop.UserJsImpl /*?*/ user) {
         _idTokenChangedController.add(User.getInstance(user));
       });
 
@@ -383,9 +383,6 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
   /// Creates a new Auth from a [jsObject].
   static Auth getInstance(auth_interop.AuthJsImpl jsObject) {
-    if (jsObject == null) {
-      return null;
-    }
     return _expando[jsObject] ??= Auth._fromJsObject(jsObject);
   }
 
@@ -457,7 +454,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// [Auth.signInWithEmailLink] with the email address and
   /// the email link supplied in the email sent to the user.
   Future sendSignInLinkToEmail(String email,
-          [auth_interop.ActionCodeSettings actionCodeSettings]) =>
+          [auth_interop.ActionCodeSettings /*?*/ actionCodeSettings]) =>
       handleThenable(jsObject.sendSignInLinkToEmail(email, actionCodeSettings));
 
   /// Sends a password reset e-mail to the given [email].
@@ -480,7 +477,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// The Android package name and iOS bundle ID will be respected only if
   /// they are configured in the same Firebase Auth project used.
   Future sendPasswordResetEmail(String email,
-          [auth_interop.ActionCodeSettings actionCodeSettings]) =>
+          [auth_interop.ActionCodeSettings /*?*/ actionCodeSettings]) =>
       handleThenable(
           jsObject.sendPasswordResetEmail(email, actionCodeSettings));
 
@@ -507,7 +504,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Asynchronously signs in with the given credentials, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> signInWithCredential(
-          auth_interop.OAuthCredential credential) =>
+          auth_interop.OAuthCredential /*!*/ credential) =>
       handleThenable(jsObject.signInWithCredential(credential))
           .then((u) => UserCredential.fromJsObject(u));
 

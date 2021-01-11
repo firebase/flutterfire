@@ -5,56 +5,110 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
+#import "Private/FLTDocumentSnapshotStreamHandler.h"
 #import "Private/FLTFirebaseFirestoreUtils.h"
+#import "Private/FLTQuerySnapshotStreamHandler.h"
+#import "Private/FLTSnapshotsInSyncStreamHandler.h"
+#import "Private/FLTTransactionStreamHandler.h"
+
 #import "Public/FLTFirebaseFirestorePlugin.h"
 
 NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase_firestore";
+NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =
+    @"plugins.flutter.io/firebase_firestore/query";
+NSString *const kFLTFirebaseFirestoreDocumentSnapshotEventChannelName =
+    @"plugins.flutter.io/firebase_firestore/document";
+NSString *const kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName =
+    @"plugins.flutter.io/firebase_firestore/snapshotsInSync";
+NSString *const kFLTFirebaseFirestoreTransactionChannelName =
+    @"plugins.flutter.io/firebase_firestore/transaction";
 
 @interface FLTFirebaseFirestorePlugin ()
-@property(nonatomic, retain) FlutterMethodChannel *channel;
+@property(nonatomic, retain) NSMutableDictionary *transactions;
+
+/// Registers a unique event channel based on a channel prefix.
+///
+/// Once registered, the plugin will take care of removing the stream handler and cleaning up,
+/// if the engine is detached.
+///
+/// This function generates a random ID.
+///
+/// @param prefix Channel prefix onto which the unique ID will be appended on. The convention is
+///     "namespace/component" whereas the last / is added internally.
+/// @param handler The handler object for responding to channel events and submitting data.
+/// @return The generated identifier.
+/// @see #registerEventChannel(String, String, StreamHandler)
+- (NSString *)registerEventChannelWithPrefix:(NSString *)prefix
+                               streamHandler:(NSObject<FlutterStreamHandler> *)handler;
+
+/// Registers a unique event channel based on a channel prefix.
+///
+/// Once registered, the plugin will take care of removing the stream handler and cleaning up,
+/// if the engine is detached.
+///
+/// @param prefix Channel prefix onto which the unique ID will be appended on. The convention is
+/// "namespace/component" whereas the last / is added internally.
+/// @param identifier A identifier which will be appended to the prefix.
+/// @param handler The handler object for responding to channel events and submitting data.
+/// @return The passed identifier.
+/// @see #registerEventChannel(String, String, StreamHandler)
+- (NSString *)registerEventChannelWithPrefix:(NSString *)prefix
+                                  identifier:(NSString *)identifier
+                               streamHandler:(NSObject<FlutterStreamHandler> *)handler;
 @end
 
 @implementation FLTFirebaseFirestorePlugin {
-  NSMutableDictionary<NSNumber *, id<FIRListenerRegistration>> *_listeners;
-  NSMutableDictionary *_transactions;
+  NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
+  NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
+  NSMutableDictionary<NSString *, FLTTransactionStreamHandler *> *_transactionHandlers;
+  NSObject<FlutterBinaryMessenger> *_binaryMessenger;
+}
+
+FlutterStandardMethodCodec *_codec;
+
++ (void)initialize {
+  _codec =
+      [FlutterStandardMethodCodec codecWithReaderWriter:[FLTFirebaseFirestoreReaderWriter new]];
 }
 
 #pragma mark - FlutterPlugin
 
 // Returns a singleton instance of the Firebase Firestore plugin.
-+ (instancetype)sharedInstance {
-  static dispatch_once_t onceToken;
-  static FLTFirebaseFirestorePlugin *instance;
+//+ (instancetype)sharedInstance {
+//  static dispatch_once_t onceToken;
+//  static FLTFirebaseFirestorePlugin *instance;
+//
+//  dispatch_once(&onceToken, ^{
+//    instance = [[FLTFirebaseFirestorePlugin alloc] init];
+//    // Register with the Flutter Firebase plugin registry.
+//    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
+//  });
+//
+//  return instance;
+//}
 
-  dispatch_once(&onceToken, ^{
-    instance = [[FLTFirebaseFirestorePlugin alloc] init];
-    // Register with the Flutter Firebase plugin registry.
-    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
-  });
-
-  return instance;
-}
-
-- (instancetype)init {
+- (instancetype)init:(NSObject<FlutterBinaryMessenger> *)messenger {
   self = [super init];
   if (self) {
-    _listeners = [NSMutableDictionary<NSNumber *, id<FIRListenerRegistration>> dictionary];
+    _binaryMessenger = messenger;
     _transactions = [NSMutableDictionary<NSNumber *, FIRTransaction *> dictionary];
+    _eventChannels = [NSMutableDictionary dictionary];
+    _streamHandlers = [NSMutableDictionary dictionary];
+    _transactionHandlers = [NSMutableDictionary dictionary];
   }
   return self;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FLTFirebaseFirestoreReaderWriter *firestoreReaderWriter = [FLTFirebaseFirestoreReaderWriter new];
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseFirestoreChannelName
                                   binaryMessenger:[registrar messenger]
-                                            codec:[FlutterStandardMethodCodec
-                                                      codecWithReaderWriter:firestoreReaderWriter]];
+                                            codec:_codec];
 
-  FLTFirebaseFirestorePlugin *instance = [FLTFirebaseFirestorePlugin sharedInstance];
-  instance.channel = channel;
+  FLTFirebaseFirestorePlugin *instance =
+      [[FLTFirebaseFirestorePlugin alloc] init:[registrar messenger]];
   [registrar addMethodCallDelegate:instance channel:channel];
+
 #if TARGET_OS_OSX
 // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.
 #else
@@ -63,13 +117,14 @@ NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase
 }
 
 - (void)cleanupWithCompletion:(void (^)(void))completion {
-  @synchronized(self->_listeners) {
-    for (NSNumber *key in [self->_listeners allKeys]) {
-      id<FIRListenerRegistration> listener = self->_listeners[key];
-      [listener remove];
-    }
-    [self->_listeners removeAllObjects];
+  for (FlutterEventChannel *channel in self->_eventChannels) {
+    [channel setStreamHandler:nil];
   }
+  [self->_eventChannels removeAllObjects];
+  for (NSObject<FlutterStreamHandler> *handler in self->_streamHandlers) {
+    [handler onCancelWithArguments:nil];
+  }
+  [self->_streamHandlers removeAllObjects];
 
   @synchronized(self->_transactions) {
     [self->_transactions removeAllObjects];
@@ -101,7 +156,6 @@ NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   [self cleanupWithCompletion:nil];
-  self.channel = nil;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
@@ -129,10 +183,12 @@ NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
 
-  if ([@"Transaction#create" isEqualToString:call.method]) {
-    [self transactionCreate:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Transaction#get" isEqualToString:call.method]) {
+  if ([@"Transaction#get" isEqualToString:call.method]) {
     [self transactionGet:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Transaction#create" isEqualToString:call.method]) {
+    [self transactionCreate:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Transaction#storeResult" isEqualToString:call.method]) {
+    [self transactionStoreResult:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DocumentReference#set" isEqualToString:call.method]) {
     [self documentSet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DocumentReference#update" isEqualToString:call.method]) {
@@ -141,14 +197,8 @@ NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase
     [self documentDelete:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DocumentReference#get" isEqualToString:call.method]) {
     [self documentGet:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Query#addSnapshotListener" isEqualToString:call.method]) {
-    [self queryAddSnapshotListener:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"DocumentReference#addSnapshotListener" isEqualToString:call.method]) {
-    [self documentAddSnapshotListener:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Query#get" isEqualToString:call.method]) {
     [self queryGet:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Firestore#removeListener" isEqualToString:call.method]) {
-    [self removeListener:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"WriteBatch#commit" isEqualToString:call.method]) {
     [self batchCommit:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Firestore#terminate" isEqualToString:call.method]) {
@@ -161,8 +211,13 @@ NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase
     [self clearPersistence:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Firestore#waitForPendingWrites" isEqualToString:call.method]) {
     [self waitForPendingWrites:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Firestore#addSnapshotsInSyncListener" isEqualToString:call.method]) {
-    [self addSnapshotsInSyncListener:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"SnapshotsInSync#setup" isEqualToString:call.method]) {
+    [self setupSnapshotsInSyncListener:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Query#snapshots" isEqualToString:call.method]) {
+    [self setupQuerySnapshotsListener:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"DocumentReference#snapshots" isEqualToString:call.method]) {
+    [self setupDocumentReferenceSnapshotsListener:call.arguments
+                             withMethodCallResult:methodCallResult];
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
@@ -192,25 +247,25 @@ NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase
 
 #pragma mark - Firestore API
 
-- (void)addSnapshotsInSyncListener:(id)arguments
-              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  __weak __typeof__(self) weakSelf = self;
-  NSNumber *handle = arguments[@"handle"];
-  FIRFirestore *firestore = arguments[@"firestore"];
+- (void)setupSnapshotsInSyncListener:(id)arguments
+                withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  result.success([self
+      registerEventChannelWithPrefix:kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName
+                       streamHandler:[FLTSnapshotsInSyncStreamHandler new]]);
+}
 
-  id listener = ^() {
-    [weakSelf.channel invokeMethod:@"Firestore#snapshotsInSync"
-                         arguments:@{
-                           @"handle" : handle,
-                         }];
-  };
+- (void)setupDocumentReferenceSnapshotsListener:(id)arguments
+                           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  result.success([self
+      registerEventChannelWithPrefix:kFLTFirebaseFirestoreDocumentSnapshotEventChannelName
+                       streamHandler:[FLTDocumentSnapshotStreamHandler new]]);
+}
 
-  id<FIRListenerRegistration> listenerRegistration =
-      [firestore addSnapshotsInSyncListener:listener];
-  @synchronized(_listeners) {
-    _listeners[handle] = listenerRegistration;
-  }
-  result.success(nil);
+- (void)setupQuerySnapshotsListener:(id)arguments
+               withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  result.success([self
+      registerEventChannelWithPrefix:kFLTFirebaseFirestoreQuerySnapshotEventChannelName
+                       streamHandler:[FLTQuerySnapshotStreamHandler new]]);
 }
 
 - (void)waitForPendingWrites:(id)arguments
@@ -270,95 +325,9 @@ NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase
   }];
 }
 
-- (void)transactionCreate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRFirestore *firestore = arguments[@"firestore"];
-  NSNumber *transactionId = arguments[@"transactionId"];
-  NSNumber *transactionTimeout = arguments[@"timeout"];
-
-  __weak __typeof__(self) weakSelf = self;
-  NSDictionary *transactionAttemptArguments = @{
-    @"transactionId" : transactionId,
-    @"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:firestore.app.name]
-  };
-
-  id transactionRunBlock = ^id(FIRTransaction *transaction, NSError **pError) {
-    @synchronized(self->_transactions) {
-      self->_transactions[transactionId] = transaction;
-    }
-
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    __block NSDictionary *attemptedTransactionResponse;
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-      [weakSelf.channel invokeMethod:@"Transaction#attempt"
-                           arguments:transactionAttemptArguments
-                              result:^(id dartAttemptTransactionResult) {
-                                attemptedTransactionResponse = dartAttemptTransactionResult;
-                                dispatch_semaphore_signal(semaphore);
-                              }];
-    });
-
-    long timedOut = dispatch_semaphore_wait(
-        semaphore,
-        dispatch_time(DISPATCH_TIME_NOW, [transactionTimeout integerValue] * NSEC_PER_MSEC));
-    NSString *dartResponseType =
-        attemptedTransactionResponse ? attemptedTransactionResponse[@"type"] : @"ERROR";
-
-    if (timedOut) {
-      *pError = [NSError errorWithDomain:FIRFirestoreErrorDomain
-                                    code:FIRFirestoreErrorCodeDeadlineExceeded
-                                userInfo:@{}];
-      return nil;
-    }
-
-    if ([@"ERROR" isEqualToString:dartResponseType]) {
-      // Do nothing - already handled in Dart land.
-      return nil;
-    }
-
-    NSArray<NSDictionary *> *commands = attemptedTransactionResponse[@"commands"];
-    for (NSDictionary *command in commands) {
-      NSString *commandType = command[@"type"];
-      NSString *documentPath = command[@"path"];
-      FIRDocumentReference *reference = [firestore documentWithPath:documentPath];
-      if ([@"DELETE" isEqualToString:commandType]) {
-        [transaction deleteDocument:reference];
-      } else if ([@"UPDATE" isEqualToString:commandType]) {
-        NSDictionary *data = command[@"data"];
-        [transaction updateData:data forDocument:reference];
-      } else if ([@"SET" isEqualToString:commandType]) {
-        NSDictionary *data = command[@"data"];
-        NSDictionary *options = command[@"options"];
-        if ([options[@"merge"] isEqual:@YES]) {
-          [transaction setData:data forDocument:reference merge:YES];
-        } else if (![options[@"mergeFields"] isEqual:[NSNull null]]) {
-          [transaction setData:data forDocument:reference mergeFields:options[@"mergeFields"]];
-        } else {
-          [transaction setData:data forDocument:reference];
-        }
-      }
-    }
-
-    return nil;
-  };
-
-  id transactionCompleteBlock = ^(id transactionResult, NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-    @synchronized(self->_transactions) {
-      [self->_transactions removeObjectForKey:transactionId];
-    }
-  };
-
-  [firestore runTransactionWithBlock:transactionRunBlock completion:transactionCompleteBlock];
-}
-
 - (void)transactionGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    NSNumber *transactionId = arguments[@"transactionId"];
+    NSString *transactionId = arguments[@"transactionId"];
     FIRDocumentReference *document = arguments[@"reference"];
 
     FIRTransaction *transaction = self->_transactions[transactionId];
@@ -374,6 +343,35 @@ NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase
       result.success(nil);
     }
   });
+}
+
+- (void)transactionCreate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSString *transactionId = [[[NSUUID UUID] UUIDString] lowercaseString];
+
+  FLTTransactionStreamHandler *handler =
+      [[FLTTransactionStreamHandler alloc] initWithId:transactionId
+          started:^(FIRTransaction *_Nonnull transaction) {
+            self->_transactions[transactionId] = transaction;
+          }
+          ended:^{
+            self->_transactions[transactionId] = nil;
+          }];
+
+  _transactionHandlers[transactionId] = handler;
+
+  result.success([self registerEventChannelWithPrefix:kFLTFirebaseFirestoreTransactionChannelName
+                                           identifier:transactionId
+                                        streamHandler:handler]);
+}
+
+- (void)transactionStoreResult:(id)arguments
+          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSString *transactionId = arguments[@"transactionId"];
+  NSDictionary *transactionResult = arguments[@"result"];
+
+  [_transactionHandlers[transactionId] receiveTransactionResponse:transactionResult];
+
+  result.success(nil);
 }
 
 - (void)documentSet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -438,87 +436,6 @@ NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase
   [document getDocumentWithSource:source completion:completion];
 }
 
-- (void)queryAddSnapshotListener:(id)arguments
-            withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  __weak __typeof__(self) weakSelf = self;
-  FIRQuery *query = arguments[@"query"];
-
-  if (query == nil) {
-    result.error(@"sdk-error",
-                 @"An error occurred while parsing query arguments, see native logs for more "
-                 @"information. Please report this issue.",
-                 nil, nil);
-    return;
-  }
-
-  NSNumber *handle = arguments[@"handle"];
-  NSNumber *includeMetadataChanges = arguments[@"includeMetadataChanges"];
-
-  id listener = ^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
-    if (error != nil) {
-      NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
-      [weakSelf.channel
-          invokeMethod:@"QuerySnapshot#error"
-             arguments:@{
-               @"handle" : handle,
-               @"error" : @{@"code" : codeAndMessage[0], @"message" : codeAndMessage[1]},
-             }];
-    } else if (snapshot != nil) {
-      [weakSelf.channel invokeMethod:@"QuerySnapshot#event"
-                           arguments:@{
-                             @"handle" : handle,
-                             @"snapshot" : snapshot,
-                           }];
-    }
-  };
-
-  id<FIRListenerRegistration> listenerRegistration =
-      [query addSnapshotListenerWithIncludeMetadataChanges:includeMetadataChanges.boolValue
-                                                  listener:listener];
-
-  @synchronized(_listeners) {
-    _listeners[handle] = listenerRegistration;
-  }
-  result.success(nil);
-}
-
-- (void)documentAddSnapshotListener:(id)arguments
-               withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  __weak __typeof__(self) weakSelf = self;
-
-  NSNumber *handle = arguments[@"handle"];
-  NSNumber *includeMetadataChanges = arguments[@"includeMetadataChanges"];
-
-  FIRDocumentReference *document = arguments[@"reference"];
-
-  id listener = ^(FIRDocumentSnapshot *snapshot, NSError *_Nullable error) {
-    if (error != nil) {
-      NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
-      [weakSelf.channel
-          invokeMethod:@"DocumentSnapshot#error"
-             arguments:@{
-               @"handle" : handle,
-               @"error" : @{@"code" : codeAndMessage[0], @"message" : codeAndMessage[1]},
-             }];
-    } else if (snapshot != nil) {
-      [weakSelf.channel invokeMethod:@"DocumentSnapshot#event"
-                           arguments:@{
-                             @"handle" : handle,
-                             @"snapshot" : snapshot,
-                           }];
-    }
-  };
-
-  id<FIRListenerRegistration> listenerRegistration =
-      [document addSnapshotListenerWithIncludeMetadataChanges:includeMetadataChanges.boolValue
-                                                     listener:listener];
-
-  @synchronized(_listeners) {
-    _listeners[handle] = listenerRegistration;
-  }
-  result.success(nil);
-}
-
 - (void)queryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRQuery *query = arguments[@"query"];
 
@@ -539,17 +456,6 @@ NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase
                          result.success(snapshot);
                        }
                      }];
-}
-
-- (void)removeListener:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSNumber *handle = arguments[@"handle"];
-  @synchronized(_listeners) {
-    if (_listeners[handle] != nil) {
-      [_listeners[handle] remove];
-      [_listeners removeObjectForKey:handle];
-    }
-  }
-  result.success(nil);
 }
 
 - (void)batchCommit:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -587,6 +493,29 @@ NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase
       result.success(nil);
     }
   }];
+}
+
+- (NSString *)registerEventChannelWithPrefix:(NSString *)prefix
+                               streamHandler:(NSObject<FlutterStreamHandler> *)handler {
+  return [self registerEventChannelWithPrefix:prefix
+                                   identifier:[[[NSUUID UUID] UUIDString] lowercaseString]
+                                streamHandler:handler];
+}
+
+- (NSString *)registerEventChannelWithPrefix:(NSString *)prefix
+                                  identifier:(NSString *)identifier
+                               streamHandler:(NSObject<FlutterStreamHandler> *)handler {
+  NSString *channelName = [NSString stringWithFormat:@"%@/%@", prefix, identifier];
+
+  FlutterEventChannel *channel = [[FlutterEventChannel alloc] initWithName:channelName
+                                                           binaryMessenger:_binaryMessenger
+                                                                     codec:_codec];
+
+  [channel setStreamHandler:handler];
+  [_eventChannels setObject:channel forKey:identifier];
+  [_streamHandlers setObject:handler forKey:identifier];
+
+  return identifier;
 }
 
 @end

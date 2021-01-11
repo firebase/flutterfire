@@ -29,7 +29,7 @@ class ListResult {
   /// If set, there might be more results for this list.
   ///
   /// Use this token to resume the list with [ListOptions].
-  String get nextPageToken => _delegate.nextPageToken;
+  String /*?*/ get nextPageToken => _delegate.nextPageToken;
 
   /// References to prefixes (sub-folders). You can call list() on them to get
   /// its contents.

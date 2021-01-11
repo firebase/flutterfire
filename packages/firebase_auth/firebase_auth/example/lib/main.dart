@@ -34,7 +34,7 @@ class AuthExampleApp extends StatelessWidget {
 class AuthTypeSelector extends StatelessWidget {
   // Navigates to a new page
   void _pushPage(BuildContext context, Widget page) {
-    Navigator.of(context).push(
+    Navigator.of(context) /*!*/ .push(
       MaterialPageRoute<void>(builder: (_) => page),
     );
   }

@@ -14,7 +14,7 @@ import '../mock.dart';
 
 void main() {
   setupFirebaseAuthMocks();
-  FirebaseAuthPlatform auth;
+  /*late*/ FirebaseAuthPlatform auth;
   final List<MethodCall> log = <MethodCall>[];
   const String regularTestEmail = 'test@email.com';
   const String testPassword = 'testPassword';
@@ -94,7 +94,7 @@ void main() {
   }
 
   group('$MethodChannelFirebaseAuth', () {
-    Map<String, dynamic> user;
+    /*late*/ Map<String, dynamic> user;
 
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
@@ -868,7 +868,7 @@ void main() {
     });
 
     group('verifyPhoneNumber()', () {
-      int handle;
+      /*late*/ int handle;
 
       setUp(() {
         handle = nextMockHandleId;
@@ -933,7 +933,7 @@ void main() {
     });
 
     group('authStateChanges()', () {
-      StreamSubscription<UserPlatform> subscription;
+      /*late*/ StreamSubscription<UserPlatform> subscription;
 
       tearDown(() {
         subscription?.cancel();
@@ -976,7 +976,7 @@ void main() {
     });
 
     group('idTokenChanges()', () {
-      StreamSubscription<UserPlatform> subscription;
+      /*late*/ StreamSubscription<UserPlatform> subscription;
 
       tearDown(() {
         subscription?.cancel();
@@ -1015,7 +1015,7 @@ void main() {
     });
 
     group('userChanges()', () {
-      StreamSubscription<UserPlatform> subscription;
+      /*late*/ StreamSubscription<UserPlatform> subscription;
 
       tearDown(() {
         subscription?.cancel();

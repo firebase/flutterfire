@@ -30,11 +30,11 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   }
 
   /// The [FirebaseFirestorePlatform] used to produce this [DocumentSnapshotPlatform].
-  final FirebaseFirestorePlatform _firestore;
+  final FirebaseFirestorePlatform /*!*/ _firestore;
 
   final Pointer _pointer;
 
-  final Map<String, dynamic> _data;
+  final Map<String, dynamic> /*!*/ _data;
 
   /// The database ID of the snapshot's document.
   String get id => _pointer.id;
@@ -55,7 +55,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   DocumentReferencePlatform get reference => _firestore.doc(_pointer.path);
 
   /// Contains all the data of this snapshot.
-  Map<String, dynamic> data() {
+  Map<String, dynamic> /*?*/ data() {
     return exists ? Map<String, dynamic>.from(_data['data']) : null;
   }
 
@@ -91,7 +91,9 @@ class DocumentSnapshotPlatform extends PlatformInterface {
     }
 
     List<String> components = fieldPath.components;
-    Map<String, dynamic> snapshotData = data();
+
+    // We know snapshotData is not null because of the `exists` check
+    Map<String, dynamic> snapshotData = data() /*!*/;
 
     _findComponent(int componentIndex, Map<String, dynamic> data) {
       bool isLast = componentIndex + 1 == components.length;

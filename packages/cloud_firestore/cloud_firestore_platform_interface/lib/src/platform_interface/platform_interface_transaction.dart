@@ -9,7 +9,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// The [TransactionHandler] may be executed multiple times, it should be able
 /// to handle multiple executions.
-typedef TransactionHandler<T extends dynamic> = Future<T> Function(
+typedef TransactionHandler<T extends dynamic> = Future<T /*?*/ > Function(
     TransactionPlatform);
 
 /// A [TransactionPlatform] is a set of read and write operations on one or more documents.
@@ -60,7 +60,7 @@ abstract class TransactionPlatform extends PlatformInterface {
   /// If the document does not exist yet, it will be created. If you pass
   /// [SetOptions], the provided [data] can be merged into the existing document.
   TransactionPlatform set(String documentPath, Map<String, dynamic> data,
-      [SetOptions options]) {
+      [SetOptions /*?*/ options]) {
     throw UnimplementedError("set() is not implemented");
   }
 }

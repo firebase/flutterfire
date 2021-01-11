@@ -14,8 +14,8 @@ import 'es6_interop.dart';
 import 'js_interop.dart' as js;
 
 /// Returns Dart representation from JS Object.
-dynamic dartify(Object jsObject,
-    [Object Function(Object object) customDartify]) {
+dynamic dartify(Object /*?*/ jsObject,
+    [Object Function(Object /*?*/ object) /*?*/ customDartify]) {
   if (_isBasicType(jsObject)) {
     return jsObject;
   }
@@ -30,7 +30,7 @@ dynamic dartify(Object jsObject,
     return jsDate;
   }
 
-  Object value = customDartify?.call(jsObject);
+  Object /*?*/ value = customDartify?.call(jsObject);
 
   if (value == null) {
     var keys = js.objectKeys(jsObject);
@@ -45,12 +45,14 @@ dynamic dartify(Object jsObject,
 }
 
 // Converts an Iterable into a JS Array
-dynamic jsifyList(Iterable list, [Object Function(Object object) customJsify]) {
+dynamic jsifyList(Iterable list,
+    [Object Function(Object object) /*?*/ customJsify]) {
   return js.toJSArray(list.map((item) => jsify(item, customJsify)).toList());
 }
 
 // Returns the JS implementation from Dart Object.
-dynamic jsify(Object dartObject, [Object Function(Object object) customJsify]) {
+dynamic jsify(Object dartObject,
+    [Object Function(Object object) /*?*/ customJsify]) {
   if (_isBasicType(dartObject)) {
     return dartObject;
   }
@@ -71,7 +73,7 @@ dynamic jsify(Object dartObject, [Object Function(Object object) customJsify]) {
     return allowInterop(dartObject);
   }
 
-  Object value = customJsify?.call(dartObject);
+  Object /*?*/ value = customJsify?.call(dartObject);
 
   if (value == null) {
     throw ArgumentError.value(dartObject, 'dartObject', 'Could not convert');
@@ -86,7 +88,7 @@ dynamic callMethod(Object jsObject, String method, List<dynamic> args) =>
 
 /// Returns `true` if the [value] is a very basic built-in type - e.g.
 /// `null`, [num], [bool] or [String]. It returns `false` in the other case.
-bool _isBasicType(Object value) {
+bool _isBasicType(Object /*?*/ value) {
   if (value == null || value is num || value is bool || value is String) {
     return true;
   }

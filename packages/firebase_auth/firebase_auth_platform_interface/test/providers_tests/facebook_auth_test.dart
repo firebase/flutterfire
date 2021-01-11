@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  TestFacebookAuthProvider facebookAuthProvider;
+  /*late*/ TestFacebookAuthProvider facebookAuthProvider;
   final String kMockProviderId = 'facebook.com';
   setUpAll(() {
     facebookAuthProvider = TestFacebookAuthProvider();

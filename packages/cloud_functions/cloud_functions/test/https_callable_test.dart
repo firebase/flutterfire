@@ -102,14 +102,5 @@ void main() {
         verify(kMockHttpsCallablePlatform(parameters));
       });
     });
-
-    group('set.timeout (deprecated)', () {
-      test('sets timeout value', () async {
-        // ignore: deprecated_member_use_from_same_package
-        kHttpsCallable.timeout = Duration(minutes: 2);
-
-        verify(kMockHttpsCallablePlatform.timeout = Duration(minutes: 2));
-      });
-    });
   });
 }

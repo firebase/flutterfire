@@ -17,10 +17,11 @@ typedef void PhoneVerificationFailed(FirebaseAuthException error);
 
 /// Typedef for handling when Firebase sends a SMS code to the provided phone
 /// number.
-typedef void PhoneCodeSent(String verificationId, int forceResendingToken);
+typedef void PhoneCodeSent(
+    String /*!*/ verificationId, int forceResendingToken);
 
 /// Typedef for handling automatic phone number timeout resolution.
-typedef void PhoneCodeAutoRetrievalTimeout(String verificationId);
+typedef void PhoneCodeAutoRetrievalTimeout(String /*!*/ verificationId);
 
 /// An enumeration of the possible persistence mechanism types.
 ///

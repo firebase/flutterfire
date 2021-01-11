@@ -14,7 +14,7 @@ String _reserved = "Paths must not contain '~', '*', '/', '[', or ']'.";
 /// contains a '.'.
 class FieldPath {
   /// The [List] of components which make up this [FieldPath].
-  final List<String> components;
+  final List<String /*!*/ > /*!*/ components;
 
   /// Creates a new [FieldPath].
   FieldPath(this.components) {

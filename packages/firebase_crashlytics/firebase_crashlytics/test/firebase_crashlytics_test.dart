@@ -15,7 +15,7 @@ import './mock.dart';
 void main() {
   setupFirebaseCrashlyticsMocks();
 
-  FirebaseCrashlytics crashlytics;
+  /*late*/ FirebaseCrashlytics crashlytics;
 
   group('$FirebaseCrashlytics', () {
     setUpAll(() async {

@@ -13,7 +13,7 @@ void main() {
   initializeMethodChannel();
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
-  MethodChannelFirebaseFirestore firestore;
+  /*late*/ MethodChannelFirebaseFirestore firestore;
 
   final List<MethodCall> log = <MethodCall>[];
 

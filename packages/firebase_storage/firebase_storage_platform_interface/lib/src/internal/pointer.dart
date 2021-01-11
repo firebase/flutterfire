@@ -25,7 +25,7 @@ class Pointer {
     }
   }
 
-  String _path;
+  String /*!*/ _path;
 
   /// Returns whether the path points to the root of a bucket.
   bool get isRoot {

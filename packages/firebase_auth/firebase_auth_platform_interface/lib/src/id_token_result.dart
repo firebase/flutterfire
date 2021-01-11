@@ -17,7 +17,7 @@ class IdTokenResult {
   @protected
   IdTokenResult(this._data);
 
-  final Map<String, dynamic> _data;
+  final Map<String, dynamic> /*!*/ _data;
 
   /// The authentication time formatted as UTC string. This is the time the user
   /// authenticated (signed in) and not the time the token was refreshed.

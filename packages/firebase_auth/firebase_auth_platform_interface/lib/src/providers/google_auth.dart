@@ -85,13 +85,6 @@ class GoogleAuthProvider extends AuthProvider {
       accessToken: accessToken,
     );
   }
-
-  @Deprecated('Deprecated in favor of `GoogleAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential({String idToken, String accessToken}) {
-    return GoogleAuthProvider.credential(
-        idToken: idToken, accessToken: accessToken);
-  }
 }
 
 /// The auth credential returned from calling

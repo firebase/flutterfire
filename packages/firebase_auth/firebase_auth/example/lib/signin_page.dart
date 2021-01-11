@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -169,7 +171,7 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
 
-  String _userEmail;
+  String _userEmail = '';
 
   @override
   Widget build(BuildContext context) {
@@ -249,7 +251,7 @@ class _AnonymouslySignInSection extends StatefulWidget {
 
 class _AnonymouslySignInSectionState extends State<_AnonymouslySignInSection> {
   bool _success;
-  String _userID;
+  String _userID = '';
 
   @override
   Widget build(BuildContext context) {

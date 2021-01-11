@@ -70,11 +70,4 @@ void main() {
     functions.httpsCallable('testName');
     verify(kMockFirebaseFunctionsPlatform.httpsCallable(any, 'testName', any));
   });
-
-//
-  test('getHttpsCallable()', () {
-    // ignore: deprecated_member_use_from_same_package
-    functions.getHttpsCallable(functionName: 'testName');
-    verify(kMockFirebaseFunctionsPlatform.httpsCallable(any, 'testName', any));
-  });
 }
