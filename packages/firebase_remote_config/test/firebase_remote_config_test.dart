@@ -14,7 +14,8 @@ void main() {
     return <String, dynamic>{
       'lastFetchTime': lastFetchTime,
       'lastFetchStatus': 'success',
-      'inDebugMode': true,
+      'minimumFetchInterval': 0, // 12 hours is default, 0 seconds in test
+      'fetchTimeout': 60, // 60 seconds is remote-config default
       'parameters': <String, dynamic>{
         'param1': <String, dynamic>{
           'source': 'static',
@@ -48,7 +49,8 @@ void main() {
           isMethodCall('RemoteConfig#instance', arguments: null),
         ],
       );
-      expect(remoteConfig.remoteConfigSettings.debugMode, true);
+      expect(remoteConfig.remoteConfigSettings.minimumFetchIntervalMillis, 0);
+      expect(remoteConfig.remoteConfigSettings.fetchTimeoutMillis, 60 * 1000);
       expect(remoteConfig.lastFetchTime,
           DateTime.fromMillisecondsSinceEpoch(lastFetchTime));
       expect(remoteConfig.lastFetchStatus, LastFetchStatus.values[0]);
@@ -218,9 +220,11 @@ void main() {
     });
 
     test('setConfigSettings', () async {
-      expect(remoteConfig.remoteConfigSettings.debugMode, true);
+      var intervalSecs = 100;
+      expect(remoteConfig.remoteConfigSettings.minimumFetchIntervalMillis, 0);
       final RemoteConfigSettings remoteConfigSettings =
-          RemoteConfigSettings(debugMode: false);
+          // milliseconds in the Dart API (to match firebase-js-sdk)
+          RemoteConfigSettings(minimumFetchIntervalMillis: intervalSecs * 1000);
       await remoteConfig.setConfigSettings(remoteConfigSettings);
       expect(
         log,
@@ -228,12 +232,15 @@ void main() {
           isMethodCall(
             'RemoteConfig#setConfigSettings',
             arguments: <String, dynamic>{
-              'debugMode': false,
+              // milliseconds in Dart API, but just seconds for native ios/android
+              'minimumFetchInterval': intervalSecs,
+              'fetchTimeout': 60, // from our mock instance above
             },
           ),
         ],
       );
-      expect(remoteConfig.remoteConfigSettings.debugMode, false);
+      expect(remoteConfig.remoteConfigSettings.minimumFetchIntervalMillis,
+          intervalSecs * 1000);
     });
   });
 }

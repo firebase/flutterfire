@@ -1,6 +1,10 @@
 name: firebase_dynamic_links_example
 description: Demonstrates how to use the firebase_dynamic_links plugin.
 
+environment:
+  sdk: ">=2.0.0 <3.0.0"
+  flutter: ">=1.10.0 <2.0.0"
+
 dependencies:
   flutter:
     sdk: flutter

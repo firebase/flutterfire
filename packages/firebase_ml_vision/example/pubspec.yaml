@@ -2,10 +2,13 @@ name: firebase_ml_vision_example
 description: Demonstrates how to use the firebase_ml_vision plugin.
 author: Flutter Team <flutter-dev@googlegroups.com>
 
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+  flutter: ">=1.10.0 <2.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
-
   image_picker: ^0.6.0
   cupertino_icons: ^0.1.2
   firebase_ml_vision:
