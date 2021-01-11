@@ -26,6 +26,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FieldValueFactoryPlatform.instance = FieldValueFactoryWeb();
     FirebaseFirestorePlatform.instance = FirebaseFirestoreWeb();
   }
 
@@ -34,10 +35,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   FirebaseFirestoreWeb({FirebaseApp /*?*/ app})
       : _webFirestore =
             firestore_interop.getFirestoreInstance(core_interop.app(app?.name)),
-        // TODO(ehesp): Why is a `!` being added with null safety?
-        super(appInstance: app) {
-    FieldValueFactoryPlatform.instance = FieldValueFactoryWeb();
-  }
+        super(appInstance: app);
 
   @override
   FirebaseFirestorePlatform delegateFor({/*required*/ FirebaseApp app}) {
