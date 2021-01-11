@@ -21,7 +21,7 @@ MockFirebaseAuth mockAuthPlatform = MockFirebaseAuth();
 void main() {
   setupFirebaseAuthMocks();
 
-  /*late*/ FirebaseAuth auth;
+  late FirebaseAuth auth;
 
   const Map<String, dynamic> kMockIdTokenResult = <String, dynamic>{
     'token': '12345',
@@ -58,8 +58,8 @@ void main() {
     ],
   };
 
-  MockUserPlatform mockUserPlatform;
-  MockUserCredentialPlatform mockUserCredPlatform;
+  MockUserPlatform? mockUserPlatform;
+  MockUserCredentialPlatform? mockUserCredPlatform;
 
   AdditionalUserInfo mockAdditionalInfo = AdditionalUserInfo(
     isNewUser: false,
@@ -69,10 +69,11 @@ void main() {
   );
 
   EmailAuthCredential mockCredential =
-      EmailAuthProvider.credential(email: 'test', password: 'test');
+      EmailAuthProvider.credential(email: 'test', password: 'test')
+          as EmailAuthCredential;
 
   group("$User", () {
-    Map<String, dynamic> user;
+    Map<String, dynamic>? user;
     FirebaseAuthPlatform.instance = mockAuthPlatform;
 
     setUpAll(() async {
@@ -82,29 +83,34 @@ void main() {
 
       user = kMockUser;
 
-      mockUserPlatform = MockUserPlatform(mockAuthPlatform, user);
+      mockUserPlatform = MockUserPlatform(mockAuthPlatform, user!);
 
       mockUserCredPlatform = MockUserCredentialPlatform(
-          FirebaseAuthPlatform.instance,
-          mockAdditionalInfo,
-          mockCredential,
-          mockUserPlatform);
+        FirebaseAuthPlatform.instance,
+        mockAdditionalInfo,
+        mockCredential,
+        mockUserPlatform!,
+      );
 
       when(mockAuthPlatform.signInAnonymously()).thenAnswer(
           (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
-      when(mockAuthPlatform.currentUser).thenReturn(mockUserPlatform);
+
+      when(mockAuthPlatform.currentUser).thenReturn(mockUserPlatform!);
 
       when(mockAuthPlatform.instanceFor(
-              app: anyNamed("app"),
-              pluginConstants: anyNamed("pluginConstants")))
-          .thenAnswer((_) => mockUserPlatform);
+        app: anyNamed("app"),
+        pluginConstants: anyNamed("pluginConstants"),
+      )).thenAnswer((_) => mockUserPlatform);
+
       when(mockAuthPlatform.delegateFor(
         app: anyNamed("app"),
       )).thenAnswer((_) => mockAuthPlatform);
+
       when(mockAuthPlatform.setInitialValues(
         currentUser: anyNamed("currentUser"),
         languageCode: anyNamed("languageCode"),
       )).thenAnswer((_) => mockAuthPlatform);
+
       MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
         switch (call.method) {
           default:
@@ -119,150 +125,100 @@ void main() {
     });
 
     test('delete()', () async {
-      await auth.currentUser.delete();
+      await auth.currentUser!.delete();
 
-      verify(mockUserPlatform.delete());
+      verify(mockUserPlatform!.delete());
     });
 
     test('getIdToken()', () async {
-      when(mockUserPlatform.getIdToken(any))
-          .thenAnswer((_) => Future.value('token'));
+      when(mockUserPlatform!.getIdToken(any)).thenAnswer((_) async => 'token');
 
-      final token = await auth.currentUser.getIdToken(true);
+      final token = await auth.currentUser!.getIdToken(true);
 
-      verify(mockUserPlatform.getIdToken(true));
+      verify(mockUserPlatform!.getIdToken(true));
       expect(token, isA<String>());
     });
 
     test('getIdTokenResult()', () async {
-      when(mockUserPlatform.getIdTokenResult(any))
-          .thenAnswer((_) => Future.value(IdTokenResult(kMockIdTokenResult)));
+      when(mockUserPlatform!.getIdTokenResult(any))
+          .thenAnswer((_) async => IdTokenResult(kMockIdTokenResult));
 
-      final idTokenResult = await auth.currentUser.getIdTokenResult(true);
+      final idTokenResult = await auth.currentUser!.getIdTokenResult(true);
 
-      verify(mockUserPlatform.getIdTokenResult(true));
+      verify(mockUserPlatform!.getIdTokenResult(true));
       expect(idTokenResult, isA<IdTokenResult>());
     });
 
     group('linkWithCredential()', () {
       setUp(() {
-        when(mockUserPlatform.linkWithCredential(any))
-            .thenAnswer((_) => Future.value(mockUserCredPlatform));
+        when(mockUserPlatform!.linkWithCredential(any))
+            .thenAnswer((_) async => mockUserCredPlatform!);
       });
+
       test('should call linkWithCredential()', () async {
         String newEmail = 'new@email.com';
         EmailAuthCredential credential =
-            EmailAuthProvider.credential(email: newEmail, password: 'test');
+            EmailAuthProvider.credential(email: newEmail, password: 'test')
+                as EmailAuthCredential;
 
-        await auth.currentUser.linkWithCredential(credential);
+        await auth.currentUser!.linkWithCredential(credential);
 
-        verify(mockUserPlatform.linkWithCredential(credential));
-      });
-
-      test('throws an AssertionError', () async {
-        try {
-          await auth.currentUser.linkWithCredential(null);
-        } on AssertionError catch (_) {
-          verifyNever(mockUserPlatform.linkWithCredential(
-            null,
-          ));
-          return;
-        }
-
-        fail('should have thrown an AssertionError');
+        verify(mockUserPlatform!.linkWithCredential(credential));
       });
     });
 
     group('reauthenticateWithCredential()', () {
       setUp(() {
-        when(mockUserPlatform.reauthenticateWithCredential(any))
+        when(mockUserPlatform!.reauthenticateWithCredential(any))
             .thenAnswer((_) => Future.value(mockUserCredPlatform));
       });
       test('should call reauthenticateWithCredential()', () async {
         String newEmail = 'new@email.com';
         EmailAuthCredential credential =
-            EmailAuthProvider.credential(email: newEmail, password: 'test');
+            EmailAuthProvider.credential(email: newEmail, password: 'test')
+                as EmailAuthCredential;
 
-        await auth.currentUser.reauthenticateWithCredential(credential);
+        await auth.currentUser!.reauthenticateWithCredential(credential);
 
-        verify(mockUserPlatform.reauthenticateWithCredential(credential));
-      });
-
-      test('throws an AssertionError', () async {
-        try {
-          await auth.currentUser.reauthenticateWithCredential(null);
-        } on AssertionError catch (_) {
-          verifyNever(mockUserPlatform.reauthenticateWithCredential(
-            null,
-          ));
-          return;
-        }
-
-        fail('should have thrown an AssertionError');
+        verify(mockUserPlatform!.reauthenticateWithCredential(credential));
       });
     });
 
     test('reload()', () async {
-      await auth.currentUser.reload();
+      await auth.currentUser!.reload();
 
-      verify(mockUserPlatform.reload());
+      verify(mockUserPlatform!.reload());
     });
 
     test('sendEmailVerification()', () async {
       final ActionCodeSettings actionCodeSettings =
           ActionCodeSettings(url: 'test');
 
-      await auth.currentUser.sendEmailVerification(actionCodeSettings);
+      await auth.currentUser!.sendEmailVerification(actionCodeSettings);
 
-      verify(mockUserPlatform.sendEmailVerification(actionCodeSettings));
+      verify(mockUserPlatform!.sendEmailVerification(actionCodeSettings));
     });
 
     group('unlink()', () {
       setUp(() {
-        when(mockUserPlatform.unlink(any))
+        when(mockUserPlatform!.unlink(any))
             .thenAnswer((_) => Future.value(mockUserPlatform));
       });
       test('should call unlink()', () async {
         final String providerId = 'providerId';
 
-        await auth.currentUser.unlink(providerId);
+        await auth.currentUser!.unlink(providerId);
 
-        verify(mockUserPlatform.unlink(providerId));
-      });
-
-      test('throws an AssertionError', () async {
-        try {
-          await auth.currentUser.unlink(null);
-        } on AssertionError catch (_) {
-          verifyNever(mockUserPlatform.unlink(
-            null,
-          ));
-          return;
-        }
-
-        fail('should have thrown an AssertionError');
+        verify(mockUserPlatform!.unlink(providerId));
       });
     });
     group('updateEmail()', () {
       test('should call updateEmail()', () async {
         final String newEmail = 'newEmail';
 
-        await auth.currentUser.updateEmail(newEmail);
+        await auth.currentUser!.updateEmail(newEmail);
 
-        verify(mockUserPlatform.updateEmail(newEmail));
-      });
-
-      test('throws an AssertionError', () async {
-        try {
-          await auth.currentUser.updateEmail(null);
-        } on AssertionError catch (_) {
-          verifyNever(mockUserPlatform.updateEmail(
-            null,
-          ));
-          return;
-        }
-
-        fail('should have thrown an AssertionError');
+        verify(mockUserPlatform!.updateEmail(newEmail));
       });
     });
 
@@ -270,44 +226,19 @@ void main() {
       test('should call updatePassword()', () async {
         final String newPassword = 'newPassword';
 
-        await auth.currentUser.updatePassword(newPassword);
+        await auth.currentUser!.updatePassword(newPassword);
 
-        verify(mockUserPlatform.updatePassword(newPassword));
-      });
-
-      test('throws an AssertionError', () async {
-        try {
-          await auth.currentUser.updatePassword(null);
-        } on AssertionError catch (_) {
-          verifyNever(mockUserPlatform.updatePassword(
-            null,
-          ));
-          return;
-        }
-
-        fail('should have thrown an AssertionError');
+        verify(mockUserPlatform!.updatePassword(newPassword));
       });
     });
     group('updatePhoneNumber()', () {
       test('should call updatePhoneNumber()', () async {
         PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-            verificationId: 'test', smsCode: 'test');
+            verificationId: 'test', smsCode: 'test') as PhoneAuthCredential;
 
-        await auth.currentUser.updatePhoneNumber(phoneAuthCredential);
+        await auth.currentUser!.updatePhoneNumber(phoneAuthCredential);
 
-        verify(mockUserPlatform.updatePhoneNumber(phoneAuthCredential));
-      });
-      test('throws an AssertionError', () async {
-        try {
-          await auth.currentUser.updatePhoneNumber(null);
-        } on AssertionError catch (_) {
-          verifyNever(mockUserPlatform.updatePhoneNumber(
-            null,
-          ));
-          return;
-        }
-
-        fail('should have thrown an AssertionError');
+        verify(mockUserPlatform!.updatePhoneNumber(phoneAuthCredential));
       });
     });
 
@@ -318,10 +249,11 @@ void main() {
         'displayName': displayName,
         'photoURL': photoURL
       };
-      await auth.currentUser
+
+      await auth.currentUser!
           .updateProfile(displayName: displayName, photoURL: photoURL);
 
-      verify(mockUserPlatform.updateProfile(data));
+      verify(mockUserPlatform!.updateProfile(data));
     });
 
     group('verifyBeforeUpdateEmail()', () {
@@ -329,37 +261,46 @@ void main() {
         const newEmail = 'new@email.com';
         ActionCodeSettings actionCodeSettings = ActionCodeSettings(url: 'test');
 
-        await auth.currentUser
+        await auth.currentUser!
             .verifyBeforeUpdateEmail(newEmail, actionCodeSettings);
 
-        verify(mockUserPlatform.verifyBeforeUpdateEmail(
-            newEmail, actionCodeSettings));
-      });
-
-      test('throws an AssertionError', () async {
-        ActionCodeSettings actionCodeSettings = ActionCodeSettings(url: 'test');
-
-        try {
-          await auth.currentUser
-              .verifyBeforeUpdateEmail(null, actionCodeSettings);
-        } on AssertionError catch (_) {
-          verifyNever(mockUserPlatform.verifyBeforeUpdateEmail(
-              null, actionCodeSettings));
-          return;
-        }
-
-        fail('should have thrown an AssertionError');
+        verify(mockUserPlatform!
+            .verifyBeforeUpdateEmail(newEmail, actionCodeSettings));
       });
     });
 
     test('toString()', () async {
       when(mockAuthPlatform.currentUser)
-          .thenReturn(TestUserPlatform(mockAuthPlatform, user));
+          .thenReturn(TestUserPlatform(mockAuthPlatform, user!));
+
+      const userInfo = 'UserInfo('
+          'displayName: Flutter Test User, '
+          'email: test@example.com, '
+          'phoneNumber: null, '
+          'photoURL: http://www.example.com/, '
+          'providerId: firebase, '
+          'uid: 12345)';
+
+      final userMetadata = 'UserMetadata('
+          'creationTime: ${DateTime.fromMillisecondsSinceEpoch(kMockCreationTimestamp)}, '
+          'lastSignInTime: ${DateTime.fromMillisecondsSinceEpoch(kMockLastSignInTimestamp)})';
 
       expect(
-          auth.currentUser.toString(),
-          equals(
-              'User(displayName: displayName, email: null, emailVerified: false, isAnonymous: true, metadata: UserMetadata(creationTime: ${DateTime.fromMillisecondsSinceEpoch(kMockCreationTimestamp)}, lastSignInTime: ${DateTime.fromMillisecondsSinceEpoch(kMockLastSignInTimestamp).toString()}), phoneNumber: null, photoURL: null, providerData, [UserInfo(displayName: Flutter Test User, email: test@example.com, phoneNumber: null, photoURL: http://www.example.com/, providerId: firebase, uid: 12345)], refreshToken: null, tenantId: null, uid: null)'));
+        auth.currentUser.toString(),
+        'User('
+        'displayName: displayName, '
+        'email: null, '
+        'emailVerified: false, '
+        'isAnonymous: true, '
+        'metadata: $userMetadata, '
+        'phoneNumber: null, '
+        'photoURL: null, '
+        'providerData, '
+        '[$userInfo], '
+        'refreshToken: null, '
+        'tenantId: null, '
+        'uid: null)',
+      );
     });
   });
 }
@@ -382,27 +323,34 @@ class MockUserCredentialPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserCredentialPlatform {
   MockUserCredentialPlatform(
-      FirebaseAuthPlatform auth,
-      AdditionalUserInfo additionalUserInfo,
-      AuthCredential credential,
-      UserPlatform userPlatform) {
+    FirebaseAuthPlatform auth,
+    AdditionalUserInfo additionalUserInfo,
+    AuthCredential credential,
+    UserPlatform userPlatform,
+  ) {
     TestUserCredentialPlatform(
-        auth, additionalUserInfo, credential, userPlatform);
+      auth,
+      additionalUserInfo,
+      credential,
+      userPlatform,
+    );
   }
 }
 
 class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   TestFirebaseAuthPlatform() : super();
 
-  instanceFor({FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {}
+  instanceFor({FirebaseApp? app, Map<dynamic, dynamic>? pluginConstants}) {}
 
-  FirebaseAuthPlatform delegateFor({FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
     return this;
   }
 
   @override
-  FirebaseAuthPlatform setInitialValues(
-      {Map<String, dynamic> currentUser, String languageCode}) {
+  FirebaseAuthPlatform setInitialValues({
+    Map<String, dynamic>? currentUser,
+    String? languageCode,
+  }) {
     return this;
   }
 }
@@ -414,11 +362,11 @@ class TestUserPlatform extends UserPlatform {
 
 class TestUserCredentialPlatform extends UserCredentialPlatform {
   TestUserCredentialPlatform(
-      FirebaseAuthPlatform auth,
-      AdditionalUserInfo additionalUserInfo,
-      AuthCredential credential,
-      UserPlatform userPlatform)
-      : super(
+    FirebaseAuthPlatform auth,
+    AdditionalUserInfo additionalUserInfo,
+    AuthCredential credential,
+    UserPlatform userPlatform,
+  ) : super(
             auth: auth,
             additionalUserInfo: additionalUserInfo,
             credential: credential,

@@ -27,6 +27,7 @@ class PhoneAuthProvider extends AuthProvider {
 
   /// Create a new [PhoneAuthCredential] from a provided [verificationId] and
   /// [smsCode].
+  // TODO(rrousselGit): Should this return a PhoneAuthCredential instead?
   static AuthCredential credential({
     required String verificationId,
     required String smsCode,

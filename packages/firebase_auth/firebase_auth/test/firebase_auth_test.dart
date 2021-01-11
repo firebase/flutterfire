@@ -20,7 +20,7 @@ MockFirebaseAuth mockAuthPlatform = MockFirebaseAuth();
 void main() {
   setupFirebaseAuthMocks();
 
-  /*late*/ FirebaseAuth auth;
+  late FirebaseAuth auth;
 
   const String kMockActionCode = '12345';
   const String kMockEmail = 'test@example.com';
@@ -36,8 +36,6 @@ void main() {
   const String kMockOobCode = 'oobcode';
   const String kMockURL = 'http://www.example.com';
 
-  final ActionCodeSettings kMockActionCodeSettings =
-      ActionCodeSettings(url: kMockURL);
   final TestAuthProvider testAuthProvider = TestAuthProvider();
   final int kMockCreationTimestamp =
       DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
@@ -63,12 +61,12 @@ void main() {
     ],
   };
 
-  /*late*/ MockUserPlatform mockUserPlatform;
-  /*late*/ MockUserCredentialPlatform mockUserCredPlatform;
-  /*late*/ MockConfirmationResultPlatform mockConfirmationResultPlatform;
-  /*late*/ MockRecaptchaVerifier mockVerifier;
-  /*late*/ AdditionalUserInfo mockAdditionalUserInfo;
-  /*late*/ EmailAuthCredential mockCredential;
+  MockUserPlatform? mockUserPlatform;
+  MockUserCredentialPlatform? mockUserCredPlatform;
+  MockConfirmationResultPlatform? mockConfirmationResultPlatform;
+  MockRecaptchaVerifier? mockVerifier;
+  AdditionalUserInfo? mockAdditionalUserInfo;
+  EmailAuthCredential? mockCredential;
 
   group("$FirebaseAuth", () {
     Map<String, dynamic> user;
@@ -82,23 +80,26 @@ void main() {
 
       mockUserPlatform = MockUserPlatform(mockAuthPlatform, user);
       mockConfirmationResultPlatform = MockConfirmationResultPlatform();
-      mockUserCredPlatform = MockUserCredentialPlatform(
-          FirebaseAuthPlatform.instance,
-          mockAdditionalUserInfo,
-          mockCredential,
-          mockUserPlatform);
-      mockVerifier = MockRecaptchaVerifier();
       mockAdditionalUserInfo = AdditionalUserInfo(
         isNewUser: false,
         username: 'flutterUser',
         providerId: 'testProvider',
         profile: <String, dynamic>{'foo': 'bar'},
       );
-      mockCredential =
-          EmailAuthProvider.credential(email: 'test', password: 'test');
+      mockCredential = EmailAuthProvider.credential(
+        email: 'test',
+        password: 'test',
+      ) as EmailAuthCredential;
+      mockUserCredPlatform = MockUserCredentialPlatform(
+        FirebaseAuthPlatform.instance,
+        mockAdditionalUserInfo!,
+        mockCredential!,
+        mockUserPlatform!,
+      );
+      mockVerifier = MockRecaptchaVerifier();
 
-      when(mockAuthPlatform.signInAnonymously()).thenAnswer(
-          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+      when(mockAuthPlatform.signInAnonymously())
+          .thenAnswer((_) async => mockUserCredPlatform!);
 
       when(mockAuthPlatform.signInWithCredential(any)).thenAnswer(
           (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
@@ -106,9 +107,9 @@ void main() {
       when(mockAuthPlatform.currentUser).thenReturn(mockUserPlatform);
 
       when(mockAuthPlatform.instanceFor(
-              app: anyNamed("app"),
-              pluginConstants: anyNamed("pluginConstants")))
-          .thenAnswer((_) => mockUserPlatform);
+        app: anyNamed("app"),
+        pluginConstants: anyNamed("pluginConstants"),
+      )).thenAnswer((_) => mockUserPlatform);
 
       when(mockAuthPlatform.delegateFor(
         app: anyNamed("app"),
@@ -120,46 +121,42 @@ void main() {
       )).thenAnswer((_) => mockAuthPlatform);
 
       when(mockAuthPlatform.createUserWithEmailAndPassword(any, any))
-          .thenAnswer((_) =>
-              Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+          .thenAnswer((_) async => mockUserCredPlatform!);
 
-      when(mockAuthPlatform.getRedirectResult()).thenAnswer(
-          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+      when(mockAuthPlatform.getRedirectResult())
+          .thenAnswer((_) async => mockUserCredPlatform!);
 
-      when(mockAuthPlatform.signInWithCustomToken(any)).thenAnswer(
-          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+      when(mockAuthPlatform.signInWithCustomToken(any))
+          .thenAnswer((_) async => mockUserCredPlatform!);
 
-      when(mockAuthPlatform.signInWithEmailAndPassword(any, any)).thenAnswer(
-          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+      when(mockAuthPlatform.signInWithEmailAndPassword(any, any))
+          .thenAnswer((_) async => mockUserCredPlatform!);
 
-      when(mockAuthPlatform.signInWithEmailLink(any, any)).thenAnswer(
-          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+      when(mockAuthPlatform.signInWithEmailLink(any, any))
+          .thenAnswer((_) async => mockUserCredPlatform!);
 
-      when(mockAuthPlatform.signInWithPhoneNumber(any, any)).thenAnswer((_) =>
-          Future<ConfirmationResultPlatform>.value(
-              mockConfirmationResultPlatform));
-      when(mockVerifier.delegate).thenReturn(mockVerifier.mockDelegate);
+      when(mockAuthPlatform.signInWithPhoneNumber(any, any))
+          .thenAnswer((_) async => mockConfirmationResultPlatform!);
 
-      when(mockAuthPlatform.signInWithPopup(any)).thenAnswer(
-          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+      when(mockVerifier!.delegate).thenReturn(mockVerifier!.mockDelegate);
 
-      when(mockAuthPlatform.signInWithRedirect(any)).thenAnswer(
-          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+      when(mockAuthPlatform.signInWithPopup(any))
+          .thenAnswer((_) async => mockUserCredPlatform!);
+
+      when(mockAuthPlatform.signInWithRedirect(any))
+          .thenAnswer((_) async => mockUserCredPlatform);
 
       when(mockAuthPlatform.authStateChanges()).thenAnswer((_) =>
-          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]));
+          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
 
       when(mockAuthPlatform.idTokenChanges()).thenAnswer((_) =>
-          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]));
+          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
 
       when(mockAuthPlatform.userChanges()).thenAnswer((_) =>
-          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]));
+          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
 
       MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
-        switch (call.method) {
-          default:
-            return <String, dynamic>{'user': user};
-        }
+        return <String, dynamic>{'user': user};
       });
     });
 
@@ -170,7 +167,7 @@ void main() {
 
     group('currentUser', () {
       test('get currentUser', () {
-        User user = auth.currentUser;
+        User? user = auth.currentUser;
         verify(mockAuthPlatform.currentUser);
         expect(user, isA<User>());
       });
@@ -189,10 +186,6 @@ void main() {
     });
 
     group('checkActionCode()', () {
-      test('should throw if null', () {
-        expect(() => auth.checkActionCode(null), throwsAssertionError);
-      });
-
       test('should call delegate method', () async {
         await auth.checkActionCode(kMockActionCode);
         verify(mockAuthPlatform.checkActionCode(kMockActionCode));
@@ -200,11 +193,6 @@ void main() {
     });
 
     group('confirmPasswordReset()', () {
-      test('should throw if null', () {
-        expect(() => auth.confirmPasswordReset(code: null, newPassword: null),
-            throwsAssertionError);
-      });
-
       test('should call delegate method', () async {
         await auth.confirmPasswordReset(
             code: kMockActionCode, newPassword: kMockPassword);
@@ -214,13 +202,6 @@ void main() {
     });
 
     group('createUserWithEmailAndPassword()', () {
-      test('should throw if null', () {
-        expect(
-            () => auth.createUserWithEmailAndPassword(
-                email: null, password: null),
-            throwsAssertionError);
-      });
-
       test('should call delegate method', () async {
         await auth.createUserWithEmailAndPassword(
             email: kMockEmail, password: kMockPassword);
@@ -230,11 +211,6 @@ void main() {
     });
 
     group('fetchSignInMethodsForEmail()', () {
-      test('should throw if null', () {
-        expect(
-            () => auth.fetchSignInMethodsForEmail(null), throwsAssertionError);
-      });
-
       test('should call delegate method', () async {
         await auth.fetchSignInMethodsForEmail(kMockEmail);
         verify(mockAuthPlatform.fetchSignInMethodsForEmail(kMockEmail));
@@ -249,10 +225,6 @@ void main() {
     });
 
     group('isSignInWithEmailLink()', () {
-      test('should throw if null', () {
-        expect(() => auth.isSignInWithEmailLink(null), throwsAssertionError);
-      });
-
       test('should call delegate method', () async {
         await auth.isSignInWithEmailLink(kMockURL);
         verify(mockAuthPlatform.isSignInWithEmailLink(kMockURL));
@@ -261,33 +233,29 @@ void main() {
 
     group('authStateChanges()', () {
       test('should stream changes', () async {
-        final StreamQueue<User> changes =
-            StreamQueue<User>(auth.authStateChanges());
+        final StreamQueue<User?> changes =
+            StreamQueue<User?>(auth.authStateChanges());
         expect(await changes.next, isA<User>());
       });
     });
 
     group('idTokenChanges()', () {
       test('should stream changes', () async {
-        final StreamQueue<User> changes =
-            StreamQueue<User>(auth.idTokenChanges());
+        final StreamQueue<User?> changes =
+            StreamQueue<User?>(auth.idTokenChanges());
         expect(await changes.next, isA<User>());
       });
     });
 
     group('userChanges()', () {
       test('should stream changes', () async {
-        final StreamQueue<User> changes = StreamQueue<User>(auth.userChanges());
+        final StreamQueue<User?> changes =
+            StreamQueue<User?>(auth.userChanges());
         expect(await changes.next, isA<User>());
       });
     });
 
     group('sendPasswordResetEmail()', () {
-      test('should throw if null', () {
-        expect(() => auth.sendPasswordResetEmail(email: null),
-            throwsAssertionError);
-      });
-
       test('should call delegate method', () async {
         await auth.sendPasswordResetEmail(email: kMockEmail);
         verify(mockAuthPlatform.sendPasswordResetEmail(kMockEmail));
@@ -295,11 +263,6 @@ void main() {
     });
 
     group('sendPasswordResetEmail()', () {
-      test('should throw if null', () {
-        expect(() => auth.sendPasswordResetEmail(email: null),
-            throwsAssertionError);
-      });
-
       test('should call delegate method', () async {
         await auth.sendPasswordResetEmail(email: kMockEmail);
         verify(mockAuthPlatform.sendPasswordResetEmail(kMockEmail));
@@ -307,27 +270,6 @@ void main() {
     });
 
     group('sendSignInLinkToEmail()', () {
-      test('should throw if email null', () {
-        expect(
-            () => auth.sendSignInLinkToEmail(
-                email: null, actionCodeSettings: kMockActionCodeSettings),
-            throwsAssertionError);
-      });
-
-      test('should throw if actionCodeSettings null', () {
-        expect(
-            () => auth.sendSignInLinkToEmail(
-                email: kMockEmail, actionCodeSettings: null),
-            throwsAssertionError);
-      });
-
-      test('should throw if email and actionCodeSettings are null', () {
-        expect(
-            () => auth.sendSignInLinkToEmail(
-                email: null, actionCodeSettings: null),
-            throwsAssertionError);
-      });
-
       test('should throw if actionCodeSettings.handleCodeInApp is not true',
           () async {
         final ActionCodeSettings kMockActionCodeSettingsNull =
@@ -370,10 +312,6 @@ void main() {
     });
 
     group('setPersistence()', () {
-      test('should throw if null', () {
-        expect(() => auth.setPersistence(null), throwsAssertionError);
-      });
-
       test('should call delegate method', () async {
         await auth.setPersistence(Persistence.LOCAL);
         verify(mockAuthPlatform.setPersistence(Persistence.LOCAL));
@@ -491,9 +429,6 @@ void main() {
     });
 
     group('signInWithCustomToken()', () {
-      test('should throw if token null', () {
-        expect(() => auth.signInWithCustomToken(null), throwsAssertionError);
-      });
       test('should call delegate method', () async {
         await auth.signInWithCustomToken(kMockCustomToken);
         verify(mockAuthPlatform.signInWithCustomToken(kMockCustomToken));
@@ -501,11 +436,6 @@ void main() {
     });
 
     group('signInWithEmailAndPassword()', () {
-      test('should throw if email or password are null', () {
-        expect(
-            () => auth.signInWithEmailAndPassword(email: null, password: null),
-            throwsAssertionError);
-      });
       test('should call delegate method', () async {
         await auth.signInWithEmailAndPassword(
             email: kMockEmail, password: kMockPassword);
@@ -515,10 +445,6 @@ void main() {
     });
 
     group('signInWithEmailLink()', () {
-      test('should throw if email or link are null', () {
-        expect(() => auth.signInWithEmailLink(email: null, emailLink: null),
-            throwsAssertionError);
-      });
       test('should call delegate method', () async {
         await auth.signInWithEmailLink(email: kMockEmail, emailLink: kMockURL);
         verify(mockAuthPlatform.signInWithEmailLink(kMockEmail, kMockURL));
@@ -526,11 +452,6 @@ void main() {
     });
 
     group('signInWithPhoneNumber()', () {
-      test('should throw if phoneNumber or verifier are null', () {
-        expect(
-            () => auth.signInWithPhoneNumber(null, null), throwsAssertionError);
-      });
-
       test('should call delegate method', () async {
         await auth.signInWithPhoneNumber(kMockPhoneNumber, mockVerifier);
         verify(mockAuthPlatform.signInWithPhoneNumber(kMockPhoneNumber, any));
@@ -559,9 +480,6 @@ void main() {
     });
 
     group('verifyPasswordResetCode()', () {
-      test('should throw if phoneNumber or verifier are null', () {
-        expect(() => auth.verifyPasswordResetCode(null), throwsAssertionError);
-      });
       test('should call delegate method', () async {
         await auth.verifyPasswordResetCode(kMockOobCode);
         verify(mockAuthPlatform.verifyPasswordResetCode(kMockOobCode));
@@ -569,25 +487,13 @@ void main() {
     });
 
     group('verifyPhoneNumber()', () {
-      test('should throw if null', () {
-        expect(
-            () => auth.verifyPhoneNumber(
-                phoneNumber: null,
-                verificationCompleted: null,
-                verificationFailed: null,
-                codeSent: null,
-                codeAutoRetrievalTimeout: null,
-                autoRetrievedSmsCodeForTesting: null),
-            throwsAssertionError);
-      });
-
       test('should call delegate method', () async {
         final PhoneVerificationCompleted verificationCompleted =
             (PhoneAuthCredential phoneAuthCredential) {};
         final PhoneVerificationFailed verificationFailed =
             (FirebaseAuthException authException) {};
         final PhoneCodeSent codeSent =
-            (String verificationId, [int forceResendingToken]) async {};
+            (String verificationId, [int? forceResendingToken]) async {};
         final PhoneCodeAutoRetrievalTimeout autoRetrievalTimeout =
             (String verificationId) {};
 
@@ -657,15 +563,15 @@ class TestConfirmationResultPlatform extends ConfirmationResultPlatform {
 class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   TestFirebaseAuthPlatform() : super();
 
-  instanceFor({FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {}
+  instanceFor({FirebaseApp? app, Map<dynamic, dynamic>? pluginConstants}) {}
 
-  FirebaseAuthPlatform delegateFor({FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
     return this;
   }
 
   @override
   FirebaseAuthPlatform setInitialValues(
-      {Map<String, dynamic> currentUser, String languageCode}) {
+      {Map<String, dynamic>? currentUser, String? languageCode}) {
     return this;
   }
 }

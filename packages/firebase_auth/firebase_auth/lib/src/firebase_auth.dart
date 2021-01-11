@@ -12,28 +12,28 @@ class FirebaseAuth extends FirebasePluginPlatform {
   // Cached and lazily loaded instance of [FirebaseAuthPlatform] to avoid
   // creating a [MethodChannelFirebaseAuth] when not needed or creating an
   // instance with the default app before a user specifies an app.
-  FirebaseAuthPlatform /*?*/ _delegatePackingProperty;
+  FirebaseAuthPlatform? _delegatePackingProperty;
 
   /// Returns the underlying delegate implementation.
   ///
   /// If called and no [_delegatePackingProperty] exists, it will first be
   /// created and assigned before returning the delegate.
-  FirebaseAuthPlatform /*!*/ get _delegate {
+  FirebaseAuthPlatform get _delegate {
     if (_delegatePackingProperty == null) {
       _delegatePackingProperty = FirebaseAuthPlatform.instanceFor(
           app: app, pluginConstants: pluginConstants);
     }
-    return _delegatePackingProperty;
+    return _delegatePackingProperty!;
   }
 
   /// The [FirebaseApp] for this current Auth instance.
   FirebaseApp app;
 
-  FirebaseAuth._({/*required*/ this.app})
+  FirebaseAuth._({/*required*/ required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_auth');
 
   /// Returns an instance using the default [FirebaseApp].
-  static FirebaseAuth /*!*/ get instance {
+  static FirebaseAuth get instance {
     FirebaseApp defaultAppInstance = Firebase.app();
 
     if (!_firebaseAuthInstances.containsKey(defaultAppInstance.name)) {
@@ -42,20 +42,18 @@ class FirebaseAuth extends FirebasePluginPlatform {
       );
     }
 
-    return _firebaseAuthInstances[defaultAppInstance.name];
+    return _firebaseAuthInstances[defaultAppInstance.name]!;
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  factory FirebaseAuth.instanceFor({/*required*/ FirebaseApp app}) {
-    assert(app != null);
-
+  factory FirebaseAuth.instanceFor({/*required*/ required FirebaseApp app}) {
     if (!_firebaseAuthInstances.containsKey(app.name)) {
       _firebaseAuthInstances[app.name] = FirebaseAuth._(
         app: app,
       );
     }
 
-    return _firebaseAuthInstances[app.name];
+    return _firebaseAuthInstances[app.name]!;
   }
 
   /// Returns the current [User] if they are currently signed-in, or `null` if
@@ -64,7 +62,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// You should not use this getter to determine the users current state,
   /// instead use [authStateChanges], [idTokenChanges] or [userChanges] to
   /// subscribe to updates.
-  User /*?*/ get currentUser {
+  User? get currentUser {
     if (_delegate.currentUser != null) {
       return User._(this, _delegate.currentUser);
     }
@@ -75,7 +73,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// The current Auth instance's language code.
   ///
   /// See [setLanguageCode] to update the language code.
-  String /*?*/ get languageCode {
+  String? get languageCode {
     if (_delegate.languageCode != null) {
       return _delegate.languageCode;
     }
@@ -100,7 +98,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///    have happened if the user was deleted between when the action code was
   ///    issued and when this method was called.
   Future<void> applyActionCode(String code) async {
-    assert(code != null);
     await _delegate.applyActionCode(code);
   }
 
@@ -123,7 +120,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///    have happened if the user was deleted between when the action code was
   ///    issued and when this method was called.
   Future<ActionCodeInfo> checkActionCode(String code) {
-    assert(code != null);
     return _delegate.checkActionCode(code);
   }
 
@@ -145,10 +141,10 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///    issued and when this method was called.
   /// - **weak-password**:
   ///  - Thrown if the new password is not strong enough.
-  Future<void> confirmPasswordReset(
-      {/*required*/ String code, /*required*/ String newPassword}) async {
-    assert(code != null);
-    assert(newPassword != null);
+  Future<void> confirmPasswordReset({
+    required String code,
+    required String newPassword,
+  }) async {
     await _delegate.confirmPasswordReset(code, newPassword);
   }
 
@@ -166,13 +162,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **weak-password**:
   ///  - Thrown if the password is not strong enough.
   Future<UserCredential> createUserWithEmailAndPassword({
-    @required String email,
-    @required String password,
+    required String email,
+    required String password,
   }) async {
-    assert(email != null);
-    assert(password != null);
     return UserCredential._(
-        this, await _delegate.createUserWithEmailAndPassword(email, password));
+      this,
+      await _delegate.createUserWithEmailAndPassword(email, password),
+    );
   }
 
   /// Returns a list of sign-in methods that can be used to sign in a given
@@ -187,7 +183,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **invalid-email**:
   ///  - Thrown if the email address is not valid.
   Future<List<String>> fetchSignInMethodsForEmail(String email) {
-    assert(email != null);
     return _delegate.fetchSignInMethodsForEmail(email);
   }
 
@@ -204,14 +199,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
 
   /// Checks if an incoming link is a sign-in with email link.
   bool isSignInWithEmailLink(String emailLink) {
-    assert(emailLink != null);
     return _delegate.isSignInWithEmailLink(emailLink);
   }
 
   /// Internal helper which pipes internal [Stream] events onto
   /// a users own Stream.
-  Stream<User> _pipeStreamChanges(Stream<UserPlatform /*?*/ > stream) {
-    Stream<User> streamSync = stream.map((delegateUser) {
+  Stream<User?> _pipeStreamChanges(Stream<UserPlatform?> stream) {
+    Stream<User?> streamSync = stream.map((delegateUser) {
       if (delegateUser == null) {
         return null;
       }
@@ -219,8 +213,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
       return User._(this, delegateUser);
     });
 
-    StreamController<User> streamController;
-    streamController = StreamController<User>.broadcast(onListen: () {
+    late StreamController<User?> streamController;
+    streamController = StreamController<User?>.broadcast(onListen: () {
       // Fire an event straight away
       streamController.add(currentUser);
       // Pipe events of the broadcast stream into this stream
@@ -232,12 +226,12 @@ class FirebaseAuth extends FirebasePluginPlatform {
 
   /// Notifies about changes to the user's sign-in state (such as sign-in or
   /// sign-out).
-  Stream<User> authStateChanges() =>
+  Stream<User?> authStateChanges() =>
       _pipeStreamChanges(_delegate.authStateChanges());
 
   /// Notifies about changes to the user's sign-in state (such as sign-in or
   /// sign-out) and also token refresh events.
-  Stream<User> idTokenChanges() =>
+  Stream<User?> idTokenChanges() =>
       _pipeStreamChanges(_delegate.idTokenChanges());
 
   /// Notifies about changes to any user updates.
@@ -248,17 +242,15 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// this Stream is to for listening to realtime updates to the user without
   /// manually having to call [reload] and then rehydrating changes to your
   /// application.
-  Stream<User> userChanges() => _pipeStreamChanges(_delegate.userChanges());
+  Stream<User?> userChanges() => _pipeStreamChanges(_delegate.userChanges());
 
   /// Triggers the Firebase Authentication backend to send a password-reset
   /// email to the given email address, which must correspond to an existing
   /// user of your app.
   Future<void> sendPasswordResetEmail({
-    @required String email,
-    // TODO(ehesp): Should be nullable after platform migration
-    ActionCodeSettings actionCodeSettings,
+    required String email,
+    ActionCodeSettings? actionCodeSettings,
   }) {
-    assert(email != null);
     return _delegate.sendPasswordResetEmail(email, actionCodeSettings);
   }
 
@@ -277,12 +269,9 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **user-not-found**:
   ///  - Thrown if there is no user corresponding to the email address.
   Future<void> sendSignInLinkToEmail({
-    @required String email,
-    @required ActionCodeSettings actionCodeSettings,
+    required String email,
+    required ActionCodeSettings actionCodeSettings,
   }) async {
-    assert(email != null);
-    assert(actionCodeSettings != null);
-
     if (actionCodeSettings.handleCodeInApp != true) {
       throw ArgumentError(
           "The [handleCodeInApp] value of [ActionCodeSettings] must be `true`.");
@@ -331,11 +320,12 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///   Key Sharing capabilities must be enabled for your app via XCode (Project
   ///   settings > Capabilities). To learn more, visit the
   ///   [Apple documentation](https://developer.apple.com/documentation/security/keychain_services/keychain_items/sharing_access_to_keychain_items_among_a_collection_of_apps).
-  Future<void> setSettings(
-      {bool /*?*/ appVerificationDisabledForTesting,
-      String /*?*/ userAccessGroup}) {
+  Future<void> setSettings({
+    bool? appVerificationDisabledForTesting,
+    String? userAccessGroup,
+  }) {
     return _delegate.setSettings(
-      appVerificationDisabledForTesting: appVerificationDisabledForTesting,
+      appVerificationDisabledForTesting: appVerificationDisabledForTesting!,
       userAccessGroup: userAccessGroup,
     );
   }
@@ -356,7 +346,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///
   /// This is only supported on web based platforms.
   Future<void> setPersistence(Persistence persistence) async {
-    assert(persistence != null);
     return _delegate.setPersistence(persistence);
   }
 
@@ -422,9 +411,10 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.id.
   Future<UserCredential> signInWithCredential(AuthCredential credential) async {
-    assert(credential != null);
     return UserCredential._(
-        this, await _delegate.signInWithCredential(credential));
+      this,
+      await _delegate.signInWithCredential(credential),
+    );
   }
 
   /// Tries to sign in a user with a given custom token.
@@ -448,7 +438,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **invalid-custom-token**:
   ///  - Thrown if the custom token format is incorrect.
   Future<UserCredential> signInWithCustomToken(String token) async {
-    assert(token != null);
     return UserCredential._(this, await _delegate.signInWithCustomToken(token));
   }
 
@@ -472,14 +461,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///  - Thrown if the password is invalid for the given email, or the account
   ///    corresponding to the email does not have a password set.
   Future<UserCredential> signInWithEmailAndPassword({
-    @required String email,
-    @required String password,
+    required String email,
+    required String password,
   }) async {
-    assert(email != null);
-    assert(password != null);
-
     return UserCredential._(
-        this, await _delegate.signInWithEmailAndPassword(email, password));
+      this,
+      await _delegate.signInWithEmailAndPassword(email, password),
+    );
   }
 
   /// Signs in using an email address and email sign-in link.
@@ -497,13 +485,14 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///  - Thrown if the email address is not valid.
   /// - **user-disabled**:
   ///  - Thrown if the user corresponding to the given email has been disabled.
-  Future<UserCredential> signInWithEmailLink(
-      {@required String email, @required String emailLink}) async {
-    assert(email != null);
-    assert(emailLink != null);
-
+  Future<UserCredential> signInWithEmailLink({
+    required String email,
+    required String emailLink,
+  }) async {
     return UserCredential._(
-        this, await _delegate.signInWithEmailLink(email, emailLink));
+      this,
+      await _delegate.signInWithEmailLink(email, emailLink),
+    );
   }
 
   /// Starts a sign-in flow for a phone number.
@@ -515,13 +504,17 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// with the users SMS verification code to complete the authentication flow.
   ///
   /// This method is only available on web based platforms.
-  Future<ConfirmationResult> signInWithPhoneNumber(String phoneNumber,
-      [RecaptchaVerifier /*?*/ verifier]) async {
-    assert(phoneNumber != null);
+  Future<ConfirmationResult> signInWithPhoneNumber(
+    String phoneNumber, [
+    RecaptchaVerifier? verifier,
+  ]) async {
     assert(phoneNumber.isNotEmpty);
+
     verifier ??= RecaptchaVerifier();
-    return ConfirmationResult._(this,
-        await _delegate.signInWithPhoneNumber(phoneNumber, verifier.delegate));
+    return ConfirmationResult._(
+      this,
+      await _delegate.signInWithPhoneNumber(phoneNumber, verifier.delegate),
+    );
   }
 
   /// Authenticates a Firebase client using a popup-based OAuth authentication
@@ -570,7 +563,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///    This may have happened if the user was deleted between when the code
   ///    was issued and when this method was called.
   Future<String> verifyPasswordResetCode(String code) {
-    assert(code != null);
     return _delegate.verifyPasswordResetCode(code);
   }
 
@@ -616,22 +608,15 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// [codeAutoRetrievalTimeout] Triggered when SMS auto-retrieval times out and
   ///   provide a [verificationId].
   Future<void> verifyPhoneNumber({
-    @required String phoneNumber,
-    @required PhoneVerificationCompleted verificationCompleted,
-    @required PhoneVerificationFailed verificationFailed,
-    @required PhoneCodeSent codeSent,
-    @required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
-    @visibleForTesting String /*?*/ autoRetrievedSmsCodeForTesting,
+    required String phoneNumber,
+    required PhoneVerificationCompleted verificationCompleted,
+    required PhoneVerificationFailed verificationFailed,
+    required PhoneCodeSent codeSent,
+    required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
+    @visibleForTesting String? autoRetrievedSmsCodeForTesting,
     Duration timeout = const Duration(seconds: 30),
-    int /*?*/ forceResendingToken,
+    int? forceResendingToken,
   }) {
-    assert(phoneNumber != null);
-    assert(timeout != null);
-    assert(verificationCompleted != null);
-    assert(verificationFailed != null);
-    assert(codeSent != null);
-    assert(codeAutoRetrievalTimeout != null);
-
     return _delegate.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       timeout: timeout,
