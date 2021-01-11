@@ -64,15 +64,15 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     _idTokenChangesListeners[app.name] =
         StreamController<UserPlatform>.broadcast();
 
-      _webAuth.onAuthStateChanged.map((auth_interop.User webUser) {
-        if (webUser == null) {
-          return null;
-        } else {
-          return UserWeb(this, webUser);
-        }
-      }).listen((UserWeb webUser) {
-        _authStateChangesListeners[app.name].add(webUser);
-      });
+    _webAuth.onAuthStateChanged.map((auth_interop.User webUser) {
+      if (webUser == null) {
+        return null;
+      } else {
+        return UserWeb(this, webUser);
+      }
+    }).listen((UserWeb webUser) {
+      _authStateChangesListeners[app.name].add(webUser);
+    });
 
     // Also triggers `userChanged` events
     _webAuth.onIdTokenChanged.map((auth_interop.User webUser) {
