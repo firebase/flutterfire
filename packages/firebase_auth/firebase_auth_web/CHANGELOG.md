@@ -1,3 +1,7 @@
+## 0.3.2+5
+
+ - **FIX**: Revert #4312: Double event fire on initialization (#4620).
+
 ## 0.3.2+4
 
  - **FIX**: bubble exceptions (#3700).
