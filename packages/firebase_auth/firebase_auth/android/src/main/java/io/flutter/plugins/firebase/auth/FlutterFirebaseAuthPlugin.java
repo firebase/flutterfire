@@ -74,7 +74,9 @@ public class FlutterFirebaseAuthPlugin
 
   private static final HashMap<Integer, PhoneAuthProvider.ForceResendingToken>
       forceResendingTokens = new HashMap<>();
-  private PluginRegistry.Registrar registrar;
+  @Nullable
+  private BinaryMessenger messenger;
+
   private MethodChannel channel;
   private Activity activity;
 
@@ -83,7 +85,6 @@ public class FlutterFirebaseAuthPlugin
   @SuppressWarnings("unused")
   public static void registerWith(PluginRegistry.Registrar registrar) {
     FlutterFirebaseAuthPlugin instance = new FlutterFirebaseAuthPlugin();
-    instance.registrar = registrar;
     instance.initInstance(registrar.messenger());
   }
 
@@ -108,6 +109,8 @@ public class FlutterFirebaseAuthPlugin
     registerPlugin(METHOD_CHANNEL_NAME, this);
     channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
     channel.setMethodCallHandler(this);
+
+    this.messenger = messenger;
   }
 
   @Override
@@ -125,6 +128,8 @@ public class FlutterFirebaseAuthPlugin
       streamHandler.onCancel(null);
       eventChannel.setStreamHandler(null);
     }
+
+    messenger = null;
 
     streamHandlers.clear();
   }
@@ -150,8 +155,9 @@ public class FlutterFirebaseAuthPlugin
   }
 
   // Only access activity with this method.
+  @Nullable
   private Activity getActivity() {
-    return registrar != null ? registrar.activity() : activity;
+    return activity;
   }
 
   private FirebaseAuth getAuth(Map<String, Object> arguments) {
@@ -1067,19 +1073,21 @@ public class FlutterFirebaseAuthPlugin
       final FirebaseAuth auth = getAuth(call.arguments());
       final IdTokenChannelStreamHandler handler = new IdTokenChannelStreamHandler(auth);
       final String name = METHOD_CHANNEL_NAME + "/id-token/" + auth.getApp().getName();
-      final EventChannel channel = new EventChannel(registrar.messenger(), name);
+      final EventChannel channel = new EventChannel(messenger, name);
       channel.setStreamHandler(handler);
       streamHandlers.put(channel, handler);
       result.success(name);
+      return;
     }
     case "Auth#registerAuthStateListener": {
       final FirebaseAuth auth = getAuth(call.arguments());
       final AuthStateChannelStreamHandler handler = new AuthStateChannelStreamHandler(auth);
       final String name = METHOD_CHANNEL_NAME + "/auth-state/" + auth.getApp().getName();
-      final EventChannel channel = new EventChannel(registrar.messenger(), name);
+      final EventChannel channel = new EventChannel(messenger, name);
       channel.setStreamHandler(handler);
       streamHandlers.put(channel, handler);
       result.success(name);
+      return;
     }
       case "Auth#applyActionCode":
         methodCallTask = applyActionCode(call.arguments());
