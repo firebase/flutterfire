@@ -4,7 +4,6 @@
 
  - **FIX**: handle ArrayIndexOutOfBoundsException (fixes #4334) (#4638).
  - **FEAT**: add check on podspec to assist upgrading users deployment target.
- - **CI**: temporarily disable flaky storage test.
  - **BUILD**: commit Podfiles with 10.12 deployment target.
  - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
  - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
