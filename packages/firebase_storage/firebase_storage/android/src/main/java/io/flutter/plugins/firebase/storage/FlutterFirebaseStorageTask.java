@@ -65,8 +65,7 @@ class FlutterFirebaseStorageTask {
   static void cancelInProgressTasks() {
     synchronized (inProgressTasks) {
       for (int i = 0; i < inProgressTasks.size(); i++) {
-        int key = inProgressTasks.keyAt(i);
-        FlutterFirebaseStorageTask task = inProgressTasks.get(key);
+        FlutterFirebaseStorageTask task = inProgressTasks.valueAt(i);
         if (task != null) {
           task.destroy();
         }
@@ -139,7 +138,9 @@ class FlutterFirebaseStorageTask {
       if (storageTask.isInProgress() || storageTask.isPaused()) {
         storageTask.cancel();
       }
-      inProgressTasks.remove(handle);
+      if (inProgressTasks.get(handle) != null) {
+        inProgressTasks.remove(handle);
+      }
     }
 
     synchronized (cancelSyncObject) {
