@@ -191,9 +191,12 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **weak-password**:
   ///  - Thrown if the password is not strong enough.
   Future<UserCredentialPlatform> createUserWithEmailAndPassword(
-      String email, String password) {
+    String email,
+    String password,
+  ) {
     throw UnimplementedError(
-        'createUserWithEmailAndPassword() is not implemented');
+      'createUserWithEmailAndPassword() is not implemented',
+    );
   }
 
   /// Returns a list of sign-in methods that can be used to sign in a given
@@ -257,8 +260,10 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// Triggers the Firebase Authentication backend to send a password-reset
   /// email to the given email address, which must correspond to an existing
   /// user of your app.
-  Future<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings? actionCodeSettings]) {
+  Future<void> sendPasswordResetEmail(
+    String email, [
+    ActionCodeSettings? actionCodeSettings,
+  ]) {
     throw UnimplementedError('sendPasswordResetEmail() is not implemented');
   }
 
@@ -320,8 +325,10 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///   Key Sharing capabilities must be enabled for your app via XCode (Project
   ///   settings > Capabilities). To learn more, visit the
   ///   [Apple documentation](https://developer.apple.com/documentation/security/keychain_services/keychain_items/sharing_access_to_keychain_items_among_a_collection_of_apps).
-  Future<void> setSettings(
-      {bool? appVerificationDisabledForTesting, String? userAccessGroup}) {
+  Future<void> setSettings({
+    bool? appVerificationDisabledForTesting,
+    String? userAccessGroup,
+  }) {
     throw UnimplementedError('setSettings() is not implemented');
   }
 
@@ -446,7 +453,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  - Thrown if the password is invalid for the given email, or the account
   ///    corresponding to the email does not have a password set.
   Future<UserCredentialPlatform> signInWithEmailAndPassword(
-      String email, String password) async {
+    String email,
+    String password,
+  ) async {
     throw UnimplementedError('signInWithEmailAndPassword() is not implemented');
   }
 
@@ -466,7 +475,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **user-disabled**:
   ///  - Thrown if the user corresponding to the given email has been disabled.
   Future<UserCredentialPlatform> signInWithEmailLink(
-      String email, String emailLink) async {
+    String email,
+    String emailLink,
+  ) async {
     throw UnimplementedError('signInWithEmailLink() is not implemented');
   }
 

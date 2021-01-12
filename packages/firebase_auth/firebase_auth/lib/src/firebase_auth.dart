@@ -326,7 +326,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
     String? userAccessGroup,
   }) {
     return _delegate.setSettings(
-      appVerificationDisabledForTesting: appVerificationDisabledForTesting!,
+      appVerificationDisabledForTesting: appVerificationDisabledForTesting,
       userAccessGroup: userAccessGroup,
     );
   }

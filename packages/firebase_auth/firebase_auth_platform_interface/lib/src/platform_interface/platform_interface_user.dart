@@ -212,8 +212,10 @@ abstract class UserPlatform extends PlatformInterface {
   ///  - Thrown if you have not enabled the phone authentication provider in the
   ///  Firebase Console. Go to the Firebase Console for your project, in the Auth
   ///  section and the Sign in Method tab and configure the provider.
-  Future<ConfirmationResultPlatform> linkWithPhoneNumber(String phoneNumber,
-      RecaptchaVerifierFactoryPlatform applicationVerifier) {
+  Future<ConfirmationResultPlatform> linkWithPhoneNumber(
+    String phoneNumber,
+    RecaptchaVerifierFactoryPlatform applicationVerifier,
+  ) {
     throw UnimplementedError('linkWithPhoneNumber() is not implemented');
   }
 

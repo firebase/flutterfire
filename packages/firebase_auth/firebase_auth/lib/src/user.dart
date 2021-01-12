@@ -208,8 +208,10 @@ class User {
   ///  - Thrown if you have not enabled the phone authentication provider in the
   ///  Firebase Console. Go to the Firebase Console for your project, in the Auth
   ///  section and the Sign in Method tab and configure the provider.
-  Future<ConfirmationResult> linkWithPhoneNumber(String phoneNumber,
-      [RecaptchaVerifier? verifier]) async {
+  Future<ConfirmationResult> linkWithPhoneNumber(
+    String phoneNumber, [
+    RecaptchaVerifier? verifier,
+  ]) async {
     assert(phoneNumber.isNotEmpty);
     verifier ??= RecaptchaVerifier();
     return ConfirmationResult._(

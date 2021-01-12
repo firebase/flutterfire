@@ -11,7 +11,7 @@ import '../../firebase_auth_exception.dart';
 /// Catches a [PlatformException] and converts it into a [FirebaseAuthException]
 /// if it was intentionally caught on the native platform.
 Object convertPlatformException(Object exception) {
-  if (exception is! Exception || exception is! PlatformException) {
+  if (exception is! PlatformException) {
     // TODO(rrousselGit): Is this dead code?
     return exception;
   }

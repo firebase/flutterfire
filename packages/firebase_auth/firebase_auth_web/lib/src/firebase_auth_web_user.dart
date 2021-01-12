@@ -94,8 +94,10 @@ class UserWeb extends UserPlatform {
   }
 
   @override
-  Future<ConfirmationResultPlatform> linkWithPhoneNumber(String phoneNumber,
-      RecaptchaVerifierFactoryPlatform applicationVerifier) async {
+  Future<ConfirmationResultPlatform> linkWithPhoneNumber(
+    String phoneNumber,
+    RecaptchaVerifierFactoryPlatform applicationVerifier,
+  ) async {
     _assertCurrentUser(auth);
     try {
       // Do not inline - type is not inferred & error is thrown.
