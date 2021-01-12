@@ -20,19 +20,11 @@ class QuerySnapshot {
           QueryDocumentSnapshot._(_firestore, documentDelegate))
       .toList();
 
-  @Deprecated("Deprecated in favor of `.docs`")
-  // ignore: public_member_api_docs
-  List<QueryDocumentSnapshot> get documents => docs;
-
   /// An array of the documents that changed since the last snapshot. If this
   /// is the first snapshot, all documents will be in the list as Added changes.
   List<DocumentChange> get docChanges => _delegate.docChanges
       .map((documentDelegate) => DocumentChange._(_firestore, documentDelegate))
       .toList();
-
-  @Deprecated("Deprecated in favor of `docChanges`")
-  // ignore: public_member_api_docs
-  List<DocumentChange> get documentChanges => docChanges;
 
   /// Returns the [SnapshotMetadata] for this snapshot.
   SnapshotMetadata get metadata => SnapshotMetadata._(_delegate.metadata);

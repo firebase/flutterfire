@@ -31,7 +31,7 @@ FirebaseException platformExceptionToFirebaseAuthException(
       : null;
 
   String code = 'unknown';
-  String message = platformException.message;
+  String /*!*/ message = platformException.message;
   String email;
   AuthCredential credential;
 

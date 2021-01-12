@@ -221,16 +221,16 @@ class UploadTaskListTile extends StatelessWidget {
       : super(key: key);
 
   /// The [UploadTask].
-  final firebase_storage.UploadTask task;
+  final firebase_storage.UploadTask /*!*/ task;
 
   /// Triggered when the user dismisses the task from the list.
-  final VoidCallback onDismissed;
+  final VoidCallback /*!*/ onDismissed;
 
   /// Triggered when the user presses the download button on a completed upload task.
-  final VoidCallback onDownload;
+  final VoidCallback /*!*/ onDownload;
 
   /// Triggered when the user presses the "link" button on a completed upload task.
-  final VoidCallback onDownloadLink;
+  final VoidCallback /*!*/ onDownloadLink;
 
   /// Displays the current transferred bytes of the task.
   String _bytesTransferred(firebase_storage.TaskSnapshot snapshot) {

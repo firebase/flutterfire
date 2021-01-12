@@ -11,7 +11,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
   // instance with the default app before a user specifies an app.
   FirebaseStoragePlatform _delegatePackingProperty;
 
-  FirebaseStoragePlatform get _delegate {
+  FirebaseStoragePlatform /*!*/ get _delegate {
     if (_delegatePackingProperty == null) {
       _delegatePackingProperty = FirebaseStoragePlatform.instanceFor(
         app: app,
@@ -25,7 +25,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
   FirebaseApp app;
 
   /// The storage bucket of this instance.
-  String bucket;
+  String /*!*/ bucket;
 
   /// The maximum time to retry operations other than uploads or downloads in milliseconds.
   Duration get maxOperationRetryTime {
@@ -58,7 +58,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
   ///
   /// If [app] is not provided, the default Firebase app will be used.
   /// If [bucket] is not provided, the default storage bucket will be used.
-  static FirebaseStorage instanceFor({
+  static FirebaseStorage /*!*/ instanceFor({
     FirebaseApp app,
     String bucket,
   }) {
@@ -68,6 +68,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
     bucket ??= app.options.storageBucket;
 
     // A bucket must exist at this point
+    // TODO(ehesp): Check whether `app.options.storageBucket` can be nullable post migration
     if (bucket == null) {
       if (app.name == defaultFirebaseAppName) {
         _throwNoBucketError(
@@ -97,18 +98,11 @@ class FirebaseStorage extends FirebasePluginPlatform {
     return newInstance;
   }
 
-  // ignore: public_member_api_docs
-  @Deprecated(
-      "Constructing Storage is deprecated, use 'FirebaseStorage.instance' or 'FirebaseStorage.instanceFor' instead")
-  factory FirebaseStorage({FirebaseApp app, String storageBucket}) {
-    return FirebaseStorage.instanceFor(app: app, bucket: storageBucket);
-  }
-
   /// Returns a new [Reference].
   ///
   /// If the [path] is empty, the reference will point to the root of the
   /// storage bucket.
-  Reference ref([String path]) {
+  Reference ref([String /*?*/ path]) {
     path ??= '/';
     path = path.isEmpty ? '/' : path;
     return Reference._(this, _delegate.ref(path));
@@ -145,41 +139,11 @@ class FirebaseStorage extends FirebasePluginPlatform {
         .ref(path);
   }
 
-  @Deprecated("Deprecated in favor of refFromURL")
-  // ignore: public_member_api_docs
-  Future<Reference> getReferenceFromUrl(String url) async {
-    return refFromURL(url);
-  }
-
-  @Deprecated("Deprecated in favor of get.maxOperationRetryTime")
-  // ignore: public_member_api_docs
-  Future<int> getMaxOperationRetryTimeMillis() async {
-    return maxOperationRetryTime.inMilliseconds;
-  }
-
-  @Deprecated("Deprecated in favor of get.maxUploadRetryTime")
-  // ignore: public_member_api_docs
-  Future<int> getMaxUploadRetryTimeMillis() async {
-    return maxUploadRetryTime.inMilliseconds;
-  }
-
-  @Deprecated("Deprecated in favor of get.maxDownloadRetryTime")
-  // ignore: public_member_api_docs
-  Future<int> getMaxDownloadRetryTimeMillis() async {
-    return maxDownloadRetryTime.inMilliseconds;
-  }
-
   /// Sets the new maximum operation retry time.
   void setMaxOperationRetryTime(Duration time) {
     assert(time != null);
     assert(!time.isNegative);
     return _delegate.setMaxOperationRetryTime(time.inMilliseconds);
-  }
-
-  /// Sets the new maximum operation retry time in milliseconds.
-  @Deprecated("Deprecated in favor of setMaxUploadRetryTime()")
-  Future<void> setMaxOperationRetryTimeMillis(int time) async {
-    return setMaxOperationRetryTime(Duration(milliseconds: time));
   }
 
   /// Sets the new maximum upload retry time.
@@ -189,23 +153,11 @@ class FirebaseStorage extends FirebasePluginPlatform {
     return _delegate.setMaxUploadRetryTime(time.inMilliseconds);
   }
 
-  /// Sets the new maximum upload retry time in milliseconds.
-  @Deprecated("Deprecated in favor of setMaxUploadRetryTime()")
-  Future<void> setMaxUploadRetryTimeMillis(int time) async {
-    return setMaxUploadRetryTime(Duration(milliseconds: time));
-  }
-
   /// Sets the new maximum download retry time.
   void setMaxDownloadRetryTime(Duration time) {
     assert(time != null);
     assert(!time.isNegative);
     return _delegate.setMaxDownloadRetryTime(time.inMilliseconds);
-  }
-
-  /// Sets the new maximum download retry time in milliseconds.
-  @Deprecated("Deprecated in favor of setMaxDownloadRetryTime()")
-  Future<void> setMaxDownloadRetryTimeMillis(int time) async {
-    return setMaxDownloadRetryTime(Duration(milliseconds: time));
   }
 
   @override

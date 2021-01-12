@@ -24,7 +24,7 @@ class QueryWeb extends QueryPlatform {
     this._firestore,
     this._path,
     this._webQuery, {
-    Map<String, dynamic> parameters,
+    /*required*/ Map<String, dynamic> parameters,
     this.isCollectionGroupQuery = false,
   }) : super(_firestore, parameters);
 
@@ -119,7 +119,7 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  Future<QuerySnapshotPlatform> get([GetOptions options]) async {
+  Future<QuerySnapshotPlatform> get([GetOptions /*?*/ options]) async {
     try {
       return convertWebQuerySnapshot(firestore,
           await _buildWebQueryWithParameters().get(convertGetOptions(options)));

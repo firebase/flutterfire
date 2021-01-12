@@ -16,7 +16,7 @@ void main() {
   final List<MethodCall> log = <MethodCall>[];
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
-  FirebaseAuthPlatform auth;
+  /*late*/ FirebaseAuthPlatform auth;
   const String kMockProviderId = 'firebase';
   const String kMockUid = '12345';
   const String kMockDisplayName = 'Flutter Test User';
@@ -79,8 +79,8 @@ void main() {
   }
 
   group('$MethodChannelUser', () {
-    Map<String, dynamic> user;
-    List kMockProviderData;
+    /*late*/ Map<String, dynamic> user;
+    /*late*/ List kMockProviderData;
 
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();

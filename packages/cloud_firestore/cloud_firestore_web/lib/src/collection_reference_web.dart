@@ -35,7 +35,7 @@ class CollectionReferenceWeb extends QueryWeb
   String get path => _delegate.path;
 
   @override
-  DocumentReferencePlatform doc([String path]) {
+  DocumentReferencePlatform doc([String /*?*/ path]) {
     firestore_interop.DocumentReference documentReference = _delegate.doc(path);
     return DocumentReferenceWeb(
         _firestorePlatform, _webFirestore, documentReference.path);

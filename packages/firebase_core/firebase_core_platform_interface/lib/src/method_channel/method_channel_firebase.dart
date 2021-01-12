@@ -63,8 +63,8 @@ class MethodChannelFirebase extends FirebasePlatform {
   ///
   /// Internally initializes core if it is not yet ready.
   @override
-  Future<FirebaseAppPlatform> initializeApp(
-      {String name, FirebaseOptions options}) async {
+  Future<FirebaseAppPlatform /*!*/ > initializeApp(
+      {String /*?*/ name, FirebaseOptions /*?*/ options}) async {
     if (name == defaultFirebaseAppName) {
       throw noDefaultAppInitialization();
     }
@@ -99,7 +99,7 @@ class MethodChannelFirebase extends FirebasePlatform {
 
     _initializeFirebaseAppFromMap(await channel.invokeMapMethod(
       'Firebase#initializeApp',
-      <String, dynamic>{'appName': name, 'options': options.asMap},
+      <String, dynamic>{'appName': name, 'options': options /*!*/ .asMap},
     ));
 
     return appInstances[name];
@@ -110,7 +110,7 @@ class MethodChannelFirebase extends FirebasePlatform {
   /// Returns the default Firebase app if no [name] is provided and throws a
   /// [FirebaseException] if no app with the [name] has been created.
   @override
-  FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
+  FirebaseAppPlatform /*!*/ app([String name = defaultFirebaseAppName]) {
     if (appInstances.containsKey(name)) {
       return appInstances[name];
     }

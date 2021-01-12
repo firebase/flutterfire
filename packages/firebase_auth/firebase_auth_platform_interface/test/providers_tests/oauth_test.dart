@@ -8,7 +8,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 final String kMockProviderId = 'test.com';
 
 void main() {
-  TestOAuthProvider oAuthProvider;
+  /*late*/ TestOAuthProvider oAuthProvider;
 
   setUpAll(() {
     oAuthProvider = TestOAuthProvider(kMockProviderId);

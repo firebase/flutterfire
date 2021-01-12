@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 typedef Callback(MethodCall call);
 
-setupFirebaseAuthMocks([Callback customHandlers]) {
+setupFirebaseAuthMocks([Callback /*?*/ customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {

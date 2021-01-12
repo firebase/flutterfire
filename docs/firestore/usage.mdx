@@ -64,7 +64,7 @@ class AddUser extends StatelessWidget {
           .catchError((error) => print("Failed to add user: $error"));
     }
 
-    return FlatButton(
+    return TextButton(
       onPressed: addUser,
       child: Text(
         "Add User",

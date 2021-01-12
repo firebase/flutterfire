@@ -10,7 +10,7 @@ class FullMetadata {
   @protected
   FullMetadata(this._metadata);
 
-  final Map<String, dynamic> _metadata;
+  final Map<String, dynamic> /*!*/ _metadata;
 
   /// The bucket this object is contained in.
   String get bucket {

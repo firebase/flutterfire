@@ -13,7 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runTransactionTests() {
   group('$Transaction', () {
-    FirebaseFirestore firestore;
+    /*late*/ FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -52,6 +52,32 @@ void runTransactionTests() {
         DocumentSnapshot snapshot = await documentReference.get();
         expect(snapshot.data()['foo'], equals('bar'));
       }
+    });
+
+    test('runs multiple transactions in parallel', () async {
+      DocumentReference doc1 = await initializeTest('transaction-multi-1');
+      DocumentReference doc2 = await initializeTest('transaction-multi-2');
+
+      await doc1.set({'test': 'value1'});
+      await doc2.set({'test': 'value2'});
+
+      await Future.wait([
+        firestore.runTransaction((Transaction transaction) async {
+          transaction.set(doc1, {
+            'test': 'value3',
+          });
+        }),
+        firestore.runTransaction((Transaction transaction) async {
+          transaction.set(doc2, {
+            'test': 'value4',
+          });
+        }),
+      ]);
+
+      DocumentSnapshot snapshot1 = await doc1.get();
+      expect(snapshot1.data()['test'], equals('value3'));
+      DocumentSnapshot snapshot2 = await doc2.get();
+      expect(snapshot2.data()['test'], equals('value4'));
     });
 
     test('should abort if timeout is exceeded', () async {

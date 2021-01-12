@@ -86,12 +86,6 @@ class FacebookAuthProvider extends AuthProvider {
       accessToken,
     );
   }
-
-  @Deprecated('Deprecated in favor of `FacebookAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential(String token) {
-    return FacebookAuthProvider.credential(token);
-  }
 }
 
 /// The auth credential returned from calling

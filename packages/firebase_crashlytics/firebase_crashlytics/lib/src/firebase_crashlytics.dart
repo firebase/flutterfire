@@ -8,7 +8,7 @@ part of firebase_crashlytics;
 /// You can get an instance by calling [FirebaseCrashlytics.instance].
 class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Cached instance of [FirebaseCrashlytics];
-  static FirebaseCrashlytics _instance;
+  static /*late*/ FirebaseCrashlytics _instance;
 
   // Cached and lazily loaded instance of [FirebaseCrashlyticsPlatform] to avoid
   // creating a [MethodChannelFirebaseCrashlytics] when not needed or creating an
@@ -29,24 +29,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseCrashlytics get instance {
     return _instance ??= FirebaseCrashlytics._(app: Firebase.app());
-  }
-
-  /// Whether the current Crashlytics instance is collecting reports. If false,
-  /// then no crash reporting data is sent to Firebase.
-  ///
-  /// See [setCrashlyticsCollectionEnabled] for toggling collection status.
-  @Deprecated(
-      "enableInDevMode getter is deprecated, use 'isCrashlyticsCollectionEnabled' instead")
-  bool get enableInDevMode {
-    return _delegate.isCrashlyticsCollectionEnabled;
-  }
-
-  /// Whether the current Crashlytics instance is collecting reports. If false,
-  /// then no crash reporting data is sent to Firebase.
-  @Deprecated(
-      "enableInDevMode setter is deprecated, use 'setCrashlyticsCollectionEnabled(bool)' instead")
-  set enableInDevMode(bool enabled) {
-    _delegate.setCrashlyticsCollectionEnabled(enabled).then((value) => null);
   }
 
   /// Whether the current Crashlytics instance is collecting reports. If false,
@@ -93,7 +75,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   Future<void> recordError(dynamic exception, StackTrace stack,
       {dynamic reason,
       Iterable<DiagnosticsNode> information,
-      bool printDetails}) async {
+      bool /*?*/ printDetails}) async {
     // If [null] is provided, use the debug flag instead.
     printDetails ??= kDebugMode;
 
@@ -218,22 +200,4 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     assert(value is int || value is num || value is String || value is bool);
     return _delegate.setCustomKey(key, value.toString());
   }
-}
-
-/// Extends the [FirebaseCrashlytics] class to allow for deprecated usage of
-/// using [Crashlytics] directly.
-@Deprecated(
-    "Class Crashlytics is deprecated. Use 'FirebaseCrashlytics' instead.")
-class Crashlytics extends FirebaseCrashlytics {
-  // ignore: public_member_api_docs
-  @Deprecated(
-      "Constructing Crashlytics is deprecated, use 'FirebaseCrashlytics.instance' instead")
-  factory Crashlytics() {
-    return FirebaseCrashlytics.instance;
-  }
-
-  @Deprecated(
-      "Accessing Crashlytics.instance is deprecated, use 'FirebaseCrashlytics.instance' instead")
-  // ignore: public_member_api_docs
-  static FirebaseCrashlytics get instance => FirebaseCrashlytics.instance;
 }

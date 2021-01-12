@@ -17,16 +17,16 @@ import '../mock.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  FirebaseStoragePlatform storage;
-  MethodChannelReference ref;
-  FirebaseApp app;
+  /*late*/ FirebaseStoragePlatform storage;
+  /*late*/ MethodChannelReference ref;
+  /*late*/ FirebaseApp app;
   final List<MethodCall> log = <MethodCall>[];
 
   // mock props
   bool mockPlatformExceptionThrown = false;
 
   final kMockData = 'Hello World';
-  MethodChannelPutStringTask kMockTask;
+  /*late*/ MethodChannelPutStringTask kMockTask;
 
   final kMockExceptionMessage = 'a mock exception message';
 

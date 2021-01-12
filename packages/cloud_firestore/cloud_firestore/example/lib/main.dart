@@ -114,7 +114,25 @@ class _FilmListState extends State<FilmList> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Firestore Example: Movies'),
+          title: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text('Firestore Example: Movies'),
+
+              // This is a example use for "snapshots in sync".
+              // The view reflects the time of the last Firestore sync; which happens any time a field is updated.
+              StreamBuilder(
+                stream: FirebaseFirestore.instance.snapshotsInSync(),
+                builder: (context, _) {
+                  return Text(
+                    'Latest Snapshot: ${DateTime.now()}',
+                    style: Theme.of(context).textTheme.caption,
+                  );
+                },
+              )
+            ],
+          ),
           actions: <Widget>[
             PopupMenuButton(
               onSelected: (String value) async {
@@ -269,10 +287,10 @@ class Movie extends StatelessWidget {
 /// Displays and manages the movie "like" count.
 class Likes extends StatefulWidget {
   /// The [DocumentReference] relating to the counter.
-  final DocumentReference reference;
+  final DocumentReference /*!*/ reference;
 
   /// The number of current likes (before manipulation).
-  final num currentLikes;
+  final num /*!*/ currentLikes;
 
   /// Constructs a new [Likes] instance with a given [DocumentReference] and
   /// current like count.
@@ -285,7 +303,7 @@ class Likes extends StatefulWidget {
 }
 
 class _Likes extends State<Likes> {
-  int _likes;
+  int /*!*/ _likes;
 
   _onLike(int current) async {
     // Increment the "like" count straight away to show feedback to the user.

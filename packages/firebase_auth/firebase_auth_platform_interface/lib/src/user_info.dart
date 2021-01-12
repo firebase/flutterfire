@@ -43,12 +43,12 @@ class UserInfo {
   }
 
   /// The federated provider ID.
-  String get providerId {
+  String /*!*/ get providerId {
     return _data['providerId'];
   }
 
   /// The user's unique ID.
-  String get uid {
+  String /*!*/ get uid {
     return _data['uid'];
   }
 

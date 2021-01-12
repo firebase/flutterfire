@@ -49,24 +49,6 @@ abstract class EmailAuthProvider extends AuthProvider {
     assert(emailLink != null);
     return EmailAuthCredential._credentialWithLink(email, emailLink);
   }
-
-  @Deprecated('Deprecated in favor of `EmailAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential({
-    @required String email,
-    @required String password,
-  }) {
-    return EmailAuthProvider.credential(email: email, password: password);
-  }
-
-  @Deprecated('Deprecated in favor of `EmailAuthProvider.credentialWithLink()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredentialWithLink({
-    @required String email,
-    @required String link,
-  }) {
-    return EmailAuthProvider.credentialWithLink(email: email, emailLink: link);
-  }
 }
 
 /// The auth credential returned from calling

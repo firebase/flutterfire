@@ -14,9 +14,9 @@ import '../mock.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  FirebaseStoragePlatform storage;
-  FirebaseApp app;
-  FirebaseApp secondaryApp;
+  /*late*/ FirebaseStoragePlatform storage;
+  /*late*/ FirebaseApp app;
+  /*late*/ FirebaseApp secondaryApp;
 
   String kBucket = 'foo';
 
