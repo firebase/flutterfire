@@ -31,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -349,8 +350,14 @@ public class FlutterFirebaseAuthPlugin
     output.put(Constants.EMAIL_VERIFIED, firebaseUser.isEmailVerified());
     output.put(Constants.IS_ANONYMOUS, firebaseUser.isAnonymous());
 
-    metadata.put(Constants.CREATION_TIME, firebaseUser.getMetadata().getCreationTimestamp());
-    metadata.put(Constants.LAST_SIGN_IN_TIME, firebaseUser.getMetadata().getLastSignInTimestamp());
+    // TODO(Salakar): add an integration test to check for null, if possible
+    // See https://github.com/FirebaseExtended/flutterfire/issues/3643
+    final FirebaseUserMetadata userMetadata = firebaseUser.getMetadata();
+    if (userMetadata != null) {
+      metadata.put(Constants.CREATION_TIME, firebaseUser.getMetadata().getCreationTimestamp());
+      metadata.put(
+          Constants.LAST_SIGN_IN_TIME, firebaseUser.getMetadata().getLastSignInTimestamp());
+    }
     output.put(Constants.METADATA, metadata);
     output.put(Constants.PHONE_NUMBER, firebaseUser.getPhoneNumber());
     output.put(Constants.PHOTO_URL, parsePhotoUrl(firebaseUser.getPhotoUrl()));
