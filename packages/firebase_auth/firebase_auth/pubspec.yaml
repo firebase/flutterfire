@@ -19,11 +19,10 @@ flutter:
         default_package: firebase_auth_web
 
 dependencies:
-  meta: ^1.0.4
-  firebase_core: ^0.6.0
-  firebase_core_platform_interface: ^3.0.0
   firebase_auth_platform_interface: ^3.0.0
   firebase_auth_web: ^0.3.2+5
+  firebase_core: ^0.6.0
+  firebase_core_platform_interface: ^3.0.0
   flutter:
     sdk: flutter
   meta: ^1.0.4
