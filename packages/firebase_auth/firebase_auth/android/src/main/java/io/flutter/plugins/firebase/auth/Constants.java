@@ -56,7 +56,6 @@ public class Constants {
   public static final String ACCESS_TOKEN = "accessToken";
   public static final String CODE = "code";
   public static final String RAW_NONCE = "rawNonce";
-  public static final String HANDLE = "handle";
   public static final String EMAIL_LINK = "emailLink";
   public static final String VERIFICATION_ID = "verificationId";
   public static final String SMS_CODE = "smsCode";

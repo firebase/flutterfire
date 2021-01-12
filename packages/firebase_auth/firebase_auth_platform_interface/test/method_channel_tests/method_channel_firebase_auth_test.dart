@@ -109,8 +109,14 @@ void main() {
         }
 
         switch (call.method) {
-          case 'Auth#registerChangeListeners':
-            return {};
+          case 'Auth#registerIdTokenListener':
+            final String name = 'idTokenChannel';
+            handleEventChannel(name, log);
+            return name;
+          case 'Auth#registerAuthStateListener':
+            final String name = 'authStateChannel';
+            handleEventChannel(name, log);
+            return name;
           case 'Auth#signInAnonymously':
             user = generateUser(user, <String, dynamic>{
               'isAnonymous': true,
@@ -143,7 +149,9 @@ void main() {
           case 'Auth#verifyPasswordResetCode':
             return <String, dynamic>{'email': call.arguments['code']};
           case "Auth#verifyPhoneNumber":
-            return null;
+            final String name = 'phoneNumberVerifier';
+            handleEventChannel(name, log);
+            return name;
           case 'Auth#checkActionCode':
             return <String, dynamic>{
               'operation': 2,
@@ -868,24 +876,19 @@ void main() {
     });
 
     group('verifyPhoneNumber()', () {
-      /*late*/ int handle;
-
-      setUp(() {
-        handle = nextMockHandleId;
-      });
-
       const String testPhoneNumber = '+1 555 555 555';
       const String testSmsCode = '12345';
       final Duration testTimeout = Duration(seconds: 5);
       test('returns a successful result', () async {
         await auth.verifyPhoneNumber(
-            phoneNumber: testPhoneNumber,
-            verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {},
-            verificationFailed: null,
-            codeSent: null,
-            codeAutoRetrievalTimeout: null,
-            timeout: testTimeout,
-            autoRetrievedSmsCodeForTesting: testSmsCode);
+          phoneNumber: testPhoneNumber,
+          verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {},
+          verificationFailed: null,
+          codeSent: null,
+          codeAutoRetrievalTimeout: null,
+          timeout: testTimeout,
+          autoRetrievedSmsCodeForTesting: testSmsCode,
+        );
 
         // check native method was called
         expect(log, <Matcher>[
@@ -893,13 +896,13 @@ void main() {
             'Auth#verifyPhoneNumber',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
-              'handle': handle,
               'phoneNumber': testPhoneNumber,
               'timeout': testTimeout.inMilliseconds,
               'forceResendingToken': null,
               'autoRetrievedSmsCodeForTesting': testSmsCode,
             },
           ),
+          isMethodCall('listen', arguments: null),
         ]);
       });
 
@@ -964,12 +967,15 @@ void main() {
           }, count: 2, reason: "Stream should only have been called 3 times"),
         );
 
-        await simulateEvent('Auth#authStateChanges', user);
+        await injectEventChannelResponse('authStateChannel', {'user': user});
 
         final Map<String, dynamic> updatedUser = <String, dynamic>{
           'email': testEmail,
         };
-        await simulateEvent('Auth#authStateChanges', updatedUser);
+        await injectEventChannelResponse(
+          'authStateChannel',
+          {'user': updatedUser},
+        );
 
         expect(log, equals([]));
       });
@@ -1007,8 +1013,8 @@ void main() {
           }, count: 2, reason: "Stream should only have been called 2 times"),
         );
 
-        await simulateEvent('Auth#idTokenChanges', null);
-        await simulateEvent('Auth#idTokenChanges', user);
+        await injectEventChannelResponse('idTokenChannel', {'user': null});
+        await injectEventChannelResponse('idTokenChannel', {'user': user});
 
         expect(log, equals([]));
       });
@@ -1049,8 +1055,8 @@ void main() {
 
         // id token change events will trigger setCurrentUser()
         // and hence userChange events
-        await simulateEvent('Auth#idTokenChanges', null);
-        await simulateEvent('Auth#idTokenChanges', user);
+        await injectEventChannelResponse('idTokenChannel', {'user': null});
+        await injectEventChannelResponse('idTokenChannel', {'user': user});
 
         expect(log, equals([]));
       });
