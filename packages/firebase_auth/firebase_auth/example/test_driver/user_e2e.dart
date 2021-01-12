@@ -134,9 +134,6 @@ void runUserTests() {
           // clean up
           await auth.currentUser.delete();
           return;
-        } catch (e, stack) {
-          print('e: $e');
-          print('stack: $stack');
         }
 
         fail('should have thrown an error');
