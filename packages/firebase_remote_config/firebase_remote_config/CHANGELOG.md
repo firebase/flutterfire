@@ -1,3 +1,30 @@
+## 0.7.0
+
+The plugin has been updated and reworked to better mirror the features
+currently offered by the native (iOS and Android) clients.
+
+`RemoteConfig`:
+- **CHORE**: migrate to platform interface.
+- **FEAT**: support multiple firebase apps. `RemoteConfig.instanceFor()` can
+  be used to retrieve an instance of RemoteConfig for a particular
+  Firebase App.
+- **BREAKING**: `fetch()` now takes no arguments. `RemoteConfigSettings` should
+  be used to specify the freshness of the cached config via the `minimumFetchInterval`
+  property.
+- **BREAKING**: `activateFetched()` is now `activate()`.
+- **FEAT**: Added `fetchAndActivate()` support.
+- **FEAT**: Added `ensureInitialized()` support.
+
+`RemoteConfigSettings`
+- **BREAKING**: `fetchTimeoutMillis` is now `fetchTimeout`.
+- **BREAKING**: `minimumFetchIntervalMillis` is now `minimumFetchInterval`
+- **BREAKING**: `fetchTimeout` and `minimumFetchInterval` are refactored
+  from `int` to `Duration`.
+
+`FetchThrottledException`
+- **BREAKING**: removed `FetchThrottledException`. The general
+  FirebaseException is used to handle all RemoteConfig specific exceptions.
+
 ## 0.6.0
 
 > Note: This release has breaking changes.
