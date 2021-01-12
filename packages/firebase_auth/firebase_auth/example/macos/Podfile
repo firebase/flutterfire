@@ -76,8 +76,6 @@ target 'Runner' do
       pod p[:name], :path => File.join(symlink, 'macos')
     end
   }
-  # not supported on MacOS
-  # pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '6.26.0'
 end
 
 # Prevent Cocoapods from embedding a second Flutter framework and causing an error with the new Xcode build system.
