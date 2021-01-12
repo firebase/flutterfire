@@ -26,7 +26,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// The [FirebaseAuthPlatform] instance.
   final FirebaseAuthPlatform auth;
 
-  Map<String, dynamic> _user;
+  final Map<String, dynamic> _user;
 
   /// The users display name.
   ///
@@ -342,8 +342,10 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// If you have a custom email action handler, you can complete the
   /// verification process by calling [applyActionCode].
-  Future<void> verifyBeforeUpdateEmail(String newEmail,
-      [ActionCodeSettings? actionCodeSettings]) async {
+  Future<void> verifyBeforeUpdateEmail(
+    String newEmail, [
+    ActionCodeSettings? actionCodeSettings,
+  ]) async {
     throw UnimplementedError('verifyBeforeUpdateEmail() is not implemented');
   }
 }

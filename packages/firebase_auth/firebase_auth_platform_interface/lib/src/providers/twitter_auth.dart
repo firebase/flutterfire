@@ -90,8 +90,10 @@ class TwitterAuthCredential extends OAuthCredential {
             accessToken: accessToken,
             secret: secret);
 
-  factory TwitterAuthCredential._credential(
-      {required String accessToken, required String secret}) {
+  factory TwitterAuthCredential._credential({
+    required String accessToken,
+    required String secret,
+  }) {
     return TwitterAuthCredential._(accessToken: accessToken, secret: secret);
   }
 }

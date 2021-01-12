@@ -89,13 +89,14 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   }
 
   @override
-  RecaptchaVerifierFactoryPlatform delegateFor(
-      {String? container,
-      RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
-      RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,
-      RecaptchaVerifierOnSuccess? onSuccess,
-      RecaptchaVerifierOnError? onError,
-      RecaptchaVerifierOnExpired? onExpired}) {
+  RecaptchaVerifierFactoryPlatform delegateFor({
+    String? container,
+    RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
+    RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,
+    RecaptchaVerifierOnSuccess? onSuccess,
+    RecaptchaVerifierOnError? onError,
+    RecaptchaVerifierOnExpired? onExpired,
+  }) {
     return RecaptchaVerifierFactoryWeb(
         container: container,
         size: size,

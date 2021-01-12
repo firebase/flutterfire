@@ -61,8 +61,10 @@ class PhoneAuthCredential extends AuthCredential {
         verificationId: verificationId, smsCode: smsCode);
   }
 
-  factory PhoneAuthCredential._credentialFromToken(int token,
-      {String? smsCode}) {
+  factory PhoneAuthCredential._credentialFromToken(
+    int token, {
+    String? smsCode,
+  }) {
     return PhoneAuthCredential._(token: token, smsCode: smsCode);
   }
 

@@ -24,6 +24,7 @@ Object convertPlatformException(Object exception) {
 /// A [PlatformException] can only be converted to a [FirebaseAuthException] if
 /// the `details` of the exception exist. Firebase returns specific codes and
 /// messages which can be converted into user friendly exceptions.
+// TODO(rousselGit): Should this return a FirebaseAuthException to avoid having to cast?
 FirebaseException platformExceptionToFirebaseAuthException(
   PlatformException platformException,
 ) {

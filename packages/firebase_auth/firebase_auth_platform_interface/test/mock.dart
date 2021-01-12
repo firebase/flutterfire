@@ -84,17 +84,6 @@ Future<void> testExceptionHandling(
         throwsA(isA<FirebaseAuthException>())
     ]),
   );
-  // try {
-  //   await testMethod();
-  // } on FirebaseAuthException catch (_) {
-  //   if (type == 'PLATFORM' || type == 'EXCEPTION') {
-  //     return;
-  //   }
-  //   fail(
-  //       'testExceptionHandling: ${testMethod} threw unexpected FirebaseAuthException');
-  // } catch (e) {
-  //   fail('testExceptionHandling: ${testMethod} threw invalid exception ${e}');
-  // }
 }
 
 Map<String, dynamic> generateUser(

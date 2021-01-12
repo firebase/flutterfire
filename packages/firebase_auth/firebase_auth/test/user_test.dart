@@ -97,12 +97,6 @@ void main() {
 
       when(mockAuthPlatform.currentUser).thenReturn(mockUserPlatform!);
 
-      // TODO
-      // when(mockAuthPlatform.instanceFor(
-      //   app: anyNamed('app'),
-      //   pluginConstants: anyNamed('pluginConstants'),
-      // )).thenAnswer((_) => mockUserPlatform);
-
       when(mockAuthPlatform.delegateFor(
         app: anyNamed('app'),
       )).thenAnswer((_) => mockAuthPlatform);
@@ -340,9 +334,6 @@ class MockUserCredentialPlatform extends Mock
 
 class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   TestFirebaseAuthPlatform() : super();
-
-  // TODO
-  // instanceFor({FirebaseApp? app, Map<dynamic, dynamic>? pluginConstants}) {}
 
   @override
   FirebaseAuthPlatform delegateFor({FirebaseApp? app}) => this;

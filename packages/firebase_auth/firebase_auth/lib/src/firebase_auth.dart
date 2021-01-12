@@ -213,10 +213,10 @@ class FirebaseAuth extends FirebasePluginPlatform {
       return User._(this, delegateUser);
     });
 
-    late StreamController<User?> streamController;
+    StreamController<User?>? streamController;
     streamController = StreamController<User?>.broadcast(onListen: () {
       // Fire an event straight away
-      streamController.add(currentUser);
+      streamController!.add(currentUser);
       // Pipe events of the broadcast stream into this stream
       streamSync.pipe(streamController);
     });

@@ -187,8 +187,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       _userChangesListeners[app.name]!.stream;
 
   @override
-  Future<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings? actionCodeSettings]) async {
+  Future<void> sendPasswordResetEmail(
+    String email, [
+    ActionCodeSettings? actionCodeSettings,
+  ]) async {
     try {
       await _webAuth!.sendPasswordResetEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
@@ -198,8 +200,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> sendSignInLinkToEmail(String email,
-      [ActionCodeSettings? actionCodeSettings]) async {
+  Future<void> sendSignInLinkToEmail(
+    String email, [
+    ActionCodeSettings? actionCodeSettings,
+  ]) async {
     try {
       await _webAuth!.sendSignInLinkToEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
@@ -344,15 +348,16 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> verifyPhoneNumber(
-      {required String phoneNumber,
-      required PhoneVerificationCompleted verificationCompleted,
-      required PhoneVerificationFailed verificationFailed,
-      required PhoneCodeSent codeSent,
-      required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
-      String? autoRetrievedSmsCodeForTesting,
-      Duration timeout = const Duration(seconds: 30),
-      int? forceResendingToken}) {
+  Future<void> verifyPhoneNumber({
+    required String phoneNumber,
+    required PhoneVerificationCompleted verificationCompleted,
+    required PhoneVerificationFailed verificationFailed,
+    required PhoneCodeSent codeSent,
+    required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
+    String? autoRetrievedSmsCodeForTesting,
+    Duration timeout = const Duration(seconds: 30),
+    int? forceResendingToken,
+  }) {
     throw UnimplementedError(
         'verifyPhoneNumber() is not supported on the web. Please use `signInWithPhoneNumber` instead.');
   }
