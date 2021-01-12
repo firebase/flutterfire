@@ -16,7 +16,6 @@ public class AuthStateChannelStreamHandler implements StreamHandler {
   private final FirebaseAuth firebaseAuth;
   private AuthStateListener authStateListener;
 
-
   public AuthStateChannelStreamHandler(FirebaseAuth firebaseAuth) {
     this.firebaseAuth = firebaseAuth;
   }
@@ -28,22 +27,23 @@ public class AuthStateChannelStreamHandler implements StreamHandler {
 
     final AtomicBoolean initialAuthState = new AtomicBoolean(true);
 
-    authStateListener = auth -> {
-      if (initialAuthState.get()) {
-        initialAuthState.set(false);
-        return;
-      }
+    authStateListener =
+        auth -> {
+          if (initialAuthState.get()) {
+            initialAuthState.set(false);
+            return;
+          }
 
-      FirebaseUser user = auth.getCurrentUser();
+          FirebaseUser user = auth.getCurrentUser();
 
-      if (user == null) {
-        event.put(Constants.USER, null);
-      } else {
-        event.put(Constants.USER, parseFirebaseUser(user));
-      }
+          if (user == null) {
+            event.put(Constants.USER, null);
+          } else {
+            event.put(Constants.USER, parseFirebaseUser(user));
+          }
 
-      events.success(event);
-    };
+          events.success(event);
+        };
 
     firebaseAuth.addAuthStateListener(authStateListener);
   }

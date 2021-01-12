@@ -74,8 +74,7 @@ public class FlutterFirebaseAuthPlugin
 
   private static final HashMap<Integer, PhoneAuthProvider.ForceResendingToken>
       forceResendingTokens = new HashMap<>();
-  @Nullable
-  private BinaryMessenger messenger;
+  @Nullable private BinaryMessenger messenger;
 
   private MethodChannel channel;
   private Activity activity;
@@ -374,7 +373,8 @@ public class FlutterFirebaseAuthPlugin
     return output;
   }
 
-  private static List<Map<String, Object>> parseUserInfoList(List<? extends UserInfo> userInfoList) {
+  private static List<Map<String, Object>> parseUserInfoList(
+      List<? extends UserInfo> userInfoList) {
     List<Map<String, Object>> output = new ArrayList<>();
 
     for (UserInfo userInfo : userInfoList) {
@@ -1062,33 +1062,33 @@ public class FlutterFirebaseAuthPlugin
         });
   }
 
-
-
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     Task<?> methodCallTask;
 
     switch (call.method) {
-    case "Auth#registerIdTokenListener": {
-      final FirebaseAuth auth = getAuth(call.arguments());
-      final IdTokenChannelStreamHandler handler = new IdTokenChannelStreamHandler(auth);
-      final String name = METHOD_CHANNEL_NAME + "/id-token/" + auth.getApp().getName();
-      final EventChannel channel = new EventChannel(messenger, name);
-      channel.setStreamHandler(handler);
-      streamHandlers.put(channel, handler);
-      result.success(name);
-      return;
-    }
-    case "Auth#registerAuthStateListener": {
-      final FirebaseAuth auth = getAuth(call.arguments());
-      final AuthStateChannelStreamHandler handler = new AuthStateChannelStreamHandler(auth);
-      final String name = METHOD_CHANNEL_NAME + "/auth-state/" + auth.getApp().getName();
-      final EventChannel channel = new EventChannel(messenger, name);
-      channel.setStreamHandler(handler);
-      streamHandlers.put(channel, handler);
-      result.success(name);
-      return;
-    }
+      case "Auth#registerIdTokenListener":
+        {
+          final FirebaseAuth auth = getAuth(call.arguments());
+          final IdTokenChannelStreamHandler handler = new IdTokenChannelStreamHandler(auth);
+          final String name = METHOD_CHANNEL_NAME + "/id-token/" + auth.getApp().getName();
+          final EventChannel channel = new EventChannel(messenger, name);
+          channel.setStreamHandler(handler);
+          streamHandlers.put(channel, handler);
+          result.success(name);
+          return;
+        }
+      case "Auth#registerAuthStateListener":
+        {
+          final FirebaseAuth auth = getAuth(call.arguments());
+          final AuthStateChannelStreamHandler handler = new AuthStateChannelStreamHandler(auth);
+          final String name = METHOD_CHANNEL_NAME + "/auth-state/" + auth.getApp().getName();
+          final EventChannel channel = new EventChannel(messenger, name);
+          channel.setStreamHandler(handler);
+          streamHandlers.put(channel, handler);
+          result.success(name);
+          return;
+        }
       case "Auth#applyActionCode":
         methodCallTask = applyActionCode(call.arguments());
         break;
@@ -1301,7 +1301,7 @@ public class FlutterFirebaseAuthPlugin
         cachedThreadPool,
         () -> {
           // TODO: not sure if this is applicable here.
-//          removeEventListeners();
+          //          removeEventListeners();
           authCredentials.clear();
           forceResendingTokens.clear();
           return null;

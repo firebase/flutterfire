@@ -24,17 +24,18 @@ public class IdTokenChannelStreamHandler implements StreamHandler {
     Map<String, Object> event = new HashMap<>();
     event.put(Constants.APP_NAME, firebaseAuth.getApp().getName());
 
-    idTokenListener = auth -> {
-      FirebaseUser user = auth.getCurrentUser();
+    idTokenListener =
+        auth -> {
+          FirebaseUser user = auth.getCurrentUser();
 
-      if (user == null) {
-        event.put(Constants.USER, null);
-      } else {
-        event.put(Constants.USER, parseFirebaseUser(user));
-      }
+          if (user == null) {
+            event.put(Constants.USER, null);
+          } else {
+            event.put(Constants.USER, parseFirebaseUser(user));
+          }
 
-      events.success(event);
-    };
+          events.success(event);
+        };
 
     firebaseAuth.addIdTokenListener(idTokenListener);
   }
