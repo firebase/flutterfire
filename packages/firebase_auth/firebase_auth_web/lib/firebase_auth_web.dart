@@ -45,11 +45,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         return UserWeb(this, webUser);
       }
     }).listen((UserWeb? webUser) {
-      if (_initialAuthState) {
-        _initialAuthState = false;
-      } else {
-        _authStateChangesListeners[app.name]!.add(webUser);
-      }
+      _authStateChangesListeners[app.name]!.add(webUser);
     });
 
     // TODO(rrousselGit): close StreamSubscription
@@ -65,8 +61,6 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       _userChangesListeners[app.name]!.add(webUser);
     });
   }
-
-  static bool _initialAuthState = true;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {

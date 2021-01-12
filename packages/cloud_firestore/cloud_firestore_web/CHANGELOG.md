@@ -1,3 +1,10 @@
+## 0.3.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: ensure web FieldValue types are converted (#4247).
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs (#4594).
+
 ## 0.2.1+2
 
  - Update a dependency to the latest release.

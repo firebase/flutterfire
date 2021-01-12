@@ -15,11 +15,11 @@ import 'method_channel_firestore.dart';
 class MethodChannelTransaction extends TransactionPlatform {
   /// [FirebaseApp] name used for this [MethodChannelTransaction]
   final String /*!*/ appName;
-  int _transactionId;
+  String _transactionId;
   FirebaseFirestorePlatform /*!*/ _firestore;
 
   /// Constructor.
-  MethodChannelTransaction(int transactionId, this.appName)
+  MethodChannelTransaction(String transactionId, this.appName)
       : _transactionId = transactionId,
         super() {
     _firestore =

@@ -1,3 +1,7 @@
+## 1.1.5
+
+ - **FIX**: bubble exceptions (#4419).
+
 ## 1.1.4
 
  - Update a dependency to the latest release.

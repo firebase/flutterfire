@@ -114,7 +114,25 @@ class _FilmListState extends State<FilmList> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Firestore Example: Movies'),
+          title: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text('Firestore Example: Movies'),
+
+              // This is a example use for "snapshots in sync".
+              // The view reflects the time of the last Firestore sync; which happens any time a field is updated.
+              StreamBuilder(
+                stream: FirebaseFirestore.instance.snapshotsInSync(),
+                builder: (context, _) {
+                  return Text(
+                    'Latest Snapshot: ${DateTime.now()}',
+                    style: Theme.of(context).textTheme.caption,
+                  );
+                },
+              )
+            ],
+          ),
           actions: <Widget>[
             PopupMenuButton(
               onSelected: (String value) async {
