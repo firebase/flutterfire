@@ -835,6 +835,7 @@ public class FlutterFirebaseAuthPlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
+          Log.d("FBA", "args: " + arguments);
           FirebaseUser firebaseUser = getCurrentUser(arguments);
           AuthCredential credential = getCredential(arguments);
 

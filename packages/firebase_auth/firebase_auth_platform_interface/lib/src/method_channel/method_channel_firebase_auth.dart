@@ -42,6 +42,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       _authStateChangesListeners = <String, StreamController<UserPlatform>>{};
 
   StreamSubscription<UserPlatform> _idTokenSubscription;
+  StreamSubscription<UserPlatform> _authStateSubscription;
 
   static Map<String, StreamController<UserPlatform>> _idTokenChangesListeners =
       <String, StreamController<UserPlatform>>{};
@@ -77,6 +78,17 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       _idTokenSubscription = events.receiveBroadcastStream().listen(
         (arguments) {
           _handleIdTokenChangesListener(arguments);
+        },
+      );
+    });
+
+    channel.invokeMethod<String>('Auth#registerAuthStateListener', {
+      'appName': app.name,
+    }).then((channelName) {
+      final events = EventChannel(channelName);
+      _authStateSubscription = events.receiveBroadcastStream().listen(
+        (arguments) {
+          _handleAuthStateChangesListener(arguments);
         },
       );
     });
