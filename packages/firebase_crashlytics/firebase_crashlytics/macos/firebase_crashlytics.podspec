@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
   s.source_files     = 'Classes/**/*.{h,m}'
   s.public_header_files = 'Classes/**/*.h'
 
-  s.platform = :osx, '10.11'
+  s.platform = :osx, '10.12'
 
   # Flutter dependencies
   s.dependency 'FlutterMacOS'
@@ -40,7 +40,7 @@ Pod::Spec.new do |s|
   s.dependency 'Firebase/Crashlytics', "~> #{firebase_sdk_version}"
 
   s.static_framework = true
-  s.pod_target_xcconfig = { 
+  s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-cls\\\"",
     'DEFINES_MODULE' => 'YES'
   }

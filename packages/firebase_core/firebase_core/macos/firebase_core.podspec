@@ -26,12 +26,12 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*'
-  
-  s.platform = :osx, '10.11'
+
+  s.platform = :osx, '10.12'
 
   # Flutter dependencies
   s.dependency 'FlutterMacOS'
-  
+
   # Firebase dependencies
   s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
 
