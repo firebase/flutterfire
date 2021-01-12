@@ -22,6 +22,14 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  User user;
+
+  @override
+  void initState() {
+    _auth.userChanges().listen((event) => setState(() => user = event));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +63,7 @@ class _SignInPageState extends State<SignInPage> {
           padding: EdgeInsets.all(8),
           scrollDirection: Axis.vertical,
           children: <Widget>[
+            _UserInfoCard(user),
             _EmailPasswordForm(),
             _EmailLinkSignInSection(),
             _AnonymouslySignInSection(),
@@ -69,6 +78,76 @@ class _SignInPageState extends State<SignInPage> {
   // Example code for sign out.
   void _signOut() async {
     await _auth.signOut();
+  }
+}
+
+class _UserInfoCard extends StatefulWidget {
+  final User user;
+
+  _UserInfoCard(this.user);
+
+  @override
+  _UserInfoCardState createState() => _UserInfoCardState();
+}
+
+class _UserInfoCardState extends State<_UserInfoCard> {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              child: const Text(
+                "User info",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              padding: EdgeInsets.only(bottom: 8.0),
+              alignment: Alignment.center,
+            ),
+                () {
+              if (widget.user != null) {
+                if (widget.user.photoURL != null) {
+                  return Container(
+                    child: Image.network(widget.user.photoURL),
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(bottom: 8.0),
+                  );
+                }
+                return Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    child: Text(
+                      "No image",
+                      textAlign: TextAlign.center,
+                    ),
+                    width: 50,
+                    height: 50,
+                    padding: EdgeInsets.all(8.0),
+                    margin: EdgeInsets.only(bottom: 8.0),
+                    color: Colors.black,
+                  ),
+                );
+              }
+              return Container();
+            }(),
+            Text(
+              widget.user == null
+                  ? 'Not signed in'
+                  : 'Email: ${widget.user.email}\n\n'
+                  'Phone number: ${widget.user.phoneNumber}\n\n'
+                  'Name: ${widget.user.displayName}\n\n'
+                  'ID: ${widget.user.uid}\n\n'
+                  'Created: ${widget.user.metadata.creationTime.toString()}\n\n'
+                  'Last login: ${widget.user.metadata.lastSignInTime}\n\n\n'
+                  'Providers: ${widget.user.providerData.fold('', (previousValue, element) => previousValue += '\n${element.providerId} ${element.uid}')}',
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
