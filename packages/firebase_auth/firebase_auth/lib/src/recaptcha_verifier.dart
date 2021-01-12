@@ -52,15 +52,16 @@ class RecaptchaVerifier {
     RecaptchaVerifierOnError? onError,
     RecaptchaVerifierOnExpired? onExpired,
   }) {
-    // TODO(ehesp): nullable params should be passed as null after platform migration
-    return RecaptchaVerifier._(_factory.delegateFor(
-      container: container!,
-      size: size,
-      theme: theme,
-      onSuccess: onSuccess!,
-      onError: onError!,
-      onExpired: onExpired!,
-    ));
+    return RecaptchaVerifier._(
+      _factory.delegateFor(
+        container: container,
+        size: size,
+        theme: theme,
+        onSuccess: onSuccess,
+        onError: onError,
+        onExpired: onExpired,
+      ),
+    );
   }
 
   /// Returns the underlying factory delegate instance.

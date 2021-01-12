@@ -620,13 +620,11 @@ class FirebaseAuth extends FirebasePluginPlatform {
     return _delegate.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       timeout: timeout,
-      // TODO(ehesp): should be nullable after platform migration
       forceResendingToken: forceResendingToken,
       verificationCompleted: verificationCompleted,
       verificationFailed: verificationFailed,
       codeSent: codeSent,
       codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
-      // TODO(ehesp): should be nullable after platform migration
       // ignore: invalid_use_of_visible_for_testing_member
       autoRetrievedSmsCodeForTesting: autoRetrievedSmsCodeForTesting,
     );

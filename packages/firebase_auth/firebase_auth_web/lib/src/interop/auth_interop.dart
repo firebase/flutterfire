@@ -30,13 +30,13 @@ abstract class AuthJsImpl {
   external String get languageCode;
   external set languageCode(String s);
   external Func0 onAuthStateChanged(nextOrObserver,
-      [Func1 opt_error, Func0 opt_completed]);
+      [Func1? opt_error, Func0? opt_completed]);
   external Func0 onIdTokenChanged(nextOrObserver,
-      [Func1 opt_error, Func0 opt_completed]);
+      [Func1? opt_error, Func0? opt_completed]);
   external PromiseJsImpl<void> sendSignInLinkToEmail(String email,
-      [ActionCodeSettings actionCodeSettings]);
+      [ActionCodeSettings? actionCodeSettings]);
   external PromiseJsImpl<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings actionCodeSettings]);
+      [ActionCodeSettings? actionCodeSettings]);
   external PromiseJsImpl<void> setPersistence(String persistence);
   external PromiseJsImpl<UserCredentialJsImpl> signInAnonymously();
 
@@ -93,9 +93,9 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external String get tenantId;
   external UserMetadata get metadata;
   external PromiseJsImpl<void> delete();
-  external PromiseJsImpl<String> getIdToken([bool opt_forceRefresh]);
+  external PromiseJsImpl<String> getIdToken([bool? opt_forceRefresh]);
   external PromiseJsImpl<UserCredentialJsImpl> linkWithCredential(
-      OAuthCredential credential);
+      OAuthCredential? credential);
   external PromiseJsImpl<ConfirmationResultJsImpl> linkWithPhoneNumber(
       String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
   external PromiseJsImpl<UserCredentialJsImpl> linkWithPopup(
@@ -113,17 +113,17 @@ abstract class UserJsImpl extends UserInfoJsImpl {
       AuthProviderJsImpl provider);
   external PromiseJsImpl<void> reload();
   external PromiseJsImpl<void> sendEmailVerification(
-      [ActionCodeSettings actionCodeSettings]);
+      [ActionCodeSettings? actionCodeSettings]);
   external PromiseJsImpl<void> verifyBeforeUpdateEmail(String newEmail,
-      [ActionCodeSettings actionCodeSettings]);
+      [ActionCodeSettings? actionCodeSettings]);
   external PromiseJsImpl<UserJsImpl> unlink(String providerId);
   external PromiseJsImpl<void> updateEmail(String newEmail);
   external PromiseJsImpl<void> updatePassword(String newPassword);
   external PromiseJsImpl<void> updatePhoneNumber(
-      OAuthCredential phoneCredential);
+      OAuthCredential? phoneCredential);
   external PromiseJsImpl<void> updateProfile(UserProfile profile);
   external PromiseJsImpl<IdTokenResultImpl> getIdTokenResult(
-      [bool forceRefresh]);
+      [bool? forceRefresh]);
   external Object toJSON();
 }
 
@@ -224,7 +224,7 @@ class GoogleAuthProviderJsImpl extends AuthProviderJsImpl {
   external GoogleAuthProviderJsImpl addScope(String scope);
   external GoogleAuthProviderJsImpl setCustomParameters(customOAuthParameters);
   external static OAuthCredential credential(
-      [String idToken, String accessToken]);
+      [String? idToken, String? accessToken]);
 }
 
 @JS('OAuthProvider')
@@ -232,7 +232,7 @@ class OAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory OAuthProviderJsImpl(String providerId);
   external OAuthProviderJsImpl addScope(String scope);
   external OAuthProviderJsImpl setCustomParameters(customOAuthParameters);
-  external OAuthCredential credential([String idToken, String accessToken]);
+  external OAuthCredential credential([String? idToken, String? accessToken]);
 }
 
 @JS('TwitterAuthProvider')
@@ -245,7 +245,7 @@ class TwitterAuthProviderJsImpl extends AuthProviderJsImpl {
 
 @JS('PhoneAuthProvider')
 class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
-  external factory PhoneAuthProviderJsImpl([AuthJsImpl auth]);
+  external factory PhoneAuthProviderJsImpl([AuthJsImpl? auth]);
   external static String get PROVIDER_ID;
   external PromiseJsImpl<String> verifyPhoneNumber(
       String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
@@ -262,7 +262,7 @@ abstract class ApplicationVerifierJsImpl {
 @JS('RecaptchaVerifier')
 class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
   external factory RecaptchaVerifierJsImpl(container,
-      [Object parameters, AppJsImpl app]);
+      [Object? parameters, AppJsImpl? app]);
   external void clear();
   external PromiseJsImpl<num> render();
 }
@@ -304,7 +304,7 @@ class UserProfile {
   external String get photoURL;
   external set photoURL(String s);
 
-  external factory UserProfile({String displayName, String photoURL});
+  external factory UserProfile({String? displayName, String? photoURL});
 }
 
 /// An authentication error.
@@ -368,10 +368,10 @@ class ActionCodeSettings {
   external bool get handleCodeInApp;
   external set handleCodeInApp(bool b);
   external factory ActionCodeSettings(
-      {String url,
-      IosSettings iOS,
-      AndroidSettings android,
-      bool handleCodeInApp});
+      {String? url,
+      IosSettings? iOS,
+      AndroidSettings? android,
+      bool? handleCodeInApp});
 }
 
 /// The iOS settings.
@@ -383,7 +383,7 @@ class ActionCodeSettings {
 class IosSettings {
   external String get bundleId;
   external set bundleId(String s);
-  external factory IosSettings({String bundleId});
+  external factory IosSettings({String? bundleId});
 }
 
 /// The Android settings.
@@ -409,7 +409,7 @@ class AndroidSettings {
   external bool get installApp;
   external set installApp(bool b);
   external factory AndroidSettings(
-      {String packageName, String minimumVersion, bool installApp});
+      {String? packageName, String? minimumVersion, bool? installApp});
 }
 
 /// https://firebase.google.com/docs/reference/js/firebase.auth#.UserCredential
@@ -437,6 +437,6 @@ class AdditionalUserInfoJsImpl {
 @anonymous
 class AuthSettings {
   external bool get appVerificationDisabledForTesting;
-  external set appVerificationDisabledForTesting(bool b);
+  external set appVerificationDisabledForTesting(bool? b);
   // external factory AuthSettings({bool appVerificationDisabledForTesting});
 }
