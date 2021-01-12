@@ -28,6 +28,6 @@ fi
 if [ "$ACTION" == "macos" ]
 then
   melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
-    flutter build macos --debug --target="$TARGET_FILE" --dart-define=CI=true
+    flutter build macos --debug --target="$TARGET_FILE" --device-id=macos --dart-define=CI=true
   exit
 fi
