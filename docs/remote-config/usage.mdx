@@ -33,7 +33,7 @@ Firebase Remote Config default parameters allows your application to startup wit
 network call. To set the default parameters call the `setDefaults()` method on your [`FirebaseRemoteConfig`](!firebase_remote_config.FirebaseRemoteConfig) instance:
 
 ```dart
-remoteConfig.setConfigSettings(<String, dynamic>{
+remoteConfig.setDefaults(<String, dynamic>{
   'welcome_message': 'this is the default welcome message',
   'feat1_enabled': false,
 });
