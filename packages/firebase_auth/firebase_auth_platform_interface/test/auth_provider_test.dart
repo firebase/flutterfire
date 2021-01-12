@@ -6,7 +6,7 @@ import 'package:firebase_auth_platform_interface/src/auth_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final String kMockProviderId = 'id-1';
+  const String kMockProviderId = 'id-1';
   group('$AuthProvider', () {
     group('Constructor', () {
       test('sets providerId with given value', () {

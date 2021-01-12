@@ -12,19 +12,13 @@ class FirebaseAuthException extends FirebaseException implements Exception {
   // ignore: public_member_api_docs
   @protected
   FirebaseAuthException({
-    this.message,
-    required this.code,
+    String? message,
+    required String code,
     this.email,
     this.credential,
     this.phoneNumber,
     this.tenantId,
   }) : super(plugin: 'firebase_auth', message: message, code: code);
-
-  /// Unique error code
-  final String code;
-
-  /// Complete error message.
-  final String? message;
 
   /// The email of the user's account used for sign-in/linking.
   final String? email;

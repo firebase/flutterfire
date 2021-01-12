@@ -7,7 +7,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 
 void main() {
   late TestFacebookAuthProvider facebookAuthProvider;
-  final String kMockProviderId = 'facebook.com';
+  const String kMockProviderId = 'facebook.com';
   setUpAll(() {
     facebookAuthProvider = TestFacebookAuthProvider();
   });
@@ -63,7 +63,7 @@ void main() {
     });
 
     group('FacebookAuthProvider.credential()', () {
-      final String kMockAccessToken = 'test-token';
+      const String kMockAccessToken = 'test-token';
       test('creates a new [FacebookAuthCredential]', () {
         final result = FacebookAuthProvider.credential(kMockAccessToken);
         expect(result, isA<OAuthCredential>());

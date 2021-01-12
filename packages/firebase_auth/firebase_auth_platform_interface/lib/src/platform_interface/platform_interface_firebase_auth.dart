@@ -54,10 +54,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// It will always default to [MethodChannelFirebaseAuth]
   /// if no other implementation was provided.
   static FirebaseAuthPlatform get instance {
-    if (_instance == null) {
-      _instance = MethodChannelFirebaseAuth.instance;
-    }
-
+    _instance ??= MethodChannelFirebaseAuth.instance;
     return _instance!;
   }
 
@@ -96,24 +93,24 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// instead use [authStateChanges], [idTokenChanges] or [userChanges] to
   /// subscribe to updates.
   UserPlatform? get currentUser {
-    throw UnimplementedError("get.currentUser is not implemented");
+    throw UnimplementedError('get.currentUser is not implemented');
   }
 
   /// Sets the current user for the instance.
   set currentUser(UserPlatform? userPlatform) {
-    throw UnimplementedError("set.currentUser is not implemented");
+    throw UnimplementedError('set.currentUser is not implemented');
   }
 
   /// The current Auth instance's language code.
   ///
   /// See [setLanguageCode] to update the language code.
   String? get languageCode {
-    throw UnimplementedError("languageCode is not implemented");
+    throw UnimplementedError('languageCode is not implemented');
   }
 
   /// Sends a Stream event to a [authStateChanges] stream controller.
   void sendAuthChangesEvent(String appName, UserPlatform? userPlatform) {
-    throw UnimplementedError("sendAuthChangesEvent() is not implemented");
+    throw UnimplementedError('sendAuthChangesEvent() is not implemented');
   }
 
   /// Applies a verification code sent to the user by email or other out-of-band
@@ -133,7 +130,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///    have happened if the user was deleted between when the action code was
   ///    issued and when this method was called.
   Future<void> applyActionCode(String code) {
-    throw UnimplementedError("applyActionCode() is not implemented");
+    throw UnimplementedError('applyActionCode() is not implemented');
   }
 
   /// Checks a verification code sent to the user by email or other out-of-band
@@ -155,7 +152,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///    have happened if the user was deleted between when the action code was
   ///    issued and when this method was called.
   Future<ActionCodeInfo> checkActionCode(String code) {
-    throw UnimplementedError("checkActionCode() is not implemented");
+    throw UnimplementedError('checkActionCode() is not implemented');
   }
 
   /// Completes the password reset process, given a confirmation code and new
@@ -177,7 +174,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **weak-password**:
   ///  - Thrown if the new password is not strong enough.
   Future<void> confirmPasswordReset(String code, String newPassword) {
-    throw UnimplementedError("confirmPasswordReset() is not implemented");
+    throw UnimplementedError('confirmPasswordReset() is not implemented');
   }
 
   /// Tries to create a new user account with the given email address and
@@ -196,7 +193,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   Future<UserCredentialPlatform> createUserWithEmailAndPassword(
       String email, String password) {
     throw UnimplementedError(
-        "createUserWithEmailAndPassword() is not implemented");
+        'createUserWithEmailAndPassword() is not implemented');
   }
 
   /// Returns a list of sign-in methods that can be used to sign in a given

@@ -4,10 +4,10 @@
 
 import 'dart:async';
 
-import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:firebase_auth_platform_interface/src/firebase_auth_exception.dart';
-import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user.dart';
-import 'package:firebase_auth_platform_interface/src/platform_interface/platform_interface_user_credential.dart';
+import '../../firebase_auth_platform_interface.dart';
+import '../firebase_auth_exception.dart';
+import 'method_channel_user.dart';
+import '../platform_interface/platform_interface_user_credential.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +100,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         case 'Auth#phoneCodeAutoRetrievalTimeout':
           return _handlePhoneCodeAutoRetrievalTimeout(arguments);
         default:
-          throw UnimplementedError("${call.method} has not been implemented");
+          throw UnimplementedError('${call.method} has not been implemented');
       }
     });
 
@@ -110,6 +110,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   UserPlatform? currentUser;
 
+  @override
   String? languageCode;
 
   @override
@@ -545,6 +546,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     );
   }
 
+  @override
   Future<void> signOut() async {
     try {
       await channel.invokeMethod<void>('Auth#signOut', <String, dynamic>{
@@ -557,6 +559,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
   }
 
+  @override
   Future<String> verifyPasswordResetCode(String code) async {
     try {
       Map<String, dynamic> data = (await channel
@@ -572,6 +575,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
   }
 
+  @override
   Future<void> verifyPhoneNumber({
     required String phoneNumber,
     required PhoneVerificationCompleted verificationCompleted,
@@ -584,7 +588,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }) async {
     if (defaultTargetPlatform == TargetPlatform.macOS) {
       throw UnimplementedError(
-        "verifyPhoneNumber() is not available on MacOS platforms.",
+        'verifyPhoneNumber() is not available on MacOS platforms.',
       );
     }
 

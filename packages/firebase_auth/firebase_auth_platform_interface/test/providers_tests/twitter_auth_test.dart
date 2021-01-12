@@ -7,7 +7,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 
 void main() {
   late TestTwitterAuthProvider twitterAuthProvider;
-  final String kMockProviderId = 'twitter.com';
+  const String kMockProviderId = 'twitter.com';
   setUpAll(() {
     twitterAuthProvider = TestTwitterAuthProvider();
   });
@@ -46,8 +46,8 @@ void main() {
     });
 
     group('TwitterAuthProvider.credential()', () {
-      final String kMockAccessToken = 'test-token';
-      final String kMockSecret = 'test-secret';
+      const String kMockAccessToken = 'test-token';
+      const String kMockSecret = 'test-secret';
       test('creates a new [TwitterAuthCredential]', () {
         final result = TwitterAuthProvider.credential(
             accessToken: kMockAccessToken, secret: kMockSecret);

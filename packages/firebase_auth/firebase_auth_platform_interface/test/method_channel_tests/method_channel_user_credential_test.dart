@@ -14,11 +14,11 @@ void main() {
   setupFirebaseAuthMocks();
 
   late FirebaseAuthPlatform auth;
-  final String kMockUid = '12345';
-  final String kMockUsername = 'fluttertestuser';
-  final String kMockEmail = 'test@example.com';
-  final String kMockProviderId = 'provider-id';
-  final String kMockSignInMethod = 'password';
+  const String kMockUid = '12345';
+  const String kMockUsername = 'fluttertestuser';
+  const String kMockEmail = 'test@example.com';
+  const String kMockProviderId = 'provider-id';
+  const String kMockSignInMethod = 'password';
 
   final Map<String, dynamic> kMockInitialUserData = <String, dynamic>{
     'user': <String, dynamic>{

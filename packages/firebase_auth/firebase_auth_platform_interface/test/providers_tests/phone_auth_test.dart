@@ -7,7 +7,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 
 void main() {
   late TestPhoneAuthProvider phoneAuthProvider;
-  final String kMockProviderId = 'phone';
+  const String kMockProviderId = 'phone';
   setUpAll(() {
     phoneAuthProvider = TestPhoneAuthProvider();
   });
@@ -28,8 +28,8 @@ void main() {
     });
 
     group('PhoneAuthProvider.credential()', () {
-      final String kMockVerificationId = 'test-verification-id';
-      final String kMockSmsCode = 'test-sms-code';
+      const String kMockVerificationId = 'test-verification-id';
+      const String kMockSmsCode = 'test-sms-code';
       test('creates a new [PhoneAuthCredential]', () {
         final result = PhoneAuthProvider.credential(
             verificationId: kMockVerificationId, smsCode: kMockSmsCode);

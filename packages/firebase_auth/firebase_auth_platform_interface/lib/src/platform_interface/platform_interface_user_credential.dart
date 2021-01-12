@@ -21,7 +21,7 @@ abstract class UserCredentialPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Ensures that any delegate class has extended a [UserCredentialPlatform].
-  static verifyExtends(UserCredentialPlatform instance) {
+  static void verifyExtends(UserCredentialPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 

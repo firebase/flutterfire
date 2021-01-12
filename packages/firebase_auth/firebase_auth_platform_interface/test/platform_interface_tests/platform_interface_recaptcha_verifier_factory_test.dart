@@ -67,7 +67,7 @@ void main() {
     group('delegateFor()', () {
       test('throws UnimplementedError error', () async {
         try {
-          await recaptchaVerifierFactoryPlatform.delegateFor();
+          recaptchaVerifierFactoryPlatform.delegateFor();
         } on UnimplementedError catch (e) {
           expect(e.message, equals('delegateFor() is not implemented'));
           return;
@@ -78,7 +78,7 @@ void main() {
 
     test('throws if type', () async {
       try {
-        await recaptchaVerifierFactoryPlatform.type;
+        recaptchaVerifierFactoryPlatform.type;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('type is not implemented'));
         return;

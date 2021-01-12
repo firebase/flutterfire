@@ -5,7 +5,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
-final String kMockProviderId = 'test.com';
+const String kMockProviderId = 'test.com';
 
 void main() {
   late TestOAuthProvider oAuthProvider;
@@ -57,9 +57,9 @@ void main() {
     });
 
     group('credential()', () {
-      final String kMockAccessToken = 'test-token';
-      final String kMockIdToken = 'id';
-      final String kMockRawNonce = 'test-raw-nonce';
+      const String kMockAccessToken = 'test-token';
+      const String kMockIdToken = 'id';
+      const String kMockRawNonce = 'test-raw-nonce';
       test('creates a new [OAuthCredential]', () {
         final result = oAuthProvider.credential(
             accessToken: kMockAccessToken,

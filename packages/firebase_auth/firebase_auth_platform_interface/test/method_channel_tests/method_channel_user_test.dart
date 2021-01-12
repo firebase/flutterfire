@@ -680,8 +680,6 @@ void main() {
     group('verifyBeforeUpdateEmail()', () {
       final ActionCodeSettings actionCodeSettings = ActionCodeSettings(
         url: 'test',
-        dynamicLinkDomain: null,
-        handleCodeInApp: null,
       );
       const newEmail = 'new@email.com';
       test('verifyBeforeUpdateEmail()', () async {

@@ -19,17 +19,17 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// If called and no [_delegatePackingProperty] exists, it will first be
   /// created and assigned before returning the delegate.
   FirebaseAuthPlatform get _delegate {
-    if (_delegatePackingProperty == null) {
-      _delegatePackingProperty = FirebaseAuthPlatform.instanceFor(
-          app: app, pluginConstants: pluginConstants);
-    }
+    _delegatePackingProperty ??= FirebaseAuthPlatform.instanceFor(
+      app: app,
+      pluginConstants: pluginConstants,
+    );
     return _delegatePackingProperty!;
   }
 
   /// The [FirebaseApp] for this current Auth instance.
   FirebaseApp app;
 
-  FirebaseAuth._({/*required*/ required this.app})
+  FirebaseAuth._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_auth');
 
   /// Returns an instance using the default [FirebaseApp].
@@ -46,7 +46,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  factory FirebaseAuth.instanceFor({/*required*/ required FirebaseApp app}) {
+  factory FirebaseAuth.instanceFor({required FirebaseApp app}) {
     if (!_firebaseAuthInstances.containsKey(app.name)) {
       _firebaseAuthInstances[app.name] = FirebaseAuth._(
         app: app,
@@ -274,7 +274,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   }) async {
     if (actionCodeSettings.handleCodeInApp != true) {
       throw ArgumentError(
-          "The [handleCodeInApp] value of [ActionCodeSettings] must be `true`.");
+        'The [handleCodeInApp] value of [ActionCodeSettings] must be `true`.',
+      );
     }
 
     await _delegate.sendSignInLinkToEmail(email, actionCodeSettings);

@@ -130,7 +130,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   @override
   Future<int> render() async {
     try {
-      return (await _delegate.render()) as int;
+      return await _delegate.render() as int;
     } catch (e) {
       throw getFirebaseAuthException(e);
     }

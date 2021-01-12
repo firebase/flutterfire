@@ -7,7 +7,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 
 void main() {
   late TestGoogleAuthProvider googleAuthProvider;
-  final String kMockProviderId = 'google.com';
+  const String kMockProviderId = 'google.com';
   setUpAll(() {
     googleAuthProvider = TestGoogleAuthProvider();
   });
@@ -63,8 +63,8 @@ void main() {
     });
 
     group('GoogleAuthProvider.credential()', () {
-      final String kMockAccessToken = 'test-access-token';
-      final String kMockIdToken = 'test-id-token';
+      const String kMockAccessToken = 'test-access-token';
+      const String kMockIdToken = 'test-id-token';
       test('creates a new [GoogleAuthCredential]', () {
         final result =
             GoogleAuthProvider.credential(accessToken: kMockAccessToken);
@@ -79,7 +79,6 @@ void main() {
       test('allows accessToken to be null', () {
         expect(
             GoogleAuthProvider.credential(
-              accessToken: null,
               idToken: kMockIdToken,
             ),
             isA<OAuthCredential>());
@@ -89,17 +88,13 @@ void main() {
         expect(
             GoogleAuthProvider.credential(
               accessToken: kMockAccessToken,
-              idToken: null,
             ),
             isA<OAuthCredential>());
       });
 
       test('throws [AssertionError] when accessToken and idTokenResult is null',
           () {
-        expect(
-            () =>
-                GoogleAuthProvider.credential(accessToken: null, idToken: null),
-            throwsAssertionError);
+        expect(GoogleAuthProvider.credential, throwsAssertionError);
       });
     });
   });

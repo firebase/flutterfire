@@ -6,13 +6,13 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final bool kMockIsNewUser = true;
-  final String kMockDisplayName = 'test-name';
+  const bool kMockIsNewUser = true;
+  const String kMockDisplayName = 'test-name';
   final Map<String, dynamic> kMockProfile = <String, dynamic>{
     'displayName': kMockDisplayName
   };
-  final String kMockProviderId = 'password';
-  final String kMockUsername = 'username';
+  const String kMockProviderId = 'password';
+  const String kMockUsername = 'username';
 
   group('$AdditionalUserInfo', () {
     AdditionalUserInfo additionalUserInfo = AdditionalUserInfo(

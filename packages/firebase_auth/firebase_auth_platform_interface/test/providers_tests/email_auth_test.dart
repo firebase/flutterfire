@@ -7,9 +7,9 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 
 void main() {
   late TestEmailAuthProvider emailAuthProvider;
-  final String kMockEmail = 'test-email';
-  final String kMockPassword = 'test-password';
-  final String kMockEmailLink = 'https://www.emaillink.com';
+  const String kMockEmail = 'test-email';
+  const String kMockPassword = 'test-password';
+  const String kMockEmailLink = 'https://www.emaillink.com';
 
   setUpAll(() {
     emailAuthProvider = TestEmailAuthProvider();

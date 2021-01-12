@@ -212,8 +212,10 @@ class User {
       [RecaptchaVerifier? verifier]) async {
     assert(phoneNumber.isNotEmpty);
     verifier ??= RecaptchaVerifier();
-    return ConfirmationResult._(this._auth,
-        await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate));
+    return ConfirmationResult._(
+      _auth,
+      await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate),
+    );
   }
 
   /// Re-authenticates a user using a fresh credential.
@@ -355,10 +357,10 @@ class User {
         'email: $email, '
         'emailVerified: $emailVerified, '
         'isAnonymous: $isAnonymous, '
-        'metadata: ${metadata}, '
+        'metadata: $metadata, '
         'phoneNumber: $phoneNumber, '
         'photoURL: $photoURL, '
-        'providerData, ${providerData}, '
+        'providerData, $providerData, '
         'refreshToken: $refreshToken, '
         'tenantId: $tenantId, '
         'uid: $uid)';

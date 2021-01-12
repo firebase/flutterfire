@@ -7,7 +7,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 
 void main() {
   late TestSAMLAuthProvider samlAuthProvider;
-  final String kMockProviderId = 'saml';
+  const String kMockProviderId = 'saml';
   setUpAll(() {
     samlAuthProvider = TestSAMLAuthProvider(kMockProviderId);
   });

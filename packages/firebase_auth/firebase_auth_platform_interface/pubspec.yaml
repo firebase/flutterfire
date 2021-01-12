@@ -6,18 +6,18 @@ homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/f
 version: 2.1.4
 
 dependencies:
+  firebase_core: ^0.5.3
   flutter:
     sdk: flutter
   meta: ^1.0.5
-  firebase_core: ^0.5.3
   plugin_platform_interface: ^1.0.2
 
 dev_dependencies:
   firebase_core_platform_interface: ^2.0.0
-  pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1
+  pedantic: ^1.8.0
 
 environment:
   sdk: '>=2.12.0-0 <3.0.0'

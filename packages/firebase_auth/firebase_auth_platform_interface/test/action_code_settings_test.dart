@@ -6,14 +6,14 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final String kMockBundleId = 'com.test.bundle';
-  final String kMockPackageName = 'com.test.package';
+  const String kMockBundleId = 'com.test.bundle';
+  const String kMockPackageName = 'com.test.package';
 
-  final String kMockDynamicLinkDomain = 'domain.com';
-  final bool kMockHandleCodeInApp = true;
-  final String kMockUrl = 'https://test.url';
-  final String kMockMinimumVersion = '8.0';
-  final bool kMockInstallApp = true;
+  const String kMockDynamicLinkDomain = 'domain.com';
+  const bool kMockHandleCodeInApp = true;
+  const String kMockUrl = 'https://test.url';
+  const String kMockMinimumVersion = '8.0';
+  const bool kMockInstallApp = true;
 
   group('$ActionCodeSettings', () {
     ActionCodeSettings actionCodeSettings = ActionCodeSettings(

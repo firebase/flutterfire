@@ -102,7 +102,9 @@ class UserWeb extends UserPlatform {
       auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
 
       return ConfirmationResultWeb(
-          this.auth, await _webUser.linkWithPhoneNumber(phoneNumber, verifier));
+        auth,
+        await _webUser.linkWithPhoneNumber(phoneNumber, verifier),
+      );
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -226,11 +228,11 @@ class UserWeb extends UserPlatform {
 /// a user, sign-out and then call a method on the user reference, we first check
 /// whether the user is signed out before calling a method. This replicates
 /// what happens on native since requests are sent over the method channel.
-_assertCurrentUser(FirebaseAuthPlatform instance) {
+void _assertCurrentUser(FirebaseAuthPlatform instance) {
   if (instance.currentUser == null) {
     throw FirebaseAuthException(
-      code: "no-current-user",
-      message: "No user currently signed in.",
+      code: 'no-current-user',
+      message: 'No user currently signed in.',
     );
   }
 }

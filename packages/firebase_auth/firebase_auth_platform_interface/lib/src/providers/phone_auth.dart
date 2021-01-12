@@ -45,8 +45,11 @@ class PhoneAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [PhoneAuthProvider.credential].
 class PhoneAuthCredential extends AuthCredential {
-  PhoneAuthCredential._({this.verificationId, this.smsCode, this.token})
-      : super(
+  PhoneAuthCredential._({
+    this.verificationId,
+    this.smsCode,
+    int? token,
+  }) : super(
           providerId: _kProviderId,
           signInMethod: _kProviderId,
           token: token,
@@ -68,9 +71,6 @@ class PhoneAuthCredential extends AuthCredential {
 
   /// The SMS code sent to and entered by the user.
   final String? smsCode;
-
-  /// An token relating to a internally stored credential.
-  final int? token;
 
   /// Returns the credential as a serialized [Map].
   @override

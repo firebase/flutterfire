@@ -68,7 +68,7 @@ void main() {
   AdditionalUserInfo? mockAdditionalUserInfo;
   EmailAuthCredential? mockCredential;
 
-  group("$FirebaseAuth", () {
+  group('$FirebaseAuth', () {
     Map<String, dynamic> user;
     FirebaseAuthPlatform.instance = mockAuthPlatform;
 
@@ -107,17 +107,17 @@ void main() {
       when(mockAuthPlatform.currentUser).thenReturn(mockUserPlatform);
 
       when(mockAuthPlatform.instanceFor(
-        app: anyNamed("app"),
-        pluginConstants: anyNamed("pluginConstants"),
+        app: anyNamed('app'),
+        pluginConstants: anyNamed('pluginConstants'),
       )).thenAnswer((_) => mockUserPlatform);
 
       when(mockAuthPlatform.delegateFor(
-        app: anyNamed("app"),
+        app: anyNamed('app'),
       )).thenAnswer((_) => mockAuthPlatform);
 
       when(mockAuthPlatform.setInitialValues(
-        currentUser: anyNamed("currentUser"),
-        languageCode: anyNamed("languageCode"),
+        currentUser: anyNamed('currentUser'),
+        languageCode: anyNamed('languageCode'),
       )).thenAnswer((_) => mockAuthPlatform);
 
       when(mockAuthPlatform.createUserWithEmailAndPassword(any, any))
@@ -226,7 +226,7 @@ void main() {
 
     group('isSignInWithEmailLink()', () {
       test('should call delegate method', () async {
-        await auth.isSignInWithEmailLink(kMockURL);
+        auth.isSignInWithEmailLink(kMockURL);
         verify(mockAuthPlatform.isSignInWithEmailLink(kMockURL));
       });
     });
@@ -273,7 +273,7 @@ void main() {
       test('should throw if actionCodeSettings.handleCodeInApp is not true',
           () async {
         final ActionCodeSettings kMockActionCodeSettingsNull =
-            ActionCodeSettings(url: kMockURL, handleCodeInApp: null);
+            ActionCodeSettings(url: kMockURL);
         final ActionCodeSettings kMockActionCodeSettingsFalse =
             ActionCodeSettings(url: kMockURL, handleCodeInApp: false);
 
@@ -304,10 +304,9 @@ void main() {
 
     group('setSettings()', () {
       test('should call delegate method', () async {
-        await auth.setSettings(
-            appVerificationDisabledForTesting: true, userAccessGroup: null);
+        await auth.setSettings(appVerificationDisabledForTesting: true);
         verify(mockAuthPlatform.setSettings(
-            appVerificationDisabledForTesting: true, userAccessGroup: null));
+            appVerificationDisabledForTesting: true));
       });
     });
 
@@ -385,7 +384,7 @@ void main() {
       });
 
       test('OAuthProvider signInWithCredential for Apple', () async {
-        OAuthProvider oAuthProvider = OAuthProvider("apple.com");
+        OAuthProvider oAuthProvider = OAuthProvider('apple.com');
         final AuthCredential credential = oAuthProvider.credential(
           idToken: kMockIdToken,
           accessToken: kMockAccessToken,
@@ -504,14 +503,15 @@ void main() {
             codeSent: codeSent,
             codeAutoRetrievalTimeout: autoRetrievalTimeout);
 
-        verify(mockAuthPlatform.verifyPhoneNumber(
+        verify(
+          mockAuthPlatform.verifyPhoneNumber(
             phoneNumber: kMockPhoneNumber,
-            timeout: Duration(seconds: 30),
-            forceResendingToken: null,
             verificationCompleted: verificationCompleted,
             verificationFailed: verificationFailed,
             codeSent: codeSent,
-            codeAutoRetrievalTimeout: autoRetrievalTimeout));
+            codeAutoRetrievalTimeout: autoRetrievalTimeout,
+          ),
+        );
       });
     });
 
@@ -563,15 +563,21 @@ class TestConfirmationResultPlatform extends ConfirmationResultPlatform {
 class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   TestFirebaseAuthPlatform() : super();
 
-  instanceFor({FirebaseApp? app, Map<dynamic, dynamic>? pluginConstants}) {}
+  void instanceFor({
+    FirebaseApp? app,
+    Map<dynamic, dynamic>? pluginConstants,
+  }) {}
 
+  @override
   FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
     return this;
   }
 
   @override
-  FirebaseAuthPlatform setInitialValues(
-      {Map<String, dynamic>? currentUser, String? languageCode}) {
+  FirebaseAuthPlatform setInitialValues({
+    Map<String, dynamic>? currentUser,
+    String? languageCode,
+  }) {
     return this;
   }
 }
@@ -584,14 +590,14 @@ class MockRecaptchaVerifier extends Mock
   }
 
   RecaptchaVerifierFactoryPlatform get mockDelegate {
-    return MockRecaptchaVerifierFactoryPlatform(); //this.delegate;
+    return MockRecaptchaVerifierFactoryPlatform();
   }
 }
 
 class MockRecaptchaVerifierFactoryPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestRecaptchaVerifierFactoryPlatform {
-  MockRecaptchaVerifier() {
+  MockRecaptchaVerifierFactoryPlatform() {
     TestRecaptchaVerifierFactoryPlatform();
   }
 }
@@ -626,7 +632,7 @@ class TestRecaptchaVerifierFactoryPlatform
 }
 
 class TestAuthProvider extends AuthProvider {
-  TestAuthProvider() : super("TEST");
+  TestAuthProvider() : super('TEST');
 }
 
 class TestUserPlatform extends UserPlatform {
@@ -636,11 +642,11 @@ class TestUserPlatform extends UserPlatform {
 
 class TestUserCredentialPlatform extends UserCredentialPlatform {
   TestUserCredentialPlatform(
-      FirebaseAuthPlatform auth,
-      AdditionalUserInfo additionalUserInfo,
-      AuthCredential credential,
-      UserPlatform userPlatform)
-      : super(
+    FirebaseAuthPlatform auth,
+    AdditionalUserInfo additionalUserInfo,
+    AuthCredential credential,
+    UserPlatform userPlatform,
+  ) : super(
             auth: auth,
             additionalUserInfo: additionalUserInfo,
             credential: credential,

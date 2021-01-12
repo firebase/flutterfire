@@ -13,14 +13,14 @@ void main() {
 
   late TestUserPlatform userPlatform;
   late FirebaseAuthPlatform auth;
-  final String kMockProviderId = 'firebase';
-  final String kMockUid = '12345';
-  final String kMockDisplayName = 'Flutter Test User';
-  final String kMockPhotoURL = 'http://www.example.com/';
-  final String kMockEmail = 'test@example.com';
-  final String kMockPhoneNumber = TEST_PHONE_NUMBER;
-  final String kMockRefreshToken = 'test';
-  final String kMockTenantId = 'test-tenant-id';
+  const String kMockProviderId = 'firebase';
+  const String kMockUid = '12345';
+  const String kMockDisplayName = 'Flutter Test User';
+  const String kMockPhotoURL = 'http://www.example.com/';
+  const String kMockEmail = 'test@example.com';
+  const String kMockPhoneNumber = TEST_PHONE_NUMBER;
+  const String kMockRefreshToken = 'test';
+  const String kMockTenantId = 'test-tenant-id';
   final int kMockCreationTimestamp =
       DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
   final int kMockLastSignInTimestamp =

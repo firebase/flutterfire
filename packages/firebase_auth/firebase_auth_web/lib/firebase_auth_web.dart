@@ -250,6 +250,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     }
   }
 
+  @override
   Future<UserCredentialPlatform> signInWithCredential(
       AuthCredential credential) async {
     try {

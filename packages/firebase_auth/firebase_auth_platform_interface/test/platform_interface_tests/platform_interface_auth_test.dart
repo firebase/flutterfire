@@ -207,7 +207,7 @@ void main() {
         String code1 = 'oobCode=';
         String code2 = 'oobCode%3D';
         List options = [
-          {'email': '$testEmail', 'expected': false},
+          {'email': testEmail, 'expected': false},
           {'email': '$testEmail$mode1', 'expected': false},
           {'email': '$testEmail$mode2', 'expected': false},
           {'email': '$testEmail$mode1&$mode2', 'expected': false},
@@ -220,10 +220,12 @@ void main() {
           {'email': '$testEmail$mode2&$code2', 'expected': true},
         ];
 
-        options.forEach((element) {
-          expect(firebaseAuthPlatform.isSignInWithEmailLink(element['email']),
-              equals(element['expected']));
-        });
+        for (final element in options) {
+          expect(
+            firebaseAuthPlatform.isSignInWithEmailLink(element['email']),
+            equals(element['expected']),
+          );
+        }
       });
     });
 
@@ -324,7 +326,7 @@ void main() {
     test('throws if signInWithCredential()', () async {
       try {
         await firebaseAuthPlatform.signInWithCredential(
-          AuthCredential(
+          const AuthCredential(
             providerId: 'provider',
             signInMethod: 'method',
           ),
@@ -432,10 +434,10 @@ void main() {
 class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   TestFirebaseAuthPlatform(FirebaseApp app) : super(appInstance: app);
   FirebaseAuthPlatform testDelegateFor({required FirebaseApp app}) {
-    return this.delegateFor(app: app);
+    return delegateFor(app: app);
   }
 
   FirebaseAuthPlatform testSetInitialValues() {
-    return this.setInitialValues(currentUser: null, languageCode: null);
+    return setInitialValues();
   }
 }

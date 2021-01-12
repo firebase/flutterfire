@@ -19,7 +19,7 @@ abstract class UserPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Ensures that any delegate class has extended a [UserPlatform].
-  static verifyExtends(UserPlatform instance) {
+  static void verifyExtends(UserPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
@@ -120,7 +120,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///    threshold. Use [User.reauthenticateWithCredential] to resolve. This
   ///    does not apply if the user is anonymous.
   Future<void> delete() async {
-    throw UnimplementedError("delete() is not implemented");
+    throw UnimplementedError('delete() is not implemented');
   }
 
   /// Returns a JSON Web Token (JWT) used to identify the user to a Firebase
@@ -132,7 +132,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// If [forceRefresh] is `true`, the token returned will be refresh regardless
   /// of token expiration.
   Future<String> getIdToken(bool forceRefresh) {
-    throw UnimplementedError("getIdToken() is not implemented");
+    throw UnimplementedError('getIdToken() is not implemented');
   }
 
   /// Returns a [IdTokenResult] containing the users JSON Web Token (JWT) and
@@ -141,7 +141,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// If [forceRefresh] is `true`, the token returned will be refresh regardless
   /// of token expiration.
   Future<IdTokenResult> getIdTokenResult(bool forceRefresh) {
-    throw UnimplementedError("getIdTokenResult() is not implemented");
+    throw UnimplementedError('getIdTokenResult() is not implemented');
   }
 
   /// Links the user account with the given credentials.
@@ -186,7 +186,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
   Future<UserCredentialPlatform> linkWithCredential(AuthCredential credential) {
-    throw UnimplementedError("linkWithCredential() is not implemented");
+    throw UnimplementedError('linkWithCredential() is not implemented');
   }
 
   /// Links the user account with the given phone number.
@@ -214,7 +214,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///  section and the Sign in Method tab and configure the provider.
   Future<ConfirmationResultPlatform> linkWithPhoneNumber(String phoneNumber,
       RecaptchaVerifierFactoryPlatform applicationVerifier) {
-    throw UnimplementedError("linkWithPhoneNumber() is not implemented");
+    throw UnimplementedError('linkWithPhoneNumber() is not implemented');
   }
 
   /// Re-authenticates a user using a fresh credential.
@@ -249,12 +249,12 @@ abstract class UserPlatform extends PlatformInterface {
   Future<UserCredentialPlatform> reauthenticateWithCredential(
       AuthCredential credential) {
     throw UnimplementedError(
-        "reauthenticateWithCredential() is not implemented");
+        'reauthenticateWithCredential() is not implemented');
   }
 
   /// Refreshes the current user, if signed in.
   Future<void> reload() async {
-    throw UnimplementedError("reload() is not implemented");
+    throw UnimplementedError('reload() is not implemented');
   }
 
   /// Sends a verification email to a user.
@@ -263,7 +263,7 @@ abstract class UserPlatform extends PlatformInterface {
   Future<void> sendEmailVerification(
     ActionCodeSettings? actionCodeSettings,
   ) async {
-    throw UnimplementedError("sendEmailVerification() is not implemented");
+    throw UnimplementedError('sendEmailVerification() is not implemented');
   }
 
   /// Unlinks a provider from a user account.
@@ -273,7 +273,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///  - Thrown if the user does not have this provider linked or when the
   ///    provider ID given does not exist.
   Future<UserPlatform> unlink(String providerId) async {
-    throw UnimplementedError("unlink() is not implemented");
+    throw UnimplementedError('unlink() is not implemented');
   }
 
   /// Updates the user's email address.
@@ -296,7 +296,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///    threshold. Use [User.reauthenticateWithCredential] to resolve. This
   ///    does not apply if the user is anonymous.
   Future<void> updateEmail(String newEmail) async {
-    throw UnimplementedError("updateEmail() is not implemented");
+    throw UnimplementedError('updateEmail() is not implemented');
   }
 
   /// Updates the user's password.
@@ -313,7 +313,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///    threshold. Use [User.reauthenticateWithCredential] to resolve. This
   ///    does not apply if the user is anonymous.
   Future<void> updatePassword(String newPassword) async {
-    throw UnimplementedError("updatePassword() is not implemented");
+    throw UnimplementedError('updatePassword() is not implemented');
   }
 
   /// Updates the user's phone number.
@@ -327,12 +327,12 @@ abstract class UserPlatform extends PlatformInterface {
   /// - **invalid-verification-id**:
   ///  - Thrown if the verification ID of the credential is not valid.
   Future<void> updatePhoneNumber(PhoneAuthCredential phoneCredential) async {
-    throw UnimplementedError("updatePhoneNumber() is not implemented");
+    throw UnimplementedError('updatePhoneNumber() is not implemented');
   }
 
   /// Updates a user's profile data.
   Future<void> updateProfile(Map<String, String> profile) async {
-    throw UnimplementedError("updateProfile() is not implemented");
+    throw UnimplementedError('updateProfile() is not implemented');
   }
 
   /// Sends a verification email to a new email address. The user's email will
@@ -342,6 +342,6 @@ abstract class UserPlatform extends PlatformInterface {
   /// verification process by calling [applyActionCode].
   Future<void> verifyBeforeUpdateEmail(String newEmail,
       [ActionCodeSettings? actionCodeSettings]) async {
-    throw UnimplementedError("verifyBeforeUpdateEmail() is not implemented");
+    throw UnimplementedError('verifyBeforeUpdateEmail() is not implemented');
   }
 }

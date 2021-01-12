@@ -58,6 +58,7 @@ class UserInfo<T extends auth_interop.UserInfoJsImpl>
 class User extends UserInfo<auth_interop.UserJsImpl> {
   static final _expando = Expando<User>();
 
+  @override
   String get uid => jsObject.uid;
 
   /// If the user's email address has been already verified.
@@ -314,6 +315,8 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   auth_interop.AuthSettings get settings => jsObject.settings;
 
   Func0? _onAuthUnsubscribe;
+  // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
+  // ignore: close_sinks
   StreamController<User?>? _changeController;
 
   /// Sends events when the users sign-in state changes.
@@ -324,11 +327,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// If the value is `null`, there is no signed-in user.
   Stream<User?> get onAuthStateChanged {
     if (_changeController == null) {
-      var nextWrapper = allowInterop((auth_interop.UserJsImpl? user) {
+      final nextWrapper = allowInterop((auth_interop.UserJsImpl? user) {
         _changeController!.add(User.getInstance(user));
       });
 
-      var errorWrapper = allowInterop((e) => _changeController!.addError(e));
+      final errorWrapper = allowInterop((e) => _changeController!.addError(e));
 
       void startListen() {
         assert(_onAuthUnsubscribe == null);
@@ -342,12 +345,17 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       }
 
       _changeController = StreamController<User?>.broadcast(
-          onListen: startListen, onCancel: stopListen, sync: true);
+        onListen: startListen,
+        onCancel: stopListen,
+        sync: true,
+      );
     }
     return _changeController!.stream;
   }
 
   Func0? _onIdTokenChangedUnsubscribe;
+  // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
+  // ignore: close_sinks
   StreamController<User?>? _idTokenChangedController;
 
   /// Sends events for changes to the signed-in user's ID token,
@@ -358,11 +366,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// If the value is `null`, there is no signed-in user.
   Stream<User?> get onIdTokenChanged {
     if (_idTokenChangedController == null) {
-      var nextWrapper = allowInterop((auth_interop.UserJsImpl? user) {
+      final nextWrapper = allowInterop((auth_interop.UserJsImpl? user) {
         _idTokenChangedController!.add(User.getInstance(user));
       });
 
-      var errorWrapper =
+      final errorWrapper =
           allowInterop((e) => _idTokenChangedController!.addError(e));
 
       void startListen() {
@@ -377,7 +385,10 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       }
 
       _idTokenChangedController = StreamController<User?>.broadcast(
-          onListen: startListen, onCancel: stopListen, sync: true);
+        onListen: startListen,
+        onCancel: stopListen,
+        sync: true,
+      );
     }
     return _idTokenChangedController!.stream;
   }

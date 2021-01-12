@@ -11,15 +11,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 
 typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
-typedef Callback(MethodCall call);
+typedef Callback = void Function(MethodCall call);
 
 // mock values
-final String TEST_PHONE_NUMBER = '5555555555';
+const String TEST_PHONE_NUMBER = '5555555555';
 
 int mockHandleId = 0;
 int get nextMockHandleId => mockHandleId++;
 
-setupFirebaseAuthMocks([Callback? customHandlers]) {
+void setupFirebaseAuthMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {

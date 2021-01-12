@@ -142,7 +142,7 @@ void main() {
             };
           case 'Auth#verifyPasswordResetCode':
             return <String, dynamic>{'email': call.arguments['code']};
-          case "Auth#verifyPhoneNumber":
+          case 'Auth#verifyPhoneNumber':
             return null;
           case 'Auth#checkActionCode':
             return <String, dynamic>{
@@ -212,8 +212,7 @@ void main() {
 
       test('when currentUser arg is null', () {
         final testAuth = TestMethodChannelFirebaseAuth(Firebase.app());
-        final result =
-            testAuth.setInitialValues(currentUser: null, languageCode: 'en');
+        final result = testAuth.setInitialValues(languageCode: 'en');
         expect(result, isA<FirebaseAuthPlatform>());
         expect(result.languageCode, equals('en'));
         expect(result.currentUser, isNull);
@@ -222,7 +221,7 @@ void main() {
     });
 
     group('applyActionCode()', () {
-      final String code = '12345';
+      const String code = '12345';
       test('invokes native method with correct args', () async {
         await auth.applyActionCode(code);
 
@@ -254,7 +253,7 @@ void main() {
     });
 
     group('checkActionCode()', () {
-      final String code = '12345';
+      const String code = '12345';
 
       test('invokes native method with correct args and returns correct result',
           () async {
@@ -298,8 +297,8 @@ void main() {
     });
 
     group('confirmPasswordReset()', () {
-      final String code = '12345';
-      final String newPassword = 'newPassword';
+      const String code = '12345';
+      const String newPassword = 'newPassword';
       test('invokes native method with correct args', () async {
         await auth.confirmPasswordReset(code, newPassword);
 
@@ -491,7 +490,7 @@ void main() {
 
     group('signInWithCustomToken()', () {
       test('returns result of a successful sign in', () async {
-        final String token = 'testToken';
+        const String token = 'testToken';
         final result = await auth.signInWithCustomToken(token);
 
         // check result
@@ -514,14 +513,14 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        final String token = 'testToken';
+        const String token = 'testToken';
         void callMethod() => auth.signInWithCustomToken(token);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        final String token = 'testToken';
+        const String token = 'testToken';
         void callMethod() => auth.signInWithCustomToken(token);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
@@ -750,7 +749,7 @@ void main() {
 
     group('setPersistence()', () {
       test('throw [UnimplementedError]', () async {
-        final Persistence persistence = Persistence.LOCAL;
+        const Persistence persistence = Persistence.LOCAL;
         try {
           await auth.setPersistence(persistence);
         } on UnimplementedError catch (e) {
@@ -874,7 +873,7 @@ void main() {
 
       const String testPhoneNumber = '+1 555 555 555';
       const String testSmsCode = '12345';
-      final Duration testTimeout = Duration(seconds: 5);
+      const Duration testTimeout = Duration(seconds: 5);
 
       test('returns a successful result', () async {
         await auth.verifyPhoneNumber(
@@ -942,7 +941,7 @@ void main() {
       });
 
       test('returns [Stream<UserPlatform>]', () async {
-        final result = await auth.authStateChanges();
+        final result = auth.authStateChanges();
 
         expect(result, isA<Stream<UserPlatform>>());
       });
@@ -961,9 +960,9 @@ void main() {
             } else if (call == 2) {
               expect(user!.email, equals(testEmail));
             } else {
-              fail("Should not have been called");
+              fail('Should not have been called');
             }
-          }, count: 2, reason: "Stream should only have been called 2 times"),
+          }, count: 2, reason: 'Stream should only have been called 2 times'),
         );
 
         await simulateEvent('Auth#authStateChanges', user);
@@ -985,7 +984,7 @@ void main() {
       });
 
       test('returns [Stream<UserPlatform>]', () async {
-        final result = await auth.idTokenChanges();
+        final result = auth.idTokenChanges();
 
         expect(result, isA<Stream<UserPlatform>>());
       });
@@ -1004,9 +1003,9 @@ void main() {
               expect(user.uid, equals(kMockUid));
               expect(auth.currentUser!.uid, equals(user.uid));
             } else {
-              fail("Should not have been called");
+              fail('Should not have been called');
             }
-          }, count: 2, reason: "Stream should only have been called 2 times"),
+          }, count: 2, reason: 'Stream should only have been called 2 times'),
         );
 
         await simulateEvent('Auth#idTokenChanges', null);
@@ -1024,7 +1023,7 @@ void main() {
       });
 
       test('returns [Stream<UserPlatform>]', () async {
-        final result = await auth.userChanges();
+        final result = auth.userChanges();
 
         expect(result, isA<Stream<UserPlatform>>());
       });
@@ -1044,9 +1043,9 @@ void main() {
               expect(user.uid, equals(kMockUid));
               expect(auth.currentUser!.uid, equals(user.uid));
             } else {
-              fail("Should not have been called");
+              fail('Should not have been called');
             }
-          }, count: 2, reason: "Stream should only have been called 2 times"),
+          }, count: 2, reason: 'Stream should only have been called 2 times'),
         );
 
         // id token change events will trigger setCurrentUser()

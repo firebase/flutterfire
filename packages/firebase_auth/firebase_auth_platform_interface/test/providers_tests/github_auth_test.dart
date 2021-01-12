@@ -7,7 +7,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 
 void main() {
   late TestGithubAuthProvider githubAuthProvider;
-  final String kMockProviderId = 'github.com';
+  const String kMockProviderId = 'github.com';
   setUpAll(() {
     githubAuthProvider = TestGithubAuthProvider();
   });
@@ -62,7 +62,7 @@ void main() {
     });
 
     group('GithubAuthProvider.credential()', () {
-      final String kMockAccessToken = 'test-token';
+      const String kMockAccessToken = 'test-token';
       test('creates a new [GithubAuthCredential]', () {
         final result = GithubAuthProvider.credential(kMockAccessToken);
         expect(result, isA<OAuthCredential>());

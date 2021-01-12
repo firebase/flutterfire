@@ -14,7 +14,9 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
 FirebaseAuthException getFirebaseAuthException(Object exception) {
   if (exception is! core_interop.FirebaseError) {
     return FirebaseAuthException(
-        code: 'unknown', message: 'An unknown error occurred: ${exception}');
+      code: 'unknown',
+      message: 'An unknown error occurred: $exception',
+    );
   }
 
   auth_interop.AuthError firebaseError = exception as auth_interop.AuthError;

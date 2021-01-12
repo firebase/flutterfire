@@ -22,11 +22,12 @@ class AuthExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Firebase Example App',
-        theme: ThemeData.dark(),
-        home: Scaffold(
-          body: AuthTypeSelector(),
-        ));
+      title: 'Firebase Example App',
+      theme: ThemeData.dark(),
+      home: Scaffold(
+        body: AuthTypeSelector(),
+      ),
+    );
   }
 }
 
@@ -43,30 +44,30 @@ class AuthTypeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Firebase Example App"),
+        title: const Text('Firebase Example App'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
+            padding: const EdgeInsets.all(16),
+            alignment: Alignment.center,
             child: SignInButtonBuilder(
               icon: Icons.person_add,
               backgroundColor: Colors.indigo,
               text: 'Registration',
               onPressed: () => _pushPage(context, RegisterPage()),
             ),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
           ),
           Container(
+            padding: const EdgeInsets.all(16),
+            alignment: Alignment.center,
             child: SignInButtonBuilder(
               icon: Icons.verified_user,
               backgroundColor: Colors.orange,
               text: 'Sign In',
               onPressed: () => _pushPage(context, SignInPage()),
             ),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
           ),
         ],
       ),

@@ -72,7 +72,7 @@ void main() {
       EmailAuthProvider.credential(email: 'test', password: 'test')
           as EmailAuthCredential;
 
-  group("$User", () {
+  group('$User', () {
     Map<String, dynamic>? user;
     FirebaseAuthPlatform.instance = mockAuthPlatform;
 
@@ -97,18 +97,19 @@ void main() {
 
       when(mockAuthPlatform.currentUser).thenReturn(mockUserPlatform!);
 
-      when(mockAuthPlatform.instanceFor(
-        app: anyNamed("app"),
-        pluginConstants: anyNamed("pluginConstants"),
-      )).thenAnswer((_) => mockUserPlatform);
+      // TODO
+      // when(mockAuthPlatform.instanceFor(
+      //   app: anyNamed('app'),
+      //   pluginConstants: anyNamed('pluginConstants'),
+      // )).thenAnswer((_) => mockUserPlatform);
 
       when(mockAuthPlatform.delegateFor(
-        app: anyNamed("app"),
+        app: anyNamed('app'),
       )).thenAnswer((_) => mockAuthPlatform);
 
       when(mockAuthPlatform.setInitialValues(
-        currentUser: anyNamed("currentUser"),
-        languageCode: anyNamed("languageCode"),
+        currentUser: anyNamed('currentUser'),
+        languageCode: anyNamed('languageCode'),
       )).thenAnswer((_) => mockAuthPlatform);
 
       MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
@@ -205,7 +206,7 @@ void main() {
             .thenAnswer((_) => Future.value(mockUserPlatform));
       });
       test('should call unlink()', () async {
-        final String providerId = 'providerId';
+        const String providerId = 'providerId';
 
         await auth.currentUser!.unlink(providerId);
 
@@ -214,7 +215,7 @@ void main() {
     });
     group('updateEmail()', () {
       test('should call updateEmail()', () async {
-        final String newEmail = 'newEmail';
+        const String newEmail = 'newEmail';
 
         await auth.currentUser!.updateEmail(newEmail);
 
@@ -224,7 +225,7 @@ void main() {
 
     group('updatePassword()', () {
       test('should call updatePassword()', () async {
-        final String newPassword = 'newPassword';
+        const String newPassword = 'newPassword';
 
         await auth.currentUser!.updatePassword(newPassword);
 
@@ -243,8 +244,8 @@ void main() {
     });
 
     test('updateProfile()', () async {
-      final String displayName = 'updatedName';
-      final String photoURL = 'testUrl';
+      const String displayName = 'updatedName';
+      const String photoURL = 'testUrl';
       Map<String, String> data = <String, String>{
         'displayName': displayName,
         'photoURL': photoURL
@@ -340,11 +341,11 @@ class MockUserCredentialPlatform extends Mock
 class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   TestFirebaseAuthPlatform() : super();
 
-  instanceFor({FirebaseApp? app, Map<dynamic, dynamic>? pluginConstants}) {}
+  // TODO
+  // instanceFor({FirebaseApp? app, Map<dynamic, dynamic>? pluginConstants}) {}
 
-  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
-    return this;
-  }
+  @override
+  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) => this;
 
   @override
   FirebaseAuthPlatform setInitialValues({
