@@ -1,3 +1,7 @@
+## 0.3.0+1
+
+ - Update a dependency to the latest release.
+
 ## 0.3.0
 
  - **FEAT**: bump firebase-android-sdk BoM to 25.13.0.

@@ -1,3 +1,7 @@
+## 7.0.1
+
+ - Update a dependency to the latest release.
+
 ## 7.0.0
 
  - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
