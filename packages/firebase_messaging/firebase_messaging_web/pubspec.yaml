@@ -1,7 +1,7 @@
 name: firebase_messaging_web
 description: The web implementation of firebase_messaging
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging_web/firebase_messaging_web
-version: 0.1.0-dev.5
+version: 0.1.0-dev.4
 
 flutter:
   plugin:
