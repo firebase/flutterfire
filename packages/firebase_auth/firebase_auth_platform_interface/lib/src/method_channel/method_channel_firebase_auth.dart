@@ -59,7 +59,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName, channel.codec);
-      print('events: ${channelName}');
       events.receiveBroadcastStream().listen(
         (arguments) {
           _handleIdTokenChangesListener(app.name, arguments);
