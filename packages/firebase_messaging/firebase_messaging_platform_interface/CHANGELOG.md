@@ -1,3 +1,7 @@
+## 1.0.0-dev.9
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.8
 
  - **FIX**: cast args lists to string values (#4382).

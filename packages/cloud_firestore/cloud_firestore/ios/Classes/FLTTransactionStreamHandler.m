@@ -1,9 +1,6 @@
-//
-//  FLTTransactionStreamHandler.m
-//  cloud_firestore
-//
-//  Created by Sebastian Roth on 24/11/2020.
-//
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
