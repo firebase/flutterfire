@@ -82,7 +82,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   @override
   Future<void> deleteToken({String senderId}) async {
     if (!_initialized) {
-      // no-op for unsupported browswers
+      // no-op for unsupported browsers
       return;
     }
     try {
@@ -100,7 +100,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   @override
   Future<String> getToken({String senderId, String vapidKey}) async {
     if (!_initialized) {
-      // no-op for unsupported browswers
+      // no-op for unsupported browsers
       return null;
     }
     try {
