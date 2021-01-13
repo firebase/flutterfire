@@ -25,7 +25,10 @@ DateTime /*?*/ dartifyDate(Object jsObject) {
     try {
       var date = jsObject as dynamic;
       return DateTime.fromMillisecondsSinceEpoch(date.getTime());
-    } on NoSuchMethodError {
+    }
+    // TODO(rrousselGit): document why try/catch is needed here or find an alternative
+    // ignore: avoid_catching_errors
+    on NoSuchMethodError {
       // so it's not a JsDate!
       return null;
     }

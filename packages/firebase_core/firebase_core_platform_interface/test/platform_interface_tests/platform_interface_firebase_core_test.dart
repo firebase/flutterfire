@@ -35,9 +35,12 @@ void main() {
 
 class ImplementsFirebasePlatform implements FirebasePlatform {
   @override
-  Future<FirebaseAppPlatform> initializeApp(
-          {String name, FirebaseOptions options}) =>
-      null;
+  Future<FirebaseAppPlatform> initializeApp({
+    String name,
+    FirebaseOptions options,
+  }) {
+    return null;
+  }
 
   @override
   FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
@@ -51,5 +54,8 @@ class ImplementsFirebasePlatform implements FirebasePlatform {
 class ExtendsFirebasePlatform extends FirebasePlatform {}
 
 class FirebaseCoreMockPlatform extends Mock
-    with MockPlatformInterfaceMixin
-    implements FirebasePlatform {}
+    with
+        // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
+        MockPlatformInterfaceMixin
+    implements
+        FirebasePlatform {}

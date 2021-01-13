@@ -14,7 +14,7 @@ class FirebaseAppPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   // ignore: public_member_api_docs
-  static verifyExtends(FirebaseAppPlatform instance) {
+  static void verifyExtends(FirebaseAppPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
@@ -30,12 +30,15 @@ class FirebaseAppPlatform extends PlatformInterface {
   /// Returns true if automatic data collection is enabled for this app.
   bool get isAutomaticDataCollectionEnabled {
     throw UnimplementedError(
-        'isAutomaticDataCollectionEnabled has not been implemented.');
+      'isAutomaticDataCollectionEnabled has not been implemented.',
+    );
   }
 
   /// Deletes the current FirebaseApp.
   Future<void> delete() async {
-    throw UnimplementedError('delete() has not been implemented.');
+    throw UnimplementedError(
+      'delete() has not been implemented.',
+    );
   }
 
   /// Sets whether automatic data collection is enabled or disabled for this app.
@@ -44,13 +47,15 @@ class FirebaseAppPlatform extends PlatformInterface {
   /// the [FirebaseAppPlatform.isAutomaticDataCollectionEnabled] property.
   Future<void> setAutomaticDataCollectionEnabled(bool enabled) async {
     throw UnimplementedError(
-        'setAutomaticDataCollectionEnabled() has not been implemented.');
+      'setAutomaticDataCollectionEnabled() has not been implemented.',
+    );
   }
 
   /// Sets whether automatic resource management is enabled or disabled for this app.
   Future<void> setAutomaticResourceManagementEnabled(bool enabled) async {
     throw UnimplementedError(
-        'setAutomaticResourceManagementEnabled() has not been implemented.');
+      'setAutomaticResourceManagementEnabled() has not been implemented.',
+    );
   }
 
   @override

@@ -13,10 +13,10 @@ dependencies:
   quiver: ">=2.0.0 <3.0.0"
 
 dev_dependencies:
-  pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1
+  pedantic: ^1.8.0
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

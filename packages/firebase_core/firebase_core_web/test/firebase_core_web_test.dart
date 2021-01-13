@@ -17,14 +17,17 @@ void main() {
   group('$FirebaseCoreWeb', () {
     setUp(() async {
       firebaseMock = FirebaseMock(
-          app: js.allowInterop((String name) => FirebaseAppMock(
-                name: name,
-                options: FirebaseAppOptionsMock(
-                    apiKey: 'abc',
-                    appId: '123',
-                    messagingSenderId: 'msg',
-                    projectId: 'test'),
-              )));
+        app: js.allowInterop(
+          (String name) => FirebaseAppMock(
+            name: name,
+            options: FirebaseAppOptionsMock(
+                apiKey: 'abc',
+                appId: '123',
+                messagingSenderId: 'msg',
+                projectId: 'test'),
+          ),
+        ),
+      );
 
       FirebasePlatform.instance = FirebaseCoreWeb();
     });
@@ -47,14 +50,15 @@ void main() {
           },
         });
       });
+
       final FirebaseApp app = Firebase.app('foo');
+
       expect(app.name, equals('foo'));
 
-      final FirebaseOptions options = await app.options;
-      expect(options.apiKey, equals('abc'));
-      expect(options.appId, equals('123'));
-      expect(options.messagingSenderId, equals('msg'));
-      expect(options.projectId, equals('test'));
+      expect(app.options.apiKey, equals('abc'));
+      expect(app.options.appId, equals('123'));
+      expect(app.options.messagingSenderId, equals('msg'));
+      expect(app.options.projectId, equals('test'));
     });
 
     test('.initializeApp()', () async {
@@ -92,10 +96,9 @@ void main() {
           projectId: 'test',
         ),
       );
-      expect(app.name, equals('foo'));
 
-      final FirebaseOptions options = await app.options;
-      expect(options.appId, equals('123'));
+      expect(app.name, equals('foo'));
+      expect(app.options.appId, equals('123'));
     });
   });
 }

@@ -8,9 +8,10 @@ import 'dart:js' as js;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'mock/firebase_mock.dart';
 import 'package:js/js_util.dart' as js_util;
+import 'package:flutter_test/flutter_test.dart';
+
+import 'mock/firebase_mock.dart';
 
 void main() {
   group('no default app', () {
@@ -26,7 +27,7 @@ void main() {
         return;
       }
 
-      fail("FirebaseException not thrown");
+      fail('FirebaseException not thrown');
     });
   });
 
@@ -44,7 +45,7 @@ void main() {
         return;
       }
 
-      fail("FirebaseException not thrown");
+      fail('FirebaseException not thrown');
     });
 
     group('secondary apps', () {
@@ -55,7 +56,7 @@ void main() {
         } catch (e) {
           assert(
               e.toString().contains(
-                  "FirebaseOptions cannot be null when creating a secondary Firebase app."),
+                  'FirebaseOptions cannot be null when creating a secondary Firebase app.'),
               true);
         }
       });
@@ -83,7 +84,7 @@ void main() {
         return;
       }
 
-      fail("FirebaseException not thrown");
+      fail('FirebaseException not thrown');
     });
   });
 }

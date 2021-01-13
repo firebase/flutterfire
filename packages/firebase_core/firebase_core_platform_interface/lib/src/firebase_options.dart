@@ -18,6 +18,7 @@ part of firebase_core_platform_interface;
 ///   )
 /// );
 /// ```
+@immutable
 class FirebaseOptions {
   /// The options used to configure a Firebase app.
   ///

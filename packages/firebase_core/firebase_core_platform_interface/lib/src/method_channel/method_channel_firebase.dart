@@ -63,8 +63,10 @@ class MethodChannelFirebase extends FirebasePlatform {
   ///
   /// Internally initializes core if it is not yet ready.
   @override
-  Future<FirebaseAppPlatform /*!*/ > initializeApp(
-      {String /*?*/ name, FirebaseOptions /*?*/ options}) async {
+  Future<FirebaseAppPlatform /*!*/ > initializeApp({
+    String /*?*/ name,
+    FirebaseOptions /*?*/ options,
+  }) async {
     if (name == defaultFirebaseAppName) {
       throw noDefaultAppInitialization();
     }
@@ -89,8 +91,10 @@ class MethodChannelFirebase extends FirebasePlatform {
       return appInstances[defaultFirebaseAppName];
     }
 
-    assert(options != null,
-        "FirebaseOptions cannot be null when creating a secondary Firebase app.");
+    assert(
+      options != null,
+      'FirebaseOptions cannot be null when creating a secondary Firebase app.',
+    );
 
     // Check whether the app has already been initialized
     if (appInstances.containsKey(name)) {

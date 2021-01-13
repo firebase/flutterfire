@@ -9,8 +9,8 @@ import 'dart:async';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
 
-import 'func.dart';
 import 'es6_interop.dart';
+import 'func.dart';
 import 'js_interop.dart' as js;
 
 /// Returns Dart representation from JS Object.
@@ -35,7 +35,7 @@ dynamic dartify(Object /*?*/ jsObject,
   if (value == null) {
     var keys = js.objectKeys(jsObject);
     var map = <String, dynamic>{};
-    for (var key in keys) {
+    for (final key in keys) {
       map[key] = dartify(util.getProperty(jsObject, key), customDartify);
     }
     return map;

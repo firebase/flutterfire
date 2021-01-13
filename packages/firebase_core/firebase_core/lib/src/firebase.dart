@@ -6,6 +6,9 @@ part of firebase_core;
 
 /// The entry point for accessing Firebase.
 class Firebase {
+  // Ensures end-users cannot initialize the class.
+  Firebase._();
+
   // Cached & lazily loaded instance of [FirebasePlatform].
   // Avoids a [MethodChannelFirebase] being initialized until the user
   // starts using Firebase.
@@ -16,14 +19,8 @@ class Firebase {
   static FirebasePlatform delegatePackingProperty;
 
   static FirebasePlatform /*!*/ get _delegate {
-    if (delegatePackingProperty == null) {
-      delegatePackingProperty = FirebasePlatform.instance;
-    }
-    return delegatePackingProperty;
+    return delegatePackingProperty ??= FirebasePlatform.instance;
   }
-
-  // Ensures end-users cannot initialize the class.
-  Firebase._();
 
   /// Returns a list of all [FirebaseApp] instances that have been created.
   static List<FirebaseApp> get apps {
@@ -37,8 +34,10 @@ class Firebase {
   ///
   /// The default app instance cannot be initialized here and should be created
   /// using the platform Firebase integration.
-  static Future<FirebaseApp> initializeApp(
-      {String /*?*/ name, FirebaseOptions /*?*/ options}) async {
+  static Future<FirebaseApp> initializeApp({
+    String /*?*/ name,
+    FirebaseOptions /*?*/ options,
+  }) async {
     // TODO(ehesp): Should be nullable post platform migration
     FirebaseAppPlatform app =
         await _delegate.initializeApp(name: name, options: options);
@@ -55,6 +54,7 @@ class Firebase {
     return app == null ? null : FirebaseApp._(app);
   }
 
+  // TODO(rrousselGit): remove ==/hashCode
   @override
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
@@ -63,8 +63,9 @@ class Firebase {
   }
 
   @override
-  int get hashCode => this.toString().hashCode;
+  int get hashCode => toString().hashCode;
 
+  // TODO(rrousselGit): include app name/options
   @override
   String toString() => '$Firebase';
 }

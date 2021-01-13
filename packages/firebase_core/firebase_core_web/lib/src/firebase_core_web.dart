@@ -51,8 +51,10 @@ class FirebaseCoreWeb extends FirebasePlatform {
         throw coreNotInitialized();
       }
     } else {
-      assert(options != null,
-          "FirebaseOptions cannot be null when creating a secondary Firebase app.");
+      assert(
+        options != null,
+        'FirebaseOptions cannot be null when creating a secondary Firebase app.',
+      );
 
       try {
         app = firebase.initializeApp(

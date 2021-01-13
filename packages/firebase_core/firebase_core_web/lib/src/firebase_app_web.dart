@@ -15,6 +15,7 @@ part of firebase_core_web;
 class FirebaseAppWeb extends FirebaseAppPlatform {
   FirebaseAppWeb._(String name, FirebaseOptions options) : super(name, options);
 
+  // TODO(rrousselGit): Either FirebaseAppPlatform shouldn't overrides ==/hashCode or FirebaseAppWeb should be immutable
   /// Returns whether automatic data collection enabled or disabled.
   bool _isAutomaticDataCollectionEnabled = false;
 

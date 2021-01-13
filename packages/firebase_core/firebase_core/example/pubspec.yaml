@@ -2,10 +2,10 @@ name: firebase_core_example
 description: Demonstrates how to use the firebase_core plugin.
 
 dependencies:
-  flutter:
-    sdk: flutter
   firebase_core:
     path: ../
+  flutter:
+    sdk: flutter
 
 dev_dependencies:
   e2e: ^0.6.1

@@ -68,7 +68,7 @@ void main() {
           return;
         }
 
-        fail("FirebaseException not thrown");
+        fail('FirebaseException not thrown');
       });
 
       test('should initialize core if not first initialized', () async {
@@ -114,7 +114,7 @@ void main() {
             return;
           }
 
-          fail("FirebaseException not thrown");
+          fail('FirebaseException not thrown');
         });
       });
 
@@ -126,7 +126,7 @@ void main() {
           } catch (e) {
             assert(
                 e.toString().contains(
-                    "FirebaseOptions cannot be null when creating a secondary Firebase app."),
+                    'FirebaseOptions cannot be null when creating a secondary Firebase app.'),
                 true);
           }
         });
@@ -214,7 +214,7 @@ void main() {
           return;
         }
 
-        fail("FirebaseException not thrown");
+        fail('FirebaseException not thrown');
       });
     });
   });
