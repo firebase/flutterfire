@@ -59,7 +59,7 @@ class FirebaseAppPlatform extends PlatformInterface {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! FirebaseAppPlatform) return false;
     return other.name == name && other.options == options;

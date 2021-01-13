@@ -16,9 +16,9 @@ class Firebase {
   // instance directly as a static property since the class is not initialized.
   @visibleForTesting
   // ignore: public_member_api_docs
-  static FirebasePlatform delegatePackingProperty;
+  static FirebasePlatform? delegatePackingProperty;
 
-  static FirebasePlatform /*!*/ get _delegate {
+  static FirebasePlatform get _delegate {
     return delegatePackingProperty ??= FirebasePlatform.instance;
   }
 
@@ -35,12 +35,14 @@ class Firebase {
   /// The default app instance cannot be initialized here and should be created
   /// using the platform Firebase integration.
   static Future<FirebaseApp> initializeApp({
-    String /*?*/ name,
-    FirebaseOptions /*?*/ options,
+    String? name,
+    FirebaseOptions? options,
   }) async {
-    // TODO(ehesp): Should be nullable post platform migration
-    FirebaseAppPlatform app =
-        await _delegate.initializeApp(name: name, options: options);
+    FirebaseAppPlatform app = await _delegate.initializeApp(
+      name: name,
+      options: options,
+    );
+
     return FirebaseApp._(app);
   }
 
@@ -50,8 +52,8 @@ class Firebase {
   /// Throws if the app does not exist.
   static FirebaseApp app([String name = defaultFirebaseAppName]) {
     FirebaseAppPlatform app = _delegate.app(name);
-    // TODO(ehesp): Is the null check required? Wouldn't it throw?
-    return app == null ? null : FirebaseApp._(app);
+
+    return FirebaseApp._(app);
   }
 
   // TODO(rrousselGit): remove ==/hashCode

@@ -26,9 +26,6 @@ class App extends JsObjectWrapper<AppJsImpl> {
 
   /// Creates a new App from a [jsObject].
   static App getInstance(AppJsImpl jsObject) {
-    if (jsObject == null) {
-      return null;
-    }
     return _expando[jsObject] ??= App._fromJsObject(jsObject);
   }
 

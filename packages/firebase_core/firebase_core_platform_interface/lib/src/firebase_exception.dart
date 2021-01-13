@@ -27,8 +27,8 @@ class FirebaseException implements Exception {
   /// }
   /// ```
   FirebaseException({
-    @required this.plugin,
-    @required this.message,
+    required this.plugin,
+    required this.message,
     this.code = 'unknown',
     this.stackTrace,
   });
@@ -51,7 +51,7 @@ class FirebaseException implements Exception {
 
   /// The stack trace which provides information to the user about the call
   /// sequence that triggered an exception
-  final StackTrace /*?*/ stackTrace;
+  final StackTrace? stackTrace;
 
   @override
   bool operator ==(dynamic other) {

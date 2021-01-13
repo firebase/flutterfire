@@ -22,6 +22,7 @@ linter:
     prefer_final_fields: false
     prefer_final_locals: false
     omit_local_variable_types: false
+    avoid_equals_and_hash_code_on_mutable_classes: false
 
     #############
 

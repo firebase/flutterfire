@@ -36,20 +36,23 @@ void main() {
 class ImplementsFirebasePlatform implements FirebasePlatform {
   @override
   Future<FirebaseAppPlatform> initializeApp({
-    String name,
-    FirebaseOptions options,
-  }) {
-    return null;
+    String? name,
+    FirebaseOptions? options,
+  }) async {
+    return FakeFirebaseAppPlatform();
   }
 
   @override
   FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
-    return null;
+    return FakeFirebaseAppPlatform();
   }
 
   @override
-  List<FirebaseAppPlatform> get apps => null;
+  List<FirebaseAppPlatform> get apps => [];
 }
+
+// ignore: avoid_implementing_value_types
+class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {}
 
 class ExtendsFirebasePlatform extends FirebasePlatform {}
 
