@@ -61,14 +61,10 @@ void main() {
 
     group('.initializeApp()', () {
       test('should throw if trying to initialize default app', () async {
-        try {
-          await channelPlatform.initializeApp(name: defaultFirebaseAppName);
-        } on FirebaseException catch (e) {
-          expect(e, noDefaultAppInitialization());
-          return;
-        }
-
-        fail('FirebaseException not thrown');
+        await expectLater(
+          () => channelPlatform.initializeApp(name: defaultFirebaseAppName),
+          throwsA(noDefaultAppInitialization()),
+        );
       });
 
       test('should initialize core if not first initialized', () async {
@@ -107,14 +103,10 @@ void main() {
         });
 
         test('should throw if no default app is available', () async {
-          try {
-            await channelPlatform.initializeApp();
-          } on FirebaseException catch (e) {
-            expect(e, coreNotInitialized());
-            return;
-          }
-
-          fail('FirebaseException not thrown');
+          await expectLater(
+            channelPlatform.initializeApp,
+            throwsA(coreNotInitialized()),
+          );
         });
       });
 

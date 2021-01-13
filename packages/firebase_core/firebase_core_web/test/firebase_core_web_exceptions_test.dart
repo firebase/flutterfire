@@ -22,7 +22,7 @@ void main() {
     test('should throw exception if no default app is available', () async {
       await expectLater(
         Firebase.initializeApp,
-        coreNotInitialized(),
+        throwsA(coreNotInitialized()),
       );
     });
   });
@@ -36,7 +36,7 @@ void main() {
         () async {
       await expectLater(
         () => Firebase.initializeApp(name: defaultFirebaseAppName),
-        noDefaultAppInitialization(),
+        throwsA(noDefaultAppInitialization()),
       );
     });
 
@@ -65,7 +65,7 @@ void main() {
     test('should throw exception if no named app was found', () async {
       await expectLater(
         () => Firebase.app('foo'),
-        noAppExists('foo'),
+        throwsA(noAppExists('foo')),
       );
     });
   });
