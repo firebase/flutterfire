@@ -1,3 +1,7 @@
+## 3.0.1
+
+ - **DOCS**: installation links updated (#4479).
+
 ## 3.0.0
 
 > Note: This release has breaking changes.

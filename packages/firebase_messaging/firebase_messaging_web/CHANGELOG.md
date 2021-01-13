@@ -1,3 +1,7 @@
+## 0.1.0-dev.4
+
+ - **FIX**: null check notification jsObject (#4624).
+
 ## 0.1.0-dev.3
 
  - Update a dependency to the latest release.
