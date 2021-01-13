@@ -33,6 +33,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   /// If [app] is null then the created instance will use the default [FirebaseApp]
   FirebaseMessagingWeb({FirebaseApp app}) : super(appInstance: app) {
     if (!messaging_interop.isSupported()) {
+      // The browser is not supported (Safari). Initialize a full no-op FirebaseMessagingWeb
       return;
     }
 
