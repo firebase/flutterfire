@@ -25,8 +25,10 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// The default app instance cannot be initialized here and should be created
   /// using the platform Firebase integration.
   @override
-  Future<FirebaseAppPlatform> initializeApp(
-      {String? name, FirebaseOptions? options}) async {
+  Future<FirebaseAppPlatform> initializeApp({
+    String? name,
+    FirebaseOptions? options,
+  }) async {
     firebase.App? app;
 
     if (name == defaultFirebaseAppName) {

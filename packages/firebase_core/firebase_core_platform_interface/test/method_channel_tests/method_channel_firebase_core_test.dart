@@ -121,22 +121,22 @@ void main() {
       group('secondary apps', () {
         test('should throw if no options are provided with a named app',
             () async {
-          try {
-            await channelPlatform.initializeApp(name: 'foo');
-          } catch (e) {
-            assert(
-                e.toString().contains(
-                    'FirebaseOptions cannot be null when creating a secondary Firebase app.'),
-                true);
-          }
+          await expectLater(
+            () => channelPlatform.initializeApp(name: 'foo'),
+            throwsAssertionError,
+          );
         });
 
         test('should initialize secondary apps', () async {
           await channelPlatform.initializeApp();
           await channelPlatform.initializeApp(
-              name: 'foo', options: testOptions);
+            name: 'foo',
+            options: testOptions,
+          );
           await channelPlatform.initializeApp(
-              name: 'bar', options: testOptions);
+            name: 'bar',
+            options: testOptions,
+          );
 
           expect(
             methodCallLog,
@@ -180,7 +180,9 @@ void main() {
 
       test('should remove a deleted app from the List', () async {
         FirebaseAppPlatform app = await channelPlatform.initializeApp(
-            name: 'foo', options: testOptions);
+          name: 'foo',
+          options: testOptions,
+        );
 
         // Default & foo
         expect(channelPlatform.apps.length, 2);
@@ -205,16 +207,11 @@ void main() {
         expect(app.options, testOptions);
       });
 
-      test('should throw if no named app was found', () async {
-        String name = 'foo';
-        try {
-          channelPlatform.app(name);
-        } on FirebaseException catch (e) {
-          expect(e, noAppExists(name));
-          return;
-        }
-
-        fail('FirebaseException not thrown');
+      test('should throw if no named app was found', () {
+        expect(
+          () => channelPlatform.app('foo'),
+          throwsA(noAppExists('foo')),
+        );
       });
     });
   });

@@ -20,14 +20,10 @@ void main() {
     });
 
     test('should throw exception if no default app is available', () async {
-      try {
-        await Firebase.initializeApp();
-      } on FirebaseException catch (e) {
-        expect(e, coreNotInitialized());
-        return;
-      }
-
-      fail('FirebaseException not thrown');
+      await expectLater(
+        Firebase.initializeApp,
+        coreNotInitialized(),
+      );
     });
   });
 
@@ -38,27 +34,19 @@ void main() {
 
     test('should throw exception if trying to initialize default app',
         () async {
-      try {
-        await Firebase.initializeApp(name: defaultFirebaseAppName);
-      } on FirebaseException catch (e) {
-        expect(e, noDefaultAppInitialization());
-        return;
-      }
-
-      fail('FirebaseException not thrown');
+      await expectLater(
+        () => Firebase.initializeApp(name: defaultFirebaseAppName),
+        noDefaultAppInitialization(),
+      );
     });
 
     group('secondary apps', () {
       test('should throw exception if no options are provided with a named app',
           () async {
-        try {
-          await Firebase.initializeApp(name: 'foo');
-        } catch (e) {
-          assert(
-              e.toString().contains(
-                  'FirebaseOptions cannot be null when creating a secondary Firebase app.'),
-              true);
-        }
+        await expectLater(
+          () => Firebase.initializeApp(name: 'foo'),
+          throwsAssertionError,
+        );
       });
     });
   });
@@ -75,16 +63,10 @@ void main() {
     });
 
     test('should throw exception if no named app was found', () async {
-      String name = 'foo';
-
-      try {
-        Firebase.app(name);
-      } on FirebaseException catch (e) {
-        expect(e, noAppExists(name));
-        return;
-      }
-
-      fail('FirebaseException not thrown');
+      await expectLater(
+        () => Firebase.app('foo'),
+        noAppExists('foo'),
+      );
     });
   });
 }
