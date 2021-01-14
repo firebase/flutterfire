@@ -77,14 +77,6 @@ class TwitterAuthProvider extends AuthProvider {
       secret: secret,
     );
   }
-
-  @Deprecated('Deprecated in favor of `TwitterAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential(
-      {@required String accessToken, @required String secret}) {
-    return TwitterAuthProvider.credential(
-        accessToken: accessToken, secret: secret);
-  }
 }
 
 /// The auth credential returned from calling

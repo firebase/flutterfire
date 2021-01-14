@@ -1,3 +1,11 @@
+## 3.1.3
+
+ - Update a dependency to the latest release.
+
+## 3.1.2
+
+ - Update a dependency to the latest release.
+
 ## 3.1.1
 
  - **FIX**: issue when specifying a functions region #4226 (#4266).

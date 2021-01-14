@@ -203,16 +203,18 @@ void main() {
     });
 
     group("snapshots()", () {
-      int handleId;
       final List<MethodCall> log = <MethodCall>[];
+
+      final String mockObserverId = 'QUERY1';
+
       setUp(() {
         log.clear();
-        handleId = nextMockHandleId;
 
         handleMethodCall((MethodCall call) async {
           log.add(call);
-          if (call.method == "Query#addSnapshotListener") {
-            await Future<void>.delayed(Duration.zero);
+          if (call.method == "Query#snapshots") {
+            handleQuerySnapshotsEventChannel(mockObserverId, log);
+            return mockObserverId;
           }
         });
       });
@@ -230,15 +232,13 @@ void main() {
 
         await subscription.cancel();
         await Future<void>.delayed(Duration.zero);
-        expect(log[0].method, 'Query#addSnapshotListener');
-        expect(log[1].method, 'Firestore#removeListener');
-        expect(log[0].arguments, <String, dynamic>{
+        expect(log[0].method, 'Query#snapshots');
+        expect(log[1].method, 'listen');
+        expect(log[1].arguments, <String, dynamic>{
           'query': isInstanceOf<MethodChannelQuery>(),
-          'handle': handleId,
-          'firestore': isInstanceOf<FirebaseFirestorePlatform>(),
           'includeMetadataChanges': false,
         });
-        expect(log[1].arguments, <String, dynamic>{'handle': handleId});
+        expect(log[2].method, 'cancel');
       });
     });
 

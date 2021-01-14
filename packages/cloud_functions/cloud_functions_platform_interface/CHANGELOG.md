@@ -1,3 +1,13 @@
+## 4.0.1
+
+ - Update a dependency to the latest release.
+
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+
 ## 3.0.3
 
  - Update a dependency to the latest release.

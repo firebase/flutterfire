@@ -1,3 +1,15 @@
+## 0.3.2+6
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+5
+
+ - **FIX**: Revert #4312: Double event fire on initialization (#4620).
+
+## 0.3.2+4
+
+ - **FIX**: bubble exceptions (#3700).
+
 ## 0.3.2+3
 
  - **FIX**: web now fires once on authStateListener initialisation (#4312).
@@ -64,7 +76,7 @@
 
 ## 0.1.2
 
-* Implement `fetchSignInMethodsForEmail`, `isSignInWithEmailLink`, `signInWithEmailAndLink`, and `sendLinkToEmail`. 
+* Implement `fetchSignInMethodsForEmail`, `isSignInWithEmailLink`, `signInWithEmailAndLink`, and `sendLinkToEmail`.
 
 ## 0.1.1+4
 

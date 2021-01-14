@@ -23,10 +23,6 @@ class DocumentReference {
   /// This document's given ID within the collection.
   String get id => _delegate.id;
 
-  @Deprecated("Deprecated in favor of `.id`")
-  // ignore: public_member_api_docs
-  String get documentID => id;
-
   /// The parent [CollectionReference] of this document.
   CollectionReference get parent =>
       CollectionReference._(firestore, _delegate.parent);
@@ -85,12 +81,6 @@ class DocumentReference {
         options);
   }
 
-  @Deprecated("Deprecated in favor of `.set()`")
-  // ignore: public_member_api_docs
-  Future<void> setData(Map<String, dynamic> data, [SetOptions /*?*/ options]) {
-    return set(data, options);
-  }
-
   /// Updates data on the document. Data will be merged with any existing
   /// document data.
   ///
@@ -99,12 +89,6 @@ class DocumentReference {
     assert(data != null);
     return _delegate
         .update(_CodecUtility.replaceValueWithDelegatesInMap(data) /*!*/);
-  }
-
-  @Deprecated("Deprecated in favor of `.update()`")
-  // ignore: public_member_api_docs
-  Future<void> updateData(Map<String, dynamic> data) {
-    return update(data);
   }
 
   @override
