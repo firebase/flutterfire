@@ -26,7 +26,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List fruit = [];
 
   @override
@@ -38,7 +37,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        key: _scaffoldKey,
         appBar: AppBar(
           title: const Text('Firebase Functions Example'),
         ),
@@ -50,30 +48,32 @@ class _MyAppState extends State<MyApp> {
                     title: Text("${fruit[index]}"),
                   );
                 })),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            // See index.js in the functions folder for the example function we
-            // are using for this example
-            HttpsCallable callable = FirebaseFunctions.instance.httpsCallable(
-                'listFruit',
-                options: HttpsCallableOptions(timeout: Duration(seconds: 5)));
+        floatingActionButton: Builder(
+          builder: (context) => FloatingActionButton.extended(
+            onPressed: () async {
+              // See index.js in the functions folder for the example function we
+              // are using for this example
+              HttpsCallable callable = FirebaseFunctions.instance.httpsCallable(
+                  'listFruit',
+                  options: HttpsCallableOptions(timeout: Duration(seconds: 5)));
 
-            await callable().then((v) {
-              setState(() {
-                fruit.clear();
-                v.data.forEach((f) {
-                  fruit.add(f);
+              await callable().then((v) {
+                setState(() {
+                  fruit.clear();
+                  v.data.forEach((f) {
+                    fruit.add(f);
+                  });
                 });
+              }).catchError((e) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("ERROR: $e"),
+                ));
               });
-            }).catchError((e) {
-              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                content: Text("ERROR: $e"),
-              ));
-            });
-          },
-          label: Text('Call Function'),
-          icon: Icon(Icons.cloud),
-          backgroundColor: Colors.deepOrange,
+            },
+            label: Text('Call Function'),
+            icon: Icon(Icons.cloud),
+            backgroundColor: Colors.deepOrange,
+          ),
         ),
       ),
     );

@@ -63,8 +63,9 @@ class ProgrammaticTriggersExample extends StatelessWidget {
             RaisedButton(
               onPressed: () {
                 fiam.triggerEvent('chicken_event');
-                Scaffold.of(context).showSnackBar(const SnackBar(
-                    content: Text("Triggering event: chicken_event")));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Triggering event: chicken_event"),
+                ));
               },
               color: Colors.blue,
               child: Text(
@@ -107,8 +108,9 @@ class AnalyticsEventExample extends StatelessWidget {
             RaisedButton(
               onPressed: () {
                 _sendAnalyticsEvent();
-                Scaffold.of(context).showSnackBar(const SnackBar(
-                    content: Text("Firing analytics event: awesome_event")));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Firing analytics event: awesome_event"),
+                ));
               },
               color: Colors.blue,
               child: Text(

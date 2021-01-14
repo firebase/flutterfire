@@ -139,7 +139,7 @@ class _MainScreenState extends State<_MainScreen> {
                   },
                   onLongPress: () {
                     Clipboard.setData(ClipboardData(text: _linkMessage));
-                    Scaffold.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Copied Link!')),
                     );
                   },

@@ -26,7 +26,7 @@ dev_dependencies:
     sdk: flutter
   pedantic: ^1.8.0
   firebase_core_platform_interface: ^2.0.0
-  mockito: ^4.1.1
+  mockito: ^5.0.0-nullsafety.2
 
 flutter:
   plugin:
