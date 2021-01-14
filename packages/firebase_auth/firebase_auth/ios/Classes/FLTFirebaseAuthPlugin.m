@@ -7,7 +7,7 @@
 
 #import "Private/FLTAuthStateChannelStreamHandler.h"
 #import "Private/FLTIdTokenChannelStreamHandler.h"
-#import "Private/FLTPhoneNumberVeritifcationStreamHandler.h"
+#import "Private/FLTPhoneNumberVerificationStreamHandler.h"
 
 #import "Public/FLTFirebaseAuthPlugin.h"
 
@@ -970,8 +970,8 @@ BOOL static initialAuthState = true;
   FlutterEventChannel *channel = [FlutterEventChannel eventChannelWithName:name
                                                            binaryMessenger:_binaryMessenger];
 
-  FLTPhoneNumberVeritifcationStreamHandler *handler =
-      [[FLTPhoneNumberVeritifcationStreamHandler alloc] initWithAuth:auth arguments:arguments];
+  FLTPhoneNumberVerificationStreamHandler *handler =
+      [[FLTPhoneNumberVerificationStreamHandler alloc] initWithAuth:auth arguments:arguments];
   [channel setStreamHandler:handler];
 
   [_eventChannels setObject:channel forKey:name];
