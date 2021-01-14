@@ -1,3 +1,9 @@
+## 0.8.0-dev.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: rework remote config plugin (#4186).
+
 ## 0.7.0
 
 The plugin has been updated and reworked to better mirror the features
