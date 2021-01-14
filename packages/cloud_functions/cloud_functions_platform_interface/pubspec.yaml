@@ -5,6 +5,10 @@ homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/c
 # less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
 version: 4.0.1
 
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.9.1+hotfix.5 <2.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
@@ -19,6 +23,3 @@ dev_dependencies:
     sdk: flutter
   mockito: ^4.1.1
 
-environment:
-  sdk: ">=2.0.0 <3.0.0"
-  flutter: ">=1.9.1+hotfix.5 <2.0.0"

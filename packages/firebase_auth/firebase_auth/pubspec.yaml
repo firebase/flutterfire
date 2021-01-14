@@ -5,18 +5,9 @@ description: Flutter plugin for Firebase Auth, enabling Android and iOS
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_auth/firebase_auth
 version: 0.20.0
 
-flutter:
-  plugin:
-    platforms:
-      android:
-        package: io.flutter.plugins.firebase.auth
-        pluginClass: FlutterFirebaseAuthPlugin
-      ios:
-        pluginClass: FLTFirebaseAuthPlugin
-      macos:
-        pluginClass: FLTFirebaseAuthPlugin
-      web:
-        default_package: firebase_auth_web
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.4 <2.0.0"
 
 dependencies:
   meta: ^1.0.4
@@ -36,6 +27,15 @@ dev_dependencies:
     sdk: flutter
   plugin_platform_interface: ^1.0.2
 
-environment:
-  sdk: ">=2.0.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: io.flutter.plugins.firebase.auth
+        pluginClass: FlutterFirebaseAuthPlugin
+      ios:
+        pluginClass: FLTFirebaseAuthPlugin
+      macos:
+        pluginClass: FLTFirebaseAuthPlugin
+      web:
+        default_package: firebase_auth_web

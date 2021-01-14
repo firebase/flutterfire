@@ -3,18 +3,9 @@ description: A Flutter plugin allowing you to use Firebase Cloud Functions.
 version: 0.9.0
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_functions/cloud_functions
 
-flutter:
-  plugin:
-    platforms:
-      android:
-        package: io.flutter.plugins.firebase.functions
-        pluginClass: FlutterFirebaseFunctionsPlugin
-      ios:
-        pluginClass: FLTFirebaseFunctionsPlugin
-      macos:
-        pluginClass: FLTFirebaseFunctionsPlugin
-      web:
-        default_package: cloud_functions_web
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"
 
 dependencies:
   meta: ^1.1.6
@@ -34,6 +25,15 @@ dev_dependencies:
   mockito: ^4.1.1
   plugin_platform_interface: ^1.0.2
 
-environment:
-  sdk: '>=2.0.0 <3.0.0'
-  flutter: '>=1.12.13+hotfix.5 <2.0.0'
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: io.flutter.plugins.firebase.functions
+        pluginClass: FlutterFirebaseFunctionsPlugin
+      ios:
+        pluginClass: FLTFirebaseFunctionsPlugin
+      macos:
+        pluginClass: FLTFirebaseFunctionsPlugin
+      web:
+        default_package: cloud_functions_web
