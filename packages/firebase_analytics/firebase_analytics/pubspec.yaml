@@ -5,6 +5,29 @@ description:
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics/firebase_analytics
 version: 7.0.1
 
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+
+dependencies:
+  meta: ^1.0.4
+  flutter:
+    sdk: flutter
+  firebase_core: ^0.7.0
+  firebase_analytics_web: ^0.1.0
+  firebase_analytics_platform_interface: ^1.0.1
+
+dependency_overrides:
+  quiver: ">=3.0.0-nullsafety.2 <4.0.0"
+
+dev_dependencies:
+  pedantic: ^1.8.0
+  mockito: 3.0.0
+  flutter_test:
+    sdk: flutter
+  flutter_driver:
+    sdk: flutter
+
 flutter:
   plugin:
     platforms:
@@ -15,23 +38,3 @@ flutter:
         pluginClass: FLTFirebaseAnalyticsPlugin
       web:
         default_package: firebase_analytics_web
-
-dependencies:
-  meta: ^1.0.4
-  flutter:
-    sdk: flutter
-  firebase_core: ^0.7.0
-  firebase_analytics_web: ^0.1.0
-  firebase_analytics_platform_interface: ^1.0.1
-
-dev_dependencies:
-  pedantic: ^1.8.0
-  mockito: 3.0.0
-  flutter_test:
-    sdk: flutter
-  flutter_driver:
-    sdk: flutter
-
-environment:
-  sdk: ">=2.1.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
