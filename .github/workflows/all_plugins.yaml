@@ -99,7 +99,7 @@ jobs:
       - name: "Build Example Snapshots"
         run: |
           melos exec -c 1 --scope="*example*" -- \
-            "flutter --suppress-analytics build aot"
+            "flutter --suppress-analytics build apk"
 
   test:
     runs-on: ubuntu-latest
