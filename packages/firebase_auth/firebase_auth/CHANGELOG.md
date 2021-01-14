@@ -1,3 +1,7 @@
+## 0.20.0+1
+
+ - **FIX**: package compatibility.
+
 ## 0.20.0
 
 > Note: This release has breaking changes.
