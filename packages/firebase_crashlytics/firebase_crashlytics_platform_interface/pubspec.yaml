@@ -15,6 +15,9 @@ dependencies:
   firebase_core: ^0.7.0
   plugin_platform_interface: ^1.0.2
 
+dependency_overrides:
+  quiver: ">=3.0.0-nullsafety.2 <4.0.0"
+
 dev_dependencies:
   firebase_core_platform_interface: ^2.0.0
   pedantic: ^1.8.0
