@@ -20,8 +20,7 @@
 }
 
 - (FlutterError *)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)events {
-#if TARGET_OS_OSX
-#else
+#if TARGET_OS_IPHONE
   id completer = ^(NSString *verificationID, NSError *error) {
     if (error != nil) {
       NSDictionary *errorDetails = [FLTFirebaseAuthPlugin getNSDictionaryFromNSError:error];

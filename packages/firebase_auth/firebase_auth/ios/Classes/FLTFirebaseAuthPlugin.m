@@ -47,17 +47,11 @@ NSString *const kErrCodeInvalidCredential = @"invalid-credential";
 NSString *const kErrMsgInvalidCredential =
     @"The supplied auth credential is malformed, has expired or is not currently supported.";
 
-BOOL static initialAuthState = true;
-
 @interface FLTFirebaseAuthPlugin ()
 @property(nonatomic, retain) NSObject<FlutterBinaryMessenger> *messenger;
 @end
 
 @implementation FLTFirebaseAuthPlugin {
-  // Auth state change handlers keyed by Firebase app name.
-  NSMutableDictionary<NSString *, FIRAuthStateDidChangeListenerHandle> *_authChangeListeners;
-  // ID token change handlers keyed by Firebase app name.
-  NSMutableDictionary<NSString *, FIRIDTokenDidChangeListenerHandle> *_idTokenChangeListeners;
   // Used for caching credentials between Method Channel method calls.
   NSMutableDictionary<NSNumber *, FIRAuthCredential *> *_credentials;
 
@@ -71,10 +65,6 @@ BOOL static initialAuthState = true;
 - (instancetype)init:(NSObject<FlutterBinaryMessenger> *)messenger {
   self = [super init];
   if (self) {
-    _authChangeListeners =
-        [NSMutableDictionary<NSString *, FIRAuthStateDidChangeListenerHandle> dictionary];
-    _idTokenChangeListeners =
-        [NSMutableDictionary<NSString *, FIRIDTokenDidChangeListenerHandle> dictionary];
     _credentials = [NSMutableDictionary<NSNumber *, FIRAuthCredential *> dictionary];
     _binaryMessenger = messenger;
     _eventChannels = [NSMutableDictionary dictionary];
@@ -102,28 +92,6 @@ BOOL static initialAuthState = true;
 }
 
 - (void)cleanupWithCompletion:(void (^)(void))completion {
-  // Cleanup auth state change listeners.
-  @synchronized(self->_authChangeListeners) {
-    for (NSString *appName in [FIRApp allApps]) {
-      FIRApp *app = [FIRApp appNamed:appName];
-      if (_authChangeListeners[appName] != nil) {
-        [[FIRAuth authWithApp:app] removeAuthStateDidChangeListener:_authChangeListeners[appName]];
-      }
-    }
-    [_authChangeListeners removeAllObjects];
-  }
-
-  // Cleanup id token change listeners.
-  @synchronized(self->_idTokenChangeListeners) {
-    for (NSString *appName in [FIRApp allApps]) {
-      FIRApp *app = [FIRApp appNamed:appName];
-      if (_idTokenChangeListeners[appName] != nil) {
-        [[FIRAuth authWithApp:app] removeIDTokenDidChangeListener:_idTokenChangeListeners[appName]];
-      }
-    }
-    [_idTokenChangeListeners removeAllObjects];
-  }
-
   // Cleanup credentials.
   [_credentials removeAllObjects];
 

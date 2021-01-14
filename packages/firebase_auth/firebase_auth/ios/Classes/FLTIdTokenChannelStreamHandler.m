@@ -21,14 +21,11 @@
 - (FlutterError *)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)events {
   _listener =
       [_auth addIDTokenDidChangeListener:^(FIRAuth *_Nonnull auth, FIRUser *_Nullable user) {
-        NSDictionary *dict;
         if (user) {
-          dict = @{@"user" : [FLTFirebaseAuthPlugin getNSDictionaryFromUser:user]};
+          events(@{@"user" : [FLTFirebaseAuthPlugin getNSDictionaryFromUser:user]});
         } else {
-          dict = @{@"user" : [NSNull null]};
+          events(@{@"user" : [NSNull null]});
         }
-
-        events(dict);
       }];
 
   return nil;
