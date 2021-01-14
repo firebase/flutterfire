@@ -67,7 +67,6 @@ class Firebase {
   @override
   int get hashCode => toString().hashCode;
 
-  // TODO(rrousselGit): include app name/options
   @override
   String toString() => '$Firebase';
 }

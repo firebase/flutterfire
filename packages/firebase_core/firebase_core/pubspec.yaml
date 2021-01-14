@@ -4,18 +4,9 @@ description: Flutter plugin for Firebase Core, enabling connecting to multiple
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_core/firebase_core
 version: 0.7.0
 
-flutter:
-  plugin:
-    platforms:
-      android:
-        package: io.flutter.plugins.firebase.core
-        pluginClass: FlutterFirebaseCorePlugin
-      ios:
-        pluginClass: FLTFirebaseCorePlugin
-      macos:
-        pluginClass: FLTFirebaseCorePlugin
-      web:
-        default_package: firebase_core_web
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"
 
 dependencies:
   firebase_core_platform_interface: ^3.0.1
@@ -34,6 +25,15 @@ dev_dependencies:
   pedantic: 1.10.0-nullsafety.3
   plugin_platform_interface: ^1.1.0-nullsafety.1
 
-environment:
-  sdk: '>=2.12.0-0 <3.0.0'
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: io.flutter.plugins.firebase.core
+        pluginClass: FlutterFirebaseCorePlugin
+      ios:
+        pluginClass: FLTFirebaseCorePlugin
+      macos:
+        pluginClass: FLTFirebaseCorePlugin
+      web:
+        default_package: firebase_core_web
