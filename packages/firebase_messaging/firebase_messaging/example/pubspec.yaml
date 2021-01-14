@@ -18,6 +18,8 @@ dependencies:
 dependency_overrides:
   firebase_core:
     path: ../../../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../../../firebase_core/firebase_core_platform_interface
   firebase_messaging:
     path: ../
   firebase_messaging_platform_interface:
