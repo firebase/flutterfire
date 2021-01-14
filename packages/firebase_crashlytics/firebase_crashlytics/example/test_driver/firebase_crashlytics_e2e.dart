@@ -4,15 +4,13 @@
 
 // @dart=2.9
 
-import 'package:e2e/e2e.dart';
+import 'package:drive/drive.dart' as drive;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
-void main() {
-  E2EWidgetsFlutterBinding.ensureInitialized();
-
+void testsMain() {
   group('$FirebaseCrashlytics', () {
     /*late*/ FirebaseCrashlytics crashlytics;
 
@@ -140,3 +138,5 @@ void main() {
     });
   });
 }
+
+void main() => drive.main(testsMain);
