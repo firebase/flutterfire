@@ -17,6 +17,9 @@ dependencies:
   firebase_storage_platform_interface: ^1.0.4
   quiver: ">=3.0.0-nullsafety.2 <4.0.0"
 
+dependency_overrides:
+  quiver: ">=3.0.0-nullsafety.2 <4.0.0"
+
 dev_dependencies:
   pedantic: 1.10.0-nullsafety.3
   http: ^0.12.0
