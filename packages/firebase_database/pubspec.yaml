@@ -5,7 +5,7 @@ homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/f
 version: 6.0.0
 
 environment:
-  sdk: ">=2.0.0 <3.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
   flutter: ">=1.12.13+hotfix.5 <2.0.0"
 
 dependencies:

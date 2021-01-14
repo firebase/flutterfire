@@ -3,12 +3,9 @@ description: The web implementation of firebase_messaging
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging_web/firebase_messaging_web
 version: 0.1.0-dev.5
 
-flutter:
-  plugin:
-    platforms:
-      web:
-        pluginClass: FirebaseMessagingWeb
-        fileName: firebase_messaging_web.dart
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.4 <2.0.0"
 
 dependencies:
   flutter:
@@ -29,6 +26,9 @@ dev_dependencies:
   firebase_core_platform_interface: ^2.0.0
   mockito: ^4.1.1
 
-environment:
-  sdk: ">=2.1.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+flutter:
+  plugin:
+    platforms:
+      web:
+        pluginClass: FirebaseMessagingWeb
+        fileName: firebase_messaging_web.dart
