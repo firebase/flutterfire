@@ -30,7 +30,7 @@ jobs:
             tuneup check
       - name: "Pub Check"
         run: |
-          melos exec -c 1 --no-private --ignore="*example*" -- \
+          melos exec -c 1 -- \
             pub publish --dry-run
 
   pub_get_check:
@@ -82,24 +82,6 @@ jobs:
           melos exec -c 4 --ignore="*platform_interface*" --ignore="*web*" -- \
             find . -maxdepth 12 -name "*.java" -print0 \| xargs -0 java -jar $HOME/google-java-format.jar --replace
           ./.github/workflows/scripts/validate-formatting.sh
-
-  build_examples_dart:
-    timeout-minutes: 15
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 0
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev
-      - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
-      - name: "Build Example Snapshots"
-        run: |
-          melos exec -c 1 --scope="*example*" -- \
-            "flutter --suppress-analytics build apk"
 
   test:
     runs-on: ubuntu-latest
