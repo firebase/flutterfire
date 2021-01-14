@@ -107,7 +107,7 @@ class _UserInfoCardState extends State<_UserInfoCard> {
               padding: EdgeInsets.only(bottom: 8.0),
               alignment: Alignment.center,
             ),
-                () {
+            () {
               if (widget.user != null) {
                 if (widget.user.photoURL != null) {
                   return Container(
@@ -137,12 +137,12 @@ class _UserInfoCardState extends State<_UserInfoCard> {
               widget.user == null
                   ? 'Not signed in'
                   : 'Email: ${widget.user.email}\n\n'
-                  'Phone number: ${widget.user.phoneNumber}\n\n'
-                  'Name: ${widget.user.displayName}\n\n'
-                  'ID: ${widget.user.uid}\n\n'
-                  'Created: ${widget.user.metadata.creationTime.toString()}\n\n'
-                  'Last login: ${widget.user.metadata.lastSignInTime}\n\n\n'
-                  'Providers: ${widget.user.providerData.fold('', (previousValue, element) => previousValue += '\n${element.providerId} ${element.uid}')}',
+                      'Phone number: ${widget.user.phoneNumber}\n\n'
+                      'Name: ${widget.user.displayName}\n\n'
+                      'ID: ${widget.user.uid}\n\n'
+                      'Created: ${widget.user.metadata.creationTime.toString()}\n\n'
+                      'Last login: ${widget.user.metadata.lastSignInTime}\n\n\n'
+                      'Providers: ${widget.user.providerData.fold('', (previousValue, element) => previousValue += '\n${element.providerId} ${element.uid}')}',
             ),
           ],
         ),
