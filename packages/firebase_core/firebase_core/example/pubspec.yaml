@@ -12,7 +12,7 @@ dependencies:
 
 dependency_overrides:
   firebase_core_platform_interface:
-    path: ../../firebase_core/firebase_core_platform_interface
+    path: ../../firebase_core_platform_interface
   quiver: ">=3.0.0-nullsafety.2 <4.0.0"
 
 dev_dependencies:
