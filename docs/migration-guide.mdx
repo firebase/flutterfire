@@ -12,15 +12,16 @@ to upgrade to the latest recommended versions, follow this guide to help ease th
 
 The table below shows the recommended package versions for each plugin this migration guide covers.
 
-|                 Plugin |                               Version |
-| ---------------------: | ------------------------------------: |
-|      `cloud_firestore` |      `^{{ plugins.cloud_firestore }}` |
-|      `cloud_functions` |      `^{{ plugins.cloud_functions }}` |
-|        `firebase_auth` |        `^{{ plugins.firebase_auth }}` |
-|        `firebase_core` |        `^{{ plugins.firebase_core }}` |
-| `firebase_crashlytics` | `^{{ plugins.firebase_crashlytics }}` |
-|     `firebase_storage` |     `^{{ plugins.firebase_storage }}` |
-|   `firebase_messaging` |   `^{{ plugins.firebase_messaging }}` |
+|                 Plugin  |                                  Version |
+| ----------------------: | ---------------------------------------: |
+|       `cloud_firestore` |         `^{{ plugins.cloud_firestore }}` |
+|       `cloud_functions` |         `^{{ plugins.cloud_functions }}` |
+|         `firebase_auth` |           `^{{ plugins.firebase_auth }}` |
+|         `firebase_core` |           `^{{ plugins.firebase_core }}` |
+|  `firebase_crashlytics` |    `^{{ plugins.firebase_crashlytics }}` |
+|      `firebase_storage` |        `^{{ plugins.firebase_storage }}` |
+|    `firebase_messaging` |      `^{{ plugins.firebase_messaging }}` |
+|`firebase_remote_config` |  `^{{ plugins.firebase_remote_config }}` |
 
 ## Breaking Changes & Deprecations
 
@@ -62,6 +63,7 @@ dependencies:
   cloud_functions: "^{{ plugins.cloud_functions }}"
   firebase_storage: "^{{ plugins.firebase_storage }}"
   firebase_messaging: "^{{ plugins.firebase_messaging }}"
+  firebase_remote_config: "^{{ plugins.firebase_remote_config }}"
   # Updated to work with new core only plugins (no new changes):
   firebase_admob: "^{{ plugins.firebase_admob }}"
   firebase_analytics: "^{{ plugins.firebase_analytics }}"
@@ -69,7 +71,6 @@ dependencies:
   firebase_dynamic_links: "^{{ plugins.firebase_dynamic_links }}"
   firebase_in_app_messaging: "^{{ plugins.firebase_in_app_messaging }}"
   firebase_performance: "^{{ plugins.firebase_performance }}"
-  firebase_remote_config: "^{{ plugins.firebase_remote_config }}"
 ```
 
 Install the updated plugins by running the following command from the project root:
@@ -565,6 +566,33 @@ We've also added lots of features which can be seen in the changelog below, howe
     - Additional types are available throughout messaging to aid with the latest changes:
         - `BackgroundMessageHandler`, `AppleNotificationSetting`, `AppleShowPreviewSetting`, `AuthorizationStatus`
           , `AndroidNotificationPriority`, `AndroidNotificationVisibility`
+
+### Remote Config
+
+The plugin has been updated and reworked to better mirror the features
+currently offered by the native (iOS and Android) clients.
+
+`RemoteConfig`:
+  - **CHORE**: migrate to platform interface.
+  - **FEAT**: support multiple firebase apps. `RemoteConfig.instanceFor()` can
+    be used to retrieve an instance of RemoteConfig for a particular
+    Firebase App.
+  - **BREAKING**: `fetch()` now takes no arguments. `RemoteConfigSettings` should
+    be used to specify the freshness of the cached config via the `minimumFetchInterval`
+    property.
+  - **BREAKING**: `activateFetched()` is now `activate()`.
+  - **FEAT**: Added `fetchAndActivate()` support.
+  - **FEAT**: Added `ensureInitialized()` support.
+
+`RemoteConfigSettings`
+  - **BREAKING**: `fetchTimeoutMillis` is now `fetchTimeout`.
+  - **BREAKING**: `minimumFetchIntervalMillis` is now `minimumFetchInterval`
+  - **BREAKING**: `fetchTimeout` and `minimumFetchInterval` are refactored
+    from `int` to `Duration`.
+
+`FetchThrottledException`
+  - **BREAKING**: removed `FetchThrottledException`. The general
+    FirebaseException is used to handle all RemoteConfig specific exceptions.
 
 ### Storage
 

@@ -1,3 +1,7 @@
+## 1.0.0-dev.10
+
+ - **DOCS**: fix messaging regex examples (#4649).
+
 ## 1.0.0-dev.9
 
  - Update a dependency to the latest release.
