@@ -3,6 +3,8 @@
 // found in the LICENSE file.
 // ignore_for_file: public_member_api_docs
 
+// @dart=2.9
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
