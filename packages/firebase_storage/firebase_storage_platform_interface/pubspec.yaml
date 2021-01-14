@@ -21,3 +21,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1
+
+dependency_overrides:
+  firebase_core:
+    path: ../../../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../../../firebase_core/firebase_core_platform_interface
