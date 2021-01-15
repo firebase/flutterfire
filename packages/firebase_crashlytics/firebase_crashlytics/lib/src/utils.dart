@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 /// Returns a [List] containing detailed output of each line in a stack trace.
 List<Map<String, String>> getStackTraceElements(List<String> lines) {
   final List<Map<String, String>> elements = <Map<String, String>>[];

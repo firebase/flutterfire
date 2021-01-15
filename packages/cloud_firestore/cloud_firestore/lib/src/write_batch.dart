@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of cloud_firestore;
 
 /// A [WriteBatch] is a series of write operations to be performed as one unit.

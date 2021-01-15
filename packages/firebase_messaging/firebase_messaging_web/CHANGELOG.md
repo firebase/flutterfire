@@ -1,3 +1,7 @@
+## 0.1.0-dev.5
+
+ - **FIX**: check is supported before init web (#4644).
+
 ## 0.1.0-dev.4
 
  - **FIX**: null check notification jsObject (#4624).

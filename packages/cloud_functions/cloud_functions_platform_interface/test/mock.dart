@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:cloud_functions_platform_interface/src/firebase_functions_exception.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';

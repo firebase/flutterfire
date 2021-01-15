@@ -1,3 +1,8 @@
+## 0.4.0+1
+
+ - **REFACTOR**: updated crashlytics e2e test library.
+ - **FIX**: updated didCrashOnPreviousExecution call.
+
 ## 0.4.0
 
 > Note: This release has breaking changes.
