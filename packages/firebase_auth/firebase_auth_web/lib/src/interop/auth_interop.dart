@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 // ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, comment_references
 // ignore_for_file: public_member_api_docs
 

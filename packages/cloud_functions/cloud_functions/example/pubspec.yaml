@@ -1,6 +1,10 @@
 name: cloud_functions_example
 description: Demonstrates how to use the cloud_functions plugin.
 
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+  
 dependencies:
   flutter:
     sdk: flutter
@@ -13,6 +17,8 @@ dependencies:
 dependency_overrides:
   firebase_core:
     path: ../../../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../../../firebase_core/firebase_core_platform_interface
 
 dev_dependencies:
   pedantic: ^1.8.0
@@ -24,7 +30,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-environment:
-  sdk: ">=2.10.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"

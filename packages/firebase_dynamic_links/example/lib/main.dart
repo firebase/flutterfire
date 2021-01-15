@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -137,7 +139,7 @@ class _MainScreenState extends State<_MainScreen> {
                   },
                   onLongPress: () {
                     Clipboard.setData(ClipboardData(text: _linkMessage));
-                    Scaffold.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Copied Link!')),
                     );
                   },
