@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_messaging;
 
 /// The [FirebaseMessaging] entry point.
@@ -322,7 +324,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// Subscribe to topic in background.
   ///
   /// [topic] must match the following regular expression:
-  /// "[a-zA-Z0-9-_.~%]{1,900}".
+  /// `[a-zA-Z0-9-_.~%]{1,900}`.
   Future<void> subscribeToTopic(String topic) {
     _assertTopicName(topic);
     return _delegate.subscribeToTopic(topic);

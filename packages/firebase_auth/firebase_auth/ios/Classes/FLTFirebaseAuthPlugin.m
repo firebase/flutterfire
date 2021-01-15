@@ -249,6 +249,7 @@ BOOL static initialAuthState = true;
 #pragma mark - AppDelegate
 
 #if TARGET_OS_IPHONE
+#if !__has_include(<FirebaseMessaging/FirebaseMessaging.h>)
 - (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)notification
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
@@ -258,6 +259,7 @@ BOOL static initialAuthState = true;
   }
   return NO;
 }
+#endif
 
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {

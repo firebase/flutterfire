@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -18,7 +20,7 @@ import 'src/utils.dart' as utils;
 /// delegates calls to messaging web plugin.
 class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   /// Instance of Messaging from the web plugin
-  final messaging_interop.Messaging _webMessaging;
+  messaging_interop.Messaging _webMessaging;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -31,10 +33,14 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   /// Builds an instance of [FirebaseMessagingWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseMessagingWeb({FirebaseApp app})
-      : _webMessaging =
-            messaging_interop.getMessagingInstance(core_interop.app(app?.name)),
-        super(appInstance: app) {
+  FirebaseMessagingWeb({FirebaseApp app}) : super(appInstance: app) {
+    if (!messaging_interop.isSupported()) {
+      // The browser is not supported (Safari). Initialize a full no-op FirebaseMessagingWeb
+      return;
+    }
+
+    _webMessaging =
+        messaging_interop.getMessagingInstance(core_interop.app(app?.name));
     if (app != null && _initialized) return;
 
     _webMessaging.onMessage
@@ -77,6 +83,10 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   @override
   Future<void> deleteToken({String senderId}) async {
+    if (!_initialized) {
+      // no-op for unsupported browsers
+      return;
+    }
     try {
       await _webMessaging.deleteToken();
     } catch (e) {
@@ -91,6 +101,10 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   @override
   Future<String> getToken({String senderId, String vapidKey}) async {
+    if (!_initialized) {
+      // no-op for unsupported browsers
+      return null;
+    }
     try {
       return await _webMessaging.getToken(vapidKey: vapidKey);
     } catch (e) {

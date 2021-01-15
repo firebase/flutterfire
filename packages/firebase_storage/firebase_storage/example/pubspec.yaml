@@ -2,6 +2,9 @@ name: firebase_storage_example
 description: Demonstrates how to use the firebase_storage plugin.
 author: Flutter Team <flutter-dev@googlegroups.com>
 
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
@@ -15,6 +18,8 @@ dependencies:
 dependency_overrides:
   firebase_core:
     path: ../../../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../../../firebase_core/firebase_core_platform_interface
   firebase_storage:
     path: ../
   firebase_storage_platform_interface:
@@ -34,6 +39,3 @@ flutter:
   uses-material-design: true
   assets:
     - assets/hello.txt
-
-environment:
-  sdk: ">=2.3.0 <3.0.0"

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:io';
 
@@ -102,7 +104,7 @@ class _MyAppState extends State<MyApp> {
                           onPressed: () {
                             FirebaseCrashlytics.instance
                                 .setCustomKey('example', 'flutterfire');
-                            Scaffold.of(context).showSnackBar(SnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(
                                   'Custom Key "example: flutterfire" has been set \n'
                                   'Key will appear in Firebase Console once app has crashed and reopened'),
@@ -114,7 +116,7 @@ class _MyAppState extends State<MyApp> {
                           onPressed: () {
                             FirebaseCrashlytics.instance
                                 .log('This is a log example');
-                            Scaffold.of(context).showSnackBar(SnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(
                                   'The message "This is a log example" has been logged \n'
                                   'Message will appear in Firebase Console once app has crashed and reopened'),
@@ -124,7 +126,7 @@ class _MyAppState extends State<MyApp> {
                       RaisedButton(
                           child: const Text('Crash'),
                           onPressed: () async {
-                            Scaffold.of(context).showSnackBar(SnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text('App will crash is 5 seconds \n'
                                   'Please reopen to send data to Crashlytics'),
                               duration: Duration(seconds: 5),
@@ -140,7 +142,7 @@ class _MyAppState extends State<MyApp> {
                       RaisedButton(
                           child: const Text('Throw Error'),
                           onPressed: () {
-                            Scaffold.of(context).showSnackBar(SnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text('Thrown error has been caught \n'
                                   'Please crash and reopen to send data to Crashlytics'),
                               duration: Duration(seconds: 5),
@@ -153,7 +155,7 @@ class _MyAppState extends State<MyApp> {
                       RaisedButton(
                           child: const Text('Async out of bounds'),
                           onPressed: () {
-                            Scaffold.of(context).showSnackBar(SnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(
                                   'Uncaught Exception that is handled by second parameter of runZonedGuarded \n'
                                   'Please crash and reopen to send data to Crashlytics'),
@@ -175,7 +177,8 @@ class _MyAppState extends State<MyApp> {
                           child: const Text('Record Error'),
                           onPressed: () async {
                             try {
-                              Scaffold.of(context).showSnackBar(SnackBar(
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
                                 content: Text('Recorded Error  \n'
                                     'Please crash and reopen to send data to Crashlytics'),
                                 duration: Duration(seconds: 5),

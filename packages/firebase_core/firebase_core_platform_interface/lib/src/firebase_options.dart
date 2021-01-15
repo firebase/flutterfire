@@ -18,6 +18,7 @@ part of firebase_core_platform_interface;
 ///   )
 /// );
 /// ```
+@immutable
 class FirebaseOptions {
   /// The options used to configure a Firebase app.
   ///
@@ -33,10 +34,10 @@ class FirebaseOptions {
   /// );
   /// ```
   const FirebaseOptions({
-    this.apiKey,
-    this.appId,
-    this.messagingSenderId,
-    this.projectId,
+    required this.apiKey,
+    required this.appId,
+    required this.messagingSenderId,
+    required this.projectId,
     this.authDomain,
     this.databaseURL,
     this.storageBucket,
@@ -48,11 +49,7 @@ class FirebaseOptions {
     this.iosClientId,
     this.iosBundleId,
     this.appGroupId,
-  })  : assert(apiKey != null, "'apiKey' cannot be null"),
-        assert(appId != null, "'appId' cannot be null."),
-        assert(
-            messagingSenderId != null, "'messagingSenderId' cannot be null."),
-        assert(projectId != null, "'projectId' cannot be null.");
+  });
 
   /// Named constructor to create [FirebaseOptions] from a Map.
   ///
@@ -83,63 +80,59 @@ class FirebaseOptions {
   /// An API key used for authenticating requests from your app, for example
   /// "AIzaSyDdVgKwhZl0sTTTLZ7iTmt1r3N2cJLnaDk", used to identify your app to
   /// Google servers.
-  final String /*!*/ apiKey;
+  final String apiKey;
 
   /// The Google App ID that is used to uniquely identify an instance of an app.
-  ///
-  /// This property is required cannot be `null`.
-  final String /*!*/ appId;
+  final String appId;
 
   /// The unique sender ID value used in messaging to identify your app.
-  ///
-  /// This property is required cannot be `null`.
-  final String /*!*/ messagingSenderId;
+  final String messagingSenderId;
 
   /// The Project ID from the Firebase console, for example "my-awesome-app".
-  final String /*!*/ projectId;
+  final String projectId;
 
   /// The auth domain used to handle redirects from OAuth provides on web
   /// platforms, for example "my-awesome-app.firebaseapp.com".
-  final String authDomain;
+  final String? authDomain;
 
   /// The database root URL, for example "https://my-awesome-app.firebaseio.com."
   ///
   /// This property should be set for apps that use Firebase Database.
-  final String databaseURL;
+  final String? databaseURL;
 
   /// The Google Cloud Storage bucket name, for example
   /// "my-awesome-app.appspot.com".
-  final String storageBucket;
+  final String? storageBucket;
 
   /// The project measurement ID value used on web platforms with analytics.
-  final String measurementId;
+  final String? measurementId;
 
   /// The tracking ID for Google Analytics, for example "UA-12345678-1", used to
   /// configure Google Analytics.
   ///
   /// This property is used on iOS only.
-  final String trackingId;
+  final String? trackingId;
 
   /// The URL scheme used by iOS secondary apps for Dynamic Links.
-  final String deepLinkURLScheme;
+  final String? deepLinkURLScheme;
 
   /// The Android client ID from the Firebase Console, for example
   /// "12345.apps.googleusercontent.com."
   ///
   /// This value is used by iOS only.
-  final String androidClientId;
+  final String? androidClientId;
 
   /// The iOS client ID from the Firebase Console, for example
   /// "12345.apps.googleusercontent.com."
   ///
   /// This value is used by iOS only.
-  final String iosClientId;
+  final String? iosClientId;
 
   /// The iOS bundle ID for the application. Defaults to `[[NSBundle mainBundle] bundleID]`
   /// when not set manually or in a plist.
   ///
   /// This property is used on iOS only.
-  final String iosBundleId;
+  final String? iosBundleId;
 
   /// The iOS App Group identifier to share data between the application and the
   /// application extensions.
@@ -148,11 +141,11 @@ class FirebaseOptions {
   /// application and on the Apple Developer Portal.
   ///
   /// This property is used on iOS only.
-  final String appGroupId;
+  final String? appGroupId;
 
   /// The current instance as a [Map].
-  Map<String, String> get asMap {
-    return <String, String>{
+  Map<String, String?> get asMap {
+    return <String, String?>{
       'apiKey': apiKey,
       'appId': appId,
       'messagingSenderId': messagingSenderId,
@@ -179,9 +172,7 @@ class FirebaseOptions {
   }
 
   @override
-  int get hashCode {
-    return hashObjects(asMap.entries);
-  }
+  int get hashCode => hashList(asMap.entries);
 
   @override
   String toString() => asMap.toString();
