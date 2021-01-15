@@ -83,13 +83,9 @@ class FirebaseOptions {
   final String apiKey;
 
   /// The Google App ID that is used to uniquely identify an instance of an app.
-  ///
-  /// This property is required cannot be `null`.
   final String appId;
 
   /// The unique sender ID value used in messaging to identify your app.
-  ///
-  /// This property is required cannot be `null`.
   final String messagingSenderId;
 
   /// The Project ID from the Firebase console, for example "my-awesome-app".

@@ -108,7 +108,9 @@ Future<T> handleThenable<T>(PromiseJsImpl<T> thenable) async {
 
 /// Handles the [Future] object with the provided [mapper] function.
 PromiseJsImpl<S> handleFutureWithMapper<T, S>(
-    Future<T> future, Func1<T, S> mapper) {
+  Future<T> future,
+  Func1<T, S> mapper,
+) {
   return PromiseJsImpl<S>(allowInterop((
     void Function(S) resolve,
     void Function(Object) reject,
