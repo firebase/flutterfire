@@ -61,9 +61,7 @@ class FirebaseException implements Exception {
   }
 
   @override
-  int get hashCode {
-    return hash3(plugin, code, message);
-  }
+  int get hashCode => hashValues(plugin, code, message);
 
   @override
   String toString() {

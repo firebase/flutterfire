@@ -62,7 +62,7 @@ class FirebaseApp {
   }
 
   @override
-  int get hashCode => hash2(name, options);
+  int get hashCode => hashValues(name, options);
 
   @override
   String toString() => '$FirebaseApp($name)';

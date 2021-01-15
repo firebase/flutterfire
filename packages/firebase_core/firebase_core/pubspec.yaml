@@ -14,7 +14,6 @@ dependencies:
   flutter:
     sdk: flutter
   meta: ^1.3.0-nullsafety.0
-  quiver: ">=3.0.0-nullsafety.2 <4.0.0"
 
 dev_dependencies:
   flutter_driver:
@@ -26,7 +25,10 @@ dev_dependencies:
   plugin_platform_interface: ^1.1.0-nullsafety.1
 
 dependency_overrides:
-  quiver: ">=3.0.0-nullsafety.2 <4.0.0"
+  firebase_core_web:
+    path: ../firebase_core_web
+  firebase_core_platform_interface:
+    path: ../firebase_core_platform_interface
 
 flutter:
   plugin:
