@@ -221,7 +221,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       o is FirebaseFirestore && o.app.name == app.name;
 
   @override
-  int get hashCode => hash2(app.name, app.options);
+  int get hashCode => hashValues(app.name, app.options);
 
   @override
   String toString() => '$FirebaseFirestore(app: ${app.name})';

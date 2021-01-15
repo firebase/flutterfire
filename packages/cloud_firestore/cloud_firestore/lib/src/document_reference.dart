@@ -98,7 +98,7 @@ class DocumentReference {
       o is DocumentReference && o.firestore == firestore && o.path == path;
 
   @override
-  int get hashCode => hash2(firestore, path);
+  int get hashCode => hashValues(firestore, path);
 
   @override
   String toString() => '$DocumentReference($path)';

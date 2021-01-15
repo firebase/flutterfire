@@ -70,7 +70,7 @@ class CollectionReference extends Query {
       o is CollectionReference && o.firestore == firestore && o.path == path;
 
   @override
-  int get hashCode => hash2(firestore, path);
+  int get hashCode => hashValues(firestore, path);
 
   @override
   String toString() => '$CollectionReference($path)';
