@@ -1,3 +1,7 @@
+## 0.7.0-nullsafety.0
+
+ - **REFACTOR**: Migrate non-nullable types (#4656).
+
 ## 0.7.0
 
 > Note: This release has breaking changes.
