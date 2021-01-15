@@ -1,4 +1,4 @@
-## 0.2.1-nullsafety.0
+## 0.2.2-nullsafety.0
 
  - **REFACTOR**: Migrate to non-nullable types (#4656).
 
