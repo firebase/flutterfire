@@ -11,8 +11,8 @@ import 'dart:typed_data';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:quiver/core.dart';
 
 import 'mock.dart';
 
@@ -367,12 +367,14 @@ void main() async {
     });
 
     test('hashCode()', () {
-      expect(testRef.hashCode, hash2(storage, testFullPath));
+      expect(testRef.hashCode, hashValues(storage, testFullPath));
     });
 
     test('toString()', () {
-      expect(testRef.toString(),
-          '$Reference(app: ${defaultFirebaseAppName}, fullPath: $testFullPath)');
+      expect(
+        testRef.toString(),
+        '$Reference(app: ${defaultFirebaseAppName}, fullPath: $testFullPath)',
+      );
     });
   });
 }

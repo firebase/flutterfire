@@ -23,7 +23,7 @@ dependencies:
 dev_dependencies:
   firebase_auth:
     path: ../firebase_auth
-  firebase_core_platform_interface: ^2.0.0
+  firebase_core_platform_interface: ^3.0.1
   flutter_test:
     sdk: flutter
   pedantic: ^1.8.0
