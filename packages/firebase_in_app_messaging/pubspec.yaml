@@ -22,9 +22,6 @@ dev_dependencies:
   test: any
   e2e: ^0.6.1
 
-dependency_overrides:
-  quiver: ">=3.0.0-nullsafety.2 <4.0.0"
-
 flutter:
   plugin:
     platforms:
