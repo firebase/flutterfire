@@ -24,12 +24,6 @@ dev_dependencies:
   pedantic: 1.10.0-nullsafety.3
   plugin_platform_interface: ^1.1.0-nullsafety.1
 
-dependency_overrides:
-  firebase_core_web:
-    path: ../firebase_core_web
-  firebase_core_platform_interface:
-    path: ../firebase_core_platform_interface
-
 flutter:
   plugin:
     platforms:
