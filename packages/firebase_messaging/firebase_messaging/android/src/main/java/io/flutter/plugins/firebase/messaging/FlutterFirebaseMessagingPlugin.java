@@ -50,6 +50,8 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
   private Activity mainActivity;
   private RemoteMessage initialMessage;
 
+  public static final String DEFAULT_ERROR_CODE = "firebase_messaging";
+
   @SuppressWarnings("unused")
   public static void registerWith(Registrar registrar) {
     FlutterFirebaseMessagingPlugin instance = new FlutterFirebaseMessagingPlugin();
@@ -366,13 +368,14 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
 
   private Map<String, Object> getExceptionDetails(@Nullable Exception exception) {
     Map<String, Object> details = new HashMap<>();
-    details.put("code", "unknown");
+    details.put("code", DEFAULT_ERROR_CODE);
+
     if (exception != null) {
       details.put("message", exception.getMessage());
     } else {
       details.put("message", "An unknown error has occurred.");
     }
-    details.put("additionalData", new HashMap<>());
+
     return details;
   }
 
