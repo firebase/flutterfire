@@ -13,11 +13,11 @@ dependencies:
   flutter:
     sdk: flutter
   meta: ^1.0.5
-  firebase_core: ^0.5.2
+  firebase_core: ^0.7.0
   plugin_platform_interface: ^1.0.1
 
 dev_dependencies:
-  firebase_core_platform_interface: ^2.0.0
+  firebase_core_platform_interface: ^3.0.1
   pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
