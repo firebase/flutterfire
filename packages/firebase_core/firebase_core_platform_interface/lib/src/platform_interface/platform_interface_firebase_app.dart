@@ -66,7 +66,7 @@ class FirebaseAppPlatform extends PlatformInterface {
   }
 
   @override
-  int get hashCode => hash2(name, options);
+  int get hashCode => hashValues(name, options);
 
   @override
   String toString() => '$FirebaseAppPlatform($name)';
