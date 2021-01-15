@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
@@ -296,8 +294,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<ConfirmationResultPlatform> signInWithPhoneNumber(String phoneNumber,
-      RecaptchaVerifierFactoryPlatform applicationVerifier) async {
+  Future<ConfirmationResultPlatform> signInWithPhoneNumber(
+    String phoneNumber,
+    RecaptchaVerifierFactoryPlatform applicationVerifier,
+  ) async {
     try {
       // Do not inline - type is not inferred & error is thrown.
       auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
