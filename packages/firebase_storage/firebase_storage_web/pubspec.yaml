@@ -10,7 +10,7 @@ environment:
 dependencies:
   async: ^2.4.2
   crypto: ^2.1.5
-  firebase_core: ^0.7.0-nullsafety+0
+  firebase_core: ^0.7.0-nullsafety.0
   firebase_core_web: ^0.2.2-nullsafety.0
   firebase_storage_platform_interface: ^1.0.4
   flutter:
