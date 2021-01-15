@@ -22,6 +22,9 @@ void main() {
         await catchPlatformException(assertionError);
       } on FirebaseFunctionsException catch (_) {
         fail('should have thrown the original exception');
+        // ignore: avoid_catching_errors, in this instance we want to do this
+      } on AssertionError catch (_) {
+        return;
       } catch (e) {
         fail('should have thrown an Exception and not a ${e.runtimeType}');
       }
