@@ -42,6 +42,7 @@ void main() {
     test('throws if call()', () {
       try {
         httpsCallablePlatform.call();
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('call() is not implemented'));
         return;
@@ -59,6 +60,6 @@ class TestHttpsCallablePlatform extends HttpsCallablePlatform {
 class TestFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {
   TestFirebaseFunctionsPlatform(FirebaseApp app) : super(app, 'test_region');
   FirebaseFunctionsPlatform testDelegateFor({FirebaseApp app}) {
-    return this.delegateFor();
+    return delegateFor();
   }
 }

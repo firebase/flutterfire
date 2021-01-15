@@ -6,15 +6,17 @@
 
 import 'dart:async';
 
-import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import '../../../cloud_functions_platform_interface.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseFunctionsException]
 /// if it was intentionally caught on the native platform.
 FutureOr<Map<String, dynamic>> catchPlatformException(Object exception,
     [StackTrace stackTrace]) async {
   if (exception is! Exception || exception is! PlatformException) {
+    // TODO(Salakar): Is this dead code?
+    // ignore: only_throw_errors
     throw exception;
   }
 

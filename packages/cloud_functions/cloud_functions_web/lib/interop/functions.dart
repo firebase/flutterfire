@@ -6,9 +6,6 @@
 
 // ignore_for_file: public_member_api_docs
 
-// TODO(ehesp): remove import once nullability updates dart sdk
-import 'dart:async';
-
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'firebase_interop.dart' as firebase_interop;
@@ -28,6 +25,8 @@ Functions getFunctionsInstance(App app, String region) {
 }
 
 class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
+  Functions._fromJsObject(functions_interop.FunctionsJsImpl jsObject)
+      : super.fromJsObject(jsObject);
   static final _expando = Expando<Functions>();
 
   /// Creates a new Functions from a [jsObject].
@@ -37,9 +36,6 @@ class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
     }
     return _expando[jsObject] ??= Functions._fromJsObject(jsObject);
   }
-
-  Functions._fromJsObject(functions_interop.FunctionsJsImpl jsObject)
-      : super.fromJsObject(jsObject);
 
   Functions get functions => getInstance(jsObject);
 
@@ -61,6 +57,9 @@ class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
 
 class HttpsCallable
     extends JsObjectWrapper<functions_interop.HttpsCallableJsImpl> {
+  HttpsCallable._fromJsObject(functions_interop.HttpsCallableJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
   static final _expando = Expando<HttpsCallable>();
 
   /// Creates a new HttpsCallable from a [jsObject].
@@ -72,16 +71,17 @@ class HttpsCallable
     return _expando[jsObject] ??= HttpsCallable._fromJsObject(jsObject);
   }
 
-  HttpsCallable._fromJsObject(functions_interop.HttpsCallableJsImpl jsObject)
-      : super.fromJsObject(jsObject);
-
-  Future<HttpsCallableResult> call([data]) =>
+  Future<HttpsCallableResult> call([dynamic data]) =>
       handleThenable(jsObject.call(data == null ? null : jsify(data)))
           .then(HttpsCallableResult.getInstance);
 }
 
 class HttpsCallableResult
     extends JsObjectWrapper<functions_interop.HttpsCallableResultJsImpl> {
+  HttpsCallableResult._fromJsObject(
+      functions_interop.HttpsCallableResultJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
   static final _expando = Expando<HttpsCallableResult>();
 
   /// Creates a new HttpsCallableResult from a [jsObject].
@@ -92,10 +92,6 @@ class HttpsCallableResult
     }
     return _expando[jsObject] ??= HttpsCallableResult._fromJsObject(jsObject);
   }
-
-  HttpsCallableResult._fromJsObject(
-      functions_interop.HttpsCallableResultJsImpl jsObject)
-      : super.fromJsObject(jsObject);
 
   dynamic get data => dartify(jsObject.data);
 }

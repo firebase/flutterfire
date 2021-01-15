@@ -13,7 +13,7 @@ void main() {
   final Map<String, dynamic> testAdditionalData = <String, dynamic>{
     'foo': 'bar',
   };
-  final String testMessage = 'PlatformException Message';
+  const String testMessage = 'PlatformException Message';
   group('catchPlatformException()', () {
     test('should throw any exception', () async {
       AssertionError assertionError = AssertionError();
@@ -22,8 +22,6 @@ void main() {
         await catchPlatformException(assertionError);
       } on FirebaseFunctionsException catch (_) {
         fail('should have thrown the original exception');
-      } on AssertionError catch (_) {
-        return;
       } catch (e) {
         fail('should have thrown an Exception and not a ${e.runtimeType}');
       }
@@ -67,8 +65,8 @@ void main() {
     });
 
     test('details = null', () {
-      PlatformException platformException = PlatformException(
-          code: 'native', message: testMessage, details: null);
+      PlatformException platformException =
+          PlatformException(code: 'native', message: testMessage);
 
       FirebaseFunctionsException result =
           platformExceptionToFirebaseFunctionsException(platformException);

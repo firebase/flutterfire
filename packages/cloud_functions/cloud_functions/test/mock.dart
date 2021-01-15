@@ -12,16 +12,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-typedef Callback(MethodCall call);
+typedef Callback = Function(MethodCall call);
 
-final String kTestString = 'Hello World';
-final String kBucket = 'gs://fake-storage-bucket-url.com';
-final String kSecondaryBucket = 'gs://fake-storage-bucket-url-2.com';
+const String kTestString = 'Hello World';
+const String kBucket = 'gs://fake-storage-bucket-url.com';
+const String kSecondaryBucket = 'gs://fake-storage-bucket-url-2.com';
 MockFirebaseFunctionsPlatform kMockFirebaseFunctionsPlatform;
 final MockHttpsCallablePlatform kMockHttpsCallablePlatform =
     MockHttpsCallablePlatform();
 
-setupFirebaseFunctionsMocks() {
+void setupFirebaseFunctionsMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
@@ -57,8 +57,11 @@ setupFirebaseFunctionsMocks() {
 
 // FirebaseFunctionsPlatform Mock
 class MockFirebaseFunctionsPlatform extends Mock
-    with MockPlatformInterfaceMixin
-    implements TestFirebaseFunctionsPlatform {
+    with
+        // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
+        MockPlatformInterfaceMixin
+    implements
+        TestFirebaseFunctionsPlatform {
   MockFirebaseFunctionsPlatform(FirebaseApp app, String region) {
     TestFirebaseFunctionsPlatform(app, region);
   }
@@ -66,15 +69,19 @@ class MockFirebaseFunctionsPlatform extends Mock
 
 // HttpsCallablePlatform Mock
 class MockHttpsCallablePlatform extends Mock
-    with MockPlatformInterfaceMixin
-    implements HttpsCallablePlatform {}
+    with
+        // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
+        MockPlatformInterfaceMixin
+    implements
+        HttpsCallablePlatform {}
 
 class TestFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {
   TestFirebaseFunctionsPlatform(FirebaseApp app, String region)
       : super(app, region);
 
-  instanceFor({FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {}
+  void instanceFor({FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {}
 
+  @override
   FirebaseFunctionsPlatform delegateFor({FirebaseApp app, String region}) {
     return this;
   }

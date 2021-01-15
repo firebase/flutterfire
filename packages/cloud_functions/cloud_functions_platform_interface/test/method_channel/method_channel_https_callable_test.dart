@@ -26,8 +26,7 @@ void main() {
   String kName = 'test_name';
   String kOrigin = 'test_origin';
   dynamic kParameters = {'foo': 'bar'};
-  HttpsCallableOptions kOptions =
-      HttpsCallableOptions(timeout: Duration(minutes: 1));
+  HttpsCallableOptions kOptions = HttpsCallableOptions();
   String kPlatformExceptionMessage = 'Mock platform exception thrown';
 
   group('$MethodChannelHttpsCallable', () {
@@ -111,7 +110,7 @@ void main() {
 
     group('timeout', () {
       test('set value', () {
-        httpsCallable.timeout = Duration(minutes: 2);
+        httpsCallable.timeout = const Duration(minutes: 2);
         expect(httpsCallable.timeout, isInstanceOf<Duration>());
         expect(httpsCallable.timeout.inMinutes, 2);
       });
@@ -227,18 +226,14 @@ void main() {
 
       test('catch an [Exception] error', () async {
         mockExceptionThrown = true;
-
-        Function callMethod = () => httpsCallable.call();
-        await testExceptionHandling('EXCEPTION', callMethod);
+        await testExceptionHandling('EXCEPTION', httpsCallable.call);
       });
 
       test(
           'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
           () async {
         mockPlatformExceptionThrown = true;
-
-        Function callMethod = () => httpsCallable.call();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling('PLATFORM', httpsCallable.call);
       });
     });
   });

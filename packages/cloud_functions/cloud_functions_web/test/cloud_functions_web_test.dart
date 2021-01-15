@@ -46,7 +46,7 @@ void main() {
             options: FirebaseAppOptionsMock(appId: '123'),
             functions: allowInterop(([region]) => FirebaseFunctionsMock(
                   httpsCallable: allowInterop((functionName, [options]) {
-                    final String appName = name == null ? '[DEFAULT]' : name;
+                    final String appName = name ?? '[DEFAULT]';
                     return allowInterop(([data]) {
                       Map<String, dynamic> result = loggingCall(
                           appName: appName,
@@ -57,7 +57,7 @@ void main() {
                     });
                   }),
                   useFunctionsEmulator: allowInterop((url) {
-                    print('Unimplemented. Supposed to emulate at $url');
+                    // TODO: add mock testing for useFunctionsEmulator
                   }),
                 ))),
       ));
@@ -78,7 +78,7 @@ void main() {
               });
             }),
             useFunctionsEmulator: allowInterop((url) {
-              print('Unimplemented. Supposed to emulate at $url');
+              // TODO: add mock testing for useFunctionsEmulator
             }),
           ));
     });
@@ -86,7 +86,8 @@ void main() {
 }
 
 Promise _jsPromise(dynamic value) {
-  return Promise(allowInterop((void resolve(dynamic result), Function reject) {
+  return Promise(
+      allowInterop((void Function(dynamic result) resolve, Function reject) {
     resolve(value);
   }));
 }

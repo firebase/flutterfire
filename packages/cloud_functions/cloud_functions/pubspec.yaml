@@ -8,22 +8,22 @@ environment:
   flutter: ">=1.12.13+hotfix.5 <2.0.0"
 
 dependencies:
-  meta: ^1.1.6
-  flutter:
-    sdk: flutter
-  firebase_core: ^0.7.0
-  firebase_core_platform_interface: ^3.0.1
   cloud_functions_platform_interface: ^4.0.1
   cloud_functions_web: ^3.1.3
-dev_dependencies:
-  pedantic: ^1.8.0
-  flutter_test:
+  firebase_core: ^0.7.0
+  firebase_core_platform_interface: ^3.0.1
+  flutter:
     sdk: flutter
+  meta: ^1.1.6
+dev_dependencies:
   flutter_driver:
     sdk: flutter
-  test: any
+  flutter_test:
+    sdk: flutter
   mockito: ^5.0.0-nullsafety.2
+  pedantic: ^1.8.0
   plugin_platform_interface: ^1.0.2
+  test: any
 
 flutter:
   plugin:

@@ -8,10 +8,10 @@ import 'package:cloud_functions_platform_interface/cloud_functions_platform_inte
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import 'mock.dart';
 
-import 'package:mockito/mockito.dart';
 import 'sample.dart' as data;
 
 void main() {
@@ -43,8 +43,8 @@ void main() {
         return Future.value(kMockHttpsCallablePlatform);
       });
 
-      kHttpsCallable = functions.httpsCallable('test_name',
-          options: HttpsCallableOptions(timeout: Duration(minutes: 1)));
+      kHttpsCallable =
+          functions.httpsCallable('test_name', options: HttpsCallableOptions());
     });
 
     group('constructor', () {
@@ -61,7 +61,7 @@ void main() {
 
       test('accepts null', () async {
         expect(await kHttpsCallable(null), isA<HttpsCallableResult>());
-        verify(kMockHttpsCallablePlatform.call(null));
+        verify(kMockHttpsCallablePlatform.call());
       });
 
       test('accepts String', () async {

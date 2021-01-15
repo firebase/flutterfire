@@ -8,10 +8,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import 'mock.dart';
-
-import 'package:mockito/mockito.dart';
 
 void main() {
   setupFirebaseFunctionsMocks();
@@ -29,7 +28,7 @@ void main() {
 
       secondaryApp = await Firebase.initializeApp(
           name: 'foo',
-          options: FirebaseOptions(
+          options: const FirebaseOptions(
             apiKey: '123',
             appId: '123',
             messagingSenderId: '123',

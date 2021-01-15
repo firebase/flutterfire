@@ -4,11 +4,12 @@
 
 // @dart=2.9
 
-import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
-import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+import '../../cloud_functions_platform_interface.dart';
+import '../method_channel/method_channel_firebase_functions.dart';
 
 /// The interface that implementations of `cloud_functions` must extend.
 ///
@@ -19,10 +20,17 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 /// `implements` this interface will be broken by newly added
 /// [FirebaseFunctionsPlatform] methods.
 abstract class FirebaseFunctionsPlatform extends PlatformInterface {
-  static final Object _token = Object();
-
-  /// Create an instance using [app] and [region]
+  /// Create an instance using [app] and [region].
   FirebaseFunctionsPlatform(this.app, this.region) : super(token: _token);
+
+  /// Create an instance using [app] using the existing implementation
+  factory FirebaseFunctionsPlatform.instanceFor(
+      {FirebaseApp app, String region}) {
+    return FirebaseFunctionsPlatform.instance
+        .delegateFor(app: app, region: region);
+  }
+
+  static final Object _token = Object();
 
   static FirebaseFunctionsPlatform _instance;
 
@@ -37,11 +45,7 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   /// It will always default to [MethodChannelFirebaseFunctions]
   /// if no other implementation was provided.
   static FirebaseFunctionsPlatform get instance {
-    if (_instance == null) {
-      _instance = MethodChannelFirebaseFunctions.instance;
-    }
-
-    return _instance;
+    return _instance ??= MethodChannelFirebaseFunctions.instance;
   }
 
   /// Sets the [FirebaseFunctionsPlatform.instance]
@@ -49,13 +53,6 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
     assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
-  }
-
-  /// Create an instance using [app] using the existing implementation
-  factory FirebaseFunctionsPlatform.instanceFor(
-      {FirebaseApp app, String region}) {
-    return FirebaseFunctionsPlatform.instance
-        .delegateFor(app: app, region: region);
   }
 
   /// Enables delegates to create new instances of themselves if a none default

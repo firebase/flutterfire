@@ -75,9 +75,10 @@ void main() {
       });
     });
 
-    test('throws if .delegateFor', () {
+    test('throws if .delegateFor is not implemented', () {
       try {
         firebaseFunctionsPlatform.testDelegateFor();
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('delegateFor() is not implemented'));
         return;
@@ -88,6 +89,7 @@ void main() {
     test('throws if httpsCallable()', () {
       try {
         firebaseFunctionsPlatform.httpsCallable('', '', null);
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('httpsCallable() is not implemented'));
         return;
@@ -100,6 +102,6 @@ void main() {
 class TestFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {
   TestFirebaseFunctionsPlatform(FirebaseApp app) : super(app, 'test_region');
   FirebaseFunctionsPlatform testDelegateFor({FirebaseApp app}) {
-    return this.delegateFor();
+    return delegateFor();
   }
 }

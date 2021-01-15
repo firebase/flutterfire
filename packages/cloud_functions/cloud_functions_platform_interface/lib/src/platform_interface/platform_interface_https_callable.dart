@@ -6,8 +6,8 @@
 
 import 'dart:async';
 
-import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import '../../cloud_functions_platform_interface.dart';
 
 /// Interface for [HttpsCallable] implementations.
 ///
@@ -25,7 +25,7 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   /// This is used by the app-facing [HttpsCallable] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(HttpsCallablePlatform instance) {
+  static void verifyExtends(HttpsCallablePlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 

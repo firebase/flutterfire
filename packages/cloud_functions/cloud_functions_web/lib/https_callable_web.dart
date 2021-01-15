@@ -8,9 +8,9 @@ import 'dart:async';
 import 'dart:js_util' as util;
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
-import 'package:cloud_functions_web/utils.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart' show dartify;
 import 'interop/functions.dart' as functions_interop;
+import 'utils.dart';
 
 /// A web specific implementation of [HttpsCallable].
 class HttpsCallableWeb extends HttpsCallablePlatform {
@@ -34,7 +34,7 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
     functions_interop.HttpsCallable callable =
         _webFunctions.httpsCallable(name, callableOptions);
 
-    var response;
+    Object response;
     var input = parameters;
     if ((input is Map) || (input is Iterable)) {
       input = util.jsify(parameters);

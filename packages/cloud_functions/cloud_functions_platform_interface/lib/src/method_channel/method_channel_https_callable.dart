@@ -6,8 +6,8 @@
 
 import 'dart:async';
 
-import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
-import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
+import '../../cloud_functions_platform_interface.dart';
+import 'method_channel_firebase_functions.dart';
 
 import 'utils/exception.dart';
 

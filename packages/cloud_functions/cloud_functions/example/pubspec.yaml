@@ -6,13 +6,13 @@ environment:
   flutter: ">=1.12.13+hotfix.4 <2.0.0"
   
 dependencies:
-  flutter:
-    sdk: flutter
-  cupertino_icons: ^0.1.2
   cloud_functions:
     path: ../
+  cupertino_icons: ^0.1.2
   firebase_core:
     path: ../../../firebase_core/firebase_core
+  flutter:
+    sdk: flutter
 
 dependency_overrides:
   firebase_core:
@@ -21,12 +21,12 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_platform_interface
 
 dev_dependencies:
-  pedantic: ^1.8.0
   drive: 0.0.1-6.0.pre
+  e2e: ^0.6.1
   flutter_driver:
     sdk: flutter
+  pedantic: ^1.8.0
   test: any
-  e2e: ^0.6.1
 
 flutter:
   uses-material-design: true

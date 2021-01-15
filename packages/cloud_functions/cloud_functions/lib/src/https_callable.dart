@@ -38,8 +38,10 @@ class HttpsCallable {
 /// Asserts whether a given call parameter is a valid type.
 void _assertValidParameterType(dynamic parameter, [bool isRoot = true]) {
   if (parameter is List) {
-    return parameter
-        .forEach((element) => _assertValidParameterType(element, false));
+    for (final element in parameter) {
+      _assertValidParameterType(element, false);
+    }
+    return;
   }
 
   if (parameter is Map) {

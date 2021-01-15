@@ -10,25 +10,22 @@ part of cloud_functions;
 ///
 /// You can get an instance by calling [FirebaseFunctions.instance].
 class FirebaseFunctions extends FirebasePluginPlatform {
+  FirebaseFunctions._({this.app, String region})
+      : _region = region ??= 'us-central1',
+        super(app.name, 'plugins.flutter.io/firebase_functions');
+
   // Cached and lazily loaded instance of [FirebaseFunctionsPlatform] to avoid
   // creating a [MethodChannelFirebaseFunctions] when not needed or creating an
   // instance with the default app before a user specifies an app.
   FirebaseFunctionsPlatform _delegatePackingProperty;
 
   FirebaseFunctionsPlatform get _delegate {
-    if (_delegatePackingProperty == null) {
-      _delegatePackingProperty =
-          FirebaseFunctionsPlatform.instanceFor(app: app, region: _region);
-    }
-    return _delegatePackingProperty;
+    return _delegatePackingProperty ??=
+        FirebaseFunctionsPlatform.instanceFor(app: app, region: _region);
   }
 
   /// The [FirebaseApp] for this current [FirebaseFunctions] instance.
   final FirebaseApp app;
-
-  FirebaseFunctions._({this.app, String region})
-      : _region = region ??= 'us-central1',
-        super(app.name, 'plugins.flutter.io/firebase_functions');
 
   static final Map<String, FirebaseFunctions> _cachedInstances = {};
 
@@ -79,9 +76,12 @@ class FirebaseFunctions extends FirebasePluginPlatform {
       // Android considers localhost as 10.0.2.2 - automatically handle this for users.
       if (defaultTargetPlatform == TargetPlatform.android) {
         if (origin.startsWith('http://localhost')) {
-          origin = origin.replaceFirst('http://localhost', 'http://10.0.2.2');
-        } else if (origin.startsWith('http://127.0.0.1')) {
-          origin = origin.replaceFirst('http://127.0.0.1', 'http://10.0.2.2');
+          _origin = origin.replaceFirst('http://localhost', 'http://10.0.2.2');
+          return;
+        }
+        if (origin.startsWith('http://127.0.0.1')) {
+          _origin = origin.replaceFirst('http://127.0.0.1', 'http://10.0.2.2');
+          return;
         }
       }
     }
