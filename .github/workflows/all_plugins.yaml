@@ -113,8 +113,6 @@ jobs:
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Flutter Test"
-        run: |
-          melos exec -c 1 --dir-exists=test --ignore="*example*" --ignore="*web*" -- \
-            "flutter test"
+        run: melos run test --no-select
       - name: "Flutter Test - Web"
         run: melos run test:web --no-select
