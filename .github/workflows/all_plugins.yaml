@@ -116,3 +116,5 @@ jobs:
         run: |
           melos exec -c 1 --dir-exists=test --ignore="*example*" --ignore="*web*" -- \
             "flutter test"
+      - name: "Flutter Test - Web"
+        run: melos run test:web --no-select
