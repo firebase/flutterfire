@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:cloud_functions_platform_interface/src/https_callable_options.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
@@ -16,8 +14,8 @@ import '../mock.dart';
 void main() {
   setupFirebaseFunctionsMocks();
 
-  MethodChannelFirebaseFunctions functions;
-  MethodChannelHttpsCallable httpsCallable;
+  MethodChannelFirebaseFunctions? functions;
+  MethodChannelHttpsCallable? httpsCallable;
   final List<MethodCall> logger = <MethodCall>[];
 
   // mock props
@@ -62,7 +60,7 @@ void main() {
     setUp(() async {
       mockPlatformExceptionThrown = false;
       mockExceptionThrown = false;
-      httpsCallable.options = kOptions;
+      httpsCallable!.options = kOptions;
 
       logger.clear();
     });
@@ -74,56 +72,38 @@ void main() {
       });
 
       test('should set name', () {
-        expect(httpsCallable.name, isInstanceOf<String>());
-        expect(httpsCallable.name, kName);
+        expect(httpsCallable!.name, isInstanceOf<String>());
+        expect(httpsCallable!.name, kName);
       });
 
       test('should set origin', () {
-        expect(httpsCallable.origin, isInstanceOf<String>());
-        expect(httpsCallable.origin, kOrigin);
+        expect(httpsCallable!.origin, isInstanceOf<String>());
+        expect(httpsCallable!.origin, kOrigin);
       });
 
       test('should set options', () {
-        expect(httpsCallable.options, isInstanceOf<HttpsCallableOptions>());
-        expect(httpsCallable.options.timeout, isInstanceOf<Duration>());
-        expect(httpsCallable.options.timeout.inMinutes, 1);
-      });
-
-      test('should set timeout', () {
-        expect(httpsCallable.timeout, isInstanceOf<Duration>());
-        expect(httpsCallable.timeout.inMinutes, 1);
+        expect(httpsCallable!.options, isInstanceOf<HttpsCallableOptions>());
+        expect(httpsCallable!.options!.timeout, isInstanceOf<Duration>());
+        expect(httpsCallable!.options!.timeout.inMinutes, 1);
       });
     });
 
     group('options', () {
       test('should set options', () {
-        expect(httpsCallable.options, isInstanceOf<HttpsCallableOptions>());
-        expect(httpsCallable.options.timeout, isInstanceOf<Duration>());
-        expect(httpsCallable.options.timeout.inMinutes, 1);
+        expect(httpsCallable!.options, isInstanceOf<HttpsCallableOptions>());
+        expect(httpsCallable!.options!.timeout, isInstanceOf<Duration>());
+        expect(httpsCallable!.options!.timeout.inMinutes, 1);
       });
 
       test('handles null value', () {
-        httpsCallable.options = null;
-        expect(httpsCallable.options, isNull);
-      });
-    });
-
-    group('timeout', () {
-      test('set value', () {
-        httpsCallable.timeout = const Duration(minutes: 2);
-        expect(httpsCallable.timeout, isInstanceOf<Duration>());
-        expect(httpsCallable.timeout.inMinutes, 2);
-      });
-
-      test('handles null value', () {
-        httpsCallable.timeout = null;
-        expect(httpsCallable.timeout, isNull);
+        httpsCallable!.options = null;
+        expect(httpsCallable!.options, isNull);
       });
     });
 
     group('call', () {
       test('invokes native method with correct args', () async {
-        final result = await httpsCallable.call(kParameters);
+        final result = await httpsCallable!.call(kParameters);
 
         expect(result, isA<dynamic>());
         expect(result['foo'], 'bar');
@@ -133,11 +113,11 @@ void main() {
           isMethodCall(
             'FirebaseFunctions#call',
             arguments: <String, dynamic>{
-              'appName': functions.app.name,
-              'functionName': httpsCallable.name,
-              'origin': httpsCallable.origin,
-              'region': functions.region,
-              'timeout': httpsCallable.timeout.inMilliseconds,
+              'appName': functions!.app!.name,
+              'functionName': httpsCallable!.name,
+              'origin': httpsCallable!.origin,
+              'region': functions!.region,
+              'timeout': httpsCallable!.options?.timeout.inMilliseconds,
               'parameters': kParameters,
             },
           ),
@@ -145,19 +125,19 @@ void main() {
       });
 
       test('invokes native method when timeout is null', () async {
-        httpsCallable.timeout = null;
+        httpsCallable!.options = null;
 
-        await httpsCallable.call(kParameters);
+        await httpsCallable!.call(kParameters);
 
         // check native method was called
         expect(logger, <Matcher>[
           isMethodCall(
             'FirebaseFunctions#call',
             arguments: <String, dynamic>{
-              'appName': functions.app.name,
-              'functionName': httpsCallable.name,
-              'origin': httpsCallable.origin,
-              'region': functions.region,
+              'appName': functions!.app!.name,
+              'functionName': httpsCallable!.name,
+              'origin': httpsCallable!.origin,
+              'region': functions!.region,
               'timeout': null,
               'parameters': kParameters,
             },
@@ -166,19 +146,19 @@ void main() {
       });
 
       test('invokes native method when options is null', () async {
-        httpsCallable.options = null;
+        httpsCallable!.options = null;
 
-        await httpsCallable.call(kParameters);
+        await httpsCallable!.call(kParameters);
 
         // check native method was called
         expect(logger, <Matcher>[
           isMethodCall(
             'FirebaseFunctions#call',
             arguments: <String, dynamic>{
-              'appName': functions.app.name,
-              'functionName': httpsCallable.name,
-              'origin': httpsCallable.origin,
-              'region': functions.region,
+              'appName': functions!.app!.name,
+              'functionName': httpsCallable!.name,
+              'origin': httpsCallable!.origin,
+              'region': functions!.region,
               'timeout': null,
               'parameters': kParameters,
             },
@@ -187,18 +167,18 @@ void main() {
       });
 
       test('accepts no args', () async {
-        await httpsCallable.call();
+        await httpsCallable!.call();
 
         // check native method was called
         expect(logger, <Matcher>[
           isMethodCall(
             'FirebaseFunctions#call',
             arguments: <String, dynamic>{
-              'appName': functions.app.name,
-              'functionName': httpsCallable.name,
-              'origin': httpsCallable.origin,
-              'region': functions.region,
-              'timeout': httpsCallable.timeout?.inMilliseconds,
+              'appName': functions!.app!.name,
+              'functionName': httpsCallable!.name,
+              'origin': httpsCallable!.origin,
+              'region': functions!.region,
+              'timeout': httpsCallable!.options?.timeout.inMilliseconds,
               'parameters': null,
             },
           ),
@@ -206,18 +186,18 @@ void main() {
       });
 
       test('accepts null', () async {
-        await httpsCallable.call();
+        await httpsCallable!.call();
 
         // check native method was called
         expect(logger, <Matcher>[
           isMethodCall(
             'FirebaseFunctions#call',
             arguments: <String, dynamic>{
-              'appName': functions.app.name,
-              'functionName': httpsCallable.name,
-              'origin': httpsCallable.origin,
-              'region': functions.region,
-              'timeout': httpsCallable.timeout?.inMilliseconds,
+              'appName': functions!.app!.name,
+              'functionName': httpsCallable!.name,
+              'origin': httpsCallable!.origin,
+              'region': functions!.region,
+              'timeout': httpsCallable!.options?.timeout.inMilliseconds,
               'parameters': null,
             },
           ),
@@ -226,14 +206,14 @@ void main() {
 
       test('catch an [Exception] error', () async {
         mockExceptionThrown = true;
-        await testExceptionHandling('EXCEPTION', httpsCallable.call);
+        await testExceptionHandling('EXCEPTION', httpsCallable!.call);
       });
 
       test(
           'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        await testExceptionHandling('PLATFORM', httpsCallable.call);
+        await testExceptionHandling('PLATFORM', httpsCallable!.call);
       });
     });
   });

@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -14,7 +12,7 @@ import 'method_channel_https_callable.dart';
 class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
   /// Creates a new [MethodChannelFirebaseFunctions] instance with an [app] and/or
   /// [region].
-  MethodChannelFirebaseFunctions({FirebaseApp app, String region})
+  MethodChannelFirebaseFunctions({FirebaseApp? app, String? region})
       : super(app, region);
 
   /// Internal stub class initializer.
@@ -35,13 +33,14 @@ class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
   );
 
   @override
-  FirebaseFunctionsPlatform delegateFor({FirebaseApp app, String region}) {
+  FirebaseFunctionsPlatform delegateFor(
+      {required FirebaseApp app, required String region}) {
     return MethodChannelFirebaseFunctions(app: app, region: region);
   }
 
   @override
   HttpsCallablePlatform httpsCallable(
-      String origin, String name, HttpsCallableOptions options) {
+      String origin, String name, HttpsCallableOptions? options) {
     return MethodChannelHttpsCallable(this, origin, name, options);
   }
 }

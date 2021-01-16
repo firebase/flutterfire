@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,9 +12,9 @@ import '../mock.dart';
 void main() {
   setupFirebaseFunctionsMocks();
 
-  TestFirebaseFunctionsPlatform firebaseFunctionsPlatform;
-  FirebaseApp app;
-  FirebaseApp secondaryApp;
+  TestFirebaseFunctionsPlatform? firebaseFunctionsPlatform;
+  FirebaseApp? app;
+  FirebaseApp? secondaryApp;
 
   group('$FirebaseFunctionsPlatform()', () {
     setUpAll(() async {
@@ -50,7 +48,7 @@ void main() {
       final result = FirebaseFunctionsPlatform.instanceFor(app: app);
       expect(result, isA<FirebaseFunctionsPlatform>());
       expect(result.app, isA<FirebaseApp>());
-      expect(result.app.name, defaultFirebaseAppName);
+      expect(result.app!.name, defaultFirebaseAppName);
     });
 
     test('get.instance', () {
@@ -66,18 +64,14 @@ void main() {
 
         expect(FirebaseFunctionsPlatform.instance,
             isA<FirebaseFunctionsPlatform>());
-        expect(FirebaseFunctionsPlatform.instance.app.name, equals('testApp2'));
-      });
-
-      test('throws an [AssertionError] if instance is null', () {
-        expect(() => FirebaseFunctionsPlatform.instance = null,
-            throwsAssertionError);
+        expect(
+            FirebaseFunctionsPlatform.instance.app!.name, equals('testApp2'));
       });
     });
 
     test('throws if .delegateFor is not implemented', () {
       try {
-        firebaseFunctionsPlatform.testDelegateFor();
+        firebaseFunctionsPlatform!.testDelegateFor(app!);
         // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('delegateFor() is not implemented'));
@@ -88,7 +82,7 @@ void main() {
 
     test('throws if httpsCallable()', () {
       try {
-        firebaseFunctionsPlatform.httpsCallable('', '', null);
+        firebaseFunctionsPlatform!.httpsCallable('', '', null);
         // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('httpsCallable() is not implemented'));
@@ -100,8 +94,8 @@ void main() {
 }
 
 class TestFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {
-  TestFirebaseFunctionsPlatform(FirebaseApp app) : super(app, 'test_region');
-  FirebaseFunctionsPlatform testDelegateFor({FirebaseApp app}) {
-    return delegateFor();
+  TestFirebaseFunctionsPlatform(FirebaseApp? app) : super(app, 'test_region');
+  FirebaseFunctionsPlatform testDelegateFor(FirebaseApp app) {
+    return delegateFor(app: app, region: 'test_region');
   }
 }

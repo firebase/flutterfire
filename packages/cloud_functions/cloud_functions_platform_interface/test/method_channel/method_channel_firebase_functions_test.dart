@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_functions_platform_interface/src/https_callable_options.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_https_callable.dart';
@@ -14,10 +12,10 @@ import '../mock.dart';
 
 void main() {
   setupFirebaseFunctionsMocks();
-  FirebaseFunctionsPlatform functions;
+  late FirebaseFunctionsPlatform functions;
 
   group('$MethodChannelFirebaseFunctions', () {
-    FirebaseApp app;
+    FirebaseApp? app;
 
     setUpAll(() async {
       app = await Firebase.initializeApp();
@@ -37,7 +35,7 @@ void main() {
 
     test('delegateFor', () {
       final testFunctions = TestMethodChannelFirebaseFunctions(app);
-      final result = testFunctions.delegateFor(app: app, region: 'uk');
+      final result = testFunctions.delegateFor(app: app!, region: 'uk');
       expect(result, isA<MethodChannelFirebaseFunctions>());
       expect(result.app, isA<FirebaseApp>());
     });
@@ -52,5 +50,5 @@ void main() {
 
 class TestMethodChannelFirebaseFunctions
     extends MethodChannelFirebaseFunctions {
-  TestMethodChannelFirebaseFunctions(FirebaseApp app) : super(app: app);
+  TestMethodChannelFirebaseFunctions(FirebaseApp? app) : super(app: app);
 }

@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -25,20 +23,20 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
 
   /// Create an instance using [app] using the existing implementation
   factory FirebaseFunctionsPlatform.instanceFor(
-      {FirebaseApp app, String region}) {
+      {FirebaseApp? app, String? region}) {
     return FirebaseFunctionsPlatform.instance
-        .delegateFor(app: app, region: region);
+        .delegateFor(app: app!, region: region!);
   }
 
   static final Object _token = Object();
 
-  static FirebaseFunctionsPlatform _instance;
+  static FirebaseFunctionsPlatform? _instance;
 
   /// The [FirebaseApp] this instance was initialized with
-  final FirebaseApp app;
+  final FirebaseApp? app;
 
   /// The region for the HTTPS trigger, such as "us-central1".
-  final String region;
+  final String? region;
 
   /// The current default [FirebaseFunctionsPlatform] instance.
   ///
@@ -50,7 +48,6 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseFunctionsPlatform.instance]
   static set instance(FirebaseFunctionsPlatform instance) {
-    assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
@@ -58,13 +55,14 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance or region is required by the user.
   @protected
-  FirebaseFunctionsPlatform delegateFor({FirebaseApp app, String region}) {
+  FirebaseFunctionsPlatform delegateFor(
+      {required FirebaseApp app, required String region}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
   /// Creates a [HttpsCallablePlatform] instance
   HttpsCallablePlatform httpsCallable(
-      String origin, String name, HttpsCallableOptions options) {
+      String origin, String name, HttpsCallableOptions? options) {
     throw UnimplementedError('httpsCallable() is not implemented');
   }
 }

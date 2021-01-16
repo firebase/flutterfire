@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -30,16 +28,16 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   }
 
   /// The [FirebaseFunctionsPlatform] instance.
-  final FirebaseFunctionsPlatform functions;
+  final FirebaseFunctionsPlatform? functions;
 
   /// The [origin] of the local emulator, such as "http://localhost:5001"
-  final String origin;
+  final String? origin;
 
   /// The name of the function
   final String name;
 
   /// Used to set the options for this instance.
-  HttpsCallableOptions options;
+  HttpsCallableOptions? options;
 
   /// Executes this Callable HTTPS trigger asynchronously.
   ///
@@ -57,15 +55,5 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   /// the user is also automatically included.
   Future<dynamic> call([dynamic parameters]) {
     throw UnimplementedError('call() is not implemented');
-  }
-
-  /// Returns the timeout for this instance.
-  Duration get timeout {
-    return options?.timeout;
-  }
-
-  /// Changes the timeout for calls from this instances.
-  set timeout(Duration duration) {
-    options = HttpsCallableOptions(timeout: duration);
   }
 }

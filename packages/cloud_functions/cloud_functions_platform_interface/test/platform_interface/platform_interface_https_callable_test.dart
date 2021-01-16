@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,7 +13,7 @@ void main() {
   setupFirebaseFunctionsMocks();
 
   TestFirebaseFunctionsPlatform firebaseFunctionsPlatform;
-  TestHttpsCallablePlatform httpsCallablePlatform;
+  TestHttpsCallablePlatform? httpsCallablePlatform;
   FirebaseApp app;
 
   group('$HttpsCallablePlatform()', () {
@@ -41,7 +39,7 @@ void main() {
 
     test('throws if call()', () {
       try {
-        httpsCallablePlatform.call();
+        httpsCallablePlatform!.call();
         // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('call() is not implemented'));
@@ -59,7 +57,7 @@ class TestHttpsCallablePlatform extends HttpsCallablePlatform {
 
 class TestFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {
   TestFirebaseFunctionsPlatform(FirebaseApp app) : super(app, 'test_region');
-  FirebaseFunctionsPlatform testDelegateFor({FirebaseApp app}) {
-    return delegateFor();
+  FirebaseFunctionsPlatform testDelegateFor(FirebaseApp app) {
+    return delegateFor(app: app, region: 'test_region');
   }
 }

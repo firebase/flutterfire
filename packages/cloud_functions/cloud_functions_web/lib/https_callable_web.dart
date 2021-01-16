@@ -29,7 +29,7 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
 
     functions_interop.HttpsCallableOptions callableOptions =
         functions_interop.HttpsCallableOptions(
-            timeout: timeout?.inMilliseconds);
+            timeout: options?.timeout?.inMilliseconds);
 
     functions_interop.HttpsCallable callable =
         _webFunctions.httpsCallable(name, callableOptions);

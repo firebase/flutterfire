@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 
@@ -14,9 +12,9 @@ class FirebaseFunctionsException extends FirebaseException
   // ignore: public_member_api_docs
   @protected
   FirebaseFunctionsException({
-    @required String message,
-    String code,
-    StackTrace stackTrace,
+    required String message,
+    required String code,
+    StackTrace? stackTrace,
     this.details,
   }) : super(
             plugin: 'firebase_functions',

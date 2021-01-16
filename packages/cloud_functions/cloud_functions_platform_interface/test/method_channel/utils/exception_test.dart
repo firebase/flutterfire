@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_functions_platform_interface/src/firebase_functions_exception.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/utils/exception.dart';
@@ -59,7 +57,8 @@ void main() {
           details: {'additionalData': testAdditionalData});
 
       FirebaseFunctionsException result =
-          platformExceptionToFirebaseFunctionsException(platformException);
+          platformExceptionToFirebaseFunctionsException(platformException)
+              as FirebaseFunctionsException;
       expect(result.code, 'unknown');
       expect(result.message, testMessage);
 
@@ -72,7 +71,8 @@ void main() {
           PlatformException(code: 'native', message: testMessage);
 
       FirebaseFunctionsException result =
-          platformExceptionToFirebaseFunctionsException(platformException);
+          platformExceptionToFirebaseFunctionsException(platformException)
+              as FirebaseFunctionsException;
       expect(result.code, 'unknown');
       expect(result.message, testMessage);
       expect(result.details, isNull);
@@ -85,7 +85,8 @@ void main() {
           details: {'additionalData': null});
 
       FirebaseFunctionsException result =
-          platformExceptionToFirebaseFunctionsException(platformException);
+          platformExceptionToFirebaseFunctionsException(platformException)
+              as FirebaseFunctionsException;
       expect(result.code, 'unknown');
       expect(result.message, testMessage);
       expect(result.details, isNull);
