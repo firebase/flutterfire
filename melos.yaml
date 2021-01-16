@@ -10,7 +10,7 @@ scripts:
 
   analyze:
     run: |
-      melos exec -c 5 --fail-fast -- \
+      melos exec -c 5 -- \
         dart analyze .
     description: |
       Run `dart analyze` in all packages.
