@@ -21,13 +21,12 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
-          flutter --suppress-analytics pub global activate tuneup
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Dart Analyze"
         run: |
           melos exec -c 3 -- \
-            tuneup check
+            dart analyze .
       # TODO(rrousselGit): re-enable dry-runs after the projects has been fully migrated to NNBD
       # - name: "Pub Check"
       #   run: |
