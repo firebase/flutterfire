@@ -33,9 +33,9 @@ class HttpsCallable {
     assert(_delegate != null);
     
     var result = await _delegate.call(parameters);
-    var converted_result = Map<String, dynamic>.from(result);
+    var convertedResult = Map<String, dynamic>.from(result);
     
-    return HttpsCallableResult<T>._(converted_result);
+    return HttpsCallableResult<T>._(convertedResult);
   }
 }
 
