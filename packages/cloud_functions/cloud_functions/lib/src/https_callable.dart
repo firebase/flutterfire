@@ -31,7 +31,11 @@ class HttpsCallable {
   Future<HttpsCallableResult<T>> call<T>([dynamic parameters]) async {
     _assertValidParameterType(parameters);
     assert(_delegate != null);
-    return HttpsCallableResult<T>._(await _delegate.call(parameters));
+    
+    var result = await _delegate.call(parameters);
+    var converted_result = Map<String, dynamic>.from(result);
+    
+    return HttpsCallableResult<T>._(converted_result);
   }
 }
 
