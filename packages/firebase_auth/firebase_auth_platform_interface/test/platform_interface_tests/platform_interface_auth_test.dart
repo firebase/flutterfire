@@ -34,8 +34,14 @@ void main() {
       );
       handleMethodCall((call) async {
         switch (call.method) {
-          case 'Auth#registerChangeListeners':
-            return {};
+          case 'Auth#registerIdTokenListener':
+            final String name = 'idTokenChannel';
+            handleEventChannel(name);
+            return name;
+          case 'Auth#registerAuthStateListener':
+            final String name = 'authStateChannel';
+            handleEventChannel(name);
+            return name;
           default:
             return null;
         }

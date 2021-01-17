@@ -15,20 +15,9 @@ import 'package:flutter/services.dart';
 
 import 'method_channel_user_credential.dart';
 import 'utils/exception.dart';
-import 'utils/phone_auth_callbacks.dart';
 
 /// Method Channel delegate for [FirebaseAuthPlatform].
 class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
-  /// Keep an internal reference to whether the [MethodChannelFirebaseAuth]
-  /// class has already been initialized.
-  static bool _initialized = false;
-
-  /// Keeps an internal handle ID for the channel.
-  static int _methodChannelHandleId = 0;
-
-  /// Increments and returns the next channel ID handler for Auth.
-  static int get nextMethodChannelHandleId => _methodChannelHandleId++;
-
   /// The [MethodChannelFirebaseAuth] method channel.
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/firebase_auth',
@@ -46,8 +35,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   static Map<String, StreamController<UserPlatform>> _userChangesListeners =
       <String, StreamController<UserPlatform>>{};
-
-  static Map<int, PhoneAuthCallbacks> _phoneAuthCallbacks = {};
 
   StreamController<T> _createBroadcastStream<T>() {
     return StreamController<T>.broadcast();
@@ -68,10 +55,26 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// Creates a new instance with a given [FirebaseApp].
   MethodChannelFirebaseAuth({/*required*/ FirebaseApp app})
       : super(appInstance: app) {
-    // Send a request to start listening to change listeners straight away
-    channel
-        .invokeMethod<void>('Auth#registerChangeListeners', <String, dynamic>{
+    channel.invokeMethod<String>('Auth#registerIdTokenListener', {
       'appName': app.name,
+    }).then((channelName) {
+      final events = EventChannel(channelName, channel.codec);
+      events.receiveBroadcastStream().listen(
+        (arguments) {
+          _handleIdTokenChangesListener(app.name, arguments);
+        },
+      );
+    });
+
+    channel.invokeMethod<String>('Auth#registerAuthStateListener', {
+      'appName': app.name,
+    }).then((channelName) {
+      final events = EventChannel(channelName, channel.codec);
+      events.receiveBroadcastStream().listen(
+        (arguments) {
+          _handleAuthStateChangesListener(app.name, arguments);
+        },
+      );
     });
 
     // Create a app instance broadcast stream for native listener events
@@ -79,33 +82,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         _createBroadcastStream<UserPlatform>();
     _idTokenChangesListeners[app.name] = _createBroadcastStream<UserPlatform>();
     _userChangesListeners[app.name] = _createBroadcastStream<UserPlatform>();
-
-    // The channel setMethodCallHandler callback is not app specific, so there
-    // is no need to register the caller more than once.
-    if (_initialized) return;
-
-    channel.setMethodCallHandler((MethodCall call) async {
-      Map<dynamic, dynamic> /*!*/ arguments = call.arguments;
-
-      switch (call.method) {
-        case 'Auth#authStateChanges':
-          return _handleAuthStateChangesListener(arguments);
-        case 'Auth#idTokenChanges':
-          return _handleIdTokenChangesListener(arguments);
-        case 'Auth#phoneVerificationCompleted':
-          return _handlePhoneVerificationCompleted(arguments);
-        case 'Auth#phoneVerificationFailed':
-          return _handlePhoneVerificationFailed(arguments);
-        case 'Auth#phoneCodeSent':
-          return _handlePhoneCodeSent(arguments);
-        case 'Auth#phoneCodeAutoRetrievalTimeout':
-          return _handlePhoneCodeAutoRetrievalTimeout(arguments);
-        default:
-          throw UnimplementedError("${call.method} has not been implemented");
-      }
-    });
-
-    _initialized = true;
   }
 
   UserPlatform _currentUser;
@@ -134,8 +110,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   // Duplicate setting of [currentUser] in [_handleAuthStateChangesListener] & [_handleIdTokenChangesListener]
   // as iOS & Android do not guarantee correct ordering
   Future<void> _handleAuthStateChangesListener(
-      Map<dynamic, dynamic> arguments) async {
-    String /*!*/ appName = arguments['appName'];
+      String appName, Map<dynamic, dynamic> arguments) async {
     StreamController<UserPlatform> /*!*/ streamController =
         _authStateChangesListeners[appName];
     MethodChannelFirebaseAuth /*!*/ instance =
@@ -158,8 +133,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// This handler also manages the [currentUser] along with sending events
   /// to any [userChanges] stream subscribers.
   Future<void> _handleIdTokenChangesListener(
-      Map<dynamic, dynamic> arguments) async {
-    String /*!*/ appName = arguments['appName'];
+      String appName, Map<dynamic, dynamic> arguments) async {
     StreamController<UserPlatform> /*!*/ idTokenStreamController =
         _idTokenChangesListeners[appName];
     StreamController<UserPlatform> /*!*/ userChangesStreamController =
@@ -180,52 +154,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       idTokenStreamController.add(user);
       userChangesStreamController.add(user);
     }
-  }
-
-  Future<void> _handlePhoneVerificationCompleted(
-      Map<dynamic, dynamic> arguments) async {
-    final int /*!*/ handle = arguments['handle'];
-    final int token = arguments['token'];
-    final String /*!*/ smsCode = arguments['smsCode'];
-
-    PhoneAuthCredential phoneAuthCredential =
-        PhoneAuthProvider.credentialFromToken(token, smsCode: smsCode);
-    PhoneAuthCallbacks callbacks = _phoneAuthCallbacks[handle];
-    callbacks.verificationCompleted(phoneAuthCredential);
-  }
-
-  Future<void> _handlePhoneVerificationFailed(
-      Map<dynamic, dynamic> arguments) async {
-    final int /*!*/ handle = arguments['handle'];
-    final Map<dynamic, dynamic> error = arguments['error'];
-    final Map<dynamic, dynamic> details = error['details'];
-
-    PhoneAuthCallbacks callbacks = _phoneAuthCallbacks[handle];
-
-    FirebaseAuthException exception = FirebaseAuthException(
-      message: details != null ? details['message'] : error['message'],
-      code: details != null ? details['code'] : 'unknown',
-    );
-
-    callbacks.verificationFailed(exception);
-  }
-
-  Future<void> _handlePhoneCodeSent(Map<dynamic, dynamic> arguments) async {
-    final int /*!*/ handle = arguments['handle'];
-    final String verificationId = arguments['verificationId'];
-    final int forceResendingToken = arguments['forceResendingToken'];
-
-    PhoneAuthCallbacks callbacks = _phoneAuthCallbacks[handle];
-    callbacks.codeSent(verificationId, forceResendingToken);
-  }
-
-  Future<void> _handlePhoneCodeAutoRetrievalTimeout(
-      Map<dynamic, dynamic> arguments) async {
-    final int /*!*/ handle = arguments['handle'];
-    final String verificationId = arguments['verificationId'];
-
-    PhoneAuthCallbacks callbacks = _phoneAuthCallbacks[handle];
-    callbacks.codeAutoRetrievalTimeout(verificationId);
   }
 
   /// Gets a [FirebaseAuthPlatform] with specific arguments such as a different
@@ -574,20 +502,47 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           "verifyPhoneNumber() is not available on MacOS platforms.");
     }
 
-    int handle = MethodChannelFirebaseAuth.nextMethodChannelHandleId;
-
-    _phoneAuthCallbacks[handle] = PhoneAuthCallbacks(verificationCompleted,
-        verificationFailed, codeSent, codeAutoRetrievalTimeout);
-
     try {
-      await channel
-          .invokeMethod<void>('Auth#verifyPhoneNumber', <String, dynamic>{
+      final eventChannelName = await channel
+          .invokeMethod<String>('Auth#verifyPhoneNumber', <String, dynamic>{
         'appName': app.name,
-        'handle': handle,
         'phoneNumber': phoneNumber,
         'timeout': timeout.inMilliseconds,
         'forceResendingToken': forceResendingToken,
         'autoRetrievedSmsCodeForTesting': autoRetrievedSmsCodeForTesting,
+      });
+
+      EventChannel(eventChannelName)
+          .receiveBroadcastStream()
+          .listen((arguments) {
+        final name = arguments['name'];
+        if (name == 'Auth#phoneVerificationCompleted') {
+          final int token = arguments['token'];
+          final String /*!*/ smsCode = arguments['smsCode'];
+
+          PhoneAuthCredential phoneAuthCredential =
+              PhoneAuthProvider.credentialFromToken(token, smsCode: smsCode);
+          verificationCompleted(phoneAuthCredential);
+        } else if (name == 'Auth#phoneVerificationFailed') {
+          final Map<dynamic, dynamic> error = arguments['error'];
+          final Map<dynamic, dynamic> details = error['details'];
+
+          FirebaseAuthException exception = FirebaseAuthException(
+            message: details != null ? details['message'] : error['message'],
+            code: details != null ? details['code'] : 'unknown',
+          );
+
+          verificationFailed(exception);
+        } else if (name == 'Auth#phoneCodeSent') {
+          final String verificationId = arguments['verificationId'];
+          final int forceResendingToken = arguments['forceResendingToken'];
+
+          codeSent(verificationId, forceResendingToken);
+        } else if (name == 'Auth#phoneCodeAutoRetrievalTimeout') {
+          final String verificationId = arguments['verificationId'];
+
+          codeAutoRetrievalTimeout(verificationId);
+        }
       });
     } catch (e) {
       throw convertPlatformException(e);

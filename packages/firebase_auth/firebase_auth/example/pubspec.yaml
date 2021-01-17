@@ -21,6 +21,8 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core
   firebase_dynamic_links:
     path: ../../../firebase_dynamic_links
+  firebase_auth_platform_interface:
+    path: ../../firebase_auth_platform_interface
 
 dev_dependencies:
   pedantic: ^1.8.0
