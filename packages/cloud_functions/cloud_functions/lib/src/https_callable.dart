@@ -2,17 +2,18 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 part of cloud_functions;
 
 /// A reference to a particular Callable HTTPS trigger in Cloud Functions.
 ///
 /// You can get an instance by calling [FirebaseFunctions.instance.httpsCallable].
 class HttpsCallable {
-  HttpsCallable._(this._delegate);
+  HttpsCallable._(this.delegate);
 
-  final HttpsCallablePlatform _delegate;
+  /// Returns the underlying [HttpsCallablePlatform] delegate for this
+  /// [HttpsCallable] instance. This is useful for testing purposes only.
+  @visibleForTesting
+  final HttpsCallablePlatform delegate;
 
   /// Executes this Callable HTTPS trigger asynchronously.
   ///
@@ -30,8 +31,7 @@ class HttpsCallable {
   /// the user is also automatically included.
   Future<HttpsCallableResult<T>> call<T>([dynamic parameters]) async {
     _assertValidParameterType(parameters);
-    assert(_delegate != null);
-    return HttpsCallableResult<T>._(await _delegate.call(parameters));
+    return HttpsCallableResult<T>._(await delegate.call(parameters));
   }
 }
 
@@ -45,8 +45,13 @@ void _assertValidParameterType(dynamic parameter, [bool isRoot = true]) {
   }
 
   if (parameter is Map) {
-    return parameter
-        .forEach((_, value) => _assertValidParameterType(value, false));
+    for (final key in parameter.keys) {
+      assert(key is String);
+    }
+    for (final value in parameter.values) {
+      _assertValidParameterType(value, false);
+    }
+    return;
   }
 
   assert(parameter == null ||

@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 part of cloud_functions;
 
 /// The result of calling a HttpsCallable function.
@@ -13,7 +11,7 @@ class HttpsCallableResult<T> {
   final dynamic _data;
 
   /// Returns the data that was returned from the Callable HTTPS trigger.
-  T get data {
-    return _data as T;
+  T? get data {
+    return _data as T?;
   }
 }

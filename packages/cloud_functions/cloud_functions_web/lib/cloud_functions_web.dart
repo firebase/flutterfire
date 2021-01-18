@@ -44,7 +44,7 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
 
   @override
   HttpsCallablePlatform httpsCallable(
-      String origin, String name, HttpsCallableOptions? options) {
+      String? origin, String name, HttpsCallableOptions? options) {
     return HttpsCallableWeb(this, _webFunctions!, origin, name, options);
   }
 }

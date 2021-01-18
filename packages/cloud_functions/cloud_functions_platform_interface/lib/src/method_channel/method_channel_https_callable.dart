@@ -13,7 +13,7 @@ import 'utils/exception.dart';
 class MethodChannelHttpsCallable extends HttpsCallablePlatform {
   /// Creates a new [MethodChannelHttpsCallable] instance.
   MethodChannelHttpsCallable(FirebaseFunctionsPlatform? functions,
-      String origin, String name, HttpsCallableOptions? options)
+      String? origin, String name, HttpsCallableOptions? options)
       : super(functions, origin, name, options);
 
   @override
