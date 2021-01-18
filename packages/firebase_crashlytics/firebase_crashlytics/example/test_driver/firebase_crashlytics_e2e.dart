@@ -2,15 +2,15 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:e2e/e2e.dart';
+// @dart=2.9
+
+import 'package:drive/drive.dart' as drive;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
-void main() {
-  E2EWidgetsFlutterBinding.ensureInitialized();
-
+void testsMain() {
   group('$FirebaseCrashlytics', () {
     /*late*/ FirebaseCrashlytics crashlytics;
 
@@ -138,3 +138,5 @@ void main() {
     });
   });
 }
+
+void main() => drive.main(testsMain);

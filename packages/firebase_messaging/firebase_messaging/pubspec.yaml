@@ -2,7 +2,31 @@ name: firebase_messaging
 description: Flutter plugin for Firebase Cloud Messaging, a cross-platform
   messaging solution that lets you reliably deliver messages on Android and iOS.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging
-version: 8.0.0-dev.12
+version: 8.0.0-dev.14
+
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+
+dependencies:
+  meta: ^1.0.4
+  flutter:
+    sdk: flutter
+  firebase_core: ^0.7.0
+  firebase_core_platform_interface: ^3.0.1
+  firebase_messaging_platform_interface: ^1.0.0-dev.10
+  firebase_messaging_web: ^0.1.0-dev.5
+
+dev_dependencies:
+  pedantic: ^1.8.0
+  flutter_test:
+    sdk: flutter
+  flutter_driver:
+    sdk: flutter
+  test: any
+  mockito: ^5.0.0-nullsafety.2
+  plugin_platform_interface: ^1.0.2
+  async: ^2.4.2
 
 flutter:
   plugin:
@@ -16,26 +40,3 @@ flutter:
         pluginClass: FLTFirebaseMessagingPlugin
       web:
         default_package: firebase_messaging_web
-
-dependencies:
-  meta: ^1.0.4
-  flutter:
-    sdk: flutter
-  firebase_core: ^0.6.0
-  firebase_core_platform_interface: ^3.0.0
-  firebase_messaging_platform_interface: ^1.0.0-dev.8
-  firebase_messaging_web: ^0.1.0-dev.3
-dev_dependencies:
-  pedantic: ^1.8.0
-  flutter_test:
-    sdk: flutter
-  flutter_driver:
-    sdk: flutter
-  test: any
-  mockito: ^4.1.1
-  plugin_platform_interface: ^1.0.2
-  async: ^2.4.2
-
-environment:
-  sdk: ">=2.1.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"

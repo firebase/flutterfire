@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:e2e/e2e_driver.dart' as e2e;
+// @dart=2.9
 
-void main() => e2e.main();
+import 'package:drive/drive_driver.dart' as drive;
+
+void main() => drive.main();

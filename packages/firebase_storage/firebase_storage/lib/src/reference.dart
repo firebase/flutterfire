@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_storage;
 
 /// Represents a reference to a Google Cloud Storage object. Developers can
@@ -208,7 +210,7 @@ class Reference {
       o is Reference && o.fullPath == fullPath && o.storage == storage;
 
   @override
-  int get hashCode => hash2(storage, fullPath);
+  int get hashCode => hashValues(storage, fullPath);
 
   @override
   String toString() =>

@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of cloud_firestore;
 
 /// The entry point for accessing a [FirebaseFirestore].
@@ -219,7 +221,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       o is FirebaseFirestore && o.app.name == app.name;
 
   @override
-  int get hashCode => hash2(app.name, app.options);
+  int get hashCode => hashValues(app.name, app.options);
 
   @override
   String toString() => '$FirebaseFirestore(app: ${app.name})';

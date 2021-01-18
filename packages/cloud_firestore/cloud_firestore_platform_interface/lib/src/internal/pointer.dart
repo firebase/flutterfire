@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 /// A helper class to handle Firestore paths.
 ///
 /// This class is used internally to manage paths which point to a collection

@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_storage;
 
 /// The entrypoint for [FirebaseStorage].
@@ -165,7 +167,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
       o is FirebaseStorage && o.app.name == app.name && o.bucket == bucket;
 
   @override
-  int get hashCode => hash2(app.name, bucket);
+  int get hashCode => hashValues(app.name, bucket);
 
   @override
   String toString() => '$FirebaseStorage(app: ${app.name}, bucket: $bucket)';

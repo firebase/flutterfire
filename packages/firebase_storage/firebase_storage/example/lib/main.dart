@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:io' as io;
 
@@ -57,8 +59,9 @@ class _TaskManager extends State<TaskManager> {
   /// The user selects a file, and the task is added to the list.
   Future<firebase_storage.UploadTask> uploadFile(PickedFile file) async {
     if (file == null) {
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text("No file was selected")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("No file was selected"),
+      ));
       return null;
     }
 
@@ -146,10 +149,13 @@ class _TaskManager extends State<TaskManager> {
       text: link,
     ));
 
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
         content: Text(
-      'Success!\n Copied download URL to Clipboard!',
-    )));
+          'Success!\n Copied download URL to Clipboard!',
+        ),
+      ),
+    );
   }
 
   Future<void> _downloadFile(firebase_storage.Reference ref) async {
@@ -159,66 +165,71 @@ class _TaskManager extends State<TaskManager> {
 
     await ref.writeToFile(tempFile);
 
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
         content: Text(
-      'Success!\n Downloaded ${ref.name} \n from bucket: ${ref.bucket}\n '
-      'at path: ${ref.fullPath} \n'
-      'Wrote "${ref.fullPath}" to tmp-${ref.name}.txt',
-    )));
+          'Success!\n Downloaded ${ref.name} \n from bucket: ${ref.bucket}\n '
+          'at path: ${ref.fullPath} \n'
+          'Wrote "${ref.fullPath}" to tmp-${ref.name}.txt',
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Storage Example App'),
-          actions: [
-            PopupMenuButton<UploadType>(
-                onSelected: handleUploadType,
-                icon: Icon(Icons.add),
-                itemBuilder: (context) => [
-                      const PopupMenuItem(
-                          child: Text("Upload string"),
-                          value: UploadType.string),
-                      const PopupMenuItem(
-                          child: Text("Upload local file"),
-                          value: UploadType.file),
-                      if (_uploadTasks.isNotEmpty)
-                        PopupMenuItem(
-                            child: Text("Clear list"), value: UploadType.clear)
-                    ])
-          ],
-        ),
-        body: _uploadTasks.isEmpty
-            ? Center(child: Text("Press the '+' button to add a new file."))
-            : ListView.builder(
-                itemCount: _uploadTasks.length,
-                itemBuilder: (context, index) => UploadTaskListTile(
-                    task: _uploadTasks[index],
-                    onDismissed: () => _removeTaskAtIndex(index),
-                    onDownloadLink: () {
-                      return _downloadLink(_uploadTasks[index].snapshot.ref);
-                    },
-                    onDownload: () {
-                      if (kIsWeb) {
-                        return _downloadBytes(_uploadTasks[index].snapshot.ref);
-                      } else {
-                        return _downloadFile(_uploadTasks[index].snapshot.ref);
-                      }
-                    })));
+      appBar: AppBar(
+        title: Text('Storage Example App'),
+        actions: [
+          PopupMenuButton<UploadType>(
+            onSelected: handleUploadType,
+            icon: Icon(Icons.add),
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                  child: Text("Upload string"), value: UploadType.string),
+              const PopupMenuItem(
+                  child: Text("Upload local file"), value: UploadType.file),
+              if (_uploadTasks.isNotEmpty)
+                PopupMenuItem(
+                    child: Text("Clear list"), value: UploadType.clear)
+            ],
+          )
+        ],
+      ),
+      body: _uploadTasks.isEmpty
+          ? Center(child: Text("Press the '+' button to add a new file."))
+          : ListView.builder(
+              itemCount: _uploadTasks.length,
+              itemBuilder: (context, index) => UploadTaskListTile(
+                task: _uploadTasks[index],
+                onDismissed: () => _removeTaskAtIndex(index),
+                onDownloadLink: () {
+                  return _downloadLink(_uploadTasks[index].snapshot.ref);
+                },
+                onDownload: () {
+                  if (kIsWeb) {
+                    return _downloadBytes(_uploadTasks[index].snapshot.ref);
+                  } else {
+                    return _downloadFile(_uploadTasks[index].snapshot.ref);
+                  }
+                },
+              ),
+            ),
+    );
   }
 }
 
 /// Displays the current state of a single UploadTask.
 class UploadTaskListTile extends StatelessWidget {
   // ignore: public_member_api_docs
-  const UploadTaskListTile(
-      {Key key,
-      this.task,
-      this.onDismissed,
-      this.onDownload,
-      this.onDownloadLink})
-      : super(key: key);
+  const UploadTaskListTile({
+    Key key,
+    this.task,
+    this.onDismissed,
+    this.onDownload,
+    this.onDownloadLink,
+  }) : super(key: key);
 
   /// The [UploadTask].
   final firebase_storage.UploadTask /*!*/ task;
@@ -240,65 +251,68 @@ class UploadTaskListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<firebase_storage.TaskSnapshot>(
-        stream: task.snapshotEvents,
-        builder: (BuildContext context,
-            AsyncSnapshot<firebase_storage.TaskSnapshot> asyncSnapshot) {
-          Widget subtitle = Text('---');
-          firebase_storage.TaskSnapshot snapshot = asyncSnapshot.data;
-          firebase_storage.TaskState state = snapshot?.state;
+      stream: task.snapshotEvents,
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<firebase_storage.TaskSnapshot> asyncSnapshot,
+      ) {
+        Widget subtitle = Text('---');
+        firebase_storage.TaskSnapshot snapshot = asyncSnapshot.data;
+        firebase_storage.TaskState state = snapshot?.state;
 
-          if (asyncSnapshot.hasError) {
-            if (asyncSnapshot.error is firebase_core.FirebaseException &&
-                (asyncSnapshot.error as firebase_core.FirebaseException).code ==
-                    'canceled') {
-              subtitle = Text('Upload canceled.');
-            } else {
-              print(asyncSnapshot.error);
-              subtitle = Text('Something went wrong.');
-            }
-          } else if (snapshot != null) {
-            subtitle =
-                Text('${state}: ${_bytesTransferred(snapshot)} bytes sent');
+        if (asyncSnapshot.hasError) {
+          if (asyncSnapshot.error is firebase_core.FirebaseException &&
+              (asyncSnapshot.error as firebase_core.FirebaseException).code ==
+                  'canceled') {
+            subtitle = Text('Upload canceled.');
+          } else {
+            print(asyncSnapshot.error);
+            subtitle = Text('Something went wrong.');
           }
+        } else if (snapshot != null) {
+          subtitle =
+              Text('${state}: ${_bytesTransferred(snapshot)} bytes sent');
+        }
 
-          return Dismissible(
-            key: Key(task.hashCode.toString()),
-            onDismissed: ($) => onDismissed(),
-            child: ListTile(
-              title: Text('Upload Task #${task.hashCode}'),
-              subtitle: subtitle,
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  if (state == firebase_storage.TaskState.running)
-                    IconButton(
-                      icon: Icon(Icons.pause),
-                      onPressed: () => task.pause(),
-                    ),
-                  if (state == firebase_storage.TaskState.running)
-                    IconButton(
-                      icon: Icon(Icons.cancel),
-                      onPressed: () => task.cancel(),
-                    ),
-                  if (state == firebase_storage.TaskState.paused)
-                    IconButton(
-                      icon: Icon(Icons.file_upload),
-                      onPressed: () => task.resume(),
-                    ),
-                  if (state == firebase_storage.TaskState.success)
-                    IconButton(
-                      icon: Icon(Icons.file_download),
-                      onPressed: () => onDownload(),
-                    ),
-                  if (state == firebase_storage.TaskState.success)
-                    IconButton(
-                      icon: Icon(Icons.link),
-                      onPressed: () => onDownloadLink(),
-                    ),
-                ],
-              ),
+        return Dismissible(
+          key: Key(task.hashCode.toString()),
+          onDismissed: ($) => onDismissed(),
+          child: ListTile(
+            title: Text('Upload Task #${task.hashCode}'),
+            subtitle: subtitle,
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                if (state == firebase_storage.TaskState.running)
+                  IconButton(
+                    icon: Icon(Icons.pause),
+                    onPressed: () => task.pause(),
+                  ),
+                if (state == firebase_storage.TaskState.running)
+                  IconButton(
+                    icon: Icon(Icons.cancel),
+                    onPressed: () => task.cancel(),
+                  ),
+                if (state == firebase_storage.TaskState.paused)
+                  IconButton(
+                    icon: Icon(Icons.file_upload),
+                    onPressed: () => task.resume(),
+                  ),
+                if (state == firebase_storage.TaskState.success)
+                  IconButton(
+                    icon: Icon(Icons.file_download),
+                    onPressed: () => onDownload(),
+                  ),
+                if (state == firebase_storage.TaskState.success)
+                  IconButton(
+                    icon: Icon(Icons.link),
+                    onPressed: () => onDownloadLink(),
+                  ),
+              ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }

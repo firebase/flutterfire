@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of cloud_firestore;
 
 /// A [CollectionReference] object can be used for adding documents, getting
@@ -68,7 +70,7 @@ class CollectionReference extends Query {
       o is CollectionReference && o.firestore == firestore && o.path == path;
 
   @override
-  int get hashCode => hash2(firestore, path);
+  int get hashCode => hashValues(firestore, path);
 
   @override
   String toString() => '$CollectionReference($path)';

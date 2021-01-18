@@ -3,6 +3,10 @@ description: Flutter plugin for Firebase machine learning vision services.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_ml_vision
 version: 0.10.0
 
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.10.0 <2.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
@@ -11,7 +15,7 @@ dev_dependencies:
   pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
-  firebase_core: ^0.4.5
+  firebase_core: ^0.7.0
   flutter_driver:
     sdk: flutter
   test: any
@@ -27,7 +31,3 @@ flutter:
         pluginClass: FirebaseMlVisionPlugin
       ios:
         pluginClass: FLTFirebaseMlVisionPlugin
-
-environment:
-  sdk: ">=2.0.0 <3.0.0"
-  flutter: ">=1.10.0 <2.0.0"

@@ -1,3 +1,17 @@
+## 8.0.0-dev.14
+
+ - **DOCS**: fix messaging regex examples (#4649).
+
+## 8.0.0-dev.13
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: add check on podspec to assist upgrading users deployment target.
+ - **BUILD**: commit Podfiles with 10.12 deployment target.
+ - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
+ - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
+ - **BREAKING** **BUILD**: set osx min supported platform version to 10.12.
+
 ## 8.0.0-dev.12
 
 > Note: This release has breaking changes.

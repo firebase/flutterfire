@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+        run: ./.github/workflows/scripts/install-flutter.sh dev
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
@@ -55,10 +55,11 @@ jobs:
         run: ./.github/workflows/scripts/build-example.sh ios
       - name: "Drive iOS Example"
         run: ./.github/workflows/scripts/drive-example.sh ios
-      - name: "Build MacOS Example"
-        run: ./.github/workflows/scripts/build-example.sh macos
-      - name: "Drive MacOS Example"
-        run: ./.github/workflows/scripts/drive-example.sh macos
+      # TODO(Salakar): Messaging macOS currently requires signing to build.
+      #- name: "Build MacOS Example"
+      #  run: ./.github/workflows/scripts/build-example.sh macos
+      #- name: "Drive MacOS Example"
+      #  run: ./.github/workflows/scripts/drive-example.sh macos
 
   web:
     runs-on: ubuntu-latest

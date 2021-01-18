@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_storage;
 
 /// A [TaskSnapshot] is returned as the result or on-going process of a [Task].
@@ -46,7 +48,7 @@ class TaskSnapshot {
       o is TaskSnapshot && o.ref == ref && o.storage == storage;
 
   @override
-  int get hashCode => hash2(storage, ref);
+  int get hashCode => hashValues(storage, ref);
 
   @override
   String toString() => '$TaskSnapshot(ref: $ref, state: $state)';

@@ -2,11 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:quiver/core.dart';
 
 import 'mock.dart';
 
@@ -27,13 +29,15 @@ void main() {
 
       storage = FirebaseStorage.instance;
       secondaryApp = await Firebase.initializeApp(
-          name: 'foo',
-          options: FirebaseOptions(
-              apiKey: '123',
-              appId: '123',
-              messagingSenderId: '123',
-              projectId: '123',
-              storageBucket: kSecondaryBucket));
+        name: 'foo',
+        options: FirebaseOptions(
+          apiKey: '123',
+          appId: '123',
+          messagingSenderId: '123',
+          projectId: '123',
+          storageBucket: kSecondaryBucket,
+        ),
+      );
       storageSecondary = FirebaseStorage.instanceFor(app: secondaryApp);
 
       when(kMockStoragePlatform.ref(any)).thenReturn(MockReferencePlatform());
@@ -155,48 +159,65 @@ void main() {
     group('setMaxDownloadRetryTime()', () {
       test('throws AssertionError if null', () async {
         expect(
-            () => storage.setMaxDownloadRetryTime(null), throwsAssertionError);
+          () => storage.setMaxDownloadRetryTime(null),
+          throwsAssertionError,
+        );
       });
       test('throws AssertionError if negative', () async {
-        expect(() => storage.setMaxDownloadRetryTime(Duration(seconds: -1)),
-            throwsAssertionError);
+        expect(
+          () => storage.setMaxDownloadRetryTime(Duration(seconds: -1)),
+          throwsAssertionError,
+        );
       });
     });
 
     group('setMaxOperationRetryTime()', () {
       test('throws AssertionError if null', () async {
         expect(
-            () => storage.setMaxOperationRetryTime(null), throwsAssertionError);
+          () => storage.setMaxOperationRetryTime(null),
+          throwsAssertionError,
+        );
       });
 
       test('throws AssertionError if negative', () async {
-        expect(() => storage.setMaxOperationRetryTime(Duration(seconds: -1)),
-            throwsAssertionError);
+        expect(
+          () => storage.setMaxOperationRetryTime(Duration(seconds: -1)),
+          throwsAssertionError,
+        );
       });
     });
 
     group('setMaxUploadRetryTime()', () {
       test('throws AssertionError if null', () async {
-        expect(() => storage.setMaxUploadRetryTime(null), throwsAssertionError);
+        expect(
+          () => storage.setMaxUploadRetryTime(null),
+          throwsAssertionError,
+        );
       });
 
       test('throws AssertionError if 0', () async {
-        expect(() => storage.setMaxUploadRetryTime(Duration(seconds: -1)),
-            throwsAssertionError);
+        expect(
+          () => storage.setMaxUploadRetryTime(Duration(seconds: -1)),
+          throwsAssertionError,
+        );
       });
     });
 
     group('hashCode()', () {
       test('returns the correct value', () {
-        expect(storage.hashCode,
-            hash2(app.name, kBucket.replaceFirst("gs://", "")));
+        expect(
+          storage.hashCode,
+          hashValues(app.name, kBucket.replaceFirst("gs://", "")),
+        );
       });
     });
 
     group('toString()', () {
       test('returns the correct value', () {
-        expect(storage.toString(),
-            '$FirebaseStorage(app: ${app.name}, bucket: ${kBucket.replaceFirst("gs://", "")})');
+        expect(
+          storage.toString(),
+          '$FirebaseStorage(app: ${app.name}, bucket: ${kBucket.replaceFirst("gs://", "")})',
+        );
       });
     });
   });

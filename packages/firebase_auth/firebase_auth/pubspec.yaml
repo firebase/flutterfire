@@ -3,7 +3,29 @@ description: Flutter plugin for Firebase Auth, enabling Android and iOS
   authentication using passwords, phone numbers and identity providers
   like Google, Facebook and Twitter.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_auth/firebase_auth
-version: 0.19.0+1
+version: 0.20.0+1
+
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+
+dependencies:
+  meta: ^1.0.4
+  firebase_core: ^0.7.0
+  firebase_core_platform_interface: ^3.0.1
+  firebase_auth_platform_interface: ^3.0.1
+  firebase_auth_web: ^0.3.2+6
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  pedantic: ^1.8.0
+  async: ^2.3.0
+  mockito: ^5.0.0-nullsafety.2
+  test: ^1.3.0
+  flutter_test:
+    sdk: flutter
+  plugin_platform_interface: ^1.0.2
 
 flutter:
   plugin:
@@ -17,25 +39,3 @@ flutter:
         pluginClass: FLTFirebaseAuthPlugin
       web:
         default_package: firebase_auth_web
-
-dependencies:
-  meta: ^1.0.4
-  firebase_core: ^0.6.0
-  firebase_core_platform_interface: ^3.0.0
-  firebase_auth_platform_interface: ^3.0.0
-  firebase_auth_web: ^0.3.2+5
-  flutter:
-    sdk: flutter
-
-dev_dependencies:
-  pedantic: ^1.8.0
-  async: ^2.3.0
-  mockito: ^4.1.1
-  test: ^1.3.0
-  flutter_test:
-    sdk: flutter
-  plugin_platform_interface: ^1.0.2
-
-environment:
-  sdk: ">=2.0.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"

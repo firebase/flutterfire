@@ -12,18 +12,19 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('$FirebaseApp', () {
-    /*late*/ MockFirebaseCore mock;
+    final mock = MockFirebaseCore();
 
     const FirebaseOptions testOptions = FirebaseOptions(
-        apiKey: 'apiKey',
-        appId: 'appId',
-        messagingSenderId: 'messagingSenderId',
-        projectId: 'projectId');
+      apiKey: 'apiKey',
+      appId: 'appId',
+      messagingSenderId: 'messagingSenderId',
+      projectId: 'projectId',
+    );
 
     String testAppName = 'testApp';
 
     setUp(() async {
-      mock = MockFirebaseCore();
+      clearInteractions(mock);
       Firebase.delegatePackingProperty = mock;
 
       final FirebaseAppPlatform platformApp =
@@ -66,5 +67,51 @@ void main() {
 }
 
 class MockFirebaseCore extends Mock
-    with MockPlatformInterfaceMixin
-    implements FirebasePlatform {}
+    with
+        // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
+        MockPlatformInterfaceMixin
+    implements
+        FirebasePlatform {
+  @override
+  FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
+    return super.noSuchMethod(
+      Invocation.method(#app, [name]),
+      FakeFirebaseAppPlatform(),
+    );
+  }
+
+  @override
+  Future<FirebaseAppPlatform> initializeApp({
+    String? name,
+    FirebaseOptions? options,
+  }) {
+    return super.noSuchMethod(
+      Invocation.method(
+        #initializeApp,
+        const [],
+        {
+          #name: name,
+          #options: options,
+        },
+      ),
+      Future.value(FakeFirebaseAppPlatform()),
+    );
+  }
+
+  @override
+  List<FirebaseAppPlatform> get apps {
+    return super.noSuchMethod(
+      Invocation.getter(#apps),
+      <FirebaseAppPlatform>[],
+    );
+  }
+}
+
+// ignore: avoid_implementing_value_types
+class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {
+  @override
+  // ignore: hash_and_equals, overriden only because the compile complains otherwise
+  bool operator ==(Object? other) {
+    return super == other;
+  }
+}
