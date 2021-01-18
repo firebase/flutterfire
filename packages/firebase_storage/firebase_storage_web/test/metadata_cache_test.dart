@@ -19,8 +19,6 @@ final otherMetadata = SettableMetadata(
 );
 
 void main() {
-  print('(Check example/test_driver for integration tests!)');
-
   TestWidgetsFlutterBinding.ensureInitialized();
 
   /*late*/ SettableMetadataCache cache;
@@ -37,7 +35,7 @@ void main() {
         cache.store(someMetadata);
       });
 
-      test('Merges metadata without overwriting what\'s already set', () {
+      test("Merges metadata without overwriting what's already set", () {
         final setMetadata = cache.store(otherMetadata);
 
         expect(
@@ -46,7 +44,7 @@ void main() {
       });
 
       test(
-          'Shallowly merges extendedMetadata without overwriting what\'s already set',
+          "Shallowly merges extendedMetadata without overwriting what's already set",
           () {
         final withCustomMetadata = SettableMetadata(customMetadata: {
           'testing': '456',

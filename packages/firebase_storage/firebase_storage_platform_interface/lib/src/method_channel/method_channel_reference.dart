@@ -8,8 +8,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
-
 import '../../firebase_storage_platform_interface.dart';
 import 'method_channel_firebase_storage.dart';
 import 'method_channel_list_result.dart';
@@ -172,6 +170,7 @@ class MethodChannelReference extends ReferencePlatform {
     return MethodChannelPutFileTask(handle, storage, fullPath, file, metadata);
   }
 
+  @override
   TaskPlatform putString(String data, PutStringFormat format,
       [SettableMetadata /*?*/ metadata]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
@@ -181,6 +180,7 @@ class MethodChannelReference extends ReferencePlatform {
         handle, storage, fullPath, data, format, metadata);
   }
 
+  @override
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) async {
     try {
       Map<String, dynamic> data = await MethodChannelFirebaseStorage.channel
@@ -201,6 +201,7 @@ class MethodChannelReference extends ReferencePlatform {
     }
   }
 
+  @override
   TaskPlatform writeToFile(File file) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
     MethodChannelFirebaseStorage.taskObservers[handle] =

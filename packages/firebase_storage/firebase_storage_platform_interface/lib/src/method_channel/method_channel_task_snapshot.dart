@@ -4,8 +4,7 @@
 
 // @dart=2.9
 
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
-
+import '../../firebase_storage_platform_interface.dart';
 import 'method_channel_reference.dart';
 
 /// Implementation for a [TaskSnapshotPlatform].

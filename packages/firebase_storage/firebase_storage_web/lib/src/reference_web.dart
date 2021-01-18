@@ -4,36 +4,26 @@
 
 // @dart=2.9
 
-import 'dart:typed_data';
 import 'dart:html' as html;
+import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
-import 'package:firebase_storage_web/src/task_web.dart';
-import 'package:firebase_storage_web/src/utils/list.dart';
-import 'package:firebase_storage_web/src/utils/metadata_cache.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
-import 'interop/storage.dart' as storage_interop;
 import './firebase_storage_web.dart';
-import './utils/metadata.dart';
 import './utils/errors.dart';
+import './utils/metadata.dart';
+import 'interop/storage.dart' as storage_interop;
+import 'task_web.dart';
+import 'utils/list.dart';
+import 'utils/metadata_cache.dart';
 
-final _storageUrlPrefix = RegExp(r'^(?:gs|https?)://');
+final _storageUrlPrefix = RegExp(r'^(?:gs|https?):\//');
 
 /// The web implementation of a Firebase Storage 'ref'
 class ReferenceWeb extends ReferencePlatform {
-  // The js-interop layer for the ref that is wrapped by this class...
-  storage_interop.StorageReference _ref;
-
-  // Remember what metadata has already been set on this ref.
-  // TODO: Should this be initialized with the metadata currently in firebase?
-  final SettableMetadataCache _cache = SettableMetadataCache();
-
-  // The path for the current ref
-  final String _path;
-
   /// Constructor for this ref
   @override
   ReferenceWeb(FirebaseStorageWeb storage, String path)
@@ -45,6 +35,16 @@ class ReferenceWeb extends ReferencePlatform {
       _ref = storage.webStorage.ref(_path);
     }
   }
+
+  // The js-interop layer for the ref that is wrapped by this class...
+  storage_interop.StorageReference _ref;
+
+  // Remember what metadata has already been set on this ref.
+  // TODO: Should this be initialized with the metadata currently in firebase?
+  final SettableMetadataCache _cache = SettableMetadataCache();
+
+  // The path for the current ref
+  final String _path;
 
   // Platform overrides follow
 

@@ -8,14 +8,14 @@ part of firebase_storage;
 
 /// A class representing an on-going storage task that additionally delegates to a [Future].
 abstract class Task implements Future<TaskSnapshot> {
+  Task._(this.storage, this._delegate) {
+    TaskPlatform.verifyExtends(_delegate);
+  }
+
   TaskPlatform _delegate;
 
   /// The [FirebaseStorage] instance associated with this task.
   final FirebaseStorage storage;
-
-  Task._(this.storage, this._delegate) {
-    TaskPlatform.verifyExtends(_delegate);
-  }
 
   /// Returns a [Stream] of [TaskSnapshot] events.
   ///

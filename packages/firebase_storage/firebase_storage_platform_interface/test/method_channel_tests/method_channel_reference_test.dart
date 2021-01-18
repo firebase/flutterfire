@@ -5,16 +5,17 @@
 // @dart=2.9
 
 import 'dart:convert';
-import 'dart:typed_data';
 import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:firebase_storage_platform_interface/src/method_channel/method_channel_firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/src/method_channel/method_channel_reference.dart';
-import '../mock.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import '../mock.dart';
 
 void main() {
   setupFirebaseStorageMocks();
@@ -29,7 +30,7 @@ void main() {
   final kMetadata = SettableMetadata(
       contentLanguage: 'en',
       customMetadata: <String, String>{'activity': 'test'});
-  final kListOptions = ListOptions(maxResults: 20, pageToken: null);
+  const kListOptions = ListOptions(maxResults: 20);
 
   group('$MethodChannelReference', () {
     setUpAll(() async {
@@ -40,7 +41,7 @@ void main() {
         log.add(call);
         if (mockPlatformExceptionThrown) {
           throw PlatformException(
-              code: 'UNKNOWN', message: "Mock platform exception thrown");
+              code: 'UNKNOWN', message: 'Mock platform exception thrown');
         }
 
         switch (call.method) {
@@ -107,7 +108,8 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => ref.delete();
+        Function callMethod;
+        callMethod = () => ref.delete();
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -136,7 +138,8 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => ref.getDownloadURL();
+        Function callMethod;
+        callMethod = () => ref.getDownloadURL();
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -165,7 +168,8 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => ref.getMetadata();
+        Function callMethod;
+        callMethod = () => ref.getMetadata();
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -198,7 +202,8 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => ref.list(kListOptions);
+        Function callMethod;
+        callMethod = () => ref.list(kListOptions);
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -227,7 +232,8 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => ref.listAll();
+        Function callMethod;
+        callMethod = () => ref.listAll();
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -238,7 +244,7 @@ void main() {
 
       test('should invoke native method with correct args', () async {
         int handle = nextMockHandleId;
-        await ref.putData(data, kMetadata);
+        ref.putData(data, kMetadata);
 
         // check native method was called
         expect(log, <Matcher>[
@@ -279,7 +285,7 @@ void main() {
     group('putFile', () {
       test('should invoke native method with correct args', () async {
         int handle = nextMockHandleId;
-        await ref.putFile(kFile, kMetadata);
+        ref.putFile(kFile, kMetadata);
 
         // check native method was called
         expect(log, <Matcher>[
@@ -310,9 +316,9 @@ void main() {
 
     group('putString', () {
       test('should invoke native method with correct args', () async {
-        final String data = 'foo';
+        const String data = 'foo';
         int handle = nextMockHandleId;
-        await ref.putString(data, PutStringFormat.raw, kMetadata);
+        ref.putString(data, PutStringFormat.raw, kMetadata);
 
         // check native method was called
         expect(log, <Matcher>[
@@ -352,7 +358,8 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => ref.updateMetadata(kMetadata);
+        Function callMethod;
+        callMethod = () => ref.updateMetadata(kMetadata);
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -360,7 +367,7 @@ void main() {
     group('writeToFile', () {
       test('should invoke native method with correct args', () async {
         int handle = nextMockHandleId;
-        await ref.writeToFile(kFile);
+        ref.writeToFile(kFile);
 
         // check native method was called
         expect(log, <Matcher>[

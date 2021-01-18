@@ -44,8 +44,8 @@ void main() {
 
     test('throws if get.snapshotEvents', () async {
       try {
-        await taskPlatform.snapshotEvents;
-      } on UnimplementedError catch (e) {
+        taskPlatform.snapshotEvents;
+      } catch (e) {
         expect(e.message, equals('snapshotEvents is not implemented'));
         return;
       }
@@ -54,8 +54,8 @@ void main() {
 
     test('throws if get.snapshot', () async {
       try {
-        await taskPlatform.snapshot;
-      } on UnimplementedError catch (e) {
+        taskPlatform.snapshot;
+      } catch (e) {
         expect(e.message, equals('snapshot is not implemented'));
         return;
       }
@@ -65,7 +65,7 @@ void main() {
     test('throws if get.onComplete', () async {
       try {
         await taskPlatform.onComplete;
-      } on UnimplementedError catch (e) {
+      } catch (e) {
         expect(e.message, equals('onComplete is not implemented'));
         return;
       }
@@ -75,7 +75,7 @@ void main() {
     test('throws if pause()', () async {
       try {
         await taskPlatform.pause();
-      } on UnimplementedError catch (e) {
+      } catch (e) {
         expect(e.message, equals('pause() is not implemented'));
         return;
       }
@@ -85,7 +85,7 @@ void main() {
     test('throws if resume()', () async {
       try {
         await taskPlatform.resume();
-      } on UnimplementedError catch (e) {
+      } catch (e) {
         expect(e.message, equals('resume() is not implemented'));
         return;
       }
@@ -95,7 +95,7 @@ void main() {
     test('throws if cancel()', () async {
       try {
         await taskPlatform.cancel();
-      } on UnimplementedError catch (e) {
+      } catch (e) {
         expect(e.message, equals('cancel() is not implemented'));
         return;
       }

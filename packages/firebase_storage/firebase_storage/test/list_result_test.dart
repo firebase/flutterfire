@@ -8,10 +8,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import 'mock.dart';
-
-import 'package:mockito/mockito.dart';
 
 void main() {
   setupFirebaseStorageMocks();
@@ -44,7 +43,7 @@ void main() {
 
       Reference ref = storage.ref();
       listResult =
-          await ref.list(ListOptions(maxResults: 10, pageToken: 'token'));
+          await ref.list(const ListOptions(maxResults: 10, pageToken: 'token'));
     });
 
     group('.items', () {

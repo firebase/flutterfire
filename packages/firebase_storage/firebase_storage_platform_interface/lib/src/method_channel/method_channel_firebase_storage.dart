@@ -6,56 +6,15 @@
 
 import 'dart:async';
 
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
+import '../../firebase_storage_platform_interface.dart';
 import 'method_channel_reference.dart';
 import 'method_channel_task_snapshot.dart';
 
 /// Method Channel delegate for [FirebaseStoragePlatform].
 class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
-  /// Keep an internal reference to whether the [MethodChannelFirebaseStorage]
-  /// class has already been initialized.
-  static bool _initialized = false;
-
-  /// Returns a unique key to identify the instance by [FirebaseApp] name and
-  /// any custom storage buckets.
-  static String _getInstanceKey(
-      String /*!*/ /*!*/ appName, String /*!*/ bucket) {
-    return '${appName}|${bucket ?? ''}';
-  }
-
-  /// The [MethodChannelFirebaseStorage] method channel.
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_storage',
-  );
-
-  static Map<String, MethodChannelFirebaseStorage>
-      _methodChannelFirebaseStorageInstances =
-      <String, MethodChannelFirebaseStorage>{};
-
-  /// Returns a stub instance to allow the platform interface to access
-  /// the class instance statically.
-  static MethodChannelFirebaseStorage get instance {
-    return MethodChannelFirebaseStorage._();
-  }
-
-  static int _methodChannelHandleId = 0;
-
-  /// Increments and returns the next channel ID handler for Storage.
-  static int get nextMethodChannelHandleId => _methodChannelHandleId++;
-
-  /// A map containing all Task stream observers, keyed by their handle.
-  static final Map<int, StreamController<dynamic>> taskObservers =
-      <int, StreamController<TaskSnapshotPlatform>>{};
-
-  /// Internal stub class initializer.
-  ///
-  /// When the user code calls an storage method, the real instance is
-  /// then initialized via the [delegateFor] method.
-  MethodChannelFirebaseStorage._() : super(appInstance: null);
-
   /// Creates a new [MethodChannelFirebaseStorage] instance with an [app] and/or
   /// [bucket].
   MethodChannelFirebaseStorage({FirebaseApp /*!*/ app, String bucket})
@@ -98,9 +57,55 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     _initialized = true;
   }
 
-  int maxOperationRetryTime = Duration(minutes: 2).inMilliseconds;
-  int maxUploadRetryTime = Duration(minutes: 10).inMilliseconds;
-  int maxDownloadRetryTime = Duration(minutes: 10).inMilliseconds;
+  /// Internal stub class initializer.
+  ///
+  /// When the user code calls an storage method, the real instance is
+  /// then initialized via the [delegateFor] method.
+  MethodChannelFirebaseStorage._() : super(appInstance: null);
+
+  /// Keep an internal reference to whether the [MethodChannelFirebaseStorage]
+  /// class has already been initialized.
+  static bool _initialized = false;
+
+  /// Returns a unique key to identify the instance by [FirebaseApp] name and
+  /// any custom storage buckets.
+  static String _getInstanceKey(
+      String /*!*/ /*!*/ appName, String /*!*/ bucket) {
+    return '$appName|${bucket ?? ''}';
+  }
+
+  /// The [MethodChannelFirebaseStorage] method channel.
+  static const MethodChannel channel = MethodChannel(
+    'plugins.flutter.io/firebase_storage',
+  );
+
+  static Map<String, MethodChannelFirebaseStorage>
+      _methodChannelFirebaseStorageInstances =
+      <String, MethodChannelFirebaseStorage>{};
+
+  /// Returns a stub instance to allow the platform interface to access
+  /// the class instance statically.
+  static MethodChannelFirebaseStorage get instance {
+    return MethodChannelFirebaseStorage._();
+  }
+
+  static int _methodChannelHandleId = 0;
+
+  /// Increments and returns the next channel ID handler for Storage.
+  static int get nextMethodChannelHandleId => _methodChannelHandleId++;
+
+  /// A map containing all Task stream observers, keyed by their handle.
+  static final Map<int, StreamController<dynamic>> taskObservers =
+      <int, StreamController<TaskSnapshotPlatform>>{};
+
+  @override
+  int maxOperationRetryTime = const Duration(minutes: 2).inMilliseconds;
+
+  @override
+  int maxUploadRetryTime = const Duration(minutes: 10).inMilliseconds;
+  
+  @override
+  int maxDownloadRetryTime = const Duration(minutes: 10).inMilliseconds;
 
   Future<void> _handleTaskStateChange(
       TaskState taskState, Map<dynamic, dynamic> arguments) async {
@@ -147,7 +152,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   }
 
   @override
-  void setMaxUploadRetryTime(int time) async {
+  void setMaxUploadRetryTime(int time) {
     maxUploadRetryTime = time;
   }
 

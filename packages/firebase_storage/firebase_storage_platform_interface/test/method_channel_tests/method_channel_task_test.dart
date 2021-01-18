@@ -27,10 +27,10 @@ void main() {
   // mock props
   bool mockPlatformExceptionThrown = false;
 
-  final kMockData = 'Hello World';
+  const kMockData = 'Hello World';
   /*late*/ MethodChannelPutStringTask kMockTask;
 
-  final kMockExceptionMessage = 'a mock exception message';
+  const kMockExceptionMessage = 'a mock exception message';
 
   group('$MethodChannelTask', () {
     setUpAll(() async {
@@ -98,7 +98,8 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => kMockTask.pause();
+        Function callMethod;
+        callMethod = () => kMockTask.pause();
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -122,7 +123,8 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => kMockTask.resume();
+        Function callMethod;
+        callMethod = () => kMockTask.resume();
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -146,7 +148,8 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => kMockTask.cancel();
+        Function callMethod;
+        callMethod = () => kMockTask.cancel();
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });

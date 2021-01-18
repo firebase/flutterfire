@@ -9,7 +9,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
+import '../../firebase_storage_platform_interface.dart';
 import '../internal/pointer.dart';
 
 /// The interface a reference must implement.
@@ -29,7 +29,7 @@ abstract class ReferencePlatform extends PlatformInterface {
   /// This is used by the app-facing [Reference] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(ReferencePlatform instance) {
+  static void verifyExtends(ReferencePlatform instance) {
     assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
   }

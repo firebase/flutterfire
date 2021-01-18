@@ -79,7 +79,7 @@ void main() {
     test('throws if .delegateFor', () {
       try {
         firebaseStoragePlatform.testDelegateFor();
-      } on UnimplementedError catch (e) {
+      } catch (e) {
         expect(e.message, equals('delegateFor() is not implemented'));
         return;
       }
@@ -89,7 +89,7 @@ void main() {
     test('throws if get.maxOperationRetryTime', () {
       try {
         firebaseStoragePlatform.maxOperationRetryTime;
-      } on UnimplementedError catch (e) {
+      } catch (e) {
         expect(
             e.message, equals('get.maxOperationRetryTime is not implemented'));
         return;
@@ -100,7 +100,7 @@ void main() {
     test('throws if get.maxUploadRetryTime', () {
       try {
         firebaseStoragePlatform.maxUploadRetryTime;
-      } on UnimplementedError catch (e) {
+      } catch (e) {
         expect(e.message, equals('get.maxUploadRetryTime is not implemented'));
         return;
       }
@@ -110,7 +110,7 @@ void main() {
     test('throws if get.maxDownloadRetryTime', () {
       try {
         firebaseStoragePlatform.maxDownloadRetryTime;
-      } on UnimplementedError catch (e) {
+      } catch (e) {
         expect(
             e.message, equals('get.maxDownloadRetryTime is not implemented'));
         return;
@@ -121,7 +121,7 @@ void main() {
     test('throws if setMaxOperationRetryTime()', () {
       try {
         firebaseStoragePlatform.setMaxOperationRetryTime(100);
-      } on UnimplementedError catch (e) {
+      } catch (e) {
         expect(
             e.message, equals('setMaxOperationRetryTime() is not implemented'));
         return;
@@ -132,7 +132,7 @@ void main() {
     test('throws if setMaxUploadRetryTime()', () {
       try {
         firebaseStoragePlatform.setMaxUploadRetryTime(100);
-      } on UnimplementedError catch (e) {
+      } catch (e) {
         expect(e.message, equals('setMaxUploadRetryTime() is not implemented'));
         return;
       }
@@ -142,7 +142,7 @@ void main() {
     test('throws if setMaxDownloadRetryTime()', () {
       try {
         firebaseStoragePlatform.setMaxDownloadRetryTime(100);
-      } on UnimplementedError catch (e) {
+      } catch (e) {
         expect(
             e.message, equals('setMaxDownloadRetryTime() is not implemented'));
         return;
@@ -153,7 +153,7 @@ void main() {
     test('throws if ref()', () {
       try {
         firebaseStoragePlatform.ref('/foo');
-      } on UnimplementedError catch (e) {
+      } catch (e) {
         expect(e.message, equals('ref() is not implemented'));
         return;
       }
@@ -165,6 +165,6 @@ void main() {
 class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
   TestFirebaseStoragePlatform(FirebaseApp app) : super(appInstance: app);
   FirebaseStoragePlatform testDelegateFor({FirebaseApp app}) {
-    return this.delegateFor();
+    return delegateFor();
   }
 }

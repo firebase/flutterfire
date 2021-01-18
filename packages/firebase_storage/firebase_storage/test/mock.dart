@@ -15,14 +15,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-typedef Callback(MethodCall call);
+typedef Callback = Function(MethodCall call);
 
-final String kTestString = 'Hello World';
-final String kBucket = 'gs://fake-storage-bucket-url.com';
-final String kSecondaryBucket = 'gs://fake-storage-bucket-url-2.com';
+const String kTestString = 'Hello World';
+const String kBucket = 'gs://fake-storage-bucket-url.com';
+const String kSecondaryBucket = 'gs://fake-storage-bucket-url-2.com';
 final MockFirebaseStorage kMockStoragePlatform = MockFirebaseStorage();
 
-setupFirebaseStorageMocks() {
+void setupFirebaseStorageMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
@@ -55,13 +55,13 @@ setupFirebaseStorageMocks() {
 
   // Mock Platform Interface Methods
   when(kMockStoragePlatform.delegateFor(
-          app: anyNamed("app"), bucket: anyNamed("bucket")))
+          app: anyNamed('app'), bucket: anyNamed('bucket')))
       .thenReturn(kMockStoragePlatform);
 
   when(kMockStoragePlatform.setInitialValues(
-          maxDownloadRetryTime: anyNamed("maxDownloadRetryTime"),
-          maxOperationRetryTime: anyNamed("maxOperationRetryTime"),
-          maxUploadRetryTime: anyNamed("maxUploadRetryTime")))
+          maxDownloadRetryTime: anyNamed('maxDownloadRetryTime'),
+          maxOperationRetryTime: anyNamed('maxOperationRetryTime'),
+          maxUploadRetryTime: anyNamed('maxUploadRetryTime')))
       .thenReturn(kMockStoragePlatform);
   when(kMockStoragePlatform.maxOperationRetryTime).thenReturn(0);
   when(kMockStoragePlatform.maxDownloadRetryTime).thenReturn(0);
@@ -82,6 +82,7 @@ class MockFirebaseStorage extends Mock
 class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
   TestFirebaseStoragePlatform() : super();
 
+  @override
   FirebaseStoragePlatform delegateFor({FirebaseApp app, String bucket}) {
     return this;
   }
@@ -121,7 +122,7 @@ class MockTaskSnapshotPlatform extends Mock
 
 // Creates a test file with a specified name to
 // a locally directory
-Future<File> createFile(name) async {
+Future<File> createFile(String name) async {
   final Directory systemTempDir = Directory.systemTemp;
   final File file = await File('${systemTempDir.path}/$name').create();
   await file.writeAsString(kTestString);

@@ -8,15 +8,14 @@ part of firebase_storage;
 
 /// A [TaskSnapshot] is returned as the result or on-going process of a [Task].
 class TaskSnapshot {
+  TaskSnapshot._(this.storage, this._delegate) : assert(_delegate != null) {
+    TaskSnapshotPlatform.verifyExtends(_delegate);
+  }
+
   TaskSnapshotPlatform _delegate;
 
   /// The [FirebaseStorage] instance used to create the task.
   final FirebaseStorage storage;
-
-  TaskSnapshot._(this.storage, this._delegate) {
-    assert(_delegate != null);
-    TaskSnapshotPlatform.verifyExtends(_delegate);
-  }
 
   /// The current transferred bytes of this task.
   int get bytesTransferred => _delegate.bytesTransferred;
@@ -44,8 +43,8 @@ class TaskSnapshot {
   int get totalBytes => _delegate.totalBytes;
 
   @override
-  bool operator ==(dynamic o) =>
-      o is TaskSnapshot && o.ref == ref && o.storage == storage;
+  bool operator ==(Object other) =>
+      other is TaskSnapshot && other.ref == ref && other.storage == storage;
 
   @override
   int get hashCode => hashValues(storage, ref);

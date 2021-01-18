@@ -5,7 +5,7 @@
 // @dart=2.9
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
+import '../../firebase_storage_platform_interface.dart';
 
 /// Result returned by [list].
 abstract class ListResultPlatform extends PlatformInterface {
@@ -20,7 +20,7 @@ abstract class ListResultPlatform extends PlatformInterface {
   /// This is used by the app-facing [Reference] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(ListResultPlatform instance) {
+  static void verifyExtends(ListResultPlatform instance) {
     assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
   }

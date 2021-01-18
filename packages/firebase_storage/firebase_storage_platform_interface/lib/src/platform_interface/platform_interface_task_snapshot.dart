@@ -5,7 +5,7 @@
 // @dart=2.9
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
+import '../../firebase_storage_platform_interface.dart';
 
 /// The interface a task snapshot must extend.
 abstract class TaskSnapshotPlatform extends PlatformInterface {
@@ -24,7 +24,7 @@ abstract class TaskSnapshotPlatform extends PlatformInterface {
   /// This is used by the app-facing [TaskSnapshot] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(TaskSnapshotPlatform instance) {
+  static void verifyExtends(TaskSnapshotPlatform instance) {
     assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
   }

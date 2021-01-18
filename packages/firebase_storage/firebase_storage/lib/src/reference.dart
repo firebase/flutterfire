@@ -9,14 +9,14 @@ part of firebase_storage;
 /// Represents a reference to a Google Cloud Storage object. Developers can
 /// upload, download, and delete objects, as well as get/set object metadata.
 class Reference {
+  Reference._(this.storage, this._delegate) {
+    ReferencePlatform.verifyExtends(_delegate);
+  }
+
   ReferencePlatform _delegate;
 
   /// The storage service associated with this reference.
   final FirebaseStorage storage;
-
-  Reference._(this.storage, this._delegate) {
-    ReferencePlatform.verifyExtends(_delegate);
-  }
 
   /// The name of the bucket containing this reference's object.
   String get bucket => _delegate.bucket;
@@ -154,30 +154,34 @@ class Reference {
     assert(data != null);
     assert(format != null);
 
+    String _data = data;
+    PutStringFormat _format = format;
+    SettableMetadata _metadata = metadata;
+
     // Convert any raw string values into a Base64 format
     if (format == PutStringFormat.raw) {
-      data = base64.encode(utf8.encode(data));
-      format = PutStringFormat.base64;
+      _data = base64.encode(utf8.encode(_data));
+      _format = PutStringFormat.base64;
     }
 
     // Convert a data_url into a Base64 format
     if (format == PutStringFormat.dataUrl) {
-      format = PutStringFormat.base64;
+      _format = PutStringFormat.base64;
       UriData uri = UriData.fromUri(Uri.parse(data));
       assert(uri.isBase64);
-      data = uri.contentText;
+      _data = uri.contentText;
 
-      if (metadata == null && uri.mimeType.isNotEmpty) {
-        metadata = SettableMetadata(
+      if (_metadata == null && uri.mimeType.isNotEmpty) {
+        _metadata = SettableMetadata(
           contentType: uri.mimeType,
         );
       }
 
       // If the data_url contains a mime-type & the user has not provided it,
       // set it
-      if ((metadata.contentType == null || metadata.contentType.isEmpty) &&
+      if ((_metadata.contentType == null || _metadata.contentType.isEmpty) &&
           uri.mimeType.isNotEmpty) {
-        metadata = SettableMetadata(
+        _metadata = SettableMetadata(
           cacheControl: metadata.cacheControl,
           contentDisposition: metadata.contentDisposition,
           contentEncoding: metadata.contentEncoding,
@@ -188,7 +192,8 @@ class Reference {
     }
 
     // TODO(ehesp): Check metadata is nullable post platform migration
-    return UploadTask._(storage, _delegate.putString(data, format, metadata));
+    return UploadTask._(
+        storage, _delegate.putString(_data, _format, _metadata));
   }
 
   /// Updates the metadata on a storage object.
@@ -206,8 +211,10 @@ class Reference {
   }
 
   @override
-  bool operator ==(dynamic o) =>
-      o is Reference && o.fullPath == fullPath && o.storage == storage;
+  bool operator ==(Object other) =>
+      other is Reference &&
+      other.fullPath == fullPath &&
+      other.storage == storage;
 
   @override
   int get hashCode => hashValues(storage, fullPath);

@@ -9,8 +9,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 
+import '../../firebase_storage_platform_interface.dart';
 import 'method_channel_firebase_storage.dart';
 import 'method_channel_task_snapshot.dart';
 import 'utils/exception.dart';
@@ -123,10 +123,7 @@ abstract class MethodChannelTask extends TaskPlatform {
     } else if (_didComplete && _exception != null) {
       return catchFuturePlatformException(_exception, _stackTrace);
     } else {
-      if (_completer == null) {
-        _completer = Completer<TaskSnapshotPlatform>();
-      }
-
+      _completer ??= Completer<TaskSnapshotPlatform>();
       return _completer.future;
     }
   }
