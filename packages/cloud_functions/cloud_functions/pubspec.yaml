@@ -20,7 +20,6 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  mockito: ^5.0.0-nullsafety.2
   pedantic: ^1.8.0
   plugin_platform_interface: ^1.0.2
   test: any
