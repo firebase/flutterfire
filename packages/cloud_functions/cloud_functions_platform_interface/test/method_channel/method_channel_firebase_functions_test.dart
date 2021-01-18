@@ -35,7 +35,7 @@ void main() {
 
     test('delegateFor', () {
       final testFunctions = TestMethodChannelFirebaseFunctions(app);
-      final result = testFunctions.delegateFor(app: app!, region: 'uk');
+      final result = testFunctions.delegateFor(app: app, region: 'uk');
       expect(result, isA<MethodChannelFirebaseFunctions>());
       expect(result.app, isA<FirebaseApp>());
     });

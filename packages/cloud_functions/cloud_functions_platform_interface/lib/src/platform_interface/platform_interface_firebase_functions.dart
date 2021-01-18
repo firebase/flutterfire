@@ -25,7 +25,7 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   factory FirebaseFunctionsPlatform.instanceFor(
       {FirebaseApp? app, String? region}) {
     return FirebaseFunctionsPlatform.instance
-        .delegateFor(app: app!, region: region!);
+        .delegateFor(app: app, region: region);
   }
 
   static final Object _token = Object();
@@ -55,8 +55,7 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance or region is required by the user.
   @protected
-  FirebaseFunctionsPlatform delegateFor(
-      {required FirebaseApp app, required String region}) {
+  FirebaseFunctionsPlatform delegateFor({FirebaseApp? app, String? region}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 

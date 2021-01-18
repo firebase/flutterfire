@@ -33,8 +33,7 @@ class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
   );
 
   @override
-  FirebaseFunctionsPlatform delegateFor(
-      {required FirebaseApp app, required String region}) {
+  FirebaseFunctionsPlatform delegateFor({FirebaseApp? app, String? region}) {
     return MethodChannelFirebaseFunctions(app: app, region: region);
   }
 
