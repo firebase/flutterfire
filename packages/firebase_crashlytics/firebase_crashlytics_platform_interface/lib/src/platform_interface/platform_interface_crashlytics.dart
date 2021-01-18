@@ -19,22 +19,11 @@ import '../method_channel/method_channel_crashlytics.dart';
 /// other Flutter supported platforms.
 abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
-  @protected
-  final FirebaseApp /*?*/ appInstance;
-
-  /// Create an instance using [app]
   FirebaseCrashlyticsPlatform({this.appInstance}) : super(token: _token);
-
-  static final Object _token = Object();
-
-  /// Returns the [FirebaseApp] for the current instance.
-  FirebaseApp get app {
-    return appInstance ?? Firebase.app();
-  }
 
   /// Create an instance using [app] using the existing implementation
   factory FirebaseCrashlyticsPlatform.instanceFor(
-      {FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
+      {FirebaseApp app, @required Map<dynamic, dynamic> pluginConstants}) {
     // Only the default app is supported on Crashlytics.
     assert(app.name == defaultFirebaseAppName);
     assert(pluginConstants != null);
@@ -44,6 +33,19 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
       isCrashlyticsCollectionEnabled:
           pluginConstants['isCrashlyticsCollectionEnabled'],
     );
+  }
+
+  /// The [FirebaseApp] this instance was initialized with.
+  @protected
+  final FirebaseApp /*?*/ appInstance;
+
+  /// Create an instance using [app]
+
+  static final Object _token = Object();
+
+  /// Returns the [FirebaseApp] for the current instance.
+  FirebaseApp get app {
+    return appInstance ?? Firebase.app();
   }
 
   static /*late*/ FirebaseCrashlyticsPlatform _instance;
@@ -69,7 +71,7 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
   /// See [setCrashlyticsCollectionEnabled] for toggling collection status.
   bool get isCrashlyticsCollectionEnabled {
     throw UnimplementedError(
-        "isCrashlyticsCollectionEnabled is not implemented");
+        'isCrashlyticsCollectionEnabled is not implemented');
   }
 
   /// Checks a device for any fatal or non-fatal crash reports that haven't yet

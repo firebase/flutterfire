@@ -69,6 +69,7 @@ void main() {
     test('throws if .checkForUnsentReports', () {
       try {
         firebaseCrashlyticsPlatform.checkForUnsentReports();
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('checkForUnsentReports() is not implemented'));
         return;
@@ -79,6 +80,7 @@ void main() {
     test('throws if .crash', () {
       try {
         firebaseCrashlyticsPlatform.crash();
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('crash() is not implemented'));
         return;
@@ -89,6 +91,7 @@ void main() {
     test('throws if .deleteUnsentReports', () {
       try {
         firebaseCrashlyticsPlatform.deleteUnsentReports();
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('deleteUnsentReports() is not implemented'));
         return;
@@ -99,6 +102,7 @@ void main() {
     test('throws if .didCrashOnPreviousExecution', () {
       try {
         firebaseCrashlyticsPlatform.didCrashOnPreviousExecution();
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message,
             equals('didCrashOnPreviousExecution() is not implemented'));
@@ -110,6 +114,7 @@ void main() {
     test('throws if .recordError', () {
       try {
         firebaseCrashlyticsPlatform.recordError();
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('recordError() is not implemented'));
         return;
@@ -120,6 +125,7 @@ void main() {
     test('throws if .log', () {
       try {
         firebaseCrashlyticsPlatform.log('foo');
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('log() is not implemented'));
         return;
@@ -130,6 +136,7 @@ void main() {
     test('throws if .sendUnsentReports', () {
       try {
         firebaseCrashlyticsPlatform.sendUnsentReports();
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('sendUnsentReports() is not implemented'));
         return;
@@ -140,6 +147,7 @@ void main() {
     test('throws if .setCrashlyticsCollectionEnabled', () {
       try {
         firebaseCrashlyticsPlatform.setCrashlyticsCollectionEnabled(true);
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message,
             equals('setCrashlyticsCollectionEnabled() is not implemented'));
@@ -151,6 +159,7 @@ void main() {
     test('throws if .setUserIdentifier', () {
       try {
         firebaseCrashlyticsPlatform.setUserIdentifier('foo');
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('setUserIdentifier() is not implemented'));
         return;
@@ -161,6 +170,7 @@ void main() {
     test('throws if .setCustomKey', () {
       try {
         firebaseCrashlyticsPlatform.setCustomKey('foo', 'bar');
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('setCustomKey() is not implemented'));
         return;

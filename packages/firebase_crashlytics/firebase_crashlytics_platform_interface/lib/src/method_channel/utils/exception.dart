@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 Exception convertPlatformException(Object exception,
     [StackTrace /*?*/ stackTrace]) {
   if (exception is! Exception || exception is! PlatformException) {
+    // ignore: only_throw_errors
     throw exception;
   }
 

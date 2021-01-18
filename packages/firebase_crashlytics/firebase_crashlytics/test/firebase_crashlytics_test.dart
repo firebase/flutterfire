@@ -29,9 +29,7 @@ void main() {
       methodCallLog.clear();
     });
 
-    tearDown(() {
-      methodCallLog.clear();
-    });
+    tearDown(methodCallLog.clear);
 
     test('checkForUnsentReports', () async {
       await crashlytics.checkForUnsentReports();
@@ -42,7 +40,7 @@ void main() {
     });
 
     test('crash', () async {
-      await crashlytics.crash();
+      crashlytics.crash();
 
       expect(methodCallLog,
           <Matcher>[isMethodCall('Crashlytics#crash', arguments: null)]);
@@ -67,8 +65,8 @@ void main() {
     group('recordError', () {
       test('with stack', () async {
         final stack = StackTrace.current;
-        final exception = 'foo exception';
-        final exceptionReason = 'bar reason';
+        const exception = 'foo exception';
+        const exceptionReason = 'bar reason';
 
         await crashlytics.recordError(exception, stack,
             reason: exceptionReason, printDetails: false);
@@ -90,8 +88,8 @@ void main() {
       });
 
       test('without stack', () async {
-        final exception = 'foo exception';
-        final exceptionReason = 'bar reason';
+        const exception = 'foo exception';
+        const exceptionReason = 'bar reason';
 
         await crashlytics.recordError(exception, null, reason: exceptionReason);
         expect(methodCallLog[0].method, 'Crashlytics#recordError');
@@ -108,11 +106,11 @@ void main() {
     });
 
     test('recordFlutterError', () async {
-      final exception = 'foo exception';
-      final exceptionReason = 'bar reason';
-      final exceptionLibrary = 'baz library';
-      final exceptionFirstMessage = 'first message';
-      final exceptionSecondMessage = 'second message';
+      const exception = 'foo exception';
+      const exceptionReason = 'bar reason';
+      const exceptionLibrary = 'baz library';
+      const exceptionFirstMessage = 'first message';
+      const exceptionSecondMessage = 'second message';
       final stack = StackTrace.current;
       final FlutterErrorDetails details = FlutterErrorDetails(
         exception: exception,
@@ -142,7 +140,7 @@ void main() {
       });
 
       test('should call delegate method', () async {
-        final msg = 'foo';
+        const msg = 'foo';
         await crashlytics.log(msg);
         expect(methodCallLog, <Matcher>[
           isMethodCall('Crashlytics#log', arguments: {
@@ -191,7 +189,7 @@ void main() {
       });
 
       test('should call delegate method', () async {
-        final id = 'foo';
+        const id = 'foo';
         await crashlytics.setUserIdentifier(id);
         expect(methodCallLog, <Matcher>[
           isMethodCall('Crashlytics#setUserIdentifier', arguments: {
@@ -212,8 +210,8 @@ void main() {
       });
 
       test('should call delegate method', () async {
-        final key = 'foo';
-        final value = 'bar';
+        const key = 'foo';
+        const value = 'bar';
         await crashlytics.setCustomKey(key, value);
         expect(methodCallLog, <Matcher>[
           isMethodCall('Crashlytics#setCustomKey', arguments: {

@@ -24,9 +24,9 @@ void testsMain() {
         await crashlytics.setCrashlyticsCollectionEnabled(true);
         try {
           await crashlytics.checkForUnsentReports();
-          fail("Error did not throw");
+          fail('Error did not throw');
         } catch (e) {
-          print(e);
+          // Do nothing. test will fail.
         }
       });
 

@@ -9,8 +9,8 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
-import './utils/exception.dart';
 import '../platform_interface/platform_interface_crashlytics.dart';
+import './utils/exception.dart';
 
 /// The entry point for accessing a method channel based Crashlytics instance.
 ///
@@ -20,7 +20,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   MethodChannelFirebaseCrashlytics({FirebaseApp app}) : super(appInstance: app);
 
   /// The [MethodChannel] used to communicate with the native plugin
-  static MethodChannel channel = MethodChannel(
+  static MethodChannel channel = const MethodChannel(
     'plugins.flutter.io/firebase_crashlytics',
   );
 
@@ -35,7 +35,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   MethodChannelFirebaseCrashlytics setInitialValues({
     bool /*!*/ isCrashlyticsCollectionEnabled,
   }) {
-    this._isCrashlyticsCollectionEnabled = isCrashlyticsCollectionEnabled;
+    _isCrashlyticsCollectionEnabled = isCrashlyticsCollectionEnabled;
     return this;
   }
 

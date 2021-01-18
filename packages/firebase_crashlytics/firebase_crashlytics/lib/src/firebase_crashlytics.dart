@@ -10,6 +10,9 @@ part of firebase_crashlytics;
 ///
 /// You can get an instance by calling [FirebaseCrashlytics.instance].
 class FirebaseCrashlytics extends FirebasePluginPlatform {
+  FirebaseCrashlytics._({this.app})
+      : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
+
   /// Cached instance of [FirebaseCrashlytics];
   static /*late*/ FirebaseCrashlytics _instance;
 
@@ -25,9 +28,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
 
   /// The [FirebaseApp] for this current [FirebaseCrashlytics] instance.
   FirebaseApp app;
-
-  FirebaseCrashlytics._({this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseCrashlytics get instance {
@@ -87,33 +87,40 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
         : (StringBuffer()..writeAll(information, '\n')).toString();
 
     if (printDetails) {
+      // ignore: avoid_print
       print('----------------FIREBASE CRASHLYTICS----------------');
 
       // If available, give a reason to the exception.
       if (reason != null) {
+        // ignore: avoid_print
         print('The following exception was thrown $reason:');
       }
 
       // Need to print the exception to explain why the exception was thrown.
+      // ignore: avoid_print
       print(exception);
 
       // Print information provided by the Flutter framework about the exception.
+      // ignore: avoid_print
       if (_information.isNotEmpty) print('\n$_information');
 
       // Not using Trace.format here to stick to the default stack trace format
       // that Flutter developers are used to seeing.
+      // ignore: avoid_print
       if (stack != null) print('\n$stack');
+      // ignore: avoid_print
       print('----------------------------------------------------');
     }
 
     // The stack trace can be null. To avoid the following exception:
     // Invalid argument(s): Cannot create a Trace from null.
     // We can check for null and provide an empty stack trace.
-    stack ??= StackTrace.current ?? StackTrace.fromString('');
+    final StackTrace stackTrace =
+        stack ?? StackTrace.current ?? StackTrace.fromString('');
 
     // Report error.
     final List<String> stackTraceLines =
-        Trace.format(stack).trimRight().split('\n');
+        Trace.format(stackTrace).trimRight().split('\n');
     final List<Map<String, String>> stackTraceElements =
         getStackTraceElements(stackTraceLines);
 

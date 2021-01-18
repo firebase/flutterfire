@@ -9,11 +9,11 @@ import 'package:firebase_crashlytics_platform_interface/firebase_crashlytics_pla
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-typedef Callback(MethodCall call);
+typedef Callback = void Function(MethodCall call);
 
 final List<MethodCall> methodCallLog = <MethodCall>[];
 
-setupFirebaseCrashlyticsMocks([Callback /*?*/ customHandlers]) {
+dynamic setupFirebaseCrashlyticsMocks([Callback /*?*/ customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {

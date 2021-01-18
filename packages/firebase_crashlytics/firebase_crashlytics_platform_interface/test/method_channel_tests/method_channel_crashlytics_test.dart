@@ -114,8 +114,8 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.checkForUnsentReports();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling(
+            'PLATFORM', crashlytics.checkForUnsentReports);
       });
     });
 
@@ -137,8 +137,7 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.crash();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling('PLATFORM', crashlytics.crash);
       });
     });
 
@@ -163,8 +162,8 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.deleteUnsentReports();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling(
+            'PLATFORM', crashlytics.deleteUnsentReports);
       });
     });
 
@@ -188,8 +187,8 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.didCrashOnPreviousExecution();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling(
+            'PLATFORM', crashlytics.didCrashOnPreviousExecution);
       });
     });
 
@@ -220,8 +219,7 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.recordError();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling('PLATFORM', crashlytics.recordError);
       });
     });
 
@@ -257,8 +255,7 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.sendUnsentReports();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling('PLATFORM', crashlytics.sendUnsentReports);
       });
     });
 
@@ -282,9 +279,8 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod =
-            () => crashlytics.setCrashlyticsCollectionEnabled(true);
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling('PLATFORM',
+            () => crashlytics.setCrashlyticsCollectionEnabled(true));
       });
     });
 
@@ -308,9 +304,8 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod =
-            () => crashlytics.setUserIdentifier(kMockUserIdentifier);
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling('PLATFORM',
+            () => crashlytics.setUserIdentifier(kMockUserIdentifier));
       });
     });
 
@@ -335,8 +330,8 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.setCustomKey('foo', 'bar');
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling(
+            'PLATFORM', () => crashlytics.setCustomKey('foo', 'bar'));
       });
     });
   });
