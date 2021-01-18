@@ -24,7 +24,7 @@ jobs:
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Run Analyze"
-        run: melos run analyze --no-select
+        run: melos run analyze
       # TODO(rrousselGit): re-enable dry-runs after the projects has been fully migrated to NNBD
       # - name: "Pub Check"
       #   run: |

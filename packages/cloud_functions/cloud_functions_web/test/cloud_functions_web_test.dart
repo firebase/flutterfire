@@ -5,7 +5,6 @@
 // @dart=2.9
 
 @TestOn('chrome')
-
 import 'dart:js' show allowInterop;
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
@@ -82,6 +81,10 @@ void main() {
             }),
           ));
     });
+  });
+
+  test('TODO - add Firebase Functions web tests', () {
+    // TODO(Salakar): Web tests are currently missing and need adding.
   });
 }
 
