@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 // ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, public_member_api_docs
 
 @JS('firebase.functions')
@@ -26,7 +24,7 @@ abstract class FunctionsAppJsImpl extends AppJsImpl {
 abstract class FunctionsJsImpl {
   external FunctionsAppJsImpl get app;
   external HttpsCallableJsImpl httpsCallable(String name,
-      [HttpsCallableOptions options]);
+      [HttpsCallableOptions? options]);
   external void useFunctionsEmulator(String url);
 }
 
@@ -45,7 +43,7 @@ abstract class HttpsCallableJsImpl {
 @JS('HttpsCallableOptions')
 @anonymous
 abstract class HttpsCallableOptions {
-  external factory HttpsCallableOptions({int timeout});
+  external factory HttpsCallableOptions({int? timeout});
   external int get timeout;
   external set timeout(int t);
 }
@@ -67,7 +65,7 @@ abstract class HttpsCallableResultJsImpl {
 abstract class HttpsErrorJsImpl {
   external ErrorJsImpl get error;
   external set error(ErrorJsImpl e);
-  external dynamic get code;
+  external String get code;
   external set code(String v);
   external dynamic get details;
   external set details(dynamic d);

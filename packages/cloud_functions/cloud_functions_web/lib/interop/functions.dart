@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 // ignore_for_file: public_member_api_docs
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
@@ -14,7 +12,7 @@ import 'functions_interop.dart' as functions_interop;
 export 'functions_interop.dart' show HttpsCallableOptions;
 
 /// Given an AppJSImp, return the Functions instance.
-Functions getFunctionsInstance(App app, String region) {
+Functions getFunctionsInstance(App app, String? region) {
   functions_interop.FunctionsJsImpl jsObject;
   if (region == null) {
     jsObject = firebase_interop.functions(app.jsObject);
@@ -31,9 +29,6 @@ class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
 
   /// Creates a new Functions from a [jsObject].
   static Functions getInstance(functions_interop.FunctionsJsImpl jsObject) {
-    if (jsObject == null) {
-      return null;
-    }
     return _expando[jsObject] ??= Functions._fromJsObject(jsObject);
   }
 
@@ -42,7 +37,7 @@ class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
   functions_interop.FunctionsAppJsImpl get app => jsObject.app;
 
   HttpsCallable httpsCallable(String name,
-      [functions_interop.HttpsCallableOptions options]) {
+      [functions_interop.HttpsCallableOptions? options]) {
     functions_interop.HttpsCallableJsImpl httpCallableImpl;
     if (options != null) {
       httpCallableImpl = jsObject.httpsCallable(name, options);
@@ -65,9 +60,6 @@ class HttpsCallable
   /// Creates a new HttpsCallable from a [jsObject].
   static HttpsCallable getInstance(
       functions_interop.HttpsCallableJsImpl jsObject) {
-    if (jsObject == null) {
-      return null;
-    }
     return _expando[jsObject] ??= HttpsCallable._fromJsObject(jsObject);
   }
 
@@ -87,9 +79,6 @@ class HttpsCallableResult
   /// Creates a new HttpsCallableResult from a [jsObject].
   static HttpsCallableResult getInstance(
       functions_interop.HttpsCallableResultJsImpl jsObject) {
-    if (jsObject == null) {
-      return null;
-    }
     return _expando[jsObject] ??= HttpsCallableResult._fromJsObject(jsObject);
   }
 

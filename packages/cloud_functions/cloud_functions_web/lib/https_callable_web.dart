@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 import 'dart:js_util' as util;
 
@@ -16,7 +14,7 @@ import 'utils.dart';
 class HttpsCallableWeb extends HttpsCallablePlatform {
   /// Constructor.
   HttpsCallableWeb(FirebaseFunctionsPlatform functions, this._webFunctions,
-      String origin, String name, HttpsCallableOptions options)
+      String origin, String name, HttpsCallableOptions? options)
       : super(functions, origin, name, options);
 
   final functions_interop.Functions _webFunctions;
@@ -24,12 +22,12 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
   @override
   Future<dynamic> call([dynamic parameters]) async {
     if (origin != null) {
-      _webFunctions.useFunctionsEmulator(origin);
+      _webFunctions.useFunctionsEmulator(origin!);
     }
 
     functions_interop.HttpsCallableOptions callableOptions =
         functions_interop.HttpsCallableOptions(
-            timeout: options?.timeout?.inMilliseconds);
+            timeout: options?.timeout.inMilliseconds);
 
     functions_interop.HttpsCallable callable =
         _webFunctions.httpsCallable(name, callableOptions);

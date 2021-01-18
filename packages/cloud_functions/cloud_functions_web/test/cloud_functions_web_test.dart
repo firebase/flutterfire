@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 @TestOn('chrome')
 import 'dart:js' show allowInterop;
 
@@ -12,7 +10,6 @@ import 'package:cloud_functions_web/cloud_functions_web.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:meta/meta.dart';
 
 import 'mock/firebase_mock.dart';
 
@@ -23,9 +20,9 @@ void main() {
     final List<Map<String, dynamic>> log = <Map<String, dynamic>>[];
 
     Map<String, dynamic> loggingCall(
-        {@required String appName,
-        @required String functionName,
-        String region,
+        {required String? appName,
+        required String functionName,
+        String? region,
         dynamic parameters}) {
       log.add(<String, dynamic>{
         'appName': appName,
@@ -45,7 +42,7 @@ void main() {
             options: FirebaseAppOptionsMock(appId: '123'),
             functions: allowInterop(([region]) => FirebaseFunctionsMock(
                   httpsCallable: allowInterop((functionName, [options]) {
-                    final String appName = name ?? '[DEFAULT]';
+                    final String appName = name;
                     return allowInterop(([data]) {
                       Map<String, dynamic> result = loggingCall(
                           appName: appName,
@@ -68,7 +65,7 @@ void main() {
       // executed when its call method is invoked
       firebaseMock.functions = allowInterop(([app]) => FirebaseFunctionsMock(
             httpsCallable: allowInterop((functionName, [options]) {
-              final String appName = app == null ? '[DEFAULT]' : app.name;
+              final String? appName = app == null ? '[DEFAULT]' : app.name;
               return allowInterop(([data]) {
                 Map<String, dynamic> result =
                     loggingCall(appName: appName, functionName: functionName);

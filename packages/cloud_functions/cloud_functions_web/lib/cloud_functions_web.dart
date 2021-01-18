@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
@@ -15,7 +13,7 @@ import 'interop/functions.dart' as functions_interop;
 /// Web implementation of [FirebaseFunctionsPlatform].
 class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   /// The entry point for the [FirebaseFunctionsWeb] class.
-  FirebaseFunctionsWeb({FirebaseApp app, String region})
+  FirebaseFunctionsWeb({FirebaseApp? app, String? region})
       : _webFunctions = functions_interop.getFunctionsInstance(
             core_interop.app(app?.name), region),
         super(app, region);
@@ -27,7 +25,7 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
         super(null, null);
 
   /// Instance of functions from the web plugin
-  final functions_interop.Functions _webFunctions;
+  final functions_interop.Functions? _webFunctions;
 
   /// Create the default instance of the [FirebaseFunctionsPlatform] as a [FirebaseFunctionsWeb]
   static void registerWith(Registrar registrar) {
@@ -40,13 +38,13 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   }
 
   @override
-  FirebaseFunctionsPlatform delegateFor({FirebaseApp app, String region}) {
+  FirebaseFunctionsPlatform delegateFor({FirebaseApp? app, String? region}) {
     return FirebaseFunctionsWeb(app: app, region: region);
   }
 
   @override
   HttpsCallablePlatform httpsCallable(
-      String origin, String name, HttpsCallableOptions options) {
-    return HttpsCallableWeb(this, _webFunctions, origin, name, options);
+      String origin, String name, HttpsCallableOptions? options) {
+    return HttpsCallableWeb(this, _webFunctions!, origin, name, options);
   }
 }
