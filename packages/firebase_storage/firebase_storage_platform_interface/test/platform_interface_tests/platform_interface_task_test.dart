@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+// ignore_for_file: avoid_catching_errors
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
@@ -14,7 +14,7 @@ import '../mock.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  /*late*/ TestTaskPlatform taskPlatform;
+  TestTaskPlatform? taskPlatform;
 
   group('$TaskPlatform()', () {
     setUpAll(() async {
@@ -30,22 +30,18 @@ void main() {
     group('verifyExtends()', () {
       test('calls successfully', () {
         try {
-          TaskPlatform.verifyExtends(taskPlatform);
+          TaskPlatform.verifyExtends(taskPlatform!);
           return;
         } catch (_) {
           fail('thrown an unexpected exception');
         }
       });
-
-      test('throws an [AssertionError] exception when instance is null', () {
-        expect(() => TaskPlatform.verifyExtends(null), throwsAssertionError);
-      });
     });
 
     test('throws if get.snapshotEvents', () async {
       try {
-        taskPlatform.snapshotEvents;
-      } catch (e) {
+        taskPlatform!.snapshotEvents;
+      } on UnimplementedError catch (e) {
         expect(e.message, equals('snapshotEvents is not implemented'));
         return;
       }
@@ -54,8 +50,8 @@ void main() {
 
     test('throws if get.snapshot', () async {
       try {
-        taskPlatform.snapshot;
-      } catch (e) {
+        taskPlatform!.snapshot;
+      } on UnimplementedError catch (e) {
         expect(e.message, equals('snapshot is not implemented'));
         return;
       }
@@ -64,8 +60,8 @@ void main() {
 
     test('throws if get.onComplete', () async {
       try {
-        await taskPlatform.onComplete;
-      } catch (e) {
+        await taskPlatform!.onComplete;
+      } on UnimplementedError catch (e) {
         expect(e.message, equals('onComplete is not implemented'));
         return;
       }
@@ -74,8 +70,8 @@ void main() {
 
     test('throws if pause()', () async {
       try {
-        await taskPlatform.pause();
-      } catch (e) {
+        await taskPlatform!.pause();
+      } on UnimplementedError catch (e) {
         expect(e.message, equals('pause() is not implemented'));
         return;
       }
@@ -84,8 +80,8 @@ void main() {
 
     test('throws if resume()', () async {
       try {
-        await taskPlatform.resume();
-      } catch (e) {
+        await taskPlatform!.resume();
+      } on UnimplementedError catch (e) {
         expect(e.message, equals('resume() is not implemented'));
         return;
       }
@@ -94,8 +90,8 @@ void main() {
 
     test('throws if cancel()', () async {
       try {
-        await taskPlatform.cancel();
-      } catch (e) {
+        await taskPlatform!.cancel();
+      } on UnimplementedError catch (e) {
         expect(e.message, equals('cancel() is not implemented'));
         return;
       }

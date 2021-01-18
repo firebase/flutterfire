@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -17,14 +15,15 @@ import 'method_channel_task_snapshot.dart';
 class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// Creates a new [MethodChannelFirebaseStorage] instance with an [app] and/or
   /// [bucket].
-  MethodChannelFirebaseStorage({FirebaseApp /*!*/ app, String bucket})
+  MethodChannelFirebaseStorage(
+      {required FirebaseApp app, required String bucket})
       : super(appInstance: app, bucket: bucket) {
     // The channel setMethodCallHandler callback is not app specific, so there
     // is no need to register the caller more than once.
     if (_initialized) return;
 
     channel.setMethodCallHandler((MethodCall call) async {
-      Map<dynamic, dynamic> /*!*/ arguments = call.arguments;
+      Map<dynamic, dynamic> arguments = call.arguments;
 
       switch (call.method) {
         case 'Task#onProgress':
@@ -61,7 +60,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   ///
   /// When the user code calls an storage method, the real instance is
   /// then initialized via the [delegateFor] method.
-  MethodChannelFirebaseStorage._() : super(appInstance: null);
+  MethodChannelFirebaseStorage._() : super(appInstance: null, bucket: '');
 
   /// Keep an internal reference to whether the [MethodChannelFirebaseStorage]
   /// class has already been initialized.
@@ -69,9 +68,8 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   /// Returns a unique key to identify the instance by [FirebaseApp] name and
   /// any custom storage buckets.
-  static String _getInstanceKey(
-      String /*!*/ /*!*/ appName, String /*!*/ bucket) {
-    return '$appName|${bucket ?? ''}';
+  static String _getInstanceKey(String /*!*/ appName, String bucket) {
+    return '$appName|$bucket';
   }
 
   /// The [MethodChannelFirebaseStorage] method channel.
@@ -103,7 +101,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   @override
   int maxUploadRetryTime = const Duration(minutes: 10).inMilliseconds;
-  
+
   @override
   int maxDownloadRetryTime = const Duration(minutes: 10).inMilliseconds;
 
@@ -115,30 +113,27 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
     // Get the cached Storage instance.
     FirebaseStoragePlatform storage = _methodChannelFirebaseStorageInstances[
-        _getInstanceKey(arguments['appName'], arguments['bucket'])];
+        _getInstanceKey(arguments['appName'], arguments['bucket'])]!;
 
     // Create a snapshot.
     TaskSnapshotPlatform snapshot =
         MethodChannelTaskSnapshot(storage, taskState, snapshotData);
 
     // Fire a snapshot event.
-    taskObservers[arguments['handle']].add(snapshot);
+    taskObservers[arguments['handle']]!.add(snapshot);
   }
 
-  void _sendTaskException(int /*!*/ handle, FirebaseException exception) {
-    taskObservers[handle].addError(exception);
+  void _sendTaskException(int handle, FirebaseException exception) {
+    taskObservers[handle]!.addError(exception);
   }
 
   @override
-  FirebaseStoragePlatform delegateFor({FirebaseApp app, String bucket}) {
+  FirebaseStoragePlatform delegateFor(
+      {required FirebaseApp app, required String bucket}) {
     String key = _getInstanceKey(app.name, bucket);
 
-    if (!_methodChannelFirebaseStorageInstances.containsKey(key)) {
-      _methodChannelFirebaseStorageInstances[key] =
-          MethodChannelFirebaseStorage(app: app, bucket: bucket);
-    }
-
-    return _methodChannelFirebaseStorageInstances[key];
+    return _methodChannelFirebaseStorageInstances[key] ??=
+        MethodChannelFirebaseStorage(app: app, bucket: bucket);
   }
 
   @override

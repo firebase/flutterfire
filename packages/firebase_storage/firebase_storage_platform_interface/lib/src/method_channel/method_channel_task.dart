@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 import 'dart:io';
@@ -42,13 +42,13 @@ abstract class MethodChannelTask extends TaskPlatform {
       _stackTrace = stackTrace;
       if (_completer != null) {
         catchFuturePlatformException(e, stackTrace)
-            .catchError(_completer.completeError);
+            .catchError(_completer!.completeError);
       }
     });
 
     // Get the task stream.
-    _stream = MethodChannelFirebaseStorage.taskObservers[_handle].stream;
-    /*late*/ StreamSubscription _subscription;
+    _stream = MethodChannelFirebaseStorage.taskObservers[_handle]!.stream as Stream<TaskSnapshotPlatform>;
+    late StreamSubscription _subscription;
 
     // Listen for stream events.
     _subscription = _stream.listen((TaskSnapshotPlatform snapshot) async {
@@ -82,22 +82,22 @@ abstract class MethodChannelTask extends TaskPlatform {
       _stackTrace = stackTrace;
       if (_completer != null) {
         catchFuturePlatformException(e, stackTrace)
-            .catchError(_completer.completeError);
+            .catchError(_completer!.completeError);
       }
     }, cancelOnError: true);
   }
 
-  Object _exception;
+  Object? _exception;
 
-  StackTrace _stackTrace;
+  StackTrace? _stackTrace;
 
   bool _didComplete = false;
 
-  Completer<TaskSnapshotPlatform> _completer;
+  Completer<TaskSnapshotPlatform>? _completer;
 
-  Stream<TaskSnapshotPlatform> _stream;
+  late Stream<TaskSnapshotPlatform> _stream;
 
-  Completer<void> _initialTaskCompleter;
+  late Completer<void> _initialTaskCompleter;
 
   Future<void> Function() _initialTask;
 
@@ -106,11 +106,11 @@ abstract class MethodChannelTask extends TaskPlatform {
   /// The [FirebaseStoragePlatform] used to create the task.
   final FirebaseStoragePlatform storage;
 
-  TaskSnapshotPlatform _snapshot;
+  late TaskSnapshotPlatform _snapshot;
 
   @override
   Stream<TaskSnapshotPlatform> get snapshotEvents {
-    return MethodChannelFirebaseStorage.taskObservers[_handle].stream;
+    return MethodChannelFirebaseStorage.taskObservers[_handle]!.stream as Stream<TaskSnapshotPlatform>;
   }
 
   @override
@@ -121,10 +121,10 @@ abstract class MethodChannelTask extends TaskPlatform {
     if (_didComplete && _exception == null) {
       return Future.value(snapshot);
     } else if (_didComplete && _exception != null) {
-      return catchFuturePlatformException(_exception, _stackTrace);
+      return catchFuturePlatformException(_exception!, _stackTrace);
     } else {
       _completer ??= Completer<TaskSnapshotPlatform>();
-      return _completer.future;
+      return _completer!.future;
     }
   }
 
@@ -135,10 +135,10 @@ abstract class MethodChannelTask extends TaskPlatform {
         await _initialTaskCompleter.future;
       }
 
-      Map<String, dynamic> data = await MethodChannelFirebaseStorage.channel
+      Map<String, dynamic> data = await (MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>('Task#pause', <String, dynamic>{
         'handle': _handle,
-      });
+      }) as FutureOr<Map<String, dynamic>>);
 
       bool success = data['status'];
       if (success) {
@@ -158,10 +158,10 @@ abstract class MethodChannelTask extends TaskPlatform {
         await _initialTaskCompleter.future;
       }
 
-      Map<String, dynamic> data = await MethodChannelFirebaseStorage.channel
+      Map<String, dynamic> data = await (MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>('Task#resume', <String, dynamic>{
         'handle': _handle,
-      });
+      }) as FutureOr<Map<String, dynamic>>);
 
       bool success = data['status'];
       if (success) {
@@ -181,10 +181,10 @@ abstract class MethodChannelTask extends TaskPlatform {
         await _initialTaskCompleter.future;
       }
 
-      Map<String, dynamic> data = await MethodChannelFirebaseStorage.channel
+      Map<String, dynamic> data = await (MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>('Task#cancel', <String, dynamic>{
         'handle': _handle,
-      });
+      }) as FutureOr<Map<String, dynamic>>);
 
       bool success = data['status'];
       if (success) {
@@ -202,7 +202,7 @@ abstract class MethodChannelTask extends TaskPlatform {
 class MethodChannelPutFileTask extends MethodChannelTask {
   // ignore: public_member_api_docs
   MethodChannelPutFileTask(int handle, FirebaseStoragePlatform storage,
-      String path, File file, SettableMetadata metadata)
+      String path, File file, SettableMetadata? metadata)
       : super(handle, storage, path,
             _getTask(handle, storage, path, file, metadata));
 
@@ -211,7 +211,7 @@ class MethodChannelPutFileTask extends MethodChannelTask {
       FirebaseStoragePlatform storage,
       String path,
       File file,
-      SettableMetadata /*?*/ metadata) {
+      SettableMetadata? metadata) {
     return () => MethodChannelFirebaseStorage.channel
             .invokeMethod<void>('Task#startPutFile', <String, dynamic>{
           'appName': storage.app.name,
@@ -236,7 +236,7 @@ class MethodChannelPutStringTask extends MethodChannelTask {
       String path,
       String data,
       PutStringFormat format,
-      SettableMetadata /*?*/ metadata)
+      SettableMetadata? metadata)
       : super(handle, storage, path,
             _getTask(handle, storage, path, data, format, metadata));
 
@@ -246,7 +246,7 @@ class MethodChannelPutStringTask extends MethodChannelTask {
       String path,
       String data,
       PutStringFormat format,
-      SettableMetadata /*?*/ metadata) {
+      SettableMetadata? metadata) {
     return () => MethodChannelFirebaseStorage.channel
             .invokeMethod<void>('Task#startPutString', <String, dynamic>{
           'appName': storage.app.name,
@@ -267,7 +267,7 @@ class MethodChannelPutStringTask extends MethodChannelTask {
 class MethodChannelPutTask extends MethodChannelTask {
   // ignore: public_member_api_docs
   MethodChannelPutTask(int handle, FirebaseStoragePlatform storage, String path,
-      Uint8List data, SettableMetadata /*?*/ metadata)
+      Uint8List data, SettableMetadata? metadata)
       : super(handle, storage, path,
             _getTask(handle, storage, path, data, metadata));
 
@@ -276,7 +276,7 @@ class MethodChannelPutTask extends MethodChannelTask {
       FirebaseStoragePlatform storage,
       String path,
       Uint8List data,
-      SettableMetadata metadata) {
+      SettableMetadata? metadata) {
     return () => MethodChannelFirebaseStorage.channel
             .invokeMethod<void>('Task#startPutData', <String, dynamic>{
           'appName': storage.app.name,

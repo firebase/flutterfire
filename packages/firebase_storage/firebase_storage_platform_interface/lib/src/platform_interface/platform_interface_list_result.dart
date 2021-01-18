@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import '../../firebase_storage_platform_interface.dart';
@@ -21,12 +21,11 @@ abstract class ListResultPlatform extends PlatformInterface {
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
   static void verifyExtends(ListResultPlatform instance) {
-    assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
   }
 
   /// The [FirebaseStoragePlatform] used when fetching list items.
-  final FirebaseStoragePlatform storage;
+  final FirebaseStoragePlatform? storage;
 
   /// Objects in this directory. You can call [getMetadata] and [getDownloadUrl] on them.
   List<ReferencePlatform> get items {
@@ -34,7 +33,7 @@ abstract class ListResultPlatform extends PlatformInterface {
   }
 
   /// If set, there might be more results for this list. Use this token to resume the list.
-  final String /*?*/ nextPageToken;
+  final String? nextPageToken;
 
   /// References to prefixes (sub-folders). You can call [list] on them to get its contents.
   ///

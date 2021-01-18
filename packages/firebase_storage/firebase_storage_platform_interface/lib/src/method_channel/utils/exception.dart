@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -13,25 +13,25 @@ import 'package:flutter/services.dart';
 ///
 /// If the [Exception] is a [PlatformException], a [FirebaseException] is returned.
 Exception convertPlatformException(Object exception,
-    [StackTrace /*?*/ stackTrace]) {
+    [StackTrace? stackTrace]) {
   if (exception is! Exception || exception is! PlatformException) {
-    return exception;
+    return exception as Exception;
   }
 
   return platformExceptionToFirebaseException(
-      exception as PlatformException, stackTrace);
+      exception, stackTrace);
 }
 
 /// Catches a [PlatformException] and converts it into a [FirebaseException] if
 /// it was intentionally caught on the native platform.
-Future<T> catchFuturePlatformException<T>(Object /*!*/ exception,
-    [StackTrace stackTrace]) {
+Future<T> catchFuturePlatformException<T>(Object exception,
+    [StackTrace? stackTrace]) {
   if (exception is! Exception || exception is! PlatformException) {
     return Future.error(exception, stackTrace);
   }
 
   return Future<T>.error(platformExceptionToFirebaseException(
-      exception as PlatformException, stackTrace));
+      exception, stackTrace));
 }
 
 /// Converts a [PlatformException] into a [FirebaseException].
@@ -41,8 +41,8 @@ Future<T> catchFuturePlatformException<T>(Object /*!*/ exception,
 /// which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseException(
     PlatformException platformException,
-    [StackTrace /*?*/ stackTrace]) {
-  Map<String, String> details = platformException.details != null
+    [StackTrace? stackTrace]) {
+  Map<String, String>? details = platformException.details != null
       ? Map<String, String>.from(platformException.details)
       : null;
 

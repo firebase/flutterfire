@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -23,7 +21,6 @@ abstract class TaskPlatform extends PlatformInterface {
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
   static void verifyExtends(TaskPlatform instance) {
-    assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
   }
 
@@ -39,7 +36,7 @@ abstract class TaskPlatform extends PlatformInterface {
   }
 
   /// The latest [TaskSnapshot] for this task.
-  TaskSnapshotPlatform /*!*/ get snapshot {
+  TaskSnapshotPlatform get snapshot {
     throw UnimplementedError('snapshot is not implemented');
   }
 

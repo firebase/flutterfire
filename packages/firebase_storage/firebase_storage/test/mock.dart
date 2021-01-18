@@ -80,7 +80,7 @@ class MockFirebaseStorage extends Mock
 }
 
 class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
-  TestFirebaseStoragePlatform() : super();
+  TestFirebaseStoragePlatform() : super(bucket: '');
 
   @override
   FirebaseStoragePlatform delegateFor({FirebaseApp app, String bucket}) {

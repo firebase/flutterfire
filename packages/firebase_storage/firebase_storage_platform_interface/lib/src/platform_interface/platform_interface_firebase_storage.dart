@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -18,35 +18,35 @@ import '../method_channel/method_channel_firebase_storage.dart';
 /// other Flutter supported platforms.
 abstract class FirebaseStoragePlatform extends PlatformInterface {
   /// Create an instance using [app]
-  FirebaseStoragePlatform({this.appInstance, this.bucket})
+  FirebaseStoragePlatform({this.appInstance, required this.bucket})
       : super(token: _token);
 
   /// Returns a [FirebaseStoragePlatform] with the provided arguments.
   factory FirebaseStoragePlatform.instanceFor(
-      {FirebaseApp /*!*/ app, String /*!*/ bucket}) {
+      {required FirebaseApp app, required String bucket}) {
     return FirebaseStoragePlatform.instance
         .delegateFor(app: app, bucket: bucket);
   }
 
   @protected
   // ignore: public_member_api_docs
-  final FirebaseApp appInstance;
+  final FirebaseApp? appInstance;
 
   /// The storage bucket of this instance.
-  final String /*!*/ bucket;
+  final String bucket;
 
   static final Object _token = Object();
 
   /// Returns the [FirebaseApp] for the current instance.
-  FirebaseApp /*!*/ get app {
+  FirebaseApp get app {
     if (appInstance == null) {
       return Firebase.app();
     }
 
-    return appInstance;
+    return appInstance!;
   }
 
-  static FirebaseStoragePlatform _instance;
+  static FirebaseStoragePlatform? _instance;
 
   /// The current default [FirebaseStoragePlatform] instance.
   ///
@@ -58,7 +58,6 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
 
   /// Sets the [FirebaseStoragePlatform.instance]
   static set instance(FirebaseStoragePlatform instance) {
-    assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
@@ -81,8 +80,8 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseStoragePlatform /*!*/ delegateFor(
-      {FirebaseApp /*!*/ app, String /*!*/ bucket}) {
+  FirebaseStoragePlatform delegateFor(
+      {required FirebaseApp app, required String bucket}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
