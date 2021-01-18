@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -19,7 +21,7 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
   final FirebaseApp appInstance;
 
   /// The storage bucket of this instance.
-  final String bucket;
+  final String /*!*/ bucket;
 
   /// Create an instance using [app]
   FirebaseStoragePlatform({this.appInstance, this.bucket})
@@ -29,13 +31,13 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
 
   /// Returns a [FirebaseStoragePlatform] with the provided arguments.
   factory FirebaseStoragePlatform.instanceFor(
-      {FirebaseApp app, String bucket}) {
+      {FirebaseApp /*!*/ app, String /*!*/ bucket}) {
     return FirebaseStoragePlatform.instance
         .delegateFor(app: app, bucket: bucket);
   }
 
   /// Returns the [FirebaseApp] for the current instance.
-  FirebaseApp get app {
+  FirebaseApp /*!*/ get app {
     if (appInstance == null) {
       return Firebase.app();
     }
@@ -81,7 +83,8 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseStoragePlatform delegateFor({FirebaseApp app, String bucket}) {
+  FirebaseStoragePlatform /*!*/ delegateFor(
+      {FirebaseApp /*!*/ app, String /*!*/ bucket}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 

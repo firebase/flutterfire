@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_crashlytics_platform_interface/firebase_crashlytics_platform_interface.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +13,7 @@ typedef Callback(MethodCall call);
 
 final List<MethodCall> methodCallLog = <MethodCall>[];
 
-setupFirebaseCrashlyticsMocks([Callback customHandlers]) {
+setupFirebaseCrashlyticsMocks([Callback /*?*/ customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
@@ -24,8 +26,8 @@ MockTaskSnapshotPlatform mockTaskSnapshotPlatform = MockTaskSnapshotPlatform();
 
 void main() {
   setupFirebaseStorageMocks();
-  FirebaseStorage storage;
-  TaskSnapshot taskSnapshot;
+  /*late*/ FirebaseStorage storage;
+  /*late*/ TaskSnapshot taskSnapshot;
   FullMetadata fullMetadata = FullMetadata(testMetadata);
 
   group('$TaskSnapshot', () {

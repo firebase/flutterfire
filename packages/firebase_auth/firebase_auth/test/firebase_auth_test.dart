@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:async/async.dart';
@@ -20,7 +22,7 @@ MockFirebaseAuth mockAuthPlatform = MockFirebaseAuth();
 void main() {
   setupFirebaseAuthMocks();
 
-  FirebaseAuth auth;
+  /*late*/ FirebaseAuth auth;
 
   const String kMockActionCode = '12345';
   const String kMockEmail = 'test@example.com';
@@ -63,12 +65,12 @@ void main() {
     ],
   };
 
-  MockUserPlatform mockUserPlatform;
-  MockUserCredentialPlatform mockUserCredPlatform;
-  MockConfirmationResultPlatform mockConfirmationResultPlatform;
-  MockRecaptchaVerifier mockVerifier;
-  AdditionalUserInfo mockAdditionalUserInfo;
-  EmailAuthCredential mockCredential;
+  /*late*/ MockUserPlatform mockUserPlatform;
+  /*late*/ MockUserCredentialPlatform mockUserCredPlatform;
+  /*late*/ MockConfirmationResultPlatform mockConfirmationResultPlatform;
+  /*late*/ MockRecaptchaVerifier mockVerifier;
+  /*late*/ AdditionalUserInfo mockAdditionalUserInfo;
+  /*late*/ EmailAuthCredential mockCredential;
 
   group("$FirebaseAuth", () {
     Map<String, dynamic> user;

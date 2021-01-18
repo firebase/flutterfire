@@ -11,38 +11,42 @@ void main() {
   group('$FirebaseOptions', () {
     test('should return true if instances are the same', () {
       const options1 = FirebaseOptions(
-          apiKey: 'apiKey',
-          appId: 'appId',
-          messagingSenderId: 'messagingSenderId',
-          projectId: 'projectId');
+        apiKey: 'apiKey',
+        appId: 'appId',
+        messagingSenderId: 'messagingSenderId',
+        projectId: 'projectId',
+      );
 
       const options2 = FirebaseOptions(
-          apiKey: 'apiKey',
-          appId: 'appId',
-          messagingSenderId: 'messagingSenderId',
-          projectId: 'projectId');
+        apiKey: 'apiKey',
+        appId: 'appId',
+        messagingSenderId: 'messagingSenderId',
+        projectId: 'projectId',
+      );
 
       expect(options1 == options2, isTrue);
     });
 
     test('should not return equal if instances are the different', () {
       const options1 = FirebaseOptions(
-          apiKey: 'apiKey',
-          appId: 'appId',
-          messagingSenderId: 'messagingSenderId',
-          projectId: 'projectId');
+        apiKey: 'apiKey',
+        appId: 'appId',
+        messagingSenderId: 'messagingSenderId',
+        projectId: 'projectId',
+      );
 
       const options2 = FirebaseOptions(
-          apiKey: 'apiKey2',
-          appId: 'appId2',
-          messagingSenderId: 'messagingSenderId2',
-          projectId: 'projectId2');
+        apiKey: 'apiKey2',
+        appId: 'appId2',
+        messagingSenderId: 'messagingSenderId2',
+        projectId: 'projectId2',
+      );
 
       expect(options1 == options2, isFalse);
     });
 
     test('should construct an instance from a Map', () {
-      FirebaseOptions options1 = FirebaseOptions.fromMap({
+      FirebaseOptions options1 = FirebaseOptions.fromMap(const {
         'apiKey': 'apiKey',
         'appId': 'appId',
         'messagingSenderId': 'messagingSenderId',
@@ -50,10 +54,11 @@ void main() {
       });
 
       FirebaseOptions options2 = const FirebaseOptions(
-          apiKey: 'apiKey',
-          appId: 'appId',
-          messagingSenderId: 'messagingSenderId',
-          projectId: 'projectId');
+        apiKey: 'apiKey',
+        appId: 'appId',
+        messagingSenderId: 'messagingSenderId',
+        projectId: 'projectId',
+      );
 
       expect(options1 == options2, isTrue);
     });

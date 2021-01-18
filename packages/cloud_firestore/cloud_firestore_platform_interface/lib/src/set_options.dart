@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'field_path.dart';
 
 /// An options class that configures the behavior of set() calls in [DocumentReference],
@@ -11,17 +13,17 @@ class SetOptions {
   /// in its data argument.
   ///
   /// Fields omitted from the set() call remain untouched.
-  final bool merge;
+  final bool /*?*/ merge;
 
   /// Changes the behavior of set() calls to only replace the specified field paths.
   ///
   /// Any field path that is not specified is ignored and remains untouched.
-  List<FieldPath> mergeFields;
+  List<FieldPath> /*?*/ mergeFields;
 
   /// Creates a [SetOptions] instance.
   SetOptions({
     this.merge,
-    List<dynamic> mergeFields,
+    List<dynamic> /*?*/ mergeFields,
   }) {
     assert(!(merge == null && mergeFields == null),
         "options must provide 'merge' or 'mergeFields'");

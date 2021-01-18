@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 import '../utils/codec_utility.dart';
@@ -79,7 +81,7 @@ SnapshotMetadataPlatform convertWebSnapshotMetadata(
 }
 
 /// Converts a [GetOptions] to a [web.GetOptions].
-firestore_interop.GetOptions convertGetOptions(GetOptions options) {
+firestore_interop.GetOptions /*?*/ convertGetOptions(GetOptions /*?*/ options) {
   if (options == null) return null;
 
   var source;
@@ -104,7 +106,7 @@ firestore_interop.GetOptions convertGetOptions(GetOptions options) {
 }
 
 /// Converts a [SetOptions] to a [web.SetOptions].
-firestore_interop.SetOptions convertSetOptions(SetOptions options) {
+firestore_interop.SetOptions /*?*/ convertSetOptions(SetOptions options) {
   if (options == null) return null;
 
   var parsedOptions;

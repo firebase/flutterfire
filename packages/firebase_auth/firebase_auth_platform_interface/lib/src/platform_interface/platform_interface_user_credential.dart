@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_auth_platform_interface/src/platform_interface/platform_interface_user.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -12,7 +14,10 @@ import '../../firebase_auth_platform_interface.dart';
 abstract class UserCredentialPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
   UserCredentialPlatform(
-      {this.auth, this.additionalUserInfo, this.credential, this.user})
+      {/*required*/ this.auth,
+      this.additionalUserInfo,
+      this.credential,
+      this.user})
       : super(token: _token);
 
   static final Object _token = Object();
@@ -25,7 +30,7 @@ abstract class UserCredentialPlatform extends PlatformInterface {
   }
 
   /// The current FirebaseAuth instance.
-  final FirebaseAuthPlatform auth;
+  final FirebaseAuthPlatform /*!*/ auth;
 
   /// Returns additional information about the user, such as whether they are a
   /// newly created one.

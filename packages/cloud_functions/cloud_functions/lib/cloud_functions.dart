@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 library cloud_functions;
 
 import 'dart:async';
@@ -14,11 +16,7 @@ import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
 export 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart'
-    show
-        // ignore: deprecated_member_use
-        CloudFunctionsException,
-        HttpsCallableOptions,
-        FirebaseFunctionsException;
+    show HttpsCallableOptions, FirebaseFunctionsException;
 
 part 'src/firebase_functions.dart';
 part 'src/https_callable.dart';

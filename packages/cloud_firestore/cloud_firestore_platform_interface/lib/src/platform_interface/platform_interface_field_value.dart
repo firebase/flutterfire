@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 /// A representation of a `FieldValue` that lives in the platform interface
 /// and wraps an opaque value.
 ///
@@ -17,8 +19,4 @@ class FieldValuePlatform {
   /// through to the underlying implementation.
   static dynamic getDelegate(FieldValuePlatform fieldValue) =>
       fieldValue._delegate;
-
-  /// No-op method kept in place to avoid a breaking change.
-  @Deprecated('It is no longer necessary to call this method.')
-  static void verifyExtends(FieldValuePlatform instance) {}
 }

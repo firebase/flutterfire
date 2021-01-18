@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of cloud_firestore;
 
 /// The entry point for accessing a [FirebaseFirestore].
@@ -21,7 +23,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   // instance with the default app before a user specifies an app.
   FirebaseFirestorePlatform _delegatePackingProperty;
 
-  FirebaseFirestorePlatform get _delegate {
+  FirebaseFirestorePlatform /*!*/ get _delegate {
     if (_delegatePackingProperty == null) {
       _delegatePackingProperty =
           FirebaseFirestorePlatform.instanceFor(app: app);
@@ -32,7 +34,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// The [FirebaseApp] for this current [FirebaseFirestore] instance.
   FirebaseApp app;
 
-  FirebaseFirestore._({this.app})
+  FirebaseFirestore._({/*required*/ this.app})
       : super(app.name, 'plugins.flutter.io/firebase_firestore');
 
   static final Map<String, FirebaseFirestore> _cachedInstances = {};
@@ -45,7 +47,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  static FirebaseFirestore instanceFor({FirebaseApp app}) {
+  static FirebaseFirestore /*!*/ instanceFor({FirebaseApp app}) {
     assert(app != null);
     if (_cachedInstances.containsKey(app.name)) {
       return _cachedInstances[app.name];
@@ -55,13 +57,6 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     _cachedInstances[app.name] = newInstance;
 
     return newInstance;
-  }
-
-  // ignore: public_member_api_docs
-  @Deprecated(
-      "Constructing Firestore is deprecated, use 'FirebaseFirestore.instance' or 'FirebaseFirestore.instanceFor' instead")
-  factory FirebaseFirestore({FirebaseApp app}) {
-    return FirebaseFirestore.instanceFor(app: app);
   }
 
   /// Gets a [CollectionReference] for the specified Firestore path.
@@ -132,10 +127,6 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return DocumentReference._(this, _delegate.doc(documentPath));
   }
 
-  @Deprecated("Deprecated in favor of `.doc()`")
-  // ignore: public_member_api_docs
-  DocumentReference document(String documentPath) => doc(documentPath);
-
   /// Enables the network for this instance. Any pending local-only writes
   /// will be written to the remote servers.
   Future<void> enableNetwork() {
@@ -169,7 +160,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// By default transactions are limited to 5 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
-  Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
+  Future<T /*?*/ > runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
     assert(transactionHandler != null, "transactionHandler cannot be null");
 
@@ -230,30 +221,8 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       o is FirebaseFirestore && o.app.name == app.name;
 
   @override
-  int get hashCode => hash2(app.name, app.options);
+  int get hashCode => hashValues(app.name, app.options);
 
   @override
   String toString() => '$FirebaseFirestore(app: ${app.name})';
-}
-
-/// Extends the [FirebaseFirestore] class to allow for deprecated usage of
-/// using [Firebase] directly.
-@Deprecated("Class Firestore is deprecated, use 'FirebaseFirestore' instead.")
-class Firestore extends FirebaseFirestore {
-  // ignore: public_member_api_docs
-  @Deprecated(
-      "Constructing Firestore is deprecated, use 'FirebaseFirestore.instance' or 'FirebaseFirestore.instanceFor' instead")
-  factory Firestore({FirebaseApp app}) {
-    return FirebaseFirestore.instanceFor(app: app);
-  }
-
-  /// Returns an instance using the default [FirebaseApp].
-  static FirebaseFirestore get instance {
-    return FirebaseFirestore.instance;
-  }
-
-  /// Returns an instance using a specified [FirebaseApp].
-  static FirebaseFirestore instanceFor({FirebaseApp app}) {
-    return FirebaseFirestore.instanceFor(app: app);
-  }
 }

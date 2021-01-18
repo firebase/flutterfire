@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user_credential.dart';
@@ -13,7 +15,7 @@ import '../mock.dart';
 void main() {
   setupFirebaseAuthMocks();
 
-  FirebaseAuthPlatform auth;
+  /*late*/ FirebaseAuthPlatform auth;
   final String kMockUid = '12345';
   final String kMockUsername = 'fluttertestuser';
   final String kMockEmail = 'test@example.com';
@@ -38,8 +40,8 @@ void main() {
   };
 
   group('$MethodChannelUserCredential()', () {
-    MethodChannelUserCredential userCredential;
-    Map<String, dynamic> userData = kMockInitialUserData;
+    /*late*/ MethodChannelUserCredential userCredential;
+    /*late*/ Map<String, dynamic> userData = kMockInitialUserData;
 
     setUpAll(() async {
       await Firebase.initializeApp();

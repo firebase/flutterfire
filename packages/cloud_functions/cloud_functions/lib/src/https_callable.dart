@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of cloud_functions;
 
 /// A reference to a particular Callable HTTPS trigger in Cloud Functions.
@@ -30,13 +32,6 @@ class HttpsCallable {
     _assertValidParameterType(parameters);
     assert(_delegate != null);
     return HttpsCallableResult<T>._(await _delegate.call(parameters));
-  }
-
-  @Deprecated(
-      "Setting the timeout is deprecated in favor of using [HttpsCallableOptions]")
-  // ignore: public_member_api_docs
-  set timeout(Duration duration) {
-    _delegate.timeout = duration;
   }
 }
 

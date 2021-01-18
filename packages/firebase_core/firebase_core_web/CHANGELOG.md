@@ -1,3 +1,15 @@
+## 0.2.2-nullsafety.0
+
+ - **REFACTOR**: Migrate to non-nullable types (#4656).
+
+## 0.2.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+2
+
+ - Update a dependency to the latest release.
+
 ## 0.2.1+1
 
  - **REFACTOR**: ignore typedefs.

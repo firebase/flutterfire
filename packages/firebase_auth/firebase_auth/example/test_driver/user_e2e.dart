@@ -4,6 +4,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -14,7 +16,7 @@ import './test_utils.dart';
 
 void runUserTests() {
   group('$User', () {
-    FirebaseAuth auth;
+    /*late*/ FirebaseAuth auth;
     String email = generateRandomEmail();
 
     setUpAll(() async {

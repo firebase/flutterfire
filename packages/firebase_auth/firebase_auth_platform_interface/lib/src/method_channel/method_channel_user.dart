@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
@@ -31,7 +33,7 @@ class MethodChannelUser extends UserPlatform {
   }
 
   @override
-  Future<String> getIdToken(bool forceRefresh) async {
+  Future<String /*!*/ > getIdToken(bool forceRefresh) async {
     try {
       Map<String, dynamic> data = await MethodChannelFirebaseAuth.channel
           .invokeMapMethod<String, dynamic>(
@@ -137,7 +139,7 @@ class MethodChannelUser extends UserPlatform {
   }
 
   @override
-  Future<UserPlatform> unlink(String providerId) async {
+  Future<UserPlatform /*!*/ > unlink(String providerId) async {
     try {
       Map<String, dynamic> data = await MethodChannelFirebaseAuth.channel
           .invokeMapMethod<String, dynamic>('User#unlink', <String, dynamic>{
@@ -232,7 +234,7 @@ class MethodChannelUser extends UserPlatform {
 
   @override
   Future<void> verifyBeforeUpdateEmail(String newEmail,
-      [ActionCodeSettings actionCodeSettings]) async {
+      [ActionCodeSettings /*?*/ actionCodeSettings]) async {
     try {
       await MethodChannelFirebaseAuth.channel
           .invokeMethod<void>('User#verifyBeforeUpdateEmail', <String, dynamic>{

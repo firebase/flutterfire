@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 
@@ -28,7 +30,7 @@ abstract class TaskSnapshotPlatform extends PlatformInterface {
   }
 
   /// The current transferred bytes of this task.
-  int get bytesTransferred => _data['bytesTransferred'];
+  int /*!*/ get bytesTransferred => _data['bytesTransferred'];
 
   /// The [FullMetadata] associated with this task.
   ///
@@ -51,5 +53,5 @@ abstract class TaskSnapshotPlatform extends PlatformInterface {
   }
 
   /// The total bytes of the task.
-  int get totalBytes => _data['totalBytes'];
+  int /*!*/ get totalBytes => _data['totalBytes'];
 }

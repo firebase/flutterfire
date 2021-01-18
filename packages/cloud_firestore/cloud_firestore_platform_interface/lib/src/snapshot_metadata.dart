@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 /// Metadata about a snapshot, describing the state of the snapshot.
 class SnapshotMetadataPlatform {
   /// Create an instance of [SnapshotMetadataPlatform]
@@ -14,7 +16,7 @@ class SnapshotMetadataPlatform {
   /// `includeMetadataChanges` parameter set to `true` you will receive another
   /// snapshot with `hasPendingWrites` equal to `false` once the writes have been
   /// committed to the backend.
-  final bool hasPendingWrites;
+  final bool /*!*/ hasPendingWrites;
 
   /// Whether the snapshot was created from cached data rather than guaranteed
   /// up-to-date server data.
@@ -23,5 +25,5 @@ class SnapshotMetadataPlatform {
   /// `includeMetadataChanges` parameter set to `true` you will receive another
   /// snapshot with `isFomCache` equal to `false` once the client has received
   /// up-to-date data from the backend.
-  final bool isFromCache;
+  final bool /*!*/ isFromCache;
 }

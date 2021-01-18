@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:html';
 
@@ -61,7 +63,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
 
     if (container == null || container.isEmpty) {
       parameters['size'] = 'invisible';
-      Element el = window.document.getElementById(_kInvisibleElementId);
+      Element /*?*/ el = window.document.getElementById(_kInvisibleElementId);
 
       // If an existing element exists, something may have already been rendered.
       if (el != null) {
@@ -105,7 +107,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   }
 
   @override
-  auth_interop.ApplicationVerifier get delegate {
+  auth_interop.ApplicationVerifier /*!*/ get delegate {
     return _delegate;
   }
 

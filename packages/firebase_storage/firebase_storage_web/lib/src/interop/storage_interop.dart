@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 // ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, public_member_api_docs
 
 @JS('firebase.storage')
@@ -57,14 +59,14 @@ abstract class ReferenceJsImpl {
 @JS()
 @anonymous
 class FullMetadataJsImpl extends UploadMetadataJsImpl {
-  external String get bucket;
-  external String get fullPath;
-  external String get generation;
-  external String get metageneration;
-  external String get name;
-  external int get size;
-  external String get timeCreated;
-  external String get updated;
+  external String /*?*/ get bucket;
+  external String /*?*/ get fullPath;
+  external String /*?*/ get generation;
+  external String /*?*/ get metageneration;
+  external String /*?*/ get name;
+  external int /*?*/ get size;
+  external String /*?*/ get timeCreated;
+  external String /*?*/ get updated;
 
   external factory FullMetadataJsImpl(
       {String md5Hash,
@@ -79,7 +81,7 @@ class FullMetadataJsImpl extends UploadMetadataJsImpl {
 @JS()
 @anonymous
 class UploadMetadataJsImpl extends SettableMetadataJsImpl {
-  external String get md5Hash;
+  external String /*?*/ get md5Hash;
   external set md5Hash(String s);
 
   external factory UploadMetadataJsImpl(

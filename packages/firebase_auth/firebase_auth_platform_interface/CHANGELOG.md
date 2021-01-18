@@ -1,3 +1,14 @@
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: bubble exceptions (#3700).
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs (#4590).
+
 ## 2.1.4
 
  - Update a dependency to the latest release.

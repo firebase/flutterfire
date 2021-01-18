@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,10 +14,10 @@ import '../mock.dart';
 void main() {
   setupFirebaseAuthMocks();
 
-  TestFirebaseAuthPlatform firebaseAuthPlatform;
+  /*late*/ TestFirebaseAuthPlatform firebaseAuthPlatform;
 
-  FirebaseApp app;
-  FirebaseApp secondaryApp;
+  /*late*/ FirebaseApp app;
+  /*late*/ FirebaseApp secondaryApp;
   group('$FirebaseAuthPlatform()', () {
     setUpAll(() async {
       app = await Firebase.initializeApp();

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:meta/meta.dart';
 
 /// Interface representing ID token result obtained from [getIdTokenResult].
@@ -17,7 +19,7 @@ class IdTokenResult {
   @protected
   IdTokenResult(this._data);
 
-  final Map<String, dynamic> _data;
+  final Map<String, dynamic> /*!*/ _data;
 
   /// The authentication time formatted as UTC string. This is the time the user
   /// authenticated (signed in) and not the time the token was refreshed.

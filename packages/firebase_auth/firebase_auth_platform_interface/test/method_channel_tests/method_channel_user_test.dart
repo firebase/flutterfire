@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,7 +18,7 @@ void main() {
   final List<MethodCall> log = <MethodCall>[];
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
-  FirebaseAuthPlatform auth;
+  /*late*/ FirebaseAuthPlatform auth;
   const String kMockProviderId = 'firebase';
   const String kMockUid = '12345';
   const String kMockDisplayName = 'Flutter Test User';
@@ -79,8 +81,8 @@ void main() {
   }
 
   group('$MethodChannelUser', () {
-    Map<String, dynamic> user;
-    List kMockProviderData;
+    /*late*/ Map<String, dynamic> user;
+    /*late*/ List kMockProviderData;
 
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();

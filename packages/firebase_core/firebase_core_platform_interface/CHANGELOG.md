@@ -1,3 +1,17 @@
+## 3.0.2-nullsafety.0
+
+ - **REFACTOR**: Migrate to non-nullable types (#4656).
+
+## 3.0.1
+
+ - **DOCS**: installation links updated (#4479).
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+
 ## 2.1.0
 
  - **FEAT**: add FirebaseException.stackTrace support (#4095).

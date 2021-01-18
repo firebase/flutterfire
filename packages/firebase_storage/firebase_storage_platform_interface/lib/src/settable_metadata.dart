@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 /// The settable metadata a storage object reference can be set with.
 class SettableMetadata {
   /// Creates a new [SettableMetadata] instance.

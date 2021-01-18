@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'auth_credential.dart';
@@ -13,7 +15,7 @@ class FirebaseAuthException extends FirebaseException implements Exception {
   @protected
   FirebaseAuthException(
       {@required this.message,
-      this.code,
+      @required this.code,
       this.email,
       this.credential,
       this.phoneNumber,

@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
 import 'package:cloud_firestore_web/src/utils/exception.dart';
@@ -24,7 +26,7 @@ class QueryWeb extends QueryPlatform {
     this._firestore,
     this._path,
     this._webQuery, {
-    Map<String, dynamic> parameters,
+    /*required*/ Map<String, dynamic> parameters,
     this.isCollectionGroupQuery = false,
   }) : super(_firestore, parameters);
 
@@ -119,7 +121,7 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  Future<QuerySnapshotPlatform> get([GetOptions options]) async {
+  Future<QuerySnapshotPlatform> get([GetOptions /*?*/ options]) async {
     try {
       return convertWebQuerySnapshot(firestore,
           await _buildWebQueryWithParameters().get(convertGetOptions(options)));

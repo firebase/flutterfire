@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 
@@ -21,7 +23,3 @@ class FirebaseFunctionsException extends FirebaseException
   /// Additional data provided with the exception.
   final dynamic details;
 }
-
-@Deprecated("Deprecated in favor of FirebaseFunctionsException")
-// ignore: public_member_api_docs
-class CloudFunctionsException extends FirebaseFunctionsException {}

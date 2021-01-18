@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,8 +13,8 @@ import '../mock.dart';
 void main() {
   setupFirebaseAuthMocks();
 
-  TestUserPlatform userPlatform;
-  FirebaseAuthPlatform auth;
+  /*late*/ TestUserPlatform userPlatform;
+  /*late*/ FirebaseAuthPlatform auth;
   final String kMockProviderId = 'firebase';
   final String kMockUid = '12345';
   final String kMockDisplayName = 'Flutter Test User';

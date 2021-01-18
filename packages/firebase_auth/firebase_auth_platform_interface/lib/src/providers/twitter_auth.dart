@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/auth_provider.dart';
 import 'package:meta/meta.dart';
@@ -77,22 +79,14 @@ class TwitterAuthProvider extends AuthProvider {
       secret: secret,
     );
   }
-
-  @Deprecated('Deprecated in favor of `TwitterAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential(
-      {@required String accessToken, @required String secret}) {
-    return TwitterAuthProvider.credential(
-        accessToken: accessToken, secret: secret);
-  }
 }
 
 /// The auth credential returned from calling
 /// [TwitterAuthProvider.credential].
 class TwitterAuthCredential extends OAuthCredential {
   TwitterAuthCredential._({
-    String accessToken,
-    String secret,
+    @required String /*!*/ accessToken,
+    @required String /*!*/ secret,
   }) : super(
             providerId: _kProviderId,
             signInMethod: _kProviderId,

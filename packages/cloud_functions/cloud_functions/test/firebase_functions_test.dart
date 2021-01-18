@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
@@ -68,13 +70,6 @@ void main() {
 
   test('httpsCallable()', () {
     functions.httpsCallable('testName');
-    verify(kMockFirebaseFunctionsPlatform.httpsCallable(any, 'testName', any));
-  });
-
-//
-  test('getHttpsCallable()', () {
-    // ignore: deprecated_member_use_from_same_package
-    functions.getHttpsCallable(functionName: 'testName');
     verify(kMockFirebaseFunctionsPlatform.httpsCallable(any, 'testName', any));
   });
 }

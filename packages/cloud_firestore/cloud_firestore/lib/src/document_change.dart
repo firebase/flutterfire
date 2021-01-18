@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of cloud_firestore;
 
 /// A [DocumentChange] represents a change to the documents matching a query.
@@ -36,8 +38,4 @@ class DocumentChange {
   /// Returns the [DocumentSnapshot] for this instance.
   DocumentSnapshot get doc =>
       DocumentSnapshot._(_firestore, _delegate.document);
-
-  @Deprecated("Deprecated in favor of .doc")
-  // ignore: public_member_api_docs
-  DocumentSnapshot get document => doc;
 }

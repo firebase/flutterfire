@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_auth;
 
 /// A user account.
@@ -17,14 +19,14 @@ class User {
   /// The users display name.
   ///
   /// Will be `null` if signing in anonymously or via password authentication.
-  String get displayName {
+  String /*?*/ get displayName {
     return _delegate.displayName;
   }
 
   /// The users email address.
   ///
   /// Will be `null` if signing in anonymously.
-  String get email {
+  String /*?*/ get email {
     return _delegate.email;
   }
 
@@ -52,7 +54,7 @@ class User {
   ///
   /// This property will be `null` if the user has not signed in or been has
   /// their phone number linked.
-  String get phoneNumber {
+  String /*?*/ get phoneNumber {
     return _delegate.phoneNumber;
   }
 
@@ -60,16 +62,7 @@ class User {
   ///
   /// This property will be populated if the user has signed in or been linked
   /// with a 3rd party OAuth provider (such as Google).
-  String get photoURL {
-    return _delegate.photoURL;
-  }
-
-  /// Returns a photo URL for the user.
-  ///
-  /// This property will be populated if the user has signed in or been linked
-  /// with a 3rd party OAuth provider (such as Google).
-  @Deprecated("Deprecated in favor of 'photoURL'.")
-  String get photoUrl {
+  String /*?*/ get photoURL {
     return _delegate.photoURL;
   }
 
@@ -82,7 +75,7 @@ class User {
   ///
   /// This property maybe `null` or empty if the underlying platform does not
   /// support providing refresh tokens.
-  String get refreshToken {
+  String /*?*/ get refreshToken {
     return _delegate.refreshToken;
   }
 
@@ -91,7 +84,7 @@ class User {
   /// This is a read-only property, which indicates the tenant ID used to sign
   /// in the current user. This is `null` if the user is signed in from the
   /// parent project.
-  String get tenantId {
+  String /*?*/ get tenantId {
     return _delegate.tenantId;
   }
 
@@ -217,7 +210,7 @@ class User {
   ///  Firebase Console. Go to the Firebase Console for your project, in the Auth
   ///  section and the Sign in Method tab and configure the provider.
   Future<ConfirmationResult> linkWithPhoneNumber(String phoneNumber,
-      [RecaptchaVerifier verifier]) async {
+      [RecaptchaVerifier /*?*/ verifier]) async {
     assert(phoneNumber != null);
     assert(phoneNumber.isNotEmpty);
     verifier ??= RecaptchaVerifier();
@@ -342,8 +335,9 @@ class User {
   }
 
   /// Updates a user's profile data.
-  Future<void> updateProfile({String displayName, String photoURL}) async {
-    await _delegate.updateProfile(<String, String>{
+  Future<void> updateProfile(
+      {String /*?*/ displayName, String /*?*/ photoURL}) async {
+    await _delegate.updateProfile(<String, String /*?*/ >{
       'displayName': displayName,
       'photoURL': photoURL,
     });
@@ -364,11 +358,4 @@ class User {
   String toString() {
     return '$User(displayName: $displayName, email: $email, emailVerified: $emailVerified, isAnonymous: $isAnonymous, metadata: ${metadata.toString()}, phoneNumber: $phoneNumber, photoURL: $photoURL, providerData, ${providerData.toString()}, refreshToken: $refreshToken, tenantId: $tenantId, uid: $uid)';
   }
-}
-
-@Deprecated(
-    "Deprecated in favor of `User`. When updating your code it is recommended to namespace your 'firebase_auth' import to avoid class naming conflicts if you already have a 'User' class in your project e.g. `import 'package:firebase_auth/firebase_auth.dart' as auth;`, `User` then becomes `auth.User`.")
-// ignore: public_member_api_docs
-class FirebaseUser extends User {
-  FirebaseUser._(FirebaseAuth auth, UserPlatform user) : super._(auth, user);
 }

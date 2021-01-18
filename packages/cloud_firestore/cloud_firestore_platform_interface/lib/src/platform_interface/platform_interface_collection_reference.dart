@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 
@@ -25,8 +27,8 @@ abstract class CollectionReferencePlatform extends QueryPlatform {
   /// For subcollections, parent returns the containing [DocumentReferencePlatform].
   ///
   /// For root collections, `null` is returned.
-  DocumentReferencePlatform get parent {
-    String parentPath = _pointer.parentPath();
+  DocumentReferencePlatform /*?*/ get parent {
+    String /*?*/ parentPath = _pointer.parentPath();
 
     if (parentPath == null) {
       return null;
@@ -45,7 +47,7 @@ abstract class CollectionReferencePlatform extends QueryPlatform {
   ///
   /// The unique key generated is prefixed with a client-generated timestamp
   /// so that the resulting list will be chronologically-sorted.
-  DocumentReferencePlatform doc([String path]) {
+  DocumentReferencePlatform doc([String /*?*/ path]) {
     throw UnimplementedError("doc() is not implemented");
   }
 

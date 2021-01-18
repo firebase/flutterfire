@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -100,15 +102,6 @@ void main() {
         };
         await kHttpsCallable(parameters);
         verify(kMockHttpsCallablePlatform(parameters));
-      });
-    });
-
-    group('set.timeout (deprecated)', () {
-      test('sets timeout value', () async {
-        // ignore: deprecated_member_use_from_same_package
-        kHttpsCallable.timeout = Duration(minutes: 2);
-
-        verify(kMockHttpsCallablePlatform.timeout = Duration(minutes: 2));
       });
     });
   });

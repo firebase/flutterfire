@@ -1,3 +1,14 @@
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: Move Snapshot handling into a EventChannel (#4209).
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs (#4594).
+
 ## 2.2.1
 
  - Update a dependency to the latest release.

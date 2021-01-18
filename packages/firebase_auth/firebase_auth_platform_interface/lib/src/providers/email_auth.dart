@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/auth_provider.dart';
 import 'package:meta/meta.dart';
@@ -48,24 +50,6 @@ abstract class EmailAuthProvider extends AuthProvider {
     assert(email != null);
     assert(emailLink != null);
     return EmailAuthCredential._credentialWithLink(email, emailLink);
-  }
-
-  @Deprecated('Deprecated in favor of `EmailAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential({
-    @required String email,
-    @required String password,
-  }) {
-    return EmailAuthProvider.credential(email: email, password: password);
-  }
-
-  @Deprecated('Deprecated in favor of `EmailAuthProvider.credentialWithLink()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredentialWithLink({
-    @required String email,
-    @required String link,
-  }) {
-    return EmailAuthProvider.credentialWithLink(email: email, emailLink: link);
   }
 }
 

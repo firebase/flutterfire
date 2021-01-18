@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
@@ -20,7 +22,7 @@ void main() {
   );
 
   MethodChannelFirebaseFirestore.channel.setMockMethodCallHandler((call) async {
-    DocumentReferencePlatform ref = call.arguments['reference'];
+    DocumentReferencePlatform /*!*/ ref = call.arguments['reference'];
     if (call.method == 'DocumentReference#get' && ref.path == 'doc/exists') {
       return {
         'data': {
@@ -68,7 +70,7 @@ void main() {
     return null;
   });
 
-  FirebaseFirestore firestore;
+  /*late*/ FirebaseFirestore firestore;
 
   group("$DocumentSnapshot", () {
     setUpAll(() async {

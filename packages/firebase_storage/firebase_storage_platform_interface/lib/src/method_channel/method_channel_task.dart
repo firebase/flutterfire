@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
@@ -46,7 +48,7 @@ abstract class MethodChannelTask extends TaskPlatform {
 
     // Get the task stream.
     _stream = MethodChannelFirebaseStorage.taskObservers[_handle].stream;
-    StreamSubscription _subscription;
+    /*late*/ StreamSubscription _subscription;
 
     // Listen for stream events.
     _subscription = _stream.listen((TaskSnapshotPlatform snapshot) async {
@@ -212,7 +214,7 @@ class MethodChannelPutFileTask extends MethodChannelTask {
       FirebaseStoragePlatform storage,
       String path,
       File file,
-      SettableMetadata metadata) {
+      SettableMetadata /*?*/ metadata) {
     return () => MethodChannelFirebaseStorage.channel
             .invokeMethod<void>('Task#startPutFile', <String, dynamic>{
           'appName': storage.app.name,
@@ -237,7 +239,7 @@ class MethodChannelPutStringTask extends MethodChannelTask {
       String path,
       String data,
       PutStringFormat format,
-      SettableMetadata metadata)
+      SettableMetadata /*?*/ metadata)
       : super(handle, storage, path,
             _getTask(handle, storage, path, data, format, metadata));
 
@@ -247,7 +249,7 @@ class MethodChannelPutStringTask extends MethodChannelTask {
       String path,
       String data,
       PutStringFormat format,
-      SettableMetadata metadata) {
+      SettableMetadata /*?*/ metadata) {
     return () => MethodChannelFirebaseStorage.channel
             .invokeMethod<void>('Task#startPutString', <String, dynamic>{
           'appName': storage.app.name,
@@ -268,7 +270,7 @@ class MethodChannelPutStringTask extends MethodChannelTask {
 class MethodChannelPutTask extends MethodChannelTask {
   // ignore: public_member_api_docs
   MethodChannelPutTask(int handle, FirebaseStoragePlatform storage, String path,
-      Uint8List data, SettableMetadata metadata)
+      Uint8List data, SettableMetadata /*?*/ metadata)
       : super(handle, storage, path,
             _getTask(handle, storage, path, data, metadata));
 

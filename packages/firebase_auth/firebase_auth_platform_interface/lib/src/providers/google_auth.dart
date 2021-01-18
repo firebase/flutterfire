@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 const _kProviderId = 'google.com';
@@ -84,13 +86,6 @@ class GoogleAuthProvider extends AuthProvider {
       idToken: idToken,
       accessToken: accessToken,
     );
-  }
-
-  @Deprecated('Deprecated in favor of `GoogleAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential({String idToken, String accessToken}) {
-    return GoogleAuthProvider.credential(
-        idToken: idToken, accessToken: accessToken);
   }
 }
 

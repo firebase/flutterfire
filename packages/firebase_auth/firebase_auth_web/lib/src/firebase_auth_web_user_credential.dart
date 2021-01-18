@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'interop/auth.dart' as auth_interop;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
@@ -15,8 +17,10 @@ class UserCredentialWeb extends UserCredentialPlatform {
       FirebaseAuthPlatform auth, auth_interop.UserCredential webUserCredential)
       : super(
           auth: auth,
+          // TODO(ehesp): confirm after platform migration this is nullable
           additionalUserInfo: convertWebAdditionalUserInfo(
               webUserCredential.additionalUserInfo),
+          // TODO(ehesp): confirm after platform migration this is nullable
           credential: convertWebOAuthCredential(webUserCredential.credential),
           user: UserWeb(auth, webUserCredential.user),
         );

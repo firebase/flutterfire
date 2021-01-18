@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 
 import 'method_channel_reference.dart';
@@ -13,7 +15,7 @@ class MethodChannelTaskSnapshot extends TaskSnapshotPlatform {
       : super(state, _data);
 
   /// The [FirebaseStoragePlatform] used to create the task.
-  final FirebaseStoragePlatform storage;
+  final FirebaseStoragePlatform /*!*/ storage;
 
   final Map<String, dynamic> _data;
 

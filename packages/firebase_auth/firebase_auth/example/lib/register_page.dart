@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_signin_button/button_builder.dart';
@@ -23,7 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _success;
-  String _userEmail;
+  String _userEmail = '';
 
   @override
   Widget build(BuildContext context) {

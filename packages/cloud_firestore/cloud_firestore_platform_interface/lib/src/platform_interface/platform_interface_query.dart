@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -27,7 +29,7 @@ abstract class QueryPlatform extends PlatformInterface {
   Map<String, dynamic> parameters;
 
   /// Create a [QueryPlatform] instance
-  QueryPlatform(this.firestore, Map<String, dynamic> parameters)
+  QueryPlatform(this.firestore, Map<String, dynamic> /*?*/ parameters)
       : this.parameters = parameters ?? _initialParameters,
         super(token: _token);
 
@@ -112,7 +114,7 @@ abstract class QueryPlatform extends PlatformInterface {
 
   /// Performs a query and returns a [QuerySnapshotPlatform] containing
   /// all documents which match the query.
-  Future<QuerySnapshotPlatform> get([GetOptions options]) {
+  Future<QuerySnapshotPlatform> get([GetOptions /*?*/ options]) {
     throw UnimplementedError("get() is not implemented");
   }
 

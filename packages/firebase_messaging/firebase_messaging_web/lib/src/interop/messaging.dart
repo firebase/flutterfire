@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
@@ -95,8 +97,9 @@ class MessagePayload
   FcmOptions get fcmOptions => jsObject.fcmOptions == null
       ? null
       : FcmOptions._fromJsObject(jsObject.fcmOptions);
-  NotificationPayload get notification =>
-      NotificationPayload._fromJsObject(jsObject.notification);
+  NotificationPayload get notification => jsObject.notification == null
+      ? null
+      : NotificationPayload._fromJsObject(jsObject.notification);
   Map<String, dynamic> get data => dartify(jsObject.data);
   String get from => jsObject.from;
 }

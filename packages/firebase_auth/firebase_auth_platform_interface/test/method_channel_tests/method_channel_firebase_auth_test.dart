@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
@@ -14,7 +16,7 @@ import '../mock.dart';
 
 void main() {
   setupFirebaseAuthMocks();
-  FirebaseAuthPlatform auth;
+  /*late*/ FirebaseAuthPlatform auth;
   final List<MethodCall> log = <MethodCall>[];
   const String regularTestEmail = 'test@email.com';
   const String testPassword = 'testPassword';
@@ -94,7 +96,7 @@ void main() {
   }
 
   group('$MethodChannelFirebaseAuth', () {
-    Map<String, dynamic> user;
+    /*late*/ Map<String, dynamic> user;
 
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
@@ -868,7 +870,7 @@ void main() {
     });
 
     group('verifyPhoneNumber()', () {
-      int handle;
+      /*late*/ int handle;
 
       setUp(() {
         handle = nextMockHandleId;
@@ -933,7 +935,7 @@ void main() {
     });
 
     group('authStateChanges()', () {
-      StreamSubscription<UserPlatform> subscription;
+      /*late*/ StreamSubscription<UserPlatform> subscription;
 
       tearDown(() {
         subscription?.cancel();
@@ -976,7 +978,7 @@ void main() {
     });
 
     group('idTokenChanges()', () {
-      StreamSubscription<UserPlatform> subscription;
+      /*late*/ StreamSubscription<UserPlatform> subscription;
 
       tearDown(() {
         subscription?.cancel();
@@ -1015,7 +1017,7 @@ void main() {
     });
 
     group('userChanges()', () {
-      StreamSubscription<UserPlatform> subscription;
+      /*late*/ StreamSubscription<UserPlatform> subscription;
 
       tearDown(() {
         subscription?.cancel();

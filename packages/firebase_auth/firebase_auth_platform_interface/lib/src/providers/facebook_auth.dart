@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -85,12 +87,6 @@ class FacebookAuthProvider extends AuthProvider {
     return FacebookAuthCredential._credential(
       accessToken,
     );
-  }
-
-  @Deprecated('Deprecated in favor of `FacebookAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential(String token) {
-    return FacebookAuthProvider.credential(token);
   }
 }
 

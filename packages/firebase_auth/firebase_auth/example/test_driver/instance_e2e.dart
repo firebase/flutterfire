@@ -4,6 +4,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +17,7 @@ import './test_utils.dart';
 
 void runInstanceTests() {
   group('$FirebaseAuth.instance', () {
-    FirebaseAuth auth;
+    /*late*/ FirebaseAuth auth;
 
     // generate unique email address for test run
     String regularTestEmail = generateRandomEmail();
@@ -49,8 +51,8 @@ void runInstanceTests() {
     });
 
     group('authStateChanges()', () {
-      StreamSubscription subscription;
-      StreamSubscription subscription2;
+      /*late*/ StreamSubscription subscription;
+      StreamSubscription /*?*/ subscription2;
 
       tearDown(() async {
         await subscription?.cancel();
@@ -91,8 +93,8 @@ void runInstanceTests() {
     });
 
     group('idTokenChanges()', () {
-      StreamSubscription subscription;
-      StreamSubscription subscription2;
+      /*late*/ StreamSubscription subscription;
+      StreamSubscription /*?*/ subscription2;
 
       tearDown(() async {
         await subscription?.cancel();
@@ -133,7 +135,7 @@ void runInstanceTests() {
     });
 
     group('userChanges()', () {
-      StreamSubscription subscription;
+      /*late*/ StreamSubscription subscription;
       tearDown(() async {
         await subscription.cancel();
       });
@@ -141,7 +143,7 @@ void runInstanceTests() {
           () async {
         await ensureSignedIn(regularTestEmail);
 
-        Stream<User> stream = auth.userChanges();
+        Stream<User /*?*/ > stream = auth.userChanges();
         int call = 0;
 
         subscription = stream.listen(expectAsync1((User user) {

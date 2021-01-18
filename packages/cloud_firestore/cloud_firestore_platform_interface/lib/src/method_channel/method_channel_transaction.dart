@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -14,12 +16,12 @@ import 'method_channel_firestore.dart';
 /// communicate with Firebase plugins.
 class MethodChannelTransaction extends TransactionPlatform {
   /// [FirebaseApp] name used for this [MethodChannelTransaction]
-  final String appName;
-  int _transactionId;
-  FirebaseFirestorePlatform _firestore;
+  final String /*!*/ appName;
+  String _transactionId;
+  FirebaseFirestorePlatform /*!*/ _firestore;
 
   /// Constructor.
-  MethodChannelTransaction(int transactionId, this.appName)
+  MethodChannelTransaction(String transactionId, this.appName)
       : _transactionId = transactionId,
         super() {
     _firestore =
