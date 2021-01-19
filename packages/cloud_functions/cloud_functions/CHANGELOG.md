@@ -1,3 +1,7 @@
+## 0.9.1-nullsafety.0
+
+- **REFACTOR**: migrate to NNBD.
+
 ## 0.9.0
 
 > Note: This release has breaking changes.

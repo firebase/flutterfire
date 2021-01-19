@@ -140,13 +140,13 @@ void testsMain() {
     setUpAll(() async {
       timeoutCallable = FirebaseFunctions.instance.httpsCallable(
           kTestFunctionTimeout,
-          options: HttpsCallableOptions(timeout: Duration(seconds: 3)));
+          options: HttpsCallableOptions(timeout: const Duration(seconds: 3)));
     });
 
     test('times out when the provided timeout is exceeded', () async {
       try {
         await timeoutCallable({
-          'testTimeout': Duration(seconds: 6).inMilliseconds.toString(),
+          'testTimeout': const Duration(seconds: 6).inMilliseconds.toString(),
         });
         fail('Should have thrown');
       } on FirebaseFunctionsException catch (e) {
