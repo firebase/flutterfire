@@ -32,6 +32,9 @@ dev_dependencies:
   mockito: ^5.0.0-nullsafety.2
   plugin_platform_interface: ^1.1.0-nullsafety.1
 
+dependency_overrides:
+  http_parser: ^4.0.0-nullsafety
+
 flutter:
   plugin:
     platforms:

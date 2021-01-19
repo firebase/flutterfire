@@ -25,8 +25,11 @@ dev_dependencies:
     sdk: flutter
   flutter_driver:
     sdk: flutter
-  test: any
+  test: ^1.16.0-nullsafety.15
   e2e: ^0.6.1
+
+dependency_overrides:
+  http_parser: ^4.0.0-nullsafety
 
 flutter:
   plugin:
