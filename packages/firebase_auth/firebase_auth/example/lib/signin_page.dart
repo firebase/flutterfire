@@ -165,7 +165,10 @@ class _UserInfoCardState extends State<_UserInfoCard> {
                               : Image.network(provider.photoURL),
                           title: Text(provider.providerId),
                           subtitle: Text(
-                              "${provider.displayName == null ? "" : "${provider.displayName}\n"}${provider.uid}"),
+                              "${provider.uid == null ? "" : "ID: ${provider.uid}\n"}"
+                              "${provider.email == null ? "" : "Email: ${provider.email}\n"}"
+                              "${provider.phoneNumber == null ? "" : "Phone number: ${provider.phoneNumber}\n"}"
+                              "${provider.displayName == null ? "" : "Name: ${provider.displayName}\n"}"),
                         ),
                       ),
                       onDismissed: (action) =>
