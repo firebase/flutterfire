@@ -237,7 +237,7 @@ class MethodChannelUser extends UserPlatform {
   }
 
   @override
-  Future<void> updateProfile(Map<String, String> profile) async {
+  Future<void> updateProfile(Map<String, String?> profile) async {
     try {
       Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
           .invokeMapMethod<String, dynamic>(

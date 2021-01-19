@@ -126,28 +126,25 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<void> _handleAuthStateChangesListener(
     Map<dynamic, dynamic> arguments,
   ) async {
-    try {
-      String appName = arguments['appName'];
-      StreamController<UserPlatform?> streamController =
-          _authStateChangesListeners[appName]!;
-      MethodChannelFirebaseAuth instance =
-          _methodChannelFirebaseAuthInstances[appName]!;
+    String appName = arguments['appName'];
+    // ignore: close_sinks, the sink is not created here, only obtained
+    StreamController<UserPlatform?> streamController =
+        _authStateChangesListeners[appName]!;
+    MethodChannelFirebaseAuth instance =
+        _methodChannelFirebaseAuthInstances[appName]!;
 
-      final Map? userMap = arguments['user'] as Map?;
+    final Map? userMap = arguments['user'] as Map?;
 
-      if (userMap == null) {
-        instance.currentUser = null;
-        streamController.add(null);
-      } else {
-        final MethodChannelUser user =
-            MethodChannelUser(instance, userMap.cast<String, dynamic>());
+    if (userMap == null) {
+      instance.currentUser = null;
+      streamController.add(null);
+    } else {
+      final MethodChannelUser user =
+          MethodChannelUser(instance, userMap.cast<String, dynamic>());
 
-        // TODO(rousselGit): should this logic be moved to the setter instead?
-        instance.currentUser = user;
-        streamController.add(instance.currentUser);
-      }
-    } catch (err, stack) {
-      print('Swallowed error $err\n\n$stack');
+      // TODO(rousselGit): should this logic be moved to the setter instead?
+      instance.currentUser = user;
+      streamController.add(instance.currentUser);
     }
   }
 
@@ -159,8 +156,10 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     Map<dynamic, dynamic> arguments,
   ) async {
     String appName = arguments['appName'];
+    // ignore: close_sinks, the sink is not created here, only obtained
     StreamController<UserPlatform?> idTokenStreamController =
         _idTokenChangesListeners[appName]!;
+    // ignore: close_sinks, the sink is not created here, only obtained
     StreamController<UserPlatform?> userChangesStreamController =
         _userChangesListeners[appName]!;
     MethodChannelFirebaseAuth instance =

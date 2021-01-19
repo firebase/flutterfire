@@ -36,24 +36,14 @@ class FirebaseAuth extends FirebasePluginPlatform {
   static FirebaseAuth get instance {
     FirebaseApp defaultAppInstance = Firebase.app();
 
-    if (!_firebaseAuthInstances.containsKey(defaultAppInstance.name)) {
-      _firebaseAuthInstances[defaultAppInstance.name] = FirebaseAuth._(
-        app: Firebase.app(),
-      );
-    }
-
-    return _firebaseAuthInstances[defaultAppInstance.name]!;
+    return FirebaseAuth.instanceFor(app: defaultAppInstance);
   }
 
   /// Returns an instance using a specified [FirebaseApp].
   factory FirebaseAuth.instanceFor({required FirebaseApp app}) {
-    if (!_firebaseAuthInstances.containsKey(app.name)) {
-      _firebaseAuthInstances[app.name] = FirebaseAuth._(
-        app: app,
-      );
-    }
-
-    return _firebaseAuthInstances[app.name]!;
+    return _firebaseAuthInstances.putIfAbsent(app.name, () {
+      return FirebaseAuth._(app: app);
+    });
   }
 
   /// Returns the current [User] if they are currently signed-in, or `null` if
@@ -64,7 +54,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// subscribe to updates.
   User? get currentUser {
     if (_delegate.currentUser != null) {
-      return User._(this, _delegate.currentUser);
+      return User._(this, _delegate.currentUser!);
     }
 
     return null;

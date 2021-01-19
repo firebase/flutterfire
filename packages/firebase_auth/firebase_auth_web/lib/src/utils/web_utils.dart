@@ -29,7 +29,7 @@ FirebaseAuthException getFirebaseAuthException(Object exception) {
     code: code,
     message: message,
     email: firebaseError.email,
-    credential: convertWebAuthCredential(firebaseError.credential)!,
+    credential: convertWebAuthCredential(firebaseError.credential),
     phoneNumber: firebaseError.phoneNumber,
     tenantId: firebaseError.tenantId,
   );
@@ -57,7 +57,7 @@ AdditionalUserInfo? convertWebAdditionalUserInfo(
 
   return AdditionalUserInfo(
     isNewUser: webAdditionalUserInfo.isNewUser,
-    profile: webAdditionalUserInfo.profile,
+    profile: webAdditionalUserInfo.profile!,
     providerId: webAdditionalUserInfo.providerId,
     username: webAdditionalUserInfo.username,
   );
@@ -65,7 +65,8 @@ AdditionalUserInfo? convertWebAdditionalUserInfo(
 
 /// Converts a [auth_interop.IdTokenResult] into a [IdTokenResult].
 IdTokenResult convertWebIdTokenResult(
-    auth_interop.IdTokenResult webIdTokenResult) {
+  auth_interop.IdTokenResult webIdTokenResult,
+) {
   return IdTokenResult(<String, dynamic>{
     'claims': webIdTokenResult.claims,
     'expirationTimestamp':
@@ -180,7 +181,8 @@ auth_interop.AuthProvider? convertPlatformAuthProvider(
     authProvider.scopes
         .forEach((String scope) => oAuthProvider.addScope(scope));
     oAuthProvider.setCustomParameters(
-        Map<String, dynamic>.from(authProvider.parameters));
+      Map<String, dynamic>.from(authProvider.parameters!),
+    );
     return oAuthProvider;
   }
 
@@ -216,26 +218,28 @@ AuthCredential? convertWebOAuthCredential(
 
 /// Converts a [AuthCredential] into a [firebase.OAuthCredential].
 auth_interop.OAuthCredential? convertPlatformCredential(
-    AuthCredential credential) {
+  AuthCredential credential,
+) {
   if (credential is EmailAuthCredential) {
     if (credential.emailLink != null) {
       return auth_interop.EmailAuthProvider.credentialWithLink(
         credential.email,
-        credential.emailLink,
+        credential.emailLink!,
       );
     }
     return auth_interop.EmailAuthProvider.credential(
       credential.email,
-      credential.password,
+      credential.password!,
     );
   }
 
   if (credential is FacebookAuthCredential) {
-    return auth_interop.FacebookAuthProvider.credential(credential.accessToken);
+    return auth_interop.FacebookAuthProvider.credential(
+        credential.accessToken!);
   }
 
   if (credential is GithubAuthCredential) {
-    return auth_interop.GithubAuthProvider.credential(credential.accessToken);
+    return auth_interop.GithubAuthProvider.credential(credential.accessToken!);
   }
 
   if (credential is GoogleAuthCredential) {
@@ -254,15 +258,15 @@ auth_interop.OAuthCredential? convertPlatformCredential(
 
   if (credential is TwitterAuthCredential) {
     return auth_interop.TwitterAuthProvider.credential(
-      credential.accessToken,
-      credential.secret,
+      credential.accessToken!,
+      credential.secret!,
     );
   }
 
   if (credential is PhoneAuthCredential) {
     return auth_interop.PhoneAuthProvider.credential(
-      credential.verificationId,
-      credential.smsCode,
+      credential.verificationId!,
+      credential.smsCode!,
     );
   }
 

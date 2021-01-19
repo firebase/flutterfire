@@ -102,7 +102,7 @@ class User {
   ///  - Thrown if the user's last sign-in time does not meet the security
   ///    threshold. Use [User.reauthenticateWithCredential] to resolve. This
   ///    does not apply if the user is anonymous.
-  Future<void> delete() {
+  Future<void> delete() async {
     return _delegate.delete();
   }
 

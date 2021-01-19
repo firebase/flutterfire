@@ -492,7 +492,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// This method is only available on web based platforms.
   Future<ConfirmationResultPlatform> signInWithPhoneNumber(
     String phoneNumber,
-    RecaptchaVerifierFactoryPlatform? applicationVerifier,
+    RecaptchaVerifierFactoryPlatform applicationVerifier,
   ) async {
     throw UnimplementedError('signInWithPhoneNumber() is not implemented');
   }

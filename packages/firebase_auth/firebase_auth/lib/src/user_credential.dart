@@ -16,16 +16,16 @@ class UserCredential {
 
   /// Returns additional information about the user, such as whether they are a
   /// newly created one.
-  AdditionalUserInfo get additionalUserInfo => _delegate.additionalUserInfo;
+  AdditionalUserInfo? get additionalUserInfo => _delegate.additionalUserInfo;
 
   /// The users [AuthCredential].
-  AuthCredential get credential => _delegate.credential;
+  AuthCredential? get credential => _delegate.credential;
 
   /// Returns a [User] containing additional information and user specific
   /// methods.
   User? get user {
     // TODO(rousselGit): cache the `user` instance or override == so that ".user == .user"
-    return _delegate.user == null ? null : User._(_auth, _delegate.user);
+    return _delegate.user == null ? null : User._(_auth, _delegate.user!);
   }
 
   @override

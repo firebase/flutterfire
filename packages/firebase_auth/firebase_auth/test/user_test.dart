@@ -7,21 +7,27 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
+// import 'package:mockito/annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import './mock.dart';
-
 import 'package:mockito/mockito.dart';
+
+// import './user_test.mocks.dart';
+import './mock.dart';
 
 Map<String, dynamic> kMockUser1 = <String, dynamic>{
   'isAnonymous': true,
   'emailVerified': false,
   'displayName': 'displayName',
 };
-MockFirebaseAuth mockAuthPlatform = MockFirebaseAuth();
+
+// @GenerateMocks([], customMocks: [
+//   MockSpec<MockFirebaseAuthPlatformBase>(as: #MockFirebaseAuthPlatform),
+//   MockSpec<MockUserPlatformBase>(as: #MockUserPlatform),
+// ])
 void main() {
   setupFirebaseAuthMocks();
 
-  late FirebaseAuth auth;
+  FirebaseAuth? auth;
 
   const Map<String, dynamic> kMockIdTokenResult = <String, dynamic>{
     'token': '12345',
@@ -42,6 +48,7 @@ void main() {
   Map<String, dynamic> kMockUser = <String, dynamic>{
     'isAnonymous': true,
     'emailVerified': false,
+    'uid': '42',
     'displayName': 'displayName',
     'metadata': <String, int>{
       'creationTime': kMockCreationTimestamp,
@@ -72,14 +79,29 @@ void main() {
       EmailAuthProvider.credential(email: 'test', password: 'test')
           as EmailAuthCredential;
 
+  var mockAuthPlatform = MockFirebaseAuth();
+
   group('$User', () {
     Map<String, dynamic>? user;
-    FirebaseAuthPlatform.instance = mockAuthPlatform;
 
-    setUpAll(() async {
-      await Firebase.initializeApp();
+    // used to generate a unique application name for each test
+    var testCount = 0;
 
-      auth = FirebaseAuth.instance;
+    setUp(() async {
+      FirebaseAuthPlatform.instance = mockAuthPlatform = MockFirebaseAuth();
+
+      // Each test uses a unique FirebaseApp instance to avoid sharing state
+      final app = await Firebase.initializeApp(
+        name: '$testCount',
+        options: const FirebaseOptions(
+          apiKey: '',
+          appId: '',
+          messagingSenderId: '',
+          projectId: '',
+        ),
+      );
+
+      auth = FirebaseAuth.instanceFor(app: app);
 
       user = kMockUser;
 
@@ -95,7 +117,7 @@ void main() {
       when(mockAuthPlatform.signInAnonymously()).thenAnswer(
           (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
 
-      when(mockAuthPlatform.currentUser).thenReturn(mockUserPlatform!);
+      when(mockAuthPlatform.currentUser).thenReturn(mockUserPlatform);
 
       when(mockAuthPlatform.delegateFor(
         app: anyNamed('app'),
@@ -114,21 +136,27 @@ void main() {
       });
     });
 
+    tearDown(() => testCount++);
+
     setUp(() async {
       user = kMockUser;
-      await auth.signInAnonymously();
+      await auth!.signInAnonymously();
     });
 
     test('delete()', () async {
-      await auth.currentUser!.delete();
+      // Necessary as we otherwise get a "null is not a Future<void>" error
+      when(mockUserPlatform!.delete()).thenAnswer((i) async {});
+
+      await auth!.currentUser!.delete();
 
       verify(mockUserPlatform!.delete());
     });
 
     test('getIdToken()', () async {
+      // Necessary as we otherwise get a "null is not a Future<void>" error
       when(mockUserPlatform!.getIdToken(any)).thenAnswer((_) async => 'token');
 
-      final token = await auth.currentUser!.getIdToken(true);
+      final token = await auth!.currentUser!.getIdToken(true);
 
       verify(mockUserPlatform!.getIdToken(true));
       expect(token, isA<String>());
@@ -138,7 +166,7 @@ void main() {
       when(mockUserPlatform!.getIdTokenResult(any))
           .thenAnswer((_) async => IdTokenResult(kMockIdTokenResult));
 
-      final idTokenResult = await auth.currentUser!.getIdTokenResult(true);
+      final idTokenResult = await auth!.currentUser!.getIdTokenResult(true);
 
       verify(mockUserPlatform!.getIdTokenResult(true));
       expect(idTokenResult, isA<IdTokenResult>());
@@ -156,7 +184,7 @@ void main() {
             EmailAuthProvider.credential(email: newEmail, password: 'test')
                 as EmailAuthCredential;
 
-        await auth.currentUser!.linkWithCredential(credential);
+        await auth!.currentUser!.linkWithCredential(credential);
 
         verify(mockUserPlatform!.linkWithCredential(credential));
       });
@@ -173,23 +201,30 @@ void main() {
             EmailAuthProvider.credential(email: newEmail, password: 'test')
                 as EmailAuthCredential;
 
-        await auth.currentUser!.reauthenticateWithCredential(credential);
+        await auth!.currentUser!.reauthenticateWithCredential(credential);
 
         verify(mockUserPlatform!.reauthenticateWithCredential(credential));
       });
     });
 
     test('reload()', () async {
-      await auth.currentUser!.reload();
+      // Necessary as we otherwise get a "null is not a Future<void>" error
+      when(mockUserPlatform!.reload()).thenAnswer((i) async {});
+
+      await auth!.currentUser!.reload();
 
       verify(mockUserPlatform!.reload());
     });
 
     test('sendEmailVerification()', () async {
+      // Necessary as we otherwise get a "null is not a Future<void>" error
+      when(mockUserPlatform!.sendEmailVerification(any))
+          .thenAnswer((i) async {});
+
       final ActionCodeSettings actionCodeSettings =
           ActionCodeSettings(url: 'test');
 
-      await auth.currentUser!.sendEmailVerification(actionCodeSettings);
+      await auth!.currentUser!.sendEmailVerification(actionCodeSettings);
 
       verify(mockUserPlatform!.sendEmailVerification(actionCodeSettings));
     });
@@ -202,16 +237,19 @@ void main() {
       test('should call unlink()', () async {
         const String providerId = 'providerId';
 
-        await auth.currentUser!.unlink(providerId);
+        await auth!.currentUser!.unlink(providerId);
 
         verify(mockUserPlatform!.unlink(providerId));
       });
     });
     group('updateEmail()', () {
       test('should call updateEmail()', () async {
+        // Necessary as we otherwise get a "null is not a Future<void>" error
+        when(mockUserPlatform!.updateEmail(any)).thenAnswer((i) async {});
+
         const String newEmail = 'newEmail';
 
-        await auth.currentUser!.updateEmail(newEmail);
+        await auth!.currentUser!.updateEmail(newEmail);
 
         verify(mockUserPlatform!.updateEmail(newEmail));
       });
@@ -219,25 +257,34 @@ void main() {
 
     group('updatePassword()', () {
       test('should call updatePassword()', () async {
+        // Necessary as we otherwise get a "null is not a Future<void>" error
+        when(mockUserPlatform!.updatePassword(any)).thenAnswer((i) async {});
+
         const String newPassword = 'newPassword';
 
-        await auth.currentUser!.updatePassword(newPassword);
+        await auth!.currentUser!.updatePassword(newPassword);
 
         verify(mockUserPlatform!.updatePassword(newPassword));
       });
     });
     group('updatePhoneNumber()', () {
       test('should call updatePhoneNumber()', () async {
+        // Necessary as we otherwise get a "null is not a Future<void>" error
+        when(mockUserPlatform!.updatePhoneNumber(any)).thenAnswer((i) async {});
+
         PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
             verificationId: 'test', smsCode: 'test') as PhoneAuthCredential;
 
-        await auth.currentUser!.updatePhoneNumber(phoneAuthCredential);
+        await auth!.currentUser!.updatePhoneNumber(phoneAuthCredential);
 
         verify(mockUserPlatform!.updatePhoneNumber(phoneAuthCredential));
       });
     });
 
     test('updateProfile()', () async {
+      // Necessary as we otherwise get a "null is not a Future<void>" error
+      when(mockUserPlatform!.updateProfile(any)).thenAnswer((i) async {});
+
       const String displayName = 'updatedName';
       const String photoURL = 'testUrl';
       Map<String, String> data = <String, String>{
@@ -245,7 +292,7 @@ void main() {
         'photoURL': photoURL
       };
 
-      await auth.currentUser!
+      await auth!.currentUser!
           .updateProfile(displayName: displayName, photoURL: photoURL);
 
       verify(mockUserPlatform!.updateProfile(data));
@@ -253,10 +300,14 @@ void main() {
 
     group('verifyBeforeUpdateEmail()', () {
       test('should call verifyBeforeUpdateEmail()', () async {
+        // Necessary as we otherwise get a "null is not a Future<void>" error
+        when(mockUserPlatform!.verifyBeforeUpdateEmail(any, any))
+            .thenAnswer((i) async {});
+
         const newEmail = 'new@email.com';
         ActionCodeSettings actionCodeSettings = ActionCodeSettings(url: 'test');
 
-        await auth.currentUser!
+        await auth!.currentUser!
             .verifyBeforeUpdateEmail(newEmail, actionCodeSettings);
 
         verify(mockUserPlatform!
@@ -281,7 +332,7 @@ void main() {
           'lastSignInTime: ${DateTime.fromMillisecondsSinceEpoch(kMockLastSignInTimestamp)})';
 
       expect(
-        auth.currentUser.toString(),
+        auth!.currentUser.toString(),
         'User('
         'displayName: displayName, '
         'email: null, '
@@ -294,16 +345,49 @@ void main() {
         '[$userInfo], '
         'refreshToken: null, '
         'tenantId: null, '
-        'uid: null)',
+        'uid: 42)',
       );
     });
   });
 }
 
+class MockFirebaseAuthPlatformBase = TestFirebaseAuthPlatform
+    with MockPlatformInterfaceMixin;
+
+class MockUserPlatformBase = TestUserPlatform with MockPlatformInterfaceMixin;
+
 class MockFirebaseAuth extends Mock
     with MockPlatformInterfaceMixin
     implements TestFirebaseAuthPlatform {
-  MockFirebaseAuth();
+  @override
+  Future<UserCredentialPlatform> signInAnonymously() {
+    return super.noSuchMethod(
+      Invocation.method(#signInAnonymously, const []),
+      neverEndingFuture<UserCredentialPlatform>(),
+    );
+  }
+
+  @override
+  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
+    return super.noSuchMethod(
+      Invocation.method(#delegateFor, const [], {#app: app}),
+      TestFirebaseAuthPlatform(),
+    );
+  }
+
+  @override
+  FirebaseAuthPlatform setInitialValues({
+    Map<String, dynamic>? currentUser,
+    String? languageCode,
+  }) {
+    return super.noSuchMethod(
+      Invocation.method(#setInitialValues, const [], {
+        #currentUser: currentUser,
+        #languageCode: languageCode,
+      }),
+      TestFirebaseAuthPlatform(),
+    );
+  }
 }
 
 class MockUserPlatform extends Mock
@@ -311,6 +395,120 @@ class MockUserPlatform extends Mock
     implements TestUserPlatform {
   MockUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> _user) {
     TestUserPlatform(auth, _user);
+  }
+
+  @override
+  Future<void> delete() {
+    return super.noSuchMethod(
+      Invocation.method(#delete, []),
+      neverEndingFuture<void>(),
+    );
+  }
+
+  @override
+  Future<void> reload() {
+    return super.noSuchMethod(
+      Invocation.method(#reload, []),
+      neverEndingFuture<void>(),
+    );
+  }
+
+  @override
+  Future<String> getIdToken(bool? forceRefresh) {
+    return super.noSuchMethod(
+      Invocation.method(#getIdToken, [forceRefresh]),
+      neverEndingFuture<String>(),
+    );
+  }
+
+  @override
+  Future<UserPlatform> unlink(String? providerId) {
+    return super.noSuchMethod(
+      Invocation.method(#unlink, [providerId]),
+      neverEndingFuture<UserPlatform>(),
+    );
+  }
+
+  @override
+  Future<IdTokenResult> getIdTokenResult(bool? forceRefresh) {
+    return super.noSuchMethod(
+      Invocation.method(#getIdTokenResult, [forceRefresh]),
+      neverEndingFuture<IdTokenResult>(),
+    );
+  }
+
+  @override
+  Future<UserCredentialPlatform> reauthenticateWithCredential(
+    AuthCredential? credential,
+  ) {
+    return super.noSuchMethod(
+      Invocation.method(#reauthenticateWithCredential, [credential]),
+      neverEndingFuture<UserCredentialPlatform>(),
+    );
+  }
+
+  @override
+  Future<UserCredentialPlatform> linkWithCredential(
+    AuthCredential? credential,
+  ) {
+    return super.noSuchMethod(
+      Invocation.method(#linkWithCredential, [credential]),
+      neverEndingFuture<UserCredentialPlatform>(),
+    );
+  }
+
+  @override
+  Future<void> sendEmailVerification(ActionCodeSettings? actionCodeSettings) {
+    return super.noSuchMethod(
+      Invocation.method(#sendEmailVerification, [actionCodeSettings]),
+      neverEndingFuture<void>(),
+    );
+  }
+
+  @override
+  Future<void> updateEmail(String? newEmail) {
+    return super.noSuchMethod(
+      Invocation.method(#updateEmail, [newEmail]),
+      neverEndingFuture<void>(),
+    );
+  }
+
+  @override
+  Future<void> updatePassword(String? newPassword) {
+    return super.noSuchMethod(
+      Invocation.method(#updatePassword, [newPassword]),
+      neverEndingFuture<void>(),
+    );
+  }
+
+  @override
+  Future<void> updatePhoneNumber(PhoneAuthCredential? phoneCredential) {
+    return super.noSuchMethod(
+      Invocation.method(#updatePhoneNumber, [phoneCredential]),
+      neverEndingFuture<void>(),
+    );
+  }
+
+  @override
+  Future<void> updateProfile(Map<String, String?>? profile) {
+    return super.noSuchMethod(
+      Invocation.method(#updateProfile, [profile]),
+      neverEndingFuture<void>(),
+    );
+  }
+
+  @override
+  Future<void> verifyBeforeUpdateEmail(
+    String? newEmail, [
+    ActionCodeSettings? actionCodeSettings,
+  ]) {
+    return super.noSuchMethod(
+      Invocation.method(#verifyBeforeUpdateEmail, [
+        newEmail,
+        actionCodeSettings,
+      ]),
+      neverEndingFuture<void>(),
+    );
   }
 }
 

@@ -333,7 +333,7 @@ abstract class UserPlatform extends PlatformInterface {
   }
 
   /// Updates a user's profile data.
-  Future<void> updateProfile(Map<String, String> profile) async {
+  Future<void> updateProfile(Map<String, String?> profile) async {
     throw UnimplementedError('updateProfile() is not implemented');
   }
 
