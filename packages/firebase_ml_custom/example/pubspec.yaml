@@ -28,6 +28,7 @@ dependency_overrides:
     git:
       url: https://github.com/dart-lang/http
       ref: d5c678cd63c3e9c1d779a09acfa95b7e3af84665
+  http_parser: ^4.0.0-nullsafety
 
 dev_dependencies:
   pedantic: ^1.8.0
