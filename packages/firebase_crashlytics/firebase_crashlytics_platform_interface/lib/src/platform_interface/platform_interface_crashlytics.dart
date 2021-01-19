@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -19,14 +17,15 @@ import '../method_channel/method_channel_crashlytics.dart';
 /// other Flutter supported platforms.
 abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
-  FirebaseCrashlyticsPlatform({this.appInstance}) : super(token: _token);
+  FirebaseCrashlyticsPlatform({required this.appInstance})
+      : super(token: _token);
 
   /// Create an instance using [app] using the existing implementation
   factory FirebaseCrashlyticsPlatform.instanceFor(
-      {FirebaseApp app, @required Map<dynamic, dynamic> pluginConstants}) {
+      {required FirebaseApp app,
+      required Map<dynamic, dynamic> pluginConstants}) {
     // Only the default app is supported on Crashlytics.
     assert(app.name == defaultFirebaseAppName);
-    assert(pluginConstants != null);
     // Must have bool collection enabled constant.
     assert(pluginConstants['isCrashlyticsCollectionEnabled'] != null);
     return FirebaseCrashlyticsPlatform.instance.setInitialValues(
@@ -37,7 +36,7 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
 
   /// The [FirebaseApp] this instance was initialized with.
   @protected
-  final FirebaseApp /*?*/ appInstance;
+  final FirebaseApp appInstance;
 
   /// Create an instance using [app]
 
@@ -45,10 +44,10 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
 
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp get app {
-    return appInstance ?? Firebase.app();
+    return appInstance;
   }
 
-  static /*late*/ FirebaseCrashlyticsPlatform _instance;
+  static late FirebaseCrashlyticsPlatform _instance;
 
   /// The current default [FirebaseCrashlyticsPlatform] instance.
   ///
@@ -60,7 +59,6 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseCrashlyticsPlatform.instance]
   static set instance(FirebaseCrashlyticsPlatform instance) {
-    assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
@@ -109,10 +107,10 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
 
   /// Submits a Crashlytics report of a caught error.
   Future<void> recordError({
-    String /*!*/ exception,
-    String /*!*/ information,
-    String /*?*/ reason,
-    List<Map<String, String>> /*?*/ stackTraceElements,
+    required String exception,
+    required String information,
+    required String reason,
+    required List<Map<String, String>> stackTraceElements,
   }) {
     throw UnimplementedError('recordError() is not implemented');
   }
@@ -183,7 +181,7 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
   /// calls.
   @protected
   FirebaseCrashlyticsPlatform setInitialValues({
-    bool isCrashlyticsCollectionEnabled,
+    required bool isCrashlyticsCollectionEnabled,
   }) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }

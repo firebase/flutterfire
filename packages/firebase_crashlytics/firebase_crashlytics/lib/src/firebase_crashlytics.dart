@@ -2,19 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_crashlytics;
 
 /// The entry point for accessing a [FirebaseCrashlytics].
 ///
 /// You can get an instance by calling [FirebaseCrashlytics.instance].
 class FirebaseCrashlytics extends FirebasePluginPlatform {
-  FirebaseCrashlytics._({this.app})
+  FirebaseCrashlytics._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
 
   /// Cached instance of [FirebaseCrashlytics];
-  static /*late*/ FirebaseCrashlytics _instance;
+  static late FirebaseCrashlytics _instance;
 
   // Cached and lazily loaded instance of [FirebaseCrashlyticsPlatform] to avoid
   // creating a [MethodChannelFirebaseCrashlytics] when not needed or creating an
@@ -75,18 +73,18 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   }
 
   /// Submits a Crashlytics report of a caught error.
-  Future<void> recordError(dynamic exception, StackTrace stack,
+  Future<void> recordError(dynamic exception, StackTrace? stack,
       {dynamic reason,
-      Iterable<DiagnosticsNode> information,
-      bool /*?*/ printDetails}) async {
-    // If [null] is provided, use the debug flag instead.
-    printDetails ??= kDebugMode;
+      Iterable<DiagnosticsNode> information = const [] ,
+      bool printDetails = false}) async {
+    // Use the debug flag if provided, otherwise user can set using printDetails
+    bool printOut = kDebugMode || printDetails;
 
-    final String _information = (information == null || information.isEmpty)
+    final String _information =  information.isEmpty
         ? ''
         : (StringBuffer()..writeAll(information, '\n')).toString();
 
-    if (printDetails) {
+    if (printOut) {
       // ignore: avoid_print
       print('----------------FIREBASE CRASHLYTICS----------------');
 
@@ -126,7 +124,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
 
     return _delegate.recordError(
       exception: exception.toString(),
-      reason: reason?.toString(),
+      reason: reason.toString(),
       information: _information,
       stackTraceElements: stackTraceElements,
     );
@@ -139,7 +137,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     return recordError(
         flutterErrorDetails.exceptionAsString(), flutterErrorDetails.stack,
         reason: flutterErrorDetails.context,
-        printDetails: false,
         information: flutterErrorDetails.informationCollector == null
             ? null
             : flutterErrorDetails.informationCollector());

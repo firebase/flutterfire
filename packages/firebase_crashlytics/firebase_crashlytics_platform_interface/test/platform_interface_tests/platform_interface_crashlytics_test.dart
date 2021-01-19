@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:firebase_crashlytics_platform_interface/firebase_crashlytics_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,10 +14,10 @@ import '../mock.dart';
 void main() {
   setupFirebaseCrashlyticsMocks();
 
-  /*late*/ TestFirebaseCrashlyticsPlatform firebaseCrashlyticsPlatform;
+  late TestFirebaseCrashlyticsPlatform firebaseCrashlyticsPlatform;
 
-  /*late*/ FirebaseApp app;
-  /*late*/ FirebaseApp secondaryApp;
+  late FirebaseApp app;
+  late FirebaseApp secondaryApp;
 
   group('$FirebaseCrashlyticsPlatform()', () {
     setUpAll(() async {
@@ -58,11 +58,6 @@ void main() {
             isA<FirebaseCrashlyticsPlatform>());
         expect(
             FirebaseCrashlyticsPlatform.instance.app.name, equals('testApp2'));
-      });
-
-      test('throws an [AssertionError] if instance is null', () {
-        expect(() => FirebaseCrashlyticsPlatform.instance = null,
-            throwsAssertionError);
       });
     });
 
@@ -106,17 +101,6 @@ void main() {
       } on UnimplementedError catch (e) {
         expect(e.message,
             equals('didCrashOnPreviousExecution() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
-    });
-
-    test('throws if .recordError', () {
-      try {
-        firebaseCrashlyticsPlatform.recordError();
-        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('recordError() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');

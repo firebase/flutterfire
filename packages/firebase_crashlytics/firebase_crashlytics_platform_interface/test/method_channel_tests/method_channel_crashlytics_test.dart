@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics_platform_interface/firebase_crashlytics_platform_interface.dart';
@@ -15,7 +15,7 @@ import '../mock.dart';
 void main() {
   setupFirebaseCrashlyticsMocks();
 
-  /*late*/ FirebaseCrashlyticsPlatform crashlytics;
+  late FirebaseCrashlyticsPlatform crashlytics;
   final List<MethodCall> logger = <MethodCall>[];
 
   // mock props

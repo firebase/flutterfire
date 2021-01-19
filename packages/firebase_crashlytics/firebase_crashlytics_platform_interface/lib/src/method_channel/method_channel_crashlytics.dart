@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -17,14 +17,14 @@ import './utils/exception.dart';
 /// You can get an instance by calling [MethodChannelFirebaseCrashlytics.instance].
 class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   /// Create an instance of [MethodChannelFirebaseCrashlytics].
-  MethodChannelFirebaseCrashlytics({FirebaseApp app}) : super(appInstance: app);
+  MethodChannelFirebaseCrashlytics({required FirebaseApp app}) : super(appInstance: app);
 
   /// The [MethodChannel] used to communicate with the native plugin
   static MethodChannel channel = const MethodChannel(
     'plugins.flutter.io/firebase_crashlytics',
   );
 
-  bool /*!*/ _isCrashlyticsCollectionEnabled;
+  late bool _isCrashlyticsCollectionEnabled;
 
   @override
   bool get isCrashlyticsCollectionEnabled {
@@ -33,18 +33,18 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
 
   @override
   MethodChannelFirebaseCrashlytics setInitialValues({
-    bool /*!*/ isCrashlyticsCollectionEnabled,
+    required bool isCrashlyticsCollectionEnabled,
   }) {
     _isCrashlyticsCollectionEnabled = isCrashlyticsCollectionEnabled;
     return this;
   }
 
   @override
-  Future<bool /*!*/ > checkForUnsentReports() async {
+  Future<bool > checkForUnsentReports() async {
     try {
       Map<String, dynamic> data =
-          await channel.invokeMapMethod<String, dynamic>(
-              'Crashlytics#checkForUnsentReports');
+          await (channel.invokeMapMethod<String, dynamic>(
+              'Crashlytics#checkForUnsentReports') as FutureOr<Map<String, dynamic>>);
 
       return data['unsentReports'];
     } catch (e, s) {
@@ -71,11 +71,11 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   }
 
   @override
-  Future<bool /*!*/ > didCrashOnPreviousExecution() async {
+  Future<bool > didCrashOnPreviousExecution() async {
     try {
       Map<String, dynamic> data =
-          await channel.invokeMapMethod<String, dynamic>(
-              'Crashlytics#didCrashOnPreviousExecution');
+          await (channel.invokeMapMethod<String, dynamic>(
+              'Crashlytics#didCrashOnPreviousExecution') as FutureOr<Map<String, dynamic>>);
 
       return data['didCrashOnPreviousExecution'];
     } catch (e, s) {
@@ -85,10 +85,10 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
 
   @override
   Future<void> recordError({
-    String /*!*/ exception,
-    String /*!*/ information,
-    String /*?*/ reason,
-    List<Map<String, String>> /*?*/ stackTraceElements,
+    required String exception,
+    required String information,
+    required String reason,
+    required List<Map<String, String>> stackTraceElements,
   }) async {
     try {
       await channel
@@ -96,7 +96,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
         'exception': exception,
         'information': information,
         'reason': reason,
-        'stackTraceElements': stackTraceElements ?? [],
+        'stackTraceElements': stackTraceElements,
       });
     } catch (e, s) {
       throw convertPlatformException(e, s);
@@ -126,11 +126,11 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> setCrashlyticsCollectionEnabled(bool enabled) async {
     try {
-      Map<String, dynamic> data = await channel
+      Map<String, dynamic> data = await (channel
           .invokeMapMethod<String, dynamic>(
               'Crashlytics#setCrashlyticsCollectionEnabled', <String, dynamic>{
         'enabled': enabled,
-      });
+      }) as FutureOr<Map<String, dynamic>>);
 
       _isCrashlyticsCollectionEnabled = data['isCrashlyticsCollectionEnabled'];
     } catch (e, s) {

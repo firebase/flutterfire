@@ -69,7 +69,7 @@ void main() {
         const exceptionReason = 'bar reason';
 
         await crashlytics.recordError(exception, stack,
-            reason: exceptionReason, printDetails: false);
+            reason: exceptionReason);
         expect(methodCallLog, <Matcher>[
           isMethodCall('Crashlytics#recordError', arguments: {
             'exception': exception,
