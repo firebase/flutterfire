@@ -48,7 +48,8 @@ void main() {
         }
       });
 
-      functions = MethodChannelFirebaseFunctions(app: app);
+      functions =
+          MethodChannelFirebaseFunctions(app: app, region: 'us-central1');
       httpsCallable = MethodChannelHttpsCallable(
         functions!,
         kOrigin,

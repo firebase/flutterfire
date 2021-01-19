@@ -13,7 +13,7 @@ import 'interop/functions.dart' as functions_interop;
 /// Web implementation of [FirebaseFunctionsPlatform].
 class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   /// The entry point for the [FirebaseFunctionsWeb] class.
-  FirebaseFunctionsWeb({FirebaseApp? app, String? region})
+  FirebaseFunctionsWeb({FirebaseApp? app, required String region})
       : _webFunctions = functions_interop.getFunctionsInstance(
             core_interop.app(app?.name), region),
         super(app, region);
@@ -22,7 +22,7 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   /// registering the web delegates or listeners.
   FirebaseFunctionsWeb._()
       : _webFunctions = null,
-        super(null, null);
+        super(null, 'us-central1');
 
   /// Instance of functions from the web plugin
   final functions_interop.Functions? _webFunctions;
@@ -38,7 +38,8 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   }
 
   @override
-  FirebaseFunctionsPlatform delegateFor({FirebaseApp? app, String? region}) {
+  FirebaseFunctionsPlatform delegateFor(
+      {FirebaseApp? app, required String region}) {
     return FirebaseFunctionsWeb(app: app, region: region);
   }
 

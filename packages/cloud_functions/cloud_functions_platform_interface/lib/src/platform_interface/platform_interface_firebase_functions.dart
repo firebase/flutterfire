@@ -23,7 +23,7 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
 
   /// Create an instance using [app] using the existing implementation
   factory FirebaseFunctionsPlatform.instanceFor(
-      {FirebaseApp? app, String? region}) {
+      {FirebaseApp? app, required String region}) {
     return FirebaseFunctionsPlatform.instance
         .delegateFor(app: app, region: region);
   }
@@ -36,7 +36,7 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   final FirebaseApp? app;
 
   /// The region for the HTTPS trigger, such as "us-central1".
-  final String? region;
+  final String region;
 
   /// The current default [FirebaseFunctionsPlatform] instance.
   ///
@@ -55,7 +55,8 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance or region is required by the user.
   @protected
-  FirebaseFunctionsPlatform delegateFor({FirebaseApp? app, String? region}) {
+  FirebaseFunctionsPlatform delegateFor(
+      {FirebaseApp? app, required String region}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 

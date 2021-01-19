@@ -12,14 +12,14 @@ import 'method_channel_https_callable.dart';
 class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
   /// Creates a new [MethodChannelFirebaseFunctions] instance with an [app] and/or
   /// [region].
-  MethodChannelFirebaseFunctions({FirebaseApp? app, String? region})
+  MethodChannelFirebaseFunctions({FirebaseApp? app, required String region})
       : super(app, region);
 
   /// Internal stub class initializer.
   ///
   /// When the user code calls a functions method, the real instance is
   /// then initialized via the [delegateFor] method.
-  MethodChannelFirebaseFunctions._() : super(null, null);
+  MethodChannelFirebaseFunctions._() : super(null, 'us-central1');
 
   /// Returns a stub instance to allow the platform interface to access
   /// the class instance statically.
@@ -33,7 +33,8 @@ class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
   );
 
   @override
-  FirebaseFunctionsPlatform delegateFor({FirebaseApp? app, String? region}) {
+  FirebaseFunctionsPlatform delegateFor(
+      {FirebaseApp? app, required String region}) {
     return MethodChannelFirebaseFunctions(app: app, region: region);
   }
 

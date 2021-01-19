@@ -13,7 +13,8 @@ void main() {
   setUp(() async {
     resetFirebaseCoreMocks();
     await Firebase.initializeApp();
-    FirebaseFunctionsPlatform.instance = MockFirebaseFunctionsPlatform();
+    FirebaseFunctionsPlatform.instance =
+        MockFirebaseFunctionsPlatform(region: 'us-central1');
   });
 
   group('FirebaseFunctions', () {

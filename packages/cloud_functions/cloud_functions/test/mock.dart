@@ -65,7 +65,7 @@ class MockHttpsCallablePlatform extends HttpsCallablePlatform {
 }
 
 class MockFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {
-  MockFirebaseFunctionsPlatform({FirebaseApp? app, String? region})
+  MockFirebaseFunctionsPlatform({FirebaseApp? app, required String region})
       : super(app, region);
 
   @override
@@ -77,7 +77,8 @@ class MockFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {
   }
 
   @override
-  FirebaseFunctionsPlatform delegateFor({FirebaseApp? app, String? region}) {
+  FirebaseFunctionsPlatform delegateFor(
+      {FirebaseApp? app, required String region}) {
     MockFirebaseFunctionsPlatform functionsPlatform =
         MockFirebaseFunctionsPlatform(app: app, region: region);
     return functionsPlatform;

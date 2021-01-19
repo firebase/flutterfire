@@ -45,7 +45,8 @@ void main() {
     });
 
     test('FirebaseFunctionsPlatform.instanceFor', () {
-      final result = FirebaseFunctionsPlatform.instanceFor(app: app);
+      final result = FirebaseFunctionsPlatform.instanceFor(
+          app: app, region: 'us-central1');
       expect(result, isA<FirebaseFunctionsPlatform>());
       expect(result.app, isA<FirebaseApp>());
       expect(result.app!.name, defaultFirebaseAppName);

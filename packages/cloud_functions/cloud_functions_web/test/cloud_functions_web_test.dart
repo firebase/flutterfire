@@ -59,7 +59,8 @@ void main() {
       ));
 
       FirebasePlatform.instance = FirebaseCoreWeb();
-      FirebaseFunctionsPlatform.instance = FirebaseFunctionsWeb();
+      FirebaseFunctionsPlatform.instance =
+          FirebaseFunctionsWeb(region: 'us-central1');
 
       // install loggingCall on the HttpsCallable mock as the thing that gets
       // executed when its call method is invoked

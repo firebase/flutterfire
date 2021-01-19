@@ -20,7 +20,8 @@ void main() {
 
     setUpAll(() async {
       app = await Firebase.initializeApp();
-      functions = MethodChannelFirebaseFunctions(app: app);
+      functions =
+          MethodChannelFirebaseFunctions(app: app, region: 'us-central1');
     });
 
     test('channel', () {
@@ -32,11 +33,12 @@ void main() {
       final result = MethodChannelFirebaseFunctions.instance;
       expect(result, isA<MethodChannelFirebaseFunctions>());
       expect(result, isA<FirebaseFunctionsPlatform>());
-      expect(result.region, isNull);
+      expect(result.region, equals('us-central1'));
     });
 
     test('delegateFor', () {
-      final testFunctions = TestMethodChannelFirebaseFunctions(app: app);
+      final testFunctions =
+          TestMethodChannelFirebaseFunctions(app: app, region: 'us-central1');
       final result =
           testFunctions.delegateFor(app: app, region: 'europe-west1');
       expect(result, isA<MethodChannelFirebaseFunctions>());
@@ -59,6 +61,6 @@ void main() {
 
 class TestMethodChannelFirebaseFunctions
     extends MethodChannelFirebaseFunctions {
-  TestMethodChannelFirebaseFunctions({FirebaseApp? app, String? region})
+  TestMethodChannelFirebaseFunctions({FirebaseApp? app, required String region})
       : super(app: app, region: region);
 }
