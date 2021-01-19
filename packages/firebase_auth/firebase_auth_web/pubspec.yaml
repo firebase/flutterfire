@@ -9,24 +9,24 @@ environment:
 
 dependencies:
   firebase_auth_platform_interface: ^3.0.1
-  firebase_core: ^0.7.0
-  firebase_core_web: ^0.2.1+3
+  firebase_core: ^0.7.0-nullsafety.0
+  firebase_core_web: ^0.2.2-nullsafety.0
   flutter:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  http_parser: ^3.1.3
-  intl: ^0.16.1
-  js: ^0.6.1
-  meta: ^1.1.7
+  http_parser: ^4.0.0-nullsafety
+  intl: ^0.17.0-nullsafety.2
+  js: ^0.6.3-nullsafety.3
+  meta: ^1.3.0-nullsafety.6
 
 dev_dependencies:
   firebase_auth:
     path: ../firebase_auth
-  firebase_core_platform_interface: ^3.0.1
+  firebase_core_platform_interface: ^3.0.2-nullsafety.0
   flutter_test:
     sdk: flutter
-  pedantic: ^1.8.0
+  pedantic: ^1.10.0-nullsafety.3
 
 flutter:
   plugin:
