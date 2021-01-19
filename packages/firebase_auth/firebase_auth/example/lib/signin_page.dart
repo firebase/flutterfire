@@ -12,9 +12,6 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-// TODO(rrousselGit): remove this import when core is migrated to NNBD
-import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 /// Entrypoint example for various sign-in flows with Firebase.

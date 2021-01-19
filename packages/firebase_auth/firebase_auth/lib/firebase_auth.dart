@@ -12,47 +12,45 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-// TODO(rrousselGit): uncomment when core is migrated
-// export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
-//     show
-//         FirebaseAuthException,
-//         IdTokenResult,
-//         UserMetadata,
-//         UserInfo,
-//         ActionCodeInfo,
-//         ActionCodeSettings,
-//         AdditionalUserInfo,
-//         ActionCodeInfoOperation,
-//         Persistence,
-//         PhoneVerificationCompleted,
-//         PhoneVerificationFailed,
-//         PhoneCodeSent,
-//         PhoneCodeAutoRetrievalTimeout,
-//         AuthCredential,
-//         EmailAuthProvider,
-//         EmailAuthCredential,
-//         FacebookAuthProvider,
-//         FacebookAuthCredential,
-//         GithubAuthProvider,
-//         GithubAuthCredential,
-//         GoogleAuthProvider,
-//         GoogleAuthCredential,
-//         OAuthProvider,
-//         OAuthCredential,
-//         PhoneAuthProvider,
-//         PhoneAuthCredential,
-//         SAMLAuthProvider,
-//         TwitterAuthProvider,
-//         TwitterAuthCredential,
-//         RecaptchaVerifierOnSuccess,
-//         RecaptchaVerifierOnExpired,
-//         RecaptchaVerifierOnError,
-//         RecaptchaVerifierSize,
-//         RecaptchaVerifierTheme;
+export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
+    show
+        FirebaseAuthException,
+        IdTokenResult,
+        UserMetadata,
+        UserInfo,
+        ActionCodeInfo,
+        ActionCodeSettings,
+        AdditionalUserInfo,
+        ActionCodeInfoOperation,
+        Persistence,
+        PhoneVerificationCompleted,
+        PhoneVerificationFailed,
+        PhoneCodeSent,
+        PhoneCodeAutoRetrievalTimeout,
+        AuthCredential,
+        EmailAuthProvider,
+        EmailAuthCredential,
+        FacebookAuthProvider,
+        FacebookAuthCredential,
+        GithubAuthProvider,
+        GithubAuthCredential,
+        GoogleAuthProvider,
+        GoogleAuthCredential,
+        OAuthProvider,
+        OAuthCredential,
+        PhoneAuthProvider,
+        PhoneAuthCredential,
+        SAMLAuthProvider,
+        TwitterAuthProvider,
+        TwitterAuthCredential,
+        RecaptchaVerifierOnSuccess,
+        RecaptchaVerifierOnExpired,
+        RecaptchaVerifierOnError,
+        RecaptchaVerifierSize,
+        RecaptchaVerifierTheme;
 
-// TODO(rrousselGit): uncomment when core is migrated
-// export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-//     show FirebaseException;
+export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show FirebaseException;
 
 part 'src/firebase_auth.dart';
 part 'src/user_credential.dart';

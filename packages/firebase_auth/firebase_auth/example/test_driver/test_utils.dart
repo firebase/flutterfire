@@ -6,9 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-// TODO(rrousselGit): remove this import when core is migrated to NNBD
-import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-
 FirebaseAuth auth = FirebaseAuth.instance;
 
 String TEST_PASSWORD = 'testpassword';
