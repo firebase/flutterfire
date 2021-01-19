@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,16 +11,14 @@ import '../mock.dart';
 
 void main() {
   setupFirebaseFunctionsMocks();
-
-  TestFirebaseFunctionsPlatform firebaseFunctionsPlatform;
-  TestHttpsCallablePlatform httpsCallablePlatform;
-  FirebaseApp app;
+  TestHttpsCallablePlatform? httpsCallablePlatform;
 
   group('$HttpsCallablePlatform()', () {
     setUpAll(() async {
-      app = await Firebase.initializeApp();
+      FirebaseApp app = await Firebase.initializeApp();
+      TestFirebaseFunctionsPlatform firebaseFunctionsPlatform =
+          TestFirebaseFunctionsPlatform(app);
 
-      firebaseFunctionsPlatform = TestFirebaseFunctionsPlatform(app);
       httpsCallablePlatform =
           TestHttpsCallablePlatform(firebaseFunctionsPlatform);
 
@@ -39,9 +35,10 @@ void main() {
       expect(httpsCallablePlatform, isA<PlatformInterface>());
     });
 
-    test('throws if call()', () {
+    test('throws Unimplemented if called', () {
       try {
-        httpsCallablePlatform.call();
+        httpsCallablePlatform!.call();
+        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('call() is not implemented'));
         return;
@@ -53,12 +50,9 @@ void main() {
 
 class TestHttpsCallablePlatform extends HttpsCallablePlatform {
   TestHttpsCallablePlatform(FirebaseFunctionsPlatform functions)
-      : super(functions, 'test_region', '', HttpsCallableOptions());
+      : super(functions, null, 'function_name', HttpsCallableOptions());
 }
 
 class TestFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {
   TestFirebaseFunctionsPlatform(FirebaseApp app) : super(app, 'test_region');
-  FirebaseFunctionsPlatform testDelegateFor({FirebaseApp app}) {
-    return this.delegateFor();
-  }
 }

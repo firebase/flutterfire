@@ -1,3 +1,7 @@
+## 3.1.4-nullsafety.0
+
+- **REFACTOR**: migrate to NNBD.
+
 ## 3.1.3
 
  - Update a dependency to the latest release.
