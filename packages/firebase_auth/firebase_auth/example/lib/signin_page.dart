@@ -107,16 +107,15 @@ class _UserInfoCardState extends State<_UserInfoCard> {
               padding: EdgeInsets.only(bottom: 8.0),
               alignment: Alignment.center,
             ),
-            () {
-              if (widget.user != null) {
-                if (widget.user.photoURL != null) {
-                  return Container(
-                    child: Image.network(widget.user.photoURL),
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.only(bottom: 8.0),
-                  );
-                }
-                return Align(
+            if (widget.user != null)
+              if (widget.user.photoURL != null)
+                Container(
+                  child: Image.network(widget.user.photoURL),
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(bottom: 8.0),
+                )
+              else
+                Align(
                   alignment: Alignment.center,
                   child: Container(
                     child: Text(
@@ -129,20 +128,70 @@ class _UserInfoCardState extends State<_UserInfoCard> {
                     margin: EdgeInsets.only(bottom: 8.0),
                     color: Colors.black,
                   ),
-                );
-              }
-              return Container();
-            }(),
-            Text(
-              widget.user == null
-                  ? 'Not signed in'
-                  : 'Email: ${widget.user.email}\n\n'
-                      'Phone number: ${widget.user.phoneNumber}\n\n'
-                      'Name: ${widget.user.displayName}\n\n'
-                      'ID: ${widget.user.uid}\n\n'
-                      'Created: ${widget.user.metadata.creationTime.toString()}\n\n'
-                      'Last login: ${widget.user.metadata.lastSignInTime}\n\n\n'
-                      'Providers: ${widget.user.providerData.fold('', (previousValue, element) => previousValue += '\n${element.providerId} ${element.uid}')}',
+                ),
+            Text(widget.user == null
+                ? 'Not signed in'
+                : '${widget.user.isAnonymous ? 'User is anonymous\n\n' : ''}'
+                    'Email: ${widget.user.email} (verified: ${widget.user.emailVerified})\n\n'
+                    'Phone number: ${widget.user.phoneNumber}\n\n'
+                    'Name: ${widget.user.displayName}\n\n\n'
+                    'ID: ${widget.user.uid}\n\n'
+                    'Tenant ID: ${widget.user.tenantId}\n\n'
+                    'Refresh token: ${widget.user.refreshToken}\n\n\n'
+                    'Created: ${widget.user.metadata.creationTime.toString()}\n\n'
+                    'Last login: ${widget.user.metadata.lastSignInTime}\n\n'),
+            if (widget.user != null)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    widget.user.providerData.isEmpty
+                        ? 'No providers'
+                        : 'Providers:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  for (var provider in widget.user.providerData)
+                    Dismissible(
+                      key: Key(provider.uid),
+                      child: Card(
+                        color: Colors.grey[700],
+                        child: ListTile(
+                          leading: provider.photoURL == null
+                              ? IconButton(
+                                  icon: const Icon(Icons.remove),
+                                  onPressed: () =>
+                                      widget.user.unlink(provider.providerId))
+                              : Image.network(provider.photoURL),
+                          title: Text(provider.providerId),
+                          subtitle: Text(
+                              "${provider.displayName == null ? "" : "${provider.displayName}\n"}${provider.uid}"),
+                        ),
+                      ),
+                      onDismissed: (action) =>
+                          widget.user.unlink(provider.providerId),
+                    ),
+                ],
+              ),
+            Visibility(
+              visible: widget.user != null,
+              child: Container(
+                margin: EdgeInsets.only(top: 8.0),
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      onPressed: () => widget.user.reload(),
+                      icon: const Icon(Icons.refresh),
+                    ),
+                    IconButton(
+                      onPressed: () => widget.user.delete(),
+                      icon: const Icon(Icons.delete_forever),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
