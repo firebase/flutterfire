@@ -20,7 +20,7 @@ void main() {
     final List<Map<String, dynamic>> log = <Map<String, dynamic>>[];
 
     Map<String, dynamic> loggingCall(
-        {required String? appName,
+        {required String appName,
         required String functionName,
         String? region,
         dynamic parameters}) {
@@ -65,7 +65,7 @@ void main() {
       // executed when its call method is invoked
       firebaseMock.functions = allowInterop(([app]) => FirebaseFunctionsMock(
             httpsCallable: allowInterop((functionName, [options]) {
-              final String? appName = app == null ? '[DEFAULT]' : app.name;
+              final String appName = app == null ? '[DEFAULT]' : app.name;
               return allowInterop(([data]) {
                 Map<String, dynamic> result =
                     loggingCall(appName: appName, functionName: functionName);

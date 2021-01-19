@@ -30,32 +30,38 @@ class HttpsCallable {
   /// instance. If a user is logged in with Firebase Auth, an auth ID token for
   /// the user is also automatically included.
   Future<HttpsCallableResult<T>> call<T>([dynamic parameters]) async {
-    _assertValidParameterType(parameters);
+    assert(_debugIsValidParameterType(parameters));
     return HttpsCallableResult<T>._(await delegate.call(parameters));
   }
 }
 
-/// Asserts whether a given call parameter is a valid type.
-void _assertValidParameterType(dynamic parameter, [bool isRoot = true]) {
+/// Whether a given call parameter is a valid type.
+bool _debugIsValidParameterType(dynamic parameter, [bool isRoot = true]) {
   if (parameter is List) {
     for (final element in parameter) {
-      _assertValidParameterType(element, false);
+      if (!_debugIsValidParameterType(element, false)) {
+        return false;
+      }
     }
-    return;
+    return true;
   }
 
   if (parameter is Map) {
     for (final key in parameter.keys) {
-      assert(key is String);
+      if (key is! String) {
+        return false;
+      }
     }
     for (final value in parameter.values) {
-      _assertValidParameterType(value, false);
+      if (!_debugIsValidParameterType(value, false)) {
+        return false;
+      }
     }
-    return;
+    return true;
   }
 
-  assert(parameter == null ||
+  return parameter == null ||
       parameter is String ||
       parameter is num ||
-      parameter is bool);
+      parameter is bool;
 }

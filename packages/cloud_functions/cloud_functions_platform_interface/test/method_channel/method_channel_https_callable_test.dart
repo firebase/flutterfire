@@ -50,7 +50,7 @@ void main() {
 
       functions = MethodChannelFirebaseFunctions(app: app);
       httpsCallable = MethodChannelHttpsCallable(
-        functions,
+        functions!,
         kOrigin,
         kName,
         kOptions,
@@ -83,21 +83,16 @@ void main() {
 
       test('should set options', () {
         expect(httpsCallable!.options, isInstanceOf<HttpsCallableOptions>());
-        expect(httpsCallable!.options!.timeout, isInstanceOf<Duration>());
-        expect(httpsCallable!.options!.timeout.inMinutes, 1);
+        expect(httpsCallable!.options.timeout, isInstanceOf<Duration>());
+        expect(httpsCallable!.options.timeout.inMinutes, 1);
       });
     });
 
     group('options', () {
       test('should set options', () {
         expect(httpsCallable!.options, isInstanceOf<HttpsCallableOptions>());
-        expect(httpsCallable!.options!.timeout, isInstanceOf<Duration>());
-        expect(httpsCallable!.options!.timeout.inMinutes, 1);
-      });
-
-      test('handles null value', () {
-        httpsCallable!.options = null;
-        expect(httpsCallable!.options, isNull);
+        expect(httpsCallable!.options.timeout, isInstanceOf<Duration>());
+        expect(httpsCallable!.options.timeout.inMinutes, 1);
       });
     });
 
@@ -117,49 +112,7 @@ void main() {
               'functionName': httpsCallable!.name,
               'origin': httpsCallable!.origin,
               'region': functions!.region,
-              'timeout': httpsCallable!.options?.timeout.inMilliseconds,
-              'parameters': kParameters,
-            },
-          ),
-        ]);
-      });
-
-      test('invokes native method when timeout is null', () async {
-        httpsCallable!.options = null;
-
-        await httpsCallable!.call(kParameters);
-
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'FirebaseFunctions#call',
-            arguments: <String, dynamic>{
-              'appName': functions!.app!.name,
-              'functionName': httpsCallable!.name,
-              'origin': httpsCallable!.origin,
-              'region': functions!.region,
-              'timeout': null,
-              'parameters': kParameters,
-            },
-          ),
-        ]);
-      });
-
-      test('invokes native method when options is null', () async {
-        httpsCallable!.options = null;
-
-        await httpsCallable!.call(kParameters);
-
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'FirebaseFunctions#call',
-            arguments: <String, dynamic>{
-              'appName': functions!.app!.name,
-              'functionName': httpsCallable!.name,
-              'origin': httpsCallable!.origin,
-              'region': functions!.region,
-              'timeout': null,
+              'timeout': httpsCallable!.options.timeout.inMilliseconds,
               'parameters': kParameters,
             },
           ),
@@ -178,7 +131,7 @@ void main() {
               'functionName': httpsCallable!.name,
               'origin': httpsCallable!.origin,
               'region': functions!.region,
-              'timeout': httpsCallable!.options?.timeout.inMilliseconds,
+              'timeout': httpsCallable!.options.timeout.inMilliseconds,
               'parameters': null,
             },
           ),
@@ -197,7 +150,7 @@ void main() {
               'functionName': httpsCallable!.name,
               'origin': httpsCallable!.origin,
               'region': functions!.region,
-              'timeout': httpsCallable!.options?.timeout.inMilliseconds,
+              'timeout': httpsCallable!.options.timeout.inMilliseconds,
               'parameters': null,
             },
           ),

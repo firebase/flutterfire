@@ -28,7 +28,7 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   }
 
   /// The [FirebaseFunctionsPlatform] instance.
-  final FirebaseFunctionsPlatform? functions;
+  final FirebaseFunctionsPlatform functions;
 
   /// The [origin] of the local emulator, such as "http://localhost:5001"
   final String? origin;
@@ -37,7 +37,7 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   final String name;
 
   /// Used to set the options for this instance.
-  HttpsCallableOptions? options;
+  HttpsCallableOptions options;
 
   /// Executes this Callable HTTPS trigger asynchronously.
   ///

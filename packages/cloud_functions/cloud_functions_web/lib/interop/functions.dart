@@ -12,7 +12,7 @@ import 'functions_interop.dart' as functions_interop;
 export 'functions_interop.dart' show HttpsCallableOptions;
 
 /// Given an AppJSImp, return the Functions instance.
-Functions getFunctionsInstance(App app, String? region) {
+Functions getFunctionsInstance(App app, [String? region]) {
   functions_interop.FunctionsJsImpl jsObject;
   if (region == null) {
     jsObject = firebase_interop.functions(app.jsObject);

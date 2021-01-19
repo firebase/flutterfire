@@ -39,7 +39,7 @@ class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
 
   @override
   HttpsCallablePlatform httpsCallable(
-      String? origin, String name, HttpsCallableOptions? options) {
+      String? origin, String name, HttpsCallableOptions options) {
     return MethodChannelHttpsCallable(this, origin, name, options);
   }
 }

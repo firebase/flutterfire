@@ -15,8 +15,15 @@ const String kTestString = 'Hello World';
 const String kBucket = 'gs://fake-storage-bucket-url.com';
 const String kSecondaryBucket = 'gs://fake-storage-bucket-url-2.com';
 
-void setupFirebaseCoreMocks() {
+void resetFirebaseCoreMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  // Rest Firebase core apps & instance.
+  // TODO(Salakar): Is this an API core could provide for testing, e.g. Firebase.reset().
+  MethodChannelFirebase.appInstances = {};
+  MethodChannelFirebase.isCoreInitialized = false;
+  FirebasePlatform.instance = MethodChannelFirebase();
+
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
     if (call.method == 'Firebase#initializeCore') {
       return [
@@ -46,8 +53,8 @@ void setupFirebaseCoreMocks() {
 }
 
 class MockHttpsCallablePlatform extends HttpsCallablePlatform {
-  MockHttpsCallablePlatform(FirebaseFunctionsPlatform? functions,
-      String? origin, String name, HttpsCallableOptions? options)
+  MockHttpsCallablePlatform(FirebaseFunctionsPlatform functions, String? origin,
+      String name, HttpsCallableOptions options)
       : super(functions, origin, name, options);
 
   @override
@@ -63,7 +70,7 @@ class MockFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {
 
   @override
   HttpsCallablePlatform httpsCallable(
-      String? origin, String name, HttpsCallableOptions? options) {
+      String? origin, String name, HttpsCallableOptions options) {
     HttpsCallablePlatform httpsCallablePlatform =
         MockHttpsCallablePlatform(this, origin, name, options);
     return httpsCallablePlatform;

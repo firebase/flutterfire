@@ -19,9 +19,7 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-// ignore: public_member_api_docs
 class MyApp extends StatefulWidget {
-  // ignore: public_member_api_docs
   MyApp({Key key}) : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();

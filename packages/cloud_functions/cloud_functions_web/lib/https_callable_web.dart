@@ -14,7 +14,7 @@ import 'utils.dart';
 class HttpsCallableWeb extends HttpsCallablePlatform {
   /// Constructor.
   HttpsCallableWeb(FirebaseFunctionsPlatform functions, this._webFunctions,
-      String? origin, String name, HttpsCallableOptions? options)
+      String? origin, String name, HttpsCallableOptions options)
       : super(functions, origin, name, options);
 
   final functions_interop.Functions _webFunctions;
@@ -27,7 +27,7 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
 
     functions_interop.HttpsCallableOptions callableOptions =
         functions_interop.HttpsCallableOptions(
-            timeout: options?.timeout.inMilliseconds);
+            timeout: options.timeout.inMilliseconds);
 
     functions_interop.HttpsCallable callable =
         _webFunctions.httpsCallable(name, callableOptions);

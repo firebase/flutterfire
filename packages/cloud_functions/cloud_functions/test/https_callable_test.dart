@@ -11,10 +11,10 @@ import 'mock.dart';
 import 'sample.dart' as data;
 
 void main() {
-  setupFirebaseCoreMocks();
   HttpsCallable? httpsCallable;
 
-  setUpAll(() async {
+  setUp(() async {
+    resetFirebaseCoreMocks();
     await Firebase.initializeApp();
     FirebaseFunctionsPlatform.instance = MockFirebaseFunctionsPlatform();
     httpsCallable = FirebaseFunctions.instance.httpsCallable('foo');

@@ -10,9 +10,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'mock.dart';
 
 void main() {
-  setupFirebaseCoreMocks();
-
-  setUpAll(() async {
+  setUp(() async {
+    resetFirebaseCoreMocks();
     await Firebase.initializeApp();
     FirebaseFunctionsPlatform.instance = MockFirebaseFunctionsPlatform();
   });
@@ -34,7 +33,9 @@ void main() {
     group('.instanceFor()', () {
       FirebaseApp? secondaryApp;
 
-      setUpAll(() async {
+      setUp(() async {
+        resetFirebaseCoreMocks();
+        await Firebase.initializeApp();
         secondaryApp = await Firebase.initializeApp(
           name: 'foo',
           options: const FirebaseOptions(
@@ -149,8 +150,8 @@ void main() {
                     timeout: const Duration(seconds: 1337)))
             .delegate;
         expect(delegate.options, isNotNull);
-        expect(delegate.options!.timeout, isA<Duration>());
-        expect(delegate.options!.timeout.inSeconds, equals(1337));
+        expect(delegate.options.timeout, isA<Duration>());
+        expect(delegate.options.timeout.inSeconds, equals(1337));
       });
     });
   });

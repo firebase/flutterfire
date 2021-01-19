@@ -82,7 +82,8 @@ void main() {
 
     test('throws if httpsCallable()', () {
       try {
-        firebaseFunctionsPlatform!.httpsCallable('', '', null);
+        firebaseFunctionsPlatform!
+            .httpsCallable('', '', HttpsCallableOptions());
         // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('httpsCallable() is not implemented'));
