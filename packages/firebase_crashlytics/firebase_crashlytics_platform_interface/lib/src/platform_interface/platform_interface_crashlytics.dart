@@ -47,7 +47,7 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
     return appInstance;
   }
 
-  static late FirebaseCrashlyticsPlatform _instance;
+  static late FirebaseCrashlyticsPlatform? _instance;
 
   /// The current default [FirebaseCrashlyticsPlatform] instance.
   ///
