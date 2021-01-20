@@ -23,11 +23,11 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     'plugins.flutter.io/firebase_crashlytics',
   );
 
-  late bool _isCrashlyticsCollectionEnabled;
+  bool? _isCrashlyticsCollectionEnabled;
 
   @override
   bool get isCrashlyticsCollectionEnabled {
-    return _isCrashlyticsCollectionEnabled;
+    return _isCrashlyticsCollectionEnabled!;
   }
 
   @override

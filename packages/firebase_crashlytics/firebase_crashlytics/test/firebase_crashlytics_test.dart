@@ -15,7 +15,7 @@ import './mock.dart';
 void main() {
   setupFirebaseCrashlyticsMocks();
 
-  late FirebaseCrashlytics crashlytics;
+  FirebaseCrashlytics? crashlytics;
 
   group('$FirebaseCrashlytics', () {
     setUpAll(() async {
@@ -30,7 +30,7 @@ void main() {
     tearDown(methodCallLog.clear);
 
     test('checkForUnsentReports', () async {
-      await crashlytics.checkForUnsentReports();
+      await crashlytics!.checkForUnsentReports();
 
       expect(methodCallLog, <Matcher>[
         isMethodCall('Crashlytics#checkForUnsentReports', arguments: null)
@@ -38,14 +38,14 @@ void main() {
     });
 
     test('crash', () async {
-      crashlytics.crash();
+      crashlytics!.crash();
 
       expect(methodCallLog,
           <Matcher>[isMethodCall('Crashlytics#crash', arguments: null)]);
     });
 
     test('deleteUnsentReports', () async {
-      await crashlytics.deleteUnsentReports();
+      await crashlytics!.deleteUnsentReports();
 
       expect(methodCallLog, <Matcher>[
         isMethodCall('Crashlytics#deleteUnsentReports', arguments: null)
@@ -53,7 +53,7 @@ void main() {
     });
 
     test('didCrashOnPreviousExecution', () async {
-      await crashlytics.didCrashOnPreviousExecution();
+      await crashlytics!.didCrashOnPreviousExecution();
 
       expect(methodCallLog, <Matcher>[
         isMethodCall('Crashlytics#didCrashOnPreviousExecution', arguments: null)
@@ -66,7 +66,7 @@ void main() {
         const exception = 'foo exception';
         const exceptionReason = 'bar reason';
 
-        await crashlytics.recordError(exception, stack,
+        await crashlytics!.recordError(exception, stack,
             reason: exceptionReason);
         expect(methodCallLog, <Matcher>[
           isMethodCall('Crashlytics#recordError', arguments: {
@@ -89,7 +89,7 @@ void main() {
         const exception = 'foo exception';
         const exceptionReason = 'bar reason';
 
-        await crashlytics.recordError(exception, null, reason: exceptionReason);
+        await crashlytics!.recordError(exception, null, reason: exceptionReason);
         expect(methodCallLog[0].method, 'Crashlytics#recordError');
         expect(methodCallLog[0].arguments['exception'], exception);
         expect(methodCallLog[0].arguments['reason'], exceptionReason);
@@ -120,7 +120,7 @@ void main() {
         ],
         context: ErrorDescription(exceptionReason),
       );
-      await crashlytics.recordFlutterError(details);
+      await crashlytics!.recordFlutterError(details);
       expect(methodCallLog, <Matcher>[
         isMethodCall('Crashlytics#recordError', arguments: {
           'exception': exception,
@@ -135,7 +135,7 @@ void main() {
     group('log', () {
       test('should call delegate method', () async {
         const msg = 'foo';
-        await crashlytics.log(msg);
+        await crashlytics!.log(msg);
         expect(methodCallLog, <Matcher>[
           isMethodCall('Crashlytics#log', arguments: {
             'message': msg,
@@ -146,7 +146,7 @@ void main() {
 
     group('sendUnsentReports', () {
       test('should call delegate method', () async {
-        await crashlytics.sendUnsentReports();
+        await crashlytics!.sendUnsentReports();
         expect(methodCallLog, <Matcher>[
           isMethodCall('Crashlytics#sendUnsentReports', arguments: null)
         ]);
@@ -155,10 +155,10 @@ void main() {
 
     group('setCrashlyticsCollectionEnabled', () {
       test('should call delegate method', () async {
-        await crashlytics.setCrashlyticsCollectionEnabled(false);
-        expect(crashlytics.isCrashlyticsCollectionEnabled, isFalse);
-        await crashlytics.setCrashlyticsCollectionEnabled(true);
-        expect(crashlytics.isCrashlyticsCollectionEnabled, isTrue);
+        await crashlytics!.setCrashlyticsCollectionEnabled(false);
+        expect(crashlytics!.isCrashlyticsCollectionEnabled, isFalse);
+        await crashlytics!.setCrashlyticsCollectionEnabled(true);
+        expect(crashlytics!.isCrashlyticsCollectionEnabled, isTrue);
         expect(methodCallLog, <Matcher>[
           isMethodCall('Crashlytics#setCrashlyticsCollectionEnabled',
               arguments: {
@@ -175,7 +175,7 @@ void main() {
     group('setUserIdentifier', () {
       test('should call delegate method', () async {
         const id = 'foo';
-        await crashlytics.setUserIdentifier(id);
+        await crashlytics!.setUserIdentifier(id);
         expect(methodCallLog, <Matcher>[
           isMethodCall('Crashlytics#setUserIdentifier', arguments: {
             'identifier': id,
@@ -187,15 +187,15 @@ void main() {
     group('setCustomKey', () {
       test('should throw if null', () async {
         expect(
-            () => crashlytics.setCustomKey('foo', null), throwsAssertionError);
-        expect(() => crashlytics.setCustomKey('foo', []), throwsAssertionError);
-        expect(() => crashlytics.setCustomKey('foo', {}), throwsAssertionError);
+            () => crashlytics!.setCustomKey('foo', null), throwsAssertionError);
+        expect(() => crashlytics!.setCustomKey('foo', []), throwsAssertionError);
+        expect(() => crashlytics!.setCustomKey('foo', {}), throwsAssertionError);
       });
 
       test('should call delegate method', () async {
         const key = 'foo';
         const value = 'bar';
-        await crashlytics.setCustomKey(key, value);
+        await crashlytics!.setCustomKey(key, value);
         expect(methodCallLog, <Matcher>[
           isMethodCall('Crashlytics#setCustomKey', arguments: {
             'key': key,
