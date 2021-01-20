@@ -73,10 +73,6 @@ void testsMain() {
     });
 
     group('log', () {
-      test('should throw if message is null', () async {
-        expect(() => crashlytics.log(null), throwsAssertionError);
-      });
-
       // This is currently only testing that we can log without crashing.
       test('accepts any value', () async {
         await crashlytics.log('flutter');
@@ -91,11 +87,6 @@ void testsMain() {
     });
 
     group('setCrashlyticsCollectionEnabled', () {
-      test('should throw if null', () async {
-        expect(() => crashlytics.setCrashlyticsCollectionEnabled(null),
-            throwsAssertionError);
-      });
-
       // This is currently only testing that we can send unsent reports without crashing.
       test('should update to true', () async {
         await crashlytics.setCrashlyticsCollectionEnabled(true);
@@ -108,10 +99,6 @@ void testsMain() {
     });
 
     group('setUserIdentifier', () {
-      test('should throw if null', () async {
-        expect(() => crashlytics.setUserIdentifier(null), throwsAssertionError);
-      });
-
       // This is currently only testing that we can log errors without crashing.
       test('should update', () async {
         await crashlytics.setUserIdentifier('foo');
