@@ -28,9 +28,7 @@ void main() {
   });
 }
 
-// ignore: public_member_api_docs
 class MyApp extends StatefulWidget {
-  // ignore: public_member_api_docs
   MyApp({Key key}) : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();
@@ -42,7 +40,6 @@ class _MyAppState extends State<MyApp> {
   Future<void> _testAsyncErrorOnInit() async {
     Future<void>.delayed(const Duration(seconds: 2), () {
       final List<int> list = <int>[];
-      // ignore: avoid_print
       print(list[100]);
     });
   }
@@ -179,7 +176,6 @@ class _MyAppState extends State<MyApp> {
                             Future<void>.delayed(const Duration(seconds: 2),
                                 () {
                               final List<int> list = <int>[];
-                              // ignore: avoid_print
                               print(list[100]);
                             });
                           }, FirebaseCrashlytics.instance.recordError);
