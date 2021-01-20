@@ -163,7 +163,7 @@ class _Application extends State<Application> {
 
     try {
       await http.post(
-        'https://api.rnfirebase.io/messaging/send',
+        Uri.parse('https://api.rnfirebase.io/messaging/send'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

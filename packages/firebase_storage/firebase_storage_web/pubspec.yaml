@@ -17,10 +17,7 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  http:
-    git:
-      url: https://github.com/dart-lang/http
-      ref: d5c678cd63c3e9c1d779a09acfa95b7e3af84665
+  http: ^0.12.2
   js: ^0.6.1
   meta: ^1.1.7
 
