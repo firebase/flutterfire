@@ -133,7 +133,6 @@ void main() {
     });
 
     group('log', () {
-
       test('should call delegate method', () async {
         const msg = 'foo';
         await crashlytics.log(msg);
@@ -155,7 +154,6 @@ void main() {
     });
 
     group('setCrashlyticsCollectionEnabled', () {
-
       test('should call delegate method', () async {
         await crashlytics.setCrashlyticsCollectionEnabled(false);
         expect(crashlytics.isCrashlyticsCollectionEnabled, isFalse);
