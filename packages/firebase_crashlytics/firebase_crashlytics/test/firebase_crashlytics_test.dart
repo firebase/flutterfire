@@ -133,9 +133,6 @@ void main() {
     });
 
     group('log', () {
-      test('should throw if msg is null', () async {
-        expect(() => crashlytics.log(null), throwsAssertionError);
-      });
 
       test('should call delegate method', () async {
         const msg = 'foo';
@@ -158,10 +155,6 @@ void main() {
     });
 
     group('setCrashlyticsCollectionEnabled', () {
-      test('should throw if null', () async {
-        expect(() => crashlytics.setCrashlyticsCollectionEnabled(null),
-            throwsAssertionError);
-      });
 
       test('should call delegate method', () async {
         await crashlytics.setCrashlyticsCollectionEnabled(false);
@@ -182,10 +175,6 @@ void main() {
     });
 
     group('setUserIdentifier', () {
-      test('should throw if null', () async {
-        expect(() => crashlytics.setUserIdentifier(null), throwsAssertionError);
-      });
-
       test('should call delegate method', () async {
         const id = 'foo';
         await crashlytics.setUserIdentifier(id);
@@ -199,8 +188,6 @@ void main() {
 
     group('setCustomKey', () {
       test('should throw if null', () async {
-        expect(
-            () => crashlytics.setCustomKey(null, null), throwsAssertionError);
         expect(
             () => crashlytics.setCustomKey('foo', null), throwsAssertionError);
         expect(() => crashlytics.setCustomKey('foo', []), throwsAssertionError);
