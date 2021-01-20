@@ -41,12 +41,11 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<bool> checkForUnsentReports() async {
     try {
-      Map<String, dynamic> data =
-          await (channel.invokeMapMethod<String, dynamic>(
-                  'Crashlytics#checkForUnsentReports')
-              as Future<Map<String, dynamic>>);
+      Map<String, dynamic>? data =
+          await channel.invokeMapMethod<String, dynamic>(
+              'Crashlytics#checkForUnsentReports');
 
-      return data['unsentReports'];
+      return data!['unsentReports'];
     } catch (e, s) {
       throw convertPlatformException(e, s);
     }
@@ -73,12 +72,11 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<bool> didCrashOnPreviousExecution() async {
     try {
-      Map<String, dynamic> data =
-          await (channel.invokeMapMethod<String, dynamic>(
-                  'Crashlytics#didCrashOnPreviousExecution')
-              as Future<Map<String, dynamic>>);
+      Map<String, dynamic>? data =
+          await channel.invokeMapMethod<String, dynamic>(
+              'Crashlytics#didCrashOnPreviousExecution');
 
-      return data['didCrashOnPreviousExecution'];
+      return data!['didCrashOnPreviousExecution'];
     } catch (e, s) {
       throw convertPlatformException(e, s);
     }
@@ -127,13 +125,13 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> setCrashlyticsCollectionEnabled(bool enabled) async {
     try {
-      Map<String, dynamic> data = await (channel
+      Map<String, dynamic>? data = await channel
           .invokeMapMethod<String, dynamic>(
               'Crashlytics#setCrashlyticsCollectionEnabled', <String, dynamic>{
         'enabled': enabled,
-      }) as Future<Map<String, dynamic>>);
+      });
 
-      _isCrashlyticsCollectionEnabled = data['isCrashlyticsCollectionEnabled'];
+      _isCrashlyticsCollectionEnabled = data!['isCrashlyticsCollectionEnabled'];
     } catch (e, s) {
       throw convertPlatformException(e, s);
     }

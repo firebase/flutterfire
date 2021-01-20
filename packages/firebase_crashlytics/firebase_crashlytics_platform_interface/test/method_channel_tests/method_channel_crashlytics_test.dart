@@ -217,7 +217,13 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        await testExceptionHandling('PLATFORM', crashlytics.recordError);
+        await testExceptionHandling(
+            'PLATFORM',
+            () => crashlytics.recordError(
+                exception: 'test exception',
+                reason: 'test',
+                information: 'test',
+                stackTraceElements: []));
       });
     });
 
