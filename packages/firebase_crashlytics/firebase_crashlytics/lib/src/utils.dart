@@ -7,7 +7,7 @@ List<Map<String, String>> getStackTraceElements(List<String> lines) {
   final List<Map<String, String>> elements = <Map<String, String>>[];
 
   for (final String line in lines) {
-    final List<String> lineParts = line.split(RegExp(r'\\s+'));
+    final List<String> lineParts = line.split(RegExp(r'\s+'));
 
     final String fileName = lineParts.first;
 
