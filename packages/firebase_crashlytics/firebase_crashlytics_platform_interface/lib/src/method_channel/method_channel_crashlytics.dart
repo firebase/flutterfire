@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -17,7 +15,8 @@ import './utils/exception.dart';
 /// You can get an instance by calling [MethodChannelFirebaseCrashlytics.instance].
 class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   /// Create an instance of [MethodChannelFirebaseCrashlytics].
-  MethodChannelFirebaseCrashlytics({required FirebaseApp app}) : super(appInstance: app);
+  MethodChannelFirebaseCrashlytics({required FirebaseApp app})
+      : super(appInstance: app);
 
   /// The [MethodChannel] used to communicate with the native plugin
   static MethodChannel channel = const MethodChannel(
@@ -40,11 +39,12 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   }
 
   @override
-  Future<bool > checkForUnsentReports() async {
+  Future<bool> checkForUnsentReports() async {
     try {
       Map<String, dynamic> data =
           await (channel.invokeMapMethod<String, dynamic>(
-              'Crashlytics#checkForUnsentReports') as FutureOr<Map<String, dynamic>>);
+                  'Crashlytics#checkForUnsentReports')
+              as Future<Map<String, dynamic>>);
 
       return data['unsentReports'];
     } catch (e, s) {
@@ -71,11 +71,12 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   }
 
   @override
-  Future<bool > didCrashOnPreviousExecution() async {
+  Future<bool> didCrashOnPreviousExecution() async {
     try {
       Map<String, dynamic> data =
           await (channel.invokeMapMethod<String, dynamic>(
-              'Crashlytics#didCrashOnPreviousExecution') as FutureOr<Map<String, dynamic>>);
+                  'Crashlytics#didCrashOnPreviousExecution')
+              as Future<Map<String, dynamic>>);
 
       return data['didCrashOnPreviousExecution'];
     } catch (e, s) {
@@ -130,7 +131,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
           .invokeMapMethod<String, dynamic>(
               'Crashlytics#setCrashlyticsCollectionEnabled', <String, dynamic>{
         'enabled': enabled,
-      }) as FutureOr<Map<String, dynamic>>);
+      }) as Future<Map<String, dynamic>>);
 
       _isCrashlyticsCollectionEnabled = data['isCrashlyticsCollectionEnabled'];
     } catch (e, s) {

@@ -12,12 +12,12 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
       : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
 
   /// Cached instance of [FirebaseCrashlytics];
-  static late FirebaseCrashlytics _instance;
+  static late FirebaseCrashlytics? _instance;
 
   // Cached and lazily loaded instance of [FirebaseCrashlyticsPlatform] to avoid
   // creating a [MethodChannelFirebaseCrashlytics] when not needed or creating an
   // instance with the default app before a user specifies an app.
-  FirebaseCrashlyticsPlatform _delegatePackingProperty;
+  FirebaseCrashlyticsPlatform? _delegatePackingProperty;
 
   FirebaseCrashlyticsPlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseCrashlyticsPlatform.instanceFor(
@@ -75,12 +75,12 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Submits a Crashlytics report of a caught error.
   Future<void> recordError(dynamic exception, StackTrace? stack,
       {dynamic reason,
-      Iterable<DiagnosticsNode> information = const [] ,
+      Iterable<DiagnosticsNode> information = const [],
       bool printDetails = false}) async {
     // Use the debug flag if provided, otherwise user can set using printDetails
     bool printOut = kDebugMode || printDetails;
 
-    final String _information =  information.isEmpty
+    final String _information = information.isEmpty
         ? ''
         : (StringBuffer()..writeAll(information, '\n')).toString();
 
@@ -113,8 +113,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     // The stack trace can be null. To avoid the following exception:
     // Invalid argument(s): Cannot create a Trace from null.
     // We can check for null and provide an empty stack trace.
-    final StackTrace stackTrace =
-        stack ?? StackTrace.current ?? StackTrace.fromString('');
+    final StackTrace stackTrace = stack ?? StackTrace.current;
 
     // Report error.
     final List<String> stackTraceLines =
@@ -132,14 +131,16 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
 
   /// Submits a Crashlytics report of a non-fatal error caught by the Flutter framework.
   Future<void> recordFlutterError(FlutterErrorDetails flutterErrorDetails) {
-    assert(flutterErrorDetails != null);
     FlutterError.dumpErrorToConsole(flutterErrorDetails, forceReport: true);
+
     return recordError(
         flutterErrorDetails.exceptionAsString(), flutterErrorDetails.stack,
         reason: flutterErrorDetails.context,
-        information: flutterErrorDetails.informationCollector == null
-            ? null
-            : flutterErrorDetails.informationCollector());
+        // todo getting "unchecked_use_of_nullable_value" error and cannot resolve it, raise in PR.
+        // information: flutterErrorDetails.informationCollector == null
+        //     ? []
+        //     : flutterErrorDetails.informationCollector());
+        information: []);
   }
 
   /// Logs a message that's included in the next fatal or non-fatal report.
@@ -150,7 +151,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// The maximum log size is 64k. If exceeded, the log rolls such that messages
   /// are removed, starting from the oldest.
   Future<void> log(String message) async {
-    assert(message != null);
     return _delegate.log(message);
   }
 
@@ -172,7 +172,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// data collection is disabled. Use [deleteUnsentReports] to delete any reports
   /// stored on the device without sending them to Crashlytics.
   Future<void> setCrashlyticsCollectionEnabled(bool enabled) {
-    assert(enabled != null);
     return _delegate.setCrashlyticsCollectionEnabled(enabled);
   }
 
@@ -185,7 +184,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Ensure you have collected permission to store any personal identifiable information
   /// from the user if required.
   Future<void> setUserIdentifier(String identifier) {
-    assert(identifier != null);
     return _delegate.setUserIdentifier(identifier);
   }
 
@@ -202,7 +200,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   ///
   /// The value can only be a type [int], [num], [String] or [bool].
   Future<void> setCustomKey(String key, dynamic value) async {
-    assert(key != null);
     assert(value != null);
     assert(value is int || value is num || value is String || value is bool);
     return _delegate.setCustomKey(key, value.toString());

@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -17,7 +15,7 @@ import './mock.dart';
 void main() {
   setupFirebaseCrashlyticsMocks();
 
-  /*late*/ FirebaseCrashlytics crashlytics;
+  late FirebaseCrashlytics crashlytics;
 
   group('$FirebaseCrashlytics', () {
     setUpAll(() async {
