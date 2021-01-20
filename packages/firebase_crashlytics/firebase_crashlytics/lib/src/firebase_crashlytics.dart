@@ -12,7 +12,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
       : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
 
   /// Cached instance of [FirebaseCrashlytics];
-  static late FirebaseCrashlytics? _instance;
+  static FirebaseCrashlytics? _instance;
 
   // Cached and lazily loaded instance of [FirebaseCrashlyticsPlatform] to avoid
   // creating a [MethodChannelFirebaseCrashlytics] when not needed or creating an
@@ -29,7 +29,9 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseCrashlytics get instance {
-    return _instance ??= FirebaseCrashlytics._(app: Firebase.app());
+    _instance ??= FirebaseCrashlytics._(app: Firebase.app());
+    
+    return _instance!;
   }
 
   /// Whether the current Crashlytics instance is collecting reports. If false,
@@ -136,11 +138,10 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     return recordError(
         flutterErrorDetails.exceptionAsString(), flutterErrorDetails.stack,
         reason: flutterErrorDetails.context,
-        // todo getting "unchecked_use_of_nullable_value" error and cannot resolve it, raise in PR.
-        // information: flutterErrorDetails.informationCollector == null
-        //     ? []
-        //     : flutterErrorDetails.informationCollector());
-        information: []);
+        information: flutterErrorDetails.informationCollector == null
+            ? []
+            : flutterErrorDetails.informationCollector!());
+        );
   }
 
   /// Logs a message that's included in the next fatal or non-fatal report.
