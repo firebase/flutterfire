@@ -637,25 +637,6 @@ void runUserTests() {
         fail('should have thrown an error');
       }, skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS);
 
-      test('should throw an AssertionError if verification code is null',
-          () async {
-        // Setup
-        await auth.createUserWithEmailAndPassword(
-            email: email, password: TEST_PASSWORD);
-
-        try {
-          // Update phone number
-          await auth.currentUser.updatePhoneNumber(
-              PhoneAuthProvider.credential(verificationId: '', smsCode: null));
-        } on AssertionError catch (_) {
-          return;
-        } catch (_) {
-          fail('should have thrown a AssertionError error');
-        }
-
-        fail('should have thrown an error');
-      }, skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS);
-
       test('should throw an error when verification id is an empty string',
           () async {
         // Setup
@@ -698,24 +679,6 @@ void runUserTests() {
       },
           skip:
               true); // gets rate-limited often so should only be enabled when manual testing
-
-      test('should error if email is null', () async {
-        // Setup
-        await auth.createUserWithEmailAndPassword(
-            email: email, password: TEST_PASSWORD);
-
-        // Test
-        try {
-          await auth.currentUser.verifyBeforeUpdateEmail(
-              null, ActionCodeSettings(url: 'test.com'));
-        } on AssertionError catch (_) {
-          return;
-        } catch (e) {
-          fail('should have thrown an $AssertionError');
-        }
-
-        fail('should have thrown an error');
-      });
     });
 
     group('delete()', () {
@@ -744,7 +707,7 @@ void runUserTests() {
         });
       });
 
-      test('should throw a error on delete when no user is signed in',
+      test('should throw an error on delete when no user is signed in',
           () async {
         // Setup
         User user;

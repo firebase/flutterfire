@@ -321,10 +321,6 @@ void runInstanceTests() {
         expect(auth.isSignInWithEmailLink(emailLink3), equals(false));
         expect(auth.isSignInWithEmailLink(emailLink4), equals(true));
       });
-
-      test('throws if email link is null', () {
-        expect(() => auth.isSignInWithEmailLink(null), throwsAssertionError);
-      });
     });
 
     group('sendPasswordResetEmail()', () {
