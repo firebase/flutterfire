@@ -33,7 +33,11 @@ Future getCustomToken(
     var body = json.encode(claims);
     var headers = {'authorization': 'Bearer $idToken'};
 
-    final response = await http.post(path, headers: headers, body: body);
+    final response = await http.post(
+      Uri.parse(path),
+      headers: headers,
+      body: body,
+    );
     if (response.statusCode == 200) {
       // successful, parse json
       var jsonData = json.decode(response.body);
