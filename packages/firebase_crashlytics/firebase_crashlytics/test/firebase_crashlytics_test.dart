@@ -66,8 +66,8 @@ void main() {
         const exception = 'foo exception';
         const exceptionReason = 'bar reason';
 
-        await crashlytics!.recordError(exception, stack,
-            reason: exceptionReason);
+        await crashlytics!
+            .recordError(exception, stack, reason: exceptionReason);
         expect(methodCallLog, <Matcher>[
           isMethodCall('Crashlytics#recordError', arguments: {
             'exception': exception,
@@ -89,7 +89,8 @@ void main() {
         const exception = 'foo exception';
         const exceptionReason = 'bar reason';
 
-        await crashlytics!.recordError(exception, null, reason: exceptionReason);
+        await crashlytics!
+            .recordError(exception, null, reason: exceptionReason);
         expect(methodCallLog[0].method, 'Crashlytics#recordError');
         expect(methodCallLog[0].arguments['exception'], exception);
         expect(methodCallLog[0].arguments['reason'], exceptionReason);
@@ -188,8 +189,10 @@ void main() {
       test('should throw if null', () async {
         expect(
             () => crashlytics!.setCustomKey('foo', null), throwsAssertionError);
-        expect(() => crashlytics!.setCustomKey('foo', []), throwsAssertionError);
-        expect(() => crashlytics!.setCustomKey('foo', {}), throwsAssertionError);
+        expect(
+            () => crashlytics!.setCustomKey('foo', []), throwsAssertionError);
+        expect(
+            () => crashlytics!.setCustomKey('foo', {}), throwsAssertionError);
       });
 
       test('should call delegate method', () async {
