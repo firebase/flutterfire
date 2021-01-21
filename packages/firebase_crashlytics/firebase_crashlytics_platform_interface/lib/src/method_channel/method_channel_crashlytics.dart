@@ -46,8 +46,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
               'Crashlytics#checkForUnsentReports');
 
       return data!['unsentReports'];
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
+    } on PlatformException catch (e, s) {
+      throw platformExceptionToFirebaseException(e, s);
     }
   }
 
@@ -55,8 +55,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   Future<void> crash() async {
     try {
       await channel.invokeMethod<void>('Crashlytics#crash');
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
+    } on PlatformException catch (e, s) {
+      throw platformExceptionToFirebaseException(e, s);
     }
   }
 
@@ -64,8 +64,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   Future<void> deleteUnsentReports() async {
     try {
       await channel.invokeMethod<void>('Crashlytics#deleteUnsentReports');
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
+    } on PlatformException catch (e, s) {
+      throw platformExceptionToFirebaseException(e, s);
     }
   }
 
@@ -77,8 +77,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
               'Crashlytics#didCrashOnPreviousExecution');
 
       return data!['didCrashOnPreviousExecution'];
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
+    } on PlatformException catch (e, s) {
+      throw platformExceptionToFirebaseException(e, s);
     }
   }
 
@@ -97,8 +97,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
         'reason': reason,
         'stackTraceElements': stackTraceElements ?? [],
       });
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
+    } on PlatformException catch (e, s) {
+      throw platformExceptionToFirebaseException(e, s);
     }
   }
 
@@ -108,8 +108,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
       await channel.invokeMethod<void>('Crashlytics#log', <String, dynamic>{
         'message': message,
       });
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
+    } on PlatformException catch (e, s) {
+      throw platformExceptionToFirebaseException(e, s);
     }
   }
 
@@ -117,8 +117,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   Future<void> sendUnsentReports() async {
     try {
       await channel.invokeMethod<void>('Crashlytics#sendUnsentReports');
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
+    } on PlatformException catch (e, s) {
+      throw platformExceptionToFirebaseException(e, s);
     }
   }
 
@@ -132,8 +132,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
       });
 
       _isCrashlyticsCollectionEnabled = data!['isCrashlyticsCollectionEnabled'];
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
+    } on PlatformException catch (e, s) {
+      throw platformExceptionToFirebaseException(e, s);
     }
   }
 
@@ -144,8 +144,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
           'Crashlytics#setUserIdentifier', <String, dynamic>{
         'identifier': identifier,
       });
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
+    } on PlatformException catch (e, s) {
+      throw platformExceptionToFirebaseException(e, s);
     }
   }
 
@@ -157,8 +157,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
         'key': key,
         'value': value,
       });
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
+    } on PlatformException catch (e, s) {
+      throw platformExceptionToFirebaseException(e, s);
     }
   }
 }
