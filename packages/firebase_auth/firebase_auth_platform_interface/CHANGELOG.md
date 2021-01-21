@@ -1,3 +1,8 @@
+## 4.0.0-nullsafety.1
+
+Bump firebase_core to v0.8.0-nullsafety.1
+
+
 ## 4.0.0-nullsafety.0
 
 Migrated to null safety (#4633)
