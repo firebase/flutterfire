@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
@@ -47,7 +45,8 @@ abstract class MethodChannelTask extends TaskPlatform {
     });
 
     // Get the task stream.
-    _stream = MethodChannelFirebaseStorage.taskObservers[_handle]!.stream as Stream<TaskSnapshotPlatform>;
+    _stream = MethodChannelFirebaseStorage.taskObservers[_handle]!.stream
+        as Stream<TaskSnapshotPlatform>;
     late StreamSubscription _subscription;
 
     // Listen for stream events.
@@ -110,7 +109,8 @@ abstract class MethodChannelTask extends TaskPlatform {
 
   @override
   Stream<TaskSnapshotPlatform> get snapshotEvents {
-    return MethodChannelFirebaseStorage.taskObservers[_handle]!.stream as Stream<TaskSnapshotPlatform>;
+    return MethodChannelFirebaseStorage.taskObservers[_handle]!.stream
+        as Stream<TaskSnapshotPlatform>;
   }
 
   @override

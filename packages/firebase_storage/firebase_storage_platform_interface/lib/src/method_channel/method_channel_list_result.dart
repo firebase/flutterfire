@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import '../../firebase_storage_platform_interface.dart';
 import 'method_channel_reference.dart';
 
@@ -25,7 +23,9 @@ class MethodChannelListResult extends ListResultPlatform {
 
   @override
   List<ReferencePlatform> get items {
-    return _items.map((path) => MethodChannelReference(storage!, path)).toList();
+    return _items
+        .map((path) => MethodChannelReference(storage!, path))
+        .toList();
   }
 
   @override

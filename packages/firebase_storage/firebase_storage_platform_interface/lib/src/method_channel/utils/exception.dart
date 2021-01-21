@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -12,14 +10,12 @@ import 'package:flutter/services.dart';
 /// Catches a [PlatformException] and returns an [Exception].
 ///
 /// If the [Exception] is a [PlatformException], a [FirebaseException] is returned.
-Exception convertPlatformException(Object exception,
-    [StackTrace? stackTrace]) {
+Exception convertPlatformException(Object exception, [StackTrace? stackTrace]) {
   if (exception is! Exception || exception is! PlatformException) {
     return exception as Exception;
   }
 
-  return platformExceptionToFirebaseException(
-      exception, stackTrace);
+  return platformExceptionToFirebaseException(exception, stackTrace);
 }
 
 /// Catches a [PlatformException] and converts it into a [FirebaseException] if
@@ -30,8 +26,8 @@ Future<T> catchFuturePlatformException<T>(Object exception,
     return Future.error(exception, stackTrace);
   }
 
-  return Future<T>.error(platformExceptionToFirebaseException(
-      exception, stackTrace));
+  return Future<T>.error(
+      platformExceptionToFirebaseException(exception, stackTrace));
 }
 
 /// Converts a [PlatformException] into a [FirebaseException].

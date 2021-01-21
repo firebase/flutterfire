@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
@@ -80,7 +78,7 @@ abstract class ReferencePlatform extends PlatformInterface {
   }
 
   /// Fetches a long lived download URL for this object.
-  Future<String > getDownloadURL() {
+  Future<String> getDownloadURL() {
     throw UnimplementedError('getDownloadURL() is not implemented');
   }
 
@@ -122,7 +120,7 @@ abstract class ReferencePlatform extends PlatformInterface {
   ///
   /// Returns a [Uint8List] of the data. If the [maxSize] (in bytes) is exceeded,
   /// the operation will be canceled.
-  Future<Uint8List? > getData(int maxSize) async {
+  Future<Uint8List?> getData(int maxSize) async {
     throw UnimplementedError('getData() is not implemented');
   }
 
@@ -131,8 +129,7 @@ abstract class ReferencePlatform extends PlatformInterface {
   /// Use this method to upload fixed sized data as a [Uint8List].
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
-  TaskPlatform putData(Uint8List data,
-      [SettableMetadata? metadata]) {
+  TaskPlatform putData(Uint8List data, [SettableMetadata? metadata]) {
     throw UnimplementedError('putData() is not implemented');
   }
 

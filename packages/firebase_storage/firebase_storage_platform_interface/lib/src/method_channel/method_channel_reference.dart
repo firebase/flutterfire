@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
@@ -39,7 +37,7 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  Future<String > getDownloadURL() async {
+  Future<String> getDownloadURL() async {
     try {
       Map<String, dynamic> data = await (MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>(
@@ -131,7 +129,7 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  Future<Uint8List? > getData(int maxSize) {
+  Future<Uint8List?> getData(int maxSize) {
     try {
       return MethodChannelFirebaseStorage.channel
           .invokeMethod<Uint8List>('Reference#getData', <String, dynamic>{
