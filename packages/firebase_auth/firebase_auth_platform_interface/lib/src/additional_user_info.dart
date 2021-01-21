@@ -11,7 +11,7 @@ class AdditionalUserInfo {
   @protected
   AdditionalUserInfo({
     required this.isNewUser,
-    required this.profile,
+    this.profile,
     this.providerId,
     this.username,
   });
@@ -21,7 +21,7 @@ class AdditionalUserInfo {
 
   /// A [Map] containing additional profile information from the identity
   /// provider.
-  final Map<String, dynamic> profile;
+  final Map<String, dynamic>? profile;
 
   /// The federated identity provider ID.
   final String? providerId;
@@ -31,6 +31,10 @@ class AdditionalUserInfo {
 
   @override
   String toString() {
-    return '$AdditionalUserInfo(isNewUser: $isNewUser, profile: ${profile.toString()}, providerId: $providerId, username: $username)';
+    return '$AdditionalUserInfo('
+        'isNewUser: $isNewUser, '
+        'profile: $profile, '
+        'providerId: $providerId, '
+        'username: $username)';
   }
 }

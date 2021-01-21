@@ -50,14 +50,15 @@ ActionCodeInfo? convertWebActionCodeInfo(
 
 /// Converts a [auth_interop.AdditionalUserInfo] into a [AdditionalUserInfo].
 AdditionalUserInfo? convertWebAdditionalUserInfo(
-    auth_interop.AdditionalUserInfo? webAdditionalUserInfo) {
+  auth_interop.AdditionalUserInfo? webAdditionalUserInfo,
+) {
   if (webAdditionalUserInfo == null) {
     return null;
   }
 
   return AdditionalUserInfo(
     isNewUser: webAdditionalUserInfo.isNewUser,
-    profile: webAdditionalUserInfo.profile!,
+    profile: webAdditionalUserInfo.profile,
     providerId: webAdditionalUserInfo.providerId,
     username: webAdditionalUserInfo.username,
   );

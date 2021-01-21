@@ -149,8 +149,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<UserCredentialPlatform> createUserWithEmailAndPassword(
       String email, String password) async {
     try {
-      return UserCredentialWeb(this,
-          await _webAuth!.createUserWithEmailAndPassword(email, password));
+      return UserCredentialWeb(
+        this,
+        await _webAuth!.createUserWithEmailAndPassword(email, password),
+      );
     } catch (e) {
       throw getFirebaseAuthException(e);
     }

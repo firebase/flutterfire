@@ -429,9 +429,15 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// enables an email-based password reset. This function will create a new
   /// user account and set the initial user password.
   Future<UserCredential> createUserWithEmailAndPassword(
-          String email, String password) =>
-      handleThenable(jsObject.createUserWithEmailAndPassword(email, password))
-          .then((u) => UserCredential.fromJsObject(u));
+    String email,
+    String password,
+  ) async {
+    final u = await handleThenable(
+      jsObject.createUserWithEmailAndPassword(email, password),
+    );
+
+    return UserCredential.fromJsObject(u);
+  }
 
   /// Gets the list of possible sign in methods for the given email address.
   ///

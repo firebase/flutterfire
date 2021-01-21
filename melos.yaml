@@ -136,7 +136,7 @@ scripts:
   test:web_e2e:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter drive -d chrome --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
+        "flutter drive --device-id=web-server --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
     description: |
       Run all Web test driver e2e tests in a specific example app.
        - Requires `flutter channel master` (or beta).
@@ -151,7 +151,7 @@ scripts:
   test:macos_e2e:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter drive --device-id=web-server --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
+        "flutter drive -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
     description: |
       Run all MacOS test driver e2e tests in a specific example app.
        - Requires `flutter channel master`.

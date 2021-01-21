@@ -69,7 +69,7 @@ void main() {
 
         expect(additionalUserInfo.isNewUser, isTrue);
         expect(additionalUserInfo.profile, isA<Map<String, dynamic>>());
-        expect(additionalUserInfo.profile['foo'], equals('bar'));
+        expect(additionalUserInfo.profile!['foo'], equals('bar'));
         expect(additionalUserInfo.username, equals('info$kMockUsername'));
         expect(additionalUserInfo.providerId, equals('info$kMockProviderId'));
 
