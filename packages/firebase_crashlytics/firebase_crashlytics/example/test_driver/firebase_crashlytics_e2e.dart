@@ -22,7 +22,7 @@ void testsMain() {
     group('checkForUnsentReports', () {
       //TODO(russellwheatley) debug test. The fail() function doesn't fail test and an error isn't thrown on android platform
       // test('should throw if automatic crash report is enabled', () async {
-      
+
       //previous implementation
       // try {
       //   await crashlytics.checkForUnsentReports();
@@ -30,7 +30,7 @@ void testsMain() {
       // } catch (e) {
       //   // Do nothing. test will fail.
       // }
-      
+
       // current implementation
       //   await crashlytics.setCrashlyticsCollectionEnabled(true);
 
