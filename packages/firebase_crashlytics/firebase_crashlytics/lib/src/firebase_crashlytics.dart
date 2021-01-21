@@ -78,15 +78,15 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   Future<void> recordError(dynamic exception, StackTrace? stack,
       {dynamic reason,
       Iterable<DiagnosticsNode> information = const [],
-      bool printDetails = false}) async {
-    // Use the debug flag if provided, otherwise user can set using printDetails
-    bool printOut = kDebugMode || printDetails;
+      bool? printDetails}) async {
+    // Use the debug flag if printDetails is not provided
+    printDetails ??= kDebugMode;
 
     final String _information = information.isEmpty
         ? ''
         : (StringBuffer()..writeAll(information, '\n')).toString();
 
-    if (printOut) {
+    if (printDetails) {
       // ignore: avoid_print
       print('----------------FIREBASE CRASHLYTICS----------------');
 
@@ -112,9 +112,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
       print('----------------------------------------------------');
     }
 
-    // The stack trace can be null. To avoid the following exception:
-    // Invalid argument(s): Cannot create a Trace from null.
-    // We can check for null and provide an empty stack trace.
     final StackTrace stackTrace = stack ?? StackTrace.current;
 
     // Report error.
@@ -199,8 +196,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// ignored. Keys or values that exceed 1024 characters are truncated.
   ///
   /// The value can only be a type [int], [num], [String] or [bool].
-  Future<void> setCustomKey(String key, dynamic value) async {
-    assert(value != null);
+  Future<void> setCustomKey(String key, Object value) async {
     assert(value is int || value is num || value is String || value is bool);
     return _delegate.setCustomKey(key, value.toString());
   }
