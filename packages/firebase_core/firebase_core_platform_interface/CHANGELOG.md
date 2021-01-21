@@ -1,3 +1,7 @@
+## 4.0.0-nullsafety.0
+
+Major bump for the null-safety version to respect the versioning convention.
+
 ## 3.0.2-nullsafety.0
 
  - **REFACTOR**: Migrate to non-nullable types (#4656).

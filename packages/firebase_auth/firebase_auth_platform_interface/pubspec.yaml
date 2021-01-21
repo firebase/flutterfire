@@ -17,7 +17,7 @@ dependencies:
   plugin_platform_interface: ^1.1.0-nullsafety.1
 
 dev_dependencies:
-  firebase_core_platform_interface: ^3.0.2-nullsafety.0
+  firebase_core_platform_interface: ^4.0.0-nullsafety.0
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0-nullsafety.2
