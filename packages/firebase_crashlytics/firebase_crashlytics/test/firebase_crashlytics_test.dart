@@ -188,8 +188,6 @@ void main() {
     group('setCustomKey', () {
       test('should throw if null', () async {
         expect(
-            () => crashlytics!.setCustomKey('foo', null), throwsAssertionError);
-        expect(
             () => crashlytics!.setCustomKey('foo', []), throwsAssertionError);
         expect(
             () => crashlytics!.setCustomKey('foo', {}), throwsAssertionError);
