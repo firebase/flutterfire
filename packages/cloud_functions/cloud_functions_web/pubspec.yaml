@@ -9,8 +9,8 @@ environment:
 
 dependencies:
   cloud_functions_platform_interface: ^4.0.2-nullsafety.1
-  firebase_core: ^0.8.0-nullsafety.0
-  firebase_core_web: ^0.2.2-nullsafety.1
+  firebase_core: ^0.8.0-nullsafety.1
+  firebase_core_web: ^0.3.0-nullsafety.0
   flutter:
     sdk: flutter
   flutter_web_plugins:
@@ -18,7 +18,7 @@ dependencies:
   js: ^0.6.3-nullsafety.3
 
 dev_dependencies:
-  firebase_core_platform_interface: ^3.0.2-nullsafety.0
+  firebase_core_platform_interface: ^4.0.0-nullsafety.0
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0-nullsafety.2

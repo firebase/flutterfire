@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
@@ -15,35 +13,32 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 abstract class UserPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
   UserPlatform(this.auth, Map<String, dynamic> user)
-      : assert(user != null),
-        _user = user,
+      : _user = user,
         super(token: _token);
 
   static final Object _token = Object();
 
   /// Ensures that any delegate class has extended a [UserPlatform].
-  static verifyExtends(UserPlatform instance) {
-    assert(instance != null);
-
+  static void verifyExtends(UserPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
   /// The [FirebaseAuthPlatform] instance.
-  final FirebaseAuthPlatform /*!*/ auth;
+  final FirebaseAuthPlatform auth;
 
-  Map<String, dynamic> _user;
+  final Map<String, dynamic> _user;
 
   /// The users display name.
   ///
   /// Will be `null` if signing in anonymously or via password authentication.
-  String get displayName {
+  String? get displayName {
     return _user['displayName'];
   }
 
   /// The users email address.
   ///
   /// Will be `null` if signing in anonymously.
-  String get email {
+  String? get email {
     return _user['email'];
   }
 
@@ -53,12 +48,12 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// Once verified, call [reload] to ensure the latest user information is
   /// retrieved from Firebase.
-  bool /*!*/ get emailVerified {
+  bool get emailVerified {
     return _user['emailVerified'];
   }
 
   /// Returns whether the user is a anonymous.
-  bool /*!*/ get isAnonymous {
+  bool get isAnonymous {
     return _user['isAnonymous'];
   }
 
@@ -72,7 +67,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// This property will be `null` if the user has not signed in or been has
   /// their phone number linked.
-  String /*?*/ get phoneNumber {
+  String? get phoneNumber {
     return _user['phoneNumber'];
   }
 
@@ -80,14 +75,14 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// This property will be populated if the user has signed in or been linked
   /// with a 3rd party OAuth provider (such as Google).
-  String /*?*/ get photoURL {
+  String? get photoURL {
     return _user['photoURL'];
   }
 
   /// Returns a list of user information for each linked provider.
   List<UserInfo> get providerData {
     return List.from(_user['providerData'])
-        .map((data) => UserInfo(Map<String, dynamic>.from(data)))
+        .map((data) => UserInfo(Map<String, String?>.from(data)))
         .toList();
   }
 
@@ -95,7 +90,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// This property maybe `null` or empty if the underlying platform does not
   /// support providing refresh tokens.
-  String get refreshToken {
+  String? get refreshToken {
     return _user['refreshToken'];
   }
 
@@ -104,12 +99,12 @@ abstract class UserPlatform extends PlatformInterface {
   /// This is a read-only property, which indicates the tenant ID used to sign
   /// in the current user. This is `null` if the user is signed in from the
   /// parent project.
-  String get tenantId {
+  String? get tenantId {
     return _user['tenantId'];
   }
 
   /// The user's unique ID.
-  String /*!*/ get uid {
+  String get uid {
     return _user['uid'];
   }
 
@@ -125,7 +120,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///    threshold. Use [User.reauthenticateWithCredential] to resolve. This
   ///    does not apply if the user is anonymous.
   Future<void> delete() async {
-    throw UnimplementedError("delete() is not implemented");
+    throw UnimplementedError('delete() is not implemented');
   }
 
   /// Returns a JSON Web Token (JWT) used to identify the user to a Firebase
@@ -136,8 +131,8 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// If [forceRefresh] is `true`, the token returned will be refresh regardless
   /// of token expiration.
-  Future<String /*!*/ > getIdToken(bool forceRefresh) {
-    throw UnimplementedError("getIdToken() is not implemented");
+  Future<String> getIdToken(bool forceRefresh) {
+    throw UnimplementedError('getIdToken() is not implemented');
   }
 
   /// Returns a [IdTokenResult] containing the users JSON Web Token (JWT) and
@@ -146,7 +141,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// If [forceRefresh] is `true`, the token returned will be refresh regardless
   /// of token expiration.
   Future<IdTokenResult> getIdTokenResult(bool forceRefresh) {
-    throw UnimplementedError("getIdTokenResult() is not implemented");
+    throw UnimplementedError('getIdTokenResult() is not implemented');
   }
 
   /// Links the user account with the given credentials.
@@ -191,7 +186,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
   Future<UserCredentialPlatform> linkWithCredential(AuthCredential credential) {
-    throw UnimplementedError("linkWithCredential() is not implemented");
+    throw UnimplementedError('linkWithCredential() is not implemented');
   }
 
   /// Links the user account with the given phone number.
@@ -217,9 +212,11 @@ abstract class UserPlatform extends PlatformInterface {
   ///  - Thrown if you have not enabled the phone authentication provider in the
   ///  Firebase Console. Go to the Firebase Console for your project, in the Auth
   ///  section and the Sign in Method tab and configure the provider.
-  Future<ConfirmationResultPlatform> linkWithPhoneNumber(String phoneNumber,
-      RecaptchaVerifierFactoryPlatform applicationVerifier) {
-    throw UnimplementedError("linkWithPhoneNumber() is not implemented");
+  Future<ConfirmationResultPlatform> linkWithPhoneNumber(
+    String phoneNumber,
+    RecaptchaVerifierFactoryPlatform applicationVerifier,
+  ) {
+    throw UnimplementedError('linkWithPhoneNumber() is not implemented');
   }
 
   /// Re-authenticates a user using a fresh credential.
@@ -254,20 +251,21 @@ abstract class UserPlatform extends PlatformInterface {
   Future<UserCredentialPlatform> reauthenticateWithCredential(
       AuthCredential credential) {
     throw UnimplementedError(
-        "reauthenticateWithCredential() is not implemented");
+        'reauthenticateWithCredential() is not implemented');
   }
 
   /// Refreshes the current user, if signed in.
   Future<void> reload() async {
-    throw UnimplementedError("reload() is not implemented");
+    throw UnimplementedError('reload() is not implemented');
   }
 
   /// Sends a verification email to a user.
   ///
   /// The verification process is completed by calling [applyActionCode].
   Future<void> sendEmailVerification(
-      ActionCodeSettings actionCodeSettings) async {
-    throw UnimplementedError("sendEmailVerification() is not implemented");
+    ActionCodeSettings? actionCodeSettings,
+  ) async {
+    throw UnimplementedError('sendEmailVerification() is not implemented');
   }
 
   /// Unlinks a provider from a user account.
@@ -276,8 +274,8 @@ abstract class UserPlatform extends PlatformInterface {
   /// - **no-such-provider**:
   ///  - Thrown if the user does not have this provider linked or when the
   ///    provider ID given does not exist.
-  Future<UserPlatform /*!*/ > unlink(String providerId) async {
-    throw UnimplementedError("unlink() is not implemented");
+  Future<UserPlatform> unlink(String providerId) async {
+    throw UnimplementedError('unlink() is not implemented');
   }
 
   /// Updates the user's email address.
@@ -300,7 +298,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///    threshold. Use [User.reauthenticateWithCredential] to resolve. This
   ///    does not apply if the user is anonymous.
   Future<void> updateEmail(String newEmail) async {
-    throw UnimplementedError("updateEmail() is not implemented");
+    throw UnimplementedError('updateEmail() is not implemented');
   }
 
   /// Updates the user's password.
@@ -317,7 +315,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///    threshold. Use [User.reauthenticateWithCredential] to resolve. This
   ///    does not apply if the user is anonymous.
   Future<void> updatePassword(String newPassword) async {
-    throw UnimplementedError("updatePassword() is not implemented");
+    throw UnimplementedError('updatePassword() is not implemented');
   }
 
   /// Updates the user's phone number.
@@ -331,12 +329,12 @@ abstract class UserPlatform extends PlatformInterface {
   /// - **invalid-verification-id**:
   ///  - Thrown if the verification ID of the credential is not valid.
   Future<void> updatePhoneNumber(PhoneAuthCredential phoneCredential) async {
-    throw UnimplementedError("updatePhoneNumber() is not implemented");
+    throw UnimplementedError('updatePhoneNumber() is not implemented');
   }
 
   /// Updates a user's profile data.
-  Future<void> updateProfile(Map<String, String> profile) async {
-    throw UnimplementedError("updateProfile() is not implemented");
+  Future<void> updateProfile(Map<String, String?> profile) async {
+    throw UnimplementedError('updateProfile() is not implemented');
   }
 
   /// Sends a verification email to a new email address. The user's email will
@@ -344,8 +342,10 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// If you have a custom email action handler, you can complete the
   /// verification process by calling [applyActionCode].
-  Future<void> verifyBeforeUpdateEmail(String newEmail,
-      [ActionCodeSettings /*?*/ actionCodeSettings]) async {
-    throw UnimplementedError("verifyBeforeUpdateEmail() is not implemented");
+  Future<void> verifyBeforeUpdateEmail(
+    String newEmail, [
+    ActionCodeSettings? actionCodeSettings,
+  ]) async {
+    throw UnimplementedError('verifyBeforeUpdateEmail() is not implemented');
   }
 }
