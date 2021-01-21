@@ -1,3 +1,7 @@
+## 0.8.0-nullsafety.0
+
+- **FIX**: Bump package to 0.8.0 for nullsafety. (fixes issue #4728)
+
 ## 0.7.0-nullsafety.0
 
  - **REFACTOR**: Migrate non-nullable types (#4656).
