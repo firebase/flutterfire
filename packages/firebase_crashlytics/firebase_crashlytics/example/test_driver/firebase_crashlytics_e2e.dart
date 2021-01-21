@@ -22,12 +22,10 @@ void testsMain() {
     group('checkForUnsentReports', () {
       test('should throw if automatic crash report is enabled', () async {
         await crashlytics.setCrashlyticsCollectionEnabled(true);
-        try {
-          await crashlytics.checkForUnsentReports();
-          fail('Error did not throw');
-        } catch (e) {
-          // Do nothing. test will fail.
-        }
+        await expectLater(
+          crashlytics.checkForUnsentReports,
+          throwsA(isA<FirebaseException>()),
+        );
       });
 
       test('checks device cache for unsent crashlytics reports', () async {
