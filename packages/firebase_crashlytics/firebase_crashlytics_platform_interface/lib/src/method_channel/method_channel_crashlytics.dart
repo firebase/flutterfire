@@ -87,7 +87,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     required String exception,
     required String information,
     required String reason,
-    required List<Map<String, String>> stackTraceElements,
+    List<Map<String, String>>? stackTraceElements,
   }) async {
     try {
       await channel
@@ -95,7 +95,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
         'exception': exception,
         'information': information,
         'reason': reason,
-        'stackTraceElements': stackTraceElements,
+        'stackTraceElements': stackTraceElements ?? [],
       });
     } catch (e, s) {
       throw convertPlatformException(e, s);
