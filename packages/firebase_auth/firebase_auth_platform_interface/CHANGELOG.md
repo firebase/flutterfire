@@ -1,3 +1,7 @@
+## 4.0.0-nullsafety.0
+
+Migrated to null safety (#4633)
+
 ## 3.0.1
 
  - Update a dependency to the latest release.
