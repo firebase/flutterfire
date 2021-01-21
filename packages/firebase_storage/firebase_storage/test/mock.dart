@@ -72,8 +72,11 @@ void setupFirebaseStorageMocks() {
 
 // FirebaseStoragePlatform Mock
 class MockFirebaseStorage extends Mock
-    with MockPlatformInterfaceMixin
-    implements TestFirebaseStoragePlatform {
+    with
+        // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
+        MockPlatformInterfaceMixin
+    implements
+        TestFirebaseStoragePlatform {
   MockFirebaseStorage() {
     TestFirebaseStoragePlatform();
   }
@@ -97,28 +100,43 @@ class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
 
 // ReferencePlatform Mock
 class MockReferencePlatform extends Mock
-    with MockPlatformInterfaceMixin
-    implements ReferencePlatform {}
+    with
+        // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
+        MockPlatformInterfaceMixin
+    implements
+        ReferencePlatform {}
 
 // ListResultPlatform Mock
 class MockListResultPlatform extends Mock
-    with MockPlatformInterfaceMixin
-    implements ListResultPlatform {}
+    with
+        // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
+        MockPlatformInterfaceMixin
+    implements
+        ListResultPlatform {}
 
 // UploadTaskPlatform Mock
 class MockUploadTaskPlatform extends Mock
-    with MockPlatformInterfaceMixin
-    implements TaskPlatform {}
+    with
+        // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
+        MockPlatformInterfaceMixin
+    implements
+        TaskPlatform {}
 
 // DownloadTaskPlatform Mock
 class MockDownloadTaskPlatform extends Mock
-    with MockPlatformInterfaceMixin
-    implements TaskPlatform {}
+    with
+        // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
+        MockPlatformInterfaceMixin
+    implements
+        TaskPlatform {}
 
 // TaskSnapshotPlatform Mock
 class MockTaskSnapshotPlatform extends Mock
-    with MockPlatformInterfaceMixin
-    implements TaskSnapshotPlatform {}
+    with
+        // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
+        MockPlatformInterfaceMixin
+    implements
+        TaskSnapshotPlatform {}
 
 // Creates a test file with a specified name to
 // a locally directory
