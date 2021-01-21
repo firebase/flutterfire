@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_auth_platform_interface/src/platform_interface/platform_interface_user.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -13,33 +11,31 @@ import '../../firebase_auth_platform_interface.dart';
 /// [createUserWithEmailAndPassword].
 abstract class UserCredentialPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
-  UserCredentialPlatform(
-      {/*required*/ this.auth,
-      this.additionalUserInfo,
-      this.credential,
-      this.user})
-      : super(token: _token);
+  UserCredentialPlatform({
+    required this.auth,
+    this.additionalUserInfo,
+    this.credential,
+    this.user,
+  }) : super(token: _token);
 
   static final Object _token = Object();
 
   /// Ensures that any delegate class has extended a [UserCredentialPlatform].
-  static verifyExtends(UserCredentialPlatform instance) {
-    assert(instance != null);
-
+  static void verifyExtends(UserCredentialPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
   /// The current FirebaseAuth instance.
-  final FirebaseAuthPlatform /*!*/ auth;
+  final FirebaseAuthPlatform auth;
 
   /// Returns additional information about the user, such as whether they are a
   /// newly created one.
-  final AdditionalUserInfo additionalUserInfo;
+  final AdditionalUserInfo? additionalUserInfo;
 
   /// The users [AuthCredential].
-  final AuthCredential credential;
+  final AuthCredential? credential;
 
   /// Returns a [UserPlatform] containing additional information and user
   /// specific methods.
-  final UserPlatform user;
+  final UserPlatform? user;
 }
