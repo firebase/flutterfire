@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:meta/meta.dart';
 
 /// Interface representing ID token result obtained from [getIdTokenResult].
@@ -19,36 +17,36 @@ class IdTokenResult {
   @protected
   IdTokenResult(this._data);
 
-  final Map<String, dynamic> /*!*/ _data;
+  final Map<String, dynamic> _data;
 
   /// The authentication time formatted as UTC string. This is the time the user
   /// authenticated (signed in) and not the time the token was refreshed.
-  DateTime get authTime => _data['authTimestamp'] == null
+  DateTime? get authTime => _data['authTimestamp'] == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(_data['authTimestamp']);
 
   /// The entire payload claims of the ID token including the standard reserved
   /// claims as well as the custom claims.
-  Map<String, dynamic> get claims => _data['claims'] == null
+  Map<String, dynamic>? get claims => _data['claims'] == null
       ? null
       : Map<String, dynamic>.from(_data['claims']);
 
   /// The time when the ID token expires.
-  DateTime get expirationTime => _data['expirationTimestamp'] == null
+  DateTime? get expirationTime => _data['expirationTimestamp'] == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(_data['expirationTimestamp']);
 
   /// The time when ID token was issued.
-  DateTime get issuedAtTime => _data['issuedAtTimestamp'] == null
+  DateTime? get issuedAtTime => _data['issuedAtTimestamp'] == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(_data['issuedAtTimestamp']);
 
   /// The sign-in provider through which the ID token was obtained (anonymous,
   /// custom, phone, password, etc). Note, this does not map to provider IDs.
-  String get signInProvider => _data['signInProvider'];
+  String? get signInProvider => _data['signInProvider'];
 
   /// The Firebase Auth ID token JWT string.
-  String get token => _data['token'];
+  String? get token => _data['token'];
 
   @override
   String toString() {

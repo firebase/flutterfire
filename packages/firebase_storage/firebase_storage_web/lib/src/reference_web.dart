@@ -130,7 +130,7 @@ class ReferenceWeb extends ReferencePlatform {
   Future<Uint8List /*?*/ > getData(
     int maxSize, {
     @visibleForTesting
-        Future<Uint8List> Function(dynamic url) readBytes = http.readBytes,
+        Future<Uint8List> Function(Uri url) readBytes = http.readBytes,
   }) async {
     if (maxSize > 0) {
       final metadata = await getMetadata();
@@ -141,7 +141,7 @@ class ReferenceWeb extends ReferencePlatform {
 
     try {
       String url = await getDownloadURL();
-      return await readBytes(url);
+      return await readBytes(Uri.parse(url));
     } catch (e) {
       throw getFirebaseException(e);
     }

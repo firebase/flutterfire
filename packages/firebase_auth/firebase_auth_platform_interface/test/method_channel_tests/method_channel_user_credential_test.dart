@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user_credential.dart';
@@ -15,12 +13,12 @@ import '../mock.dart';
 void main() {
   setupFirebaseAuthMocks();
 
-  /*late*/ FirebaseAuthPlatform auth;
-  final String kMockUid = '12345';
-  final String kMockUsername = 'fluttertestuser';
-  final String kMockEmail = 'test@example.com';
-  final String kMockProviderId = 'provider-id';
-  final String kMockSignInMethod = 'password';
+  late FirebaseAuthPlatform auth;
+  const String kMockUid = '12345';
+  const String kMockUsername = 'fluttertestuser';
+  const String kMockEmail = 'test@example.com';
+  const String kMockProviderId = 'provider-id';
+  const String kMockSignInMethod = 'password';
 
   final Map<String, dynamic> kMockInitialUserData = <String, dynamic>{
     'user': <String, dynamic>{
@@ -40,8 +38,8 @@ void main() {
   };
 
   group('$MethodChannelUserCredential()', () {
-    /*late*/ MethodChannelUserCredential userCredential;
-    /*late*/ Map<String, dynamic> userData = kMockInitialUserData;
+    late MethodChannelUserCredential userCredential;
+    late Map<String, dynamic> userData = kMockInitialUserData;
 
     setUpAll(() async {
       await Firebase.initializeApp();
@@ -63,15 +61,15 @@ void main() {
       test('sets values correctly', () {
         expect(userCredential.auth, isA<FirebaseAuthPlatform>());
 
-        final additionalUserInfo = userCredential.additionalUserInfo;
-        final credential = userCredential.credential;
-        final user = userCredential.user;
+        final additionalUserInfo = userCredential.additionalUserInfo!;
+        final credential = userCredential.credential!;
+        final user = userCredential.user!;
 
         expect(additionalUserInfo, isA<AdditionalUserInfo>());
 
         expect(additionalUserInfo.isNewUser, isTrue);
         expect(additionalUserInfo.profile, isA<Map<String, dynamic>>());
-        expect(additionalUserInfo.profile['foo'], equals('bar'));
+        expect(additionalUserInfo.profile!['foo'], equals('bar'));
         expect(additionalUserInfo.username, equals('info$kMockUsername'));
         expect(additionalUserInfo.providerId, equals('info$kMockProviderId'));
 
@@ -82,11 +80,6 @@ void main() {
         expect(user, isA<MethodChannelUser>());
         expect(user.uid, equals(kMockUid));
         expect(user.email, equals(kMockEmail));
-      });
-
-      test('throws [AssertionError] when data is null', () {
-        expect(() => MethodChannelUserCredential(auth, null),
-            throwsAssertionError);
       });
 
       test('set additionalUserInfo to null', () {
@@ -104,8 +97,8 @@ void main() {
 
         expect(testUser.additionalUserInfo, isA<AdditionalUserInfo>());
         expect(
-            testUser.additionalUserInfo.profile, isA<Map<String, dynamic>>());
-        expect(testUser.additionalUserInfo.profile, isEmpty);
+            testUser.additionalUserInfo!.profile, isA<Map<String, dynamic>>());
+        expect(testUser.additionalUserInfo!.profile, isEmpty);
       });
 
       test('set authCredential to null', () {

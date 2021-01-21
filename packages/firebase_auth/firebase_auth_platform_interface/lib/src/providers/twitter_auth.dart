@@ -2,11 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/auth_provider.dart';
-import 'package:meta/meta.dart';
 
 const _kProviderId = 'twitter.com';
 
@@ -62,18 +59,18 @@ class TwitterAuthProvider extends AuthProvider {
   /// Sets the OAuth custom parameters to pass in a Twitter OAuth request for
   /// popup and redirect sign-in operations.
   TwitterAuthProvider setCustomParameters(
-      Map<dynamic, dynamic> customOAuthParameters) {
-    assert(customOAuthParameters != null);
+    Map<dynamic, dynamic> customOAuthParameters,
+  ) {
     _parameters = customOAuthParameters;
     return this;
   }
 
   /// Create a new [TwitterAuthCredential] from a provided [accessToken] and
   /// [secret];
-  static OAuthCredential credential(
-      {@required String accessToken, @required String secret}) {
-    assert(accessToken != null);
-    assert(secret != null);
+  static OAuthCredential credential({
+    required String accessToken,
+    required String secret,
+  }) {
     return TwitterAuthCredential._credential(
       accessToken: accessToken,
       secret: secret,
@@ -85,16 +82,18 @@ class TwitterAuthProvider extends AuthProvider {
 /// [TwitterAuthProvider.credential].
 class TwitterAuthCredential extends OAuthCredential {
   TwitterAuthCredential._({
-    @required String /*!*/ accessToken,
-    @required String /*!*/ secret,
+    required String accessToken,
+    required String secret,
   }) : super(
             providerId: _kProviderId,
             signInMethod: _kProviderId,
             accessToken: accessToken,
             secret: secret);
 
-  factory TwitterAuthCredential._credential(
-      {@required String accessToken, @required String secret}) {
+  factory TwitterAuthCredential._credential({
+    required String accessToken,
+    required String secret,
+  }) {
     return TwitterAuthCredential._(accessToken: accessToken, secret: secret);
   }
 }

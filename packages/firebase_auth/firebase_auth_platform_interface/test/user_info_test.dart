@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_auth_platform_interface/src/user_info.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -16,8 +14,8 @@ void main() {
   const String kMockPhotoURL = 'http://www.example.com/';
   const String kMockEmail = 'test@example.com';
 
-  final String kMockPhoneNumber = TEST_PHONE_NUMBER;
-  final Map<String, dynamic> kMockData = <String, dynamic>{
+  const String kMockPhoneNumber = TEST_PHONE_NUMBER;
+  const Map<String, String?> kMockData = <String, String?>{
     'providerId': kMockProviderId,
     'uid': kMockUid,
     'displayName': kMockDisplayName,
@@ -42,8 +40,16 @@ void main() {
     });
 
     test('toString()', () {
-      expect(userInfo.toString(),
-          '$UserInfo(displayName: $kMockDisplayName, email: $kMockEmail, phoneNumber: $kMockPhoneNumber, photoURL: $kMockPhotoURL, providerId: $kMockProviderId, uid: $kMockUid)');
+      expect(
+        userInfo.toString(),
+        '$UserInfo('
+        'displayName: $kMockDisplayName, '
+        'email: $kMockEmail, '
+        'phoneNumber: $kMockPhoneNumber, '
+        'photoURL: $kMockPhotoURL, '
+        'providerId: $kMockProviderId, '
+        'uid: $kMockUid)',
+      );
     });
   });
 }

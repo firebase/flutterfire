@@ -1,3 +1,11 @@
+## 0.9.1-nullsafety.1
+
+ - **FIX**: bump `firebase_core` dependencies to resolve versioning issue when releasing.
+
+## 0.9.1-nullsafety.0
+
+- **REFACTOR**: migrate to NNBD.
+
 ## 0.9.0
 
 > Note: This release has breaking changes.

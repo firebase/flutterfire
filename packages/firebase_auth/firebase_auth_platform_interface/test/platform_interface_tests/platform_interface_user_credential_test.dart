@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,27 +12,31 @@ import '../mock.dart';
 void main() {
   setupFirebaseAuthMocks();
 
-  /*late*/ FirebaseAuthPlatform auth;
-  final String kMockUid = '12345';
-  final String kMockUsername = 'fluttertestuser';
-  final String kMockEmail = 'test@example.com';
-  final String kMockPassword = 'test-password';
+  late FirebaseAuthPlatform auth;
+  const String kMockUid = '12345';
+  const String kMockUsername = 'fluttertestuser';
+  const String kMockEmail = 'test@example.com';
+  const String kMockPassword = 'test-password';
 
   final kMockUserData = <String, dynamic>{
     'uid': kMockUid,
     'email': kMockEmail,
   };
   group('$UserCredentialPlatform()', () {
-    /*late*/ AdditionalUserInfo kMockAdditionalUserInfo;
-    /*late*/ AuthCredential kMockCredential;
-    /*late*/ UserPlatform kMockUser;
-    /*late*/ TestUserCredentialPlatform userCredentialPlatform;
+    late AdditionalUserInfo kMockAdditionalUserInfo;
+    late AuthCredential kMockCredential;
+    late UserPlatform kMockUser;
+    late TestUserCredentialPlatform userCredentialPlatform;
 
     setUpAll(() async {
       await Firebase.initializeApp();
       auth = FirebaseAuthPlatform.instance;
 
-      kMockAdditionalUserInfo = AdditionalUserInfo(username: kMockUsername);
+      kMockAdditionalUserInfo = AdditionalUserInfo(
+        username: kMockUsername,
+        profile: {},
+        isNewUser: false,
+      );
       kMockUser = TestUserPlatform(auth, kMockUserData);
       kMockCredential = EmailAuthProvider.credential(
           email: kMockEmail, password: kMockPassword);
@@ -50,23 +52,31 @@ void main() {
       });
 
       test('sets correct values', () {
-        expect(userCredentialPlatform.additionalUserInfo.toString(),
-            equals(kMockAdditionalUserInfo.toString()));
+        expect(
+          userCredentialPlatform.additionalUserInfo.toString(),
+          equals(kMockAdditionalUserInfo.toString()),
+        );
 
         expect(userCredentialPlatform.auth, isA<FirebaseAuthPlatform>());
         expect(userCredentialPlatform.auth.app, isA<FirebaseApp>());
 
-        expect(userCredentialPlatform.additionalUserInfo,
-            isA<AdditionalUserInfo>());
-        expect(userCredentialPlatform.additionalUserInfo.toString(),
-            equals(kMockAdditionalUserInfo.toString()));
+        expect(
+          userCredentialPlatform.additionalUserInfo,
+          isA<AdditionalUserInfo>(),
+        );
+        expect(
+          userCredentialPlatform.additionalUserInfo.toString(),
+          equals(kMockAdditionalUserInfo.toString()),
+        );
 
         expect(userCredentialPlatform.credential, isA<AuthCredential>());
-        expect(userCredentialPlatform.credential.toString(),
-            equals(kMockCredential.toString()));
+        expect(
+          userCredentialPlatform.credential.toString(),
+          equals(kMockCredential.toString()),
+        );
 
         expect(userCredentialPlatform.user, isA<UserPlatform>());
-        expect(userCredentialPlatform.user.email, equals(kMockEmail));
+        expect(userCredentialPlatform.user!.email, equals(kMockEmail));
       });
     });
 
@@ -78,11 +88,6 @@ void main() {
         } catch (_) {
           fail('thrown an unexpected exception');
         }
-      });
-
-      test('throws an [AssertionError] exception when instance is null', () {
-        expect(() => UserCredentialPlatform.verifyExtends(null),
-            throwsAssertionError);
       });
     });
   });
