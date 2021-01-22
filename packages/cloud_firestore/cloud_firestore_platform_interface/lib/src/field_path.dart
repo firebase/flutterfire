@@ -57,7 +57,8 @@ class FieldPath {
 
   @override
   bool operator ==(dynamic other) =>
-      other is FieldPath && const ListEquality().equals(other.components, components);
+      other is FieldPath &&
+      const ListEquality().equals(other.components, components);
 
   @override
   int get hashCode => hashList(components);

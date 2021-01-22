@@ -79,8 +79,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
       querySnapshots = _delegate.onMetadataChangesSnapshot;
     }
     return querySnapshots
-        .map((webSnapshot) =>
-            convertWebDocumentSnapshot(firestore, webSnapshot))
+        .map(
+            (webSnapshot) => convertWebDocumentSnapshot(firestore, webSnapshot))
         .handleError((e) {
       throw getFirebaseException(e);
     });

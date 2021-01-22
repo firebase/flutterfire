@@ -24,7 +24,8 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   FirebaseFirestorePlatform _delegatePackingProperty;
 
   FirebaseFirestorePlatform /*!*/ get _delegate {
-    return _delegatePackingProperty ??= FirebaseFirestorePlatform.instanceFor(app: app);
+    return _delegatePackingProperty ??=
+        FirebaseFirestorePlatform.instanceFor(app: app);
   }
 
   /// The [FirebaseApp] for this current [FirebaseFirestore] instance.

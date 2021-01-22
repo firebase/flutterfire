@@ -235,8 +235,7 @@ void main() {
         final Stream<void> stream = firestore.snapshotsInSync();
         final Completer<void> receivedSync = Completer<void>();
 
-        final StreamSubscription<void> subscription =
-            stream.listen((event) {
+        final StreamSubscription<void> subscription = stream.listen((event) {
           receivedSync.complete();
         });
 

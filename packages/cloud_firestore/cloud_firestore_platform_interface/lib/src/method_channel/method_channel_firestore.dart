@@ -25,7 +25,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// Create an instance of [MethodChannelFirebaseFirestore] with optional [FirebaseApp]
   MethodChannelFirebaseFirestore({FirebaseApp /*!*/ app})
       : super(appInstance: app);
-      
+
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
   /// If null, the default [FirebaseApp] is used.

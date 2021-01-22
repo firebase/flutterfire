@@ -33,7 +33,8 @@ void runSnapshotMetadataTests() {
     test('a snapshot returns the correct [isFromCache] value', () async {
       CollectionReference collection =
           await initializeTest('snapshot-metadata-is-from-cache');
-      QuerySnapshot qs = await collection.get(const GetOptions(source: Source.cache));
+      QuerySnapshot qs =
+          await collection.get(const GetOptions(source: Source.cache));
       expect(qs.metadata.isFromCache, isTrue);
 
       QuerySnapshot qs2 =

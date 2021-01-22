@@ -64,10 +64,11 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
         return MethodChannelFirebaseFirestore(app: app);
       case _kFirestoreQuery:
         Map<dynamic, dynamic> values = readValue(buffer);
-        //ignore: 
+        //ignore:
         return MethodChannelQuery(
-          //ignore: avoid_redundant_argument_values
-            MethodChannelFirebaseFirestore(app: null), values['path']);
+            //ignore: avoid_redundant_argument_values
+            MethodChannelFirebaseFirestore(app: null),
+            values['path']);
       case _kFirestoreSettings:
         readValue(buffer);
         return const Settings();

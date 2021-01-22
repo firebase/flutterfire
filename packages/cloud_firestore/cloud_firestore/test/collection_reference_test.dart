@@ -127,7 +127,7 @@ void main() {
         expect(() => docRef.collection(path), throwsAssertionError);
       }
     });
-      // ignore: todo
+    // ignore: todo
     // TODO(ehesp): Remove when null safety lands
     // group('add()', () {
     //   test('data must not be null', () {
@@ -139,7 +139,7 @@ void main() {
     group('validate', () {
       test('path must be non-empty strings', () {
         DocumentReference docRef = firestore.doc('foo/bar');
-      // ignore: todo
+        // ignore: todo
         // TODO(ehesp): Remove when null safety lands
         // expect(() => firestore.collection(null), throwsAssertionError);
         // expect(() => docRef.collection(null), throwsAssertionError);

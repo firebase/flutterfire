@@ -21,7 +21,9 @@ class GeoPoint {
 
   @override
   bool operator ==(dynamic other) =>
-      other is GeoPoint && other.latitude == latitude && other.longitude == longitude;
+      other is GeoPoint &&
+      other.latitude == latitude &&
+      other.longitude == longitude;
 
   @override
   int get hashCode => hashValues(latitude, longitude);

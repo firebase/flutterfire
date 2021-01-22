@@ -8,7 +8,7 @@ part of cloud_firestore;
 
 /// The [TransactionHandler] may be executed multiple times; it should be able
 /// to handle multiple executions.
-typedef  TransactionHandler<T> =  Future<T> Function(Transaction transaction);
+typedef TransactionHandler<T> = Future<T> Function(Transaction transaction);
 
 /// Transaction class which is created from a call to [runTransaction()].
 class Transaction {

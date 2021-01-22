@@ -52,14 +52,14 @@ abstract class CollectionReferencePlatform extends QueryPlatform {
   }
 
   @override
-  //ignore: avoid_equals_and_hash_code_on_mutable_classes 
+  //ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(dynamic other) =>
       other is CollectionReferencePlatform &&
       other.firestore == firestore &&
       other.path == path;
 
   @override
-  //ignore: avoid_equals_and_hash_code_on_mutable_classes 
+  //ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => path.hashCode;
 
   @override

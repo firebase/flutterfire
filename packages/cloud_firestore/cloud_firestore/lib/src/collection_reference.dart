@@ -71,7 +71,9 @@ class CollectionReference extends Query {
 
   @override
   bool operator ==(dynamic other) =>
-      other is CollectionReference && other.firestore == firestore && other.path == path;
+      other is CollectionReference &&
+      other.firestore == firestore &&
+      other.path == path;
 
   @override
   int get hashCode => hashValues(firestore, path);

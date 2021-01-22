@@ -13,6 +13,7 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/method_cha
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
 
 import '../utils/test_common.dart';
+
 //ignore: avoid_implementing_value_types
 class MockDocumentReference extends Mock implements DocumentReferencePlatform {}
 

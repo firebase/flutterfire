@@ -26,6 +26,7 @@ class MockFirestoreWeb extends Mock implements web.Firestore {}
 class MockWebTransaction extends Mock implements web.Transaction {}
 
 class MockWebWriteBatch extends Mock implements web.WriteBatch {}
+
 //ignore: avoid_implementing_value_types
 class MockDocumentReference extends Mock implements DocumentReferenceWeb {}
 
