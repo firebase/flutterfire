@@ -1,3 +1,11 @@
+## 3.1.4-nullsafety.1
+
+ - **FIX**: bump `firebase_core` dependencies to resolve versioning issue when releasing.
+
+## 3.1.4-nullsafety.0
+
+- **REFACTOR**: migrate to NNBD.
+
 ## 3.1.3
 
  - Update a dependency to the latest release.

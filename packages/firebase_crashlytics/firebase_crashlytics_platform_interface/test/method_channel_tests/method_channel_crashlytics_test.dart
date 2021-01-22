@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics_platform_interface/firebase_crashlytics_platform_interface.dart';
 import 'package:firebase_crashlytics_platform_interface/src/method_channel/method_channel_crashlytics.dart';
@@ -15,7 +13,7 @@ import '../mock.dart';
 void main() {
   setupFirebaseCrashlyticsMocks();
 
-  /*late*/ FirebaseCrashlyticsPlatform crashlytics;
+  FirebaseCrashlyticsPlatform? crashlytics;
   final List<MethodCall> logger = <MethodCall>[];
 
   // mock props
@@ -94,7 +92,7 @@ void main() {
     group('checkForUnsentReports', () {
       test('should call delegate method successfully', () async {
         kUnsentReports = true;
-        var isUnsentReports = await crashlytics.checkForUnsentReports();
+        var isUnsentReports = await crashlytics!.checkForUnsentReports();
 
         expect(isUnsentReports, isTrue);
 
@@ -114,14 +112,14 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.checkForUnsentReports();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling(
+            'PLATFORM', crashlytics!.checkForUnsentReports);
       });
     });
 
     group('crash', () {
       test('should call delegate method successfully', () {
-        crashlytics.crash();
+        crashlytics!.crash();
 
         // check native method was called
         expect(logger, <Matcher>[
@@ -137,15 +135,14 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.crash();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling('PLATFORM', crashlytics!.crash);
       });
     });
 
     group('deleteUnsentReports', () {
       test('should call delegate method successfully', () async {
         kUnsentReports = true;
-        await crashlytics.deleteUnsentReports();
+        await crashlytics!.deleteUnsentReports();
 
         expect(kUnsentReports, isFalse);
 
@@ -163,14 +160,14 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.deleteUnsentReports();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling(
+            'PLATFORM', crashlytics!.deleteUnsentReports);
       });
     });
 
     group('didCrashOnPreviousExecution', () {
       test('should call delegate method successfully', () async {
-        var didCrash = await crashlytics.didCrashOnPreviousExecution();
+        var didCrash = await crashlytics!.didCrashOnPreviousExecution();
 
         expect(didCrash, isTrue);
 
@@ -188,14 +185,14 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.didCrashOnPreviousExecution();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling(
+            'PLATFORM', crashlytics!.didCrashOnPreviousExecution);
       });
     });
 
     group('recordError', () {
       test('should call delegate method successfully', () async {
-        await crashlytics.recordError(
+        await crashlytics!.recordError(
             exception: kMockError['exception'],
             reason: kMockError['reason'],
             information: kMockError['information'],
@@ -220,13 +217,18 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.recordError();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling(
+            'PLATFORM',
+            () => crashlytics!.recordError(
+                exception: 'test exception',
+                reason: 'test',
+                information: 'test',
+                stackTraceElements: []));
       });
     });
 
     test('log', () async {
-      await crashlytics.log(kMockMessage);
+      await crashlytics!.log(kMockMessage);
 
       // check native method was called
       expect(logger, <Matcher>[
@@ -241,7 +243,7 @@ void main() {
 
     group('sendUnsentReports', () {
       test('should call delegate method successfully', () async {
-        await crashlytics.sendUnsentReports();
+        await crashlytics!.sendUnsentReports();
 
         // check native method was called
         expect(logger, <Matcher>[
@@ -257,14 +259,13 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.sendUnsentReports();
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling('PLATFORM', crashlytics!.sendUnsentReports);
       });
     });
 
     group('setCrashlyticsCollectionEnabled', () {
       test('should call delegate method successfully', () async {
-        await crashlytics.setCrashlyticsCollectionEnabled(true);
+        await crashlytics!.setCrashlyticsCollectionEnabled(true);
 
         // check native method was called
         expect(logger, <Matcher>[
@@ -282,15 +283,14 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod =
-            () => crashlytics.setCrashlyticsCollectionEnabled(true);
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling('PLATFORM',
+            () => crashlytics!.setCrashlyticsCollectionEnabled(true));
       });
     });
 
     group('setUserIdentifier', () {
       test('should call delegate method successfully', () async {
-        await crashlytics.setUserIdentifier(kMockUserIdentifier);
+        await crashlytics!.setUserIdentifier(kMockUserIdentifier);
 
         // check native method was called
         expect(logger, <Matcher>[
@@ -308,15 +308,14 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod =
-            () => crashlytics.setUserIdentifier(kMockUserIdentifier);
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling('PLATFORM',
+            () => crashlytics!.setUserIdentifier(kMockUserIdentifier));
       });
     });
 
     group('setCustomKey', () {
       test('setCustomKey', () async {
-        await crashlytics.setCustomKey('foo', 'bar');
+        await crashlytics!.setCustomKey('foo', 'bar');
 
         // check native method was called
         expect(logger, <Matcher>[
@@ -335,8 +334,8 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => crashlytics.setCustomKey('foo', 'bar');
-        await testExceptionHandling('PLATFORM', callMethod);
+        await testExceptionHandling(
+            'PLATFORM', () => crashlytics!.setCustomKey('foo', 'bar'));
       });
     });
   });

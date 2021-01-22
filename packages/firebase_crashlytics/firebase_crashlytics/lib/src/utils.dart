@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:stack_trace/stack_trace.dart';
 
 final _obfuscatedStackTraceLineRegExp =
@@ -14,43 +12,39 @@ List<Map<String, String>> getStackTraceElements(StackTrace stackTrace) {
   final Trace trace = Trace.from(stackTrace).terse;
   final List<Map<String, String>> elements = <Map<String, String>>[];
 
-  for (Frame frame in trace.frames) {
-    try {
-      if (frame is UnparsedFrame) {
-        if (_obfuscatedStackTraceLineRegExp.hasMatch(frame.member)) {
-          // Same exceptions should be grouped in Crashlytics Console.
-          // Crashlytics Console groups issues with same stack trace.
-          // Obfuscated stack traces contains abs address, virt address
-          // and symbol name + offset. abs addresses are different across
-          // sessions, so same error can create different issues in Console.
-          // We replace abs address with '0' so that Crashlytics Console can
-          // group same exceptions. Also we don't need abs addresses for
-          // deobfuscating, if we have virt address or symbol name + offset.
-          final String method = frame.member.replaceFirstMapped(
-              _obfuscatedStackTraceLineRegExp,
-              (match) => '${match.group(1)}0${match.group(3)}');
-          elements.add(<String, String>{
-            'file': '',
-            'line': '0',
-            'method': method,
-          });
-        }
-      } else {
-        final Map<String, String> element = <String, String>{
-          'file': frame.library,
-          'line': frame.line?.toString() ?? '0',
-        };
-        final List<String> members = frame.member.split('.');
-        if (members.length > 1) {
-          element['method'] = members.sublist(1).join('.');
-          element['class'] = members.first;
-        } else {
-          element['method'] = frame.member;
-        }
-        elements.add(element);
+  for (final Frame frame in trace.frames) {
+    if (frame is UnparsedFrame) {
+      if (_obfuscatedStackTraceLineRegExp.hasMatch(frame.member)) {
+        // Same exceptions should be grouped in Crashlytics Console.
+        // Crashlytics Console groups issues with same stack trace.
+        // Obfuscated stack traces contains abs address, virt address
+        // and symbol name + offset. abs addresses are different across
+        // sessions, so same error can create different issues in Console.
+        // We replace abs address with '0' so that Crashlytics Console can
+        // group same exceptions. Also we don't need abs addresses for
+        // deobfuscating, if we have virt address or symbol name + offset.
+        final String method = frame.member.replaceFirstMapped(
+            _obfuscatedStackTraceLineRegExp,
+            (match) => '${match.group(1)}0${match.group(3)}');
+        elements.add(<String, String>{
+          'file': '',
+          'line': '0',
+          'method': method,
+        });
       }
-    } catch (e) {
-      print(e.toString());
+    } else {
+      final Map<String, String> element = <String, String>{
+        'file': frame.library,
+        'line': frame.line?.toString() ?? '0',
+      };
+      final List<String> members = frame.member.split('.');
+      if (members.length > 1) {
+        element['method'] = members.sublist(1).join('.');
+        element['class'] = members.first;
+      } else {
+        element['method'] = frame.member;
+      }
+      elements.add(element);
     }
   }
 

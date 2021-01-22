@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:meta/meta.dart';
 
 /// The type of operation that generated the action code from calling
@@ -36,10 +34,9 @@ class ActionCodeInfo {
   // ignore: public_member_api_docs
   @protected
   ActionCodeInfo({
-    @required int /*!*/ operation,
-    @required Map<String, dynamic> data,
-  })  : assert(data != null),
-        _operation = operation,
+    required int operation,
+    required Map<String, dynamic> data,
+  })   : _operation = operation,
         _data = data;
 
   int _operation;

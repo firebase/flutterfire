@@ -1,3 +1,11 @@
+## 0.3.0-nullsafety.0
+
+Major bump for the null-safety version to respect the versioning convention.
+
+## 0.2.2-nullsafety.1
+
+ - Bump `firebase_core` dependency version.
+
 ## 0.2.2-nullsafety.0
 
  - **REFACTOR**: Migrate to non-nullable types (#4656).
