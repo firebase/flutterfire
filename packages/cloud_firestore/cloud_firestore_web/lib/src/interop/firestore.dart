@@ -56,7 +56,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
 
   DocumentReference doc(String documentPath) =>
       DocumentReference.getInstance(jsObject.doc(documentPath));
-
+//ignore: prefer_void_to_null
   Future<Null> enablePersistence(
           [firestore_interop.PersistenceSettings settings]) =>
       handleThenable(jsObject.enablePersistence(settings));
@@ -90,6 +90,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     return _onSnapshotsInSyncController.stream;
   }
 
+//ignore: prefer_void_to_null
   Future<Null> clearPersistence() =>
       handleThenable(jsObject.clearPersistence());
 
@@ -108,9 +109,9 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   Future enableNetwork() => handleThenable(jsObject.enableNetwork());
 
   Future disableNetwork() => handleThenable(jsObject.disableNetwork());
-
+//ignore: prefer_void_to_null
   Future<Null> terminate() => handleThenable(jsObject.terminate());
-
+//ignore: prefer_void_to_null
   Future<Null> waitForPendingWrites() =>
       handleThenable(jsObject.waitForPendingWrites());
 }
@@ -129,7 +130,7 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
 
   WriteBatch._fromJsObject(firestore_interop.WriteBatchJsImpl jsObject)
       : super.fromJsObject(jsObject);
-
+//ignore: prefer_void_to_null
   Future<Null> commit() => handleThenable(jsObject.commit());
 
   WriteBatch delete(DocumentReference documentRef) =>
@@ -181,7 +182,7 @@ class DocumentReference
 
   CollectionReference collection(String collectionPath) =>
       CollectionReference.getInstance(jsObject.collection(collectionPath));
-
+//ignore: prefer_void_to_null
   Future<Null> delete() => handleThenable(jsObject.delete());
 
   Future<DocumentSnapshot> get([firestore_interop.GetOptions options]) {
@@ -190,7 +191,9 @@ class DocumentReference
     return handleThenable(jsObjectSet).then(DocumentSnapshot.getInstance);
   }
 
+//ignore: close_sinks
   StreamController<DocumentSnapshot> _onSnapshotController;
+//ignore: close_sinks
   StreamController<DocumentSnapshot> _onMetadataController;
 
   /// Attaches a listener for [DocumentSnapshot] events.
@@ -225,12 +228,15 @@ class DocumentReference
         onSnapshotUnsubscribe = null;
       }
 
-      controller = StreamController<DocumentSnapshot>.broadcast(
-          onListen: startListen, onCancel: stopListen, sync: true);
+      return StreamController<DocumentSnapshot>.broadcast(
+              onListen: startListen, onCancel: stopListen, sync: true)
+          .stream;
     }
+
     return controller.stream;
   }
 
+//ignore: prefer_void_to_null
   Future<Null> set(Map<String, dynamic> data,
       [firestore_interop.SetOptions options]) {
     var jsObjectSet = (options != null)
@@ -239,6 +245,7 @@ class DocumentReference
     return handleThenable(jsObjectSet);
   }
 
+//ignore: prefer_void_to_null
   Future<Null> update(
           {Map<String, dynamic> data,
           List< /*String|FieldPath|dynamic*/ dynamic> fieldsAndValues}) =>
@@ -268,8 +275,9 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
   Query limitToLast(num limit) =>
       Query.fromJsObject(jsObject.limitToLast(limit));
-
+//ignore: close_sinks
   StreamController<QuerySnapshot> _onSnapshotController;
+//ignore: close_sinks
   StreamController<QuerySnapshot> _onSnapshotMetadataController;
 
   Stream<QuerySnapshot> get onSnapshot =>
@@ -279,6 +287,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
       (_onSnapshotMetadataController ??= _createStream(true)).stream;
 
   StreamController<QuerySnapshot> _createStream(bool includeMetadataChanges) {
+//ignore: close_sinks
     StreamController<QuerySnapshot> controller;
 
     var nextWrapper =
@@ -307,7 +316,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
         onListen: startListen, onCancel: stopListen, sync: true);
   }
 
-  Query orderBy(/*String|FieldPath*/ fieldPath,
+  Query orderBy(/*String|FieldPath*/ dynamic fieldPath,
       [String /*'desc'|'asc'*/ directionStr]) {
     var jsObjectOrderBy = (directionStr != null)
         ? jsObject.orderBy(fieldPath, directionStr)
@@ -323,8 +332,8 @@ class Query<T extends firestore_interop.QueryJsImpl>
       Query.fromJsObject(
           _wrapPaginatingFunctionCall('startAt', snapshot, fieldValues));
 
-  Query where(/*String|FieldPath*/ fieldPath,
-          String /*'<'|'<='|'=='|'>='|'>'*/ opStr, value) =>
+  Query where(/*String|FieldPath*/ dynamic fieldPath,
+          String /*'<'|'<='|'=='|'>='|'>'*/ opStr, dynamic value) =>
       Query.fromJsObject(jsObject.where(fieldPath, opStr, jsify(value)));
 
   /// Calls js paginating [method] with [DocumentSnapshot] or List of
@@ -438,7 +447,7 @@ class DocumentSnapshot
 
   Map<String, dynamic> data() => dartify(jsObject.data());
 
-  dynamic get(/*String|FieldPath*/ fieldPath) =>
+  dynamic get(/*String|FieldPath*/ dynamic fieldPath) =>
       dartify(jsObject.get(fieldPath));
 
   bool isEqual(DocumentSnapshot other) => jsObject.isEqual(other.jsObject);
@@ -448,6 +457,7 @@ class QuerySnapshot
     extends JsObjectWrapper<firestore_interop.QuerySnapshotJsImpl> {
   static final _expando = Expando<QuerySnapshot>();
 
+  // ignore: todo
   // TODO: [SnapshotListenOptions options]
   List<DocumentChange> docChanges(
           [firestore_interop.SnapshotListenOptions options]) =>

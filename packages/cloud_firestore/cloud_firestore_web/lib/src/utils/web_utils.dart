@@ -9,9 +9,9 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import '../utils/codec_utility.dart';
 import '../interop/firestore.dart' as firestore_interop;
 
-const _kChangeTypeAdded = "added";
-const _kChangeTypeModified = "modified";
-const _kChangeTypeRemoved = "removed";
+const _kChangeTypeAdded = 'added';
+const _kChangeTypeModified = 'modified';
+const _kChangeTypeRemoved = 'removed';
 
 /// Converts a [web.QuerySnapshot] to a [QuerySnapshotPlatform].
 QuerySnapshotPlatform convertWebQuerySnapshot(
@@ -52,11 +52,11 @@ DocumentSnapshotPlatform convertWebDocumentSnapshot(
 DocumentChangePlatform convertWebDocumentChange(
     FirebaseFirestorePlatform firestore,
     firestore_interop.DocumentChange webDocumentChange) {
-  return (DocumentChangePlatform(
+  return DocumentChangePlatform(
       convertWebDocumentChangeType(webDocumentChange.type),
       webDocumentChange.oldIndex,
       webDocumentChange.newIndex,
-      convertWebDocumentSnapshot(firestore, webDocumentChange.doc)));
+      convertWebDocumentSnapshot(firestore, webDocumentChange.doc));
 }
 
 /// Converts a [web.DocumentChange] type into a [DocumentChangeType].
@@ -84,7 +84,7 @@ SnapshotMetadataPlatform convertWebSnapshotMetadata(
 firestore_interop.GetOptions /*?*/ convertGetOptions(GetOptions /*?*/ options) {
   if (options == null) return null;
 
-  var source;
+  String source;
   if (options.source != null) {
     switch (options.source) {
       case Source.serverAndCache:
@@ -109,7 +109,7 @@ firestore_interop.GetOptions /*?*/ convertGetOptions(GetOptions /*?*/ options) {
 firestore_interop.SetOptions /*?*/ convertSetOptions(SetOptions options) {
   if (options == null) return null;
 
-  var parsedOptions;
+  firestore_interop.SetOptions parsedOptions;
   if (options.merge != null) {
     parsedOptions = firestore_interop.SetOptions(merge: options.merge);
   } else if (options.mergeFields != null) {

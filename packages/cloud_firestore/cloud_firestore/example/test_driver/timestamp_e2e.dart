@@ -27,7 +27,7 @@ void runTimestampTests() {
 
     test('sets a $Timestamp & returns one', () async {
       DocumentReference doc = await initializeTest('timestamp');
-      DateTime date = DateTime.utc(3000, 01, 01);
+      DateTime date = DateTime.utc(3000);
 
       await doc.set({'foo': Timestamp.fromDate(date)});
       DocumentSnapshot snapshot = await doc.get();
@@ -40,7 +40,7 @@ void runTimestampTests() {
     test('updates a $Timestamp & returns', () async {
       DocumentReference doc = await initializeTest('geo-point-update');
       DateTime date = DateTime.utc(3000, 01, 02);
-      await doc.set({'foo': DateTime.utc(3000, 01, 01)});
+      await doc.set({'foo': DateTime.utc(3000)});
       await doc.update({'foo': date});
       DocumentSnapshot snapshot = await doc.get();
       Timestamp timestamp = snapshot.data()['foo'];

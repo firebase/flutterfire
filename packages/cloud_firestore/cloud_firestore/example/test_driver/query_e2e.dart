@@ -72,7 +72,7 @@ void runQueryTests() {
       test('uses [GetOptions] cache', () async {
         CollectionReference collection = await initializeTest('get');
         QuerySnapshot qs =
-            await collection.get(GetOptions(source: Source.cache));
+            await collection.get(const GetOptions(source: Source.cache));
         expect(qs, isA<QuerySnapshot>());
         expect(qs.metadata.isFromCache, isTrue);
       }, skip: kIsWeb);
@@ -80,7 +80,7 @@ void runQueryTests() {
       test('uses [GetOptions] server', () async {
         CollectionReference collection = await initializeTest('get');
         QuerySnapshot qs =
-            await collection.get(GetOptions(source: Source.server));
+            await collection.get(const GetOptions(source: Source.server));
         expect(qs, isA<QuerySnapshot>());
         expect(qs.metadata.isFromCache, isFalse);
       });
@@ -96,7 +96,7 @@ void runQueryTests() {
               (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
-        fail("Should have thrown a [FirebaseException]");
+        fail('Should have thrown a [FirebaseException]');
       });
     });
 
@@ -124,9 +124,9 @@ void runQueryTests() {
             QueryDocumentSnapshot documentSnapshot = snapshot.docs[0];
             expect(documentSnapshot.data()['foo'], equals('bar'));
           } else {
-            fail("Should not have been called");
+            fail('Should not have been called');
           }
-        }, count: 1, reason: "Stream should only have been called once."));
+        }, count: 1, reason: 'Stream should only have been called once.'));
       });
 
       test('listens to multiple queries', () async {
@@ -185,13 +185,13 @@ void runQueryTests() {
                 snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
             expect(documentSnapshot.data()['foo'], equals('baz'));
           } else {
-            fail("Should not have been called");
+            fail('Should not have been called');
           }
         },
             count: 5,
-            reason: "Stream should only have been called five times."));
+            reason: 'Stream should only have been called five times.'));
 
-        await Future.delayed(Duration(milliseconds: 500));
+        await Future.delayed(const Duration(milliseconds: 500));
         await collection.doc('doc1').set({'bar': 'baz'});
         await collection.doc('doc1').delete();
         await collection.doc('doc2').set({'foo': 'bar'});
@@ -213,7 +213,7 @@ void runQueryTests() {
           return;
         }
 
-        fail("Should have thrown a [FirebaseException]");
+        fail('Should have thrown a [FirebaseException]');
       });
     });
 
@@ -274,7 +274,7 @@ void runQueryTests() {
         ]);
 
         QuerySnapshot snapshot = await collection
-            .orderBy(FieldPath(['bar', 'value']), descending: true)
+            .orderBy(FieldPath(const ['bar', 'value']), descending: true)
             .endAt([2]).get();
 
         expect(snapshot.docs.length, equals(2));
@@ -282,7 +282,7 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc2'));
 
         QuerySnapshot snapshot2 =
-            await collection.orderBy(FieldPath(['foo'])).endAt([2]).get();
+            await collection.orderBy(FieldPath(const ['foo'])).endAt([2]).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc1'));
@@ -401,15 +401,16 @@ void runQueryTests() {
         ]);
 
         QuerySnapshot snapshot = await collection
-            .orderBy(FieldPath(['bar', 'value']), descending: true)
+            .orderBy(FieldPath(const ['bar', 'value']), descending: true)
             .startAt([2]).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc2'));
         expect(snapshot.docs[1].id, equals('doc1'));
 
-        QuerySnapshot snapshot2 =
-            await collection.orderBy(FieldPath(['foo'])).startAt([2]).get();
+        QuerySnapshot snapshot2 = await collection
+            .orderBy(FieldPath(const ['foo']))
+            .startAt([2]).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc2'));
@@ -530,15 +531,16 @@ void runQueryTests() {
         ]);
 
         QuerySnapshot snapshot = await collection
-            .orderBy(FieldPath(['bar', 'value']), descending: true)
+            .orderBy(FieldPath(const ['bar', 'value']), descending: true)
             .endBefore([1]).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc3'));
         expect(snapshot.docs[1].id, equals('doc2'));
 
-        QuerySnapshot snapshot2 =
-            await collection.orderBy(FieldPath(['foo'])).endBefore([3]).get();
+        QuerySnapshot snapshot2 = await collection
+            .orderBy(FieldPath(const ['foo']))
+            .endBefore([3]).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc1'));
@@ -982,10 +984,10 @@ void runQueryTests() {
 
         await Future.wait([
           collection.doc('doc1').set({
-            'foo': -(rand) + 1,
+            'foo': -rand + 1,
           }),
           collection.doc('doc2').set({
-            'foo': -(rand) + 2,
+            'foo': -rand + 2,
           }),
           collection.doc('doc3').set({
             'foo': rand,
@@ -1008,10 +1010,10 @@ void runQueryTests() {
 
         await Future.wait([
           collection.doc('doc1').set({
-            'foo': -(rand) + 1,
+            'foo': -rand + 1,
           }),
           collection.doc('doc2').set({
-            'foo': -(rand) + 2,
+            'foo': -rand + 2,
           }),
           collection.doc('doc3').set({
             'foo': rand,
@@ -1166,13 +1168,13 @@ void runQueryTests() {
         expect(snapshot.docs.length, equals(3));
       });
 
-      // When documents have a key with a "." in them, only a [FieldPath]
+      // When documents have a key with a '.' in them, only a [FieldPath]
       // can access the value, rather than a raw string
       test('returns where FieldPath', () async {
         CollectionReference collection =
             await initializeTest('where-field-path');
 
-        FieldPath fieldPath = FieldPath(['nested', 'foo.bar@gmail.com']);
+        FieldPath fieldPath = FieldPath(const ['nested', 'foo.bar@gmail.com']);
 
         await Future.wait([
           collection.doc('doc1').set({

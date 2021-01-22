@@ -53,13 +53,16 @@ class FieldValue extends FieldValuePlatform {
   dynamic _delegate;
 
   @override
+  // ignore: no_runtimetype_tostring
   String toString() => '$runtimeType($_delegate)';
 
   @override
-  bool operator ==(Object o) {
-    return o is FieldValue && o._delegate == _delegate;
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    return other is FieldValue && other._delegate == _delegate;
   }
 
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => _delegate.hashCode;
 }

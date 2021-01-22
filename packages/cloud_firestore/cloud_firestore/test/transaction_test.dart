@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import './mock.dart';
 
+// ignore: todo
 // TODO(ehesp): Remove when null safety lands
 void main() {
   setupCloudFirestoreMocks();

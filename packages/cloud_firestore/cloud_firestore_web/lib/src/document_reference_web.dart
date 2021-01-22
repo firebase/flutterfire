@@ -54,7 +54,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     try {
       firestore_interop.DocumentSnapshot documentSnapshot =
           await _delegate.get(convertGetOptions(options));
-      return convertWebDocumentSnapshot(this.firestore, documentSnapshot);
+      return convertWebDocumentSnapshot(firestore, documentSnapshot);
     } catch (e) {
       throw getFirebaseException(e);
     }
@@ -80,7 +80,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     }
     return querySnapshots
         .map((webSnapshot) =>
-            convertWebDocumentSnapshot(this.firestore, webSnapshot))
+            convertWebDocumentSnapshot(firestore, webSnapshot))
         .handleError((e) {
       throw getFirebaseException(e);
     });

@@ -16,12 +16,12 @@ void main() {
   /*late*/ FirebaseFirestore firestore;
   /*late*/ FirebaseFirestore firestoreSecondary;
 
-  group("$CollectionReference", () {
+  group('$CollectionReference', () {
     setUpAll(() async {
       await Firebase.initializeApp();
       FirebaseApp secondaryApp = await Firebase.initializeApp(
           name: 'foo',
-          options: FirebaseOptions(
+          options: const FirebaseOptions(
             apiKey: '123',
             appId: '123',
             messagingSenderId: '123',
@@ -93,6 +93,7 @@ void main() {
 
     test('path must be non-empty strings', () {
       DocumentReference docRef = firestore.doc('foo/bar');
+      // ignore: todo
       // TODO(ehesp): Remove when null safety lands
       // expect(() => firestore.collection(null), throwsAssertionError);
       // expect(() => docRef.collection(null), throwsAssertionError);
@@ -119,14 +120,14 @@ void main() {
       CollectionReference colRef = firestore.collection('test-collection');
       DocumentReference docRef = colRef.doc('test-document');
 
-      for (var path in badPaths) {
+      for (final path in badPaths) {
         expect(() => firestore.collection(path), throwsAssertionError);
         expect(() => firestore.doc(path), throwsAssertionError);
         expect(() => colRef.doc(path), throwsAssertionError);
         expect(() => docRef.collection(path), throwsAssertionError);
       }
     });
-
+      // ignore: todo
     // TODO(ehesp): Remove when null safety lands
     // group('add()', () {
     //   test('data must not be null', () {
@@ -138,6 +139,7 @@ void main() {
     group('validate', () {
       test('path must be non-empty strings', () {
         DocumentReference docRef = firestore.doc('foo/bar');
+      // ignore: todo
         // TODO(ehesp): Remove when null safety lands
         // expect(() => firestore.collection(null), throwsAssertionError);
         // expect(() => docRef.collection(null), throwsAssertionError);
@@ -165,14 +167,14 @@ void main() {
         CollectionReference colRef = firestore.collection('test-collection');
         DocumentReference docRef = colRef.doc('test-document');
 
-        for (String path in badPaths) {
+        for (final String path in badPaths) {
           expect(() => firestore.collection(path), throwsAssertionError);
           expect(() => firestore.doc(path), throwsAssertionError);
           expect(() => colRef.doc(path), throwsAssertionError);
           expect(() => docRef.collection(path), throwsAssertionError);
         }
       });
-
+      // ignore: todo
       // TODO(ehesp): Remove when null safety lands
       // test('add() data must not be null', () {
       //   CollectionReference ref = firestore.collection('foo');

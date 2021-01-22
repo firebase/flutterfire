@@ -72,7 +72,7 @@ void main() {
           }
           return Future.delayed(Duration.zero);
         default:
-          return null;
+          return Future.value(null);
       }
     });
   });
@@ -83,7 +83,7 @@ void main() {
     log.clear();
   });
 
-  group("$MethodChannelFirebaseFirestore", () {
+  group('$MethodChannelFirebaseFirestore', () {
     group('constructor', () {
       test('should create an instance with no args', () {
         MethodChannelFirebaseFirestore test = MethodChannelFirebaseFirestore();
@@ -236,7 +236,7 @@ void main() {
         final Completer<void> receivedSync = Completer<void>();
 
         final StreamSubscription<void> subscription =
-            await stream.listen((event) {
+            stream.listen((event) {
           receivedSync.complete();
         });
 
@@ -330,14 +330,14 @@ void main() {
           } on FirebaseException catch (_) {
             return;
           } catch (_) {
-            fail("Transaction threw invalid exeption");
+            fail('Transaction threw invalid exeption');
           }
         });
       });
     });
 
     group('settings', () {
-      Settings settings = Settings();
+      Settings settings = const Settings();
 
       test('stores the settings on the Firestore instance', () {
         firestore.settings = settings;

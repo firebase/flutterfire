@@ -21,9 +21,12 @@ import 'utils/auto_id_generator.dart';
 /// [CollectionReferencePlatform] and this class started throwing compilation
 /// errors, now you know why.
 class MethodChannelCollectionReference extends MethodChannelQuery
-    implements CollectionReferencePlatform {
+    implements
+// ignore: avoid_implementing_value_types
+        CollectionReferencePlatform {
   Pointer _pointer;
-
+// ignore: todo
+//TODO ignoring the above error might not be desirable. The == method isn't inherited from CollectionReferencePlatform because we only "implement" it
   /// Create a [MethodChannelCollectionReference] instance.
   MethodChannelCollectionReference(
       FirebaseFirestorePlatform firestore, String path)

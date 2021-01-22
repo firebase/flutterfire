@@ -36,13 +36,13 @@ class DocumentReference {
   /// Gets a [CollectionReference] instance that refers to the collection at the
   /// specified path, relative from this [DocumentReference].
   CollectionReference collection(String collectionPath) {
-    assert(collectionPath != null, "a collection path cannot be null");
+    assert(collectionPath != null, 'a collection path cannot be null');
     assert(collectionPath.isNotEmpty,
-        "a collectionPath path must be a non-empty string");
-    assert(!collectionPath.contains("//"),
-        "a collection path must not contain '//'");
+        'a collectionPath path must be a non-empty string');
+    assert(!collectionPath.contains('//'),
+        'a collection path must not contain "//"');
     assert(isValidCollectionPath(collectionPath),
-        "a collection path must point to a valid collection.");
+        'a collection path must point to a valid collection.');
 
     return CollectionReference._(
         firestore, _delegate.collection(collectionPath));
@@ -78,6 +78,7 @@ class DocumentReference {
   Future<void> set(Map<String, dynamic> data, [SetOptions /*?*/ options]) {
     assert(data != null);
     return _delegate.set(
+        // ignore: todo
         // TODO(ehesp): `options` should be nullable after platform interface null safe is available
         _CodecUtility.replaceValueWithDelegatesInMap(data) /*!*/,
         options);
@@ -94,10 +95,12 @@ class DocumentReference {
   }
 
   @override
-  bool operator ==(dynamic o) =>
-      o is DocumentReference && o.firestore == firestore && o.path == path;
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(dynamic other) =>
+      other is DocumentReference && other.firestore == firestore && other.path == path;
 
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => hashValues(firestore, path);
 
   @override

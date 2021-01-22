@@ -30,7 +30,7 @@ FirebaseException platformExceptionToFirebaseException(
       : null;
 
   String code = 'unknown';
-  String message = platformException.message ?? "";
+  String message = platformException.message ?? '';
 
   if (details != null) {
     code = details['code'] ?? code;

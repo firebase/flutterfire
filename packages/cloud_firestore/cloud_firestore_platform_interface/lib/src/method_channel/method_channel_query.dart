@@ -19,6 +19,7 @@ import 'utils/exception.dart';
 /// communicate with Firebase plugins.
 class MethodChannelQuery extends QueryPlatform {
   /// Flags whether the current query is for a collection group.
+  @override
   final bool isCollectionGroupQuery;
 
   /// Create a [MethodChannelQuery] from a [path] and optional [parameters]

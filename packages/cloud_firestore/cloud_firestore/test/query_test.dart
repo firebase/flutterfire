@@ -16,13 +16,13 @@ void main() {
   /*late*/ FirebaseFirestore firestore;
   /*late*/ Query query;
 
-  group("$Query", () {
+  group('$Query', () {
     setUpAll(() async {
       await Firebase.initializeApp();
       // secondary app
       await Firebase.initializeApp(
           name: 'foo',
-          options: FirebaseOptions(
+          options: const FirebaseOptions(
             apiKey: '123',
             appId: '123',
             messagingSenderId: '123',
@@ -199,7 +199,7 @@ void main() {
         expect(() => query.endAt(['123']), throwsAssertionError);
         expect(
             () => query.startAt([
-                  FieldPath(['123'])
+                  FieldPath(const ['123'])
                 ]),
             throwsAssertionError);
       });

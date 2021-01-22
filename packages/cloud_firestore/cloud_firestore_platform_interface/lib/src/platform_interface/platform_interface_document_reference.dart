@@ -32,7 +32,7 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   /// This is used by the app-facing [DocumentReference] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(DocumentReferencePlatform instance) {
+  static void verifyExtends(DocumentReferencePlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
@@ -60,20 +60,20 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
 
   /// Deletes the document referred to by this [DocumentReferencePlatform].
   Future<void> delete() {
-    throw UnimplementedError("delete() is not implemented");
+    throw UnimplementedError('delete() is not implemented');
   }
 
   /// Reads the document referenced by this [DocumentReferencePlatform].
   ///
   /// If no document exists, the read will return null.
   Future<DocumentSnapshotPlatform> get([GetOptions /*?*/ options]) async {
-    throw UnimplementedError("get() is not implemented");
+    throw UnimplementedError('get() is not implemented');
   }
 
   /// Notifies of documents at this location
   Stream<DocumentSnapshotPlatform> snapshots(
       {bool includeMetadataChanges = false}) {
-    throw UnimplementedError("snapshots() is not implemented");
+    throw UnimplementedError('snapshots() is not implemented');
   }
 
   /// Writes to the document referred to by this [DocumentReferencePlatform].
@@ -83,7 +83,7 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   /// If [merge] is true, the provided data will be merged into an
   /// existing document instead of overwriting.
   Future<void> set(Map<String, dynamic> data, [SetOptions /*?*/ options]) {
-    throw UnimplementedError("set() is not implemented");
+    throw UnimplementedError('set() is not implemented');
   }
 
   /// Updates fields in the document referred to by this [DocumentReferencePlatform].
@@ -93,16 +93,18 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   ///
   /// If no document exists yet, the update will fail.
   Future<void> update(Map<String, dynamic> data) {
-    throw UnimplementedError("update() is not implemented");
+    throw UnimplementedError('update() is not implemented');
   }
 
   @override
-  bool operator ==(dynamic o) =>
-      o is DocumentReferencePlatform &&
-      o.firestore == firestore &&
-      o.path == path;
+  //ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(dynamic other) =>
+      other is DocumentReferencePlatform &&
+      other.firestore == firestore &&
+      other.path == path;
 
   @override
+  //ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => path.hashCode;
 
   @override

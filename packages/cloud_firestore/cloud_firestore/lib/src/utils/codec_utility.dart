@@ -22,7 +22,7 @@ class _CodecUtility {
     if (data == null) {
       return null;
     }
-    return List.from(data).map((value) => valueEncode(value)).toList();
+    return List.from(data).map(valueEncode).toList();
   }
 
   static Map<String, dynamic> /*?*/ replaceDelegatesWithValueInMap(

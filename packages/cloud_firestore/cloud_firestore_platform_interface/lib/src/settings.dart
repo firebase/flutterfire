@@ -4,9 +4,12 @@
 
 // @dart=2.9
 
+import 'package:flutter/material.dart';
+
 /// Specifies custom configurations for your Cloud Firestore instance.
 ///
 /// You must set these before invoking any other methods.
+@immutable
 class Settings {
   /// Creates an instance for these [Settings].
   const Settings(
@@ -52,8 +55,8 @@ class Settings {
   }
 
   @override
-  bool operator ==(dynamic o) =>
-      o is Settings && o.asMap.toString() == asMap.toString();
+  bool operator ==(dynamic other) =>
+      other is Settings && other.asMap.toString() == asMap.toString();
 
   @override
   int get hashCode => asMap.hashCode;

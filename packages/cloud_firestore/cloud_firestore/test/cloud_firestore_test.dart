@@ -21,7 +21,7 @@ void main() {
       await Firebase.initializeApp();
       secondaryApp = await Firebase.initializeApp(
           name: 'foo',
-          options: FirebaseOptions(
+          options: const FirebaseOptions(
             apiKey: '123',
             appId: '123',
             messagingSenderId: '123',
@@ -48,6 +48,7 @@ void main() {
         expect(firestore.collection('foo'), isA<CollectionReference>());
       });
 
+      // ignore: todo
       // TODO(ehesp): Remove when null safety lands
       // test('does not expect a null path', () {
       //   expect(() => firestore.collection(null), throwsAssertionError);
@@ -68,6 +69,7 @@ void main() {
         expect(firestore.collectionGroup('foo'), isA<Query>());
       });
 
+      // ignore: todo
       // TODO(ehesp): Remove when null safety lands
       // test('does not expect a null path', () {
       //   expect(() => firestore.collectionGroup(null), throwsAssertionError);
@@ -88,6 +90,7 @@ void main() {
         expect(firestore.doc('foo/bar'), isA<DocumentReference>());
       });
 
+      // ignore: todo
       // TODO(ehesp): Remove when null safety lands
       // test('does not expect a null path', () {
       //   expect(() => firestore.doc(null), throwsAssertionError);

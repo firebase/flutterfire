@@ -16,12 +16,12 @@ void main() {
   /*late*/ FirebaseFirestore firestore;
   /*late*/ FirebaseFirestore firestoreSecondary;
 
-  group("$DocumentReference", () {
+  group('$DocumentReference', () {
     setUpAll(() async {
       await Firebase.initializeApp();
       FirebaseApp secondaryApp = await Firebase.initializeApp(
           name: 'foo',
-          options: FirebaseOptions(
+          options: const FirebaseOptions(
             apiKey: '123',
             appId: '123',
             messagingSenderId: '123',
@@ -45,7 +45,7 @@ void main() {
       expect(ref == ref2, isFalse);
     });
 
-    test("returns document() returns a $DocumentReference", () {
+    test('returns document() returns a $DocumentReference', () {
       DocumentReference ref = firestore.doc('foo/bar');
       DocumentReference ref2 = firestore.doc('foo/bar/baz/bert');
 
@@ -53,7 +53,7 @@ void main() {
       expect(ref2, isA<DocumentReference>());
     });
 
-    test("returns the same firestore instance", () {
+    test('returns the same firestore instance', () {
       DocumentReference ref = firestore.doc('foo/bar');
       DocumentReference ref2 = firestoreSecondary.doc('foo/bar');
 
@@ -61,7 +61,7 @@ void main() {
       expect(ref2.firestore, equals(firestoreSecondary));
     });
 
-    test("returns the correct ID", () {
+    test('returns the correct ID', () {
       DocumentReference ref = firestore.doc('foo/bar');
       DocumentReference ref2 = firestore.doc('foo/bar/baz/bert');
 
@@ -71,13 +71,13 @@ void main() {
     });
 
     group('.parent', () {
-      test("returns a $CollectionReference", () {
+      test('returns a $CollectionReference', () {
         DocumentReference ref = firestore.doc('foo/bar');
 
         expect(ref.parent, isA<CollectionReference>());
       });
 
-      test("returns the correct $CollectionReference", () {
+      test('returns the correct $CollectionReference', () {
         DocumentReference ref = firestore.doc('foo/bar');
         CollectionReference colRef = firestore.collection('foo');
 
@@ -87,6 +87,7 @@ void main() {
 
     test('path must be a non-empty string', () {
       CollectionReference ref = firestore.collection('foo');
+      // ignore: todo
       // TODO(ehesp): Remove when null safety lands
       // expect(() => firestore.doc(null), throwsAssertionError);
       expect(() => firestore.doc(''), throwsAssertionError);
@@ -112,6 +113,7 @@ void main() {
           throwsAssertionError);
     });
 
+    // ignore: todo
     // TODO(ehesp): Remove when null safety lands
     // test('data must not be null', () {
     //   DocumentReference ref = firestore.collection('foo').doc();

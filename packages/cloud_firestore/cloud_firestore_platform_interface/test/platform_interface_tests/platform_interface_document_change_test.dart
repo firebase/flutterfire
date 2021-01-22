@@ -27,12 +27,12 @@ class TestDocumentChange extends DocumentChangePlatform {
 void main() {
   initializeMethodChannel();
 
-  group("$DocumentChangePlatform()", () {
+  group('$DocumentChangePlatform()', () {
     setUpAll(() async {
       await Firebase.initializeApp();
     });
 
-    test("constructor", () {
+    test('constructor', () {
       final testDocumentChangePlatform = TestDocumentChange._();
       expect(
           testDocumentChangePlatform, isInstanceOf<DocumentChangePlatform>());

@@ -40,9 +40,9 @@ class MethodChannelTransaction extends TransactionPlatform {
   ///
   /// Requires all reads to be executed before all writes, otherwise an [AssertionError] will be thrown
   @override
-  Future<DocumentSnapshotPlatform> get(documentPath) async {
+  Future<DocumentSnapshotPlatform> get(String documentPath) async {
     assert(_commands.isEmpty,
-        "Transactions require all reads to be executed before all writes.");
+        'Transactions require all reads to be executed before all writes.');
 
     final Map<String, dynamic> result = await MethodChannelFirebaseFirestore
         .channel

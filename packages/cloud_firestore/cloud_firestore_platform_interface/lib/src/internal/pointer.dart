@@ -4,11 +4,14 @@
 
 // @dart=2.9
 
+import 'package:flutter/material.dart';
+
 /// A helper class to handle Firestore paths.
 ///
 /// This class is used internally to manage paths which point to a collection
 /// or document on Firestore. Since paths can be deeply nested, the class helps
 /// to reduce code repetition and improve testability.
+@immutable
 class Pointer {
   /// Create instance of [Pointer]
   Pointer(String path)
@@ -39,7 +42,8 @@ class Pointer {
   /// Collections are paths whose components are not dividable by 2, for example
   /// "collection/document/sub-collection".
   bool isCollection() {
-    return components.length % 2 == 1;
+    // return components.length % 2 == 1;
+    return components.length.isOdd;
   }
 
   /// Returns whether the given path is a pointer to a Firestore document.
@@ -47,7 +51,7 @@ class Pointer {
   /// Documents are paths whose components are dividable by 2, for example
   /// "collection/document".
   bool isDocument() {
-    return components.length % 2 == 0;
+    return components.length.isEven;
   }
 
   /// Returns a new collection path from the current document pointer.
@@ -73,7 +77,7 @@ class Pointer {
   }
 
   @override
-  bool operator ==(dynamic o) => o is Pointer && o.path == path;
+  bool operator ==(dynamic other) => other is Pointer && other.path == path;
 
   @override
   int get hashCode => path.hashCode;

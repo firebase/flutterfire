@@ -105,7 +105,7 @@ class CodecUtility {
               components[9]);
         default:
           throw Exception(
-              "Firestore web FieldPath only supports 10 levels deep field paths");
+              'Firestore web FieldPath only supports 10 levels deep field paths');
       }
     } else if (value == FieldPath.documentId) {
       return firestore_interop.FieldPath.documentId();

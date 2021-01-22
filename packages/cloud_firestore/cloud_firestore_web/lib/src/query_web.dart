@@ -18,6 +18,7 @@ class QueryWeb extends QueryPlatform {
   final String _path;
 
   /// Flags whether the current query is for a collection group.
+  @override
   final bool isCollectionGroupQuery;
 
   /// Builds an instance of [QueryWeb] delegating to a package:firebase [Query]
@@ -42,7 +43,7 @@ class QueryWeb extends QueryPlatform {
   firestore_interop.Query _buildWebQueryWithParameters() {
     firestore_interop.Query query = _webQuery;
 
-    for (List<dynamic> order in parameters['orderBy']) {
+    for (final List<dynamic> order in parameters['orderBy']) {
       query = query.orderBy(
           CodecUtility.valueEncode(order[0]), order[1] ? 'desc' : 'asc');
     }
@@ -75,7 +76,7 @@ class QueryWeb extends QueryPlatform {
       query = query.limitToLast(parameters['limitToLast']);
     }
 
-    for (List<dynamic> condition in parameters['where']) {
+    for (final List<dynamic> condition in parameters['where']) {
       dynamic fieldPath = CodecUtility.valueEncode(condition[0]);
       String opStr = condition[1];
       dynamic value = CodecUtility.valueEncode(condition[2]);

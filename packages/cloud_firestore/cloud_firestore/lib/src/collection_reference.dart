@@ -9,7 +9,10 @@ part of cloud_firestore;
 /// A [CollectionReference] object can be used for adding documents, getting
 /// [DocumentReference]s, and querying for documents (using the methods
 /// inherited from [Query]).
+@immutable
 class CollectionReference extends Query {
+  @override
+  // ignore: overridden_fields
   final CollectionReferencePlatform _delegate;
 
   CollectionReference._(FirebaseFirestore firestore, this._delegate)
@@ -57,17 +60,18 @@ class CollectionReference extends Query {
   /// so that the resulting list will be chronologically-sorted.
   DocumentReference doc([String /*?*/ path]) {
     if (path != null) {
-      assert(path.isNotEmpty, "a document path must be a non-empty string");
-      assert(!path.contains("//"), "a document path must not contain '//'");
-      assert(path != '/', "a document path must point to a valid document");
+      assert(path.isNotEmpty, 'a document path must be a non-empty string');
+      assert(!path.contains('//'), 'a document path must not contain "//"');
+      assert(path != '/', 'a document path must point to a valid document');
     }
+    // ignore: todo
     // TODO(ehesp): null saftey check adds a `!` to the path?
     return DocumentReference._(firestore, _delegate.doc(path));
   }
 
   @override
-  bool operator ==(dynamic o) =>
-      o is CollectionReference && o.firestore == firestore && o.path == path;
+  bool operator ==(dynamic other) =>
+      other is CollectionReference && other.firestore == firestore && other.path == path;
 
   @override
   int get hashCode => hashValues(firestore, path);

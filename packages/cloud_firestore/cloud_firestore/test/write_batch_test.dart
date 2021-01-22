@@ -47,7 +47,7 @@ void main() {
     await Firebase.initializeApp();
     FirebaseApp secondaryApp = await Firebase.initializeApp(
         name: 'foo',
-        options: FirebaseOptions(
+        options: const FirebaseOptions(
           apiKey: '123',
           appId: '123',
           messagingSenderId: '123',
@@ -58,7 +58,7 @@ void main() {
     firestoreSecondary = FirebaseFirestore.instanceFor(app: secondaryApp);
   });
 
-  group("$WriteBatch", () {
+  group('$WriteBatch', () {
     test('requires document reference from same Firestore instance', () {
       DocumentReference badRef = firestoreSecondary.doc('doc/exists');
 

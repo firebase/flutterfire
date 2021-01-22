@@ -6,7 +6,10 @@
 
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 /// Represents a geographical point by its longitude and latitude
+@immutable
 class GeoPoint {
   /// Create [GeoPoint] instance.
   const GeoPoint(this.latitude, this.longitude)
@@ -17,8 +20,8 @@ class GeoPoint {
   final double longitude; // ignore: public_member_api_docs
 
   @override
-  bool operator ==(dynamic o) =>
-      o is GeoPoint && o.latitude == latitude && o.longitude == longitude;
+  bool operator ==(dynamic other) =>
+      other is GeoPoint && other.latitude == latitude && other.longitude == longitude;
 
   @override
   int get hashCode => hashValues(latitude, longitude);

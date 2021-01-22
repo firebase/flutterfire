@@ -62,11 +62,11 @@ void runDocumentChangeTests() {
           expect(change.type, equals(DocumentChangeType.removed));
           expect(change.doc.data()['name'], equals('doc1'));
         } else {
-          fail("Should not have been called");
+          fail('Should not have been called');
         }
-      }, count: 2, reason: "Stream should only have been called twice."));
+      }, count: 2, reason: 'Stream should only have been called twice.'));
 
-      await Future.delayed(Duration(seconds: 1)); // Ensure listener fires
+      await Future.delayed(const Duration(seconds: 1)); // Ensure listener fires
       await doc1.delete();
 
       await subscription.cancel();
@@ -108,11 +108,11 @@ void runDocumentChangeTests() {
           expect(change.type, equals(DocumentChangeType.modified));
           expect(change.doc.id, equals('doc1'));
         } else {
-          fail("Should not have been called");
+          fail('Should not have been called');
         }
-      }, count: 2, reason: "Stream should only have been called twice."));
+      }, count: 2, reason: 'Stream should only have been called twice.'));
 
-      await Future.delayed(Duration(seconds: 1)); // Ensure listener fires
+      await Future.delayed(const Duration(seconds: 1)); // Ensure listener fires
       await doc1.update({'value': 4});
 
       await subscription.cancel();

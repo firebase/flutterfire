@@ -19,7 +19,7 @@ import '../utils/test_common.dart';
 void main() {
   initializeMethodChannel();
 
-  group("$MethodChannelDocumentReference()", () {
+  group('$MethodChannelDocumentReference()', () {
     /*late*/ MethodChannelDocumentReference _documentReference;
     /*late*/ FieldValuePlatform mockFieldValue;
 
@@ -40,61 +40,61 @@ void main() {
           FieldValuePlatform(MethodChannelFieldValueFactory().increment(2.0));
     });
 
-    test("set", () async {
+    test('set', () async {
       _assertSetDataMethodCalled(_documentReference, null, null);
       _assertSetDataMethodCalled(_documentReference, true, null);
       _assertSetDataMethodCalled(_documentReference, false, null);
       _assertSetDataMethodCalled(_documentReference, false, mockFieldValue);
     });
 
-    test("update", () async {
+    test('update', () async {
       bool isMethodCalled = false;
       final Map<String, dynamic> data = {
-        "test": "test",
-        "fieldValue": mockFieldValue
+        'test': 'test',
+        'fieldValue': mockFieldValue
       };
       handleMethodCall((call) {
-        if (call.method == "DocumentReference#update") {
+        if (call.method == 'DocumentReference#update') {
           isMethodCalled = true;
-          expect(call.arguments["data"]["test"], equals(data["test"]));
+          expect(call.arguments['data']['test'], equals(data['test']));
         }
       });
       await _documentReference.update(data);
       expect(isMethodCalled, isTrue,
-          reason: "DocumentReference.update was not called");
+          reason: 'DocumentReference.update was not called');
     });
 
-    test("get", () async {
-      await _assertGetMethodCalled(_documentReference, null, "default");
-      await _assertGetMethodCalled(_documentReference, Source.cache, "cache");
-      await _assertGetMethodCalled(_documentReference, Source.server, "server");
-      await _assertGetMethodCalled(
-          _documentReference, Source.serverAndCache, "default");
+    test('get', () async {
+      _assertGetMethodCalled(_documentReference, null, 'default');
+      _assertGetMethodCalled(_documentReference, Source.cache, 'cache');
+      _assertGetMethodCalled(_documentReference, Source.server, 'server');
+      _assertGetMethodCalled(
+          _documentReference, Source.serverAndCache, 'default');
     });
 
-    test("delete", () async {
+    test('delete', () async {
       bool isMethodCalled = false;
       handleMethodCall((call) {
-        if (call.method == "DocumentReference#delete") {
+        if (call.method == 'DocumentReference#delete') {
           isMethodCalled = true;
         }
       });
       await _documentReference.delete();
       expect(isMethodCalled, isTrue,
-          reason: "DocumentReference.delete was not called");
+          reason: 'DocumentReference.delete was not called');
     });
 
     group('snapshots', () {
       final List<MethodCall> log = <MethodCall>[];
 
-      final String mockObserverId = 'DOCUMENT1';
+      const String mockObserverId = 'DOCUMENT1';
 
       setUp(() {
         log.clear();
 
         handleMethodCall((MethodCall call) async {
           log.add(call);
-          if (call.method == "DocumentReference#snapshots") {
+          if (call.method == 'DocumentReference#snapshots') {
             handleDocumentSnapshotsEventChannel(mockObserverId, log);
             return Future.value(mockObserverId);
           }
@@ -106,7 +106,7 @@ void main() {
         final Stream<DocumentSnapshotPlatform> stream =
             _documentReference.snapshots();
         final StreamSubscription<DocumentSnapshotPlatform> subscription =
-            await stream.listen((DocumentSnapshotPlatform snapshot) {});
+            stream.listen((DocumentSnapshotPlatform snapshot) {});
 
         await subscription.cancel();
         await Future<void>.delayed(Duration.zero);
@@ -122,18 +122,19 @@ void main() {
   });
 }
 
+//ignore:avoid_void_async
 void _assertGetMethodCalled(DocumentReferencePlatform documentReference,
     Source /*?*/ source, String expectedSourceString) async {
   bool isMethodCalled = false;
   handleMethodCall((call) {
-    if (call.method == "DocumentReference#get") {
+    if (call.method == 'DocumentReference#get') {
       isMethodCalled = true;
-      expect(call.arguments["source"], equals(expectedSourceString));
+      expect(call.arguments['source'], equals(expectedSourceString));
     }
     return {
-      "path": "test/test",
-      "data": {},
-      "metadata": {"hasPendingWrites": false, "isFromCache": false}
+      'path': 'test/test',
+      'data': {},
+      'metadata': {'hasPendingWrites': false, 'isFromCache': false}
     };
   });
   if (source != null) {
@@ -142,21 +143,22 @@ void _assertGetMethodCalled(DocumentReferencePlatform documentReference,
     await documentReference.get();
   }
   expect(isMethodCalled, isTrue,
-      reason: "DocumentReference.get was not called");
+      reason: 'DocumentReference.get was not called');
 }
 
+//ignore:avoid_void_async
 void _assertSetDataMethodCalled(DocumentReferencePlatform documentReference,
     bool /*?*/ expectedMergeValue, FieldValuePlatform /*?*/ fieldValue) async {
   bool isMethodCalled = false;
-  final Map<String, dynamic> data = {"test": "test"};
+  final Map<String, dynamic> data = {'test': 'test'};
   if (fieldValue != null) {
-    data.addAll({"fieldValue": fieldValue});
+    data.addAll({'fieldValue': fieldValue});
   }
   handleMethodCall((call) {
-    if (call.method == "DocumentReference#set") {
+    if (call.method == 'DocumentReference#set') {
       isMethodCalled = true;
-      expect(call.arguments["data"]["test"], equals(data["test"]));
-      expect(call.arguments["options"]["merge"], expectedMergeValue);
+      expect(call.arguments['data']['test'], equals(data['test']));
+      expect(call.arguments['options']['merge'], expectedMergeValue);
     }
   });
   if (expectedMergeValue == null) {
@@ -165,5 +167,5 @@ void _assertSetDataMethodCalled(DocumentReferencePlatform documentReference,
     await documentReference.set(data, SetOptions(merge: expectedMergeValue));
   }
   expect(isMethodCalled, isTrue,
-      reason: "DocumentReference.set was not called");
+      reason: 'DocumentReference.set was not called');
 }

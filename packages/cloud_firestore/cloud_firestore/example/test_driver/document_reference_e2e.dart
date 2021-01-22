@@ -43,9 +43,9 @@ void runDocumentReferenceTests() {
           if (call == 1) {
             expect(snapshot.exists, isFalse);
           } else {
-            fail("Should not have been called");
+            fail('Should not have been called');
           }
-        }, count: 1, reason: "Stream should only have been called once."));
+        }, count: 1, reason: 'Stream should only have been called once.'));
       });
 
       test('listens to multiple documents', () async {
@@ -85,14 +85,14 @@ void runDocumentReferenceTests() {
             expect(snapshot.exists, isTrue);
             expect(snapshot.data()['foo'], equals('baz'));
           } else {
-            fail("Should not have been called");
+            fail('Should not have been called');
           }
         },
             count: 5,
-            reason: "Stream should only have been called five times."));
+            reason: 'Stream should only have been called five times.'));
 
         await Future.delayed(
-            Duration(seconds: 1)); // allow stream to return a noop-doc
+            const Duration(seconds: 1)); // allow stream to return a noop-doc
         await document.set({'bar': 'baz'});
         await document.delete();
         await document.set({'foo': 'bar'});
@@ -114,7 +114,7 @@ void runDocumentReferenceTests() {
           return;
         }
 
-        fail("Should have thrown a [FirebaseException]");
+        fail('Should have thrown a [FirebaseException]');
       });
     });
 
@@ -142,7 +142,7 @@ void runDocumentReferenceTests() {
               (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
-        fail("Should have thrown a [FirebaseException]");
+        fail('Should have thrown a [FirebaseException]');
       });
     });
 
@@ -152,7 +152,7 @@ void runDocumentReferenceTests() {
             await initializeTest('document-get-server');
         await document.set({'foo': 'bar'});
         DocumentSnapshot snapshot =
-            await document.get(GetOptions(source: Source.server));
+            await document.get(const GetOptions(source: Source.server));
         expect(snapshot.data(), {'foo': 'bar'});
         expect(snapshot.metadata.isFromCache, isFalse);
       });
@@ -161,7 +161,7 @@ void runDocumentReferenceTests() {
         DocumentReference document = await initializeTest('document-get-cache');
         await document.set({'foo': 'bar'});
         DocumentSnapshot snapshot =
-            await document.get(GetOptions(source: Source.cache));
+            await document.get(const GetOptions(source: Source.cache));
         expect(snapshot.data(), equals({'foo': 'bar'}));
         expect(snapshot.metadata.isFromCache, isTrue);
       }, skip: kIsWeb);
@@ -177,7 +177,7 @@ void runDocumentReferenceTests() {
               (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
-        fail("Should have thrown a [FirebaseException]");
+        fail('Should have thrown a [FirebaseException]');
       });
     });
 
@@ -223,7 +223,7 @@ void runDocumentReferenceTests() {
             dataToSet,
             SetOptions(mergeFields: [
               'bar',
-              FieldPath(['baz'])
+              FieldPath(const ['baz'])
             ]));
         DocumentSnapshot snapshot2 = await document.get();
         expect(
@@ -241,7 +241,7 @@ void runDocumentReferenceTests() {
               (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
-        fail("Should have thrown a [FirebaseException]");
+        fail('Should have thrown a [FirebaseException]');
       });
 
       test('set and return all possible datatypes', () async {
@@ -267,7 +267,7 @@ void runDocumentReferenceTests() {
           ],
           'null': null,
           'timestamp': Timestamp.now(),
-          'geopoint': GeoPoint(1, 2),
+          'geopoint': const GeoPoint(1, 2),
           'reference': firestore.doc('foo/bar'),
           'nan': double.nan,
           'infinity': double.infinity,
@@ -326,7 +326,7 @@ void runDocumentReferenceTests() {
             await initializeTest('document-update-not-exists');
         try {
           await document.update({'foo': 'bar'});
-          fail("Should have thrown");
+          fail('Should have thrown');
         } catch (e) {
           expect(e, isA<FirebaseException>());
           expect(e.code, equals('not-found'));

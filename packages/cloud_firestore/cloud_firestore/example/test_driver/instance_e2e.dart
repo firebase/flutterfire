@@ -43,7 +43,7 @@ void runInstanceTests() {
       });
 
       // Allow the snapshots to trigger...
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
 
       await documentReference.set({'foo': 'bar'});
 
@@ -122,9 +122,9 @@ void runInstanceTests() {
       // the instance, and then check whether clearing succeeds.
       try {
         await firestore.clearPersistence();
-        fail("Should have thrown");
+        fail('Should have thrown');
       } on FirebaseException catch (e) {
-        expect(e.code, equals("failed-precondition"));
+        expect(e.code, equals('failed-precondition'));
       } catch (e) {
         fail(e);
       }

@@ -44,10 +44,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// It will always default to [MethodChannelFirebaseFirestore]
   /// if no other implementation was provided.
   static FirebaseFirestorePlatform get instance {
-    if (_instance == null) {
-      _instance = MethodChannelFirebaseFirestore(app: Firebase.app());
-    }
-    return _instance;
+    return _instance ??= MethodChannelFirebaseFirestore(app: Firebase.app());
   }
 
   static FirebaseFirestorePlatform /*?*/ _instance;
@@ -191,10 +188,12 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   }
 
   @override
-  bool operator ==(dynamic o) =>
-      o is FirebaseFirestorePlatform && o.app.name == app.name;
+  //ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(dynamic other) =>
+      other is FirebaseFirestorePlatform && other.app.name == app.name;
 
   @override
+  //ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => toString().hashCode;
 
   @override

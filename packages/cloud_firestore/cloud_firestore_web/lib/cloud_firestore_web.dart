@@ -36,6 +36,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   FirebaseFirestoreWeb({FirebaseApp /*?*/ app})
       : _webFirestore =
             firestore_interop.getFirestoreInstance(core_interop.app(app?.name)),
+            //ignore: todo
         // TODO(ehesp): Why is a `!` being added with null safety?
         super(appInstance: app) {
     FieldValueFactoryPlatform.instance = FieldValueFactoryWeb();
@@ -47,8 +48,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  CollectionReferencePlatform collection(String path) {
-    return CollectionReferenceWeb(this, _webFirestore, path);
+  CollectionReferencePlatform collection(String collectionPath) {
+    return CollectionReferenceWeb(this, _webFirestore, collectionPath);
   }
 
   @override
@@ -64,8 +65,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  QueryPlatform collectionGroup(String path) {
-    return QueryWeb(this, path, _webFirestore.collectionGroup(path),
+  QueryPlatform collectionGroup(String collectionPath) {
+    return QueryWeb(this, collectionPath, _webFirestore.collectionGroup(collectionPath),
         isCollectionGroupQuery: true);
   }
 
@@ -79,8 +80,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  DocumentReferencePlatform doc(String path) =>
-      DocumentReferenceWeb(this, _webFirestore, path);
+  DocumentReferencePlatform doc(String documentPath) =>
+      DocumentReferenceWeb(this, _webFirestore, documentPath);
 
   @override
   Future<void> enableNetwork() async {

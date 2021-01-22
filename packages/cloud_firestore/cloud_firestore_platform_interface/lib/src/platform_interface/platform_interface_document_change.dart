@@ -43,7 +43,7 @@ class DocumentChangePlatform extends PlatformInterface {
   /// This is used by the app-facing [DocumentChange] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(DocumentChangePlatform instance) {
+  static void  verifyExtends(DocumentChangePlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 

@@ -29,7 +29,7 @@ class WriteBatch {
   void delete(DocumentReference document) {
     assert(document != null);
     assert(document.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+        'the document provided is from a different Firestore instance');
     return _delegate.delete(document.path);
   }
 
@@ -44,9 +44,10 @@ class WriteBatch {
     assert(document != null);
     assert(data != null);
     assert(document.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+        'the document provided is from a different Firestore instance');
     return _delegate.set(
         document.path,
+        // ignore: todo
         // TODO(ehesp): `options` should be nullable after platform interface null safe is available
         _CodecUtility.replaceValueWithDelegatesInMap(data),
         options);
@@ -59,7 +60,7 @@ class WriteBatch {
     assert(document != null);
     assert(data != null);
     assert(document.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+        'the document provided is from a different Firestore instance');
     return _delegate.update(
         document.path, _CodecUtility.replaceValueWithDelegatesInMap(data));
   }

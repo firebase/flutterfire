@@ -66,7 +66,7 @@ void main() {
           return;
         }
 
-        fail("Should have thrown a [StateError]");
+        fail('Should have thrown a [StateError]');
       });
 
       test('return before invoking method call if writes is empty', () {
@@ -110,9 +110,9 @@ void main() {
         } on FirebaseException catch (_) {
           return;
         } catch (_) {
-          fail("WriteBatch threw invalid exeption");
+          fail('WriteBatch threw invalid exeption');
         }
-        fail("WriteBatch should have thrown an exception");
+        fail('WriteBatch should have thrown an exception');
       });
 
       test('catches and throws a [Exception] from WriteBatch#commit', () async {
@@ -125,9 +125,9 @@ void main() {
         } on Exception catch (_) {
           return;
         } catch (_) {
-          fail("WriteBatch threw invalid exeption");
+          fail('WriteBatch threw invalid exeption');
         }
-        fail("WriteBatch should have thrown an exception");
+        fail('WriteBatch should have thrown an exception');
       });
     });
 

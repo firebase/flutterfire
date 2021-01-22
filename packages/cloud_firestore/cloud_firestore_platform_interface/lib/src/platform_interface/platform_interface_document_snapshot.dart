@@ -27,7 +27,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   /// This is used by the app-facing [DocumentSnapshot] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(DocumentSnapshotPlatform instance) {
+  static void verifyExtends(DocumentSnapshotPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
@@ -69,7 +69,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   dynamic get(dynamic field) {
     assert(field != null);
     assert(field is String || field is FieldPath,
-        "Supported [field] types are [String] and [FieldPath]");
+        'Supported [field] types are [String] and [FieldPath]');
 
     if (!exists) {
       throw StateError(
@@ -97,7 +97,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
     // We know snapshotData is not null because of the `exists` check
     Map<String, dynamic> snapshotData = data() /*!*/;
 
-    _findComponent(int componentIndex, Map<String, dynamic> data) {
+    dynamic _findComponent(int componentIndex, Map<String, dynamic> data) {
       bool isLast = componentIndex + 1 == components.length;
       dynamic value = _findKeyValueInMap(components[componentIndex], data);
 

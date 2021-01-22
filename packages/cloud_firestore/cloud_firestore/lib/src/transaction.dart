@@ -8,7 +8,7 @@ part of cloud_firestore;
 
 /// The [TransactionHandler] may be executed multiple times; it should be able
 /// to handle multiple executions.
-typedef Future<T> TransactionHandler<T>(Transaction transaction);
+typedef  TransactionHandler<T> =  Future<T> Function(Transaction transaction);
 
 /// Transaction class which is created from a call to [runTransaction()].
 class Transaction {
@@ -34,7 +34,7 @@ class Transaction {
   Transaction delete(DocumentReference documentReference) {
     assert(documentReference != null);
     assert(documentReference.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+        'the document provided is from a different Firestore instance');
 
     return Transaction._(_firestore, _delegate.delete(documentReference.path));
   }
@@ -46,7 +46,7 @@ class Transaction {
     assert(documentReference != null);
     assert(data != null);
     assert(documentReference.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+        'the document provided is from a different Firestore instance');
 
     return Transaction._(
         _firestore,
@@ -61,12 +61,13 @@ class Transaction {
       DocumentReference documentReference, Map<String, dynamic> data,
       [SetOptions /*?*/ options]) {
     assert(documentReference.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+        'the document provided is from a different Firestore instance');
 
     return Transaction._(
         _firestore,
         _delegate.set(
             documentReference.path,
+            // ignore: todo
             // TODO(ehesp): `options` should be nullable after platform interface null safe is available
             _CodecUtility.replaceValueWithDelegatesInMap(data),
             options));

@@ -33,11 +33,11 @@ void runSnapshotMetadataTests() {
     test('a snapshot returns the correct [isFromCache] value', () async {
       CollectionReference collection =
           await initializeTest('snapshot-metadata-is-from-cache');
-      QuerySnapshot qs = await collection.get(GetOptions(source: Source.cache));
+      QuerySnapshot qs = await collection.get(const GetOptions(source: Source.cache));
       expect(qs.metadata.isFromCache, isTrue);
 
       QuerySnapshot qs2 =
-          await collection.get(GetOptions(source: Source.server));
+          await collection.get(const GetOptions(source: Source.server));
       expect(qs2.metadata.isFromCache, isFalse);
     });
   }, skip: kIsWeb);

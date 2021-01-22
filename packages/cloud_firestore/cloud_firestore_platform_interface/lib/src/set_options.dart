@@ -22,30 +22,22 @@ class SetOptions {
 
   /// Creates a [SetOptions] instance.
   SetOptions({
-    this.merge,
-    List<dynamic> /*?*/ mergeFields,
-  }) {
-    assert(!(merge == null && mergeFields == null),
-        "options must provide 'merge' or 'mergeFields'");
-
-    if (merge != null) {
-      assert(mergeFields == null,
-          "options cannot have both 'merge' & 'mergeFields'");
-    }
-
-    if (mergeFields != null) {
-      assert(merge == null, "options cannot have both 'merge' & 'mergeFields'");
-      assert(
-          mergeFields
-                  .where((value) => value is String || value is FieldPath)
-                  .length ==
-              mergeFields.length,
-          '[mergeFields] must be a [String] or [FieldPath]');
-
-      this.mergeFields = mergeFields.map((field) {
-        if (field is String) return FieldPath.fromString(field);
-        return field as FieldPath;
-      }).toList(growable: false);
-    }
-  }
+    // ignore: avoid_init_to_null
+    this.merge = null,
+    // ignore: avoid_init_to_null
+    List<dynamic> /*?*/ mergeFields = null,
+  })  : assert(!(merge == null && mergeFields == null),
+            "options must provide 'merge' or 'mergeFields'"),
+        assert(mergeFields != null && merge != null,
+            "options cannot have both 'merge' & 'mergeFields'"),
+        assert(
+            mergeFields
+                    .where((value) => value is String || value is FieldPath)
+                    .length ==
+                mergeFields.length,
+            '[mergeFields] must be a [String] or [FieldPath]'),
+        mergeFields = mergeFields.map((field) {
+          if (field is String) return FieldPath.fromString(field);
+          return field as FieldPath;
+        }).toList(growable: false);
 }

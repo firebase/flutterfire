@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group("$FieldValue", () {
+  group('$FieldValue', () {
     test('equality', () {
       expect(FieldValue.delete() == FieldValue.delete(), isTrue);
       expect(

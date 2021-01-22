@@ -32,6 +32,7 @@ class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
     assert(value is int || value is double);
     if (value is double) {
       return MethodChannelFieldValue(FieldValueType.incrementDouble, value);
+      // ignore: avoid_double_and_int_checks
     } else if (value is int) {
       return MethodChannelFieldValue(FieldValueType.incrementInteger, value);
     }

@@ -34,12 +34,11 @@ void runWriteBatchTests() {
       CollectionReference collection = await initializeTest('write-batch-ops');
       WriteBatch batch = firestore.batch();
 
-      DocumentReference doc1 = await collection.doc('doc1'); // delete
-      DocumentReference doc2 = await collection.doc('doc2'); // set
-      DocumentReference doc3 = await collection.doc('doc3'); // update
-      DocumentReference doc4 = await collection.doc('doc4'); // update w/ merge
-      DocumentReference doc5 =
-          await collection.doc('doc5'); // update w/ mergeFields
+      DocumentReference doc1 = collection.doc('doc1'); // delete
+      DocumentReference doc2 = collection.doc('doc2'); // set
+      DocumentReference doc3 = collection.doc('doc3'); // update
+      DocumentReference doc4 = collection.doc('doc4'); // update w/ merge
+      DocumentReference doc5 = collection.doc('doc5'); // update w/ mergeFields
 
       await Future.wait([
         doc1.set({'foo': 'bar'}),
@@ -54,6 +53,7 @@ void runWriteBatchTests() {
       batch.update(doc3, <String, dynamic>{'bar': 'ben'});
       batch.set(doc4, <String, dynamic>{'bar': 'ben'}, SetOptions(merge: true));
 
+      // ignore: todo
       // TODO(ehesp): firebase-dart does not support mergeFields
       if (!kIsWeb) {
         batch.set(doc5, <String, dynamic>{'bar': 'ben'},
@@ -83,6 +83,7 @@ void runWriteBatchTests() {
             'foo': 'bar',
             'bar': 'ben',
           }));
+      // ignore: todo
       // TODO(ehesp): firebase-dart does not support mergeFields
       if (!kIsWeb) {
         expect(

@@ -14,7 +14,7 @@ void main() {
     });
 
     test('provides a default source if none provided', () {
-      expect(GetOptions().source, equals(Source.serverAndCache));
+      expect(const GetOptions().source, equals(Source.serverAndCache));
     });
   });
 }

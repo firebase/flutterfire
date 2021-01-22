@@ -25,16 +25,13 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// Create an instance of [MethodChannelFirebaseFirestore] with optional [FirebaseApp]
   MethodChannelFirebaseFirestore({FirebaseApp /*!*/ app})
       : super(appInstance: app);
-
-  /// The [Settings] for this [MethodChannelFirebaseFirestore] instance.
-  Settings _settings = Settings();
-
+      
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
   /// If null, the default [FirebaseApp] is used.
 
   /// The [MethodChannel] used to communicate with the native plugin
-  static MethodChannel channel = MethodChannel(
+  static MethodChannel channel = const MethodChannel(
     'plugins.flutter.io/firebase_firestore',
     StandardMethodCodec(FirestoreMessageCodec()),
   );
@@ -43,7 +40,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static EventChannel querySnapshotChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/query/$id',
-      StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(FirestoreMessageCodec()),
     );
   }
 
@@ -51,7 +48,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static EventChannel documentSnapshotChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/document/$id',
-      StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(FirestoreMessageCodec()),
     );
   }
 
@@ -59,7 +56,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static EventChannel snapshotsInSyncChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/snapshotsInSync/$id',
-      StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(FirestoreMessageCodec()),
     );
   }
 
@@ -93,13 +90,14 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  CollectionReferencePlatform collection(String path) {
-    return MethodChannelCollectionReference(this, path);
+  CollectionReferencePlatform collection(String collectionPath) {
+    return MethodChannelCollectionReference(this, collectionPath);
   }
 
   @override
-  QueryPlatform collectionGroup(String path) {
-    return MethodChannelQuery(this, path, isCollectionGroupQuery: true);
+  QueryPlatform collectionGroup(String collectionPath) {
+    return MethodChannelQuery(this, collectionPath,
+        isCollectionGroupQuery: true);
   }
 
   @override
@@ -115,8 +113,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  DocumentReferencePlatform doc(String path) {
-    return MethodChannelDocumentReference(this, path);
+  DocumentReferencePlatform doc(String documentPath) {
+    return MethodChannelDocumentReference(this, documentPath);
   }
 
   @override
@@ -183,7 +181,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
     final eventChannel = EventChannel(
       'plugins.flutter.io/firebase_firestore/transaction/$transactionId',
-      StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(FirestoreMessageCodec()),
     );
 
     snapshotStream = eventChannel.receiveBroadcastStream(
@@ -205,7 +203,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         }
 
         final TransactionPlatform transaction =
-            MethodChannelTransaction(transactionId, event["appName"]);
+            MethodChannelTransaction(transactionId, event['appName']);
 
         // If the transaction fails on Dart side, then forward the error
         // right away and only inform native side of the error.
@@ -247,14 +245,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  Settings get settings {
-    return _settings;
-  }
-
-  @override
-  set settings(Settings settings) {
-    _settings = settings;
-  }
+  Settings settings;
 
   @override
   Future<void> terminate() async {
