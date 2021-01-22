@@ -37,12 +37,13 @@ List<Map<String, String>> getStackTraceElements(StackTrace stackTrace) {
         'file': frame.library,
         'line': frame.line?.toString() ?? '0',
       };
-      final List<String> members = frame.member.split('.');
+      final String member = frame.member ?? '<fn>';
+      final List<String> members = member.split('.');
       if (members.length > 1) {
         element['method'] = members.sublist(1).join('.');
         element['class'] = members.first;
       } else {
-        element['method'] = frame.member;
+        element['method'] = member;
       }
       elements.add(element);
     }
