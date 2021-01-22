@@ -7,11 +7,11 @@ environment:
 
 dependencies:
   cloud_firestore:
+    path: ../
   firebase_core:
     path: ../../../firebase_core/firebase_core
   flutter:
     sdk: flutter
-    path: ../
 
 dependency_overrides:
   cloud_firestore_platform_interface:
