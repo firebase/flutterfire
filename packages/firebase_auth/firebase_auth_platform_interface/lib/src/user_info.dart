@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:meta/meta.dart';
 
 /// User profile information, visible only to the Firebase project's apps.
@@ -12,19 +10,19 @@ class UserInfo {
   @protected
   UserInfo(this._data);
 
-  final Map<String, dynamic> _data;
+  final Map<String, String?> _data;
 
   /// The users display name.
   ///
   /// Will be `null` if signing in anonymously or via password authentication.
-  String get displayName {
+  String? get displayName {
     return _data['displayName'];
   }
 
   /// The users email address.
   ///
   /// Will be `null` if signing in anonymously.
-  String get email {
+  String? get email {
     return _data['email'];
   }
 
@@ -32,7 +30,7 @@ class UserInfo {
   ///
   /// This property will be `null` if the user has not signed in or been has
   /// their phone number linked.
-  String get phoneNumber {
+  String? get phoneNumber {
     return _data['phoneNumber'];
   }
 
@@ -40,18 +38,18 @@ class UserInfo {
   ///
   /// This property will be populated if the user has signed in or been linked
   /// with a 3rd party OAuth provider (such as Google).
-  String get photoURL {
+  String? get photoURL {
     return _data['photoURL'];
   }
 
   /// The federated provider ID.
-  String /*!*/ get providerId {
-    return _data['providerId'];
+  String get providerId {
+    return _data['providerId']!;
   }
 
   /// The user's unique ID.
-  String /*!*/ get uid {
-    return _data['uid'];
+  String get uid {
+    return _data['uid']!;
   }
 
   @override

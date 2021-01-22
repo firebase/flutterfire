@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -12,7 +10,7 @@ void main() {
   String kMockVerificationId = 'test-id';
 
   group('$ConfirmationResultPlatform()', () {
-    /*late*/ TestConfirmationResultPlatform confirmationResultPlatform;
+    late TestConfirmationResultPlatform confirmationResultPlatform;
 
     setUpAll(() async {
       confirmationResultPlatform =
@@ -32,11 +30,6 @@ void main() {
         } catch (_) {
           fail('thrown an unexpected exception');
         }
-      });
-
-      test('throws an [AssertionError] exception when instance is null', () {
-        expect(() => ConfirmationResultPlatform.verifyExtends(null),
-            throwsAssertionError);
       });
     });
 

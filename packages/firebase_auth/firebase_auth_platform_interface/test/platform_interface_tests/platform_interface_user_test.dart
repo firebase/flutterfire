@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,16 +11,16 @@ import '../mock.dart';
 void main() {
   setupFirebaseAuthMocks();
 
-  /*late*/ TestUserPlatform userPlatform;
-  /*late*/ FirebaseAuthPlatform auth;
-  final String kMockProviderId = 'firebase';
-  final String kMockUid = '12345';
-  final String kMockDisplayName = 'Flutter Test User';
-  final String kMockPhotoURL = 'http://www.example.com/';
-  final String kMockEmail = 'test@example.com';
-  final String kMockPhoneNumber = TEST_PHONE_NUMBER;
-  final String kMockRefreshToken = 'test';
-  final String kMockTenantId = 'test-tenant-id';
+  late TestUserPlatform userPlatform;
+  late FirebaseAuthPlatform auth;
+  const String kMockProviderId = 'firebase';
+  const String kMockUid = '12345';
+  const String kMockDisplayName = 'Flutter Test User';
+  const String kMockPhotoURL = 'http://www.example.com/';
+  const String kMockEmail = 'test@example.com';
+  const String kMockPhoneNumber = TEST_PHONE_NUMBER;
+  const String kMockRefreshToken = 'test';
+  const String kMockTenantId = 'test-tenant-id';
   final int kMockCreationTimestamp =
       DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
   final int kMockLastSignInTimestamp =
@@ -66,10 +64,6 @@ void main() {
       test('creates a new instance of [UserPlatform]', () {
         expect(userPlatform, isA<UserPlatform>());
       });
-
-      test('throws [AssertionError] when user is null', () {
-        expect(() => TestUserPlatform(auth, null), throwsAssertionError);
-      });
     });
 
     group('verifyExtends()', () {
@@ -80,10 +74,6 @@ void main() {
         } catch (_) {
           fail('thrown an unexpected exception');
         }
-      });
-
-      test('throws an [AssertionError] exception when instance is null', () {
-        expect(() => UserPlatform.verifyExtends(null), throwsAssertionError);
       });
     });
 
@@ -108,9 +98,9 @@ void main() {
 
     test('UserPlatform.metadata', () {
       expect(userPlatform.metadata, isA<UserMetadata>());
-      expect(userPlatform.metadata.creationTime.millisecondsSinceEpoch,
+      expect(userPlatform.metadata.creationTime!.millisecondsSinceEpoch,
           equals(kMockCreationTimestamp));
-      expect(userPlatform.metadata.lastSignInTime.millisecondsSinceEpoch,
+      expect(userPlatform.metadata.lastSignInTime!.millisecondsSinceEpoch,
           equals(kMockLastSignInTimestamp));
     });
     test('UserPlatform.phoneNumber', () {
@@ -253,7 +243,8 @@ void main() {
 
     test('throws if .updatePhoneNumber', () async {
       PhoneAuthCredential phoneCredential = PhoneAuthProvider.credential(
-          verificationId: 'verificationId', smsCode: '12345');
+          verificationId: 'verificationId',
+          smsCode: '12345') as PhoneAuthCredential;
       try {
         await userPlatform.updatePhoneNumber(phoneCredential);
       } on UnimplementedError catch (e) {

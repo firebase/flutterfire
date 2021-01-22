@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 /// A class which stores user callbacks for phone number verification.
@@ -17,14 +15,14 @@ class PhoneAuthCallbacks {
   );
 
   /// Called on automatic phone number resolution.
-  final PhoneVerificationCompleted /*!*/ verificationCompleted;
+  final PhoneVerificationCompleted verificationCompleted;
 
   /// Called when an error is thrown during phone number verification.
-  final PhoneVerificationFailed /*!*/ verificationFailed;
+  final PhoneVerificationFailed verificationFailed;
 
   /// Called when the SMS code has been sent to the provided phone number.
-  final PhoneCodeSent /*!*/ codeSent;
+  final PhoneCodeSent codeSent;
 
   /// Called when the automatic phone number resolution timeout has expired.
-  final PhoneCodeAutoRetrievalTimeout /*!*/ codeAutoRetrievalTimeout;
+  final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout;
 }
