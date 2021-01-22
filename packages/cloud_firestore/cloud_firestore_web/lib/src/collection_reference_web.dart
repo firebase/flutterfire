@@ -13,8 +13,8 @@ import 'query_web.dart';
 
 /// Web implementation for Firestore [CollectionReferencePlatform].
 class CollectionReferenceWeb extends QueryWeb
-//ignore: avoid_implementing_value_types
     implements
+//ignore: avoid_implementing_value_types
         CollectionReferencePlatform {
   /// instance of Firestore from the web plugin
   final firestore_interop.Firestore _webFirestore;
