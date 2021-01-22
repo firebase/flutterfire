@@ -121,7 +121,8 @@ NSDictionary *barcodeContactInfoToDictionary(FIRVisionBarcodeContactInfo *contac
                                                NSUInteger idx, BOOL *_Nonnull stop) {
     [emails addObject:@{
       @"address" : email.address ?: [NSNull null],
-      @"body" : email.body ?: [NSNull null] @"subject" : email.subject ?: [NSNull null],
+      @"body" : email.body ?: [NSNull null],
+      @"subject" : email.subject ?: [NSNull null],
       @"type" : @(email.type)
     }];
   }];
