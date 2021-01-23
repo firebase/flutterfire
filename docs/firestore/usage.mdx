@@ -153,10 +153,10 @@ class UserInformation extends StatelessWidget {
         }
 
         return new ListView(
-          children: snapshot.data.documents.map((DocumentSnapshot document) {
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
             return new ListTile(
-              title: new Text(document.data()['full_name']),
-              subtitle: new Text(document.data()['company']),
+              title: new Text(docs.data()['full_name']),
+              subtitle: new Text(docs.data()['company']),
             );
           }).toList(),
         );
