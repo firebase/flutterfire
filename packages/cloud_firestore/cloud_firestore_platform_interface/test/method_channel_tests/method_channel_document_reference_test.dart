@@ -20,8 +20,8 @@ void main() {
   initializeMethodChannel();
 
   group('$MethodChannelDocumentReference()', () {
-    /*late*/ MethodChannelDocumentReference _documentReference;
-    /*late*/ FieldValuePlatform mockFieldValue;
+    MethodChannelDocumentReference /*?*/ _documentReference;
+    FieldValuePlatform /*?*/ mockFieldValue;
 
     setUpAll(() async {
       await Firebase.initializeApp(

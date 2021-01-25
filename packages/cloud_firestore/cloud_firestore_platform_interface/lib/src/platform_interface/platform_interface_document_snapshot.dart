@@ -94,10 +94,9 @@ class DocumentSnapshotPlatform extends PlatformInterface {
 
     List<String> components = fieldPath.components;
 
-    // We know snapshotData is not null because of the `exists` check
-    Map<String, dynamic> snapshotData = data() /*!*/;
+    Map<String, dynamic>/*?*/ snapshotData = data();
 
-    dynamic _findComponent(int componentIndex, Map<String, dynamic> data) {
+    dynamic _findComponent(int componentIndex, Map<String, dynamic>/*?*/ data) {
       bool isLast = componentIndex + 1 == components.length;
       dynamic value = _findKeyValueInMap(components[componentIndex], data);
 

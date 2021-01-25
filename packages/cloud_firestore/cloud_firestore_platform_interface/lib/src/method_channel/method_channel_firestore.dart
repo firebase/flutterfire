@@ -23,7 +23,7 @@ import 'utils/exception.dart';
 /// You can get an instance by calling [FirebaseFirestore.instance].
 class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// Create an instance of [MethodChannelFirebaseFirestore] with optional [FirebaseApp]
-  MethodChannelFirebaseFirestore({FirebaseApp /*!*/ app})
+  MethodChannelFirebaseFirestore({FirebaseApp /*?*/ app})
       : super(appInstance: app);
 
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
@@ -131,8 +131,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Stream<void> snapshotsInSync() {
-    StreamSubscription<dynamic> snapshotStream;
-    StreamController<void> controller; // ignore: close_sinks
+    StreamSubscription<dynamic>/*?*/ snapshotStream;
+   /*late*/ StreamController<void> controller; // ignore: close_sinks
 
     controller = StreamController<void>.broadcast(
       onListen: () async {

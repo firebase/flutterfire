@@ -18,7 +18,7 @@ import '../../utils/test_common.dart';
 
 void main() {
   initializeMethodChannel();
-  /*late*/ MethodChannelFirebaseFirestore firestore;
+  MethodChannelFirebaseFirestore /*?*/ firestore;
 
   setUpAll(() async {
     firestore = MethodChannelFirebaseFirestore();

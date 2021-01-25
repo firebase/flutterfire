@@ -78,7 +78,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
 
   /// Enable persistence of Firestore data. Web only.
   Future<void> enablePersistence(
-      [PersistenceSettings /*!*/ persistenceSettings]) async {
+      [PersistenceSettings /*?*/ persistenceSettings]) async {
     throw UnimplementedError('enablePersistence() is not implemented');
   }
 
