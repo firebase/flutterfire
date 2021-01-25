@@ -15,7 +15,6 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  http_parser: ^4.0.0-nullsafety
   js: ^0.6.1
   meta: ^1.1.7
 
@@ -25,6 +24,9 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.0.0-nullsafety.2
   pedantic: ^1.8.0
+
+dependency_overrides:
+  http_parser: ^4.0.0-nullsafety  
 
 flutter:
   plugin:
