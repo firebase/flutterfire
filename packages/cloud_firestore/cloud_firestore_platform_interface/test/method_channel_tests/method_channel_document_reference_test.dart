@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -20,8 +20,8 @@ void main() {
   initializeMethodChannel();
 
   group('$MethodChannelDocumentReference()', () {
-    MethodChannelDocumentReference /*?*/ _documentReference;
-    FieldValuePlatform /*?*/ mockFieldValue;
+    MethodChannelDocumentReference? _documentReference;
+    FieldValuePlatform? mockFieldValue;
 
     setUpAll(() async {
       await Firebase.initializeApp(
@@ -59,7 +59,7 @@ void main() {
           expect(call.arguments['data']['test'], equals(data['test']));
         }
       });
-      await _documentReference.update(data);
+      await _documentReference!.update(data);
       expect(isMethodCalled, isTrue,
           reason: 'DocumentReference.update was not called');
     });
@@ -79,7 +79,7 @@ void main() {
           isMethodCalled = true;
         }
       });
-      await _documentReference.delete();
+      await _documentReference!.delete();
       expect(isMethodCalled, isTrue,
           reason: 'DocumentReference.delete was not called');
     });
@@ -104,7 +104,7 @@ void main() {
       test('onListen and onCancel invokes native methods with correct args',
           () async {
         final Stream<DocumentSnapshotPlatform> stream =
-            _documentReference.snapshots();
+            _documentReference!.snapshots();
         final StreamSubscription<DocumentSnapshotPlatform> subscription =
             stream.listen((DocumentSnapshotPlatform snapshot) {});
 
@@ -123,8 +123,8 @@ void main() {
 }
 
 //ignore:avoid_void_async
-void _assertGetMethodCalled(DocumentReferencePlatform documentReference,
-    Source /*?*/ source, String expectedSourceString) async {
+void _assertGetMethodCalled(DocumentReferencePlatform? documentReference,
+    Source? source, String expectedSourceString) async {
   bool isMethodCalled = false;
   handleMethodCall((call) {
     if (call.method == 'DocumentReference#get') {
@@ -138,17 +138,17 @@ void _assertGetMethodCalled(DocumentReferencePlatform documentReference,
     };
   });
   if (source != null) {
-    await documentReference.get(GetOptions(source: source));
+    await documentReference!.get(GetOptions(source: source));
   } else {
-    await documentReference.get();
+    await documentReference!.get();
   }
   expect(isMethodCalled, isTrue,
       reason: 'DocumentReference.get was not called');
 }
 
 //ignore:avoid_void_async
-void _assertSetDataMethodCalled(DocumentReferencePlatform documentReference,
-    bool /*?*/ expectedMergeValue, FieldValuePlatform /*?*/ fieldValue) async {
+void _assertSetDataMethodCalled(DocumentReferencePlatform? documentReference,
+    bool? expectedMergeValue, FieldValuePlatform? fieldValue) async {
   bool isMethodCalled = false;
   final Map<String, dynamic> data = {'test': 'test'};
   if (fieldValue != null) {
@@ -162,9 +162,9 @@ void _assertSetDataMethodCalled(DocumentReferencePlatform documentReference,
     }
   });
   if (expectedMergeValue == null) {
-    await documentReference.set(data);
+    await documentReference!.set(data);
   } else {
-    await documentReference.set(data, SetOptions(merge: expectedMergeValue));
+    await documentReference!.set(data, SetOptions(merge: expectedMergeValue));
   }
   expect(isMethodCalled, isTrue,
       reason: 'DocumentReference.set was not called');

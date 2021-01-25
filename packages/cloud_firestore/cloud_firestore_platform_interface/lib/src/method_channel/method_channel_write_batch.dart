@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -65,7 +65,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
 
   @override
   void set(String documentPath, Map<String, dynamic> data,
-      [SetOptions /*?*/ options]) {
+      [SetOptions? options]) {
     _assertNotCommitted();
     _writes.add(<String, dynamic>{
       'path': documentPath,

@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
@@ -32,11 +32,11 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   }
 
   /// The [FirebaseFirestorePlatform] used to produce this [DocumentSnapshotPlatform].
-  final FirebaseFirestorePlatform /*!*/ _firestore;
+  final FirebaseFirestorePlatform _firestore;
 
   final Pointer _pointer;
 
-  final Map<String, dynamic> /*!*/ _data;
+  final Map<String, dynamic> _data;
 
   /// The database ID of the snapshot's document.
   String get id => _pointer.id;
@@ -57,7 +57,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   DocumentReferencePlatform get reference => _firestore.doc(_pointer.path);
 
   /// Contains all the data of this snapshot.
-  Map<String, dynamic> /*?*/ data() {
+  Map<String, dynamic>? data() {
     return exists ? Map<String, dynamic>.from(_data['data']) : null;
   }
 
@@ -94,11 +94,11 @@ class DocumentSnapshotPlatform extends PlatformInterface {
 
     List<String> components = fieldPath.components;
 
-    Map<String, dynamic>/*?*/ snapshotData = data();
+    Map<String, dynamic>? snapshotData = data();
 
-    dynamic _findComponent(int componentIndex, Map<String, dynamic>/*?*/ data) {
+    dynamic _findComponent(int componentIndex, Map<String, dynamic>? data) {
       bool isLast = componentIndex + 1 == components.length;
-      dynamic value = _findKeyValueInMap(components[componentIndex], data);
+      dynamic value = _findKeyValueInMap(components[componentIndex], data!);
 
       if (isLast) {
         return value;

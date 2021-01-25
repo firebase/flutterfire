@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -17,7 +17,7 @@ import 'utils/exception.dart';
 /// An implementation of [DocumentReferencePlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.
 class MethodChannelDocumentReference extends DocumentReferencePlatform {
-  Pointer _pointer;
+  late Pointer _pointer;
 
   /// Creates a [DocumentReferencePlatform] that is implemented using [MethodChannel].
   MethodChannelDocumentReference(
@@ -28,7 +28,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   }
 
   @override
-  Future<void> set(Map<String, dynamic> data, [SetOptions options]) async {
+  Future<void> set(Map<String, dynamic> data, [SetOptions? options]) async {
     try {
       await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
         'DocumentReference#set',
@@ -65,18 +65,18 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
 
   @override
   Future<DocumentSnapshotPlatform> get(
-      [GetOptions options = const GetOptions()]) async {
+      [GetOptions? options = const GetOptions()]) async {
     try {
-      final Map<String, dynamic> data = await MethodChannelFirebaseFirestore
+      final Map<String, dynamic> data = await (MethodChannelFirebaseFirestore
           .channel
           .invokeMapMethod<String, dynamic>(
         'DocumentReference#get',
         <String, dynamic>{
           'firestore': firestore,
           'reference': this,
-          'source': getSourceString(options.source),
+          'source': getSourceString(options!.source),
         },
-      );
+      ) as FutureOr<Map<String, dynamic>>);
 
       return DocumentSnapshotPlatform(firestore, _pointer.path, data);
     } catch (e) {
@@ -104,10 +104,10 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
 
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
-    StreamController<DocumentSnapshotPlatform>
+    late StreamController<DocumentSnapshotPlatform>
         controller; // ignore: close_sinks
 
-    StreamSubscription<dynamic> snapshotStream;
+    StreamSubscription<dynamic>? snapshotStream;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.channel

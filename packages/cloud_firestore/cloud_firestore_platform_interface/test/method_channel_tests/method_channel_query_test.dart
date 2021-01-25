@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -18,7 +18,7 @@ import '../utils/test_common.dart';
 
 void main() {
   initializeMethodChannel();
-   MethodChannelQuery /*?*/ query;
+   MethodChannelQuery? query;
   const Map<String, dynamic> kMockSnapshotMetadata = <String, dynamic>{
     'hasPendingWrites': false,
     'isFromCache': false,
@@ -65,7 +65,7 @@ void main() {
         ['bar']
       ]);
       List<dynamic> values = [1];
-      MethodChannelQuery q = query.endAtDocument(orders, values);
+      MethodChannelQuery q = query!.endAtDocument(orders, values) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['endAt'], equals([1]));
@@ -81,9 +81,9 @@ void main() {
       List<List<dynamic>> fields = List.from([
         ['bar']
       ]);
-      MethodChannelQuery q = query.endAt(
+      MethodChannelQuery q = query!.endAt(
         fields,
-      );
+      ) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(
@@ -99,7 +99,7 @@ void main() {
         ['bar']
       ]);
       List<dynamic> values = [1];
-      MethodChannelQuery q = query.endBeforeDocument(orders, values);
+      MethodChannelQuery q = query!.endBeforeDocument(orders, values) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['endAt'], equals(null));
@@ -113,7 +113,7 @@ void main() {
 
     test('endBefore()', () {
       List<dynamic> fields = List.from(['bar']);
-      MethodChannelQuery q = query.endBefore(fields);
+      MethodChannelQuery q = query!.endBefore(fields) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['endAt'], equals(null));
@@ -155,7 +155,7 @@ void main() {
       });
       test('returns a [QuerySnapshotPlatform] instance', () async {
         const GetOptions getOptions = GetOptions(source: Source.cache);
-        QuerySnapshotPlatform snapshot = await query.get(getOptions);
+        QuerySnapshotPlatform snapshot = await query!.get(getOptions);
         expect(snapshot, isA<QuerySnapshotPlatform>());
         expect(snapshot.docs.length, 1);
       });
@@ -182,13 +182,13 @@ void main() {
     });
 
     test('limit()', () {
-      MethodChannelQuery q = query.limit(1);
+      MethodChannelQuery q = query!.limit(1) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['limit'], equals(1));
     });
     test('limitToLast()', () {
-      MethodChannelQuery q = query.limitToLast(1);
+      MethodChannelQuery q = query!.limitToLast(1) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['limitToLast'], equals(1));
@@ -198,7 +198,7 @@ void main() {
       List<List<dynamic>> orders = List.from([
         ['bar']
       ]);
-      MethodChannelQuery q = query.orderBy(orders);
+      MethodChannelQuery q = query!.orderBy(orders) as MethodChannelQuery;
       expect(q, isNot(same(query)));
       expect(
           q.parameters['orderBy'],
@@ -225,13 +225,13 @@ void main() {
       });
 
       test('returns a [Stream]', () {
-        Stream<QuerySnapshotPlatform> stream = query.snapshots();
+        Stream<QuerySnapshotPlatform> stream = query!.snapshots();
         expect(stream, isA<Stream<QuerySnapshotPlatform>>());
       });
 
       test('onListen and onCancel invokes native methods with correct args',
           () async {
-        Stream<QuerySnapshotPlatform> stream = query.snapshots();
+        Stream<QuerySnapshotPlatform> stream = query!.snapshots();
         final StreamSubscription<QuerySnapshotPlatform> subscription =
             stream.listen((QuerySnapshotPlatform snapshot) {});
 
@@ -249,13 +249,13 @@ void main() {
 
     test('sets a default value for includeMetadataChanges', () {
       try {
-        query.snapshots();
+        query!.snapshots();
       } on AssertionError catch (_) {
         fail('Default value not set for includeMetadataChanges');
       }
     });
     test('should throw if includeMetadataChanges is null', () {
-      expect(() => query.snapshots(includeMetadataChanges: null),
+      expect(() => query!.snapshots(includeMetadataChanges: null),
           throwsAssertionError);
     });
 
@@ -264,7 +264,7 @@ void main() {
         ['bar']
       ]);
       List<dynamic> values = [1];
-      MethodChannelQuery q = query.startAfterDocument(orders, values);
+      MethodChannelQuery q = query!.startAfterDocument(orders, values) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['startAt'], equals(null));
@@ -277,7 +277,7 @@ void main() {
     });
     test('startAfter()', () {
       List<dynamic> fields = List.from(['bar']);
-      MethodChannelQuery q = query.startAfter(fields);
+      MethodChannelQuery q = query!.startAfter(fields) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['startAt'], equals(null));
@@ -289,7 +289,7 @@ void main() {
         ['bar']
       ]);
       List<dynamic> values = [1];
-      MethodChannelQuery q = query.startAtDocument(orders, values);
+      MethodChannelQuery q = query!.startAtDocument(orders, values) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['startAt'], equals([1]));
@@ -302,7 +302,7 @@ void main() {
     });
     test('startAt()', () {
       List<dynamic> fields = List.from(['bar']);
-      MethodChannelQuery q = query.startAt(fields);
+      MethodChannelQuery q = query!.startAt(fields) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['startAt'], equals(['bar']));
@@ -313,7 +313,7 @@ void main() {
       List<List<dynamic>> conditions = List.from([
         ['bar']
       ]);
-      MethodChannelQuery q = query.where(conditions);
+      MethodChannelQuery q = query!.where(conditions) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(

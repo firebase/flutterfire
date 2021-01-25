@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:flutter/services.dart';
 
@@ -26,7 +26,7 @@ class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
       MethodChannelFieldValue(FieldValueType.delete, null);
 
   @override
-  MethodChannelFieldValue increment(num value) {
+  MethodChannelFieldValue? increment(num value) {
     // It is a compile-time error for any type other than `int` or `double` to
     // attempt to extend or implement `num`.
     assert(value is int || value is double);

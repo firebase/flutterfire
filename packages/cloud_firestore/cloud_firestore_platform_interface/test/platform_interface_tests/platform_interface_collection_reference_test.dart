@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -61,7 +61,7 @@ void main() {
 
     test('parent', () {
       final collection = TestSubcollectionReference._();
-      final parent = collection.parent /*!*/;
+      final parent = collection.parent!;
       final parentPath = parent.path;
       expect(parent, isInstanceOf<DocumentReferencePlatform>());
       expect(parentPath, equals('$_kCollectionId/$_kDocumentId'));

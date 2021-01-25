@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -49,7 +49,7 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
 
   /// Return the parent [CollectionReferencePlatform] of this document.
   CollectionReferencePlatform get parent {
-    return firestore.collection(_pointer.parentPath() /*!*/);
+    return firestore.collection(_pointer.parentPath()!);
   }
 
   /// Returns a [CollectionReferencePlatform] starting from the current
@@ -66,7 +66,7 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   /// Reads the document referenced by this [DocumentReferencePlatform].
   ///
   /// If no document exists, the read will return null.
-  Future<DocumentSnapshotPlatform> get([GetOptions /*?*/ options]) async {
+  Future<DocumentSnapshotPlatform> get([GetOptions? options]) async {
     throw UnimplementedError('get() is not implemented');
   }
 
@@ -82,7 +82,7 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   ///
   /// If [merge] is true, the provided data will be merged into an
   /// existing document instead of overwriting.
-  Future<void> set(Map<String, dynamic> data, [SetOptions /*?*/ options]) {
+  Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
     throw UnimplementedError('set() is not implemented');
   }
 

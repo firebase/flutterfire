@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_collection_reference.dart';
@@ -53,9 +53,9 @@ void main() {
       expect(actual, isNot(equals(factory.serverTimestamp())));
     });
     test('increment', () {
-      final MethodChannelFieldValue actualInt = factory.increment(1);
+      final MethodChannelFieldValue actualInt = factory.increment(1)!;
       expect(actualInt.type, equals(FieldValueType.incrementInteger));
-      final MethodChannelFieldValue actualDouble = factory.increment(1.0);
+      final MethodChannelFieldValue actualDouble = factory.increment(1.0)!;
       expect(actualDouble.type, equals(FieldValueType.incrementDouble));
       expect(actualInt, equals(factory.increment(1)));
       expect(actualInt, isNot(equals(actualDouble)));

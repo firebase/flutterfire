@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +15,7 @@ void main() {
   initializeMethodChannel();
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
-  MethodChannelFirebaseFirestore /*?*/ firestore;
+  MethodChannelFirebaseFirestore? firestore;
 
   final List<MethodCall> log = <MethodCall>[];
 
@@ -53,7 +53,7 @@ void main() {
   group('$MethodChannelWriteBatch', () {
     group('commit()', () {
       test('throw [StateError] if batch has already been commited', () async {
-        final MethodChannelWriteBatch batch = firestore.batch();
+        final MethodChannelWriteBatch batch = firestore!.batch() as MethodChannelWriteBatch;
         await batch.commit();
 
         try {
@@ -70,13 +70,13 @@ void main() {
       });
 
       test('return before invoking method call if writes is empty', () {
-        final MethodChannelWriteBatch batch = firestore.batch();
+        final MethodChannelWriteBatch batch = firestore!.batch() as MethodChannelWriteBatch;
         batch.commit();
         expect(log.length, 0);
       });
 
       test('invokes native method WriteBatch#commit', () async {
-        final MethodChannelWriteBatch batch = firestore.batch();
+        final MethodChannelWriteBatch batch = firestore!.batch() as MethodChannelWriteBatch;
         batch.set('foo/bar', {});
         await batch.commit();
         expect(log.length, 1);
@@ -90,7 +90,7 @@ void main() {
                   'path': 'foo/bar',
                   'type': 'SET',
                   'data': {},
-                  'options': <String, bool>{'merge': null, 'mergeFields': null},
+                  'options': <String, bool?>{'merge': null, 'mergeFields': null},
                 }
               ]
             }),
@@ -101,7 +101,7 @@ void main() {
       test(
           'catches [PlatformException] from WriteBatch#commit and throws a [FirebaseException]',
           () async {
-        final MethodChannelWriteBatch batch = firestore.batch();
+        final MethodChannelWriteBatch batch = firestore!.batch() as MethodChannelWriteBatch;
         batch.set('foo/bar', {});
         mockPlatformExceptionThrown = true;
 
@@ -116,7 +116,7 @@ void main() {
       });
 
       test('catches and throws a [Exception] from WriteBatch#commit', () async {
-        final MethodChannelWriteBatch batch = firestore.batch();
+        final MethodChannelWriteBatch batch = firestore!.batch() as MethodChannelWriteBatch;
         mockExceptionThrown = true;
         batch.set('foo/bar', {});
 
@@ -133,7 +133,7 @@ void main() {
 
     group('set()', () {
       test('invokes native method WriteBatch#commit with no merge ', () async {
-        final MethodChannelWriteBatch batch = firestore.batch();
+        final MethodChannelWriteBatch batch = firestore!.batch() as MethodChannelWriteBatch;
         batch.set(
           'foo/bar',
           <String, String>{'bazKey': 'quxValue'},
@@ -149,7 +149,7 @@ void main() {
                   'path': 'foo/bar',
                   'type': 'SET',
                   'data': <String, String>{'bazKey': 'quxValue'},
-                  'options': <String, bool>{'merge': null, 'mergeFields': null},
+                  'options': <String, bool?>{'merge': null, 'mergeFields': null},
                 }
               ]
             }),
@@ -158,7 +158,7 @@ void main() {
       });
 
       test('invokes native method WriteBatch#commit with merge ', () async {
-        final MethodChannelWriteBatch batch = firestore.batch();
+        final MethodChannelWriteBatch batch = firestore!.batch() as MethodChannelWriteBatch;
         batch.set('foo/bar', <String, String>{'bazKey': 'quxValue'},
             SetOptions(merge: true));
         await batch.commit();
@@ -172,7 +172,7 @@ void main() {
                   'path': 'foo/bar',
                   'type': 'SET',
                   'data': <String, String>{'bazKey': 'quxValue'},
-                  'options': <String, bool>{'merge': true, 'mergeFields': null},
+                  'options': <String, bool?>{'merge': true, 'mergeFields': null},
                 }
               ]
             }),
@@ -182,7 +182,7 @@ void main() {
     });
 
     test('update', () async {
-      final MethodChannelWriteBatch batch = firestore.batch();
+      final MethodChannelWriteBatch batch = firestore!.batch() as MethodChannelWriteBatch;
       batch.update(
         'foo/bar',
         <String, String>{'bazKey': 'quxValue'},
@@ -209,7 +209,7 @@ void main() {
     });
 
     test('delete', () async {
-      final MethodChannelWriteBatch batch = firestore.batch();
+      final MethodChannelWriteBatch batch = firestore!.batch() as MethodChannelWriteBatch;
       batch.delete('foo/bar');
       await batch.commit();
       expect(

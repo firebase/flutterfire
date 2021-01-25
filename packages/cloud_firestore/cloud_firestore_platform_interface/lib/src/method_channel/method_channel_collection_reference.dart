@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
@@ -24,7 +24,7 @@ class MethodChannelCollectionReference extends MethodChannelQuery
     implements
 // ignore: avoid_implementing_value_types
         CollectionReferencePlatform {
-  Pointer _pointer;
+  late Pointer _pointer;
 // ignore: todo
 //TODO ignoring the above error might not be desirable. The == method isn't inherited from CollectionReferencePlatform because we only "implement" it
   /// Create a [MethodChannelCollectionReference] instance.
@@ -41,8 +41,8 @@ class MethodChannelCollectionReference extends MethodChannelQuery
   /// A string containing the slash-separated path to this instance
   /// (relative to the root of the database).
   @override
-  DocumentReferencePlatform get parent {
-    String parentPath = _pointer.parentPath();
+  DocumentReferencePlatform? get parent {
+    String? parentPath = _pointer.parentPath();
     return parentPath == null
         ? null
         : MethodChannelDocumentReference(firestore, parentPath);
@@ -53,7 +53,7 @@ class MethodChannelCollectionReference extends MethodChannelQuery
   String get path => _pointer.path;
 
   @override
-  DocumentReferencePlatform doc([String path]) {
+  DocumentReferencePlatform doc([String? path]) {
     String documentPath;
 
     if (path != null) {

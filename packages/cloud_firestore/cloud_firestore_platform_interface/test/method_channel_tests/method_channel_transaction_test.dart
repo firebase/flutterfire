@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -56,7 +56,7 @@ void main() {
         }
       });
     });
-     TransactionPlatform /*?*/ transaction;
+     TransactionPlatform? transaction;
     final mockDocumentReference = MockDocumentReference();
     when(mockDocumentReference.path).thenReturn('$kCollectionId/$kDocumentId');
     when(mockDocumentReference.id).thenReturn(kDocumentId);
@@ -68,23 +68,23 @@ void main() {
 
     group('commands', () {
       test('returns with equal checks', () async {
-        await transaction.get(mockDocumentReference.path);
-        transaction.set(mockDocumentReference.path, {'foo': 'bar'});
-        expect(transaction.commands.length, equals(1));
+        await transaction!.get(mockDocumentReference.path);
+        transaction!.set(mockDocumentReference.path, {'foo': 'bar'});
+        expect(transaction!.commands.length, equals(1));
       });
     });
 
     group('get()', () {
       test('should throw if get is called after a command', () async {
-        transaction.set(mockDocumentReference.path, {'foo': 'bar'});
-        expect(transaction.commands.length, 1);
-        expect(() => transaction.get(mockDocumentReference.path),
+        transaction!.set(mockDocumentReference.path, {'foo': 'bar'});
+        expect(transaction!.commands.length, 1);
+        expect(() => transaction!.get(mockDocumentReference.path),
             throwsAssertionError);
       });
 
       test('returns a [DocumentSnapshotPlatform] ', () async {
         DocumentSnapshotPlatform result =
-            await transaction.get(mockDocumentReference.path);
+            await transaction!.get(mockDocumentReference.path);
         expect(isMethodCalled, isTrue,
             reason: 'Transaction.get was not called');
         expect(result, isInstanceOf<DocumentSnapshotPlatform>());
@@ -93,11 +93,11 @@ void main() {
     });
 
     test('delete()', () {
-      transaction.delete(mockDocumentReference.path);
+      transaction!.delete(mockDocumentReference.path);
 
-      expect(transaction.commands.length, 1);
+      expect(transaction!.commands.length, 1);
 
-      Map<String, dynamic> command = transaction.commands[0];
+      Map<String, dynamic> command = transaction!.commands[0];
       expect(command['type'], 'DELETE');
       expect(command['path'], 'foo/bar');
       expect(command['data'], equals(null));
@@ -108,11 +108,11 @@ void main() {
         'test': 'test',
         'fieldValue': mockFieldValue
       };
-      transaction.update(mockDocumentReference.path, data);
+      transaction!.update(mockDocumentReference.path, data);
 
-      expect(transaction.commands.length, 1);
+      expect(transaction!.commands.length, 1);
 
-      Map<String, dynamic> command = transaction.commands[0];
+      Map<String, dynamic> command = transaction!.commands[0];
       expect(command['type'], 'UPDATE');
       expect(command['path'], 'foo/bar');
       expect(command['data'], equals(data));
@@ -125,10 +125,10 @@ void main() {
       };
       final SetOptions options = SetOptions(merge: true);
 
-      transaction.set(mockDocumentReference.path, data, options);
-      expect(transaction.commands.length, 1);
+      transaction!.set(mockDocumentReference.path, data, options);
+      expect(transaction!.commands.length, 1);
 
-      Map<String, dynamic> command = transaction.commands[0];
+      Map<String, dynamic> command = transaction!.commands[0];
       expect(command['type'], 'SET');
       expect(command['path'], 'foo/bar');
       expect(command['data'], equals(data));

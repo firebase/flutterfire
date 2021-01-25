@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -79,7 +79,7 @@ void handleDocumentSnapshotsEventChannel(
     log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await ServicesBinding.instance!.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope(
@@ -108,7 +108,7 @@ void handleQuerySnapshotsEventChannel(final String id, List<MethodCall> log) {
     log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await ServicesBinding.instance!.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope(
@@ -136,7 +136,7 @@ void handleSnapshotsInSyncEventChannel(final String id) {
       .setMockMethodCallHandler((MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await ServicesBinding.instance!.defaultBinaryMessenger
             .handlePlatformMessage(
                 name, codec.encodeSuccessEnvelope({}), (_) {});
         break;
@@ -149,8 +149,8 @@ void handleSnapshotsInSyncEventChannel(final String id) {
 
 void handleTransactionEventChannel(
   final String id, {
-  final FirebaseAppPlatform app,
-  bool throwException,
+  final FirebaseAppPlatform? app,
+  bool? throwException,
 }) {
   final name = 'plugins.flutter.io/firebase_firestore/transaction/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
@@ -159,17 +159,17 @@ void handleTransactionEventChannel(
       .setMockMethodCallHandler((MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await ServicesBinding.instance!.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope({
-            'appName': app.name,
+            'appName': app!.name,
           }),
           (_) {},
         );
 
-        if (throwException) {
-          await ServicesBinding.instance.defaultBinaryMessenger
+        if (throwException!) {
+          await ServicesBinding.instance!.defaultBinaryMessenger
               .handlePlatformMessage(
             name,
             codec.encodeSuccessEnvelope({
@@ -181,7 +181,7 @@ void handleTransactionEventChannel(
             (_) {},
           );
         }
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await ServicesBinding.instance!.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope({

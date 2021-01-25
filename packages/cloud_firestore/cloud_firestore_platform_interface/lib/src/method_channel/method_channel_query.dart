@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -26,13 +26,13 @@ class MethodChannelQuery extends QueryPlatform {
   MethodChannelQuery(
     FirebaseFirestorePlatform _firestore,
     String path, {
-    /*required*/ Map<String, dynamic> /*!*/ parameters,
+    /*required*/ required Map<String, dynamic> parameters,
     this.isCollectionGroupQuery = false,
   }) : super(_firestore, parameters) {
     _pointer = Pointer(path);
   }
 
-  /*late*/ Pointer _pointer;
+  late Pointer _pointer;
 
   /// Returns the Document path that that this query relates to.
   String get path {
@@ -91,18 +91,18 @@ class MethodChannelQuery extends QueryPlatform {
 
   /// Fetch the documents for this query
   @override
-  Future<QuerySnapshotPlatform> get([GetOptions /*?*/ options]) async {
+  Future<QuerySnapshotPlatform> get([GetOptions? options]) async {
     try {
-      final Map<String, dynamic> data = await MethodChannelFirebaseFirestore
+      final Map<String, dynamic> data = await (MethodChannelFirebaseFirestore
           .channel
           .invokeMapMethod<String, dynamic>(
         'Query#get',
         <String, dynamic>{
           'query': this,
           'firestore': firestore,
-          'source': getSourceString(options.source),
+          'source': getSourceString(options!.source),
         },
-      );
+      ) as FutureOr<Map<String, dynamic>>);
 
       return MethodChannelQuerySnapshot(firestore, data);
     } catch (e) {
@@ -134,9 +134,9 @@ class MethodChannelQuery extends QueryPlatform {
 
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
-    StreamController<QuerySnapshotPlatform> controller; // ignore: close_sinks
+    late StreamController<QuerySnapshotPlatform> controller; // ignore: close_sinks
 
-    StreamSubscription<dynamic> snapshotStream;
+    StreamSubscription<dynamic>? snapshotStream;
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.channel

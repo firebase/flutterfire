@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,7 +18,7 @@ const _kDocumentId = 'document';
 void main() {
   initializeMethodChannel();
 
-   MethodChannelCollectionReference/*?*/ _testCollection;
+   MethodChannelCollectionReference? _testCollection;
 
   setUpAll(() async {
     await Firebase.initializeApp(
@@ -36,17 +36,17 @@ void main() {
 
   group('$MethodChannelCollectionReference', () {
     test('Parent', () {
-      expect(_testCollection.parent, isNull);
+      expect(_testCollection!.parent, isNull);
       expect(
           MethodChannelCollectionReference(FirebaseFirestorePlatform.instance,
                   '$_kCollectionId/$_kDocumentId/test')
-              .parent
+              .parent!
               .path,
           equals('$_kCollectionId/$_kDocumentId'));
     });
     test('Document', () {
-      expect(_testCollection.doc().path.split('/').length, equals(2));
-      expect(_testCollection.doc(_kDocumentId).path.split('/').last,
+      expect(_testCollection!.doc().path.split('/').length, equals(2));
+      expect(_testCollection!.doc(_kDocumentId).path.split('/').last,
           equals(_kDocumentId));
     });
   });

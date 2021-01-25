@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:flutter/material.dart';
 
@@ -25,13 +25,13 @@ class Settings {
 
   /// Attempts to enable persistent storage, if possible.
   /// This setting has no effect on Web, for Web use [FirebaseFirestore.enablePersistence] instead.
-  final bool /*?*/ persistenceEnabled;
+  final bool? persistenceEnabled;
 
   /// The hostname to connect to.
-  final String /*?*/ host;
+  final String? host;
 
   /// Whether to use SSL when connecting.
-  final bool /*?*/ sslEnabled;
+  final bool? sslEnabled;
 
   /// An approximate cache size threshold for the on-disk data.
   ///
@@ -42,7 +42,7 @@ class Settings {
   ///
   /// The default value is 40 MB. The threshold must be set to at least 1 MB,
   /// and can be set to [Settings.CACHE_SIZE_UNLIMITED] to disable garbage collection.
-  final int /*?*/ cacheSizeBytes;
+  final int? cacheSizeBytes;
 
   /// Returns the settings as a [Map]
   Map<String, dynamic> get asMap {
