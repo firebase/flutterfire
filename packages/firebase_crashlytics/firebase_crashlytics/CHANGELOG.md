@@ -1,4 +1,4 @@
-## 0.4.1-nullsafety.0
+## 0.5.0-1.0.nullsafety.0
 
 - **REFACTOR**: migrate to NNBD.
 
