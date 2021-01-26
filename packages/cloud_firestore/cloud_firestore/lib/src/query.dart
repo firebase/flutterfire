@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 part of cloud_firestore;
 
@@ -176,7 +176,7 @@ class Query {
   ///
   /// To modify how the query is fetched, the [options] parameter can be provided
   /// with a [GetOptions] instance.
-  Future<QuerySnapshot> get([GetOptions /*?*/ options]) async {
+  Future<QuerySnapshot> get([GetOptions? options]) async {
     QuerySnapshotPlatform snapshotDelegate =
         await _delegate.get(options ?? const GetOptions());
     return QuerySnapshot._(firestore, snapshotDelegate);
@@ -248,7 +248,7 @@ class Query {
     if (conditions.isNotEmpty) {
       for (final dynamic condition in conditions) {
         dynamic field = condition[0];
-        String /*!*/ operator = condition[1];
+        String operator = condition[1];
 
         // Initial orderBy() parameter has to match every where() fieldPath parameter when
         // inequality operator is invoked
@@ -344,10 +344,10 @@ class Query {
     dynamic isGreaterThan,
     dynamic isGreaterThanOrEqualTo,
     dynamic arrayContains,
-    List<dynamic> /*?*/ arrayContainsAny,
-    List<dynamic> /*?*/ whereIn,
-    List<dynamic> /*?*/ whereNotIn,
-    bool /*?*/ isNull,
+    List<dynamic>? arrayContainsAny,
+    List<dynamic>? whereIn,
+    List<dynamic>? whereNotIn,
+    bool? isNull,
   }) {
     _assertValidFieldType(field);
 
@@ -413,7 +413,7 @@ class Query {
     // query is valid.
     for (final dynamic condition in conditions) {
       dynamic field = condition[0]; // FieldPath or FieldPathType
-      String /*!*/ operator = condition[1];
+      String operator = condition[1];
       dynamic value = condition[2];
 
       // Initial orderBy() parameter has to match every where() fieldPath parameter when

@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 part of cloud_firestore;
 
@@ -33,7 +33,7 @@ class DocumentSnapshot {
   bool get exists => _delegate.exists;
 
   /// Contains all the data of this [DocumentSnapshot].
-  Map<String, dynamic> /*?*/ data() {
+  Map<String, dynamic>? data() {
     return _CodecUtility.replaceDelegatesWithValueInMap(
         _delegate.data(), _firestore);
   }

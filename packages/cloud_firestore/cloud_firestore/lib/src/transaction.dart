@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 part of cloud_firestore;
 
@@ -51,7 +51,7 @@ class Transaction {
     return Transaction._(
         _firestore,
         _delegate.update(documentReference.path,
-            _CodecUtility.replaceValueWithDelegatesInMap(data)));
+            _CodecUtility.replaceValueWithDelegatesInMap(data)!));
   }
 
   /// Writes to the document referred to by the provided [DocumentReference].
@@ -59,7 +59,7 @@ class Transaction {
   /// [SetOptions], the provided data can be merged into the existing document.
   Transaction set(
       DocumentReference documentReference, Map<String, dynamic> data,
-      [SetOptions /*?*/ options]) {
+      [SetOptions? options]) {
     assert(documentReference.firestore == _firestore,
         'the document provided is from a different Firestore instance');
 
@@ -69,7 +69,7 @@ class Transaction {
             documentReference.path,
             // ignore: todo
             // TODO(ehesp): `options` should be nullable after platform interface null safe is available
-            _CodecUtility.replaceValueWithDelegatesInMap(data),
+            _CodecUtility.replaceValueWithDelegatesInMap(data)!,
             options));
   }
 }

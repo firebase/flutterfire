@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 part of cloud_firestore;
 
@@ -21,9 +21,9 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   // Cached and lazily loaded instance of [FirestorePlatform] to avoid
   // creating a [MethodChannelFirestore] when not needed or creating an
   // instance with the default app before a user specifies an app.
-  FirebaseFirestorePlatform _delegatePackingProperty;
+  FirebaseFirestorePlatform? _delegatePackingProperty;
 
-  FirebaseFirestorePlatform /*!*/ get _delegate {
+  FirebaseFirestorePlatform get _delegate {
     return _delegatePackingProperty ??=
         FirebaseFirestorePlatform.instanceFor(app: app);
   }
@@ -31,7 +31,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// The [FirebaseApp] for this current [FirebaseFirestore] instance.
   FirebaseApp app;
 
-  FirebaseFirestore._({/*required*/ this.app})
+  FirebaseFirestore._({/*required*/ required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_firestore');
 
   static final Map<String, FirebaseFirestore> _cachedInstances = {};
@@ -44,10 +44,10 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  static FirebaseFirestore /*!*/ instanceFor({@required FirebaseApp app}) {
+  static FirebaseFirestore instanceFor({required FirebaseApp app}) {
     assert(app != null);
     if (_cachedInstances.containsKey(app.name)) {
-      return _cachedInstances[app.name];
+      return _cachedInstances[app.name]!;
     }
 
     FirebaseFirestore newInstance = FirebaseFirestore._(app: app);
@@ -87,7 +87,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// This is a web-only method. Use [Settings.persistenceEnabled] for non-web platforms.
   Future<void> enablePersistence(
-      [PersistenceSettings persistenceSettings]) async {
+      [PersistenceSettings? persistenceSettings]) async {
     return _delegate.enablePersistence(persistenceSettings);
   }
 
@@ -157,11 +157,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// By default transactions are limited to 5 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
-  Future<T /*?*/ > runTransaction<T>(TransactionHandler<T> transactionHandler,
+  Future<T? > runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
     assert(transactionHandler != null, 'transactionHandler cannot be null');
 
-    T output;
+    T? output;
     await _delegate.runTransaction((transaction) async {
       output = await transactionHandler(Transaction._(this, transaction));
     }, timeout: timeout);
@@ -172,12 +172,12 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// Specifies custom settings to be used to configure this [FirebaseFirestore] instance.
   ///
   /// You must set these before invoking any other methods on this [FirebaseFirestore] instance.
-  set settings(Settings settings) {
+  set settings(Settings? settings) {
     _delegate.settings = settings;
   }
 
   /// The current [Settings] for this [FirebaseFirestore] instance.
-  Settings get settings {
+  Settings? get settings {
     return _delegate.settings;
   }
 

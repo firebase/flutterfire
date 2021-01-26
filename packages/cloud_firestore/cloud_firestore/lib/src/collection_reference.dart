@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 part of cloud_firestore;
 
@@ -24,8 +24,8 @@ class CollectionReference extends Query {
   /// Returns the parent [DocumentReference] of this collection or `null`.
   ///
   /// If this collection is a root collection, `null` is returned.
-  DocumentReference get parent {
-    DocumentReferencePlatform /*?*/ _documentReferencePlatform =
+  DocumentReference? get parent {
+    DocumentReferencePlatform? _documentReferencePlatform =
         _delegate.parent;
 
     // Only subcollections have a parent
@@ -58,7 +58,7 @@ class CollectionReference extends Query {
   ///
   /// The unique key generated is prefixed with a client-generated timestamp
   /// so that the resulting list will be chronologically-sorted.
-  DocumentReference doc([String /*?*/ path]) {
+  DocumentReference doc([String? path]) {
     if (path != null) {
       assert(path.isNotEmpty, 'a document path must be a non-empty string');
       assert(!path.contains('//'), 'a document path must not contain "//"');

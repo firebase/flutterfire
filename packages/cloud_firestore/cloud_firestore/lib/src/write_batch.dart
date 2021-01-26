@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 part of cloud_firestore;
 
@@ -40,7 +40,7 @@ class WriteBatch {
   /// If [SetOptions] are provided, the data will be merged into an existing
   /// document instead of overwriting.
   void set(DocumentReference document, Map<String, dynamic> data,
-      [SetOptions /*?*/ options]) {
+      [SetOptions? options]) {
     assert(document != null);
     assert(data != null);
     assert(document.firestore == _firestore,
@@ -49,7 +49,7 @@ class WriteBatch {
         document.path,
         // ignore: todo
         // TODO(ehesp): `options` should be nullable after platform interface null safe is available
-        _CodecUtility.replaceValueWithDelegatesInMap(data),
+        _CodecUtility.replaceValueWithDelegatesInMap(data)!,
         options);
   }
 
@@ -62,6 +62,6 @@ class WriteBatch {
     assert(document.firestore == _firestore,
         'the document provided is from a different Firestore instance');
     return _delegate.update(
-        document.path, _CodecUtility.replaceValueWithDelegatesInMap(data));
+        document.path, _CodecUtility.replaceValueWithDelegatesInMap(data)!);
   }
 }
