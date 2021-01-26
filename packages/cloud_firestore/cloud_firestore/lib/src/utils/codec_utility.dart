@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 part of cloud_firestore;
 
 class _CodecUtility {
@@ -17,8 +15,7 @@ class _CodecUtility {
     return output;
   }
 
-  static List<dynamic>? replaceValueWithDelegatesInArray(
-      List<dynamic>? data) {
+  static List<dynamic>? replaceValueWithDelegatesInArray(List<dynamic>? data) {
     if (data == null) {
       return null;
     }

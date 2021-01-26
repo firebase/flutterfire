@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 import 'interop/firestore.dart' as firestore_interop;
@@ -14,7 +12,7 @@ import 'utils/codec_utility.dart';
 /// A web specific implementation of [WriteBatch].
 class WriteBatchWeb extends WriteBatchPlatform {
   final firestore_interop.Firestore _webFirestoreDelegate;
-   firestore_interop.WriteBatch? _webWriteBatchDelegate;
+  firestore_interop.WriteBatch? _webWriteBatchDelegate;
 
   /// Constructor.
   WriteBatchWeb(this._webFirestoreDelegate)

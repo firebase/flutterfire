@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/exception.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -41,7 +39,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  FirebaseFirestorePlatform delegateFor({/*required*/ required FirebaseApp app}) {
+  FirebaseFirestorePlatform delegateFor(
+      {/*required*/ required FirebaseApp app}) {
     return FirebaseFirestoreWeb(app: app);
   }
 
@@ -97,7 +96,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T? > runTransaction<T>(TransactionHandler<T> transactionHandler,
+  Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
     try {
       await _webFirestore.runTransaction((transaction) async {

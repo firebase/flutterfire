@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:meta/meta.dart';
 
@@ -40,7 +38,8 @@ class CollectionReferenceWeb extends QueryWeb
 
   @override
   DocumentReferencePlatform doc([String? path]) {
-    firestore_interop.DocumentReference documentReference = _delegate!.doc(path)!;
+    firestore_interop.DocumentReference documentReference =
+        _delegate!.doc(path)!;
     return DocumentReferenceWeb(
         _firestorePlatform, _webFirestore, documentReference.path);
   }

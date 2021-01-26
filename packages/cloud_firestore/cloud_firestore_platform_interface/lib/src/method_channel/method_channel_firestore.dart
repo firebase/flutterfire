@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -23,8 +21,7 @@ import 'utils/exception.dart';
 /// You can get an instance by calling [FirebaseFirestore.instance].
 class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// Create an instance of [MethodChannelFirebaseFirestore] with optional [FirebaseApp]
-  MethodChannelFirebaseFirestore({FirebaseApp? app})
-      : super(appInstance: app);
+  MethodChannelFirebaseFirestore({FirebaseApp? app}) : super(appInstance: app);
 
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
@@ -132,7 +129,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Stream<void> snapshotsInSync() {
     StreamSubscription<dynamic>? snapshotStream;
-   late StreamController<void> controller; // ignore: close_sinks
+    late StreamController<void> controller; // ignore: close_sinks
 
     controller = StreamController<void>.broadcast(
       onListen: () async {
@@ -160,7 +157,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T? > runTransaction<T>(
+  Future<T?> runTransaction<T>(
     TransactionHandler<T> transactionHandler, {
     Duration timeout = const Duration(seconds: 30),
   }) async {

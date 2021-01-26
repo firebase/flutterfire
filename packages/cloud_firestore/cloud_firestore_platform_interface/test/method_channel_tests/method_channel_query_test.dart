@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -18,7 +16,7 @@ import '../utils/test_common.dart';
 
 void main() {
   initializeMethodChannel();
-   MethodChannelQuery? query;
+  MethodChannelQuery? query;
   const Map<String, dynamic> kMockSnapshotMetadata = <String, dynamic>{
     'hasPendingWrites': false,
     'isFromCache': false,
@@ -65,7 +63,8 @@ void main() {
         ['bar']
       ]);
       List<dynamic> values = [1];
-      MethodChannelQuery q = query!.endAtDocument(orders, values) as MethodChannelQuery;
+      MethodChannelQuery q =
+          query!.endAtDocument(orders, values) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['endAt'], equals([1]));
@@ -99,7 +98,8 @@ void main() {
         ['bar']
       ]);
       List<dynamic> values = [1];
-      MethodChannelQuery q = query!.endBeforeDocument(orders, values) as MethodChannelQuery;
+      MethodChannelQuery q =
+          query!.endBeforeDocument(orders, values) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['endAt'], equals(null));
@@ -264,7 +264,8 @@ void main() {
         ['bar']
       ]);
       List<dynamic> values = [1];
-      MethodChannelQuery q = query!.startAfterDocument(orders, values) as MethodChannelQuery;
+      MethodChannelQuery q =
+          query!.startAfterDocument(orders, values) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['startAt'], equals(null));
@@ -289,7 +290,8 @@ void main() {
         ['bar']
       ]);
       List<dynamic> values = [1];
-      MethodChannelQuery q = query!.startAtDocument(orders, values) as MethodChannelQuery;
+      MethodChannelQuery q =
+          query!.startAtDocument(orders, values) as MethodChannelQuery;
 
       expect(q, isNot(same(query)));
       expect(q.parameters['startAt'], equals([1]));

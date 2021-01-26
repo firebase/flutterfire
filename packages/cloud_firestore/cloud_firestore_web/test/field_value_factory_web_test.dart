@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 @TestOn('chrome')
 import 'package:cloud_firestore_web/src/field_value_factory_web.dart';
 import 'package:cloud_firestore_web/src/field_value_web.dart';

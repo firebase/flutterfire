@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
 import 'package:cloud_firestore_web/src/utils/exception.dart';
@@ -59,8 +57,8 @@ class QueryWeb extends QueryPlatform {
     }
 
     if (parameters['endAt'] != null) {
-      query = query!.endAt(
-          fieldValues: CodecUtility.valueEncode(parameters['endAt']));
+      query = query!
+          .endAt(fieldValues: CodecUtility.valueEncode(parameters['endAt']));
     }
 
     if (parameters['endBefore'] != null) {
@@ -124,8 +122,10 @@ class QueryWeb extends QueryPlatform {
   @override
   Future<QuerySnapshotPlatform> get([GetOptions? options]) async {
     try {
-      return convertWebQuerySnapshot(firestore,
-          await _buildWebQueryWithParameters()!.get(convertGetOptions(options)));
+      return convertWebQuerySnapshot(
+          firestore,
+          await _buildWebQueryWithParameters()!
+              .get(convertGetOptions(options)));
     } catch (e) {
       throw getFirebaseException(e);
     }

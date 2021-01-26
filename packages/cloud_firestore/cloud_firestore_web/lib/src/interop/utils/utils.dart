@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:js/js.dart';
@@ -34,32 +32,34 @@ dynamic dartify(Object? jsObject) {
 
 /// Returns the JS implementation from Dart Object.
 dynamic jsify(Object? dartObject) {
-  return core_interop.jsify(dartObject!, (Object? object) {
-    if (object is DateTime) {
-      return TimestampJsImpl.fromMillis(object.millisecondsSinceEpoch);
-    }
+  return core_interop.jsify(
+      dartObject!,
+      (Object? object) {
+        if (object is DateTime) {
+          return TimestampJsImpl.fromMillis(object.millisecondsSinceEpoch);
+        }
 
-    if (object is DocumentReference) {
-      return object.jsObject;
-    }
+        if (object is DocumentReference) {
+          return object.jsObject;
+        }
 
-    if (object is FieldValue) {
-      return jsifyFieldValue(object);
-    }
+        if (object is FieldValue) {
+          return jsifyFieldValue(object);
+        }
 
-    if (object is Blob) {
-      return object;
-    }
+        if (object is Blob) {
+          return object;
+        }
 
-    // NOTE: if the firestore JS lib is not imported, we'll get a DDC warning here
-    if (object is GeoPoint) {
-      return dartObject;
-    }
+        // NOTE: if the firestore JS lib is not imported, we'll get a DDC warning here
+        if (object is GeoPoint) {
+          return dartObject;
+        }
 
-    if (object is Function) {
-      return allowInterop(object);
-    }
+        if (object is Function) {
+          return allowInterop(object);
+        }
 
-    return null;
-  } as Object Function(Object)?);
+        return null;
+      } as Object Function(Object)?);
 }

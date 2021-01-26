@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'utils/exception.dart';
 import 'utils/web_utils.dart';
@@ -28,8 +26,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         super(firestore, path);
 
   @override
-  Future<void> set(Map<String, dynamic> data,
-      [SetOptions? options]) async {
+  Future<void> set(Map<String, dynamic> data, [SetOptions? options]) async {
     try {
       await _delegate!.set(
         CodecUtility.encodeMapData(data),
@@ -79,8 +76,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
       querySnapshots = _delegate!.onMetadataChangesSnapshot;
     }
     return querySnapshots
-        .map(
-            (webSnapshot) => convertWebDocumentSnapshot(firestore, webSnapshot!))
+        .map((webSnapshot) =>
+            convertWebDocumentSnapshot(firestore, webSnapshot!))
         .handleError((e) {
       throw getFirebaseException(e);
     });

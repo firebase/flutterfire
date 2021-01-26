@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
@@ -70,7 +68,7 @@ void main() {
     return null;
   });
 
-   FirebaseFirestore? firestore;
+  FirebaseFirestore? firestore;
 
   group('$DocumentSnapshot', () {
     setUpAll(() async {

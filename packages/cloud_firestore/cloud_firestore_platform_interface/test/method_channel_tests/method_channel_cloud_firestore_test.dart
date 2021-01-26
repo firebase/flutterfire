@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 // import 'dart:async';
 
 import 'dart:async';
@@ -20,8 +18,8 @@ import '../utils/test_common.dart';
 
 void main() {
   initializeMethodChannel();
-   MethodChannelFirebaseFirestore? firestore;
-   FirebaseApp? secondaryApp;
+  MethodChannelFirebaseFirestore? firestore;
+  FirebaseApp? secondaryApp;
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
   String mockTransactionId = 'TRANSACTION1';
@@ -269,8 +267,8 @@ void main() {
 
         test('throws [AssertionError] for timeout more than 0 ms', () {
           expect(
-              firestore!.runTransaction(transactionHandler,
-                  timeout: Duration.zero),
+              firestore!
+                  .runTransaction(transactionHandler, timeout: Duration.zero),
               throwsAssertionError);
         });
 

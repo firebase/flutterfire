@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -18,7 +16,7 @@ String _reserved = "Paths must not contain '~', '*', '/', '[', or ']'.";
 @immutable
 class FieldPath {
   /// The [List] of components which make up this [FieldPath].
-  final List<String > components;
+  final List<String> components;
 
   /// Creates a new [FieldPath].
   FieldPath(this.components)

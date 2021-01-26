@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 part of cloud_firestore;
 
 /// A [CollectionReference] object can be used for adding documents, getting
@@ -25,8 +23,7 @@ class CollectionReference extends Query {
   ///
   /// If this collection is a root collection, `null` is returned.
   DocumentReference? get parent {
-    DocumentReferencePlatform? _documentReferencePlatform =
-        _delegate.parent;
+    DocumentReferencePlatform? _documentReferencePlatform = _delegate.parent;
 
     // Only subcollections have a parent
     if (_documentReferencePlatform == null) {

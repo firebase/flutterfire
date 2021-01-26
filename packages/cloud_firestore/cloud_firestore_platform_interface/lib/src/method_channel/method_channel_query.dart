@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -134,7 +132,8 @@ class MethodChannelQuery extends QueryPlatform {
 
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
-    late StreamController<QuerySnapshotPlatform> controller; // ignore: close_sinks
+    late StreamController<QuerySnapshotPlatform>
+        controller; // ignore: close_sinks
 
     StreamSubscription<dynamic>? snapshotStream;
     controller = StreamController<QuerySnapshotPlatform>.broadcast(

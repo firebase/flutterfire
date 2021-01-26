@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -56,7 +54,7 @@ void main() {
         }
       });
     });
-     TransactionPlatform? transaction;
+    TransactionPlatform? transaction;
     final mockDocumentReference = MockDocumentReference();
     when(mockDocumentReference.path).thenReturn('$kCollectionId/$kDocumentId');
     when(mockDocumentReference.id).thenReturn(kDocumentId);

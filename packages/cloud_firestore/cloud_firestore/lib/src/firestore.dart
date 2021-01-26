@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 part of cloud_firestore;
 
 /// The entry point for accessing a [FirebaseFirestore].
@@ -157,7 +155,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// By default transactions are limited to 5 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
-  Future<T? > runTransaction<T>(TransactionHandler<T> transactionHandler,
+  Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
     assert(transactionHandler != null, 'transactionHandler cannot be null');
 
