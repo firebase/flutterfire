@@ -1,4 +1,4 @@
-// @dart = 2.9
+
 
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
@@ -14,7 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runDocumentReferenceTests() {
   group('$DocumentReference', () {
-    FirebaseFirestore /*?*/ firestore;
+    FirebaseFirestore? firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -22,8 +22,8 @@ void runDocumentReferenceTests() {
 
     Future<DocumentReference> initializeTest(String path) async {
       String prefixedPath = 'flutter-tests/$path';
-      await firestore.doc(prefixedPath).delete();
-      return firestore.doc(prefixedPath);
+      await firestore!.doc(prefixedPath).delete();
+      return firestore!.doc(prefixedPath);
     }
 
     group('DocumentReference.snapshots()', () {
@@ -55,8 +55,8 @@ void runDocumentReferenceTests() {
         await doc1.set({'test': 'value1'});
         await doc2.set({'test': 'value2'});
 
-        final value1 = doc1.snapshots().first.then((s) => s.data()['test']);
-        final value2 = doc2.snapshots().first.then((s) => s.data()['test']);
+        final value1 = doc1.snapshots().first.then((s) => s.data()!['test']);
+        final value2 = doc2.snapshots().first.then((s) => s.data()!['test']);
 
         await expectLater(value1, completion('value1'));
         await expectLater(value2, completion('value2'));
@@ -75,15 +75,15 @@ void runDocumentReferenceTests() {
             expect(snapshot.exists, isFalse);
           } else if (call == 2) {
             expect(snapshot.exists, isTrue);
-            expect(snapshot.data()['bar'], equals('baz'));
+            expect(snapshot.data()!['bar'], equals('baz'));
           } else if (call == 3) {
             expect(snapshot.exists, isFalse);
           } else if (call == 4) {
             expect(snapshot.exists, isTrue);
-            expect(snapshot.data()['foo'], equals('bar'));
+            expect(snapshot.data()!['foo'], equals('bar'));
           } else if (call == 5) {
             expect(snapshot.exists, isTrue);
-            expect(snapshot.data()['foo'], equals('baz'));
+            expect(snapshot.data()!['foo'], equals('baz'));
           } else {
             fail('Should not have been called');
           }
@@ -102,7 +102,7 @@ void runDocumentReferenceTests() {
       });
 
       test('listeners throws a [FirebaseException]', () async {
-        DocumentReference document = firestore.doc('not-allowed/document');
+        DocumentReference document = firestore!.doc('not-allowed/document');
         Stream<DocumentSnapshot> stream = document.snapshots();
 
         try {
@@ -132,7 +132,7 @@ void runDocumentReferenceTests() {
       });
 
       test('throws a [FirebaseException] on error', () async {
-        DocumentReference document = firestore.doc('not-allowed/document');
+        DocumentReference document = firestore!.doc('not-allowed/document');
 
         try {
           await document.delete();
@@ -167,7 +167,7 @@ void runDocumentReferenceTests() {
       }, skip: kIsWeb);
 
       test('throws a [FirebaseException] on error', () async {
-        DocumentReference document = firestore.doc('not-allowed/document');
+        DocumentReference document = firestore!.doc('not-allowed/document');
 
         try {
           await document.get();
@@ -231,7 +231,7 @@ void runDocumentReferenceTests() {
       }, skip: kIsWeb);
 
       test('throws a [FirebaseException] on error', () async {
-        DocumentReference document = firestore.doc('not-allowed/document');
+        DocumentReference document = firestore!.doc('not-allowed/document');
 
         try {
           await document.set({'foo': 'bar'});
@@ -268,14 +268,14 @@ void runDocumentReferenceTests() {
           'null': null,
           'timestamp': Timestamp.now(),
           'geopoint': const GeoPoint(1, 2),
-          'reference': firestore.doc('foo/bar'),
+          'reference': firestore!.doc('foo/bar'),
           'nan': double.nan,
           'infinity': double.infinity,
           'negative_infinity': double.negativeInfinity,
         });
 
         DocumentSnapshot snapshot = await document.get();
-        Map<String, dynamic> data = snapshot.data();
+        Map<String, dynamic> data = snapshot.data()!;
 
         expect(data['string'], equals('foo bar'));
         expect(data['number_32'], equals(123));

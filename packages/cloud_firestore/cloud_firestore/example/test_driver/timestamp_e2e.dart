@@ -1,4 +1,4 @@
-// @dart = 2.9
+
 
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
@@ -13,7 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runTimestampTests() {
   group('$Timestamp', () {
-    FirebaseFirestore /*?*/ firestore;
+    FirebaseFirestore? firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -21,8 +21,8 @@ void runTimestampTests() {
 
     Future<DocumentReference> initializeTest(String path) async {
       String prefixedPath = 'flutter-tests/$path';
-      await firestore.doc(prefixedPath).delete();
-      return firestore.doc(prefixedPath);
+      await firestore!.doc(prefixedPath).delete();
+      return firestore!.doc(prefixedPath);
     }
 
     test('sets a $Timestamp & returns one', () async {
@@ -31,7 +31,7 @@ void runTimestampTests() {
 
       await doc.set({'foo': Timestamp.fromDate(date)});
       DocumentSnapshot snapshot = await doc.get();
-      Timestamp timestamp = snapshot.data()['foo'];
+      Timestamp timestamp = snapshot.data()!['foo'];
       expect(timestamp, isA<Timestamp>());
       expect(timestamp.millisecondsSinceEpoch,
           equals(date.millisecondsSinceEpoch));
@@ -43,7 +43,7 @@ void runTimestampTests() {
       await doc.set({'foo': DateTime.utc(3000)});
       await doc.update({'foo': date});
       DocumentSnapshot snapshot = await doc.get();
-      Timestamp timestamp = snapshot.data()['foo'];
+      Timestamp timestamp = snapshot.data()!['foo'];
       expect(timestamp, isA<Timestamp>());
       expect(timestamp.millisecondsSinceEpoch,
           equals(date.millisecondsSinceEpoch));

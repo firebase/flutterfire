@@ -1,4 +1,4 @@
-// @dart = 2.9
+
 
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
@@ -15,7 +15,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runTransactionTests() {
   group('$Transaction', () {
-    FirebaseFirestore /*?*/ firestore;
+    FirebaseFirestore? firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -23,14 +23,14 @@ void runTransactionTests() {
 
     Future<DocumentReference> initializeTest(String path) async {
       String prefixedPath = 'flutter-tests/$path';
-      await firestore.doc(prefixedPath).delete();
-      return firestore.doc(prefixedPath);
+      await firestore!.doc(prefixedPath).delete();
+      return firestore!.doc(prefixedPath);
     }
 
     test('should resolve with user value', () async {
       int randomValue = Random().nextInt(9999);
-      int response =
-          await firestore.runTransaction<int>((Transaction transaction) async {
+      int? response =
+          await firestore!.runTransaction<int>((Transaction transaction) async {
         return randomValue;
       });
       expect(response, equals(randomValue));
@@ -43,7 +43,7 @@ void runTransactionTests() {
       await documentReference.set({'foo': 'bar'});
 
       try {
-        await firestore.runTransaction((Transaction transaction) async {
+        await firestore!.runTransaction((Transaction transaction) async {
           transaction.set(documentReference, {
             'foo': 'baz',
           });
@@ -52,7 +52,7 @@ void runTransactionTests() {
         fail('Should have thrown');
       } catch (e) {
         DocumentSnapshot snapshot = await documentReference.get();
-        expect(snapshot.data()['foo'], equals('bar'));
+        expect(snapshot.data()!['foo'], equals('bar'));
       }
     });
 
@@ -64,12 +64,12 @@ void runTransactionTests() {
       await doc2.set({'test': 'value2'});
 
       await Future.wait([
-        firestore.runTransaction((Transaction transaction) async {
+        firestore!.runTransaction((Transaction transaction) async {
           transaction.set(doc1, {
             'test': 'value3',
           });
         }),
-        firestore.runTransaction((Transaction transaction) async {
+        firestore!.runTransaction((Transaction transaction) async {
           transaction.set(doc2, {
             'test': 'value4',
           });
@@ -77,14 +77,14 @@ void runTransactionTests() {
       ]);
 
       DocumentSnapshot snapshot1 = await doc1.get();
-      expect(snapshot1.data()['test'], equals('value3'));
+      expect(snapshot1.data()!['test'], equals('value3'));
       DocumentSnapshot snapshot2 = await doc2.get();
-      expect(snapshot2.data()['test'], equals('value4'));
+      expect(snapshot2.data()!['test'], equals('value4'));
     });
 
     test('should abort if timeout is exceeded', () async {
       try {
-        await firestore.runTransaction((Transaction transaction) async {
+        await firestore!.runTransaction((Transaction transaction) async {
           await Future.delayed(const Duration(seconds: 2));
         }, timeout: const Duration(seconds: 1));
         fail('Should have thrown');
@@ -96,7 +96,7 @@ void runTransactionTests() {
 
     test('should throw with exception', () async {
       try {
-        await firestore.runTransaction((Transaction transaction) async {
+        await firestore!.runTransaction((Transaction transaction) async {
           throw StateError('foo');
         });
         fail('Transaction should not have resolved');
@@ -111,10 +111,10 @@ void runTransactionTests() {
     test('should throw a native error, and convert to a [FirebaseException]',
         () async {
       DocumentReference documentReference =
-          firestore.doc('not-allowed/document');
+          firestore!.doc('not-allowed/document');
 
       try {
-        await firestore.runTransaction((Transaction transaction) async {
+        await firestore!.runTransaction((Transaction transaction) async {
           transaction.set(documentReference, {'foo': 'bar'});
         });
         fail('Transaction should not have resolved');
@@ -129,10 +129,10 @@ void runTransactionTests() {
     group('Transaction.get()', () {
       test('should throw if get is called after a command', () async {
         DocumentReference documentReference =
-            firestore.doc('flutter-tests/foo');
+            firestore!.doc('flutter-tests/foo');
 
         expect(
-            () => firestore.runTransaction((Transaction transaction) async {
+            () => firestore!.runTransaction((Transaction transaction) async {
                   await transaction.get(documentReference);
                   transaction.set(documentReference, {'foo': 'bar'});
                   await transaction.get(documentReference);
@@ -166,7 +166,7 @@ void runTransactionTests() {
 
         await documentReference.set({'foo': 'bar'});
 
-        await firestore.runTransaction((Transaction transaction) async {
+        await firestore!.runTransaction((Transaction transaction) async {
           transaction.delete(documentReference);
         });
 
@@ -182,18 +182,18 @@ void runTransactionTests() {
 
         await documentReference.set({'foo': 'bar', 'bar': 1});
 
-        await firestore.runTransaction((Transaction transaction) async {
+        await firestore!.runTransaction((Transaction transaction) async {
           DocumentSnapshot documentSnapshot =
               await transaction.get(documentReference);
           transaction.update(documentReference, {
-            'bar': documentSnapshot.data()['bar'] + 1,
+            'bar': documentSnapshot.data()!['bar'] + 1,
           });
         });
 
         DocumentSnapshot snapshot = await documentReference.get();
         expect(snapshot.exists, isTrue);
-        expect(snapshot.data()['bar'], equals(2));
-        expect(snapshot.data()['foo'], equals('bar'));
+        expect(snapshot.data()!['bar'], equals(2));
+        expect(snapshot.data()!['foo'], equals('bar'));
       });
     });
 
@@ -204,11 +204,11 @@ void runTransactionTests() {
 
         await documentReference.set({'foo': 'bar', 'bar': 1});
 
-        await firestore.runTransaction((Transaction transaction) async {
+        await firestore!.runTransaction((Transaction transaction) async {
           DocumentSnapshot documentSnapshot =
               await transaction.get(documentReference);
           transaction.set(documentReference, {
-            'bar': documentSnapshot.data()['bar'] + 1,
+            'bar': documentSnapshot.data()!['bar'] + 1,
           });
         });
 
@@ -227,21 +227,21 @@ void runTransactionTests() {
 
         await documentReference.set({'foo': 'bar', 'bar': 1});
 
-        await firestore.runTransaction((Transaction transaction) async {
+        await firestore!.runTransaction((Transaction transaction) async {
           DocumentSnapshot documentSnapshot =
               await transaction.get(documentReference);
           transaction.set(
               documentReference,
               {
-                'bar': documentSnapshot.data()['bar'] + 1,
+                'bar': documentSnapshot.data()!['bar'] + 1,
               },
               SetOptions(merge: true));
         });
 
         DocumentSnapshot snapshot = await documentReference.get();
         expect(snapshot.exists, isTrue);
-        expect(snapshot.data()['bar'], equals(2));
-        expect(snapshot.data()['foo'], equals('bar'));
+        expect(snapshot.data()!['bar'], equals(2));
+        expect(snapshot.data()!['foo'], equals('bar'));
       });
 
       test('merges fields a document with set', () async {
@@ -250,13 +250,13 @@ void runTransactionTests() {
 
         await documentReference.set({'foo': 'bar', 'bar': 1, 'baz': 1});
 
-        await firestore.runTransaction((Transaction transaction) async {
+        await firestore!.runTransaction((Transaction transaction) async {
           DocumentSnapshot documentSnapshot =
               await transaction.get(documentReference);
           transaction.set(
               documentReference,
               {
-                'bar': documentSnapshot.data()['bar'] + 1,
+                'bar': documentSnapshot.data()!['bar'] + 1,
                 'baz': 'ben',
               },
               SetOptions(mergeFields: ['bar']));
@@ -274,18 +274,18 @@ void runTransactionTests() {
           await initializeTest('transaction-all');
 
       DocumentReference documentReference2 =
-          firestore.doc('flutter-tests/delete');
+          firestore!.doc('flutter-tests/delete');
 
       await documentReference2.set({'foo': 'bar'});
       await documentReference.set({'foo': 1});
 
-      String result = await firestore
+      String? result = await firestore!
           .runTransaction<String>((Transaction transaction) async {
         DocumentSnapshot documentSnapshot =
             await transaction.get(documentReference);
 
         transaction.set(documentReference, {
-          'foo': documentSnapshot.data()['foo'] + 1,
+          'foo': documentSnapshot.data()!['foo'] + 1,
         });
 
         transaction.update(documentReference, {'bar': 'baz'});

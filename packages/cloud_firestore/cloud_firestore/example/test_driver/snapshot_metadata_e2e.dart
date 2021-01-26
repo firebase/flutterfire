@@ -1,4 +1,4 @@
-// @dart = 2.9
+
 
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
@@ -14,7 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runSnapshotMetadataTests() {
   group('$SnapshotMetadata', () {
-    FirebaseFirestore /*?*/ firestore;
+    FirebaseFirestore? firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -22,7 +22,7 @@ void runSnapshotMetadataTests() {
 
     Future<CollectionReference> initializeTest(String id) async {
       CollectionReference collection =
-          firestore.collection('flutter-tests/$id/query-tests');
+          firestore!.collection('flutter-tests/$id/query-tests');
       QuerySnapshot snapshot = await collection.get();
       await Future.forEach(snapshot.docs, (DocumentSnapshot documentSnapshot) {
         return documentSnapshot.reference.delete();
