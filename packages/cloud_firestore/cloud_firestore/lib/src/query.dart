@@ -248,7 +248,7 @@ class Query {
     if (conditions.isNotEmpty) {
       for (final dynamic condition in conditions) {
         dynamic field = condition[0];
-        String operator = condition[1];
+        String /*!*/ operator = condition[1];
 
         // Initial orderBy() parameter has to match every where() fieldPath parameter when
         // inequality operator is invoked
@@ -413,7 +413,7 @@ class Query {
     // query is valid.
     for (final dynamic condition in conditions) {
       dynamic field = condition[0]; // FieldPath or FieldPathType
-      String operator = condition[1];
+      String /*!*/ operator = condition[1];
       dynamic value = condition[2];
 
       // Initial orderBy() parameter has to match every where() fieldPath parameter when

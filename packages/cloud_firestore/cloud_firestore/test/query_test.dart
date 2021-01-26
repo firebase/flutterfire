@@ -13,8 +13,8 @@ import './mock.dart';
 
 void main() {
   setupCloudFirestoreMocks();
-  /*late*/ FirebaseFirestore firestore;
-  /*late*/ Query query;
+  FirebaseFirestore /*?*/ firestore;
+  Query /*?*/ query;
 
   group('$Query', () {
     setUpAll(() async {

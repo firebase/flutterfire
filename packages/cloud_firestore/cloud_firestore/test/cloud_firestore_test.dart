@@ -12,9 +12,9 @@ import './mock.dart';
 
 void main() {
   setupCloudFirestoreMocks();
-  /*late*/ FirebaseFirestore firestore;
-  /*late*/ FirebaseFirestore firestoreSecondary;
-  /*late*/ FirebaseApp secondaryApp;
+  FirebaseFirestore /*?*/ firestore;
+  FirebaseFirestore /*?*/ firestoreSecondary;
+  FirebaseApp /*?*/ secondaryApp;
 
   group('$FirebaseFirestore', () {
     setUpAll(() async {

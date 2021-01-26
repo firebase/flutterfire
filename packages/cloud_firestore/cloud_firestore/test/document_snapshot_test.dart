@@ -70,7 +70,7 @@ void main() {
     return null;
   });
 
-  /*late*/ FirebaseFirestore firestore;
+   FirebaseFirestore /*?*/ firestore;
 
   group('$DocumentSnapshot', () {
     setUpAll(() async {
