@@ -13,7 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runCollectionReferenceTests() {
   group('$CollectionReference', () {
-    /*late*/ FirebaseFirestore firestore;
+     FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;

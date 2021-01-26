@@ -15,7 +15,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runQueryTests() {
   group('$Query', () {
-    /*late*/ FirebaseFirestore firestore;
+    FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
