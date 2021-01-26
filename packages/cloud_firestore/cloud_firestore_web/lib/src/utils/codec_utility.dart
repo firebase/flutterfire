@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/cloud_firestore_web.dart'
@@ -15,7 +15,7 @@ import '../field_value_web.dart';
 /// Class containing static utility methods to encode/decode firestore data.
 class CodecUtility {
   /// Encodes a Map of values from their proper types to a serialized version.
-  static Map<String, dynamic> encodeMapData(Map<String, dynamic> /*?*/ data) {
+  static Map<String, dynamic>? encodeMapData(Map<String, dynamic>? data) {
     if (data == null) {
       return null;
     }
@@ -25,7 +25,7 @@ class CodecUtility {
   }
 
   /// Encodes an Array of values from their proper types to a serialized version.
-  static List<dynamic> encodeArrayData(List<dynamic> /*?*/ data) {
+  static List<dynamic>? encodeArrayData(List<dynamic>? data) {
     if (data == null) {
       return null;
     }
@@ -126,7 +126,7 @@ class CodecUtility {
   }
 
   /// Decodes the values on an incoming Map to their proper types.
-  static Map<String, dynamic> decodeMapData(Map<String, dynamic> /*?*/ data) {
+  static Map<String, dynamic>? decodeMapData(Map<String, dynamic>? data) {
     if (data == null) {
       return null;
     }
@@ -136,7 +136,7 @@ class CodecUtility {
   }
 
   /// Decodes the values on an incoming Array to their proper types.
-  static List<dynamic> decodeArrayData(List<dynamic> /*?*/ data) {
+  static List<dynamic>? decodeArrayData(List<dynamic>? data) {
     if (data == null) {
       return null;
     }
@@ -146,7 +146,7 @@ class CodecUtility {
   /// Decodes an incoming value to its proper type.
   static dynamic valueDecode(dynamic value) {
     if (value is firestore_interop.GeoPoint) {
-      return GeoPoint(value.latitude, value.longitude);
+      return GeoPoint(value.latitude as double, value.longitude as double);
     } else if (value is DateTime) {
       return Timestamp.fromDate(value);
     } else if (value is firestore_interop.Blob) {

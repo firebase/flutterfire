@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
@@ -16,7 +16,7 @@ FirebaseException getFirebaseException(Object object) {
   }
 
   core_interop.FirebaseError firebaseError =
-      object as core_interop.FirebaseError;
+      object;
 
   String code = firebaseError.code.replaceFirst('firestore/', '');
   String message =

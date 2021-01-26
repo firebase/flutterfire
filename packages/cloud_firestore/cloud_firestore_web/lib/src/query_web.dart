@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
@@ -13,7 +13,7 @@ import 'utils/web_utils.dart';
 
 /// Web implementation of Firestore [QueryPlatform].
 class QueryWeb extends QueryPlatform {
-  final firestore_interop.Query _webQuery;
+  final firestore_interop.Query? _webQuery;
   final FirebaseFirestorePlatform _firestore;
   final String _path;
 
@@ -27,7 +27,7 @@ class QueryWeb extends QueryPlatform {
     this._firestore,
     this._path,
     this._webQuery, {
-    /*required*/ Map<String, dynamic> parameters,
+    /*required*/ required Map<String, dynamic> parameters,
     this.isCollectionGroupQuery = false,
   }) : super(_firestore, parameters);
 
@@ -40,40 +40,40 @@ class QueryWeb extends QueryPlatform {
   }
 
   /// Builds a [web.Query] from given [parameters].
-  firestore_interop.Query _buildWebQueryWithParameters() {
-    firestore_interop.Query query = _webQuery;
+  firestore_interop.Query? _buildWebQueryWithParameters() {
+    firestore_interop.Query? query = _webQuery;
 
     for (final List<dynamic> order in parameters['orderBy']) {
-      query = query.orderBy(
+      query = query!.orderBy(
           CodecUtility.valueEncode(order[0]), order[1] ? 'desc' : 'asc');
     }
 
     if (parameters['startAt'] != null) {
-      query = query.startAt(
+      query = query!.startAt(
           fieldValues: CodecUtility.valueEncode(parameters['startAt']));
     }
 
     if (parameters['startAfter'] != null) {
-      query = query.startAfter(
+      query = query!.startAfter(
           fieldValues: CodecUtility.valueEncode(parameters['startAfter']));
     }
 
     if (parameters['endAt'] != null) {
-      query = query.endAt(
+      query = query!.endAt(
           fieldValues: CodecUtility.valueEncode(parameters['endAt']));
     }
 
     if (parameters['endBefore'] != null) {
-      query = query.endBefore(
+      query = query!.endBefore(
           fieldValues: CodecUtility.valueEncode(parameters['endBefore']));
     }
 
     if (parameters['limit'] != null) {
-      query = query.limit(parameters['limit']);
+      query = query!.limit(parameters['limit']);
     }
 
     if (parameters['limitToLast'] != null) {
-      query = query.limitToLast(parameters['limitToLast']);
+      query = query!.limitToLast(parameters['limitToLast']);
     }
 
     for (final List<dynamic> condition in parameters['where']) {
@@ -81,7 +81,7 @@ class QueryWeb extends QueryPlatform {
       String opStr = condition[1];
       dynamic value = CodecUtility.valueEncode(condition[2]);
 
-      query = query.where(fieldPath, opStr, value);
+      query = query!.where(fieldPath, opStr, value);
     }
 
     return query;
@@ -122,10 +122,10 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  Future<QuerySnapshotPlatform> get([GetOptions /*?*/ options]) async {
+  Future<QuerySnapshotPlatform> get([GetOptions? options]) async {
     try {
       return convertWebQuerySnapshot(firestore,
-          await _buildWebQueryWithParameters().get(convertGetOptions(options)));
+          await _buildWebQueryWithParameters()!.get(convertGetOptions(options)));
     } catch (e) {
       throw getFirebaseException(e);
     }
@@ -153,9 +153,9 @@ class QueryWeb extends QueryPlatform {
   }) {
     Stream<firestore_interop.QuerySnapshot> querySnapshots;
     if (includeMetadataChanges) {
-      querySnapshots = _buildWebQueryWithParameters().onSnapshotMetadata;
+      querySnapshots = _buildWebQueryWithParameters()!.onSnapshotMetadata;
     } else {
-      querySnapshots = _buildWebQueryWithParameters().onSnapshot;
+      querySnapshots = _buildWebQueryWithParameters()!.onSnapshot;
     }
     return querySnapshots
         .map((webQuerySnapshot) =>

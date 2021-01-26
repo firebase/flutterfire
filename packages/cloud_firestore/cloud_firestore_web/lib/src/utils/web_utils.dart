@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
@@ -20,12 +20,12 @@ QuerySnapshotPlatform convertWebQuerySnapshot(
   return QuerySnapshotPlatform(
     webQuerySnapshot.docs
         .map((webDocumentSnapshot) =>
-            convertWebDocumentSnapshot(firestore, webDocumentSnapshot))
+            convertWebDocumentSnapshot(firestore, webDocumentSnapshot!))
         .toList(),
     webQuerySnapshot
         .docChanges()
         .map((webDocumentChange) =>
-            convertWebDocumentChange(firestore, webDocumentChange))
+            convertWebDocumentChange(firestore, webDocumentChange!))
         .toList(),
     convertWebSnapshotMetadata(webQuerySnapshot.metadata),
   );
@@ -37,7 +37,7 @@ DocumentSnapshotPlatform convertWebDocumentSnapshot(
     firestore_interop.DocumentSnapshot webSnapshot) {
   return DocumentSnapshotPlatform(
     firestore,
-    webSnapshot.ref.path,
+    webSnapshot.ref!.path,
     <String, dynamic>{
       'data': CodecUtility.decodeMapData(webSnapshot.data()),
       'metadata': <String, bool>{
@@ -54,9 +54,9 @@ DocumentChangePlatform convertWebDocumentChange(
     firestore_interop.DocumentChange webDocumentChange) {
   return DocumentChangePlatform(
       convertWebDocumentChangeType(webDocumentChange.type),
-      webDocumentChange.oldIndex,
-      webDocumentChange.newIndex,
-      convertWebDocumentSnapshot(firestore, webDocumentChange.doc));
+      webDocumentChange.oldIndex as int,
+      webDocumentChange.newIndex as int,
+      convertWebDocumentSnapshot(firestore, webDocumentChange.doc!));
 }
 
 /// Converts a [web.DocumentChange] type into a [DocumentChangeType].
@@ -81,10 +81,10 @@ SnapshotMetadataPlatform convertWebSnapshotMetadata(
 }
 
 /// Converts a [GetOptions] to a [web.GetOptions].
-firestore_interop.GetOptions /*?*/ convertGetOptions(GetOptions /*?*/ options) {
+firestore_interop.GetOptions? convertGetOptions(GetOptions? options) {
   if (options == null) return null;
 
-  String source;
+  String? source;
   if (options.source != null) {
     switch (options.source) {
       case Source.serverAndCache:
@@ -106,15 +106,15 @@ firestore_interop.GetOptions /*?*/ convertGetOptions(GetOptions /*?*/ options) {
 }
 
 /// Converts a [SetOptions] to a [web.SetOptions].
-firestore_interop.SetOptions /*?*/ convertSetOptions(SetOptions options) {
+firestore_interop.SetOptions? convertSetOptions(SetOptions? options) {
   if (options == null) return null;
 
-  firestore_interop.SetOptions parsedOptions;
+  firestore_interop.SetOptions? parsedOptions;
   if (options.merge != null) {
     parsedOptions = firestore_interop.SetOptions(merge: options.merge);
   } else if (options.mergeFields != null) {
     parsedOptions = firestore_interop.SetOptions(
-        mergeFields: options.mergeFields
+        mergeFields: options.mergeFields!
             .map((e) => e.components.toList().join('.'))
             .toList());
   }
