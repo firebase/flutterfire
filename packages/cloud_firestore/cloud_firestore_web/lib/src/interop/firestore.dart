@@ -18,7 +18,7 @@ import 'utils/utils.dart';
 export 'firestore_interop.dart';
 
 /// Given an AppJSImp, return the Firestore instance.
-Firestore getFirestoreInstance([App app]) {
+Firestore/*!*/ getFirestoreInstance([App app]) {
   return Firestore.getInstance(app != null
       ? firebase_interop.firestore(app.jsObject)
       : firebase_interop.firestore());
@@ -288,7 +288,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
   StreamController<QuerySnapshot> _createStream(bool includeMetadataChanges) {
 //ignore: close_sinks
-    StreamController<QuerySnapshot> controller;
+    StreamController<QuerySnapshot>/*?*/ controller;
 
     var nextWrapper =
         allowInterop((firestore_interop.QuerySnapshotJsImpl snapshot) {
@@ -366,7 +366,7 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
   String get path => jsObject.path;
 
   /// Creates a new CollectionReference from a [jsObject].
-  static CollectionReference getInstance(
+  static CollectionReference/*?*/ getInstance(
       firestore_interop.CollectionReferenceJsImpl jsObject) {
     if (jsObject == null) {
       return null;
@@ -408,7 +408,7 @@ class DocumentChange
   num get newIndex => jsObject.newIndex;
 
   /// Creates a new DocumentChange from a [jsObject].
-  static DocumentChange getInstance(
+  static DocumentChange/*?*/ getInstance(
       firestore_interop.DocumentChangeJsImpl jsObject) {
     if (jsObject == null) {
       return null;
@@ -433,7 +433,7 @@ class DocumentSnapshot
   DocumentReference get ref => DocumentReference.getInstance(jsObject.ref);
 
   /// Creates a new DocumentSnapshot from a [jsObject].
-  static DocumentSnapshot getInstance(
+  static DocumentSnapshot/*?*/ getInstance(
       firestore_interop.DocumentSnapshotJsImpl jsObject) {
     if (jsObject == null) {
       return null;

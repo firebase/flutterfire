@@ -14,7 +14,7 @@ import 'utils/codec_utility.dart';
 /// A web specific implementation of [WriteBatch].
 class WriteBatchWeb extends WriteBatchPlatform {
   final firestore_interop.Firestore _webFirestoreDelegate;
-  /*late*/ firestore_interop.WriteBatch /*!*/ _webWriteBatchDelegate;
+   firestore_interop.WriteBatch /*?*/ _webWriteBatchDelegate;
 
   /// Constructor.
   WriteBatchWeb(this._webFirestoreDelegate)
