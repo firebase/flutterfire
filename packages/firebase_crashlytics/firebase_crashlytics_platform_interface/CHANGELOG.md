@@ -1,3 +1,7 @@
+## 2.0.0-1.0.nullsafety.0
+
+ - **REFACTOR**: migrate to nnbd (#4715).
+
 ## 1.1.6
 
  - Update a dependency to the latest release.
