@@ -1,3 +1,11 @@
+## 0.4.0-nullsafety.1
+
+Bump firebase_auth_platform_interface to v4.0.0-nullsafety.1
+
+## 0.4.0-nullsafety.0
+
+Migrated to null safety (#4633)
+
 ## 0.3.2+6
 
  - Update a dependency to the latest release.

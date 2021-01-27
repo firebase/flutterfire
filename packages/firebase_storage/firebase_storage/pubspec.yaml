@@ -18,7 +18,7 @@ dependencies:
 
 dev_dependencies:
   pedantic: 1.10.0-nullsafety.3
-  http: ^0.12.0
+  http: ^0.12.2 
   flutter_test:
     sdk: flutter
   uuid: ^2.0.4
@@ -28,6 +28,9 @@ dev_dependencies:
   e2e: ^0.6.1
   mockito: ^5.0.0-nullsafety.2
   plugin_platform_interface: ^1.1.0-nullsafety.1
+
+dependency_overrides:
+  http_parser: ^4.0.0-nullsafety
 
 flutter:
   plugin:
