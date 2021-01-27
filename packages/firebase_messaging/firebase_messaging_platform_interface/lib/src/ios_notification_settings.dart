@@ -5,7 +5,7 @@
 /// A class representing iOS specific permissions which can be requested by your
 /// application.
 @Deprecated(
-    "Using [IosNotificationSettings] is deprecated. Instead, call [requestPermission] directly with named arguments")
+    'Using [IosNotificationSettings] is deprecated. Instead, call [requestPermission] directly with named arguments')
 class IosNotificationSettings {
   // ignore: public_member_api_docs
   const IosNotificationSettings({

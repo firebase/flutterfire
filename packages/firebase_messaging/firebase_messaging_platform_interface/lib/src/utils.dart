@@ -111,7 +111,7 @@ NotificationSettings convertToNotificationSettings(Map<String, int> map) {
 }
 
 /// Used to return [NotificationSettings] for all Android devices.
-final NotificationSettings androidNotificationSettings = NotificationSettings(
+const NotificationSettings androidNotificationSettings = NotificationSettings(
   authorizationStatus: AuthorizationStatus.authorized,
   alert: AppleNotificationSetting.notSupported,
   announcement: AppleNotificationSetting.notSupported,

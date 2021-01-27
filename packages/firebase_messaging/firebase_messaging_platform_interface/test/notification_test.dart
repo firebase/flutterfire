@@ -11,7 +11,7 @@ void main() {
   group('Notification', () {
     test('new instance', () {
       const testTitle = 'test notification';
-      final notification = RemoteNotification(title: testTitle);
+      const notification = RemoteNotification(title: testTitle);
       expect(notification.title, equals(testTitle));
     });
   });
@@ -19,7 +19,7 @@ void main() {
   group('AndroidNotification', () {
     test('new instance', () {
       const testChannelId = 'fooId';
-      final notification = AndroidNotification(
+      const notification = AndroidNotification(
           channelId: testChannelId,
           priority: AndroidNotificationPriority.lowPriority);
       expect(notification.channelId, equals(testChannelId));
@@ -29,7 +29,7 @@ void main() {
   group('AppleNotification', () {
     test('new instance', () {
       const testSubtitle = 'bar';
-      final notification = AppleNotification(subtitle: testSubtitle);
+      const notification = AppleNotification(subtitle: testSubtitle);
       expect(notification.subtitle, equals(testSubtitle));
     });
   });
@@ -37,7 +37,7 @@ void main() {
   group('AppleNotificationSound', () {
     test('new instance', () {
       const testCritical = false;
-      final iosSound = AppleNotificationSound(critical: testCritical);
+      const iosSound = AppleNotificationSound(critical: testCritical);
       expect(iosSound.critical, equals(testCritical));
     });
   });

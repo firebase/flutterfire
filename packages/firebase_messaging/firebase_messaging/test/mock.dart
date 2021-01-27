@@ -12,13 +12,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-typedef Callback(MethodCall call);
+typedef Callback = Function(MethodCall call);
 
-final String kTestString = 'Hello World';
+const String kTestString = 'Hello World';
 
 final MockFirebaseMessaging kMockMessagingPlatform = MockFirebaseMessaging();
 
-setupFirebaseMessagingMocks() {
+void setupFirebaseMessagingMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
@@ -50,11 +50,11 @@ setupFirebaseMessagingMocks() {
 
   // Mock Platform Interface Methods
   // ignore: invalid_use_of_protected_member
-  when(kMockMessagingPlatform.delegateFor(app: anyNamed("app")))
+  when(kMockMessagingPlatform.delegateFor(app: anyNamed('app')))
       .thenReturn(kMockMessagingPlatform);
   // ignore: invalid_use_of_protected_member
   when(kMockMessagingPlatform.setInitialValues(
-    isAutoInitEnabled: anyNamed("isAutoInitEnabled"),
+    isAutoInitEnabled: anyNamed('isAutoInitEnabled'),
   )).thenReturn(kMockMessagingPlatform);
 }
 

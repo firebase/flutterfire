@@ -208,10 +208,10 @@ class TestFirebaseMessagingPlatform extends FirebaseMessagingPlatform {
   TestFirebaseMessagingPlatform(FirebaseApp app) : super(appInstance: app);
 
   FirebaseMessagingPlatform testDelegateFor({FirebaseApp app}) {
-    return this.delegateFor();
+    return delegateFor();
   }
 
   FirebaseMessagingPlatform testSetInitialValues() {
-    return this.setInitialValues(isAutoInitEnabled: true);
+    return setInitialValues(isAutoInitEnabled: true);
   }
 }

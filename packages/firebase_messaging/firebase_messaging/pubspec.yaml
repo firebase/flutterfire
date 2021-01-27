@@ -9,24 +9,24 @@ environment:
   flutter: ">=1.12.13+hotfix.5 <2.0.0"
 
 dependencies:
-  meta: ^1.0.4
-  flutter:
-    sdk: flutter
   firebase_core: ^0.7.0
   firebase_core_platform_interface: ^3.0.1
   firebase_messaging_platform_interface: ^1.0.0-dev.10
   firebase_messaging_web: ^0.1.0-dev.5
+  flutter:
+    sdk: flutter
+  meta: ^1.0.4
 
 dev_dependencies:
-  pedantic: ^1.8.0
-  flutter_test:
-    sdk: flutter
+  async: ^2.4.2
   flutter_driver:
     sdk: flutter
-  test: any
+  flutter_test:
+    sdk: flutter
   mockito: ^5.0.0-nullsafety.2
+  pedantic: ^1.8.0
   plugin_platform_interface: ^1.0.2
-  async: ^2.4.2
+  test: any
 
 flutter:
   plugin:

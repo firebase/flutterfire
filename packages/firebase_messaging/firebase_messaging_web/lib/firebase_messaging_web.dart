@@ -54,9 +54,8 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  void registerBackgroundMessageHandler(handler) {
-    // no-op
-  }
+  // ignore: type_annotate_public_apis
+  void registerBackgroundMessageHandler(BackgroundMessageHandler handler) {}
 
   @override
   FirebaseMessagingPlatform delegateFor({FirebaseApp app}) {
@@ -77,7 +76,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<RemoteMessage> getInitialMessage() {
+  Future<RemoteMessage> getInitialMessage() async {
     return null;
   }
 
@@ -88,7 +87,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
       return;
     }
     try {
-      await _webMessaging.deleteToken();
+      _webMessaging.deleteToken();
     } catch (e) {
       throw utils.getFirebaseException(e);
     }
