@@ -11,7 +11,7 @@ void main() {
   group('IosNotificationSettings', () {
     test('toMap()', () {
       // ignore: deprecated_member_use_from_same_package
-      final settings = IosNotificationSettings(sound: false, alert: false);
+      const settings = IosNotificationSettings(sound: false, alert: false);
       final settingsMap = settings.toMap();
       expect(settingsMap, isA<Map<String, dynamic>>());
       expect(settingsMap['sound'], isFalse);

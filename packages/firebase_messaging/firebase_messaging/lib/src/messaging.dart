@@ -16,11 +16,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   FirebaseMessagingPlatform _delegatePackingProperty;
 
   FirebaseMessagingPlatform get _delegate {
-    if (_delegatePackingProperty == null) {
-      _delegatePackingProperty = FirebaseMessagingPlatform.instanceFor(
-          app: app, pluginConstants: pluginConstants);
-    }
-    return _delegatePackingProperty;
+    return _delegatePackingProperty ??= FirebaseMessagingPlatform.instanceFor(
+        app: app, pluginConstants: pluginConstants);
   }
 
   /// The [FirebaseApp] for this current [FirebaseMessaging] instance.
@@ -96,6 +93,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return streamController.stream;
   }
 
+  // ignore: use_setters_to_change_properties
   /// Set a message handler function which is called when the app is in the
   /// background or terminated.
   ///
@@ -245,7 +243,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// On Web, a popup requesting the users permission is shown using the native
   /// browser API.
   @Deprecated(
-      "requestNotificationPermissions() is deprecated in favor of requestPermission()")
+      'requestNotificationPermissions() is deprecated in favor of requestPermission()')
   Future<bool> requestNotificationPermissions(
       [IosNotificationSettings iosSettings]) async {
     iosSettings ??= const IosNotificationSettings();
@@ -263,7 +261,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   /// Send a new [RemoteMessage] to the FCM server. Android only.
   Future<void> sendMessage({
-    String to,
+    @required String to,
     Map<String, String> data,
     String collapseKey,
     String messageId,
@@ -355,16 +353,16 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   /// Determine whether FCM auto-initialization is enabled or disabled.
   @Deprecated(
-      "autoInitEnabled() is deprecated. Use [isAutoInitEnabled] instead")
+      'autoInitEnabled() is deprecated. Use [isAutoInitEnabled] instead')
   Future<bool> autoInitEnabled() async {
     return isAutoInitEnabled;
   }
 }
 
-_assertTopicName(String topic) {
+void _assertTopicName(String topic) {
   assert(topic != null);
 
-  bool isValidTopic = RegExp(r"^[a-zA-Z0-9-_.~%]{1,900}$").hasMatch(topic);
+  bool isValidTopic = RegExp(r'^[a-zA-Z0-9-_.~%]{1,900}$').hasMatch(topic);
 
   assert(isValidTopic);
 }

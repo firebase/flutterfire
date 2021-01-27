@@ -18,10 +18,10 @@ external bool isSupported();
 @JS('Messaging')
 abstract class MessagingJsImpl {
   external void deleteToken();
-  external PromiseJsImpl<String> getToken(getTokenOptions);
+  external PromiseJsImpl<String> getToken(dynamic getTokenOptions);
   external void Function() onMessage(
-    optionsOrObserverOrOnNext,
-    observerOrOnNextOrOnError,
+    dynamic optionsOrObserverOrOnNext,
+    dynamic observerOrOnNextOrOnError,
   );
 }
 

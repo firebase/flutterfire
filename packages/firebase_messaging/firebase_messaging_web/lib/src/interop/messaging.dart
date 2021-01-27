@@ -53,6 +53,7 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
               'vapidKey': vapidKey,
             }));
 
+  // ignore: close_sinks
   StreamController<MessagePayload> _onMessageController;
 
   /// When a push message is received and the user is currently on a page for your origin,
@@ -62,18 +63,19 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
 
   Stream<MessagePayload> _createOnMessageStream(
       StreamController<MessagePayload> controller) {
-    if (controller == null) {
-      controller = StreamController.broadcast(sync: true);
+    StreamController<MessagePayload> _controller = controller;
+    if (_controller == null) {
+      _controller = StreamController.broadcast(sync: true);
       final nextWrapper = allowInterop((payload) {
-        controller.add(MessagePayload._fromJsObject(payload));
+        _controller.add(MessagePayload._fromJsObject(payload));
       });
       final errorWrapper = allowInterop((e) {
-        controller.addError(e);
+        _controller.addError(e);
       });
 
       jsObject.onMessage(nextWrapper, errorWrapper);
     }
-    return controller.stream;
+    return _controller.stream;
   }
 }
 

@@ -50,10 +50,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// It will always default to [MethodChannelFirebaseMessaging]
   /// if no other implementation was provided.
   static FirebaseMessagingPlatform get instance {
-    if (_instance == null) {
-      _instance = MethodChannelFirebaseMessaging.instance;
-    }
-    return _instance;
+    return _instance ??= MethodChannelFirebaseMessaging.instance;
   }
 
   /// Sets the [FirebaseMessagingPlatform.instance]
@@ -63,6 +60,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  // ignore: close_sinks
   static StreamController<RemoteMessage> _onMessageStreamController;
 
   /// Returns a Stream that is called when an incoming FCM payload is received whilst
@@ -75,6 +73,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
         StreamController<RemoteMessage>.broadcast();
   }
 
+  // ignore: close_sinks
   static StreamController<RemoteMessage> _onMessageOpenedAppStreamController;
 
   /// Returns a [Stream] that is called when a user presses a notification displayed

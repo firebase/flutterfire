@@ -4,6 +4,8 @@
 
 // @dart=2.9
 
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'dart:async';
 
 import 'package:async/async.dart';
@@ -60,7 +62,7 @@ void main() {
     group('initialNotification', () {
       test('verify delegate method is called', () async {
         const senderId = 'test-notification';
-        RemoteMessage message = RemoteMessage(senderId: senderId);
+        RemoteMessage message = const RemoteMessage(senderId: senderId);
         when(kMockMessagingPlatform.getInitialMessage())
             .thenAnswer((_) => Future.value(message));
 
@@ -76,7 +78,7 @@ void main() {
     group('deleteToken', () {
       test('verify delegate method is called with correct args', () async {
         when(kMockMessagingPlatform.deleteToken())
-            .thenAnswer((_) => Future.value(null));
+            .thenAnswer((_) => Future.value());
 
         await messaging.deleteToken();
 
@@ -208,14 +210,14 @@ void main() {
       });
 
       test('throws AssertionError if topic is invalid', () async {
-        final invalidTopic = 'test invalid = topic';
+        const invalidTopic = 'test invalid = topic';
 
         expect(() => messaging.subscribeToTopic(invalidTopic),
             throwsAssertionError);
       });
 
       test('verify delegate method is called with correct args', () async {
-        final topic = 'test-topic';
+        const topic = 'test-topic';
 
         await messaging.subscribeToTopic(topic);
         verify(kMockMessagingPlatform.subscribeToTopic(topic));
@@ -231,7 +233,7 @@ void main() {
       when(kMockMessagingPlatform.unsubscribeFromTopic(any))
           .thenAnswer((_) => null);
       test('verify delegate method is called with correct args', () async {
-        final topic = 'test-topic';
+        const topic = 'test-topic';
 
         await messaging.unsubscribeFromTopic(topic);
         verify(kMockMessagingPlatform.unsubscribeFromTopic(topic));

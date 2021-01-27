@@ -15,9 +15,7 @@ import 'interop/messaging.dart';
 FirebaseException getFirebaseException(Object object) {
   if (object is! core_interop.FirebaseError) {
     return FirebaseException(
-        plugin: 'firebase_messaging',
-        code: 'unknown',
-        message: object.toString());
+        plugin: 'firebase_messaging', message: object.toString());
   }
 
   core_interop.FirebaseError firebaseError =

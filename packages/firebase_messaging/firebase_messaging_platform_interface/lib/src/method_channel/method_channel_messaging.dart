@@ -34,37 +34,40 @@ void _firebaseMessagingCallbackDispatcher() {
 
   // This is where we handle background events from the native portion of the plugin.
   _channel.setMethodCallHandler((MethodCall call) async {
-    if (call.method == "MessagingBackground#onMessage") {
+    if (call.method == 'MessagingBackground#onMessage') {
       final CallbackHandle handle =
-          CallbackHandle.fromRawHandle(call.arguments["userCallbackHandle"]);
+          CallbackHandle.fromRawHandle(call.arguments['userCallbackHandle']);
 
       // PluginUtilities.getCallbackFromHandle performs a lookup based on the
       // callback handle and returns a tear-off of the original callback.
       final Function closure = PluginUtilities.getCallbackFromHandle(handle);
 
       if (closure == null) {
+        // ignore: avoid_print
         print('Fatal: could not find user callback');
         exit(-1);
       }
 
       try {
         Map<String, dynamic> messageMap =
-            Map<String, dynamic>.from(call.arguments["message"]);
+            Map<String, dynamic>.from(call.arguments['message']);
         final RemoteMessage remoteMessage = RemoteMessage.fromMap(messageMap);
         await closure(remoteMessage);
       } catch (e) {
+        // ignore: avoid_print
         print(
-            "FlutterFire Messaging: An error occurred in your background messaging handler:");
+            'FlutterFire Messaging: An error occurred in your background messaging handler:');
+        // ignore: avoid_print
         print(e);
       }
     } else {
-      throw UnimplementedError("${call.method} has not been implemented");
+      throw UnimplementedError('${call.method} has not been implemented');
     }
   });
 
   // Once we've finished initializing, let the native portion of the plugin
   // know that it can start scheduling alarms.
-  _channel.invokeMethod<void>("MessagingBackground#initialized");
+  _channel.invokeMethod<void>('MessagingBackground#initialized');
 }
 
 /// The entry point for accessing a Messaging.
@@ -76,30 +79,29 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
-        case "Messaging#onTokenRefresh":
+        case 'Messaging#onTokenRefresh':
           _tokenStreamController.add(call.arguments as String);
           break;
-        case "Messaging#onMessage":
-          print(call.arguments);
+        case 'Messaging#onMessage':
           Map<String, dynamic> messageMap =
               Map<String, dynamic>.from(call.arguments);
           FirebaseMessagingPlatform.onMessage
               .add(RemoteMessage.fromMap(messageMap));
           break;
-        case "Messaging#onMessageOpenedApp":
+        case 'Messaging#onMessageOpenedApp':
           Map<String, dynamic> messageMap =
               Map<String, dynamic>.from(call.arguments);
           FirebaseMessagingPlatform.onMessageOpenedApp
               .add(RemoteMessage.fromMap(messageMap));
           break;
-        case "Messaging#onBackgroundMessage":
+        case 'Messaging#onBackgroundMessage':
           // Apple only. Android calls via separate background channel.
           Map<String, dynamic> messageMap =
               Map<String, dynamic>.from(call.arguments);
           return FirebaseMessagingPlatform.onBackgroundMessage
               ?.call(RemoteMessage.fromMap(messageMap));
         default:
-          throw UnimplementedError("${call.method} has not been implemented");
+          throw UnimplementedError('${call.method} has not been implemented');
       }
     });
     _initialized = true;
@@ -166,7 +168,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  void registerBackgroundMessageHandler(
+  Future<void> registerBackgroundMessageHandler(
       BackgroundMessageHandler handler) async {
     if (handler == null || defaultTargetPlatform != TargetPlatform.android) {
       return;
@@ -338,7 +340,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }) async {
     if (defaultTargetPlatform != TargetPlatform.android) {
       throw UnimplementedError(
-          "Sending of messages from the Firebase Messaging SDK is only supported on Android devices.");
+          'Sending of messages from the Firebase Messaging SDK is only supported on Android devices.');
     }
 
     try {
