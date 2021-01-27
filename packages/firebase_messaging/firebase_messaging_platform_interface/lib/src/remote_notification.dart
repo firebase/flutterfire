@@ -56,9 +56,9 @@ class RemoteNotification {
           sound: map['apple']['sound'] == null
               ? null
               : AppleNotificationSound(
-                  critical: map['apple']['criticalSound']['critical'],
+                  critical: map['apple']['criticalSound']['critical'] ?? false,
                   name: map['apple']['criticalSound']['name'],
-                  volume: map['apple']['criticalSound']['volume']));
+                  volume: map['apple']['criticalSound']['volume'] ?? 0));
     }
 
     return RemoteNotification(
@@ -83,7 +83,7 @@ class RemoteNotification {
   final String title;
 
   /// Any arguments that should be formatted into the resource specified by titleLocKey.
-  final List<String> titleLocArgs;
+  final List<String> /*!*/ titleLocArgs;
 
   /// The native localization key for the notification title.
   final String titleLocKey;
@@ -92,7 +92,7 @@ class RemoteNotification {
   final String body;
 
   /// Any arguments that should be formatted into the resource specified by bodyLocKey.
-  final List<String> bodyLocArgs;
+  final List<String> /*!*/ bodyLocArgs;
 
   /// The native localization key for the notification body content.
   final String bodyLocKey;
@@ -142,7 +142,7 @@ class AndroidNotification {
   ///
   /// This property only has impact on devices running Android 8.0 (API level 26) +.
   /// Later than this, they use the channel importance instead.
-  final AndroidNotificationPriority priority;
+  final AndroidNotificationPriority /*!*/ priority;
 
   /// The resource file name of the small icon shown in the notification.
   final String smallIcon;
@@ -154,7 +154,7 @@ class AndroidNotification {
   final String ticker;
 
   /// The visibility level of the notification.
-  final AndroidNotificationVisibility visibility;
+  final AndroidNotificationVisibility /*!*/ visibility;
 }
 
 /// Apple specific properties of a [RemoteNotification].
@@ -185,7 +185,7 @@ class AppleNotification {
   final String subtitle;
 
   /// Any arguments that should be formatted into the resource specified by subtitleLocKey.
-  final List<String> subtitleLocArgs;
+  final List<String> /*!*/ subtitleLocArgs;
 
   /// The native localization key for the notification subtitle.
   final String subtitleLocKey;
@@ -197,7 +197,7 @@ class AppleNotificationSound {
   const AppleNotificationSound({this.critical, this.name, this.volume});
 
   /// Whether or not the notification sound was critical.
-  final bool critical;
+  final bool /*!*/ critical;
 
   /// The resource name of the sound played.
   final String name;
@@ -205,7 +205,7 @@ class AppleNotificationSound {
   /// The volume of the sound.
   ///
   /// This value is a number between 0.0 & 1.0.
-  final num volume;
+  final num /*!*/ volume;
 }
 
 // Utility to correctly cast lists

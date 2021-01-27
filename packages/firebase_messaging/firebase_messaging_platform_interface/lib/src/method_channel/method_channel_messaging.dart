@@ -73,12 +73,13 @@ void _firebaseMessagingCallbackDispatcher() {
 /// You can get an instance by calling [FirebaseMessaging.instance].
 class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   /// Create an instance of [MethodChannelFirebaseMessaging] with optional [FirebaseApp]
-  MethodChannelFirebaseMessaging({FirebaseApp app}) : super(appInstance: app) {
+  MethodChannelFirebaseMessaging({FirebaseApp /*!*/ app})
+      : super(appInstance: app) {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
         case 'Messaging#onTokenRefresh':
-          _tokenStreamController.add(call.arguments as String);
+          _tokenStreamController.add(call.arguments as String /*!*/);
           break;
         case 'Messaging#onMessage':
           Map<String, dynamic> messageMap =
@@ -205,10 +206,12 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     }
 
     try {
-      return (await channel
+      Map<String, String> data = await channel
           .invokeMapMethod<String, String>('Messaging#getAPNSToken', {
         'appName': app.name,
-      }))['token'];
+      });
+
+      return data['token'];
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -220,11 +223,13 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     String vapidKey, // not used yet; web only property
   }) async {
     try {
-      return (await channel
-          .invokeMapMethod<String, String>('Messaging#getToken', {
+      Map<String, String> data =
+          await channel.invokeMapMethod<String, String>('Messaging#getToken', {
         'appName': app.name,
         'senderId': senderId,
-      }))['token'];
+      });
+
+      return data['token'];
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -305,9 +310,9 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> setForegroundNotificationPresentationOptions({
-    bool alert,
-    bool badge,
-    bool sound,
+    bool/*!*/ alert,
+    bool/*!*/ badge,
+    bool/*!*/ sound,
   }) async {
     if (defaultTargetPlatform != TargetPlatform.iOS &&
         defaultTargetPlatform != TargetPlatform.macOS) {
@@ -329,7 +334,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> sendMessage({
-    String to,
+    String/*!*/ to,
     Map<String, String> data,
     String collapseKey,
     String messageId,
