@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
@@ -34,9 +32,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   App get app => App.getInstance(jsObject.app);
 
   /// Creates a new Firestore from a [jsObject].
-  static Firestore getInstance(
-      firestore_interop.FirestoreJsImpl jsObject) {
-
+  static Firestore getInstance(firestore_interop.FirestoreJsImpl jsObject) {
     return _expando[jsObject] ??= Firestore._fromJsObject(jsObject);
   }
 
@@ -98,7 +94,8 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
             updateFunction(Transaction.getInstance(transaction)), jsify));
 
     return handleThenable(jsObject.runTransaction(updateFunctionWrap))
-        .then((value) => null);
+        //there is no value returned from this Future
+        .then((value) => dartify(null));
   }
 
   void settings(firestore_interop.Settings settings) =>
@@ -186,7 +183,9 @@ class DocumentReference
   Future<DocumentSnapshot> get([firestore_interop.GetOptions? options]) {
     var jsObjectSet =
         (options != null) ? jsObject.get(options) : jsObject.get();
-    return handleThenable(jsObjectSet).then(DocumentSnapshot.getInstance as FutureOr<DocumentSnapshot> Function(firestore_interop.DocumentSnapshotJsImpl));
+    return handleThenable(jsObjectSet).then(DocumentSnapshot.getInstance
+        as FutureOr<DocumentSnapshot> Function(
+            firestore_interop.DocumentSnapshotJsImpl));
   }
 
 //ignore: close_sinks
@@ -379,7 +378,8 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
   Future<DocumentReference> add(Map<String, dynamic> data) =>
       handleThenable<firestore_interop.DocumentReferenceJsImpl>(
               jsObject.add(jsify(data)))
-          .then(DocumentReference.getInstance as FutureOr<DocumentReference> Function(firestore_interop.DocumentReferenceJsImpl));
+          .then(DocumentReference.getInstance as FutureOr<DocumentReference>
+              Function(firestore_interop.DocumentReferenceJsImpl));
 
   DocumentReference? doc([String? documentPath]) {
     var jsObjectDoc =
@@ -495,7 +495,8 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
   static final _expando = Expando<Transaction>();
 
   /// Creates a new Transaction from a [jsObject].
-  static Transaction? getInstance(firestore_interop.TransactionJsImpl? jsObject) {
+  static Transaction? getInstance(
+      firestore_interop.TransactionJsImpl? jsObject) {
     if (jsObject == null) {
       return null;
     }
@@ -511,7 +512,8 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
   Future<DocumentSnapshot> get(DocumentReference documentRef) =>
       handleThenable<firestore_interop.DocumentSnapshotJsImpl>(
               jsObject.get(documentRef.jsObject))
-          .then(DocumentSnapshot.getInstance as FutureOr<DocumentSnapshot> Function(firestore_interop.DocumentSnapshotJsImpl));
+          .then(DocumentSnapshot.getInstance as FutureOr<DocumentSnapshot>
+              Function(firestore_interop.DocumentSnapshotJsImpl));
 
   Transaction? set(DocumentReference? documentRef, Map<String, dynamic>? data,
       [firestore_interop.SetOptions? options]) {
