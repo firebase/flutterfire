@@ -254,11 +254,6 @@ void main() {
         fail('Default value not set for includeMetadataChanges');
       }
     });
-    test('should throw if includeMetadataChanges is null', () {
-      expect(() => query!.snapshots(includeMetadataChanges: null),
-          throwsAssertionError);
-    });
-
     test('startAfterDocument()', () {
       List<List<dynamic>> orders = List.from([
         ['bar']

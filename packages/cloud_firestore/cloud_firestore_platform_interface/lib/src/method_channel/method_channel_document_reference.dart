@@ -20,8 +20,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   /// Creates a [DocumentReferencePlatform] that is implemented using [MethodChannel].
   MethodChannelDocumentReference(
       FirebaseFirestorePlatform firestore, String path)
-      : assert(firestore != null),
-        super(firestore, path) {
+      : super(firestore, path) {
     _pointer = Pointer(path);
   }
 
@@ -98,7 +97,6 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   Stream<DocumentSnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    assert(includeMetadataChanges != null);
 
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.

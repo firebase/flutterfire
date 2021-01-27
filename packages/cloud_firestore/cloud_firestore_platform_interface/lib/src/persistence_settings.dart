@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/material.dart';
-
 /// A settings class that can be passed to Firestore.enablePersistence() to configure Firestore persistence.
 /// Only supported for Web.
 class PersistenceSettings {
@@ -17,5 +15,5 @@ class PersistenceSettings {
   /// Creates a [PersistenceSettings] instance.
   const PersistenceSettings({
     required this.synchronizeTabs,
-  }) : assert(synchronizeTabs != null);
+  });
 }

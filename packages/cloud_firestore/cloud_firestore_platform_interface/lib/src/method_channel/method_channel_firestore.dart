@@ -237,7 +237,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     );
 
     return completer.future.whenComplete(() {
-      snapshotStream?.cancel();
+      snapshotStream.cancel();
     });
   }
 

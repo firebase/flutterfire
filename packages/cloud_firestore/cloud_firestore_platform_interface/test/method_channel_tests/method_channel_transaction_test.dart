@@ -48,7 +48,6 @@ void main() {
               'data': <String, dynamic>{'key1': 'val1'},
               'metadata': kMockSnapshotMetadata,
             };
-            break;
           default:
             return null;
         }

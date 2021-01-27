@@ -20,12 +20,8 @@ class FieldPath {
 
   /// Creates a new [FieldPath].
   FieldPath(this.components)
-      : assert(components != null),
-        assert(components.isNotEmpty),
-        assert(
-            components
-                .where((component) => component == null || component.isEmpty)
-                .isEmpty,
+      : assert(components.isNotEmpty),
+        assert(components.where((component) => component.isEmpty).isEmpty,
             'Expected all FieldPath components to be non-null or non-empty strings.');
 
   /// Returns a special sentinel `FieldPath` to refer to the ID of a document.

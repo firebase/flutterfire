@@ -24,7 +24,7 @@ class MethodChannelQuery extends QueryPlatform {
   MethodChannelQuery(
     FirebaseFirestorePlatform _firestore,
     String path, {
-    /*required*/ required Map<String, dynamic> parameters,
+     Map<String, dynamic>? parameters,
     this.isCollectionGroupQuery = false,
   }) : super(_firestore, parameters) {
     _pointer = Pointer(path);
@@ -128,8 +128,6 @@ class MethodChannelQuery extends QueryPlatform {
   Stream<QuerySnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    assert(includeMetadataChanges != null);
-
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     late StreamController<QuerySnapshotPlatform>
