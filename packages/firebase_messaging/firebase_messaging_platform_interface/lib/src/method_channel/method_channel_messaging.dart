@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
@@ -38,7 +36,7 @@ void _firebaseMessagingCallbackDispatcher() {
 
       // PluginUtilities.getCallbackFromHandle performs a lookup based on the
       // callback handle and returns a tear-off of the original callback.
-      final Function closure = PluginUtilities.getCallbackFromHandle(handle);
+      final Function closure = PluginUtilities.getCallbackFromHandle(handle)!;
 
       if (closure == null) {
         // ignore: avoid_print
@@ -73,13 +71,13 @@ void _firebaseMessagingCallbackDispatcher() {
 /// You can get an instance by calling [FirebaseMessaging.instance].
 class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   /// Create an instance of [MethodChannelFirebaseMessaging] with optional [FirebaseApp]
-  MethodChannelFirebaseMessaging({FirebaseApp /*!*/ app})
+  MethodChannelFirebaseMessaging({required FirebaseApp app})
       : super(appInstance: app) {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
         case 'Messaging#onTokenRefresh':
-          _tokenStreamController.add(call.arguments as String /*!*/);
+          _tokenStreamController.add(call.arguments as String);
           break;
         case 'Messaging#onMessage':
           Map<String, dynamic> messageMap =
@@ -106,7 +104,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     _initialized = true;
   }
 
-  bool _autoInitEnabled;
+  bool? _autoInitEnabled;
 
   static bool _initialized = false;
   static bool _bgHandlerInitialized = false;
@@ -133,25 +131,25 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       StreamController<String>.broadcast();
 
   @override
-  FirebaseMessagingPlatform delegateFor({FirebaseApp app}) {
+  FirebaseMessagingPlatform delegateFor({required FirebaseApp app}) {
     return MethodChannelFirebaseMessaging(app: app);
   }
 
   @override
-  FirebaseMessagingPlatform setInitialValues({bool isAutoInitEnabled}) {
+  FirebaseMessagingPlatform setInitialValues({bool? isAutoInitEnabled}) {
     _autoInitEnabled = isAutoInitEnabled ?? false;
     return this;
   }
 
   @override
   bool get isAutoInitEnabled {
-    return _autoInitEnabled;
+    return _autoInitEnabled!;
   }
 
   @override
-  Future<RemoteMessage> getInitialMessage() async {
+  Future<RemoteMessage?> getInitialMessage() async {
     try {
-      Map<String, dynamic> remoteMessageMap = await channel
+      Map<String, dynamic>? remoteMessageMap = await channel
           .invokeMapMethod<String, dynamic>('Messaging#getInitialMessage', {
         'appName': app.name,
       });
@@ -168,7 +166,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> registerBackgroundMessageHandler(
-      BackgroundMessageHandler handler) async {
+      BackgroundMessageHandler? handler) async {
     if (handler == null || defaultTargetPlatform != TargetPlatform.android) {
       return;
     }
@@ -176,9 +174,9 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     if (!_bgHandlerInitialized) {
       _bgHandlerInitialized = true;
       final CallbackHandle bgHandle = PluginUtilities.getCallbackHandle(
-          _firebaseMessagingCallbackDispatcher);
+          _firebaseMessagingCallbackDispatcher)!;
       final CallbackHandle userHandle =
-          PluginUtilities.getCallbackHandle(handler);
+          PluginUtilities.getCallbackHandle(handler)!;
       await channel.invokeMapMethod('Messaging#startBackgroundIsolate', {
         'pluginCallbackHandle': bgHandle.toRawHandle(),
         'userCallbackHandle': userHandle.toRawHandle(),
@@ -188,7 +186,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> deleteToken({
-    String senderId,
+    String? senderId,
   }) async {
     try {
       await channel.invokeMapMethod(
@@ -199,17 +197,17 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<String> getAPNSToken() async {
+  Future<String?> getAPNSToken() async {
     if (defaultTargetPlatform != TargetPlatform.iOS &&
         defaultTargetPlatform != TargetPlatform.macOS) {
       return null;
     }
 
     try {
-      Map<String, String> data = await channel
+      Map<String, String> data = await (channel
           .invokeMapMethod<String, String>('Messaging#getAPNSToken', {
         'appName': app.name,
-      });
+      }) as FutureOr<Map<String, String>>);
 
       return data['token'];
     } catch (e) {
@@ -219,17 +217,17 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<String> getToken({
-    String senderId,
-    String vapidKey, // not used yet; web only property
+    String? senderId,
+    String? vapidKey, // not used yet; web only property
   }) async {
     try {
       Map<String, String> data =
-          await channel.invokeMapMethod<String, String>('Messaging#getToken', {
+          await (channel.invokeMapMethod<String, String>('Messaging#getToken', {
         'appName': app.name,
         'senderId': senderId,
-      });
+      }) as FutureOr<Map<String, String>>);
 
-      return data['token'];
+      return data['token']!;
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -243,10 +241,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     }
 
     try {
-      Map<String, int> response = await channel
+      Map<String, int> response = await (channel
           .invokeMapMethod<String, int>('Messaging#getNotificationSettings', {
         'appName': app.name,
-      });
+      }) as FutureOr<Map<String, int>>);
 
       return convertToNotificationSettings(response);
     } catch (e) {
@@ -269,7 +267,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     }
 
     try {
-      Map<String, int> response = await channel
+      Map<String, int> response = await (channel
           .invokeMapMethod<String, int>('Messaging#requestPermission', {
         'appName': app.name,
         'permissions': <String, bool>{
@@ -281,7 +279,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           'provisional': provisional,
           'sound': sound,
         }
-      });
+      }) as FutureOr<Map<String, int>>);
 
       return convertToNotificationSettings(response);
     } catch (e) {
@@ -292,12 +290,12 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   @override
   Future<void> setAutoInitEnabled(bool enabled) async {
     try {
-      Map<String, dynamic> data = await channel
+      Map<String, dynamic> data = await (channel
           .invokeMapMethod<String, dynamic>('Messaging#setAutoInitEnabled', {
         'appName': app.name,
         'enabled': enabled,
-      });
-      _autoInitEnabled = data['isAutoInitEnabled'];
+      }) as FutureOr<Map<String, dynamic>>);
+      _autoInitEnabled = data['isAutoInitEnabled'] as bool;
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -310,9 +308,9 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> setForegroundNotificationPresentationOptions({
-    bool/*!*/ alert,
-    bool/*!*/ badge,
-    bool/*!*/ sound,
+    required bool alert,
+    required bool badge,
+    required bool sound,
   }) async {
     if (defaultTargetPlatform != TargetPlatform.iOS &&
         defaultTargetPlatform != TargetPlatform.macOS) {
@@ -334,12 +332,12 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> sendMessage({
-    String/*!*/ to,
-    Map<String, String> data,
-    String collapseKey,
-    String messageId,
-    String messageType,
-    int ttl,
+    required String to,
+    Map<String, String>? data,
+    String? collapseKey,
+    String? messageId,
+    String? messageType,
+    int? ttl,
   }) async {
     if (defaultTargetPlatform != TargetPlatform.android) {
       throw UnimplementedError(

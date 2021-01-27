@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,9 +12,9 @@ import '../mock.dart';
 void main() {
   setupFirebaseMessagingMocks();
 
-  TestFirebaseMessagingPlatform firebaseMessagingPlatform;
-  FirebaseApp app;
-  FirebaseApp secondaryApp;
+  TestFirebaseMessagingPlatform? firebaseMessagingPlatform;
+  FirebaseApp? app;
+  FirebaseApp? secondaryApp;
 
   group('$FirebaseMessagingPlatform()', () {
     setUpAll(() async {
@@ -51,7 +49,7 @@ void main() {
 
     test('instanceFor', () {
       final result = FirebaseMessagingPlatform.instanceFor(
-          app: app,
+          app: app!,
           pluginConstants: <dynamic, dynamic>{
             'AUTO_INIT_ENABLED': true,
           });
@@ -75,16 +73,11 @@ void main() {
             isA<FirebaseMessagingPlatform>());
         expect(FirebaseMessagingPlatform.instance.app.name, equals('testApp2'));
       });
-
-      test('throws an [AssertionError] if instance is null', () {
-        expect(() => FirebaseMessagingPlatform.instance = null,
-            throwsAssertionError);
-      });
     });
 
     test('throws if delegateFor', () {
       try {
-        firebaseMessagingPlatform.testDelegateFor();
+        firebaseMessagingPlatform!.testDelegateFor();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('delegateFor() is not implemented'));
         return;
@@ -94,7 +87,7 @@ void main() {
 
     test('throws if setInitialValues', () {
       try {
-        firebaseMessagingPlatform.testSetInitialValues();
+        firebaseMessagingPlatform!.testSetInitialValues();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('setInitialValues() is not implemented'));
         return;
@@ -104,7 +97,7 @@ void main() {
 
     test('throws if isAutoInitEnabled', () {
       try {
-        firebaseMessagingPlatform.isAutoInitEnabled;
+        firebaseMessagingPlatform!.isAutoInitEnabled;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('isAutoInitEnabled is not implemented'));
         return;
@@ -114,7 +107,7 @@ void main() {
 
     test('throws if getInitialMessage', () {
       try {
-        firebaseMessagingPlatform.getInitialMessage();
+        firebaseMessagingPlatform!.getInitialMessage();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('getInitialMessage() is not implemented'));
         return;
@@ -124,7 +117,7 @@ void main() {
 
     test('throws if deleteToken()', () async {
       try {
-        await firebaseMessagingPlatform.deleteToken();
+        await firebaseMessagingPlatform!.deleteToken();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('deleteToken() is not implemented'));
         return;
@@ -134,7 +127,7 @@ void main() {
 
     test('throws if getAPNSToken()', () async {
       try {
-        await firebaseMessagingPlatform.getAPNSToken();
+        await firebaseMessagingPlatform!.getAPNSToken();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('getAPNSToken() is not implemented'));
         return;
@@ -144,7 +137,7 @@ void main() {
 
     test('throws if getToken()', () async {
       try {
-        await firebaseMessagingPlatform.getToken();
+        await firebaseMessagingPlatform!.getToken();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('getToken() is not implemented'));
         return;
@@ -154,7 +147,7 @@ void main() {
 
     test('throws if onTokenRefresh', () {
       try {
-        firebaseMessagingPlatform.onTokenRefresh;
+        firebaseMessagingPlatform!.onTokenRefresh;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('onTokenRefresh is not implemented'));
         return;
@@ -164,7 +157,7 @@ void main() {
 
     test('throws if requestPermission()', () async {
       try {
-        await firebaseMessagingPlatform.requestPermission();
+        await firebaseMessagingPlatform!.requestPermission();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('requestPermission() is not implemented'));
         return;
@@ -174,7 +167,7 @@ void main() {
 
     test('throws if setAutoInitEnabled()', () async {
       try {
-        await firebaseMessagingPlatform.setAutoInitEnabled(true);
+        await firebaseMessagingPlatform!.setAutoInitEnabled(true);
       } on UnimplementedError catch (e) {
         expect(e.message, equals('setAutoInitEnabled() is not implemented'));
         return;
@@ -184,7 +177,7 @@ void main() {
 
     test('throws if subscribeToTopic()', () async {
       try {
-        await firebaseMessagingPlatform.subscribeToTopic('foo');
+        await firebaseMessagingPlatform!.subscribeToTopic('foo');
       } on UnimplementedError catch (e) {
         expect(e.message, equals('subscribeToTopic() is not implemented'));
         return;
@@ -194,7 +187,7 @@ void main() {
 
     test('throws if unsubscribeFromTopic()', () async {
       try {
-        await firebaseMessagingPlatform.unsubscribeFromTopic('foo');
+        await firebaseMessagingPlatform!.unsubscribeFromTopic('foo');
       } on UnimplementedError catch (e) {
         expect(e.message, equals('unsubscribeFromTopic() is not implemented'));
         return;
@@ -205,10 +198,10 @@ void main() {
 }
 
 class TestFirebaseMessagingPlatform extends FirebaseMessagingPlatform {
-  TestFirebaseMessagingPlatform(FirebaseApp app) : super(appInstance: app);
+  TestFirebaseMessagingPlatform(FirebaseApp? app) : super(appInstance: app);
 
-  FirebaseMessagingPlatform testDelegateFor({FirebaseApp app}) {
-    return delegateFor();
+  FirebaseMessagingPlatform testDelegateFor({FirebaseApp? app}) {
+    return delegateFor(app: app ?? Firebase.app());
   }
 
   FirebaseMessagingPlatform testSetInitialValues() {

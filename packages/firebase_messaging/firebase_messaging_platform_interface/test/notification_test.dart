@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -37,7 +35,7 @@ void main() {
   group('AppleNotificationSound', () {
     test('new instance', () {
       const testCritical = false;
-      const iosSound = AppleNotificationSound(critical: testCritical);
+      const iosSound = AppleNotificationSound();
       expect(iosSound.critical, equals(testCritical));
     });
   });
