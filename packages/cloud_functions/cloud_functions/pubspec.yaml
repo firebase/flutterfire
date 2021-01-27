@@ -10,8 +10,8 @@ environment:
 dependencies:
   cloud_functions_platform_interface: ^4.0.2-nullsafety.1
   cloud_functions_web: ^3.1.4-nullsafety.1
-  firebase_core: ^0.8.0-nullsafety.1
-  firebase_core_platform_interface: ^4.0.0-nullsafety.0
+  firebase_core: ">=0.8.0-1.0.nullsafety.0 <0.8.0-2.0.nullsafety.0"
+  firebase_core_platform_interface: ">=4.0.0-1.0.nullsafety.0 <4.0.0-2.0.nullsafety.0"
   flutter:
     sdk: flutter
 
