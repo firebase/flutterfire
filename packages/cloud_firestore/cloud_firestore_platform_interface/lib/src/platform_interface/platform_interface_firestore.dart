@@ -187,7 +187,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
 
   @override
   //ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       other is FirebaseFirestorePlatform && other.app.name == app.name;
 
   @override

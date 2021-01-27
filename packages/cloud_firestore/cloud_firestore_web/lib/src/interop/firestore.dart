@@ -21,7 +21,7 @@ export 'firestore_interop.dart';
 Firestore getFirestoreInstance([App? app]) {
   return Firestore.getInstance(app != null
       ? firebase_interop.firestore(app.jsObject)
-      : firebase_interop.firestore())!;
+      : firebase_interop.firestore());
 }
 
 /// The Cloud Firestore service interface.
@@ -34,11 +34,8 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   App get app => App.getInstance(jsObject.app);
 
   /// Creates a new Firestore from a [jsObject].
-  static Firestore? getInstance(
-      firestore_interop.FirestoreJsImpl? jsObject) {
-    if (jsObject == null) {
-      return null;
-    }
+  static Firestore getInstance(
+      firestore_interop.FirestoreJsImpl jsObject) {
 
     return _expando[jsObject] ??= Firestore._fromJsObject(jsObject);
   }
@@ -61,6 +58,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
           [firestore_interop.PersistenceSettings? settings]) =>
       handleThenable(jsObject.enablePersistence(settings));
 
+  // ignore: close_sinks
   StreamController<void>? _onSnapshotsInSyncController;
 
   Stream<void> snapshotsInSync() {
@@ -100,7 +98,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
             updateFunction(Transaction.getInstance(transaction)), jsify));
 
     return handleThenable(jsObject.runTransaction(updateFunctionWrap))
-        .then(dartify);
+        .then((value) => null);
   }
 
   void settings(firestore_interop.Settings settings) =>
@@ -158,7 +156,7 @@ class DocumentReference
 
   /// Non-null [Firestore] the document is in.
   /// This is useful for performing transactions, for example.
-  Firestore? get firestore => Firestore.getInstance(jsObject.firestore);
+  Firestore get firestore => Firestore.getInstance(jsObject.firestore);
 
   String get id => jsObject.id;
 
@@ -252,9 +250,9 @@ class DocumentReference
       handleThenable(_wrapUpdateFunctionCall(jsObject, data, fieldsAndValues));
 }
 
-class Query<T extends firestore_interop.QueryJsImpl?>
+class Query<T extends firestore_interop.QueryJsImpl>
     extends JsObjectWrapper<T> {
-  Firestore? get firestore => Firestore.getInstance(jsObject.firestore);
+  Firestore get firestore => Firestore.getInstance(jsObject.firestore);
 
   /// Creates a new Query from a [jsObject].
   Query.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
@@ -350,7 +348,7 @@ class Query<T extends firestore_interop.QueryJsImpl?>
     var args = (snapshot != null)
         ? [snapshot.jsObject]
         : fieldValues!.map(jsify).toList();
-    return callMethod(jsObject!, method, args);
+    return callMethod(jsObject, method, args);
   }
 }
 
@@ -368,9 +366,6 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
   /// Creates a new CollectionReference from a [jsObject].
   static CollectionReference? getInstance(
       firestore_interop.CollectionReferenceJsImpl jsObject) {
-    if (jsObject == null) {
-      return null;
-    }
     return _expando[jsObject] ??= CollectionReference._fromJsObject(jsObject);
   }
 
@@ -379,7 +374,7 @@ class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
 
   CollectionReference._fromJsObject(
       firestore_interop.CollectionReferenceJsImpl jsObject)
-      : super.fromJsObject(jsObject as T*);
+      : super.fromJsObject(jsObject as T);
 
   Future<DocumentReference> add(Map<String, dynamic> data) =>
       handleThenable<firestore_interop.DocumentReferenceJsImpl>(
@@ -408,11 +403,8 @@ class DocumentChange
   num get newIndex => jsObject.newIndex;
 
   /// Creates a new DocumentChange from a [jsObject].
-  static DocumentChange? getInstance(
+  static DocumentChange getInstance(
       firestore_interop.DocumentChangeJsImpl jsObject) {
-    if (jsObject == null) {
-      return null;
-    }
     return _expando[jsObject] ??= DocumentChange._fromJsObject(jsObject);
   }
 
@@ -435,9 +427,6 @@ class DocumentSnapshot
   /// Creates a new DocumentSnapshot from a [jsObject].
   static DocumentSnapshot? getInstance(
       firestore_interop.DocumentSnapshotJsImpl jsObject) {
-    if (jsObject == null) {
-      return null;
-    }
     return _expando[jsObject] ??= DocumentSnapshot._fromJsObject(jsObject);
   }
 
@@ -460,7 +449,7 @@ class QuerySnapshot
   // ignore: todo
   // TODO: [SnapshotListenOptions options]
   List<DocumentChange?> docChanges(
-          [firestore_interop.SnapshotListenOptions options]) =>
+          [firestore_interop.SnapshotListenOptions? options]) =>
       jsObject
           .docChanges(jsify(options))
           // explicitly typing the param as dynamic to work-around
@@ -486,9 +475,6 @@ class QuerySnapshot
 
   static QuerySnapshot getInstance(
       firestore_interop.QuerySnapshotJsImpl jsObject) {
-    if (jsObject == null) {
-      return null;
-    }
     return _expando[jsObject] ??= QuerySnapshot._fromJsObject(jsObject);
   }
 

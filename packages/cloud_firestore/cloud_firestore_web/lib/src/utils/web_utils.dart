@@ -83,21 +83,20 @@ firestore_interop.GetOptions? convertGetOptions(GetOptions? options) {
   if (options == null) return null;
 
   String? source;
-  if (options.source != null) {
-    switch (options.source) {
-      case Source.serverAndCache:
-        source = 'default';
-        break;
-      case Source.cache:
-        source = 'cache';
-        break;
-      case Source.server:
-        source = 'server';
-        break;
-      default:
-        source = 'default';
-        break;
-    }
+
+  switch (options.source) {
+    case Source.serverAndCache:
+      source = 'default';
+      break;
+    case Source.cache:
+      source = 'cache';
+      break;
+    case Source.server:
+      source = 'server';
+      break;
+    default:
+      source = 'default';
+      break;
   }
 
   return firestore_interop.GetOptions(source: source);

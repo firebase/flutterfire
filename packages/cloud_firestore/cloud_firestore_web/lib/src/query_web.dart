@@ -25,7 +25,7 @@ class QueryWeb extends QueryPlatform {
     this._firestore,
     this._path,
     this._webQuery, {
-    /*required*/ required Map<String, dynamic> parameters,
+    Map<String, dynamic>? parameters,
     this.isCollectionGroupQuery = false,
   }) : super(_firestore, parameters);
 
