@@ -64,7 +64,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   Future<DocumentSnapshotPlatform> get(
       [GetOptions? options = const GetOptions()]) async {
     try {
-      final Map<String, dynamic> data = await (MethodChannelFirebaseFirestore
+      final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
           .channel
           .invokeMapMethod<String, dynamic>(
         'DocumentReference#get',
@@ -73,9 +73,9 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           'reference': this,
           'source': getSourceString(options!.source),
         },
-      ) as FutureOr<Map<String, dynamic>>);
+      );
 
-      return DocumentSnapshotPlatform(firestore, _pointer.path, data);
+      return DocumentSnapshotPlatform(firestore, _pointer.path, data!);
     } catch (e) {
       throw convertPlatformException(e);
     }
