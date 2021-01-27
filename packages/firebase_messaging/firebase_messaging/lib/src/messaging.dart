@@ -103,13 +103,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     FirebaseMessagingPlatform.onBackgroundMessage = handler;
   }
 
-  // ignore: public_member_api_docs
-  @Deprecated(
-      "Constructing Messaging is deprecated, use 'FirebaseMessaging.instance' instead")
-  factory FirebaseMessaging() {
-    return FirebaseMessaging.instance;
-  }
-
   /// Returns whether messaging auto initialization is enabled or disabled for the device.
   bool get isAutoInitEnabled {
     return _delegate.isAutoInitEnabled;
@@ -234,31 +227,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     );
   }
 
-  /// Prompts the user for notification permissions.
-  ///
-  /// On iOS, a dialog is shown requesting the users permission.
-  ///
-  /// On Android, permissions are not required and `true` is returned.
-  ///
-  /// On Web, a popup requesting the users permission is shown using the native
-  /// browser API.
-  @Deprecated(
-      'requestNotificationPermissions() is deprecated in favor of requestPermission()')
-  Future<bool> requestNotificationPermissions(
-      [IosNotificationSettings iosSettings]) async {
-    iosSettings ??= const IosNotificationSettings();
-    AuthorizationStatus status = (await requestPermission(
-      sound: iosSettings.sound,
-      alert: iosSettings.alert,
-      badge: iosSettings.badge,
-      provisional: iosSettings.provisional,
-    ))
-        .authorizationStatus;
-
-    return status == AuthorizationStatus.authorized ||
-        status == AuthorizationStatus.provisional;
-  }
-
   /// Send a new [RemoteMessage] to the FCM server. Android only.
   Future<void> sendMessage({
     @required String to,
@@ -332,30 +300,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   Future<void> unsubscribeFromTopic(String topic) {
     _assertTopicName(topic);
     return _delegate.unsubscribeFromTopic(topic);
-  }
-
-  /// Resets Instance ID and revokes all tokens.
-  ///
-  /// A new Instance ID is generated asynchronously if Firebase Cloud Messaging
-  /// auto-init is enabled.
-  ///
-  /// Returns `true` if the operations executed successfully and `false` if
-  /// an error occurred.
-  @Deprecated('Use [deleteToken] instead.')
-  Future<bool> deleteInstanceID() async {
-    try {
-      await deleteToken();
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  /// Determine whether FCM auto-initialization is enabled or disabled.
-  @Deprecated(
-      'autoInitEnabled() is deprecated. Use [isAutoInitEnabled] instead')
-  Future<bool> autoInitEnabled() async {
-    return isAutoInitEnabled;
   }
 }
 
