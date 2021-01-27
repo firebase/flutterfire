@@ -25,7 +25,6 @@ class WriteBatch {
 
   /// Deletes the document referred to by [document].
   void delete(DocumentReference document) {
-    assert(document != null);
     assert(document.firestore == _firestore,
         'the document provided is from a different Firestore instance');
     return _delegate.delete(document.path);

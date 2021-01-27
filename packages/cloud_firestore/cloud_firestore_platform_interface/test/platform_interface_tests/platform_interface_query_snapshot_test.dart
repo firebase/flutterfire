@@ -13,8 +13,8 @@ const _kPath = 'document';
 DocumentSnapshotPlatform documentSnapshotPlatform =
     DocumentSnapshotPlatform(FirebaseFirestorePlatform.instance, _kPath, {});
 final List<DocumentSnapshotPlatform> _kDocuments = [documentSnapshotPlatform];
-DocumentChangePlatform documentChangePlatform =
-    DocumentChangePlatform(DocumentChangeType.added, -1, 1, documentSnapshotPlatform);
+DocumentChangePlatform documentChangePlatform = DocumentChangePlatform(
+    DocumentChangeType.added, -1, 1, documentSnapshotPlatform);
 final _kDocumentChanges = [documentChangePlatform];
 final _kMetaData = SnapshotMetadataPlatform(true, true);
 

@@ -153,7 +153,6 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// timeout can be adjusted by setting the timeout parameter.
   Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
-
     T? output;
     await _delegate.runTransaction((transaction) async {
       output = await transactionHandler(Transaction._(this, transaction));

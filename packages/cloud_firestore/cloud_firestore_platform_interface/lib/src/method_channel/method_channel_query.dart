@@ -24,7 +24,7 @@ class MethodChannelQuery extends QueryPlatform {
   MethodChannelQuery(
     FirebaseFirestorePlatform _firestore,
     String path, {
-     Map<String, dynamic>? parameters,
+    Map<String, dynamic>? parameters,
     this.isCollectionGroupQuery = false,
   }) : super(_firestore, parameters) {
     _pointer = Pointer(path);

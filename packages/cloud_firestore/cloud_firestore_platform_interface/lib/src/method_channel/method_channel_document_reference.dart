@@ -97,7 +97,6 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   Stream<DocumentSnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     late StreamController<DocumentSnapshotPlatform>

@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -297,7 +295,8 @@ class Likes extends StatefulWidget {
 
   /// Constructs a new [Likes] instance with a given [DocumentReference] and
   /// current like count.
-  Likes({Key? key, required this.reference, required this.currentLikes}) : super(key: key);
+  Likes({Key? key, required this.reference, required this.currentLikes})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -348,7 +347,8 @@ class _Likes extends State<Likes> {
 
   @override
   Widget build(BuildContext context) {
-    int currentLikes = widget.currentLikes as bool ?  widget.currentLikes as int? ?? 0 : _likes;
+    int currentLikes =
+        widget.currentLikes as bool ? widget.currentLikes as int? ?? 0 : _likes;
 
     return Row(children: [
       IconButton(

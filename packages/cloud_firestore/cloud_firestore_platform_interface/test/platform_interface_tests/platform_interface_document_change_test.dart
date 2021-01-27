@@ -15,11 +15,11 @@ const _kNewIndex = 1;
 class TestDocumentChange extends DocumentChangePlatform {
   TestDocumentChange._()
       : super(
-          _kDocumentChangeType,
-          _kOldIndex,
-          _kNewIndex,
-          DocumentSnapshotPlatform(FirebaseFirestorePlatform.instance, '$kCollectionId/$kDocumentId', {})
-        );
+            _kDocumentChangeType,
+            _kOldIndex,
+            _kNewIndex,
+            DocumentSnapshotPlatform(FirebaseFirestorePlatform.instance,
+                '$kCollectionId/$kDocumentId', {}));
 }
 
 void main() {
