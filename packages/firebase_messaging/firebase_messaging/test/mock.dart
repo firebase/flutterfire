@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
@@ -50,7 +50,7 @@ void setupFirebaseMessagingMocks() {
 
   // Mock Platform Interface Methods
   // ignore: invalid_use_of_protected_member
-  when(kMockMessagingPlatform.delegateFor(app: anyNamed('app')))
+  when(kMockMessagingPlatform.delegateFor(app: anyNamed('app')!))
       .thenReturn(kMockMessagingPlatform);
   // ignore: invalid_use_of_protected_member
   when(kMockMessagingPlatform.setInitialValues(

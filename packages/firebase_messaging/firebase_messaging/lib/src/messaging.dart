@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_messaging;
 
 /// The [FirebaseMessaging] entry point.
@@ -13,7 +11,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   // Cached and lazily loaded instance of [FirebaseMessagingPlatform] to avoid
   // creating a [MethodChannelFirebaseMessaging] when not needed or creating an
   // instance with the default app before a user specifies an app.
-  FirebaseMessagingPlatform _delegatePackingProperty;
+  FirebaseMessagingPlatform? _delegatePackingProperty;
 
   FirebaseMessagingPlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseMessagingPlatform.instanceFor(
@@ -23,7 +21,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// The [FirebaseApp] for this current [FirebaseMessaging] instance.
   FirebaseApp app;
 
-  FirebaseMessaging._({this.app})
+  FirebaseMessaging._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_messaging');
 
   /// Returns an instance using the default [FirebaseApp].
@@ -65,9 +63,10 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     Stream<RemoteMessage> onMessageStream =
         FirebaseMessagingPlatform.onMessage.stream;
 
-    StreamController<RemoteMessage> streamController;
+    // ignore: close_sinks
+    StreamController<RemoteMessage>? streamController;
     streamController = StreamController<RemoteMessage>.broadcast(onListen: () {
-      onMessageStream.pipe(streamController);
+      onMessageStream.pipe(streamController!);
     });
 
     return streamController.stream;
@@ -85,9 +84,10 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     Stream<RemoteMessage> onMessageOpenedAppStream =
         FirebaseMessagingPlatform.onMessageOpenedApp.stream;
 
-    StreamController<RemoteMessage> streamController;
+    // ignore: close_sinks
+    StreamController<RemoteMessage>? streamController;
     streamController = StreamController<RemoteMessage>.broadcast(onListen: () {
-      onMessageOpenedAppStream.pipe(streamController);
+      onMessageOpenedAppStream.pipe(streamController!);
     });
 
     return streamController.stream;
@@ -117,7 +117,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// This should be used to determine whether specific notification interaction
   /// should open the app with a specific purpose (e.g. opening a chat message,
   /// specific screen etc).
-  Future<RemoteMessage> getInitialMessage() {
+  Future<RemoteMessage?> getInitialMessage() {
     return _delegate.getInitialMessage();
   }
 
@@ -134,13 +134,13 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// without using the FCM service.
   ///
   /// On Android & web, this returns `null`.
-  Future<String> getAPNSToken() {
+  Future<String?> getAPNSToken() {
     return _delegate.getAPNSToken();
   }
 
   /// Returns the default FCM token for this device and optionally a [senderId].
   Future<String> getToken({
-    String vapidKey,
+    String? vapidKey,
   }) {
     return _delegate.getToken(
       vapidKey: vapidKey,
@@ -229,14 +229,13 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   /// Send a new [RemoteMessage] to the FCM server. Android only.
   Future<void> sendMessage({
-    @required String to,
-    Map<String, String> data,
-    String collapseKey,
-    String messageId,
-    String messageType,
-    int ttl,
+    String? to,
+    Map<String, String>? data,
+    String? collapseKey,
+    String? messageId,
+    String? messageType,
+    int? ttl,
   }) {
-    assert(to != null);
     if (ttl != null) {
       assert(ttl >= 0);
     }
@@ -252,7 +251,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   /// Enable or disable auto-initialization of Firebase Cloud Messaging.
   Future<void> setAutoInitEnabled(bool enabled) async {
-    assert(enabled != null);
     return _delegate.setAutoInitEnabled(enabled);
   }
 
@@ -304,9 +302,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 }
 
 void _assertTopicName(String topic) {
-  assert(topic != null);
-
   bool isValidTopic = RegExp(r'^[a-zA-Z0-9-_.~%]{1,900}$').hasMatch(topic);
-
   assert(isValidTopic);
 }
