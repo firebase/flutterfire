@@ -18,8 +18,8 @@ import '../mock.dart';
 void main() {
   setupFirebaseMessagingMocks();
 
-  FirebaseApp app;
-  FirebaseMessagingPlatform messaging;
+  FirebaseApp/*?*/ app;
+  FirebaseMessagingPlatform/*?*/ messaging;
   final List<MethodCall> log = <MethodCall>[];
 
   group('$MethodChannelFirebaseMessaging', () {

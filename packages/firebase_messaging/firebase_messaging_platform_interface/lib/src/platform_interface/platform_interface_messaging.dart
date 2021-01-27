@@ -23,7 +23,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   FirebaseMessagingPlatform({this.appInstance}) : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
-  FirebaseApp get app {
+  FirebaseApp/*!*/ get app {
     if (appInstance == null) {
       return Firebase.app();
     }
@@ -35,7 +35,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
 
   /// Create an instance with a [FirebaseApp] using an existing instance.
   factory FirebaseMessagingPlatform.instanceFor(
-      {FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
+      {FirebaseApp/*!*/ app, Map<dynamic, dynamic> pluginConstants}) {
     return FirebaseMessagingPlatform.instance
         .delegateFor(app: app)
         .setInitialValues(
@@ -111,7 +111,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseMessagingPlatform delegateFor({FirebaseApp app}) {
+  FirebaseMessagingPlatform delegateFor({FirebaseApp/*!*/ app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -128,7 +128,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   }
 
   /// Returns whether messaging auto initialization is enabled or disabled for the device.
-  bool get isAutoInitEnabled {
+  bool/*!*/ get isAutoInitEnabled {
     throw UnimplementedError('isAutoInitEnabled is not implemented');
   }
 
@@ -170,7 +170,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   }
 
   /// Returns the default FCM token for this device and optionally [senderId].
-  Future<String> getToken({
+  Future<String/*!*/> getToken({
     String senderId,
     String vapidKey,
   }) {
@@ -178,7 +178,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   }
 
   /// Fires when a new FCM token is generated.
-  Stream<String> get onTokenRefresh {
+  Stream<String/*!*/> get onTokenRefresh {
     throw UnimplementedError('onTokenRefresh is not implemented');
   }
 
@@ -275,9 +275,9 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// If all arguments are `false`, a notification message will not be displayed in the
   /// foreground.
   Future<void> setForegroundNotificationPresentationOptions({
-    bool alert,
-    bool badge,
-    bool sound,
+    bool/*!*/ alert,
+    bool/*!*/ badge,
+    bool/*!*/ sound,
   }) {
     throw UnimplementedError(
         'setForegroundNotificationPresentationOptions() is not implemented');
@@ -285,7 +285,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
 
   /// Send a new [RemoteMessage] to the FCM server.
   Future<void> sendMessage({
-    String to,
+    String/*!*/ to,
     Map<String, String> data,
     String collapseKey,
     String messageId,

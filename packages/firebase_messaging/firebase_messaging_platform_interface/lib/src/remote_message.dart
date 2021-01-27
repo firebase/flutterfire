@@ -37,6 +37,7 @@ class RemoteMessage {
       from: map['from'],
       // Note: using toString on messageId as it can be an int or string when being sent from native.
       messageId: map['messageId']?.toString(),
+      messageType: map['messageType'],
       mutableContent: map['mutableContent'] ?? false,
       notification: map['notification'] == null
           ? null
@@ -62,10 +63,10 @@ class RemoteMessage {
   final String collapseKey;
 
   /// Whether the iOS APNs message was configured as a background update notification.
-  final bool contentAvailable;
+  final bool/*!*/ contentAvailable;
 
   /// Any additional data sent with the message.
-  final Map<String, dynamic> data;
+  final Map<String, dynamic>/*!*/ data;
 
   /// The topic name or message identifier.
   final String from;
@@ -78,7 +79,7 @@ class RemoteMessage {
 
   /// Whether the iOS APNs `mutable-content` property on the message was set
   /// allowing the app to modify the notification via app extensions.
-  final bool mutableContent;
+  final bool/*!*/ mutableContent;
 
   /// Additional Notification data sent with the message.
   final RemoteNotification notification;
