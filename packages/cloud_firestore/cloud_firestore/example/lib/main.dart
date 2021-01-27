@@ -306,7 +306,7 @@ class Likes extends StatefulWidget {
 }
 
 class _Likes extends State<Likes> {
-  int _likes;
+  int _likes = 0;
 
   Future<void> _onLike(int current) async {
     // Increment the 'like' count straight away to show feedback to the user.
@@ -348,7 +348,7 @@ class _Likes extends State<Likes> {
 
   @override
   Widget build(BuildContext context) {
-    int currentLikes = _likes ?? widget.currentLikes as int? ?? 0;
+    int currentLikes = widget.currentLikes as bool ?  widget.currentLikes as int? ?? 0 : _likes;
 
     return Row(children: [
       IconButton(

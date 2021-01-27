@@ -100,7 +100,6 @@ class Query {
 
   /// Common handler for all non-document based cursor queries.
   List<dynamic> _assertQueryCursorValues(List<dynamic> fields) {
-    assert(fields != null);
     List<List<dynamic>> orders = List.from(parameters['orderBy']);
 
     assert(fields.length <= orders.length,
@@ -219,7 +218,7 @@ class Query {
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
   Query orderBy(dynamic field, {bool descending = false}) {
-    assert(field != null && descending != null);
+    assert(field != null);
     _assertValidFieldType(field);
     assert(!_hasStartCursor(),
         'Invalid query. You must not call startAt(), startAtDocument(), startAfter() or startAfterDocument() before calling orderBy()');

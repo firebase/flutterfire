@@ -34,7 +34,6 @@ class DocumentReference {
   /// Gets a [CollectionReference] instance that refers to the collection at the
   /// specified path, relative from this [DocumentReference].
   CollectionReference collection(String collectionPath) {
-    assert(collectionPath != null, 'a collection path cannot be null');
     assert(collectionPath.isNotEmpty,
         'a collectionPath path must be a non-empty string');
     assert(!collectionPath.contains('//'),
@@ -74,7 +73,6 @@ class DocumentReference {
   /// If [SetOptions] are provided, the data will be merged into an existing
   /// document instead of overwriting.
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
-    assert(data != null);
     return _delegate.set(
         // ignore: todo
         // TODO(ehesp): `options` should be nullable after platform interface null safe is available
@@ -87,7 +85,6 @@ class DocumentReference {
   ///
   /// If no document exists yet, the update will fail.
   Future<void> update(Map<String, dynamic> data) {
-    assert(data != null);
     return _delegate
         .update(_CodecUtility.replaceValueWithDelegatesInMap(data)!);
   }

@@ -39,8 +39,6 @@ class WriteBatch {
   /// document instead of overwriting.
   void set(DocumentReference document, Map<String, dynamic> data,
       [SetOptions? options]) {
-    assert(document != null);
-    assert(data != null);
     assert(document.firestore == _firestore,
         'the document provided is from a different Firestore instance');
     return _delegate.set(
@@ -55,8 +53,6 @@ class WriteBatch {
   ///
   /// If the document does not yet exist, an exception will be thrown.
   void update(DocumentReference document, Map<String, dynamic> data) {
-    assert(document != null);
-    assert(data != null);
     assert(document.firestore == _firestore,
         'the document provided is from a different Firestore instance');
     return _delegate.update(

@@ -43,7 +43,6 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Returns an instance using a specified [FirebaseApp].
   static FirebaseFirestore instanceFor({required FirebaseApp app}) {
-    assert(app != null);
     if (_cachedInstances.containsKey(app.name)) {
       return _cachedInstances[app.name]!;
     }
@@ -56,7 +55,6 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference collection(String collectionPath) {
-    assert(collectionPath != null, 'a collection path cannot be null');
     assert(collectionPath.isNotEmpty,
         'a collectionPath path must be a non-empty string');
     assert(!collectionPath.contains('//'),
@@ -91,7 +89,6 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [Query] for the specified collection group.
   Query collectionGroup(String collectionPath) {
-    assert(collectionPath != null, 'a collection path cannot be null');
     assert(collectionPath.isNotEmpty,
         'a collection path must be a non-empty string');
     assert(!collectionPath.contains('/'),
@@ -111,7 +108,6 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [DocumentReference] for the specified Firestore path.
   DocumentReference doc(String documentPath) {
-    assert(documentPath != null, 'a document path cannot be null');
     assert(
         documentPath.isNotEmpty, 'a document path must be a non-empty string');
     assert(!documentPath.contains('//'),
@@ -157,7 +153,6 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// timeout can be adjusted by setting the timeout parameter.
   Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
-    assert(transactionHandler != null, 'transactionHandler cannot be null');
 
     T? output;
     await _delegate.runTransaction((transaction) async {

@@ -41,8 +41,6 @@ class Transaction {
   /// The update will fail if applied to a document that does not exist.
   Transaction update(
       DocumentReference documentReference, Map<String, dynamic> data) {
-    assert(documentReference != null);
-    assert(data != null);
     assert(documentReference.firestore == _firestore,
         'the document provided is from a different Firestore instance');
 
