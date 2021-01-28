@@ -1,41 +1,6 @@
 ## 0.4.0-1.0.nullsafety.0
 
- - **REFACTOR**: Migrate firebase auth to nnbd (#4633).
- - **FIX**: send userPlatform on changes (#3313).
- - **FIX**: bubble exceptions (#3700).
- - **FIX**: Revert #4312: Double event fire on initialization (#4620).
  - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
- - **FIX**: web now fires once on authStateListener initialisation (#4312).
- - **FIX**: fix IdTokenResult timestamps (web, ios) (#3357).
- - **FIX**: force locale timestamp conversion (#3320).
- - **FIX**: implement missing web confirmPasswordReset (#3344).
- - **FEAT**: migrate firebase interop files to local repository (#3973).
- - **FEAT**: implement signInWithPhoneNumber on web (#3205).
- - **FEAT**: add support for linkWithPhoneNumber (#3436).
- - **FEAT**: use named arguments for ActionCodeSettings (#3269).
- - **FEAT**: bump firebase_core to v0.8.0-nullsafety.1 (#4760).
- - **FEAT**: v1 rework (#3140).
- - **FEAT**: v1 rework (#7) (#2890).
- - **FEAT**: add support for `confirmPasswordReset` (#2559).
- - **CHORE**: null safety hints (#4370).
- - **CHORE**: remove quiver + remove dependency_overrides + use latest firebase (#4689).
- - **CHORE**: publish packages.
- - **CHORE**: Migrate firebase_core/firebase_core_platform_interface/firebase_core_web to non-nullable types (#4656).
- - **CHORE**: publish packages.
- - **CHORE**: publish packages.
- - **CHORE**: publish packages.
- - **CHORE**: publish packages.
- - **CHORE**: publish packages.
- - **CHORE**: publish packages.
- - **CHORE**: update lower bound dart dependency to 2.0.0.
- - **CHORE**: Add changelogs for firebase_auth (#4757).
- - **CHORE**: publish packages.
- - **CHORE**: publish packages.
- - **CHORE**: firebase_auth_web v0.3.0+1.
- - **CHORE**: promote to stable version.
- - **CHORE**: remove android directory from web plugins (#3199).
- - **CHORE**: migrate to depend on new `firebase_core` plugin.
- - **CHORE**: publish packages.
 
 ## 0.4.0-nullsafety.1
 
