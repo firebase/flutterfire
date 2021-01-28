@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of cloud_firestore;
 
 /// The entry point for accessing a [FirebaseFirestore].
@@ -21,7 +23,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   // instance with the default app before a user specifies an app.
   FirebaseFirestorePlatform _delegatePackingProperty;
 
-  FirebaseFirestorePlatform get _delegate {
+  FirebaseFirestorePlatform /*!*/ get _delegate {
     if (_delegatePackingProperty == null) {
       _delegatePackingProperty =
           FirebaseFirestorePlatform.instanceFor(app: app);
@@ -32,7 +34,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// The [FirebaseApp] for this current [FirebaseFirestore] instance.
   FirebaseApp app;
 
-  FirebaseFirestore._({this.app})
+  FirebaseFirestore._({/*required*/ this.app})
       : super(app.name, 'plugins.flutter.io/firebase_firestore');
 
   static final Map<String, FirebaseFirestore> _cachedInstances = {};
@@ -45,7 +47,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  static FirebaseFirestore instanceFor({FirebaseApp app}) {
+  static FirebaseFirestore /*!*/ instanceFor({FirebaseApp app}) {
     assert(app != null);
     if (_cachedInstances.containsKey(app.name)) {
       return _cachedInstances[app.name];
@@ -55,13 +57,6 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     _cachedInstances[app.name] = newInstance;
 
     return newInstance;
-  }
-
-  // ignore: public_member_api_docs
-  @Deprecated(
-      "Constructing Firestore is deprecated, use 'FirebaseFirestore.instance' or 'FirebaseFirestore.instanceFor' instead")
-  factory FirebaseFirestore({FirebaseApp app}) {
-    return FirebaseFirestore.instanceFor(app: app);
   }
 
   /// Gets a [CollectionReference] for the specified Firestore path.
@@ -92,9 +87,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Enable persistence of Firestore data.
-  /// This is a web only method. Use [Settings.persistenceEnabled] for non Web platforms.
-  Future<void> enablePersistence() async {
-    return _delegate.enablePersistence();
+  ///
+  /// This is a web-only method. Use [Settings.persistenceEnabled] for non-web platforms.
+  Future<void> enablePersistence(
+      [PersistenceSettings persistenceSettings]) async {
+    return _delegate.enablePersistence(persistenceSettings);
   }
 
   /// Gets a [Query] for the specified collection group.
@@ -130,10 +127,6 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return DocumentReference._(this, _delegate.doc(documentPath));
   }
 
-  @Deprecated("Deprecated in favor of `.doc()`")
-  // ignore: public_member_api_docs
-  DocumentReference document(String documentPath) => doc(documentPath);
-
   /// Enables the network for this instance. Any pending local-only writes
   /// will be written to the remote servers.
   Future<void> enableNetwork() {
@@ -154,7 +147,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// After the [TransactionHandler] is run, [FirebaseFirestore] will attempt to apply the
   /// changes to the server. If any of the data read has been modified outside
   /// of this [Transaction] since being read, then the transaction will be
-  /// retried by executing the `updateBlock` again. If the transaction still
+  /// retried by executing the provided [TransactionHandler] again. If the transaction still
   /// fails after 5 retries, then the transaction will fail.s
   ///
   /// The [TransactionHandler] may be executed multiple times, it should be able
@@ -167,12 +160,16 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// By default transactions are limited to 5 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
-  Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
-      {Duration timeout = const Duration(seconds: 30)}) {
+  Future<T /*?*/ > runTransaction<T>(TransactionHandler<T> transactionHandler,
+      {Duration timeout = const Duration(seconds: 30)}) async {
     assert(transactionHandler != null, "transactionHandler cannot be null");
-    return _delegate.runTransaction<T>((transaction) {
-      return transactionHandler(Transaction._(this, transaction));
+
+    T output;
+    await _delegate.runTransaction((transaction) async {
+      output = await transactionHandler(Transaction._(this, transaction));
     }, timeout: timeout);
+
+    return output;
   }
 
   /// Specifies custom settings to be used to configure this [FirebaseFirestore] instance.
@@ -224,30 +221,8 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       o is FirebaseFirestore && o.app.name == app.name;
 
   @override
-  int get hashCode => hash2(app.name, app.options);
+  int get hashCode => hashValues(app.name, app.options);
 
   @override
   String toString() => '$FirebaseFirestore(app: ${app.name})';
-}
-
-/// Extends the [FirebaseFirestore] class to allow for deprecated usage of
-/// using [Firebase] directly.
-@Deprecated("Class Firestore is deprecated, use 'FirebaseFirestore' instead.")
-class Firestore extends FirebaseFirestore {
-  // ignore: public_member_api_docs
-  @Deprecated(
-      "Constructing Firestore is deprecated, use 'FirebaseFirestore.instance' or 'FirebaseFirestore.instanceFor' instead")
-  factory Firestore({FirebaseApp app}) {
-    return FirebaseFirestore.instanceFor(app: app);
-  }
-
-  /// Returns an instance using the default [FirebaseApp].
-  static FirebaseFirestore get instance {
-    return FirebaseFirestore.instance;
-  }
-
-  /// Returns an instance using a specified [FirebaseApp].
-  static FirebaseFirestore instanceFor({FirebaseApp app}) {
-    return FirebaseFirestore.instanceFor(app: app);
-  }
 }

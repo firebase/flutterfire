@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of cloud_firestore;
 
 /// Represents a [Query] over the data at a particular location.
@@ -41,7 +43,8 @@ class Query {
     return (operator == '<' ||
         operator == '<=' ||
         operator == '>' ||
-        operator == '>=');
+        operator == '>=' ||
+        operator == '!=');
   }
 
   /// Asserts that a [DocumentSnapshot] can be used within the current
@@ -173,15 +176,11 @@ class Query {
   ///
   /// To modify how the query is fetched, the [options] parameter can be provided
   /// with a [GetOptions] instance.
-  Future<QuerySnapshot> get([GetOptions options]) async {
+  Future<QuerySnapshot> get([GetOptions /*?*/ options]) async {
     QuerySnapshotPlatform snapshotDelegate =
         await _delegate.get(options ?? const GetOptions());
     return QuerySnapshot._(firestore, snapshotDelegate);
   }
-
-  @Deprecated("Deprecated in favor of `.get()`")
-  // ignore: public_member_api_docs
-  Future<QuerySnapshot> getDocuments([GetOptions options]) => get(options);
 
   /// Creates and returns a new Query that's additionally limited to only return up
   /// to the specified number of documents.
@@ -339,14 +338,16 @@ class Query {
   Query where(
     dynamic field, {
     dynamic isEqualTo,
+    dynamic isNotEqualTo,
     dynamic isLessThan,
     dynamic isLessThanOrEqualTo,
     dynamic isGreaterThan,
     dynamic isGreaterThanOrEqualTo,
     dynamic arrayContains,
-    List<dynamic> arrayContainsAny,
-    List<dynamic> whereIn,
-    bool isNull,
+    List<dynamic> /*?*/ arrayContainsAny,
+    List<dynamic> /*?*/ whereIn,
+    List<dynamic> /*?*/ whereNotIn,
+    bool /*?*/ isNull,
   }) {
     _assertValidFieldType(field);
 
@@ -376,6 +377,7 @@ class Query {
     }
 
     if (isEqualTo != null) addCondition(field, '==', isEqualTo);
+    if (isNotEqualTo != null) addCondition(field, '!=', isNotEqualTo);
     if (isLessThan != null) addCondition(field, '<', isLessThan);
     if (isLessThanOrEqualTo != null) {
       addCondition(field, '<=', isLessThanOrEqualTo);
@@ -391,6 +393,7 @@ class Query {
       addCondition(field, 'array-contains-any', arrayContainsAny);
     }
     if (whereIn != null) addCondition(field, 'in', whereIn);
+    if (whereNotIn != null) addCondition(field, 'not-in', whereNotIn);
     if (isNull != null) {
       assert(
           isNull,
@@ -401,6 +404,8 @@ class Query {
 
     dynamic hasInequality;
     bool hasIn = false;
+    bool hasNotIn = false;
+    bool hasNotEqualTo = false;
     bool hasArrayContains = false;
     bool hasArrayContainsAny = false;
 
@@ -424,7 +429,9 @@ class Query {
             'You can only perform equals comparisons on null.');
       }
 
-      if (operator == 'in' || operator == 'array-contains-any') {
+      if (operator == 'in' ||
+          operator == 'array-contains-any' ||
+          operator == 'not-in') {
         assert(value is List,
             "A non-empty [List] is required for '$operator' filters.");
         assert((value as List).length <= 10,
@@ -435,8 +442,20 @@ class Query {
             "'$operator' filters cannot contain 'null' in the [List].");
       }
 
+      if (operator == '!=') {
+        assert(!hasNotEqualTo, "You cannot use '!=' filters more than once.");
+        assert(!hasNotIn, "You cannot use '!=' filters with 'not-in' filters.");
+        hasNotEqualTo = true;
+      }
+
+      if (operator == 'not-in') {
+        assert(!hasNotIn, "You cannot use 'not-in' filters more than once.");
+        assert(!hasNotEqualTo,
+            "You cannot use 'not-in' filters with '!=' filters.");
+      }
+
       if (operator == 'in') {
-        assert(!hasIn, "You cannot use 'in' filters more than once.");
+        assert(!hasIn, "You cannot use 'whereIn' filters more than once.");
         hasIn = true;
       }
 

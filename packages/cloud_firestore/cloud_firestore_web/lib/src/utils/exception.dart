@@ -2,18 +2,21 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_core/firebase_core.dart';
+// @dart=2.9
 
-import 'package:firebase/firebase.dart' as firebase;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web_interop.dart'
+    as core_interop;
 
 /// Returns a [FirebaseException] from a thrown web error.
 FirebaseException getFirebaseException(Object object) {
-  if (object is! firebase.FirebaseError) {
+  if (object is! core_interop.FirebaseError) {
     return FirebaseException(
         plugin: 'cloud_firestore', code: 'unknown', message: object.toString());
   }
 
-  firebase.FirebaseError firebaseError = object as firebase.FirebaseError;
+  core_interop.FirebaseError firebaseError =
+      object as core_interop.FirebaseError;
 
   String code = firebaseError.code.replaceFirst('firestore/', '');
   String message =

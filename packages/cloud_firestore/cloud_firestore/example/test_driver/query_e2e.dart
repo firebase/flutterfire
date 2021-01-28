@@ -1,6 +1,10 @@
+// @dart = 2.9
+
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
+// @dart=2.9
 
 import 'dart:math';
 import 'dart:async';
@@ -11,7 +15,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runQueryTests() {
   group('$Query', () {
-    FirebaseFirestore firestore;
+    /*late*/ FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -92,7 +96,7 @@ void runQueryTests() {
               (error as FirebaseException).code, equals('permission-denied'));
           return;
         }
-        fail("Should have thrown a [FireebaseException]");
+        fail("Should have thrown a [FirebaseException]");
       });
     });
 
@@ -123,6 +127,28 @@ void runQueryTests() {
             fail("Should not have been called");
           }
         }, count: 1, reason: "Stream should only have been called once."));
+      });
+
+      test('listens to multiple queries', () async {
+        CollectionReference collection1 =
+            await initializeTest('document-snapshot-1');
+        CollectionReference collection2 =
+            await initializeTest('document-snapshot-2');
+
+        await collection1.add({'test': 'value1'});
+        await collection2.add({'test': 'value2'});
+
+        final value1 = collection1
+            .snapshots()
+            .first
+            .then((s) => s.docs.first.data()['test']);
+        final value2 = collection2
+            .snapshots()
+            .first
+            .then((s) => s.docs.first.data()['test']);
+
+        await expectLater(value1, completion('value1'));
+        await expectLater(value2, completion('value2'));
       });
 
       test('listens to a multiple changes response', () async {
@@ -753,7 +779,7 @@ void runQueryTests() {
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc2'));
         expect(snapshot2.docs[1].id, equals('doc1'));
-      }, skip: kIsWeb);
+      });
     });
 
     /**
@@ -862,6 +888,32 @@ void runQueryTests() {
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
           expect(doc.data()['foo'], equals(rand));
+        });
+      });
+
+      test('returns with not equal checks', () async {
+        CollectionReference collection =
+            await initializeTest('where-not-equal');
+        int rand = Random().nextInt(9999);
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': rand,
+          }),
+          collection.doc('doc2').set({
+            'foo': rand,
+          }),
+          collection.doc('doc3').set({
+            'foo': rand + 1,
+          }),
+        ]);
+
+        QuerySnapshot snapshot =
+            await collection.where('foo', isNotEqualTo: rand).get();
+
+        expect(snapshot.docs.length, equals(1));
+        snapshot.docs.forEach((doc) {
+          expect(doc.data()['foo'], equals(rand + 1));
         });
       });
 
@@ -1029,6 +1081,62 @@ void runQueryTests() {
         snapshot.docs.forEach((doc) {
           String status = doc.data()['status'];
           expect(status == 'Ready to Ship' || status == 'Ordered', isTrue);
+        });
+      });
+
+      test('returns with in filter', () async {
+        CollectionReference collection = await initializeTest('where-in');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'status': 'Ordered',
+          }),
+          collection.doc('doc2').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc3').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc4').set({
+            'status': 'Incomplete',
+          }),
+        ]);
+
+        QuerySnapshot snapshot = await collection
+            .where('status', whereIn: ['Ready to Ship', 'Ordered']).get();
+
+        expect(snapshot.docs.length, equals(3));
+        snapshot.docs.forEach((doc) {
+          String status = doc.data()['status'];
+          expect(status == 'Ready to Ship' || status == 'Ordered', isTrue);
+        });
+      });
+
+      test('returns with not-in filter', () async {
+        CollectionReference collection = await initializeTest('where-not-in');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'status': 'Ordered',
+          }),
+          collection.doc('doc2').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc3').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc4').set({
+            'status': 'Incomplete',
+          }),
+        ]);
+
+        QuerySnapshot snapshot = await collection
+            .where('status', whereNotIn: ['Ready to Ship', 'Ordered']).get();
+
+        expect(snapshot.docs.length, equals(1));
+        snapshot.docs.forEach((doc) {
+          String status = doc.data()['status'];
+          expect(status == 'Incomplete', isTrue);
         });
       });
 

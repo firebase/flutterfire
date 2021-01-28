@@ -1,3 +1,98 @@
+## 0.21.0-1.1.nullsafety.0
+
+ - **FEAT**: implement support for `useEmulator` (#4263).
+
+## 0.21.0-1.0.nullsafety.0
+
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+
+## 0.21.0-nullsafety.0
+
+ - **FEAT**: Migrated to null safety (#4633)
+
+## 0.20.0+1
+
+ - **FIX**: package compatibility.
+
+## 0.20.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: null pointer exception if user metadata null (#4622).
+ - **FEAT**: add check on podspec to assist upgrading users deployment target.
+ - **BUILD**: commit Podfiles with 10.12 deployment target.
+ - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
+ - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
+ - **BREAKING** **BUILD**: set osx min supported platform version to 10.12.
+
+## 0.19.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.19.0
+
+> Note: This release has breaking changes.
+
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
+## 0.18.4+1
+
+ - Update a dependency to the latest release.
+
+## 0.18.4
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **DOCS**: Fixed two typos in method documentation (#4219).
+
+## 0.18.3+1
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FIX**: stop authStateChange firing twice for initial event (#4099).
+ - **FIX**: updated email link signin to use latest format for ActionCodeSettings (#3425).
+ - **CHORE**: add missing dependency to example app.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 0.18.3
+
+ - **FEAT**: migrate firebase interop files to local repository (#3973).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **FEAT** [WEB] adds support for `EmailAuthProvider.credentialWithLink`
+ - **FEAT** [WEB] adds support for `FirebaseAuth.setSettings`
+ - **FEAT** [WEB] adds support for `User.tenantId`
+ - **FEAT** [WEB] `FirebaseAuthException` now supports `email` & `credential` properties
+ - **FEAT** [WEB] `ActionCodeInfo` now supports `previousEmail` field
+
+## 0.18.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
+## 0.18.1+2
+
+ - **FIX**: on iOS use sendEmailVerificationWithActionCodeSettings instead of sendEmailVerificationWithCompletion (#3686).
+ - **DOCS**: README updates (#3768).
+
+## 0.18.1+1
+
+ - **FIX**: Optional params for "signInWithCredential" method are converted to "nil" if "null" for iOS (#3731).
+
+## 0.18.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **FIX**: fix IdTokenResult timestamps (web, ios) (#3357).
+ - **FIX**: pub.dev score fixes (#3318).
+ - **FIX**: use unknown APNS token type (#3345).
+ - **FIX**: update FLTFirebaseAuthPlugin.m (#3360).
+ - **FIX**: use correct FIRAuth instance on listeners (#3316).
+ - **FEAT**: add support for linkWithPhoneNumber (#3436).
+ - **FEAT**: use named arguments for ActionCodeSettings (#3269).
+ - **FEAT**: implement signInWithPhoneNumber on web (#3205).
+ - **FEAT**: expose smsCode (android only) (#3308).
+ - **DOCS**: fixed signOut method documentation (#3342).
+
 ## 0.18.0+1
 
 * Fixed an Android issue where certain network related Firebase Auth error codes would come through as `unknown`. [(#3217)](https://github.com/FirebaseExtended/flutterfire/pull/3217)

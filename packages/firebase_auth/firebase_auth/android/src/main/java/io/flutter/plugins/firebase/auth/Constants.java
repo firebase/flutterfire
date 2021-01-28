@@ -77,4 +77,6 @@ public class Constants {
   public static final String HANDLE_CODE_IN_APP = "handleCodeInApp";
   public static final String ACTION_CODE_SETTINGS = "actionCodeSettings";
   public static final String AUTO_RETRIEVED_SMS_CODE_FOR_TESTING = "autoRetrievedSmsCodeForTesting";
+  public static final String HOST = "host";
+  public static final String PORT = "port";
 }

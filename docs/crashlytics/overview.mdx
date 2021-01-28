@@ -50,14 +50,16 @@ dependencies {
 }
 ```
 
-2. Apply the following to the bottom of your `android/app/build.gradle` file.
+2. Apply the following to your `android/app/build.gradle` file.
 
-```groovy {5} title="android/app/build.gradle"
-dependencies {
-  // ... your dependencies
-}
+```groovy {3} title="android/app/build.gradle"
+// ... other imports
 
 apply plugin: 'com.google.firebase.crashlytics'
+
+android {
+  // ... your android config
+}
 ```
 
 #### b. iOS

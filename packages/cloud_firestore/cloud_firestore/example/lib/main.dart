@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -114,7 +116,25 @@ class _FilmListState extends State<FilmList> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Firestore Example: Movies'),
+          title: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text('Firestore Example: Movies'),
+
+              // This is a example use for "snapshots in sync".
+              // The view reflects the time of the last Firestore sync; which happens any time a field is updated.
+              StreamBuilder(
+                stream: FirebaseFirestore.instance.snapshotsInSync(),
+                builder: (context, _) {
+                  return Text(
+                    'Latest Snapshot: ${DateTime.now()}',
+                    style: Theme.of(context).textTheme.caption,
+                  );
+                },
+              )
+            ],
+          ),
           actions: <Widget>[
             PopupMenuButton(
               onSelected: (String value) async {
@@ -269,10 +289,10 @@ class Movie extends StatelessWidget {
 /// Displays and manages the movie "like" count.
 class Likes extends StatefulWidget {
   /// The [DocumentReference] relating to the counter.
-  final DocumentReference reference;
+  final DocumentReference /*!*/ reference;
 
   /// The number of current likes (before manipulation).
-  final num currentLikes;
+  final num /*!*/ currentLikes;
 
   /// Constructs a new [Likes] instance with a given [DocumentReference] and
   /// current like count.
@@ -285,7 +305,7 @@ class Likes extends StatefulWidget {
 }
 
 class _Likes extends State<Likes> {
-  int _likes;
+  int /*!*/ _likes;
 
   _onLike(int current) async {
     // Increment the "like" count straight away to show feedback to the user.
@@ -312,7 +332,8 @@ class _Likes extends State<Likes> {
       setState(() {
         _likes = newLikes;
       });
-    } catch (e) {
+    } catch (e, s) {
+      print(s);
       print("Failed to update likes for document! $e");
 
       // If the transaction fails, revert back to the old count

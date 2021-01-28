@@ -1,6 +1,9 @@
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -15,7 +18,7 @@ import '../utils/test_common.dart';
 
 void main() {
   initializeMethodChannel();
-  MethodChannelQuery query;
+  /*late*/ MethodChannelQuery query;
   const Map<String, dynamic> kMockSnapshotMetadata = <String, dynamic>{
     "hasPendingWrites": false,
     "isFromCache": false,
@@ -203,16 +206,18 @@ void main() {
     });
 
     group("snapshots()", () {
-      int handleId;
       final List<MethodCall> log = <MethodCall>[];
+
+      final String mockObserverId = 'QUERY1';
+
       setUp(() {
         log.clear();
-        handleId = nextMockHandleId;
 
         handleMethodCall((MethodCall call) async {
           log.add(call);
-          if (call.method == "Query#addSnapshotListener") {
-            await Future<void>.delayed(Duration.zero);
+          if (call.method == "Query#snapshots") {
+            handleQuerySnapshotsEventChannel(mockObserverId, log);
+            return mockObserverId;
           }
         });
       });
@@ -230,15 +235,13 @@ void main() {
 
         await subscription.cancel();
         await Future<void>.delayed(Duration.zero);
-        expect(log[0].method, 'Query#addSnapshotListener');
-        expect(log[1].method, 'Firestore#removeListener');
-        expect(log[0].arguments, <String, dynamic>{
+        expect(log[0].method, 'Query#snapshots');
+        expect(log[1].method, 'listen');
+        expect(log[1].arguments, <String, dynamic>{
           'query': isInstanceOf<MethodChannelQuery>(),
-          'handle': handleId,
-          'firestore': isInstanceOf<FirebaseFirestorePlatform>(),
           'includeMetadataChanges': false,
         });
-        expect(log[1].arguments, <String, dynamic>{'handle': handleId});
+        expect(log[2].method, 'cancel');
       });
     });
 

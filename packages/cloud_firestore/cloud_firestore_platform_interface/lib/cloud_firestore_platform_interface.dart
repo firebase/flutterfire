@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 library cloud_firestore_platform_interface;
 
 import 'src/internal/pointer.dart';
@@ -27,6 +29,7 @@ export 'src/timestamp.dart';
 export 'src/settings.dart';
 export 'src/get_options.dart';
 export 'src/set_options.dart';
+export 'src/persistence_settings.dart';
 
 /// Helper method exposed to determine whether a given [collectionPath] points to
 /// a valid Firestore collection.

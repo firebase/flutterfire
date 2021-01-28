@@ -2,17 +2,20 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:firebase/firestore.dart' as web;
+// @dart=2.9
 
-import 'package:cloud_firestore_web/cloud_firestore_web.dart';
-import 'package:cloud_firestore_web/src/document_reference_web.dart';
-import 'package:cloud_firestore_web/src/field_value_web.dart';
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_web/cloud_firestore_web.dart'
+    show FirebaseFirestoreWeb;
+
+import '../interop/firestore.dart' as firestore_interop;
+import '../document_reference_web.dart';
+import '../field_value_web.dart';
 
 /// Class containing static utility methods to encode/decode firestore data.
 class CodecUtility {
   /// Encodes a Map of values from their proper types to a serialized version.
-  static Map<String, dynamic> encodeMapData(Map<String, dynamic> data) {
+  static Map<String, dynamic> encodeMapData(Map<String, dynamic> /*?*/ data) {
     if (data == null) {
       return null;
     }
@@ -22,7 +25,7 @@ class CodecUtility {
   }
 
   /// Encodes an Array of values from their proper types to a serialized version.
-  static List<dynamic> encodeArrayData(List<dynamic> data) {
+  static List<dynamic> encodeArrayData(List<dynamic> /*?*/ data) {
     if (data == null) {
       return null;
     }
@@ -43,25 +46,32 @@ class CodecUtility {
       // deep FieldPaths which the web counterpart supports
       switch (length) {
         case 1:
-          return web.FieldPath(components[0]);
+          return firestore_interop.FieldPath(components[0]);
         case 2:
-          return web.FieldPath(components[0], components[1]);
+          return firestore_interop.FieldPath(components[0], components[1]);
         case 3:
-          return web.FieldPath(components[0], components[1], components[2]);
+          return firestore_interop.FieldPath(
+              components[0], components[1], components[2]);
         case 4:
-          return web.FieldPath(
+          return firestore_interop.FieldPath(
               components[0], components[1], components[2], components[3]);
         case 5:
-          return web.FieldPath(components[0], components[1], components[2],
-              components[3], components[4]);
+          return firestore_interop.FieldPath(components[0], components[1],
+              components[2], components[3], components[4]);
         case 6:
-          return web.FieldPath(components[0], components[1], components[2],
-              components[3], components[4], components[5]);
+          return firestore_interop.FieldPath(components[0], components[1],
+              components[2], components[3], components[4], components[5]);
         case 7:
-          return web.FieldPath(components[0], components[1], components[2],
-              components[3], components[4], components[5], components[6]);
+          return firestore_interop.FieldPath(
+              components[0],
+              components[1],
+              components[2],
+              components[3],
+              components[4],
+              components[5],
+              components[6]);
         case 8:
-          return web.FieldPath(
+          return firestore_interop.FieldPath(
               components[0],
               components[1],
               components[2],
@@ -71,7 +81,7 @@ class CodecUtility {
               components[6],
               components[7]);
         case 9:
-          return web.FieldPath(
+          return firestore_interop.FieldPath(
               components[0],
               components[1],
               components[2],
@@ -82,7 +92,7 @@ class CodecUtility {
               components[7],
               components[8]);
         case 10:
-          return web.FieldPath(
+          return firestore_interop.FieldPath(
               components[0],
               components[1],
               components[2],
@@ -98,13 +108,13 @@ class CodecUtility {
               "Firestore web FieldPath only supports 10 levels deep field paths");
       }
     } else if (value == FieldPath.documentId) {
-      return web.FieldPath.documentId();
+      return firestore_interop.FieldPath.documentId();
     } else if (value is Timestamp) {
       return value.toDate();
     } else if (value is GeoPoint) {
-      return web.GeoPoint(value.latitude, value.longitude);
+      return firestore_interop.GeoPoint(value.latitude, value.longitude);
     } else if (value is Blob) {
-      return web.Blob.fromUint8Array(value.bytes);
+      return firestore_interop.Blob.fromUint8Array(value.bytes);
     } else if (value is DocumentReferenceWeb) {
       return value.firestoreWeb.doc(value.path);
     } else if (value is Map<String, dynamic>) {
@@ -116,7 +126,7 @@ class CodecUtility {
   }
 
   /// Decodes the values on an incoming Map to their proper types.
-  static Map<String, dynamic> decodeMapData(Map<String, dynamic> data) {
+  static Map<String, dynamic> decodeMapData(Map<String, dynamic> /*?*/ data) {
     if (data == null) {
       return null;
     }
@@ -126,7 +136,7 @@ class CodecUtility {
   }
 
   /// Decodes the values on an incoming Array to their proper types.
-  static List<dynamic> decodeArrayData(List<dynamic> data) {
+  static List<dynamic> decodeArrayData(List<dynamic> /*?*/ data) {
     if (data == null) {
       return null;
     }
@@ -135,13 +145,13 @@ class CodecUtility {
 
   /// Decodes an incoming value to its proper type.
   static dynamic valueDecode(dynamic value) {
-    if (value is web.GeoPoint) {
+    if (value is firestore_interop.GeoPoint) {
       return GeoPoint(value.latitude, value.longitude);
     } else if (value is DateTime) {
       return Timestamp.fromDate(value);
-    } else if (value is web.Blob) {
+    } else if (value is firestore_interop.Blob) {
       return Blob(value.toUint8Array());
-    } else if (value is web.DocumentReference) {
+    } else if (value is firestore_interop.DocumentReference) {
       return (FirebaseFirestorePlatform.instance as FirebaseFirestoreWeb)
           .doc(value.path);
     } else if (value is Map<String, dynamic>) {

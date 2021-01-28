@@ -10,8 +10,8 @@ On the [Firebase Console](https://console.firebase.google.com/project/_/overview
 existing Android app for your Firebase project.
 
 The "Android package name" must match your local project's package name that was created when you started the
-Flutter project. The current package name can be found in the `manifest` tag within the project's
-`/android/app/src/main/AndroidManifest.xml` file.
+Flutter project. The current package name can be found in your module (app-level) Gradle file,
+usually `android/app/build.gradle`, `defaultConfig` section (example package name: `com.yourcompany.yourproject`).
 
 > When creating a new Android app "debug signing certificate SHA-1" is optional, however, it is required for Dynamic Links
 > & Phone Authentication. To generate a certificate run `cd android && ./gradlew signingReport` and copy the SHA1 from

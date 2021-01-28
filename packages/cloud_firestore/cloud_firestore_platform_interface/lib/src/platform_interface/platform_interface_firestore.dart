@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -9,19 +11,20 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import '../persistence_settings.dart';
 import '../method_channel/method_channel_firestore.dart';
 
 /// Defines an interface to work with Cloud Firestore on web and mobile
 abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
   @protected
-  final FirebaseApp appInstance;
+  final FirebaseApp /*?*/ appInstance;
 
   /// Create an instance using [app]
-  FirebaseFirestorePlatform({this.appInstance}) : super(token: _token);
+  FirebaseFirestorePlatform({this.appInstance /*?*/}) : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
-  FirebaseApp get app {
+  FirebaseApp /*!*/ get app {
     if (appInstance == null) {
       return Firebase.app();
     }
@@ -47,7 +50,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     return _instance;
   }
 
-  static FirebaseFirestorePlatform _instance;
+  static FirebaseFirestorePlatform /*?*/ _instance;
 
   /// Sets the [FirebaseFirestorePlatform.instance]
   static set instance(FirebaseFirestorePlatform instance) {
@@ -58,7 +61,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseFirestorePlatform delegateFor({FirebaseApp app}) {
+  FirebaseFirestorePlatform delegateFor({@required FirebaseApp /*!*/ app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -77,12 +80,13 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   }
 
   /// Enable persistence of Firestore data. Web only.
-  Future<void> enablePersistence() async {
+  Future<void> enablePersistence(
+      [PersistenceSettings /*!*/ persistenceSettings]) async {
     throw UnimplementedError('enablePersistence() is not implemented');
   }
 
   /// Gets a [CollectionReferencePlatform] for the specified Firestore path.
-  CollectionReferencePlatform collection(String collectionPath) {
+  CollectionReferencePlatform collection(String /*!*/ collectionPath) {
     throw UnimplementedError('collection() is not implemented');
   }
 
@@ -124,7 +128,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// After the [TransactionHandler] is run, Firestore will attempt to apply the
   /// changes to the server. If any of the data read has been modified outside
   /// of this transaction since being read, then the transaction will be
-  /// retried by executing the updateBlock again. If the transaction still
+  /// retried by executing the provided [TransactionHandler] again. If the transaction still
   /// fails after 5 retries, then the transaction will fail.
   ///
   /// The [TransactionHandler] may be executed multiple times, it should be able

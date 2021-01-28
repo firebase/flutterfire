@@ -43,6 +43,8 @@ NSString *const kErrCodeInvalidCredential = @"invalid-credential";
 NSString *const kErrMsgInvalidCredential =
     @"The supplied auth credential is malformed, has expired or is not currently supported.";
 
+BOOL static initialAuthState = true;
+
 @interface FLTFirebaseAuthPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @end
@@ -210,6 +212,8 @@ NSString *const kErrMsgInvalidCredential =
     [self signInWithEmailLink:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#signOut" isEqualToString:call.method]) {
     [self signOut:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Auth#useEmulator" isEqualToString:call.method]) {
+    [self useEmulator:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#verifyPasswordResetCode" isEqualToString:call.method]) {
     [self verifyPasswordResetCode:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#verifyPhoneNumber" isEqualToString:call.method]) {
@@ -247,6 +251,7 @@ NSString *const kErrMsgInvalidCredential =
 #pragma mark - AppDelegate
 
 #if TARGET_OS_IPHONE
+#if !__has_include(<FirebaseMessaging/FirebaseMessaging.h>)
 - (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)notification
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
@@ -256,6 +261,7 @@ NSString *const kErrMsgInvalidCredential =
   }
   return NO;
 }
+#endif
 
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -548,6 +554,12 @@ NSString *const kErrMsgInvalidCredential =
   }
 }
 
+- (void)useEmulator:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
+  [auth useEmulatorWithHost:arguments[@"host"] port:[arguments[@"port"] integerValue]];
+  result.success(nil);
+}
+
 - (void)verifyPasswordResetCode:(id)arguments
            withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
@@ -705,13 +717,16 @@ NSString *const kErrMsgInvalidCredential =
     return;
   }
 
-  [currentUser sendEmailVerificationWithCompletion:^(NSError *_Nullable error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-  }];
+  FIRActionCodeSettings *actionCodeSettings =
+      [self getFIRActionCodeSettingsFromArguments:arguments];
+  [currentUser sendEmailVerificationWithActionCodeSettings:actionCodeSettings
+                                                completion:^(NSError *_Nullable error) {
+                                                  if (error != nil) {
+                                                    result.error(nil, nil, nil, error);
+                                                  } else {
+                                                    result.success(nil);
+                                                  }
+                                                }];
 }
 
 - (void)userUnlink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -900,12 +915,16 @@ NSString *const kErrMsgInvalidCredential =
   __weak __typeof__(self) weakSelf = self;
 
   id authStateChangeListener = ^(FIRAuth *_Nonnull auth, FIRUser *_Nullable user) {
-    [weakSelf.channel
-        invokeMethod:@"Auth#authStateChanges"
-           arguments:@{
-             @"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:auth.app.name],
-             @"user" : user != nil ? [weakSelf getNSDictionaryFromUser:user] : [NSNull null]
-           }];
+    if (initialAuthState) {
+      initialAuthState = false;
+    } else {
+      [weakSelf.channel
+          invokeMethod:@"Auth#authStateChanges"
+             arguments:@{
+               @"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:auth.app.name],
+               @"user" : user != nil ? [weakSelf getNSDictionaryFromUser:user] : [NSNull null]
+             }];
+    }
   };
 
   @synchronized(self->_authChangeListeners) {
@@ -1110,10 +1129,18 @@ NSString *const kErrMsgInvalidCredential =
   }
 
   NSString *signInMethod = credentialDictionary[kArgumentSignInMethod];
-  NSString *secret = credentialDictionary[kArgumentSecret];
-  NSString *idToken = credentialDictionary[kArgumentIdToken];
-  NSString *accessToken = credentialDictionary[kArgumentAccessToken];
-  NSString *rawNonce = credentialDictionary[kArgumentRawNonce];
+  NSString *secret = credentialDictionary[kArgumentSecret] == [NSNull null]
+                         ? nil
+                         : credentialDictionary[kArgumentSecret];
+  NSString *idToken = credentialDictionary[kArgumentIdToken] == [NSNull null]
+                          ? nil
+                          : credentialDictionary[kArgumentIdToken];
+  NSString *accessToken = credentialDictionary[kArgumentAccessToken] == [NSNull null]
+                              ? nil
+                              : credentialDictionary[kArgumentAccessToken];
+  NSString *rawNonce = credentialDictionary[kArgumentRawNonce] == [NSNull null]
+                           ? nil
+                           : credentialDictionary[kArgumentRawNonce];
 
   // Password Auth
   if ([signInMethod isEqualToString:kSignInMethodPassword]) {

@@ -1,6 +1,9 @@
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -25,95 +28,117 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   }
 
   @override
-  Future<void> set(Map<String, dynamic> data, [SetOptions options]) {
-    return MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-      'DocumentReference#set',
-      <String, dynamic>{
-        'firestore': firestore,
-        'reference': this,
-        'data': data,
-        'options': <String, dynamic>{
-          'merge': options?.merge,
-          'mergeFields': options?.mergeFields,
+  Future<void> set(Map<String, dynamic> data, [SetOptions options]) async {
+    try {
+      await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
+        'DocumentReference#set',
+        <String, dynamic>{
+          'firestore': firestore,
+          'reference': this,
+          'data': data,
+          'options': <String, dynamic>{
+            'merge': options?.merge,
+            'mergeFields': options?.mergeFields,
+          },
         },
-      },
-    ).catchError(catchPlatformException);
+      );
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
-  Future<void> update(Map<String, dynamic> data) {
-    return MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-      'DocumentReference#update',
-      <String, dynamic>{
-        'firestore': firestore,
-        'reference': this,
-        'data': data,
-      },
-    ).catchError(catchPlatformException);
+  Future<void> update(Map<String, dynamic> data) async {
+    try {
+      await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
+        'DocumentReference#update',
+        <String, dynamic>{
+          'firestore': firestore,
+          'reference': this,
+          'data': data,
+        },
+      );
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
   Future<DocumentSnapshotPlatform> get(
       [GetOptions options = const GetOptions()]) async {
-    final Map<String, dynamic> data = await MethodChannelFirebaseFirestore
-        .channel
-        .invokeMapMethod<String, dynamic>(
-      'DocumentReference#get',
-      <String, dynamic>{
-        'firestore': firestore,
-        'reference': this,
-        'source': getSourceString(options.source),
-      },
-    ).catchError(catchPlatformException);
+    try {
+      final Map<String, dynamic> data = await MethodChannelFirebaseFirestore
+          .channel
+          .invokeMapMethod<String, dynamic>(
+        'DocumentReference#get',
+        <String, dynamic>{
+          'firestore': firestore,
+          'reference': this,
+          'source': getSourceString(options.source),
+        },
+      );
 
-    return DocumentSnapshotPlatform(firestore, _pointer.path, data);
+      return DocumentSnapshotPlatform(firestore, _pointer.path, data);
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
-  Future<void> delete() {
-    return MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-      'DocumentReference#delete',
-      <String, dynamic>{'firestore': firestore, 'reference': this},
-    ).catchError(catchPlatformException);
+  Future<void> delete() async {
+    try {
+      await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
+        'DocumentReference#delete',
+        <String, dynamic>{'firestore': firestore, 'reference': this},
+      );
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
-  Stream<DocumentSnapshotPlatform> snapshots(
-      {bool includeMetadataChanges = false}) {
+  Stream<DocumentSnapshotPlatform> snapshots({
+    bool includeMetadataChanges = false,
+  }) {
     assert(includeMetadataChanges != null);
-    int handle = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
-    Completer<void> onListenComplete = Completer<void>();
 
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     StreamController<DocumentSnapshotPlatform>
         controller; // ignore: close_sinks
+
+    StreamSubscription<dynamic> snapshotStream;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () async {
-        MethodChannelFirebaseFirestore.documentObservers[handle] = controller;
-        await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-          'DocumentReference#addSnapshotListener',
+        final observerId = await MethodChannelFirebaseFirestore.channel
+            .invokeMethod<String>('DocumentReference#snapshots');
+        snapshotStream =
+            MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
+                .receiveBroadcastStream(
           <String, dynamic>{
-            'handle': handle,
-            'firestore': firestore,
             'reference': this,
             'includeMetadataChanges': includeMetadataChanges,
           },
-        );
-
-        if (!onListenComplete.isCompleted) {
-          onListenComplete.complete();
-        }
+        ).listen((snapshot) {
+          controller.add(
+            DocumentSnapshotPlatform(
+              firestore,
+              snapshot['path'],
+              <String, dynamic>{
+                'data': snapshot['data'],
+                'metadata': snapshot['metadata'],
+              },
+            ),
+          );
+        }, onError: (error, stack) {
+          controller.addError(convertPlatformException(error), stack);
+        });
       },
-      onCancel: () async {
-        await onListenComplete.future;
-        await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-          'Firestore#removeListener',
-          <String, dynamic>{'handle': handle},
-        );
-        MethodChannelFirebaseFirestore.documentObservers.remove(handle);
+      onCancel: () {
+        snapshotStream?.cancel();
       },
     );
+
     return controller.stream;
   }
 }

@@ -1,6 +1,10 @@
+// @dart = 2.9
+
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
+// @dart=2.9
 
 import 'dart:async';
 
@@ -13,12 +17,12 @@ import './test_utils.dart';
 
 void runInstanceTests() {
   group('$FirebaseAuth.instance', () {
-    FirebaseAuth auth;
+    /*late*/ FirebaseAuth auth;
 
     // generate unique email address for test run
     String regularTestEmail = generateRandomEmail();
 
-    void commonSuccessCallback(currentUserCredential) async {
+    Future<void> commonSuccessCallback(currentUserCredential) async {
       var currentUser = currentUserCredential.user;
 
       expect(currentUser, isInstanceOf<Object>());
@@ -47,6 +51,18 @@ void runInstanceTests() {
     });
 
     group('authStateChanges()', () {
+      /*late*/ StreamSubscription subscription;
+      StreamSubscription /*?*/ subscription2;
+
+      tearDown(() async {
+        await subscription?.cancel();
+        await ensureSignedOut();
+
+        if (subscription2 != null) {
+          await Future.delayed(const Duration(seconds: 5));
+          await subscription2.cancel();
+        }
+      });
       test('calls callback with the current user and when auth state changes',
           () async {
         await ensureSignedIn(regularTestEmail);
@@ -55,8 +71,7 @@ void runInstanceTests() {
         Stream<User> stream = auth.authStateChanges();
         int call = 0;
 
-        StreamSubscription subscription =
-            stream.listen(expectAsync1((User user) {
+        subscription = stream.listen(expectAsync1((User user) {
           call++;
           if (call == 1) {
             expect(user.uid, isA<String>());
@@ -66,40 +81,31 @@ void runInstanceTests() {
           } else if (call == 3) {
             expect(user.uid, isA<String>());
             expect(user.uid != uid, isTrue); // anonymous user
-
           } else {
-            fail("Should not have been called");
+            fail('Should not have been called');
           }
-        }, count: 3, reason: "Stream should only have been called 3 times"));
+        }, count: 3, reason: 'Stream should only have been called 3 times'));
 
         // Prevent race condition where signOut is called before the stream hits
         await auth.signOut();
         await auth.signInAnonymously();
-        await subscription.cancel();
-        await ensureSignedOut();
-      });
-
-      test('handles multiple subscribers', () async {
-        await ensureSignedOut();
-
-        Stream<User> stream = auth.authStateChanges();
-        Stream<User> stream2 = auth.authStateChanges();
-
-        StreamSubscription subscription =
-            stream.listen(expectAsync1((User user) {}, count: 2));
-
-        StreamSubscription subscription2 =
-            stream2.listen(expectAsync1((User user) {}, count: 3));
-
-        await ensureSignedIn(regularTestEmail);
-        await subscription.cancel();
-        await ensureSignedOut();
-        await Future.delayed(Duration(seconds: 5));
-        await subscription2.cancel();
       });
     });
 
     group('idTokenChanges()', () {
+      /*late*/ StreamSubscription subscription;
+      StreamSubscription /*?*/ subscription2;
+
+      tearDown(() async {
+        await subscription?.cancel();
+        await ensureSignedOut();
+
+        if (subscription2 != null) {
+          await Future.delayed(const Duration(seconds: 5));
+          await subscription2.cancel();
+        }
+      });
+
       test('calls callback with the current user and when auth state changes',
           () async {
         await ensureSignedIn(regularTestEmail);
@@ -108,8 +114,7 @@ void runInstanceTests() {
         Stream<User> stream = auth.idTokenChanges();
         int call = 0;
 
-        StreamSubscription subscription =
-            stream.listen(expectAsync1((User user) {
+        subscription = stream.listen(expectAsync1((User user) {
           call++;
           if (call == 1) {
             expect(user.uid, equals(uid)); // initial user
@@ -119,39 +124,18 @@ void runInstanceTests() {
             expect(user.uid, isA<String>());
             expect(user.uid != uid, isTrue); // anonymous user
           } else {
-            fail("Should not have been called");
+            fail('Should not have been called');
           }
-        }, count: 3, reason: "Stream should only have been called 3 times"));
+        }, count: 3, reason: 'Stream should only have been called 3 times'));
 
         // Prevent race condition where signOut is called before the stream hits
         await auth.signOut();
         await auth.signInAnonymously();
-        await subscription.cancel();
-        await ensureSignedOut();
-      });
-
-      test('handles multiple subscribers', () async {
-        await ensureSignedOut();
-
-        Stream<User> stream = auth.idTokenChanges();
-        Stream<User> stream2 = auth.idTokenChanges();
-
-        StreamSubscription subscription =
-            stream.listen(expectAsync1((User user) {}, count: 2));
-
-        StreamSubscription subscription2 =
-            stream2.listen(expectAsync1((User user) {}, count: 3));
-
-        await ensureSignedIn(regularTestEmail);
-        await subscription.cancel();
-        await ensureSignedOut();
-        await Future.delayed(Duration(seconds: 5));
-        await subscription2.cancel();
       });
     });
 
     group('userChanges()', () {
-      StreamSubscription subscription;
+      /*late*/ StreamSubscription subscription;
       tearDown(() async {
         await subscription.cancel();
       });
@@ -159,7 +143,7 @@ void runInstanceTests() {
           () async {
         await ensureSignedIn(regularTestEmail);
 
-        Stream<User> stream = auth.userChanges();
+        Stream<User /*?*/ > stream = auth.userChanges();
         int call = 0;
 
         subscription = stream.listen(expectAsync1((User user) {
@@ -169,9 +153,9 @@ void runInstanceTests() {
           } else if (call == 2) {
             expect(user.displayName, equals('updatedName')); // updated profile
           } else {
-            fail("Should not have been called");
+            fail('Should not have been called');
           }
-        }, count: 2, reason: "Stream should only have been called 2 times"));
+        }, count: 2, reason: 'Stream should only have been called 2 times'));
 
         await auth.currentUser.updateProfile(displayName: 'updatedName');
 
@@ -192,9 +176,9 @@ void runInstanceTests() {
       test('throws if invalid code', () async {
         try {
           await auth.applyActionCode('!!!!!!');
-          fail("Should have thrown");
+          fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("invalid-action-code"));
+          expect(e.code, equals('invalid-action-code'));
         } catch (e) {
           fail(e.toString());
         }
@@ -207,7 +191,7 @@ void runInstanceTests() {
           await auth.checkActionCode('!!!!!!');
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("invalid-action-code"));
+          expect(e.code, equals('invalid-action-code'));
         } catch (e) {
           fail(e.toString());
         }
@@ -221,9 +205,9 @@ void runInstanceTests() {
               code: '!!!!!!', newPassword: 'thingamajig');
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("invalid-action-code"));
+          expect(e.code, equals('invalid-action-code'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
     });
@@ -260,7 +244,7 @@ void runInstanceTests() {
         try {
           await auth.createUserWithEmailAndPassword(
               email: regularTestEmail, password: '123456');
-          fail("Should have thrown FirebaseAuthException");
+          fail('Should have thrown FirebaseAuthException');
         } on FirebaseAuthException catch (e) {
           expect(e.code, equals('email-already-in-use'));
         } catch (e) {
@@ -273,7 +257,7 @@ void runInstanceTests() {
         try {
           await auth.createUserWithEmailAndPassword(
               email: '!!!!!', password: '123456');
-          fail("Should have thrown FirebaseAuthException");
+          fail('Should have thrown FirebaseAuthException');
         } on FirebaseAuthException catch (e) {
           expect(e.code, equals('invalid-email'));
         } catch (e) {
@@ -286,7 +270,7 @@ void runInstanceTests() {
         try {
           await auth.createUserWithEmailAndPassword(
               email: generateRandomEmail(), password: '1');
-          fail("Should have thrown FirebaseAuthException");
+          fail('Should have thrown FirebaseAuthException');
         } on FirebaseAuthException catch (e) {
           expect(e.code, equals('weak-password'));
         } catch (e) {
@@ -315,23 +299,12 @@ void runInstanceTests() {
           await auth.fetchSignInMethodsForEmail('foobar');
           fail('Should have thrown');
         } on FirebaseAuthException catch (e) {
-          expect(e.code, equals("invalid-email"));
+          expect(e.code, equals('invalid-email'));
         } catch (e) {
           fail(e.toString());
         }
       });
     });
-
-    group('getRedirectResult()', () {
-      test('throw an unimplemented error', () async {
-        try {
-          await auth.getRedirectResult();
-          fail('Should have thrown');
-        } catch (e) {
-          expect(e, isInstanceOf<UnimplementedError>());
-        }
-      });
-    }, skip: !kIsWeb);
 
     group('isSignInWithEmailLink()', () {
       test('should return true or false', () {
@@ -347,10 +320,6 @@ void runInstanceTests() {
         expect(auth.isSignInWithEmailLink(emailLink2), equals(false));
         expect(auth.isSignInWithEmailLink(emailLink3), equals(false));
         expect(auth.isSignInWithEmailLink(emailLink4), equals(true));
-      });
-
-      test('throws if email link is null', () {
-        expect(() => auth.isSignInWithEmailLink(null), throwsAssertionError);
       });
     });
 
@@ -382,7 +351,7 @@ void runInstanceTests() {
       });
     });
 
-    group('sendSignInWithEmailLink()', () {
+    group('sendSignInLinkToEmail()', () {
       test('should send email successfully', () async {
         var email = generateRandomEmail();
         await auth.createUserWithEmailAndPassword(
@@ -429,12 +398,19 @@ void runInstanceTests() {
         expect(auth.languageCode, equals('en'));
       });
 
-      test('should allow null value', () async {
+      test('should allow null value and default the device language code',
+          () async {
         await auth.setLanguageCode(null);
 
         expect(auth.languageCode,
             isNotNull); // default to the device language or the Firebase projects default language
-      });
+      }, skip: kIsWeb);
+
+      test('should allow null value and set to null', () async {
+        await auth.setLanguageCode(null);
+
+        expect(auth.languageCode, null);
+      }, skip: !kIsWeb);
     });
 
     group('setPersistence()', () {
@@ -444,6 +420,14 @@ void runInstanceTests() {
           fail('Should have thrown');
         } catch (e) {
           expect(e, isInstanceOf<UnimplementedError>());
+        }
+      }, skip: kIsWeb);
+
+      test('should set persistence', () async {
+        try {
+          await auth.setPersistence(Persistence.LOCAL);
+        } catch (e) {
+          fail('unexpected error thrown');
         }
       }, skip: !kIsWeb);
     });
@@ -485,13 +469,13 @@ void runInstanceTests() {
           await auth.signInWithCredential(credential);
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("user-disabled"));
+          expect(e.code, equals('user-disabled'));
           expect(
               e.message,
               equals(
-                  "The user account has been disabled by an administrator."));
+                  'The user account has been disabled by an administrator.'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
 
@@ -502,13 +486,13 @@ void runInstanceTests() {
           await auth.signInWithCredential(credential);
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("wrong-password"));
+          expect(e.code, equals('wrong-password'));
           expect(
               e.message,
               equals(
-                  "The password is invalid or the user does not have a password."));
+                  'The password is invalid or the user does not have a password.'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
 
@@ -519,13 +503,13 @@ void runInstanceTests() {
           await auth.signInWithCredential(credential);
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("user-not-found"));
+          expect(e.code, equals('user-not-found'));
           expect(
               e.message,
               equals(
-                  "There is no user record corresponding to this identifier. The user may have been deleted."));
+                  'There is no user record corresponding to this identifier. The user may have been deleted.'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
     });
@@ -574,13 +558,13 @@ void runInstanceTests() {
               email: email, password: password);
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("user-disabled"));
+          expect(e.code, equals('user-disabled'));
           expect(
               e.message,
               equals(
-                  "The user account has been disabled by an administrator."));
+                  'The user account has been disabled by an administrator.'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
 
@@ -590,13 +574,13 @@ void runInstanceTests() {
               email: regularTestEmail, password: 'sowrong');
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("wrong-password"));
+          expect(e.code, equals('wrong-password'));
           expect(
               e.message,
               equals(
-                  "The password is invalid or the user does not have a password."));
+                  'The password is invalid or the user does not have a password.'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
 
@@ -606,68 +590,47 @@ void runInstanceTests() {
               email: generateRandomEmail(), password: TEST_PASSWORD);
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("user-not-found"));
+          expect(e.code, equals('user-not-found'));
           expect(
               e.message,
               equals(
-                  "There is no user record corresponding to this identifier. The user may have been deleted."));
+                  'There is no user record corresponding to this identifier. The user may have been deleted.'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
     });
 
     // For manual testing only
-    group('signInWithEmailAndLink()', () {
-      // see: sendSignInWithEmailLink test below
-      // to ensure an email is successfully sent using
-      // automated testing. Enable this manual test to
-      // ensure the link in the test email actually works
-      // and signs a user in.
-//      test('should sign in user using link', () async {
-//        const email = 'MANUAL TEST EMAIL HERE';
-//        const emailLink = 'MANUAL TEST CODE HERE';
-//
-//        var userCredential =
-//            await auth.signInWithEmailLink(email: email, emailLink: emailLink);
-//
-//        expect(userCredential.user.email, equals(email));
-//        // clean up
-//        ensureSignedOut();
-//      });
-    });
+    // group('signInWithEmailLink()', () {
+    // see: signInWithEmailLink test below
+    // to ensure an email is successfully sent using
+    // automated testing. Enable this manual test to
+    // ensure the link in the test email actually works
+    // and signs a user in.
+    // test('should sign in user using link', () async {
+    //  const email = 'MANUAL TEST EMAIL HERE';
+    //     const emailLink = 'MANUAL TEST CODE HERE';
 
-    group('signInWithPopup()', () {
-      test('throws an unimplemented error', () async {
-        try {
-          FacebookAuthProvider facebookProvider = FacebookAuthProvider();
-          facebookProvider.addScope('user_birthday');
-          facebookProvider.setCustomParameters({
-            'display': 'popup',
-          });
+    //   var userCredential =
+    //       await auth.signInWithEmailLink(email: email, emailLink: emailLink);
 
-          await auth.signInWithPopup(facebookProvider);
-        } catch (e) {
-          expect(e, isInstanceOf<UnimplementedError>());
-        }
-      }, skip: !kIsWeb);
-    });
+    //   expect(userCredential.user.email, equals(email));
+    //   // clean up
+    //   ensureSignedOut();
+    // });
 
-    group('signInWithRedirect()', () {
-      test('throws an unimplemented error', () async {
-        try {
-          FacebookAuthProvider facebookProvider = FacebookAuthProvider();
-          facebookProvider.addScope('user_birthday');
-          facebookProvider.setCustomParameters({
-            'display': 'popup',
-          });
-
-          await auth.signInWithRedirect(facebookProvider);
-        } catch (e) {
-          expect(e, isInstanceOf<UnimplementedError>());
-        }
-      }, skip: !kIsWeb);
-    });
+    // test('should throw argument-error', () async {
+    //   const email = 'test@email.com';
+    //   const emailLink = 'https://invalid.com';
+    //   try {
+    //     await auth.signInWithEmailLink(email: email, emailLink: emailLink);
+    //   } on FirebaseAuthException catch (e) {
+    //     expect(e.code, 'argument-error');
+    //     expect(e.message, 'Invalid email link!');
+    //   }
+    // });
+    // });
 
     group('signOut()', () {
       test('should sign out', () async {
@@ -684,7 +647,7 @@ void runInstanceTests() {
           await auth.verifyPasswordResetCode('!!!!!!');
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("invalid-action-code"));
+          expect(e.code, equals('invalid-action-code'));
         } catch (e) {
           fail(e.toString());
         }
@@ -700,18 +663,18 @@ void runInstanceTests() {
               phoneNumber: 'foo',
               verificationCompleted: (PhoneAuthCredential credential) {
                 return completer
-                    .completeError(Exception("Should not have been called"));
+                    .completeError(Exception('Should not have been called'));
               },
               verificationFailed: (FirebaseAuthException e) {
                 completer.complete(e);
               },
               codeSent: (String verificationId, int resetToken) {
                 return completer
-                    .completeError(Exception("Should not have been called"));
+                    .completeError(Exception('Should not have been called'));
               },
               codeAutoRetrievalTimeout: (String foo) {
                 return completer
-                    .completeError(Exception("Should not have been called"));
+                    .completeError(Exception('Should not have been called'));
               }));
 
           return completer.future;
@@ -738,22 +701,22 @@ void runInstanceTests() {
               verificationCompleted: (PhoneAuthCredential credential) {
                 if (credential.smsCode != testSmsCode) {
                   return completer
-                      .completeError(Exception("SMS code did not match"));
+                      .completeError(Exception('SMS code did not match'));
                 }
 
                 completer.complete(credential);
               },
               verificationFailed: (FirebaseException e) {
                 return completer
-                    .completeError(Exception("Should not have been called"));
+                    .completeError(Exception('Should not have been called'));
               },
               codeSent: (String verificationId, int resetToken) {
                 return completer
-                    .completeError(Exception("Should not have been called"));
+                    .completeError(Exception('Should not have been called'));
               },
               codeAutoRetrievalTimeout: (String foo) {
                 return completer
-                    .completeError(Exception("Should not have been called"));
+                    .completeError(Exception('Should not have been called'));
               }));
 
           return completer.future;
@@ -761,7 +724,7 @@ void runInstanceTests() {
 
         PhoneAuthCredential credential = await getCredential();
         expect(credential, isA<PhoneAuthCredential>());
-      }, skip: defaultTargetPlatform != TargetPlatform.android);
-    }, skip: defaultTargetPlatform == TargetPlatform.macOS);
+      }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
+    }, skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb);
   });
 }

@@ -2,13 +2,15 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:js' as js;
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/cloud_firestore_web.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:mockito/mockito.dart';
-import 'package:firebase/firestore.dart' as web;
+import 'package:cloud_firestore_web/src/interop/firestore.dart' as web;
 
 import 'package:cloud_firestore_web/src/document_reference_web.dart';
 import 'package:cloud_firestore_web/src/query_web.dart';

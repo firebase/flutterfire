@@ -1,0 +1,100 @@
+---
+title: Permissions
+---
+
+Before diving into requesting notification permissions from your users, it is important to understand how Apple and
+web platforms handle permissions.
+
+Notifications cannot be shown to users if the user has not "granted" your application permission.
+The overall notification permission of a single application can be either be "not determined", "granted" or "declined".
+Upon installing a new application, the default status is "not determined".
+
+In order to receive a "granted" status, you must request permission from your user (see below). The user can either
+accept or decline your request to grant permissions. If granted, notifications will be displayed based on the permission
+settings which were requested.
+
+If the user declines the request, you cannot re-request permission, trying to request permission again will immediately
+return a "denied" status without any user interaction - instead the user must manually enable notification
+permissions from the device Settings UI (or via a custom UI).
+
+## Requesting permissions
+
+As explained in the [Usage documentation](usage.mdx), permission must be requested from your users in order to display
+remote notifications from FCM, via the [`requestPermission`](!firebase_messaging.FirebaseMessaging.requestPermission) API:
+
+```dart
+FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+NotificationSettings settings = await messaging.requestPermission(
+  alert: true,
+  announcement: false,
+  badge: true,
+  carPlay: false,
+  criticalAlert: false,
+  provisional: false,
+  sound: true,
+);
+
+if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+  print('User granted permission');
+} else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+  print('User granted provisional permission');
+} else {
+  print('User declined or has not accepted permission');
+}
+```
+
+On Apple based platforms, once a permission request has been handled by the user (authorized or denied), it is not possible
+to re-request permission. The user must instead update permission via the device Settings UI:
+
+- If the user denied permission altogether, they must enable app permission fully.
+- If the user accepted requested permission (without sound), they must specifically enable the sound option themselves.
+
+## Permission settings
+
+Although overall notification permission can be granted, the permissions can be further broken down into 'settings'.
+
+Settings are used by the device to control notifications behavior, for example alerting the user with sound. When requesting
+permission, you can provide arguments if you wish to override the defaults. This is demonstrated in the above example.
+
+The full list of permission settings can be seen in the table below along with their default values:
+
+| Permission     | Default | Description                                                                                                                   |
+| -------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `alert`        | `true`  | Sets whether notifications can be displayed to the user on the device.                                                        |
+| `announcement` | `false` | If enabled, Siri will read the notification content out when devices are connected to AirPods.                                |
+| `badge`        | `true`  | Sets whether a notification dot will appear next to the app icon on the device when there are unread notifications.           |
+| `carPlay`      | `true`  | Sets whether notifications will appear when the device is connected to [CarPlay](https://www.apple.com/ios/carplay/).         |
+| `provisional`  | `false` | Sets whether provisional permissions are granted. See [Provisional authorization](#provisional-authorization) for more information. |
+| `sound`        | `true`  | Sets whether a sound will be played when a notification is displayed on the device.                                           |
+
+The settings provided will be stored by the device and will be visible in the iOS Settings UI for your application.
+
+You can also read the current permissions without attempting to request them via the [`getNotificationSettings`](!firebase_messaging.FirebaseMessaging.getNotificationSettings)
+method:
+
+```dart
+NotificationSettings settings = await messaging.getNotificationSettings();
+```
+
+## Provisional authorization
+
+Devices on iOS 12+ can use provisional authorization. This type of permission system allows for notification permission
+to be instantly granted without displaying a dialog to your user. The permission allows notifications to be displayed quietly
+(only visible within the device notification center).
+
+To enable provision permission, set the `provisional` argument to `true` when requesting permission:
+
+```dart
+NotificationSettings settings = await messaging.requestPermission(
+  provisional: true,
+);
+```
+
+When a notification is displayed on the device, the user will be presented with several actions prompting to keep receiving
+notifications quietly, enable full notification permission or turn them off:
+
+<Image
+  src="ios-provisional-notification.jpg"
+  alt="iOS Provisional Notification Example"
+/>

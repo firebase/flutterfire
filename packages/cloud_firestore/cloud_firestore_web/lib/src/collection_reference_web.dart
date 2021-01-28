@@ -2,13 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:firebase/firestore.dart' as web;
 import 'package:meta/meta.dart';
 
-import 'package:cloud_firestore_web/src/document_reference_web.dart';
-import 'package:cloud_firestore_web/src/query_web.dart';
-
+import 'interop/firestore.dart' as firestore_interop;
 import 'document_reference_web.dart';
 import 'query_web.dart';
 
@@ -16,12 +15,12 @@ import 'query_web.dart';
 class CollectionReferenceWeb extends QueryWeb
     implements CollectionReferencePlatform {
   /// instance of Firestore from the web plugin
-  final web.Firestore _webFirestore;
+  final firestore_interop.Firestore _webFirestore;
 
   final FirebaseFirestorePlatform _firestorePlatform;
 
   /// instance of DocumentReference from the web plugin
-  final web.CollectionReference _delegate;
+  final firestore_interop.CollectionReference _delegate;
 
   // disabling lint as it's only visible for testing
   @visibleForTesting
@@ -38,8 +37,8 @@ class CollectionReferenceWeb extends QueryWeb
   String get path => _delegate.path;
 
   @override
-  DocumentReferencePlatform doc([String path]) {
-    web.DocumentReference documentReference = _delegate.doc(path);
+  DocumentReferencePlatform doc([String /*?*/ path]) {
+    firestore_interop.DocumentReference documentReference = _delegate.doc(path);
     return DocumentReferenceWeb(
         _firestorePlatform, _webFirestore, documentReference.path);
   }
@@ -49,7 +48,7 @@ class CollectionReferenceWeb extends QueryWeb
 
   @override
   DocumentReferencePlatform get parent {
-    web.DocumentReference documentReference = _delegate.parent;
+    firestore_interop.DocumentReference documentReference = _delegate.parent;
 
     if (documentReference == null) {
       return null;

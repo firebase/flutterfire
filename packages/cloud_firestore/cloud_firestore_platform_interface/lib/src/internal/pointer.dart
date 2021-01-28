@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 /// A helper class to handle Firestore paths.
 ///
 /// This class is used internally to manage paths which point to a collection
@@ -61,7 +63,7 @@ class Pointer {
   }
 
   /// Returns a path pointing to the parent of the current path.
-  String parentPath() {
+  String /*?*/ parentPath() {
     if (components.length < 2) {
       return null;
     }

@@ -115,16 +115,16 @@ public class FlutterFirebaseCrashlyticsPlugin
 
           final String dartExceptionMessage =
               (String) Objects.requireNonNull(arguments.get(Constants.EXCEPTION));
-          final String context = (String) arguments.get(Constants.CONTEXT);
+          final String reason = (String) arguments.get(Constants.REASON);
           final String information =
               (String) Objects.requireNonNull(arguments.get(Constants.INFORMATION));
 
           Exception exception;
-          if (context != null) {
+          if (reason != null) {
             // Set a "reason" (to match iOS) to show where the exception was thrown.
-            crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, "thrown " + context);
+            crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, "thrown " + reason);
             exception =
-                new FlutterError(dartExceptionMessage + ". " + "Error thrown " + context + ".");
+                new FlutterError(dartExceptionMessage + ". " + "Error thrown " + reason + ".");
           } else {
             exception = new FlutterError(dartExceptionMessage);
           }

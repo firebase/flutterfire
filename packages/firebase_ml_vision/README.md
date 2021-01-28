@@ -92,7 +92,7 @@ final DocumentTextRecognizer cloudDocumentTextRecognizer = FirebaseVision.instan
 You can also configure all detectors, except on-device `TextRecognizer`, with desired options.
 
 ```dart
-final ImageLabeler labeler = FirebaseVision.instance.imageLabler(
+final ImageLabeler labeler = FirebaseVision.instance.imageLabeler(
   ImageLabelerOptions(confidenceThreshold: 0.75),
 );
 ```

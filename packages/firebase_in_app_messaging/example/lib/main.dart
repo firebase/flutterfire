@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -61,8 +63,9 @@ class ProgrammaticTriggersExample extends StatelessWidget {
             RaisedButton(
               onPressed: () {
                 fiam.triggerEvent('chicken_event');
-                Scaffold.of(context).showSnackBar(const SnackBar(
-                    content: Text("Triggering event: chicken_event")));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Triggering event: chicken_event"),
+                ));
               },
               color: Colors.blue,
               child: Text(
@@ -105,8 +108,9 @@ class AnalyticsEventExample extends StatelessWidget {
             RaisedButton(
               onPressed: () {
                 _sendAnalyticsEvent();
-                Scaffold.of(context).showSnackBar(const SnackBar(
-                    content: Text("Firing analytics event: awesome_event")));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Firing analytics event: awesome_event"),
+                ));
               },
               color: Colors.blue,
               child: Text(

@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
@@ -11,8 +13,8 @@ import './mock.dart';
 
 void main() {
   setupCloudFirestoreMocks();
-  FirebaseFirestore firestore;
-  FirebaseFirestore firestoreSecondary;
+  /*late*/ FirebaseFirestore firestore;
+  /*late*/ FirebaseFirestore firestoreSecondary;
 
   group("$DocumentReference", () {
     setUpAll(() async {
@@ -85,7 +87,8 @@ void main() {
 
     test('path must be a non-empty string', () {
       CollectionReference ref = firestore.collection('foo');
-      expect(() => firestore.doc(null), throwsAssertionError);
+      // TODO(ehesp): Remove when null safety lands
+      // expect(() => firestore.doc(null), throwsAssertionError);
       expect(() => firestore.doc(''), throwsAssertionError);
       expect(() => ref.doc(''), throwsAssertionError);
     });
@@ -109,9 +112,10 @@ void main() {
           throwsAssertionError);
     });
 
-    test('data must not be null', () {
-      DocumentReference ref = firestore.collection('foo').doc();
-      expect(() => ref.set(null), throwsAssertionError);
-    });
+    // TODO(ehesp): Remove when null safety lands
+    // test('data must not be null', () {
+    //   DocumentReference ref = firestore.collection('foo').doc();
+    //   expect(() => ref.set(null), throwsAssertionError);
+    // });
   });
 }

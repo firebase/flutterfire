@@ -14,8 +14,10 @@ void main() {
     final PhoneVerificationFailed verificationFailed =
         (FirebaseAuthException authException) {};
 
-    final PhoneCodeSent codeSent =
-        (String verificationId, [int forceResendingToken]) async {};
+    final PhoneCodeSent codeSent = (
+      String verificationId, [
+      int? forceResendingToken,
+    ]) async {};
 
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
         (String verificationId) {};

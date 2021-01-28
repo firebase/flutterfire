@@ -8,9 +8,10 @@ import 'dart:js' as js;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'mock/firebase_mock.dart';
 import 'package:js/js_util.dart' as js_util;
+import 'package:flutter_test/flutter_test.dart';
+
+import 'mock/firebase_mock.dart';
 
 void main() {
   group('no default app', () {
@@ -19,14 +20,10 @@ void main() {
     });
 
     test('should throw exception if no default app is available', () async {
-      try {
-        await Firebase.initializeApp();
-      } on FirebaseException catch (e) {
-        expect(e, coreNotInitialized());
-        return;
-      }
-
-      fail("FirebaseException not thrown");
+      await expectLater(
+        Firebase.initializeApp,
+        throwsA(coreNotInitialized()),
+      );
     });
   });
 
@@ -37,27 +34,19 @@ void main() {
 
     test('should throw exception if trying to initialize default app',
         () async {
-      try {
-        await Firebase.initializeApp(name: defaultFirebaseAppName);
-      } on FirebaseException catch (e) {
-        expect(e, noDefaultAppInitialization());
-        return;
-      }
-
-      fail("FirebaseException not thrown");
+      await expectLater(
+        () => Firebase.initializeApp(name: defaultFirebaseAppName),
+        throwsA(noDefaultAppInitialization()),
+      );
     });
 
     group('secondary apps', () {
       test('should throw exception if no options are provided with a named app',
           () async {
-        try {
-          await Firebase.initializeApp(name: 'foo');
-        } catch (e) {
-          assert(
-              e.toString().contains(
-                  "FirebaseOptions cannot be null when creating a secondary Firebase app."),
-              true);
-        }
+        await expectLater(
+          () => Firebase.initializeApp(name: 'foo'),
+          throwsAssertionError,
+        );
       });
     });
   });
@@ -74,16 +63,10 @@ void main() {
     });
 
     test('should throw exception if no named app was found', () async {
-      String name = 'foo';
-
-      try {
-        Firebase.app(name);
-      } on FirebaseException catch (e) {
-        expect(e, noAppExists(name));
-        return;
-      }
-
-      fail("FirebaseException not thrown");
+      await expectLater(
+        () => Firebase.app('foo'),
+        throwsA(noAppExists('foo')),
+      );
     });
   });
 }

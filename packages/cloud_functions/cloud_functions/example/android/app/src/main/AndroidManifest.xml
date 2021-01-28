@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.flutter.plugins.firebase.cloudfunctions.cloudfunctionsexample">
+    package="io.flutter.plugins.firebase.functions.example">
 
     <!-- The INTERNET permission is required for development. Specifically,
          flutter needs it to communicate with the running application
