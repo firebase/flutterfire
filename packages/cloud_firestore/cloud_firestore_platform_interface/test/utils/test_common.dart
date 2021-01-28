@@ -85,6 +85,8 @@ void handleDocumentSnapshotsEventChannel(
               'path': 'document/1',
               'data': {'name': 'value'},
               'metadata': {},
+              'documents': [],
+              'documentChanges': []
             },
           ),
           (_) {},
@@ -113,7 +115,9 @@ void handleQuerySnapshotsEventChannel(final String id, List<MethodCall> log) {
             {
               'path': 'document/1',
               'data': {'name': 'value'},
-              'metadata': {},
+              'metadata': {'hasPendingWrites': false, 'isFromCache': false},
+              'documents': [],
+              'documentChanges': []
             },
           ),
           (_) {},

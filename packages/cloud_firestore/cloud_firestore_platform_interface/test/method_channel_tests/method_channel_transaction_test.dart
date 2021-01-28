@@ -13,7 +13,12 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/method_cha
 import '../utils/test_common.dart';
 
 //ignore: avoid_implementing_value_types
-class MockDocumentReference extends Mock implements DocumentReferencePlatform {}
+class MockDocumentReference extends Mock implements DocumentReferencePlatform {
+  @override
+  String get path => super.noSuchMethod(Invocation.getter(#path), 'foo/bar');
+  @override
+  String get id => super.noSuchMethod(Invocation.getter(#id), 'mock-id');
+}
 
 const _kTransactionId = '1022';
 const Map<String, dynamic> kMockSnapshotMetadata = <String, dynamic>{

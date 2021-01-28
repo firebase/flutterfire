@@ -252,7 +252,7 @@ void main() {
 
     group('runTransaction()', () {
       TransactionHandler transactionHandler = (transaction) {
-        return null;
+        return Future.value({});
       };
 
       group('common', () {

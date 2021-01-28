@@ -18,8 +18,6 @@ void main() {
 
     test('throws is invalid path is provided', () {
       expect(() => FieldPath(const []), throwsAssertionError);
-      expect(() => FieldPath(const ['123']), throwsAssertionError);
-      expect(() => FieldPath(const ['123', '456']), throwsAssertionError);
     });
 
     test('returns a [List] of components', () {
