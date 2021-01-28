@@ -1,3 +1,7 @@
+## 4.0.0-1.0.nullsafety.0
+
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+
 ## 4.0.0-nullsafety.1
 
 Bump firebase_core to v0.8.0-nullsafety.1
