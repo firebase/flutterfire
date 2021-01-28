@@ -24,9 +24,9 @@ class SetOptions {
     this.merge = null,
     // ignore: avoid_init_to_null
     List<dynamic>? mergeFields = null,
-  })  : assert(merge == null && mergeFields == null,
+  })  : assert(!(merge == null && mergeFields == null),
             "options must provide 'merge' or 'mergeFields'"),
-        assert(mergeFields != null && merge != null,
+        assert(!(mergeFields != null && merge != null),
             "options cannot have both 'merge' & 'mergeFields'"),
         assert(
             mergeFields!
