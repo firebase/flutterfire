@@ -1,3 +1,7 @@
+## 4.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_core_platform_interface" to `4.0.0-1.0.nullsafety.0`.
+
 ## 4.0.0-nullsafety.0
 
 Major bump for the null-safety version to respect the versioning convention.
