@@ -67,7 +67,7 @@ void main() {
       expect(t.toDate().day, 1);
     });
 
-    test('fromMillisecondsSinceEpoch can handle nagtive millisecond values',
+    test('fromMillisecondsSinceEpoch can handle negative millisecond values',
         () {
       Timestamp t = Timestamp.fromMillisecondsSinceEpoch(-9999999999);
 
