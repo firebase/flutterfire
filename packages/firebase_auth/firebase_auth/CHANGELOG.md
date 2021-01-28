@@ -4,7 +4,7 @@
 
 ## 0.21.0-nullsafety.0
 
-Migrated to null safety (#4633)
+ - **FEAT**: Migrated to null safety (#4633)
 
 ## 0.20.0+1
 
