@@ -113,11 +113,11 @@ PromiseJsImpl<S> handleFutureWithMapper<T, S>(
 ) {
   return PromiseJsImpl<S>(allowInterop((
     void Function(S) resolve,
-    Null Function(Object) reject,
+    void Function(Object) reject,
   ) {
     future.then((value) {
       var mappedValue = mapper(value);
       resolve(mappedValue);
-    }).catchError(reject);
+    }).catchError((error) => reject(error));
   }));
 }
