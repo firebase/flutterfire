@@ -1,3 +1,39 @@
+## 4.0.0-1.0.nullsafety.0
+
+> Note: This release has breaking changes.
+
+ - **REFACTOR**: Migrate firebase auth to nnbd (#4633).
+ - **REFACTOR**: remove signInSecondFactor (#3158).
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+ - **FIX**: bubble exceptions (#3700).
+ - **FIX**: fix firebase_auth listeners assigning of currentUser (#3737).
+ - **FIX**: fix IdTokenResult timestamps (web, ios) (#3357).
+ - **FIX**: documentation changes and google auth provider assert (#3216).
+ - **FEAT**: bump firebase_core to v0.8.0-nullsafety.1 (#4760).
+ - **FEAT**: add support for linkWithPhoneNumber (#3436).
+ - **FEAT**: use named arguments for ActionCodeSettings (#3269).
+ - **FEAT**: implement signInWithPhoneNumber on web (#3205).
+ - **FEAT**: expose smsCode (android only) (#3308).
+ - **FEAT**: v1 rework (#3140).
+ - **DOCS**: fixed signOut method documentation (#3342).
+ - **CHORE**: bump firebase_core and firebase_core_web (#4758).
+ - **CHORE**: Add changelogs for firebase_auth (#4757).
+ - **CHORE**: remove quiver + remove dependency_overrides + use latest firebase (#4689).
+ - **CHORE**: Migrate firebase_core/firebase_core_platform_interface/firebase_core_web to non-nullable types (#4656).
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: null safety hints (#4370).
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: firebase_auth_platform_interface v2.0.1.
+ - **CHORE**: promote to stable version.
+ - **CHORE**: update lower bound dart dependency to 2.0.0.
+ - **BREAKING** **REFACTOR**: remove deprecated APIs (#4590).
+
 ## 4.0.0-nullsafety.1
 
 Bump firebase_core to v0.8.0-nullsafety.1
