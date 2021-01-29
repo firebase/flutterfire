@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -10,7 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runWriteBatchTests() {
   group('$WriteBatch', () {
-    FirebaseFirestore? firestore;
+    FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -18,7 +20,7 @@ void runWriteBatchTests() {
 
     Future<CollectionReference> initializeTest(String id) async {
       CollectionReference collection =
-          firestore!.collection('flutter-tests/$id/query-tests');
+          firestore.collection('flutter-tests/$id/query-tests');
       QuerySnapshot snapshot = await collection.get();
       await Future.forEach(snapshot.docs, (DocumentSnapshot documentSnapshot) {
         return documentSnapshot.reference.delete();
@@ -28,7 +30,7 @@ void runWriteBatchTests() {
 
     test('performs batch operations', () async {
       CollectionReference collection = await initializeTest('write-batch-ops');
-      WriteBatch batch = firestore!.batch();
+      WriteBatch batch = firestore.batch();
 
       DocumentReference doc1 = collection.doc('doc1'); // delete
       DocumentReference doc2 = collection.doc('doc2'); // set

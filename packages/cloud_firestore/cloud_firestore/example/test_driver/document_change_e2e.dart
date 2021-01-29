@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -9,7 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runDocumentChangeTests() {
   group('$DocumentChange', () {
-    FirebaseFirestore? firestore;
+    FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -17,7 +19,7 @@ void runDocumentChangeTests() {
 
     Future<CollectionReference> initializeTest(String id) async {
       CollectionReference collection =
-          firestore!.collection('flutter-tests/$id/query-tests');
+          firestore.collection('flutter-tests/$id/query-tests');
       QuerySnapshot snapshot = await collection.get();
       await Future.forEach(snapshot.docs, (DocumentSnapshot documentSnapshot) {
         return documentSnapshot.reference.delete();
@@ -47,7 +49,7 @@ void runDocumentChangeTests() {
           expect(change.newIndex, equals(0));
           expect(change.oldIndex, equals(-1));
           expect(change.type, equals(DocumentChangeType.added));
-          expect(change.doc.data()!['name'], equals('doc1'));
+          expect(change.doc.data()['name'], equals('doc1'));
         } else if (call == 2) {
           expect(snapshot.docs.length, equals(0));
           expect(snapshot.docChanges.length, equals(1));
@@ -56,7 +58,7 @@ void runDocumentChangeTests() {
           expect(change.newIndex, equals(-1));
           expect(change.oldIndex, equals(0));
           expect(change.type, equals(DocumentChangeType.removed));
-          expect(change.doc.data()!['name'], equals('doc1'));
+          expect(change.doc.data()['name'], equals('doc1'));
         } else {
           fail('Should not have been called');
         }
@@ -93,7 +95,7 @@ void runDocumentChangeTests() {
             expect(change.oldIndex, equals(-1));
             expect(change.newIndex, equals(index));
             expect(change.type, equals(DocumentChangeType.added));
-            expect(change.doc.data()!['value'], equals(index + 1));
+            expect(change.doc.data()['value'], equals(index + 1));
           });
         } else if (call == 2) {
           expect(snapshot.docs.length, equals(3));

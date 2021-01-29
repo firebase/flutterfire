@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -10,7 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runInstanceTests() {
   group('$FirebaseFirestore.instance', () {
-    FirebaseFirestore? firestore;
+    FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -18,7 +20,7 @@ void runInstanceTests() {
 
     test('snapshotsInSync()', () async {
       DocumentReference documentReference =
-          firestore!.doc('flutter-tests/insync');
+          firestore.doc('flutter-tests/insync');
 
       // Ensure deleted
       await documentReference.delete();
@@ -29,7 +31,7 @@ void runInstanceTests() {
 
       int inSyncCount = 0;
 
-      insync = firestore!.snapshotsInSync().listen((_) {
+      insync = firestore.snapshotsInSync().listen((_) {
         controller.add('insync=$inSyncCount');
         inSyncCount++;
       });
@@ -62,13 +64,13 @@ void runInstanceTests() {
       if (kIsWeb) return;
 
       // Write some data while online
-      await firestore!.enableNetwork();
+      await firestore.enableNetwork();
       DocumentReference documentReference =
-          firestore!.doc('flutter-tests/enable-network');
+          firestore.doc('flutter-tests/enable-network');
       await documentReference.set({'foo': 'bar'});
 
       // Disable the network
-      await firestore!.disableNetwork();
+      await firestore.disableNetwork();
 
       StreamController controller = StreamController();
 
@@ -80,7 +82,7 @@ void runInstanceTests() {
       });
 
       // Go back online
-      await firestore!.enableNetwork();
+      await firestore.enableNetwork();
 
       await expectLater(controller.stream, emits(true));
       await controller.close();
@@ -90,25 +92,25 @@ void runInstanceTests() {
       if (kIsWeb) return;
 
       // Write some data while online
-      await firestore!.enableNetwork();
+      await firestore.enableNetwork();
       DocumentReference documentReference =
-          firestore!.doc('flutter-tests/disable-network');
+          firestore.doc('flutter-tests/disable-network');
       await documentReference.set({'foo': 'bar'});
 
       // Disable the network
-      await firestore!.disableNetwork();
+      await firestore.disableNetwork();
 
       // Get data from cache
       DocumentSnapshot documentSnapshot = await documentReference.get();
       expect(documentSnapshot.metadata.isFromCache, isTrue);
-      expect(documentSnapshot.data()!['foo'], equals('bar'));
+      expect(documentSnapshot.data()['foo'], equals('bar'));
 
       // Go back online once test complete
-      await firestore!.enableNetwork();
+      await firestore.enableNetwork();
     });
 
     test('waitForPendingWrites()', () async {
-      await firestore!.waitForPendingWrites();
+      await firestore.waitForPendingWrites();
     }, skip: kIsWeb);
 
     test('terminate() / clearPersistence()', () async {
@@ -117,17 +119,16 @@ void runInstanceTests() {
       // We first check it does throw as expected, then terminate
       // the instance, and then check whether clearing succeeds.
       try {
-        await firestore!.clearPersistence();
+        await firestore.clearPersistence();
         fail('Should have thrown');
+      } on FirebaseException catch (e) {
+        expect(e.code, equals('failed-precondition'));
       } catch (e) {
-        expect(e, isA<FirebaseException>());
-        if (e is FirebaseException) {
-          expect(e.code, equals('failed-precondition'));
-        }
+        fail(e);
       }
 
-      await firestore!.terminate();
-      await firestore!.clearPersistence();
+      await firestore.terminate();
+      await firestore.clearPersistence();
     });
   }, skip: kIsWeb);
 }

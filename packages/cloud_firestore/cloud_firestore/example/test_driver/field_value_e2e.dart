@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -9,7 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runFieldValueTests() {
   group('$FieldValue', () {
-    FirebaseFirestore? firestore;
+    FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -17,8 +19,8 @@ void runFieldValueTests() {
 
     Future<DocumentReference> initializeTest(String path) async {
       String prefixedPath = 'flutter-tests/$path';
-      await firestore!.doc(prefixedPath).delete();
-      return firestore!.doc(prefixedPath);
+      await firestore.doc(prefixedPath).delete();
+      return firestore.doc(prefixedPath);
     }
 
     group('FieldValue.increment()', () {
@@ -28,7 +30,7 @@ void runFieldValueTests() {
         await doc.set({'foo': 2});
         await doc.update({'foo': FieldValue.increment(1)});
         DocumentSnapshot snapshot = await doc.get();
-        expect(snapshot.data()!['foo'], equals(3));
+        expect(snapshot.data()['foo'], equals(3));
       });
 
       test('decrements a number', () async {
@@ -37,7 +39,7 @@ void runFieldValueTests() {
         await doc.set({'foo': 2});
         await doc.update({'foo': FieldValue.increment(-1)});
         DocumentSnapshot snapshot = await doc.get();
-        expect(snapshot.data()!['foo'], equals(1));
+        expect(snapshot.data()['foo'], equals(1));
       });
 
       test('sets an increment if it does not exist', () async {
@@ -47,7 +49,7 @@ void runFieldValueTests() {
         expect(snapshot.exists, isFalse);
         await doc.set({'foo': FieldValue.increment(1)});
         DocumentSnapshot snapshot2 = await doc.get();
-        expect(snapshot2.data()!['foo'], equals(1));
+        expect(snapshot2.data()['foo'], equals(1));
       });
     });
 
@@ -57,7 +59,7 @@ void runFieldValueTests() {
             await initializeTest('field-value-server-timestamp-new');
         await doc.set({'foo': FieldValue.serverTimestamp()});
         DocumentSnapshot snapshot = await doc.get();
-        expect(snapshot.data()!['foo'], isA<Timestamp>());
+        expect(snapshot.data()['foo'], isA<Timestamp>());
       });
 
       test('updates a server time value', () async {
@@ -65,12 +67,12 @@ void runFieldValueTests() {
             await initializeTest('field-value-server-timestamp-update');
         await doc.set({'foo': FieldValue.serverTimestamp()});
         DocumentSnapshot snapshot = await doc.get();
-        Timestamp serverTime1 = snapshot.data()!['foo'];
+        Timestamp serverTime1 = snapshot.data()['foo'];
         expect(serverTime1, isA<Timestamp>());
         await Future.delayed(const Duration(milliseconds: 100));
         await doc.update({'foo': FieldValue.serverTimestamp()});
         DocumentSnapshot snapshot2 = await doc.get();
-        Timestamp serverTime2 = snapshot2.data()!['foo'];
+        Timestamp serverTime2 = snapshot2.data()['foo'];
         expect(serverTime2, isA<Timestamp>());
         expect(
             serverTime2.microsecondsSinceEpoch >
@@ -100,7 +102,7 @@ void runFieldValueTests() {
           'foo': FieldValue.arrayUnion([3, 4])
         });
         DocumentSnapshot snapshot = await doc.get();
-        expect(snapshot.data()!['foo'], equals([1, 2, 3, 4]));
+        expect(snapshot.data()['foo'], equals([1, 2, 3, 4]));
       });
 
       test('updates an array if current value is not an array', () async {
@@ -111,7 +113,7 @@ void runFieldValueTests() {
           'foo': FieldValue.arrayUnion([3, 4])
         });
         DocumentSnapshot snapshot = await doc.get();
-        expect(snapshot.data()!['foo'], equals([3, 4]));
+        expect(snapshot.data()['foo'], equals([3, 4]));
       });
 
       test('sets an array if current value is not an array', () async {
@@ -122,7 +124,7 @@ void runFieldValueTests() {
           'foo': FieldValue.arrayUnion([3, 4])
         });
         DocumentSnapshot snapshot = await doc.get();
-        expect(snapshot.data()!['foo'], equals([3, 4]));
+        expect(snapshot.data()['foo'], equals([3, 4]));
       });
     });
 
@@ -137,7 +139,7 @@ void runFieldValueTests() {
           'foo': FieldValue.arrayRemove([3, 4])
         });
         DocumentSnapshot snapshot = await doc.get();
-        expect(snapshot.data()!['foo'], equals([1, 2]));
+        expect(snapshot.data()['foo'], equals([1, 2]));
       });
 
       test('removes & updates an array if existing item is not an array',
@@ -149,7 +151,7 @@ void runFieldValueTests() {
           'foo': FieldValue.arrayUnion([3, 4])
         });
         DocumentSnapshot snapshot = await doc.get();
-        expect(snapshot.data()!['foo'], equals([3, 4]));
+        expect(snapshot.data()['foo'], equals([3, 4]));
       });
 
       test('removes & sets an array if existing item is not an array',
@@ -161,7 +163,7 @@ void runFieldValueTests() {
           'foo': FieldValue.arrayUnion([3, 4])
         });
         DocumentSnapshot snapshot = await doc.get();
-        expect(snapshot.data()!['foo'], equals([3, 4]));
+        expect(snapshot.data()['foo'], equals([3, 4]));
       });
 
       // ignore: todo
@@ -179,7 +181,7 @@ void runFieldValueTests() {
           'foo': FieldValue.arrayUnion([2, ref])
         });
         DocumentSnapshot snapshot = await doc.get();
-        expect(snapshot.data()!['foo'], equals([1, 2, ref]));
+        expect(snapshot.data()['foo'], equals([1, 2, ref]));
       }, skip: true);
     });
   });

@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -184,7 +186,7 @@ class _FilmListState extends State<FilmList> {
               return Center(child: Text(stream.error.toString()));
             }
 
-            QuerySnapshot querySnapshot = stream.data!;
+            QuerySnapshot querySnapshot = stream.data;
 
             return ListView.builder(
               itemCount: querySnapshot.size,
@@ -204,7 +206,7 @@ class Movie extends StatelessWidget {
   Movie(this.snapshot);
 
   /// Returns the [DocumentSnapshot] data as a a [Map].
-  Map<String, dynamic>? get movie {
+  Map<String, dynamic> get movie {
     return snapshot.data();
   }
 
@@ -212,7 +214,7 @@ class Movie extends StatelessWidget {
   Widget get poster {
     return SizedBox(
       width: 100,
-      child: Center(child: Image.network(movie!['poster'])),
+      child: Center(child: Image.network(movie['poster'])),
     );
   }
 
@@ -228,7 +230,7 @@ class Movie extends StatelessWidget {
             genres,
             Likes(
               reference: snapshot.reference,
-              currentLikes: movie!['likes'],
+              currentLikes: movie['likes'],
             )
           ],
         ));
@@ -236,7 +238,7 @@ class Movie extends StatelessWidget {
 
   /// Return the movie title.
   Widget get title {
-    return Text('${movie!['title']} (${movie!['year']})',
+    return Text('${movie['title']} (${movie['year']})',
         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
   }
 
@@ -247,16 +249,16 @@ class Movie extends StatelessWidget {
         child: Row(children: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: Text('Rated: ${movie!['rated']}'),
+            child: Text('Rated: ${movie['rated']}'),
           ),
-          Text('Runtime: ${movie!['runtime']}'),
+          Text('Runtime: ${movie['runtime']}'),
         ]));
   }
 
   /// Returns a list of genre movie tags.
   List<Widget> genreItems() {
     List<Widget> items = <Widget>[];
-    movie!['genre'].forEach((genre) {
+    movie['genre'].forEach((genre) {
       items.add(Padding(
         padding: const EdgeInsets.only(right: 2),
         child: Chip(
@@ -288,15 +290,14 @@ class Movie extends StatelessWidget {
 /// Displays and manages the movie 'like' count.
 class Likes extends StatefulWidget {
   /// The [DocumentReference] relating to the counter.
-  final DocumentReference reference;
+  final DocumentReference /*!*/ reference;
 
   /// The number of current likes (before manipulation).
-  final num currentLikes;
+  final num /*!*/ currentLikes;
 
   /// Constructs a new [Likes] instance with a given [DocumentReference] and
   /// current like count.
-  Likes({Key? key, required this.reference, required this.currentLikes})
-      : super(key: key);
+  Likes({Key key, this.reference, this.currentLikes}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -305,7 +306,7 @@ class Likes extends StatefulWidget {
 }
 
 class _Likes extends State<Likes> {
-  int _likes = 0;
+  int /*!*/ _likes;
 
   Future<void> _onLike(int current) async {
     // Increment the 'like' count straight away to show feedback to the user.
@@ -315,22 +316,22 @@ class _Likes extends State<Likes> {
 
     try {
       // Return and set the updated 'likes' count from the transaction
-      int? newLikes = await FirebaseFirestore.instance
-          .runTransaction<int?>((transaction) async {
+      int newLikes = await FirebaseFirestore.instance
+          .runTransaction<int>((transaction) async {
         DocumentSnapshot txSnapshot = await transaction.get(widget.reference);
 
         if (!txSnapshot.exists) {
           throw Exception('Document does not exist!');
         }
 
-        int? updatedLikes = (txSnapshot.data()!['likes'] ?? 0) + 1;
+        int updatedLikes = (txSnapshot.data()['likes'] ?? 0) + 1;
         transaction.update(widget.reference, {'likes': updatedLikes});
         return updatedLikes;
       });
 
       // Update with the real count once the transaction has completed.
       setState(() {
-        _likes = newLikes!;
+        _likes = newLikes;
       });
     } catch (e, s) {
       //ignore: avoid_print
@@ -347,8 +348,7 @@ class _Likes extends State<Likes> {
 
   @override
   Widget build(BuildContext context) {
-    int currentLikes =
-        widget.currentLikes as bool ? widget.currentLikes as int? ?? 0 : _likes;
+    int currentLikes = _likes ?? widget.currentLikes ?? 0;
 
     return Row(children: [
       IconButton(

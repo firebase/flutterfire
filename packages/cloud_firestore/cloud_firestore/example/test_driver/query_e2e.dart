@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:math';
 import 'dart:async';
 
@@ -11,7 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runQueryTests() {
   group('$Query', () {
-    FirebaseFirestore? firestore;
+    FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -19,7 +21,7 @@ void runQueryTests() {
 
     Future<CollectionReference> initializeTest(String id) async {
       CollectionReference collection =
-          firestore!.collection('flutter-tests/$id/query-tests');
+          firestore.collection('flutter-tests/$id/query-tests');
       QuerySnapshot snapshot = await collection.get();
       await Future.forEach(snapshot.docs,
           (QueryDocumentSnapshot documentSnapshot) {
@@ -34,7 +36,7 @@ void runQueryTests() {
     group('collectionGroup()', () {
       test('returns a data via a sub-collection', () async {
         CollectionReference collection =
-            firestore!.collection('flutter-tests/collection-group/group-test');
+            firestore.collection('flutter-tests/collection-group/group-test');
         QuerySnapshot snapshot = await collection.get();
 
         await Future.forEach(snapshot.docs,
@@ -45,13 +47,13 @@ void runQueryTests() {
         await collection.doc('doc1').set({'foo': 1});
         await collection.doc('doc2').set({'foo': 2});
 
-        QuerySnapshot groupSnapshot = await firestore!
+        QuerySnapshot groupSnapshot = await firestore
             .collectionGroup('group-test')
             .orderBy('foo', descending: true)
             .get();
         expect(groupSnapshot.size, equals(2));
-        expect(groupSnapshot.docs[0].data()!['foo'], equals(2));
-        expect(groupSnapshot.docs[1].data()!['foo'], equals(1));
+        expect(groupSnapshot.docs[0].data()['foo'], equals(2));
+        expect(groupSnapshot.docs[1].data()['foo'], equals(1));
       });
     });
 
@@ -82,7 +84,7 @@ void runQueryTests() {
       });
 
       test('throws a [FirebaseException]', () async {
-        CollectionReference collection = firestore!.collection('not-allowed');
+        CollectionReference collection = firestore.collection('not-allowed');
 
         try {
           await collection.get();
@@ -118,7 +120,7 @@ void runQueryTests() {
             expect(snapshot.docs.length, equals(1));
             expect(snapshot.docs[0], isA<QueryDocumentSnapshot>());
             QueryDocumentSnapshot documentSnapshot = snapshot.docs[0];
-            expect(documentSnapshot.data()!['foo'], equals('bar'));
+            expect(documentSnapshot.data()['foo'], equals('bar'));
           } else {
             fail('Should not have been called');
           }
@@ -137,11 +139,11 @@ void runQueryTests() {
         final value1 = collection1
             .snapshots()
             .first
-            .then((s) => s.docs.first.data()!['test']);
+            .then((s) => s.docs.first.data()['test']);
         final value2 = collection2
             .snapshots()
             .first
-            .then((s) => s.docs.first.data()!['test']);
+            .then((s) => s.docs.first.data()['test']);
 
         await expectLater(value1, completion('value1'));
         await expectLater(value2, completion('value2'));
@@ -160,12 +162,12 @@ void runQueryTests() {
           if (call == 1) {
             expect(snapshot.docs.length, equals(1));
             QueryDocumentSnapshot documentSnapshot = snapshot.docs[0];
-            expect(documentSnapshot.data()!['foo'], equals('bar'));
+            expect(documentSnapshot.data()['foo'], equals('bar'));
           } else if (call == 2) {
             expect(snapshot.docs.length, equals(2));
             QueryDocumentSnapshot documentSnapshot =
                 snapshot.docs.firstWhere((doc) => doc.id == 'doc1');
-            expect(documentSnapshot.data()!['bar'], equals('baz'));
+            expect(documentSnapshot.data()['bar'], equals('baz'));
           } else if (call == 3) {
             expect(snapshot.docs.length, equals(1));
             expect(
@@ -174,12 +176,12 @@ void runQueryTests() {
             expect(snapshot.docs.length, equals(2));
             QueryDocumentSnapshot documentSnapshot =
                 snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
-            expect(documentSnapshot.data()!['foo'], equals('bar'));
+            expect(documentSnapshot.data()['foo'], equals('bar'));
           } else if (call == 5) {
             expect(snapshot.docs.length, equals(2));
             QueryDocumentSnapshot documentSnapshot =
                 snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
-            expect(documentSnapshot.data()!['foo'], equals('baz'));
+            expect(documentSnapshot.data()['foo'], equals('baz'));
           } else {
             fail('Should not have been called');
           }
@@ -197,7 +199,7 @@ void runQueryTests() {
       });
 
       test('listeners throws a [FirebaseException]', () async {
-        CollectionReference collection = firestore!.collection('not-allowed');
+        CollectionReference collection = firestore.collection('not-allowed');
         Stream<QuerySnapshot> stream = collection.snapshots();
 
         try {
@@ -885,7 +887,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()!['foo'], equals(rand));
+          expect(doc.data()['foo'], equals(rand));
         });
       });
 
@@ -911,7 +913,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(1));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()!['foo'], equals(rand + 1));
+          expect(doc.data()['foo'], equals(rand + 1));
         });
       });
 
@@ -940,7 +942,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()!['foo'] > rand, isTrue);
+          expect(doc.data()['foo'] > rand, isTrue);
         });
       });
 
@@ -969,7 +971,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(3));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()!['foo'] >= rand, isTrue);
+          expect(doc.data()['foo'] >= rand, isTrue);
         });
       });
 
@@ -995,7 +997,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()!['foo'] < rand, isTrue);
+          expect(doc.data()['foo'] < rand, isTrue);
         });
       });
 
@@ -1024,7 +1026,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(3));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()!['foo'] <= rand, isTrue);
+          expect(doc.data()['foo'] <= rand, isTrue);
         });
       });
 
@@ -1050,7 +1052,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
-          expect(doc.data()!['foo'], equals([1, '2', '$rand']));
+          expect(doc.data()['foo'], equals([1, '2', '$rand']));
         });
       });
 
@@ -1077,7 +1079,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(3));
         snapshot.docs.forEach((doc) {
-          String? status = doc.data()!['status'];
+          String status = doc.data()['status'];
           expect(status == 'Ready to Ship' || status == 'Ordered', isTrue);
         });
       });
@@ -1105,7 +1107,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(3));
         snapshot.docs.forEach((doc) {
-          String? status = doc.data()!['status'];
+          String status = doc.data()['status'];
           expect(status == 'Ready to Ship' || status == 'Ordered', isTrue);
         });
       });
@@ -1133,7 +1135,7 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(1));
         snapshot.docs.forEach((doc) {
-          String? status = doc.data()!['status'];
+          String status = doc.data()['status'];
           expect(status == 'Incomplete', isTrue);
         });
       });
