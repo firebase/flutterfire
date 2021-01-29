@@ -89,7 +89,8 @@ class MethodChannelQuery extends QueryPlatform {
 
   /// Fetch the documents for this query
   @override
-  Future<QuerySnapshotPlatform> get([GetOptions options = const GetOptions()]) async {
+  Future<QuerySnapshotPlatform> get(
+      [GetOptions options = const GetOptions()]) async {
     try {
       final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
           .channel

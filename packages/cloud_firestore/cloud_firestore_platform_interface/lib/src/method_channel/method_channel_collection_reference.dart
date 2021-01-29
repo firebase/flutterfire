@@ -23,7 +23,7 @@ class MethodChannelCollectionReference extends MethodChannelQuery
 // ignore: avoid_implementing_value_types
         CollectionReferencePlatform {
   late Pointer _pointer;
-  
+
   /// Create a [MethodChannelCollectionReference] instance.
   MethodChannelCollectionReference(
       FirebaseFirestorePlatform firestore, String path)

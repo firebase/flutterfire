@@ -64,7 +64,8 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   /// Reads the document referenced by this [DocumentReferencePlatform].
   ///
   /// If no document exists, the read will return null.
-  Future<DocumentSnapshotPlatform> get([GetOptions options = const GetOptions()]) async {
+  Future<DocumentSnapshotPlatform> get(
+      [GetOptions options = const GetOptions()]) async {
     throw UnimplementedError('get() is not implemented');
   }
 
