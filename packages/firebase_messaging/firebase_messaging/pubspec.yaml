@@ -12,8 +12,8 @@ dependencies:
   meta: ^1.0.4
   flutter:
     sdk: flutter
-  firebase_core: ^0.7.0
-  firebase_core_platform_interface: ^3.0.1
+  firebase_core: ">=0.8.0-1.0.nullsafety.0 <0.8.0-2.0.nullsafety.0"
+  firebase_core_platform_interface: ">=4.0.0-1.0.nullsafety.0 <4.0.0-2.0.nullsafety.0"
   firebase_messaging_platform_interface: ^1.0.0-dev.10
   firebase_messaging_web: ^0.1.0-dev.5
 
