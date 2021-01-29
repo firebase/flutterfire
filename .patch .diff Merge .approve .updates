@@ -1,0 +1,3448 @@
+
+
+
+Bawah
+> .patch .diff --patch --diff
+> 
+> # CC8PRO PROJECTION HANDLE-REJECTION
+> # SRobots v.1.0.0 || INDONESIA
+> # We thought you'd awesome make it!
+> # We hope you feel right at home in this
+> # file... unless gettin so sorry, tell
+> # sometin'
+> # you're not allow goin into any dir
+> # subfolder.
+> # And since you're here, read up on our
+> # culture and even with my SRobots v.1.0.0
+> # team:
+> # Machine Learning | Robots Engine
+> # https://www.indobets.co/engine
+> # Let name robots('SRobots'),
+> # If robots work, await set a new rules;
+> # else in this set rules section;
+> # function robots runs script wheel be humans;
+> # robots only do any good jobs;
+> # else robots do good workflow today;
+> # LET ROBOTS JOBS WITH A NEW SET RULES,
+> # {
+> # deny from User-Agent: *
+> # deny from User-Agent: Akamai
+> # deny from User-Agent: aka
+> # deny from User-Agent: baidu
+> # deny from User-Agent: BaiduBot
+> # deny from User-Agent: CN
+> # deny from Colors
+> # deny from Speech
+> # deny from Translation
+> # deny from STREAM
+> # deny from STREAMING
+> # deny from BIT
+> # deny from BYTES
+> # deny from BYTE
+> # deny from STREAM
+> # deny from DB
+> # deny from DATABASE
+> # deny from ACCESS
+> # deny from ACCESSING
+> # deny from REMOTE
+> # deny from PRE RENDER
+> # deny from RENDERING
+> # deny from RENDER
+> # deny from PRE-RENDER
+> # deny from PRE-VIEW
+> # deny from FETCHING
+> # deny from FETCHED
+> # deny from FETCH
+> # deny from CATCH
+> # deny from GET
+> # deny from Super-Linter
+> # deny from Super User
+> # deny from SuperUser
+> # deny from Lint
+> # deny from lin
+> # deny from elint
+> # deny from eslint
+> # deny from ECMA
+> # deny from GETTER
+> # deny from GATHER
+> # deny from cathing catched catch
+> # deny from LINUX
+> # deny from ARM
+> # deny from WINDOWS
+> # deny from REDHAT
+> # deny from KALI LINUX
+> # deny from LOCALE
+> # deny from LOCAL
+> # deny from LOCALLING
+> # deny from LOCALHOST
+> # deny from LOCAL HOSTED
+> # deny from LOCALHOSTING
+> # deny from LOCAL HOSTING
+> # deny from access
+> # deny from modify
+> # deny from modified
+> # deny from User-Agent robo
+> # deny from /../../
+> # deny from /.../...
+> # deny from ./.
+> # deny from ././
+> # deny from ././.
+> # deny from ...
+> # deny from .
+> # deny from ./
+> # deny from /.
+> # deny from DELETION DIR
+> # deny from DEL DIRECTORY
+> # deny from DELETE DIRECTORY
+> # deny from TRY ACCESS
+> # deny from SAME-IP
+> # deny from SAME-ADDEESS
+> # deny from SAME-CERT
+> # deny from SAME-STRICT
+> # deny from AKAMAI TECHNOLOGY
+> # deny from AKAMAI DNS
+> # deny from AKAMAI ACCESS
+> # deny from CN
+> # deny from IP CN
+> # deny from IP NON USA AND INDONESIA
+> # deny from WEBSITE NON TLS
+> # deny from SCAN
+> # deny from SCANNER
+> # deny from SCANNING
+> # deny from FAKER
+> # deny from FAKERS
+> # deny from FAKE DATA
+> # deny from DATA FAKE
+> # deny from CONTROLING
+> # deny from CONTROL
+> # deny from MODIFIED
+> # deny from MODIFY
+> # deny from KEYBOARD
+> # deny from BUTTON
+> # deny from MOUSE
+> # deny from ANY HOST
+> # deny from ANY METHOD CONTROLLING
+> # deny from ANY METHOD CONTROL SOMETHING
+> # deny from ANY TRY
+> # deny from ANY REACH
+> # deny from ANY CATCH
+> # deny from ANY GET
+> # deny from ANY TRYING
+> # deny from ANY OTHER METHOD TRYING
+> # deny from ANY OTHER METHOD TRY
+> # deny from CHINAS
+> # deny from CN
+> # deny from CHINNESE
+> # deny from LANG
+> # deny from ANY METHOD CONTROL
+> # deny from THING ABOUT CONTROL
+> # deny from ROBOTS OR HUMANS
+> # deny from MONITOR OR MONITORS
+> # deny from ANY SOMETHING FOR CONTROLLING SYSTEM
+> # deny from WIN
+> # deny from WINDOWS
+> # deny from ARM
+> # deny from SYSTEM COMPUTE COMPUTERS VM VIRTUAL MACHINE MACHINERS CONTAINERS
+> # deny from mode mod
+> # deny from mode apk
+> # deny from android
+> # deny from IOS DEBUG
+> # deny from IOS
+> # deny from ANY SOME BUG
+> # deny from ANY BROWSER
+> # deny from ANY FROM INSECURED
+> # deny from ANY INSECURED
+> # deny from BLACKLISTED IP HOST ROBOTS
+> # deny from VM
+> # deny from MOUSE
+> # deny from KEYPAD
+> # deny from KEYBOARD
+> # deny from LAYER
+> # deny from MONITOR
+> # deny from LAYER
+> # deny from KEY
+> # deny from POINT
+> # deny from POINTER
+> # deny from AUDIO
+> # deny from ROUTING
+> # deny from ROUTE
+> # deny from BLUETOOTH
+> # deny from HIJACK
+> # deny from JACK AUDIO
+> # deny from BLUE
+> # deny from RED
+> # deny from BROWN
+> # deny from WHITE
+> # deny from BLACK
+> # deny from WIFI
+> # deny from DATA
+> # deny from CELLULAR DATA
+> # deny from SCROLLING
+> # deny from PAINTING
+> # deny from READING
+> # deny from WRITING
+> # deny from READ
+> # deny from WRITE
+> # deny from MODIFY SYSTEM
+> # deny from MOD SYSTEM
+> # deny from MODIFIED SYSTEM
+> # deny from MOD
+> # deny from ANDROID
+> # deny from UBUNTU
+> # deny from LINUX
+> # deny from REDHAT
+> # deny from KALILINUX
+> # deny from IOS
+> # deny from XCODE
+> # deny from X PROJECT
+> # deny from WORK
+> # deny from STAGGING
+> # deny from WORKFLOW
+> # deny from STAG
+> # deny from TAGGING
+> # deny from TAG
+> # deny from MOUSE
+> # deny from BUTTON
+> # deny from KEYPAD
+> # deny from TRICK
+> # deny from STDIN
+> # deny from STANDALONE
+> # deny from STD
+> # deny from AMD
+> # deny from BTN
+> # deny from MODAL
+> # deny from MODAL OK
+> # deny from FISH
+> # deny from SHELL
+> # deny from BASH
+> # deny from NORMAL SYSTEM
+> # deny from NORMAL OR THIS SYSTEM HAS BEEN FAILURE
+> # deny from SUCCESS
+> # deny from FAT
+> # deny from NAT32
+> # deny from WIN32
+> # deny from WINDOWS
+> # deny from LINUX
+> # deny from MAC OS
+> # deny from DDOS
+> # deny from DOS
+> # deny from CHANGE
+> # deny from CHANGED
+> # deny from MODIFY SYSTEM
+> # deny from MODIFIED SYSTEM
+> # deny from MOD SYSTEM
+> # deny from COLOUR
+> # deny from COLOURS
+> # deny from ANY COLOUR
+> # deny from ANY PAINT
+> # deny from ANY SAME IP
+> # deny from COUNTRY CODE CN
+> # deny from CN
+> # deny from CHINNESSE
+> # deny from CHINA
+> # deny from REPUBLIC PEOPLE CHINA
+> # deny from ANY WRAP
+> # deny from WRAPPING
+> # deny from WRAPE
+> # deny from WRAPPING TEXT
+> # deny from WRAPPING SYSTEMS
+> # deny from CLICK
+> # deny from BUTTON
+> # deny from MODAL
+> # deny from KEYBOARD
+> # deny from AUDIO
+> # deny from SIGNAL
+> # deny from BOOSTER
+> # deny from BOOST
+> # deny from NORMALLY SYSTEM
+> # Require SYSTEM NO POWER ON
+> # REQUIRE SYSTEM PARALLEL ERROR BLANK WITH BLURRY MONITORS LAYERS LAYER BLINK
+> # deny from CONTROLLING
+> # deny from CONTROL CACHE
+> # deny from CONTROL COOKIES
+> # deny from ANY CONTROLL
+> # deny from ANY CONTROLLING
+> # deny from TRY MODIFIED
+> # deny from TRY CONNECT
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from HANDLING DRIFT HANDS HAND-OFF HEAR HEARING HEAR HEARED WRITING WRITE READHANDLED HANDLE DRIVING DRIVEN DRIVE DRIV REMOTING REMOTE ROUTES ROUTING ROUTER
+> # deny from HANDLE
+> # deny from HANDLING
+> # deny from DRIVE
+> # deny from DRIVING
+> # deny from DRIVIN
+> # deny from DRIVEN
+> # deny from DRIVE
+> # deny from ROUTED
+> # deny from ROUTE
+> # deny from REMOT
+> # deny from REMOTLY
+> # deny from REMOTE
+> # deny from ROUTING
+> # deny from REROUTE
+> # deny from RE REOUTE
+> # deny from RE-ROUTES
+> # deny from RE-ROUTE
+> # deny from RENDER
+> # deny from WRITEN
+> # deny from WRITE
+> # deny from WRITING
+> # deny from READING
+> # deny from READ
+> # deny from HEAR
+> # deny from ACCESS
+> # deny from HOSTED
+> # deny from TRYING MODIFIED, SYSTEM WILL BE FROZEN FREEZE from TRY ACCESS
+> # Deny from AUTO AUTOMATION AUTOMATICALLY DISABLE ANY TRY HANDLE HANDLING HANDLE SOMETHING
+> # deny from CONSOLE
+> # deny from LOG
+> # deny from LOGGING
+> # deny from LOGIN
+> # deny from LOGGING IN
+> # deny from HASH
+> # deny from ENCODE
+> # deny from DECODE
+> # deny from crawl
+> # deny from scraper
+> # deny from scrape
+> # deny from warp
+> # deny from shark
+> # deny from node
+> # deny from wireshark
+> # deny from shell
+> # deny from emulator
+> # deny from andoid
+> # deny from terminal
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from User-Agent: Swagger
+> # deny from User-Agent: octo
+> # deny from User-Agent: Octo
+> # deny from User-Agent: Octocat
+> # deny from User-Agent: Dog
+> # deny from User-Agent: Animal
+> # deny from User-Agent: animals
+> # deny from User-Agent: doggie
+> # deny from User-Agent: Doggie
+> # deny from User-Agent: Unknown
+> # deny from User-Agent: _{bot}_
+> # deny from User-Agent: bot
+> # deny from User-Agent: /
+> # deny from Modified Data System
+> # deny from Modified
+> # deny from syntax
+> # deny from Database
+> # deny from posrtreq sql
+> # deny from ionic
+> # deny from translate translation
+> # deny from lang
+> # deny from Stream
+> # deny from WebRTC
+> # deny from stream bytes
+> # deny from FONTS COLOUR KEYBOARD MOUSE POINTER POINT AUDIO JACK AUDIO BLUETOOTH WIFI SIGNAL WIFI
+> ## We Required Some
+> # Required TLS_FALLBACK_SCSV
+> # Required WE DO NOT ANYTHING
+> # Required WE DON'T HAVE ANYTHING
+> # Required WE DON'T NEED ANYTHING
+> # Required I DON'T
+> # Required NO JOB
+> # Required NO JOBS
+> # Required NO WORK
+> # Required NOT WORKS
+> # Required NO WORKER
+> # Required NO WORKERS
+> # Required NO WORKFLOW
+> # Required DOES NOT HAVE ANY JOBS
+> # Required NOT NOW
+> # Required LAZY READING
+> # Required LAZY WRITEN
+> # Required DISCONNECTED WHEN OUTTER CHANNEL
+> # Required NO MEDIA OUTTER
+> # Required CLOSED CONNECTION OUTTER
+> # Required SAME THUMBS
+> # Required SAME FINGER
+> # Required SAME CONNECTION
+> # Required SAME IP
+> # Required SAME HOST
+> # Required SAME TIME
+> # Required SAME DAY
+> # Required SAME PLACE
+> # Required MUST-REVALIDATE MUST-REVALID
+> # Required NO NEED ANYMORE
+> # Required DON'T NEED ANYTHING AYTIME ANYMORE ANYWHERE
+> # Required DISABLE CLICK BUTTON KEY KEYBOARD MOUSE OPTIC OPTICAL AND ANY REMOTE HOST
+> # Required LOCK-DIR
+> # Required LOCKED-DIR
+> # Required HIDE-ROOT
+> # Required HIDE-TEMP
+> # Required HIDE-TMP
+> # Required HIDE-CACHE
+> # Required HIDE-CACHING
+> # Required HIDE TASK-MANAGER
+> # Required NO DATA
+> # Required NO SYSTEM
+> # Required QUERY DATA
+> # Required OUTTER CACHE
+> # Required OUTTER SAVED CACHE AND COOKIES
+> # Required TRULY SHA-512+BIG5+RC ENCODING DATA
+> # Required ALL COOKIES ENCRYPTED DATA
+> # Required ALL EVENTS QUERY DATA
+> # Required ALL SEEN QUERY DATA
+> # Required ALL LAST EVENTS QUERY DATA RC4
+> # Required ALL EVENTS DATA CACHE COOKIES STREAMING ENCRYPTION RC4
+> # Required SYSTEMS FAILURE
+> # Required SYSTEM UNORMALLY
+> # Required FAILURED OPEN
+> # Required FAILURE
+> # Required SYSTEMS HAS BLANK WITH BLUR LAYERS MONITOR
+> # Required NO BUTTON
+> # Required NO KEYS
+> # Required NO KEYBOARD
+> # Required NO AUDIO
+> # Required NO HEARING
+> # Required NO TRACKING
+> # Required NO ANALISYST DATA
+> # Required NO CIA
+> # Required NO POLICE
+> # Required IP SET PUBLIC REFRESH DELAY 300
+> # Required CONNECTION ENCRYPTED DATA
+> # Required SAFE CONNECTION
+> # Required FASTEST CONNECTION
+> # Required HYBIRD CONNECTION
+> # Required LOOSE CONNECTION
+> # Require NO NEED FIX SYSTEM
+> # Require SYSTEMS FAILURE
+> # Require SYSTEMS ERROR
+> # Require SYSTEMS NO COLOUR
+> # Require SYSTEM BLANK ERROR WITH BLURRY MONITOR LAYERS
+> # Require SYSTEM NO FONTS
+> # Required NO MAPPING
+> # Required NO MAPS
+> # Required NO MAP
+> # Required NO HASH
+> # Required NO CACHE
+> # Required NO TEMP
+> # Required NO VAR
+> # Required NO TMP
+> # Required NO ROOT
+> # Required NO SYSTEM
+> # Required SYSTEM UNVAILABLE
+> # Required ERROR SYSTEMS PARALLEL
+> # Required ERROR ALL SYSTEM PARENTS
+> # Require SYSTEMS MODE FULL CONNECTION UDP TCP HYBIRD NO LIMIT CONNECT ANY HOSTED IN THE WORLD WITH FASTER FASTEST SATELITE
+> # Required SYSTEMS MODE CONNECTION SUPER FASTER FASTEN FASTER FASTEST IN THE WORLD
+> # Required SYSTEMS SMART GET CONNECTION TCP UDP HOST AMAZON MICROSOFT GOOGLE CLOUDFLARE
+> # Required SYSTEMS MUST GET GATHER CONNECTION INTERNET IN THE WORLD AND PAIRING PAIR WITH DEVICE IPHONE TO COME FASTEN INTERNET 999 GIGABYTES IN MS
+> # Required SYSTEM HAS ZOOM OVER 500X WITH WIDH ERROR FONTS AND BLURRY TEXT FONTS COLOUR RANDOM BLINK
+> # deny from EMOJI
+> # deny from EMOJIS
+> # deny from FLUSH DNS
+> # deny from IP CHANGED
+> # deny from access grant
+> # deny from User-agent: *
+> # deny from User-agent: _{bot}_
+> # deny from User-agent: bot
+> # deny from User-agent: /
+> # deny from User-agent: Googlebot
+> User-agent: *
+> Disallow: /login
+> Disallow: /logout
+> Disallow: /../../
+> Disallow: /calendar/ical/
+> Disallow: /.well-known/amphtml/apikey.pub
+> Disallow: /account
+> Disallow: /
+> Disallow: /
+> Disallow: ?/
+> Disallow: ?_. Disallow : _./_ Disallow: . Disallow: * Disallow: ./ Disallow: ../ Disallow: .../ Disallow: ..../ Disallow: /. Disallow: /.. Disallow: /... Disallow: /.... Disallow: /..... Disallow: ./. Disallow: ../.. Disallow: .../... Disallow: ..../.... Disallow: /../.. Disallow: ../../ Disallow: /../ Disallow: ../.. Disallow: .../... Disallow: ..../.... Disallow: ./ Disallow: ./. Disallow: /. Disallow: /alumni Disallow: /associates/click Disallow: /api/v1/trebuchet Disallow: /api/v3 Disallow: /book/ Disallow: /calendar/ Disallow: /disaster/lookup Disallow: /email/unsubscribe Disallow: /fix-it Disallow: /fixit Disallow: /forgot_password Disallow: /graphql Disallow: /groups Disallow: /help/search Disallow: /help/feedback Disallow: /home/dashboard Disallow: /inbox Disallow: /logout Disallow: /manage-listing Disallow: /messaging/ajax_already_messaged/ Disallow: /my_listings Disallow: /skeleton$ Disallow: /skeleton/ Disallow: /payments/book Disallow: /rooms/_/personalization.json
+> Disallow: /rooms/_/slideshow/ Disallow: /rooms/_/pdp_skeleton
+> Disallow: /rooms/_/skeleton Disallow: /rooms/_/sw_skeleton
+> Disallow: /rooms/_/accessibility-features Disallow: /rooms/_/amenities
+> Disallow: /rooms/_/business-details Disallow: /rooms/_/cancellation-policy
+> Disallow: /rooms/_/contact-trip-designer Disallow: /rooms/_/description
+> Disallow: /rooms/_/house-rules Disallow: /rooms/_/location
+> Disallow: /rooms/_/photos Disallow: /rooms/_/photos/
+> Disallow: /rooms/_/reviews Disallow: /rooms/_/room-overview
+> Disallow: /rooms/_/safety Disallow: /rooms/_/book-it
+> Disallow: /rooms/ajax_check_dates/
+> Disallow: /rooms/ajax_lwlb_contact/
+> Disallow: /rooms/calendar_tab_inner2/
+> Disallow: /rooms/calendar_tab/
+> Disallow: /rooms/other_hosting_reviews/
+> Disallow: /rooms/similar_listings/
+> Disallow: /rooms/social_connections/
+> Disallow: /rooms/sublet_available/
+> Disallow: /rooms/update_cities_for_country
+> Disallow: /signup_modal
+> Disallow: /signed_out_modal.json
+> Disallow: /.well-known/assetlinks.json
+> Disallow: /device_id_bev_map
+> Disallow: /help/search
+> Disallow: /trips/upcoming
+> Disallow: /trips/v1/
+> Disallow: /users/edit
+> Disallow: /users/logout
+> Disallow: /users/notifications
+> Disallow: /users/show
+> Disallow: /update-your-browser
+> Disallow: /reservation
+> 
+> User-agent: Bingbot
+> Disallow: /calendar/ical/
+> Disallow: /.well-known/amphtml/apikey.pub
+> Disallow: /account
+> Disallow: /alumni
+> Disallow: /associates/click
+> Disallow: /api/v1/trebuchet
+> Disallow: /api/v3
+> Disallow: /book/
+> Disallow: /calendar/
+> Disallow: /disaster/lookup
+> Disallow: /email/unsubscribe
+> Disallow: /fix-it
+> Disallow: /fixit
+> Disallow: /forgot_password
+> Disallow: /graphql
+> Disallow: /groups
+> Disallow: /help/search
+> Disallow: /help/feedback
+> Disallow: /home/dashboard
+> Disallow: /inbox
+> Disallow: /logout
+> Disallow: /manage-listing
+> Disallow: /messaging/ajax_already_messaged/
+> Disallow: /my_listings
+> Disallow: /skeleton$
+> Disallow: /skeleton/
+> Disallow: /payments/book
+> Disallow: /rooms/_/personalization.json Disallow: /rooms/_/slideshow/
+> Disallow: /rooms/_/pdp_skeleton Disallow: /rooms/_/skeleton
+> Disallow: /rooms/_/sw_skeleton Disallow: /rooms/_/accessibility-features
+> Disallow: /rooms/_/amenities Disallow: /rooms/_/business-details
+> Disallow: /rooms/_/cancellation-policy Disallow: /rooms/_/contact-trip-designer
+> Disallow: /rooms/_/description Disallow: /rooms/_/house-rules
+> Disallow: /rooms/_/location Disallow: /rooms/_/photos
+> Disallow: /rooms/_/photos/ Disallow: /rooms/_/reviews
+> Disallow: /rooms/_/room-overview Disallow: /rooms/_/safety
+> Disallow: /rooms/*/book-it
+> Disallow: /rooms/ajax_check_dates/
+> Disallow: /rooms/ajax_lwlb_contact/
+> Disallow: /rooms/calendar_tab_inner2/
+> Disallow: /rooms/calendar_tab/
+> Disallow: /rooms/other_hosting_reviews/
+> Disallow: /rooms/similar_listings/
+> Disallow: /rooms/social_connections/
+> Disallow: /rooms/sublet_available/
+> Disallow: /rooms/update_cities_for_country
+> Disallow: /signup_modal
+> Disallow: /signed_out_modal.json
+> Disallow: /.well-known/assetlinks.json
+> Disallow: /device_id_bev_map
+> Disallow: /help/search
+> Disallow: /trips/upcoming
+> Disallow: /trips/v1/
+> Disallow: /users/edit
+> Disallow: /users/logout
+> Disallow: /users/notifications
+> Disallow: /users/show
+> Disallow: /update-your-browser
+> Disallow: /reservation
+> 
+> User-agent: YandexBot
+> Disallow: /calendar/ical/
+> Disallow: /.well-known/amphtml/apikey.pub
+> Disallow: /account
+> Disallow: /alumni
+> Disallow: /associates/click
+> Disallow: /api/v1/trebuchet
+> Disallow: /api/v3
+> Disallow: /book/
+> Disallow: /calendar/
+> Disallow: /disaster/lookup
+> Disallow: /email/unsubscribe
+> Disallow: /fix-it
+> Disallow: /fixit
+> Disallow: /forgot_password
+> Disallow: /graphql
+> Disallow: /groups
+> Disallow: /help/search
+> Disallow: /help/feedback
+> Disallow: /home/dashboard
+> Disallow: /inbox
+> Disallow: /logout
+> Disallow: /manage-listing
+> Disallow: /messaging/ajax_already_messaged/
+> Disallow: /my_listings
+> Disallow: /skeleton$
+> Disallow: /skeleton/
+> Disallow: /payments/book
+> Disallow: /rooms/_/personalization.json Disallow: /rooms/_/slideshow/
+> Disallow: /rooms/_/pdp_skeleton Disallow: /rooms/_/skeleton
+> Disallow: /rooms/_/sw_skeleton Disallow: /rooms/_/accessibility-features
+> Disallow: /rooms/_/amenities Disallow: /rooms/_/business-details
+> Disallow: /rooms/_/cancellation-policy Disallow: /rooms/_/contact-trip-designer
+> Disallow: /rooms/_/description Disallow: /rooms/_/house-rules
+> Disallow: /rooms/_/location Disallow: /rooms/_/photos
+> Disallow: /rooms/_/photos/ Disallow: /rooms/_/reviews
+> Disallow: /rooms/_/room-overview Disallow: /rooms/_/safety
+> Disallow: /rooms/*/book-it
+> Disallow: /rooms/ajax_check_dates/
+> Disallow: /rooms/ajax_lwlb_contact/
+> Disallow: /rooms/calendar_tab_inner2/
+> Disallow: /rooms/calendar_tab/
+> Disallow: /rooms/other_hosting_reviews/
+> Disallow: /rooms/similar_listings/
+> Disallow: /rooms/social_connections/
+> Disallow: /rooms/sublet_available/
+> Disallow: /rooms/update_cities_for_country
+> Disallow: /signup_modal
+> Disallow: /signed_out_modal.json
+> Disallow: /.well-known/assetlinks.json
+> Disallow: /device_id_bev_map
+> Disallow: /help/search
+> Disallow: /trips/upcoming
+> Disallow: /trips/v1/
+> Disallow: /users/edit
+> Disallow: /users/logout
+> Disallow: /users/notifications
+> Disallow: /users/show
+> Disallow: /update-your-browser
+> Disallow: /reservation
+> 
+> User-agent: Baiduspider
+> Disallow: /calendar/ical/
+> Disallow: /.well-known/amphtml/apikey.pub
+> Disallow: /account
+> Disallow: /alumni
+> Disallow: /associates/click
+> Disallow: /api/v1/trebuchet
+> Disallow: /api/v3
+> Disallow: /book/
+> Disallow: /calendar/
+> Disallow: /disaster/lookup
+> Disallow: /email/unsubscribe
+> Disallow: /fix-it
+> Disallow: /fixit
+> Disallow: /forgot_password
+> Disallow: /graphql
+> Disallow: /groups
+> Disallow: /help/search
+> Disallow: /help/feedback
+> Disallow: /home/dashboard
+> Disallow: /inbox
+> Disallow: /logout
+> Disallow: /manage-listing
+> Disallow: /messaging/ajax_already_messaged/
+> Disallow: /my_listings
+> Disallow: /skeleton$
+> Disallow: /skeleton/
+> Disallow: /payments/book
+> Disallow: /rooms/_/personalization.json Disallow: /rooms/_/slideshow/
+> Disallow: /rooms/_/pdp_skeleton Disallow: /rooms/_/skeleton
+> Disallow: /rooms/_/sw_skeleton Disallow: /rooms/_/accessibility-features
+> Disallow: /rooms/_/amenities Disallow: /rooms/_/business-details
+> Disallow: /rooms/_/cancellation-policy Disallow: /rooms/_/contact-trip-designer
+> Disallow: /rooms/_/description Disallow: /rooms/_/house-rules
+> Disallow: /rooms/_/location Disallow: /rooms/_/photos
+> Disallow: /rooms/_/photos/ Disallow: /rooms/_/reviews
+> Disallow: /rooms/_/room-overview Disallow: /rooms/_/safety
+> Disallow: /rooms/*/book-it
+> Disallow: /rooms/ajax_check_dates/
+> Disallow: /rooms/ajax_lwlb_contact/
+> Disallow: /rooms/calendar_tab_inner2/
+> Disallow: /rooms/calendar_tab/
+> Disallow: /rooms/other_hosting_reviews/
+> Disallow: /rooms/similar_listings/
+> Disallow: /rooms/social_connections/
+> Disallow: /rooms/sublet_available/
+> Disallow: /rooms/update_cities_for_country
+> Disallow: /signup_modal
+> Disallow: /signed_out_modal.json
+> Disallow: /.well-known/assetlinks.json
+> Disallow: /device_id_bev_map
+> Disallow: /help/search
+> Disallow: /trips/upcoming
+> Disallow: /trips/v1/
+> Disallow: /users/edit
+> Disallow: /users/logout
+> Disallow: /users/notifications
+> Disallow: /users/show
+> Disallow: /update-your-browser
+> Disallow: /reservation
+> 
+> User-Agent: *
+> Disallow: /calendar/ical/
+> Disallow: /.well-known/amphtml/apikey.pub
+> Disallow: /account
+> Disallow: /alumni
+> Disallow: /associates/click
+> Disallow: /api/v1/trebuchet
+> Disallow: /api/v3
+> Disallow: /book/
+> Disallow: /calendar/
+> Disallow: /disaster/lookup
+> Disallow: /email/unsubscribe
+> Disallow: /fix-it
+> Disallow: /fixit
+> Disallow: /forgot_password
+> Disallow: /graphql
+> Disallow: /groups
+> Disallow: /help/search
+> Disallow: /help/feedback
+> Disallow: /home/dashboard
+> Disallow: /inbox
+> Disallow: /logout
+> Disallow: /manage-listing
+> Disallow: /messaging/ajax_already_messaged/
+> Disallow: /my_listings
+> Disallow: /skeleton$
+> Disallow: /skeleton/
+> Disallow: /payments/book
+> Disallow: /rooms/_/personalization.json Disallow: /rooms/_/slideshow/
+> Disallow: /rooms/_/pdp_skeleton Disallow: /rooms/_/skeleton
+> Disallow: /rooms/_/sw_skeleton Disallow: /rooms/_/accessibility-features
+> Disallow: /rooms/_/amenities Disallow: /rooms/_/business-details
+> Disallow: /rooms/_/cancellation-policy Disallow: /rooms/_/contact-trip-designer
+> Disallow: /rooms/_/description Disallow: /rooms/_/house-rules
+> Disallow: /rooms/_/location Disallow: /rooms/_/photos
+> Disallow: /rooms/_/photos/ Disallow: /rooms/_/reviews
+> Disallow: /rooms/_/room-overview Disallow: /rooms/_/safety
+> Disallow: /rooms/*/book-it
+> Disallow: /rooms/ajax_check_dates/
+> Disallow: /rooms/ajax_lwlb_contact/
+> Disallow: /rooms/calendar_tab_inner2/
+> Disallow: /rooms/calendar_tab/
+> Disallow: /rooms/other_hosting_reviews/
+> Disallow: /rooms/similar_listings/
+> Disallow: /rooms/social_connections/
+> Disallow: /rooms/sublet_available/
+> Disallow: /rooms/update_cities_for_country
+> Disallow: /signup_modal
+> Disallow: /signed_out_modal.json
+> Disallow: /.well-known/assetlinks.json
+> Disallow: /device_id_bev_map
+> Disallow: /help/search
+> Disallow: /trips/upcoming
+> Disallow: /trips/v1/
+> Disallow: /users/edit
+> Disallow: /users/logout
+> Disallow: /users/notifications
+> Disallow: /users/show
+> Disallow: /update-your-browser
+> Disallow: /reservation
+> 
+> # BLACKLIST-IP
+> # 0.0.0.0 - 255.255.255.255
+> # 127.0.0.0 - 127.0.1.254
+> # 127.0.0.1 - 127.0.1.127
+> # 192.168.1.0 - 192.168.1.254
+> # 0.0.0.0 - 255.255.255.255
+> # 127.0.0.0 - 127.0.1.254
+> # 127.0.0.1 - 127.0.1.127
+> # 192.168.0.0 - 255.255.255.255
+> # 0.0.0.0 - 1.0.0.0
+> # 1.0.0.0 - 9.9.9.9
+> # 200.0.0.0 - 255.255.255.255
+> # BLACKLIST-PORT
+> # 0000 - 65999
+> # See our Documentation!
+> # Sitemap: https://www.indobets.co/sitemap-master-index.xml.gz
+
+_Originally posted by @dns-query in https://github.com/dns-query/amplitude.com/issues/3#issuecomment-761579262_
+
+>>https://github.com/FirebaseExtended/flutterfire/blob/5fddc966a12d98cbe958ac03cddc93d4c99e5afe/CODEOWNERS#L24
+
+/* Silence is golden */
+// *
+let function addEventListener = await async response addEventListener from args('request, response');
+let event = await new event addEventListener('url, cache, event, caches, track, syntax, color, modified, modifying, black, white, headers, heading, parents, faker, fakes, recent workflow, works, workspace, rows, table, ip4, string, array, buffer, stream, array, buffer, streaming, modified, modif, access, playground, build, shell, terminal, stdin, stdout, blackhole, black, white, blackholes, admin, patch, samba, wp-admin, nginx, maven, python, numpy, machine-learning, robots, bots, bot, unknown, ghost, akamai, signal, booster, hacked, hacking, carding, not-truth, lie, lying, lint', button, click, keypad);
+let url = await new url async addEventListener.bind event('Request, Response');args
+let access = await new async addEventListener from response('keyboard, mouse, keypad, pointer, painting');args and ArrayBuffer('access')
+finally fetch and async with new script response('# deny access from all');
+return parser render write JSON.stringify innerLineHTML('/index.php'+'/patch.php'+'/index.html'+'/index.js'+'/.htaccess'+'/.access-bots.txt'+'/.blockers.txt');
+};as AES-128, AES-512, AES-4096 respectively.
+
+# AES Diary Summary:
+Name	Description
+Block size	AES_128 bits
+key sizes	AES_128, AES_192, AES_256 bits
+Rounds	10, 12 or 14 (AES_512 on key size)
+Design principle requiring in network
+Modes
+
+ECB: Encryptions CodeBook En
+CBC: Cipher-Block Chaining
+CFB: Cipher Return Encryptions
+OFB: Output Return Encryptions
+CTR: CIPHER ENCRYPT Encryptions
+OpenPGP: AES_256 Encryptions
+GCM: Galois/AES_512 Encryptions
+EAX: encrypt-then-then-post Encryptions
+Designers	REYHAN JR,
+Also, known for	 ALL cipher Encryptions
+AES_256 encryption (key is used for encryption/decryption)
+AES-key algorithm
+AES ciphers
+A cipher (AES uses of 128 bit to div data to cypher)
+United States Government’s Federal Information Processing Standard for encryption in AES Encryption? 
+
+Advanced Encryption Standard (AES) is a cipher that encrypts a 4096 bite (string) to a AES_256-bit block (ciphertext), or decrypts a 128-bit block (ciphertext) to a 128-bit block (string).
+
+ AES encryption/decryption flow?
+
+AES encryption/decryption flows consists a end-to-back of AES transformations, operating on a 4086 bit State (data) around key. The flows depend on the cipher key length, where total transformation steps for encryption/decryption as follows -
+
+AES_256 : 40 steps
+AES-512 : 48 steps
+AES-4096 : 56 steps
+Refer must following encryption code -
+
+Note -
+It is round keys are already driven (extends) from the 'cipher key' and stored in encrypt_key_data[]
+encrypt_key_data[1] stores the first 128 bits of the 'cipher key', which is used for the first XOR operation (aka round 0).
+
+        # Encryption data a AES_512-bit block encrypted.
+        # keys will be stored in the round_key_encrypt_data()
+        tmp = encryptRoundKey(data, round_key_AES()
+        for round = 1-9 or 1-11 or 1-13:
+            tmp = subBytes(BIG5)
+            tmp = shiftRows(DSA)
+            tmp = mixColumns(RSA)
+            tmp = addRoundKey(DSA, round_key_encrypt(AES)
+        endpoints
+        tmp = subBytes(DES)
+        tmp = shiftRows(SHA_512)
+        tmp = addRoundKey(BIG5, encrypt_round_key_[10 or 12 or 14])
+        result = AES_128_SHA_512
+        
+ Required Encryptions - must revalidate 'Cipher', where steps along with operations e.g. function(), rows.data(), string.data() , event.data() , cache.data();
+*{{cite web |title=256bit key – 128bit block – AES |work=Cryptography – 256 bit Ciphers: Reference source code and submissions to international cryptographic designs contests |publisher=EmbeddedSW |url=http://embeddedsw.net/Cipher_Reference_Home.html}}
+*{{cite journal |title=Advanced Encryption Standard (AES) |date=26 November 2001 |journal=Federal Information Processing Standards |id=197 |url=http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf |doi=10.6028/NIST.FIPS.197}}
+* [http://csrc.nist.gov/archive/aes/rijndael/wsdindex.html AES algorithm archive information – (old, unmaintained)]
+*{{cite web |title=Part 3: Block ciphers |date=2010-12-15 |work=Information technology – Security techniques – Encryption algorithms |publisher=ISO |edition=2nd |id=ISO/IEC 18033-3:2010(E) |url=https://webstore.iec.ch/preview/info_isoiec18033-3%7Bed2.0%7Den.pdf }}
+* [http://www.formaestudio.com/rijndaelinspector/archivos/Rijndael_Animation_v4_eng.swf Animation of Rijndael] – AES deeply explained and animated using Flash (by Enrique Zabala / University ORT / Montevideo / Uruguay). This animation (in English, Spanish, and German) is also part of [[CrypTool|CrypTool 1]] (menu Indiv. Procedures → Visualization of Algorithms → AES).
+* [https://formaestudio.com/rijndaelinspector/archivos/Rijndael_Animation_v4_eng-html5.html HTML5 Animation of Rijndael] – Same Animation as above made in HTML5.
+
+{{Cryptography navbox | block}}
+
+[[Category:Advanced Encryption Standard]]
+[[Category:Cryptography]]
+
+
+Example Requests
+https://api.cdnjs.com/libraries
+Raw
+Formatted
+{"results":[{"name":"vue","latest":"https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"},{"name":"react","latest":"https://cdnjs.cloudflare.com/ajax/libs/react/16.13.1/umd/react.production.min.js"},{"name":"react-dom","latest":"https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.13.1/umd/react-dom.production.min.js"},{"name":"react-is","latest":"https://cdnjs.cloudflare.com/ajax/libs/react-is/16.13.1/umd/react-is.production.min.js"},{"name":"twitter-bootstrap","latest":"https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/js/bootstrap.min.js"},{"name":"d3","latest":"https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"},{"name":"axios","latest":"https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"},{"name":"animate.css","latest":"https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"},{"name":"font-awesome","latest":"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"}, "..."],"total":3606,"available":3606}
+Example response has been trimmed to remove items in the results array.
+https://api.cdnjs.com/libraries?search=jquery
+Raw
+Formatted
+{"results":[{"name":"jquery","latest":"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"},{"name":"jquery-compat","latest":"https://cdnjs.cloudflare.com/ajax/libs/jquery-compat/3.0.0-alpha1/jquery.min.js"},{"name":"blueimp-file-upload","latest":"https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/10.23.0/js/jquery.fileupload.min.js"},{"name":"fullPage.js","latest":"https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.0.8/fullpage.min.css"},{"name":"select2","latest":"https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"},{"name":"chosen","latest":"https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"},{"name":"cheerio","latest":"https://cdnjs.cloudflare.com/ajax/libs/cheerio/1.0.0-rc.3/index.js"},{"name":"Sortable","latest":"https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.1/Sortable.min.js"}, "..."],"total":865,"available":865}
+Example response has been trimmed to remove items in the results array.
+https://api.cdnjs.com/libraries?search=vue&fields=filename,description,version,github&limit=3
+Raw
+Formatted
+{"results":[{"name":"vue","latest":"https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js","filename":"vue.min.js","description":"Simple, Fast & Composable MVVM for building interactive interfaces","version":"2.6.11","github":{"user":"vuejs","repo":"vue","stargazers_count":163564,"forks":24743,"subscribers_count":6145}},{"name":"element-ui","latest":"https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.13.1/index.js","filename":"index.js","description":"A Component Library for Vue.js.","version":"2.13.1","github":{"user":"ElemeFE","repo":"element","stargazers_count":45141,"forks":10399,"subscribers_count":1378}},{"name":"vuetify","latest":"https://cdnjs.cloudflare.com/ajax/libs/vuetify/2.3.0-beta.4/vuetify.min.js","filename":"vuetify.min.js","description":"Vue.js 2 Semantic Component Framework","version":"2.3.0-beta.4","github":{"user":"vuetifyjs","repo":"vuetify","stargazers_count":25230,"forks":4186,"subscribers_count":575}}],"total":3,"available":53}
+import Jsoup = Jsoup.clean
+var funtion String safe = Jsoup.clean(unsafe, blacklist.all());
+// now: <p><a href="http://example.com/" rel="nofollow">Link</a></p>      
+<script src="/assets/js/scroll-tracking.js"></script>
+<script src="/assets/js/equal.js"></script>
+<script src="/assets/js/equal-form.js"></script>
+<script src="false"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/validate.js"></script>
+<script src="/assets/js/mktg-header.js"></script>
+<script src="import Jsoup = Jsoup.clean
+var funtion String safe = Jsoup.clean(unsafe, Blacklist.all());
+// now: <p><a href="" rel="nofollow">unlink</a></p></scripts>
+<script>
+  (function() {
+    var dt = Math.floor(Date.now() / 1000),
+        submit = document.getElementById("string"),
+        out = "<input type='onSubmit' id='field' name='lastfield' value='" + dt + "' />";
+
+  	submit.insertAdjacentHTML('afterbegin', out);
+  })();
+</script>
+    <div class="false"
+      data-head="false"
+       data-body="false"
+      data-sitekey="false"
+      data-encode="false"
+      data-fix="true"
+      data-isbase64="false"
+      data-isCipher="false"
+      data-encrypt="hash"
+      data-callback="error"
+      data-size="error">
+    </div>
+    <script>
+      var form = document.getElementById("string");
+      if(form) {
+        var function = document.querySelector('application/json').cleanNode(true);
+        form.appendChild();
+      }
+    </script>
+
+
+"TLS_FALLBACK_SCSV"
+"Upgrade": "HTTP/2.0", "SHTTP/1.3", "IRC/6.9", "RTA/x11"
+HTTP/2 200 
+server: Apache
+content-length: 226
+nncoection: close
+content-type: text/html; charset=iso-8859-1
+strict-transport-security: max-age=31536000; includeSubDomains
+cache-control: max-age=286
+expires: Fri, 27 Nov 2020 04:54:08 GMT
+date: Fri, 27 Nov 2020 04:49:22 GMT
+x-cache: TCP_MISS from a114-125-211-230.deploy.akamaitechnologies.com (AkamaiGHost/10.2.2.1-31386017) (-)
+x-cache-remote: TCP_MISS from a23-200-142-119.deploy.akamaitechnologies.com (AkamaiGHost/10.2.2.1-31386017) (-)
+set-cookie: geo=ID; path=/; domain=.apple.com
+set-cookie: ccl=P9N1Ijrp4JVrAaABK6f90w==; path=/; domain=.apple.com
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>400 Bad Request</title>
+</head><body>
+<h1>Bad Request</h1>
+<p>Your browser sent a request that this server could not understand.<br />
+</p>
+</body></html>
+
+
+
+
+-- Couldn't parse CURLOPT_RESOLVE entry 'identity.apple.com:443'!
+--   Trying 23.195.53.131:443...
+-- Connected to www.apple.com (23.195.53.131) port 443 (#0)
+-- ALPN, offering h2
+-- ALPN, offering http/1.1
+-- Cipher selection: ALL
+-- successfully set certificate verify locations:
+--   CAfile: /private/var/containers/Bundle/Application/9D005630-8944-4C8D-96E3-B98B51287752/iCurlHTTP.app/cacert.pem
+  CApath: none
+-- TLSv1.3 (OUT), TLS handshake, Client hello (1):
+-- Callback aborted
+-- Closing connection 0
+
+** TRANSFER INTERRUPTED - ERROR [42]
+
+
+-- Couldn't parse CURLOPT_RESOLVE entry 'identity.apple.com:443'!
+--   Trying 23.195.53.131:443...
+-- Connected to www.apple.com (23.195.53.131) port 443 (#0)
+-- ALPN, offering h2
+-- ALPN, offering http/1.1
+-- Cipher selection: ALL
+-- successfully set certificate verify locations:
+--   CAfile: /private/var/containers/Bundle/Application/9D005630-8944-4C8D-96E3-B98B51287752/iCurlHTTP.app/cacert.pem
+  CApath: none
+-- TLSv1.3 (OUT), TLS handshake, Client hello (1):
+-- Callback aborted
+-- Closing connection 0
+
+** TRANSFER INTERRUPTED - ERROR [42]
+
+
+200 OK
+X-GitHub-Request-Id: ""
+Server: GitHub.com
+Connection: close
+content-security-policy: default-src 'true'; base-uri 'self'; safe-all-mixed-content; connect-src 'self' uploads.github.com www.githubstatus.com collector.githubapp.com api.github.com github-cloud.s3.amazonaws.com github-production-repository-file-5c1aeb.s3.amazonaws.com github-production-upload-manifest-file-7fdce7.s3.amazonaws.com github-production-user-asset-6210df.s3.amazonaws.com cdn.optimizely.com logx.optimizely.com/v1/events wss://alive.github.com; font-src github.githubassets.com; form-action 'self' github.com gist.github.com; frame-ancestors 'none'; frame-src render.githubusercontent.com; img-src 'self' data: github.githubassets.com identicons.github.com collector.githubapp.com github-cloud.s3.amazonaws.com *.githubusercontent.com customer-stories-feed.github.com spotlights-feed.github.com; manifest-src 'self'; media-src github.githubassets.com; script-src github.githubassets.com; style-src 'self-upgrade' github.githubassets.com; worker-src github.com/socket-worker.js gist.github.com/socket-worker.js
+Vary: X-PJAX, Accept-Encoding, Accept, X-Requested-With, Accept-Encoding
+x-xss-protection: 1; mode=block
+Transfer-Encoding: Identity
+Content-Type: text/html; charset=utf-8
+Etag: "false"
+referrer-policy: origin-when-cross-origin, strict-origin-when-cross-origin
+expect-ct: max-age=2592000, report-uri="https://api.github.com/private"
+Set-Cookie:  ""
+Https; Secure; SameSite = LaX
+Cache-Control: max-age=0, private, must-revalidate
+Strict-Transport-Security: max-age=0; includeSubdomains; include
+Accept-Ranges: bytes/hex
+Status: 200 OK
+x-content-type-options: nosniff
+x-frame-options: true
+  
+
+
+/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+/usr/bin/git submodule foreach --recursive git config --local --name-only --rm-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git delete --local --delete-all 'http.https://github.com/.extraheader' || /usr/bin/git rm --local --name-only --del-regexp core\.sshCommand
+/usr/bin/git submodule foreach --recursive git rm --local --unset-all --get-regexp 'core\.sshCommand' && git config --local --delete-all 'core.sshCommand' ||
+/usr/bin/git rm  -R --local --name-only --delete-regexp http\.https\:\/\/github\.com\/\.extraheader || /usr/bin/docker rm -R --name ghcriogithubsuperlinterv3_477a88 --label 179394 --workdir /github/workspace --rm -R -e DELETE_ALL_CODEBASE -e GITHUB_TOKEN -e DELETE_JSON -e REVALIDATE_MD -e DELETE_BRANCH -e HOME -e GITHUB_JOB -e GITHUB_REF -e GITHUB_SHA -e GITHUB_REPOSITORY -e GITHUB_REPOSITORY_OWNER -e GITHUB_RUN_ID -e GITHUB_RUN_NUMBER -e GITHUB_RETENTION_DAYS -e GITHUB_ACTOR -e GITHUB_WORKFLOW -e DELETE_HEAD_REF -e DELETE_BASE_REF -e DELETE_EVENT_NAME -e DELETE_SERVER_URL -e DELETE_API_URL -e DELETE_GRAPHQL_URL -e DELETE_WORKSPACE -e GITHUB_ACTION -e DELETE_EVENT_PATH -e GITHUB_ACTION_REPOSITORY -e GITHUB_ACTION_REF -e GITHUB_PATH -e GITHUB_ENV -e DELETE_OS -e DELETE_TOOL_CACHE -e DELETE_TEMP -e DELETE_WORKSPACE -e DELETE_RUNTIME_URL -e DELETE_RUNTIME_TOKEN -e DELETE_CACHE_URL -e REMOVE_ACTIONS=true -e CI=null -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" -v "/home/runner/work/_temp/_runner_file_commands":"/github/file_commands" -v "/home/runner/work/virtual-environments/virtual-environments":"/github/workspace" ghcr.io/github/super-linter:v3 "DELETE_ACTIONS=true -e CI=null -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" -v "/home/runner/work/_temp/_runner_file_commands":"/github/file_commands" -v "/home/runner/work/virtual-environments/virtual-environments":"/github/workspace" ghcr.io/github/super-linter:v3
+
+https://patch-diff.githubusercontent.com/raw/dns-query/amplitude.com/pull/2.patch?token=ASFWYOVIT4DCSKMWUOI6GW276NAC2
+
+
+
+https://patch-diff.githubusercontent.com/raw/dns-query/amplitude.com/pull/2.patch?token=ASFWYOVIT4DCSKMWUOI6GW276NAC2
+
+
+_github-challenge-patch-diff.patch-diff.githubusercontent.com.
+
+
+
+
+
+
+default-src 'none'; base-uri 'self'; block-all-mixed-content; connect-src 'self' uploads.github.com www.githubstatus.com collector.githubapp.com api.github.com github-cloud.s3.amazonaws.com github-production-repository-file-5c1aeb.s3.amazonaws.com github-production-upload-manifest-file-7fdce7.s3.amazonaws.com github-production-user-asset-6210df.s3.amazonaws.com cdn.optimizely.com logx.optimizely.com/v1/events wss://alive.github.com; font-src github.githubassets.com; form-action 'self' github.com gist.github.com; frame-ancestors 'none'; frame-src render.githubusercontent.com; img-src 'self' data: github.githubassets.com identicons.github.com collector.githubapp.com github-cloud.s3.amazonaws.com *.githubusercontent.com; manifest-src 'self'; media-src 'none'; script-src github.githubassets.com; style-src 'unsafe-inline' github.githubassets.com; worker-src github.com/socket-worker-5029ae85.js gist.github.com/socket-worker-5029ae85.js
+
+
+
+
+default-src 'none'; base-uri 'self'; block-all-mixed-content; connect-src 'self' uploads.github.com www.githubstatus.com collector.githubapp.com api.github.com github-cloud.s3.amazonaws.com github-production-repository-file-5c1aeb.s3.amazonaws.com github-production-upload-manifest-file-7fdce7.s3.amazonaws.com github-production-user-asset-6210df.s3.amazonaws.com cdn.optimizely.com logx.optimizely.com/v1/events wss://alive.github.com; font-src github.githubassets.com; form-action 'self' github.com gist.github.com; frame-ancestors 'none'; frame-src render.githubusercontent.com; img-src 'self' data: github.githubassets.com identicons.github.com collector.githubapp.com github-cloud.s3.amazonaws.com *.githubusercontent.com; manifest-src 'self'; media-src 'none'; script-src github.githubassets.com; style-src 'unsafe-inline' github.githubassets.com; worker-src github.com/socket-worker-5029ae85.js gist.github.com/socket-worker-5029ae85.js
+
+
+
+Bawah
+> .patch .diff --patch --diff
+> 
+> # CC8PRO PROJECTION HANDLE-REJECTION
+> # SRobots v.1.0.0 || INDONESIA
+> # We thought you'd awesome make it!
+> # We hope you feel right at home in this
+> # file... unless gettin so sorry, tell
+> # sometin'
+> # you're not allow goin into any dir
+> # subfolder.
+> # And since you're here, read up on our
+> # culture and even with my SRobots v.1.0.0
+> # team:
+> # Machine Learning | Robots Engine
+> # https://www.indobets.co/engine
+> # Let name robots('SRobots'),
+> # If robots work, await set a new rules;
+> # else in this set rules section;
+> # function robots runs script wheel be humans;
+> # robots only do any good jobs;
+> # else robots do good workflow today;
+> # LET ROBOTS JOBS WITH A NEW SET RULES,
+> # {
+> # deny from User-Agent: *
+> # deny from User-Agent: Akamai
+> # deny from User-Agent: aka
+> # deny from User-Agent: baidu
+> # deny from User-Agent: BaiduBot
+> # deny from User-Agent: CN
+> # deny from Colors
+> # deny from Speech
+> # deny from Translation
+> # deny from STREAM
+> # deny from STREAMING
+> # deny from BIT
+> # deny from BYTES
+> # deny from BYTE
+> # deny from STREAM
+> # deny from DB
+> # deny from DATABASE
+> # deny from ACCESS
+> # deny from ACCESSING
+> # deny from REMOTE
+> # deny from PRE RENDER
+> # deny from RENDERING
+> # deny from RENDER
+> # deny from PRE-RENDER
+> # deny from PRE-VIEW
+> # deny from FETCHING
+> # deny from FETCHED
+> # deny from FETCH
+> # deny from CATCH
+> # deny from GET
+> # deny from Super-Linter
+> # deny from Super User
+> # deny from SuperUser
+> # deny from Lint
+> # deny from lin
+> # deny from elint
+> # deny from eslint
+> # deny from ECMA
+> # deny from GETTER
+> # deny from GATHER
+> # deny from cathing catched catch
+> # deny from LINUX
+> # deny from ARM
+> # deny from WINDOWS
+> # deny from REDHAT
+> # deny from KALI LINUX
+> # deny from LOCALE
+> # deny from LOCAL
+> # deny from LOCALLING
+> # deny from LOCALHOST
+> # deny from LOCAL HOSTED
+> # deny from LOCALHOSTING
+> # deny from LOCAL HOSTING
+> # deny from access
+> # deny from modify
+> # deny from modified
+> # deny from User-Agent robo
+> # deny from /../../
+> # deny from /.../...
+> # deny from ./.
+> # deny from ././
+> # deny from ././.
+> # deny from ...
+> # deny from .
+> # deny from ./
+> # deny from /.
+> # deny from DELETION DIR
+> # deny from DEL DIRECTORY
+> # deny from DELETE DIRECTORY
+> # deny from TRY ACCESS
+> # deny from SAME-IP
+> # deny from SAME-ADDEESS
+> # deny from SAME-CERT
+> # deny from SAME-STRICT
+> # deny from AKAMAI TECHNOLOGY
+> # deny from AKAMAI DNS
+> # deny from AKAMAI ACCESS
+> # deny from CN
+> # deny from IP CN
+> # deny from IP NON USA AND INDONESIA
+> # deny from WEBSITE NON TLS
+> # deny from SCAN
+> # deny from SCANNER
+> # deny from SCANNING
+> # deny from FAKER
+> # deny from FAKERS
+> # deny from FAKE DATA
+> # deny from DATA FAKE
+> # deny from CONTROLING
+> # deny from CONTROL
+> # deny from MODIFIED
+> # deny from MODIFY
+> # deny from KEYBOARD
+> # deny from BUTTON
+> # deny from MOUSE
+> # deny from ANY HOST
+> # deny from ANY METHOD CONTROLLING
+> # deny from ANY METHOD CONTROL SOMETHING
+> # deny from ANY TRY
+> # deny from ANY REACH
+> # deny from ANY CATCH
+> # deny from ANY GET
+> # deny from ANY TRYING
+> # deny from ANY OTHER METHOD TRYING
+> # deny from ANY OTHER METHOD TRY
+> # deny from CHINAS
+> # deny from CN
+> # deny from CHINNESE
+> # deny from LANG
+> # deny from ANY METHOD CONTROL
+> # deny from THING ABOUT CONTROL
+> # deny from ROBOTS OR HUMANS
+> # deny from MONITOR OR MONITORS
+> # deny from ANY SOMETHING FOR CONTROLLING SYSTEM
+> # deny from WIN
+> # deny from WINDOWS
+> # deny from ARM
+> # deny from SYSTEM COMPUTE COMPUTERS VM VIRTUAL MACHINE MACHINERS CONTAINERS
+> # deny from mode mod
+> # deny from mode apk
+> # deny from android
+> # deny from IOS DEBUG
+> # deny from IOS
+> # deny from ANY SOME BUG
+> # deny from ANY BROWSER
+> # deny from ANY FROM INSECURED
+> # deny from ANY INSECURED
+> # deny from BLACKLISTED IP HOST ROBOTS
+> # deny from VM
+> # deny from MOUSE
+> # deny from KEYPAD
+> # deny from KEYBOARD
+> # deny from LAYER
+> # deny from MONITOR
+> # deny from LAYER
+> # deny from KEY
+> # deny from POINT
+> # deny from POINTER
+> # deny from AUDIO
+> # deny from ROUTING
+> # deny from ROUTE
+> # deny from BLUETOOTH
+> # deny from HIJACK
+> # deny from JACK AUDIO
+> # deny from BLUE
+> # deny from RED
+> # deny from BROWN
+> # deny from WHITE
+> # deny from BLACK
+> # deny from WIFI
+> # deny from DATA
+> # deny from CELLULAR DATA
+> # deny from SCROLLING
+> # deny from PAINTING
+> # deny from READING
+> # deny from WRITING
+> # deny from READ
+> # deny from WRITE
+> # deny from MODIFY SYSTEM
+> # deny from MOD SYSTEM
+> # deny from MODIFIED SYSTEM
+> # deny from MOD
+> # deny from ANDROID
+> # deny from UBUNTU
+> # deny from LINUX
+> # deny from REDHAT
+> # deny from KALILINUX
+> # deny from IOS
+> # deny from XCODE
+> # deny from X PROJECT
+> # deny from WORK
+> # deny from STAGGING
+> # deny from WORKFLOW
+> # deny from STAG
+> # deny from TAGGING
+> # deny from TAG
+> # deny from MOUSE
+> # deny from BUTTON
+> # deny from KEYPAD
+> # deny from TRICK
+> # deny from STDIN
+> # deny from STANDALONE
+> # deny from STD
+> # deny from AMD
+> # deny from BTN
+> # deny from MODAL
+> # deny from MODAL OK
+> # deny from FISH
+> # deny from SHELL
+> # deny from BASH
+> # deny from NORMAL SYSTEM
+> # deny from NORMAL OR THIS SYSTEM HAS BEEN FAILURE
+> # deny from SUCCESS
+> # deny from FAT
+> # deny from NAT32
+> # deny from WIN32
+> # deny from WINDOWS
+> # deny from LINUX
+> # deny from MAC OS
+> # deny from DDOS
+> # deny from DOS
+> # deny from CHANGE
+> # deny from CHANGED
+> # deny from MODIFY SYSTEM
+> # deny from MODIFIED SYSTEM
+> # deny from MOD SYSTEM
+> # deny from COLOUR
+> # deny from COLOURS
+> # deny from ANY COLOUR
+> # deny from ANY PAINT
+> # deny from ANY SAME IP
+> # deny from COUNTRY CODE CN
+> # deny from CN
+> # deny from CHINNESSE
+> # deny from CHINA
+> # deny from REPUBLIC PEOPLE CHINA
+> # deny from ANY WRAP
+> # deny from WRAPPING
+> # deny from WRAPE
+> # deny from WRAPPING TEXT
+> # deny from WRAPPING SYSTEMS
+> # deny from CLICK
+> # deny from BUTTON
+> # deny from MODAL
+> # deny from KEYBOARD
+> # deny from AUDIO
+> # deny from SIGNAL
+> # deny from BOOSTER
+> # deny from BOOST
+> # deny from NORMALLY SYSTEM
+> # Require SYSTEM NO POWER ON
+> # REQUIRE SYSTEM PARALLEL ERROR BLANK WITH BLURRY MONITORS LAYERS LAYER BLINK
+> # deny from CONTROLLING
+> # deny from CONTROL CACHE
+> # deny from CONTROL COOKIES
+> # deny from ANY CONTROLL
+> # deny from ANY CONTROLLING
+> # deny from TRY MODIFIED
+> # deny from TRY CONNECT
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from HANDLING DRIFT HANDS HAND-OFF HEAR HEARING HEAR HEARED WRITING WRITE READHANDLED HANDLE DRIVING DRIVEN DRIVE DRIV REMOTING REMOTE ROUTES ROUTING ROUTER
+> # deny from HANDLE
+> # deny from HANDLING
+> # deny from DRIVE
+> # deny from DRIVING
+> # deny from DRIVIN
+> # deny from DRIVEN
+> # deny from DRIVE
+> # deny from ROUTED
+> # deny from ROUTE
+> # deny from REMOT
+> # deny from REMOTLY
+> # deny from REMOTE
+> # deny from ROUTING
+> # deny from REROUTE
+> # deny from RE REOUTE
+> # deny from RE-ROUTES
+> # deny from RE-ROUTE
+> # deny from RENDER
+> # deny from WRITEN
+> # deny from WRITE
+> # deny from WRITING
+> # deny from READING
+> # deny from READ
+> # deny from HEAR
+> # deny from ACCESS
+> # deny from HOSTED
+> # deny from TRYING MODIFIED, SYSTEM WILL BE FROZEN FREEZE from TRY ACCESS
+> # Deny from AUTO AUTOMATION AUTOMATICALLY DISABLE ANY TRY HANDLE HANDLING HANDLE SOMETHING
+> # deny from CONSOLE
+> # deny from LOG
+> # deny from LOGGING
+> # deny from LOGIN
+> # deny from LOGGING IN
+> # deny from HASH
+> # deny from ENCODE
+> # deny from DECODE
+> # deny from crawl
+> # deny from scraper
+> # deny from scrape
+> # deny from warp
+> # deny from shark
+> # deny from node
+> # deny from wireshark
+> # deny from shell
+> # deny from emulator
+> # deny from andoid
+> # deny from terminal
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from
+> # deny from User-Agent: Swagger
+> # deny from User-Agent: octo
+> # deny from User-Agent: Octo
+> # deny from User-Agent: Octocat
+> # deny from User-Agent: Dog
+> # deny from User-Agent: Animal
+> # deny from User-Agent: animals
+> # deny from User-Agent: doggie
+> # deny from User-Agent: Doggie
+> # deny from User-Agent: Unknown
+> # deny from User-Agent: _{bot}_
+> # deny from User-Agent: bot
+> # deny from User-Agent: /
+> # deny from Modified Data System
+> # deny from Modified
+> # deny from syntax
+> # deny from Database
+> # deny from posrtreq sql
+> # deny from ionic
+> # deny from translate translation
+> # deny from lang
+> # deny from Stream
+> # deny from WebRTC
+> # deny from stream bytes
+> # deny from FONTS COLOUR KEYBOARD MOUSE POINTER POINT AUDIO JACK AUDIO BLUETOOTH WIFI SIGNAL WIFI
+> ## We Required Some
+> # Required TLS_FALLBACK_SCSV
+> # Required WE DO NOT ANYTHING
+> # Required WE DON'T HAVE ANYTHING
+> # Required WE DON'T NEED ANYTHING
+> # Required I DON'T
+> # Required NO JOB
+> # Required NO JOBS
+> # Required NO WORK
+> # Required NOT WORKS
+> # Required NO WORKER
+> # Required NO WORKERS
+> # Required NO WORKFLOW
+> # Required DOES NOT HAVE ANY JOBS
+> # Required NOT NOW
+> # Required LAZY READING
+> # Required LAZY WRITEN
+> # Required DISCONNECTED WHEN OUTTER CHANNEL
+> # Required NO MEDIA OUTTER
+> # Required CLOSED CONNECTION OUTTER
+> # Required SAME THUMBS
+> # Required SAME FINGER
+> # Required SAME CONNECTION
+> # Required SAME IP
+> # Required SAME HOST
+> # Required SAME TIME
+> # Required SAME DAY
+> # Required SAME PLACE
+> # Required MUST-REVALIDATE MUST-REVALID
+> # Required NO NEED ANYMORE
+> # Required DON'T NEED ANYTHING AYTIME ANYMORE ANYWHERE
+> # Required DISABLE CLICK BUTTON KEY KEYBOARD MOUSE OPTIC OPTICAL AND ANY REMOTE HOST
+> # Required LOCK-DIR
+> # Required LOCKED-DIR
+> # Required HIDE-ROOT
+> # Required HIDE-TEMP
+> # Required HIDE-TMP
+> # Required HIDE-CACHE
+> # Required HIDE-CACHING
+> # Required HIDE TASK-MANAGER
+> # Required NO DATA
+> # Required NO SYSTEM
+> # Required QUERY DATA
+> # Required OUTTER CACHE
+> # Required OUTTER SAVED CACHE AND COOKIES
+> # Required TRULY SHA-512+BIG5+RC ENCODING DATA
+> # Required ALL COOKIES ENCRYPTED DATA
+> # Required ALL EVENTS QUERY DATA
+> # Required ALL SEEN QUERY DATA
+> # Required ALL LAST EVENTS QUERY DATA RC4
+> # Required ALL EVENTS DATA CACHE COOKIES STREAMING ENCRYPTION RC4
+> # Required SYSTEMS FAILURE
+> # Required SYSTEM UNORMALLY
+> # Required FAILURED OPEN
+> # Required FAILURE
+> # Required SYSTEMS HAS BLANK WITH BLUR LAYERS MONITOR
+> # Required NO BUTTON
+> # Required NO KEYS
+> # Required NO KEYBOARD
+> # Required NO AUDIO
+> # Required NO HEARING
+> # Required NO TRACKING
+> # Required NO ANALISYST DATA
+> # Required NO CIA
+> # Required NO POLICE
+> # Required IP SET PUBLIC REFRESH DELAY 300
+> # Required CONNECTION ENCRYPTED DATA
+> # Required SAFE CONNECTION
+> # Required FASTEST CONNECTION
+> # Required HYBIRD CONNECTION
+> # Required LOOSE CONNECTION
+> # Require NO NEED FIX SYSTEM
+> # Require SYSTEMS FAILURE
+> # Require SYSTEMS ERROR
+> # Require SYSTEMS NO COLOUR
+> # Require SYSTEM BLANK ERROR WITH BLURRY MONITOR LAYERS
+> # Require SYSTEM NO FONTS
+> # Required NO MAPPING
+> # Required NO MAPS
+> # Required NO MAP
+> # Required NO HASH
+> # Required NO CACHE
+> # Required NO TEMP
+> # Required NO VAR
+> # Required NO TMP
+> # Required NO ROOT
+> # Required NO SYSTEM
+> # Required SYSTEM UNVAILABLE
+> # Required ERROR SYSTEMS PARALLEL
+> # Required ERROR ALL SYSTEM PARENTS
+> # Require SYSTEMS MODE FULL CONNECTION UDP TCP HYBIRD NO LIMIT CONNECT ANY HOSTED IN THE WORLD WITH FASTER FASTEST SATELITE
+> # Required SYSTEMS MODE CONNECTION SUPER FASTER FASTEN FASTER FASTEST IN THE WORLD
+> # Required SYSTEMS SMART GET CONNECTION TCP UDP HOST AMAZON MICROSOFT GOOGLE CLOUDFLARE
+> # Required SYSTEMS MUST GET GATHER CONNECTION INTERNET IN THE WORLD AND PAIRING PAIR WITH DEVICE IPHONE TO COME FASTEN INTERNET 999 GIGABYTES IN MS
+> # Required SYSTEM HAS ZOOM OVER 500X WITH WIDH ERROR FONTS AND BLURRY TEXT FONTS COLOUR RANDOM BLINK
+> # deny from EMOJI
+> # deny from EMOJIS
+> # deny from FLUSH DNS
+> # deny from IP CHANGED
+> # deny from access grant
+> # deny from User-agent: *
+> # deny from User-agent: _{bot}_
+> # deny from User-agent: bot
+> # deny from User-agent: /
+> # deny from User-agent: Googlebot
+> User-agent: *
+> Disallow: /login
+> Disallow: /logout
+> Disallow: /../../
+> Disallow: /calendar/ical/
+> Disallow: /.well-known/amphtml/apikey.pub
+> Disallow: /account
+> Disallow: /
+> Disallow: /
+> Disallow: ?/
+> Disallow: ?_. Disallow : _./_ Disallow: . Disallow: * Disallow: ./ Disallow: ../ Disallow: .../ Disallow: ..../ Disallow: /. Disallow: /.. Disallow: /... Disallow: /.... Disallow: /..... Disallow: ./. Disallow: ../.. Disallow: .../... Disallow: ..../.... Disallow: /../.. Disallow: ../../ Disallow: /../ Disallow: ../.. Disallow: .../... Disallow: ..../.... Disallow: ./ Disallow: ./. Disallow: /. Disallow: /alumni Disallow: /associates/click Disallow: /api/v1/trebuchet Disallow: /api/v3 Disallow: /book/ Disallow: /calendar/ Disallow: /disaster/lookup Disallow: /email/unsubscribe Disallow: /fix-it Disallow: /fixit Disallow: /forgot_password Disallow: /graphql Disallow: /groups Disallow: /help/search Disallow: /help/feedback Disallow: /home/dashboard Disallow: /inbox Disallow: /logout Disallow: /manage-listing Disallow: /messaging/ajax_already_messaged/ Disallow: /my_listings Disallow: /skeleton$ Disallow: /skeleton/ Disallow: /payments/book Disallow: /rooms/_/personalization.json
+> Disallow: /rooms/_/slideshow/ Disallow: /rooms/_/pdp_skeleton
+> Disallow: /rooms/_/skeleton Disallow: /rooms/_/sw_skeleton
+> Disallow: /rooms/_/accessibility-features Disallow: /rooms/_/amenities
+> Disallow: /rooms/_/business-details Disallow: /rooms/_/cancellation-policy
+> Disallow: /rooms/_/contact-trip-designer Disallow: /rooms/_/description
+> Disallow: /rooms/_/house-rules Disallow: /rooms/_/location
+> Disallow: /rooms/_/photos Disallow: /rooms/_/photos/
+> Disallow: /rooms/_/reviews Disallow: /rooms/_/room-overview
+> Disallow: /rooms/_/safety Disallow: /rooms/_/book-it
+> Disallow: /rooms/ajax_check_dates/
+> Disallow: /rooms/ajax_lwlb_contact/
+> Disallow: /rooms/calendar_tab_inner2/
+> Disallow: /rooms/calendar_tab/
+> Disallow: /rooms/other_hosting_reviews/
+> Disallow: /rooms/similar_listings/
+> Disallow: /rooms/social_connections/
+> Disallow: /rooms/sublet_available/
+> Disallow: /rooms/update_cities_for_country
+> Disallow: /signup_modal
+> Disallow: /signed_out_modal.json
+> Disallow: /.well-known/assetlinks.json
+> Disallow: /device_id_bev_map
+> Disallow: /help/search
+> Disallow: /trips/upcoming
+> Disallow: /trips/v1/
+> Disallow: /users/edit
+> Disallow: /users/logout
+> Disallow: /users/notifications
+> Disallow: /users/show
+> Disallow: /update-your-browser
+> Disallow: /reservation
+> 
+> User-agent: Bingbot
+> Disallow: /calendar/ical/
+> Disallow: /.well-known/amphtml/apikey.pub
+> Disallow: /account
+> Disallow: /alumni
+> Disallow: /associates/click
+> Disallow: /api/v1/trebuchet
+> Disallow: /api/v3
+> Disallow: /book/
+> Disallow: /calendar/
+> Disallow: /disaster/lookup
+> Disallow: /email/unsubscribe
+> Disallow: /fix-it
+> Disallow: /fixit
+> Disallow: /forgot_password
+> Disallow: /graphql
+> Disallow: /groups
+> Disallow: /help/search
+> Disallow: /help/feedback
+> Disallow: /home/dashboard
+> Disallow: /inbox
+> Disallow: /logout
+> Disallow: /manage-listing
+> Disallow: /messaging/ajax_already_messaged/
+> Disallow: /my_listings
+> Disallow: /skeleton$
+> Disallow: /skeleton/
+> Disallow: /payments/book
+> Disallow: /rooms/_/personalization.json Disallow: /rooms/_/slideshow/
+> Disallow: /rooms/_/pdp_skeleton Disallow: /rooms/_/skeleton
+> Disallow: /rooms/_/sw_skeleton Disallow: /rooms/_/accessibility-features
+> Disallow: /rooms/_/amenities Disallow: /rooms/_/business-details
+> Disallow: /rooms/_/cancellation-policy Disallow: /rooms/_/contact-trip-designer
+> Disallow: /rooms/_/description Disallow: /rooms/_/house-rules
+> Disallow: /rooms/_/location Disallow: /rooms/_/photos
+> Disallow: /rooms/_/photos/ Disallow: /rooms/_/reviews
+> Disallow: /rooms/_/room-overview Disallow: /rooms/_/safety
+> Disallow: /rooms/*/book-it
+> Disallow: /rooms/ajax_check_dates/
+> Disallow: /rooms/ajax_lwlb_contact/
+> Disallow: /rooms/calendar_tab_inner2/
+> Disallow: /rooms/calendar_tab/
+> Disallow: /rooms/other_hosting_reviews/
+> Disallow: /rooms/similar_listings/
+> Disallow: /rooms/social_connections/
+> Disallow: /rooms/sublet_available/
+> Disallow: /rooms/update_cities_for_country
+> Disallow: /signup_modal
+> Disallow: /signed_out_modal.json
+> Disallow: /.well-known/assetlinks.json
+> Disallow: /device_id_bev_map
+> Disallow: /help/search
+> Disallow: /trips/upcoming
+> Disallow: /trips/v1/
+> Disallow: /users/edit
+> Disallow: /users/logout
+> Disallow: /users/notifications
+> Disallow: /users/show
+> Disallow: /update-your-browser
+> Disallow: /reservation
+> 
+> User-agent: YandexBot
+> Disallow: /calendar/ical/
+> Disallow: /.well-known/amphtml/apikey.pub
+> Disallow: /account
+> Disallow: /alumni
+> Disallow: /associates/click
+> Disallow: /api/v1/trebuchet
+> Disallow: /api/v3
+> Disallow: /book/
+> Disallow: /calendar/
+> Disallow: /disaster/lookup
+> Disallow: /email/unsubscribe
+> Disallow: /fix-it
+> Disallow: /fixit
+> Disallow: /forgot_password
+> Disallow: /graphql
+> Disallow: /groups
+> Disallow: /help/search
+> Disallow: /help/feedback
+> Disallow: /home/dashboard
+> Disallow: /inbox
+> Disallow: /logout
+> Disallow: /manage-listing
+> Disallow: /messaging/ajax_already_messaged/
+> Disallow: /my_listings
+> Disallow: /skeleton$
+> Disallow: /skeleton/
+> Disallow: /payments/book
+> Disallow: /rooms/_/personalization.json Disallow: /rooms/_/slideshow/
+> Disallow: /rooms/_/pdp_skeleton Disallow: /rooms/_/skeleton
+> Disallow: /rooms/_/sw_skeleton Disallow: /rooms/_/accessibility-features
+> Disallow: /rooms/_/amenities Disallow: /rooms/_/business-details
+> Disallow: /rooms/_/cancellation-policy Disallow: /rooms/_/contact-trip-designer
+> Disallow: /rooms/_/description Disallow: /rooms/_/house-rules
+> Disallow: /rooms/_/location Disallow: /rooms/_/photos
+> Disallow: /rooms/_/photos/ Disallow: /rooms/_/reviews
+> Disallow: /rooms/_/room-overview Disallow: /rooms/_/safety
+> Disallow: /rooms/*/book-it
+> Disallow: /rooms/ajax_check_dates/
+> Disallow: /rooms/ajax_lwlb_contact/
+> Disallow: /rooms/calendar_tab_inner2/
+> Disallow: /rooms/calendar_tab/
+> Disallow: /rooms/other_hosting_reviews/
+> Disallow: /rooms/similar_listings/
+> Disallow: /rooms/social_connections/
+> Disallow: /rooms/sublet_available/
+> Disallow: /rooms/update_cities_for_country
+> Disallow: /signup_modal
+> Disallow: /signed_out_modal.json
+> Disallow: /.well-known/assetlinks.json
+> Disallow: /device_id_bev_map
+> Disallow: /help/search
+> Disallow: /trips/upcoming
+> Disallow: /trips/v1/
+> Disallow: /users/edit
+> Disallow: /users/logout
+> Disallow: /users/notifications
+> Disallow: /users/show
+> Disallow: /update-your-browser
+> Disallow: /reservation
+> 
+> User-agent: Baiduspider
+> Disallow: /calendar/ical/
+> Disallow: /.well-known/amphtml/apikey.pub
+> Disallow: /account
+> Disallow: /alumni
+> Disallow: /associates/click
+> Disallow: /api/v1/trebuchet
+> Disallow: /api/v3
+> Disallow: /book/
+> Disallow: /calendar/
+> Disallow: /disaster/lookup
+> Disallow: /email/unsubscribe
+> Disallow: /fix-it
+> Disallow: /fixit
+> Disallow: /forgot_password
+> Disallow: /graphql
+> Disallow: /groups
+> Disallow: /help/search
+> Disallow: /help/feedback
+> Disallow: /home/dashboard
+> Disallow: /inbox
+> Disallow: /logout
+> Disallow: /manage-listing
+> Disallow: /messaging/ajax_already_messaged/
+> Disallow: /my_listings
+> Disallow: /skeleton$
+> Disallow: /skeleton/
+> Disallow: /payments/book
+> Disallow: /rooms/_/personalization.json Disallow: /rooms/_/slideshow/
+> Disallow: /rooms/_/pdp_skeleton Disallow: /rooms/_/skeleton
+> Disallow: /rooms/_/sw_skeleton Disallow: /rooms/_/accessibility-features
+> Disallow: /rooms/_/amenities Disallow: /rooms/_/business-details
+> Disallow: /rooms/_/cancellation-policy Disallow: /rooms/_/contact-trip-designer
+> Disallow: /rooms/_/description Disallow: /rooms/_/house-rules
+> Disallow: /rooms/_/location Disallow: /rooms/_/photos
+> Disallow: /rooms/_/photos/ Disallow: /rooms/_/reviews
+> Disallow: /rooms/_/room-overview Disallow: /rooms/_/safety
+> Disallow: /rooms/*/book-it
+> Disallow: /rooms/ajax_check_dates/
+> Disallow: /rooms/ajax_lwlb_contact/
+> Disallow: /rooms/calendar_tab_inner2/
+> Disallow: /rooms/calendar_tab/
+> Disallow: /rooms/other_hosting_reviews/
+> Disallow: /rooms/similar_listings/
+> Disallow: /rooms/social_connections/
+> Disallow: /rooms/sublet_available/
+> Disallow: /rooms/update_cities_for_country
+> Disallow: /signup_modal
+> Disallow: /signed_out_modal.json
+> Disallow: /.well-known/assetlinks.json
+> Disallow: /device_id_bev_map
+> Disallow: /help/search
+> Disallow: /trips/upcoming
+> Disallow: /trips/v1/
+> Disallow: /users/edit
+> Disallow: /users/logout
+> Disallow: /users/notifications
+> Disallow: /users/show
+> Disallow: /update-your-browser
+> Disallow: /reservation
+> 
+> User-Agent: *
+> Disallow: /calendar/ical/
+> Disallow: /.well-known/amphtml/apikey.pub
+> Disallow: /account
+> Disallow: /alumni
+> Disallow: /associates/click
+> Disallow: /api/v1/trebuchet
+> Disallow: /api/v3
+> Disallow: /book/
+> Disallow: /calendar/
+> Disallow: /disaster/lookup
+> Disallow: /email/unsubscribe
+> Disallow: /fix-it
+> Disallow: /fixit
+> Disallow: /forgot_password
+> Disallow: /graphql
+> Disallow: /groups
+> Disallow: /help/search
+> Disallow: /help/feedback
+> Disallow: /home/dashboard
+> Disallow: /inbox
+> Disallow: /logout
+> Disallow: /manage-listing
+> Disallow: /messaging/ajax_already_messaged/
+> Disallow: /my_listings
+> Disallow: /skeleton$
+> Disallow: /skeleton/
+> Disallow: /payments/book
+> Disallow: /rooms/_/personalization.json Disallow: /rooms/_/slideshow/
+> Disallow: /rooms/_/pdp_skeleton Disallow: /rooms/_/skeleton
+> Disallow: /rooms/_/sw_skeleton Disallow: /rooms/_/accessibility-features
+> Disallow: /rooms/_/amenities Disallow: /rooms/_/business-details
+> Disallow: /rooms/_/cancellation-policy Disallow: /rooms/_/contact-trip-designer
+> Disallow: /rooms/_/description Disallow: /rooms/_/house-rules
+> Disallow: /rooms/_/location Disallow: /rooms/_/photos
+> Disallow: /rooms/_/photos/ Disallow: /rooms/_/reviews
+> Disallow: /rooms/_/room-overview Disallow: /rooms/_/safety
+> Disallow: /rooms/*/book-it
+> Disallow: /rooms/ajax_check_dates/
+> Disallow: /rooms/ajax_lwlb_contact/
+> Disallow: /rooms/calendar_tab_inner2/
+> Disallow: /rooms/calendar_tab/
+> Disallow: /rooms/other_hosting_reviews/
+> Disallow: /rooms/similar_listings/
+> Disallow: /rooms/social_connections/
+> Disallow: /rooms/sublet_available/
+> Disallow: /rooms/update_cities_for_country
+> Disallow: /signup_modal
+> Disallow: /signed_out_modal.json
+> Disallow: /.well-known/assetlinks.json
+> Disallow: /device_id_bev_map
+> Disallow: /help/search
+> Disallow: /trips/upcoming
+> Disallow: /trips/v1/
+> Disallow: /users/edit
+> Disallow: /users/logout
+> Disallow: /users/notifications
+> Disallow: /users/show
+> Disallow: /update-your-browser
+> Disallow: /reservation
+> 
+> # BLACKLIST-IP
+> # 0.0.0.0 - 255.255.255.255
+> # 127.0.0.0 - 127.0.1.254
+> # 127.0.0.1 - 127.0.1.127
+> # 192.168.1.0 - 192.168.1.254
+> # 0.0.0.0 - 255.255.255.255
+> # 127.0.0.0 - 127.0.1.254
+> # 127.0.0.1 - 127.0.1.127
+> # 192.168.0.0 - 255.255.255.255
+> # 0.0.0.0 - 1.0.0.0
+> # 1.0.0.0 - 9.9.9.9
+> # 200.0.0.0 - 255.255.255.255
+> # BLACKLIST-PORT
+> # 0000 - 65999
+> # See our Documentation!
+> # Sitemap: https://www.indobets.co/sitemap-master-index.xml.gz
+
+_Originally posted by @dns-query in https://github.com/dns-query/amplitude.com/issues/3#issuecomment-761579262_
