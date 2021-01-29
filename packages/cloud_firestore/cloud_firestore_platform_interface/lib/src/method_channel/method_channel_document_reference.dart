@@ -62,7 +62,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
 
   @override
   Future<DocumentSnapshotPlatform> get(
-      [GetOptions? options = const GetOptions()]) async {
+      [GetOptions options = const GetOptions()]) async {
     try {
       final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
           .channel
@@ -71,7 +71,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         <String, dynamic>{
           'firestore': firestore,
           'reference': this,
-          'source': getSourceString(options!.source),
+          'source': getSourceString(options.source),
         },
       );
 
@@ -108,7 +108,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         final observerId = await MethodChannelFirebaseFirestore.channel
             .invokeMethod<String>('DocumentReference#snapshots');
         snapshotStream =
-            MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
+            MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId!)
                 .receiveBroadcastStream(
           <String, dynamic>{
             'reference': this,

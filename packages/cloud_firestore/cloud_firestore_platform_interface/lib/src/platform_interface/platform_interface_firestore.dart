@@ -23,11 +23,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
 
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp get app {
-    if (appInstance == null) {
-      return Firebase.app();
-    }
-
-    return appInstance!;
+    return appInstance ?? Firebase.app();
   }
 
   static final Object _token = Object();

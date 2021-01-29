@@ -89,7 +89,7 @@ class MethodChannelQuery extends QueryPlatform {
 
   /// Fetch the documents for this query
   @override
-  Future<QuerySnapshotPlatform> get([GetOptions? options]) async {
+  Future<QuerySnapshotPlatform> get([GetOptions options = const GetOptions()]) async {
     try {
       final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
           .channel
@@ -98,7 +98,7 @@ class MethodChannelQuery extends QueryPlatform {
         <String, dynamic>{
           'query': this,
           'firestore': firestore,
-          'source': getSourceString(options!.source),
+          'source': getSourceString(options.source),
         },
       );
 
@@ -140,7 +140,7 @@ class MethodChannelQuery extends QueryPlatform {
             .invokeMethod<String>('Query#snapshots');
 
         snapshotStream =
-            MethodChannelFirebaseFirestore.querySnapshotChannel(observerId)
+            MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!)
                 .receiveBroadcastStream(
           <String, dynamic>{
             'query': this,

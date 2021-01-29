@@ -10,7 +10,7 @@ part of cloud_firestore;
 @immutable
 class CollectionReference extends Query {
   @override
-  // ignore: overridden_fields
+  
   final CollectionReferencePlatform _delegate;
 
   CollectionReference._(FirebaseFirestore firestore, this._delegate)

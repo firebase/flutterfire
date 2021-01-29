@@ -51,9 +51,9 @@ void main() {
       expect(actual, isNot(equals(factory.serverTimestamp())));
     });
     test('increment', () {
-      final MethodChannelFieldValue actualInt = factory.increment(1)!;
+      final MethodChannelFieldValue actualInt = factory.increment(1);
       expect(actualInt.type, equals(FieldValueType.incrementInteger));
-      final MethodChannelFieldValue actualDouble = factory.increment(1.0)!;
+      final MethodChannelFieldValue actualDouble = factory.increment(1.0);
       expect(actualDouble.type, equals(FieldValueType.incrementDouble));
       expect(actualInt, equals(factory.increment(1)));
       expect(actualInt, isNot(equals(actualDouble)));

@@ -23,8 +23,7 @@ class MethodChannelCollectionReference extends MethodChannelQuery
 // ignore: avoid_implementing_value_types
         CollectionReferencePlatform {
   late Pointer _pointer;
-// ignore: todo
-//TODO ignoring the above error might not be desirable. The == method isn't inherited from CollectionReferencePlatform because we only "implement" it
+  
   /// Create a [MethodChannelCollectionReference] instance.
   MethodChannelCollectionReference(
       FirebaseFirestorePlatform firestore, String path)

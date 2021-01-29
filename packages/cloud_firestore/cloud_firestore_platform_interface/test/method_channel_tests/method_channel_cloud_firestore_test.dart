@@ -109,12 +109,8 @@ void main() {
     });
 
     group('delegateFor()', () {
-      test('returns a [FirestorePlatform] with no arguments', () {
-        expect(firestore!.delegateFor(),
-            equals(FirebaseFirestorePlatform.instance));
-      });
       test('returns a [FirestorePlatform] with arguments', () {
-        expect(firestore!.delegateFor(app: secondaryApp),
+        expect(firestore!.delegateFor(app: secondaryApp!),
             FirebaseFirestorePlatform.instanceFor(app: secondaryApp!));
       });
     });

@@ -30,7 +30,6 @@ class Transaction {
 
   /// Deletes the document referred to by the provided [documentReference].
   Transaction delete(DocumentReference documentReference) {
-    assert(documentReference != null);
     assert(documentReference.firestore == _firestore,
         'the document provided is from a different Firestore instance');
 

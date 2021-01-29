@@ -34,7 +34,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   );
 
   /// The [EventChannel] used for query snapshots
-  static EventChannel querySnapshotChannel(String? id) {
+  static EventChannel querySnapshotChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/query/$id',
       const StandardMethodCodec(FirestoreMessageCodec()),
@@ -42,7 +42,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   /// The [EventChannel] used for document snapshots
-  static EventChannel documentSnapshotChannel(String? id) {
+  static EventChannel documentSnapshotChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/document/$id',
       const StandardMethodCodec(FirestoreMessageCodec()),
@@ -50,7 +50,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   /// The [EventChannel] used for snapshotsInSync
-  static EventChannel snapshotsInSyncChannel(String? id) {
+  static EventChannel snapshotsInSyncChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/snapshotsInSync/$id',
       const StandardMethodCodec(FirestoreMessageCodec()),
@@ -60,7 +60,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// Gets a [FirebaseFirestorePlatform] with specific arguments such as a different
   /// [FirebaseApp].
   @override
-  FirebaseFirestorePlatform delegateFor({/*required*/ FirebaseApp? app}) {
+  FirebaseFirestorePlatform delegateFor({required FirebaseApp app}) {
     return MethodChannelFirebaseFirestore(app: app);
   }
 
@@ -137,7 +137,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
             .invokeMethod<String>('SnapshotsInSync#setup');
 
         snapshotStream =
-            MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId)
+            MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId!)
                 .receiveBroadcastStream(
           <String, dynamic>{
             'firestore': this,
@@ -157,7 +157,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T?> runTransaction<T>(
+  Future<T> runTransaction<T>(
     TransactionHandler<T> transactionHandler, {
     Duration timeout = const Duration(seconds: 30),
   }) async {
@@ -174,7 +174,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     Completer<T> completer = Completer();
 
     // Will be set by the `transactionHandler`.
-    T? result;
+    late T result;
 
     final eventChannel = EventChannel(
       'plugins.flutter.io/firebase_firestore/transaction/$transactionId',
@@ -205,7 +205,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         // If the transaction fails on Dart side, then forward the error
         // right away and only inform native side of the error.
         try {
-          result = await transactionHandler(transaction);
+          result = await transactionHandler(transaction) as T;
         } catch (error, stack) {
           // Signal native that a user error occurred, and finish the
           // transaction

@@ -51,8 +51,7 @@ class FieldValue extends FieldValuePlatform {
   dynamic _delegate;
 
   @override
-  // ignore: no_runtimetype_tostring
-  String toString() => '$runtimeType($_delegate)';
+  String toString() => '$FieldValue($_delegate)';
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes

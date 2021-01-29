@@ -39,7 +39,6 @@ class Pointer {
   /// Collections are paths whose components are not dividable by 2, for example
   /// "collection/document/sub-collection".
   bool isCollection() {
-    // return components.length % 2 == 1;
     return components.length.isOdd;
   }
 
