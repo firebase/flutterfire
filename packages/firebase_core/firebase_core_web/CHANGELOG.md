@@ -1,3 +1,7 @@
+## 0.3.0-1.0.nullsafety.0
+
+ - Bump "firebase_core_web" to `0.3.0-1.0.nullsafety.0`.
+
 ## 0.3.0-nullsafety.0
 
 Major bump for the null-safety version to respect the versioning convention.
