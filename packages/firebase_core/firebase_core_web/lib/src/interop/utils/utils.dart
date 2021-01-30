@@ -118,6 +118,6 @@ PromiseJsImpl<S> handleFutureWithMapper<T, S>(
     future.then((value) {
       var mappedValue = mapper(value);
       resolve(mappedValue);
-    }).catchError(reject);
+    }).catchError((error) => reject(error));
   }));
 }
