@@ -98,7 +98,7 @@ class _MyAppState extends State<MyApp> {
                 return Center(
                   child: Column(
                     children: <Widget>[
-                      RaisedButton(
+                      ElevatedButton(
                         onPressed: () {
                           FirebaseCrashlytics.instance
                               .setCustomKey('example', 'flutterfire');
@@ -112,7 +112,7 @@ class _MyAppState extends State<MyApp> {
                         },
                         child: const Text('Key'),
                       ),
-                      RaisedButton(
+                      ElevatedButton(
                         onPressed: () {
                           FirebaseCrashlytics.instance
                               .log('This is a log example');
@@ -126,7 +126,7 @@ class _MyAppState extends State<MyApp> {
                         },
                         child: const Text('Log'),
                       ),
-                      RaisedButton(
+                      ElevatedButton(
                         onPressed: () async {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
@@ -144,7 +144,7 @@ class _MyAppState extends State<MyApp> {
                         },
                         child: const Text('Crash'),
                       ),
-                      RaisedButton(
+                      ElevatedButton(
                         onPressed: () {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
@@ -159,7 +159,7 @@ class _MyAppState extends State<MyApp> {
                         },
                         child: const Text('Throw Error'),
                       ),
-                      RaisedButton(
+                      ElevatedButton(
                         onPressed: () {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
@@ -182,7 +182,7 @@ class _MyAppState extends State<MyApp> {
                         },
                         child: const Text('Async out of bounds'),
                       ),
-                      RaisedButton(
+                      ElevatedButton(
                         onPressed: () async {
                           try {
                             ScaffoldMessenger.of(context)

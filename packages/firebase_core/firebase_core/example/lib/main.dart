@@ -67,16 +67,17 @@ class MyApp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                   onPressed: initializeDefault,
                   child: const Text('Initialize default app')),
-              RaisedButton(
+              ElevatedButton(
                   onPressed: initializeSecondary,
                   child: const Text('Initialize secondary app')),
-              RaisedButton(onPressed: apps, child: const Text('Get apps')),
-              RaisedButton(
+              ElevatedButton(onPressed: apps, child: const Text('Get apps')),
+              ElevatedButton(
                   onPressed: options, child: const Text('List options')),
-              RaisedButton(onPressed: delete, child: const Text('Delete app')),
+              ElevatedButton(
+                  onPressed: delete, child: const Text('Delete app')),
             ],
           ),
         ),
