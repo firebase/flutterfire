@@ -1,6 +1,14 @@
+## 0.21.0-1.1.nullsafety.0
+
+ - **FEAT**: implement support for `useEmulator` (#4263).
+
+## 0.21.0-1.0.nullsafety.0
+
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+
 ## 0.21.0-nullsafety.0
 
-Migrated to null safety (#4633)
+ - **FEAT**: Migrated to null safety (#4633)
 
 ## 0.20.0+1
 
