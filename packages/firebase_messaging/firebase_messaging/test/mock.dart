@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
@@ -17,6 +15,13 @@ typedef Callback = Function(MethodCall call);
 const String kTestString = 'Hello World';
 
 final MockFirebaseMessaging kMockMessagingPlatform = MockFirebaseMessaging();
+
+Future<T> neverEndingFuture<T>() async {
+  // ignore: literal_only_boolean_expressions
+  while (true) {
+    await Future.delayed(const Duration(minutes: 5));
+  }
+}
 
 void setupFirebaseMessagingMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -50,7 +55,7 @@ void setupFirebaseMessagingMocks() {
 
   // Mock Platform Interface Methods
   // ignore: invalid_use_of_protected_member
-  when(kMockMessagingPlatform.delegateFor(app: anyNamed('app')!))
+  when(kMockMessagingPlatform.delegateFor(app: anyNamed('app')))
       .thenReturn(kMockMessagingPlatform);
   // ignore: invalid_use_of_protected_member
   when(kMockMessagingPlatform.setInitialValues(
@@ -66,6 +71,103 @@ class MockFirebaseMessaging extends Mock
     implements FirebaseMessagingPlatform {
   MockFirebaseMessaging() {
     TestFirebaseMessagingPlatform();
+  }
+
+  @override
+  bool get isAutoInitEnabled {
+    return super.noSuchMethod(Invocation.getter(#isAutoInitEnabled), true);
+  }
+
+  @override
+  FirebaseMessagingPlatform delegateFor({FirebaseApp? app}) {
+    return super.noSuchMethod(
+      Invocation.method(#delegateFor, [], {#app: app}),
+      TestFirebaseMessagingPlatform(),
+    );
+  }
+
+  @override
+  FirebaseMessagingPlatform setInitialValues({bool? isAutoInitEnabled}) {
+    return super.noSuchMethod(
+      Invocation.method(
+          #setInitialValues, [], {#isAutoInitEnabled: isAutoInitEnabled}),
+      TestFirebaseMessagingPlatform(),
+    );
+  }
+
+  @override
+  Future<RemoteMessage?> getInitialMessage() {
+    return super.noSuchMethod(Invocation.method(#getInitialMessage, []),
+        neverEndingFuture<RemoteMessage>());
+  }
+
+  @override
+  Future<void> deleteToken({String? senderId}) {
+    return super.noSuchMethod(
+        Invocation.method(#deleteToken, [], {#senderId: senderId}),
+        Future<void>.value());
+  }
+
+  @override
+  Future<String?> getAPNSToken() {
+    return super.noSuchMethod(
+        Invocation.method(#getAPNSToken, []), Future<String>.value(''));
+  }
+
+  @override
+  Future<String> getToken({String? senderId, String? vapidKey}) {
+    return super.noSuchMethod(
+        Invocation.method(
+            #getToken, [], {#senderId: senderId, #vapidKey: vapidKey}),
+        Future<String>.value(''));
+  }
+
+  @override
+  Future<void> setAutoInitEnabled(bool? enabled) {
+    return super.noSuchMethod(Invocation.method(#setAutoInitEnabled, [enabled]),
+        Future<void>.value());
+  }
+
+  @override
+  Stream<String> get onTokenRefresh {
+    return super.noSuchMethod(
+      Invocation.getter(#onTokenRefresh),
+      const Stream<String>.empty(),
+    );
+  }
+
+  @override
+  Future<NotificationSettings> requestPermission(
+      {bool? alert = true,
+      bool? announcement = false,
+      bool? badge = true,
+      bool? carPlay = false,
+      bool? criticalAlert = false,
+      bool? provisional = false,
+      bool? sound = true}) {
+    return super.noSuchMethod(
+        Invocation.method(#requestPermission, [], {
+          #alert: alert,
+          #announcement: announcement,
+          #badge: badge,
+          #carPlay: carPlay,
+          #criticalAlert: criticalAlert,
+          #provisional: provisional,
+          #sound: sound
+        }),
+        neverEndingFuture<NotificationSettings>());
+  }
+
+  @override
+  Future<void> subscribeToTopic(String? topic) {
+    return super.noSuchMethod(
+        Invocation.method(#subscribeToTopic, [topic]), Future<void>.value());
+  }
+
+  @override
+  Future<void> unsubscribeFromTopic(String? topic) {
+    return super.noSuchMethod(Invocation.method(#unsubscribeFromTopic, [topic]),
+        Future<void>.value());
   }
 }
 
