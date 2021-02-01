@@ -1,12 +1,11 @@
 // @dart=2.9
 
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html';
 import 'dart:typed_data';
+import 'dart:html';
 
 /// Initializes a DOM container where we can host elements.
 Element _ensureInitialized(String id) {
-  var target = querySelector('#$id');
+  var target = querySelector('#${id}');
   if (target == null) {
     final Element targetElement = Element.tag('flt-x-file')..id = id;
 
