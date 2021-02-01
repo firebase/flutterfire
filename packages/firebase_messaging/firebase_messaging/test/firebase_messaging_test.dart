@@ -57,18 +57,17 @@ void main() {
       });
     });
 
-    group('initialNotification', () {
+    group('getInitialMessage', () {
       test('verify delegate method is called', () async {
         const senderId = 'test-notification';
         RemoteMessage message = const RemoteMessage(senderId: senderId);
         when(kMockMessagingPlatform.getInitialMessage())
             .thenAnswer((_) => Future.value(message));
 
-        final result =
-            await (messaging!.getInitialMessage() as FutureOr<RemoteMessage>);
+        final result = await messaging!.getInitialMessage();
 
         expect(result, isA<RemoteMessage>());
-        expect(result.senderId, senderId);
+        expect(result!.senderId, senderId);
 
         verify(kMockMessagingPlatform.getInitialMessage());
       });
@@ -100,7 +99,7 @@ void main() {
       test('verify delegate method is called with correct args', () async {
         const vapidKey = 'test-vapid-key';
         when(kMockMessagingPlatform.getToken(vapidKey: anyNamed('vapidKey')))
-            .thenReturn(Future.value(''));
+            .thenAnswer((_) => Future.value(''));
 
         await messaging!.getToken(vapidKey: vapidKey);
 
@@ -125,13 +124,13 @@ void main() {
     group('requestPermission', () {
       test('verify delegate method is called with correct args', () async {
         when(kMockMessagingPlatform.requestPermission(
-          alert: anyNamed('alert')!,
-          announcement: anyNamed('announcement')!,
-          badge: anyNamed('badge')!,
-          carPlay: anyNamed('carPlay')!,
-          criticalAlert: anyNamed('criticalAlert')!,
-          provisional: anyNamed('provisional')!,
-          sound: anyNamed('sound')!,
+          alert: anyNamed('alert'),
+          announcement: anyNamed('announcement'),
+          badge: anyNamed('badge'),
+          carPlay: anyNamed('carPlay'),
+          criticalAlert: anyNamed('criticalAlert'),
+          provisional: anyNamed('provisional'),
+          sound: anyNamed('sound'),
         )).thenAnswer((_) => Future.value(androidNotificationSettings));
 
         // true values
@@ -188,7 +187,8 @@ void main() {
 
     group('setAutoInitEnabled', () {
       test('verify delegate method is called with correct args', () async {
-        when<Future<void>>(kMockMessagingPlatform.setAutoInitEnabled(true));
+        when(kMockMessagingPlatform.setAutoInitEnabled(any))
+            .thenAnswer((_) => Future<void>.value());
 
         await messaging!.setAutoInitEnabled(false);
         verify(kMockMessagingPlatform.setAutoInitEnabled(false));
@@ -198,9 +198,10 @@ void main() {
       });
     });
     group('subscribeToTopic', () {
-      setUpAll(() {
-        when(kMockMessagingPlatform.subscribeToTopic(''));
-      });
+      // setUp(() {
+      //   when(kMockMessagingPlatform.subscribeToTopic(''))
+      //       .thenAnswer((_) => Future<void>.value());
+      // });
 
       test('throws AssertionError if topic is invalid', () async {
         const invalidTopic = 'test invalid = topic';
@@ -210,6 +211,9 @@ void main() {
       });
 
       test('verify delegate method is called with correct args', () async {
+        when(kMockMessagingPlatform.subscribeToTopic(any))
+            .thenAnswer((_) => Future<void>.value());
+
         const topic = 'test-topic';
 
         await messaging!.subscribeToTopic(topic);
@@ -217,7 +221,8 @@ void main() {
       });
     });
     group('unsubscribeFromTopic', () {
-      when(kMockMessagingPlatform.unsubscribeFromTopic(''));
+      when(kMockMessagingPlatform.unsubscribeFromTopic(any))
+          .thenAnswer((_) => Future<void>.value());
       test('verify delegate method is called with correct args', () async {
         const topic = 'test-topic';
 
