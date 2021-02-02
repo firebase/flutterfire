@@ -104,7 +104,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     _initialized = true;
   }
 
-  bool? _autoInitEnabled;
+  late bool _autoInitEnabled;
 
   static bool _initialized = false;
   static bool _bgHandlerInitialized = false;
@@ -143,7 +143,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   bool get isAutoInitEnabled {
-    return _autoInitEnabled!;
+    return _autoInitEnabled;
   }
 
   @override
