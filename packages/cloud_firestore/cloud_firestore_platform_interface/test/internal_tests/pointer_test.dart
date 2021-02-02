@@ -2,18 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('$Pointer', () {
-    // TODO(ehesp): remove once null-safety lands
-    // test('fails assertion if path is null', () {
-    //   expect(() => Pointer(null), throwsAssertionError);
-    // });
-
     test('returns a path and components', () {
       expect(Pointer('foo/bar').path, 'foo/bar');
       expect(Pointer('foo/bar').components, ['foo', 'bar']);

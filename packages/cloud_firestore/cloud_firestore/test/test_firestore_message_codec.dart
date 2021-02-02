@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -62,12 +60,14 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
         final FirebaseApp app = Firebase.app(appName);
         return MethodChannelFirebaseFirestore(app: app);
       case _kFirestoreQuery:
+        String appName = readValue(buffer);
         Map<dynamic, dynamic> values = readValue(buffer);
+        final FirebaseApp app = Firebase.app(appName);
         return MethodChannelQuery(
-            MethodChannelFirebaseFirestore(app: null), values['path']);
+            MethodChannelFirebaseFirestore(app: app), values['path']);
       case _kFirestoreSettings:
         readValue(buffer);
-        return Settings();
+        return const Settings();
       case _kDocumentReference:
         MethodChannelFirebaseFirestore firestore = readValue(buffer);
         String path = readValue(buffer);

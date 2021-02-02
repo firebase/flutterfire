@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 // import 'dart:async';
 
 import 'dart:async';
@@ -20,8 +18,8 @@ import '../utils/test_common.dart';
 
 void main() {
   initializeMethodChannel();
-  /*late*/ MethodChannelFirebaseFirestore firestore;
-  /*late*/ FirebaseApp secondaryApp;
+  MethodChannelFirebaseFirestore? firestore;
+  FirebaseApp? secondaryApp;
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
   String mockTransactionId = 'TRANSACTION1';
@@ -72,7 +70,7 @@ void main() {
           }
           return Future.delayed(Duration.zero);
         default:
-          return null;
+          return Future.value(null);
       }
     });
   });
@@ -83,7 +81,7 @@ void main() {
     log.clear();
   });
 
-  group("$MethodChannelFirebaseFirestore", () {
+  group('$MethodChannelFirebaseFirestore', () {
     group('constructor', () {
       test('should create an instance with no args', () {
         MethodChannelFirebaseFirestore test = MethodChannelFirebaseFirestore();
@@ -111,23 +109,19 @@ void main() {
     });
 
     group('delegateFor()', () {
-      test('returns a [FirestorePlatform] with no arguments', () {
-        expect(firestore.delegateFor(),
-            equals(FirebaseFirestorePlatform.instance));
-      });
       test('returns a [FirestorePlatform] with arguments', () {
-        expect(firestore.delegateFor(app: secondaryApp),
-            FirebaseFirestorePlatform.instanceFor(app: secondaryApp));
+        expect(firestore!.delegateFor(app: secondaryApp!),
+            FirebaseFirestorePlatform.instanceFor(app: secondaryApp!));
       });
     });
 
     test('batch()', () {
-      expect(firestore.batch(), isInstanceOf<WriteBatchPlatform>());
+      expect(firestore!.batch(), isInstanceOf<WriteBatchPlatform>());
     });
 
     group('clearPersistence()', () {
       test('invoke Firestore#clearPersistence with correct args', () {
-        expect(firestore.clearPersistence(), isInstanceOf<Future<void>>());
+        expect(firestore!.clearPersistence(), isInstanceOf<Future<void>>());
 
         expect(
           log,
@@ -144,13 +138,13 @@ void main() {
 
       test('catch [PlatformException] error', () {
         mockPlatformExceptionThrown = true;
-        expect(() => firestore.clearPersistence(),
+        expect(() => firestore!.clearPersistence(),
             throwsA(isInstanceOf<FirebaseException>()));
       });
     });
 
     test('collection()', () {
-      final collection = firestore.collection('foo/bar');
+      final collection = firestore!.collection('foo/bar');
 
       expect(collection, isInstanceOf<CollectionReferencePlatform>());
       expect(collection.path, equals('foo/bar'));
@@ -158,7 +152,7 @@ void main() {
     });
 
     test('collectionGroup()', () {
-      final collectionGroup = firestore.collectionGroup('foo/bar');
+      final collectionGroup = firestore!.collectionGroup('foo/bar');
 
       expect(collectionGroup, isInstanceOf<QueryPlatform>());
       expect(collectionGroup.isCollectionGroupQuery, isTrue);
@@ -167,7 +161,7 @@ void main() {
 
     group('disableNetwork()', () {
       test('invoke Firestore#disableNetwork with correct args', () {
-        expect(firestore.disableNetwork(), isInstanceOf<Future<void>>());
+        expect(firestore!.disableNetwork(), isInstanceOf<Future<void>>());
 
         expect(
           log,
@@ -185,13 +179,13 @@ void main() {
       test('catch [PlatformException] error', () {
         mockPlatformExceptionThrown = true;
 
-        expect(() => firestore.disableNetwork(),
+        expect(() => firestore!.disableNetwork(),
             throwsA(isInstanceOf<FirebaseException>()));
       });
     });
 
     test('doc()', () {
-      final doc = firestore.doc('foo/bar');
+      final doc = firestore!.doc('foo/bar');
 
       expect(doc, isInstanceOf<DocumentReferencePlatform>());
       expect(doc.path, equals('foo/bar'));
@@ -200,7 +194,7 @@ void main() {
 
     group('enableNetwork()', () {
       test('invoke Firestore#enableNetwork with correct args', () {
-        expect(firestore.enableNetwork(), isInstanceOf<Future<void>>());
+        expect(firestore!.enableNetwork(), isInstanceOf<Future<void>>());
 
         expect(
           log,
@@ -218,25 +212,24 @@ void main() {
       test('catch [PlatformException] error', () {
         mockPlatformExceptionThrown = true;
 
-        expect(() => firestore.enableNetwork(),
+        expect(() => firestore!.enableNetwork(),
             throwsA(isInstanceOf<FirebaseException>()));
       });
     });
 
     group('snapshotsInSync()', () {
       test('returns a [Stream]', () {
-        final stream = firestore.snapshotsInSync();
+        final stream = firestore!.snapshotsInSync();
 
         expect(stream, isInstanceOf<Stream<void>>());
       });
 
       test('onListen and onCancel invokes native methods with correct args',
           () async {
-        final Stream<void> stream = firestore.snapshotsInSync();
+        final Stream<void> stream = firestore!.snapshotsInSync();
         final Completer<void> receivedSync = Completer<void>();
 
-        final StreamSubscription<void> subscription =
-            await stream.listen((event) {
+        final StreamSubscription<void> subscription = stream.listen((event) {
           receivedSync.complete();
         });
 
@@ -255,7 +248,7 @@ void main() {
 
     group('runTransaction()', () {
       TransactionHandler transactionHandler = (transaction) {
-        return null;
+        return Future.value({});
       };
 
       group('common', () {
@@ -270,14 +263,14 @@ void main() {
 
         test('throws [AssertionError] for timeout more than 0 ms', () {
           expect(
-              firestore.runTransaction(transactionHandler,
-                  timeout: Duration.zero),
+              firestore!
+                  .runTransaction(transactionHandler, timeout: Duration.zero),
               throwsAssertionError);
         });
 
         test('sets timeout to a default value', () async {
           final transactionFuture =
-              firestore.runTransaction(transactionHandler);
+              firestore!.runTransaction(transactionHandler);
           expect(transactionFuture, isInstanceOf<Future>());
         });
       });
@@ -293,7 +286,7 @@ void main() {
         });
 
         test('returns result of a successful transaction', () async {
-          await firestore.runTransaction((TransactionPlatform tx) async {},
+          await firestore!.runTransaction((TransactionPlatform tx) async {},
               timeout: const Duration(seconds: 3));
 
           expect(log, <Matcher>[
@@ -325,29 +318,29 @@ void main() {
             () async {
           mockPlatformExceptionThrown = true;
           try {
-            await firestore.runTransaction(transactionHandler);
+            await firestore!.runTransaction(transactionHandler);
             fail('Should have thrown exception');
           } on FirebaseException catch (_) {
             return;
           } catch (_) {
-            fail("Transaction threw invalid exeption");
+            fail('Transaction threw invalid exeption');
           }
         });
       });
     });
 
     group('settings', () {
-      Settings settings = Settings();
+      Settings settings = const Settings();
 
       test('stores the settings on the Firestore instance', () {
-        firestore.settings = settings;
-        expect(firestore.settings, settings);
+        firestore!.settings = settings;
+        expect(firestore!.settings, settings);
       });
     });
 
     group('terminate()', () {
       test('invoke Firestore#terminate with correct args', () {
-        expect(firestore.terminate(), isInstanceOf<Future<void>>());
+        expect(firestore!.terminate(), isInstanceOf<Future<void>>());
 
         expect(
           log,
@@ -365,14 +358,14 @@ void main() {
       test('catch [PlatformException] error', () {
         mockPlatformExceptionThrown = true;
 
-        expect(() => firestore.terminate(),
+        expect(() => firestore!.terminate(),
             throwsA(isInstanceOf<FirebaseException>()));
       });
     });
 
     group('waitForPendingWrites()', () {
       test('invoke Firestore#waitForPendingWrites with correct args', () {
-        expect(firestore.waitForPendingWrites(), isInstanceOf<Future<void>>());
+        expect(firestore!.waitForPendingWrites(), isInstanceOf<Future<void>>());
 
         expect(
           log,
@@ -390,7 +383,7 @@ void main() {
       test('catch [PlatformException] error', () {
         mockPlatformExceptionThrown = true;
 
-        expect(() => firestore.waitForPendingWrites(),
+        expect(() => firestore!.waitForPendingWrites(),
             throwsA(isInstanceOf<FirebaseException>()));
       });
     });

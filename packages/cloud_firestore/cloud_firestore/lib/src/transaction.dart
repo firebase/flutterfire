@@ -2,13 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 part of cloud_firestore;
 
 /// The [TransactionHandler] may be executed multiple times; it should be able
 /// to handle multiple executions.
-typedef Future<T> TransactionHandler<T>(Transaction transaction);
+typedef TransactionHandler<T> = Future<T> Function(Transaction transaction);
 
 /// Transaction class which is created from a call to [runTransaction()].
 class Transaction {
@@ -32,9 +30,8 @@ class Transaction {
 
   /// Deletes the document referred to by the provided [documentReference].
   Transaction delete(DocumentReference documentReference) {
-    assert(documentReference != null);
     assert(documentReference.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+        'the document provided is from a different Firestore instance');
 
     return Transaction._(_firestore, _delegate.delete(documentReference.path));
   }
@@ -43,15 +40,13 @@ class Transaction {
   /// The update will fail if applied to a document that does not exist.
   Transaction update(
       DocumentReference documentReference, Map<String, dynamic> data) {
-    assert(documentReference != null);
-    assert(data != null);
     assert(documentReference.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+        'the document provided is from a different Firestore instance');
 
     return Transaction._(
         _firestore,
         _delegate.update(documentReference.path,
-            _CodecUtility.replaceValueWithDelegatesInMap(data)));
+            _CodecUtility.replaceValueWithDelegatesInMap(data)!));
   }
 
   /// Writes to the document referred to by the provided [DocumentReference].
@@ -59,16 +54,13 @@ class Transaction {
   /// [SetOptions], the provided data can be merged into the existing document.
   Transaction set(
       DocumentReference documentReference, Map<String, dynamic> data,
-      [SetOptions /*?*/ options]) {
+      [SetOptions? options]) {
     assert(documentReference.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+        'the document provided is from a different Firestore instance');
 
     return Transaction._(
         _firestore,
-        _delegate.set(
-            documentReference.path,
-            // TODO(ehesp): `options` should be nullable after platform interface null safe is available
-            _CodecUtility.replaceValueWithDelegatesInMap(data),
-            options));
+        _delegate.set(documentReference.path,
+            _CodecUtility.replaceValueWithDelegatesInMap(data)!, options));
   }
 }
