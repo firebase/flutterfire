@@ -4,8 +4,8 @@ homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/c
 version: 0.3.0+1
 
 environment:
-  sdk: ">=2.12.0-133.7.beta <3.0.0"
-  flutter: ">=1.9.1+hotfix.5 <2.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.4 <2.0.0"
 
 dependencies:
   cloud_firestore_platform_interface: ^3.0.1
