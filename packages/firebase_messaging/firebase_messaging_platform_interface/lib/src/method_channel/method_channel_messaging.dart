@@ -198,12 +198,12 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     }
 
     try {
-      Map<String, String> data = await (channel
-          .invokeMapMethod<String, String>('Messaging#getAPNSToken', {
+      Map<String, String?>? data = await channel
+          .invokeMapMethod<String, String?>('Messaging#getAPNSToken', {
         'appName': app.name,
-      }) as FutureOr<Map<String, String>>);
+      });
 
-      return data['token'];
+      return data?['token'];
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -215,13 +215,13 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     String? vapidKey, // not used yet; web only property
   }) async {
     try {
-      Map<String, String?> data =
-          await (channel.invokeMapMethod<String, String>('Messaging#getToken', {
+      Map<String, String?>? data =
+          await channel.invokeMapMethod<String, String>('Messaging#getToken', {
         'appName': app.name,
         'senderId': senderId,
-      }) as FutureOr<Map<String, String>>);
+      });
 
-      return data['token'];
+      return data?['token'];
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -261,7 +261,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     }
 
     try {
-      Map<String, int> response = await (channel
+      Map<String, int>? response = await channel
           .invokeMapMethod<String, int>('Messaging#requestPermission', {
         'appName': app.name,
         'permissions': <String, bool>{
@@ -273,9 +273,9 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           'provisional': provisional,
           'sound': sound,
         }
-      }) as FutureOr<Map<String, int>>);
+      });
 
-      return convertToNotificationSettings(response);
+      return convertToNotificationSettings(response!);
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -284,12 +284,13 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   @override
   Future<void> setAutoInitEnabled(bool enabled) async {
     try {
-      Map<String, dynamic> data = await (channel
+      Map<String, dynamic>? data = await channel
           .invokeMapMethod<String, dynamic>('Messaging#setAutoInitEnabled', {
         'appName': app.name,
         'enabled': enabled,
-      }) as FutureOr<Map<String, dynamic>>);
-      _autoInitEnabled = data['isAutoInitEnabled'] as bool;
+      });
+
+      _autoInitEnabled = data?['isAutoInitEnabled'] as bool;
     } catch (e) {
       throw convertPlatformException(e);
     }
