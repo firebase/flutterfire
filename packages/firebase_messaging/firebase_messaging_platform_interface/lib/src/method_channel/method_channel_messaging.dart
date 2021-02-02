@@ -36,13 +36,8 @@ void _firebaseMessagingCallbackDispatcher() {
 
       // PluginUtilities.getCallbackFromHandle performs a lookup based on the
       // callback handle and returns a tear-off of the original callback.
-      final Function closure = PluginUtilities.getCallbackFromHandle(handle)!;
-
-      if (closure == null) {
-        // ignore: avoid_print
-        print('Fatal: could not find user callback');
-        exit(-1);
-      }
+      final closure = PluginUtilities.getCallbackFromHandle(handle)!
+          as Future<void> Function(RemoteMessage);
 
       try {
         Map<String, dynamic> messageMap =
