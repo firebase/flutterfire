@@ -3,8 +3,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-// ignore_for_file: avoid_print
-
 /// Manages & returns the users FCM token.
 ///
 /// Also monitors token refreshes and updates state.
