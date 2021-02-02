@@ -25,9 +25,6 @@ class _Permissions extends State<Permissions> {
       announcement: true,
       carPlay: true,
       criticalAlert: true,
-      // This will ensure the popup shows for users
-      // ignore: avoid_redundant_argument_values
-      provisional: false,
     );
 
     setState(() {
