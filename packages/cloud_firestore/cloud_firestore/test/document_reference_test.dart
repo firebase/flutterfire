@@ -85,9 +85,6 @@ void main() {
 
     test('path must be a non-empty string', () {
       CollectionReference ref = firestore!.collection('foo');
-      // ignore: todo
-      // TODO(ehesp): Remove when null safety lands
-      // expect(() => firestore.doc(null), throwsAssertionError);
       expect(() => firestore!.doc(''), throwsAssertionError);
       expect(() => ref.doc(''), throwsAssertionError);
     });
@@ -110,12 +107,5 @@ void main() {
       expect(() => ref.set({}, SetOptions(mergeFields: ['foo', false])),
           throwsAssertionError);
     });
-
-    // ignore: todo
-    // TODO(ehesp): Remove when null safety lands
-    // test('data must not be null', () {
-    //   DocumentReference ref = firestore.collection('foo').doc();
-    //   expect(() => ref.set(null), throwsAssertionError);
-    // });
   });
 }

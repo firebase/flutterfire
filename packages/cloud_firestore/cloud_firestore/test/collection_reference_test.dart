@@ -91,10 +91,6 @@ void main() {
 
     test('path must be non-empty strings', () {
       DocumentReference docRef = firestore!.doc('foo/bar');
-      // ignore: todo
-      // TODO(ehesp): Remove when null safety lands
-      // expect(() => firestore.collection(null), throwsAssertionError);
-      // expect(() => docRef.collection(null), throwsAssertionError);
       expect(() => firestore!.collection(''), throwsAssertionError);
       expect(() => docRef.collection(''), throwsAssertionError);
     });
@@ -125,22 +121,10 @@ void main() {
         expect(() => docRef.collection(path), throwsAssertionError);
       }
     });
-    // ignore: todo
-    // TODO(ehesp): Remove when null safety lands
-    // group('add()', () {
-    //   test('data must not be null', () {
-    //     CollectionReference ref = firestore.collection('foo');
-    //     expect(() => ref.add(null), throwsAssertionError);
-    //   });
-    // });
 
     group('validate', () {
       test('path must be non-empty strings', () {
         DocumentReference docRef = firestore!.doc('foo/bar');
-        // ignore: todo
-        // TODO(ehesp): Remove when null safety lands
-        // expect(() => firestore.collection(null), throwsAssertionError);
-        // expect(() => docRef.collection(null), throwsAssertionError);
         expect(() => firestore!.collection(''), throwsAssertionError);
         expect(() => docRef.collection(''), throwsAssertionError);
       });
@@ -172,12 +156,6 @@ void main() {
           expect(() => docRef.collection(path), throwsAssertionError);
         }
       });
-      // ignore: todo
-      // TODO(ehesp): Remove when null safety lands
-      // test('add() data must not be null', () {
-      //   CollectionReference ref = firestore.collection('foo');
-      //   expect(() => ref.add(null), throwsAssertionError);
-      // });
     });
   });
 }

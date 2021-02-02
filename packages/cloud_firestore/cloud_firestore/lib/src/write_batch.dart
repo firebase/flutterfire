@@ -42,8 +42,6 @@ class WriteBatch {
         'the document provided is from a different Firestore instance');
     return _delegate.set(
         document.path,
-        // ignore: todo
-        // TODO(ehesp): `options` should be nullable after platform interface null safe is available
         _CodecUtility.replaceValueWithDelegatesInMap(data)!,
         options);
   }

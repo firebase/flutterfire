@@ -28,7 +28,6 @@ dev_dependencies:
   drive: 0.0.1-6.0.pre
   flutter_driver:
     sdk: flutter
-  pedantic: ^1.8.0
   test: any
 
 flutter:

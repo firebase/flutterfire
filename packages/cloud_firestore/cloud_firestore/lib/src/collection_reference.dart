@@ -10,6 +10,7 @@ part of cloud_firestore;
 @immutable
 class CollectionReference extends Query {
   @override
+  // ignore: overridden_fields
   final CollectionReferencePlatform _delegate;
 
   CollectionReference._(FirebaseFirestore firestore, this._delegate)
@@ -60,8 +61,7 @@ class CollectionReference extends Query {
       assert(!path.contains('//'), 'a document path must not contain "//"');
       assert(path != '/', 'a document path must point to a valid document');
     }
-    // ignore: todo
-    // TODO(ehesp): null saftey check adds a `!` to the path?
+
     return DocumentReference._(firestore, _delegate.doc(path));
   }
 

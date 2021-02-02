@@ -62,8 +62,6 @@ class Transaction {
         _firestore,
         _delegate.set(
             documentReference.path,
-            // ignore: todo
-            // TODO(ehesp): `options` should be nullable after platform interface null safe is available
             _CodecUtility.replaceValueWithDelegatesInMap(data)!,
             options));
   }

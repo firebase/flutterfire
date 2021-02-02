@@ -120,7 +120,7 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  Future<QuerySnapshotPlatform> get([GetOptions? options]) async {
+  Future<QuerySnapshotPlatform> get([GetOptions options = const GetOptions()]) async {
     try {
       return convertWebQuerySnapshot(
           firestore,

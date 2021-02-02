@@ -74,10 +74,7 @@ class DocumentReference {
   /// document instead of overwriting.
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
     return _delegate.set(
-        // ignore: todo
-        // TODO(ehesp): `options` should be nullable after platform interface null safe is available
-        _CodecUtility.replaceValueWithDelegatesInMap(data)!,
-        options);
+        _CodecUtility.replaceValueWithDelegatesInMap(data)!, options);
   }
 
   /// Updates data on the document. Data will be merged with any existing
