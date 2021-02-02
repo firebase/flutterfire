@@ -53,7 +53,6 @@ class Query {
   /// passed to the query.
   Map<String, dynamic> _assertQueryCursorSnapshot(
       DocumentSnapshot documentSnapshot) {
-    assert(documentSnapshot != null);
     assert(documentSnapshot.exists,
         'a document snapshot must exist to be used within a query');
 
