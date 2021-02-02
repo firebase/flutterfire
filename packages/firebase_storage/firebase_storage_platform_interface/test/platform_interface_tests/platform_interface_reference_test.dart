@@ -95,7 +95,7 @@ void main() {
     test('throws if delete()', () async {
       try {
         await referencePlatform.delete();
-      }  catch (e) {
+      } catch (e) {
         expect(e.message, equals('delete() is not implemented'));
         return;
       }

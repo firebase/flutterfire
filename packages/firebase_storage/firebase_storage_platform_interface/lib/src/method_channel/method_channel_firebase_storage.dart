@@ -103,7 +103,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   @override
   int maxUploadRetryTime = const Duration(minutes: 10).inMilliseconds;
-  
+
   @override
   int maxDownloadRetryTime = const Duration(minutes: 10).inMilliseconds;
 

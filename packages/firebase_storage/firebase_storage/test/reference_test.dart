@@ -287,8 +287,7 @@ Future<void> main() async {
       when(mockReference.putString(any, any, any))
           .thenReturn(mockUploadTaskPlatform);
       test('raw string values', () {
-        final result =
-            testRef.putString(testString);
+        final result = testRef.putString(testString);
 
         expect(result, isA<Task>());
 

@@ -282,7 +282,8 @@ class MetaCard extends StatelessWidget {
                 child: Column(children: [
                   Container(
                       margin: const EdgeInsets.only(bottom: 16),
-                      child: Text(_title, style: const TextStyle(fontSize: 18))),
+                      child:
+                          Text(_title, style: const TextStyle(fontSize: 18))),
                   _children,
                 ]))));
   }

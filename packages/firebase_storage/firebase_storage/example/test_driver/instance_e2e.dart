@@ -125,25 +125,31 @@ void runInstanceTests() {
 
     group('setMaxOperationRetryTime', () {
       test('should set', () async {
-        expect(storage.maxOperationRetryTime, const Duration(milliseconds: 120000));
+        expect(storage.maxOperationRetryTime,
+            const Duration(milliseconds: 120000));
         storage.setMaxOperationRetryTime(const Duration(milliseconds: 100000));
-        expect(storage.maxOperationRetryTime, const Duration(milliseconds: 100000));
+        expect(storage.maxOperationRetryTime,
+            const Duration(milliseconds: 100000));
       });
     });
 
     group('setMaxUploadRetryTime', () {
       test('should set', () async {
-        expect(storage.maxUploadRetryTime, const Duration(milliseconds: 600000));
+        expect(
+            storage.maxUploadRetryTime, const Duration(milliseconds: 600000));
         storage.setMaxUploadRetryTime(const Duration(milliseconds: 120000));
-        expect(storage.maxUploadRetryTime, const Duration(milliseconds: 120000));
+        expect(
+            storage.maxUploadRetryTime, const Duration(milliseconds: 120000));
       });
     });
 
     group('setMaxDownloadRetryTime', () {
       test('should set', () async {
-        expect(storage.maxDownloadRetryTime, const Duration(milliseconds: 600000));
+        expect(
+            storage.maxDownloadRetryTime, const Duration(milliseconds: 600000));
         storage.setMaxDownloadRetryTime(const Duration(milliseconds: 120000));
-        expect(storage.maxDownloadRetryTime, const Duration(milliseconds: 120000));
+        expect(
+            storage.maxDownloadRetryTime, const Duration(milliseconds: 120000));
       });
     });
 
