@@ -29,10 +29,10 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return FirebaseMessaging._(app: Firebase.app());
   }
 
+  //  Messaging does not yet support multiple Firebase Apps. Default app only.
   /// Returns an instance using a specified [FirebaseApp]
   ///
   /// If [app] is not provided, the default Firebase app will be used.
-  // TODO: messaging does not yet support multiple Firebase Apps. Default app only.
   // static FirebaseMessaging instanceFor({
   //   FirebaseApp app,
   // }) {
@@ -52,6 +52,14 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   //
   // static final Map<String, FirebaseMessaging> _cachedInstances = {};
 
+  static final _onMessageController =
+      StreamController<RemoteMessage>.broadcast(onListen: () {
+    Stream<RemoteMessage> onMessageStream =
+        FirebaseMessagingPlatform.onMessage.stream;
+
+    onMessageStream.pipe(_onMessageController);
+  });
+
   /// Returns a Stream that is called when an incoming FCM payload is received whilst
   /// the Flutter instance is in the foreground.
   ///
@@ -59,18 +67,15 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// To handle messages whilst the app is in the background or terminated,
   /// see [onBackgroundMessage].
-  static Stream<RemoteMessage> get onMessage {
-    Stream<RemoteMessage> onMessageStream =
-        FirebaseMessagingPlatform.onMessage.stream;
+  static Stream<RemoteMessage> get onMessage => _onMessageController.stream;
 
-    // ignore: close_sinks
-    StreamController<RemoteMessage>? streamController;
-    streamController = StreamController<RemoteMessage>.broadcast(onListen: () {
-      onMessageStream.pipe(streamController!);
-    });
+  static final _onMessageOpenedAppController =
+      StreamController<RemoteMessage>.broadcast(onListen: () {
+    Stream<RemoteMessage> onMessageOpenedAppStream =
+        FirebaseMessagingPlatform.onMessageOpenedApp.stream;
 
-    return streamController.stream;
-  }
+    onMessageOpenedAppStream.pipe(_onMessageOpenedAppController);
+  });
 
   /// Returns a [Stream] that is called when a user presses a notification message displayed
   /// via FCM.
@@ -80,18 +85,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// If your app is opened via a notification whilst the app is terminated,
   /// see [getInitialMessage].
-  static Stream<RemoteMessage> get onMessageOpenedApp {
-    Stream<RemoteMessage> onMessageOpenedAppStream =
-        FirebaseMessagingPlatform.onMessageOpenedApp.stream;
-
-    // ignore: close_sinks
-    StreamController<RemoteMessage>? streamController;
-    streamController = StreamController<RemoteMessage>.broadcast(onListen: () {
-      onMessageOpenedAppStream.pipe(streamController!);
-    });
-
-    return streamController.stream;
-  }
+  static Stream<RemoteMessage> get onMessageOpenedApp =>
+      _onMessageOpenedAppController.stream;
 
   // ignore: use_setters_to_change_properties
   /// Set a message handler function which is called when the app is in the

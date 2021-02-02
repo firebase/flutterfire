@@ -16,8 +16,8 @@ import '../mock.dart';
 void main() {
   setupFirebaseMessagingMocks();
 
-  FirebaseApp? app;
-  FirebaseMessagingPlatform? messaging;
+  late FirebaseApp app;
+  late FirebaseMessagingPlatform messaging;
   final List<MethodCall> log = <MethodCall>[];
 
   group('$MethodChannelFirebaseMessaging', () {
@@ -64,7 +64,7 @@ void main() {
 
     setUp(() {
       log.clear();
-      messaging = MethodChannelFirebaseMessaging(app: app!);
+      messaging = MethodChannelFirebaseMessaging(app: app);
     });
 
     group('$FirebaseMessagingPlatform()', () {
@@ -118,12 +118,12 @@ void main() {
 
     test('isAutoInitEnabled', () {
       // ignore: invalid_use_of_protected_member
-      messaging!.setInitialValues(isAutoInitEnabled: true);
-      expect(messaging!.isAutoInitEnabled, isTrue);
+      messaging.setInitialValues(isAutoInitEnabled: true);
+      expect(messaging.isAutoInitEnabled, isTrue);
     });
 
     test('deleteToken', () async {
-      await messaging!.deleteToken();
+      await messaging.deleteToken();
 
       // check native method was called
       expect(log, <Matcher>[
@@ -140,7 +140,7 @@ void main() {
     test('getAPNSToken', () async {
       // not applicable to android
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      await messaging!.getAPNSToken();
+      await messaging.getAPNSToken();
 
       // check native method was called
       expect(log, <Matcher>[
@@ -154,7 +154,7 @@ void main() {
     });
 
     test('getToken', () async {
-      await messaging!.getToken();
+      await messaging.getToken();
 
       // check native method was called
       expect(log, <Matcher>[
@@ -170,7 +170,7 @@ void main() {
 
     test('requestPermission', () async {
       // test android response
-      final androidPermissions = await messaging!.requestPermission();
+      final androidPermissions = await messaging.requestPermission();
       expect(androidPermissions.authorizationStatus,
           equals(AuthorizationStatus.authorized));
       // clear log
@@ -178,7 +178,7 @@ void main() {
 
       // test other platforms
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      final iosStatus = await messaging!.requestPermission();
+      final iosStatus = await messaging.requestPermission();
       expect(iosStatus.authorizationStatus, isA<AuthorizationStatus>());
       expect(iosStatus.authorizationStatus,
           equals(AuthorizationStatus.authorized));
@@ -204,9 +204,9 @@ void main() {
     });
 
     test('setAutoInitEnabled', () async {
-      expect(messaging!.isAutoInitEnabled, isNull);
-      await messaging!.setAutoInitEnabled(true);
-      expect(messaging!.isAutoInitEnabled, isTrue);
+      expect(messaging.isAutoInitEnabled, isNull);
+      await messaging.setAutoInitEnabled(true);
+      expect(messaging.isAutoInitEnabled, isTrue);
 
       // check native method was called
       expect(log, <Matcher>[
@@ -221,12 +221,12 @@ void main() {
     });
 
     test('onTokenRefresh', () {
-      expect(messaging!.onTokenRefresh, isA<Stream<String>>());
+      expect(messaging.onTokenRefresh, isA<Stream<String>>());
     });
 
     test('subscribeToTopic', () async {
       const topic = 'test-topic';
-      await messaging!.subscribeToTopic(topic);
+      await messaging.subscribeToTopic(topic);
 
       // check native method was called
       expect(log, <Matcher>[
@@ -242,7 +242,7 @@ void main() {
 
     test('unsubscribeFromTopic', () async {
       const topic = 'test-topic';
-      await messaging!.unsubscribeFromTopic(topic);
+      await messaging.unsubscribeFromTopic(topic);
 
       // check native method was called
       expect(log, <Matcher>[
