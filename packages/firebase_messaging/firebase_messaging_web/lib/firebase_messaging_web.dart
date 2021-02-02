@@ -52,8 +52,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  // ignore: type_annotate_public_apis
-  void registerBackgroundMessageHandler(BackgroundMessageHandler? handler) {}
+  void registerBackgroundMessageHandler(BackgroundMessageHandler handler) {}
 
   @override
   FirebaseMessagingPlatform delegateFor({required FirebaseApp app}) {

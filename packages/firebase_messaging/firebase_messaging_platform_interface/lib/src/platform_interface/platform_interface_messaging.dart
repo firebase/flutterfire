@@ -103,7 +103,10 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// platform specific registration logic.
   static set onBackgroundMessage(BackgroundMessageHandler? handler) {
     _onBackgroundMessageHandler = handler;
-    instance.registerBackgroundMessageHandler(handler);
+
+    if (handler != null) {
+      instance.registerBackgroundMessageHandler(handler);
+    }
   }
 
   /// Enables delegates to create new instances of themselves if a none default
@@ -147,7 +150,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   ///
   /// For example, on native platforms this could be to setup an isolate, whereas
   /// on web a service worker can be registered.
-  void registerBackgroundMessageHandler(BackgroundMessageHandler? handler) {
+  void registerBackgroundMessageHandler(BackgroundMessageHandler handler) {
     throw UnimplementedError(
         'registerBackgroundMessageHandler() is not implemented');
   }

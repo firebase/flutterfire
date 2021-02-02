@@ -166,8 +166,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> registerBackgroundMessageHandler(
-      BackgroundMessageHandler? handler) async {
-    if (handler == null || defaultTargetPlatform != TargetPlatform.android) {
+      BackgroundMessageHandler handler) async {
+    if (defaultTargetPlatform != TargetPlatform.android) {
       return;
     }
 
