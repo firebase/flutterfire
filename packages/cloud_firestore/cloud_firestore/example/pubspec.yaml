@@ -16,6 +16,8 @@ dependencies:
 dependency_overrides:
   cloud_firestore_platform_interface:
     path: ../../cloud_firestore_platform_interface
+  cloud_firestore_web:
+    path: ../../cloud_firestore_web
   firebase_core:
     path: ../../../firebase_core/firebase_core
   firebase_core_platform_interface:
