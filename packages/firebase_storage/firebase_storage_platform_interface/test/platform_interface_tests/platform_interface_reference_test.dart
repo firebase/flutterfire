@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,9 +14,9 @@ import '../mock.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  TestReferencePlatform referencePlatform;
-  FirebaseApp app;
-  FirebaseStoragePlatform firebaseStoragePlatform;
+  /*late*/ TestReferencePlatform referencePlatform;
+  /*late*/ FirebaseApp app;
+  /*late*/ FirebaseStoragePlatform firebaseStoragePlatform;
 
   group('$ReferencePlatform()', () {
     setUpAll(() async {

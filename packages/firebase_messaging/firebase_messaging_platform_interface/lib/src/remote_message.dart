@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
 /// A class representing a message sent from Firebase Cloud Messaging.
@@ -30,18 +32,21 @@ class RemoteMessage {
       collapseKey: map['collapseKey'],
       contentAvailable: map['contentAvailable'] ?? false,
       data: map['data'] == null
-          ? <String, String>{}
-          : Map<String, String>.from(map['data']),
+          ? <String, dynamic>{}
+          : Map<String, dynamic>.from(map['data']),
       from: map['from'],
-      messageId: map['messageId'],
+      // Note: using toString on messageId as it can be an int or string when being sent from native.
+      messageId: map['messageId'] == null ? null : map['messageId'].toString(),
       mutableContent: map['mutableContent'] ?? false,
       notification: map['notification'] == null
           ? null
           : RemoteNotification.fromMap(
               Map<String, dynamic>.from(map['notification'])),
+      // Note: using toString on sentTime as it can be an int or string when being sent from native.
       sentTime: map['sentTime'] == null
           ? null
-          : DateTime.fromMillisecondsSinceEpoch(map['sentTime']),
+          : DateTime.fromMillisecondsSinceEpoch(
+              int.parse(map['sentTime'].toString())),
       threadId: map['threadId'],
       ttl: map['ttl'],
     );
@@ -60,7 +65,7 @@ class RemoteMessage {
   final bool contentAvailable;
 
   /// Any additional data sent with the message.
-  final Map<String, String> data;
+  final Map<String, dynamic> data;
 
   /// The topic name or message identifier.
   final String from;

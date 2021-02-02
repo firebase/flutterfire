@@ -15,6 +15,7 @@ module.exports = {
       "installation/macos",
       "installation/web",
       "migration",
+      "nullsafety",
     ],
     // AdMob: ["admob/usage", toReferenceAPI("firebase_admob")],
     Analytics: ["analytics/overview", toReferenceAPI("firebase_analytics")],
@@ -68,6 +69,7 @@ module.exports = {
     // "ML Kit Vision": ["ml-vision/usage", toReferenceAPI("firebase_ml_vision")],
     "Remote Config": [
       "remote-config/overview",
+      "remote-config/usage",
       toReferenceAPI("firebase_remote_config"),
     ],
     "Performance Monitoring": [

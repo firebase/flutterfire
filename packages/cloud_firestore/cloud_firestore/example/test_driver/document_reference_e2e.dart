@@ -1,6 +1,10 @@
+// @dart = 2.9
+
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
+// @dart=2.9
 
 import 'dart:async';
 
@@ -10,7 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runDocumentReferenceTests() {
   group('$DocumentReference', () {
-    FirebaseFirestore firestore;
+    /*late*/ FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -42,6 +46,20 @@ void runDocumentReferenceTests() {
             fail("Should not have been called");
           }
         }, count: 1, reason: "Stream should only have been called once."));
+      });
+
+      test('listens to multiple documents', () async {
+        DocumentReference doc1 = await initializeTest('document-snapshot-1');
+        DocumentReference doc2 = await initializeTest('document-snapshot-2');
+
+        await doc1.set({'test': 'value1'});
+        await doc2.set({'test': 'value2'});
+
+        final value1 = doc1.snapshots().first.then((s) => s.data()['test']);
+        final value2 = doc2.snapshots().first.then((s) => s.data()['test']);
+
+        await expectLater(value1, completion('value1'));
+        await expectLater(value2, completion('value2'));
       });
 
       test('listens to a multiple changes response', () async {

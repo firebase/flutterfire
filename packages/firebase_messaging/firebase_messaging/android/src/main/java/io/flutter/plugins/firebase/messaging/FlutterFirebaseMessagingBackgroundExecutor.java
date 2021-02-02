@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.firebase.messaging.RemoteMessage;
@@ -161,37 +163,53 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
       return;
     }
 
-    Context context = ContextHolder.getApplicationContext();
-    String appBundlePath = io.flutter.view.FlutterMain.findAppBundlePath();
-    AssetManager assets = context.getAssets();
-    if (isNotRunning()) {
-      if (shellArgs != null) {
-        Log.i(
-            TAG,
-            "Creating background FlutterEngine instance, with args: "
-                + Arrays.toString(shellArgs.toArray()));
-        backgroundFlutterEngine = new FlutterEngine(context, shellArgs.toArray());
-      } else {
-        Log.i(TAG, "Creating background FlutterEngine instance.");
-        backgroundFlutterEngine = new FlutterEngine(context);
-      }
-      // We need to create an instance of `FlutterEngine` before looking up the
-      // callback. If we don't, the callback cache won't be initialized and the
-      // lookup will fail.
-      FlutterCallbackInformation flutterCallback =
-          FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
-      DartExecutor executor = backgroundFlutterEngine.getDartExecutor();
-      initializeMethodChannel(executor);
-      DartCallback dartCallback = new DartCallback(assets, appBundlePath, flutterCallback);
+    Handler mainHandler = new Handler(Looper.getMainLooper());
+    Runnable myRunnable =
+        () -> {
+          io.flutter.view.FlutterMain.startInitialization(ContextHolder.getApplicationContext());
+          io.flutter.view.FlutterMain.ensureInitializationCompleteAsync(
+              ContextHolder.getApplicationContext(),
+              null,
+              mainHandler,
+              () -> {
+                String appBundlePath = io.flutter.view.FlutterMain.findAppBundlePath();
+                AssetManager assets = ContextHolder.getApplicationContext().getAssets();
+                if (isNotRunning()) {
+                  if (shellArgs != null) {
+                    Log.i(
+                        TAG,
+                        "Creating background FlutterEngine instance, with args: "
+                            + Arrays.toString(shellArgs.toArray()));
+                    backgroundFlutterEngine =
+                        new FlutterEngine(
+                            ContextHolder.getApplicationContext(), shellArgs.toArray());
+                  } else {
+                    Log.i(TAG, "Creating background FlutterEngine instance.");
+                    backgroundFlutterEngine =
+                        new FlutterEngine(ContextHolder.getApplicationContext());
+                  }
+                  // We need to create an instance of `FlutterEngine` before looking up the
+                  // callback. If we don't, the callback cache won't be initialized and the
+                  // lookup will fail.
+                  FlutterCallbackInformation flutterCallback =
+                      FlutterCallbackInformation.lookupCallbackInformation(callbackHandle);
+                  DartExecutor executor = backgroundFlutterEngine.getDartExecutor();
+                  initializeMethodChannel(executor);
+                  DartCallback dartCallback =
+                      new DartCallback(assets, appBundlePath, flutterCallback);
 
-      executor.executeDartCallback(dartCallback);
+                  executor.executeDartCallback(dartCallback);
 
-      // The pluginRegistrantCallback should only be set in the V1 embedding as
-      // plugin registration is done via reflection in the V2 embedding.
-      if (pluginRegistrantCallback != null) {
-        pluginRegistrantCallback.registerWith(new ShimPluginRegistry(backgroundFlutterEngine));
-      }
-    }
+                  // The pluginRegistrantCallback should only be set in the V1 embedding as
+                  // plugin registration is done via reflection in the V2 embedding.
+                  if (pluginRegistrantCallback != null) {
+                    pluginRegistrantCallback.registerWith(
+                        new ShimPluginRegistry(backgroundFlutterEngine));
+                  }
+                }
+              });
+        };
+    mainHandler.post(myRunnable);
   }
 
   boolean isDartBackgroundHandlerRegistered() {
@@ -264,14 +282,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     return prefs.getLong(USER_CALLBACK_HANDLE_KEY, 0);
   }
 
-  /** Get the registered Dart callback handle for the messaging plugin. Returns 0 if not set. */
-  private long getPluginCallbackHandle() {
-    SharedPreferences prefs =
-        ContextHolder.getApplicationContext()
-            .getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
-    return prefs.getLong(CALLBACK_HANDLE_KEY, 0);
-  }
-
   /**
    * Sets the Dart callback handle for the users Dart handler that is responsible for handling
    * messaging events in the background.
@@ -281,6 +291,14 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     SharedPreferences prefs =
         context.getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
     prefs.edit().putLong(USER_CALLBACK_HANDLE_KEY, callbackHandle).apply();
+  }
+
+  /** Get the registered Dart callback handle for the messaging plugin. Returns 0 if not set. */
+  private long getPluginCallbackHandle() {
+    SharedPreferences prefs =
+        ContextHolder.getApplicationContext()
+            .getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
+    return prefs.getLong(CALLBACK_HANDLE_KEY, 0);
   }
 
   private void initializeMethodChannel(BinaryMessenger isolate) {

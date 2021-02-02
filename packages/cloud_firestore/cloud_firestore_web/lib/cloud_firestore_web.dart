@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/exception.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,15 +33,16 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   /// Builds an instance of [FirebaseFirestoreWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseFirestoreWeb({FirebaseApp app})
+  FirebaseFirestoreWeb({FirebaseApp /*?*/ app})
       : _webFirestore =
             firestore_interop.getFirestoreInstance(core_interop.app(app?.name)),
+        // TODO(ehesp): Why is a `!` being added with null safety?
         super(appInstance: app) {
     FieldValueFactoryPlatform.instance = FieldValueFactoryWeb();
   }
 
   @override
-  FirebaseFirestorePlatform delegateFor({FirebaseApp app}) {
+  FirebaseFirestorePlatform delegateFor({/*required*/ FirebaseApp app}) {
     return FirebaseFirestoreWeb(app: app);
   }
 
@@ -94,7 +97,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
+  Future<T /*?*/ > runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
     try {
       await _webFirestore.runTransaction((transaction) async {
@@ -135,7 +138,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   /// Enable persistence of Firestore data.
   @override
-  Future<void> enablePersistence([PersistenceSettings settings]) async {
+  Future<void> enablePersistence([PersistenceSettings /*?*/ settings]) async {
     try {
       await _webFirestore.enablePersistence(
           firestore_interop.PersistenceSettings(

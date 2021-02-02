@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:io';
@@ -17,13 +19,13 @@ import 'package:flutter/services.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  FirebaseStoragePlatform storage;
-  ReferencePlatform ref;
+  /*late*/ FirebaseStoragePlatform storage;
+  /*late*/ ReferencePlatform ref;
   final List<MethodCall> log = <MethodCall>[];
 
   // mock props
   bool mockPlatformExceptionThrown = false;
-  File kFile;
+  /*late*/ File kFile;
   final kMetadata = SettableMetadata(
       contentLanguage: 'en',
       customMetadata: <String, String>{'activity': 'test'});

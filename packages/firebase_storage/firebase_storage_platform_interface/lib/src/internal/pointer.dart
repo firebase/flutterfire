@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 /// Internal helper class used to manage storage reference paths.
 class Pointer {
   /// Constructs a new [Pointer] with a given path.
@@ -25,7 +27,7 @@ class Pointer {
     }
   }
 
-  String _path;
+  String /*!*/ _path;
 
   /// Returns whether the path points to the root of a bucket.
   bool get isRoot {

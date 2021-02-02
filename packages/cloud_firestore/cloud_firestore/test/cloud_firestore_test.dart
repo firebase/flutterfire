@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,9 +12,9 @@ import './mock.dart';
 
 void main() {
   setupCloudFirestoreMocks();
-  FirebaseFirestore firestore;
-  FirebaseFirestore firestoreSecondary;
-  FirebaseApp secondaryApp;
+  /*late*/ FirebaseFirestore firestore;
+  /*late*/ FirebaseFirestore firestoreSecondary;
+  /*late*/ FirebaseApp secondaryApp;
 
   group('$FirebaseFirestore', () {
     setUpAll(() async {
@@ -46,9 +48,10 @@ void main() {
         expect(firestore.collection('foo'), isA<CollectionReference>());
       });
 
-      test('does not expect a null path', () {
-        expect(() => firestore.collection(null), throwsAssertionError);
-      });
+      // TODO(ehesp): Remove when null safety lands
+      // test('does not expect a null path', () {
+      //   expect(() => firestore.collection(null), throwsAssertionError);
+      // });
 
       test('does not expect an empty path', () {
         expect(() => firestore.collection(''), throwsAssertionError);
@@ -65,9 +68,10 @@ void main() {
         expect(firestore.collectionGroup('foo'), isA<Query>());
       });
 
-      test('does not expect a null path', () {
-        expect(() => firestore.collectionGroup(null), throwsAssertionError);
-      });
+      // TODO(ehesp): Remove when null safety lands
+      // test('does not expect a null path', () {
+      //   expect(() => firestore.collectionGroup(null), throwsAssertionError);
+      // });
 
       test('does not expect an empty path', () {
         expect(() => firestore.collectionGroup(''), throwsAssertionError);
@@ -84,9 +88,10 @@ void main() {
         expect(firestore.doc('foo/bar'), isA<DocumentReference>());
       });
 
-      test('does not expect a null path', () {
-        expect(() => firestore.doc(null), throwsAssertionError);
-      });
+      // TODO(ehesp): Remove when null safety lands
+      // test('does not expect a null path', () {
+      //   expect(() => firestore.doc(null), throwsAssertionError);
+      // });
 
       test('does not expect an empty path', () {
         expect(() => firestore.doc(''), throwsAssertionError);

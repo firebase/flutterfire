@@ -1,6 +1,9 @@
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -94,42 +97,48 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   }
 
   @override
-  Stream<DocumentSnapshotPlatform> snapshots(
-      {bool includeMetadataChanges = false}) {
+  Stream<DocumentSnapshotPlatform> snapshots({
+    bool includeMetadataChanges = false,
+  }) {
     assert(includeMetadataChanges != null);
-    int handle = MethodChannelFirebaseFirestore.nextMethodChannelHandleId;
-    Completer<void> onListenComplete = Completer<void>();
 
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     StreamController<DocumentSnapshotPlatform>
         controller; // ignore: close_sinks
+
+    StreamSubscription<dynamic> snapshotStream;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () async {
-        MethodChannelFirebaseFirestore.documentObservers[handle] = controller;
-        await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-          'DocumentReference#addSnapshotListener',
+        final observerId = await MethodChannelFirebaseFirestore.channel
+            .invokeMethod<String>('DocumentReference#snapshots');
+        snapshotStream =
+            MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
+                .receiveBroadcastStream(
           <String, dynamic>{
-            'handle': handle,
-            'firestore': firestore,
             'reference': this,
             'includeMetadataChanges': includeMetadataChanges,
           },
-        );
-
-        if (!onListenComplete.isCompleted) {
-          onListenComplete.complete();
-        }
+        ).listen((snapshot) {
+          controller.add(
+            DocumentSnapshotPlatform(
+              firestore,
+              snapshot['path'],
+              <String, dynamic>{
+                'data': snapshot['data'],
+                'metadata': snapshot['metadata'],
+              },
+            ),
+          );
+        }, onError: (error, stack) {
+          controller.addError(convertPlatformException(error), stack);
+        });
       },
-      onCancel: () async {
-        await onListenComplete.future;
-        await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-          'Firestore#removeListener',
-          <String, dynamic>{'handle': handle},
-        );
-        MethodChannelFirebaseFirestore.documentObservers.remove(handle);
+      onCancel: () {
+        snapshotStream?.cancel();
       },
     );
+
     return controller.stream;
   }
 }

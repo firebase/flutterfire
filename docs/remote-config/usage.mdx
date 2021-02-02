@@ -1,6 +1,83 @@
 ---
-title: Remote Config
+title: Using Firebase Remote Config
 sidebar_label: Usage
 ---
 
-Remote Config usage
+Once installed, you can access the [`firebase_remote_config`](!firebase_remote_config) plugin by importing
+it in your Dart code:
+
+```dart
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+```
+
+Before using Firebase Remote Config, you must first have ensured you have [initialized FlutterFire](../overview.mdx#initializing-flutterfire).
+
+To create a new Firebase Remote Config instance, call the [`instance`](!firebase_remote_config.FirebaseRemoteConfig.instance)
+getter on [`FirebaseRemoteConfig`](!firebase_remote_config.FirebaseRemoteConfig):
+
+```dart
+FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+```
+
+By default, this allows you to interact with Firebase Remote Config using the default Firebase App used whilst installing FlutterFire on your
+platform. If however you'd like to use a secondary Firebase App, use the [`instanceFor`](!firebase_remote_config.FirebaseRemoteConfig.instanceFor) method:
+
+```dart
+FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
+FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instanceFor(app: secondaryApp);
+```
+
+## Defaults
+
+Firebase Remote Config default parameters allows your application to startup without the need to make a
+network call. To set the default parameters call the `setDefaults()` method on your [`FirebaseRemoteConfig`](!firebase_remote_config.FirebaseRemoteConfig) instance:
+
+```dart
+remoteConfig.setDefaults(<String, dynamic>{
+  'welcome_message': 'this is the default welcome message',
+  'feat1_enabled': false,
+});
+```
+
+## Fetching and activating
+
+Only when default parameters are no longer sufficient updates to the Remote Config template should be made
+in the Firebase console or via the Admin SDK. Use the `fetchAndActivate()` method on your [`FirebaseRemoteConfig`](!firebase_remote_config.FirebaseRemoteConfig) instance:
+
+```dart
+bool updated = await remoteConfig.fetchAndActivate();
+if (updated) {
+  // the config has been updated, new parameter values are available.
+} else {
+  // the config values were previously updated.
+}
+```
+
+The `fetchAndActivate()` combines the operations of the `fetch()` and `activate()` methods which can be used separately
+if needed.
+
+## Get/Use parameters
+
+Whether using default or fetched parameters, you can fetch the parameter values using the available getters:
+
+```dart
+Text('Welcome ${remoteConfig.getString('welcome_message')}')
+```
+
+Other getters include: `getBool()`, `getInt()`, `getDouble()`, `getValue()`.
+
+## Settings
+
+Since fetching involves network calls Remote Config allows you to specify how long cached parameters are valid and
+how long a fetch should wait before timing out. These settings can be specified using the `setConfigSettings()`
+method on your [`FirebaseRemoteConfig`](!firebase_remote_config.FirebaseRemoteConfig) instance:
+
+```dart
+await remoteConfig.setConfigSettings(RemoteConfigSettings(
+  fetchTimeout: Duration(seconds: 10),
+  minimumFetchInterval: Duration(hours: 1),
+));
+```
+
+The above snippet specifies that a fetch will wait up to 10 seconds before timing out and fetch parameters will be
+cached for a maximum of 1 hour before being considered stale and going to the server on the next `fetch()` call.

@@ -1,3 +1,20 @@
+## 7.0.1
+
+ - Update a dependency to the latest release.
+
+## 7.0.0
+
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+ - **FIX**: Add missing sdk version constraints inside pubspec.yaml (#4604).
+
+## 6.3.0
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: publish packages.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
 ## 6.2.0
 
  - **FEAT**: bump compileSdkVersion to 29 (#3975).
@@ -102,7 +119,7 @@
 ## 5.0.0
 
 * **Breaking change**. Remove deprecated method `setMinimumSessionDuration`.
-* **Breaking change**. Removed `FirebaseAnalyticsAndroid.setAnalyticsCollectionEnabled`. Use 
+* **Breaking change**. Removed `FirebaseAnalyticsAndroid.setAnalyticsCollectionEnabled`. Use
   `FirebaseAnalytics.setAnalyticsCollectionEnabled` instead.
 * Update Android gradle plugin and gradle version.
 * Remove redundant casts on Android.

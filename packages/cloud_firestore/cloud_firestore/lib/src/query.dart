@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of cloud_firestore;
 
 /// Represents a [Query] over the data at a particular location.
@@ -174,15 +176,11 @@ class Query {
   ///
   /// To modify how the query is fetched, the [options] parameter can be provided
   /// with a [GetOptions] instance.
-  Future<QuerySnapshot> get([GetOptions options]) async {
+  Future<QuerySnapshot> get([GetOptions /*?*/ options]) async {
     QuerySnapshotPlatform snapshotDelegate =
         await _delegate.get(options ?? const GetOptions());
     return QuerySnapshot._(firestore, snapshotDelegate);
   }
-
-  @Deprecated("Deprecated in favor of `.get()`")
-  // ignore: public_member_api_docs
-  Future<QuerySnapshot> getDocuments([GetOptions options]) => get(options);
 
   /// Creates and returns a new Query that's additionally limited to only return up
   /// to the specified number of documents.
@@ -346,10 +344,10 @@ class Query {
     dynamic isGreaterThan,
     dynamic isGreaterThanOrEqualTo,
     dynamic arrayContains,
-    List<dynamic> arrayContainsAny,
-    List<dynamic> whereIn,
-    List<dynamic> whereNotIn,
-    bool isNull,
+    List<dynamic> /*?*/ arrayContainsAny,
+    List<dynamic> /*?*/ whereIn,
+    List<dynamic> /*?*/ whereNotIn,
+    bool /*?*/ isNull,
   }) {
     _assertValidFieldType(field);
 

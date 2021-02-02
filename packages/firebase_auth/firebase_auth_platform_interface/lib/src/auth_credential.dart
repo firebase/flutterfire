@@ -11,11 +11,10 @@ class AuthCredential {
   // ignore: public_member_api_docs
   @protected
   const AuthCredential({
-    @required this.providerId,
-    @required this.signInMethod,
+    required this.providerId,
+    required this.signInMethod,
     this.token,
-  })  : assert(providerId != null),
-        assert(signInMethod != null);
+  });
 
   /// The authentication provider ID for the credential. For example,
   /// 'facebook.com', or 'google.com'.
@@ -27,7 +26,7 @@ class AuthCredential {
   final String signInMethod;
 
   /// A token used to identify the AuthCredential on native platforms.
-  final int token;
+  final int? token;
 
   /// Returns the current instance as a serialized [Map].
   Map<String, dynamic> asMap() {

@@ -1,6 +1,10 @@
 name: firebase_messaging_example
 description: Demonstrates how to use the firebase_messaging plugin.
 
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
@@ -8,16 +12,21 @@ dependencies:
     path: ../
   firebase_core:
     path: ../../../firebase_core/firebase_core
-  http: 0.12.2
+  http: ^0.12.2
   flutter_local_notifications: ^3.0.0
 
 dependency_overrides:
   firebase_core:
     path: ../../../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../../../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../../../firebase_core/firebase_core_web
   firebase_messaging:
     path: ../
   firebase_messaging_platform_interface:
     path: ../../firebase_messaging_platform_interface
+  http_parser: ^4.0.0-nullsafety
 
 dev_dependencies:
   pedantic: ^1.8.0

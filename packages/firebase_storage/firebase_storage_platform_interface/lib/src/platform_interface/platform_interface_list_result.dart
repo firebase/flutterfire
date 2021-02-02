@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 
@@ -32,7 +34,7 @@ abstract class ListResultPlatform extends PlatformInterface {
   }
 
   /// If set, there might be more results for this list. Use this token to resume the list.
-  final String nextPageToken;
+  final String /*?*/ nextPageToken;
 
   /// References to prefixes (sub-folders). You can call [list] on them to get its contents.
   ///

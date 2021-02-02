@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_storage;
 
 /// Represents a reference to a Google Cloud Storage object. Developers can
@@ -12,12 +14,6 @@ class Reference {
   /// The storage service associated with this reference.
   final FirebaseStorage storage;
 
-  @Deprecated("Deprecated in favor of get.storage")
-  // ignore: public_member_api_docs
-  FirebaseStorage getStorage() {
-    return storage;
-  }
-
   Reference._(this.storage, this._delegate) {
     ReferencePlatform.verifyExtends(_delegate);
   }
@@ -25,36 +21,18 @@ class Reference {
   /// The name of the bucket containing this reference's object.
   String get bucket => _delegate.bucket;
 
-  @Deprecated("Deprecated in favor of get.bucket")
-  // ignore: public_member_api_docs
-  Future<String> getBucket() async {
-    return bucket;
-  }
-
   /// The full path of this object.
   String get fullPath => _delegate.fullPath;
-
-  @Deprecated("Deprecated in favor of get.fullPath")
-  // ignore: public_member_api_docs
-  Future<String> getPath() async {
-    return fullPath;
-  }
 
   /// The short name of this object, which is the last component of the full path.
   ///
   /// For example, if fullPath is 'full/path/image.png', name is 'image.png'.
   String get name => _delegate.name;
 
-  @Deprecated("Deprecated in favor of get.name")
-  // ignore: public_member_api_docs
-  Future<String> getName() async {
-    return name;
-  }
-
   /// A reference pointing to the parent location of this reference, or `null`
   /// if this reference is the root.
   Reference get parent {
-    ReferencePlatform referenceParentPlatform = _delegate.parent;
+    ReferencePlatform /*?*/ referenceParentPlatform = _delegate.parent;
 
     if (referenceParentPlatform == null) {
       return null;
@@ -63,20 +41,8 @@ class Reference {
     return Reference._(storage, referenceParentPlatform);
   }
 
-  @Deprecated("Deprecated in favor of get.parent")
-  // ignore: public_member_api_docs
-  Reference getParent() {
-    return parent;
-  }
-
   /// A reference to the root of this reference's bucket.
   Reference get root => Reference._(storage, _delegate.root);
-
-  @Deprecated("Deprecated in favor of get.root")
-  // ignore: public_member_api_docs
-  Reference getRoot() {
-    return root;
-  }
 
   /// Returns a reference to a relative path from this reference.
   ///
@@ -107,12 +73,13 @@ class Reference {
   /// objects whose paths end with "/" or contain two consecutive "/"s. Firebase
   /// Storage List API will filter these unsupported objects. [list] may fail
   /// if there are too many unsupported objects in the bucket.
-  Future<ListResult> list(ListOptions options) async {
+  Future<ListResult> list([ListOptions /*?*/ options]) async {
     if (options?.maxResults != null) {
       assert(options.maxResults > 0);
       assert(options.maxResults <= 1000);
     }
 
+    // TODO(ehesp): options should be nullable post platform migration
     return ListResult._(storage, await _delegate.list(options));
   }
 
@@ -136,7 +103,7 @@ class Reference {
   ///
   /// If the [maxSize] (in bytes) is exceeded, the operation will be canceled. By
   /// default the [maxSize] is 10mb (10485760 bytes).
-  Future<Uint8List> getData([int maxSize]) async {
+  Future<Uint8List /*?*/ > getData([int maxSize]) async {
     maxSize ??= 10485760;
     assert(maxSize > 0);
     return _delegate.getData(maxSize);
@@ -219,6 +186,8 @@ class Reference {
         );
       }
     }
+
+    // TODO(ehesp): Check metadata is nullable post platform migration
     return UploadTask._(storage, _delegate.putString(data, format, metadata));
   }
 
@@ -241,7 +210,7 @@ class Reference {
       o is Reference && o.fullPath == fullPath && o.storage == storage;
 
   @override
-  int get hashCode => hash2(storage, fullPath);
+  int get hashCode => hashValues(storage, fullPath);
 
   @override
   String toString() =>

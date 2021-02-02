@@ -1,3 +1,51 @@
+## 8.0.0-dev.14
+
+ - **DOCS**: fix messaging regex examples (#4649).
+
+## 8.0.0-dev.13
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: add check on podspec to assist upgrading users deployment target.
+ - **BUILD**: commit Podfiles with 10.12 deployment target.
+ - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
+ - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
+ - **BREAKING** **BUILD**: set osx min supported platform version to 10.12.
+
+## 8.0.0-dev.12
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Add missing sdk version constraints inside pubspec.yaml (#4604).
+ - **FEAT**: bump firebase-android-sdk BoM to 25.13.0.
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
+## 8.0.0-dev.11
+
+ - **REFACTOR**: initial web release as pre-release version.
+ - **FIX**: manually create a `FlutterShellArgs` instance from Android activity intent (fixes #4078) (#4341).
+ - **FIX**: fixed callback handler type casting on Android (#4313).
+ - **FIX**: macOS should not use `FIRAuth canHandleNotification` as it's iOS only (fixes #4136) (#4340).
+ - **FIX**: some iOS methods could result in an `no implementation found` error (#4339).
+
+## 8.0.0-dev.10
+
+ - **FEAT**: web implementation (#4206).
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+
+## 8.0.0-dev.9
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FIX**: various data types issues in remote message (#4150).
+ - **FIX**: java String arrays should be converted to a List (fixes #4072) (#4092).
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 8.0.0-dev.8
+
+ - **FIX**: potential crash (fixes #4032) (#4071).
+
 ## 8.0.0-dev.7
 
  - Update a dependency to the latest release.

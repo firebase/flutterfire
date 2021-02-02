@@ -1,3 +1,5 @@
+// @dart=2.9
+
 /// Conditions to download remote models.
 class FirebaseModelDownloadConditions {
   /// Android only: indicates if wifi is required.

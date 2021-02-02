@@ -114,8 +114,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                  isEqualToString:call.method]) {
     [self messagingSetForegroundNotificationPresentationOptions:call.arguments
                                            withMethodCallResult:methodCallResult];
-  }
-  if ([@"Messaging#getToken" isEqualToString:call.method]) {
+  } else if ([@"Messaging#getToken" isEqualToString:call.method]) {
     [self messagingGetToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getNotificationSettings" isEqualToString:call.method]) {
     if (@available(iOS 10, macOS 10.14, *)) {
@@ -165,7 +164,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #pragma mark - Firebase Messaging Delegate
 
 - (void)messaging:(nonnull FIRMessaging *)messaging
-    didReceiveRegistrationToken:(nonnull NSString *)fcmToken {
+    didReceiveRegistrationToken:(nullable NSString *)fcmToken {
   // Don't crash if the token is reset.
   if (fcmToken == nil) {
     return;
@@ -397,11 +396,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #if TARGET_OS_OSX
 - (void)application:(NSApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo {
-#if __has_include(<FirebaseAuth/FirebaseAuth.h>)
-  if ([[FIRAuth auth] canHandleNotification:userInfo]) {
-    return YES;
-  }
-#endif
   // Only handle notifications from FCM.
   if (userInfo[@"gcm.message_id"]) {
     NSDictionary *notificationDict =
@@ -820,6 +814,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     if ([key isEqualToString:@"aps"] || [key hasPrefix:@"gcm."] || [key hasPrefix:@"google."]) {
       continue;
     }
+
+    // message.apple.imageUrl
+    if ([key isEqualToString:@"fcm_options"]) {
+      if (userInfo[key] != nil && userInfo[key][@"image"] != nil) {
+        notificationIOS[@"imageUrl"] = userInfo[key][@"image"];
+      }
+      continue;
+    }
+
     data[key] = userInfo[key];
   }
   message[@"data"] = data;

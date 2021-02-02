@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
@@ -39,7 +41,7 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  Future<String> getDownloadURL() async {
+  Future<String /*!*/ > getDownloadURL() async {
     try {
       Map<String, dynamic> data = await MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>(
@@ -79,7 +81,7 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  Future<ListResultPlatform> list(ListOptions options) async {
+  Future<ListResultPlatform> list([ListOptions /*?*/ options]) async {
     try {
       Map<String, dynamic> data = await MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>('Reference#list', <String, dynamic>{
@@ -131,7 +133,7 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  Future<Uint8List> getData(int maxSize) {
+  Future<Uint8List /*?*/ > getData(int maxSize) {
     try {
       return MethodChannelFirebaseStorage.channel
           .invokeMethod<Uint8List>('Reference#getData', <String, dynamic>{
@@ -149,7 +151,7 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  TaskPlatform putData(Uint8List data, [SettableMetadata metadata]) {
+  TaskPlatform putData(Uint8List data, [SettableMetadata /*?*/ metadata]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
     MethodChannelFirebaseStorage.taskObservers[handle] =
         StreamController<TaskSnapshotPlatform>.broadcast();
@@ -157,13 +159,13 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  TaskPlatform putBlob(dynamic data, [SettableMetadata metadata]) {
+  TaskPlatform putBlob(dynamic data, [SettableMetadata /*?*/ metadata]) {
     throw UnimplementedError(
         'putBlob() is not supported on native platforms. Use [put], [putFile] or [putString] instead.');
   }
 
   @override
-  TaskPlatform putFile(File file, [SettableMetadata metadata]) {
+  TaskPlatform putFile(File file, [SettableMetadata /*?*/ metadata]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
     MethodChannelFirebaseStorage.taskObservers[handle] =
         StreamController<TaskSnapshotPlatform>.broadcast();
@@ -171,7 +173,7 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   TaskPlatform putString(String data, PutStringFormat format,
-      [SettableMetadata metadata]) {
+      [SettableMetadata /*?*/ metadata]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
     MethodChannelFirebaseStorage.taskObservers[handle] =
         StreamController<TaskSnapshotPlatform>.broadcast();

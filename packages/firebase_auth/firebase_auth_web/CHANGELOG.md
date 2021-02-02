@@ -1,3 +1,43 @@
+## 0.4.0-1.1.nullsafety.0
+
+ - **FEAT**: implement support for `useEmulator` (#4263).
+
+## 0.4.0-1.0.nullsafety.0
+
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+
+## 0.4.0-nullsafety.1
+
+Bump firebase_auth_platform_interface to v4.0.0-nullsafety.1
+
+## 0.4.0-nullsafety.0
+
+Migrated to null safety (#4633)
+
+## 0.3.2+6
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+5
+
+ - **FIX**: Revert #4312: Double event fire on initialization (#4620).
+
+## 0.3.2+4
+
+ - **FIX**: bubble exceptions (#3700).
+
+## 0.3.2+3
+
+ - **FIX**: web now fires once on authStateListener initialisation (#4312).
+
+## 0.3.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+1
+
+ - Update a dependency to the latest release.
+
 ## 0.3.2
 
  - **FEAT**: migrate firebase interop files to local repository (#3973).
@@ -52,7 +92,7 @@
 
 ## 0.1.2
 
-* Implement `fetchSignInMethodsForEmail`, `isSignInWithEmailLink`, `signInWithEmailAndLink`, and `sendLinkToEmail`. 
+* Implement `fetchSignInMethodsForEmail`, `isSignInWithEmailLink`, `signInWithEmailAndLink`, and `sendLinkToEmail`.
 
 ## 0.1.1+4
 

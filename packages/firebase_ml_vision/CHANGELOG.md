@@ -1,7 +1,23 @@
+## 0.10.1
+
+* Add `rawBytes` property to `Barcode`.
+
 ## 0.10.0
 
-* **Breaking Change** Update Android firebase-ml-vision dependencies to latest.
-* Add `rawBytes` property to `Barcode`.
+> Note: This release has breaking changes.
+
+ - **FIX**: Add missing sdk version constraints inside pubspec.yaml (#4604).
+ - **FIX**: build fixes for android BoM 25.13.0.
+ - **FEAT**: bump firebase-android-sdk BoM to 25.13.0.
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
+## 0.9.10
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: Migrate iOS example projects (#4222).
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
 
 ## 0.9.9
 

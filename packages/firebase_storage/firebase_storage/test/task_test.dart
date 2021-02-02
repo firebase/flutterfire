@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -20,8 +22,8 @@ MockTaskSnapshotPlatform mockTaskSnapshotPlatform = MockTaskSnapshotPlatform();
 void main() {
   setupFirebaseStorageMocks();
 
-  FirebaseStorage storage;
-  UploadTask uploadTask;
+  /*late*/ FirebaseStorage storage;
+  /*late*/ UploadTask uploadTask;
 
   group('Task', () {
     setUpAll(() async {

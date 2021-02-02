@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_storage;
 
 /// A class representing an on-going storage task that additionally delegates to a [Future].
@@ -15,12 +17,6 @@ abstract class Task implements Future<TaskSnapshot> {
     TaskPlatform.verifyExtends(_delegate);
   }
 
-  @Deprecated('events has been deprecated in favor of snapshotEvents')
-  // ignore: public_member_api_docs
-  Stream<dynamic> get events {
-    return snapshotEvents;
-  }
-
   /// Returns a [Stream] of [TaskSnapshot] events.
   ///
   /// If the task is canceled or fails, the stream will send an error event.
@@ -32,10 +28,6 @@ abstract class Task implements Future<TaskSnapshot> {
     return _delegate.snapshotEvents
         .map((snapshotDelegate) => TaskSnapshot._(storage, snapshotDelegate));
   }
-
-  @Deprecated("Deprecated in favor of [snapshot]")
-  // ignore: public_member_api_docs
-  TaskSnapshot get lastSnapshot => snapshot;
 
   /// The latest [TaskSnapshot] for this task.
   TaskSnapshot get snapshot {

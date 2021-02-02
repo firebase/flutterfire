@@ -2,13 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 library firebase_storage;
 
 import 'dart:async';
 import 'dart:typed_data' show Uint8List;
 import 'dart:io' show File;
 import 'dart:convert' show utf8, base64;
-import 'package:quiver/core.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';

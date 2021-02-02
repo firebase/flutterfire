@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -38,7 +40,7 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
   playSound: true,
 );
 
-/// Initalize the [FlutterLocalNotificationsPlugin] package.
+/// Initialize the [FlutterLocalNotificationsPlugin] package.
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -161,7 +163,7 @@ class _Application extends State<Application> {
 
     try {
       await http.post(
-        'https://api.rnfirebase.io/messaging/send',
+        Uri.parse('https://api.rnfirebase.io/messaging/send'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

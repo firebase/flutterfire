@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +58,7 @@ class _Permissions extends State<Permissions> {
     }
 
     if (!_requested) {
-      return RaisedButton(
+      return ElevatedButton(
           onPressed: requestPermissions, child: Text("Request Permissions"));
     }
 
@@ -73,7 +75,7 @@ class _Permissions extends State<Permissions> {
         row("Sound", settingsMap[_settings.sound]),
       ],
       Container(
-        child: RaisedButton(
+        child: ElevatedButton(
             onPressed: () => {}, child: Text("Reload Permissions")),
       )
     ]));

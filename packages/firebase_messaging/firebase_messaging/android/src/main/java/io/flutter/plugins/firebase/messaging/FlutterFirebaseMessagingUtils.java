@@ -9,6 +9,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +90,7 @@ class FlutterFirebaseMessagingUtils {
     }
 
     if (notification.getTitleLocalizationArgs() != null) {
-      notificationMap.put("titleLocArgs", notification.getTitleLocalizationArgs());
+      notificationMap.put("titleLocArgs", Arrays.asList(notification.getTitleLocalizationArgs()));
     }
 
     if (notification.getBody() != null) {
@@ -101,7 +102,7 @@ class FlutterFirebaseMessagingUtils {
     }
 
     if (notification.getBodyLocalizationArgs() != null) {
-      notificationMap.put("bodyLocArgs", notification.getBodyLocalizationArgs());
+      notificationMap.put("bodyLocArgs", Arrays.asList(notification.getBodyLocalizationArgs()));
     }
 
     if (notification.getChannelId() != null) {

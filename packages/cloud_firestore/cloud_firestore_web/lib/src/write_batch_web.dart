@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 import 'interop/firestore.dart' as firestore_interop;
@@ -12,11 +14,11 @@ import 'utils/codec_utility.dart';
 /// A web specific implementation of [WriteBatch].
 class WriteBatchWeb extends WriteBatchPlatform {
   final firestore_interop.Firestore _webFirestoreDelegate;
-  firestore_interop.WriteBatch _webWriteBatchDelegate;
+  /*late*/ firestore_interop.WriteBatch /*!*/ _webWriteBatchDelegate;
 
   /// Constructor.
   WriteBatchWeb(this._webFirestoreDelegate)
-      : _webWriteBatchDelegate = _webFirestoreDelegate.batch(),
+      : _webWriteBatchDelegate = _webFirestoreDelegate.batch() /*!*/,
         super();
 
   @override
@@ -35,7 +37,7 @@ class WriteBatchWeb extends WriteBatchPlatform {
 
   @override
   void set(String documentPath, Map<String, dynamic> data,
-      [SetOptions options]) {
+      [SetOptions /*?*/ options]) {
     _webWriteBatchDelegate.set(_webFirestoreDelegate.doc(documentPath),
         CodecUtility.encodeMapData(data), convertSetOptions(options));
   }

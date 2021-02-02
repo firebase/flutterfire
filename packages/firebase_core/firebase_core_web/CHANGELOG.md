@@ -1,3 +1,32 @@
+## 0.3.0-1.0.nullsafety.0
+
+ - Bump "firebase_core_web" to `0.3.0-1.0.nullsafety.0`.
+
+## 0.3.0-nullsafety.0
+
+Major bump for the null-safety version to respect the versioning convention.
+
+## 0.2.2-nullsafety.1
+
+ - Bump `firebase_core` dependency version.
+
+## 0.2.2-nullsafety.0
+
+ - **REFACTOR**: Migrate to non-nullable types (#4656).
+
+## 0.2.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+1
+
+ - **REFACTOR**: ignore typedefs.
+ - **FIX**: ensure list items are converted (#4076).
+
 ## 0.2.1
 
  - **FEAT**: migrate firebase interop files to local repository (#3973).

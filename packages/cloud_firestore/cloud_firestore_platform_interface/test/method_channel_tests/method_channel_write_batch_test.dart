@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 
@@ -13,7 +15,7 @@ void main() {
   initializeMethodChannel();
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
-  MethodChannelFirebaseFirestore firestore;
+  /*late*/ MethodChannelFirebaseFirestore firestore;
 
   final List<MethodCall> log = <MethodCall>[];
 

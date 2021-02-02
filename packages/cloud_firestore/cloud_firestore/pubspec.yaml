@@ -3,7 +3,32 @@ description:
   Flutter plugin for Cloud Firestore, a cloud-hosted, noSQL database with
   live synchronization and offline support on Android and iOS.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore
-version: 0.14.3
+version: 0.16.0
+
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  meta: ^1.3.0-nullsafety.0
+  firebase_core: ">=0.8.0-1.0.nullsafety.0 <0.8.0-2.0.nullsafety.0"
+  firebase_core_platform_interface: ">=4.0.0-1.0.nullsafety.0 <4.0.0-2.0.nullsafety.0"
+  cloud_firestore_platform_interface: ^3.0.1
+  cloud_firestore_web: ^0.3.0+1
+
+dev_dependencies:
+  pedantic: 1.10.0-nullsafety.3
+  flutter_test:
+    sdk: flutter
+  flutter_driver:
+    sdk: flutter
+  test: any
+  mockito: ^5.0.0-nullsafety.2
+
+dependency_overrides:
+  http_parser: ^4.0.0-nullsafety
 
 flutter:
   plugin:
@@ -17,25 +42,3 @@ flutter:
         pluginClass: FLTFirebaseFirestorePlugin
       web:
         default_package: cloud_firestore_web
-
-dependencies:
-  flutter:
-    sdk: flutter
-  meta: ^1.0.5
-  quiver: ">=2.0.0 <3.0.0"
-  firebase_core: ^0.5.2
-  firebase_core_platform_interface: ">=2.0.0 <2.1.0"
-  cloud_firestore_platform_interface: ^2.2.0
-  cloud_firestore_web: ^0.2.1
-dev_dependencies:
-  pedantic: ^1.8.0
-  flutter_test:
-    sdk: flutter
-  flutter_driver:
-    sdk: flutter
-  test: any
-  mockito: ^4.1.1
-
-environment:
-  sdk: ">=2.1.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"
