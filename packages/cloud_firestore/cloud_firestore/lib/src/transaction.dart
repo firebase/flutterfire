@@ -60,9 +60,7 @@ class Transaction {
 
     return Transaction._(
         _firestore,
-        _delegate.set(
-            documentReference.path,
-            _CodecUtility.replaceValueWithDelegatesInMap(data)!,
-            options));
+        _delegate.set(documentReference.path,
+            _CodecUtility.replaceValueWithDelegatesInMap(data)!, options));
   }
 }

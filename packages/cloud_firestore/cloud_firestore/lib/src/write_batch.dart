@@ -40,10 +40,8 @@ class WriteBatch {
       [SetOptions? options]) {
     assert(document.firestore == _firestore,
         'the document provided is from a different Firestore instance');
-    return _delegate.set(
-        document.path,
-        _CodecUtility.replaceValueWithDelegatesInMap(data)!,
-        options);
+    return _delegate.set(document.path,
+        _CodecUtility.replaceValueWithDelegatesInMap(data)!, options);
   }
 
   /// Updates a given [document].

@@ -47,7 +47,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   }
 
   @override
-  Future<DocumentSnapshotPlatform> get([GetOptions options = const GetOptions()]) async {
+  Future<DocumentSnapshotPlatform> get(
+      [GetOptions options = const GetOptions()]) async {
     try {
       firestore_interop.DocumentSnapshot documentSnapshot =
           await _delegate!.get(convertGetOptions(options));
