@@ -96,10 +96,10 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<String> getToken({String? senderId, String? vapidKey}) async {
+  Future<String?> getToken({String? senderId, String? vapidKey}) async {
     if (!_initialized) {
       // no-op for unsupported browsers
-      return '';
+      return null;
     }
     try {
       return await _webMessaging.getToken(vapidKey: vapidKey);

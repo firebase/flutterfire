@@ -134,7 +134,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   }
 
   /// Returns the default FCM token for this device and optionally a [senderId].
-  Future<String> getToken({
+  Future<String?> getToken({
     String? vapidKey,
   }) {
     return _delegate.getToken(

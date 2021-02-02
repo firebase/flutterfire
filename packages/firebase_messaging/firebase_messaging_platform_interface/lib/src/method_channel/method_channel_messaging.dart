@@ -211,18 +211,18 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<String> getToken({
+  Future<String?> getToken({
     String? senderId,
     String? vapidKey, // not used yet; web only property
   }) async {
     try {
-      Map<String, String> data =
+      Map<String, String?> data =
           await (channel.invokeMapMethod<String, String>('Messaging#getToken', {
         'appName': app.name,
         'senderId': senderId,
       }) as FutureOr<Map<String, String>>);
 
-      return data['token']!;
+      return data['token'];
     } catch (e) {
       throw convertPlatformException(e);
     }
