@@ -26,6 +26,8 @@ dependency_overrides:
     path: ../
   firebase_messaging_platform_interface:
     path: ../../firebase_messaging_platform_interface
+  firebase_messaging_web:
+    path: ../../firebase_messaging_web
   http_parser: ^4.0.0-nullsafety
 
 dev_dependencies:
