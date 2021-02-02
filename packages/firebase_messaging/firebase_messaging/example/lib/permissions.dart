@@ -54,7 +54,7 @@ class _Permissions extends State<Permissions> {
     }
 
     if (!_requested) {
-      return RaisedButton(
+      return ElevatedButton(
           onPressed: requestPermissions,
           child: const Text('Request Permissions'));
     }
@@ -71,7 +71,7 @@ class _Permissions extends State<Permissions> {
         row('Show Previews', previewMap[_settings.showPreviews]),
         row('Sound', settingsMap[_settings.sound]),
       ],
-      RaisedButton(
+      ElevatedButton(
           onPressed: () => {}, child: const Text('Reload Permissions')),
     ]);
   }
