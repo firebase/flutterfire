@@ -651,7 +651,7 @@ class MockFirebaseAuth extends Mock
   Stream<UserPlatform?> userChanges() {
     return super.noSuchMethod(
       Invocation.method(#userChanges, []),
-      const Stream<UserPlatform?>.empty(),
+      returnValue: const Stream<UserPlatform?>.empty(),
     );
   }
 
@@ -659,7 +659,7 @@ class MockFirebaseAuth extends Mock
   Stream<UserPlatform?> idTokenChanges() {
     return super.noSuchMethod(
       Invocation.method(#idTokenChanges, []),
-      const Stream<UserPlatform?>.empty(),
+      returnValue: const Stream<UserPlatform?>.empty(),
     );
   }
 
@@ -667,7 +667,7 @@ class MockFirebaseAuth extends Mock
   Stream<UserPlatform?> authStateChanges() {
     return super.noSuchMethod(
       Invocation.method(#authStateChanges, []),
-      const Stream<UserPlatform?>.empty(),
+      returnValue: const Stream<UserPlatform?>.empty(),
     );
   }
 
@@ -675,7 +675,7 @@ class MockFirebaseAuth extends Mock
   FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
     return super.noSuchMethod(
       Invocation.method(#delegateFor, [], {#app: app}),
-      TestFirebaseAuthPlatform(),
+      returnValue: TestFirebaseAuthPlatform(),
     );
   }
 
@@ -686,7 +686,7 @@ class MockFirebaseAuth extends Mock
   ) {
     return super.noSuchMethod(
       Invocation.method(#createUserWithEmailAndPassword, [email, password]),
-      neverEndingFuture<UserCredentialPlatform>(),
+      returnValue: neverEndingFuture<UserCredentialPlatform>(),
     );
   }
 
@@ -700,7 +700,7 @@ class MockFirebaseAuth extends Mock
         #signInWithPhoneNumber,
         [phoneNumber, applicationVerifier],
       ),
-      neverEndingFuture<ConfirmationResultPlatform>(),
+      returnValue: neverEndingFuture<ConfirmationResultPlatform>(),
     );
   }
 
@@ -710,7 +710,7 @@ class MockFirebaseAuth extends Mock
   ) {
     return super.noSuchMethod(
       Invocation.method(#signInWithCredential, [credential]),
-      neverEndingFuture<UserCredentialPlatform>(),
+      returnValue: neverEndingFuture<UserCredentialPlatform>(),
     );
   }
 
@@ -718,7 +718,7 @@ class MockFirebaseAuth extends Mock
   Future<UserCredentialPlatform> signInWithCustomToken(String? token) {
     return super.noSuchMethod(
       Invocation.method(#signInWithCustomToken, [token]),
-      neverEndingFuture<UserCredentialPlatform>(),
+      returnValue: neverEndingFuture<UserCredentialPlatform>(),
     );
   }
 
@@ -729,7 +729,7 @@ class MockFirebaseAuth extends Mock
   ) {
     return super.noSuchMethod(
       Invocation.method(#signInWithEmailAndPassword, [email, password]),
-      neverEndingFuture<UserCredentialPlatform>(),
+      returnValue: neverEndingFuture<UserCredentialPlatform>(),
     );
   }
 
@@ -737,7 +737,7 @@ class MockFirebaseAuth extends Mock
   Future<UserCredentialPlatform> signInWithPopup(AuthProvider? provider) {
     return super.noSuchMethod(
       Invocation.method(#signInWithPopup, [provider]),
-      neverEndingFuture<UserCredentialPlatform>(),
+      returnValue: neverEndingFuture<UserCredentialPlatform>(),
     );
   }
 
@@ -748,7 +748,7 @@ class MockFirebaseAuth extends Mock
   ) {
     return super.noSuchMethod(
       Invocation.method(#signInWithEmailLink, [email, emailLink]),
-      neverEndingFuture<UserCredentialPlatform>(),
+      returnValue: neverEndingFuture<UserCredentialPlatform>(),
     );
   }
 
@@ -756,7 +756,7 @@ class MockFirebaseAuth extends Mock
   Future<void> signInWithRedirect(AuthProvider? provider) {
     return super.noSuchMethod(
       Invocation.method(#signInWithRedirect, [provider]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
     );
   }
 
@@ -764,7 +764,7 @@ class MockFirebaseAuth extends Mock
   Future<UserCredentialPlatform> signInAnonymously() {
     return super.noSuchMethod(
       Invocation.method(#signInAnonymously, []),
-      neverEndingFuture<UserCredentialPlatform>(),
+      returnValue: neverEndingFuture<UserCredentialPlatform>(),
     );
   }
 
@@ -778,7 +778,7 @@ class MockFirebaseAuth extends Mock
         #currentUser: currentUser,
         #languageCode: languageCode,
       }),
-      TestFirebaseAuthPlatform(),
+      returnValue: TestFirebaseAuthPlatform(),
     );
   }
 
@@ -786,7 +786,7 @@ class MockFirebaseAuth extends Mock
   Future<UserCredentialPlatform> getRedirectResult() {
     return super.noSuchMethod(
       Invocation.method(#getRedirectResult, []),
-      neverEndingFuture<UserCredentialPlatform>(),
+      returnValue: neverEndingFuture<UserCredentialPlatform>(),
     );
   }
 
@@ -794,7 +794,7 @@ class MockFirebaseAuth extends Mock
   Future<void> setLanguageCode(String? languageCode) {
     return super.noSuchMethod(
       Invocation.method(#setLanguageCode, [languageCode]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
     );
   }
 
@@ -802,7 +802,7 @@ class MockFirebaseAuth extends Mock
   Future<void> useEmulator(String host, int port) {
     return super.noSuchMethod(
       Invocation.method(#useEmulator, [host, port]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
     );
   }
 
@@ -810,7 +810,7 @@ class MockFirebaseAuth extends Mock
   Future<ActionCodeInfo> checkActionCode(String? code) {
     return super.noSuchMethod(
       Invocation.method(#checkActionCode, [code]),
-      neverEndingFuture<ActionCodeInfo>(),
+      returnValue: neverEndingFuture<ActionCodeInfo>(),
     );
   }
 
@@ -818,7 +818,7 @@ class MockFirebaseAuth extends Mock
   Future<void> confirmPasswordReset(String? code, String? newPassword) {
     return super.noSuchMethod(
       Invocation.method(#confirmPasswordReset, [code, newPassword]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
     );
   }
 
@@ -826,7 +826,7 @@ class MockFirebaseAuth extends Mock
   Future<List<String>> fetchSignInMethodsForEmail(String? email) {
     return super.noSuchMethod(
       Invocation.method(#checkActionCode, [email]),
-      neverEndingFuture<List<String>>(),
+      returnValue: neverEndingFuture<List<String>>(),
     );
   }
 
@@ -834,7 +834,7 @@ class MockFirebaseAuth extends Mock
   bool isSignInWithEmailLink(String? emailLink) {
     return super.noSuchMethod(
       Invocation.method(#isSignInWithEmailLink, [emailLink]),
-      false,
+      returnValue: false,
     );
   }
 
@@ -845,7 +845,7 @@ class MockFirebaseAuth extends Mock
   ]) {
     return super.noSuchMethod(
       Invocation.method(#sendPasswordResetEmail, [email, actionCodeSettings]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
     );
   }
 
@@ -856,7 +856,7 @@ class MockFirebaseAuth extends Mock
   ) {
     return super.noSuchMethod(
       Invocation.method(#sendSignInLinkToEmail, [email, actionCodeSettings]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
     );
   }
 
@@ -870,7 +870,7 @@ class MockFirebaseAuth extends Mock
         appVerificationDisabledForTesting,
         userAccessGroup,
       ]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
     );
   }
 
@@ -878,7 +878,7 @@ class MockFirebaseAuth extends Mock
   Future<void> setPersistence(Persistence? persistence) {
     return super.noSuchMethod(
       Invocation.method(#setPersistence, [persistence]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
     );
   }
 
@@ -886,7 +886,7 @@ class MockFirebaseAuth extends Mock
   Future<void> signOut() {
     return super.noSuchMethod(
       Invocation.method(#signOut, [signOut]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
     );
   }
 
@@ -894,7 +894,7 @@ class MockFirebaseAuth extends Mock
   Future<String> verifyPasswordResetCode(String? code) {
     return super.noSuchMethod(
       Invocation.method(#verifyPasswordResetCode, [code]),
-      neverEndingFuture<String>(),
+      returnValue: neverEndingFuture<String>(),
     );
   }
 
@@ -920,7 +920,7 @@ class MockFirebaseAuth extends Mock
         #forceResendingToken: forceResendingToken,
         #autoRetrievedSmsCodeForTesting: autoRetrievedSmsCodeForTesting,
       }),
-      neverEndingFuture<String>(),
+      returnValue: neverEndingFuture<String>(),
     );
   }
 }
@@ -1000,7 +1000,7 @@ class MockRecaptchaVerifier extends Mock
   RecaptchaVerifierFactoryPlatform get delegate {
     return super.noSuchMethod(
       Invocation.getter(#delegate),
-      MockRecaptchaVerifierFactoryPlatform(),
+      returnValue: MockRecaptchaVerifierFactoryPlatform(),
     );
   }
 }
