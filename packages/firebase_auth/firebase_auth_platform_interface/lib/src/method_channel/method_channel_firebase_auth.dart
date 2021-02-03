@@ -259,6 +259,19 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
+  Future<void> useEmulator(String host, int port) async {
+    try {
+      await channel.invokeMethod<void>('Auth#useEmulator', <String, dynamic>{
+        'appName': app.name,
+        'host': host,
+        'port': port,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
+  }
+
+  @override
   Future<void> applyActionCode(String code) async {
     try {
       await channel

@@ -22,6 +22,8 @@ dependency_overrides:
     path: ../../firebase_core/firebase_core
   firebase_core_platform_interface:
     path: ../../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../../firebase_core/firebase_core_web
   http: ^0.12.2
   http_parser: ^4.0.0-nullsafety
 

@@ -1,3 +1,9 @@
+## 0.17.0-1.0.nullsafety.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: migrate to NNBD (#4780).
+
 ## 0.16.0
 
 > Note: This release has breaking changes.

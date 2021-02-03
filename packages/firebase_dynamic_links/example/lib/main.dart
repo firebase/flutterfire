@@ -113,13 +113,13 @@ class _MainScreenState extends State<_MainScreen> {
                 ButtonBar(
                   alignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    RaisedButton(
+                    ElevatedButton(
                       onPressed: !_isCreatingLink
                           ? () => _createDynamicLink(false)
                           : null,
                       child: const Text('Get Long Link'),
                     ),
-                    RaisedButton(
+                    ElevatedButton(
                       onPressed: !_isCreatingLink
                           ? () => _createDynamicLink(true)
                           : null,

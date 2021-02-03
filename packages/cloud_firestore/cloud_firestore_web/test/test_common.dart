@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:js' as js;
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/cloud_firestore_web.dart';
@@ -15,7 +13,7 @@ import 'package:cloud_firestore_web/src/interop/firestore.dart' as web;
 import 'package:cloud_firestore_web/src/document_reference_web.dart';
 import 'package:cloud_firestore_web/src/query_web.dart';
 
-const kCollectionId = "test";
+const kCollectionId = 'test';
 
 class MockWebDocumentSnapshot extends Mock implements web.DocumentSnapshot {}
 
@@ -27,8 +25,10 @@ class MockWebTransaction extends Mock implements web.Transaction {}
 
 class MockWebWriteBatch extends Mock implements web.WriteBatch {}
 
+//ignore: avoid_implementing_value_types
 class MockDocumentReference extends Mock implements DocumentReferenceWeb {}
 
+//ignore: avoid_implementing_value_types
 class MockFirestore extends Mock implements FirebaseFirestoreWeb {}
 
 class MockWebDocumentReference extends Mock implements web.DocumentReference {}

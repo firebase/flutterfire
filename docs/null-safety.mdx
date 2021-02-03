@@ -1,0 +1,36 @@
+---
+id: null-safety
+title: Null Safety
+---
+
+Dart [sound null safety](https://dart.dev/null-safety) is currently in beta, however; some FlutterFire packages
+have preview versions of null-safety implementations that are available to use.
+
+The below table outlines the latest null-safe plugin versions:
+
+
+|                 Plugin |                                  Version |
+| ---------------------: | ---------------------------------------: |
+|      `cloud_firestore` |      `^{{ plugins.cloud_firestore_ns }}` |
+|        `firebase_auth` |        `^{{ plugins.firebase_auth_ns }}` |
+|        `firebase_core` |        `^{{ plugins.firebase_core_ns }}` |
+| `firebase_crashlytics` | `^{{ plugins.firebase_crashlytics_ns }}` |
+|   `firebase_messaging` |   `^{{ plugins.firebase_messaging_ns }}` |
+|      `cloud_functions` |      `^{{ plugins.cloud_functions_ns }}` |
+
+---
+
+### Using with other non-null-safe FlutterFire packages
+
+:::caution
+Mixing currently **published** null-safety FlutterFire packages alongside **published** non-nullsafety packages is not supported.
+:::
+
+Not all FlutterFire packages have null-safety versions available yet. If you need to use the null-safe packages alongside
+the non-null-safe packages then it's recommended you switch to sourcing your FlutterFire packages directly from the [main
+FlutterFire repository](https://github.com/FirebaseExtended/flutterfire) (rather than pub.dev) where the packages have
+compatible version constraints.
+
+---
+
+To provide feedback on these versions or to see progress updates: see [this GitHub discussion](https://github.com/FirebaseExtended/flutterfire/discussions/4182).

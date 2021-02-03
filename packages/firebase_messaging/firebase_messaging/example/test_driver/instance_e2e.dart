@@ -11,7 +11,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-const bool SKIP_MANUAL_TESTS = bool.fromEnvironment('CI', defaultValue: false);
+// ignore: do_not_use_environment
+const bool SKIP_MANUAL_TESTS = bool.fromEnvironment('CI');
 
 void runInstanceTests() {
   group('$FirebaseMessaging.instance', () {
@@ -104,41 +105,15 @@ void runInstanceTests() {
 
     group('subscribeToTopic()', () {
       test('successfully subscribes from topic', () async {
-        final topic = 'test-topic';
+        const topic = 'test-topic';
         await messaging.subscribeToTopic(topic);
       }, skip: kIsWeb);
     });
 
     group('unsubscribeFromTopic()', () {
       test('successfully unsubscribes from topic', () async {
-        final topic = 'test-topic';
+        const topic = 'test-topic';
         await messaging.unsubscribeFromTopic(topic);
-      }, skip: kIsWeb);
-    });
-
-    // deprecated methods
-    group('FirebaseMessaging (deprecated)', () {
-      test('returns an instance with the current [FirebaseApp]', () async {
-        // ignore: deprecated_member_use
-        final testInstance = FirebaseMessaging();
-        expect(testInstance, isA<FirebaseMessaging>());
-        expect(testInstance.app, isA<FirebaseApp>());
-        expect(testInstance.app.name, defaultFirebaseAppName);
-      });
-    });
-
-    group('autoInitEnabled (deprecated)', () {
-      test('returns correct value', () async {
-        // should now be false due to previous setAutoInitEnabled test.
-        expect(messaging.isAutoInitEnabled, isFalse);
-        // ignore: deprecated_member_use
-        expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
-
-        await messaging.setAutoInitEnabled(true);
-
-        expect(messaging.isAutoInitEnabled, isTrue);
-        // ignore: deprecated_member_use
-        expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
       }, skip: kIsWeb);
     });
   });

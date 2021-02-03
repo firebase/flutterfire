@@ -79,6 +79,7 @@ abstract class AuthJsImpl {
   );
   external PromiseJsImpl<void> signInWithRedirect(AuthProviderJsImpl provider);
   external PromiseJsImpl<void> signOut();
+  external PromiseJsImpl<void> useEmulator(String origin);
   external void useDeviceLanguage();
   external PromiseJsImpl<String> verifyPasswordResetCode(String code);
 }

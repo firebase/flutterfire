@@ -1,3 +1,11 @@
+## 3.1.4-1.0.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+
+## 3.1.4-1.0.nullsafety.0
+
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+
 ## 3.1.4-nullsafety.1
 
  - **FIX**: bump `firebase_core` dependencies to resolve versioning issue when releasing.

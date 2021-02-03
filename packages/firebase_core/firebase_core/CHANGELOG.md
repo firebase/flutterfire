@@ -1,3 +1,16 @@
+## 0.8.0-1.0.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+ - **REFACTOR**: replace deprecated `RaisedButton` widget with `ElevatedButton`.
+
+## 0.8.0-1.0.nullsafety.0
+
+ - Bump "firebase_core" to `0.8.0-1.0.nullsafety.0`.
+
+## 0.8.0-nullsafety.1
+
+ - **FEAT**: bump firebase-core to 4.0.0-nullsafety.0 and firebase-core-web to 0.3.0-nullsafety.0.
+
 ## 0.8.0-nullsafety.0
 
 - **FIX**: Bump package to 0.8.0 for nullsafety. (fixes issue #4728)

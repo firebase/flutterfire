@@ -2,21 +2,19 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../utils/test_common.dart';
 
-const _kCollectionId = "collection";
-const _kDocumentId = "document";
-const _kSubcollectionId = "subcollection";
+const _kCollectionId = 'collection';
+const _kDocumentId = 'document';
+const _kSubcollectionId = 'subcollection';
 
 class TestCollectionReference extends CollectionReferencePlatform {
   TestCollectionReference._()
-      : super(FirebaseFirestorePlatform.instance, '$_kCollectionId');
+      : super(FirebaseFirestorePlatform.instance, _kCollectionId);
 }
 
 /// Collection reference pointing to the same collection as
@@ -37,18 +35,18 @@ class TestSubcollectionReference extends CollectionReferencePlatform {
 void main() {
   initializeMethodChannel();
 
-  group("$CollectionReferencePlatform()", () {
+  group('$CollectionReferencePlatform()', () {
     setUpAll(() async {
       await Firebase.initializeApp();
     });
 
-    test("constructor", () {
+    test('constructor', () {
       final testColRef = TestCollectionReference._();
       expect(testColRef, isInstanceOf<CollectionReferencePlatform>());
       expect(testColRef.id, equals(_kCollectionId));
     });
 
-    test("id", () {
+    test('id', () {
       final collection = TestCollectionReference._();
       expect(collection.id, equals(_kCollectionId));
     });
@@ -59,25 +57,25 @@ void main() {
       expect(other, equals(collection));
     });
 
-    test("parent", () {
+    test('parent', () {
       final collection = TestSubcollectionReference._();
-      final parent = collection.parent /*!*/;
+      final parent = collection.parent!;
       final parentPath = parent.path;
       expect(parent, isInstanceOf<DocumentReferencePlatform>());
-      expect(parentPath, equals("$_kCollectionId/$_kDocumentId"));
+      expect(parentPath, equals('$_kCollectionId/$_kDocumentId'));
     });
 
-    test("path", () {
+    test('path', () {
       final document = TestCollectionReference._();
-      expect(document.path, equals("$_kCollectionId"));
+      expect(document.path, equals(_kCollectionId));
     });
 
-    test("throws if .doc", () {
+    test('throws if .doc', () {
       final document = TestCollectionReference._();
       try {
         document.doc();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("doc() is not implemented"));
+        expect(e.message, equals('doc() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
