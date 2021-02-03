@@ -51,7 +51,6 @@ void runWriteBatchTests() {
       batch.update(doc3, <String, dynamic>{'bar': 'ben'});
       batch.set(doc4, <String, dynamic>{'bar': 'ben'}, SetOptions(merge: true));
 
-      // ignore: todo
       // TODO(ehesp): firebase-dart does not support mergeFields
       if (!kIsWeb) {
         batch.set(doc5, <String, dynamic>{'bar': 'ben'},
