@@ -75,14 +75,15 @@ class MockFirebaseMessaging extends Mock
 
   @override
   bool get isAutoInitEnabled {
-    return super.noSuchMethod(Invocation.getter(#isAutoInitEnabled), true);
+    return super
+        .noSuchMethod(Invocation.getter(#isAutoInitEnabled), returnValue: true);
   }
 
   @override
   FirebaseMessagingPlatform delegateFor({FirebaseApp? app}) {
     return super.noSuchMethod(
       Invocation.method(#delegateFor, [], {#app: app}),
-      TestFirebaseMessagingPlatform(),
+      returnValue: TestFirebaseMessagingPlatform(),
     );
   }
 
@@ -91,48 +92,56 @@ class MockFirebaseMessaging extends Mock
     return super.noSuchMethod(
       Invocation.method(
           #setInitialValues, [], {#isAutoInitEnabled: isAutoInitEnabled}),
-      TestFirebaseMessagingPlatform(),
+      returnValue: TestFirebaseMessagingPlatform(),
     );
   }
 
   @override
   Future<RemoteMessage?> getInitialMessage() {
-    return super.noSuchMethod(Invocation.method(#getInitialMessage, []),
-        neverEndingFuture<RemoteMessage>());
+    return super.noSuchMethod(
+      Invocation.method(#getInitialMessage, []),
+      returnValue: neverEndingFuture<RemoteMessage>(),
+    );
   }
 
   @override
   Future<void> deleteToken({String? senderId}) {
     return super.noSuchMethod(
-        Invocation.method(#deleteToken, [], {#senderId: senderId}),
-        Future<void>.value());
+      Invocation.method(#deleteToken, [], {#senderId: senderId}),
+      returnValue: Future<void>.value(),
+    );
   }
 
   @override
   Future<String?> getAPNSToken() {
     return super.noSuchMethod(
-        Invocation.method(#getAPNSToken, []), Future<String>.value(''));
+      Invocation.method(#getAPNSToken, []),
+      returnValue: Future<String>.value(''),
+    );
   }
 
   @override
   Future<String> getToken({String? senderId, String? vapidKey}) {
     return super.noSuchMethod(
-        Invocation.method(
-            #getToken, [], {#senderId: senderId, #vapidKey: vapidKey}),
-        Future<String>.value(''));
+      Invocation.method(
+          #getToken, [], {#senderId: senderId, #vapidKey: vapidKey}),
+      returnValue: Future<String>.value(''),
+    );
   }
 
   @override
   Future<void> setAutoInitEnabled(bool? enabled) {
-    return super.noSuchMethod(Invocation.method(#setAutoInitEnabled, [enabled]),
-        Future<void>.value());
+    return super.noSuchMethod(
+      Invocation.method(#setAutoInitEnabled, [enabled]),
+      returnValue: Future<void>.value(),
+    );
   }
 
   @override
   Stream<String> get onTokenRefresh {
     return super.noSuchMethod(
       Invocation.getter(#onTokenRefresh),
-      const Stream<String>.empty(),
+      returnValue: const Stream<String>.empty(),
     );
   }
 
@@ -146,28 +155,33 @@ class MockFirebaseMessaging extends Mock
       bool? provisional = false,
       bool? sound = true}) {
     return super.noSuchMethod(
-        Invocation.method(#requestPermission, [], {
-          #alert: alert,
-          #announcement: announcement,
-          #badge: badge,
-          #carPlay: carPlay,
-          #criticalAlert: criticalAlert,
-          #provisional: provisional,
-          #sound: sound
-        }),
-        neverEndingFuture<NotificationSettings>());
+      Invocation.method(#requestPermission, [], {
+        #alert: alert,
+        #announcement: announcement,
+        #badge: badge,
+        #carPlay: carPlay,
+        #criticalAlert: criticalAlert,
+        #provisional: provisional,
+        #sound: sound
+      }),
+      returnValue: neverEndingFuture<NotificationSettings>(),
+    );
   }
 
   @override
   Future<void> subscribeToTopic(String? topic) {
     return super.noSuchMethod(
-        Invocation.method(#subscribeToTopic, [topic]), Future<void>.value());
+      Invocation.method(#subscribeToTopic, [topic]),
+      returnValue: Future<void>.value(),
+    );
   }
 
   @override
   Future<void> unsubscribeFromTopic(String? topic) {
-    return super.noSuchMethod(Invocation.method(#unsubscribeFromTopic, [topic]),
-        Future<void>.value());
+    return super.noSuchMethod(
+      Invocation.method(#unsubscribeFromTopic, [topic]),
+      returnValue: Future<void>.value(),
+    );
   }
 }
 

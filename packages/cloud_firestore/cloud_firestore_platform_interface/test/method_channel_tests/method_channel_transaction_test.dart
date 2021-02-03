@@ -15,9 +15,11 @@ import '../utils/test_common.dart';
 //ignore: avoid_implementing_value_types
 class MockDocumentReference extends Mock implements DocumentReferencePlatform {
   @override
-  String get path => super.noSuchMethod(Invocation.getter(#path), 'foo/bar');
+  String get path =>
+      super.noSuchMethod(Invocation.getter(#path), returnValue: 'foo/bar');
   @override
-  String get id => super.noSuchMethod(Invocation.getter(#id), 'mock-id');
+  String get id =>
+      super.noSuchMethod(Invocation.getter(#id), returnValue: 'mock-id');
 }
 
 const _kTransactionId = '1022';
