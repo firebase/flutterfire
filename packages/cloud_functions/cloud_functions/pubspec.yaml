@@ -5,7 +5,7 @@ homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/c
 
 environment:
   sdk: ">=2.12.0-0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+  flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
   cloud_functions_platform_interface: ">=4.0.2-1.0.nullsafety.0 <4.0.2-2.0.nullsafety.0"
@@ -21,7 +21,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   pedantic: 1.10.0-nullsafety.3
-  plugin_platform_interface: ^1.1.0-nullsafety.1
+  plugin_platform_interface: ^1.1.0-nullsafety.2
   test: any
 
 flutter:
