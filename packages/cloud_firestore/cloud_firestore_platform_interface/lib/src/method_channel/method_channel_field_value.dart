@@ -2,13 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:ui' show hashValues;
 
 import 'package:collection/collection.dart';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:flutter/material.dart';
 
 /// Sentinel values that can be used when writing document fields with set() or
 /// update().
@@ -33,6 +32,7 @@ enum FieldValueType {
 }
 
 /// Default, `MethodChannel`-based delegate for a [FieldValuePlatform].
+@immutable
 class MethodChannelFieldValue {
   /// Constructor.
   MethodChannelFieldValue(this.type, this.value);

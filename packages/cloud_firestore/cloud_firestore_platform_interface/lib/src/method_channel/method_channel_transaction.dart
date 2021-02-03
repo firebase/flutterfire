@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -16,9 +14,9 @@ import 'method_channel_firestore.dart';
 /// communicate with Firebase plugins.
 class MethodChannelTransaction extends TransactionPlatform {
   /// [FirebaseApp] name used for this [MethodChannelTransaction]
-  final String /*!*/ appName;
-  String _transactionId;
-  FirebaseFirestorePlatform /*!*/ _firestore;
+  final String appName;
+  late String _transactionId;
+  late FirebaseFirestorePlatform _firestore;
 
   /// Constructor.
   MethodChannelTransaction(String transactionId, this.appName)
@@ -40,11 +38,11 @@ class MethodChannelTransaction extends TransactionPlatform {
   ///
   /// Requires all reads to be executed before all writes, otherwise an [AssertionError] will be thrown
   @override
-  Future<DocumentSnapshotPlatform> get(documentPath) async {
+  Future<DocumentSnapshotPlatform> get(String documentPath) async {
     assert(_commands.isEmpty,
-        "Transactions require all reads to be executed before all writes.");
+        'Transactions require all reads to be executed before all writes.');
 
-    final Map<String, dynamic> result = await MethodChannelFirebaseFirestore
+    final Map<String, dynamic>? result = await MethodChannelFirebaseFirestore
         .channel
         .invokeMapMethod<String, dynamic>('Transaction#get', <String, dynamic>{
       'firestore': _firestore,
@@ -55,7 +53,7 @@ class MethodChannelTransaction extends TransactionPlatform {
     return DocumentSnapshotPlatform(
       _firestore,
       documentPath,
-      Map<String, dynamic>.from(result),
+      Map<String, dynamic>.from(result!),
     );
   }
 
@@ -85,7 +83,7 @@ class MethodChannelTransaction extends TransactionPlatform {
 
   @override
   MethodChannelTransaction set(String documentPath, Map<String, dynamic> data,
-      [SetOptions options]) {
+      [SetOptions? options]) {
     _commands.add(<String, dynamic>{
       'type': 'SET',
       'path': documentPath,

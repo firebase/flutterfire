@@ -2,13 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 part of cloud_firestore;
 
 class _CodecUtility {
-  static Map<String, dynamic> /*?*/ replaceValueWithDelegatesInMap(
-      Map<dynamic, dynamic> /*?*/ data) {
+  static Map<String, dynamic>? replaceValueWithDelegatesInMap(
+      Map<dynamic, dynamic>? data) {
     if (data == null) {
       return null;
     }
@@ -17,16 +15,15 @@ class _CodecUtility {
     return output;
   }
 
-  static List<dynamic> /*?*/ replaceValueWithDelegatesInArray(
-      List<dynamic> /*?*/ data) {
+  static List<dynamic>? replaceValueWithDelegatesInArray(List<dynamic>? data) {
     if (data == null) {
       return null;
     }
-    return List.from(data).map((value) => valueEncode(value)).toList();
+    return List.from(data).map(valueEncode).toList();
   }
 
-  static Map<String, dynamic> /*?*/ replaceDelegatesWithValueInMap(
-      Map<dynamic, dynamic> /*?*/ data, FirebaseFirestore firestore) {
+  static Map<String, dynamic>? replaceDelegatesWithValueInMap(
+      Map<dynamic, dynamic>? data, FirebaseFirestore firestore) {
     if (data == null) {
       return null;
     }
@@ -35,8 +32,8 @@ class _CodecUtility {
     return output;
   }
 
-  static List<dynamic> /*?*/ replaceDelegatesWithValueInArray(
-      List<dynamic> /*?*/ data, FirebaseFirestore firestore) {
+  static List<dynamic>? replaceDelegatesWithValueInArray(
+      List<dynamic>? data, FirebaseFirestore firestore) {
     if (data == null) {
       return null;
     }

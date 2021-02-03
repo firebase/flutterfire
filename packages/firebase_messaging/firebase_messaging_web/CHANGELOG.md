@@ -1,3 +1,15 @@
+## 0.2.0-1.0.nullsafety.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: migrate to NNBD (#4909).
+ - **BREAKING**: the following deprecated APIs have been removed:
+   - `iOSNotificationSettings`.
+   - `requestNotificationPermissions` - use `requestPermission` instead.
+   - `autoInitEnabled()` - use `setAutoInitEnabled()` instead.
+   - `deleteInstanceID()` - use `deleteToken()` instead.
+   - `FirebaseMessaging()` - use `FirebaseMessaging.instance` instead.
+
 ## 0.1.0-dev.5
 
  - **FIX**: check is supported before init web (#4644).
