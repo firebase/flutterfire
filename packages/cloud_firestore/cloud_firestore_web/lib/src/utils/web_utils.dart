@@ -23,7 +23,7 @@ QuerySnapshotPlatform convertWebQuerySnapshot(
     webQuerySnapshot
         .docChanges()
         .map((webDocumentChange) =>
-            convertWebDocumentChange(firestore, webDocumentChange!))
+            convertWebDocumentChange(firestore, webDocumentChange))
         .toList(),
     convertWebSnapshotMetadata(webQuerySnapshot.metadata),
   );

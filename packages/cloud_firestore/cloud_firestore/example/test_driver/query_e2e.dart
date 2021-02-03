@@ -1223,7 +1223,7 @@ void runQueryTests() {
         expect(snapshot.docs[0].get('foo'), equals('bar'));
       });
 
-      test('returns returns and encoded DocumentReferences', () async {
+      test('returns an encoded DocumentReference', () async {
         CollectionReference collection =
             await initializeTest('where-document-reference');
 

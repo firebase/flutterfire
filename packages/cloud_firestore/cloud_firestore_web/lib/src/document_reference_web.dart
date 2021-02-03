@@ -14,7 +14,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   final firestore_interop.Firestore firestoreWeb;
 
   /// instance of DocumentReference from the web plugin
-  final firestore_interop.DocumentReference? _delegate;
+  final firestore_interop.DocumentReference _delegate;
 
   /// Creates an instance of [DocumentReferenceWeb] which represents path
   /// at [pathComponents] and uses implementation of [firestoreWeb]
@@ -28,8 +28,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   @override
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) async {
     try {
-      await _delegate!.set(
-        CodecUtility.encodeMapData(data),
+      await _delegate.set(
+        CodecUtility.encodeMapData(data)!,
         convertSetOptions(options),
       );
     } catch (e) {
@@ -40,7 +40,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   @override
   Future<void> update(Map<String, dynamic> data) async {
     try {
-      await _delegate!.update(data: CodecUtility.encodeMapData(data));
+      await _delegate.update(CodecUtility.encodeMapData(data)!);
     } catch (e) {
       throw getFirebaseException(e);
     }
@@ -51,7 +51,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
       [GetOptions options = const GetOptions()]) async {
     try {
       firestore_interop.DocumentSnapshot documentSnapshot =
-          await _delegate!.get(convertGetOptions(options));
+          await _delegate.get(convertGetOptions(options));
       return convertWebDocumentSnapshot(firestore, documentSnapshot);
     } catch (e) {
       throw getFirebaseException(e);
@@ -61,7 +61,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   @override
   Future<void> delete() async {
     try {
-      await _delegate!.delete();
+      await _delegate.delete();
     } catch (e) {
       throw getFirebaseException(e);
     }
@@ -71,14 +71,14 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   Stream<DocumentSnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    Stream<firestore_interop.DocumentSnapshot?> querySnapshots =
-        _delegate!.onSnapshot;
+    Stream<firestore_interop.DocumentSnapshot> querySnapshots =
+        _delegate.onSnapshot;
     if (includeMetadataChanges) {
-      querySnapshots = _delegate!.onMetadataChangesSnapshot;
+      querySnapshots = _delegate.onMetadataChangesSnapshot;
     }
     return querySnapshots
-        .map((webSnapshot) =>
-            convertWebDocumentSnapshot(firestore, webSnapshot!))
+        .map(
+            (webSnapshot) => convertWebDocumentSnapshot(firestore, webSnapshot))
         .handleError((e) {
       throw getFirebaseException(e);
     });
