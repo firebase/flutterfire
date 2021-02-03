@@ -401,6 +401,13 @@ void main() {
       fail('Should have thrown an [UnimplementedError]');
     });
 
+    test('throws if useEmulator', () async {
+      await expectLater(
+        () => firebaseAuthPlatform.useEmulator('http://localhost', 9099),
+        throwsUnimplementedError,
+      );
+    });
+
     test('throws if verifyPasswordResetCode()', () async {
       try {
         await firebaseAuthPlatform.verifyPasswordResetCode('test');

@@ -333,6 +333,18 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
+  Future<void> useEmulator(String host, int port) async {
+    try {
+      // The generic platform interface is with host and port split to
+      // centralize logic between android/ios native, but web takes the
+      // origin as a single string
+      await _webAuth.useEmulator('http://$host:$port');
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
+  }
+
+  @override
   Future<String> verifyPasswordResetCode(String code) async {
     try {
       return await _webAuth.verifyPasswordResetCode(code);
