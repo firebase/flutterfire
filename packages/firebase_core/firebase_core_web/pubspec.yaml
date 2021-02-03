@@ -5,7 +5,7 @@ version: 0.3.0-1.0.nullsafety.0
 
 environment:
   sdk: ">=2.12.0-0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+  flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
   firebase_core_platform_interface: ">=4.0.0-1.0.nullsafety.0 <4.0.0-2.0.nullsafety.0"
