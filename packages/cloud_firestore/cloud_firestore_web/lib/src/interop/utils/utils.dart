@@ -17,7 +17,7 @@ dynamic dartify(Object? jsObject) {
       (Object object) {
         if (util.instanceof(object, DocumentReferenceJsConstructor)) {
           return DocumentReference.getInstance(
-              object as DocumentReferenceJsImpl?);
+              object as DocumentReferenceJsImpl);
         }
         if (util.instanceof(object, GeoPointConstructor)) {
           return object;
@@ -35,8 +35,12 @@ dynamic dartify(Object? jsObject) {
 
 /// Returns the JS implementation from Dart Object.
 dynamic jsify(Object? dartObject) {
+  if (dartObject == null) {
+    return null;
+  }
+
   return core_interop.jsify(
-      dartObject!,
+      dartObject,
       (Object? object) {
         if (object is DateTime) {
           return TimestampJsImpl.fromMillis(object.millisecondsSinceEpoch);

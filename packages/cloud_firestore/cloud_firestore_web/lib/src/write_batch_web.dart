@@ -12,7 +12,7 @@ import 'utils/codec_utility.dart';
 /// A web specific implementation of [WriteBatch].
 class WriteBatchWeb extends WriteBatchPlatform {
   final firestore_interop.Firestore _webFirestoreDelegate;
-  firestore_interop.WriteBatch? _webWriteBatchDelegate;
+  firestore_interop.WriteBatch _webWriteBatchDelegate;
 
   /// Constructor.
   WriteBatchWeb(this._webFirestoreDelegate)
@@ -22,7 +22,7 @@ class WriteBatchWeb extends WriteBatchPlatform {
   @override
   Future<void> commit() async {
     try {
-      await _webWriteBatchDelegate!.commit();
+      await _webWriteBatchDelegate.commit();
     } catch (e) {
       throw getFirebaseException(e);
     }
@@ -30,14 +30,14 @@ class WriteBatchWeb extends WriteBatchPlatform {
 
   @override
   void delete(String documentPath) {
-    _webWriteBatchDelegate!.delete(_webFirestoreDelegate.doc(documentPath)!);
+    _webWriteBatchDelegate.delete(_webFirestoreDelegate.doc(documentPath));
   }
 
   @override
   void set(String documentPath, Map<String, dynamic> data,
       [SetOptions? options]) {
-    _webWriteBatchDelegate!.set(_webFirestoreDelegate.doc(documentPath),
-        CodecUtility.encodeMapData(data), convertSetOptions(options));
+    _webWriteBatchDelegate.set(_webFirestoreDelegate.doc(documentPath),
+        CodecUtility.encodeMapData(data)!, convertSetOptions(options));
   }
 
   @override
@@ -45,7 +45,7 @@ class WriteBatchWeb extends WriteBatchPlatform {
     String documentPath,
     Map<String, dynamic> data,
   ) {
-    _webWriteBatchDelegate!.update(_webFirestoreDelegate.doc(documentPath),
-        data: CodecUtility.encodeMapData(data));
+    _webWriteBatchDelegate.update(_webFirestoreDelegate.doc(documentPath),
+        CodecUtility.encodeMapData(data)!);
   }
 }
