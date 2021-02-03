@@ -35,6 +35,8 @@ void main() {
   const String kMockLanguage = 'en';
   const String kMockOobCode = 'oobcode';
   const String kMockURL = 'http://www.example.com';
+  const String kMockHost = 'www.example.com';
+  const int kMockPort = 31337;
 
   final ActionCodeSettings kMockActionCodeSettings =
       ActionCodeSettings(url: kMockURL);
@@ -166,6 +168,16 @@ void main() {
     setUp(() async {
       user = kMockUser;
       await auth.signInAnonymously();
+    });
+
+    group('emulator', () {
+      test('useEmulator() should call delegate method', () async {
+        // Necessary as we otherwise get a "null is not a Future<void>" error
+        when(mockAuthPlatform.useEmulator(kMockHost, kMockPort))
+            .thenAnswer((i) async {});
+        await auth.useEmulator('http://$kMockHost:$kMockPort');
+        verify(mockAuthPlatform.useEmulator(kMockHost, kMockPort));
+      });
     });
 
     group('currentUser', () {

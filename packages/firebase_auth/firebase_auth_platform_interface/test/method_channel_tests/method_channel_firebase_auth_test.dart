@@ -831,6 +831,23 @@ void main() {
       });
     });
 
+    group('useEmulator()', () {
+      test('calls useEmulator correctly', () async {
+        await auth.useEmulator('example.com', 31337);
+        // check native method was called
+        expect(log, <Matcher>[
+          isMethodCall(
+            'Auth#useEmulator',
+            arguments: <String, dynamic>{
+              'appName': defaultFirebaseAppName,
+              'host': 'example.com',
+              'port': 31337,
+            },
+          ),
+        ]);
+      });
+    });
+
     group('verifyPasswordResetCode()', () {
       const String testCode = 'testCode';
       test('returns a successful result', () async {
