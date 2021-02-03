@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,22 +15,22 @@ const _kNewIndex = 1;
 class TestDocumentChange extends DocumentChangePlatform {
   TestDocumentChange._()
       : super(
-          _kDocumentChangeType,
-          _kOldIndex,
-          _kNewIndex,
-          null,
-        );
+            _kDocumentChangeType,
+            _kOldIndex,
+            _kNewIndex,
+            DocumentSnapshotPlatform(FirebaseFirestorePlatform.instance,
+                '$kCollectionId/$kDocumentId', {}));
 }
 
 void main() {
   initializeMethodChannel();
 
-  group("$DocumentChangePlatform()", () {
+  group('$DocumentChangePlatform()', () {
     setUpAll(() async {
       await Firebase.initializeApp();
     });
 
-    test("constructor", () {
+    test('constructor', () {
       final testDocumentChangePlatform = TestDocumentChange._();
       expect(
           testDocumentChangePlatform, isInstanceOf<DocumentChangePlatform>());

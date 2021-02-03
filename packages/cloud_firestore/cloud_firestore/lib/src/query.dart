@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 part of cloud_firestore;
 
 /// Represents a [Query] over the data at a particular location.
@@ -40,11 +38,11 @@ class Query {
 
   /// Returns whether the current operator is an inequality operator.
   bool _isInequality(String operator) {
-    return (operator == '<' ||
+    return operator == '<' ||
         operator == '<=' ||
         operator == '>' ||
         operator == '>=' ||
-        operator == '!=');
+        operator == '!=';
   }
 
   /// Asserts that a [DocumentSnapshot] can be used within the current
@@ -55,14 +53,13 @@ class Query {
   /// passed to the query.
   Map<String, dynamic> _assertQueryCursorSnapshot(
       DocumentSnapshot documentSnapshot) {
-    assert(documentSnapshot != null);
     assert(documentSnapshot.exists,
-        "a document snapshot must exist to be used within a query");
+        'a document snapshot must exist to be used within a query');
 
     List<List<dynamic>> orders = List.from(parameters['orderBy']);
     List<dynamic> values = [];
 
-    for (List<dynamic> order in orders) {
+    for (final List<dynamic> order in orders) {
       dynamic field = order[0];
 
       // All order by fields must exist within the snapshot
@@ -70,7 +67,7 @@ class Query {
         try {
           values.add(documentSnapshot.get(field));
         } on StateError {
-          throw ("You are trying to start or end a query using a document for which the field '$field' (used as the orderBy) does not exist.");
+          throw "You are trying to start or end a query using a document for which the field '$field' (used as the orderBy) does not exist.";
         }
       }
     }
@@ -102,11 +99,10 @@ class Query {
 
   /// Common handler for all non-document based cursor queries.
   List<dynamic> _assertQueryCursorValues(List<dynamic> fields) {
-    assert(fields != null);
     List<List<dynamic>> orders = List.from(parameters['orderBy']);
 
     assert(fields.length <= orders.length,
-        "Too many arguments provided. The number of arguments must be less than or equal to the number of orderBy() clauses.");
+        'Too many arguments provided. The number of arguments must be less than or equal to the number of orderBy() clauses.');
 
     return fields;
   }
@@ -176,7 +172,7 @@ class Query {
   ///
   /// To modify how the query is fetched, the [options] parameter can be provided
   /// with a [GetOptions] instance.
-  Future<QuerySnapshot> get([GetOptions /*?*/ options]) async {
+  Future<QuerySnapshot> get([GetOptions? options]) async {
     QuerySnapshotPlatform snapshotDelegate =
         await _delegate.get(options ?? const GetOptions());
     return QuerySnapshot._(firestore, snapshotDelegate);
@@ -185,7 +181,7 @@ class Query {
   /// Creates and returns a new Query that's additionally limited to only return up
   /// to the specified number of documents.
   Query limit(int limit) {
-    assert(limit > 0, "limit must be a positive number greater than 0");
+    assert(limit > 0, 'limit must be a positive number greater than 0');
     return Query._(firestore, _delegate.limit(limit));
   }
 
@@ -194,10 +190,10 @@ class Query {
   /// You must specify at least one orderBy clause for limitToLast queries,
   /// otherwise an exception will be thrown during execution.
   Query limitToLast(int limit) {
-    assert(limit > 0, "limit must be a positive number greater than 0");
+    assert(limit > 0, 'limit must be a positive number greater than 0');
     List<List<dynamic>> orders = List.from(parameters['orderBy']);
     assert(orders.isNotEmpty,
-        "limitToLast() queries require specifying at least one orderBy() clause");
+        'limitToLast() queries require specifying at least one orderBy() clause');
     return Query._(firestore, _delegate.limitToLast(limit));
   }
 
@@ -221,18 +217,18 @@ class Query {
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
   Query orderBy(dynamic field, {bool descending = false}) {
-    assert(field != null && descending != null);
+    assert(field != null);
     _assertValidFieldType(field);
     assert(!_hasStartCursor(),
-        "Invalid query. You must not call startAt(), startAtDocument(), startAfter() or startAfterDocument() before calling orderBy()");
+        'Invalid query. You must not call startAt(), startAtDocument(), startAfter() or startAfterDocument() before calling orderBy()');
     assert(!_hasEndCursor(),
-        "Invalid query. You must not call endAt(), endAtDocument(), endBefore() or endBeforeDocument() before calling orderBy()");
+        'Invalid query. You must not call endAt(), endAtDocument(), endBefore() or endBeforeDocument() before calling orderBy()');
 
     final List<List<dynamic>> orders =
         List<List<dynamic>>.from(parameters['orderBy']);
 
     assert(orders.where((List<dynamic> item) => field == item[0]).isEmpty,
-        "OrderBy field '$field' already exists in this query");
+        'OrderBy field "$field" already exists in this query');
 
     if (field == FieldPath.documentId) {
       orders.add([field, descending]);
@@ -246,7 +242,7 @@ class Query {
         List<List<dynamic>>.from(parameters['where']);
 
     if (conditions.isNotEmpty) {
-      for (dynamic condition in conditions) {
+      for (final dynamic condition in conditions) {
         dynamic field = condition[0];
         String operator = condition[1];
 
@@ -254,10 +250,10 @@ class Query {
         // inequality operator is invoked
         if (_isInequality(operator)) {
           assert(field == orders[0][0],
-              "The initial orderBy() field '$orders[0][0]' has to be the same as the where() field parameter '$field' when an inequality operator is invoked.");
+              'The initial orderBy() field "$orders[0][0]" has to be the same as the where() field parameter "$field" when an inequality operator is invoked.');
         }
 
-        for (dynamic order in orders) {
+        for (final dynamic order in orders) {
           dynamic orderField = order[0];
 
           // Any where() fieldPath parameter cannot match any orderBy() parameter when
@@ -344,28 +340,28 @@ class Query {
     dynamic isGreaterThan,
     dynamic isGreaterThanOrEqualTo,
     dynamic arrayContains,
-    List<dynamic> /*?*/ arrayContainsAny,
-    List<dynamic> /*?*/ whereIn,
-    List<dynamic> /*?*/ whereNotIn,
-    bool /*?*/ isNull,
+    List<dynamic>? arrayContainsAny,
+    List<dynamic>? whereIn,
+    List<dynamic>? whereNotIn,
+    bool? isNull,
   }) {
     _assertValidFieldType(field);
 
-    final ListEquality<dynamic> equality = const ListEquality<dynamic>();
+    const ListEquality<dynamic> equality = ListEquality<dynamic>();
     final List<List<dynamic>> conditions =
         List<List<dynamic>>.from(parameters['where']);
 
     // Conditions can be chained from other [Query] instances
     void addCondition(dynamic field, String operator, dynamic value) {
       List<dynamic> condition;
-      value = _CodecUtility.valueEncode(value);
+      dynamic codecValue = _CodecUtility.valueEncode(value);
 
       if (field == FieldPath.documentId) {
-        condition = <dynamic>[field, operator, value];
+        condition = <dynamic>[field, operator, codecValue];
       } else {
         FieldPath fieldPath =
             field is String ? FieldPath.fromString(field) : field as FieldPath;
-        condition = <dynamic>[fieldPath, operator, value];
+        condition = <dynamic>[fieldPath, operator, codecValue];
       }
 
       assert(
@@ -411,7 +407,7 @@ class Query {
 
     // Once all conditions have been set, we must now check them to ensure the
     // query is valid.
-    for (dynamic condition in conditions) {
+    for (final dynamic condition in conditions) {
       dynamic field = condition[0]; // FieldPath or FieldPathType
       String operator = condition[1];
       dynamic value = condition[2];
