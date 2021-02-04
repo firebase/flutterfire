@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -22,8 +20,8 @@ MockTaskSnapshotPlatform mockTaskSnapshotPlatform = MockTaskSnapshotPlatform();
 void main() {
   setupFirebaseStorageMocks();
 
-  /*late*/ FirebaseStorage storage;
-  /*late*/ UploadTask uploadTask;
+  FirebaseStorage? storage;
+  UploadTask? uploadTask;
 
   group('Task', () {
     setUpAll(() async {
@@ -32,11 +30,7 @@ void main() {
       await Firebase.initializeApp();
       storage = FirebaseStorage.instance;
 
-      when(kMockStoragePlatform.ref(any)).thenReturn(mockReferencePlatform);
-      when(mockReferencePlatform.putString(any, any, any))
-          .thenReturn(mockUploadTaskPlatform);
-
-      uploadTask = storage.ref().putString(testString);
+      uploadTask = storage!.ref().putString(testString);
     });
 
     group('.snapshotEvents', () {
@@ -44,7 +38,7 @@ void main() {
         when(mockUploadTaskPlatform.snapshotEvents)
             .thenAnswer((_) => Stream.fromIterable([mockTaskSnapshotPlatform]));
 
-        final result = uploadTask.snapshotEvents;
+        final result = uploadTask!.snapshotEvents;
 
         expect(result, isA<Stream<TaskSnapshot>>());
         verify(mockUploadTaskPlatform.snapshotEvents);
@@ -56,7 +50,7 @@ void main() {
         when(mockUploadTaskPlatform.snapshot)
             .thenReturn(mockTaskSnapshotPlatform);
 
-        final result = uploadTask.snapshot;
+        final result = uploadTask!.snapshot;
 
         expect(result, isA<TaskSnapshot>());
         verify(mockUploadTaskPlatform.snapshot);
@@ -81,7 +75,7 @@ void main() {
         when(mockUploadTaskPlatform.pause())
             .thenAnswer((_) => Future.value(true));
 
-        final result = await uploadTask.pause();
+        final result = await uploadTask!.pause();
 
         expect(result, isA<bool>());
         expect(result, isTrue);
@@ -95,7 +89,7 @@ void main() {
         when(mockUploadTaskPlatform.resume())
             .thenAnswer((_) => Future.value(true));
 
-        final result = await uploadTask.resume();
+        final result = await uploadTask!.resume();
 
         expect(result, isA<bool>());
         expect(result, isTrue);
@@ -109,7 +103,7 @@ void main() {
         when(mockUploadTaskPlatform.cancel())
             .thenAnswer((_) => Future.value(true));
 
-        final result = await uploadTask.cancel();
+        final result = await uploadTask!.cancel();
 
         expect(result, isA<bool>());
         expect(result, isTrue);

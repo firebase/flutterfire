@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
@@ -15,10 +13,10 @@ import 'mock.dart';
 
 void main() {
   setupFirebaseStorageMocks();
-  /*late*/ FirebaseApp app;
-  /*late*/ FirebaseStorage storage;
-  /*late*/ FirebaseStorage storageSecondary;
-  /*late*/ FirebaseApp secondaryApp;
+  FirebaseApp? app;
+  FirebaseStorage? storage;
+  FirebaseStorage? storageSecondary;
+  FirebaseApp? secondaryApp;
 
   group('$FirebaseStorage', () {
     setUpAll(() async {
@@ -38,8 +36,6 @@ void main() {
         ),
       );
       storageSecondary = FirebaseStorage.instanceFor(app: secondaryApp);
-
-      when(kMockStoragePlatform.ref(any)).thenReturn(MockReferencePlatform());
     });
 
     test('instance', () async {
@@ -48,26 +44,26 @@ void main() {
     });
 
     test('returns the correct $FirebaseApp', () {
-      expect(storage.app, isA<FirebaseApp>());
+      expect(storage!.app, isA<FirebaseApp>());
     });
 
     group('instanceFor()', () {
       test('instance', () async {
-        expect(storageSecondary.bucket,
+        expect(storageSecondary!.bucket,
             kSecondaryBucket.replaceFirst('gs://', ''));
-        expect(storageSecondary.app.name, 'foo');
+        expect(storageSecondary!.app.name, 'foo');
       });
 
       test('returns the correct $FirebaseApp', () {
-        expect(storageSecondary.app, isA<FirebaseApp>());
-        expect(storageSecondary.app.name, 'foo');
+        expect(storageSecondary!.app, isA<FirebaseApp>());
+        expect(storageSecondary!.app.name, 'foo');
       });
     });
 
     group('get.maxOperationRetryTime', () {
       test('verify delegate method is called', () {
         const duration = Duration();
-        expect(storage.maxOperationRetryTime, duration);
+        expect(storage!.maxOperationRetryTime, duration);
 
         verify(kMockStoragePlatform.maxOperationRetryTime);
       });
@@ -76,7 +72,7 @@ void main() {
     group('get.maxUploadRetryTime', () {
       test('verify delegate method is called', () {
         const duration = Duration();
-        expect(storage.maxUploadRetryTime, duration);
+        expect(storage!.maxUploadRetryTime, duration);
         verify(kMockStoragePlatform.maxUploadRetryTime);
       });
     });
@@ -84,7 +80,7 @@ void main() {
     group('get.maxDownloadRetryTime', () {
       test('verify delegate method is called', () {
         const duration = Duration();
-        expect(storage.maxDownloadRetryTime, duration);
+        expect(storage!.maxDownloadRetryTime, duration);
         verify(kMockStoragePlatform.maxDownloadRetryTime);
       });
     });
@@ -92,7 +88,7 @@ void main() {
     // ref
     group('.ref()', () {
       test('accepts null', () {
-        final reference = storage.ref();
+        final reference = storage!.ref();
 
         expect(reference, isA<Reference>());
         verify(kMockStoragePlatform.ref('/'));
@@ -100,7 +96,7 @@ void main() {
 
       test('accepts an empty string', () {
         const String testPath = '/';
-        final reference = storage.ref('');
+        final reference = storage!.ref('');
 
         expect(reference, isA<Reference>());
         verify(kMockStoragePlatform.ref(testPath));
@@ -108,7 +104,7 @@ void main() {
 
       test('accepts a specified path', () {
         const String testPath = '/foo';
-        final reference = storage.ref(testPath);
+        final reference = storage!.ref(testPath);
 
         expect(reference, isA<Reference>());
         verify(kMockStoragePlatform.ref(testPath));
@@ -116,20 +112,16 @@ void main() {
     });
 
     group('.refFromURL()', () {
-      test('throws AssertionError when value is null', () {
-        expect(() => storage.refFromURL(null), throwsAssertionError);
-      });
-
       test(
           "throws AssertionError when value does not start with 'gs://' or 'http'",
           () {
-        expect(() => storage.refFromURL('invalid.com'), throwsAssertionError);
+        expect(() => storage!.refFromURL('invalid.com'), throwsAssertionError);
       });
 
       test('throws AssertionError when http url is not a valid storage url',
           () {
         const String url = 'https://test.com';
-        expect(() => storage.refFromURL(url), throwsAssertionError);
+        expect(() => storage!.refFromURL(url), throwsAssertionError);
       });
 
       test('verify delegate method is called for encoded http urls', () {
@@ -138,7 +130,7 @@ void main() {
         const String url =
             'https%3A%2F%2Ffirebasestorage.googleapis.com%2Fv0%2Fb%2F$customBucket%2Fo%2F$testPath%3Falt%3Dmedia';
 
-        final ref = storage.refFromURL(url);
+        final ref = storage!.refFromURL(url);
 
         expect(ref, isA<Reference>());
         verify(kMockStoragePlatform.ref(testPath));
@@ -148,7 +140,7 @@ void main() {
         const String testPath = 'bar/baz.png';
         const String url = 'gs://foo/$testPath';
 
-        final ref = storage.refFromURL(url);
+        final ref = storage!.refFromURL(url);
 
         expect(ref, isA<Reference>());
         verify(kMockStoragePlatform.ref(testPath));
@@ -156,47 +148,27 @@ void main() {
     });
 
     group('setMaxDownloadRetryTime()', () {
-      test('throws AssertionError if null', () async {
-        expect(
-          () => storage.setMaxDownloadRetryTime(null),
-          throwsAssertionError,
-        );
-      });
       test('throws AssertionError if negative', () async {
         expect(
-          () => storage.setMaxDownloadRetryTime(const Duration(seconds: -1)),
+          () => storage!.setMaxDownloadRetryTime(const Duration(seconds: -1)),
           throwsAssertionError,
         );
       });
     });
 
     group('setMaxOperationRetryTime()', () {
-      test('throws AssertionError if null', () async {
-        expect(
-          () => storage.setMaxOperationRetryTime(null),
-          throwsAssertionError,
-        );
-      });
-
       test('throws AssertionError if negative', () async {
         expect(
-          () => storage.setMaxOperationRetryTime(const Duration(seconds: -1)),
+          () => storage!.setMaxOperationRetryTime(const Duration(seconds: -1)),
           throwsAssertionError,
         );
       });
     });
 
     group('setMaxUploadRetryTime()', () {
-      test('throws AssertionError if null', () async {
-        expect(
-          () => storage.setMaxUploadRetryTime(null),
-          throwsAssertionError,
-        );
-      });
-
       test('throws AssertionError if 0', () async {
         expect(
-          () => storage.setMaxUploadRetryTime(const Duration(seconds: -1)),
+          () => storage!.setMaxUploadRetryTime(const Duration(seconds: -1)),
           throwsAssertionError,
         );
       });
@@ -206,7 +178,7 @@ void main() {
       test('returns the correct value', () {
         expect(
           storage.hashCode,
-          hashValues(app.name, kBucket.replaceFirst('gs://', '')),
+          hashValues(app!.name, kBucket.replaceFirst('gs://', '')),
         );
       });
     });
@@ -215,7 +187,7 @@ void main() {
       test('returns the correct value', () {
         expect(
           storage.toString(),
-          '$FirebaseStorage(app: ${app.name}, bucket: ${kBucket.replaceFirst("gs://", "")})',
+          '$FirebaseStorage(app: ${app!.name}, bucket: ${kBucket.replaceFirst("gs://", "")})',
         );
       });
     });

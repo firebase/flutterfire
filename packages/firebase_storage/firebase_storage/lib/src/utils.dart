@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 /// Returns a bucket from a given `gs://` URL.
 String bucketFromGoogleStorageUrl(String url) {
   assert(url.startsWith('gs://'));
@@ -26,9 +24,9 @@ String pathFromGoogleStorageUrl(String url) {
 ///
 /// If url fails to parse, null is returned
 /// If no path exists, the root path will be returned.
-Map<String, String> partsFromHttpUrl(String url) {
+Map<String, String?>? partsFromHttpUrl(String url) {
   assert(url.startsWith('http'));
-  String decodedUrl = _decodeHttpUrl(url);
+  String? decodedUrl = _decodeHttpUrl(url);
   if (decodedUrl == null) {
     return null;
   }
@@ -51,7 +49,7 @@ Map<String, String> partsFromHttpUrl(String url) {
   };
 }
 
-String _decodeHttpUrl(String url) {
+String? _decodeHttpUrl(String url) {
   try {
     return Uri.decodeFull(url);
   } catch (_) {

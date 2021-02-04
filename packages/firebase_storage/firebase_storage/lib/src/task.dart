@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_storage;
 
 /// A class representing an on-going storage task that additionally delegates to a [Future].
@@ -58,14 +56,14 @@ abstract class Task implements Future<TaskSnapshot> {
 
   @override
   Future<TaskSnapshot> catchError(Function onError,
-      {bool Function(Object error) test}) async {
+      {bool Function(Object error)? test}) async {
     await _delegate.onComplete.catchError(onError, test: test);
     return snapshot;
   }
 
   @override
   Future<S> then<S>(FutureOr<S> Function(TaskSnapshot) onValue,
-          {Function onError}) =>
+          {Function? onError}) =>
       _delegate.onComplete.then((_) {
         return onValue(snapshot);
       }, onError: onError);
@@ -78,7 +76,7 @@ abstract class Task implements Future<TaskSnapshot> {
 
   @override
   Future<TaskSnapshot> timeout(Duration timeLimit,
-          {FutureOr<TaskSnapshot> Function() onTimeout}) =>
+          {FutureOr<TaskSnapshot> Function()? onTimeout}) =>
       _delegate.onComplete
           .then((_) => snapshot)
           .timeout(timeLimit, onTimeout: onTimeout);

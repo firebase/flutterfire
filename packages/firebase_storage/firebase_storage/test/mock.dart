@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 import 'dart:io';
 
@@ -86,14 +84,14 @@ class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
   TestFirebaseStoragePlatform() : super(bucket: '');
 
   @override
-  FirebaseStoragePlatform delegateFor({FirebaseApp app, String bucket}) {
+  FirebaseStoragePlatform delegateFor({FirebaseApp? app, String? bucket}) {
     return this;
   }
 
   FirebaseStoragePlatform setInitialValues(
-      {int maxOperationRetryTime,
-      int maxDownloadRetryTime,
-      int maxUploadRetryTime}) {
+      {int? maxOperationRetryTime,
+      int? maxDownloadRetryTime,
+      int? maxUploadRetryTime}) {
     return this;
   }
 }

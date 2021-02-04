@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
@@ -17,8 +15,8 @@ void main() {
 
   const String kNextPageToken = 'next-page-token';
 
-  /*late*/ FirebaseStorage storage;
-  /*late*/ ListResult listResult;
+  FirebaseStorage? storage;
+  ListResult? listResult;
   MockReferencePlatform mockReference = MockReferencePlatform();
   MockListResultPlatform mockList = MockListResultPlatform();
 
@@ -34,21 +32,19 @@ void main() {
       await Firebase.initializeApp();
       storage = FirebaseStorage.instance;
 
-      // delegate method mocks
-      when(kMockStoragePlatform.ref(any)).thenReturn(mockReference);
       when(mockReference.list(any)).thenAnswer((_) => Future.value(mockList));
       when(mockList.items).thenReturn(items);
       when(mockList.nextPageToken).thenReturn(kNextPageToken);
       when(mockList.prefixes).thenReturn(prefixes);
 
-      Reference ref = storage.ref();
+      Reference ref = storage!.ref();
       listResult =
           await ref.list(const ListOptions(maxResults: 10, pageToken: 'token'));
     });
 
     group('.items', () {
       test('verify delegate method is called', () {
-        final items = listResult.items;
+        final items = listResult!.items;
         expect(items, isA<List<Reference>>());
         expect(items.length, items.length);
 
@@ -64,7 +60,7 @@ void main() {
 
     group('.nextPageToken', () {
       test('verify delegate method is called', () {
-        final nextPageToken = listResult.nextPageToken;
+        final nextPageToken = listResult!.nextPageToken;
         expect(nextPageToken, isA<String>());
         expect(nextPageToken, kNextPageToken);
 
@@ -74,7 +70,7 @@ void main() {
 
     group('.prefixes', () {
       test('verify delegate method is called', () {
-        final prefixes = listResult.prefixes;
+        final prefixes = listResult!.prefixes;
         expect(prefixes, isA<List<Reference>>());
         expect(prefixes.length, prefixes.length);
 

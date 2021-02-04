@@ -2,13 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_storage;
 
 /// A [TaskSnapshot] is returned as the result or on-going process of a [Task].
 class TaskSnapshot {
-  TaskSnapshot._(this.storage, this._delegate) : assert(_delegate != null) {
+  TaskSnapshot._(this.storage, this._delegate) {
     TaskSnapshotPlatform.verifyExtends(_delegate);
   }
 
@@ -23,7 +21,7 @@ class TaskSnapshot {
   /// The [FullMetadata] associated with this task.
   ///
   /// May be `null` if no metadata exists.
-  FullMetadata get metadata => _delegate.metadata;
+  FullMetadata? get metadata => _delegate.metadata;
 
   /// The [Reference] for this snapshot.
   Reference get ref {

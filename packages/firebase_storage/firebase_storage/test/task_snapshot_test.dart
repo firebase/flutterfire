@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
@@ -25,8 +23,8 @@ MockTaskSnapshotPlatform mockTaskSnapshotPlatform = MockTaskSnapshotPlatform();
 
 void main() {
   setupFirebaseStorageMocks();
-  /*late*/ FirebaseStorage storage;
-  /*late*/ TaskSnapshot taskSnapshot;
+  FirebaseStorage? storage;
+  TaskSnapshot? taskSnapshot;
   FullMetadata fullMetadata = FullMetadata(testMetadata);
 
   group('$TaskSnapshot', () {
@@ -36,13 +34,10 @@ void main() {
       await Firebase.initializeApp();
       storage = FirebaseStorage.instance;
 
-      when(kMockStoragePlatform.ref(any)).thenReturn(mockReferencePlatform);
-      when(mockReferencePlatform.putString(any, any, any))
-          .thenReturn(mockUploadTaskPlatform);
       when(mockUploadTaskPlatform.snapshot)
           .thenReturn(mockTaskSnapshotPlatform);
 
-      UploadTask uploadTask = storage.ref().putString(testString);
+      UploadTask uploadTask = storage!.ref().putString(testString);
       taskSnapshot = uploadTask.snapshot;
     });
 
@@ -51,7 +46,7 @@ void main() {
         when(mockTaskSnapshotPlatform.bytesTransferred)
             .thenReturn(testBytesTransferred);
 
-        expect(taskSnapshot.bytesTransferred, testBytesTransferred);
+        expect(taskSnapshot!.bytesTransferred, testBytesTransferred);
         verify(mockTaskSnapshotPlatform.bytesTransferred);
       });
     });
@@ -60,7 +55,7 @@ void main() {
       test('verify delegate method is called', () {
         when(mockTaskSnapshotPlatform.metadata).thenReturn(fullMetadata);
 
-        final result = taskSnapshot.metadata;
+        final result = taskSnapshot!.metadata!;
 
         expect(result, isA<FullMetadata>());
         expect(result.contentType, 'gif');
@@ -72,7 +67,7 @@ void main() {
     group('.ref', () {
       test('verify delegate method is called', () {
         when(mockTaskSnapshotPlatform.ref).thenReturn(mockReferencePlatform);
-        final result = taskSnapshot.ref;
+        final result = taskSnapshot!.ref;
 
         expect(result, isA<Reference>());
         verify(mockTaskSnapshotPlatform.ref);
@@ -83,7 +78,7 @@ void main() {
       test('verify delegate method is called', () {
         when(mockTaskSnapshotPlatform.state).thenReturn(TaskState.success);
 
-        final result = taskSnapshot.state;
+        final result = taskSnapshot!.state;
 
         expect(result, isA<TaskState>());
         verify(mockTaskSnapshotPlatform.state);
@@ -94,7 +89,7 @@ void main() {
       test('verify delegate method is called', () {
         when(mockTaskSnapshotPlatform.totalBytes).thenReturn(testTotalBytes);
 
-        final result = taskSnapshot.totalBytes;
+        final result = taskSnapshot!.totalBytes;
 
         expect(result, 20);
         verify(mockTaskSnapshotPlatform.totalBytes);
