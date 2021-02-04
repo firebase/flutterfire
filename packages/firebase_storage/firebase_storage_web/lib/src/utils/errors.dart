@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
@@ -12,7 +10,7 @@ String _parseErrorCode(String errorCode) {
   return errorCode.split('/').last;
 }
 
-Map<String, String> _errorCodeToMessage = {
+Map<String, String?> _errorCodeToMessage = {
   'unauthorized': 'User is not authorized to perform the desired action.',
   'object-not-found': 'No object exists at the desired reference.',
   'invalid-argument': null, // let error pass-through
@@ -30,8 +28,7 @@ FirebaseException getFirebaseException(Object object) {
         plugin: 'firebase_storage', message: object.toString());
   }
 
-  core_interop.FirebaseError firebaseError =
-      object as core_interop.FirebaseError;
+  core_interop.FirebaseError firebaseError = object;
 
   return FirebaseException(
     plugin: 'firebase_storage',

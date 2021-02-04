@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:async/async.dart';
@@ -29,9 +27,6 @@ class TaskWeb extends TaskPlatform {
 
   final storage_interop.UploadTask _task;
 
-  Future<TaskSnapshotPlatform> _onComplete;
-  Stream<TaskSnapshotPlatform> _snapshotEvents;
-
   /// Returns a [Stream] of [TaskSnapshot] events.
   ///
   /// If the task is canceled or fails, the stream will send an error event.
@@ -41,29 +36,25 @@ class TaskWeb extends TaskPlatform {
   /// wait for the stream to complete via [onComplete].
   @override
   Stream<TaskSnapshotPlatform> get snapshotEvents {
-    if (_snapshotEvents == null) {
-      // The mobile version of the plugin pushes a "success" snapshot to the
-      // onStateChanged stream, but the Firebase JS SDK does *not*.
-      // We use a StreamGroup + Future.asStream to simulate that feature:
-      // ignore: close_sinks
-      final group = StreamGroup<TaskSnapshotPlatform>.broadcast();
+    // The mobile version of the plugin pushes a "success" snapshot to the
+    // onStateChanged stream, but the Firebase JS SDK does *not*.
+    // We use a StreamGroup + Future.asStream to simulate that feature:
+    // ignore: close_sinks
+    final group = StreamGroup<TaskSnapshotPlatform>.broadcast();
 
-      // This stream converts the UploadTask Snapshots from JS to the plugins'
-      // It can also throw a FirebaseError internally, so we handle it.
-      final onStateChangedStream = _task.onStateChanged
-          .map<TaskSnapshotPlatform>((snapshot) =>
-              fbUploadTaskSnapshotToTaskSnapshot(_reference, snapshot))
-          .handleError((e) {
-        throw getFirebaseException(e);
-      });
+    // This stream converts the UploadTask Snapshots from JS to the plugins'
+    // It can also throw a FirebaseError internally, so we handle it.
+    final onStateChangedStream = _task.onStateChanged
+        .map<TaskSnapshotPlatform>((snapshot) =>
+            fbUploadTaskSnapshotToTaskSnapshot(_reference, snapshot))
+        .handleError((e) {
+      throw getFirebaseException(e);
+    });
 
-      group.add(onStateChangedStream);
-      group.add(onComplete.asStream());
+    group.add(onStateChangedStream);
+    group.add(onComplete.asStream());
 
-      _snapshotEvents = group.stream;
-    }
-
-    return _snapshotEvents;
+    return group.stream;
   }
 
   /// Returns a [Future] once the task has completed.
@@ -72,7 +63,7 @@ class TaskWeb extends TaskPlatform {
   /// completion event via [snapshotEvents].
   @override
   Future<TaskSnapshotPlatform> get onComplete {
-    return _onComplete ??= _task.future
+    return _task.future
         .then<TaskSnapshotPlatform>(
       (snapshot) => fbUploadTaskSnapshotToTaskSnapshot(_reference, snapshot),
     )

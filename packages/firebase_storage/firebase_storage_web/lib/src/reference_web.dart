@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:html' as html;
 import 'dart:typed_data';
 
@@ -29,15 +27,15 @@ class ReferenceWeb extends ReferencePlatform {
   ReferenceWeb(FirebaseStorageWeb storage, String path)
       : _path = path,
         super(storage, path) {
-    if (_path != null && _path.startsWith(_storageUrlPrefix)) {
-      _ref = storage.webStorage.refFromURL(_path);
+    if (_path.startsWith(_storageUrlPrefix)) {
+      _ref = storage.webStorage!.refFromURL(_path);
     } else {
-      _ref = storage.webStorage.ref(_path);
+      _ref = storage.webStorage!.ref(_path);
     }
   }
 
   // The js-interop layer for the ref that is wrapped by this class...
-  storage_interop.StorageReference _ref;
+  late storage_interop.StorageReference _ref;
 
   // Remember what metadata has already been set on this ref.
   // TODO: Should this be initialized with the metadata currently in firebase?
@@ -92,7 +90,7 @@ class ReferenceWeb extends ReferencePlatform {
   /// Storage List API will filter these unsupported objects. [list] may fail
   /// if there are too many unsupported objects in the bucket.
   @override
-  Future<ListResultPlatform> list([ListOptions /*?*/ options]) async {
+  Future<ListResultPlatform> list([ListOptions? options]) async {
     try {
       storage_interop.ListResult listResult =
           await _ref.list(listOptionsToFbListOptions(options));
@@ -127,14 +125,14 @@ class ReferenceWeb extends ReferencePlatform {
   /// Returns a [Uint8List] of the data. If the [maxSize] (in bytes) is exceeded,
   /// the operation will be canceled.
   @override
-  Future<Uint8List /*?*/ > getData(
+  Future<Uint8List?> getData(
     int maxSize, {
     @visibleForTesting
         Future<Uint8List> Function(Uri url) readBytes = http.readBytes,
   }) async {
     if (maxSize > 0) {
       final metadata = await getMetadata();
-      if (metadata.size > maxSize) {
+      if (metadata.size! > maxSize) {
         return null;
       }
     }
@@ -153,7 +151,7 @@ class ReferenceWeb extends ReferencePlatform {
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
   @override
-  TaskPlatform putData(Uint8List data, [SettableMetadata /*?*/ metadata]) {
+  TaskPlatform putData(Uint8List data, [SettableMetadata? metadata]) {
     return TaskWeb(
       this,
       _ref.put(
@@ -170,7 +168,7 @@ class ReferenceWeb extends ReferencePlatform {
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
   @override
-  TaskPlatform putBlob(dynamic data, [SettableMetadata /*?*/ metadata]) {
+  TaskPlatform putBlob(dynamic data, [SettableMetadata? metadata]) {
     assert(data is html.Blob, 'data must be a dart:html Blob object.');
 
     return TaskWeb(
@@ -199,7 +197,7 @@ class ReferenceWeb extends ReferencePlatform {
   TaskPlatform putString(
     String data,
     PutStringFormat format, [
-    SettableMetadata /*?*/ metadata,
+    SettableMetadata? metadata,
   ]) {
     return TaskWeb(
       this,
