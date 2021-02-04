@@ -21,12 +21,12 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  http: ^0.12.2
+  http: ^0.13.0-nullsafety.0
   mockito: ^5.0.0-nullsafety.2
   pedantic: 1.10.0-nullsafety.3
   plugin_platform_interface: ^1.1.0-nullsafety.1
   test: any
-  uuid: ^2.0.4
+  uuid: ^3.0.0-nullsafety.0
 
 dependency_overrides:
   http_parser: ^4.0.0-nullsafety
