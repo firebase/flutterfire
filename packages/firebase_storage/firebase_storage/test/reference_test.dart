@@ -15,17 +15,7 @@ import 'package:mockito/mockito.dart';
 
 import 'mock.dart';
 
-const String testString = 'Hello World';
-const String testBucket = 'test-bucket';
-const String testFullPath = 'foo/bar';
-const String testName = 'test-name';
-const String testParent = 'test-parent';
-const String testDownloadUrl = 'test-download-url';
-const Map<String, dynamic> testMetadataMap = <String, dynamic>{
-  'contentType': 'gif'
-};
-const int testMaxResults = 1;
-const String testPageToken = 'test-page-token';
+
 
 MockReferencePlatform mockReference = MockReferencePlatform();
 MockListResultPlatform mockListResultPlatform = MockListResultPlatform();
@@ -50,6 +40,8 @@ Future<void> main() async {
       await Firebase.initializeApp();
       storage = FirebaseStorage.instance;
 
+      when(kMockStoragePlatform.ref(any)).thenReturn(mockReference);
+
       testRef = storage!.ref();
     });
 
@@ -61,8 +53,6 @@ Future<void> main() async {
 
         expect(result, isA<String>());
         expect(result, testBucket);
-
-        verify(mockReference.bucket);
       });
     });
 
@@ -74,8 +64,6 @@ Future<void> main() async {
 
         expect(result, isA<String>());
         expect(result, testFullPath);
-
-        verify(mockReference.fullPath);
       });
     });
 
@@ -87,8 +75,6 @@ Future<void> main() async {
 
         expect(result, isA<String>());
         expect(result, testName);
-
-        verify(mockReference.name);
       });
     });
 
@@ -99,8 +85,6 @@ Future<void> main() async {
         final result = testRef!.parent;
 
         expect(result, isA<Reference>());
-
-        verify(mockReference.parent);
       });
       test('returns null if root', () {
         when(mockReference.parent).thenReturn(null);
@@ -108,8 +92,6 @@ Future<void> main() async {
         final result = testRef!.parent;
 
         expect(result, isNull);
-
-        verify(mockReference.parent);
       });
     });
 

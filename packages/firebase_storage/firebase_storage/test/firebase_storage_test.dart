@@ -64,8 +64,6 @@ void main() {
       test('verify delegate method is called', () {
         const duration = Duration();
         expect(storage!.maxOperationRetryTime, duration);
-
-        verify(kMockStoragePlatform.maxOperationRetryTime);
       });
     });
 
@@ -73,7 +71,6 @@ void main() {
       test('verify delegate method is called', () {
         const duration = Duration();
         expect(storage!.maxUploadRetryTime, duration);
-        verify(kMockStoragePlatform.maxUploadRetryTime);
       });
     });
 
@@ -81,7 +78,6 @@ void main() {
       test('verify delegate method is called', () {
         const duration = Duration();
         expect(storage!.maxDownloadRetryTime, duration);
-        verify(kMockStoragePlatform.maxDownloadRetryTime);
       });
     });
 

@@ -180,8 +180,6 @@ class Reference {
         );
       }
     }
-
-    // TODO(ehesp): Check metadata is nullable post platform migration
     return UploadTask._(
         storage, _delegate.putString(_data, _format, _metadata));
   }

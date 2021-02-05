@@ -31,9 +31,12 @@ void main() {
     setUpAll(() async {
       FirebaseStoragePlatform.instance = kMockStoragePlatform;
 
+      
       await Firebase.initializeApp();
       storage = FirebaseStorage.instance;
-
+      when(kMockStoragePlatform.ref(any)).thenReturn(mockReferencePlatform);
+      when(mockReferencePlatform.putString(any, any, any))
+          .thenReturn(mockUploadTaskPlatform);
       when(mockUploadTaskPlatform.snapshot)
           .thenReturn(mockTaskSnapshotPlatform);
 

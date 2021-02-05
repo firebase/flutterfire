@@ -48,8 +48,7 @@ void main() {
           'http://firebasestorage.googleapis.com/v0/b/valid-url.appspot.com/o/path';
 
       final result = partsFromHttpUrl(url)!;
-
-      expect(result, isA<Map<String, String>>());
+      
       expect(result['bucket'], 'valid-url.appspot.com');
       expect(result['path'], 'path');
     });
@@ -60,7 +59,7 @@ void main() {
 
       final result = partsFromHttpUrl(url)!;
 
-      expect(result, isA<Map<String, String>>());
+
       expect(result['bucket'], 'valid-url.appspot.com');
       expect(result['path'], 'path');
     });
@@ -71,7 +70,7 @@ void main() {
 
       final result = partsFromHttpUrl(url)!;
 
-      expect(result, isA<Map<String, String>>());
+
       expect(result['bucket'], 'valid-url.appspot.com');
       expect(result['path'], 'path');
     });
@@ -82,7 +81,7 @@ void main() {
 
       final result = partsFromHttpUrl(url)!;
 
-      expect(result, isA<Map<String, String>>());
+
       expect(result['bucket'], 'react-native-firebase-testing.appspot.com');
       expect(result['path'], '1mbTestFile.gif');
     });

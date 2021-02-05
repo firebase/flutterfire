@@ -5,7 +5,6 @@
 import 'dart:html' as html;
 import 'dart:typed_data';
 
-import 'package:crypto/crypto.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
@@ -158,7 +157,6 @@ class ReferenceWeb extends ReferencePlatform {
         data,
         settableMetadataToFbUploadMetadata(
           _cache.store(metadata),
-          md5Hash: md5.convert(data).toString(),
         ),
       ),
     );
@@ -206,7 +204,6 @@ class ReferenceWeb extends ReferencePlatform {
         putStringFormatToString(format),
         settableMetadataToFbUploadMetadata(
           _cache.store(metadata),
-          md5Hash: md5.convert(data.codeUnits).toString(),
         ),
       ),
     );

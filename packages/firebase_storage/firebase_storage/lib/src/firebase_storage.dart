@@ -82,8 +82,8 @@ class FirebaseStorage extends FirebasePluginPlatform {
     // Since we need to create a key using the bucket, it must not include "gs://"
     // since native does not include it when requesting the bucket. This keeps
     // the code backwards compatible but also works with the refactor.
-    if (bucket!.startsWith('gs://')) {
-      _bucket = bucket.replaceFirst('gs://', '');
+    if (_bucket.startsWith('gs://')) {
+      _bucket = _bucket.replaceFirst('gs://', '');
     }
 
     String key = '${app.name}|$_bucket';
@@ -91,7 +91,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
       return _cachedInstances[key]!;
     }
 
-    FirebaseStorage newInstance = FirebaseStorage._(app: app, bucket: bucket);
+    FirebaseStorage newInstance = FirebaseStorage._(app: app, bucket: _bucket);
     _cachedInstances[key] = newInstance;
 
     return newInstance;

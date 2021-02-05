@@ -32,6 +32,7 @@ void main() {
       await Firebase.initializeApp();
       storage = FirebaseStorage.instance;
 
+      when(kMockStoragePlatform.ref(any)).thenReturn(mockReference);
       when(mockReference.list(any)).thenAnswer((_) => Future.value(mockList));
       when(mockList.items).thenReturn(items);
       when(mockList.nextPageToken).thenReturn(kNextPageToken);
