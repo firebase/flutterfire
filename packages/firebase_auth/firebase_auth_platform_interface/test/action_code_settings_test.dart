@@ -51,7 +51,8 @@ void main() {
           expect(result['handleCodeInApp'], equals(kMockHandleCodeInApp));
           expect(result['android']['packageName'], equals(kMockPackageName));
           expect(result['android']['installApp'], equals(kMockInstallApp));
-          expect(result['android']['minimumVersion'], equals(kMockMinimumVersion));
+          expect(
+              result['android']['minimumVersion'], equals(kMockMinimumVersion));
           expect(result['iOS']['bundleId'], equals(kMockBundleId));
         });
       });
