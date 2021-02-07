@@ -53,14 +53,16 @@ class ActionCodeSettings {
       'url': url,
       'dynamicLinkDomain': dynamicLinkDomain,
       'handleCodeInApp': handleCodeInApp,
-      'iOS': {
-        'bundleId': iOSBundleId,
-      },
-      'android': {
-        'packageName': androidPackageName,
-        'minimumVersion': androidMinimumVersion,
-        'installApp': androidInstallApp,
-      }
+      if (iOSBundleId != null)
+        'iOS': {
+          'bundleId': iOSBundleId,
+        },
+      if (androidPackageName != null)
+        'android': {
+          'packageName': androidPackageName,
+          'minimumVersion': androidMinimumVersion,
+          'installApp': androidInstallApp,
+        }
     };
   }
 
