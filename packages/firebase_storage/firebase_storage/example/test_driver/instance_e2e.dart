@@ -114,12 +114,11 @@ void runInstanceTests() {
           () async {
         try {
           storage.refFromURL('bs://foo/bar/cat.gif');
-          fail('Did not throw an Error.');
+          fail('Should have thrown an [AssertionError]');
         } catch (error) {
           expect(error.message,
               contains("a url must start with 'gs://' or 'https://'"));
         }
-        fail('Should have thrown an [AssertionError]');
       });
     });
 

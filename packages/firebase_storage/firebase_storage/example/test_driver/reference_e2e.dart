@@ -254,11 +254,11 @@ void runReferenceTests() {
                 contentLanguage: 'en',
                 customMetadata: <String, String>{'activity': 'test'},
               ));
+          fail('Should have thrown [UnimplementedError]');
         } catch (error) {
           expect(error.message,
               'putBlob() is not supported on native platforms. Use [put], [putFile] or [putString] instead.');
         }
-        fail('Should have thrown [UnimplementedError]');
         // This *must* be skipped in web, the test is intended for native platforms.
       }, skip: kIsWeb);
     });
