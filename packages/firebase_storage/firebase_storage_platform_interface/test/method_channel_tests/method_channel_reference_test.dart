@@ -21,7 +21,7 @@ void main() {
   FirebaseStoragePlatform? storage;
   ReferencePlatform? ref;
   final List<MethodCall> log = <MethodCall>[];
-
+  const String bucketParam = 'bucket-test';
   // mock props
   bool mockPlatformExceptionThrown = false;
   File? kFile;
@@ -44,7 +44,9 @@ void main() {
 
         switch (call.method) {
           case 'Reference#getDownloadURL':
-            return {};
+            return {
+              'downloadURL':'https://test-url.com/'
+            };
           case 'Reference#list':
             return {
               'nextPageToken': '',
@@ -57,6 +59,8 @@ void main() {
               'items': ['foo', 'bar'],
               'prefixes': ['foo', 'bar'],
             };
+          case 'Reference#getMetadata':
+            return {};
           case 'Reference#updateMetadata':
             return {};
           case 'Task#startPutFile':
@@ -66,7 +70,7 @@ void main() {
         }
       });
 
-      storage = MethodChannelFirebaseStorage(app: app, bucket: '');
+      storage = MethodChannelFirebaseStorage(app: app, bucket: bucketParam);
       ref = MethodChannelReference(storage!, '/');
     });
 
@@ -95,7 +99,7 @@ void main() {
               'maxOperationRetryTime': storage!.maxOperationRetryTime,
               'maxUploadRetryTime': storage!.maxUploadRetryTime,
               'maxDownloadRetryTime': storage!.maxDownloadRetryTime,
-              'bucket': null,
+              'bucket': bucketParam,
               'path': '/',
             },
           ),
@@ -125,7 +129,7 @@ void main() {
               'maxOperationRetryTime': storage!.maxOperationRetryTime,
               'maxUploadRetryTime': storage!.maxUploadRetryTime,
               'maxDownloadRetryTime': storage!.maxDownloadRetryTime,
-              'bucket': null,
+              'bucket': bucketParam,
               'path': '/',
             },
           ),
@@ -155,7 +159,7 @@ void main() {
               'maxOperationRetryTime': storage!.maxOperationRetryTime,
               'maxUploadRetryTime': storage!.maxUploadRetryTime,
               'maxDownloadRetryTime': storage!.maxDownloadRetryTime,
-              'bucket': null,
+              'bucket': bucketParam,
               'path': '/',
             },
           ),
@@ -185,7 +189,7 @@ void main() {
               'maxOperationRetryTime': storage!.maxOperationRetryTime,
               'maxUploadRetryTime': storage!.maxUploadRetryTime,
               'maxDownloadRetryTime': storage!.maxDownloadRetryTime,
-              'bucket': null,
+              'bucket': bucketParam,
               'path': '/',
               'options': <String, dynamic>{
                 'maxResults': 20,
@@ -219,7 +223,7 @@ void main() {
               'maxOperationRetryTime': storage!.maxOperationRetryTime,
               'maxUploadRetryTime': storage!.maxUploadRetryTime,
               'maxDownloadRetryTime': storage!.maxDownloadRetryTime,
-              'bucket': null,
+              'bucket': bucketParam,
               'path': '/',
             },
           ),
@@ -253,7 +257,7 @@ void main() {
               'maxOperationRetryTime': storage!.maxOperationRetryTime,
               'maxUploadRetryTime': storage!.maxUploadRetryTime,
               'maxDownloadRetryTime': storage!.maxDownloadRetryTime,
-              'bucket': null,
+              'bucket': bucketParam,
               'path': '/',
               'handle': handle,
               'data': list,
@@ -294,7 +298,7 @@ void main() {
               'maxOperationRetryTime': storage!.maxOperationRetryTime,
               'maxUploadRetryTime': storage!.maxUploadRetryTime,
               'maxDownloadRetryTime': storage!.maxDownloadRetryTime,
-              'bucket': null,
+              'bucket': bucketParam,
               'path': '/',
               'handle': handle,
               'filePath': kFile!.absolute.path,
@@ -327,7 +331,7 @@ void main() {
               'maxOperationRetryTime': storage!.maxOperationRetryTime,
               'maxUploadRetryTime': storage!.maxUploadRetryTime,
               'maxDownloadRetryTime': storage!.maxDownloadRetryTime,
-              'bucket': null,
+              'bucket': bucketParam,
               'path': '/',
               'handle': handle,
               'data': data,
@@ -376,7 +380,7 @@ void main() {
               'maxOperationRetryTime': storage!.maxOperationRetryTime,
               'maxUploadRetryTime': storage!.maxUploadRetryTime,
               'maxDownloadRetryTime': storage!.maxDownloadRetryTime,
-              'bucket': null,
+              'bucket': bucketParam,
               'path': '/',
               'handle': handle,
               'filePath': kFile!.path,

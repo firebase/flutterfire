@@ -135,12 +135,12 @@ abstract class MethodChannelTask extends TaskPlatform {
         await _initialTaskCompleter.future;
       }
 
-      Map<String, dynamic> data = await (MethodChannelFirebaseStorage.channel
+      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>('Task#pause', <String, dynamic>{
         'handle': _handle,
-      }) as FutureOr<Map<String, dynamic>>);
+      });
 
-      bool success = data['status'];
+      bool success = data!['status'];
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.paused,
             Map<String, dynamic>.from(data['snapshot']));
@@ -158,12 +158,12 @@ abstract class MethodChannelTask extends TaskPlatform {
         await _initialTaskCompleter.future;
       }
 
-      Map<String, dynamic> data = await (MethodChannelFirebaseStorage.channel
+      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>('Task#resume', <String, dynamic>{
         'handle': _handle,
-      }) as FutureOr<Map<String, dynamic>>);
+      });
 
-      bool success = data['status'];
+      bool success = data!['status'];
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running,
             Map<String, dynamic>.from(data['snapshot']));
@@ -181,12 +181,12 @@ abstract class MethodChannelTask extends TaskPlatform {
         await _initialTaskCompleter.future;
       }
 
-      Map<String, dynamic> data = await (MethodChannelFirebaseStorage.channel
+      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>('Task#cancel', <String, dynamic>{
         'handle': _handle,
-      }) as FutureOr<Map<String, dynamic>>);
+      });
 
-      bool success = data['status'];
+      bool success = data!['status'];
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.canceled,
             Map<String, dynamic>.from(data['snapshot']));

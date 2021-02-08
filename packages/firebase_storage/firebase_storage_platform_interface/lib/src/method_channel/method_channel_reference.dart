@@ -39,7 +39,7 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   Future<String> getDownloadURL() async {
     try {
-      Map<String, dynamic> data = await (MethodChannelFirebaseStorage.channel
+      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>(
               'Reference#getDownloadURL', <String, dynamic>{
         'appName': storage.app.name,
@@ -48,9 +48,9 @@ class MethodChannelReference extends ReferencePlatform {
         'maxDownloadRetryTime': storage.maxDownloadRetryTime,
         'bucket': storage.bucket,
         'path': fullPath,
-      }) as FutureOr<Map<String, dynamic>>);
+      });
 
-      return data['downloadURL'];
+      return data!['downloadURL'];
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -59,7 +59,7 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   Future<FullMetadata> getMetadata() async {
     try {
-      Map<String, dynamic> data = await (MethodChannelFirebaseStorage.channel
+      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>(
               'Reference#getMetadata', <String, dynamic>{
         'appName': storage.app.name,
@@ -68,9 +68,9 @@ class MethodChannelReference extends ReferencePlatform {
         'maxDownloadRetryTime': storage.maxDownloadRetryTime,
         'bucket': storage.bucket,
         'path': fullPath,
-      }) as FutureOr<Map<String, dynamic>>);
+      });
 
-      return FullMetadata(data);
+      return FullMetadata(data!);
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -79,7 +79,7 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   Future<ListResultPlatform> list([ListOptions? options]) async {
     try {
-      Map<String, dynamic> data = await (MethodChannelFirebaseStorage.channel
+      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>('Reference#list', <String, dynamic>{
         'appName': storage.app.name,
         'maxOperationRetryTime': storage.maxOperationRetryTime,
@@ -91,11 +91,11 @@ class MethodChannelReference extends ReferencePlatform {
           'maxResults': options?.maxResults ?? 1000,
           'pageToken': options?.pageToken,
         },
-      }) as FutureOr<Map<String, dynamic>>);
+      });
 
       return MethodChannelListResult(
         storage,
-        nextPageToken: data['nextPageToken'],
+        nextPageToken: data!['nextPageToken'],
         items: List.from(data['items']),
         prefixes: List.from(data['prefixes']),
       );
@@ -107,7 +107,7 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   Future<ListResultPlatform> listAll() async {
     try {
-      Map<String, dynamic> data = await (MethodChannelFirebaseStorage.channel
+      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>(
               'Reference#listAll', <String, dynamic>{
         'appName': storage.app.name,
@@ -116,10 +116,10 @@ class MethodChannelReference extends ReferencePlatform {
         'maxDownloadRetryTime': storage.maxDownloadRetryTime,
         'bucket': storage.bucket,
         'path': fullPath,
-      }) as FutureOr<Map<String, dynamic>>);
+      });
       return MethodChannelListResult(
         storage,
-        nextPageToken: data['nextPageToken'],
+        nextPageToken: data!['nextPageToken'],
         items: List.from(data['items']),
         prefixes: List.from(data['prefixes']),
       );
@@ -181,7 +181,7 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) async {
     try {
-      Map<String, dynamic> data = await (MethodChannelFirebaseStorage.channel
+      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
           .invokeMapMethod<String, dynamic>(
               'Reference#updateMetadata', <String, dynamic>{
         'appName': storage.app.name,
@@ -191,9 +191,9 @@ class MethodChannelReference extends ReferencePlatform {
         'bucket': storage.bucket,
         'path': fullPath,
         'metadata': metadata.asMap(),
-      }) as FutureOr<Map<String, dynamic>>);
+      });
 
-      return FullMetadata(data);
+      return FullMetadata(data!);
     } catch (e) {
       throw convertPlatformException(e);
     }
