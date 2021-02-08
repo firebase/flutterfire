@@ -206,8 +206,10 @@ class Reference {
   }
 
   @override
-  bool operator ==(dynamic o) =>
-      o is Reference && o.fullPath == fullPath && o.storage == storage;
+  bool operator ==(dynamic other) =>
+      other is Reference &&
+      other.fullPath == fullPath &&
+      other.storage == storage;
 
   @override
   int get hashCode => hashValues(storage, fullPath);

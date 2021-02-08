@@ -22,7 +22,7 @@ abstract class TaskPlatform extends PlatformInterface {
   /// This is used by the app-facing [Task] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(TaskPlatform instance) {
+  static void verifyExtends(TaskPlatform instance) {
     assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
   }

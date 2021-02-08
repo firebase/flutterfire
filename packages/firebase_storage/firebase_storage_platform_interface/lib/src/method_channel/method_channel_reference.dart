@@ -172,8 +172,12 @@ class MethodChannelReference extends ReferencePlatform {
     return MethodChannelPutFileTask(handle, storage, fullPath, file, metadata);
   }
 
-  TaskPlatform putString(String data, PutStringFormat format,
-      [SettableMetadata /*?*/ metadata]) {
+  @override
+  TaskPlatform putString(
+    String data,
+    PutStringFormat format, [
+    SettableMetadata /*?*/ metadata,
+  ]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
     MethodChannelFirebaseStorage.taskObservers[handle] =
         StreamController<TaskSnapshotPlatform>.broadcast();
@@ -181,6 +185,7 @@ class MethodChannelReference extends ReferencePlatform {
         handle, storage, fullPath, data, format, metadata);
   }
 
+  @override
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) async {
     try {
       Map<String, dynamic> data = await MethodChannelFirebaseStorage.channel
@@ -201,6 +206,7 @@ class MethodChannelReference extends ReferencePlatform {
     }
   }
 
+  @override
   TaskPlatform writeToFile(File file) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
     MethodChannelFirebaseStorage.taskObservers[handle] =

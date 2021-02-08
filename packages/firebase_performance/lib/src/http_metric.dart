@@ -23,7 +23,9 @@ part of firebase_performance;
 class HttpMetric extends PerformanceAttributes {
   HttpMetric._(this._handle, this.url, this.httpMethod);
 
+  // ignore: public_member_api_docs
   final String url;
+  // ignore: public_member_api_docs
   final HttpMethod httpMethod;
 
   @override
@@ -124,7 +126,7 @@ class HttpMetric extends PerformanceAttributes {
   /// Using `await` with this method is only necessary when accurate timing
   /// is relevant.
   Future<void> start() {
-    if (_hasStopped) return Future<void>.value(null);
+    if (_hasStopped) return Future<void>.value();
 
     return FirebasePerformance.channel.invokeMethod<void>(
       'HttpMetric#start',
@@ -141,7 +143,7 @@ class HttpMetric extends PerformanceAttributes {
   ///
   /// Not necessary to use `await` with this method.
   Future<void> stop() {
-    if (_hasStopped) return Future<void>.value(null);
+    if (_hasStopped) return Future<void>.value();
 
     _hasStopped = true;
     return FirebasePerformance.channel.invokeMethod<void>(

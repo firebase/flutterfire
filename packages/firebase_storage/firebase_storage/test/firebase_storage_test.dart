@@ -30,7 +30,7 @@ void main() {
       storage = FirebaseStorage.instance;
       secondaryApp = await Firebase.initializeApp(
         name: 'foo',
-        options: FirebaseOptions(
+        options: const FirebaseOptions(
           apiKey: '123',
           appId: '123',
           messagingSenderId: '123',
@@ -55,7 +55,7 @@ void main() {
     group('instanceFor()', () {
       test('instance', () async {
         expect(storageSecondary.bucket,
-            kSecondaryBucket.replaceFirst("gs://", ""));
+            kSecondaryBucket.replaceFirst('gs://', ''));
         expect(storageSecondary.app.name, 'foo');
       });
 
@@ -67,7 +67,7 @@ void main() {
 
     group('get.maxOperationRetryTime', () {
       test('verify delegate method is called', () {
-        final duration = Duration();
+        const duration = Duration();
         expect(storage.maxOperationRetryTime, duration);
 
         verify(kMockStoragePlatform.maxOperationRetryTime);
@@ -76,7 +76,7 @@ void main() {
 
     group('get.maxUploadRetryTime', () {
       test('verify delegate method is called', () {
-        final duration = Duration();
+        const duration = Duration();
         expect(storage.maxUploadRetryTime, duration);
         verify(kMockStoragePlatform.maxUploadRetryTime);
       });
@@ -84,7 +84,7 @@ void main() {
 
     group('get.maxDownloadRetryTime', () {
       test('verify delegate method is called', () {
-        final duration = Duration();
+        const duration = Duration();
         expect(storage.maxDownloadRetryTime, duration);
         verify(kMockStoragePlatform.maxDownloadRetryTime);
       });
@@ -124,16 +124,16 @@ void main() {
       test(
           "throws AssertionError when value does not start with 'gs://' or 'http'",
           () {
-        expect(() => storage.refFromURL("invalid.com"), throwsAssertionError);
+        expect(() => storage.refFromURL('invalid.com'), throwsAssertionError);
       });
 
-      test("throws AssertionError when http url is not a valid storage url",
+      test('throws AssertionError when http url is not a valid storage url',
           () {
         const String url = 'https://test.com';
         expect(() => storage.refFromURL(url), throwsAssertionError);
       });
 
-      test("verify delegate method is called for encoded http urls", () {
+      test('verify delegate method is called for encoded http urls', () {
         const String customBucket = 'test.appspot.com';
         const String testPath = '1mbTestFile.gif';
         const String url =
@@ -165,7 +165,7 @@ void main() {
       });
       test('throws AssertionError if negative', () async {
         expect(
-          () => storage.setMaxDownloadRetryTime(Duration(seconds: -1)),
+          () => storage.setMaxDownloadRetryTime(const Duration(seconds: -1)),
           throwsAssertionError,
         );
       });
@@ -181,7 +181,7 @@ void main() {
 
       test('throws AssertionError if negative', () async {
         expect(
-          () => storage.setMaxOperationRetryTime(Duration(seconds: -1)),
+          () => storage.setMaxOperationRetryTime(const Duration(seconds: -1)),
           throwsAssertionError,
         );
       });
@@ -197,7 +197,7 @@ void main() {
 
       test('throws AssertionError if 0', () async {
         expect(
-          () => storage.setMaxUploadRetryTime(Duration(seconds: -1)),
+          () => storage.setMaxUploadRetryTime(const Duration(seconds: -1)),
           throwsAssertionError,
         );
       });
@@ -207,7 +207,7 @@ void main() {
       test('returns the correct value', () {
         expect(
           storage.hashCode,
-          hashValues(app.name, kBucket.replaceFirst("gs://", "")),
+          hashValues(app.name, kBucket.replaceFirst('gs://', '')),
         );
       });
     });

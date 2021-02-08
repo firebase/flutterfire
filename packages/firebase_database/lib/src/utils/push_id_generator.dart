@@ -27,7 +27,7 @@ class PushIdGenerator {
 
   static String generatePushChildName() {
     int now = DateTime.now().millisecondsSinceEpoch;
-    final bool duplicateTime = (now == _lastPushTime);
+    final bool duplicateTime = now == _lastPushTime;
     _lastPushTime = now;
 
     final List<String> timeStampChars = []..length = 8;

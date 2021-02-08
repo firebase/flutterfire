@@ -26,7 +26,7 @@ class RemoteConfigValue {
   static const int defaultValueForInt = 0;
 
   /// Default value for Double
-  static const double defaultValueForDouble = 0.0;
+  static const double defaultValueForDouble = 0;
 
   /// Default value for Bool
   static const bool defaultValueForBool = false;

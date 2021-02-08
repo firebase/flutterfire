@@ -17,14 +17,14 @@ Future<void> main() async {
   final FirebaseApp app = await Firebase.initializeApp(
     name: 'db2',
     options: Platform.isIOS || Platform.isMacOS
-        ? FirebaseOptions(
+        ? const FirebaseOptions(
             appId: '1:297855924061:ios:c6de2b69b03a5be8',
             apiKey: 'AIzaSyD_shO5mfO9lhy2TVWhfo1VUmARKlG4suk',
             projectId: 'flutter-firebase-plugins',
             messagingSenderId: '297855924061',
             databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
           )
-        : FirebaseOptions(
+        : const FirebaseOptions(
             appId: '1:297855924061:android:669871c998cc21bd',
             apiKey: 'AIzaSyD_shO5mfO9lhy2TVWhfo1VUmARKlG4suk',
             messagingSenderId: '297855924061',
@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     if (transactionResult.committed) {
-      _messagesRef.push().set(<String, String>{
+      await _messagesRef.push().set(<String, String>{
         _kTestKey: '$_kTestValue ${transactionResult.dataSnapshot.value}'
       });
     } else {
@@ -166,10 +166,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     trailing: IconButton(
                       onPressed: () =>
                           _messagesRef.child(snapshot.key).remove(),
-                      icon: Icon(Icons.delete),
+                      icon: const Icon(Icons.delete),
                     ),
                     title: Text(
-                      "$index: ${snapshot.value.toString()}",
+                      '$index: ${snapshot.value}',
                     ),
                   ),
                 );

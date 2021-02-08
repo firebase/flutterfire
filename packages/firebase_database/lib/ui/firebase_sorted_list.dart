@@ -30,9 +30,8 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
     this.onChildChanged,
     this.onValue,
     this.onError,
-  }) {
-    assert(query != null);
-    assert(comparator != null);
+  })  : assert(query != null),
+        assert(comparator != null) {
     listen(query.onChildAdded, _onChildAdded, onError: _onError);
     listen(query.onChildRemoved, _onChildRemoved, onError: _onError);
     listen(query.onChildChanged, _onChildChanged, onError: _onError);
@@ -68,7 +67,7 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
 
   @override
   set length(int value) {
-    throw UnsupportedError("List cannot be modified.");
+    throw UnsupportedError('List cannot be modified.');
   }
 
   @override
@@ -76,7 +75,7 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
 
   @override
   void operator []=(int index, DataSnapshot value) {
-    throw UnsupportedError("List cannot be modified.");
+    throw UnsupportedError('List cannot be modified.');
   }
 
   @override

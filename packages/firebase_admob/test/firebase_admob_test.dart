@@ -96,13 +96,15 @@ void main() {
       );
       final int id = interstitial.id;
 
-      expect(await interstitial.load(), true);
-      expect(
-          await interstitial.show(
-              anchorOffset: 60.0,
-              horizontalCenterOffset: 10.0,
-              anchorType: AnchorType.top),
-          true);
+      await expectLater(interstitial.load(), completion(true));
+      await expectLater(
+        interstitial.show(
+          anchorOffset: 60,
+          horizontalCenterOffset: 10,
+          anchorType: AnchorType.top,
+        ),
+        completion(true),
+      );
       expect(await interstitial.dispose(), true);
 
       expect(log, <Matcher>[
@@ -126,14 +128,15 @@ void main() {
     test('rewarded', () async {
       log.clear();
 
-      expect(
-          await RewardedVideoAd.instance.load(
-              adUnitId: RewardedVideoAd.testAdUnitId,
-              targetingInfo: const MobileAdTargetingInfo()),
-          true);
+      await expectLater(
+        RewardedVideoAd.instance.load(
+          adUnitId: RewardedVideoAd.testAdUnitId,
+        ),
+        completion(true),
+      );
 
-      RewardedVideoAd.instance.userId = "user-id";
-      RewardedVideoAd.instance.customData = "custom-data";
+      RewardedVideoAd.instance.userId = 'user-id';
+      RewardedVideoAd.instance.customData = 'custom-data';
 
       expect(await RewardedVideoAd.instance.show(), true);
 
@@ -143,12 +146,14 @@ void main() {
           'targetingInfo': <String, String>{'requestAgent': 'flutter-alpha'},
         }),
         isMethodCall('setRewardedVideoAdUserId', arguments: <String, dynamic>{
-          'userId': "user-id",
+          'userId': 'user-id',
         }),
-        isMethodCall('setRewardedVideoAdCustomData',
-            arguments: <String, dynamic>{
-              'customData': "custom-data",
-            }),
+        isMethodCall(
+          'setRewardedVideoAdCustomData',
+          arguments: <String, dynamic>{
+            'customData': 'custom-data',
+          },
+        ),
         isMethodCall('showRewardedVideoAd', arguments: null),
       ]);
     });

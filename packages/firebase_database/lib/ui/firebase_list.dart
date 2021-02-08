@@ -12,11 +12,11 @@ import '../firebase_database.dart'
     show DatabaseError, DataSnapshot, Event, Query;
 import 'utils/stream_subscriber_mixin.dart';
 
-typedef void ChildCallback(int index, DataSnapshot snapshot);
-typedef void ChildMovedCallback(
+typedef ChildCallback = void Function(int index, DataSnapshot snapshot);
+typedef ChildMovedCallback = void Function(
     int fromIndex, int toIndex, DataSnapshot snapshot);
-typedef void ValueCallback(DataSnapshot snapshot);
-typedef void ErrorCallback(DatabaseError error);
+typedef ValueCallback = void Function(DataSnapshot snapshot);
+typedef ErrorCallback = void Function(DatabaseError error);
 
 /// Sorts the results of `query` on the client side using `DataSnapshot.key`.
 class FirebaseList extends ListBase<DataSnapshot>
@@ -29,8 +29,7 @@ class FirebaseList extends ListBase<DataSnapshot>
     this.onChildMoved,
     this.onValue,
     this.onError,
-  }) {
-    assert(query != null);
+  }) : assert(query != null) {
     listen(query.onChildAdded, _onChildAdded, onError: _onError);
     listen(query.onChildRemoved, _onChildRemoved, onError: _onError);
     listen(query.onChildChanged, _onChildChanged, onError: _onError);
@@ -67,7 +66,7 @@ class FirebaseList extends ListBase<DataSnapshot>
 
   @override
   set length(int value) {
-    throw UnsupportedError("List cannot be modified.");
+    throw UnsupportedError('List cannot be modified.');
   }
 
   @override
@@ -75,7 +74,7 @@ class FirebaseList extends ListBase<DataSnapshot>
 
   @override
   void operator []=(int index, DataSnapshot value) {
-    throw UnsupportedError("List cannot be modified.");
+    throw UnsupportedError('List cannot be modified.');
   }
 
   @override
@@ -92,6 +91,8 @@ class FirebaseList extends ListBase<DataSnapshot>
         return index;
       }
     }
+
+    // ignore: avoid_returning_null
     return null;
   }
 

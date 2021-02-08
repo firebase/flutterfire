@@ -14,13 +14,10 @@ class FirebaseStorage extends FirebasePluginPlatform {
   FirebaseStoragePlatform _delegatePackingProperty;
 
   FirebaseStoragePlatform /*!*/ get _delegate {
-    if (_delegatePackingProperty == null) {
-      _delegatePackingProperty = FirebaseStoragePlatform.instanceFor(
-        app: app,
-        bucket: bucket,
-      );
-    }
-    return _delegatePackingProperty;
+    return _delegatePackingProperty ??= FirebaseStoragePlatform.instanceFor(
+      app: app,
+      bucket: bucket,
+    );
   }
 
   /// The [FirebaseApp] for this current [FirebaseStorage] instance.
@@ -74,7 +71,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
     if (bucket == null) {
       if (app.name == defaultFirebaseAppName) {
         _throwNoBucketError(
-            "No default storage bucket could be found. Ensure you have correctly followed the Getting Started guide.");
+            'No default storage bucket could be found. Ensure you have correctly followed the Getting Started guide.');
       } else {
         _throwNoBucketError(
             "No storage bucket could be found for the app '${app.name}'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.");
@@ -89,7 +86,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
       bucket = bucket.replaceFirst('gs://', '');
     }
 
-    String key = '${app.name}|${bucket}';
+    String key = '${app.name}|$bucket';
     if (_cachedInstances.containsKey(key)) {
       return _cachedInstances[key];
     }
@@ -163,8 +160,10 @@ class FirebaseStorage extends FirebasePluginPlatform {
   }
 
   @override
-  bool operator ==(dynamic o) =>
-      o is FirebaseStorage && o.app.name == app.name && o.bucket == bucket;
+  bool operator ==(dynamic other) =>
+      other is FirebaseStorage &&
+      other.app.name == app.name &&
+      other.bucket == bucket;
 
   @override
   int get hashCode => hashValues(app.name, bucket);
@@ -173,7 +172,10 @@ class FirebaseStorage extends FirebasePluginPlatform {
   String toString() => '$FirebaseStorage(app: ${app.name}, bucket: $bucket)';
 }
 
-_throwNoBucketError(String message) {
+void _throwNoBucketError(String message) {
   throw FirebaseException(
-      plugin: "firebase_storage", code: "no-bucket", message: message);
+    plugin: 'firebase_storage',
+    code: 'no-bucket',
+    message: message,
+  );
 }

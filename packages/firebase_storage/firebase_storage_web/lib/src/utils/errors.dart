@@ -27,9 +27,9 @@ String _getErrorMessage(String errorCode, String errorMessage) {
 FirebaseException getFirebaseException(Object object) {
   if (object is! core_interop.FirebaseError) {
     return FirebaseException(
-        plugin: 'firebase_storage',
-        code: 'unknown',
-        message: object.toString());
+      plugin: 'firebase_storage',
+      message: object.toString(),
+    );
   }
 
   core_interop.FirebaseError firebaseError =

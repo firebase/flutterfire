@@ -25,11 +25,11 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   /// If called and no [_delegatePackingProperty] exists, it will first be
   /// created and assigned before returning the delegate.
   FirebaseRemoteConfigPlatform get _delegate {
-    _delegatePackingProperty ??= FirebaseRemoteConfigPlatform.instanceFor(
+    return _delegatePackingProperty ??=
+        FirebaseRemoteConfigPlatform.instanceFor(
       app: app,
       pluginConstants: pluginConstants,
     );
-    return _delegatePackingProperty;
   }
 
   /// The [FirebaseApp] this instance was initialized with.
@@ -150,7 +150,7 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
     // To be consistent with iOS fetchTimeout is set to the default
     // 1 minute (60 seconds) if an attempt is made to set it to zero seconds.
     if (remoteConfigSettings.fetchTimeout.inSeconds == 0) {
-      remoteConfigSettings.fetchTimeout = Duration(seconds: 60);
+      remoteConfigSettings.fetchTimeout = const Duration(seconds: 60);
     }
     return _delegate.setConfigSettings(remoteConfigSettings);
   }

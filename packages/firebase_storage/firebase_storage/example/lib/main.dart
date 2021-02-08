@@ -59,9 +59,11 @@ class _TaskManager extends State<TaskManager> {
   /// The user selects a file, and the task is added to the list.
   Future<firebase_storage.UploadTask> uploadFile(PickedFile file) async {
     if (file == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("No file was selected"),
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No file was selected'),
+        ),
+      );
       return null;
     }
 
@@ -105,7 +107,7 @@ class _TaskManager extends State<TaskManager> {
   }
 
   /// Handles the user pressing the PopupMenuItem item.
-  void handleUploadType(UploadType type) async {
+  Future<void> handleUploadType(UploadType type) async {
     switch (type) {
       case UploadType.string:
         setState(() {
@@ -130,7 +132,7 @@ class _TaskManager extends State<TaskManager> {
     }
   }
 
-  _removeTaskAtIndex(int index) {
+  void _removeTaskAtIndex(int index) {
     setState(() {
       _uploadTasks = _uploadTasks..removeAt(index);
     });
@@ -150,7 +152,7 @@ class _TaskManager extends State<TaskManager> {
     ));
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text(
           'Success!\n Copied download URL to Clipboard!',
         ),
@@ -180,25 +182,31 @@ class _TaskManager extends State<TaskManager> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Storage Example App'),
+        title: const Text('Storage Example App'),
         actions: [
           PopupMenuButton<UploadType>(
             onSelected: handleUploadType,
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             itemBuilder: (context) => [
               const PopupMenuItem(
-                  child: Text("Upload string"), value: UploadType.string),
+                value: UploadType.string,
+                child: Text('Upload string'),
+              ),
               const PopupMenuItem(
-                  child: Text("Upload local file"), value: UploadType.file),
+                value: UploadType.file,
+                child: Text('Upload local file'),
+              ),
               if (_uploadTasks.isNotEmpty)
-                PopupMenuItem(
-                    child: Text("Clear list"), value: UploadType.clear)
+                const PopupMenuItem(
+                  value: UploadType.clear,
+                  child: Text('Clear list'),
+                )
             ],
           )
         ],
       ),
       body: _uploadTasks.isEmpty
-          ? Center(child: Text("Press the '+' button to add a new file."))
+          ? const Center(child: Text("Press the '+' button to add a new file."))
           : ListView.builder(
               itemCount: _uploadTasks.length,
               itemBuilder: (context, index) => UploadTaskListTile(
@@ -256,7 +264,7 @@ class UploadTaskListTile extends StatelessWidget {
         BuildContext context,
         AsyncSnapshot<firebase_storage.TaskSnapshot> asyncSnapshot,
       ) {
-        Widget subtitle = Text('---');
+        Widget subtitle = const Text('---');
         firebase_storage.TaskSnapshot snapshot = asyncSnapshot.data;
         firebase_storage.TaskState state = snapshot?.state;
 
@@ -264,14 +272,14 @@ class UploadTaskListTile extends StatelessWidget {
           if (asyncSnapshot.error is firebase_core.FirebaseException &&
               (asyncSnapshot.error as firebase_core.FirebaseException).code ==
                   'canceled') {
-            subtitle = Text('Upload canceled.');
+            subtitle = const Text('Upload canceled.');
           } else {
+            // ignore: avoid_print
             print(asyncSnapshot.error);
-            subtitle = Text('Something went wrong.');
+            subtitle = const Text('Something went wrong.');
           }
         } else if (snapshot != null) {
-          subtitle =
-              Text('${state}: ${_bytesTransferred(snapshot)} bytes sent');
+          subtitle = Text('$state: ${_bytesTransferred(snapshot)} bytes sent');
         }
 
         return Dismissible(
@@ -285,28 +293,28 @@ class UploadTaskListTile extends StatelessWidget {
               children: <Widget>[
                 if (state == firebase_storage.TaskState.running)
                   IconButton(
-                    icon: Icon(Icons.pause),
-                    onPressed: () => task.pause(),
+                    icon: const Icon(Icons.pause),
+                    onPressed: task.pause,
                   ),
                 if (state == firebase_storage.TaskState.running)
                   IconButton(
-                    icon: Icon(Icons.cancel),
-                    onPressed: () => task.cancel(),
+                    icon: const Icon(Icons.cancel),
+                    onPressed: task.cancel,
                   ),
                 if (state == firebase_storage.TaskState.paused)
                   IconButton(
-                    icon: Icon(Icons.file_upload),
-                    onPressed: () => task.resume(),
+                    icon: const Icon(Icons.file_upload),
+                    onPressed: task.resume,
                   ),
                 if (state == firebase_storage.TaskState.success)
                   IconButton(
-                    icon: Icon(Icons.file_download),
-                    onPressed: () => onDownload(),
+                    icon: const Icon(Icons.file_download),
+                    onPressed: onDownload,
                   ),
                 if (state == firebase_storage.TaskState.success)
                   IconButton(
-                    icon: Icon(Icons.link),
-                    onPressed: () => onDownloadLink(),
+                    icon: const Icon(Icons.link),
+                    onPressed: onDownloadLink,
                   ),
               ],
             ),

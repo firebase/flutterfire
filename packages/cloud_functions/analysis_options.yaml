@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # in the LICENSE file.
 
-include: all_lint_rules.yaml
+include: ../../all_lint_rules.yaml
 analyzer:
   # TODO(rrousselGit): disable implicit-cast/implicit-dynamic
   errors:

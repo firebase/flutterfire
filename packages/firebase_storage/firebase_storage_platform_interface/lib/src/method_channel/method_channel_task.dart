@@ -123,9 +123,7 @@ abstract class MethodChannelTask extends TaskPlatform {
     } else if (_didComplete && _exception != null) {
       return catchFuturePlatformException(_exception, _stackTrace);
     } else {
-      if (_completer == null) {
-        _completer = Completer<TaskSnapshotPlatform>();
-      }
+      _completer ??= Completer<TaskSnapshotPlatform>();
 
       return _completer.future;
     }

@@ -68,7 +68,7 @@ class DocumentTextRecognizer {
   /// Releases resources used by this recognizer.
   Future<void> close() {
     if (!_hasBeenOpened) _isClosed = true;
-    if (_isClosed) return Future<void>.value(null);
+    if (_isClosed) return Future<void>.value();
 
     _isClosed = true;
     return FirebaseVision.channel.invokeMethod<void>(
@@ -163,8 +163,7 @@ abstract class DocumentTextContainer {
                 data['height'],
               )
             : null,
-        confidence =
-            data['confidence'] == null ? null : data['confidence'].toDouble(),
+        confidence = data['confidence']?.toDouble(),
         recognizedBreak = data['recognizedBreak'] == null
             ? null
             : DocumentTextRecognizedBreak._(data['recognizedBreak']),

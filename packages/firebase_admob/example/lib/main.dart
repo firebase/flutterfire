@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
       size: AdSize.banner,
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
-        print("BannerAd event $event");
+        print('BannerAd event $event');
       },
     );
   }
@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
       adUnitId: InterstitialAd.testAdUnitId,
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
-        print("InterstitialAd event $event");
+        print('InterstitialAd event $event');
       },
     );
   }
@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
       factoryId: 'adFactoryExample',
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
-        print("$NativeAd event $event");
+        print('$NativeAd event $event');
       },
     );
   }
@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
     _bannerAd = createBannerAd()..load();
     RewardedVideoAd.instance.listener =
         (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
-      print("RewardedVideoAd event $event");
+      print('RewardedVideoAd event $event');
       if (event == RewardedVideoAdEvent.rewarded) {
         setState(() {
           _coins += rewardAmount;
@@ -107,46 +107,47 @@ class _MyAppState extends State<MyApp> {
         body: SingleChildScrollView(
           child: Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ElevatedButton(
-                    child: const Text('SHOW BANNER'),
-                    onPressed: () {
-                      _bannerAd ??= createBannerAd();
-                      _bannerAd
-                        ..load()
-                        ..show();
-                    }),
+                  onPressed: () {
+                    _bannerAd ??= createBannerAd();
+                    _bannerAd
+                      ..load()
+                      ..show();
+                  },
+                  child: const Text('SHOW BANNER'),
+                ),
                 ElevatedButton(
-                    child: const Text('SHOW BANNER WITH OFFSET'),
-                    onPressed: () {
-                      _bannerAd ??= createBannerAd();
-                      _bannerAd
-                        ..load()
-                        ..show(horizontalCenterOffset: -50, anchorOffset: 100);
-                    }),
+                  onPressed: () {
+                    _bannerAd ??= createBannerAd();
+                    _bannerAd
+                      ..load()
+                      ..show(horizontalCenterOffset: -50, anchorOffset: 100);
+                  },
+                  child: const Text('SHOW BANNER WITH OFFSET'),
+                ),
                 ElevatedButton(
-                    child: const Text('REMOVE BANNER'),
-                    onPressed: () {
-                      _bannerAd?.dispose();
-                      _bannerAd = null;
-                    }),
+                  onPressed: () {
+                    _bannerAd?.dispose();
+                    _bannerAd = null;
+                  },
+                  child: const Text('REMOVE BANNER'),
+                ),
                 ElevatedButton(
-                  child: const Text('LOAD INTERSTITIAL'),
                   onPressed: () {
                     _interstitialAd?.dispose();
                     _interstitialAd = createInterstitialAd()..load();
                   },
+                  child: const Text('LOAD INTERSTITIAL'),
                 ),
                 ElevatedButton(
-                  child: const Text('SHOW INTERSTITIAL'),
                   onPressed: () {
                     _interstitialAd?.show();
                   },
+                  child: const Text('SHOW INTERSTITIAL'),
                 ),
                 ElevatedButton(
-                  child: const Text('SHOW NATIVE'),
                   onPressed: () {
                     _nativeAd ??= createNativeAd();
                     _nativeAd
@@ -157,32 +158,33 @@ class _MyAppState extends State<MyApp> {
                             : AnchorType.top,
                       );
                   },
+                  child: const Text('SHOW NATIVE'),
                 ),
                 ElevatedButton(
-                  child: const Text('REMOVE NATIVE'),
                   onPressed: () {
                     _nativeAd?.dispose();
                     _nativeAd = null;
                   },
+                  child: const Text('REMOVE NATIVE'),
                 ),
                 ElevatedButton(
-                  child: const Text('LOAD REWARDED VIDEO'),
                   onPressed: () {
                     RewardedVideoAd.instance.load(
                         adUnitId: RewardedVideoAd.testAdUnitId,
                         targetingInfo: targetingInfo);
                   },
+                  child: const Text('LOAD REWARDED VIDEO'),
                 ),
                 ElevatedButton(
-                  child: const Text('SHOW REWARDED VIDEO'),
                   onPressed: () {
                     RewardedVideoAd.instance.show();
                   },
+                  child: const Text('SHOW REWARDED VIDEO'),
                 ),
-                Text("You have $_coins coins."),
+                Text('You have $_coins coins.'),
               ].map((Widget button) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   child: button,
                 );
               }).toList(),

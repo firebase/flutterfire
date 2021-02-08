@@ -13,8 +13,7 @@ class TaskSnapshot {
   /// The [FirebaseStorage] instance used to create the task.
   final FirebaseStorage storage;
 
-  TaskSnapshot._(this.storage, this._delegate) {
-    assert(_delegate != null);
+  TaskSnapshot._(this.storage, this._delegate) : assert(_delegate != null) {
     TaskSnapshotPlatform.verifyExtends(_delegate);
   }
 
@@ -44,8 +43,8 @@ class TaskSnapshot {
   int get totalBytes => _delegate.totalBytes;
 
   @override
-  bool operator ==(dynamic o) =>
-      o is TaskSnapshot && o.ref == ref && o.storage == storage;
+  bool operator ==(dynamic other) =>
+      other is TaskSnapshot && other.ref == ref && other.storage == storage;
 
   @override
   int get hashCode => hashValues(storage, ref);

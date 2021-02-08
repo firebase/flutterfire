@@ -48,7 +48,9 @@ class _PictureScannerState extends State<PictureScanner> {
     final File imageFile = File(pickedImage.path);
 
     if (imageFile != null) {
+      // ignore: unawaited_futures
       _getImageSize(imageFile);
+      // ignore: unawaited_futures
       _scanImage(imageFile);
     }
 
@@ -165,7 +167,7 @@ class _PictureScannerState extends State<PictureScanner> {
                 'Scanning...',
                 style: TextStyle(
                   color: Colors.green,
-                  fontSize: 30.0,
+                  fontSize: 30,
                 ),
               ),
             )
@@ -186,32 +188,32 @@ class _PictureScannerState extends State<PictureScanner> {
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<Detector>>[
               const PopupMenuItem<Detector>(
-                child: Text('Detect Barcode'),
                 value: Detector.barcode,
+                child: Text('Detect Barcode'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Face'),
                 value: Detector.face,
+                child: Text('Detect Face'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Label'),
                 value: Detector.label,
+                child: Text('Detect Label'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Cloud Label'),
                 value: Detector.cloudLabel,
+                child: Text('Detect Cloud Label'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Text'),
                 value: Detector.text,
+                child: Text('Detect Text'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Cloud Text'),
                 value: Detector.cloudText,
+                child: Text('Detect Cloud Text'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Document Text'),
                 value: Detector.cloudDocumentText,
+                child: Text('Detect Document Text'),
               ),
             ],
           ),

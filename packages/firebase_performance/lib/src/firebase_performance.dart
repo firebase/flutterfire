@@ -7,6 +7,7 @@
 part of firebase_performance;
 
 /// Valid HttpMethods for manual network APIs.
+// ignore: public_member_api_docs
 enum HttpMethod { Connect, Delete, Get, Head, Options, Patch, Post, Put, Trace }
 
 /// The Firebase Performance API.
@@ -25,6 +26,7 @@ class FirebasePerformance {
   final int _handle;
 
   @visibleForTesting
+  // ignore: public_member_api_docs
   static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_performance');
 

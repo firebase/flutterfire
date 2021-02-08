@@ -43,7 +43,7 @@ void textRecognizerTests() {
 
     test('processImage with specified options', () async {
       final languageHints = ['en', 'ru'];
-      final textModelType = CloudTextModelType.dense;
+      const textModelType = CloudTextModelType.dense;
 
       final options = CloudTextRecognizerOptions(
           hintedLanguages: languageHints, textModelType: textModelType);

@@ -167,7 +167,7 @@ void runReferenceTests() {
     group('list', () {
       test('returns list results', () async {
         Reference ref = storage.ref('/list');
-        ListResult result = await ref.list(ListOptions(maxResults: 25));
+        ListResult result = await ref.list(const ListOptions(maxResults: 25));
 
         expect(result.items.length, greaterThan(0));
         expect(result.prefixes, isA<List<Reference>>());
@@ -176,19 +176,19 @@ void runReferenceTests() {
 
       test('errors if maxResults is less than 0 ', () async {
         Reference ref = storage.ref('/list');
-        expect(
-            () => ref.list(ListOptions(maxResults: -1)), throwsAssertionError);
+        expect(() => ref.list(const ListOptions(maxResults: -1)),
+            throwsAssertionError);
       });
 
       test('errors if maxResults is 0 ', () async {
         Reference ref = storage.ref('/list');
-        expect(
-            () => ref.list(ListOptions(maxResults: 0)), throwsAssertionError);
+        expect(() => ref.list(const ListOptions(maxResults: 0)),
+            throwsAssertionError);
       });
 
       test('errors if maxResults is more than 1000 ', () async {
         Reference ref = storage.ref('/list');
-        expect(() => ref.list(ListOptions(maxResults: 1001)),
+        expect(() => ref.list(const ListOptions(maxResults: 1001)),
             throwsAssertionError);
       });
     });

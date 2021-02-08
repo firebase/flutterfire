@@ -76,7 +76,7 @@ class MockFirebaseCore extends Mock
   FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
     return super.noSuchMethod(
       Invocation.method(#app, [name]),
-      FakeFirebaseAppPlatform(),
+      returnValue: FakeFirebaseAppPlatform(),
     );
   }
 
@@ -94,7 +94,7 @@ class MockFirebaseCore extends Mock
           #options: options,
         },
       ),
-      Future.value(FakeFirebaseAppPlatform()),
+      returnValue: Future.value(FakeFirebaseAppPlatform()),
     );
   }
 
@@ -102,7 +102,7 @@ class MockFirebaseCore extends Mock
   List<FirebaseAppPlatform> get apps {
     return super.noSuchMethod(
       Invocation.getter(#apps),
-      <FirebaseAppPlatform>[],
+      returnValue: <FirebaseAppPlatform>[],
     );
   }
 }

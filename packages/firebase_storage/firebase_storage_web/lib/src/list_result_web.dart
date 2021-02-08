@@ -25,11 +25,11 @@ class ListResultWeb extends ListResultPlatform {
 
   @override
   List<ReferencePlatform> get items {
-    return _items.map((path) => storage.ref(path)).toList();
+    return _items.map(storage.ref).toList();
   }
 
   @override
   List<ReferencePlatform> get prefixes {
-    return _prefixes.map((path) => storage.ref(path)).toList();
+    return _prefixes.map(storage.ref).toList();
   }
 }

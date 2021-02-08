@@ -8,18 +8,17 @@ environment:
   flutter: ">=1.10.0 <2.0.0"
 
 dependencies:
-  meta: ^1.1.6
+  firebase_core: ">=0.8.0-1.0.nullsafety.1 <0.8.0-2.0.nullsafety.0"
   flutter:
     sdk: flutter
-  firebase_core: ">=0.8.0-1.0.nullsafety.1 <0.8.0-2.0.nullsafety.0"
+  meta: ^1.1.6
 dev_dependencies:
-  pedantic: ^1.8.0
-  flutter_test:
-    sdk: flutter
+  e2e: ^0.6.1
   flutter_driver:
     sdk: flutter
+  flutter_test:
+    sdk: flutter
   test: any
-  e2e: ^0.6.1
 
 flutter:
   plugin:

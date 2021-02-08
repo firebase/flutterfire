@@ -45,6 +45,8 @@ class TaskWeb extends TaskPlatform {
       // The mobile version of the plugin pushes a "success" snapshot to the
       // onStateChanged stream, but the Firebase JS SDK does *not*.
       // We use a StreamGroup + Future.asStream to simulate that feature:
+      // TODO: memory leak?
+      // ignore: close_sinks
       final group = StreamGroup<TaskSnapshotPlatform>.broadcast();
 
       // This stream converts the UploadTask Snapshots from JS to the plugins'
@@ -70,21 +72,12 @@ class TaskWeb extends TaskPlatform {
   /// completion event via [snapshotEvents].
   @override
   Future<TaskSnapshotPlatform> get onComplete {
-    if (_onComplete == null) {
-      // This future represents the internal state of the Task.
-      // It not only signals when the Task is done, but also when it fails.
-      // The frontend Task uses _delegate.onComplete when implementing the
-      // Future interface, so we must ensure we reject with the correct
-      // type of Exception.
-      _onComplete = _task.future
-          .then<TaskSnapshotPlatform>(
-        (snapshot) => fbUploadTaskSnapshotToTaskSnapshot(_reference, snapshot),
-      )
-          .catchError((e) {
-        throw getFirebaseException(e);
-      });
-    }
-    return _onComplete;
+    return _onComplete ??= _task.future
+        .then<TaskSnapshotPlatform>(
+          (snapshot) =>
+              fbUploadTaskSnapshotToTaskSnapshot(_reference, snapshot),
+        )
+        .catchError((e) => throw getFirebaseException(e));
   }
 
   /// The latest [TaskSnapshot] for this task.

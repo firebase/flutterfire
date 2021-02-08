@@ -135,7 +135,7 @@ void main() {
       });
 
       group('throws an exception when native API fails to', () {
-        final ERROR_MESSAGE = "There is some problem with a call";
+        const ERROR_MESSAGE = 'There is some problem with a call';
 
         test('process an image', () async {
           FirebaseVision.channel
@@ -309,7 +309,7 @@ void main() {
               DocumentTextBlock block = text.blocks[0];
               // TODO(jackson): Use const Rect when available in minimum Flutter SDK
               // ignore: prefer_const_constructors
-              expect(block.boundingBox, Rect.fromLTWH(26.0, 25.0, 27.0, 28.0));
+              expect(block.boundingBox, Rect.fromLTWH(26, 25, 27, 28));
               expect(block.text, 'Hey!');
               expect(block.recognizedBreak.detectedBreakType,
                   TextRecognizedBreakType.values[5]);
@@ -341,8 +341,7 @@ void main() {
               DocumentTextParagraph paragraph = text.blocks[0].paragraphs[0];
               // TODO(jackson): Use const Rect when available in minimum Flutter SDK
               // ignore: prefer_const_constructors
-              expect(
-                  paragraph.boundingBox, Rect.fromLTWH(22.0, 21.0, 23.0, 24.0));
+              expect(paragraph.boundingBox, Rect.fromLTWH(22, 21, 23, 24));
               expect(paragraph.text, 'Hey!');
               expect(paragraph.recognizedBreak.detectedBreakType,
                   TextRecognizedBreakType.values[5]);
@@ -361,7 +360,7 @@ void main() {
               DocumentTextWord word = text.blocks[0].paragraphs[0].words[0];
               // TODO(jackson): Use const Rect when available in minimum Flutter SDK
               // ignore: prefer_const_constructors
-              expect(word.boundingBox, Rect.fromLTWH(14.0, 13.0, 15.0, 16.0));
+              expect(word.boundingBox, Rect.fromLTWH(14, 13, 15, 16));
               expect(word.text, 'Hey');
               expect(word.recognizedBreak, isNull);
               expect(word.recognizedLanguages, hasLength(1));
@@ -371,7 +370,7 @@ void main() {
               word = text.blocks[0].paragraphs[0].words[1];
               // TODO(jackson): Use const Rect when available in minimum Flutter SDK
               // ignore: prefer_const_constructors
-              expect(word.boundingBox, Rect.fromLTWH(18.0, 17.0, 19.0, 20.0));
+              expect(word.boundingBox, Rect.fromLTWH(18, 17, 19, 20));
               expect(word.text, '!');
               expect(word.recognizedBreak.detectedBreakType,
                   TextRecognizedBreakType.values[5]);
@@ -391,7 +390,7 @@ void main() {
                   text.blocks[0].paragraphs[0].words[0].symbols[0];
               // TODO(jackson): Use const Rect when available in minimum Flutter SDK
               // ignore: prefer_const_constructors
-              expect(symbol.boundingBox, Rect.fromLTWH(2.0, 1.0, 3.0, 4.0));
+              expect(symbol.boundingBox, Rect.fromLTWH(2, 1, 3, 4));
               expect(symbol.text, 'H');
               expect(symbol.recognizedBreak, isNull);
               expect(symbol.recognizedLanguages, hasLength(1));
@@ -401,7 +400,7 @@ void main() {
               symbol = text.blocks[0].paragraphs[0].words[0].symbols[1];
               // TODO(jackson): Use const Rect when available in minimum Flutter SDK
               // ignore: prefer_const_constructors
-              expect(symbol.boundingBox, Rect.fromLTWH(6.0, 5.0, 7.0, 8.0));
+              expect(symbol.boundingBox, Rect.fromLTWH(6, 5, 7, 8));
               expect(symbol.text, 'e');
               expect(symbol.recognizedBreak, isNull);
               expect(symbol.recognizedLanguages, hasLength(1));
@@ -411,7 +410,7 @@ void main() {
               symbol = text.blocks[0].paragraphs[0].words[0].symbols[2];
               // TODO(jackson): Use const Rect when available in minimum Flutter SDK
               // ignore: prefer_const_constructors
-              expect(symbol.boundingBox, Rect.fromLTWH(10.0, 9.0, 11.0, 12.0));
+              expect(symbol.boundingBox, Rect.fromLTWH(10, 9, 11, 12));
               expect(symbol.text, 'y');
               expect(symbol.recognizedBreak, isNull);
               expect(symbol.recognizedLanguages, hasLength(1));

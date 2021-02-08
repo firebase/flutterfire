@@ -165,6 +165,6 @@ void main() {
 class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
   TestFirebaseStoragePlatform(FirebaseApp app) : super(appInstance: app);
   FirebaseStoragePlatform testDelegateFor({FirebaseApp app}) {
-    return this.delegateFor();
+    return delegateFor();
   }
 }

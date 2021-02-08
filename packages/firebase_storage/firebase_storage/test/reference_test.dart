@@ -35,13 +35,15 @@ MockListResultPlatform mockListResultPlatform = MockListResultPlatform();
 MockUploadTaskPlatform mockUploadTaskPlatform = MockUploadTaskPlatform();
 MockDownloadTaskPlatform mockDownloadTaskPlatform = MockDownloadTaskPlatform();
 
-void main() async {
+Future<void> main() async {
   setupFirebaseStorageMocks();
   /*late*/ FirebaseStorage storage;
   /*late*/ Reference testRef;
   FullMetadata testFullMetadata = FullMetadata(testMetadataMap);
-  ListOptions testListOptions =
-      ListOptions(maxResults: testMaxResults, pageToken: testPageToken);
+  const testListOptions = ListOptions(
+    maxResults: testMaxResults,
+    pageToken: testPageToken,
+  );
 
   SettableMetadata testSettableMetadata = SettableMetadata();
   File testFile = await createFile('foo.txt');
@@ -197,14 +199,18 @@ void main() async {
       });
 
       test('throws AssertionError if max results is not greater than 0', () {
-        ListOptions listOptions =
-            ListOptions(maxResults: 0, pageToken: testPageToken);
+        const listOptions = ListOptions(
+          maxResults: 0,
+          pageToken: testPageToken,
+        );
         expect(() => testRef.list(listOptions), throwsAssertionError);
       });
 
       test('throws AssertionError if max results is greater than 1000', () {
-        ListOptions listOptions =
-            ListOptions(maxResults: 1001, pageToken: testPageToken);
+        const listOptions = ListOptions(
+          maxResults: 1001,
+          pageToken: testPageToken,
+        );
 
         expect(() => testRef.list(listOptions), throwsAssertionError);
       });
@@ -288,14 +294,13 @@ void main() async {
       when(mockReference.putString(any, any, any))
           .thenReturn(mockUploadTaskPlatform);
       test('raw string values', () {
-        final result =
-            testRef.putString(testString, format: PutStringFormat.raw);
+        final result = testRef.putString(testString);
 
         expect(result, isA<Task>());
 
         // confirm raw string was converted to a Base64 format
         String data = base64.encode(utf8.encode(testString));
-        verify(mockReference.putString(data, PutStringFormat.base64, null));
+        verify(mockReference.putString(data, PutStringFormat.base64));
       });
 
       test('data_url format', () {
@@ -373,7 +378,7 @@ void main() async {
     test('toString()', () {
       expect(
         testRef.toString(),
-        '$Reference(app: ${defaultFirebaseAppName}, fullPath: $testFullPath)',
+        '$Reference(app: $defaultFirebaseAppName, fullPath: $testFullPath)',
       );
     });
   });

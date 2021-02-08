@@ -9,7 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 
-void main() async {
+Future<void> main() async {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() async {
@@ -33,7 +33,7 @@ void main() async {
 
   testWidgets('test all values', (WidgetTester tester) async {
     FirebasePerformance performance = FirebasePerformance.instance;
-    for (HttpMethod method in HttpMethod.values) {
+    for (final HttpMethod method in HttpMethod.values) {
       final HttpMetric testMetric = performance.newHttpMetric(
         'https://www.google.com/',
         method,

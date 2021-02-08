@@ -74,7 +74,7 @@ class TextRecognizer {
   /// Releases resources used by this recognizer.
   Future<void> close() {
     if (!_hasBeenOpened) _isClosed = true;
-    if (_isClosed) return Future<void>.value(null);
+    if (_isClosed) return Future<void>.value();
 
     _isClosed = true;
     return FirebaseVision.channel.invokeMethod<void>(
@@ -142,16 +142,17 @@ abstract class TextContainer {
                 data['height'],
               )
             : null,
-        confidence =
-            data['confidence'] == null ? null : data['confidence'].toDouble(),
+        confidence = data['confidence']?.toDouble(),
         cornerPoints = List<Offset>.unmodifiable(
             data['points'].map<Offset>((dynamic point) => Offset(
                   point[0],
                   point[1],
                 ))),
         recognizedLanguages = List<RecognizedLanguage>.unmodifiable(
-            data['recognizedLanguages'].map<RecognizedLanguage>(
-                (dynamic language) => RecognizedLanguage._(language))),
+          data['recognizedLanguages'].map<RecognizedLanguage>(
+            (dynamic language) => RecognizedLanguage._(language),
+          ),
+        ),
         text = data['text'];
 
   /// Axis-aligned bounding rectangle of the detected text.

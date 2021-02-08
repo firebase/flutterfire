@@ -44,7 +44,7 @@ void main() {
 
     test('throws if get.snapshotEvents', () async {
       try {
-        await taskPlatform.snapshotEvents;
+        taskPlatform.snapshotEvents;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('snapshotEvents is not implemented'));
         return;
@@ -54,7 +54,7 @@ void main() {
 
     test('throws if get.snapshot', () async {
       try {
-        await taskPlatform.snapshot;
+        taskPlatform.snapshot;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('snapshot is not implemented'));
         return;

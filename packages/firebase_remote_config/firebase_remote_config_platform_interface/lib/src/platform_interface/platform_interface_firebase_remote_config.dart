@@ -43,11 +43,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// It will always default to [MethodChannelFirebaseRemoteConfig]
   /// if no other implementation was provided.
   static FirebaseRemoteConfigPlatform get instance {
-    if (_instance == null) {
-      _instance = MethodChannelFirebaseRemoteConfig.instance;
-    }
-
-    return _instance;
+    return _instance ??= MethodChannelFirebaseRemoteConfig.instance;
   }
 
   /// Sets the [FirebaseRemoteConfigPlatform] instance.
@@ -63,9 +59,8 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
     return FirebaseRemoteConfigPlatform.instance
         .delegateFor(app: app)
         .setInitialValues(
-            remoteConfigValues: pluginConstants == null
-                ? Map<dynamic, dynamic>()
-                : pluginConstants);
+          remoteConfigValues: pluginConstants ?? <dynamic, dynamic>{},
+        );
   }
 
   /// Enables delegates to create new instances of themselves if a none

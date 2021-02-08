@@ -10,20 +10,19 @@ environment:
   flutter: ">=1.12.13+hotfix.5 <2.0.0"
 
 dependencies:
-  meta: ^1.0.4
+  firebase_analytics_platform_interface: ^1.0.1
+  firebase_analytics_web: ^0.1.0
+  firebase_core: ">=0.8.0-1.0.nullsafety.1 <0.8.0-2.0.nullsafety.0"
   flutter:
     sdk: flutter
-  firebase_core: ">=0.8.0-1.0.nullsafety.1 <0.8.0-2.0.nullsafety.0"
-  firebase_analytics_web: ^0.1.0
-  firebase_analytics_platform_interface: ^1.0.1
+  meta: ^1.0.4
 
 dev_dependencies:
-  pedantic: ^1.8.0
-  mockito: ^5.0.0-nullsafety.2
-  flutter_test:
-    sdk: flutter
   flutter_driver:
     sdk: flutter
+  flutter_test:
+    sdk: flutter
+  mockito: ^5.0.0-nullsafety.2
 
 flutter:
   plugin:

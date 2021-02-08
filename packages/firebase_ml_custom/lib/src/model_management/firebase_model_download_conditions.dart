@@ -28,18 +28,17 @@ class FirebaseModelDownloadConditions {
   final bool iosAllowBackgroundDownloading;
 
   /// Constructor for the download conditions that takes optional platform-specific parameters and defaults them if none given.
-  FirebaseModelDownloadConditions(
-      {this.androidRequireDeviceIdle = false,
-      this.androidRequireCharging = false,
-      this.androidRequireWifi = false,
-      this.iosAllowCellularAccess = true,
-      this.iosAllowBackgroundDownloading = false}) {
-    assert(androidRequireDeviceIdle != null);
-    assert(androidRequireCharging != null);
-    assert(androidRequireWifi != null);
-    assert(iosAllowCellularAccess != null);
-    assert(iosAllowBackgroundDownloading != null);
-  }
+  FirebaseModelDownloadConditions({
+    this.androidRequireDeviceIdle = false,
+    this.androidRequireCharging = false,
+    this.androidRequireWifi = false,
+    this.iosAllowCellularAccess = true,
+    this.iosAllowBackgroundDownloading = false,
+  })  : assert(androidRequireDeviceIdle != null),
+        assert(androidRequireCharging != null),
+        assert(androidRequireWifi != null),
+        assert(iosAllowCellularAccess != null),
+        assert(iosAllowBackgroundDownloading != null);
 
   /// Express download conditions via map.
   ///

@@ -29,7 +29,7 @@ void main() {
   final kMetadata = SettableMetadata(
       contentLanguage: 'en',
       customMetadata: <String, String>{'activity': 'test'});
-  final kListOptions = ListOptions(maxResults: 20, pageToken: null);
+  const kListOptions = ListOptions(maxResults: 20);
 
   group('$MethodChannelReference', () {
     setUpAll(() async {
@@ -40,7 +40,9 @@ void main() {
         log.add(call);
         if (mockPlatformExceptionThrown) {
           throw PlatformException(
-              code: 'UNKNOWN', message: "Mock platform exception thrown");
+            code: 'UNKNOWN',
+            message: 'Mock platform exception thrown',
+          );
         }
 
         switch (call.method) {
@@ -238,7 +240,7 @@ void main() {
 
       test('should invoke native method with correct args', () async {
         int handle = nextMockHandleId;
-        await ref.putData(data, kMetadata);
+        ref.putData(data, kMetadata);
 
         // check native method was called
         expect(log, <Matcher>[
@@ -279,7 +281,7 @@ void main() {
     group('putFile', () {
       test('should invoke native method with correct args', () async {
         int handle = nextMockHandleId;
-        await ref.putFile(kFile, kMetadata);
+        ref.putFile(kFile, kMetadata);
 
         // check native method was called
         expect(log, <Matcher>[
@@ -310,9 +312,9 @@ void main() {
 
     group('putString', () {
       test('should invoke native method with correct args', () async {
-        final String data = 'foo';
+        const String data = 'foo';
         int handle = nextMockHandleId;
-        await ref.putString(data, PutStringFormat.raw, kMetadata);
+        ref.putString(data, PutStringFormat.raw, kMetadata);
 
         // check native method was called
         expect(log, <Matcher>[
@@ -360,7 +362,7 @@ void main() {
     group('writeToFile', () {
       test('should invoke native method with correct args', () async {
         int handle = nextMockHandleId;
-        await ref.writeToFile(kFile);
+        ref.writeToFile(kFile);
 
         // check native method was called
         expect(log, <Matcher>[

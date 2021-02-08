@@ -45,7 +45,7 @@ void runTaskTests() {
         // TODO(Salakar): Known issue with iOS SDK where pausing immediately will cause an 'unknown' error.
         if (defaultTargetPlatform == TargetPlatform.iOS) {
           await task.snapshotEvents.first;
-          await Future.delayed(Duration(milliseconds: 750));
+          await Future.delayed(const Duration(milliseconds: 750));
         }
 
         // TODO(Salakar): Known issue with iOS where pausing/resuming doesn't immediately return as paused/resumed 'true'.

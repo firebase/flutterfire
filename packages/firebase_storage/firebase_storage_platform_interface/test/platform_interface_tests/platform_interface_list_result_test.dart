@@ -49,7 +49,7 @@ void main() {
 
     test('throws if get.items', () async {
       try {
-        await listResultPlatform.items;
+        listResultPlatform.items;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('items is not implemented'));
         return;
@@ -59,7 +59,7 @@ void main() {
 
     test('throws if get.prefixes', () async {
       try {
-        await listResultPlatform.prefixes;
+        listResultPlatform.prefixes;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('prefixes is not implemented'));
         return;

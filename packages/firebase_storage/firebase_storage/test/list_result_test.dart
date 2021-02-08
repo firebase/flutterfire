@@ -43,8 +43,9 @@ void main() {
       when(mockList.prefixes).thenReturn(prefixes);
 
       Reference ref = storage.ref();
-      listResult =
-          await ref.list(ListOptions(maxResults: 10, pageToken: 'token'));
+      listResult = await ref.list(
+        const ListOptions(maxResults: 10, pageToken: 'token'),
+      );
     });
 
     group('.items', () {

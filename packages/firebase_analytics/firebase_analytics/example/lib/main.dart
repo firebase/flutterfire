@@ -50,14 +50,12 @@ class MyHomePage extends StatefulWidget {
   final FirebaseAnalyticsObserver observer;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState(analytics, observer);
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  _MyHomePageState(this.analytics, this.observer);
-
-  final FirebaseAnalyticsObserver observer;
-  final FirebaseAnalytics analytics;
+  FirebaseAnalyticsObserver get observer => widget.observer;
+  FirebaseAnalytics get analytics => widget.analytics;
   String _message = '';
 
   void setMessage(String message) {
@@ -113,12 +111,12 @@ class _MyHomePageState extends State<MyHomePage> {
     await analytics.logAddPaymentInfo();
     await analytics.logAddToCart(
       currency: 'USD',
-      value: 123.0,
+      value: 123,
       itemId: 'test item id',
       itemName: 'test item name',
       itemCategory: 'test item category',
       quantity: 5,
-      price: 24.0,
+      price: 24,
       origin: 'test origin',
       itemLocationId: 'test location id',
       destination: 'test destination',
@@ -130,14 +128,14 @@ class _MyHomePageState extends State<MyHomePage> {
       itemName: 'test item name',
       itemCategory: 'test item category',
       quantity: 5,
-      price: 24.0,
-      value: 123.0,
+      price: 24,
+      value: 123,
       currency: 'USD',
       itemLocationId: 'test location id',
     );
     await analytics.logAppOpen();
     await analytics.logBeginCheckout(
-      value: 123.0,
+      value: 123,
       currency: 'USD',
       transactionId: 'test tx id',
       numberOfNights: 2,
@@ -279,46 +277,47 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: <Widget>[
           MaterialButton(
-            child: const Text('Test logEvent'),
             onPressed: _sendAnalyticsEvent,
+            child: const Text('Test logEvent'),
           ),
           MaterialButton(
-            child: const Text('Test standard event types'),
             onPressed: _testAllEventTypes,
+            child: const Text('Test standard event types'),
           ),
           MaterialButton(
-            child: const Text('Test setUserId'),
             onPressed: _testSetUserId,
+            child: const Text('Test setUserId'),
           ),
           MaterialButton(
-            child: const Text('Test setCurrentScreen'),
             onPressed: _testSetCurrentScreen,
+            child: const Text('Test setCurrentScreen'),
           ),
           MaterialButton(
-            child: const Text('Test setAnalyticsCollectionEnabled'),
             onPressed: _testSetAnalyticsCollectionEnabled,
+            child: const Text('Test setAnalyticsCollectionEnabled'),
           ),
           MaterialButton(
-            child: const Text('Test setSessionTimeoutDuration'),
             onPressed: _testSetSessionTimeoutDuration,
+            child: const Text('Test setSessionTimeoutDuration'),
           ),
           MaterialButton(
-            child: const Text('Test setUserProperty'),
             onPressed: _testSetUserProperty,
+            child: const Text('Test setUserProperty'),
           ),
           Text(_message,
               style: const TextStyle(color: Color.fromARGB(255, 0, 155, 0))),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.tab),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute<TabsPage>(
-                settings: const RouteSettings(name: TabsPage.routeName),
-                builder: (BuildContext context) {
-                  return TabsPage(observer);
-                }));
-          }),
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute<TabsPage>(
+              settings: const RouteSettings(name: TabsPage.routeName),
+              builder: (BuildContext context) {
+                return TabsPage(observer);
+              }));
+        },
+        child: const Icon(Icons.tab),
+      ),
     );
   }
 }

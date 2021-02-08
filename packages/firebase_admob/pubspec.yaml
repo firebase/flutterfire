@@ -9,18 +9,17 @@ environment:
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  meta: ^1.0.4
+  firebase_core: ">=0.8.0-1.0.nullsafety.1 <0.8.0-2.0.nullsafety.0"
   flutter:
     sdk: flutter
-  firebase_core: ">=0.8.0-1.0.nullsafety.1 <0.8.0-2.0.nullsafety.0"
+  meta: ^1.0.4
 dev_dependencies:
-  pedantic: ^1.8.0
+  e2e: ^0.6.1
   flutter_driver:
     sdk: flutter
-  mockito: ^5.0.0-nullsafety.2
   flutter_test:
     sdk: flutter
-  e2e: ^0.6.1
+  mockito: ^5.0.0-nullsafety.2
 
 flutter:
   plugin:

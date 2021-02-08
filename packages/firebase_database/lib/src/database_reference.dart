@@ -205,7 +205,9 @@ class ServerValue {
   }
 }
 
-typedef Future<MutableData> TransactionHandler(MutableData mutableData);
+typedef TransactionHandler = Future<MutableData> Function(
+  MutableData mutableData,
+);
 
 class TransactionResult {
   const TransactionResult._(this.error, this.committed, this.dataSnapshot);

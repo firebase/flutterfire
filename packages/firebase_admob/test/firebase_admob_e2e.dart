@@ -24,20 +24,21 @@ void main() {
     final NativeAd nativeAd = NativeAd(
       adUnitId: NativeAd.testAdUnitId,
       factoryId: 'adFactoryExample',
-      targetingInfo: MobileAdTargetingInfo(
+      targetingInfo: const MobileAdTargetingInfo(
         keywords: <String>['foo', 'bar'],
         contentUrl: 'http://foo.com/bar.html',
         childDirected: true,
         nonPersonalizedAds: true,
       ),
       listener: (MobileAdEvent event) {
+        // ignore: avoid_print
         print('NativeAd event: $event');
         if (event == MobileAdEvent.loaded) adLoaded = true;
       },
     );
 
     await nativeAd.load();
-    await Future<void>.delayed(Duration(seconds: 10));
+    await Future<void>.delayed(const Duration(seconds: 10));
     expect(adLoaded, isTrue);
   });
 

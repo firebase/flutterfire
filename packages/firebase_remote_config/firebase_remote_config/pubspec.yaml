@@ -10,24 +10,24 @@ environment:
   flutter: ">=1.12.13+hotfix.5 <2.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
   firebase_core: ">=0.8.0-1.0.nullsafety.1 <0.8.0-2.0.nullsafety.0"
   firebase_core_platform_interface: ">=4.0.0-1.0.nullsafety.1 <4.0.0-2.0.nullsafety.0"
   firebase_remote_config_platform_interface: ^0.1.0-dev.0
+  flutter:
+    sdk: flutter
+
 dependency_overrides:
   firebase_remote_config_platform_interface:
     path: ../firebase_remote_config_platform_interface
 
 dev_dependencies:
-  pedantic: ^1.8.0
-  flutter_test:
-    sdk: flutter
   flutter_driver:
     sdk: flutter
-  test: any
-  plugin_platform_interface: ^1.0.2
+  flutter_test:
+    sdk: flutter
   mockito: ^5.0.0-nullsafety.2
+  plugin_platform_interface: ^1.0.2
+  test: any
 
 flutter:
   plugin:

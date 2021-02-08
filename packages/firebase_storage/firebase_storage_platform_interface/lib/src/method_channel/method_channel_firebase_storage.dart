@@ -23,7 +23,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// any custom storage buckets.
   static String _getInstanceKey(
       String /*!*/ /*!*/ appName, String /*!*/ bucket) {
-    return '${appName}|${bucket ?? ''}';
+    return '$appName|${bucket ?? ''}';
   }
 
   /// The [MethodChannelFirebaseStorage] method channel.
@@ -98,9 +98,14 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     _initialized = true;
   }
 
-  int maxOperationRetryTime = Duration(minutes: 2).inMilliseconds;
-  int maxUploadRetryTime = Duration(minutes: 10).inMilliseconds;
-  int maxDownloadRetryTime = Duration(minutes: 10).inMilliseconds;
+  @override
+  int maxOperationRetryTime = const Duration(minutes: 2).inMilliseconds;
+
+  @override
+  int maxUploadRetryTime = const Duration(minutes: 10).inMilliseconds;
+
+  @override
+  int maxDownloadRetryTime = const Duration(minutes: 10).inMilliseconds;
 
   Future<void> _handleTaskStateChange(
       TaskState taskState, Map<dynamic, dynamic> arguments) async {
@@ -147,7 +152,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   }
 
   @override
-  void setMaxUploadRetryTime(int time) async {
+  Future<void> setMaxUploadRetryTime(int time) async {
     maxUploadRetryTime = time;
   }
 

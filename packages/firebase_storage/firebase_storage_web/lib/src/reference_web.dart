@@ -20,7 +20,7 @@ import './firebase_storage_web.dart';
 import './utils/metadata.dart';
 import './utils/errors.dart';
 
-final _storageUrlPrefix = RegExp(r'^(?:gs|https?)://');
+final _storageUrlPrefix = RegExp('^(?:gs|https?)://');
 
 /// The web implementation of a Firebase Storage 'ref'
 class ReferenceWeb extends ReferencePlatform {

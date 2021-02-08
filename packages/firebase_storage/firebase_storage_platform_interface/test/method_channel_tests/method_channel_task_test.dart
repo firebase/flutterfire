@@ -27,10 +27,10 @@ void main() {
   // mock props
   bool mockPlatformExceptionThrown = false;
 
-  final kMockData = 'Hello World';
+  const kMockData = 'Hello World';
   /*late*/ MethodChannelPutStringTask kMockTask;
 
-  final kMockExceptionMessage = 'a mock exception message';
+  const kMockExceptionMessage = 'a mock exception message';
 
   group('$MethodChannelTask', () {
     setUpAll(() async {

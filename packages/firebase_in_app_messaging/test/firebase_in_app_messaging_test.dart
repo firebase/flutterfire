@@ -28,7 +28,7 @@ void main() {
       await fiam.triggerEvent('someEvent');
       expect(log, <Matcher>[
         isMethodCall('triggerEvent',
-            arguments: <String, String>{"eventName": "someEvent"}),
+            arguments: <String, String>{'eventName': 'someEvent'}),
       ]);
     });
 

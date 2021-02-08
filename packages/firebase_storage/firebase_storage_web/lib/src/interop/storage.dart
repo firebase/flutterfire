@@ -161,7 +161,7 @@ class StorageReference
   /// Uploads data [blob] to the actual location with optional [metadata].
   /// Returns the [UploadTask] which can be used to monitor and manage
   /// the upload.
-  UploadTask put(blob, [UploadMetadata /*?*/ metadata]) {
+  UploadTask put(dynamic blob, [UploadMetadata /*?*/ metadata]) {
     storage_interop.UploadTaskJsImpl taskImpl;
     if (metadata != null) {
       taskImpl = jsObject.put(blob, metadata.jsObject);
@@ -237,7 +237,7 @@ class FullMetadata
       jsObject.updated == null ? null : DateTime.parse(jsObject.updated);
 
   /// Creates a new FullMetadata from a [jsObject].
-  static FullMetadata getInstance(jsObject) {
+  static FullMetadata getInstance(dynamic jsObject) {
     if (jsObject == null) {
       return null;
     }

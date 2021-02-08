@@ -78,9 +78,9 @@ class _MyAppState extends State<MyApp> {
       _traceHasRan = false;
     });
 
-    final Trace trace = _performance.newTrace("test");
-    trace.incrementMetric("metric1", 16);
-    trace.putAttribute("favorite_color", "blue");
+    final Trace trace = _performance.newTrace('test');
+    trace.incrementMetric('metric1', 16);
+    trace.putAttribute('favorite_color', 'blue');
 
     await trace.start();
 
@@ -105,8 +105,8 @@ class _MyAppState extends State<MyApp> {
     final _MetricHttpClient metricHttpClient = _MetricHttpClient(Client());
 
     final Request request = Request(
-      "SEND",
-      Uri.parse("https://www.google.com"),
+      'SEND',
+      Uri.parse('https://www.google.com'),
     );
 
     metricHttpClient.send(request);
@@ -118,8 +118,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle textStyle =
-        const TextStyle(color: Colors.lightGreenAccent, fontSize: 25.0);
+    const TextStyle textStyle = TextStyle(
+      color: Colors.lightGreenAccent,
+      fontSize: 25,
+    );
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(

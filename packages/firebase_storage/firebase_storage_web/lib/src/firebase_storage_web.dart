@@ -25,10 +25,10 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   final storage_interop.Storage webStorage;
 
   // Same default as the method channel implementation
-  int _maxDownloadRetryTime = Duration(minutes: 10).inMilliseconds;
+  int _maxDownloadRetryTime = const Duration(minutes: 10).inMilliseconds;
 
   // Same default as the method channel implementation
-  int _maxOperationRetryTime = Duration(minutes: 2).inMilliseconds;
+  int _maxOperationRetryTime = const Duration(minutes: 2).inMilliseconds;
 
   // Empty constructor. This is only used by the registerWith method.
   FirebaseStorageWeb._nullInstance() : webStorage = null;
@@ -55,9 +55,11 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   FirebaseStoragePlatform delegateFor({FirebaseApp app, String /*!*/ bucket}) {
     if (bucket == null) {
       throw FirebaseException(
-          message:
-              'No storage bucket could be found for the app \'${app.name}\'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.',
-          plugin: 'firebase_storage');
+        message: "No storage bucket could be found for the app '${app.name}'. "
+            'Ensure you have set the [storageBucket] on [FirebaseOptions] whilst '
+            'initializing the secondary Firebase app.',
+        plugin: 'firebase_storage',
+      );
     }
     return FirebaseStorageWeb(app: app, bucket: bucket);
   }

@@ -48,23 +48,23 @@ void main() {
     });
 
     test('get.bucket returns successfully', () async {
-      final bucket = await referencePlatform.bucket;
+      final bucket = referencePlatform.bucket;
       expect(bucket, isA<String>());
     });
 
     test('get.fullPath returns successfully', () async {
-      final fullPath = await referencePlatform.fullPath;
+      final fullPath = referencePlatform.fullPath;
       expect(fullPath, isA<String>());
     });
 
     test('get.name returns successfully', () async {
-      final name = await referencePlatform.name;
+      final name = referencePlatform.name;
       expect(name, isA<String>());
     });
 
     test('get.parent should throw unimplemented', () async {
       try {
-        await referencePlatform.parent;
+        referencePlatform.parent;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('ref() is not implemented'));
         return;
@@ -74,7 +74,7 @@ void main() {
 
     test('get.root should throw unimplemented', () async {
       try {
-        await referencePlatform.root;
+        referencePlatform.root;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('ref() is not implemented'));
         return;
@@ -84,7 +84,7 @@ void main() {
 
     test('get.child should throw unimplemented', () async {
       try {
-        await referencePlatform.child('/');
+        referencePlatform.child('/');
       } on UnimplementedError catch (e) {
         expect(e.message, equals('ref() is not implemented'));
         return;
@@ -124,7 +124,7 @@ void main() {
 
     test('throws if list()', () async {
       try {
-        await referencePlatform.list(ListOptions(maxResults: 10));
+        await referencePlatform.list(const ListOptions(maxResults: 10));
       } on UnimplementedError catch (e) {
         expect(e.message, equals('list() is not implemented'));
         return;
@@ -144,7 +144,7 @@ void main() {
 
     test('throws if putData()', () async {
       try {
-        await referencePlatform.putData(null);
+        referencePlatform.putData(null);
       } on UnimplementedError catch (e) {
         expect(e.message, equals('putData() is not implemented'));
         return;
@@ -154,7 +154,7 @@ void main() {
 
     test('throws if putBlob()', () async {
       try {
-        await referencePlatform.putBlob(null);
+        referencePlatform.putBlob(null);
       } on UnimplementedError catch (e) {
         expect(e.message, equals('putBlob() is not implemented'));
         return;
@@ -164,7 +164,7 @@ void main() {
 
     test('throws if putFile()', () async {
       try {
-        await referencePlatform.putFile(null);
+        referencePlatform.putFile(null);
       } on UnimplementedError catch (e) {
         expect(e.message, equals('putFile() is not implemented'));
         return;
@@ -174,7 +174,7 @@ void main() {
 
     test('throws if putString()', () async {
       try {
-        await referencePlatform.putString('foo', PutStringFormat.base64);
+        referencePlatform.putString('foo', PutStringFormat.base64);
       } on UnimplementedError catch (e) {
         expect(e.message, equals('putString() is not implemented'));
         return;
@@ -194,7 +194,7 @@ void main() {
 
     test('throws if writeToFile()', () async {
       try {
-        await referencePlatform.writeToFile(null);
+        referencePlatform.writeToFile(null);
       } on UnimplementedError catch (e) {
         expect(e.message, equals('writeToFile() is not implemented'));
         return;

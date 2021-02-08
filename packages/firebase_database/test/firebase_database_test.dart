@@ -36,7 +36,7 @@ void main() {
     int mockHandleId = 0;
     final List<MethodCall> log = <MethodCall>[];
 
-    final String databaseURL = 'https://fake-database-url2.firebaseio.com';
+    const String databaseURL = 'https://fake-database-url2.firebaseio.com';
     FirebaseDatabase database;
 
     setUp(() async {
@@ -199,7 +199,7 @@ void main() {
         final dynamic serverValue = <String, dynamic>{
           'qux': ServerValue.increment(8)
         };
-        final int priority = 42;
+        const int priority = 42;
         await database.reference().child('foo').set(value);
         await database.reference().child('bar').set(value, priority: priority);
         await database.reference().child('baz').set(serverValue);
@@ -245,7 +245,7 @@ void main() {
       });
       test('update', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
-        await database.reference().child("foo").update(value);
+        await database.reference().child('foo').update(value);
         expect(
           log,
           <Matcher>[
@@ -263,7 +263,7 @@ void main() {
       });
 
       test('setPriority', () async {
-        final int priority = 42;
+        const int priority = 42;
         await database.reference().child('foo').setPriority(priority);
         expect(
           log,
@@ -288,7 +288,7 @@ void main() {
             .runTransaction((MutableData mutableData) {
           return Future<MutableData>(() {
             mutableData.value['fakeKey'] =
-                'updated ' + mutableData.value['fakeKey'];
+                'updated ${mutableData.value['fakeKey']}';
             return mutableData;
           });
         });
@@ -313,7 +313,7 @@ void main() {
         expect(
           database.reference().child('foo').runTransaction(
                 (MutableData mutableData) async => null,
-                timeout: const Duration(milliseconds: 0),
+                timeout: const Duration(),
               ),
           throwsA(isInstanceOf<AssertionError>()),
         );
@@ -323,7 +323,7 @@ void main() {
     group('$OnDisconnect', () {
       test('set', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
-        final int priority = 42;
+        const int priority = 42;
         final DatabaseReference ref = database.reference();
         await ref.child('foo').onDisconnect().set(value);
         await ref.child('bar').onDisconnect().set(value, priority: priority);
@@ -377,7 +377,7 @@ void main() {
       });
       test('update', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
-        await database.reference().child("foo").onDisconnect().update(value);
+        await database.reference().child('foo').onDisconnect().update(value);
         expect(
           log,
           <Matcher>[
@@ -394,7 +394,7 @@ void main() {
         );
       });
       test('cancel', () async {
-        await database.reference().child("foo").onDisconnect().cancel();
+        await database.reference().child('foo').onDisconnect().cancel();
         expect(
           log,
           <Matcher>[
@@ -410,7 +410,7 @@ void main() {
         );
       });
       test('remove', () async {
-        await database.reference().child("foo").onDisconnect().remove();
+        await database.reference().child('foo').onDisconnect().remove();
         expect(
           log,
           <Matcher>[
@@ -431,7 +431,7 @@ void main() {
 
     group('$Query', () {
       test('keepSynced, simple query', () async {
-        final String path = 'foo';
+        const String path = 'foo';
         final Query query = database.reference().child(path);
         await query.keepSynced(true);
         expect(
@@ -451,11 +451,11 @@ void main() {
         );
       });
       test('keepSynced, complex query', () async {
-        final int startAt = 42;
-        final String path = 'foo';
-        final String childKey = 'bar';
-        final bool endAt = true;
-        final String endAtKey = 'baz';
+        const int startAt = 42;
+        const String path = 'foo';
+        const String childKey = 'bar';
+        const bool endAt = true;
+        const String endAtKey = 'baz';
         final Query query = database
             .reference()
             .child(path)
@@ -516,7 +516,7 @@ void main() {
         // Subscribe and allow subscription to complete.
         final StreamSubscription<Event> subscription =
             query.onValue.listen((_) {}, onError: errors.add);
-        await Future<void>.delayed(const Duration(seconds: 0));
+        await Future<void>.delayed(const Duration());
 
         await simulateError('Bad foo');
         await simulateError('Bad bar');
@@ -533,7 +533,7 @@ void main() {
       });
       test('observing value events', () async {
         mockHandleId = 87;
-        final String path = 'foo';
+        const String path = 'foo';
         final Query query = database.reference().child(path);
         Future<void> simulateEvent(String value) async {
           // TODO(hterkelsen): Remove this when defaultBinaryMessages is in stable.
@@ -559,7 +559,7 @@ void main() {
         // Subscribe and allow subscription to complete.
         final StreamSubscription<Event> subscription =
             query.onValue.listen(events.add);
-        await Future<void>.delayed(const Duration(seconds: 0));
+        await Future<void>.delayed(const Duration());
 
         await simulateEvent('1');
         await simulateEvent('2');
@@ -572,7 +572,7 @@ void main() {
 
         // Cancel subscription and allow cancellation to complete.
         subscription.cancel();
-        await Future<void>.delayed(const Duration(seconds: 0));
+        await Future<void>.delayed(const Duration());
 
         expect(
           log,

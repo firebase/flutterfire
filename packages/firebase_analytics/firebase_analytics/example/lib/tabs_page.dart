@@ -15,14 +15,12 @@ class TabsPage extends StatefulWidget {
   static const String routeName = '/tab';
 
   @override
-  State<StatefulWidget> createState() => _TabsPageState(observer);
+  State<StatefulWidget> createState() => _TabsPageState();
 }
 
 class _TabsPageState extends State<TabsPage>
     with SingleTickerProviderStateMixin, RouteAware {
-  _TabsPageState(this.observer);
-
-  final FirebaseAnalyticsObserver observer;
+  FirebaseAnalyticsObserver get observer => widget.observer;
   TabController _controller;
   int selectedIndex = 0;
 

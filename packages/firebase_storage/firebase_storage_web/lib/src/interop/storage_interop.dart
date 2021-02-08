@@ -46,7 +46,7 @@ abstract class ReferenceJsImpl {
   external PromiseJsImpl<FullMetadataJsImpl> getMetadata();
   external PromiseJsImpl<ListResultJsImpl> list([ListOptionsJsImpl options]);
   external PromiseJsImpl<ListResultJsImpl> listAll();
-  external UploadTaskJsImpl put(blob, [UploadMetadataJsImpl metadata]);
+  external UploadTaskJsImpl put(dynamic blob, [UploadMetadataJsImpl metadata]);
   external UploadTaskJsImpl putString(String value,
       [String format, UploadMetadataJsImpl metadata]);
   @override
@@ -100,8 +100,12 @@ abstract class UploadTaskJsImpl
   external UploadTaskSnapshotJsImpl get snapshot;
   external set snapshot(UploadTaskSnapshotJsImpl t);
   external bool cancel();
-  external Func0 on(String event,
-      [nextOrObserver, Func1 error, Func0 complete]);
+  external Func0 on(
+    String event, [
+    dynamic nextOrObserver,
+    Func1 error,
+    Func0 complete,
+  ]);
   external bool pause();
   external bool resume();
   @override
