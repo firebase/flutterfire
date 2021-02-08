@@ -266,8 +266,8 @@ class MockUploadTaskPlatform extends Mock
   @override
   Stream<TaskSnapshotPlatform> get snapshotEvents {
     return super.noSuchMethod(Invocation.getter(#snapshotEvents),
-        returnValue: Stream<TaskSnapshotPlatform>.empty(),
-        returnValueForMissingStub: Stream<TaskSnapshotPlatform>.empty());
+        returnValue: const Stream<TaskSnapshotPlatform>.empty(),
+        returnValueForMissingStub: const Stream<TaskSnapshotPlatform>.empty());
   }
 
   @override
