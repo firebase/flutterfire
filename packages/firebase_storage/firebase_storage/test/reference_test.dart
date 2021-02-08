@@ -15,8 +15,6 @@ import 'package:mockito/mockito.dart';
 
 import 'mock.dart';
 
-
-
 MockReferencePlatform mockReference = MockReferencePlatform();
 MockListResultPlatform mockListResultPlatform = MockListResultPlatform();
 MockUploadTaskPlatform mockUploadTaskPlatform = MockUploadTaskPlatform();

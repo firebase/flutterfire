@@ -44,9 +44,7 @@ void main() {
 
         switch (call.method) {
           case 'Reference#getDownloadURL':
-            return {
-              'downloadURL':'https://test-url.com/'
-            };
+            return {'downloadURL': 'https://test-url.com/'};
           case 'Reference#list':
             return {
               'nextPageToken': '',
