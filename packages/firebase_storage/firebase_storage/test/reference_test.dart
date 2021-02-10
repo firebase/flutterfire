@@ -275,8 +275,8 @@ Future<void> main() async {
         UriData uriData = UriData.fromString(testString);
         Uri uri = uriData.uri;
         expect(
-            () => testRef
-                .putString(uri.toString(), format: PutStringFormat.dataUrl),
+            () => testRef.putString(uri.toString(),
+                format: PutStringFormat.dataUrl),
             throwsAssertionError);
       });
     });
