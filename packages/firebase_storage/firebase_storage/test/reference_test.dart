@@ -22,8 +22,8 @@ MockDownloadTaskPlatform mockDownloadTaskPlatform = MockDownloadTaskPlatform();
 
 Future<void> main() async {
   setupFirebaseStorageMocks();
-  FirebaseStorage? storage;
-  Reference? testRef;
+  late FirebaseStorage storage;
+  late Reference testRef;
   FullMetadata testFullMetadata = FullMetadata(testMetadataMap);
   ListOptions testListOptions =
       const ListOptions(maxResults: testMaxResults, pageToken: testPageToken);
@@ -47,7 +47,7 @@ Future<void> main() async {
       test('verify delegate method is called', () {
         when(mockReference.bucket).thenReturn(testBucket);
 
-        final result = testRef!.bucket;
+        final result = testRef.bucket;
 
         expect(result, isA<String>());
         expect(result, testBucket);
@@ -58,7 +58,7 @@ Future<void> main() async {
       test('verify delegate method is called', () {
         when(mockReference.fullPath).thenReturn(testFullPath);
 
-        final result = testRef!.fullPath;
+        final result = testRef.fullPath;
 
         expect(result, isA<String>());
         expect(result, testFullPath);
@@ -69,7 +69,7 @@ Future<void> main() async {
       test('verify delegate method is called', () {
         when(mockReference.name).thenReturn(testName);
 
-        final result = testRef!.name;
+        final result = testRef.name;
 
         expect(result, isA<String>());
         expect(result, testName);
@@ -80,14 +80,14 @@ Future<void> main() async {
       test('verify delegate method is called', () {
         when(mockReference.parent).thenReturn(mockReference);
 
-        final result = testRef!.parent;
+        final result = testRef.parent;
 
         expect(result, isA<Reference>());
       });
       test('returns null if root', () {
         when(mockReference.parent).thenReturn(null);
 
-        final result = testRef!.parent;
+        final result = testRef.parent;
 
         expect(result, isNull);
       });
@@ -97,7 +97,7 @@ Future<void> main() async {
       test('verify delegate method is called', () {
         when(mockReference.root).thenReturn(mockReference);
 
-        final result = testRef!.root;
+        final result = testRef.root;
 
         expect(result, isA<Reference>());
 
@@ -109,7 +109,7 @@ Future<void> main() async {
       test('verify delegate method is called', () {
         when(mockReference.child(testFullPath)).thenReturn(mockReference);
 
-        final result = testRef!.child(testFullPath);
+        final result = testRef.child(testFullPath);
 
         expect(result, isA<Reference>());
 
@@ -121,7 +121,7 @@ Future<void> main() async {
       test('verify delegate method is called', () async {
         when(mockReference.delete()).thenAnswer((_) => Future.value());
 
-        await testRef!.delete();
+        await testRef.delete();
 
         verify(mockReference.delete());
       });
@@ -132,7 +132,7 @@ Future<void> main() async {
         when(mockReference.getDownloadURL())
             .thenAnswer((_) => Future.value(testDownloadUrl));
 
-        final result = await testRef!.getDownloadURL();
+        final result = await testRef.getDownloadURL();
 
         expect(result, isA<String>());
         expect(result, testDownloadUrl);
@@ -146,7 +146,7 @@ Future<void> main() async {
         when(mockReference.getMetadata())
             .thenAnswer((_) => Future.value(testFullMetadata));
 
-        final result = await testRef!.getMetadata();
+        final result = await testRef.getMetadata();
 
         expect(result, isA<FullMetadata>());
         expect(result.contentType, testMetadataMap['contentType']);
@@ -159,7 +159,7 @@ Future<void> main() async {
       test('verify delegate method is called', () async {
         when(mockReference.list(testListOptions))
             .thenAnswer((_) => Future.value(mockListResultPlatform));
-        final result = await testRef!.list(testListOptions);
+        final result = await testRef.list(testListOptions);
 
         expect(result, isA<ListResult>());
 
@@ -169,14 +169,14 @@ Future<void> main() async {
       test('throws AssertionError if max results is not greater than 0', () {
         ListOptions listOptions =
             const ListOptions(maxResults: 0, pageToken: testPageToken);
-        expect(() => testRef!.list(listOptions), throwsAssertionError);
+        expect(() => testRef.list(listOptions), throwsAssertionError);
       });
 
       test('throws AssertionError if max results is greater than 1000', () {
         ListOptions listOptions =
             const ListOptions(maxResults: 1001, pageToken: testPageToken);
 
-        expect(() => testRef!.list(listOptions), throwsAssertionError);
+        expect(() => testRef.list(listOptions), throwsAssertionError);
       });
     });
 
@@ -185,7 +185,7 @@ Future<void> main() async {
         when(mockReference.listAll())
             .thenAnswer((_) => Future.value(mockListResultPlatform));
 
-        final result = await testRef!.listAll();
+        final result = await testRef.listAll();
 
         expect(result, isA<ListResult>());
 
@@ -201,7 +201,7 @@ Future<void> main() async {
 
         when(mockReference.putData(data)).thenReturn(mockUploadTaskPlatform);
 
-        final result = testRef!.putData(data);
+        final result = testRef.putData(data);
 
         expect(result, isA<Task>());
 
@@ -214,7 +214,7 @@ Future<void> main() async {
         when(mockReference.putBlob(testFile))
             .thenReturn(mockUploadTaskPlatform);
 
-        final result = testRef!.putBlob(testFile);
+        final result = testRef.putBlob(testFile);
 
         expect(result, isA<Task>());
 
@@ -222,7 +222,7 @@ Future<void> main() async {
       });
 
       test('throws AssertionError if blob is null', () {
-        expect(() => testRef!.putBlob(null), throwsAssertionError);
+        expect(() => testRef.putBlob(null), throwsAssertionError);
       });
     });
 
@@ -231,7 +231,7 @@ Future<void> main() async {
         when(mockReference.putFile(testFile))
             .thenReturn(mockUploadTaskPlatform);
 
-        final result = testRef!.putFile(testFile);
+        final result = testRef.putFile(testFile);
 
         expect(result, isA<Task>());
 
@@ -242,13 +242,13 @@ Future<void> main() async {
         File file = await createFile('delete-me');
         file.deleteSync();
 
-        expect(() => testRef!.putFile(file), throwsAssertionError);
+        expect(() => testRef.putFile(file), throwsAssertionError);
       });
     });
 
     group('putString()', () {
       test('raw string values', () {
-        final result = testRef!.putString(testString);
+        final result = testRef.putString(testString);
 
         expect(result, isA<Task>());
 
@@ -261,7 +261,7 @@ Future<void> main() async {
         UriData uriData = UriData.fromString(testString, base64: true);
         Uri uri = uriData.uri;
         final result =
-            testRef!.putString(uri.toString(), format: PutStringFormat.dataUrl);
+            testRef.putString(uri.toString(), format: PutStringFormat.dataUrl);
 
         expect(result, isA<Task>());
 
@@ -275,7 +275,7 @@ Future<void> main() async {
         UriData uriData = UriData.fromString(testString);
         Uri uri = uriData.uri;
         expect(
-            () => testRef!
+            () => testRef
                 .putString(uri.toString(), format: PutStringFormat.dataUrl),
             throwsAssertionError);
       });
@@ -286,7 +286,7 @@ Future<void> main() async {
         when(mockReference.updateMetadata(testSettableMetadata))
             .thenAnswer((_) => Future.value(testFullMetadata));
 
-        final result = await testRef!.updateMetadata(testSettableMetadata);
+        final result = await testRef.updateMetadata(testSettableMetadata);
 
         expect(result, isA<FullMetadata>());
         expect(result.contentType, 'gif');
@@ -300,7 +300,7 @@ Future<void> main() async {
         when(mockReference.writeToFile(testFile))
             .thenReturn(mockDownloadTaskPlatform);
 
-        final result = testRef!.writeToFile(testFile);
+        final result = testRef.writeToFile(testFile);
 
         expect(result, isA<Task>());
 

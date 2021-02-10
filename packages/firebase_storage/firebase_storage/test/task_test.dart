@@ -20,8 +20,8 @@ MockTaskSnapshotPlatform mockTaskSnapshotPlatform = MockTaskSnapshotPlatform();
 void main() {
   setupFirebaseStorageMocks();
 
-  FirebaseStorage? storage;
-  UploadTask? uploadTask;
+  late FirebaseStorage storage;
+  late UploadTask uploadTask;
 
   group('Task', () {
     setUpAll(() async {
@@ -33,7 +33,7 @@ void main() {
       when(kMockStoragePlatform.ref(any)).thenReturn(mockReferencePlatform);
       when(mockReferencePlatform.putString(any, any, any))
           .thenReturn(mockUploadTaskPlatform);
-      uploadTask = storage!.ref().putString(testString);
+      uploadTask = storage.ref().putString(testString);
     });
 
     group('.snapshotEvents', () {
@@ -41,7 +41,7 @@ void main() {
         when(mockUploadTaskPlatform.snapshotEvents)
             .thenAnswer((_) => Stream.fromIterable([mockTaskSnapshotPlatform]));
 
-        final result = uploadTask!.snapshotEvents;
+        final result = uploadTask.snapshotEvents;
 
         expect(result, isA<Stream<TaskSnapshot>>());
         verify(mockUploadTaskPlatform.snapshotEvents);
@@ -53,7 +53,7 @@ void main() {
         when(mockUploadTaskPlatform.snapshot)
             .thenReturn(mockTaskSnapshotPlatform);
 
-        final result = uploadTask!.snapshot;
+        final result = uploadTask.snapshot;
 
         expect(result, isA<TaskSnapshot>());
         verify(mockUploadTaskPlatform.snapshot);
@@ -78,7 +78,7 @@ void main() {
         when(mockUploadTaskPlatform.pause())
             .thenAnswer((_) => Future.value(true));
 
-        final result = await uploadTask!.pause();
+        final result = await uploadTask.pause();
 
         expect(result, isA<bool>());
         expect(result, isTrue);
@@ -92,7 +92,7 @@ void main() {
         when(mockUploadTaskPlatform.resume())
             .thenAnswer((_) => Future.value(true));
 
-        final result = await uploadTask!.resume();
+        final result = await uploadTask.resume();
 
         expect(result, isA<bool>());
         expect(result, isTrue);
@@ -106,7 +106,7 @@ void main() {
         when(mockUploadTaskPlatform.cancel())
             .thenAnswer((_) => Future.value(true));
 
-        final result = await uploadTask!.cancel();
+        final result = await uploadTask.cancel();
 
         expect(result, isA<bool>());
         expect(result, isTrue);

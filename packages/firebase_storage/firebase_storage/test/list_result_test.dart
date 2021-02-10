@@ -15,8 +15,8 @@ void main() {
 
   const String kNextPageToken = 'next-page-token';
 
-  FirebaseStorage? storage;
-  ListResult? listResult;
+  late FirebaseStorage storage;
+  late ListResult listResult;
   MockReferencePlatform mockReference = MockReferencePlatform();
   MockListResultPlatform mockList = MockListResultPlatform();
 
@@ -38,14 +38,14 @@ void main() {
       when(mockList.nextPageToken).thenReturn(kNextPageToken);
       when(mockList.prefixes).thenReturn(prefixes);
 
-      Reference ref = storage!.ref();
+      Reference ref = storage.ref();
       listResult =
           await ref.list(const ListOptions(maxResults: 10, pageToken: 'token'));
     });
 
     group('.items', () {
       test('verify delegate method is called', () {
-        final items = listResult!.items;
+        final items = listResult.items;
         expect(items, isA<List<Reference>>());
         expect(items.length, items.length);
 
@@ -61,7 +61,7 @@ void main() {
 
     group('.nextPageToken', () {
       test('verify delegate method is called', () {
-        final nextPageToken = listResult!.nextPageToken;
+        final nextPageToken = listResult.nextPageToken;
         expect(nextPageToken, isA<String>());
         expect(nextPageToken, kNextPageToken);
 
@@ -71,7 +71,7 @@ void main() {
 
     group('.prefixes', () {
       test('verify delegate method is called', () {
-        final prefixes = listResult!.prefixes;
+        final prefixes = listResult.prefixes;
         expect(prefixes, isA<List<Reference>>());
         expect(prefixes.length, prefixes.length);
 

@@ -23,8 +23,8 @@ MockTaskSnapshotPlatform mockTaskSnapshotPlatform = MockTaskSnapshotPlatform();
 
 void main() {
   setupFirebaseStorageMocks();
-  FirebaseStorage? storage;
-  TaskSnapshot? taskSnapshot;
+  late FirebaseStorage storage;
+  late TaskSnapshot taskSnapshot;
   FullMetadata fullMetadata = FullMetadata(testMetadata);
 
   group('$TaskSnapshot', () {
@@ -39,7 +39,7 @@ void main() {
       when(mockUploadTaskPlatform.snapshot)
           .thenReturn(mockTaskSnapshotPlatform);
 
-      UploadTask uploadTask = storage!.ref().putString(testString);
+      UploadTask uploadTask = storage.ref().putString(testString);
       taskSnapshot = uploadTask.snapshot;
     });
 
@@ -48,7 +48,7 @@ void main() {
         when(mockTaskSnapshotPlatform.bytesTransferred)
             .thenReturn(testBytesTransferred);
 
-        expect(taskSnapshot!.bytesTransferred, testBytesTransferred);
+        expect(taskSnapshot.bytesTransferred, testBytesTransferred);
         verify(mockTaskSnapshotPlatform.bytesTransferred);
       });
     });
@@ -57,7 +57,7 @@ void main() {
       test('verify delegate method is called', () {
         when(mockTaskSnapshotPlatform.metadata).thenReturn(fullMetadata);
 
-        final result = taskSnapshot!.metadata!;
+        final result = taskSnapshot.metadata!;
 
         expect(result, isA<FullMetadata>());
         expect(result.contentType, 'gif');
@@ -69,7 +69,7 @@ void main() {
     group('.ref', () {
       test('verify delegate method is called', () {
         when(mockTaskSnapshotPlatform.ref).thenReturn(mockReferencePlatform);
-        final result = taskSnapshot!.ref;
+        final result = taskSnapshot.ref;
 
         expect(result, isA<Reference>());
         verify(mockTaskSnapshotPlatform.ref);
@@ -80,7 +80,7 @@ void main() {
       test('verify delegate method is called', () {
         when(mockTaskSnapshotPlatform.state).thenReturn(TaskState.success);
 
-        final result = taskSnapshot!.state;
+        final result = taskSnapshot.state;
 
         expect(result, isA<TaskState>());
         verify(mockTaskSnapshotPlatform.state);
@@ -91,7 +91,7 @@ void main() {
       test('verify delegate method is called', () {
         when(mockTaskSnapshotPlatform.totalBytes).thenReturn(testTotalBytes);
 
-        final result = taskSnapshot!.totalBytes;
+        final result = taskSnapshot.totalBytes;
 
         expect(result, 20);
         verify(mockTaskSnapshotPlatform.totalBytes);
