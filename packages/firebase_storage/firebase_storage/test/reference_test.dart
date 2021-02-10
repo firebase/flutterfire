@@ -40,7 +40,7 @@ Future<void> main() async {
 
       when(kMockStoragePlatform.ref(any)).thenReturn(mockReference);
 
-      testRef = storage!.ref();
+      testRef = storage.ref();
     });
 
     group('.bucket', () {
