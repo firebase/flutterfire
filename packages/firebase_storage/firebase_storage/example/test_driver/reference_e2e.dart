@@ -205,7 +205,7 @@ void runReferenceTests() {
     });
 
     group('putData', () {
-      //todo(russellwheatley): customMetadata is cast as IdentityMap which causes web error 
+      //todo(russellwheatley): customMetadata is cast as IdentityMap which causes web error
       test('uploads a file with buffer', () async {
         List<int> list = utf8.encode(kTestString);
 
@@ -330,7 +330,7 @@ void runReferenceTests() {
             await ref.updateMetadata(SettableMetadata(contentLanguage: 'fr'));
         expect(fullMetadata.contentLanguage, 'fr');
       });
-      //todo(russellwheatley): is this supposed to error? It doesn't. customMetadata is cast as IdentityMap which causes web error 
+      //todo(russellwheatley): is this supposed to error? It doesn't. customMetadata is cast as IdentityMap which causes web error
       // test('errors if metadata update removes existing data', () async {
       //   Reference ref = storage.ref('/playground').child('flt-ok.txt');
       //   await ref.updateMetadata(SettableMetadata(contentLanguage: 'es'));
