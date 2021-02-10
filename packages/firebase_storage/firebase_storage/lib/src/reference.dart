@@ -71,11 +71,9 @@ class Reference {
   /// Storage List API will filter these unsupported objects. [list] may fail
   /// if there are too many unsupported objects in the bucket.
   Future<ListResult> list([ListOptions? options]) async {
-    if (options?.maxResults != null) {
-      assert(options!.maxResults! > 0);
-      assert(options!.maxResults! <= 1000);
-    }
-
+    assert(options == null ||
+        options.maxResults == null ||
+        options.maxResults! > 0 && options.maxResults! <= 1000);
     return ListResult._(storage, await _delegate.list(options));
   }
 
@@ -197,7 +195,7 @@ class Reference {
   }
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(Object? other) =>
       other is Reference &&
       other.fullPath == fullPath &&
       other.storage == storage;

@@ -34,7 +34,6 @@ enum UploadType {
 ///
 /// Returns a [MaterialApp].
 class StorageExampleApp extends StatelessWidget {
-  // ignore: public_member_api_docs
   StorageExampleApp({Key key}) : super(key: key);
 
   @override

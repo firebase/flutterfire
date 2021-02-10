@@ -71,13 +71,8 @@ class FirebaseStorage extends FirebasePluginPlatform {
       }
     }
 
-    String _bucket;
+    String _bucket = bucket ?? app.options.storageBucket!;
 
-    if (bucket != null) {
-      _bucket = bucket;
-    } else {
-      _bucket = app.options.storageBucket!;
-    }
     // Previous versions allow storage buckets starting with "gs://".
     // Since we need to create a key using the bucket, it must not include "gs://"
     // since native does not include it when requesting the bucket. This keeps
@@ -155,7 +150,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
   }
 
   @override
-  bool operator ==(Object other) =>
+  bool operator ==(Object? other) =>
       other is FirebaseStorage &&
       other.app.name == app.name &&
       other.bucket == bucket;
