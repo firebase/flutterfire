@@ -19,28 +19,18 @@ permissions from the device Settings UI (or via a custom UI).
 
 ## Requesting permissions
 
-As explained in the [Usage documentation](usage.mdx), permission must be requested from your users in order to display
-remote notifications from FCM, via the [`requestPermission`](!firebase_messaging.FirebaseMessaging.requestPermission) API:
+As explained in the [Usage documentation](usage.mdx), permission must be requested from your iOS users in order to display
+remote notifications from FCM, via the [`requestNotificationPermissions`](!firebase_messaging.FirebaseMessaging.requestNotificationPermissions) API:
 
 ```dart
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-NotificationSettings settings = await messaging.requestPermission(
-  alert: true,
-  announcement: false,
-  badge: true,
-  carPlay: false,
-  criticalAlert: false,
-  provisional: false,
-  sound: true,
-);
+bool isPermissionGiven = await messaging.requestNotificationPermissions();
 
-if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-  print('User granted permission');
-} else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-  print('User granted provisional permission');
-} else {
-  print('User declined or has not accepted permission');
+if (isPermissionGiven) {
+   print('User granted permission');
+}else{
+   print('User declined or has not accepted permission');
 }
 ```
 
