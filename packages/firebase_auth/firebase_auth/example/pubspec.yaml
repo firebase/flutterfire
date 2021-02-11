@@ -16,7 +16,6 @@ dependencies:
     sdk: flutter
   flutter_signin_button: ^1.0.0
   google_sign_in: ^5.0.0-nullsafety
-  uuid: ^2.0.2
 
 dependency_overrides:
   firebase_auth:
