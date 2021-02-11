@@ -282,9 +282,9 @@ void main() {
             .reference()
             .child('foo')
             .runTransaction((MutableData mutableData) {
-            mutableData.value['fakeKey'] =
-                'updated ' + mutableData.value['fakeKey'];
-            return Future.value(mutableData);
+          mutableData.value['fakeKey'] =
+              'updated ' + mutableData.value['fakeKey'];
+          return Future.value(mutableData);
         });
         expect(
           log,
