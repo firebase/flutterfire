@@ -17,7 +17,7 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   http: ^0.13.0-nullsafety.0
-  js: 0.6.3
+  js: ^0.6.3-nullsafety.3
   meta: ^1.3.0-nullsafety.6
 
 dev_dependencies:
