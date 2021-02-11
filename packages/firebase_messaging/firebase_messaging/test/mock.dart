@@ -75,14 +75,16 @@ class MockFirebaseMessaging extends Mock
 
   @override
   bool get isAutoInitEnabled {
-    return super.noSuchMethod(Invocation.getter(#isAutoInitEnabled), true);
+    return super.noSuchMethod(Invocation.getter(#isAutoInitEnabled),
+        returnValue: true, returnValueForMissingStub: true);
   }
 
   @override
   FirebaseMessagingPlatform delegateFor({FirebaseApp? app}) {
     return super.noSuchMethod(
       Invocation.method(#delegateFor, [], {#app: app}),
-      TestFirebaseMessagingPlatform(),
+      returnValue: TestFirebaseMessagingPlatform(),
+      returnValueForMissingStub: TestFirebaseMessagingPlatform(),
     );
   }
 
@@ -91,27 +93,31 @@ class MockFirebaseMessaging extends Mock
     return super.noSuchMethod(
       Invocation.method(
           #setInitialValues, [], {#isAutoInitEnabled: isAutoInitEnabled}),
-      TestFirebaseMessagingPlatform(),
+      returnValue: TestFirebaseMessagingPlatform(),
+      returnValueForMissingStub: TestFirebaseMessagingPlatform(),
     );
   }
 
   @override
   Future<RemoteMessage?> getInitialMessage() {
     return super.noSuchMethod(Invocation.method(#getInitialMessage, []),
-        neverEndingFuture<RemoteMessage>());
+        returnValue: neverEndingFuture<RemoteMessage>(),
+        returnValueForMissingStub: neverEndingFuture<RemoteMessage>());
   }
 
   @override
   Future<void> deleteToken({String? senderId}) {
     return super.noSuchMethod(
         Invocation.method(#deleteToken, [], {#senderId: senderId}),
-        Future<void>.value());
+        returnValue: Future<void>.value(),
+        returnValueForMissingStub: Future<void>.value());
   }
 
   @override
   Future<String?> getAPNSToken() {
-    return super.noSuchMethod(
-        Invocation.method(#getAPNSToken, []), Future<String>.value(''));
+    return super.noSuchMethod(Invocation.method(#getAPNSToken, []),
+        returnValue: Future<String>.value(''),
+        returnValueForMissingStub: Future<String>.value(''));
   }
 
   @override
@@ -119,20 +125,23 @@ class MockFirebaseMessaging extends Mock
     return super.noSuchMethod(
         Invocation.method(
             #getToken, [], {#senderId: senderId, #vapidKey: vapidKey}),
-        Future<String>.value(''));
+        returnValue: Future<String>.value(''),
+        returnValueForMissingStub: Future<String>.value(''));
   }
 
   @override
   Future<void> setAutoInitEnabled(bool? enabled) {
     return super.noSuchMethod(Invocation.method(#setAutoInitEnabled, [enabled]),
-        Future<void>.value());
+        returnValue: Future<void>.value(),
+        returnValueForMissingStub: Future<void>.value());
   }
 
   @override
   Stream<String> get onTokenRefresh {
     return super.noSuchMethod(
       Invocation.getter(#onTokenRefresh),
-      const Stream<String>.empty(),
+      returnValue: const Stream<String>.empty(),
+      returnValueForMissingStub: const Stream<String>.empty(),
     );
   }
 
@@ -155,19 +164,22 @@ class MockFirebaseMessaging extends Mock
           #provisional: provisional,
           #sound: sound
         }),
-        neverEndingFuture<NotificationSettings>());
+        returnValue: neverEndingFuture<NotificationSettings>(),
+        returnValueForMissingStub: neverEndingFuture<NotificationSettings>());
   }
 
   @override
   Future<void> subscribeToTopic(String? topic) {
-    return super.noSuchMethod(
-        Invocation.method(#subscribeToTopic, [topic]), Future<void>.value());
+    return super.noSuchMethod(Invocation.method(#subscribeToTopic, [topic]),
+        returnValue: Future<void>.value(),
+        returnValueForMissingStub: Future<void>.value());
   }
 
   @override
   Future<void> unsubscribeFromTopic(String? topic) {
     return super.noSuchMethod(Invocation.method(#unsubscribeFromTopic, [topic]),
-        Future<void>.value());
+        returnValue: Future<void>.value(),
+        returnValueForMissingStub: Future<void>.value());
   }
 }
 
