@@ -277,43 +277,41 @@ void main() {
         );
       });
 
-      // test('runTransaction', () async {
-      //   final TransactionResult transactionResult = await database
-      //       .reference()
-      //       .child('foo')
-      //       .runTransaction((MutableData mutableData) {
-      //     return Future<MutableData>(() {
-      //       mutableData.value['fakeKey'] =
-      //           'updated ' + mutableData.value['fakeKey'];
-      //       return mutableData;
-      //     });
-      //   });
-      //   expect(
-      //     log,
-      //     <Matcher>[
-      //       isMethodCall(
-      //         'DatabaseReference#runTransaction',
-      //         arguments: <String, dynamic>{
-      //           'app': app.name,
-      //           'databaseURL': databaseURL,
-      //           'path': 'foo',
-      //           'transactionKey': 0,
-      //           'transactionTimeout': 5000,
-      //         },
-      //       ),
-      //     ],
-      //   );
-      //   expect(transactionResult.committed, equals(true));
-      //   expect(transactionResult.dataSnapshot.value,
-      //       equals(<String, dynamic>{'fakeKey': 'updated fakeValue'}));
-      //   expect(
-      //     database.reference().child('foo').runTransaction(
-      //           (MutableData mutableData) async => null,
-      //           timeout: const Duration(milliseconds: 0),
-      //         ),
-      //     throwsA(isInstanceOf<AssertionError>()),
-      //   );
-      // });
+      test('runTransaction', () async {
+        final TransactionResult transactionResult = await database
+            .reference()
+            .child('foo')
+            .runTransaction((MutableData mutableData) {
+            mutableData.value['fakeKey'] =
+                'updated ' + mutableData.value['fakeKey'];
+            return Future.value(mutableData);
+        });
+        expect(
+          log,
+          <Matcher>[
+            isMethodCall(
+              'DatabaseReference#runTransaction',
+              arguments: <String, dynamic>{
+                'app': app.name,
+                'databaseURL': databaseURL,
+                'path': 'foo',
+                'transactionKey': 0,
+                'transactionTimeout': 5000,
+              },
+            ),
+          ],
+        );
+        expect(transactionResult.committed, equals(true));
+        expect(transactionResult.dataSnapshot.value,
+            equals(<String, dynamic>{'fakeKey': 'updated fakeValue'}));
+        expect(
+          database.reference().child('foo').runTransaction(
+                (MutableData mutableData) async => null,
+                timeout: const Duration(milliseconds: 0),
+              ),
+          throwsA(isInstanceOf<AssertionError>()),
+        );
+      });
     });
 
     group('$OnDisconnect', () {
