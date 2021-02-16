@@ -12,18 +12,12 @@ dependencies:
     sdk: flutter
   meta: ^1.0.5
   collection: ^1.14.3
-  firebase_core: ^0.7.0
+  firebase_core: ">=0.8.0-1.0.nullsafety.1 <0.8.0-2.0.nullsafety.0"
   plugin_platform_interface: ^1.0.0
 
 dev_dependencies:
-  firebase_core_platform_interface: ^2.0.0
+  firebase_core_platform_interface: ">=4.0.0-1.0.nullsafety.1 <4.0.0-2.0.nullsafety.0"
   pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0-nullsafety.2
-
-dependency_overrides:
-  firebase_core:
-    path: ../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../firebase_core/firebase_core_platform_interface

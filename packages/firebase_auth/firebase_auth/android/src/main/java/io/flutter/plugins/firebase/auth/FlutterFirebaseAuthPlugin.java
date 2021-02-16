@@ -686,6 +686,18 @@ public class FlutterFirebaseAuthPlugin
         });
   }
 
+  private Task<Void> useEmulator(Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          FirebaseAuth firebaseAuth = getAuth(arguments);
+          String host = (String) arguments.get(Constants.HOST);
+          int port = (int) arguments.get(Constants.PORT);
+          firebaseAuth.useEmulator(host, port);
+          return null;
+        });
+  }
+
   private Task<Map<String, Object>> verifyPasswordResetCode(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -1034,6 +1046,9 @@ public class FlutterFirebaseAuthPlugin
         break;
       case "Auth#signOut":
         methodCallTask = signOut(call.arguments());
+        break;
+      case "Auth#useEmulator":
+        methodCallTask = useEmulator(call.arguments());
         break;
       case "Auth#verifyPasswordResetCode":
         methodCallTask = verifyPasswordResetCode(call.arguments());

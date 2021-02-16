@@ -187,6 +187,8 @@ NSString *const kErrMsgInvalidCredential =
     [self signInWithEmailLink:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#signOut" isEqualToString:call.method]) {
     [self signOut:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Auth#useEmulator" isEqualToString:call.method]) {
+    [self useEmulator:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#verifyPasswordResetCode" isEqualToString:call.method]) {
     [self verifyPasswordResetCode:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#verifyPhoneNumber" isEqualToString:call.method]) {
@@ -526,6 +528,12 @@ NSString *const kErrMsgInvalidCredential =
   } else {
     result.success(nil);
   }
+}
+
+- (void)useEmulator:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
+  [auth useEmulatorWithHost:arguments[@"host"] port:[arguments[@"port"] integerValue]];
+  result.success(nil);
 }
 
 - (void)verifyPasswordResetCode:(id)arguments

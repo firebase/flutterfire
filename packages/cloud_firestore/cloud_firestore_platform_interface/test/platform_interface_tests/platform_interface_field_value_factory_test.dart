@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,66 +15,66 @@ class TestFieldValueFactory extends FieldValueFactoryPlatform {
 void main() {
   initializeMethodChannel();
 
-  group("$FieldValueFactoryPlatform()", () {
+  group('$FieldValueFactoryPlatform()', () {
     setUpAll(() async {
       await Firebase.initializeApp();
     });
 
-    test("constructor", () {
+    test('constructor', () {
       final fieldValueFactory = TestFieldValueFactory._();
       expect(fieldValueFactory, isInstanceOf<FieldValueFactoryPlatform>());
     });
 
-    test("throws if .arrayUnion", () {
+    test('throws if .arrayUnion', () {
       final fieldValueFactory = TestFieldValueFactory._();
       try {
         fieldValueFactory.arrayUnion([]);
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("arrayUnion() is not implemented"));
+        expect(e.message, equals('arrayUnion() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .arrayRemove", () {
+    test('throws if .arrayRemove', () {
       final fieldValueFactory = TestFieldValueFactory._();
       try {
         fieldValueFactory.arrayRemove([]);
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("arrayRemove() is not implemented"));
+        expect(e.message, equals('arrayRemove() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .delete", () {
+    test('throws if .delete', () {
       final fieldValueFactory = TestFieldValueFactory._();
       try {
         fieldValueFactory.delete();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("delete() is not implemented"));
+        expect(e.message, equals('delete() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .serverTimestamp", () {
+    test('throws if .serverTimestamp', () {
       final fieldValueFactory = TestFieldValueFactory._();
       try {
         fieldValueFactory.serverTimestamp();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("serverTimestamp() is not implemented"));
+        expect(e.message, equals('serverTimestamp() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .increment", () {
+    test('throws if .increment', () {
       final fieldValueFactory = TestFieldValueFactory._();
       try {
         fieldValueFactory.increment(1);
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("increment() is not implemented"));
+        expect(e.message, equals('increment() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');

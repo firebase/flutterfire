@@ -129,11 +129,11 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             children: <Widget>[
               Text(_performanceCollectionMessage),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _togglePerformanceCollection,
                 child: const Text('Toggle Data Collection'),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _testTrace,
                 child: const Text('Run Trace'),
               ),
@@ -141,7 +141,7 @@ class _MyAppState extends State<MyApp> {
                 _traceHasRan ? 'Trace Ran!' : '',
                 style: textStyle,
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: _testHttpMetric,
                 child: const Text('Run HttpMetric'),
               ),

@@ -54,7 +54,7 @@ module.exports = [
     pub: 'firebase_messaging',
     firebase: 'cloud-messaging',
     support: {
-      web: false,
+      web: true,
       mobile: true,
       macos: true,
     },

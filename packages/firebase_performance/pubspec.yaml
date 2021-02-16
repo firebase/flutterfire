@@ -13,17 +13,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^0.7.0
-
+  firebase_core: ">=0.8.0-1.0.nullsafety.1 <0.8.0-2.0.nullsafety.0"
 dev_dependencies:
   pedantic: ^1.8.0
-  http: ^0.12.0
+  http: ^0.12.2
   flutter_test:
     sdk: flutter
   flutter_driver:
     sdk: flutter
-  test: any
+  test: ^1.16.0-nullsafety.15
   e2e: ^0.6.1
+
+dependency_overrides:
+  http_parser: ^4.0.0-nullsafety
 
 flutter:
   plugin:

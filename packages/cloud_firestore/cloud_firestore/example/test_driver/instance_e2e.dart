@@ -1,5 +1,3 @@
-// @dart = 2.9
-
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -14,7 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runInstanceTests() {
   group('$FirebaseFirestore.instance', () {
-    /*late*/ FirebaseFirestore firestore;
+    FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -43,7 +41,7 @@ void runInstanceTests() {
       });
 
       // Allow the snapshots to trigger...
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
 
       await documentReference.set({'foo': 'bar'});
 
@@ -122,9 +120,9 @@ void runInstanceTests() {
       // the instance, and then check whether clearing succeeds.
       try {
         await firestore.clearPersistence();
-        fail("Should have thrown");
+        fail('Should have thrown');
       } on FirebaseException catch (e) {
-        expect(e.code, equals("failed-precondition"));
+        expect(e.code, equals('failed-precondition'));
       } catch (e) {
         fail(e);
       }
