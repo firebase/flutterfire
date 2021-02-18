@@ -138,14 +138,14 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   }
 
   /// Get the current [Settings] for this [FirebaseFirestorePlatform] instance.
-  Settings? get settings {
+  Settings get settings {
     throw UnimplementedError('settings getter is not implemented');
   }
 
   /// Specifies custom settings to be used to configure this [FirebaseFirestorePlatform] instance.
   ///
   /// You must set these before invoking any other methods on this [FirebaseFirestorePlatform] instance.
-  set settings(Settings? settings) {
+  set settings(Settings settings) {
     throw UnimplementedError('settings setter is not implemented');
   }
 

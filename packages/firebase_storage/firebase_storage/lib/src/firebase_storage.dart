@@ -2,32 +2,30 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_storage;
 
 /// The entrypoint for [FirebaseStorage].
 class FirebaseStorage extends FirebasePluginPlatform {
+  FirebaseStorage._({required this.app, required this.bucket})
+      : super(app.name, 'plugins.flutter.io/firebase_storage');
+
   // Cached and lazily loaded instance of [FirebaseStoragePlatform] to avoid
   // creating a [MethodChannelStorage] when not needed or creating an
   // instance with the default app before a user specifies an app.
-  FirebaseStoragePlatform _delegatePackingProperty;
+  FirebaseStoragePlatform? _delegatePackingProperty;
 
-  FirebaseStoragePlatform /*!*/ get _delegate {
-    if (_delegatePackingProperty == null) {
-      _delegatePackingProperty = FirebaseStoragePlatform.instanceFor(
-        app: app,
-        bucket: bucket,
-      );
-    }
-    return _delegatePackingProperty;
+  FirebaseStoragePlatform get _delegate {
+    return _delegatePackingProperty ??= FirebaseStoragePlatform.instanceFor(
+      app: app,
+      bucket: bucket,
+    );
   }
 
   /// The [FirebaseApp] for this current [FirebaseStorage] instance.
   FirebaseApp app;
 
   /// The storage bucket of this instance.
-  String /*!*/ bucket;
+  String bucket;
 
   /// The maximum time to retry operations other than uploads or downloads in milliseconds.
   Duration get maxOperationRetryTime {
@@ -44,9 +42,6 @@ class FirebaseStorage extends FirebasePluginPlatform {
     return Duration(milliseconds: _delegate.maxDownloadRetryTime);
   }
 
-  FirebaseStorage._({this.app, this.bucket})
-      : super(app.name, 'plugins.flutter.io/firebase_storage');
-
   static final Map<String, FirebaseStorage> _cachedInstances = {};
 
   /// Returns an instance using the default [FirebaseApp].
@@ -60,41 +55,38 @@ class FirebaseStorage extends FirebasePluginPlatform {
   ///
   /// If [app] is not provided, the default Firebase app will be used.
   /// If [bucket] is not provided, the default storage bucket will be used.
-  static FirebaseStorage /*!*/ instanceFor({
-    FirebaseApp app,
-    String bucket,
+  static FirebaseStorage instanceFor({
+    FirebaseApp? app,
+    String? bucket,
   }) {
     app ??= Firebase.app();
-    assert(app != null);
 
-    bucket ??= app.options.storageBucket;
-
-    // A bucket must exist at this point
-    // TODO(ehesp): Check whether `app.options.storageBucket` can be nullable post migration
-    if (bucket == null) {
+    if (bucket == null && app.options.storageBucket == null) {
       if (app.name == defaultFirebaseAppName) {
         _throwNoBucketError(
-            "No default storage bucket could be found. Ensure you have correctly followed the Getting Started guide.");
+            'No default storage bucket could be found. Ensure you have correctly followed the Getting Started guide.');
       } else {
         _throwNoBucketError(
             "No storage bucket could be found for the app '${app.name}'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.");
       }
     }
 
+    String _bucket = bucket ?? app.options.storageBucket!;
+
     // Previous versions allow storage buckets starting with "gs://".
     // Since we need to create a key using the bucket, it must not include "gs://"
     // since native does not include it when requesting the bucket. This keeps
     // the code backwards compatible but also works with the refactor.
-    if (bucket.startsWith('gs://')) {
-      bucket = bucket.replaceFirst('gs://', '');
+    if (_bucket.startsWith('gs://')) {
+      _bucket = _bucket.replaceFirst('gs://', '');
     }
 
-    String key = '${app.name}|${bucket}';
+    String key = '${app.name}|$_bucket';
     if (_cachedInstances.containsKey(key)) {
-      return _cachedInstances[key];
+      return _cachedInstances[key]!;
     }
 
-    FirebaseStorage newInstance = FirebaseStorage._(app: app, bucket: bucket);
+    FirebaseStorage newInstance = FirebaseStorage._(app: app, bucket: _bucket);
     _cachedInstances[key] = newInstance;
 
     return newInstance;
@@ -104,10 +96,9 @@ class FirebaseStorage extends FirebasePluginPlatform {
   ///
   /// If the [path] is empty, the reference will point to the root of the
   /// storage bucket.
-  Reference ref([String /*?*/ path]) {
+  Reference ref([String? path]) {
     path ??= '/';
-    path = path.isEmpty ? '/' : path;
-    return Reference._(this, _delegate.ref(path));
+    return Reference._(this, _delegate.ref(path.isEmpty ? '/' : path));
   }
 
   /// Returns a new [Reference] from a given URL.
@@ -117,12 +108,11 @@ class FirebaseStorage extends FirebasePluginPlatform {
   /// [FirebaseStorage.bucket], a new [FirebaseStorage] instance for the
   /// [Reference] will be used instead.
   Reference refFromURL(String url) {
-    assert(url != null);
     assert(url.startsWith('gs://') || url.startsWith('http'),
         "'a url must start with 'gs://' or 'https://'");
 
-    String bucket;
-    String path;
+    String? bucket;
+    String? path;
 
     if (url.startsWith('http')) {
       final parts = partsFromHttpUrl(url);
@@ -130,7 +120,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
       assert(parts != null,
           "url could not be parsed, ensure it's a valid storage url");
 
-      bucket = parts['bucket'];
+      bucket = parts!['bucket'];
       path = parts['path'];
     } else {
       bucket = bucketFromGoogleStorageUrl(url);
@@ -143,28 +133,27 @@ class FirebaseStorage extends FirebasePluginPlatform {
 
   /// Sets the new maximum operation retry time.
   void setMaxOperationRetryTime(Duration time) {
-    assert(time != null);
     assert(!time.isNegative);
     return _delegate.setMaxOperationRetryTime(time.inMilliseconds);
   }
 
   /// Sets the new maximum upload retry time.
   void setMaxUploadRetryTime(Duration time) {
-    assert(time != null);
     assert(!time.isNegative);
     return _delegate.setMaxUploadRetryTime(time.inMilliseconds);
   }
 
   /// Sets the new maximum download retry time.
   void setMaxDownloadRetryTime(Duration time) {
-    assert(time != null);
     assert(!time.isNegative);
     return _delegate.setMaxDownloadRetryTime(time.inMilliseconds);
   }
 
   @override
-  bool operator ==(dynamic o) =>
-      o is FirebaseStorage && o.app.name == app.name && o.bucket == bucket;
+  bool operator ==(Object? other) =>
+      other is FirebaseStorage &&
+      other.app.name == app.name &&
+      other.bucket == bucket;
 
   @override
   int get hashCode => hashValues(app.name, bucket);
@@ -173,7 +162,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
   String toString() => '$FirebaseStorage(app: ${app.name}, bucket: $bucket)';
 }
 
-_throwNoBucketError(String message) {
+void _throwNoBucketError(String message) {
   throw FirebaseException(
-      plugin: "firebase_storage", code: "no-bucket", message: message);
+      plugin: 'firebase_storage', code: 'no-bucket', message: message);
 }

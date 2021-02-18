@@ -242,7 +242,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  Settings? settings;
+  Settings settings = const Settings();
 
   @override
   Future<void> terminate() async {
