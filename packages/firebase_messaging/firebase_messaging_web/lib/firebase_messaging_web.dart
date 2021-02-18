@@ -75,7 +75,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<RemoteMessage> getInitialMessage() {
+  Future<RemoteMessage> getInitialMessage() async {
     return null;
   }
 

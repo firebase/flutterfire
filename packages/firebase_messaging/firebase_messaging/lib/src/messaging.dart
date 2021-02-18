@@ -118,7 +118,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// If the application has been opened from a terminated state via a [RemoteMessage]
   /// (containing a [Notification]), it will be returned, otherwise it will be `null`.
   ///
-  /// Once the [RemoteMesage] has been consumed, it will be removed and further
+  /// Once the [RemoteMessage] has been consumed, it will be removed and further
   /// calls to [getInitialMessage] will be `null`.
   ///
   /// This should be used to determine whether specific notification interaction
