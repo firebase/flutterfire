@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:meta/meta.dart' show protected;
 
 /// The result of calling [getMetadata] on a storage object reference.
@@ -12,40 +10,40 @@ class FullMetadata {
   @protected
   FullMetadata(this._metadata);
 
-  final Map<String, dynamic> /*!*/ _metadata;
+  final Map<String, dynamic> _metadata;
 
   /// The bucket this object is contained in.
-  String get bucket {
+  String? get bucket {
     return _metadata['bucket'];
   }
 
   /// Served as the 'Cache-Control' header on object download.
-  String get cacheControl {
+  String? get cacheControl {
     return _metadata['cacheControl'];
   }
 
   /// Served as the 'Content-Disposition' HTTP header on object download.
-  String get contentDisposition {
+  String? get contentDisposition {
     return _metadata['contentDisposition'];
   }
 
   /// Served as the 'Content-Encoding' header on object download.
-  String get contentEncoding {
+  String? get contentEncoding {
     return _metadata['contentEncoding'];
   }
 
   /// Served as the 'Content-Language' header on object download.
-  String get contentLanguage {
+  String? get contentLanguage {
     return _metadata['contentLanguage'];
   }
 
   /// Served as the 'Content-Type' header on object download.
-  String get contentType {
+  String? get contentType {
     return _metadata['contentType'];
   }
 
   /// Custom metadata set on this storage object.
-  Map<String, String> get customMetadata {
+  Map<String, String>? get customMetadata {
     return _metadata['customMetadata'] == null
         ? null
         : Map<String, String>.from(_metadata['customMetadata']);
@@ -57,22 +55,22 @@ class FullMetadata {
   }
 
   /// The object's generation.
-  String get generation {
+  String? get generation {
     return _metadata['generation'];
   }
 
   /// The object's metadata generation.
-  String get metadataGeneration {
+  String? get metadataGeneration {
     return _metadata['metadataGeneration'];
   }
 
   /// A Base64-encoded MD5 hash of the object being uploaded.
-  String get md5Hash {
+  String? get md5Hash {
     return _metadata['md5Hash'];
   }
 
   /// The object's metageneration.
-  String get metageneration {
+  String? get metageneration {
     return _metadata['metageneration'];
   }
 
@@ -84,19 +82,19 @@ class FullMetadata {
   }
 
   /// The size of this object, in bytes.
-  int get size {
+  int? get size {
     return _metadata['size'];
   }
 
   /// A DateTime representing when this object was created.
-  DateTime get timeCreated {
+  DateTime? get timeCreated {
     return _metadata['creationTimeMillis'] == null
         ? null
         : DateTime.fromMillisecondsSinceEpoch(_metadata['creationTimeMillis']);
   }
 
   /// A DateTime representing when this object was updated.
-  DateTime get updated {
+  DateTime? get updated {
     return _metadata['updatedTimeMillis'] == null
         ? null
         : DateTime.fromMillisecondsSinceEpoch(_metadata['updatedTimeMillis']);
