@@ -1,6 +1,6 @@
 name: firebase_storage_web
 description: The web implementation of firebase_storage
-repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_storage/firebase_storage_web
+repository: https://github.com/minorlab/flutterfire/tree/storage-nnbd/packages/firebase_storage/firebase_storage_web
 version: 0.1.1+3
 
 environment:
