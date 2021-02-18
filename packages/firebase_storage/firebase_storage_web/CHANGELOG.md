@@ -1,3 +1,7 @@
+## 0.2.0-1.0.nullsafety.0
+
+ - **REFACTOR**: Migrate Firebase Storage to nnbd (#4753).
+
 ## 0.1.1+3
 
  - Update a dependency to the latest release.
