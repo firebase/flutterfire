@@ -2,17 +2,16 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
-import 'package:firebase_storage_web/src/reference_web.dart';
-import 'package:firebase_storage_web/src/utils/errors.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:meta/meta.dart';
-import 'interop/storage.dart' as storage_interop;
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:meta/meta.dart';
+
+import 'interop/storage.dart' as storage_interop;
+import 'reference_web.dart';
+import 'utils/errors.dart';
 
 /// The type for functions that implement the `ref` method of the [FirebaseStorageWeb] class.
 @visibleForTesting
@@ -21,29 +20,33 @@ typedef ReferenceBuilder = ReferencePlatform Function(
 
 /// The Web implementation of the FirebaseStoragePlatform.
 class FirebaseStorageWeb extends FirebaseStoragePlatform {
-  /// The js-interop layer for Firebase Storage
-  final storage_interop.Storage webStorage;
-
-  // Same default as the method channel implementation
-  int _maxDownloadRetryTime = Duration(minutes: 10).inMilliseconds;
-
-  // Same default as the method channel implementation
-  int _maxOperationRetryTime = Duration(minutes: 2).inMilliseconds;
-
-  // Empty constructor. This is only used by the registerWith method.
-  FirebaseStorageWeb._nullInstance() : webStorage = null;
-
   /// Construct the plugin.
   /// (Web doesn't use the `bucket`, since the init happens in index.html)
-  FirebaseStorageWeb({FirebaseApp app, String bucket})
+  FirebaseStorageWeb({FirebaseApp? app, required String bucket})
       : webStorage =
             storage_interop.getStorageInstance(core_interop.app(app?.name)),
         super(appInstance: app, bucket: bucket);
 
+  // Empty constructor. This is only used by the registerWith method.
+  // superclass also needs to be initialized and 'bucket' param is required.
+  FirebaseStorageWeb._nullInstance()
+      : webStorage = null,
+        super(bucket: '');
+
   /// Create a FirebaseStorageWeb injecting a [fb.Storage] object.
   @visibleForTesting
-  FirebaseStorageWeb.forMock(this.webStorage, {String bucket, FirebaseApp app})
+  FirebaseStorageWeb.forMock(this.webStorage,
+      {required String bucket, FirebaseApp? app})
       : super(appInstance: app, bucket: bucket);
+
+  /// The js-interop layer for Firebase Storage
+  final storage_interop.Storage? webStorage;
+
+  // Same default as the method channel implementation
+  int _maxDownloadRetryTime = const Duration(minutes: 10).inMilliseconds;
+
+  // Same default as the method channel implementation
+  int _maxOperationRetryTime = const Duration(minutes: 2).inMilliseconds;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web.
   static void registerWith(Registrar registrar) {
@@ -52,13 +55,8 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   /// Returns a [FirebaseStorageWeb] with the provided arguments.
   @override
-  FirebaseStoragePlatform delegateFor({FirebaseApp app, String /*!*/ bucket}) {
-    if (bucket == null) {
-      throw FirebaseException(
-          message:
-              'No storage bucket could be found for the app \'${app.name}\'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.',
-          plugin: 'firebase_storage');
-    }
+  FirebaseStoragePlatform delegateFor(
+      {FirebaseApp? app, required String bucket}) {
     return FirebaseStorageWeb(app: app, bucket: bucket);
   }
 
@@ -71,7 +69,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   /// The maximum time to retry uploads in milliseconds.
   @override
   int get maxUploadRetryTime {
-    return webStorage.maxUploadRetryTime;
+    return webStorage!.maxUploadRetryTime;
   }
 
   /// The maximum time to retry downloads in milliseconds.
@@ -88,7 +86,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   @override
   ReferencePlatform ref(
     String path, {
-    @visibleForTesting ReferenceBuilder refBuilder,
+    @visibleForTesting ReferenceBuilder? refBuilder,
   }) {
     ReferencePlatform ref;
     try {
@@ -109,13 +107,13 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   @override
   void setMaxOperationRetryTime(int time) {
     _maxOperationRetryTime = time;
-    webStorage.setMaxOperationRetryTime(time);
+    webStorage!.setMaxOperationRetryTime(time);
   }
 
   /// The new maximum upload retry time in milliseconds.
   @override
   void setMaxUploadRetryTime(int time) {
-    webStorage.setMaxUploadRetryTime(time);
+    webStorage!.setMaxUploadRetryTime(time);
   }
 
   /// The new maximum download retry time in milliseconds.

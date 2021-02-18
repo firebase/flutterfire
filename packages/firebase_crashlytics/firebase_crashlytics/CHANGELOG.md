@@ -1,3 +1,7 @@
+## 0.5.0-1.0.nullsafety.3
+
+ - Update a dependency to the latest release.
+
 ## 0.5.0-1.0.nullsafety.2
 
  - **REFACTOR**: pubspec & dependency updates (#4932).

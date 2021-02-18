@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 /// The settable metadata a storage object reference can be set with.
 class SettableMetadata {
   /// Creates a new [SettableMetadata] instance.
@@ -17,22 +15,22 @@ class SettableMetadata {
   });
 
   /// Served as the 'Cache-Control' header on object download.
-  final String cacheControl;
+  final String? cacheControl;
 
   /// Served as the 'Cache-Disposition' header on object download.
-  final String contentDisposition;
+  final String? contentDisposition;
 
   /// Served as the 'Content-Encoding' header on object download.
-  final String contentEncoding;
+  final String? contentEncoding;
 
   /// Served as the 'Content-Language' header on object download.
-  final String contentLanguage;
+  final String? contentLanguage;
 
   /// Served as the 'Content-Type' header on object download.
-  final String contentType;
+  final String? contentType;
 
   /// Additional user-defined custom metadata.
-  final Map<String, String> customMetadata;
+  final Map<String, String>? customMetadata;
 
   /// Returns the settable metadata as a [Map].
   Map<String, dynamic> asMap() {

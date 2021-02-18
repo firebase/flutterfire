@@ -1,3 +1,7 @@
+## 0.8.0-1.0.nullsafety.2
+
+ - **TESTS**: update mockito API usage in tests
+
 ## 0.8.0-1.0.nullsafety.1
 
  - **REFACTOR**: pubspec & dependency updates (#4932).

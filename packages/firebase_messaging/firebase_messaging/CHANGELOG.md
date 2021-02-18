@@ -1,3 +1,7 @@
+## 9.0.0-1.0.nullsafety.1
+
+ - **TESTS**: update mockito API usage in tests
+
 ## 9.0.0-1.0.nullsafety.0
 
 > Note: This release has breaking changes.
