@@ -13,12 +13,13 @@ import '../mock.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  /*late*/ MethodChannelListResult testListResult;
+  MethodChannelListResult? testListResult;
 
   group('$MethodChannelListResult', () {
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
-      FirebaseStoragePlatform storage = MethodChannelFirebaseStorage(app: app);
+      FirebaseStoragePlatform storage =
+          MethodChannelFirebaseStorage(app: app, bucket: '');
       testListResult = MethodChannelListResult(
         storage,
         nextPageToken: '123',
@@ -29,7 +30,7 @@ void main() {
 
     group('items', () {
       test('should return successfully', () {
-        final result = testListResult.items;
+        final result = testListResult!.items;
         expect(result, isInstanceOf<List<ReferencePlatform>>());
         expect(result.length, equals(2));
       });
@@ -37,7 +38,7 @@ void main() {
 
     group('prefixes', () {
       test('should return successfully', () {
-        final result = testListResult.prefixes;
+        final result = testListResult!.prefixes;
         expect(result, isInstanceOf<List<ReferencePlatform>>());
         expect(result.length, equals(2));
       });

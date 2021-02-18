@@ -11,20 +11,17 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   // Cached and lazily loaded instance of [FirebaseMessagingPlatform] to avoid
   // creating a [MethodChannelFirebaseMessaging] when not needed or creating an
   // instance with the default app before a user specifies an app.
-  FirebaseMessagingPlatform _delegatePackingProperty;
+  FirebaseMessagingPlatform? _delegatePackingProperty;
 
   FirebaseMessagingPlatform get _delegate {
-    if (_delegatePackingProperty == null) {
-      _delegatePackingProperty = FirebaseMessagingPlatform.instanceFor(
-          app: app, pluginConstants: pluginConstants);
-    }
-    return _delegatePackingProperty;
+    return _delegatePackingProperty ??= FirebaseMessagingPlatform.instanceFor(
+        app: app, pluginConstants: pluginConstants);
   }
 
   /// The [FirebaseApp] for this current [FirebaseMessaging] instance.
   FirebaseApp app;
 
-  FirebaseMessaging._({this.app})
+  FirebaseMessaging._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_messaging');
 
   /// Returns an instance using the default [FirebaseApp].
@@ -32,10 +29,10 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return FirebaseMessaging._(app: Firebase.app());
   }
 
+  //  Messaging does not yet support multiple Firebase Apps. Default app only.
   /// Returns an instance using a specified [FirebaseApp]
   ///
   /// If [app] is not provided, the default Firebase app will be used.
-  // TODO: messaging does not yet support multiple Firebase Apps. Default app only.
   // static FirebaseMessaging instanceFor({
   //   FirebaseApp app,
   // }) {
@@ -55,6 +52,14 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   //
   // static final Map<String, FirebaseMessaging> _cachedInstances = {};
 
+  static final _onMessageController =
+      StreamController<RemoteMessage>.broadcast(onListen: () {
+    Stream<RemoteMessage> onMessageStream =
+        FirebaseMessagingPlatform.onMessage.stream;
+
+    onMessageStream.pipe(_onMessageController);
+  });
+
   /// Returns a Stream that is called when an incoming FCM payload is received whilst
   /// the Flutter instance is in the foreground.
   ///
@@ -62,17 +67,15 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// To handle messages whilst the app is in the background or terminated,
   /// see [onBackgroundMessage].
-  static Stream<RemoteMessage> get onMessage {
-    Stream<RemoteMessage> onMessageStream =
-        FirebaseMessagingPlatform.onMessage.stream;
+  static Stream<RemoteMessage> get onMessage => _onMessageController.stream;
 
-    StreamController<RemoteMessage> streamController;
-    streamController = StreamController<RemoteMessage>.broadcast(onListen: () {
-      onMessageStream.pipe(streamController);
-    });
+  static final _onMessageOpenedAppController =
+      StreamController<RemoteMessage>.broadcast(onListen: () {
+    Stream<RemoteMessage> onMessageOpenedAppStream =
+        FirebaseMessagingPlatform.onMessageOpenedApp.stream;
 
-    return streamController.stream;
-  }
+    onMessageOpenedAppStream.pipe(_onMessageOpenedAppController);
+  });
 
   /// Returns a [Stream] that is called when a user presses a notification message displayed
   /// via FCM.
@@ -82,18 +85,10 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// If your app is opened via a notification whilst the app is terminated,
   /// see [getInitialMessage].
-  static Stream<RemoteMessage> get onMessageOpenedApp {
-    Stream<RemoteMessage> onMessageOpenedAppStream =
-        FirebaseMessagingPlatform.onMessageOpenedApp.stream;
+  static Stream<RemoteMessage> get onMessageOpenedApp =>
+      _onMessageOpenedAppController.stream;
 
-    StreamController<RemoteMessage> streamController;
-    streamController = StreamController<RemoteMessage>.broadcast(onListen: () {
-      onMessageOpenedAppStream.pipe(streamController);
-    });
-
-    return streamController.stream;
-  }
-
+  // ignore: use_setters_to_change_properties
   /// Set a message handler function which is called when the app is in the
   /// background or terminated.
   ///
@@ -101,13 +96,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// anonymous otherwise an [ArgumentError] will be thrown.
   static void onBackgroundMessage(BackgroundMessageHandler handler) {
     FirebaseMessagingPlatform.onBackgroundMessage = handler;
-  }
-
-  // ignore: public_member_api_docs
-  @Deprecated(
-      "Constructing Messaging is deprecated, use 'FirebaseMessaging.instance' instead")
-  factory FirebaseMessaging() {
-    return FirebaseMessaging.instance;
   }
 
   /// Returns whether messaging auto initialization is enabled or disabled for the device.
@@ -124,15 +112,15 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// This should be used to determine whether specific notification interaction
   /// should open the app with a specific purpose (e.g. opening a chat message,
   /// specific screen etc).
-  Future<RemoteMessage> getInitialMessage() {
+  Future<RemoteMessage?> getInitialMessage() {
     return _delegate.getInitialMessage();
   }
 
   /// Removes access to an FCM token previously authorized with optional [senderId].
   ///
   /// Messages sent by the server to this token will fail.
-  Future<void> deleteToken() {
-    return _delegate.deleteToken();
+  Future<void> deleteToken({String? senderId}) {
+    return _delegate.deleteToken(senderId: senderId);
   }
 
   /// On iOS/MacOS, it is possible to get the users APNs token.
@@ -141,13 +129,13 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// without using the FCM service.
   ///
   /// On Android & web, this returns `null`.
-  Future<String> getAPNSToken() {
+  Future<String?> getAPNSToken() {
     return _delegate.getAPNSToken();
   }
 
   /// Returns the default FCM token for this device and optionally a [senderId].
-  Future<String> getToken({
-    String vapidKey,
+  Future<String?> getToken({
+    String? vapidKey,
   }) {
     return _delegate.getToken(
       vapidKey: vapidKey,
@@ -234,41 +222,15 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     );
   }
 
-  /// Prompts the user for notification permissions.
-  ///
-  /// On iOS, a dialog is shown requesting the users permission.
-  ///
-  /// On Android, permissions are not required and `true` is returned.
-  ///
-  /// On Web, a popup requesting the users permission is shown using the native
-  /// browser API.
-  @Deprecated(
-      "requestNotificationPermissions() is deprecated in favor of requestPermission()")
-  Future<bool> requestNotificationPermissions(
-      [IosNotificationSettings iosSettings]) async {
-    iosSettings ??= const IosNotificationSettings();
-    AuthorizationStatus status = (await requestPermission(
-      sound: iosSettings.sound,
-      alert: iosSettings.alert,
-      badge: iosSettings.badge,
-      provisional: iosSettings.provisional,
-    ))
-        .authorizationStatus;
-
-    return status == AuthorizationStatus.authorized ||
-        status == AuthorizationStatus.provisional;
-  }
-
   /// Send a new [RemoteMessage] to the FCM server. Android only.
   Future<void> sendMessage({
-    String to,
-    Map<String, String> data,
-    String collapseKey,
-    String messageId,
-    String messageType,
-    int ttl,
+    String? to,
+    Map<String, String>? data,
+    String? collapseKey,
+    String? messageId,
+    String? messageType,
+    int? ttl,
   }) {
-    assert(to != null);
     if (ttl != null) {
       assert(ttl >= 0);
     }
@@ -284,7 +246,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   /// Enable or disable auto-initialization of Firebase Cloud Messaging.
   Future<void> setAutoInitEnabled(bool enabled) async {
-    assert(enabled != null);
     return _delegate.setAutoInitEnabled(enabled);
   }
 
@@ -333,36 +294,9 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     _assertTopicName(topic);
     return _delegate.unsubscribeFromTopic(topic);
   }
-
-  /// Resets Instance ID and revokes all tokens.
-  ///
-  /// A new Instance ID is generated asynchronously if Firebase Cloud Messaging
-  /// auto-init is enabled.
-  ///
-  /// Returns `true` if the operations executed successfully and `false` if
-  /// an error occurred.
-  @Deprecated('Use [deleteToken] instead.')
-  Future<bool> deleteInstanceID() async {
-    try {
-      await deleteToken();
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  /// Determine whether FCM auto-initialization is enabled or disabled.
-  @Deprecated(
-      "autoInitEnabled() is deprecated. Use [isAutoInitEnabled] instead")
-  Future<bool> autoInitEnabled() async {
-    return isAutoInitEnabled;
-  }
 }
 
-_assertTopicName(String topic) {
-  assert(topic != null);
-
-  bool isValidTopic = RegExp(r"^[a-zA-Z0-9-_.~%]{1,900}$").hasMatch(topic);
-
+void _assertTopicName(String topic) {
+  bool isValidTopic = RegExp(r'^[a-zA-Z0-9-_.~%]{1,900}$').hasMatch(topic);
   assert(isValidTopic);
 }

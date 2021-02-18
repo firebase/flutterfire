@@ -9,13 +9,15 @@ import 'dart:async';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
 
-import 'func.dart';
 import 'es6_interop.dart';
+import 'func.dart';
 import 'js_interop.dart' as js;
 
 /// Returns Dart representation from JS Object.
-dynamic dartify(Object /*?*/ jsObject,
-    [Object Function(Object /*?*/ object) /*?*/ customDartify]) {
+dynamic dartify(
+  Object? jsObject, [
+  Object Function(Object? object)? customDartify,
+]) {
   if (_isBasicType(jsObject)) {
     return jsObject;
   }
@@ -25,17 +27,17 @@ dynamic dartify(Object /*?*/ jsObject,
     return jsObject.map((item) => dartify(item, customDartify)).toList();
   }
 
-  var jsDate = js.dartifyDate(jsObject);
+  var jsDate = js.dartifyDate(jsObject!);
   if (jsDate != null) {
     return jsDate;
   }
 
-  Object /*?*/ value = customDartify?.call(jsObject);
+  Object? value = customDartify?.call(jsObject);
 
   if (value == null) {
     var keys = js.objectKeys(jsObject);
     var map = <String, dynamic>{};
-    for (var key in keys) {
+    for (final key in keys) {
       map[key] = dartify(util.getProperty(jsObject, key), customDartify);
     }
     return map;
@@ -45,14 +47,18 @@ dynamic dartify(Object /*?*/ jsObject,
 }
 
 // Converts an Iterable into a JS Array
-dynamic jsifyList(Iterable list,
-    [Object Function(Object object) /*?*/ customJsify]) {
+dynamic jsifyList(
+  Iterable list, [
+  Object Function(Object object)? customJsify,
+]) {
   return js.toJSArray(list.map((item) => jsify(item, customJsify)).toList());
 }
 
 // Returns the JS implementation from Dart Object.
-dynamic jsify(Object dartObject,
-    [Object Function(Object object) /*?*/ customJsify]) {
+dynamic jsify(
+  Object dartObject, [
+  Object Function(Object object)? customJsify,
+]) {
   if (_isBasicType(dartObject)) {
     return dartObject;
   }
@@ -73,7 +79,7 @@ dynamic jsify(Object dartObject,
     return allowInterop(dartObject);
   }
 
-  Object /*?*/ value = customJsify?.call(dartObject);
+  Object? value = customJsify?.call(dartObject);
 
   if (value == null) {
     throw ArgumentError.value(dartObject, 'dartObject', 'Could not convert');
@@ -88,7 +94,7 @@ dynamic callMethod(Object jsObject, String method, List<dynamic> args) =>
 
 /// Returns `true` if the [value] is a very basic built-in type - e.g.
 /// `null`, [num], [bool] or [String]. It returns `false` in the other case.
-bool _isBasicType(Object /*?*/ value) {
+bool _isBasicType(Object? value) {
   if (value == null || value is num || value is bool || value is String) {
     return true;
   }
@@ -102,14 +108,16 @@ Future<T> handleThenable<T>(PromiseJsImpl<T> thenable) async {
 
 /// Handles the [Future] object with the provided [mapper] function.
 PromiseJsImpl<S> handleFutureWithMapper<T, S>(
-    Future<T> future, Func1<T, S> mapper) {
+  Future<T> future,
+  Func1<T, S> mapper,
+) {
   return PromiseJsImpl<S>(allowInterop((
-    void Function(S) resolve,
-    void Function(Object) reject,
+    Function(S) resolve,
+    Function(Object) reject,
   ) {
     future.then((value) {
       var mappedValue = mapper(value);
       resolve(mappedValue);
-    }).catchError(reject);
+    }).catchError((error) => reject(error));
   }));
 }

@@ -15,7 +15,7 @@ class TaskSnapshotWeb extends TaskSnapshotPlatform {
       ReferencePlatform ref, storage_interop.UploadTaskSnapshot snapshot)
       : _reference = ref,
         _snapshot = snapshot,
-        super(fbTaskStateToTaskState(snapshot.state), null);
+        super(fbTaskStateToTaskState(snapshot.state), {});
 
   /// The [FirebaseStoragePlatform] used to create the task.
   final ReferencePlatform _reference;
@@ -30,9 +30,7 @@ class TaskSnapshotWeb extends TaskSnapshotPlatform {
   ///
   /// May be `null` if no metadata exists.
   @override
-  FullMetadata get metadata => _snapshot.metadata == null
-      ? null
-      : fbFullMetadataToFullMetadata(_snapshot.metadata);
+  FullMetadata get metadata => fbFullMetadataToFullMetadata(_snapshot.metadata);
 
   /// The [Reference] for this snapshot.
   @override

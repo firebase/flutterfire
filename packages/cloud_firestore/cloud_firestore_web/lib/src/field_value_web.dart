@@ -7,6 +7,7 @@ import 'interop/firestore.dart' as firestore_interop;
 
 /// Implementation of [FieldValuePlatform] that is compatible with
 /// the Firestore web plugin.
+
 class FieldValueWeb {
   /// The js-interop delegate for this [FieldValuePlatform]
   firestore_interop.FieldValue data;
@@ -15,9 +16,11 @@ class FieldValueWeb {
   FieldValueWeb(this.data);
 
   @override
+  //ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(dynamic other) =>
       other is FieldValueWeb && other.data == data;
 
   @override
+  //ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => data.hashCode;
 }

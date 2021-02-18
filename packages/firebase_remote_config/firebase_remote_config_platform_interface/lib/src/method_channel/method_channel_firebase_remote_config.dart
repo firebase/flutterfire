@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';

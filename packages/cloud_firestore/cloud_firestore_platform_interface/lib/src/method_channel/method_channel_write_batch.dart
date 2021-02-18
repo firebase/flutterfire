@@ -63,7 +63,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
 
   @override
   void set(String documentPath, Map<String, dynamic> data,
-      [SetOptions /*?*/ options]) {
+      [SetOptions? options]) {
     _assertNotCommitted();
     _writes.add(<String, dynamic>{
       'path': documentPath,

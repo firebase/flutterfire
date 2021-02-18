@@ -1,6 +1,7 @@
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -61,11 +62,14 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
         return MethodChannelFirebaseFirestore(app: app);
       case _kFirestoreQuery:
         Map<dynamic, dynamic> values = readValue(buffer);
+        //ignore:
         return MethodChannelQuery(
-            MethodChannelFirebaseFirestore(app: null), values['path']);
+            //ignore: avoid_redundant_argument_values
+            MethodChannelFirebaseFirestore(app: null),
+            values['path']);
       case _kFirestoreSettings:
         readValue(buffer);
-        return Settings();
+        return const Settings();
       case _kDocumentReference:
         MethodChannelFirebaseFirestore firestore = readValue(buffer);
         String path = readValue(buffer);

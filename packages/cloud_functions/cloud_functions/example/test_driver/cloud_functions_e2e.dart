@@ -4,6 +4,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
@@ -138,13 +140,13 @@ void testsMain() {
     setUpAll(() async {
       timeoutCallable = FirebaseFunctions.instance.httpsCallable(
           kTestFunctionTimeout,
-          options: HttpsCallableOptions(timeout: Duration(seconds: 3)));
+          options: HttpsCallableOptions(timeout: const Duration(seconds: 3)));
     });
 
     test('times out when the provided timeout is exceeded', () async {
       try {
         await timeoutCallable({
-          'testTimeout': Duration(seconds: 6).inMilliseconds.toString(),
+          'testTimeout': const Duration(seconds: 6).inMilliseconds.toString(),
         });
         fail('Should have thrown');
       } on FirebaseFunctionsException catch (e) {

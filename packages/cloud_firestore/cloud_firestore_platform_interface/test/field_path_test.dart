@@ -9,24 +9,23 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('$FieldPath', () {
     test('equality', () {
-      expect(FieldPath(['foo']), equals(FieldPath(['foo'])));
-      expect(FieldPath(['foo', 'bar']), equals(FieldPath(['foo', 'bar'])));
-      expect(
-          FieldPath(['foo', 'bar']), equals(FieldPath.fromString('foo.bar')));
+      expect(FieldPath(const ['foo']), equals(FieldPath(const ['foo'])));
+      expect(FieldPath(const ['foo', 'bar']),
+          equals(FieldPath(const ['foo', 'bar'])));
+      expect(FieldPath(const ['foo', 'bar']),
+          equals(FieldPath.fromString('foo.bar')));
     });
 
     test('throws is invalid path is provided', () {
-      expect(() => FieldPath(null), throwsAssertionError);
-      expect(() => FieldPath([]), throwsAssertionError);
-      expect(() => FieldPath([null]), throwsAssertionError);
-      expect(() => FieldPath(['123', null]), throwsAssertionError);
+      expect(() => FieldPath(const []), throwsAssertionError);
     });
 
     test('returns a [List] of components', () {
-      expect(FieldPath(['foo']).components, equals(['foo']));
-      expect(FieldPath(['foo.bar']).components, equals(['foo.bar']));
+      expect(FieldPath(const ['foo']).components, equals(const ['foo']));
       expect(
-          FieldPath(['foo.bar', 'baz']).components, equals(['foo.bar', 'baz']));
+          FieldPath(const ['foo.bar']).components, equals(const ['foo.bar']));
+      expect(FieldPath(const ['foo.bar', 'baz']).components,
+          equals(const ['foo.bar', 'baz']));
     });
 
     test('returns a [FieldPathType] for a documentId', () {

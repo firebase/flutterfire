@@ -7,13 +7,13 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
+import '../../firebase_storage_platform_interface.dart';
 import '../internal/pointer.dart';
 
 /// The interface a reference must implement.
 abstract class ReferencePlatform extends PlatformInterface {
   // ignore: public_member_api_docs
-  ReferencePlatform(this.storage, String /*!*/ path)
+  ReferencePlatform(this.storage, String path)
       : _pointer = Pointer(path),
         super(token: _token);
 
@@ -27,13 +27,12 @@ abstract class ReferencePlatform extends PlatformInterface {
   /// This is used by the app-facing [Reference] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(ReferencePlatform instance) {
-    assert(instance != null);
+  static void verifyExtends(ReferencePlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
   /// The storage service associated with this reference.
-  final FirebaseStoragePlatform /*!*/ storage;
+  final FirebaseStoragePlatform storage;
 
   /// The name of the bucket containing this reference's object.
   String get bucket {
@@ -41,7 +40,7 @@ abstract class ReferencePlatform extends PlatformInterface {
   }
 
   /// The full path of this object.
-  String /*!*/ get fullPath => _pointer.path;
+  String get fullPath => _pointer.path;
 
   /// The short name of this object, which is the last component of the full path.
   ///
@@ -50,8 +49,8 @@ abstract class ReferencePlatform extends PlatformInterface {
 
   /// A reference pointing to the parent location of this reference, or `null`
   /// if this reference is the root.
-  ReferencePlatform /*?*/ get parent {
-    String parentPath = _pointer.parent;
+  ReferencePlatform? get parent {
+    String? parentPath = _pointer.parent;
 
     if (parentPath == null) {
       return null;
@@ -79,7 +78,7 @@ abstract class ReferencePlatform extends PlatformInterface {
   }
 
   /// Fetches a long lived download URL for this object.
-  Future<String /*!*/ > getDownloadURL() {
+  Future<String> getDownloadURL() {
     throw UnimplementedError('getDownloadURL() is not implemented');
   }
 
@@ -99,7 +98,7 @@ abstract class ReferencePlatform extends PlatformInterface {
   /// objects whose paths end with "/" or contain two consecutive "/"s. Firebase
   /// Storage List API will filter these unsupported objects. [list] may fail
   /// if there are too many unsupported objects in the bucket.
-  Future<ListResultPlatform> list([ListOptions /*?*/ options]) {
+  Future<ListResultPlatform> list([ListOptions? options]) {
     throw UnimplementedError('list() is not implemented');
   }
 
@@ -121,7 +120,7 @@ abstract class ReferencePlatform extends PlatformInterface {
   ///
   /// Returns a [Uint8List] of the data. If the [maxSize] (in bytes) is exceeded,
   /// the operation will be canceled.
-  Future<Uint8List /*?*/ > getData(int maxSize) async {
+  Future<Uint8List?> getData(int maxSize) async {
     throw UnimplementedError('getData() is not implemented');
   }
 
@@ -130,22 +129,21 @@ abstract class ReferencePlatform extends PlatformInterface {
   /// Use this method to upload fixed sized data as a [Uint8List].
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
-  TaskPlatform putData(Uint8List /*!*/ data,
-      [SettableMetadata /*?*/ metadata]) {
+  TaskPlatform putData(Uint8List data, [SettableMetadata? metadata]) {
     throw UnimplementedError('putData() is not implemented');
   }
 
   /// Upload a [Blob]. Note; this is only supported on web platforms.
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
-  TaskPlatform putBlob(dynamic data, [SettableMetadata /*?*/ metadata]) {
+  TaskPlatform putBlob(dynamic data, [SettableMetadata? metadata]) {
     throw UnimplementedError('putBlob() is not implemented');
   }
 
   /// Upload a [File] from the filesystem. The file must exist.
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
-  TaskPlatform putFile(File /*!*/ file, [SettableMetadata /*?*/ metadata]) {
+  TaskPlatform putFile(File file, [SettableMetadata? metadata]) {
     throw UnimplementedError('putFile() is not implemented');
   }
 
@@ -160,19 +158,19 @@ abstract class ReferencePlatform extends PlatformInterface {
   ///   - [PutStringFormat.base64] will be encoded as a Base64 string.
   ///   - [PutStringFormat.base64Url] will be encoded as a Base64 string safe URL.
   TaskPlatform putString(String data, PutStringFormat format,
-      [SettableMetadata /*?*/ metadata]) {
+      [SettableMetadata? metadata]) {
     throw UnimplementedError('putString() is not implemented');
   }
 
   /// Updates the metadata on a storage object.
-  Future<FullMetadata> updateMetadata(SettableMetadata /*!*/ metadata) {
+  Future<FullMetadata> updateMetadata(SettableMetadata metadata) {
     throw UnimplementedError('updateMetadata() is not implemented');
   }
 
   /// Writes a remote storage object to the local filesystem.
   ///
   /// If a file already exists at the given location, it will be overwritten.
-  TaskPlatform writeToFile(File /*!*/ file) {
+  TaskPlatform writeToFile(File file) {
     throw UnimplementedError('writeToFile() is not implemented');
   }
 }

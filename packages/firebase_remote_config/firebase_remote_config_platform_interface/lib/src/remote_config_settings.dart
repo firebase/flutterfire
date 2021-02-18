@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:meta/meta.dart';
 
 /// Defines the options for the corresponding Remote Config instance.

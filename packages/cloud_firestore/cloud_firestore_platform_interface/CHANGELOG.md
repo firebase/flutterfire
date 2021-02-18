@@ -1,3 +1,13 @@
+## 4.0.0-1.0.nullsafety.1
+
+ - **TESTS**: update mockito API usage in tests
+
+## 4.0.0-1.0.nullsafety.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: migrate to NNBD (#4780).
+
 ## 3.0.1
 
  - Update a dependency to the latest release.

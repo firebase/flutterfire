@@ -12,7 +12,7 @@ Exception convertPlatformException(Object exception) {
     throw exception;
   }
 
-  return platformExceptionToFirebaseException(exception as PlatformException);
+  return platformExceptionToFirebaseException(exception);
 }
 
 /// Converts a [PlatformException] into a [FirebaseException].
@@ -22,12 +22,12 @@ Exception convertPlatformException(Object exception) {
 /// which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseException(
     PlatformException platformException) {
-  Map<String, String> details = platformException.details != null
+  Map<String, String>? details = platformException.details != null
       ? Map<String, String>.from(platformException.details)
       : null;
 
   String code = 'unknown';
-  String message = platformException.message;
+  String? message = platformException.message;
 
   if (details != null) {
     code = details['code'] ?? code;

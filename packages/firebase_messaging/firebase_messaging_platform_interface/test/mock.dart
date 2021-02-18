@@ -8,9 +8,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
 typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
-typedef Callback(MethodCall call);
+typedef Callback = Function(MethodCall call);
 
-void setupFirebaseMessagingMocks([Callback customHandlers]) {
+void setupFirebaseMessagingMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
     if (call.method == 'Firebase#initializeCore') {
@@ -57,8 +57,8 @@ Future<void> testExceptionHandling(String type, Function testMethod) async {
       return;
     }
     fail(
-        'testExceptionHandling: ${testMethod} threw unexpected FirebaseException');
+        'testExceptionHandling: $testMethod threw unexpected FirebaseException');
   } catch (e) {
-    fail('testExceptionHandling: ${testMethod} threw invalid exception ${e}');
+    fail('testExceptionHandling: $testMethod threw invalid exception $e');
   }
 }
