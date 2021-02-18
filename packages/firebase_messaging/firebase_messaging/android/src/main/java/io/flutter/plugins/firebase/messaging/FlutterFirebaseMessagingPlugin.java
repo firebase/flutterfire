@@ -372,7 +372,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     } else {
       details.put("message", "An unknown error has occurred.");
     }
-    details.put("additionalData", new HashMap<>());
+
     return details;
   }
 
