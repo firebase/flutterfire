@@ -1,3 +1,7 @@
+## 3.0.2
+
+ - **FIX**: allow negative timestamp values (#3565).
+
 ## 3.0.1
 
  - Update a dependency to the latest release.

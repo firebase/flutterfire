@@ -1,3 +1,8 @@
+## 0.20.1
+
+ - **FEAT**: implement support for `useEmulator` (#4263).
+ - **CHORE**: update example dependency_overrides.
+
 ## 0.20.0+1
 
  - **FIX**: package compatibility.

@@ -1,3 +1,7 @@
+## 3.1.0
+
+ - **FEAT**: implement support for `useEmulator` (#4263).
+
 ## 3.0.1
 
  - Update a dependency to the latest release.

@@ -1,3 +1,7 @@
+## 0.1.0-dev.6
+
+ - **REFACTOR**: fix misc typos & analyzer issues.
+
 ## 0.1.0-dev.5
 
  - **FIX**: check is supported before init web (#4644).
