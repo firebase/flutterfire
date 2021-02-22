@@ -1,3 +1,7 @@
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_core" to `1.0.0-1.0.nullsafety.0`.
+
 ## 0.8.0-1.0.nullsafety.2
 
  - **TESTS**: update mockito API usage in tests

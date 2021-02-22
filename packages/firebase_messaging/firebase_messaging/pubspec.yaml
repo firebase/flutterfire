@@ -9,7 +9,7 @@ environment:
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  firebase_core: ">=0.8.0-1.0.nullsafety.2 <0.8.0-2.0.nullsafety.0"
+  firebase_core: ">=1.0.0-1.0.nullsafety.0 <1.0.0-2.0.nullsafety.0"
   firebase_core_platform_interface: ">=4.0.0-1.0.nullsafety.1 <4.0.0-2.0.nullsafety.0"
   firebase_messaging_platform_interface: ">=2.0.0-1.0.nullsafety.1 <2.0.0-2.0.nullsafety.0"
   firebase_messaging_web: ">=0.2.0-1.0.nullsafety.1 <0.2.0-2.0.nullsafety.0"
