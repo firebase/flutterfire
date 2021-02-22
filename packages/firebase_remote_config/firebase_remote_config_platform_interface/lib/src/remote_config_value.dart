@@ -74,7 +74,8 @@ class RemoteConfigValue {
   bool asBool() {
     if (_value != null) {
       final String strValue = const Utf8Codec().decode(_value);
-      return strValue.toLowerCase() == 'true';
+      final lowerCase = strValue.toLowerCase();
+      return lowerCase == 'true' || lowerCase == '1';
     } else {
       return defaultValueForBool;
     }
