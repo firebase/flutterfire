@@ -1,3 +1,7 @@
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "cloud_functions_web" to `1.0.0-1.0.nullsafety.0`.
+
 ## 3.1.4-1.0.nullsafety.2
 
  - Update a dependency to the latest release.
