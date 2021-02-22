@@ -8,8 +8,7 @@ To learn more about Firebase Cloud Messaging, please visit the [Firebase website
 
 ## Getting Started
 
-To get started with Firebase Cloud Messaging for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/messaging/overview) available
- at [https://firebase.flutter.dev](https://firebase.flutter.dev)
+To get started with Firebase Cloud Messaging for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/messaging/overview).
 
 ## Usage
 
