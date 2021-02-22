@@ -1,7 +1,3 @@
-## 1.0.0-1.0.nullsafety.0
-
- - Bump "firebase_messaging" to `1.0.0-1.0.nullsafety.0`.
-
 ## 9.0.0-1.0.nullsafety.2
 
  - **FIX**: fix unhandled exception  (#4676).
