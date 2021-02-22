@@ -1,3 +1,7 @@
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "cloud_firestore" to `1.0.0-1.0.nullsafety.0`.
+
 ## 0.17.0-1.0.nullsafety.2
 
  - **FIX**: Fix type issue. (#5081).
