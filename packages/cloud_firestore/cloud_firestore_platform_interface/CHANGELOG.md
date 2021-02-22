@@ -1,3 +1,8 @@
+## 4.0.0-1.0.nullsafety.2
+
+ - **FIX**: Fix type issue. (#5081).
+ - **FIX**: Fixed crashes due to null `Settings` (#5031).
+
 ## 4.0.0-1.0.nullsafety.1
 
  - **TESTS**: update mockito API usage in tests

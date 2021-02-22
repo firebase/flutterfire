@@ -1,3 +1,7 @@
+## 0.4.0-1.0.nullsafety.2
+
+ - **FIX**: Fixed crashes due to null `Settings` (#5031).
+
 ## 0.4.0-1.0.nullsafety.1
 
  - Update a dependency to the latest release.

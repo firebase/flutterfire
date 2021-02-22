@@ -1,3 +1,7 @@
+## 0.21.0-1.1.nullsafety.3
+
+ - Update a dependency to the latest release.
+
 ## 0.21.0-1.1.nullsafety.2
 
  - **TESTS**: update mockito API usage in tests

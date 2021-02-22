@@ -1,3 +1,7 @@
+## 9.0.0-1.0.nullsafety.2
+
+ - **FIX**: fix unhandled exception  (#4676).
+
 ## 9.0.0-1.0.nullsafety.1
 
  - **TESTS**: update mockito API usage in tests
