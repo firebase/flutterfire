@@ -1,3 +1,7 @@
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "cloud_firestore_web" to `1.0.0-1.0.nullsafety.0`.
+
 ## 0.4.0-1.0.nullsafety.2
 
  - **FIX**: Fixed crashes due to null `Settings` (#5031).
