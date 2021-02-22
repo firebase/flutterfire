@@ -1,3 +1,7 @@
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_crashlytics" to `1.0.0-1.0.nullsafety.0`.
+
 ## 0.5.0-1.0.nullsafety.3
 
  - Update a dependency to the latest release.
