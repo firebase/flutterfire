@@ -10,7 +10,7 @@ environment:
 dependencies:
   cloud_functions_platform_interface: ">=4.0.2-1.0.nullsafety.2 <4.0.2-2.0.nullsafety.0"
   firebase_core: ">=1.0.0-1.0.nullsafety.0 <1.0.0-2.0.nullsafety.0"
-  firebase_core_web: ">=0.3.0-1.0.nullsafety.1 <0.3.0-2.0.nullsafety.0"
+  firebase_core_web: ">=1.0.0-1.0.nullsafety.0 <1.0.0-2.0.nullsafety.0"
   flutter:
     sdk: flutter
   flutter_web_plugins:
