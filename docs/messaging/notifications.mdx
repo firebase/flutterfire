@@ -230,6 +230,7 @@ FirebaseMessaging.onMessage.listen((RemoteMessage message) {
 
   // If `onMessage` is triggered with a notification, construct our own
   // local notification to show to users using the created channel.
+  // Set null in icon property to use app default icon
   if (notification != null && android != null) {
     flutterLocalNotificationsPlugin.show(
         notification.hashCode,
@@ -240,7 +241,7 @@ FirebaseMessaging.onMessage.listen((RemoteMessage message) {
             channel.id,
             channel.name,
             channel.description,
-            icon: android?.smallIcon,
+            icon: null,
             // other properties...
           ),
         ));
