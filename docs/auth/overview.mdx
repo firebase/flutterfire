@@ -16,7 +16,62 @@ and Twitter, and more.
 Before installing the Authentication plugin, ensure that you have followed the [Getting Started](../overview.mdx) documentation
 and have initialized FlutterFire.
 
+<Tabs
+groupId="null-safe-instructions"
+defaultValue="legacy"
+values={[
+  { label: "legacy", value: "legacy" },
+  { label: "null-safe", value: "null-safe" },
+]}
+>
+<TabItem value="legacy">
+</TabItem>
+<TabItem value="null-safe">
+
+To develop in a null-safe environment, it is a prerequisite to switch to the correct Flutter channel for each platform.
+
+### Web, Android & iOS flutter environment
+
+Web, Android & iOS require `beta` channel:
+
+```bash
+$ flutter channel beta
+```
+
+### Desktop flutter environment
+
+Desktop requires `dev` channel:
+
+```bash
+$ flutter channel dev
+```
+
+If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` compiler flag:
+```bash
+$ flutter run --no-sound-null-safety
+```
+
+For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
+
+```dart
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:firebase_analytics/firebase_analytics.dart';
+```
+
+</TabItem>
+</Tabs>
+
 ### 1. Add dependency
+
+<Tabs
+  groupId="null-safe-instructions"
+  defaultValue="legacy"
+  values={[
+    { label: "legacy", value: "legacy" },
+    { label: "null-safe", value: "null-safe" },
+  ]}
+>
+<TabItem value="legacy">
 
 Add the [`firebase_auth`](https://pub.dev/packages/firebase_auth) dependency to your projects `pubspec.yaml` file:
 
@@ -27,6 +82,22 @@ dependencies:
   firebase_core: "^{{ plugins.firebase_core }}"
   firebase_auth: "^{{ plugins.firebase_auth }}"
 ```
+
+</TabItem>
+<TabItem value="null-safe">
+
+Add the [`firebase_auth`](https://pub.dev/packages/firebase_auth) dependency to your projects `pubspec.yaml` file:
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core_ns }}"
+  firebase_auth: "^{{ plugins.firebase_auth_ns }}"
+```
+
+</TabItem>  
+</Tabs>
 
 ### 2. Download dependency
 
