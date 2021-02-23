@@ -2,21 +2,19 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_storage;
 
 /// Class returned as a result of calling a list method ([list] or [listAll])
 /// on a [Reference].
 class ListResult {
+  ListResult._(this.storage, this._delegate) {
+    ListResultPlatform.verifyExtends(_delegate);
+  }
+
   ListResultPlatform _delegate;
 
   /// The [FirebaseStorage] instance for this result.
   final FirebaseStorage storage;
-
-  ListResult._(this.storage, this._delegate) {
-    ListResultPlatform.verifyExtends(_delegate);
-  }
 
   /// Objects in this directory.
   ///
@@ -31,7 +29,7 @@ class ListResult {
   /// If set, there might be more results for this list.
   ///
   /// Use this token to resume the list with [ListOptions].
-  String /*?*/ get nextPageToken => _delegate.nextPageToken;
+  String? get nextPageToken => _delegate.nextPageToken;
 
   /// References to prefixes (sub-folders). You can call list() on them to get
   /// its contents.

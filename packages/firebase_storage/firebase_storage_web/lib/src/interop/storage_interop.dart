@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 // ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, public_member_api_docs
 
 @JS('firebase.storage')
@@ -20,7 +18,7 @@ abstract class StorageJsImpl {
   external set maxOperationRetryTime(int t);
   external int get maxUploadRetryTime;
   external set maxUploadRetryTime(int t);
-  external ReferenceJsImpl ref([String path]);
+  external ReferenceJsImpl ref([String? path]);
   external ReferenceJsImpl refFromURL(String url);
   external void setMaxOperationRetryTime(int time);
   external void setMaxUploadRetryTime(int time);
@@ -44,11 +42,11 @@ abstract class ReferenceJsImpl {
   external PromiseJsImpl<void> delete();
   external PromiseJsImpl<String> getDownloadURL();
   external PromiseJsImpl<FullMetadataJsImpl> getMetadata();
-  external PromiseJsImpl<ListResultJsImpl> list([ListOptionsJsImpl options]);
+  external PromiseJsImpl<ListResultJsImpl> list([ListOptionsJsImpl? options]);
   external PromiseJsImpl<ListResultJsImpl> listAll();
-  external UploadTaskJsImpl put(blob, [UploadMetadataJsImpl metadata]);
+  external UploadTaskJsImpl put(dynamic blob, [UploadMetadataJsImpl? metadata]);
   external UploadTaskJsImpl putString(String value,
-      [String format, UploadMetadataJsImpl metadata]);
+      [String? format, UploadMetadataJsImpl? metadata]);
   @override
   external String toString();
   external PromiseJsImpl<FullMetadataJsImpl> updateMetadata(
@@ -59,39 +57,39 @@ abstract class ReferenceJsImpl {
 @JS()
 @anonymous
 class FullMetadataJsImpl extends UploadMetadataJsImpl {
-  external String /*?*/ get bucket;
-  external String /*?*/ get fullPath;
-  external String /*?*/ get generation;
-  external String /*?*/ get metageneration;
-  external String /*?*/ get name;
-  external int /*?*/ get size;
-  external String /*?*/ get timeCreated;
-  external String /*?*/ get updated;
-
   external factory FullMetadataJsImpl(
-      {String md5Hash,
-      String cacheControl,
-      String contentDisposition,
-      String contentEncoding,
-      String contentLanguage,
-      String contentType,
+      {String? md5Hash,
+      String? cacheControl,
+      String? contentDisposition,
+      String? contentEncoding,
+      String? contentLanguage,
+      String? contentType,
       dynamic customMetadata});
+
+  external String get bucket;
+  external String? get fullPath;
+  external String? get generation;
+  external String? get metageneration;
+  external String? get name;
+  external int? get size;
+  external String? get timeCreated;
+  external String? get updated;
 }
 
 @JS()
 @anonymous
 class UploadMetadataJsImpl extends SettableMetadataJsImpl {
-  external String /*?*/ get md5Hash;
-  external set md5Hash(String s);
-
   external factory UploadMetadataJsImpl(
-      {String md5Hash,
-      String cacheControl,
-      String contentDisposition,
-      String contentEncoding,
-      String contentLanguage,
-      String contentType,
+      {String? md5Hash,
+      String? cacheControl,
+      String? contentDisposition,
+      String? contentEncoding,
+      String? contentLanguage,
+      String? contentType,
       dynamic customMetadata});
+
+  external String get md5Hash;
+  external set md5Hash(String s);
 }
 
 @JS('UploadTask')
@@ -101,11 +99,11 @@ abstract class UploadTaskJsImpl
   external set snapshot(UploadTaskSnapshotJsImpl t);
   external bool cancel();
   external Func0 on(String event,
-      [nextOrObserver, Func1 error, Func0 complete]);
+      [dynamic nextOrObserver, Func1? error, Func0? complete]);
   external bool pause();
   external bool resume();
   @override
-  external PromiseJsImpl<void> then([Func1 onResolve, Func1 onReject]);
+  external PromiseJsImpl<void> then([Func1? onResolve, Func1? onReject]);
 }
 
 @JS()
@@ -122,6 +120,14 @@ abstract class UploadTaskSnapshotJsImpl {
 @JS()
 @anonymous
 class SettableMetadataJsImpl {
+  external factory SettableMetadataJsImpl(
+      {String? cacheControl,
+      String? contentDisposition,
+      String? contentEncoding,
+      String? contentLanguage,
+      String? contentType,
+      dynamic customMetadata});
+
   external String get cacheControl;
   external set cacheControl(String s);
   external String get contentDisposition;
@@ -134,24 +140,17 @@ class SettableMetadataJsImpl {
   external set contentType(String s);
   external dynamic get customMetadata;
   external set customMetadata(dynamic s);
-  external factory SettableMetadataJsImpl(
-      {String cacheControl,
-      String contentDisposition,
-      String contentEncoding,
-      String contentLanguage,
-      String contentType,
-      dynamic customMetadata});
 }
 
 @JS()
 @anonymous
 class ListOptionsJsImpl {
+  external factory ListOptionsJsImpl({int? maxResults, String? pageToken});
+
   external set maxResults(int s);
   external int get maxResults;
   external set pageToken(String s);
   external String get pageToken;
-
-  external factory ListOptionsJsImpl({int maxResults, String pageToken});
 }
 
 @JS()
@@ -162,6 +161,7 @@ class ListResultJsImpl {
   external List<ReferenceJsImpl> get prefixes;
 }
 
+// ignore: avoid_classes_with_only_static_members
 /// An enumeration of the possible string formats for upload.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage#.StringFormat>
@@ -185,6 +185,7 @@ class StringFormat {
   external static String get DATA_URL;
 }
 
+// ignore: avoid_classes_with_only_static_members
 /// An event that is triggered on a task.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage#.TaskEvent>.

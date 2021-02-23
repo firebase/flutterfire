@@ -112,10 +112,10 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  set settings(Settings? settings) {
+  set settings(Settings settings) {
     int? cacheSizeBytes;
 
-    if (settings!.cacheSizeBytes == null) {
+    if (settings.cacheSizeBytes == null) {
       cacheSizeBytes = 40000000;
     } else if (settings.cacheSizeBytes == Settings.CACHE_SIZE_UNLIMITED) {
       // https://github.com/firebase/firebase-js-sdk/blob/e67affba53a53d28492587b2f60521a00166db60/packages/firestore/src/local/lru_garbage_collector.ts#L175

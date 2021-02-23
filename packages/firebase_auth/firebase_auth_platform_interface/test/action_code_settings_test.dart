@@ -49,10 +49,11 @@ void main() {
           expect(result['url'], equals(kMockUrl));
           expect(result['dynamicLinkDomain'], equals(kMockDynamicLinkDomain));
           expect(result['handleCodeInApp'], equals(kMockHandleCodeInApp));
-          expect(result['androidPackageName'], equals(kMockPackageName));
-          expect(result['androidInstallApp'], equals(kMockInstallApp));
-          expect(result['androidMinimumVersion'], equals(kMockMinimumVersion));
-          expect(result['iOSBundleId'], equals(kMockBundleId));
+          expect(result['android']['packageName'], equals(kMockPackageName));
+          expect(result['android']['installApp'], equals(kMockInstallApp));
+          expect(
+              result['android']['minimumVersion'], equals(kMockMinimumVersion));
+          expect(result['iOS']['bundleId'], equals(kMockBundleId));
         });
       });
 
