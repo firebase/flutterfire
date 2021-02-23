@@ -8,8 +8,7 @@ To learn more about Firebase Cloud Firestore, please visit the [Firebase website
 
 ## Getting Started
 
-To get started with Cloud Firestore for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/firestore/overview) available
- at [https://firebase.flutter.dev](https://firebase.flutter.dev)
+To get started with Cloud Firestore for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/firestore/overview).
 
 ## Usage
 
