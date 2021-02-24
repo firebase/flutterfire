@@ -1,3 +1,7 @@
+## 1.0.0-1.0.nullsafety.1
+
+ - Update platform interface and web dependencies.
+
 ## 1.0.0-1.0.nullsafety.0
 
  - Bump "cloud_functions" to `1.0.0-1.0.nullsafety.0`.
