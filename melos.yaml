@@ -3,6 +3,11 @@ name: FlutterFire
 packages:
   - packages/**
 
+ignore:
+  # TODO Excluded pending CI fixes
+  - firebase_admob
+  - firebase_admob_example
+
 scripts:
   lint:all:
     run: melos run analyze && melos run format
