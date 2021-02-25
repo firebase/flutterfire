@@ -14,7 +14,6 @@ dependencies:
     path: ../../firebase_core/firebase_core
 
 dependency_overrides:
-  quiver: ">=3.0.0-nullsafety.2 <4.0.0"
   firebase_core:
     path: ../../firebase_core/firebase_core
   firebase_core_platform_interface:

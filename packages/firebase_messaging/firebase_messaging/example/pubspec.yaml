@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_local_notifications: ^3.0.0
-  http: ^0.12.2
+  http: ^0.13.0
 
 dependency_overrides:
   firebase_core:
@@ -28,7 +28,8 @@ dependency_overrides:
     path: ../../firebase_messaging_platform_interface
   firebase_messaging_web:
     path: ../../firebase_messaging_web
-  http_parser: ^4.0.0-nullsafety
+  # Override for `flutter_local_notifications`:
+  plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
   drive: 0.0.1-6.0.pre

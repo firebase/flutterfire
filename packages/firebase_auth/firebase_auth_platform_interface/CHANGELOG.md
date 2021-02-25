@@ -1,3 +1,7 @@
+## 4.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 4.0.0-1.1.nullsafety.3
 
  - **FIX**: Fix email link signin on Android (#4973).
