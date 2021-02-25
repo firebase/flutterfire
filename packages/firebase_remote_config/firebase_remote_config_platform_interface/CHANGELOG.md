@@ -1,6 +1,6 @@
-## 0.1.0-dev.2
+## 0.2.0-dev.0
 
- - Update a dependency to the latest release.
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
 
 ## 0.1.0-dev.1
 

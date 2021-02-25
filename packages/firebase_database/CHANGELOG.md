@@ -1,10 +1,6 @@
-## 6.0.2
+## 6.1.0
 
- - Update a dependency to the latest release.
-
-## 6.0.1
-
- - Update a dependency to the latest release.
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
 
 ## 6.0.0
 
