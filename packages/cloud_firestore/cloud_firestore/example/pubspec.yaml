@@ -24,7 +24,6 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_platform_interface
   firebase_core_web:
     path: ../../../firebase_core/firebase_core_web
-  http_parser: ^4.0.0-nullsafety
 
 dev_dependencies:
   drive: 0.0.1-6.0.pre

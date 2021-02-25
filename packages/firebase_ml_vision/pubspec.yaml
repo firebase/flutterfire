@@ -15,13 +15,10 @@ dev_dependencies:
   pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
-  firebase_core: ">=1.0.0-1.0.nullsafety.0 <1.0.0-2.0.nullsafety.0"
+  firebase_core: ^1.0.0
   flutter_driver:
     sdk: flutter
   test: any
-  path: ^1.6.2
-  path_provider: ^1.6.11
-  e2e: ^0.6.1
 
 flutter:
   plugin:
