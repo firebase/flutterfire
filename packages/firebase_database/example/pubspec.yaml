@@ -3,7 +3,7 @@ description: Demonstrates how to use the firebase_database plugin.
 
 environment:
   sdk: ">=2.12.0-0 <3.0.0"
-  flutter: ">=1.9.1+hotfix.2 <2.0.0"
+  flutter: ">=1.9.1+hotfix.2"
 
 dependencies:
   flutter:
