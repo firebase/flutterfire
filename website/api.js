@@ -60,11 +60,7 @@ async function fetchPluginVersions(plugin) {
     if (nsIndex === 0) {
       return ['', nsVersions[0]];
     }
-
-    if (plugin == 'cloud_firestore') {
-      console.log(sorted);
-    }
-
+    
     return [sorted[nsIndex - 1], nsVersions[nsVersions.length - 1]];
   } catch (e) {
     console.log(`Failed to load version for plugin "${plugin}".`);
