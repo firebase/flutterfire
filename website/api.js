@@ -1,4 +1,5 @@
 const axios = require('axios');
+const compare = require('compare-versions');
 
 const BASE_NS_VERSIONS = {
   cloud_firestore: '1.0.0',
@@ -45,7 +46,7 @@ async function fetchPluginVersions(plugin) {
     }
 
     // Sort the versions and skip any with "nullsafety".
-    const sorted = versions.filter(v => !v.includes('nullsafety')).sort();
+    const sorted = versions.filter(v => !v.includes('nullsafety')).sort(compare);
     const nsIndex = sorted.indexOf(BASE_NS_VERSIONS[plugin]);
 
     // If no NS version is found..
@@ -53,12 +54,18 @@ async function fetchPluginVersions(plugin) {
       return [sorted[sorted.length - 1], ''];
     }
 
+    const nsVersions = sorted.slice(nsIndex);
+
     // If no NNS version is found..
     if (nsIndex === 0) {
-      return ['', sorted[0]];
+      return ['', nsVersions[0]];
     }
 
-    return [sorted[nsIndex - 1], sorted[nsIndex]];
+    if (plugin == 'cloud_firestore') {
+      console.log(sorted);
+    }
+
+    return [sorted[nsIndex - 1], nsVersions[nsVersions.length - 1]];
   } catch (e) {
     console.log(`Failed to load version for plugin "${plugin}".`);
     return ['', ''];
