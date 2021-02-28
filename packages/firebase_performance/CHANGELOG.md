@@ -1,10 +1,9 @@
-## 0.5.0+1
+## 0.6.0
 
- - Update a dependency to the latest release.
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
 
 ## 0.5.0
 
- - Update a dependency to the latest release.
  - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
    - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
 

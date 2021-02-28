@@ -8,8 +8,7 @@ To learn more about Crashlytics, please visit the [Firebase website](https://fir
 
 ## Getting Started
 
-To get started with Crashlytics for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/crashlytics/overview)
-available at [https://firebase.flutter.dev](https://firebase.flutter.dev/docs/overview)
+To get started with Crashlytics for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/crashlytics/overview).
 
 ## Usage
 

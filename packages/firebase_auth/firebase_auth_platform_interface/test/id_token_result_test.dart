@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_auth_platform_interface/src/id_token_result.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -31,12 +29,12 @@ void main() {
     group('Constructor', () {
       test('returns an instance of [IdTokenResult]', () {
         expect(idTokenResult, isA<IdTokenResult>());
-        expect(idTokenResult.authTime.millisecondsSinceEpoch,
+        expect(idTokenResult.authTime!.millisecondsSinceEpoch,
             equals(kMockAuthTimestamp));
         expect(idTokenResult.claims, equals(kMockClaims));
-        expect(idTokenResult.expirationTime.millisecondsSinceEpoch,
+        expect(idTokenResult.expirationTime!.millisecondsSinceEpoch,
             equals(kMockExpirationTimestamp));
-        expect(idTokenResult.issuedAtTime.millisecondsSinceEpoch,
+        expect(idTokenResult.issuedAtTime!.millisecondsSinceEpoch,
             equals(kMockIssuedAtTimestamp));
         expect(idTokenResult.signInProvider, equals(kMockSignInProvider));
         expect(idTokenResult.token, equals(kMockToken));

@@ -1,3 +1,28 @@
+## 9.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 9.0.0-1.0.nullsafety.2
+
+ - **FIX**: fix unhandled exception  (#4676).
+
+## 9.0.0-1.0.nullsafety.1
+
+ - **TESTS**: update mockito API usage in tests
+
+## 9.0.0-1.0.nullsafety.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: migrate to NNBD (#4909).
+ - **BREAKING**: the following deprecated APIs have been removed:
+    - `iOSNotificationSettings`.
+    - `requestNotificationPermissions` - use `requestPermission` instead.
+    - `autoInitEnabled()` - use `setAutoInitEnabled()` instead.
+    - `deleteInstanceID()` - use `deleteToken()` instead.
+    - `FirebaseMessaging()` - use `FirebaseMessaging.instance` instead.
+
+
 ## 8.0.0-dev.14
 
  - **DOCS**: fix messaging regex examples (#4649).

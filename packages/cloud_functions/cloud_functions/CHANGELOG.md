@@ -1,3 +1,35 @@
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.1
+
+ - Update platform interface and web dependencies.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "cloud_functions" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.9.1-1.0.nullsafety.2
+
+ - Update a dependency to the latest release.
+
+## 0.9.1-1.0.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+
+## 0.9.1-1.0.nullsafety.0
+
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+
+## 0.9.1-nullsafety.1
+
+ - **FIX**: bump `firebase_core` dependencies to resolve versioning issue when releasing.
+
+## 0.9.1-nullsafety.0
+
+- **REFACTOR**: migrate to NNBD.
+
 ## 0.9.0
 
 > Note: This release has breaking changes.

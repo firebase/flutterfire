@@ -1,3 +1,19 @@
+## 4.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 4.0.0-1.0.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+
+## 4.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_core_platform_interface" to `4.0.0-1.0.nullsafety.0`.
+
+## 4.0.0-nullsafety.0
+
+Major bump for the null-safety version to respect the versioning convention.
+
 ## 3.0.2-nullsafety.0
 
  - **REFACTOR**: Migrate to non-nullable types (#4656).

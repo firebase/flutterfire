@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
@@ -12,12 +10,12 @@ import 'test_firestore_message_codec.dart';
 
 typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
 
-const kCollectionId = "foo";
-const kDocumentId = "bar";
+const kCollectionId = 'foo';
+const kDocumentId = 'bar';
 
 const Map<String, dynamic> kMockSnapshotMetadata = <String, dynamic>{
-  "hasPendingWrites": false,
-  "isFromCache": false,
+  'hasPendingWrites': false,
+  'isFromCache': false,
 };
 
 const Map<String, dynamic> kMockDocumentSnapshotData = <String, dynamic>{
@@ -30,7 +28,7 @@ int get nextMockHandleId => mockHandleId++;
 
 void initializeMethodChannel() {
   // Install the Codec that is able to decode FieldValues.
-  MethodChannelFirebaseFirestore.channel = MethodChannel(
+  MethodChannelFirebaseFirestore.channel = const MethodChannel(
     'plugins.flutter.io/firebase_firestore',
     StandardMethodCodec(TestFirestoreMessageCodec()),
   );
@@ -72,14 +70,14 @@ void handleMethodCall(MethodCallCallback methodCallCallback) =>
 void handleDocumentSnapshotsEventChannel(
     final String id, List<MethodCall> log) {
   final name = 'plugins.flutter.io/firebase_firestore/document/$id';
-  final codec = StandardMethodCodec(TestFirestoreMessageCodec());
+  const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
   MethodChannel(name, codec)
       .setMockMethodCallHandler((MethodCall methodCall) async {
     log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await ServicesBinding.instance!.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope(
@@ -87,6 +85,8 @@ void handleDocumentSnapshotsEventChannel(
               'path': 'document/1',
               'data': {'name': 'value'},
               'metadata': {},
+              'documents': [],
+              'documentChanges': []
             },
           ),
           (_) {},
@@ -101,21 +101,23 @@ void handleDocumentSnapshotsEventChannel(
 
 void handleQuerySnapshotsEventChannel(final String id, List<MethodCall> log) {
   final name = 'plugins.flutter.io/firebase_firestore/query/$id';
-  final codec = StandardMethodCodec(TestFirestoreMessageCodec());
+  const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
   MethodChannel(name, codec)
       .setMockMethodCallHandler((MethodCall methodCall) async {
     log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await ServicesBinding.instance!.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope(
             {
               'path': 'document/1',
               'data': {'name': 'value'},
-              'metadata': {},
+              'metadata': {'hasPendingWrites': false, 'isFromCache': false},
+              'documents': [],
+              'documentChanges': []
             },
           ),
           (_) {},
@@ -130,13 +132,13 @@ void handleQuerySnapshotsEventChannel(final String id, List<MethodCall> log) {
 
 void handleSnapshotsInSyncEventChannel(final String id) {
   final name = 'plugins.flutter.io/firebase_firestore/snapshotsInSync/$id';
-  final codec = StandardMethodCodec(TestFirestoreMessageCodec());
+  const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
   MethodChannel(name, codec)
       .setMockMethodCallHandler((MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await ServicesBinding.instance!.defaultBinaryMessenger
             .handlePlatformMessage(
                 name, codec.encodeSuccessEnvelope({}), (_) {});
         break;
@@ -149,27 +151,27 @@ void handleSnapshotsInSyncEventChannel(final String id) {
 
 void handleTransactionEventChannel(
   final String id, {
-  final FirebaseAppPlatform app,
-  bool throwException,
+  final FirebaseAppPlatform? app,
+  bool? throwException,
 }) {
   final name = 'plugins.flutter.io/firebase_firestore/transaction/$id';
-  final codec = StandardMethodCodec(TestFirestoreMessageCodec());
+  const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
   MethodChannel(name, codec)
       .setMockMethodCallHandler((MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await ServicesBinding.instance!.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope({
-            'appName': app.name,
+            'appName': app!.name,
           }),
           (_) {},
         );
 
-        if (throwException) {
-          await ServicesBinding.instance.defaultBinaryMessenger
+        if (throwException!) {
+          await ServicesBinding.instance!.defaultBinaryMessenger
               .handlePlatformMessage(
             name,
             codec.encodeSuccessEnvelope({
@@ -181,7 +183,7 @@ void handleTransactionEventChannel(
             (_) {},
           );
         }
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await ServicesBinding.instance!.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope({
