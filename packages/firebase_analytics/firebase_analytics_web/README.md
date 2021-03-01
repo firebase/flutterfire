@@ -14,7 +14,7 @@ No further modifications to your `pubspec.yaml` should be required in a recent e
 ...
 dependencies:
   ...
-  firebase_analytics: ^5.0.16
+  firebase_analytics: ^7.1.0
   ...
 ```
 
@@ -29,8 +29,8 @@ In your app directory, edit `web/index.html` to add the following:
 <html>
   ...
   <body>
-    <script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-analytics.js"></script>
     <!-- Other firebase SDKs/config here -->
     <script src="main.dart.js"></script>
   </body>
