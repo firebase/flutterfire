@@ -194,6 +194,13 @@ Future<UserCredential> signInWithFacebook() async {
 </TabItem>
 </Tabs>
 
+:::caution
+Firebase will not set the `User.emailVerified` property
+to `true` if your user logs in with Facebook. Should your user login using a provider that verifies email (e.g. Google sign-in) then this will be set to true.
+For futher information, see this [issue](https://github.com/FirebaseExtended/flutterfire/issues/4612#issuecomment-782107867).
+:::
+
+
 ## Apple
 
 Apple [announced](https://developer.apple.com/news/?id=09122019b) that any applications using 3rd party login
