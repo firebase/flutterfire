@@ -12,24 +12,27 @@ The below table outlines the latest null-safe plugin versions:
 |                 Plugin |                                  Version |
 | ---------------------: | ---------------------------------------: |
 |      `cloud_firestore` |      `^{{ plugins.cloud_firestore_ns }}` |
+|      `cloud_functions` |      `^{{ plugins.cloud_functions_ns }}` |
 |        `firebase_auth` |        `^{{ plugins.firebase_auth_ns }}` |
 |        `firebase_core` |        `^{{ plugins.firebase_core_ns }}` |
 | `firebase_crashlytics` | `^{{ plugins.firebase_crashlytics_ns }}` |
 |   `firebase_messaging` |   `^{{ plugins.firebase_messaging_ns }}` |
-|      `cloud_functions` |      `^{{ plugins.cloud_functions_ns }}` |
+|   `firebase_storage`   |     `^{{ plugins.firebase_storage_ns }}` |
 
 ---
 
 ### Using with other non-null-safe FlutterFire packages
 
-:::caution
-Mixing currently **published** null-safety FlutterFire packages alongside **published** non-nullsafety packages is not supported.
-:::
+The below table outlines the latest FlutterFire packages that **are not** null-safe, but are still compatible with other null-safe packages.
+(i.e. The application will build, but you lose sound null-safety).
 
-Not all FlutterFire packages have null-safety versions available yet. If you need to use the null-safe packages alongside
-the non-null-safe packages then it's recommended you switch to sourcing your FlutterFire packages directly from the [main
-FlutterFire repository](https://github.com/FirebaseExtended/flutterfire) (rather than pub.dev) where the packages have
-compatible version constraints.
+|                 Plugin |                                  Version |
+| ---------------------: | ---------------------------------------: |
+|   `firebase_analytics` |   `^{{ plugins.firebase_analytics_ns }}` |
+|    `firebase_database` |    `^{{ plugins.firebase_database_ns }}` |
+| `firebase_performance` | `^{{ plugins.firebase_performance_ns }}` |
+|`firebase_remote_config`|`^{{ plugins.firebase_remote_config_ns }}`|
+
 
 ---
 

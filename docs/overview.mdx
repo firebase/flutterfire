@@ -18,7 +18,7 @@ hide_title: true
 
 <h1 style={{ textAlign: 'center', marginBottom: '4rem' }}>FlutterFire Overview</h1>
 
-Welcome to FlutterFire! 🔥 
+Welcome to FlutterFire! 🔥
 
 FlutterFire is a set of Flutter plugins which connect your Flutter application to [Firebase](https://firebase.com).
 
@@ -42,12 +42,35 @@ Are you migrating your existing project to these new plugins? Please start with 
 Before any Firebase services can be used, you must first install the [`firebase_core`](https://pub.dev/packages/firebase_core)
 plugin, which is responsible for connecting your application to Firebase. Add the plugin to your `pubspec.yaml` file:
 
+<Tabs
+  groupId="legacy-or-nullsafe"
+  defaultValue="legacy"
+  values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+  ]}
+>
+<TabItem value="legacy">
+
 ```yaml {4} title="pubspec.yaml"
 dependencies:
   flutter:
     sdk: flutter
   firebase_core: "{{ plugins.firebase_core }}"
 ```
+
+</TabItem>
+<TabItem value="null-safe">
+
+```yaml {4} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core_ns }}"
+```
+
+</TabItem>
+</Tabs>
 
 Install the plugin by running the following command from the project root:
 
