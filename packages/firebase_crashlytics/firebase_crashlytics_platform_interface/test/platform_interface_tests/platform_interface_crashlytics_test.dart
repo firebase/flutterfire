@@ -62,8 +62,8 @@ void main() {
     test('throws if .checkForUnsentReports', () {
       expect(
         () => firebaseCrashlyticsPlatform!.checkForUnsentReports(),
-        throwsA(isA<UnimplementedError>()
-            .having((e) => e.message, 'message', 'checkForUnsentReports() is not implemented')),
+        throwsA(isA<UnimplementedError>().having((e) => e.message, 'message',
+            'checkForUnsentReports() is not implemented')),
       );
     });
 
