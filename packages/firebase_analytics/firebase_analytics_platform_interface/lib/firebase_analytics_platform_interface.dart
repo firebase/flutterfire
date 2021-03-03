@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -62,8 +62,8 @@ abstract class FirebaseAnalyticsPlatform {
 
   /// Logs the given event [name] with the given [parameters].
   Future<void> logEvent({
-    @required String name,
-    Map<String, dynamic> parameters,
+    required String name,
+    Map<String, dynamic>? parameters,
   }) {
     throw UnimplementedError('logEvent() is not implemented on this platform');
   }
@@ -82,8 +82,8 @@ abstract class FirebaseAnalyticsPlatform {
   /// Sets the current screen name, which specifies the current visual context
   /// in your app.
   Future<void> setCurrentScreen({
-    @required String screenName,
-    String screenClassOverride,
+    required String screenName,
+    String? screenClassOverride,
   }) {
     throw UnimplementedError(
         'setCurrentScreen() is not implemented on this platform');
@@ -91,8 +91,8 @@ abstract class FirebaseAnalyticsPlatform {
 
   /// Sets a user property to the given value.
   Future<void> setUserProperty({
-    @required String name,
-    @required String value,
+    required String name,
+    required String value,
   }) {
     throw UnimplementedError(
         'setUserProperty() is not implemented on this platform');
