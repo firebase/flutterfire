@@ -119,7 +119,7 @@ class MyAppState extends State<MyApp> {
 ### Interstitial and Rewarded Ads
 
 The typical pattern for displaying interstitial and rewarded Ads with `firebase_admob` would be to
-call `show` right after `load`. This is now discouraged and show should only be called when
+call `show` right after `load`. This is now discouraged and `show` should only be called when
 `AdListener.onAdLoaded` has been called. Below is an example usage of an interstitial ad:
 
 ```dart
