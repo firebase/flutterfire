@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -58,13 +60,14 @@ class ProgrammaticTriggersExample extends StatelessWidget {
             const SizedBox(height: 8),
             const Text("Manually trigger events programmatically "),
             const SizedBox(height: 8),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 fiam.triggerEvent('chicken_event');
-                Scaffold.of(context).showSnackBar(const SnackBar(
-                    content: Text("Triggering event: chicken_event")));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Triggering event: chicken_event"),
+                ));
               },
-              color: Colors.blue,
+              style: ElevatedButton.styleFrom(primary: Colors.blue),
               child: Text(
                 "Programmatic Triggers".toUpperCase(),
                 style: TextStyle(color: Colors.white),
@@ -102,13 +105,14 @@ class AnalyticsEventExample extends StatelessWidget {
             const SizedBox(height: 8),
             const Text("Trigger an analytics event"),
             const SizedBox(height: 8),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 _sendAnalyticsEvent();
-                Scaffold.of(context).showSnackBar(const SnackBar(
-                    content: Text("Firing analytics event: awesome_event")));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Firing analytics event: awesome_event"),
+                ));
               },
-              color: Colors.blue,
+              style: ElevatedButton.styleFrom(primary: Colors.blue),
               child: Text(
                 "Log event".toUpperCase(),
                 style: TextStyle(color: Colors.white),

@@ -2,25 +2,30 @@ name: cloud_firestore_example
 description: Demonstrates how to use the firestore plugin.
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.4"
 
 dependencies:
-  flutter:
-    sdk: flutter
   cloud_firestore:
     path: ../
   firebase_core:
     path: ../../../firebase_core/firebase_core
+  flutter:
+    sdk: flutter
 
 dependency_overrides:
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
   cloud_firestore_platform_interface:
     path: ../../cloud_firestore_platform_interface
+  cloud_firestore_web:
+    path: ../../cloud_firestore_web
+  firebase_core:
+    path: ../../../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../../../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../../../firebase_core/firebase_core_web
 
 dev_dependencies:
-  pedantic: ^1.8.0
   drive: 0.0.1-6.0.pre
   flutter_driver:
     sdk: flutter

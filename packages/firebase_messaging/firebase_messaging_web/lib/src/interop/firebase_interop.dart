@@ -13,4 +13,4 @@ import 'package:js/js.dart';
 import 'messaging_interop.dart';
 
 @JS()
-external MessagingJsImpl messaging([AppJsImpl app]);
+external MessagingJsImpl messaging([AppJsImpl? app]);

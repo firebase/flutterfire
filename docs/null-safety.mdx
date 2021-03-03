@@ -1,0 +1,39 @@
+---
+id: null-safety
+title: Null Safety
+---
+
+Dart [sound null safety](https://dart.dev/null-safety) is currently in beta, however; some FlutterFire packages
+have preview versions of null-safety implementations that are available to use.
+
+The below table outlines the latest null-safe plugin versions:
+
+
+|                 Plugin |                                  Version |
+| ---------------------: | ---------------------------------------: |
+|      `cloud_firestore` |      `^{{ plugins.cloud_firestore_ns }}` |
+|      `cloud_functions` |      `^{{ plugins.cloud_functions_ns }}` |
+|        `firebase_auth` |        `^{{ plugins.firebase_auth_ns }}` |
+|        `firebase_core` |        `^{{ plugins.firebase_core_ns }}` |
+| `firebase_crashlytics` | `^{{ plugins.firebase_crashlytics_ns }}` |
+|   `firebase_messaging` |   `^{{ plugins.firebase_messaging_ns }}` |
+|   `firebase_storage`   |     `^{{ plugins.firebase_storage_ns }}` |
+
+---
+
+### Using with other non-null-safe FlutterFire packages
+
+The below table outlines the latest FlutterFire packages that **are not** null-safe, but are still compatible with other null-safe packages.
+(i.e. The application will build, but you lose sound null-safety).
+
+|                 Plugin |                                  Version |
+| ---------------------: | ---------------------------------------: |
+|   `firebase_analytics` |   `^{{ plugins.firebase_analytics_ns }}` |
+|    `firebase_database` |    `^{{ plugins.firebase_database_ns }}` |
+| `firebase_performance` | `^{{ plugins.firebase_performance_ns }}` |
+|`firebase_remote_config`|`^{{ plugins.firebase_remote_config_ns }}`|
+
+
+---
+
+To provide feedback on these versions or to see progress updates: see [this GitHub discussion](https://github.com/FirebaseExtended/flutterfire/discussions/4182).

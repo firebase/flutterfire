@@ -2,8 +2,11 @@ name: firebase_performance_example
 description: Demonstrates how to use the firebase_performance plugin.
 author: Flutter Team <flutter-dev@googlegroups.com>
 
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+
 dependencies:
-  http: ^0.12.0
+  http: ^0.13.0
   flutter:
     sdk: flutter
   firebase_performance:
@@ -14,6 +17,10 @@ dependencies:
 dependency_overrides:
   firebase_core:
     path: ../../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../../firebase_core/firebase_core_web
 
 dev_dependencies:
   pedantic: ^1.8.0
@@ -25,6 +32,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-environment:
-  sdk: ">=2.0.0 <3.0.0"

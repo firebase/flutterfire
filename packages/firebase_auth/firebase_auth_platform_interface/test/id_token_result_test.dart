@@ -29,12 +29,12 @@ void main() {
     group('Constructor', () {
       test('returns an instance of [IdTokenResult]', () {
         expect(idTokenResult, isA<IdTokenResult>());
-        expect(idTokenResult.authTime.millisecondsSinceEpoch,
+        expect(idTokenResult.authTime!.millisecondsSinceEpoch,
             equals(kMockAuthTimestamp));
         expect(idTokenResult.claims, equals(kMockClaims));
-        expect(idTokenResult.expirationTime.millisecondsSinceEpoch,
+        expect(idTokenResult.expirationTime!.millisecondsSinceEpoch,
             equals(kMockExpirationTimestamp));
-        expect(idTokenResult.issuedAtTime.millisecondsSinceEpoch,
+        expect(idTokenResult.issuedAtTime!.millisecondsSinceEpoch,
             equals(kMockIssuedAtTimestamp));
         expect(idTokenResult.signInProvider, equals(kMockSignInProvider));
         expect(idTokenResult.token, equals(kMockToken));

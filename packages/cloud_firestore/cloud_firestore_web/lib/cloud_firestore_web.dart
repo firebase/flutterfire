@@ -31,22 +31,22 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   /// Builds an instance of [FirebaseFirestoreWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseFirestoreWeb({FirebaseApp /*?*/ app})
+  FirebaseFirestoreWeb({FirebaseApp? app})
       : _webFirestore =
             firestore_interop.getFirestoreInstance(core_interop.app(app?.name)),
-        // TODO(ehesp): Why is a `!` being added with null safety?
         super(appInstance: app) {
     FieldValueFactoryPlatform.instance = FieldValueFactoryWeb();
   }
 
   @override
-  FirebaseFirestorePlatform delegateFor({/*required*/ FirebaseApp app}) {
+  FirebaseFirestorePlatform delegateFor(
+      {/*required*/ required FirebaseApp app}) {
     return FirebaseFirestoreWeb(app: app);
   }
 
   @override
-  CollectionReferencePlatform collection(String path) {
-    return CollectionReferenceWeb(this, _webFirestore, path);
+  CollectionReferencePlatform collection(String collectionPath) {
+    return CollectionReferenceWeb(this, _webFirestore, collectionPath);
   }
 
   @override
@@ -62,8 +62,9 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  QueryPlatform collectionGroup(String path) {
-    return QueryWeb(this, path, _webFirestore.collectionGroup(path),
+  QueryPlatform collectionGroup(String collectionPath) {
+    return QueryWeb(
+        this, collectionPath, _webFirestore.collectionGroup(collectionPath),
         isCollectionGroupQuery: true);
   }
 
@@ -77,8 +78,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  DocumentReferencePlatform doc(String path) =>
-      DocumentReferenceWeb(this, _webFirestore, path);
+  DocumentReferencePlatform doc(String documentPath) =>
+      DocumentReferenceWeb(this, _webFirestore, documentPath);
 
   @override
   Future<void> enableNetwork() async {
@@ -95,12 +96,12 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T /*?*/ > runTransaction<T>(TransactionHandler<T> transactionHandler,
+  Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
     try {
       await _webFirestore.runTransaction((transaction) async {
         return transactionHandler(
-            TransactionWeb(this, _webFirestore, transaction));
+            TransactionWeb(this, _webFirestore, transaction!));
       }).timeout(timeout);
       // Workaround for 'Runtime type information not available for type_variable_local'
       // See: https://github.com/dart-lang/sdk/issues/29722
@@ -112,7 +113,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   set settings(Settings settings) {
-    int cacheSizeBytes;
+    int? cacheSizeBytes;
 
     if (settings.cacheSizeBytes == null) {
       cacheSizeBytes = 40000000;
@@ -136,7 +137,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   /// Enable persistence of Firestore data.
   @override
-  Future<void> enablePersistence([PersistenceSettings /*?*/ settings]) async {
+  Future<void> enablePersistence([PersistenceSettings? settings]) async {
     try {
       await _webFirestore.enablePersistence(
           firestore_interop.PersistenceSettings(

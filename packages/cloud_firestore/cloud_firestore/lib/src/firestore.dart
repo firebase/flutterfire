@@ -19,20 +19,17 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   // Cached and lazily loaded instance of [FirestorePlatform] to avoid
   // creating a [MethodChannelFirestore] when not needed or creating an
   // instance with the default app before a user specifies an app.
-  FirebaseFirestorePlatform _delegatePackingProperty;
+  FirebaseFirestorePlatform? _delegatePackingProperty;
 
-  FirebaseFirestorePlatform /*!*/ get _delegate {
-    if (_delegatePackingProperty == null) {
-      _delegatePackingProperty =
-          FirebaseFirestorePlatform.instanceFor(app: app);
-    }
-    return _delegatePackingProperty;
+  FirebaseFirestorePlatform get _delegate {
+    return _delegatePackingProperty ??=
+        FirebaseFirestorePlatform.instanceFor(app: app);
   }
 
   /// The [FirebaseApp] for this current [FirebaseFirestore] instance.
   FirebaseApp app;
 
-  FirebaseFirestore._({/*required*/ this.app})
+  FirebaseFirestore._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_firestore');
 
   static final Map<String, FirebaseFirestore> _cachedInstances = {};
@@ -45,10 +42,9 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  static FirebaseFirestore /*!*/ instanceFor({FirebaseApp app}) {
-    assert(app != null);
+  static FirebaseFirestore instanceFor({required FirebaseApp app}) {
     if (_cachedInstances.containsKey(app.name)) {
-      return _cachedInstances[app.name];
+      return _cachedInstances[app.name]!;
     }
 
     FirebaseFirestore newInstance = FirebaseFirestore._(app: app);
@@ -59,13 +55,12 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference collection(String collectionPath) {
-    assert(collectionPath != null, "a collection path cannot be null");
     assert(collectionPath.isNotEmpty,
-        "a collectionPath path must be a non-empty string");
-    assert(!collectionPath.contains("//"),
-        "a collection path must not contain '//'");
+        'a collectionPath path must be a non-empty string');
+    assert(!collectionPath.contains('//'),
+        'a collection path must not contain "//"');
     assert(isValidCollectionPath(collectionPath),
-        "a collection path must point to a valid collection.");
+        'a collection path must point to a valid collection.');
 
     return CollectionReference._(this, _delegate.collection(collectionPath));
   }
@@ -88,17 +83,16 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// This is a web-only method. Use [Settings.persistenceEnabled] for non-web platforms.
   Future<void> enablePersistence(
-      [PersistenceSettings persistenceSettings]) async {
+      [PersistenceSettings? persistenceSettings]) async {
     return _delegate.enablePersistence(persistenceSettings);
   }
 
   /// Gets a [Query] for the specified collection group.
   Query collectionGroup(String collectionPath) {
-    assert(collectionPath != null, "a collection path cannot be null");
     assert(collectionPath.isNotEmpty,
-        "a collection path must be a non-empty string");
-    assert(!collectionPath.contains("/"),
-        "a collection path passed to collectionGroup() cannot contain '/'");
+        'a collection path must be a non-empty string');
+    assert(!collectionPath.contains('/'),
+        'a collection path passed to collectionGroup() cannot contain "/"');
 
     return Query._(this, _delegate.collectionGroup(collectionPath));
   }
@@ -114,13 +108,12 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Gets a [DocumentReference] for the specified Firestore path.
   DocumentReference doc(String documentPath) {
-    assert(documentPath != null, "a document path cannot be null");
     assert(
-        documentPath.isNotEmpty, "a document path must be a non-empty string");
-    assert(!documentPath.contains("//"),
-        "a collection path must not contain '//'");
+        documentPath.isNotEmpty, 'a document path must be a non-empty string');
+    assert(!documentPath.contains('//'),
+        'a collection path must not contain "//"');
     assert(isValidDocumentPath(documentPath),
-        "a document path must point to a valid document.");
+        'a document path must point to a valid document.');
 
     return DocumentReference._(this, _delegate.doc(documentPath));
   }
@@ -158,11 +151,9 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// By default transactions are limited to 5 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
-  Future<T /*?*/ > runTransaction<T>(TransactionHandler<T> transactionHandler,
+  Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
-    assert(transactionHandler != null, "transactionHandler cannot be null");
-
-    T output;
+    late T output;
     await _delegate.runTransaction((transaction) async {
       output = await transactionHandler(Transaction._(this, transaction));
     }, timeout: timeout);
@@ -215,11 +206,13 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   @override
-  bool operator ==(dynamic o) =>
-      o is FirebaseFirestore && o.app.name == app.name;
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(dynamic other) =>
+      other is FirebaseFirestore && other.app.name == app.name;
 
   @override
-  int get hashCode => hash2(app.name, app.options);
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => hashValues(app.name, app.options);
 
   @override
   String toString() => '$FirebaseFirestore(app: ${app.name})';

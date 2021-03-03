@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -25,7 +27,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
-  print("Handling a background message ${message.messageId}");
+  print('Handling a background message ${message.messageId}');
 }
 
 /// Create a [AndroidNotificationChannel] for heads up notifications
@@ -34,15 +36,13 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
   'High Importance Notifications', // title
   'This channel is used for important notifications.', // description
   importance: Importance.high,
-  enableVibration: true,
-  playSound: true,
 );
 
-/// Initalize the [FlutterLocalNotificationsPlugin] package.
+/// Initialize the [FlutterLocalNotificationsPlugin] package.
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
@@ -161,7 +161,7 @@ class _Application extends State<Application> {
 
     try {
       await http.post(
-        'https://api.rnfirebase.io/messaging/send',
+        Uri.parse('https://api.rnfirebase.io/messaging/send'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -173,7 +173,7 @@ class _Application extends State<Application> {
     }
   }
 
-  void onActionSelected(String value) async {
+  Future<void> onActionSelected(String value) async {
     switch (value) {
       case 'subscribe':
         {
@@ -215,23 +215,23 @@ class _Application extends State<Application> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cloud Messaging"),
+        title: const Text('Cloud Messaging'),
         actions: <Widget>[
           PopupMenuButton(
             onSelected: onActionSelected,
             itemBuilder: (BuildContext context) {
               return [
-                PopupMenuItem(
-                  value: "subscribe",
-                  child: Text("Subscribe to topic"),
+                const PopupMenuItem(
+                  value: 'subscribe',
+                  child: Text('Subscribe to topic'),
                 ),
-                PopupMenuItem(
-                  value: "unsubscribe",
-                  child: Text("Unsubscribe to topic"),
+                const PopupMenuItem(
+                  value: 'unsubscribe',
+                  child: Text('Unsubscribe to topic'),
                 ),
-                PopupMenuItem(
-                  value: "get_apns_token",
-                  child: Text("Get APNs token (Apple only)"),
+                const PopupMenuItem(
+                  value: 'get_apns_token',
+                  child: Text('Get APNs token (Apple only)'),
                 ),
               ];
             },
@@ -240,21 +240,21 @@ class _Application extends State<Application> {
       ),
       floatingActionButton: Builder(
         builder: (context) => FloatingActionButton(
-          onPressed: () => sendPushMessage(),
-          child: Icon(Icons.send),
+          onPressed: sendPushMessage,
           backgroundColor: Colors.white,
+          child: const Icon(Icons.send),
         ),
       ),
       body: SingleChildScrollView(
         child: Column(children: [
-          MetaCard("Permissions", Permissions()),
-          MetaCard("FCM Token", TokenMonitor((token) {
+          MetaCard('Permissions', Permissions()),
+          MetaCard('FCM Token', TokenMonitor((token) {
             _token = token;
             return token == null
-                ? CircularProgressIndicator()
-                : Text(token, style: TextStyle(fontSize: 12));
+                ? const CircularProgressIndicator()
+                : Text(token, style: const TextStyle(fontSize: 12));
           })),
-          MetaCard("Message Stream", MessageList()),
+          MetaCard('Message Stream', MessageList()),
         ]),
       ),
     );
@@ -273,14 +273,15 @@ class MetaCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: double.infinity,
-        margin: EdgeInsets.only(left: 8, right: 8, top: 8),
+        margin: const EdgeInsets.only(left: 8, right: 8, top: 8),
         child: Card(
             child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(children: [
                   Container(
-                      margin: EdgeInsets.only(bottom: 16),
-                      child: Text(_title, style: TextStyle(fontSize: 18))),
+                      margin: const EdgeInsets.only(bottom: 16),
+                      child:
+                          Text(_title, style: const TextStyle(fontSize: 18))),
                   _children,
                 ]))));
   }

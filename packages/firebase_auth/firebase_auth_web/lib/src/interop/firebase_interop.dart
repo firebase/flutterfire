@@ -13,4 +13,4 @@ import 'package:js/js.dart';
 import 'auth_interop.dart';
 
 @JS()
-external AuthJsImpl auth([AppJsImpl app]);
+external AuthJsImpl auth([AppJsImpl? app]);

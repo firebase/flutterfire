@@ -14,161 +14,161 @@ class TestFirestore extends FirebaseFirestorePlatform {
 
 void main() {
   initializeMethodChannel();
-  group("$FirebaseFirestorePlatform()", () {
+  group('$FirebaseFirestorePlatform()', () {
     setUpAll(() async {
       await Firebase.initializeApp();
     });
 
-    test("constructor", () {
+    test('constructor', () {
       final firestore = TestFirestore._();
       expect(firestore, isInstanceOf<FirebaseFirestorePlatform>());
     });
 
-    test("app", () {
+    test('app', () {
       final firestore = TestFirestore._();
 
       expect(firestore.app, isInstanceOf<FirebaseApp>());
       expect(firestore.app, equals(Firebase.app()));
     });
 
-    test("throws if .batch", () {
+    test('throws if .batch', () {
       final firestore = TestFirestore._();
       try {
         firestore.batch();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("batch() is not implemented"));
+        expect(e.message, equals('batch() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .clearPersistence", () async {
+    test('throws if .clearPersistence', () async {
       final firestore = TestFirestore._();
       try {
         await firestore.clearPersistence();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("clearPersistence() is not implemented"));
+        expect(e.message, equals('clearPersistence() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .collection", () {
+    test('throws if .collection', () {
       final firestore = TestFirestore._();
       try {
         firestore.collection('foo');
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("collection() is not implemented"));
+        expect(e.message, equals('collection() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .collectionGroup", () {
+    test('throws if .collectionGroup', () {
       final firestore = TestFirestore._();
       try {
         firestore.collectionGroup('foo');
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("collectionGroup() is not implemented"));
+        expect(e.message, equals('collectionGroup() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .disableNetwork", () async {
+    test('throws if .disableNetwork', () async {
       final firestore = TestFirestore._();
       try {
         await firestore.disableNetwork();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("disableNetwork() is not implemented"));
+        expect(e.message, equals('disableNetwork() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .doc", () {
+    test('throws if .doc', () {
       final firestore = TestFirestore._();
       try {
         firestore.doc('foo');
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("doc() is not implemented"));
+        expect(e.message, equals('doc() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .enableNetwork", () async {
+    test('throws if .enableNetwork', () async {
       final firestore = TestFirestore._();
       try {
         await firestore.enableNetwork();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("enableNetwork() is not implemented"));
+        expect(e.message, equals('enableNetwork() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .snapshotsInSync", () {
+    test('throws if .snapshotsInSync', () {
       final firestore = TestFirestore._();
       try {
         firestore.snapshotsInSync();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("snapshotsInSync() is not implemented"));
+        expect(e.message, equals('snapshotsInSync() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .runTransaction", () async {
+    test('throws if .runTransaction', () async {
       final firestore = TestFirestore._();
       try {
         await firestore.runTransaction((transaction) async => true);
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("runTransaction() is not implemented"));
+        expect(e.message, equals('runTransaction() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if getting .settings", () async {
+    test('throws if getting .settings', () async {
       final firestore = TestFirestore._();
       try {
         firestore.settings;
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("settings getter is not implemented"));
+        expect(e.message, equals('settings getter is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if setting .settings", () async {
+    test('throws if setting .settings', () async {
       final firestore = TestFirestore._();
       try {
-        firestore.settings = Settings();
+        firestore.settings = const Settings();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("settings setter is not implemented"));
+        expect(e.message, equals('settings setter is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .terminate", () async {
+    test('throws if .terminate', () async {
       final firestore = TestFirestore._();
       try {
         await firestore.terminate();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("terminate() is not implemented"));
+        expect(e.message, equals('terminate() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .waitForPendingWrites", () async {
+    test('throws if .waitForPendingWrites', () async {
       final firestore = TestFirestore._();
       try {
         await firestore.waitForPendingWrites();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("waitForPendingWrites() is not implemented"));
+        expect(e.message, equals('waitForPendingWrites() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');

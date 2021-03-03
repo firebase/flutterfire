@@ -2,104 +2,114 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'mock.dart';
-
-import 'package:mockito/mockito.dart';
 import 'sample.dart' as data;
 
 void main() {
-  setupFirebaseFunctionsMocks();
-  FirebaseApp app;
+  HttpsCallable? httpsCallable;
 
-  FirebaseFunctions functions;
-  HttpsCallable kHttpsCallable;
+  setUp(() async {
+    resetFirebaseCoreMocks();
+    await Firebase.initializeApp();
+    FirebaseFunctionsPlatform.instance =
+        MockFirebaseFunctionsPlatform(region: 'us-central1');
+    httpsCallable = FirebaseFunctions.instance.httpsCallable('foo');
+  });
 
-  group('$HttpsCallable', () {
-    setUpAll(() async {
-      app = await Firebase.initializeApp();
-      kMockFirebaseFunctionsPlatform = MockFirebaseFunctionsPlatform(app, '');
-      FirebaseFunctionsPlatform.instance = kMockFirebaseFunctionsPlatform;
-      functions = FirebaseFunctions.instance;
-
-      when(kMockFirebaseFunctionsPlatform.httpsCallable(any, any, any))
-          .thenAnswer((_) {
-        return kMockHttpsCallablePlatform;
-      });
-
-      when(kMockFirebaseFunctionsPlatform.delegateFor(
-              app: anyNamed('app'), region: anyNamed('region')))
-          .thenAnswer((_) {
-        return kMockFirebaseFunctionsPlatform;
-      });
-
-      when(kMockHttpsCallablePlatform(any)).thenAnswer((_) {
-        return Future.value(kMockHttpsCallablePlatform);
-      });
-
-      kHttpsCallable = functions.httpsCallable('test_name',
-          options: HttpsCallableOptions(timeout: Duration(minutes: 1)));
-    });
-
-    group('constructor', () {
-      test('returns an instance of [HttpsCallable]', () {
-        expect(kHttpsCallable, isA<HttpsCallable>());
-      });
-    });
-
+  group('HttpsCallable', () {
     group('call()', () {
-      test('returns an instance of [HttpsCallableResult]', () async {
-        expect(await kHttpsCallable(), isA<HttpsCallableResult>());
-        verify(kMockHttpsCallablePlatform.call());
+      test('parameter validation accepts null values', () async {
+        expect((await httpsCallable!.call(null)).data, isNull);
       });
 
-      test('accepts null', () async {
-        expect(await kHttpsCallable(null), isA<HttpsCallableResult>());
-        verify(kMockHttpsCallablePlatform.call(null));
+      test('parameter validation accepts string values', () async {
+        final result = await httpsCallable!.call('foo');
+        expect(
+          result.data,
+          allOf(
+            isA<String>(),
+            equals('foo'),
+          ),
+        );
       });
 
-      test('accepts String', () async {
-        expect(await kHttpsCallable.call('foo'), isA<HttpsCallableResult>());
-        verify(kMockHttpsCallablePlatform.call('foo'));
+      test('parameter validation accepts numeric values', () async {
+        final result = await httpsCallable!.call(123);
+        expect(result.data, equals(123));
       });
 
-      test('accepts [num]', () async {
-        expect(await kHttpsCallable(123), isA<HttpsCallableResult>());
-        verify(kMockHttpsCallablePlatform.call(123));
+      test('parameter validation accepts boolean values', () async {
+        final trueResult = await httpsCallable!.call(true);
+        final falseResult = await httpsCallable!.call(false);
+        expect(trueResult.data, isTrue);
+        expect(falseResult.data, isFalse);
       });
 
-      test('accepts [bool]', () async {
-        expect(await kHttpsCallable(true), isA<HttpsCallableResult>());
-        verify(kMockHttpsCallablePlatform.call(true));
-        expect(await kHttpsCallable(false), isA<HttpsCallableResult>());
-        verify(kMockHttpsCallablePlatform.call(false));
+      test('parameter validation accepts List values', () async {
+        final result = await httpsCallable!.call(data.list);
+        expect(
+          result.data,
+          allOf(
+            isA<List>(),
+            equals(data.list),
+          ),
+        );
       });
 
-      test('accepts a [List]', () async {
-        await kHttpsCallable(data.list);
-        verify(kMockHttpsCallablePlatform.call(data.list));
+      test('parameter validation accepts nested List values', () async {
+        final result = await httpsCallable!.call(data.deepList);
+        expect(
+          result.data,
+          allOf(
+            isA<List>(),
+            equals(data.deepList),
+          ),
+        );
       });
 
-      test('accepts a deeply nested [Map]', () async {
-        dynamic parameters = {
-          'type': 'deepMap',
-          'inputData': data.deepMap,
-        };
-        await kHttpsCallable(parameters);
-        verify(kMockHttpsCallablePlatform(parameters));
+      test('parameter validation accepts Map values', () async {
+        final result = await httpsCallable!.call(data.map);
+        expect(
+          result.data,
+          allOf(
+            isA<Map>(),
+            equals(data.map),
+          ),
+        );
       });
 
-      test('accepts a deeply nested [List]', () async {
-        dynamic parameters = {
-          'type': 'deepMap',
-          'inputData': data.deepList,
-        };
-        await kHttpsCallable(parameters);
-        verify(kMockHttpsCallablePlatform(parameters));
+      test('parameter validation accepts nested Map values', () async {
+        final result = await httpsCallable!.call(data.deepMap);
+        expect(
+          result.data,
+          allOf(
+            isA<Map>(),
+            equals(data.deepMap),
+          ),
+        );
+      });
+
+      test('parameter validation throws if any other type of data is passed',
+          () async {
+        expect(() {
+          return httpsCallable!.call(() => {});
+        }, throwsA(isA<AssertionError>()));
+
+        // Check nested values in Lists or Maps also throw if invalid:
+        expect(() {
+          return httpsCallable!.call({
+            'valid': 'hello world',
+            'not_valid': () => {},
+          });
+        }, throwsA(isA<AssertionError>()));
+        expect(() {
+          return httpsCallable!.call(['valid', () => {}]);
+        }, throwsA(isA<AssertionError>()));
       });
     });
   });

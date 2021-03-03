@@ -4,7 +4,6 @@
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/auth_provider.dart';
-import 'package:flutter/material.dart';
 
 const _kProviderId = 'github.com';
 
@@ -65,7 +64,6 @@ class GithubAuthProvider extends AuthProvider {
 
   /// Adds GitHub OAuth scope.
   GithubAuthProvider addScope(String scope) {
-    assert(scope != null);
     _scopes.add(scope);
     return this;
   }
@@ -73,15 +71,14 @@ class GithubAuthProvider extends AuthProvider {
   /// Sets the OAuth custom parameters to pass in a GitHub OAuth
   /// request for popup and redirect sign-in operations.
   GithubAuthProvider setCustomParameters(
-      Map<dynamic, dynamic> customOAuthParameters) {
-    assert(customOAuthParameters != null);
+    Map<dynamic, dynamic> customOAuthParameters,
+  ) {
     _parameters = customOAuthParameters;
     return this;
   }
 
   /// Create a new [GithubAuthCredential] from a provided [accessToken];
   static OAuthCredential credential(String accessToken) {
-    assert(accessToken != null);
     return GithubAuthCredential._credential(
       accessToken,
     );
@@ -92,7 +89,7 @@ class GithubAuthProvider extends AuthProvider {
 /// [GithubAuthProvider.credential].
 class GithubAuthCredential extends OAuthCredential {
   GithubAuthCredential._({
-    @required String accessToken,
+    required String accessToken,
   }) : super(
             providerId: _kProviderId,
             signInMethod: _kProviderId,

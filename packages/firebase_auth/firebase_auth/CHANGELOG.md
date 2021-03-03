@@ -1,3 +1,50 @@
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_auth" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.21.0-1.1.nullsafety.3
+
+ - Update a dependency to the latest release.
+
+## 0.21.0-1.1.nullsafety.2
+
+ - **TESTS**: update mockito API usage in tests
+
+## 0.21.0-1.1.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+
+## 0.21.0-1.1.nullsafety.0
+
+ - **FEAT**: implement support for `useEmulator` (#4263).
+
+## 0.21.0-1.0.nullsafety.0
+
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+
+## 0.21.0-nullsafety.0
+
+ - **FEAT**: Migrated to null safety (#4633)
+
+## 0.20.0+1
+
+ - **FIX**: package compatibility.
+
+## 0.20.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: null pointer exception if user metadata null (#4622).
+ - **FEAT**: add check on podspec to assist upgrading users deployment target.
+ - **BUILD**: commit Podfiles with 10.12 deployment target.
+ - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
+ - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
+ - **BREAKING** **BUILD**: set osx min supported platform version to 10.12.
+
 ## 0.19.0+1
 
  - Update a dependency to the latest release.

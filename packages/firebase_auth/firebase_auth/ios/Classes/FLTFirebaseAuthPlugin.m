@@ -212,6 +212,8 @@ BOOL static initialAuthState = true;
     [self signInWithEmailLink:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#signOut" isEqualToString:call.method]) {
     [self signOut:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Auth#useEmulator" isEqualToString:call.method]) {
+    [self useEmulator:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#verifyPasswordResetCode" isEqualToString:call.method]) {
     [self verifyPasswordResetCode:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#verifyPhoneNumber" isEqualToString:call.method]) {
@@ -249,6 +251,7 @@ BOOL static initialAuthState = true;
 #pragma mark - AppDelegate
 
 #if TARGET_OS_IPHONE
+#if !__has_include(<FirebaseMessaging/FirebaseMessaging.h>)
 - (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)notification
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
@@ -258,6 +261,7 @@ BOOL static initialAuthState = true;
   }
   return NO;
 }
+#endif
 
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -548,6 +552,12 @@ BOOL static initialAuthState = true;
   } else {
     result.success(nil);
   }
+}
+
+- (void)useEmulator:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
+  [auth useEmulatorWithHost:arguments[@"host"] port:[arguments[@"port"] integerValue]];
+  result.success(nil);
 }
 
 - (void)verifyPasswordResetCode:(id)arguments

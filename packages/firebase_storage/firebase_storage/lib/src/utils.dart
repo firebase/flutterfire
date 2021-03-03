@@ -24,14 +24,14 @@ String pathFromGoogleStorageUrl(String url) {
 ///
 /// If url fails to parse, null is returned
 /// If no path exists, the root path will be returned.
-Map<String, String> partsFromHttpUrl(String url) {
+Map<String, String?>? partsFromHttpUrl(String url) {
   assert(url.startsWith('http'));
-  String decodedUrl = _decodeHttpUrl(url);
+  String? decodedUrl = _decodeHttpUrl(url);
   if (decodedUrl == null) {
     return null;
   }
 
-  RegExp exp = RegExp(r"\/b\/(.*)\/o\/([a-zA-Z0-9.\/\-_]+)(.*)");
+  RegExp exp = RegExp(r'\/b\/(.*)\/o\/([a-zA-Z0-9.\/\-_]+)(.*)');
   Iterable<RegExpMatch> matches = exp.allMatches(decodedUrl);
 
   if (matches.isEmpty) {
@@ -49,7 +49,7 @@ Map<String, String> partsFromHttpUrl(String url) {
   };
 }
 
-String _decodeHttpUrl(String url) {
+String? _decodeHttpUrl(String url) {
   try {
     return Uri.decodeFull(url);
   } catch (_) {

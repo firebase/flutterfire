@@ -18,23 +18,27 @@ import 'src/utils.dart' as utils;
 /// delegates calls to messaging web plugin.
 class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   /// Instance of Messaging from the web plugin
-  final messaging_interop.Messaging _webMessaging;
+  late messaging_interop.Messaging _webMessaging;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
     FirebaseMessagingPlatform.instance = FirebaseMessagingWeb();
   }
 
-  Stream<String> _noopOnTokenRefreshStream;
+  Stream<String>? _noopOnTokenRefreshStream;
 
   static bool _initialized = false;
 
   /// Builds an instance of [FirebaseMessagingWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseMessagingWeb({FirebaseApp app})
-      : _webMessaging =
-            messaging_interop.getMessagingInstance(core_interop.app(app?.name)),
-        super(appInstance: app) {
+  FirebaseMessagingWeb({FirebaseApp? app}) : super(appInstance: app) {
+    if (!messaging_interop.isSupported()) {
+      // The browser is not supported (Safari). Initialize a full no-op FirebaseMessagingWeb
+      return;
+    }
+
+    _webMessaging =
+        messaging_interop.getMessagingInstance(core_interop.app(app?.name));
     if (app != null && _initialized) return;
 
     _webMessaging.onMessage
@@ -48,17 +52,15 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  void registerBackgroundMessageHandler(handler) {
-    // no-op
-  }
+  void registerBackgroundMessageHandler(BackgroundMessageHandler handler) {}
 
   @override
-  FirebaseMessagingPlatform delegateFor({FirebaseApp app}) {
+  FirebaseMessagingPlatform delegateFor({required FirebaseApp app}) {
     return FirebaseMessagingWeb(app: app);
   }
 
   @override
-  FirebaseMessagingPlatform setInitialValues({bool isAutoInitEnabled}) {
+  FirebaseMessagingPlatform setInitialValues({bool? isAutoInitEnabled}) {
     // Not required on web, but prevents UnimplementedError being thrown.
     return this;
   }
@@ -71,26 +73,34 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<RemoteMessage> getInitialMessage() {
+  Future<RemoteMessage?> getInitialMessage() async {
     return null;
   }
 
   @override
-  Future<void> deleteToken({String senderId}) async {
+  Future<void> deleteToken({String? senderId}) async {
+    if (!_initialized) {
+      // no-op for unsupported browsers
+      return;
+    }
     try {
-      await _webMessaging.deleteToken();
+      _webMessaging.deleteToken();
     } catch (e) {
       throw utils.getFirebaseException(e);
     }
   }
 
   @override
-  Future<String> getAPNSToken() async {
+  Future<String?> getAPNSToken() async {
     return null;
   }
 
   @override
-  Future<String> getToken({String senderId, String vapidKey}) async {
+  Future<String?> getToken({String? senderId, String? vapidKey}) async {
+    if (!_initialized) {
+      // no-op for unsupported browsers
+      return null;
+    }
     try {
       return await _webMessaging.getToken(vapidKey: vapidKey);
     } catch (e) {
@@ -137,7 +147,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   @override
   Future<void> setForegroundNotificationPresentationOptions(
-      {bool alert, bool badge, bool sound}) async {
+      {required bool alert, required bool badge, required bool sound}) async {
     return;
   }
 

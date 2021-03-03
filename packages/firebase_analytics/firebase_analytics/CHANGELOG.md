@@ -1,3 +1,7 @@
+## 7.1.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
 ## 7.0.0
 
  - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.

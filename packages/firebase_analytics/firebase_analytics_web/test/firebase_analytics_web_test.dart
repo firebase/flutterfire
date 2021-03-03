@@ -1,3 +1,5 @@
+// @dart=2.9
+
 @TestOn('chrome') // Uses web-only Flutter SDK
 
 import 'package:firebase/firebase.dart';

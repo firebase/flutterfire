@@ -1,3 +1,7 @@
+## 0.8.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
 ## 0.7.0
 
  - **FIX**: Add missing sdk version constraints inside pubspec.yaml (#4604).

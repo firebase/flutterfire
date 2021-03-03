@@ -13,13 +13,10 @@ import 'interop/messaging.dart';
 FirebaseException getFirebaseException(Object object) {
   if (object is! core_interop.FirebaseError) {
     return FirebaseException(
-        plugin: 'firebase_messaging',
-        code: 'unknown',
-        message: object.toString());
+        plugin: 'firebase_messaging', message: object.toString());
   }
 
-  core_interop.FirebaseError firebaseError =
-      object as core_interop.FirebaseError;
+  core_interop.FirebaseError firebaseError = object;
 
   String code = firebaseError.code.replaceFirst('messaging/', '');
   String message =
@@ -62,18 +59,18 @@ NotificationSettings getNotificationSettings(String status) {
 
 /// Converts a messaging [MessagePayload] into a Map.
 Map<String, dynamic> messagePayloadToMap(MessagePayload messagePayload) {
-  String senderId;
-  int sentTime;
+  String? senderId;
+  int? sentTime;
   Map<String, dynamic> data = {};
 
   if (messagePayload.data != null) {
-    messagePayload.data.forEach((key, value) {
+    messagePayload.data!.forEach((key, value) {
       if (key == 'google.c.a.c_id') {
         senderId = value as String;
       }
 
       if (key == 'google.c.a.ts') {
-        int seconds = int.tryParse(value as String);
+        int seconds = int.tryParse(value as String)!;
         sentTime = seconds * 1000; // sentTime is ms
       }
 
@@ -98,7 +95,7 @@ Map<String, dynamic> messagePayloadToMap(MessagePayload messagePayload) {
     'notification': messagePayload.notification == null
         ? null
         : notificationPayloadToMap(
-            messagePayload.notification, messagePayload.fcmOptions),
+            messagePayload.notification!, messagePayload.fcmOptions),
     'sentTime': sentTime,
     'threadId': null,
     'ttl': null,
@@ -110,7 +107,7 @@ Map<String, dynamic> messagePayloadToMap(MessagePayload messagePayload) {
 /// Since [FcmOptions] are web specific, we pass these down to the upper layer
 /// as web properties.
 Map<String, dynamic> notificationPayloadToMap(
-    NotificationPayload notificationPayload, FcmOptions fcmOptions) {
+    NotificationPayload notificationPayload, FcmOptions? fcmOptions) {
   return <String, dynamic>{
     'title': notificationPayload.title,
     'body': notificationPayload.body,

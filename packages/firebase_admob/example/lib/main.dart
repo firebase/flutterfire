@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 // ignore_for_file: public_member_api_docs
 
 import 'dart:io';
@@ -108,7 +110,7 @@ class _MyAppState extends State<MyApp> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                RaisedButton(
+                ElevatedButton(
                     child: const Text('SHOW BANNER'),
                     onPressed: () {
                       _bannerAd ??= createBannerAd();
@@ -116,7 +118,7 @@ class _MyAppState extends State<MyApp> {
                         ..load()
                         ..show();
                     }),
-                RaisedButton(
+                ElevatedButton(
                     child: const Text('SHOW BANNER WITH OFFSET'),
                     onPressed: () {
                       _bannerAd ??= createBannerAd();
@@ -124,26 +126,26 @@ class _MyAppState extends State<MyApp> {
                         ..load()
                         ..show(horizontalCenterOffset: -50, anchorOffset: 100);
                     }),
-                RaisedButton(
+                ElevatedButton(
                     child: const Text('REMOVE BANNER'),
                     onPressed: () {
                       _bannerAd?.dispose();
                       _bannerAd = null;
                     }),
-                RaisedButton(
+                ElevatedButton(
                   child: const Text('LOAD INTERSTITIAL'),
                   onPressed: () {
                     _interstitialAd?.dispose();
                     _interstitialAd = createInterstitialAd()..load();
                   },
                 ),
-                RaisedButton(
+                ElevatedButton(
                   child: const Text('SHOW INTERSTITIAL'),
                   onPressed: () {
                     _interstitialAd?.show();
                   },
                 ),
-                RaisedButton(
+                ElevatedButton(
                   child: const Text('SHOW NATIVE'),
                   onPressed: () {
                     _nativeAd ??= createNativeAd();
@@ -156,14 +158,14 @@ class _MyAppState extends State<MyApp> {
                       );
                   },
                 ),
-                RaisedButton(
+                ElevatedButton(
                   child: const Text('REMOVE NATIVE'),
                   onPressed: () {
                     _nativeAd?.dispose();
                     _nativeAd = null;
                   },
                 ),
-                RaisedButton(
+                ElevatedButton(
                   child: const Text('LOAD REWARDED VIDEO'),
                   onPressed: () {
                     RewardedVideoAd.instance.load(
@@ -171,7 +173,7 @@ class _MyAppState extends State<MyApp> {
                         targetingInfo: targetingInfo);
                   },
                 ),
-                RaisedButton(
+                ElevatedButton(
                   child: const Text('SHOW REWARDED VIDEO'),
                   onPressed: () {
                     RewardedVideoAd.instance.show();

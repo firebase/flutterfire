@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
@@ -33,7 +35,6 @@ class _PictureScannerState extends State<PictureScanner> {
       FirebaseVision.instance.cloudTextRecognizer();
   final DocumentTextRecognizer _cloudDocumentRecognizer =
       FirebaseVision.instance.cloudDocumentTextRecognizer();
-  final ImagePicker _picker = ImagePicker();
 
   Future<void> _getAndScanImage() async {
     setState(() {
@@ -41,8 +42,8 @@ class _PictureScannerState extends State<PictureScanner> {
       _imageSize = null;
     });
 
-    final PickedFile pickedImage =
-        await _picker.getImage(source: ImageSource.gallery);
+    final File pickedImage =
+        await ImagePicker.pickImage(source: ImageSource.gallery);
     final File imageFile = File(pickedImage.path);
 
     if (imageFile != null) {

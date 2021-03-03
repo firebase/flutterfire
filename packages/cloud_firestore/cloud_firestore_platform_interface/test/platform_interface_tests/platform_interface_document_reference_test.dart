@@ -8,8 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../utils/test_common.dart';
 
-const _kCollectionId = "test";
-const _kDocumentId = "document";
+const _kCollectionId = 'test';
+const _kDocumentId = 'document';
 
 class TestDocumentReference extends DocumentReferencePlatform {
   TestDocumentReference._()
@@ -30,21 +30,21 @@ class ShadowTestDocumentReference extends DocumentReferencePlatform {
 void main() {
   initializeMethodChannel();
 
-  group("$DocumentReferencePlatform()", () {
+  group('$DocumentReferencePlatform()', () {
     setUpAll(() async {
       await Firebase.initializeApp();
     });
 
-    test("constructor", () {
+    test('constructor', () {
       final testDocRef = TestDocumentReference._();
       expect(testDocRef, isInstanceOf<DocumentReferencePlatform>());
       expect(testDocRef.id, equals(_kDocumentId));
       expect(testDocRef.path, equals('$_kCollectionId/$_kDocumentId'));
     });
 
-    test("path", () {
+    test('path', () {
       final document = TestDocumentReference._();
-      expect(document.path, equals("$_kCollectionId/$_kDocumentId"));
+      expect(document.path, equals('$_kCollectionId/$_kDocumentId'));
     });
 
     test('==', () {
@@ -53,12 +53,12 @@ void main() {
       expect(other, equals(reference));
     });
 
-    test("id", () {
+    test('id', () {
       final document = TestDocumentReference._();
       expect(document.id, equals(_kDocumentId));
     });
 
-    test("parent", () {
+    test('parent', () {
       final document = TestDocumentReference._();
       final parent = document.parent;
       final parentPath = parent.path;
@@ -66,62 +66,62 @@ void main() {
       expect(parentPath, equals(_kCollectionId));
     });
 
-    test("collection", () {
+    test('collection', () {
       final document = TestDocumentReference._();
-      expect(document.collection("extra").path,
-          equals("$_kCollectionId/$_kDocumentId/extra"));
+      expect(document.collection('extra').path,
+          equals('$_kCollectionId/$_kDocumentId/extra'));
     });
 
-    test("throws if .delete", () async {
+    test('throws if .delete', () async {
       final document = TestDocumentReference._();
       try {
         await document.delete();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("delete() is not implemented"));
+        expect(e.message, equals('delete() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .get", () async {
+    test('throws if .get', () async {
       final document = TestDocumentReference._();
       try {
         await document.get();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("get() is not implemented"));
+        expect(e.message, equals('get() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .snapshots", () {
+    test('throws if .snapshots', () {
       final document = TestDocumentReference._();
       try {
         document.snapshots();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("snapshots() is not implemented"));
+        expect(e.message, equals('snapshots() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .set", () async {
+    test('throws if .set', () async {
       final document = TestDocumentReference._();
       try {
         await document.set({});
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("set() is not implemented"));
+        expect(e.message, equals('set() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .update", () async {
+    test('throws if .update', () async {
       final document = TestDocumentReference._();
       try {
         await document.update({});
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("update() is not implemented"));
+        expect(e.message, equals('update() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');

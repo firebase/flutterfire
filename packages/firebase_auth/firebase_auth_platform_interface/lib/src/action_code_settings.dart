@@ -16,33 +16,33 @@ class ActionCodeSettings {
     this.dynamicLinkDomain,
     this.handleCodeInApp,
     this.iOSBundleId,
-    /*required*/ @required this.url,
-  }) : assert(url != null);
+    required this.url,
+  });
 
   /// The Android package name of the application to open when the URL is pressed.
-  final String androidPackageName;
+  final String? androidPackageName;
 
   /// The minimum app version which must be installed on the device.
   ///
   /// This argument is only set if [androidPackageName] is also set. If the user
   /// has the application on the device but it is a lower version number than the
   /// one specified they will be taken to the Play Store to upgrade the application.
-  final String androidMinimumVersion;
+  final String? androidMinimumVersion;
 
   /// Whether or not the user should be automatically prompted to install the app
   /// via the Play Store if it is not already installed.
-  final bool androidInstallApp;
+  final bool? androidInstallApp;
 
   /// The iOS app to open if it is installed on the device.
-  final String iOSBundleId;
+  final String? iOSBundleId;
 
   /// Sets an optional Dynamic Link domain.
-  final String dynamicLinkDomain;
+  final String? dynamicLinkDomain;
 
   /// The default is false. When true, the action code link will be sent
   /// as a Universal Link or Android App Link and will be opened by the
   /// app if installed.
-  final bool handleCodeInApp;
+  final bool? handleCodeInApp;
 
   /// Sets the link continue/state URL
   final String url;
@@ -53,10 +53,16 @@ class ActionCodeSettings {
       'url': url,
       'dynamicLinkDomain': dynamicLinkDomain,
       'handleCodeInApp': handleCodeInApp,
-      'androidPackageName': androidPackageName,
-      'androidMinimumVersion': androidMinimumVersion,
-      'androidInstallApp': androidInstallApp,
-      'iOSBundleId': iOSBundleId,
+      if (iOSBundleId != null)
+        'iOS': {
+          'bundleId': iOSBundleId,
+        },
+      if (androidPackageName != null)
+        'android': {
+          'packageName': androidPackageName,
+          'minimumVersion': androidMinimumVersion,
+          'installApp': androidInstallApp,
+        }
     };
   }
 

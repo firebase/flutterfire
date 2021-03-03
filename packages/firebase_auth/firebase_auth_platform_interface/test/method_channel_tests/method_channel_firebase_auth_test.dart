@@ -14,7 +14,7 @@ import '../mock.dart';
 
 void main() {
   setupFirebaseAuthMocks();
-  /*late*/ FirebaseAuthPlatform auth;
+  late FirebaseAuthPlatform auth;
   final List<MethodCall> log = <MethodCall>[];
   const String regularTestEmail = 'test@email.com';
   const String testPassword = 'testPassword';
@@ -83,18 +83,18 @@ void main() {
     expect(user.uid, isA<String>());
     expect(user.email, equals(regularTestEmail));
     expect(user.isAnonymous, isFalse);
-    expect(user.uid, equals(auth.currentUser.uid));
+    expect(user.uid, equals(auth.currentUser!.uid));
   }
 
   void verifyUserCredential(UserCredentialPlatform result) {
-    verifyUser(result.user);
-    var additionalUserInfo = result.additionalUserInfo;
+    verifyUser(result.user!);
+    var additionalUserInfo = result.additionalUserInfo!;
     expect(additionalUserInfo, isA<Object>());
     expect(additionalUserInfo.isNewUser, isFalse);
   }
 
   group('$MethodChannelFirebaseAuth', () {
-    /*late*/ Map<String, dynamic> user;
+    late Map<String, dynamic> user;
 
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
@@ -142,7 +142,7 @@ void main() {
             };
           case 'Auth#verifyPasswordResetCode':
             return <String, dynamic>{'email': call.arguments['code']};
-          case "Auth#verifyPhoneNumber":
+          case 'Auth#verifyPhoneNumber':
             return null;
           case 'Auth#checkActionCode':
             return <String, dynamic>{
@@ -175,7 +175,7 @@ void main() {
     tearDown(() async {
       mockPlatformExceptionThrown = false;
       mockExceptionThrown = false;
-      await auth?.signOut();
+      await auth.signOut();
     });
 
     test('currentUser', () async {
@@ -188,7 +188,7 @@ void main() {
       MockUserPlatform userPlatform = MockUserPlatform(auth, user);
       auth.currentUser = userPlatform;
       expect(auth.currentUser, isA<UserPlatform>());
-      expect(auth.currentUser.uid, equals(kMockUid));
+      expect(auth.currentUser!.uid, equals(kMockUid));
     });
 
     test('delegateFor()', () {
@@ -212,8 +212,7 @@ void main() {
 
       test('when currentUser arg is null', () {
         final testAuth = TestMethodChannelFirebaseAuth(Firebase.app());
-        final result =
-            testAuth.setInitialValues(currentUser: null, languageCode: 'en');
+        final result = testAuth.setInitialValues(languageCode: 'en');
         expect(result, isA<FirebaseAuthPlatform>());
         expect(result.languageCode, equals('en'));
         expect(result.currentUser, isNull);
@@ -222,7 +221,7 @@ void main() {
     });
 
     group('applyActionCode()', () {
-      final String code = '12345';
+      const String code = '12345';
       test('invokes native method with correct args', () async {
         await auth.applyActionCode(code);
 
@@ -242,19 +241,19 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => auth.applyActionCode(code);
+        void callMethod() => auth.applyActionCode(code);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        Function callMethod = () => auth.applyActionCode(code);
+        void callMethod() => auth.applyActionCode(code);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
     });
 
     group('checkActionCode()', () {
-      final String code = '12345';
+      const String code = '12345';
 
       test('invokes native method with correct args and returns correct result',
           () async {
@@ -265,8 +264,10 @@ void main() {
         expect(result.operation, equals(ActionCodeInfoOperation.verifyEmail));
         expect(result.data, isA<Map<String, dynamic>>());
         expect(result.data['email'], equals(kMockActionCodeInfo.data['email']));
-        expect(result.data['previousEmail'],
-            equals(kMockActionCodeInfo.data['previousEmail']));
+        expect(
+          result.data['previousEmail'],
+          equals(kMockActionCodeInfo.data['previousEmail']),
+        );
 
         // check native method was called
         expect(log, <Matcher>[
@@ -284,20 +285,20 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => auth.checkActionCode(code);
+        void callMethod() => auth.checkActionCode(code);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        Function callMethod = () => auth.checkActionCode(code);
+        void callMethod() => auth.checkActionCode(code);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
     });
 
     group('confirmPasswordReset()', () {
-      final String code = '12345';
-      final String newPassword = 'newPassword';
+      const String code = '12345';
+      const String newPassword = 'newPassword';
       test('invokes native method with correct args', () async {
         await auth.confirmPasswordReset(code, newPassword);
 
@@ -318,15 +319,13 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod =
-            () => auth.confirmPasswordReset(code, newPassword);
+        void callMethod() => auth.confirmPasswordReset(code, newPassword);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        Function callMethod =
-            () => auth.confirmPasswordReset(code, newPassword);
+        void callMethod() => auth.confirmPasswordReset(code, newPassword);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
     });
@@ -353,14 +352,14 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () =>
+        void callMethod() =>
             auth.createUserWithEmailAndPassword(regularTestEmail, testPassword);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        Function callMethod = () =>
+        void callMethod() =>
             auth.createUserWithEmailAndPassword(regularTestEmail, testPassword);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
@@ -386,15 +385,13 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod =
-            () => auth.fetchSignInMethodsForEmail(regularTestEmail);
+        void callMethod() => auth.fetchSignInMethodsForEmail(regularTestEmail);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        Function callMethod =
-            () => auth.fetchSignInMethodsForEmail(regularTestEmail);
+        void callMethod() => auth.fetchSignInMethodsForEmail(regularTestEmail);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
     });
@@ -407,18 +404,18 @@ void main() {
         expect(result, isA<UserCredentialPlatform>());
         expect(result.user, isA<UserPlatform>());
 
-        final userResult = result.user;
+        final userResult = result.user!;
         expect(userResult.uid, isA<String>());
         expect(userResult.email, isNull);
         expect(userResult.isAnonymous, isTrue);
-        expect(userResult.uid, equals(auth.currentUser.uid));
+        expect(userResult.uid, equals(auth.currentUser!.uid));
 
         final additionalUserInfo = result.additionalUserInfo;
-        expect(additionalUserInfo, isA<Object>());
+        expect(additionalUserInfo, isNull);
 
         // check currentUser was set
         expect(auth.currentUser, isA<UserPlatform>());
-        expect(auth.currentUser.isAnonymous, isTrue);
+        expect(auth.currentUser!.isAnonymous, isTrue);
 
         // check native method was called
         expect(log, <Matcher>[
@@ -436,14 +433,14 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => auth.signInAnonymously();
+        void callMethod() => auth.signInAnonymously();
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
 
-        Function callMethod = () => auth.signInAnonymously();
+        void callMethod() => auth.signInAnonymously();
         await testExceptionHandling('EXCEPTION', callMethod);
       });
     });
@@ -477,7 +474,7 @@ void main() {
         final credential = EmailAuthProvider.credential(
             email: 'disabled@account.com', password: testPassword);
 
-        Function callMethod = () => auth.signInWithCredential(credential);
+        void callMethod() => auth.signInWithCredential(credential);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
@@ -486,14 +483,14 @@ void main() {
         final credential = EmailAuthProvider.credential(
             email: 'unknown', password: testPassword);
 
-        Function callMethod = () => auth.signInWithCredential(credential);
+        void callMethod() => auth.signInWithCredential(credential);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
     });
 
     group('signInWithCustomToken()', () {
       test('returns result of a successful sign in', () async {
-        final String token = 'testToken';
+        const String token = 'testToken';
         final result = await auth.signInWithCustomToken(token);
 
         // check result
@@ -516,15 +513,15 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        final String token = 'testToken';
-        Function callMethod = () => auth.signInWithCustomToken(token);
+        const String token = 'testToken';
+        void callMethod() => auth.signInWithCustomToken(token);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        final String token = 'testToken';
-        Function callMethod = () => auth.signInWithCustomToken(token);
+        const String token = 'testToken';
+        void callMethod() => auth.signInWithCustomToken(token);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
     });
@@ -556,7 +553,7 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () =>
+        void callMethod() =>
             auth.signInWithEmailAndPassword(regularTestEmail, testPassword);
         await testExceptionHandling('PLATFORM', callMethod);
       });
@@ -564,7 +561,7 @@ void main() {
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
 
-        Function callMethod = () =>
+        void callMethod() =>
             auth.signInWithEmailAndPassword(regularTestEmail, testPassword);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
@@ -597,14 +594,14 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () =>
+        void callMethod() =>
             auth.signInWithEmailAndPassword(regularTestEmail, testPassword);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        Function callMethod = () =>
+        void callMethod() =>
             auth.signInWithEmailAndPassword(regularTestEmail, testPassword);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
@@ -633,14 +630,14 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () =>
+        void callMethod() =>
             auth.sendPasswordResetEmail(regularTestEmail, actionCodeSettings);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        Function callMethod = () =>
+        void callMethod() =>
             auth.sendPasswordResetEmail(regularTestEmail, actionCodeSettings);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
@@ -670,14 +667,14 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () =>
+        void callMethod() =>
             auth.sendSignInLinkToEmail(regularTestEmail, actionCodeSettings);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        Function callMethod = () =>
+        void callMethod() =>
             auth.sendPasswordResetEmail(regularTestEmail, actionCodeSettings);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
@@ -704,13 +701,13 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => auth.setLanguageCode(languageCode);
+        void callMethod() => auth.setLanguageCode(languageCode);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        Function callMethod = () => auth.setLanguageCode(languageCode);
+        void callMethod() => auth.setLanguageCode(languageCode);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
     });
@@ -737,14 +734,14 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () =>
+        void callMethod() =>
             auth.setSettings(appVerificationDisabledForTesting: isDisabled);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        Function callMethod = () =>
+        void callMethod() =>
             auth.setSettings(appVerificationDisabledForTesting: isDisabled);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
@@ -752,7 +749,7 @@ void main() {
 
     group('setPersistence()', () {
       test('throw [UnimplementedError]', () async {
-        final Persistence persistence = Persistence.LOCAL;
+        const Persistence persistence = Persistence.LOCAL;
         try {
           await auth.setPersistence(persistence);
         } on UnimplementedError catch (e) {
@@ -819,15 +816,32 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => auth.signOut();
+        void callMethod() => auth.signOut();
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
 
-        Function callMethod = () => auth.signOut();
+        void callMethod() => auth.signOut();
         await testExceptionHandling('EXCEPTION', callMethod);
+      });
+    });
+
+    group('useEmulator()', () {
+      test('calls useEmulator correctly', () async {
+        await auth.useEmulator('example.com', 31337);
+        // check native method was called
+        expect(log, <Matcher>[
+          isMethodCall(
+            'Auth#useEmulator',
+            arguments: <String, dynamic>{
+              'appName': defaultFirebaseAppName,
+              'host': 'example.com',
+              'port': 31337,
+            },
+          ),
+        ]);
       });
     });
 
@@ -855,20 +869,20 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => auth.verifyPasswordResetCode(testCode);
+        void callMethod() => auth.verifyPasswordResetCode(testCode);
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
 
-        Function callMethod = () => auth.verifyPasswordResetCode(testCode);
+        void callMethod() => auth.verifyPasswordResetCode(testCode);
         await testExceptionHandling('EXCEPTION', callMethod);
       });
     });
 
     group('verifyPhoneNumber()', () {
-      /*late*/ int handle;
+      late int handle;
 
       setUp(() {
         handle = nextMockHandleId;
@@ -876,16 +890,18 @@ void main() {
 
       const String testPhoneNumber = '+1 555 555 555';
       const String testSmsCode = '12345';
-      final Duration testTimeout = Duration(seconds: 5);
+      const Duration testTimeout = Duration(seconds: 5);
+
       test('returns a successful result', () async {
         await auth.verifyPhoneNumber(
-            phoneNumber: testPhoneNumber,
-            verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {},
-            verificationFailed: null,
-            codeSent: null,
-            codeAutoRetrievalTimeout: null,
-            timeout: testTimeout,
-            autoRetrievedSmsCodeForTesting: testSmsCode);
+          phoneNumber: testPhoneNumber,
+          verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {},
+          verificationFailed: (_) {},
+          codeSent: (_, __) {},
+          codeAutoRetrievalTimeout: (_) {},
+          timeout: testTimeout,
+          autoRetrievedSmsCodeForTesting: testSmsCode,
+        );
 
         // check native method was called
         expect(log, <Matcher>[
@@ -907,61 +923,62 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseAuthException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => auth.verifyPhoneNumber(
-            phoneNumber: testPhoneNumber,
-            verificationCompleted: null,
-            verificationFailed: null,
-            codeSent: null,
-            codeAutoRetrievalTimeout: null,
-            timeout: testTimeout,
-            autoRetrievedSmsCodeForTesting: testSmsCode);
+        void callMethod() => auth.verifyPhoneNumber(
+              phoneNumber: testPhoneNumber,
+              verificationCompleted: (_) {},
+              verificationFailed: (_) {},
+              codeSent: (_, __) {},
+              codeAutoRetrievalTimeout: (_) {},
+              timeout: testTimeout,
+              autoRetrievedSmsCodeForTesting: testSmsCode,
+            );
         await testExceptionHandling('PLATFORM', callMethod);
       });
 
       test('throws an [Exception] error', () async {
         mockExceptionThrown = true;
-        Function callMethod = () => auth.verifyPhoneNumber(
-            phoneNumber: testPhoneNumber,
-            verificationCompleted: null,
-            verificationFailed: null,
-            codeSent: null,
-            codeAutoRetrievalTimeout: null,
-            timeout: testTimeout,
-            autoRetrievedSmsCodeForTesting: testSmsCode);
+        void callMethod() => auth.verifyPhoneNumber(
+              phoneNumber: testPhoneNumber,
+              verificationCompleted: (_) {},
+              verificationFailed: (_) {},
+              codeSent: (_, __) {},
+              codeAutoRetrievalTimeout: (_) {},
+              timeout: testTimeout,
+              autoRetrievedSmsCodeForTesting: testSmsCode,
+            );
         await testExceptionHandling('EXCEPTION', callMethod);
       });
     });
 
     group('authStateChanges()', () {
-      /*late*/ StreamSubscription<UserPlatform> subscription;
+      StreamSubscription<UserPlatform?>? subscription;
 
       tearDown(() {
         subscription?.cancel();
       });
 
       test('returns [Stream<UserPlatform>]', () async {
-        final result = await auth.authStateChanges();
-
-        expect(result, isA<Stream<UserPlatform>>());
+        // Checks that `authStateChanges` does not throw UnimplementedError
+        expect(auth.authStateChanges(), isNotNull);
       });
 
       test('listens to incoming changes', () async {
         const String testEmail = 'testauthstate@email.com';
-        Stream<UserPlatform> stream = auth.authStateChanges();
+        Stream<UserPlatform?> stream = auth.authStateChanges();
         int call = 0;
 
         subscription = stream.listen(
-          expectAsync1((UserPlatform user) {
+          expectAsync1((UserPlatform? user) {
             call++;
             if (call == 1) {
               expect(user, isA<UserPlatform>());
-              expect(user.email, isNull);
+              expect(user!.email, isNull);
             } else if (call == 2) {
-              expect(user.email, equals(testEmail));
+              expect(user!.email, equals(testEmail));
             } else {
-              fail("Should not have been called");
+              fail('Should not have been called');
             }
-          }, count: 2, reason: "Stream should only have been called 3 times"),
+          }, count: 2, reason: 'Stream should only have been called 2 times'),
         );
 
         await simulateEvent('Auth#authStateChanges', user);
@@ -976,35 +993,34 @@ void main() {
     });
 
     group('idTokenChanges()', () {
-      /*late*/ StreamSubscription<UserPlatform> subscription;
+      StreamSubscription<UserPlatform?>? subscription;
 
       tearDown(() {
         subscription?.cancel();
       });
 
       test('returns [Stream<UserPlatform>]', () async {
-        final result = await auth.idTokenChanges();
-
-        expect(result, isA<Stream<UserPlatform>>());
+        // Checks that `idTokenChanges` does not throw UnimplementedError
+        expect(auth.idTokenChanges(), isNotNull);
       });
 
       test('listens to incoming changes', () async {
-        Stream<UserPlatform> stream = auth.idTokenChanges();
+        Stream<UserPlatform?> stream = auth.idTokenChanges();
         int call = 0;
 
         subscription = stream.listen(
-          expectAsync1((UserPlatform user) {
+          expectAsync1((UserPlatform? user) {
             call++;
             if (call == 1) {
               expect(user, isNull);
             } else if (call == 2) {
-              expect(user.uid, isA<String>());
+              expect(user!.uid, isA<String>());
               expect(user.uid, equals(kMockUid));
-              expect(auth.currentUser.uid, equals(user.uid));
+              expect(auth.currentUser!.uid, equals(user.uid));
             } else {
-              fail("Should not have been called");
+              fail('Should not have been called');
             }
-          }, count: 2, reason: "Stream should only have been called 2 times"),
+          }, count: 2, reason: 'Stream should only have been called 2 times'),
         );
 
         await simulateEvent('Auth#idTokenChanges', null);
@@ -1015,36 +1031,35 @@ void main() {
     });
 
     group('userChanges()', () {
-      /*late*/ StreamSubscription<UserPlatform> subscription;
+      StreamSubscription<UserPlatform?>? subscription;
 
       tearDown(() {
         subscription?.cancel();
       });
 
       test('returns [Stream<UserPlatform>]', () async {
-        final result = await auth.userChanges();
-
-        expect(result, isA<Stream<UserPlatform>>());
+        // Checks that `userChanges` does not throw UnimplementedError
+        expect(auth.userChanges(), isNotNull);
       });
 
       test('listens to incoming changes', () async {
-        Stream<UserPlatform> stream = auth.userChanges();
+        Stream<UserPlatform?> stream = auth.userChanges();
         int call = 0;
 
         subscription = stream.listen(
-          expectAsync1((UserPlatform user) {
+          expectAsync1((UserPlatform? user) {
             call++;
             if (call == 1) {
               expect(user, isNull);
               expect(auth.currentUser, equals(isNull));
             } else if (call == 2) {
-              expect(user.uid, isA<String>());
+              expect(user!.uid, isA<String>());
               expect(user.uid, equals(kMockUid));
-              expect(auth.currentUser.uid, equals(user.uid));
+              expect(auth.currentUser!.uid, equals(user.uid));
             } else {
-              fail("Should not have been called");
+              fail('Should not have been called');
             }
-          }, count: 2, reason: "Stream should only have been called 2 times"),
+          }, count: 2, reason: 'Stream should only have been called 2 times'),
         );
 
         // id token change events will trigger setCurrentUser()

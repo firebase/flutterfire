@@ -17,9 +17,66 @@ and runs in a managed environment. There's no need to manage and scale your own 
 Before installing the Cloud Functions for Firebase plugin, ensure that you have followed the [Getting Started](../overview.mdx) documentation
 and have initialized FlutterFire.
 
+<Tabs
+groupId="legacy-or-nullsafe"
+defaultValue="legacy"
+values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+]}
+>
+<TabItem value="legacy">
+</TabItem>
+<TabItem value="null-safe">
+
+
+To develop in a null-safe environment, it is a prerequisite to switch to the correct Flutter channel.
+
+#### Flutter Web, Android & iOS targets:
+
+Web, Android & iOS targets require the Flutter `beta` channel:
+
+```bash
+$ flutter channel beta
+```
+
+#### Flutter desktop targets:
+
+Desktop targets such as macOS requires  the Flutter `dev` channel:
+
+```bash
+$ flutter channel dev
+```
+
+If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
+```bash
+$ flutter run --no-sound-null-safety
+```
+
+For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
+
+```dart
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:firebase_analytics/firebase_analytics.dart';
+```
+
+</TabItem>
+</Tabs>
+
 ### 1. Add dependency
 
 Add the [`cloud_functions`](https://pub.dev/packages/cloud_functions) dependency to your projects `pubspec.yaml` file:
+
+<Tabs
+  groupId="legacy-or-nullsafe"
+  defaultValue="legacy"
+  values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+  ]}
+>
+<TabItem value="legacy">
+
 
 ```yaml {5} title="pubspec.yaml"
 dependencies:
@@ -28,6 +85,20 @@ dependencies:
   firebase_core: "^{{ plugins.firebase_core }}"
   cloud_functions: "^{{ plugins.cloud_functions }}"
 ```
+
+</TabItem>
+<TabItem value="null-safe">
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core_ns }}"
+  cloud_functions: "^{{ plugins.cloud_functions_ns }}"
+```
+
+</TabItem>
+</Tabs>
 
 ### 2. Download dependency
 

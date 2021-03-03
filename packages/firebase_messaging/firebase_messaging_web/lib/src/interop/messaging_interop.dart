@@ -16,34 +16,34 @@ external bool isSupported();
 @JS('Messaging')
 abstract class MessagingJsImpl {
   external void deleteToken();
-  external PromiseJsImpl<String> getToken(getTokenOptions);
+  external PromiseJsImpl<String> getToken(dynamic getTokenOptions);
   external void Function() onMessage(
-    optionsOrObserverOrOnNext,
-    observerOrOnNextOrOnError,
+    dynamic optionsOrObserverOrOnNext,
+    dynamic observerOrOnNextOrOnError,
   );
 }
 
 @JS()
 @anonymous
 abstract class NotificationPayloadJsImpl {
-  external String get title;
-  external String get body;
-  external String get image;
+  external String? get title;
+  external String? get body;
+  external String? get image;
 }
 
 @JS()
 @anonymous
 abstract class MessagePayloadJsImpl {
-  external String get collapseKey;
-  external FcmOptionsJsImpl get fcmOptions;
-  external NotificationPayloadJsImpl get notification;
+  external String? get collapseKey;
+  external FcmOptionsJsImpl? get fcmOptions;
+  external NotificationPayloadJsImpl? get notification;
   external dynamic /*Map<String, String>*/ get data;
-  external String get from;
+  external String? get from;
 }
 
 @JS()
 @anonymous
 abstract class FcmOptionsJsImpl {
-  external String get analyticsLabel;
-  external String get link;
+  external String? get analyticsLabel;
+  external String? get link;
 }

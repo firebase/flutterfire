@@ -31,7 +31,7 @@ class DocumentSnapshot {
   bool get exists => _delegate.exists;
 
   /// Contains all the data of this [DocumentSnapshot].
-  Map<String, dynamic> /*?*/ data() {
+  Map<String, dynamic>? data() {
     return _CodecUtility.replaceDelegatesWithValueInMap(
         _delegate.data(), _firestore);
   }

@@ -62,7 +62,6 @@ class GoogleAuthProvider extends AuthProvider {
 
   /// Adds Google OAuth scope.
   GoogleAuthProvider addScope(String scope) {
-    assert(scope != null);
     _scopes.add(scope);
     return this;
   }
@@ -70,16 +69,16 @@ class GoogleAuthProvider extends AuthProvider {
   /// Sets the OAuth custom parameters to pass in a Google OAuth
   /// request for popup and redirect sign-in operations.
   GoogleAuthProvider setCustomParameters(
-      Map<dynamic, dynamic> customOAuthParameters) {
-    assert(customOAuthParameters != null);
+    Map<dynamic, dynamic> customOAuthParameters,
+  ) {
     _parameters = customOAuthParameters;
     return this;
   }
 
   /// Create a new [GoogleAuthCredential] from a provided [accessToken].
-  static OAuthCredential credential({String idToken, String accessToken}) {
+  static OAuthCredential credential({String? idToken, String? accessToken}) {
     assert(accessToken != null || idToken != null,
-        "At least one of ID token and access token is required");
+        'At least one of ID token and access token is required');
     return GoogleAuthCredential._credential(
       idToken: idToken,
       accessToken: accessToken,
@@ -91,16 +90,18 @@ class GoogleAuthProvider extends AuthProvider {
 /// [GoogleAuthProvider.credential].
 class GoogleAuthCredential extends OAuthCredential {
   GoogleAuthCredential._({
-    String accessToken,
-    String idToken,
+    String? accessToken,
+    String? idToken,
   }) : super(
             providerId: _kProviderId,
             signInMethod: _kProviderId,
             accessToken: accessToken,
             idToken: idToken);
 
-  factory GoogleAuthCredential._credential(
-      {String idToken, String accessToken}) {
+  factory GoogleAuthCredential._credential({
+    String? idToken,
+    String? accessToken,
+  }) {
     return GoogleAuthCredential._(accessToken: accessToken, idToken: idToken);
   }
 }

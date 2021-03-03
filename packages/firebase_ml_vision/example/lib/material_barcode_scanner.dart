@@ -2,14 +2,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' show lerpDouble;
 
+import 'package:camera/camera.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -423,17 +425,19 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                           child: ButtonTheme(
                             minWidth: 312,
                             height: 48,
-                            child: RaisedButton.icon(
+                            child: ElevatedButton.icon(
                               onPressed: () => Navigator.of(context).pop(),
-                              color: kShrinePink100,
-                              label: const Text('ADD TO CART - \$12.99'),
-                              icon: const Icon(Icons.add_shopping_cart),
-                              elevation: 8.0,
-                              shape: const BeveledRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(7.0),
+                              style: ElevatedButton.styleFrom(
+                                primary: kShrinePink100,
+                                elevation: 8.0,
+                                shape: const BeveledRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(7.0),
+                                  ),
                                 ),
                               ),
+                              label: const Text('ADD TO CART - \$12.99'),
+                              icon: const Icon(Icons.add_shopping_cart),
                             ),
                           ),
                         ),

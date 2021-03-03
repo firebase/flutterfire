@@ -1,10 +1,14 @@
-## 0.10.0+1
+## 0.11.0+1
 
  - **FIX**: Added NSNull validation to `driverLicenseDictionary, visionBarcodeWiFiToDictionary, visionBarcodeEmailToDictionary,
         visionBarcodePhoneToDictionary, visionBarcodeSMSToDictionary, visionBarcodeURLToDictionary` to prevent errors when
         NSArray:addObject is called.
  - **ENHANCEMENT**: Changed ternary notation at `visionBarcodeToDictionary and barcodeContactInfoToDictionary` to improve readability.
  - **DOCS**: Fixed analyze script on docs
+
+## 0.11.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
 
 ## 0.10.0
 
