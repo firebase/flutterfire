@@ -2,10 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'dart:async';
-
 import 'package:meta/meta.dart' show required, visibleForTesting;
 
 import 'method_channel_firebase_analytics.dart';
@@ -63,7 +60,7 @@ abstract class FirebaseAnalyticsPlatform {
   /// Logs the given event [name] with the given [parameters].
   Future<void> logEvent({
     required String name,
-    Map<String, dynamic>? parameters,
+    Map<String, Object>? parameters,
   }) {
     throw UnimplementedError('logEvent() is not implemented on this platform');
   }
