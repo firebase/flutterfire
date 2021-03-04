@@ -20,7 +20,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   @override
   Future<void> logEvent({
     required String name,
-    Map<String, dynamic>? parameters,
+    Map<String, Object>? parameters,
   }) async {
     _analytics.logEvent(name, parameters!);
   }

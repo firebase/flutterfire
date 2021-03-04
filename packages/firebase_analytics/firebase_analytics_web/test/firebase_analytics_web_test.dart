@@ -24,18 +24,21 @@ void main() {
       final parameters = {'a': 'b'};
       await firebaseAnalytics.logEvent(name: name, parameters: parameters);
       verify(analytics.logEvent(name, parameters));
+      verifyNoMoreInteractions(analytics);
     });
 
     test('setAnalyticsCollectionEnabled', () async {
       final enabled = true;
       await firebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
       verify(analytics.setAnalyticsCollectionEnabled(enabled));
+      verifyNoMoreInteractions(analytics);
     });
 
     test('setUserId', () async {
       final userId = 'userId';
       await firebaseAnalytics.setUserId(userId);
       verify(analytics.setUserId(userId));
+      verifyNoMoreInteractions(analytics);
     });
 
     test('setCurrentScreen', () async {
@@ -47,6 +50,7 @@ void main() {
         screenClassOverride: screenClassOverride,
       );
       verify(analytics.setCurrentScreen(screenName));
+      verifyNoMoreInteractions(analytics);
     });
 
     test('setUserProperty', () async {
@@ -54,6 +58,7 @@ void main() {
       final value = 'value';
       await firebaseAnalytics.setUserProperty(name: name, value: value);
       verify(analytics.setUserProperties({name: value}));
+      verifyNoMoreInteractions(analytics);
     });
   });
 }
