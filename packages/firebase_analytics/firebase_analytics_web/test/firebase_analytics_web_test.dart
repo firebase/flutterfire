@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 @TestOn('chrome') // Uses web-only Flutter SDK
 
@@ -11,8 +11,8 @@ class MockAnalytics extends Mock implements Analytics {}
 
 void main() {
   group('FirebaseAnalyticsWeb', () {
-    FirebaseAnalyticsWeb firebaseAnalytics;
-    MockAnalytics analytics;
+    late FirebaseAnalyticsWeb firebaseAnalytics;
+    late MockAnalytics analytics;
 
     setUp(() {
       analytics = MockAnalytics();

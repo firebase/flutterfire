@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
@@ -11,7 +9,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   final firebase.Analytics _analytics;
 
   /// A constructor that allows tests to override the firebase.Analytics object.
-  FirebaseAnalyticsWeb({@visibleForTesting firebase.Analytics analytics})
+  FirebaseAnalyticsWeb({@visibleForTesting firebase.Analytics? analytics})
       : _analytics = analytics ?? firebase.analytics();
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -21,10 +19,10 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> logEvent({
-    String name,
-    Map<String, dynamic> parameters,
+    required String name,
+    Map<String, dynamic>? parameters,
   }) async {
-    _analytics.logEvent(name, parameters);
+    _analytics.logEvent(name, parameters!);
   }
 
   @override
@@ -39,16 +37,16 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setCurrentScreen({
-    String screenName,
-    String screenClassOverride,
+    required String screenName,
+    String? screenClassOverride,
   }) async {
     _analytics.setCurrentScreen(screenName);
   }
 
   @override
   Future<void> setUserProperty({
-    String name,
-    String value,
+    required String name,
+    required String value,
   }) async {
     _analytics.setUserProperties({name: value});
   }
