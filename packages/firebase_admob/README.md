@@ -1,4 +1,5 @@
 # Deprecation of firebase_admob Plugin
+
 The `firebase_admob` plugin will be deprecated in April 2021 in favor of [Google Mobile Ads SDK for
 Flutter](https://pub.dev/packages/google_mobile_ads).
 
@@ -37,28 +38,28 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
- BannerAd _bannerAd;
+  BannerAd _bannerAd;
 
- @override
- void initState() {
-   super.initState();
-   _bannerAd = BannerAd(
-     adUnitId: BannerAd.testAdUnitId,
-     size: AdSize.banner,
-   );
+  @override
+  void initState() {
+    super.initState();
+    _bannerAd = BannerAd(
+      adUnitId: BannerAd.testAdUnitId,
+      size: AdSize.banner,
+    );
 
-   _bannerAd
-     ..load()
-     ..show(
-       anchorOffset: 10.0,
-       anchorType: AnchorType.bottom,
-     );
- }
+    _bannerAd
+      ..load()
+      ..show(
+        anchorOffset: 10.0,
+        anchorType: AnchorType.bottom,
+    );
+  }
 
- @override
- Widget build(BuildContext context) {
-   return MyAppWidget();
- }
+  @override
+  Widget build(BuildContext context) {
+    return MyAppWidget();
+  }
 }
 ```
 
@@ -68,51 +69,51 @@ to the bottom with an offset:
 
 ```dart
 void main() {
- WidgetsFlutterBinding.ensureInitialized();
- MobileAds.instance.initialize();
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
 
- runApp(MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
- @override
- MyAppState createState() => MyAppState();
+  @override
+  MyAppState createState() => MyAppState();
 }
 
 class MyAppState extends State<MyApp> {
- BannerAd _bannerAd;
+  BannerAd _bannerAd;
 
- @override
- void initState() {
-   super.initState();
-   _bannerAd = BannerAd(
-     size: AdSize.banner,
-     adUnitId: BannerAd.testAdUnitId,
-     listener: AdListener(),
-     request: AdRequest(),
-   );
-   _bannerAd.load();
+  @override
+  void initState() {
+    super.initState();
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: BannerAd.testAdUnitId,
+      listener: AdListener(),
+      request: AdRequest(),
+    );
+    _bannerAd.load();
  }
 
- @override
- void dispose() {
-   super.dispose();
-   _bannerAd.dispose();
- }
+  @override
+  void dispose() {
+    super.dispose();
+    _bannerAd.dispose();
+  }
 
- @override
- Widget build(BuildContext context) {
-   return Stack(
-     children: [
-       MyAppWidget(),
-       Container(
-         padding: EdgeInsets.only(bottom: 10.0),
-         alignment: Alignment.bottomCenter,
-         child: AdWidget(ad: _bannerAd),
-       ),
-     ],
-   );
- }
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        MyAppWidget(),
+        Container(
+          padding: EdgeInsets.only(bottom: 10.0),
+          alignment: Alignment.bottomCenter,
+          child: AdWidget(ad: _bannerAd),
+        ),
+      ],
+    );
+  }
 }
 ```
 
@@ -124,45 +125,44 @@ call `show` right after `load`. This is now discouraged and `show` should only b
 
 ```dart
 class MyApp extends StatefulWidget {
- @override
- MyAppState createState() => MyAppState();
+  @override
+  MyAppState createState() => MyAppState();
 }
 
 class MyAppState extends State<MyApp> {
- InterstitialAd _interstitialAd;
+  InterstitialAd _interstitialAd;
 
- @override
- void initState() {
-   super.initState();
-   _interstitialAd = InterstitialAd(
-     adUnitId: InterstitialAd.testAdUnitId,
-     request: AdRequest(),
-     listener: AdListener(
-       onAdLoaded: (Ad ad) {
-         // Ad is now ready to show at any time.
-         // (ad as InterstitialAd).show();
-       },
-       onAdFailedToLoad: (Ad ad, LoadAdError error) {
-         print(error);
-         ad.dispose();
-       },
-       onAdClosed: (Ad ad) {
-         ad.dispose();
-       },
-     ),
-   );
- }
+  @override
+  void initState() {
+    super.initState();
+    _interstitialAd = InterstitialAd(
+      adUnitId: InterstitialAd.testAdUnitId,
+      request: AdRequest(),
+      listener: AdListener(
+        onAdLoaded: (Ad ad) {
+          // Ad is now ready to show at any time.
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print(error);
+          ad.dispose();
+        },
+        onAdClosed: (Ad ad) {
+          ad.dispose();
+        },
+      ),
+    );
+  }
 
- @override
- void dispose() {
-   super.dispose();
-   _interstitialAd?.dispose();
- }
+  @override
+  void dispose() {
+    super.dispose();
+    _interstitialAd?.dispose();
+  }
 
- @override
- Widget build(BuildContext context) {
-   return MyAppWidget();
- }
+  @override
+  Widget build(BuildContext context) {
+    return MyAppWidget();
+  }
 }
 ```
 
