@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,12 +9,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_storage_platform_interface/src/method_channel/method_channel_firebase_storage.dart';
 
 typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
-typedef Callback(MethodCall call);
+typedef Callback = Function(MethodCall call);
 
 int mockHandleId = 0;
 int get nextMockHandleId => mockHandleId++;
 
-setupFirebaseStorageMocks([Callback /*?*/ customHandlers]) {
+void setupFirebaseStorageMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
@@ -65,8 +63,8 @@ Future<void> testExceptionHandling(String type, Function testMethod) async {
       return;
     }
     fail(
-        'testExceptionHandling: ${testMethod} threw unexpected FirebaseException');
+        'testExceptionHandling: $testMethod threw unexpected FirebaseException');
   } catch (e) {
-    fail('testExceptionHandling: ${testMethod} threw invalid exception ${e}');
+    fail('testExceptionHandling: $testMethod threw invalid exception $e');
   }
 }

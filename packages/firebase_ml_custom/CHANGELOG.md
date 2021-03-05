@@ -1,3 +1,7 @@
+## 0.2.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
 ## 0.1.0
 
  - **FEAT**: bump firebase-android-sdk BoM to 25.13.0.

@@ -12,12 +12,17 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/method_cha
 
 import '../utils/test_common.dart';
 
+const String mockId = 'mock-id';
+const String mockPath = 'foo/bar';
+
 //ignore: avoid_implementing_value_types
 class MockDocumentReference extends Mock implements DocumentReferencePlatform {
   @override
-  String get path => super.noSuchMethod(Invocation.getter(#path), 'foo/bar');
+  String get path => super.noSuchMethod(Invocation.getter(#path),
+      returnValue: mockPath, returnValueForMissingStub: mockPath);
   @override
-  String get id => super.noSuchMethod(Invocation.getter(#id), 'mock-id');
+  String get id => super.noSuchMethod(Invocation.getter(#id),
+      returnValue: mockId, returnValueForMissingStub: mockId);
 }
 
 const _kTransactionId = '1022';

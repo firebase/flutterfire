@@ -3,7 +3,7 @@ description: Demonstrates how to use the firestore plugin.
 
 environment:
   sdk: ">=2.12.0-0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+  flutter: ">=1.12.13+hotfix.4"
 
 dependencies:
   cloud_firestore:
@@ -24,7 +24,6 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_platform_interface
   firebase_core_web:
     path: ../../../firebase_core/firebase_core_web
-  http_parser: ^4.0.0-nullsafety
 
 dev_dependencies:
   drive: 0.0.1-6.0.pre

@@ -1,3 +1,7 @@
+## 1.1.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
 ## 1.0.3
 
 * Update lower bound of dart dependency to 2.0.0.

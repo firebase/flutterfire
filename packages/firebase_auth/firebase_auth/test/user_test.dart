@@ -363,7 +363,8 @@ class MockFirebaseAuth extends Mock
   Future<UserCredentialPlatform> signInAnonymously() {
     return super.noSuchMethod(
       Invocation.method(#signInAnonymously, const []),
-      neverEndingFuture<UserCredentialPlatform>(),
+      returnValue: neverEndingFuture<UserCredentialPlatform>(),
+      returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
     );
   }
 
@@ -371,7 +372,8 @@ class MockFirebaseAuth extends Mock
   FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
     return super.noSuchMethod(
       Invocation.method(#delegateFor, const [], {#app: app}),
-      TestFirebaseAuthPlatform(),
+      returnValue: TestFirebaseAuthPlatform(),
+      returnValueForMissingStub: TestFirebaseAuthPlatform(),
     );
   }
 
@@ -385,7 +387,8 @@ class MockFirebaseAuth extends Mock
         #currentUser: currentUser,
         #languageCode: languageCode,
       }),
-      TestFirebaseAuthPlatform(),
+      returnValue: TestFirebaseAuthPlatform(),
+      returnValueForMissingStub: TestFirebaseAuthPlatform(),
     );
   }
 }
@@ -401,7 +404,8 @@ class MockUserPlatform extends Mock
   Future<void> delete() {
     return super.noSuchMethod(
       Invocation.method(#delete, []),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
     );
   }
 
@@ -409,7 +413,8 @@ class MockUserPlatform extends Mock
   Future<void> reload() {
     return super.noSuchMethod(
       Invocation.method(#reload, []),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
     );
   }
 
@@ -417,7 +422,8 @@ class MockUserPlatform extends Mock
   Future<String> getIdToken(bool? forceRefresh) {
     return super.noSuchMethod(
       Invocation.method(#getIdToken, [forceRefresh]),
-      neverEndingFuture<String>(),
+      returnValue: neverEndingFuture<String>(),
+      returnValueForMissingStub: neverEndingFuture<String>(),
     );
   }
 
@@ -425,7 +431,8 @@ class MockUserPlatform extends Mock
   Future<UserPlatform> unlink(String? providerId) {
     return super.noSuchMethod(
       Invocation.method(#unlink, [providerId]),
-      neverEndingFuture<UserPlatform>(),
+      returnValue: neverEndingFuture<UserPlatform>(),
+      returnValueForMissingStub: neverEndingFuture<UserPlatform>(),
     );
   }
 
@@ -433,7 +440,8 @@ class MockUserPlatform extends Mock
   Future<IdTokenResult> getIdTokenResult(bool? forceRefresh) {
     return super.noSuchMethod(
       Invocation.method(#getIdTokenResult, [forceRefresh]),
-      neverEndingFuture<IdTokenResult>(),
+      returnValue: neverEndingFuture<IdTokenResult>(),
+      returnValueForMissingStub: neverEndingFuture<IdTokenResult>(),
     );
   }
 
@@ -443,7 +451,8 @@ class MockUserPlatform extends Mock
   ) {
     return super.noSuchMethod(
       Invocation.method(#reauthenticateWithCredential, [credential]),
-      neverEndingFuture<UserCredentialPlatform>(),
+      returnValue: neverEndingFuture<UserCredentialPlatform>(),
+      returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
     );
   }
 
@@ -453,7 +462,8 @@ class MockUserPlatform extends Mock
   ) {
     return super.noSuchMethod(
       Invocation.method(#linkWithCredential, [credential]),
-      neverEndingFuture<UserCredentialPlatform>(),
+      returnValue: neverEndingFuture<UserCredentialPlatform>(),
+      returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
     );
   }
 
@@ -461,7 +471,8 @@ class MockUserPlatform extends Mock
   Future<void> sendEmailVerification(ActionCodeSettings? actionCodeSettings) {
     return super.noSuchMethod(
       Invocation.method(#sendEmailVerification, [actionCodeSettings]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
     );
   }
 
@@ -469,7 +480,8 @@ class MockUserPlatform extends Mock
   Future<void> updateEmail(String? newEmail) {
     return super.noSuchMethod(
       Invocation.method(#updateEmail, [newEmail]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
     );
   }
 
@@ -477,7 +489,8 @@ class MockUserPlatform extends Mock
   Future<void> updatePassword(String? newPassword) {
     return super.noSuchMethod(
       Invocation.method(#updatePassword, [newPassword]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
     );
   }
 
@@ -485,7 +498,8 @@ class MockUserPlatform extends Mock
   Future<void> updatePhoneNumber(PhoneAuthCredential? phoneCredential) {
     return super.noSuchMethod(
       Invocation.method(#updatePhoneNumber, [phoneCredential]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
     );
   }
 
@@ -493,7 +507,8 @@ class MockUserPlatform extends Mock
   Future<void> updateProfile(Map<String, String?>? profile) {
     return super.noSuchMethod(
       Invocation.method(#updateProfile, [profile]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
     );
   }
 
@@ -507,7 +522,8 @@ class MockUserPlatform extends Mock
         newEmail,
         actionCodeSettings,
       ]),
-      neverEndingFuture<void>(),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
     );
   }
 }

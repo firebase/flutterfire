@@ -28,7 +28,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final ImagePicker _picker = ImagePicker();
   File _image;
   List<Map<dynamic, dynamic>> _labels;
   //When the model is ready, _loaded changes to trigger the screen state change.
@@ -37,7 +36,8 @@ class _MyAppState extends State<MyApp> {
   /// Triggers selection of an image and the consequent inference.
   Future<void> getImageLabels() async {
     try {
-      final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+      final pickedFile =
+          await ImagePicker.pickImage(source: ImageSource.gallery);
       final image = File(pickedFile.path);
       if (image == null) {
         return;

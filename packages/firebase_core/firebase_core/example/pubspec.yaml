@@ -15,7 +15,6 @@ dependency_overrides:
     path: ../../firebase_core_platform_interface
   firebase_core_web:
     path: ../../firebase_core_web
-  quiver: ">=3.0.0-nullsafety.2 <4.0.0"
 
 dev_dependencies:
   e2e: ^0.6.1

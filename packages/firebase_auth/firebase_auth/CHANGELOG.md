@@ -1,3 +1,19 @@
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_auth" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.21.0-1.1.nullsafety.3
+
+ - Update a dependency to the latest release.
+
+## 0.21.0-1.1.nullsafety.2
+
+ - **TESTS**: update mockito API usage in tests
+
 ## 0.21.0-1.1.nullsafety.1
 
  - **REFACTOR**: pubspec & dependency updates (#4932).
