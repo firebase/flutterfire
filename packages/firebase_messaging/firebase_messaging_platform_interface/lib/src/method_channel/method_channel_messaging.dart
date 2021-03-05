@@ -377,4 +377,20 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       throw convertPlatformException(e);
     }
   }
+
+  @override
+  Future<void> registerAndroidMessageIntentListener(
+      String intentActionString) async {
+    try {
+      Map<String, dynamic>? result = await channel
+          .invokeMapMethod<String, dynamic>(
+              'Messaging#registerMessageIntentListener', {
+        'appName': app.name,
+        'intentActionString': intentActionString,
+      });
+    } catch (e) {
+      print('Error calling registerAndroidMessageIntentListener: $e');
+      throw convertPlatformException(e);
+    }
+  }
 }

@@ -25,6 +25,9 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
 
     RemoteMessage remoteMessage = new RemoteMessage(intent.getExtras());
 
+    // Send intent messages to other packages.
+    FlutterFirebaseMessagingBroadcaster.broadcastToExternalListeners(context, remoteMessage);
+
     // Store the RemoteMessage if the message contains a notification payload.
     if (remoteMessage.getNotification() != null) {
       notifications.put(remoteMessage.getMessageId(), remoteMessage);

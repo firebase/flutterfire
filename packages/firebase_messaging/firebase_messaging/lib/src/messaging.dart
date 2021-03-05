@@ -294,6 +294,19 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     _assertTopicName(topic);
     return _delegate.unsubscribeFromTopic(topic);
   }
+
+  /// Register Message Intent Listener.
+  ///
+  /// This adds listeners that wish to join the onMessageReceived onbroadcast
+  /// for push messages. This can be used when other plugins need to inspect
+  /// push messages. This is only valid for Android plugins.
+  ///
+  /// param: intentActionString - The string to be used by intent listener.
+  ///
+  Future<void> registerAndroidMessageIntentListener(
+      String intentActionString) async {
+    return _delegate.registerAndroidMessageIntentListener(intentActionString);
+  }
 }
 
 void _assertTopicName(String topic) {

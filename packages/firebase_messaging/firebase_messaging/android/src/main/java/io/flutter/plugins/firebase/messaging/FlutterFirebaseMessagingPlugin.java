@@ -345,6 +345,10 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
       case "Messaging#setAutoInitEnabled":
         methodCallTask = setAutoInitEnabled(call.arguments());
         break;
+      case "Messaging#registerMessageIntentListener":
+        methodCallTask = FlutterFirebaseMessagingBroadcaster.registerMessageIntentListener(
+          mainActivity.getApplicationContext(), this, cachedThreadPool, call.arguments());
+        break;
       default:
         result.notImplemented();
         return;

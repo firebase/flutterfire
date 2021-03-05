@@ -308,4 +308,17 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   Future<void> unsubscribeFromTopic(String topic) {
     throw UnimplementedError('unsubscribeFromTopic() is not implemented');
   }
+
+  /// Register Message Intent Listener.
+  ///
+  /// This adds listeners that wish to join the onMessageReceived onbroadcast
+  /// for push messages. This can be used when other plugins need to inspect
+  /// push messages. This is only valid for Android plugins.
+  ///
+  /// param: intentActionString - The string to be used by intent listener.
+  ///        Must be unique, use scope qualifiers, i.e: message.pluginname.pushmessage.listener
+  ///
+  Future<void> registerAndroidMessageIntentListener(String intentActionString) {
+    throw UnimplementedError('subscribeToTopic() is not implemented');
+  }
 }
