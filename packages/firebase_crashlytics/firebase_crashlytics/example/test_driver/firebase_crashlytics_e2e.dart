@@ -23,13 +23,10 @@ void testsMain() {
       test('should throw if automatic crash report is enabled', () async {
         await crashlytics.setCrashlyticsCollectionEnabled(true);
 
-        try {
-          await crashlytics.checkForUnsentReports();
-        } catch (error) {
-          expect(error, isInstanceOf<StateError>());
-          return;
-        }
-        fail('Error did not throw');
+        await expectLater(
+          crashlytics.checkForUnsentReports,
+          throwsA(isA<StateError>()),
+        );
       });
 
       test('checks device cache for unsent crashlytics reports', () async {
