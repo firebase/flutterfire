@@ -689,6 +689,8 @@ If you are using the local [Firestore emulators](https://firebase.google.com/doc
 connect to these by passing a [`host`](!cloud_firestore.Settings.host) parameter to the [`settings`](!cloud_firestore.FirebaseFirestore.settings) method,
 immediately after initializing Firebase. Ensure you pass the correct port on which the Firebase emulator is running on.
 
+Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
+
 > On Android emulators, to reference `localhost`, use the `10.0.2.2` IP address instead.
 
 ```dart
