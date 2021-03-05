@@ -1,3 +1,7 @@
+## 0.11.0+2
+
+ - **BREAKING** Deprication notice. Recommend using `google_mobile_ads` instead.
+
 ## 0.11.0+1
 
  - Update a dependency to the latest release.
