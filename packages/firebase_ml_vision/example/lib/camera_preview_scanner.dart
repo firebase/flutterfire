@@ -13,6 +13,8 @@ import 'detector_painters.dart';
 import 'scanner_utils.dart';
 
 class CameraPreviewScanner extends StatefulWidget {
+  const CameraPreviewScanner({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _CameraPreviewScannerState();
 }
@@ -42,7 +44,7 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
     _initializeCamera();
   }
 
-  void _initializeCamera() async {
+  Future<void> _initializeCamera() async {
     final CameraDescription description =
         await ScannerUtils.getCamera(_direction);
 
@@ -54,7 +56,7 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
     );
     await _camera.initialize();
 
-    _camera.startImageStream((CameraImage image) {
+    await _camera.startImageStream((CameraImage image) {
       if (_isDetecting) return;
 
       _isDetecting = true;
@@ -149,7 +151,7 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
                 'Initializing Camera...',
                 style: TextStyle(
                   color: Colors.green,
-                  fontSize: 30.0,
+                  fontSize: 30,
                 ),
               ),
             )
@@ -163,7 +165,7 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
     );
   }
 
-  void _toggleCameraDirection() async {
+  Future<void> _toggleCameraDirection() async {
     if (_direction == CameraLensDirection.back) {
       _direction = CameraLensDirection.front;
     } else {
@@ -177,7 +179,7 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
       _camera = null;
     });
 
-    _initializeCamera();
+    await _initializeCamera();
   }
 
   @override
@@ -192,32 +194,32 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<Detector>>[
               const PopupMenuItem<Detector>(
-                child: Text('Detect Barcode'),
                 value: Detector.barcode,
+                child: Text('Detect Barcode'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Face'),
                 value: Detector.face,
+                child: Text('Detect Face'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Label'),
                 value: Detector.label,
+                child: Text('Detect Label'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Cloud Label'),
                 value: Detector.cloudLabel,
+                child: Text('Detect Cloud Label'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Text'),
                 value: Detector.text,
+                child: Text('Detect Text'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Cloud Text'),
                 value: Detector.cloudText,
+                child: Text('Detect Cloud Text'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Document Text'),
                 value: Detector.cloudDocumentText,
+                child: Text('Detect Document Text'),
               ),
             ],
           ),
