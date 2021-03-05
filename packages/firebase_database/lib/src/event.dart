@@ -71,5 +71,6 @@ class DatabaseError {
   String get details => _data['details'];
 
   @override
-  String toString() => "$runtimeType($code, $message, $details)";
+  // ignore: no_runtimetype_tostring
+  String toString() => '$runtimeType($code, $message, $details)';
 }
