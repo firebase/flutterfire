@@ -292,7 +292,8 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     final String filePath = '$dirPath/$timestamp.jpg';
 
     try {
-      await _cameraController.takePicture(filePath);
+      XFile file = await _cameraController.takePicture();
+      return file;
     } on CameraException catch (e) {
       print(e);
     }
