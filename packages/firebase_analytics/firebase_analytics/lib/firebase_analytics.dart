@@ -27,7 +27,7 @@ class FirebaseAnalytics {
 
   /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
   Future<void> logEvent(
-      {required String name, Map<String, dynamic>? parameters}) async {
+      {required String name, Map<String, Object>? parameters}) async {
     if (_reservedEventNames.contains(name)) {
       throw ArgumentError.value(
           name, 'name', 'Event name is reserved and cannot be used');
@@ -40,8 +40,7 @@ class FirebaseAnalytics {
           'Prefix "$kReservedPrefix" is reserved and cannot be used.');
     }
 
-    await _platformInstance.logEvent(
-        name: name, parameters: parameters as Map<String, Object>);
+    await _platformInstance.logEvent(name: name, parameters: parameters);
   }
 
   /// Sets whether analytics collection is enabled for this app on this device.
@@ -155,7 +154,7 @@ class FirebaseAnalytics {
 
     return logEvent(
       name: 'add_to_cart',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ITEM_ID: itemId,
         _ITEM_NAME: itemName,
         _ITEM_CATEGORY: itemCategory,
@@ -194,7 +193,7 @@ class FirebaseAnalytics {
 
     return logEvent(
       name: 'add_to_wishlist',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ITEM_ID: itemId,
         _ITEM_NAME: itemName,
         _ITEM_CATEGORY: itemCategory,
@@ -240,7 +239,7 @@ class FirebaseAnalytics {
 
     return logEvent(
       name: 'begin_checkout',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _VALUE: value,
         _CURRENCY: currency,
         _TRANSACTION_ID: transactionId,
@@ -297,7 +296,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'earn_virtual_currency',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
         _VALUE: value,
       }),
@@ -334,7 +333,7 @@ class FirebaseAnalytics {
 
     return logEvent(
       name: 'ecommerce_purchase',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
         _VALUE: value,
         _TRANSACTION_ID: transactionId,
@@ -370,7 +369,7 @@ class FirebaseAnalytics {
 
     return logEvent(
       name: 'generate_lead',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
         _VALUE: value,
       }),
@@ -389,7 +388,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'join_group',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _GROUP_ID: groupId,
       }),
     );
@@ -408,7 +407,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'level_up',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _LEVEL: level,
         _CHARACTER: character,
       }),
@@ -423,7 +422,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'level_start',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _LEVEL_NAME: levelName,
       }),
     );
@@ -438,7 +437,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'level_end',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _LEVEL_NAME: levelName,
         _SUCCESS: success,
       }),
@@ -454,7 +453,7 @@ class FirebaseAnalytics {
   Future<void> logLogin({String? loginMethod}) {
     return logEvent(
       name: 'login',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _METHOD: loginMethod,
       }),
     );
@@ -475,7 +474,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'post_score',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _SCORE: score,
         _LEVEL: level,
         _CHARACTER: character,
@@ -506,7 +505,7 @@ class FirebaseAnalytics {
 
     return logEvent(
       name: 'present_offer',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ITEM_ID: itemId,
         _ITEM_NAME: itemName,
         _ITEM_CATEGORY: itemCategory,
@@ -535,7 +534,7 @@ class FirebaseAnalytics {
 
     return logEvent(
       name: 'purchase_refund',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
         _VALUE: value,
         _TRANSACTION_ID: transactionId,
@@ -563,7 +562,7 @@ class FirebaseAnalytics {
 
     return logEvent(
       name: 'remove_from_cart',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _QUANTITY: quantity,
         _ITEM_CATEGORY: itemCategory,
         _ITEM_NAME: itemName,
@@ -600,7 +599,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'search',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _SEARCH_TERM: searchTerm,
         _NUMBER_OF_NIGHTS: numberOfNights,
         _NUMBER_OF_ROOMS: numberOfRooms,
@@ -628,7 +627,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'select_content',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _CONTENT_TYPE: contentType,
         _ITEM_ID: itemId,
       }),
@@ -643,7 +642,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'set_checkout_option',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _CHECKOUT_STEP: checkoutStep,
         _CHECKOUT_OPTION: checkoutOption,
       }),
@@ -663,7 +662,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'share',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _CONTENT_TYPE: contentType,
         _ITEM_ID: itemId,
         _METHOD: method,
@@ -684,7 +683,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'sign_up',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _METHOD: signUpMethod,
       }),
     );
@@ -703,7 +702,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'spend_virtual_currency',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ITEM_NAME: itemName,
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
         _VALUE: value,
@@ -747,7 +746,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'unlock_achievement',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ACHIEVEMENT_ID: id,
       }),
     );
@@ -787,7 +786,7 @@ class FirebaseAnalytics {
 
     return logEvent(
       name: 'view_item',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ITEM_ID: itemId,
         _ITEM_NAME: itemName,
         _ITEM_CATEGORY: itemCategory,
@@ -821,7 +820,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'view_item_list',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ITEM_CATEGORY: itemCategory,
       }),
     );
@@ -838,7 +837,7 @@ class FirebaseAnalytics {
   }) {
     return logEvent(
       name: 'view_search_results',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _SEARCH_TERM: searchTerm,
       }),
     );
@@ -860,9 +859,9 @@ class FirebaseAnalyticsAndroid {
 /// Creates a new map containing all of the key/value pairs from [parameters]
 /// except those whose value is `null`.
 @visibleForTesting
-Map<String, dynamic> filterOutNulls(Map<String, dynamic> parameters) {
-  final Map<String, dynamic> filtered = <String, dynamic>{};
-  parameters.forEach((String key, dynamic value) {
+Map<String, Object> filterOutNulls(Map<String, Object?> parameters) {
+  final Map<String, Object> filtered = <String, Object>{};
+  parameters.forEach((String key, Object? value) {
     if (value != null) {
       filtered[key] = value;
     }

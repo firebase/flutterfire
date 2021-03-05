@@ -139,7 +139,7 @@ void main() {
     test('logEvent log events', () async {
       await analytics.logEvent(
         name: 'test-event',
-        parameters: <String, dynamic>{'a': 'b'},
+        parameters: <String, Object>{'a': 'b'},
       );
       expect(
         methodCall,
