@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -16,7 +14,7 @@ void main() {
   final FirebaseAnalytics analytics = FirebaseAnalytics();
   const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_analytics');
-  MethodCall methodCall;
+  MethodCall? methodCall;
 
   setUp(() async {
     channel.setMockMethodCallHandler((MethodCall m) async {
@@ -94,9 +92,6 @@ void main() {
       // non-alpha first character
       expect(analytics.setUserProperty(name: '0test', value: 'test-value'),
           throwsArgumentError);
-      // null
-      expect(analytics.setUserProperty(name: null, value: 'test-value'),
-          throwsArgumentError);
       // blank
       expect(analytics.setUserProperty(name: '', value: 'test-value'),
           throwsArgumentError);
@@ -118,7 +113,7 @@ void main() {
     });
 
     test('setSessionTimeoutDuration', () async {
-      await analytics.android.setSessionTimeoutDuration(234);
+      await analytics.android!.setSessionTimeoutDuration(234);
       expect(
         methodCall,
         isMethodCall(
@@ -169,7 +164,7 @@ void main() {
     void smokeTest(String testFunctionName, Future<void> testFunction()) {
       test('$testFunctionName works', () async {
         await testFunction();
-        expect(methodCall.arguments['name'], testFunctionName);
+        expect(methodCall!.arguments['name'], testFunctionName);
       });
     }
 
