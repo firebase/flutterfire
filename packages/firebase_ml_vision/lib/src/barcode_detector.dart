@@ -209,10 +209,8 @@ class BarcodeDetector {
       }..addAll(visionImage._serialize()),
     );
 
-    final List<Barcode> barcodes = <Barcode>[];
-    reply.forEach((dynamic barcode) {
-      barcodes.add(Barcode._(barcode));
-    });
+    final List<Barcode> barcodes =
+        reply.map((barcode) => Barcode._(barcode)).toList();
 
     return barcodes;
   }
@@ -220,7 +218,7 @@ class BarcodeDetector {
   /// Release resources used by this detector.
   Future<void> close() {
     if (!_hasBeenOpened) _isClosed = true;
-    if (_isClosed) return Future<void>.value(null);
+    if (_isClosed) return Future<void>.value();
 
     _isClosed = true;
     return FirebaseVision.channel.invokeMethod<void>(
@@ -261,14 +259,12 @@ class Barcode {
         rawValue = _data['rawValue'],
         displayValue = _data['displayValue'],
         format = BarcodeFormat._(_data['format']),
-        _cornerPoints = _data['points'] == null
-            ? null
-            : _data['points']
-                .map<Offset>((dynamic item) => Offset(
-                      item[0],
-                      item[1],
-                    ))
-                .toList(),
+        _cornerPoints = _data['points']
+            ?.map<Offset>((dynamic item) => Offset(
+                  item[0],
+                  item[1],
+                ))
+            ?.toList(),
         valueType = BarcodeValueType.values[_data['valueType']],
         email = _data['email'] == null ? null : BarcodeEmail._(_data['email']),
         phone = _data['phone'] == null ? null : BarcodePhone._(_data['phone']),

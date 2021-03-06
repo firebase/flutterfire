@@ -44,7 +44,7 @@ Future<String> _loadImage(String assetFilename) async {
 
   final String tmpFilename = path.join(
     directory.path,
-    "tmp${nextHandle++}.jpg",
+    'tmp${nextHandle++}.jpg',
   );
 
   final ByteData data = await rootBundle.load(assetFilename);

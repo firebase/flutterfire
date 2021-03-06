@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: constant_identifier_names
+
 // @dart=2.9
 
 import 'package:flutter/foundation.dart';
@@ -94,8 +96,8 @@ class FirebaseAnalytics {
     );
   }
 
-  static final RegExp _nonAlphaNumeric = RegExp(r'[^a-zA-Z0-9_]');
-  static final RegExp _alpha = RegExp(r'[a-zA-Z]');
+  static final RegExp _nonAlphaNumeric = RegExp('[^a-zA-Z0-9_]');
+  static final RegExp _alpha = RegExp('[a-zA-Z]');
 
   /// Sets a user property to a given value.
   ///

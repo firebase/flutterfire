@@ -76,6 +76,20 @@ dependencies {
 
 Visit the [official Android documentation](https://developer.android.com/studio/build/multidex#mdex-gradle) to learn more.
 
+### Enabling use of Firebase Emulator Suite
+
+The [Firebase Emulator Suite](https://firebase.google.com/docs/emulator-suite) uses un-encrypted networking connections in order to enable fast, uncomplicated setup. However Android by default requires encrypted networking connections. If you would like to use any part of the Firebase Emulator Suite to emulate firebase services on your local machine during development, you must allow your Android app to connect to local network services over insecure connections.
+
+To allow insecure connections, we recommend adding the [`usesCleartextTraffic=true`](https://developer.android.com/guide/topics/manifest/application-element#usesCleartextTraffic) attribute to the `application` element of `AndroidManifest.xml` in the debug configuration tree, so you do not accidentally allow unencrypted traffic in release builds.
+
+Specifically in your app, edit (or create the file if necessary) `android/app/src/debug/AndroidManifest.xml`:
+
+```xml
+<application usesCleartextTraffic="true">
+  <!-- possibly other elements -->
+</application>
+```
+
 ## Initializing FlutterFire
 
 Once complete follow the instructions on [Initializing FlutterFire](../overview.mdx#initializing-flutterfire).

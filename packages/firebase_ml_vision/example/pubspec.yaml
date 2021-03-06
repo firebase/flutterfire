@@ -7,15 +7,17 @@ environment:
   flutter: ">=1.10.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-  image_picker: ^0.6.0
+  camera: ^0.5.6+1
   cupertino_icons: ^0.1.2
-  firebase_ml_vision:
-    path: ../
   firebase_core:
     path: ../../firebase_core/firebase_core
   camera: ^0.8.0
+  firebase_ml_vision:
+    path: ../
+  flutter:
+    sdk: flutter
+  image_picker: ^0.6.0
+
 
 dependency_overrides:
   firebase_core:
@@ -26,15 +28,15 @@ dependency_overrides:
     path: ../../firebase_core/firebase_core_web
 
 dev_dependencies:
-  pedantic: ^1.8.0
   e2e: ^0.6.1
-  flutter_test:
-    sdk: flutter
   flutter_driver:
     sdk: flutter
-  test: any
+  flutter_test:
+    sdk: flutter
   path: ^1.8.0
   path_provider: ^2.0.0
+  pedantic: ^1.8.0
+  test: any
 
 flutter:
   uses-material-design: true

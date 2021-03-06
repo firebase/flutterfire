@@ -77,6 +77,9 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///
   /// Note: Must be called immediately, prior to accessing auth methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
+  ///
+  /// Note: auth emulator is not supported for web yet. firebase-js-sdk does not support
+  /// auth.useEmulator until v8.2.4, but FlutterFire does not support firebase-js-sdk v8+ yet
   Future<void> useEmulator(String origin) async {
     assert(origin.isNotEmpty);
     String mappedOrigin = origin;
