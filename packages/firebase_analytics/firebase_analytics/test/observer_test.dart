@@ -120,10 +120,9 @@ void main() {
     test('runs onError', () async {
       PlatformException passedException;
 
-      final void Function(PlatformException error) handleError =
-          (PlatformException error) {
+      void handleError(PlatformException error) {
         passedException = error;
-      };
+      }
 
       observer = FirebaseAnalyticsObserver(
         analytics: analytics,

@@ -88,7 +88,7 @@ class FaceDetector {
     );
 
     final List<Face> faces = <Face>[];
-    for (dynamic data in reply) {
+    for (final dynamic data in reply) {
       faces.add(Face._(data));
     }
 
@@ -98,7 +98,7 @@ class FaceDetector {
   /// Release resources used by this detector.
   Future<void> close() {
     if (!_hasBeenOpened) _isClosed = true;
-    if (_isClosed) return Future<void>.value(null);
+    if (_isClosed) return Future<void>.value();
 
     _isClosed = true;
     return FirebaseVision.channel.invokeMethod<void>(

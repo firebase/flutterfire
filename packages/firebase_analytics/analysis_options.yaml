@@ -23,7 +23,6 @@ linter:
     prefer_final_locals: false
     omit_local_variable_types: false
     avoid_equals_and_hash_code_on_mutable_classes: false
-    public_member_api_docs: false
 
     #############
 
