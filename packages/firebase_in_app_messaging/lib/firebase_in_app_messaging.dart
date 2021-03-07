@@ -9,11 +9,8 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
-// TODO document
-// ignore: public_member_api_docs
 class FirebaseInAppMessaging {
   @visibleForTesting
-  // ignore: public_member_api_docs
   static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_in_app_messaging');
 

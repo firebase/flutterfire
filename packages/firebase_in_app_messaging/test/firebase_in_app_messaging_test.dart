@@ -28,7 +28,7 @@ void main() {
       await fiam.triggerEvent('someEvent');
       expect(log, <Matcher>[
         isMethodCall('triggerEvent',
-            arguments: <String, String>{'eventName': 'someEvent'}),
+            arguments: <String, String>{"eventName": "someEvent"}),
       ]);
     });
 
@@ -39,7 +39,7 @@ void main() {
           <Matcher>[isMethodCall('setMessagesSuppressed', arguments: true)]);
 
       log.clear();
-      await fiam.setMessagesSuppressed(false);
+      fiam.setMessagesSuppressed(false);
       expect(log, <Matcher>[
         isMethodCall('setMessagesSuppressed', arguments: false),
       ]);
@@ -53,7 +53,7 @@ void main() {
       ]);
 
       log.clear();
-      await fiam.setAutomaticDataCollectionEnabled(false);
+      fiam.setAutomaticDataCollectionEnabled(false);
       expect(log, <Matcher>[
         isMethodCall('setAutomaticDataCollectionEnabled', arguments: false),
       ]);
