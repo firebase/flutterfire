@@ -36,7 +36,7 @@ void main() {
     int mockHandleId = 0;
     final List<MethodCall> log = <MethodCall>[];
 
-    final String databaseURL = 'https://fake-database-url2.firebaseio.com';
+    const String databaseURL = 'https://fake-database-url2.firebaseio.com';
     FirebaseDatabase database;
 
     setUp(() async {
@@ -55,7 +55,7 @@ void main() {
             Map<String, dynamic> updatedValue;
             Future<void> simulateEvent(
                 int transactionKey, final MutableData mutableData) async {
-              ServicesBinding.instance.defaultBinaryMessenger
+              await ServicesBinding.instance.defaultBinaryMessenger
                   .handlePlatformMessage(
                       channel.name,
                       channel.codec.encodeMethodCall(
@@ -195,7 +195,7 @@ void main() {
         final dynamic serverValue = <String, dynamic>{
           'qux': ServerValue.increment(8)
         };
-        final int priority = 42;
+        const int priority = 42;
         await database.reference().child('foo').set(value);
         await database.reference().child('bar').set(value, priority: priority);
         await database.reference().child('baz').set(serverValue);
@@ -241,7 +241,7 @@ void main() {
       });
       test('update', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
-        await database.reference().child("foo").update(value);
+        await database.reference().child('foo').update(value);
         expect(
           log,
           <Matcher>[
@@ -259,7 +259,7 @@ void main() {
       });
 
       test('setPriority', () async {
-        final int priority = 42;
+        const int priority = 42;
         await database.reference().child('foo').setPriority(priority);
         expect(
           log,
@@ -283,7 +283,7 @@ void main() {
             .child('foo')
             .runTransaction((MutableData mutableData) {
           mutableData.value['fakeKey'] =
-              'updated ' + mutableData.value['fakeKey'];
+              'updated ${mutableData.value['fakeKey']}';
           return Future.value(mutableData);
         });
         expect(
@@ -307,7 +307,7 @@ void main() {
         expect(
           database.reference().child('foo').runTransaction(
                 (MutableData mutableData) async => null,
-                timeout: const Duration(milliseconds: 0),
+                timeout: const Duration(),
               ),
           throwsA(isInstanceOf<AssertionError>()),
         );
@@ -317,7 +317,7 @@ void main() {
     group('$OnDisconnect', () {
       test('set', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
-        final int priority = 42;
+        const int priority = 42;
         final DatabaseReference ref = database.reference();
         await ref.child('foo').onDisconnect().set(value);
         await ref.child('bar').onDisconnect().set(value, priority: priority);
@@ -371,7 +371,7 @@ void main() {
       });
       test('update', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
-        await database.reference().child("foo").onDisconnect().update(value);
+        await database.reference().child('foo').onDisconnect().update(value);
         expect(
           log,
           <Matcher>[
@@ -388,7 +388,7 @@ void main() {
         );
       });
       test('cancel', () async {
-        await database.reference().child("foo").onDisconnect().cancel();
+        await database.reference().child('foo').onDisconnect().cancel();
         expect(
           log,
           <Matcher>[
@@ -404,7 +404,7 @@ void main() {
         );
       });
       test('remove', () async {
-        await database.reference().child("foo").onDisconnect().remove();
+        await database.reference().child('foo').onDisconnect().remove();
         expect(
           log,
           <Matcher>[
@@ -425,7 +425,7 @@ void main() {
 
     group('$Query', () {
       test('keepSynced, simple query', () async {
-        final String path = 'foo';
+        const String path = 'foo';
         final Query query = database.reference().child(path);
         await query.keepSynced(true);
         expect(
@@ -445,11 +445,11 @@ void main() {
         );
       });
       test('keepSynced, complex query', () async {
-        final int startAt = 42;
-        final String path = 'foo';
-        final String childKey = 'bar';
-        final bool endAt = true;
-        final String endAtKey = 'baz';
+        const int startAt = 42;
+        const String path = 'foo';
+        const String childKey = 'bar';
+        const bool endAt = true;
+        const String endAtKey = 'baz';
         final Query query = database
             .reference()
             .child(path)
@@ -486,19 +486,20 @@ void main() {
         const String errorDetails = 'Some details';
         final Query query = database.reference().child('some path');
         Future<void> simulateError(String errorMessage) async {
-          ServicesBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
-              channel.name,
-              channel.codec.encodeMethodCall(
-                MethodCall('Error', <String, dynamic>{
-                  'handle': 99,
-                  'error': <String, dynamic>{
-                    'code': errorCode,
-                    'message': errorMessage,
-                    'details': errorDetails,
-                  },
-                }),
-              ),
-              (_) {});
+          await ServicesBinding.instance.defaultBinaryMessenger
+              .handlePlatformMessage(
+                  channel.name,
+                  channel.codec.encodeMethodCall(
+                    MethodCall('Error', <String, dynamic>{
+                      'handle': 99,
+                      'error': <String, dynamic>{
+                        'code': errorCode,
+                        'message': errorMessage,
+                        'details': errorDetails,
+                      },
+                    }),
+                  ),
+                  (_) {});
         }
 
         final AsyncQueue<DatabaseError> errors = AsyncQueue<DatabaseError>();
@@ -506,13 +507,13 @@ void main() {
         // Subscribe and allow subscription to complete.
         final StreamSubscription<Event> subscription =
             query.onValue.listen((_) {}, onError: errors.add);
-        await Future<void>.delayed(const Duration(seconds: 0));
+        await Future<void>.delayed(const Duration());
 
         await simulateError('Bad foo');
         await simulateError('Bad bar');
         final DatabaseError error1 = await errors.remove();
         final DatabaseError error2 = await errors.remove();
-        subscription.cancel();
+        await subscription.cancel();
         expect(error1.toString(), 'DatabaseError(12, Bad foo, Some details)');
         expect(error1.code, errorCode);
         expect(error1.message, 'Bad foo');
@@ -521,23 +522,25 @@ void main() {
         expect(error2.message, 'Bad bar');
         expect(error2.details, errorDetails);
       });
+
       test('observing value events', () async {
         mockHandleId = 87;
-        final String path = 'foo';
+        const String path = 'foo';
         final Query query = database.reference().child(path);
         Future<void> simulateEvent(String value) async {
-          ServicesBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
-              channel.name,
-              channel.codec.encodeMethodCall(
-                MethodCall('Event', <String, dynamic>{
-                  'handle': 87,
-                  'snapshot': <String, dynamic>{
-                    'key': path,
-                    'value': value,
-                  },
-                }),
-              ),
-              (_) {});
+          await ServicesBinding.instance.defaultBinaryMessenger
+              .handlePlatformMessage(
+                  channel.name,
+                  channel.codec.encodeMethodCall(
+                    MethodCall('Event', <String, dynamic>{
+                      'handle': 87,
+                      'snapshot': <String, dynamic>{
+                        'key': path,
+                        'value': value,
+                      },
+                    }),
+                  ),
+                  (_) {});
         }
 
         final AsyncQueue<Event> events = AsyncQueue<Event>();
@@ -545,7 +548,7 @@ void main() {
         // Subscribe and allow subscription to complete.
         final StreamSubscription<Event> subscription =
             query.onValue.listen(events.add);
-        await Future<void>.delayed(const Duration(seconds: 0));
+        await Future<void>.delayed(const Duration());
 
         await simulateEvent('1');
         await simulateEvent('2');
@@ -557,8 +560,8 @@ void main() {
         expect(event2.snapshot.value, '2');
 
         // Cancel subscription and allow cancellation to complete.
-        subscription.cancel();
-        await Future<void>.delayed(const Duration(seconds: 0));
+        await subscription.cancel();
+        await Future<void>.delayed(const Duration());
 
         expect(
           log,

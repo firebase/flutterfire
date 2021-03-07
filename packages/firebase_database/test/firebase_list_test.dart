@@ -54,6 +54,13 @@ void main() {
       );
     });
 
+    tearDown(() {
+      onChildAddedStreamController.close();
+      onChildRemovedStreamController.close();
+      onChildChangedStreamController.close();
+      onChildMovedStreamController.close();
+    });
+
     Future<ListChange> resetCompleterOnCallback() async {
       final ListChange result = await callbackCompleter.future;
       callbackCompleter = Completer<ListChange>();
@@ -210,6 +217,7 @@ class ListChange {
   final DataSnapshot snapshot;
 
   @override
+  // ignore: no_runtimetype_tostring
   String toString() => '$runtimeType[$index, $index2, $snapshot]';
 
   @override
@@ -234,6 +242,7 @@ class MockEvent implements Event {
   final DataSnapshot snapshot;
 
   @override
+  // ignore: no_runtimetype_tostring
   String toString() => '$runtimeType[$previousSiblingKey, $snapshot]';
 
   @override
@@ -257,6 +266,7 @@ class MockDataSnapshot implements DataSnapshot {
   final dynamic value;
 
   @override
+  // ignore: no_runtimetype_tostring
   String toString() => '$runtimeType[$key, $value]';
 
   @override
