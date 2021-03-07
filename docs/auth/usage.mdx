@@ -406,7 +406,7 @@ example:
 ```dart
 try {
   await FirebaseAuth.instance.currentUser.delete();
-} catch on FirebaseAuthException (e) {
+} on FirebaseAuthException catch (e) {
   if (e.code == 'requires-recent-login') {
     print('The user must reauthenticate before this operation can be executed.');
   }
