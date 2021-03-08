@@ -10,17 +10,18 @@ environment:
   flutter: ">=1.10.0"
 
 dependencies:
+  firebase_core: ^1.0.0
   flutter:
     sdk: flutter
-  firebase_core: ^1.0.0
+
 dev_dependencies:
-  pedantic: ^1.8.0
+  e2e: ^0.6.1
   flutter_driver:
     sdk: flutter
   flutter_test:
     sdk: flutter
+  pedantic: ^1.8.0
   url_launcher: ^5.1.6
-  e2e: ^0.6.1
 
 flutter:
   plugin:

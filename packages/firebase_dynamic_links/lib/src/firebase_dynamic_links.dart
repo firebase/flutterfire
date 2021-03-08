@@ -87,7 +87,7 @@ class FirebaseDynamicLinks {
 
   Future<dynamic> _handleMethod(MethodCall call) async {
     switch (call.method) {
-      case "onLinkSuccess":
+      case 'onLinkSuccess':
         PendingDynamicLinkData linkData;
         if (call.arguments != null) {
           final Map<dynamic, dynamic> data =
@@ -95,7 +95,7 @@ class FirebaseDynamicLinks {
           linkData = getPendingDynamicLinkDataFromMap(data);
         }
         return _onLinkSuccess(linkData);
-      case "onLinkError":
+      case 'onLinkError':
         final Map<dynamic, dynamic> data =
             call.arguments.cast<dynamic, dynamic>();
         final OnLinkErrorException e = OnLinkErrorException._(
