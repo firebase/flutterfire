@@ -9,7 +9,7 @@ environment:
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  firebase_core: ^1.0.0
+  firebase_core: ^1.0.1
   flutter:
     sdk: flutter
 
