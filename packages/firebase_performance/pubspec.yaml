@@ -13,7 +13,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^1.0.0
+  firebase_core: ^1.0.1
 dev_dependencies:
   pedantic: ^1.8.0
   http: ^0.13.0
