@@ -8,12 +8,15 @@ import 'dart:async';
 
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
+import 'package:pedantic/pedantic.dart';
 
 import 'package:firebase_performance/firebase_performance.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -78,9 +81,9 @@ class _MyAppState extends State<MyApp> {
       _traceHasRan = false;
     });
 
-    final Trace trace = _performance.newTrace("test");
-    trace.incrementMetric("metric1", 16);
-    trace.putAttribute("favorite_color", "blue");
+    final Trace trace = _performance.newTrace('test');
+    unawaited(trace.incrementMetric('metric1', 16));
+    unawaited(trace.putAttribute('favorite_color', 'blue'));
 
     await trace.start();
 
@@ -105,11 +108,11 @@ class _MyAppState extends State<MyApp> {
     final _MetricHttpClient metricHttpClient = _MetricHttpClient(Client());
 
     final Request request = Request(
-      "SEND",
-      Uri.parse("https://www.google.com"),
+      'SEND',
+      Uri.parse('https://www.google.com'),
     );
 
-    metricHttpClient.send(request);
+    unawaited(metricHttpClient.send(request));
 
     setState(() {
       _httpMetricHasRan = true;
@@ -118,8 +121,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle textStyle =
-        const TextStyle(color: Colors.lightGreenAccent, fontSize: 25.0);
+    const textStyle = TextStyle(color: Colors.lightGreenAccent, fontSize: 25);
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
