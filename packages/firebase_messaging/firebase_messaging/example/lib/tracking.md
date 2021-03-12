@@ -38,4 +38,4 @@ Application finished.
 
 ## Convert example to sound null safety
 
-
+Minimal changes to make it compile under null-safety. Some of the updates may be incorrect, but they are in any case not involved in the issue at stake here.

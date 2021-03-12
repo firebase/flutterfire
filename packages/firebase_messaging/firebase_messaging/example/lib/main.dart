@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 import 'dart:convert';
 
@@ -110,14 +108,14 @@ class Application extends StatefulWidget {
 }
 
 class _Application extends State<Application> {
-  String _token;
+  String? _token;
 
   @override
   void initState() {
     super.initState();
     FirebaseMessaging.instance
         .getInitialMessage()
-        .then((RemoteMessage message) {
+        .then((RemoteMessage? message) {
       if (message != null) {
         Navigator.pushNamed(context, '/message',
             arguments: MessageArguments(message, true));
@@ -125,8 +123,8 @@ class _Application extends State<Application> {
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
 
       if (notification != null && android != null) {
         flutterLocalNotificationsPlugin.show(
@@ -165,7 +163,7 @@ class _Application extends State<Application> {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: constructFCMPayload(_token),
+        body: constructFCMPayload(_token!),
       );
       print('FCM request for device sent!');
     } catch (e) {
@@ -198,7 +196,7 @@ class _Application extends State<Application> {
           if (defaultTargetPlatform == TargetPlatform.iOS ||
               defaultTargetPlatform == TargetPlatform.macOS) {
             print('FlutterFire Messaging Example: Getting APNs token...');
-            String token = await FirebaseMessaging.instance.getAPNSToken();
+            String? token = await FirebaseMessaging.instance.getAPNSToken();
             print('FlutterFire Messaging Example: Got APNs token: $token');
           } else {
             print(

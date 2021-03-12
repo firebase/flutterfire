@@ -1,4 +1,3 @@
-// @dart=2.9
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +36,7 @@ class _MessageList extends State<MessageList> {
           RemoteMessage message = _messages[index];
 
           return ListTile(
-            title: Text(message.messageId),
+            title: Text(message.messageId ?? 'N/A'),
             subtitle: Text(message.sentTime?.toString() ?? 'N/A'),
             onTap: () => Navigator.pushNamed(context, '/message',
                 arguments: MessageArguments(message, false)),

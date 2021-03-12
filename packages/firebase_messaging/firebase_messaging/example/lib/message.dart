@@ -1,4 +1,3 @@
-// @dart=2.9
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,7 @@ class MessageArguments {
 /// Displays information about a [RemoteMessage].
 class MessageView extends StatelessWidget {
   /// A single data row.
-  Widget row(String title, String value) {
+  Widget row(String title, String? value) {
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
       child: Row(children: [
@@ -31,13 +30,13 @@ class MessageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MessageArguments args = ModalRoute.of(context).settings.arguments;
+    final MessageArguments args = ModalRoute.of(context)?.settings.arguments as MessageArguments;
     RemoteMessage message = args.message;
-    RemoteNotification notification = message.notification;
+    RemoteNotification? notification = message.notification;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(message.messageId),
+        title: Text(message.messageId!),
       ),
       body: SingleChildScrollView(
           child: Padding(
@@ -78,47 +77,47 @@ class MessageView extends StatelessWidget {
                   ),
                   row(
                     'Channel ID',
-                    notification.android.channelId,
+                    notification.android!.channelId,
                   ),
                   row(
                     'Click Action',
-                    notification.android.clickAction,
+                    notification.android!.clickAction,
                   ),
                   row(
                     'Color',
-                    notification.android.color,
+                    notification.android!.color,
                   ),
                   row(
                     'Count',
-                    notification.android.count?.toString(),
+                    notification.android!.count?.toString(),
                   ),
                   row(
                     'Image URL',
-                    notification.android.imageUrl,
+                    notification.android!.imageUrl,
                   ),
                   row(
                     'Link',
-                    notification.android.link,
+                    notification.android!.link,
                   ),
                   row(
                     'Priority',
-                    notification.android.priority?.toString(),
+                    notification.android!.priority.toString(),
                   ),
                   row(
                     'Small Icon',
-                    notification.android.smallIcon,
+                    notification.android!.smallIcon,
                   ),
                   row(
                     'Sound',
-                    notification.android.sound,
+                    notification.android!.sound,
                   ),
                   row(
                     'Ticker',
-                    notification.android.ticker,
+                    notification.android!.ticker,
                   ),
                   row(
                     'Visibility',
-                    notification.android.visibility?.toString(),
+                    notification.android!.visibility.toString(),
                   ),
                 ],
                 if (notification.apple != null) ...[
@@ -128,15 +127,15 @@ class MessageView extends StatelessWidget {
                   ),
                   row(
                     'Subtitle',
-                    notification.apple.subtitle,
+                    notification.apple!.subtitle,
                   ),
                   row(
                     'Badge',
-                    notification.apple.badge,
+                    notification.apple!.badge,
                   ),
                   row(
                     'Sound',
-                    notification.apple.sound?.name,
+                    notification.apple!.sound?.name,
                   ),
                 ]
               ]),
