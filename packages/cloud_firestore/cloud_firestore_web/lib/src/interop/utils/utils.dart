@@ -2,8 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    as core_interop;
+import 'package:firebase_core_web/firebase_core_web_interop.dart' as core_interop;
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
 
@@ -12,7 +11,7 @@ import '../firestore_interop.dart' hide FieldValue;
 
 /// Returns Dart representation from JS Object.
 dynamic dartify(Object? jsObject) {
-  return core_interop.dartify(jsObject, (Object object) {
+  return core_interop.dartify(jsObject, (Object? object) {
     if (util.instanceof(object, DocumentReferenceJsConstructor)) {
       return DocumentReference.getInstance(object as DocumentReferenceJsImpl);
     }
@@ -20,8 +19,7 @@ dynamic dartify(Object? jsObject) {
       return object;
     }
     if (util.instanceof(object, TimestampJsConstructor)) {
-      return DateTime.fromMillisecondsSinceEpoch(
-          (object as TimestampJsImpl).toMillis());
+      return DateTime.fromMillisecondsSinceEpoch((object as TimestampJsImpl).toMillis());
     }
     if (util.instanceof(object, BlobConstructor)) {
       return object as Blob;
@@ -36,7 +34,7 @@ dynamic jsify(Object? dartObject) {
     return null;
   }
 
-  return core_interop.jsify(dartObject, (Object object) {
+  return core_interop.jsify(dartObject, (Object? object) {
     if (object is DateTime) {
       return TimestampJsImpl.fromMillis(object.millisecondsSinceEpoch);
     }
