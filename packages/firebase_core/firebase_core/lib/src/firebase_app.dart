@@ -55,6 +55,7 @@ class FirebaseApp {
   }
 
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
     if (other is! FirebaseApp) return false;
@@ -62,6 +63,7 @@ class FirebaseApp {
   }
 
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => hashValues(name, options);
 
   @override

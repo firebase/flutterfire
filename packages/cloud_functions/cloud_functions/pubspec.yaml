@@ -9,8 +9,8 @@ environment:
 
 dependencies:
   cloud_functions_platform_interface: ^5.0.0
-  cloud_functions_web: ^4.0.0
-  firebase_core: ^1.0.0
+  cloud_functions_web: ^4.0.1
+  firebase_core: ^1.0.1
   firebase_core_platform_interface: ^4.0.0
   flutter:
     sdk: flutter

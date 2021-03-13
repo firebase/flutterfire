@@ -19,6 +19,10 @@ enum ValueSource {
 /// RemoteConfigValue encapsulates the value and source of a Remote Config
 /// parameter.
 class RemoteConfigValue {
+  /// Wraps a value with metadata and type-safe getters.
+  @protected
+  RemoteConfigValue(this._value, this.source) : assert(source != null);
+
   /// Default value for String
   static const String defaultValueForString = '';
 
@@ -26,14 +30,10 @@ class RemoteConfigValue {
   static const int defaultValueForInt = 0;
 
   /// Default value for Double
-  static const double defaultValueForDouble = 0.0;
+  static const double defaultValueForDouble = 0;
 
   /// Default value for Bool
   static const bool defaultValueForBool = false;
-
-  /// Wraps a value with metadata and type-safe getters.
-  @protected
-  RemoteConfigValue(this._value, this.source) : assert(source != null);
 
   List<int> _value;
 

@@ -151,7 +151,7 @@ scripts:
       dir-exists:
         - web
         - test_driver
-      scope: "*example*"
+      scope: "*example*" 
 
   test:macos_e2e:
     run: |

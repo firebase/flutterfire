@@ -2,12 +2,13 @@
 
 import 'dart:async';
 
-import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
-import 'package:firebase_remote_config_platform_interface/src/method_channel/method_channel_firebase_remote_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+import '../../firebase_remote_config_platform_interface.dart';
+import '../method_channel/method_channel_firebase_remote_config.dart';
 
 /// The interface that implementations of `firebase_remote_config` must
 /// extend.
@@ -19,14 +20,26 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 /// `implements` this interface will be broken by newly added
 /// [FirebaseRemoteConfigPlatform] methods.
 abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
+  /// Create an instance using [app].
+  FirebaseRemoteConfigPlatform({this.appInstance}) : super(token: _token);
+
+  /// Create instance using [app] using the existing implementation.
+  factory FirebaseRemoteConfigPlatform.instanceFor({
+    FirebaseApp app,
+    Map<dynamic, dynamic> pluginConstants,
+  }) {
+    return FirebaseRemoteConfigPlatform.instance
+        .delegateFor(app: app)
+        .setInitialValues(
+          remoteConfigValues: pluginConstants ?? <dynamic, dynamic>{},
+        );
+  }
+
   static final Object _token = Object();
 
   /// The [FirebaseApp] this instance was initialized with.
   @protected
   final FirebaseApp appInstance;
-
-  /// Create an instance using [app].
-  FirebaseRemoteConfigPlatform({this.appInstance}) : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp get app {
@@ -43,11 +56,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// It will always default to [MethodChannelFirebaseRemoteConfig]
   /// if no other implementation was provided.
   static FirebaseRemoteConfigPlatform get instance {
-    if (_instance == null) {
-      _instance = MethodChannelFirebaseRemoteConfig.instance;
-    }
-
-    return _instance;
+    return _instance ??= MethodChannelFirebaseRemoteConfig.instance;
   }
 
   /// Sets the [FirebaseRemoteConfigPlatform] instance.
@@ -55,17 +64,6 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
     assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
-  }
-
-  /// Create instance using [app] using the existing implementation.
-  factory FirebaseRemoteConfigPlatform.instanceFor(
-      {FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
-    return FirebaseRemoteConfigPlatform.instance
-        .delegateFor(app: app)
-        .setInitialValues(
-            remoteConfigValues: pluginConstants == null
-                ? Map<dynamic, dynamic>()
-                : pluginConstants);
   }
 
   /// Enables delegates to create new instances of themselves if a none

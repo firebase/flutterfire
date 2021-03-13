@@ -348,7 +348,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       // The generic platform interface is with host and port split to
       // centralize logic between android/ios native, but web takes the
       // origin as a single string
-      await _webAuth!.useEmulator('http://$host:$port');
+      _webAuth!.useEmulator('http://$host:$port');
     } catch (e) {
       throw getFirebaseAuthException(e);
     }

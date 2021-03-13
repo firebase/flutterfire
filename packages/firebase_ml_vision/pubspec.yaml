@@ -12,12 +12,12 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  pedantic: ^1.8.0
-  flutter_test:
-    sdk: flutter
-  firebase_core: ^1.0.0
+  firebase_core: ^1.0.1
   flutter_driver:
     sdk: flutter
+  flutter_test:
+    sdk: flutter
+  pedantic: ^1.8.0
   test: any
 
 flutter:

@@ -8,8 +8,9 @@ import 'package:e2e/e2e.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:pedantic/pedantic.dart';
 
-void main() async {
+Future<void> main() async {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() async {
@@ -18,13 +19,14 @@ void main() async {
 
   testWidgets('setPerformanceCollectionEnabled', (WidgetTester tester) async {
     FirebasePerformance performance = FirebasePerformance.instance;
-    performance.setPerformanceCollectionEnabled(true);
+
+    unawaited(performance.setPerformanceCollectionEnabled(true));
     expect(
       performance.isPerformanceCollectionEnabled(),
       completion(isTrue),
     );
 
-    performance.setPerformanceCollectionEnabled(false);
+    unawaited(performance.setPerformanceCollectionEnabled(false));
     expect(
       performance.isPerformanceCollectionEnabled(),
       completion(isFalse),
@@ -33,13 +35,13 @@ void main() async {
 
   testWidgets('test all values', (WidgetTester tester) async {
     FirebasePerformance performance = FirebasePerformance.instance;
-    for (HttpMethod method in HttpMethod.values) {
+    for (final HttpMethod method in HttpMethod.values) {
       final HttpMetric testMetric = performance.newHttpMetric(
         'https://www.google.com/',
         method,
       );
-      testMetric.start();
-      testMetric.stop();
+      unawaited(testMetric.start());
+      unawaited(testMetric.stop());
     }
   });
 

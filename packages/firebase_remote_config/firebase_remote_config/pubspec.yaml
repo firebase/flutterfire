@@ -10,20 +10,19 @@ environment:
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: ^1.0.0
+  firebase_core: ^1.0.1
   firebase_core_platform_interface: ^4.0.0
   firebase_remote_config_platform_interface: ^0.2.0-dev.0
+  flutter:
+    sdk: flutter
+
 dev_dependencies:
-  pedantic: ^1.8.0
   flutter_test:
     sdk: flutter
-  flutter_driver:
-    sdk: flutter
-  test: any
-  plugin_platform_interface: ^2.0.0
   mockito: ^5.0.0
+  pedantic: ^1.8.0
+  plugin_platform_interface: ^2.0.0
+  test: any
 
 flutter:
   plugin:

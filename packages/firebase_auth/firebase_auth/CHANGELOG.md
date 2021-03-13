@@ -1,3 +1,7 @@
+## 1.0.1
+
+ - **DOCS**: note that auth emulator is not supported for web (#5169).
+
 ## 1.0.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
