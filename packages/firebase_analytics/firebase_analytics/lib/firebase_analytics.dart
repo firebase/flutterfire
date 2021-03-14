@@ -103,12 +103,14 @@ class FirebaseAnalytics {
     if (name.isEmpty ||
         name.length > 24 ||
         name.indexOf(_alpha) != 0 ||
-        name.contains(_nonAlphaNumeric))
+        name.contains(_nonAlphaNumeric)) {
       throw ArgumentError.value(
           name, 'name', 'must contain 1 to 24 alphanumeric characters.');
+    }
 
-    if (name.startsWith('firebase_'))
+    if (name.startsWith('firebase_')) {
       throw ArgumentError.value(name, 'name', '"firebase_" prefix is reserved');
+    }
 
     await _platformInstance.setUserProperty(name: name, value: value);
   }
