@@ -8,7 +8,6 @@ linter:
     - always_put_control_body_on_new_line
     - always_put_required_named_parameters_first
     - always_require_non_null_named_parameters
-    - always_specify_types
     - always_use_package_imports
     - annotate_overrides
     - avoid_annotating_with_dynamic
@@ -108,7 +107,6 @@ linter:
     - prefer_const_literals_to_create_immutables
     - prefer_constructors_over_static_methods
     - prefer_contains
-    - prefer_double_quotes
     - prefer_equal_for_default_values
     - prefer_expression_function_bodies
     - prefer_final_fields
@@ -153,7 +151,6 @@ linter:
     - unnecessary_await_in_return
     - unnecessary_brace_in_string_interps
     - unnecessary_const
-    - unnecessary_final
     - unnecessary_getters_setters
     - unnecessary_lambdas
     - unnecessary_new
