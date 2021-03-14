@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:flutter/services.dart';
@@ -19,8 +17,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('FirebaseAnalyticsObserver', () {
-    FirebaseAnalytics analytics;
-    FirebaseAnalyticsObserver observer;
+    late MockFirebaseAnalytics analytics;
+    late FirebaseAnalyticsObserver observer;
     final List<String> printLog = <String>[];
 
     void overridePrint(void Function() func) {
@@ -36,8 +34,8 @@ void main() {
       printLog.clear();
       analytics = MockFirebaseAnalytics();
       observer = FirebaseAnalyticsObserver(analytics: analytics);
-      when(analytics.setCurrentScreen(screenName: anyNamed('screenName')))
-          .thenAnswer((Invocation invocation) => Future<void>.value());
+      // when(analytics.setCurrentScreen(screenName: anyNamed('screenName')))
+      //     .thenAnswer((Invocation invocation) => Future<void>.value());
     });
 
     test('setCurrentScreen on route pop', () {
@@ -118,7 +116,7 @@ void main() {
     });
 
     test('runs onError', () async {
-      PlatformException passedException;
+      PlatformException? passedException;
 
       void handleError(PlatformException error) {
         passedException = error;
@@ -147,6 +145,31 @@ void main() {
   });
 }
 
-class MockFirebaseAnalytics extends Mock implements FirebaseAnalytics {}
+class MockFirebaseAnalytics extends Mock implements FirebaseAnalytics {
+  @override
+  Future<void> setCurrentScreen(
+      {required String? screenName, String? screenClassOverride = 'Flutter'}) {
+    return super.noSuchMethod(
+      Invocation.method(#setCurrentScreen, [],
+          {#screenName: screenName, #screenClassOverride: screenClassOverride}),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
+    );
+  }
+}
 
-class MockPageRoute extends Mock implements PageRoute<dynamic> {}
+class MockPageRoute extends Mock implements PageRoute<dynamic> {
+  @override
+  RouteSettings get settings => super.noSuchMethod(
+        Invocation.getter(#settings),
+        returnValue: const RouteSettings(),
+        returnValueForMissingStub: const RouteSettings(),
+      );
+}
+
+Future<T> neverEndingFuture<T>() async {
+  // ignore: literal_only_boolean_expressions
+  while (true) {
+    await Future.delayed(const Duration(minutes: 5));
+  }
+}
