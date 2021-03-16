@@ -66,7 +66,8 @@ class DynamicLinkParameters {
   static Future<ShortDynamicLink> shortenUrl(Uri url,
       [DynamicLinkParametersOptions? options]) async {
     final Map<String, dynamic>? reply = await FirebaseDynamicLinks.channel
-        .invokeMapMethod<String, dynamic>('DynamicLinkParameters#shortenUrl', <String, dynamic>{
+        .invokeMapMethod<String, dynamic>(
+            'DynamicLinkParameters#shortenUrl', <String, dynamic>{
       'url': url.toString(),
       'dynamicLinkParametersOptions': options?._data,
     });
@@ -79,7 +80,8 @@ class DynamicLinkParameters {
         'dynamicLinkParametersOptions': dynamicLinkParametersOptions?._data,
         'googleAnalyticsParameters': googleAnalyticsParameters?._data,
         'iosParameters': iosParameters?._data,
-        'itunesConnectAnalyticsParameters': itunesConnectAnalyticsParameters?._data,
+        'itunesConnectAnalyticsParameters':
+            itunesConnectAnalyticsParameters?._data,
         'link': link.toString(),
         'navigationInfoParameters': navigationInfoParameters?._data,
         'socialMetaTagParameters': socialMetaTagParameters?._data,
@@ -95,7 +97,8 @@ class DynamicLinkParameters {
   /// Generate a short Dynamic Link.
   Future<ShortDynamicLink> buildShortLink() async {
     final Map<String, dynamic>? reply = await FirebaseDynamicLinks.channel
-        .invokeMapMethod<String, dynamic>('DynamicLinkParameters#buildShortLink', _data);
+        .invokeMapMethod<String, dynamic>(
+            'DynamicLinkParameters#buildShortLink', _data);
     return _parseShortLink(reply!);
   }
 
@@ -118,7 +121,8 @@ class ShortDynamicLink {
 
 /// The Dynamic Link Android parameters.
 class AndroidParameters {
-  AndroidParameters({this.fallbackUrl, this.minimumVersion, required this.packageName});
+  AndroidParameters(
+      {this.fallbackUrl, this.minimumVersion, required this.packageName});
 
   /// The link to open when the app isn’t installed.
   ///
@@ -260,7 +264,8 @@ class IosParameters {
 
 /// The Dynamic Link iTunes Connect parameters.
 class ItunesConnectAnalyticsParameters {
-  ItunesConnectAnalyticsParameters({this.affiliateToken, this.campaignToken, this.providerToken});
+  ItunesConnectAnalyticsParameters(
+      {this.affiliateToken, this.campaignToken, this.providerToken});
 
   /// The iTunes Connect affiliate token.
   final String? affiliateToken;

@@ -15,7 +15,8 @@ void main() {
     final List<MethodCall> log = <MethodCall>[];
 
     setUp(() {
-      FirebaseDynamicLinks.channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      FirebaseDynamicLinks.channel
+          .setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
         final Map<dynamic, dynamic> returnUrl = <dynamic, dynamic>{
           'url': 'google.com',
@@ -52,7 +53,8 @@ void main() {
 
     group('getInitialLink', () {
       test('link can be parsed', () async {
-        final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
+        final PendingDynamicLinkData? data =
+            await FirebaseDynamicLinks.instance.getInitialLink();
 
         expect(data!.link, Uri.parse('https://google.com'));
 
@@ -72,7 +74,8 @@ void main() {
       // Both iOS FIRDynamicLink.url and android PendingDynamicLinkData.getUrl()
       // might return null link. In such a case we want to ignore the deep-link.
       test('for null link, returns null', () async {
-        FirebaseDynamicLinks.channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        FirebaseDynamicLinks.channel
+            .setMockMethodCallHandler((MethodCall methodCall) async {
           log.add(methodCall);
           switch (methodCall.method) {
             case 'FirebaseDynamicLinks#getInitialLink':
@@ -91,7 +94,8 @@ void main() {
           }
         });
 
-        final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
+        final PendingDynamicLinkData? data =
+            await FirebaseDynamicLinks.instance.getInitialLink();
 
         expect(data, isNull);
 
@@ -104,7 +108,8 @@ void main() {
       });
 
       test('for null result, returns null', () async {
-        FirebaseDynamicLinks.channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        FirebaseDynamicLinks.channel
+            .setMockMethodCallHandler((MethodCall methodCall) async {
           log.add(methodCall);
           switch (methodCall.method) {
             case 'FirebaseDynamicLinks#getInitialLink':
@@ -114,7 +119,8 @@ void main() {
           }
         });
 
-        final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
+        final PendingDynamicLinkData? data =
+            await FirebaseDynamicLinks.instance.getInitialLink();
 
         expect(data, isNull);
 
@@ -135,17 +141,20 @@ void main() {
       expect(data!.link.host, 'google.com');
 
       expect(log, <Matcher>[
-        isMethodCall('FirebaseDynamicLinks#getDynamicLink', arguments: <String, dynamic>{
-          'url': argument.toString(),
-        })
+        isMethodCall('FirebaseDynamicLinks#getDynamicLink',
+            arguments: <String, dynamic>{
+              'url': argument.toString(),
+            })
       ]);
     });
 
     group('$DynamicLinkParameters', () {
       test('shortenUrl', () async {
         final Uri url = Uri.parse('google.com');
-        final DynamicLinkParametersOptions options = DynamicLinkParametersOptions(
-            shortDynamicLinkPathLength: ShortDynamicLinkPathLength.unguessable);
+        final DynamicLinkParametersOptions options =
+            DynamicLinkParametersOptions(
+                shortDynamicLinkPathLength:
+                    ShortDynamicLinkPathLength.unguessable);
 
         await DynamicLinkParameters.shortenUrl(url, options);
 
@@ -155,7 +164,8 @@ void main() {
             arguments: <String, dynamic>{
               'url': url.toString(),
               'dynamicLinkParametersOptions': <String, dynamic>{
-                'shortDynamicLinkPathLength': ShortDynamicLinkPathLength.unguessable.index,
+                'shortDynamicLinkPathLength':
+                    ShortDynamicLinkPathLength.unguessable.index,
               },
             },
           ),
@@ -234,7 +244,8 @@ void main() {
               'androidParameters': null,
               'uriPrefix': 'https://test-domain/',
               'dynamicLinkParametersOptions': <String, dynamic>{
-                'shortDynamicLinkPathLength': ShortDynamicLinkPathLength.short.index,
+                'shortDynamicLinkPathLength':
+                    ShortDynamicLinkPathLength.short.index,
               },
               'googleAnalyticsParameters': null,
               'iosParameters': null,
@@ -250,7 +261,8 @@ void main() {
               'androidParameters': null,
               'uriPrefix': 'https://test-domain/',
               'dynamicLinkParametersOptions': <String, dynamic>{
-                'shortDynamicLinkPathLength': ShortDynamicLinkPathLength.short.index,
+                'shortDynamicLinkPathLength':
+                    ShortDynamicLinkPathLength.short.index,
               },
               'googleAnalyticsParameters': null,
               'iosParameters': null,
@@ -452,7 +464,8 @@ void main() {
         final DynamicLinkParameters components = DynamicLinkParameters(
           uriPrefix: 'https://test-domain/',
           link: Uri.parse('test-link.com'),
-          navigationInfoParameters: NavigationInfoParameters(forcedRedirectEnabled: true),
+          navigationInfoParameters:
+              NavigationInfoParameters(forcedRedirectEnabled: true),
         );
 
         await components.buildUrl();
@@ -552,7 +565,8 @@ void main() {
     group('onLink', () {
       OnLinkSuccessCallback? onSuccess;
       OnLinkErrorCallback? onError;
-      final List<PendingDynamicLinkData?> successLog = <PendingDynamicLinkData?>[];
+      final List<PendingDynamicLinkData?> successLog =
+          <PendingDynamicLinkData?>[];
       final List<OnLinkErrorException> errorLog = <OnLinkErrorException>[];
       setUp(() {
         onSuccess = (linkData) async {
@@ -581,7 +595,8 @@ void main() {
       }
 
       test('onSuccess', () async {
-        FirebaseDynamicLinks.instance.onLink(onSuccess: onSuccess, onError: onError);
+        FirebaseDynamicLinks.instance
+            .onLink(onSuccess: onSuccess, onError: onError);
         await callMethodHandler('onLinkSuccess', <dynamic, dynamic>{
           'link': 'https://google.com',
           'android': <dynamic, dynamic>{
@@ -606,7 +621,8 @@ void main() {
       });
 
       test('onSuccess with null link', () async {
-        FirebaseDynamicLinks.instance.onLink(onSuccess: onSuccess, onError: onError);
+        FirebaseDynamicLinks.instance
+            .onLink(onSuccess: onSuccess, onError: onError);
         await callMethodHandler('onLinkSuccess', <dynamic, dynamic>{
           'link': null,
           'android': <dynamic, dynamic>{
@@ -626,7 +642,8 @@ void main() {
       });
 
       test('onSuccess with null', () async {
-        FirebaseDynamicLinks.instance.onLink(onSuccess: onSuccess, onError: onError);
+        FirebaseDynamicLinks.instance
+            .onLink(onSuccess: onSuccess, onError: onError);
         await callMethodHandler('onLinkSuccess', null);
 
         expect(successLog, hasLength(1));
@@ -637,7 +654,8 @@ void main() {
       });
 
       test('onError', () async {
-        FirebaseDynamicLinks.instance.onLink(onSuccess: onSuccess, onError: onError);
+        FirebaseDynamicLinks.instance
+            .onLink(onSuccess: onSuccess, onError: onError);
         await callMethodHandler('onLinkError', <dynamic, dynamic>{
           'code': 'code',
           'message': 'message',
