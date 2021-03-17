@@ -6,14 +6,14 @@
 
 // @dart=2.9
 
-import 'package:integration_test/integration_test.dart';
+import 'package:e2e/e2e.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  E2EWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() async {
     await Firebase.initializeApp();
