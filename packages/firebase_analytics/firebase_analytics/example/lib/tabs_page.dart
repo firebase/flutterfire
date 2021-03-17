@@ -2,11 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/observer.dart';
 
 class TabsPage extends StatefulWidget {
-  const TabsPage(this.observer, {Key? key}) : super(key: key);
+  const TabsPage(this.observer, {Key key}) : super(key: key);
 
   final FirebaseAnalyticsObserver observer;
 
@@ -21,7 +23,7 @@ class _TabsPageState extends State<TabsPage>
         SingleTickerProviderStateMixin,
         // ignore: prefer_mixin
         RouteAware {
-  late TabController _controller;
+  TabController _controller;
   int selectedIndex = 0;
 
   final List<Tab> tabs = <Tab>[
@@ -32,13 +34,12 @@ class _TabsPageState extends State<TabsPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    widget.observer.subscribe(this, ModalRoute.of(context)! as PageRoute);
+    widget.observer.subscribe(this, ModalRoute.of(context));
   }
 
   @override
   void dispose() {
     widget.observer.unsubscribe(this);
-    _controller.dispose();
     super.dispose();
   }
 
@@ -72,7 +73,7 @@ class _TabsPageState extends State<TabsPage>
       body: TabBarView(
         controller: _controller,
         children: tabs.map((Tab tab) {
-          return Center(child: Text(tab.text!));
+          return Center(child: Text(tab.text));
         }).toList(),
       ),
     );

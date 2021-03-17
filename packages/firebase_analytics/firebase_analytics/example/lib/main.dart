@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -18,7 +20,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key key}) : super(key: key);
 
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   static FirebaseAnalyticsObserver observer =
@@ -42,12 +44,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({
-    Key? key,
-    required this.title,
-    required this.analytics,
-    required this.observer,
-  }) : super(key: key);
+  MyHomePage({Key key, this.title, this.analytics, this.observer})
+      : super(key: key);
 
   final String title;
   final FirebaseAnalytics analytics;
@@ -69,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _sendAnalyticsEvent() async {
     await widget.analytics.logEvent(
       name: 'test_event',
-      parameters: <String, Object>{
+      parameters: <String, dynamic>{
         'string': 'string',
         'int': 42,
         'long': 12345678910,
