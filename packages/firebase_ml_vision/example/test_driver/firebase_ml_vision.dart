@@ -19,7 +19,6 @@ part 'barcode_detector.dart';
 part 'face_detector.dart';
 part 'image_labeler.dart';
 part 'text_recognizer.dart';
-part 'document_text_recognizer.dart';
 
 void main() {
   final Completer<String> completer = Completer<String>();
@@ -31,7 +30,6 @@ void main() {
     faceDetectorTests();
     imageLabelerTests();
     textRecognizerTests();
-    documentTextRecognizerTests();
   });
 }
 

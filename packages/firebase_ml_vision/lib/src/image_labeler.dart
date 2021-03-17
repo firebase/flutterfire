@@ -15,8 +15,7 @@ part of firebase_ml_vision;
 /// generation and content moderation.
 ///
 /// A image labeler is created via
-/// `imageLabeler([ImageLabelerOptions options])` or
-/// `cloudImageLabeler([CloudImageLabelerOptions options])` in [FirebaseVision]:
+/// `imageLabeler([ImageLabelerOptions options])`:
 ///
 /// ```dart
 /// final FirebaseVisionImage image =
@@ -29,19 +28,13 @@ part of firebase_ml_vision;
 /// ```
 class ImageLabeler {
   ImageLabeler._({
-    @required dynamic options,
-    @required this.modelType,
+    @required ImageLabelerOptions options,
     @required int handle,
   })  : _options = options,
         _handle = handle,
-        assert(options != null),
-        assert(modelType != null);
+        assert(options != null);
 
-  /// Indicates whether this labeler is ran on device or in the cloud.
-  final ModelType modelType;
-
-  // Should be of type ImageLabelerOptions or CloudImageLabelerOptions.
-  final dynamic _options;
+  final ImageLabelerOptions _options;
   final int _handle;
   bool _hasBeenOpened = false;
   bool _isClosed = false;
@@ -57,7 +50,7 @@ class ImageLabeler {
       <String, dynamic>{
         'handle': _handle,
         'options': <String, dynamic>{
-          'modelType': _enumToString(modelType),
+          'modelType': _enumToString(ModelType.onDevice),
           'confidenceThreshold': _options.confidenceThreshold,
         },
       }..addAll(visionImage._serialize()),
@@ -105,28 +98,7 @@ class ImageLabelerOptions {
   final double confidenceThreshold;
 }
 
-/// Options for cloud image labeler.
-///
-/// Confidence threshold could be provided for the label detection. For example,
-/// if the confidence threshold is set to 0.7, only labels with
-/// confidence >= 0.7 would be returned. The default threshold is 0.5.
-class CloudImageLabelerOptions {
-  /// Constructor for [CloudImageLabelerOptions].
-  ///
-  /// Confidence threshold could be provided for the label detection.
-  /// For example, if the confidence threshold is set to 0.7, only labels with
-  /// confidence >= 0.7 would be returned. The default threshold is 0.5.
-  const CloudImageLabelerOptions({this.confidenceThreshold = 0.5})
-      : assert(confidenceThreshold >= 0.0),
-        assert(confidenceThreshold <= 1.0);
-
-  /// The minimum confidence threshold of labels to be detected.
-  ///
-  /// Required to be in range [0.0, 1.0].
-  final double confidenceThreshold;
-}
-
-/// Represents an entity label detected by [ImageLabeler] and [CloudImageLabeler].
+/// Represents an entity label detected by [ImageLabeler].
 class ImageLabel {
   ImageLabel._(dynamic data)
       : confidence = data['confidence']?.toDouble(),

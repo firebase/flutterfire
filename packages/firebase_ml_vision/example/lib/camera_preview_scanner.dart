@@ -30,13 +30,7 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
       FirebaseVision.instance.barcodeDetector();
   final FaceDetector _faceDetector = FirebaseVision.instance.faceDetector();
   final ImageLabeler _imageLabeler = FirebaseVision.instance.imageLabeler();
-  final ImageLabeler _cloudImageLabeler =
-      FirebaseVision.instance.cloudImageLabeler();
   final TextRecognizer _recognizer = FirebaseVision.instance.textRecognizer();
-  final TextRecognizer _cloudRecognizer =
-      FirebaseVision.instance.cloudTextRecognizer();
-  final DocumentTextRecognizer _cloudDocumentRecognizer =
-      FirebaseVision.instance.cloudDocumentTextRecognizer();
 
   @override
   void initState() {
@@ -80,16 +74,10 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
     switch (_currentDetector) {
       case Detector.text:
         return _recognizer.processImage;
-      case Detector.cloudText:
-        return _cloudRecognizer.processImage;
-      case Detector.cloudDocumentText:
-        return _cloudDocumentRecognizer.processImage;
       case Detector.barcode:
         return _barcodeDetector.detectInImage;
       case Detector.label:
         return _imageLabeler.processImage;
-      case Detector.cloudLabel:
-        return _cloudImageLabeler.processImage;
       case Detector.face:
         return _faceDetector.processImage;
     }
@@ -126,13 +114,8 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
         if (_scanResults is! List<ImageLabel>) return noResultsText;
         painter = LabelDetectorPainter(imageSize, _scanResults);
         break;
-      case Detector.cloudLabel:
-        if (_scanResults is! List<ImageLabel>) return noResultsText;
-        painter = LabelDetectorPainter(imageSize, _scanResults);
-        break;
       default:
-        assert(_currentDetector == Detector.text ||
-            _currentDetector == Detector.cloudText);
+        assert(_currentDetector == Detector.text);
         if (_scanResults is! VisionText) return noResultsText;
         painter = TextDetectorPainter(imageSize, _scanResults);
     }
@@ -206,20 +189,8 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
                 child: Text('Detect Label'),
               ),
               const PopupMenuItem<Detector>(
-                value: Detector.cloudLabel,
-                child: Text('Detect Cloud Label'),
-              ),
-              const PopupMenuItem<Detector>(
                 value: Detector.text,
                 child: Text('Detect Text'),
-              ),
-              const PopupMenuItem<Detector>(
-                value: Detector.cloudText,
-                child: Text('Detect Cloud Text'),
-              ),
-              const PopupMenuItem<Detector>(
-                value: Detector.cloudDocumentText,
-                child: Text('Detect Document Text'),
               ),
             ],
           ),
@@ -241,9 +212,7 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
       _barcodeDetector.close();
       _faceDetector.close();
       _imageLabeler.close();
-      _cloudImageLabeler.close();
       _recognizer.close();
-      _cloudRecognizer.close();
     });
 
     _currentDetector = null;

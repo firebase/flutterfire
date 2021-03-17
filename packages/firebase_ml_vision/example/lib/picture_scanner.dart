@@ -30,13 +30,7 @@ class _PictureScannerState extends State<PictureScanner> {
       FirebaseVision.instance.barcodeDetector();
   final FaceDetector _faceDetector = FirebaseVision.instance.faceDetector();
   final ImageLabeler _imageLabeler = FirebaseVision.instance.imageLabeler();
-  final ImageLabeler _cloudImageLabeler =
-      FirebaseVision.instance.cloudImageLabeler();
   final TextRecognizer _recognizer = FirebaseVision.instance.textRecognizer();
-  final TextRecognizer _cloudRecognizer =
-      FirebaseVision.instance.cloudTextRecognizer();
-  final DocumentTextRecognizer _cloudDocumentRecognizer =
-      FirebaseVision.instance.cloudDocumentTextRecognizer();
 
   Future<void> _getAndScanImage() async {
     setState(() {
@@ -98,17 +92,8 @@ class _PictureScannerState extends State<PictureScanner> {
       case Detector.label:
         results = await _imageLabeler.processImage(visionImage);
         break;
-      case Detector.cloudLabel:
-        results = await _cloudImageLabeler.processImage(visionImage);
-        break;
       case Detector.text:
         results = await _recognizer.processImage(visionImage);
-        break;
-      case Detector.cloudText:
-        results = await _cloudRecognizer.processImage(visionImage);
-        break;
-      case Detector.cloudDocumentText:
-        results = await _cloudDocumentRecognizer.processImage(visionImage);
         break;
       default:
         return;
@@ -132,17 +117,8 @@ class _PictureScannerState extends State<PictureScanner> {
       case Detector.label:
         painter = LabelDetectorPainter(_imageSize, results);
         break;
-      case Detector.cloudLabel:
-        painter = LabelDetectorPainter(_imageSize, results);
-        break;
       case Detector.text:
         painter = TextDetectorPainter(_imageSize, results);
-        break;
-      case Detector.cloudText:
-        painter = TextDetectorPainter(_imageSize, results);
-        break;
-      case Detector.cloudDocumentText:
-        painter = DocumentTextDetectorPainter(_imageSize, results);
         break;
       default:
         break;
@@ -201,20 +177,8 @@ class _PictureScannerState extends State<PictureScanner> {
                 child: Text('Detect Label'),
               ),
               const PopupMenuItem<Detector>(
-                value: Detector.cloudLabel,
-                child: Text('Detect Cloud Label'),
-              ),
-              const PopupMenuItem<Detector>(
                 value: Detector.text,
                 child: Text('Detect Text'),
-              ),
-              const PopupMenuItem<Detector>(
-                value: Detector.cloudText,
-                child: Text('Detect Cloud Text'),
-              ),
-              const PopupMenuItem<Detector>(
-                value: Detector.cloudDocumentText,
-                child: Text('Detect Document Text'),
               ),
             ],
           ),
@@ -236,9 +200,7 @@ class _PictureScannerState extends State<PictureScanner> {
     _barcodeDetector.close();
     _faceDetector.close();
     _imageLabeler.close();
-    _cloudImageLabeler.close();
     _recognizer.close();
-    _cloudRecognizer.close();
     super.dispose();
   }
 }

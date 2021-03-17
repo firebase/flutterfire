@@ -19,4 +19,3 @@ part 'src/face_detector.dart';
 part 'src/firebase_vision.dart';
 part 'src/image_labeler.dart';
 part 'src/text_recognizer.dart';
-part 'src/document_text_recognizer.dart';

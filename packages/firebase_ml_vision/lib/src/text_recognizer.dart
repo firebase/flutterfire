@@ -6,12 +6,6 @@
 
 part of firebase_ml_vision;
 
-/// Option for controlling additional variables in performing text recognition.
-///
-/// Sparse model type is more suitable for sparse text.
-/// Dense model type is more suitable for well-formatted dense text.
-enum CloudTextModelType { sparse, dense }
-
 /// Detector for performing optical character recognition(OCR) on an input image.
 ///
 /// A text recognizer is created via `textRecognizer()` in [FirebaseVision]:
@@ -28,17 +22,9 @@ enum CloudTextModelType { sparse, dense }
 /// ```
 class TextRecognizer {
   TextRecognizer._({
-    CloudTextRecognizerOptions cloudOptions,
-    @required this.modelType,
     @required int handle,
-  })  : _cloudOptions = cloudOptions,
-        _handle = handle,
-        assert(modelType != null),
-        assert((modelType == ModelType.cloud && cloudOptions != null) ||
-            (modelType == ModelType.onDevice && cloudOptions == null));
+  }) : _handle = handle;
 
-  final ModelType modelType;
-  final CloudTextRecognizerOptions _cloudOptions;
   final int _handle;
 
   bool _hasBeenOpened = false;
@@ -50,14 +36,9 @@ class TextRecognizer {
     assert(visionImage != null);
 
     _hasBeenOpened = true;
-    Map<String, dynamic> options = {'modelType': _enumToString(modelType)};
-
-    if (_cloudOptions != null) {
-      options.addAll({
-        'hintedLanguages': _cloudOptions.hintedLanguages,
-        'textModelType': _enumToString(_cloudOptions.textModelType),
-      });
-    }
+    Map<String, dynamic> options = {
+      'modelType': _enumToString(ModelType.onDevice)
+    };
 
     final Map<String, dynamic> reply =
         await FirebaseVision.channel.invokeMapMethod<String, dynamic>(
@@ -82,40 +63,6 @@ class TextRecognizer {
       <String, dynamic>{'handle': _handle},
     );
   }
-}
-
-/// Options for a cloud text recognizer.
-///
-/// Hinted languages and text model type may provide better results if text
-/// language and density are known prior to inference.
-class CloudTextRecognizerOptions {
-  /// Constructor for [CloudTextRecognizerOptions].
-  ///
-  /// For Latin alphabet based languages, setting language hints is not needed.
-  ///
-  /// In cases, when the language of the text in the image is known, setting
-  /// a hint will help get better results (although it will be a significant
-  /// hindrance if the hint is wrong).
-  const CloudTextRecognizerOptions({
-    this.hintedLanguages,
-    this.textModelType = CloudTextModelType.sparse,
-  }) : assert(textModelType != null);
-
-  /// Language hints for text recognition.
-  ///
-  /// In most cases, an empty value yields the best results since it enables
-  /// automatic language detection.
-  ///
-  /// Each language code parameter typically consists of a BCP-47 identifier.
-  /// See //cloud.google.com/vision/docs/languages for more details.
-  final List<String> hintedLanguages;
-
-  /// Sets model type for cloud text recognition.
-  /// Choosing 'sparse' or 'dense' option will lead the recognizer to use one of
-  /// two different models, which differ by handling text densities in an image.
-  ///
-  /// Default setting is 'sparse'.
-  final CloudTextModelType textModelType;
 }
 
 /// Recognized text in an image.
@@ -176,9 +123,8 @@ abstract class TextContainer {
 
   /// All detected languages from recognized text.
   ///
-  /// On-device text recognizers only detect Latin-based languages, while cloud
-  /// text recognizers can detect multiple languages. If no languages are
-  /// recognized, the list is empty.
+  /// On-device text recognizers only detect Latin-based languages.
+  /// If no languages are recognized, the list is empty.
   final List<RecognizedLanguage> recognizedLanguages;
 
   /// The recognized text as a string.
