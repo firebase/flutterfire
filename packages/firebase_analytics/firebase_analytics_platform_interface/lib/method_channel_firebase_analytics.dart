@@ -16,9 +16,9 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<void> logEvent({
     required String name,
-    Map<String, dynamic>? parameters,
+    Map<String, Object>? parameters,
   }) {
-    return _channel.invokeMethod<void>('logEvent', <String, dynamic>{
+    return _channel.invokeMethod<void>('logEvent', <String, Object?>{
       'name': name,
       'parameters': parameters,
     });
