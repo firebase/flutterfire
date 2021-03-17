@@ -6,6 +6,6 @@
 
 // @dart=2.9
 
-import 'package:e2e/e2e_driver.dart' as e2e;
+import 'package:integration_test/integration_test_driver.dart';
 
-void main() => e2e.main();
+void main() => integrationDriver();
