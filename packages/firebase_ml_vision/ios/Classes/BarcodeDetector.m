@@ -4,39 +4,41 @@
 
 #import "FLTFirebaseMlVisionPlugin.h"
 
+@import MLKitBarcodeScanning;
+
 @interface BarcodeDetector ()
-@property FIRVisionBarcodeDetector *detector;
+@property MLKBarcodeScanner *detector;
 @end
 
 @implementation BarcodeDetector
-- (instancetype)initWithVision:(FIRVision *)vision options:(NSDictionary *)options {
+- (instancetype)initWithOptions:(NSDictionary *)options {
   self = [super init];
   if (self) {
-    _detector = [vision barcodeDetectorWithOptions:[BarcodeDetector parseOptions:options]];
+    _detector = [MLKBarcodeScanner barcodeScannerWithOptions:[BarcodeDetector parseOptions:options]];
   }
   return self;
 }
 
-- (void)handleDetection:(FIRVisionImage *)image result:(FlutterResult)result {
-  [_detector detectInImage:image
-                completion:^(NSArray<FIRVisionBarcode *> *barcodes, NSError *error) {
+- (void)handleDetection:(MLKVisionImage *)image result:(FlutterResult)result {
+  [_detector processImage:image
+                completion:^(NSArray<MLKBarcode *> *barcodes, NSError *error) {
                   if (error) {
                     [FLTFirebaseMlVisionPlugin handleError:error result:result];
                     return;
                   } else if (!barcodes) {
                     result(@[]);
-                    return;
+                      return;
                   }
 
                   NSMutableArray *ret = [NSMutableArray array];
-                  for (FIRVisionBarcode *barcode in barcodes) {
+                  for (MLKBarcode *barcode in barcodes) {
                     [ret addObject:visionBarcodeToDictionary(barcode)];
                   }
                   result(ret);
                 }];
 }
 
-NSDictionary *visionBarcodeToDictionary(FIRVisionBarcode *barcode) {
+NSDictionary *visionBarcodeToDictionary(MLKBarcode *barcode) {
   __block NSMutableArray<NSArray *> *points = [NSMutableArray array];
 
   for (NSValue *point in barcode.cornerPoints) {
@@ -68,7 +70,7 @@ NSDictionary *visionBarcodeToDictionary(FIRVisionBarcode *barcode) {
   };
 }
 
-NSDictionary *visionBarcodeWiFiToDictionary(FIRVisionBarcodeWiFi *wifi) {
+NSDictionary *visionBarcodeWiFiToDictionary(MLKBarcodeWiFi *wifi) {
   return @{
     @"ssid" : wifi.ssid,
     @"password" : wifi.password,
@@ -76,7 +78,7 @@ NSDictionary *visionBarcodeWiFiToDictionary(FIRVisionBarcodeWiFi *wifi) {
   };
 }
 
-NSDictionary *visionBarcodeEmailToDictionary(FIRVisionBarcodeEmail *email) {
+NSDictionary *visionBarcodeEmailToDictionary(MLKBarcodeEmail *email) {
   return @{
     @"address" : email.address,
     @"body" : email.body,
@@ -85,37 +87,37 @@ NSDictionary *visionBarcodeEmailToDictionary(FIRVisionBarcodeEmail *email) {
   };
 }
 
-NSDictionary *visionBarcodePhoneToDictionary(FIRVisionBarcodePhone *phone) {
+NSDictionary *visionBarcodePhoneToDictionary(MLKBarcodePhone *phone) {
   return @{
     @"number" : phone.number,
     @"type" : @(phone.type),
   };
 }
 
-NSDictionary *visionBarcodeSMSToDictionary(FIRVisionBarcodeSMS *sms) {
+NSDictionary *visionBarcodeSMSToDictionary(MLKBarcodeSMS *sms) {
   return @{
     @"phoneNumber" : sms.phoneNumber,
     @"message" : sms.message,
   };
 }
 
-NSDictionary *visionBarcodeURLToDictionary(FIRVisionBarcodeURLBookmark *url) {
+NSDictionary *visionBarcodeURLToDictionary(MLKBarcodeURLBookmark *url) {
   return @{
     @"title" : url.title ? url.title : [NSNull null],
     @"url" : url.url ? url.url : [NSNull null],
   };
 }
 
-NSDictionary *visionBarcodeGeoPointToDictionary(FIRVisionBarcodeGeoPoint *geo) {
+NSDictionary *visionBarcodeGeoPointToDictionary(MLKBarcodeGeoPoint *geo) {
   return @{
     @"longitude" : @(geo.longitude),
     @"latitude" : @(geo.latitude),
   };
 }
 
-NSDictionary *barcodeContactInfoToDictionary(FIRVisionBarcodeContactInfo *contact) {
+NSDictionary *barcodeContactInfoToDictionary(MLKBarcodeContactInfo *contact) {
   __block NSMutableArray<NSDictionary *> *addresses = [NSMutableArray array];
-  [contact.addresses enumerateObjectsUsingBlock:^(FIRVisionBarcodeAddress *_Nonnull address,
+  [contact.addresses enumerateObjectsUsingBlock:^(MLKBarcodeAddress *_Nonnull address,
                                                   NSUInteger idx, BOOL *_Nonnull stop) {
     __block NSMutableArray<NSString *> *addressLines = [NSMutableArray array];
     [address.addressLines enumerateObjectsUsingBlock:^(NSString *_Nonnull addressLine,
@@ -129,7 +131,7 @@ NSDictionary *barcodeContactInfoToDictionary(FIRVisionBarcodeContactInfo *contac
   }];
 
   __block NSMutableArray<NSDictionary *> *emails = [NSMutableArray array];
-  [contact.emails enumerateObjectsUsingBlock:^(FIRVisionBarcodeEmail *_Nonnull email,
+  [contact.emails enumerateObjectsUsingBlock:^(MLKBarcodeEmail *_Nonnull email,
                                                NSUInteger idx, BOOL *_Nonnull stop) {
     [emails addObject:@{
       @"address" : email.address ? email.address : [NSNull null],
@@ -140,7 +142,7 @@ NSDictionary *barcodeContactInfoToDictionary(FIRVisionBarcodeContactInfo *contac
   }];
 
   __block NSMutableArray<NSDictionary *> *phones = [NSMutableArray array];
-  [contact.phones enumerateObjectsUsingBlock:^(FIRVisionBarcodePhone *_Nonnull phone,
+  [contact.phones enumerateObjectsUsingBlock:^(MLKBarcodePhone *_Nonnull phone,
                                                NSUInteger idx, BOOL *_Nonnull stop) {
     [phones addObject:@{
       @"number" : phone.number ? phone.number : [NSNull null],
@@ -164,7 +166,7 @@ NSDictionary *barcodeContactInfoToDictionary(FIRVisionBarcodeContactInfo *contac
       @"last" : contact.name.last ? contact.name.last : [NSNull null],
       @"middle" : contact.name.middle ? contact.name.middle : [NSNull null],
       @"prefix" : contact.name.prefix ? contact.name.prefix : [NSNull null],
-      @"pronunciation" : contact.name.pronounciation ? contact.name.pronounciation : [NSNull null],
+      @"pronunciation" : contact.name.pronunciation ? contact.name.pronunciation : [NSNull null],
       @"suffix" : contact.name.suffix ? contact.name.suffix : [NSNull null],
     },
     @"jobTitle" : contact.jobTitle ? contact.jobTitle : [NSNull null],
@@ -172,7 +174,7 @@ NSDictionary *barcodeContactInfoToDictionary(FIRVisionBarcodeContactInfo *contac
   };
 }
 
-NSDictionary *calendarEventToDictionary(FIRVisionBarcodeCalendarEvent *calendar) {
+NSDictionary *calendarEventToDictionary(MLKBarcodeCalendarEvent *calendar) {
   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
   dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
   dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
@@ -188,7 +190,7 @@ NSDictionary *calendarEventToDictionary(FIRVisionBarcodeCalendarEvent *calendar)
   };
 }
 
-NSDictionary *driverLicenseToDictionary(FIRVisionBarcodeDriverLicense *license) {
+NSDictionary *driverLicenseToDictionary(MLKBarcodeDriverLicense *license) {
   return @{
     @"firstName" : license.firstName,
     @"middleName" : license.middleName,
@@ -207,9 +209,9 @@ NSDictionary *driverLicenseToDictionary(FIRVisionBarcodeDriverLicense *license) 
   };
 }
 
-+ (FIRVisionBarcodeDetectorOptions *)parseOptions:(NSDictionary *)optionsData {
++ (MLKBarcodeScannerOptions *)parseOptions:(NSDictionary *)optionsData {
   NSNumber *barcodeFormat = optionsData[@"barcodeFormats"];
-  return [[FIRVisionBarcodeDetectorOptions alloc]
-      initWithFormats:(FIRVisionBarcodeFormat)barcodeFormat.intValue];
+  return [[MLKBarcodeScannerOptions alloc]
+      initWithFormats:(MLKBarcodeFormat)barcodeFormat.intValue];
 }
 @end

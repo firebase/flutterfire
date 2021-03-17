@@ -4,41 +4,24 @@
 
 #import "FLTFirebaseMlVisionPlugin.h"
 
+@import MLKitTextRecognition;
+
 @interface TextRecognizer ()
-@property FIRVisionTextRecognizer *recognizer;
+@property MLKTextRecognizer *recognizer;
 @end
 
 @implementation TextRecognizer
-- (instancetype)initWithVision:(FIRVision *)vision options:(NSDictionary *)options {
+- (instancetype)initWithOptions:(NSDictionary *)options {
   self = [super init];
   if (self) {
-    if ([@"onDevice" isEqualToString:options[@"modelType"]]) {
-      _recognizer = [vision onDeviceTextRecognizer];
-    } else if ([@"cloud" isEqualToString:options[@"modelType"]]) {
-      FIRVisionCloudTextRecognizerOptions *cloudTextRecognizerOptions =
-          [[FIRVisionCloudTextRecognizerOptions alloc] init];
-      if (options[@"hintedLanguages"] != [NSNull null]) {
-        NSArray<NSString *> *languageHints = options[@"hintedLanguages"];
-        cloudTextRecognizerOptions.languageHints = languageHints;
-      }
-      if ([@"dense" isEqualToString:options[@"textModelType"]]) {
-        cloudTextRecognizerOptions.modelType = FIRVisionCloudTextModelTypeDense;
-      }
-      _recognizer = [vision cloudTextRecognizerWithOptions:cloudTextRecognizerOptions];
-    } else {
-      NSString *reason =
-          [NSString stringWithFormat:@"Invalid model type: %@", options[@"modelType"]];
-      @throw [[NSException alloc] initWithName:NSInvalidArgumentException
-                                        reason:reason
-                                      userInfo:nil];
-    }
+      _recognizer = [MLKTextRecognizer textRecognizer];
   }
   return self;
 }
 
-- (void)handleDetection:(FIRVisionImage *)image result:(FlutterResult)result {
+- (void)handleDetection:(MLKVisionImage *)image result:(FlutterResult)result {
   [_recognizer processImage:image
-                 completion:^(FIRVisionText *_Nullable visionText, NSError *_Nullable error) {
+                 completion:^(MLKText *_Nullable visionText, NSError *_Nullable error) {
                    if (error) {
                      [FLTFirebaseMlVisionPlugin handleError:error result:result];
                      return;
@@ -51,36 +34,33 @@
                    visionTextData[@"text"] = visionText.text;
 
                    NSMutableArray *allBlockData = [NSMutableArray array];
-                   for (FIRVisionTextBlock *block in visionText.blocks) {
+                   for (MLKTextBlock *block in visionText.blocks) {
                      NSMutableDictionary *blockData = [NSMutableDictionary dictionary];
 
                      [self addData:blockData
-                           confidence:block.confidence
                          cornerPoints:block.cornerPoints
                                 frame:block.frame
                             languages:block.recognizedLanguages
                                  text:block.text];
 
                      NSMutableArray *allLineData = [NSMutableArray array];
-                     for (FIRVisionTextLine *line in block.lines) {
+                     for (MLKTextLine *line in block.lines) {
                        NSMutableDictionary *lineData = [NSMutableDictionary dictionary];
 
                        [self addData:lineData
-                             confidence:line.confidence
                            cornerPoints:line.cornerPoints
                                   frame:line.frame
                               languages:line.recognizedLanguages
                                    text:line.text];
 
                        NSMutableArray *allElementData = [NSMutableArray array];
-                       for (FIRVisionTextElement *element in line.elements) {
+                       for (MLKTextElement *element in line.elements) {
                          NSMutableDictionary *elementData = [NSMutableDictionary dictionary];
 
                          [self addData:elementData
-                               confidence:element.confidence
                              cornerPoints:element.cornerPoints
                                     frame:element.frame
-                                languages:element.recognizedLanguages
+                                languages:[NSArray new]
                                      text:element.text];
 
                          [allElementData addObject:elementData];
@@ -100,10 +80,9 @@
 }
 
 - (void)addData:(NSMutableDictionary *)addTo
-      confidence:(NSNumber *)confidence
     cornerPoints:(NSArray<NSValue *> *)cornerPoints
            frame:(CGRect)frame
-       languages:(NSArray<FIRVisionTextRecognizedLanguage *> *)languages
+       languages:(NSArray<MLKTextRecognizedLanguage *> *)languages
             text:(NSString *)text {
   __block NSMutableArray<NSArray *> *points = [NSMutableArray array];
 
@@ -112,14 +91,14 @@
   }
 
   __block NSMutableArray<NSDictionary *> *allLanguageData = [NSMutableArray array];
-  for (FIRVisionTextRecognizedLanguage *language in languages) {
+  for (MLKTextRecognizedLanguage *language in languages) {
     [allLanguageData addObject:@{
       @"languageCode" : language.languageCode ? language.languageCode : [NSNull null]
     }];
   }
 
   [addTo addEntriesFromDictionary:@{
-    @"confidence" : confidence ? confidence : [NSNull null],
+    @"confidence" : [NSNull null],
     @"points" : points,
     @"left" : @(frame.origin.x),
     @"top" : @(frame.origin.y),

@@ -6,14 +6,16 @@
 
 #import "Firebase/Firebase.h"
 
+@import MLKitVision;
+
 @interface FLTFirebaseMlVisionPlugin : NSObject <FlutterPlugin>
 + (void)handleError:(NSError *)error result:(FlutterResult)result;
 @end
 
 @protocol Detector
 @required
-- (instancetype)initWithVision:(FIRVision *)vision options:(NSDictionary *)options;
-- (void)handleDetection:(FIRVisionImage *)image result:(FlutterResult)result;
+- (instancetype)initWithOptions:(NSDictionary *)options;
+- (void)handleDetection:(MLKVisionImage *)image result:(FlutterResult)result;
 @optional
 @end
 
@@ -27,7 +29,4 @@
 @end
 
 @interface TextRecognizer : NSObject <Detector>
-@end
-
-@interface DocumentTextRecognizer : NSObject <Detector>
 @end
