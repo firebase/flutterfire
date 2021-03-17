@@ -73,7 +73,6 @@ void main() {
               'bytes': null,
               'metadata': null,
               'options': <String, dynamic>{
-                'modelType': 'onDevice',
                 'confidenceThreshold': 0.2,
               },
             },
@@ -114,7 +113,6 @@ void main() {
               'bytes': null,
               'metadata': null,
               'options': <String, dynamic>{
-                'modelType': 'onDevice',
                 'confidenceThreshold': 0.5,
               },
             },

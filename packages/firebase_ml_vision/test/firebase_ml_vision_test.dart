@@ -87,9 +87,7 @@ void main() {
                   },
                 ],
               },
-              'options': <String, dynamic>{
-                'modelType': 'onDevice',
-              },
+              'options': <String, dynamic>{},
             },
           ),
         ]);
@@ -1029,9 +1027,7 @@ void main() {
               'path': 'empty',
               'bytes': null,
               'metadata': null,
-              'options': <String, dynamic>{
-                'modelType': 'onDevice',
-              },
+              'options': <String, dynamic>{},
             },
           ),
         ]);
