@@ -152,8 +152,8 @@ class MockFirebaseAnalytics extends Mock implements FirebaseAnalytics {
     return super.noSuchMethod(
       Invocation.method(#setCurrentScreen, [],
           {#screenName: screenName, #screenClassOverride: screenClassOverride}),
-      returnValue: neverEndingFuture<void>(),
-      returnValueForMissingStub: neverEndingFuture<void>(),
+      returnValue: Future.value(),
+      returnValueForMissingStub: Future.value(),
     );
   }
 }
@@ -165,11 +165,4 @@ class MockPageRoute extends Mock implements PageRoute<dynamic> {
         returnValue: const RouteSettings(),
         returnValueForMissingStub: const RouteSettings(),
       );
-}
-
-Future<T> neverEndingFuture<T>() async {
-  // ignore: literal_only_boolean_expressions
-  while (true) {
-    await Future.delayed(const Duration(minutes: 5));
-  }
 }
