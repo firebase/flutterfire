@@ -36,16 +36,13 @@ class TextRecognizer {
     assert(visionImage != null);
 
     _hasBeenOpened = true;
-    Map<String, dynamic> options = {
-      'modelType': _enumToString(ModelType.onDevice)
-    };
 
     final Map<String, dynamic> reply =
         await FirebaseVision.channel.invokeMapMethod<String, dynamic>(
       'TextRecognizer#processImage',
       <String, dynamic>{
         'handle': _handle,
-        'options': options,
+        'options': <String, dynamic>{},
       }..addAll(visionImage._serialize()),
     );
 

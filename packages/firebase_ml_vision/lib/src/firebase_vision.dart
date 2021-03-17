@@ -13,9 +13,6 @@ enum _ImageType { file, bytes }
 /// Rotation is counter-clockwise.
 enum ImageRotation { rotation0, rotation90, rotation180, rotation270 }
 
-/// Indicates whether a model is ran on device or in the cloud.
-enum ModelType { onDevice }
-
 /// Detected language from text recognition in regular and document images.
 class RecognizedLanguage {
   RecognizedLanguage._(dynamic data) : languageCode = data['languageCode'];

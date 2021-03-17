@@ -50,7 +50,6 @@ class ImageLabeler {
       <String, dynamic>{
         'handle': _handle,
         'options': <String, dynamic>{
-          'modelType': _enumToString(ModelType.onDevice),
           'confidenceThreshold': _options.confidenceThreshold,
         },
       }..addAll(visionImage._serialize()),

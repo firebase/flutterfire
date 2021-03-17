@@ -11,7 +11,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 import com.google.firebase.ml.vision.text.RecognizedLanguage;
@@ -26,24 +25,7 @@ class TextRecognizer implements Detector {
   private final FirebaseVisionTextRecognizer recognizer;
 
   TextRecognizer(FirebaseVision vision, Map<String, Object> options) {
-    final String modelType = (String) options.get("modelType");
-    if (modelType.equals("onDevice")) {
-      recognizer = vision.getOnDeviceTextRecognizer();
-    } else if (modelType.equals("cloud")) {
-      FirebaseVisionCloudTextRecognizerOptions.Builder optionsBuilder =
-          new FirebaseVisionCloudTextRecognizerOptions.Builder();
-      if (options.get("hintedLanguages") != null) {
-        optionsBuilder.setLanguageHints((List<String>) options.get("hintedLanguages"));
-      }
-      if (options.get("textModelType").equals("dense")) {
-        optionsBuilder.setModelType(FirebaseVisionCloudTextRecognizerOptions.DENSE_MODEL);
-      }
-      FirebaseVisionCloudTextRecognizerOptions cloudTextRecognizerOptions = optionsBuilder.build();
-      recognizer = vision.getCloudTextRecognizer(cloudTextRecognizerOptions);
-    } else {
-      final String message = String.format("No model for type: %s", modelType);
-      throw new IllegalArgumentException(message);
-    }
+    recognizer = vision.getOnDeviceTextRecognizer();
   }
 
   @Override
