@@ -2,12 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart' show required;
 
 import 'firebase_analytics_platform_interface.dart';
 
@@ -18,8 +15,8 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> logEvent({
-    @required String name,
-    Map<String, dynamic> parameters,
+    required String name,
+    Map<String, dynamic>? parameters,
   }) {
     return _channel.invokeMethod<void>('logEvent', <String, dynamic>{
       'name': name,
@@ -42,10 +39,10 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setCurrentScreen({
-    @required String screenName,
-    String screenClassOverride,
+    required String screenName,
+    String? screenClassOverride,
   }) {
-    return _channel.invokeMethod<void>('setCurrentScreen', <String, String>{
+    return _channel.invokeMethod<void>('setCurrentScreen', <String, String?>{
       'screenName': screenName,
       'screenClassOverride': screenClassOverride,
     });
@@ -53,8 +50,8 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setUserProperty({
-    @required String name,
-    @required String value,
+    required String name,
+    required String value,
   }) {
     return _channel.invokeMethod<void>('setUserProperty', <String, String>{
       'name': name,
