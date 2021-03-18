@@ -14,7 +14,7 @@
 - (instancetype)initWithOptions:(NSDictionary *)options {
   self = [super init];
   if (self) {
-      _recognizer = [MLKTextRecognizer textRecognizer];
+    _recognizer = [MLKTextRecognizer textRecognizer];
   }
   return self;
 }

@@ -14,28 +14,29 @@
 - (instancetype)initWithOptions:(NSDictionary *)options {
   self = [super init];
   if (self) {
-    _detector = [MLKBarcodeScanner barcodeScannerWithOptions:[BarcodeDetector parseOptions:options]];
+    _detector =
+        [MLKBarcodeScanner barcodeScannerWithOptions:[BarcodeDetector parseOptions:options]];
   }
   return self;
 }
 
 - (void)handleDetection:(MLKVisionImage *)image result:(FlutterResult)result {
   [_detector processImage:image
-                completion:^(NSArray<MLKBarcode *> *barcodes, NSError *error) {
-                  if (error) {
-                    [FLTFirebaseMlVisionPlugin handleError:error result:result];
-                    return;
-                  } else if (!barcodes) {
-                    result(@[]);
-                      return;
-                  }
+               completion:^(NSArray<MLKBarcode *> *barcodes, NSError *error) {
+                 if (error) {
+                   [FLTFirebaseMlVisionPlugin handleError:error result:result];
+                   return;
+                 } else if (!barcodes) {
+                   result(@[]);
+                   return;
+                 }
 
-                  NSMutableArray *ret = [NSMutableArray array];
-                  for (MLKBarcode *barcode in barcodes) {
-                    [ret addObject:visionBarcodeToDictionary(barcode)];
-                  }
-                  result(ret);
-                }];
+                 NSMutableArray *ret = [NSMutableArray array];
+                 for (MLKBarcode *barcode in barcodes) {
+                   [ret addObject:visionBarcodeToDictionary(barcode)];
+                 }
+                 result(ret);
+               }];
 }
 
 NSDictionary *visionBarcodeToDictionary(MLKBarcode *barcode) {
@@ -131,8 +132,8 @@ NSDictionary *barcodeContactInfoToDictionary(MLKBarcodeContactInfo *contact) {
   }];
 
   __block NSMutableArray<NSDictionary *> *emails = [NSMutableArray array];
-  [contact.emails enumerateObjectsUsingBlock:^(MLKBarcodeEmail *_Nonnull email,
-                                               NSUInteger idx, BOOL *_Nonnull stop) {
+  [contact.emails enumerateObjectsUsingBlock:^(MLKBarcodeEmail *_Nonnull email, NSUInteger idx,
+                                               BOOL *_Nonnull stop) {
     [emails addObject:@{
       @"address" : email.address ? email.address : [NSNull null],
       @"body" : email.body ? email.body : [NSNull null],
@@ -142,8 +143,8 @@ NSDictionary *barcodeContactInfoToDictionary(MLKBarcodeContactInfo *contact) {
   }];
 
   __block NSMutableArray<NSDictionary *> *phones = [NSMutableArray array];
-  [contact.phones enumerateObjectsUsingBlock:^(MLKBarcodePhone *_Nonnull phone,
-                                               NSUInteger idx, BOOL *_Nonnull stop) {
+  [contact.phones enumerateObjectsUsingBlock:^(MLKBarcodePhone *_Nonnull phone, NSUInteger idx,
+                                               BOOL *_Nonnull stop) {
     [phones addObject:@{
       @"number" : phone.number ? phone.number : [NSNull null],
       @"type" : @(phone.type),
@@ -211,7 +212,7 @@ NSDictionary *driverLicenseToDictionary(MLKBarcodeDriverLicense *license) {
 
 + (MLKBarcodeScannerOptions *)parseOptions:(NSDictionary *)optionsData {
   NSNumber *barcodeFormat = optionsData[@"barcodeFormats"];
-  return [[MLKBarcodeScannerOptions alloc]
-      initWithFormats:(MLKBarcodeFormat)barcodeFormat.intValue];
+  return
+      [[MLKBarcodeScannerOptions alloc] initWithFormats:(MLKBarcodeFormat)barcodeFormat.intValue];
 }
 @end

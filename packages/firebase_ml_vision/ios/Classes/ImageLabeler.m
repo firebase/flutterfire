@@ -21,28 +21,27 @@
 }
 
 - (void)handleDetection:(MLKVisionImage *)image result:(FlutterResult)result {
-  [_labeler
-      processImage:image
-        completion:^(NSArray<MLKImageLabel *> *_Nullable labels, NSError *_Nullable error) {
-          if (error) {
-            [FLTFirebaseMlVisionPlugin handleError:error result:result];
-            return;
-          } else if (!labels) {
-            result(@[]);
-          }
+  [_labeler processImage:image
+              completion:^(NSArray<MLKImageLabel *> *_Nullable labels, NSError *_Nullable error) {
+                if (error) {
+                  [FLTFirebaseMlVisionPlugin handleError:error result:result];
+                  return;
+                } else if (!labels) {
+                  result(@[]);
+                }
 
-          NSMutableArray *labelData = [NSMutableArray array];
-          for (MLKImageLabel *label in labels) {
-            NSDictionary *data = @{
-              @"confidence" : @(label.confidence),
-              @"entityID" : @(label.index),
-              @"text" : label.text,
-            };
-            [labelData addObject:data];
-          }
+                NSMutableArray *labelData = [NSMutableArray array];
+                for (MLKImageLabel *label in labels) {
+                  NSDictionary *data = @{
+                    @"confidence" : @(label.confidence),
+                    @"entityID" : @(label.index),
+                    @"text" : label.text,
+                  };
+                  [labelData addObject:data];
+                }
 
-          result(labelData);
-        }];
+                result(labelData);
+              }];
 }
 
 + (MLKImageLabelerOptions *)parseOptions:(NSDictionary *)optionsData {

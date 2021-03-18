@@ -137,7 +137,7 @@
 }
 
 + (MLKFaceDetectorOptions *)parseOptions:(NSDictionary *)optionsData {
-    MLKFaceDetectorOptions *options = [[MLKFaceDetectorOptions alloc] init];
+  MLKFaceDetectorOptions *options = [[MLKFaceDetectorOptions alloc] init];
 
   NSNumber *enableClassification = optionsData[@"enableClassification"];
   if (enableClassification.boolValue) {
