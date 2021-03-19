@@ -65,6 +65,17 @@ class FirebaseFunctions extends FirebasePluginPlatform {
     return HttpsCallable._(delegate.httpsCallable(_origin, name, options));
   }
 
+  /// Localhost origin hostname for Android (considers localhost as 10.0.2.2)
+  @visibleForTesting
+  static const String androidLocalhostOriginHostname = 'http://10.0.2.2';
+
+  /// Possible variations of localhost origin hostnames
+  @visibleForTesting
+  static const List<String> localhostOriginHostnames = [
+    'http://127.0.0.1',
+    'http://localhost',
+  ];
+
   /// Changes this instance to point to a Cloud Functions emulator running locally.
   ///
   /// Set the [origin] of the local emulator, such as "http://localhost:5001", or `null`
@@ -74,13 +85,14 @@ class FirebaseFunctions extends FirebasePluginPlatform {
 
     // Android considers localhost as 10.0.2.2 - automatically handle this for users.
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      if (origin.startsWith('http://localhost')) {
-        _origin = origin.replaceFirst('http://localhost', 'http://10.0.2.2');
-        return;
-      }
-      if (origin.startsWith('http://127.0.0.1')) {
-        _origin = origin.replaceFirst('http://127.0.0.1', 'http://10.0.2.2');
-        return;
+      for (final localhostOriginHostname in localhostOriginHostnames) {
+        if (origin.startsWith(localhostOriginHostname)) {
+          _origin = origin.replaceFirst(
+            localhostOriginHostname,
+            androidLocalhostOriginHostname,
+          );
+          return;
+        }
       }
     }
 
