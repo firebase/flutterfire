@@ -2,8 +2,6 @@ export default {
   // Plugin versions are sourced from the public pub.dev API
   // See website/plugins/source-versions.js for more information on how these are sourced & injected via Webpack
   plugins: {
-    firebase_admob: PUB_FIREBASE_ADMOB,
-    firebase_admob_ns: PUB_NS_FIREBASE_ADMOB,
     firebase_analytics: PUB_FIREBASE_ANALYTICS,
     firebase_analytics_ns: PUB_NS_FIREBASE_ANALYTICS,
     firebase_auth: PUB_FIREBASE_AUTH,
