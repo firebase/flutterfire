@@ -240,7 +240,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
         .invokeMapMethod<dynamic, dynamic>(
             'RemoteConfig#getAll', <String, dynamic>{
       'appName': app!.name,
-    }) as FutureOr<Map<dynamic, dynamic>>);
+    }) as Future<Map<dynamic, dynamic>>);
     _activeParameters = _parseParameters(parameters);
   }
 
@@ -249,7 +249,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
         .invokeMapMethod<dynamic, dynamic>(
             'RemoteConfig#getProperties', <String, dynamic>{
       'appName': app!.name,
-    }) as FutureOr<Map<dynamic, dynamic>>);
+    }) as Future<Map<dynamic, dynamic>>);
     final fetchTimeout = Duration(seconds: properties['fetchTimeout']);
     final minimumFetchInterval =
         Duration(seconds: properties['minimumFetchInterval']);
