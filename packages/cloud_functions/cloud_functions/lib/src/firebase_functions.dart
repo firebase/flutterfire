@@ -73,7 +73,7 @@ class FirebaseFunctions extends FirebasePluginPlatform {
     assert(origin.isNotEmpty);
 
     // Android considers localhost as 10.0.2.2 - automatically handle this for users.
-    if (defaultTargetPlatform == TargetPlatform.android) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
       if (origin.startsWith('http://localhost')) {
         _origin = origin.replaceFirst('http://localhost', 'http://10.0.2.2');
         return;
