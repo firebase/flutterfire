@@ -20,9 +20,9 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   @override
   Future<void> logEvent({
     required String name,
-    Map<String, Object>? parameters,
+    Map<String, Object?>? parameters,
   }) async {
-    _analytics.logEvent(name, parameters!);
+    _analytics.logEvent(name, parameters ?? {});
   }
 
   @override
@@ -31,13 +31,13 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   }
 
   @override
-  Future<void> setUserId(String id) async {
+  Future<void> setUserId(String? id) async {
     _analytics.setUserId(id);
   }
 
   @override
   Future<void> setCurrentScreen({
-    required String screenName,
+    required String? screenName,
     String? screenClassOverride,
   }) async {
     _analytics.setCurrentScreen(screenName);
@@ -46,7 +46,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   @override
   Future<void> setUserProperty({
     required String name,
-    required String value,
+    required String? value,
   }) async {
     _analytics.setUserProperties({name: value});
   }

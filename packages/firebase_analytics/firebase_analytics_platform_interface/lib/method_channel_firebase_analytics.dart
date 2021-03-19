@@ -16,7 +16,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<void> logEvent({
     required String name,
-    Map<String, Object>? parameters,
+    Map<String, Object?>? parameters,
   }) {
     return _channel.invokeMethod<void>('logEvent', <String, Object?>{
       'name': name,
@@ -33,13 +33,13 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   }
 
   @override
-  Future<void> setUserId(String id) {
+  Future<void> setUserId(String? id) {
     return _channel.invokeMethod<void>('setUserId', id);
   }
 
   @override
   Future<void> setCurrentScreen({
-    required String screenName,
+    required String? screenName,
     String? screenClassOverride,
   }) {
     return _channel.invokeMethod<void>('setCurrentScreen', <String, String?>{
@@ -51,9 +51,9 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<void> setUserProperty({
     required String name,
-    required String value,
+    required String? value,
   }) {
-    return _channel.invokeMethod<void>('setUserProperty', <String, String>{
+    return _channel.invokeMethod<void>('setUserProperty', <String, String?>{
       'name': name,
       'value': value,
     });

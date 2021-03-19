@@ -62,7 +62,7 @@ abstract class FirebaseAnalyticsPlatform {
   /// Logs the given event [name] with the given [parameters].
   Future<void> logEvent({
     required String name,
-    Map<String, Object>? parameters,
+    Map<String, Object?>? parameters,
   }) {
     throw UnimplementedError('logEvent() is not implemented on this platform');
   }
@@ -74,14 +74,14 @@ abstract class FirebaseAnalyticsPlatform {
   }
 
   /// Sets the user id.
-  Future<void> setUserId(String id) {
+  Future<void> setUserId(String? id) {
     throw UnimplementedError('setUserId() is not implemented on this platform');
   }
 
   /// Sets the current screen name, which specifies the current visual context
   /// in your app.
   Future<void> setCurrentScreen({
-    required String screenName,
+    required String? screenName,
     String? screenClassOverride,
   }) {
     throw UnimplementedError(
@@ -91,7 +91,7 @@ abstract class FirebaseAnalyticsPlatform {
   /// Sets a user property to the given value.
   Future<void> setUserProperty({
     required String name,
-    required String value,
+    required String? value,
   }) {
     throw UnimplementedError(
         'setUserProperty() is not implemented on this platform');
