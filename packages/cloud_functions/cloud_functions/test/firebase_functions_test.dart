@@ -128,17 +128,20 @@ void main() {
       });
 
       test('handles "localhost" and "127.0.0.1" origin only for Android', () {
+        const testLocalhostOrigins = [
+          'http://127.0.0.1:5000',
+          'http://localhost:5000',
+        ];
+
         for (final platform in TargetPlatform.values) {
           debugDefaultTargetPlatformOverride = platform;
 
-          for (final localhostOriginHostname
-              in FirebaseFunctions.localhostOriginHostnames) {
-            final origin = '$localhostOriginHostname:5000';
+          for (final testOrigin in testLocalhostOrigins) {
             final expectedOrigin = platform == TargetPlatform.android
-                ? '${FirebaseFunctions.androidLocalhostOriginHostname}:5000'
-                : origin;
+                ? 'http://10.0.2.2:5000'
+                : testOrigin;
 
-            FirebaseFunctions.instance.useFunctionsEmulator(origin: origin);
+            FirebaseFunctions.instance.useFunctionsEmulator(origin: testOrigin);
             // Origin on the default FirebaseFunctions instance should be set.
             expect(
                 FirebaseFunctions.instance
