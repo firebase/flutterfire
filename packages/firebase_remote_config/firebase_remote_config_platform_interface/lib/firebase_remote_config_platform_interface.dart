@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 library firebase_remote_config_platform_interface;
 

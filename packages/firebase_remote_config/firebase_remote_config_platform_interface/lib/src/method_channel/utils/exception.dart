@@ -1,18 +1,18 @@
-// @dart=2.9
+
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseException] if
 /// it was intentionally caught on the native platform.
-Exception convertPlatformException(Object exception, [StackTrace stackTrace]) {
+Exception convertPlatformException(Object exception, [StackTrace? stackTrace]) {
   if (exception is! Exception || exception is! PlatformException) {
     // ignore: only_throw_errors
     throw exception;
   }
 
   return platformExceptionToFirebaseException(
-    exception as PlatformException,
+    exception,
     stackTrace,
   );
 }
@@ -24,13 +24,13 @@ Exception convertPlatformException(Object exception, [StackTrace stackTrace]) {
 /// which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseException(
     PlatformException platformException,
-    [StackTrace stackTrace]) {
-  Map<String, String> details = platformException.details != null
-      ? Map<String, dynamic>.from(platformException.details)
+    [StackTrace? stackTrace]) {
+  Map<String, String>? details = platformException.details != null
+      ? Map<String, dynamic>.from(platformException.details) as Map<String, String>?
       : null;
 
   String code = 'unknown';
-  String message = platformException.message;
+  String? message = platformException.message;
 
   if (details != null) {
     code = details['code'] ?? code;

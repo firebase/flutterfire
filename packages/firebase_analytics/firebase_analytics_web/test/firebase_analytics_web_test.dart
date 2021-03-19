@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 @TestOn('chrome') // Uses web-only Flutter SDK
 
@@ -11,8 +11,8 @@ class MockAnalytics extends Mock implements Analytics {}
 
 void main() {
   group('FirebaseAnalyticsWeb', () {
-    FirebaseAnalyticsWeb firebaseAnalytics;
-    MockAnalytics analytics;
+    late FirebaseAnalyticsWeb firebaseAnalytics;
+    MockAnalytics? analytics;
 
     setUp(() {
       analytics = MockAnalytics();
@@ -23,19 +23,19 @@ void main() {
       const name = 'random';
       final parameters = {'a': 'b'};
       await firebaseAnalytics.logEvent(name: name, parameters: parameters);
-      verify(analytics.logEvent(name, parameters));
+      verify(analytics!.logEvent(name, parameters));
     });
 
     test('setAnalyticsCollectionEnabled', () async {
       const enabled = true;
       await firebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
-      verify(analytics.setAnalyticsCollectionEnabled(enabled));
+      verify(analytics!.setAnalyticsCollectionEnabled(enabled));
     });
 
     test('setUserId', () async {
       const userId = 'userId';
       await firebaseAnalytics.setUserId(userId);
-      verify(analytics.setUserId(userId));
+      verify(analytics!.setUserId(userId));
     });
 
     test('setCurrentScreen', () async {
@@ -46,14 +46,14 @@ void main() {
         screenName: screenName,
         screenClassOverride: screenClassOverride,
       );
-      verify(analytics.setCurrentScreen(screenName));
+      verify(analytics!.setCurrentScreen(screenName));
     });
 
     test('setUserProperty', () async {
       const name = 'name';
       const value = 'value';
       await firebaseAnalytics.setUserProperty(name: name, value: value);
-      verify(analytics.setUserProperties({name: value}));
+      verify(analytics!.setUserProperties({name: value}));
     });
   });
 }
