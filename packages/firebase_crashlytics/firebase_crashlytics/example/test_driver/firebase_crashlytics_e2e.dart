@@ -20,25 +20,14 @@ void testsMain() {
     });
 
     group('checkForUnsentReports', () {
-      //TODO(russellwheatley) debug test. The fail() function doesn't fail test and an error isn't thrown on android platform
-      // test('should throw if automatic crash report is enabled', () async {
+      test('should throw if automatic crash report is enabled', () async {
+        await crashlytics.setCrashlyticsCollectionEnabled(true);
 
-      //previous implementation
-      // try {
-      //   await crashlytics.checkForUnsentReports();
-      //   fail('Error did not throw');
-      // } catch (e) {
-      //   // Do nothing. test will fail.
-      // }
-
-      // current implementation
-      //   await crashlytics.setCrashlyticsCollectionEnabled(true);
-
-      //   await expectLater(
-      //     crashlytics.checkForUnsentReports,
-      //     throwsA(isA<FirebaseException>()),
-      //   );
-      // });
+        await expectLater(
+          crashlytics.checkForUnsentReports,
+          throwsA(isA<StateError>()),
+        );
+      });
 
       test('checks device cache for unsent crashlytics reports', () async {
         await crashlytics.setCrashlyticsCollectionEnabled(false);
