@@ -16,6 +16,7 @@ interface Plugin {
   pub: string;
   documentation: string;
   firebase: string;
+  remoteSource?:string;
   support: {
     web: boolean;
     mobile: boolean;
@@ -129,7 +130,7 @@ function Home() {
                   </td>
                   <td>
                     <a
-                      href={`https://github.com/FirebaseExtended/flutterfire/tree/master/packages/${plugin.pub}`}
+                      href={plugin.remoteSource ? plugin.remoteSource : `https://github.com/FirebaseExtended/flutterfire/tree/master/packages/${plugin.pub}`}
                       target="_blank"
                     >
                       <code>{plugin.pub}</code>
