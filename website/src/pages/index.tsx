@@ -100,10 +100,10 @@ function Home() {
                     <strong>{plugin.name}</strong>
                   </td>
                   <td style={{ minWidth: 150 }}>
-                    {!plugin.remoteSource && <img
+                    <img
                       src={`https://img.shields.io/pub/v/${plugin.pub}.svg`}
                       alt={`${plugin.name} Badge`}
-                    />}
+                    />
                   </td>
                   <td>
                     <a href={`https://pub.dev/packages/${plugin.pub}`}>
