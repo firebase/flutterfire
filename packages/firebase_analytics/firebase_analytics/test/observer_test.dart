@@ -34,8 +34,8 @@ void main() {
       printLog.clear();
       analytics = MockFirebaseAnalytics();
       observer = FirebaseAnalyticsObserver(analytics: analytics);
-      // when(analytics.setCurrentScreen(screenName: anyNamed('screenName')))
-      //     .thenAnswer((Invocation invocation) => Future<void>.value());
+      when(analytics.setCurrentScreen(screenName: anyNamed('screenName')))
+          .thenAnswer((Invocation invocation) => Future<void>.value());
     });
 
     test('setCurrentScreen on route pop', () {
