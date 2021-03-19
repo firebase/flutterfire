@@ -13,7 +13,9 @@ dependencies:
   firebase_core: ^1.0.1
   firebase_core_platform_interface: ^4.0.0
   firebase_remote_config_platform_interface:
-    path: ../firebase_remote_config_platform_interface
+    git:
+      url: https://github.com/daniloadorno/flutterfire.git
+      path: packages/firebase_remote_config/firebase_remote_config_platform_interface
   flutter:
     sdk: flutter
 

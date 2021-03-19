@@ -11,9 +11,13 @@ environment:
 
 dependencies:
   firebase_analytics_platform_interface:
-    path: ../firebase_analytics_platform_interface
+    git:
+      url: https://github.com/daniloadorno/flutterfire.git
+      path: packages/firebase_analytics/firebase_analytics_platform_interface
   firebase_analytics_web:
-    path: ../firebase_analytics_web
+    git:
+      url: https://github.com/daniloadorno/flutterfire.git
+      path: packages/firebase_analytics/firebase_analytics_web
   firebase_core: ^1.0.1
   flutter:
     sdk: flutter
