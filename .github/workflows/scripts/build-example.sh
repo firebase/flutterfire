@@ -20,7 +20,7 @@ fi
 if [ "$ACTION" == "ios" ]
 then
   melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" -- \
-    flutter build ios --verbose --no-codesign --simulator --debug --target="$TARGET_FILE" --dart-define=CI=true
+    flutter build ios --no-codesign --simulator --debug --target="$TARGET_FILE" --dart-define=CI=true
   exit
 fi
 
