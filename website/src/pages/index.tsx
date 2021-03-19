@@ -16,7 +16,7 @@ interface Plugin {
   pub: string;
   documentation: string;
   firebase: string;
-  remoteSource?:string;
+  remoteSource?: string;
   support: {
     web: boolean;
     mobile: boolean;
