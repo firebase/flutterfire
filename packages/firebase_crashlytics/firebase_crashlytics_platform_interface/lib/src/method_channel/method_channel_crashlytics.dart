@@ -23,7 +23,12 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     'plugins.flutter.io/firebase_crashlytics',
   );
 
+  /// The analytics [MethodChannel] for sending fatal errors to the crashlytic's service
+  static MethodChannel _analyticsChannel =
+      const MethodChannel('plugins.flutter.io/firebase_analytics');
+
   bool? _isCrashlyticsCollectionEnabled;
+  String _FATAL_FLAG = 'com.firebase.crashlytics.flutterfire.fatal';
 
   @override
   bool get isCrashlyticsCollectionEnabled {
@@ -87,9 +92,37 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     required String exception,
     required String information,
     required String reason,
+    bool fatal = false,
     List<Map<String, String>>? stackTraceElements,
   }) async {
+    print("QQQQQQ");
     try {
+      if (fatal) {
+        try {
+          num currentUnixTimeSeconds =
+              (DateTime.now().millisecondsSinceEpoch / 1000).floorToDouble();
+    print("SSSSSS");
+
+          await setCustomKey(_FATAL_FLAG, '$currentUnixTimeSeconds');
+    print("YYYYYY");
+          await _analyticsChannel.invokeMethod('logEvent', <String, dynamic>{
+            'name': '_ae', // '_ae' is a reserved analytics value for firebase
+            'parameters': {
+              'fatal': 1, // as in firebase-android-sdk
+              'timestamp':
+                  currentUnixTimeSeconds, // 'long timestamp', is that current UNIX time?
+            },
+          });
+
+          //set custom key
+          //call analytics method
+        } on MissingPluginException catch (error) {
+          print("WWWWW: " + e.toString());
+          // TODO: warn user that analytics isn't initialised?
+
+        }
+      }
+
       await channel
           .invokeMethod<void>('Crashlytics#recordError', <String, dynamic>{
         'exception': exception,

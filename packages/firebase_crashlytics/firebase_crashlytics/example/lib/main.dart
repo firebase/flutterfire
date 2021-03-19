@@ -19,13 +19,13 @@ const _kShouldTestAsyncErrorOnInit = false;
 // Toggle this for testing Crashlytics in your app locally.
 const _kTestingCrashlytics = true;
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  
   runZonedGuarded(() {
     runApp(MyApp());
-  }, (error, stackTrace) {
-    FirebaseCrashlytics.instance.recordError(error, stackTrace);
-  });
+  }, FirebaseCrashlytics.instance.recordError);
 }
 
 class MyApp extends StatefulWidget {
@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
   // Define an async function to initialize FlutterFire
   Future<void> _initializeFlutterFire() async {
     // Wait for Firebase to initialize
-    await Firebase.initializeApp();
+    
 
     if (_kTestingCrashlytics) {
       // Force enable crashlytics collection enabled if we're testing it.
@@ -196,7 +196,7 @@ class _MyAppState extends State<MyApp> {
                             // "reason" will append the word "thrown" in the
                             // Crashlytics console.
                             await FirebaseCrashlytics.instance
-                                .recordError(e, s, reason: 'as an example');
+                                .recordError(e, s, reason: 'as an example', fatal: true);
                           }
                         },
                         child: const Text('Record Error'),
