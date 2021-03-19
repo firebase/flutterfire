@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,7 @@ class Permissions extends StatefulWidget {
 class _Permissions extends State<Permissions> {
   bool _requested = false;
   bool _fetching = false;
-  late NotificationSettings _settings;
+  NotificationSettings _settings;
 
   Future<void> requestPermissions() async {
     setState(() {
@@ -58,18 +60,16 @@ class _Permissions extends State<Permissions> {
     }
 
     return Column(children: [
-      row('Authorization Status',
-          statusMap[_settings.authorizationStatus] ?? 'N/A'),
+      row('Authorization Status', statusMap[_settings.authorizationStatus]),
       if (defaultTargetPlatform == TargetPlatform.iOS) ...[
-        row('Alert', settingsMap[_settings.alert] ?? 'N/A'),
-        row('Announcement', settingsMap[_settings.announcement] ?? 'N/A'),
-        row('Badge', settingsMap[_settings.badge] ?? 'N/A'),
-        row('Car Play', settingsMap[_settings.carPlay] ?? 'N/A'),
-        row('Lock Screen', settingsMap[_settings.lockScreen] ?? 'N/A'),
-        row('Notification Center',
-            settingsMap[_settings.notificationCenter] ?? 'N/A'),
-        row('Show Previews', previewMap[_settings.showPreviews] ?? 'N/A'),
-        row('Sound', settingsMap[_settings.sound] ?? 'N/A'),
+        row('Alert', settingsMap[_settings.alert]),
+        row('Announcement', settingsMap[_settings.announcement]),
+        row('Badge', settingsMap[_settings.badge]),
+        row('Car Play', settingsMap[_settings.carPlay]),
+        row('Lock Screen', settingsMap[_settings.lockScreen]),
+        row('Notification Center', settingsMap[_settings.notificationCenter]),
+        row('Show Previews', previewMap[_settings.showPreviews]),
+        row('Sound', settingsMap[_settings.sound]),
       ],
       ElevatedButton(
           onPressed: () => {}, child: const Text('Reload Permissions')),
