@@ -1,4 +1,4 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging_platfprm/firebase_messaging_platform.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
