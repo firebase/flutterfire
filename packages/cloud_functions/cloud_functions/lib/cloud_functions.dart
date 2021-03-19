@@ -12,8 +12,6 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
     show FirebasePluginPlatform;
 import 'package:flutter/foundation.dart';
 
-import 'src/_io.dart' if (dart.library.js) 'src/_html.dart';
-
 export 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart'
     show HttpsCallableOptions, FirebaseFunctionsException;
 
