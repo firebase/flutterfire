@@ -4,9 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   Map<String, dynamic>? mockMessageMap;
 
-  group(
-      'RemoteMessage: handle optional fields under sound null safety:',
-      () {
+  group('RemoteMessage: handle optional fields under sound null safety:', () {
     setUp(() {
       // basic message received, optional fields missing
       mockMessageMap = {
