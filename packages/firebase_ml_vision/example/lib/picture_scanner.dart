@@ -44,8 +44,8 @@ class _PictureScannerState extends State<PictureScanner> {
       _imageSize = null;
     });
 
-    final File pickedImage =
-        await ImagePicker.pickImage(source: ImageSource.gallery);
+    final PickedFile pickedImage =
+        await ImagePicker().getImage(source: ImageSource.gallery);
     final File imageFile = File(pickedImage.path);
 
     setState(() {

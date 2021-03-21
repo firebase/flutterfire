@@ -13,7 +13,6 @@ import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'colors.dart';
 import 'scanner_utils.dart';
@@ -283,17 +282,9 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   }
 
   Future<void> _takePicture() async {
-    final Directory extDir = await getApplicationDocumentsDirectory();
-
-    final String dirPath = '${extDir.path}/Pictures/barcodePics';
-    await Directory(dirPath).create(recursive: true);
-
-    final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-
-    final String filePath = '$dirPath/$timestamp.jpg';
-
+    XFile file;
     try {
-      await _cameraController.takePicture(filePath);
+      file = await _cameraController.takePicture();
     } on CameraException catch (e) {
       print(e);
     }
@@ -302,7 +293,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     _cameraController = null;
 
     setState(() {
-      _barcodePictureFilePath = filePath;
+      _barcodePictureFilePath = file.path;
     });
   }
 
@@ -351,9 +342,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                   padding: const EdgeInsets.all(16),
                   child: Text(
                     '1 result found',
-                    // TODO(bmparr): Switch body2 -> bodyText1 once https://github.com/flutter/flutter/pull/48547 makes it to stable.
-                    // ignore: deprecated_member_use
-                    style: Theme.of(context).textTheme.body2,
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ),
               ),
@@ -381,16 +370,13 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                                   margin: const EdgeInsets.only(bottom: 4),
                                   child: Text(
                                     'SPAN Reader',
-                                    // TODO(bmparr): Switch body2 -> bodyText1 once https://github.com/flutter/flutter/pull/48547 makes it to stable.
-                                    // ignore: deprecated_member_use
-                                    style: Theme.of(context).textTheme.body2,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
                                   ),
                                 ),
                                 Text(
                                   'Vol. 2',
-                                  // TODO(bmparr): Switch body2 -> bodyText1 once https://github.com/flutter/flutter/pull/48547 makes it to stable.
-                                  // ignore: deprecated_member_use
-                                  style: Theme.of(context).textTheme.body2,
+                                  style: Theme.of(context).textTheme.bodyText1,
                                 ),
                                 Expanded(
                                   child: Column(
