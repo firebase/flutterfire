@@ -35,8 +35,7 @@ class DocumentTextRecognizer {
     required CloudDocumentRecognizerOptions cloudOptions,
     required int handle,
   })   : _cloudOptions = cloudOptions,
-        _handle = handle,
-        assert(cloudOptions != null);
+        _handle = handle;
 
   final int _handle;
   final CloudDocumentRecognizerOptions _cloudOptions;
@@ -48,7 +47,6 @@ class DocumentTextRecognizer {
   Future<VisionDocumentText> processImage(
       FirebaseVisionImage visionImage) async {
     assert(!_isClosed);
-    assert(visionImage != null);
     _hasBeenOpened = true;
     final Map<String, dynamic>? reply =
         await FirebaseVision.channel.invokeMapMethod<String, dynamic>(

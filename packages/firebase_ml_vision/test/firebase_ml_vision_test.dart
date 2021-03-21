@@ -143,9 +143,7 @@ void main() {
 
         final Barcode barcode = barcodes[0];
         expect(barcode.valueType, BarcodeValueType.unknown);
-        // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-        // ignore: prefer_const_constructors
-        expect(barcode.boundingBox, Rect.fromLTWH(1, 2, 3, 4));
+        expect(barcode.boundingBox, const Rect.fromLTWH(1, 2, 3, 4));
         expect(barcode.rawValue, 'hello:raw');
         expect(barcode.displayValue, 'hello:display');
         expect(barcode.cornerPoints, const <Offset>[
@@ -633,9 +631,7 @@ void main() {
         ]);
 
         final Face face = faces[0];
-        // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-        // ignore: prefer_const_constructors
-        expect(face.boundingBox, Rect.fromLTWH(0, 1, 2, 3));
+        expect(face.boundingBox, const Rect.fromLTWH(0, 1, 2, 3));
         expect(face.headEulerAngleY, 4.0);
         expect(face.headEulerAngleZ, 5.0);
         expect(face.leftEyeOpenProbability, 0.4);
@@ -918,9 +914,7 @@ void main() {
           expect(text.blocks, hasLength(3));
 
           TextBlock block = text.blocks[0];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(block.boundingBox, Rect.fromLTWH(13, 14, 15, 16));
+          expect(block.boundingBox, const Rect.fromLTWH(13, 14, 15, 16));
           expect(block.text, 'friend');
           expect(block.cornerPoints, const <Offset>[
             Offset(17, 18),
@@ -932,9 +926,7 @@ void main() {
           expect(block.confidence, 0.5);
 
           block = text.blocks[1];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(block.boundingBox, Rect.fromLTWH(14, 13, 16, 15));
+          expect(block.boundingBox, const Rect.fromLTWH(14, 13, 16, 15));
           expect(block.text, 'hello');
           expect(block.cornerPoints, const <Offset>[
             Offset(18, 17),
@@ -943,9 +935,7 @@ void main() {
           expect(block.confidence, 0.6);
 
           block = text.blocks[2];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(block.boundingBox, Rect.fromLTWH(14, 13, 16, 15));
+          expect(block.boundingBox, const Rect.fromLTWH(14, 13, 16, 15));
           expect(block.text, 'hey');
           expect(block.cornerPoints, const <Offset>[
             Offset(18, 17),
@@ -960,9 +950,7 @@ void main() {
           final VisionText text = await recognizer.processImage(image);
 
           TextLine line = text.blocks[0].lines[0];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(line.boundingBox, Rect.fromLTWH(5, 6, 7, 8));
+          expect(line.boundingBox, const Rect.fromLTWH(5, 6, 7, 8));
           expect(line.text, 'friend');
           expect(line.cornerPoints, const <Offset>[
             Offset(9, 10),
@@ -974,9 +962,7 @@ void main() {
           expect(line.confidence, 0.3);
 
           line = text.blocks[0].lines[1];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(line.boundingBox, Rect.fromLTWH(8, 7, 4, 5));
+          expect(line.boundingBox, const Rect.fromLTWH(8, 7, 4, 5));
           expect(line.text, 'how');
           expect(line.cornerPoints, const <Offset>[
             Offset(10, 9),
@@ -1004,9 +990,7 @@ void main() {
           expect(element.confidence, 0.1);
 
           element = text.blocks[0].lines[0].elements[1];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(element.boundingBox, Rect.fromLTWH(4, 3, 2, 1));
+          expect(element.boundingBox, const Rect.fromLTWH(4, 3, 2, 1));
           expect(element.text, 'my');
           expect(element.cornerPoints, const <Offset>[
             Offset(6, 5),
@@ -1191,9 +1175,7 @@ void main() {
           expect(text.blocks, hasLength(2));
 
           TextBlock block = text.blocks[0];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(block.boundingBox, Rect.fromLTWH(13, 14, 15, 16));
+          expect(block.boundingBox, const Rect.fromLTWH(13, 14, 15, 16));
           expect(block.text, 'friend');
           expect(block.cornerPoints, const <Offset>[
             Offset(17, 18),
@@ -1205,9 +1187,7 @@ void main() {
           expect(block.confidence, 0.5);
 
           block = text.blocks[1];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(block.boundingBox, Rect.fromLTWH(14, 13, 16, 15));
+          expect(block.boundingBox, const Rect.fromLTWH(14, 13, 16, 15));
           expect(block.text, 'hello');
           expect(block.cornerPoints, const <Offset>[
             Offset(18, 17),
@@ -1222,9 +1202,7 @@ void main() {
           final VisionText text = await recognizer.processImage(image);
 
           TextLine line = text.blocks[0].lines[0];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(line.boundingBox, Rect.fromLTWH(5, 6, 7, 8));
+          expect(line.boundingBox, const Rect.fromLTWH(5, 6, 7, 8));
           expect(line.text, 'friend');
           expect(line.cornerPoints, const <Offset>[
             Offset(9, 10),
@@ -1236,9 +1214,7 @@ void main() {
           expect(line.confidence, 0.3);
 
           line = text.blocks[0].lines[1];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(line.boundingBox, Rect.fromLTWH(8, 7, 4, 5));
+          expect(line.boundingBox, const Rect.fromLTWH(8, 7, 4, 5));
           expect(line.text, 'how');
           expect(line.cornerPoints, const <Offset>[
             Offset(10, 9),
@@ -1253,9 +1229,7 @@ void main() {
           final VisionText text = await recognizer.processImage(image);
 
           TextElement element = text.blocks[0].lines[0].elements[0];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(element.boundingBox, Rect.fromLTWH(1, 2, 3, 4));
+          expect(element.boundingBox, const Rect.fromLTWH(1, 2, 3, 4));
           expect(element.text, 'hello');
           expect(element.cornerPoints, const <Offset>[
             Offset(5, 6),
@@ -1267,9 +1241,7 @@ void main() {
           expect(element.confidence, 0.1);
 
           element = text.blocks[0].lines[0].elements[1];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(element.boundingBox, Rect.fromLTWH(4, 3, 2, 1));
+          expect(element.boundingBox, const Rect.fromLTWH(4, 3, 2, 1));
           expect(element.text, 'my');
           expect(element.cornerPoints, const <Offset>[
             Offset(6, 5),

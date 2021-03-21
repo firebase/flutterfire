@@ -298,9 +298,7 @@ void main() {
                   await recognizer.processImage(image);
 
               DocumentTextBlock block = text.blocks[0];
-              // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-              // ignore: prefer_const_constructors
-              expect(block.boundingBox, Rect.fromLTWH(26, 25, 27, 28));
+              expect(block.boundingBox, const Rect.fromLTWH(26, 25, 27, 28));
               expect(block.text, 'Hey!');
               expect(block.recognizedBreak!.detectedBreakType,
                   TextRecognizedBreakType.values[5]);
@@ -311,8 +309,6 @@ void main() {
               expect(block.paragraphs, hasLength(1));
 
               block = text.blocks[1];
-              // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-              // ignore: prefer_const_constructors
               expect(block.boundingBox, isNull);
               expect(block.text, '');
               expect(block.recognizedBreak!.detectedBreakType,
@@ -330,8 +326,6 @@ void main() {
                   await recognizer.processImage(image);
 
               DocumentTextParagraph paragraph = text.blocks[0].paragraphs[0];
-              // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-              // ignore: prefer_const_constructors
               expect(
                   paragraph.boundingBox, const Rect.fromLTWH(22, 21, 23, 24));
               expect(paragraph.text, 'Hey!');
@@ -350,9 +344,7 @@ void main() {
                   await recognizer.processImage(image);
 
               DocumentTextWord word = text.blocks[0].paragraphs[0].words[0];
-              // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-              // ignore: prefer_const_constructors
-              expect(word.boundingBox, Rect.fromLTWH(14, 13, 15, 16));
+              expect(word.boundingBox, const Rect.fromLTWH(14, 13, 15, 16));
               expect(word.text, 'Hey');
               expect(word.recognizedBreak, isNull);
               expect(word.recognizedLanguages, hasLength(1));
@@ -360,9 +352,7 @@ void main() {
               expect(word.symbols, hasLength(3));
 
               word = text.blocks[0].paragraphs[0].words[1];
-              // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-              // ignore: prefer_const_constructors
-              expect(word.boundingBox, Rect.fromLTWH(18, 17, 19, 20));
+              expect(word.boundingBox, const Rect.fromLTWH(18, 17, 19, 20));
               expect(word.text, '!');
               expect(word.recognizedBreak!.detectedBreakType,
                   TextRecognizedBreakType.values[5]);
@@ -380,9 +370,7 @@ void main() {
 
               DocumentTextSymbol symbol =
                   text.blocks[0].paragraphs[0].words[0].symbols[0];
-              // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-              // ignore: prefer_const_constructors
-              expect(symbol.boundingBox, Rect.fromLTWH(2, 1, 3, 4));
+              expect(symbol.boundingBox, const Rect.fromLTWH(2, 1, 3, 4));
               expect(symbol.text, 'H');
               expect(symbol.recognizedBreak, isNull);
               expect(symbol.recognizedLanguages, hasLength(1));
@@ -390,9 +378,7 @@ void main() {
               expect(symbol.confidence, 1);
 
               symbol = text.blocks[0].paragraphs[0].words[0].symbols[1];
-              // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-              // ignore: prefer_const_constructors
-              expect(symbol.boundingBox, Rect.fromLTWH(6, 5, 7, 8));
+              expect(symbol.boundingBox, const Rect.fromLTWH(6, 5, 7, 8));
               expect(symbol.text, 'e');
               expect(symbol.recognizedBreak, isNull);
               expect(symbol.recognizedLanguages, hasLength(1));
@@ -400,9 +386,7 @@ void main() {
               expect(symbol.confidence, 0.95);
 
               symbol = text.blocks[0].paragraphs[0].words[0].symbols[2];
-              // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-              // ignore: prefer_const_constructors
-              expect(symbol.boundingBox, Rect.fromLTWH(10, 9, 11, 12));
+              expect(symbol.boundingBox, const Rect.fromLTWH(10, 9, 11, 12));
               expect(symbol.text, 'y');
               expect(symbol.recognizedBreak, isNull);
               expect(symbol.recognizedLanguages, hasLength(1));

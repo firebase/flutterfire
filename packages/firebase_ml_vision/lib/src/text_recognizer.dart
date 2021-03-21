@@ -31,7 +31,6 @@ class TextRecognizer {
     required int handle,
   })   : _cloudOptions = cloudOptions,
         _handle = handle,
-        assert(modelType != null),
         assert((modelType == ModelType.cloud && cloudOptions != null) ||
             (modelType == ModelType.onDevice && cloudOptions == null));
 
@@ -45,7 +44,6 @@ class TextRecognizer {
   /// Detects [VisionText] from a [FirebaseVisionImage].
   Future<VisionText> processImage(FirebaseVisionImage visionImage) async {
     assert(!_isClosed);
-    assert(visionImage != null);
 
     _hasBeenOpened = true;
     Map<String, dynamic> options = {'modelType': _enumToString(modelType)};
@@ -97,7 +95,7 @@ class CloudTextRecognizerOptions {
   const CloudTextRecognizerOptions({
     this.hintedLanguages,
     this.textModelType = CloudTextModelType.sparse,
-  }) : assert(textModelType != null);
+  });
 
   /// Language hints for text recognition.
   ///

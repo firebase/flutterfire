@@ -56,7 +56,7 @@ enum FaceContourType {
 /// final List<Faces> faces = await faceDetector.processImage(image);
 /// ```
 class FaceDetector {
-  FaceDetector._(this.options, this._handle) : assert(options != null);
+  FaceDetector._(this.options, this._handle);
 
   /// The options for the face detector.
   final FaceDetectorOptions options;

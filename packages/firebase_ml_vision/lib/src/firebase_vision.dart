@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 part of firebase_ml_vision;
 
 enum _ImageType { file, bytes }
@@ -130,7 +128,6 @@ class FirebaseVisionImage {
 
   /// Construct a [FirebaseVisionImage] from a file.
   factory FirebaseVisionImage.fromFile(File imageFile) {
-    assert(imageFile != null);
     return FirebaseVisionImage._(
       type: _ImageType.file,
       imageFile: imageFile,
@@ -139,7 +136,6 @@ class FirebaseVisionImage {
 
   /// Construct a [FirebaseVisionImage] from a file path.
   factory FirebaseVisionImage.fromFilePath(String imagePath) {
-    assert(imagePath != null);
     return FirebaseVisionImage._(
       type: _ImageType.file,
       imageFile: File(imagePath),
@@ -158,8 +154,6 @@ class FirebaseVisionImage {
     Uint8List bytes,
     FirebaseVisionImageMetadata metadata,
   ) {
-    assert(bytes != null);
-    assert(metadata != null);
     return FirebaseVisionImage._(
       type: _ImageType.bytes,
       bytes: bytes,
@@ -181,21 +175,12 @@ class FirebaseVisionImage {
 }
 
 /// Plane attributes to create the image buffer on iOS.
-///
-/// When using iOS, [bytesPerRow], [height], and [width] throw [AssertionError]
-/// if `null`.
 class FirebaseVisionImagePlaneMetadata {
   FirebaseVisionImagePlaneMetadata({
     required this.bytesPerRow,
     required this.height,
     required this.width,
-  })  : assert(
-          defaultTargetPlatform != TargetPlatform.iOS || bytesPerRow != null,
-        ),
-        assert(defaultTargetPlatform != TargetPlatform.iOS || height != null),
-        assert(
-          defaultTargetPlatform != TargetPlatform.iOS || width != null,
-        );
+  });
 
   /// The row stride for this color plane, in bytes.
   final int bytesPerRow;
@@ -218,7 +203,7 @@ class FirebaseVisionImagePlaneMetadata {
 /// [rotation] defaults to [ImageRotation.rotation0]. Currently only rotates on
 /// Android.
 ///
-/// When using iOS, [rawFormat] and [planeData] throw [AssertionError] if
+/// When using iOS [planeData] throws [AssertionError] if
 /// `null`.
 class FirebaseVisionImageMetadata {
   FirebaseVisionImageMetadata({
@@ -226,16 +211,8 @@ class FirebaseVisionImageMetadata {
     required this.rawFormat,
     required this.planeData,
     this.rotation = ImageRotation.rotation0,
-  })  : assert(size != null),
-        assert(
-          defaultTargetPlatform != TargetPlatform.iOS || rawFormat != null,
-        ),
-        assert(
-          defaultTargetPlatform != TargetPlatform.iOS || planeData != null,
-        ),
-        assert(
-          defaultTargetPlatform != TargetPlatform.iOS || planeData.isNotEmpty,
-        );
+  }) : assert(defaultTargetPlatform != TargetPlatform.iOS ||
+            planeData.isNotEmpty);
 
   /// Size of the image in pixels.
   final Size size;

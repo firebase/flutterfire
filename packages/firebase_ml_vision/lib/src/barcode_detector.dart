@@ -183,7 +183,7 @@ class BarcodeFormat {
 /// final List<Barcode> barcodes = await barcodeDetector.detectInImage(image);
 /// ```
 class BarcodeDetector {
-  BarcodeDetector._(this.options, this._handle) : assert(options != null);
+  BarcodeDetector._(this.options, this._handle);
 
   /// The options for configuring this detector.
   final BarcodeDetectorOptions options;

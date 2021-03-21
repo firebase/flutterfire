@@ -32,8 +32,7 @@ class ImageLabeler {
     required int handle,
   })   : _options = options,
         _handle = handle,
-        assert(options != null),
-        assert(modelType != null);
+        assert(options != null);
 
   /// Indicates whether this labeler is ran on device or in the cloud.
   final ModelType modelType;
