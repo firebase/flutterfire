@@ -162,10 +162,10 @@ class BarcodeFormat {
   static const BarcodeFormat aztec = BarcodeFormat._(0x1000);
 
   /// Raw BarcodeFormat value.
-  final int? value;
+  final int value;
 
   BarcodeFormat operator |(BarcodeFormat other) =>
-      BarcodeFormat._(value! | other.value!);
+      BarcodeFormat._(value | other.value);
 }
 
 /// Detector for performing barcode scanning on an input image.
