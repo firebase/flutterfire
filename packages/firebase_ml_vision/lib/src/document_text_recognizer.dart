@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_ml_vision;
 
 /// Start or end of a component types detected by [DocumentTextRecognizedBreak].
@@ -34,9 +32,9 @@ enum TextRecognizedBreakType {
 /// ```
 class DocumentTextRecognizer {
   DocumentTextRecognizer._({
-    @required CloudDocumentRecognizerOptions cloudOptions,
-    @required int handle,
-  })  : _cloudOptions = cloudOptions,
+    required CloudDocumentRecognizerOptions cloudOptions,
+    required int handle,
+  })   : _cloudOptions = cloudOptions,
         _handle = handle,
         assert(cloudOptions != null);
 
@@ -52,7 +50,7 @@ class DocumentTextRecognizer {
     assert(!_isClosed);
     assert(visionImage != null);
     _hasBeenOpened = true;
-    final Map<String, dynamic> reply =
+    final Map<String, dynamic>? reply =
         await FirebaseVision.channel.invokeMapMethod<String, dynamic>(
       'DocumentTextRecognizer#processImage',
       <String, dynamic>{
@@ -62,7 +60,7 @@ class DocumentTextRecognizer {
         },
       }..addAll(visionImage._serialize()),
     );
-    return VisionDocumentText._(reply);
+    return VisionDocumentText._(reply!);
   }
 
   /// Releases resources used by this recognizer.
@@ -96,7 +94,7 @@ class CloudDocumentRecognizerOptions {
   ///
   /// Each language code parameter typically consists of a BCP-47 identifier.
   /// See //cloud.google.com/vision/docs/languages for more details.
-  final List<String> hintedLanguages;
+  final List<String>? hintedLanguages;
 }
 
 /// Representation for start or end of a structural component.
@@ -110,7 +108,7 @@ class DocumentTextRecognizedBreak {
   final TextRecognizedBreakType detectedBreakType;
 
   /// Is set to true if break prepends an element.
-  final bool isPrefix;
+  final bool? isPrefix;
 }
 
 /// Recognized document text in a document image.
@@ -122,7 +120,7 @@ class VisionDocumentText {
                 (dynamic block) => DocumentTextBlock._(block)));
 
   /// String representation of the recognized text.
-  final String text;
+  final String? text;
 
   /// All recognized text broken down into individual blocks.
   final List<DocumentTextBlock> blocks;
@@ -155,13 +153,13 @@ abstract class DocumentTextContainer {
   /// The point (0, 0) is defined as the upper-left corner of the image.
   ///
   /// Could be null even if text is found.
-  final Rect boundingBox;
+  final Rect? boundingBox;
 
   /// The confidence of the recognized text block.
-  final double confidence;
+  final double? confidence;
 
   /// Detected start or end of a structural component.
-  final DocumentTextRecognizedBreak recognizedBreak;
+  final DocumentTextRecognizedBreak? recognizedBreak;
 
   /// All detected languages from recognized text.
   ///
@@ -172,7 +170,7 @@ abstract class DocumentTextContainer {
   /// The recognized text as a string.
   ///
   /// Returns empty string if nothing is found.
-  final String text;
+  final String? text;
 }
 
 /// A logical element on the page.
