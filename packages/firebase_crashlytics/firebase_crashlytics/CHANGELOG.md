@@ -1,3 +1,11 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+ - **BREAKING** **FIX**: `checkForUnsentReports` should error if `isCrashlyticsCollectionEnabled` is false (#5187).
+
 ## 1.0.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
