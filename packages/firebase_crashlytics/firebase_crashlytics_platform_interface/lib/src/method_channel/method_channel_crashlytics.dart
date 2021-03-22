@@ -111,7 +111,6 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
                   '$currentUnixTimeSeconds', // 'long timestamp', is that current UNIX time?
             },
           });
-
         } on MissingPluginException catch (error) {
           //TODO - error gets here if analytics isn't present. Should we throw an error informing users to install analytics plugin to use "fatal" flag?
         } on PlatformException catch (e, s) {
