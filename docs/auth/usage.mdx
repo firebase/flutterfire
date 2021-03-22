@@ -162,6 +162,10 @@ try {
 }
 ```
 
+:::caution
+Note: uninstalling your application on iOS or macOS can still preserve your users authentication state between app re-installs as the underlying Firebase iOS SDK persists authentication state to keychain. See [#4661](https://github.com/FirebaseExtended/flutterfire/issues/4661) for more information.
+:::
+
 Once successful, if you are listening to changes in [authentication state](#authentication-state), a new event will be sent to your
 listeners.
 
