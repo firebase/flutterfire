@@ -1,8 +1,6 @@
 ## 1.0.1
 
  - **FIX**: use `kIsWeb` to check platform is Web (#5369).
- - **CHORE**: merge all analysis_options.yaml into one (#5329).
- - **CHORE**: publish packages.
 
 ## 1.0.0
 
