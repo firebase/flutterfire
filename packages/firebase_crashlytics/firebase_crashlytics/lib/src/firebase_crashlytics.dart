@@ -126,7 +126,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
       reason: reason.toString(),
       information: _information,
       stackTraceElements: stackTraceElements,
-      fatal:fatal,
+      fatal: fatal,
     );
   }
 

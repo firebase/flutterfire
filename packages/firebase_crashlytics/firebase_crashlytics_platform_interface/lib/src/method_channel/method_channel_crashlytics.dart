@@ -95,16 +95,14 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     bool fatal = false,
     List<Map<String, String>>? stackTraceElements,
   }) async {
-    print("QQQQQQ");
     try {
       if (fatal) {
         try {
           num currentUnixTimeSeconds =
               (DateTime.now().millisecondsSinceEpoch / 1000).floorToDouble();
-    print("SSSSSS");
 
           await setCustomKey(_FATAL_FLAG, '$currentUnixTimeSeconds');
-    print("YYYYYY");
+
           await _analyticsChannel.invokeMethod('logEvent', <String, dynamic>{
             'name': '_ae', // '_ae' is a reserved analytics value for firebase
             'parameters': {
@@ -117,9 +115,9 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
           //set custom key
           //call analytics method
         } on MissingPluginException catch (error) {
-          print("WWWWW: " + e.toString());
-          // TODO: warn user that analytics isn't initialised?
-
+          //TODO - error gets here if analytics isn't present. Should we throw an error informing them to install to use "fatal"?
+        } on PlatformException catch (e, s) {
+          throw platformExceptionToFirebaseException(e, s);
         }
       }
 
