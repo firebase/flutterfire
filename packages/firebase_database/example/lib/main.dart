@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _counterSubscription.cancel();
   }
 
-  Future<void> _incrementWithTransaction() async {
+  Future<void> _increment() async {
     // Increment counter in transaction.
     final TransactionResult transactionResult =
         await _counterRef.runTransaction((MutableData mutableData) async {
@@ -116,18 +116,6 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
   }
-  
-  Future<void> _increment() async {
-
-    try{
-      final result = await _counterRef.update(ServerValue.increment(1));
-      _messagesRef.push().set(<String, String>{
-        _kTestKey: '$_kTestValue ${result.dataSnapshot.value}'
-      });
-    }catch(error){
-        print(error.message);  
-    }
- }
 
   @override
   Widget build(BuildContext context) {
