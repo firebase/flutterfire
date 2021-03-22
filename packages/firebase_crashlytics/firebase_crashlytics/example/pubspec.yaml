@@ -9,6 +9,9 @@ environment:
 dependencies:
   firebase_core:
     path: ../../../firebase_core/firebase_core
+  firebase_analytics:
+    path: ../../../firebase_analytics/firebase_analytics
+
   firebase_crashlytics:
     path: ../
   flutter:
