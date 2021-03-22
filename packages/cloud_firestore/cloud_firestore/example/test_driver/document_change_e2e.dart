@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -11,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runDocumentChangeTests() {
   group('$DocumentChange', () {
-    FirebaseFirestore /*?*/ firestore;
+    late FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -26,6 +24,52 @@ void runDocumentChangeTests() {
       });
       return collection;
     }
+
+    test('can add/update values to null in the document', () async {
+      CollectionReference collection = await initializeTest('null-test');
+      DocumentReference doc1 = collection.doc('doc1');
+
+      await expectLater(
+        doc1.snapshots(),
+        emits(
+          isA<DocumentSnapshot>().having((q) => q.exists, 'exists', false),
+        ),
+      );
+
+      await doc1.set(<String, Object?>{
+        'key': null,
+        'key2': 42,
+      });
+
+      await expectLater(
+        doc1.snapshots(),
+        emits(
+          isA<DocumentSnapshot>()
+              .having((q) => q.exists, 'exists', true)
+              .having((q) => q.data(), 'data()', <String, Object?>{
+            'key': null,
+            'key2': 42,
+          }),
+        ),
+      );
+
+      await doc1.set({
+        'key': null,
+        'key2': null,
+      });
+
+      await expectLater(
+        doc1.snapshots(),
+        emits(
+          isA<DocumentSnapshot>()
+              .having((q) => q.exists, 'exists', true)
+              .having((q) => q.data(), 'data()', <String, Object?>{
+            'key': null,
+            'key2': null,
+          }),
+        ),
+      );
+    }, timeout: const Timeout.factor(8));
 
     test('returns the correct metadata when adding and removing', () async {
       CollectionReference collection =
