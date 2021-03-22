@@ -1,23 +1,22 @@
 name: firebase_crashlytics_platform_interface
 description: A common platform interface for the firebase_crashlytics plugin.
-version: 1.1.6
+version: 2.0.0
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_crashlytics/firebase_crashlytics_platform_interface
 
 environment:
   sdk: ">=2.12.0-0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+  flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
+  collection: ^1.15.0
+  firebase_core: ^1.0.1
   flutter:
     sdk: flutter
-  meta: ^1.0.5
-  collection: ^1.14.3
-  firebase_core: ^0.7.0
-  plugin_platform_interface: ^1.0.2
+  meta: ^1.3.0
+  plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
-  firebase_core_platform_interface: ^3.0.1
-  pedantic: ^1.8.0
+  firebase_core_platform_interface: ^4.0.0
   flutter_test:
     sdk: flutter
-  mockito: ^5.0.0-nullsafety.2
+  mockito: ^5.0.0

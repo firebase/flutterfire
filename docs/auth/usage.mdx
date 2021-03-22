@@ -406,7 +406,7 @@ example:
 ```dart
 try {
   await FirebaseAuth.instance.currentUser.delete();
-} catch on FirebaseAuthException (e) {
+} on FirebaseAuthException catch (e) {
   if (e.code == 'requires-recent-login') {
     print('The user must reauthenticate before this operation can be executed.');
   }
@@ -476,4 +476,14 @@ Future<void> linkGoogleAndTwitter() async {
   // Link the Twitter account to the Google account.
   await googleUserCredential.user.linkWithCredential(twitterAuthCredential);
 }
+```
+
+### Emulator Usage
+
+If you are using the local Cloud Functions emulators, then it is possible to connect to these using the `useEmulator` method.
+Ensure you pass the correct port on which the Firebase emulator is running on.
+Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
+
+```dart
+FirebaseAuth.instance.useEmulator(origin: 'http://localhost:9099');
 ```

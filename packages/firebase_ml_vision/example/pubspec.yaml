@@ -4,35 +4,37 @@ author: Flutter Team <flutter-dev@googlegroups.com>
 
 environment:
   sdk: ">=2.12.0-0 <3.0.0"
-  flutter: ">=1.10.0 <2.0.0"
+  flutter: ">=1.10.0"
 
 dependencies:
+  camera: ^0.5.6+1
+  cupertino_icons: ^0.1.2
+  firebase_core:
+    path: ../../firebase_core/firebase_core
+  firebase_ml_vision:
+    path: ../
   flutter:
     sdk: flutter
   image_picker: ^0.6.0
-  cupertino_icons: ^0.1.2
-  firebase_ml_vision:
-    path: ../
-  firebase_core:
-    path: ../../firebase_core/firebase_core
-  camera: ^0.5.6+1
 
 dependency_overrides:
   firebase_core:
     path: ../../firebase_core/firebase_core
   firebase_core_platform_interface:
     path: ../../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../../firebase_core/firebase_core_web
 
 dev_dependencies:
-  pedantic: ^1.8.0
   e2e: ^0.6.1
-  flutter_test:
-    sdk: flutter
   flutter_driver:
     sdk: flutter
+  flutter_test:
+    sdk: flutter
+  path: ^1.8.0
+  path_provider: ^2.0.0
+  pedantic: ^1.8.0
   test: any
-  path: ^1.6.2
-  path_provider: ^1.6.11
 
 flutter:
   uses-material-design: true

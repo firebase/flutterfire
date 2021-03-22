@@ -2,13 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group("$FieldValue", () {
+  group('$FieldValue', () {
     test('equality', () {
       expect(FieldValue.delete() == FieldValue.delete(), isTrue);
       expect(

@@ -7,6 +7,7 @@
 part of firebase_performance;
 
 /// Valid HttpMethods for manual network APIs.
+// ignore: constant_identifier_names
 enum HttpMethod { Connect, Delete, Get, Head, Options, Patch, Post, Put, Trace }
 
 /// The Firebase Performance API.

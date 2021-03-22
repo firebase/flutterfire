@@ -7,12 +7,12 @@ import 'package:meta/meta.dart';
 
 /// Web implementation for [FirebaseAnalyticsPlatform]
 class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
-  /// Instance of Analytics from the web plugin.
-  final firebase.Analytics _analytics;
-
   /// A constructor that allows tests to override the firebase.Analytics object.
   FirebaseAnalyticsWeb({@visibleForTesting firebase.Analytics analytics})
       : _analytics = analytics ?? firebase.analytics();
+
+  /// Instance of Analytics from the web plugin.
+  final firebase.Analytics _analytics;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {

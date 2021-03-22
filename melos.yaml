@@ -3,6 +3,11 @@ name: FlutterFire
 packages:
   - packages/**
 
+ignore:
+  # TODO Excluded pending CI fixes
+  - firebase_admob
+  - firebase_admob_example
+
 scripts:
   lint:all:
     run: melos run analyze && melos run format
@@ -11,7 +16,7 @@ scripts:
   analyze:
     run: |
       melos exec -c 5 -- \
-        dart analyze .
+        dart analyze . --fatal-infos
     description: |
       Run `dart analyze` in all packages.
        - Note: you can also rely on your IDEs Dart Analysis / Issues window.
@@ -136,7 +141,7 @@ scripts:
   test:web_e2e:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter drive -d web --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
+        "flutter drive --device-id=web-server --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
     description: |
       Run all Web test driver e2e tests in a specific example app.
        - Requires `flutter channel master` (or beta).
@@ -146,7 +151,7 @@ scripts:
       dir-exists:
         - web
         - test_driver
-      scope: "*example*"
+      scope: "*example*" 
 
   test:macos_e2e:
     run: |

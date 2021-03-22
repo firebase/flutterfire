@@ -2,20 +2,18 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final String kMockBundleId = 'com.test.bundle';
-  final String kMockPackageName = 'com.test.package';
+  const String kMockBundleId = 'com.test.bundle';
+  const String kMockPackageName = 'com.test.package';
 
-  final String kMockDynamicLinkDomain = 'domain.com';
-  final bool kMockHandleCodeInApp = true;
-  final String kMockUrl = 'https://test.url';
-  final String kMockMinimumVersion = '8.0';
-  final bool kMockInstallApp = true;
+  const String kMockDynamicLinkDomain = 'domain.com';
+  const bool kMockHandleCodeInApp = true;
+  const String kMockUrl = 'https://test.url';
+  const String kMockMinimumVersion = '8.0';
+  const bool kMockInstallApp = true;
 
   group('$ActionCodeSettings', () {
     ActionCodeSettings actionCodeSettings = ActionCodeSettings(
@@ -41,9 +39,6 @@ void main() {
         expect(actionCodeSettings.androidInstallApp, equals(kMockInstallApp));
         expect(actionCodeSettings.iOSBundleId, equals(kMockBundleId));
       });
-      test('throws [AssertionError] when url is null', () {
-        expect(() => ActionCodeSettings(url: null), throwsAssertionError);
-      });
 
       group('asMap', () {
         test('returns the current instance as a [Map]', () {
@@ -54,10 +49,11 @@ void main() {
           expect(result['url'], equals(kMockUrl));
           expect(result['dynamicLinkDomain'], equals(kMockDynamicLinkDomain));
           expect(result['handleCodeInApp'], equals(kMockHandleCodeInApp));
-          expect(result['androidPackageName'], equals(kMockPackageName));
-          expect(result['androidInstallApp'], equals(kMockInstallApp));
-          expect(result['androidMinimumVersion'], equals(kMockMinimumVersion));
-          expect(result['iOSBundleId'], equals(kMockBundleId));
+          expect(result['android']['packageName'], equals(kMockPackageName));
+          expect(result['android']['installApp'], equals(kMockInstallApp));
+          expect(
+              result['android']['minimumVersion'], equals(kMockMinimumVersion));
+          expect(result['iOS']['bundleId'], equals(kMockBundleId));
         });
       });
 

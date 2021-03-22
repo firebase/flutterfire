@@ -54,6 +54,13 @@ void main() {
       );
     });
 
+    tearDown(() {
+      onChildAddedStreamController.close();
+      onChildRemovedStreamController.close();
+      onChildChangedStreamController.close();
+      onChildMovedStreamController.close();
+    });
+
     Future<ListChange> resetCompleterOnCallback() async {
       final ListChange result = await callbackCompleter.future;
       callbackCompleter = Completer<ListChange>();
@@ -210,9 +217,11 @@ class ListChange {
   final DataSnapshot snapshot;
 
   @override
+  // ignore: no_runtimetype_tostring
   String toString() => '$runtimeType[$index, $index2, $snapshot]';
 
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object o) {
     return o is ListChange &&
         index == o.index &&
@@ -221,6 +230,7 @@ class ListChange {
   }
 
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => index;
 }
 
@@ -234,9 +244,11 @@ class MockEvent implements Event {
   final DataSnapshot snapshot;
 
   @override
+  // ignore: no_runtimetype_tostring
   String toString() => '$runtimeType[$previousSiblingKey, $snapshot]';
 
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object o) {
     return o is MockEvent &&
         previousSiblingKey == o.previousSiblingKey &&
@@ -244,6 +256,7 @@ class MockEvent implements Event {
   }
 
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => previousSiblingKey.hashCode;
 }
 
@@ -257,13 +270,16 @@ class MockDataSnapshot implements DataSnapshot {
   final dynamic value;
 
   @override
+  // ignore: no_runtimetype_tostring
   String toString() => '$runtimeType[$key, $value]';
 
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object o) {
     return o is MockDataSnapshot && key == o.key && value == o.value;
   }
 
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => key.hashCode;
 }

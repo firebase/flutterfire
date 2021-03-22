@@ -2,12 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
 /// Converts an [int] into it's [AndroidNotificationPriority] representation.
-AndroidNotificationPriority convertToAndroidNotificationPriority(int priority) {
+AndroidNotificationPriority convertToAndroidNotificationPriority(
+    int? priority) {
   switch (priority) {
     case -2:
       return AndroidNotificationPriority.minimumPriority;
@@ -26,7 +25,7 @@ AndroidNotificationPriority convertToAndroidNotificationPriority(int priority) {
 
 /// Converts an [int] into it's [AndroidNotificationVisibility] representation.
 AndroidNotificationVisibility convertToAndroidNotificationVisibility(
-    int visibility) {
+    int? visibility) {
   switch (visibility) {
     case -1:
       return AndroidNotificationVisibility.secret;
@@ -40,7 +39,7 @@ AndroidNotificationVisibility convertToAndroidNotificationVisibility(
 }
 
 /// Converts an [int] into it's [AuthorizationStatus] representation.
-AuthorizationStatus convertToAuthorizationStatus(int status) {
+AuthorizationStatus convertToAuthorizationStatus(int? status) {
   // Can be null on unsupported platforms, e.g. iOS < 10.
   if (status == null) {
     return AuthorizationStatus.notDetermined;
@@ -60,7 +59,7 @@ AuthorizationStatus convertToAuthorizationStatus(int status) {
 }
 
 /// Converts an [int] into it's [AppleNotificationSetting] representation.
-AppleNotificationSetting convertToAppleNotificationSetting(int status) {
+AppleNotificationSetting convertToAppleNotificationSetting(int? status) {
   // Can be null on unsupported platforms, e.g. iOS < 10.
   if (status == null) {
     return AppleNotificationSetting.notSupported;
@@ -78,7 +77,7 @@ AppleNotificationSetting convertToAppleNotificationSetting(int status) {
 }
 
 /// Converts an [int] into its [AppleShowPreviewSetting] representation.
-AppleShowPreviewSetting convertToAppleShowPreviewSetting(int status) {
+AppleShowPreviewSetting convertToAppleShowPreviewSetting(int? status) {
   switch (status) {
     case -1:
       return AppleShowPreviewSetting.notSupported;
@@ -111,7 +110,7 @@ NotificationSettings convertToNotificationSettings(Map<String, int> map) {
 }
 
 /// Used to return [NotificationSettings] for all Android devices.
-final NotificationSettings androidNotificationSettings = NotificationSettings(
+const NotificationSettings androidNotificationSettings = NotificationSettings(
   authorizationStatus: AuthorizationStatus.authorized,
   alert: AppleNotificationSetting.notSupported,
   announcement: AppleNotificationSetting.notSupported,

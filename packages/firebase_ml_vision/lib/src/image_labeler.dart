@@ -64,7 +64,7 @@ class ImageLabeler {
     );
 
     final List<ImageLabel> labels = <ImageLabel>[];
-    for (dynamic data in reply) {
+    for (final dynamic data in reply) {
       labels.add(ImageLabel._(data));
     }
 
@@ -74,7 +74,7 @@ class ImageLabeler {
   /// Release resources used by this labeler.
   Future<void> close() {
     if (!_hasBeenOpened) _isClosed = true;
-    if (_isClosed) return Future<void>.value(null);
+    if (_isClosed) return Future<void>.value();
 
     _isClosed = true;
     return FirebaseVision.channel.invokeMethod<void>(
@@ -129,8 +129,7 @@ class CloudImageLabelerOptions {
 /// Represents an entity label detected by [ImageLabeler] and [CloudImageLabeler].
 class ImageLabel {
   ImageLabel._(dynamic data)
-      : confidence =
-            data['confidence'] == null ? null : data['confidence'].toDouble(),
+      : confidence = data['confidence']?.toDouble(),
         entityId = data['entityId'],
         text = data['text'];
 

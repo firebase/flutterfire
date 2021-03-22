@@ -6,29 +6,31 @@ environment:
   sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
   cupertino_icons: ^0.1.2
-  firebase_in_app_messaging:
-    path: ../
-  firebase_core:
-    path: ../../firebase_core/firebase_core
   firebase_analytics:
     path: ../../firebase_analytics/firebase_analytics
+  firebase_core:
+    path: ../../firebase_core/firebase_core
+  firebase_in_app_messaging:
+    path: ../
+  flutter:
+    sdk: flutter
 
 dependency_overrides:
   firebase_core:
     path: ../../firebase_core/firebase_core
   firebase_core_platform_interface:
     path: ../../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../../firebase_core/firebase_core_web
 
 dev_dependencies:
-  pedantic: ^1.8.0
   e2e: ^0.6.1
-  flutter_test:
-    sdk: flutter
   flutter_driver:
     sdk: flutter
+  flutter_test:
+    sdk: flutter
+  pedantic: ^1.8.0
   test: any
 
 flutter:

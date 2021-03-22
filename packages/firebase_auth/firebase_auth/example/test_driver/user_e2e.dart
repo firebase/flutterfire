@@ -193,11 +193,13 @@ void runUserTests() {
               PhoneAuthProvider.credential(
                   verificationId: 'test', smsCode: 'test'));
         } on FirebaseAuthException catch (e) {
-          expect(e.code, equals("invalid-verification-id"));
+          expect(e.code, equals('invalid-verification-id'));
           expect(
-              e.message,
-              equals(
-                  "The verification ID used to create the phone auth credential is invalid."));
+            e.message,
+            equals(
+              'The verification ID used to create the phone auth credential is invalid.',
+            ),
+          );
           return;
         } catch (e) {
           fail('should have thrown an FirebaseAuthException');
@@ -242,11 +244,11 @@ void runUserTests() {
           await auth.currentUser.reauthenticateWithCredential(credential);
         } on FirebaseAuthException catch (e) {
           // Assertions
-          expect(e.code, equals("user-mismatch"));
+          expect(e.code, equals('user-mismatch'));
           expect(
               e.message,
               equals(
-                  "The supplied credentials do not correspond to the previously signed in user."));
+                  'The supplied credentials do not correspond to the previously signed in user.'));
           await auth.currentUser.delete(); //clean up
           return;
         } catch (e) {
@@ -295,8 +297,8 @@ void runUserTests() {
           await auth.currentUser.reauthenticateWithCredential(credential);
         } on FirebaseAuthException catch (e) {
           // Assertions
-          expect(e.code, equals("invalid-email"));
-          expect(e.message, equals("The email address is badly formatted."));
+          expect(e.code, equals('invalid-email'));
+          expect(e.message, equals('The email address is badly formatted.'));
           return;
         } catch (e) {
           fail('should have thrown an FirebaseAuthException');
@@ -313,15 +315,15 @@ void runUserTests() {
         try {
           // Test
           AuthCredential credential = EmailAuthProvider.credential(
-              email: email, password: "WRONG_TEST_PASSWORD");
+              email: email, password: 'WRONG_TEST_PASSWORD');
           await auth.currentUser.reauthenticateWithCredential(credential);
         } on FirebaseAuthException catch (e) {
           // Assertions
-          expect(e.code, equals("wrong-password"));
+          expect(e.code, equals('wrong-password'));
           expect(
               e.message,
               equals(
-                  "The password is invalid or the user does not have a password."));
+                  'The password is invalid or the user does not have a password.'));
           return;
         } catch (e) {
           fail('should have thrown an FirebaseAuthException');
@@ -413,7 +415,7 @@ void runUserTests() {
 
         // Test
         try {
-          await auth.currentUser.unlink("invalid");
+          await auth.currentUser.unlink('invalid');
         } on FirebaseAuthException catch (e) {
           expect(e.code, 'no-such-provider');
           expect(e.message,
@@ -504,11 +506,11 @@ void runUserTests() {
         await auth.signInAnonymously();
 
         // Test
-        await auth.currentUser.refreshToken;
+        auth.currentUser.refreshToken;
 
         // Assertions
         expect(auth.currentUser.refreshToken, isA<String>());
-        expect(auth.currentUser.refreshToken, equals(""));
+        expect(auth.currentUser.refreshToken, equals(''));
       }, skip: kIsWeb);
 
       test('should return a token on web', () async {
@@ -516,7 +518,7 @@ void runUserTests() {
         await auth.signInAnonymously();
 
         // Test
-        await auth.currentUser.refreshToken;
+        auth.currentUser.refreshToken;
 
         // Assertions
         expect(auth.currentUser.refreshToken, isA<String>());
@@ -622,32 +624,13 @@ void runUserTests() {
         try {
           // Update user profile
           await auth.currentUser.updatePhoneNumber(PhoneAuthProvider.credential(
-              verificationId: "invalid", smsCode: TEST_SMS_CODE));
+              verificationId: 'invalid', smsCode: TEST_SMS_CODE));
         } on FirebaseAuthException catch (e) {
-          expect(e.code, "invalid-verification-id");
+          expect(e.code, 'invalid-verification-id');
           expect(e.message,
-              "The verification ID used to create the phone auth credential is invalid.");
+              'The verification ID used to create the phone auth credential is invalid.');
           return;
         } catch (e) {
-          fail('should have thrown a AssertionError error');
-        }
-
-        fail('should have thrown an error');
-      }, skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS);
-
-      test('should throw an AssertionError if verification code is null',
-          () async {
-        // Setup
-        await auth.createUserWithEmailAndPassword(
-            email: email, password: TEST_PASSWORD);
-
-        try {
-          // Update phone number
-          await auth.currentUser.updatePhoneNumber(
-              PhoneAuthProvider.credential(verificationId: "", smsCode: null));
-        } on AssertionError catch (_) {
-          return;
-        } catch (_) {
           fail('should have thrown a AssertionError error');
         }
 
@@ -663,11 +646,11 @@ void runUserTests() {
         try {
           // Test
           await auth.currentUser.updatePhoneNumber(PhoneAuthProvider.credential(
-              verificationId: "", smsCode: TEST_SMS_CODE));
+              verificationId: '', smsCode: TEST_SMS_CODE));
         } on FirebaseAuthException catch (e) {
-          expect(e.code, "invalid-verification-id");
+          expect(e.code, 'invalid-verification-id');
           expect(e.message,
-              "The verification ID used to create the phone auth credential is invalid.");
+              'The verification ID used to create the phone auth credential is invalid.');
           return;
         } catch (e) {
           fail('should have thrown an FirebaseAuthException error');
@@ -696,24 +679,6 @@ void runUserTests() {
       },
           skip:
               true); // gets rate-limited often so should only be enabled when manual testing
-
-      test('should error if email is null', () async {
-        // Setup
-        await auth.createUserWithEmailAndPassword(
-            email: email, password: TEST_PASSWORD);
-
-        // Test
-        try {
-          await auth.currentUser.verifyBeforeUpdateEmail(
-              null, ActionCodeSettings(url: 'test.com'));
-        } on AssertionError catch (_) {
-          return;
-        } catch (e) {
-          fail('should have thrown an $AssertionError');
-        }
-
-        fail('should have thrown an error');
-      });
     });
 
     group('delete()', () {
@@ -742,7 +707,7 @@ void runUserTests() {
         });
       });
 
-      test('should throw a error on delete when no user is signed in',
+      test('should throw an error on delete when no user is signed in',
           () async {
         // Setup
         User user;

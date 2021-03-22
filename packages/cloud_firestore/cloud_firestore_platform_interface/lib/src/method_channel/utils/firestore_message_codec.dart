@@ -2,8 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
+import 'dart:typed_data';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -77,13 +76,11 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       buffer.putUint8List(value.bytes);
     } else if (value is FieldValuePlatform) {
       MethodChannelFieldValue delegate = FieldValuePlatform.getDelegate(value);
-      final int code = _kFieldValueCodes[delegate.type];
-      assert(code != null);
+      final int code = _kFieldValueCodes[delegate.type]!;
       buffer.putUint8(code);
       if (delegate.value != null) writeValue(buffer, delegate.value);
     } else if (value is FieldPathType) {
-      final int code = _kFieldPathCodes[value];
-      assert(code != null);
+      final int code = _kFieldPathCodes[value]!;
       buffer.putUint8(code);
     } else if (value is FieldPath) {
       buffer.putUint8(_kFieldPath);
@@ -118,7 +115,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
   }
 
   @override
-  dynamic readValueOfType(int type, ReadBuffer buffer) {
+  Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case _kDateTime:
         return DateTime.fromMillisecondsSinceEpoch(buffer.getInt64());
@@ -127,8 +124,8 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       case _kGeoPoint:
         return GeoPoint(buffer.getFloat64(), buffer.getFloat64());
       case _kDocumentReference:
-        final String appName = readValue(buffer);
-        final String /*!*/ path = readValue(buffer);
+        final String appName = readValue(buffer)! as String;
+        final String path = readValue(buffer)! as String;
         final FirebaseApp app = Firebase.app(appName);
         final FirebaseFirestorePlatform firestore =
             FirebaseFirestorePlatform.instanceFor(app: app);
@@ -136,7 +133,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       case _kBlob:
         final int length = readSize(buffer);
         final List<int> bytes = buffer.getUint8List(length);
-        return Blob(bytes);
+        return Blob(bytes as Uint8List);
       case _kDocumentId:
         return FieldPath.documentId;
       case _kNaN:

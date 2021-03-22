@@ -19,10 +19,12 @@ const String testDevice = 'YOUR_DEVICE_ID';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -47,7 +49,7 @@ class _MyAppState extends State<MyApp> {
       size: AdSize.banner,
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
-        print("BannerAd event $event");
+        print('BannerAd event $event');
       },
     );
   }
@@ -57,7 +59,7 @@ class _MyAppState extends State<MyApp> {
       adUnitId: InterstitialAd.testAdUnitId,
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
-        print("InterstitialAd event $event");
+        print('InterstitialAd event $event');
       },
     );
   }
@@ -68,7 +70,7 @@ class _MyAppState extends State<MyApp> {
       factoryId: 'adFactoryExample',
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
-        print("$NativeAd event $event");
+        print('$NativeAd event $event');
       },
     );
   }
@@ -80,7 +82,7 @@ class _MyAppState extends State<MyApp> {
     _bannerAd = createBannerAd()..load();
     RewardedVideoAd.instance.listener =
         (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
-      print("RewardedVideoAd event $event");
+      print('RewardedVideoAd event $event');
       if (event == RewardedVideoAdEvent.rewarded) {
         setState(() {
           _coins += rewardAmount;
@@ -107,46 +109,47 @@ class _MyAppState extends State<MyApp> {
         body: SingleChildScrollView(
           child: Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                RaisedButton(
-                    child: const Text('SHOW BANNER'),
-                    onPressed: () {
-                      _bannerAd ??= createBannerAd();
-                      _bannerAd
-                        ..load()
-                        ..show();
-                    }),
-                RaisedButton(
-                    child: const Text('SHOW BANNER WITH OFFSET'),
-                    onPressed: () {
-                      _bannerAd ??= createBannerAd();
-                      _bannerAd
-                        ..load()
-                        ..show(horizontalCenterOffset: -50, anchorOffset: 100);
-                    }),
-                RaisedButton(
-                    child: const Text('REMOVE BANNER'),
-                    onPressed: () {
-                      _bannerAd?.dispose();
-                      _bannerAd = null;
-                    }),
-                RaisedButton(
-                  child: const Text('LOAD INTERSTITIAL'),
+                ElevatedButton(
+                  onPressed: () {
+                    _bannerAd ??= createBannerAd();
+                    _bannerAd
+                      ..load()
+                      ..show();
+                  },
+                  child: const Text('SHOW BANNER'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _bannerAd ??= createBannerAd();
+                    _bannerAd
+                      ..load()
+                      ..show(horizontalCenterOffset: -50, anchorOffset: 100);
+                  },
+                  child: const Text('SHOW BANNER WITH OFFSET'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _bannerAd?.dispose();
+                    _bannerAd = null;
+                  },
+                  child: const Text('REMOVE BANNER'),
+                ),
+                ElevatedButton(
                   onPressed: () {
                     _interstitialAd?.dispose();
                     _interstitialAd = createInterstitialAd()..load();
                   },
+                  child: const Text('LOAD INTERSTITIAL'),
                 ),
-                RaisedButton(
-                  child: const Text('SHOW INTERSTITIAL'),
+                ElevatedButton(
                   onPressed: () {
                     _interstitialAd?.show();
                   },
+                  child: const Text('SHOW INTERSTITIAL'),
                 ),
-                RaisedButton(
-                  child: const Text('SHOW NATIVE'),
+                ElevatedButton(
                   onPressed: () {
                     _nativeAd ??= createNativeAd();
                     _nativeAd
@@ -157,32 +160,33 @@ class _MyAppState extends State<MyApp> {
                             : AnchorType.top,
                       );
                   },
+                  child: const Text('SHOW NATIVE'),
                 ),
-                RaisedButton(
-                  child: const Text('REMOVE NATIVE'),
+                ElevatedButton(
                   onPressed: () {
                     _nativeAd?.dispose();
                     _nativeAd = null;
                   },
+                  child: const Text('REMOVE NATIVE'),
                 ),
-                RaisedButton(
-                  child: const Text('LOAD REWARDED VIDEO'),
+                ElevatedButton(
                   onPressed: () {
                     RewardedVideoAd.instance.load(
                         adUnitId: RewardedVideoAd.testAdUnitId,
                         targetingInfo: targetingInfo);
                   },
+                  child: const Text('LOAD REWARDED VIDEO'),
                 ),
-                RaisedButton(
-                  child: const Text('SHOW REWARDED VIDEO'),
+                ElevatedButton(
                   onPressed: () {
                     RewardedVideoAd.instance.show();
                   },
+                  child: const Text('SHOW REWARDED VIDEO'),
                 ),
-                Text("You have $_coins coins."),
+                Text('You have $_coins coins.'),
               ].map((Widget button) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   child: button,
                 );
               }).toList(),

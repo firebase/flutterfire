@@ -42,7 +42,7 @@ module.exports = function generateFaviconTags() {
             attributes: {
               rel: 'mask-icon',
               href: '/favicon/safari-pinned-tab.svg',
-              color: '#5bbad5'
+              color: '#5bbad5',
             },
           },
           {

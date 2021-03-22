@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'field_path.dart';
 
 /// An options class that configures the behavior of set() calls in [DocumentReference],
@@ -13,35 +11,33 @@ class SetOptions {
   /// in its data argument.
   ///
   /// Fields omitted from the set() call remain untouched.
-  final bool /*?*/ merge;
+  final bool? merge;
 
   /// Changes the behavior of set() calls to only replace the specified field paths.
   ///
   /// Any field path that is not specified is ignored and remains untouched.
-  List<FieldPath> /*?*/ mergeFields;
+  List<FieldPath>? mergeFields;
 
   /// Creates a [SetOptions] instance.
   SetOptions({
-    this.merge,
-    List<dynamic> /*?*/ mergeFields,
+    // ignore: avoid_init_to_null
+    this.merge = null,
+    // ignore: avoid_init_to_null
+    List<dynamic>? mergeFields = null,
   }) {
+    // ignore: prefer_asserts_in_initializer_lists
     assert(!(merge == null && mergeFields == null),
         "options must provide 'merge' or 'mergeFields'");
-
-    if (merge != null) {
-      assert(mergeFields == null,
-          "options cannot have both 'merge' & 'mergeFields'");
-    }
-
+    // ignore: prefer_asserts_in_initializer_lists
+    assert(!(mergeFields != null && merge != null),
+        "options cannot have both 'merge' & 'mergeFields'");
     if (mergeFields != null) {
-      assert(merge == null, "options cannot have both 'merge' & 'mergeFields'");
       assert(
           mergeFields
                   .where((value) => value is String || value is FieldPath)
                   .length ==
               mergeFields.length,
           '[mergeFields] must be a [String] or [FieldPath]');
-
       this.mergeFields = mergeFields.map((field) {
         if (field is String) return FieldPath.fromString(field);
         return field as FieldPath;

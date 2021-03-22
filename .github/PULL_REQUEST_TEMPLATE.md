@@ -24,7 +24,7 @@ This will ensure a smooth and quick review process. Updating the `pubspec.yaml` 
 
 Does your PR require plugin users to manually update their apps to accommodate your change?
 
-- [ ] Yes, this is a breaking change (please indicate a breaking change in CHANGELOG.md and increment major revision).
+- [ ] Yes, this is a breaking change.
 - [ ] No, this is *not* a breaking change.
 
 <!-- Links -->

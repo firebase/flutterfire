@@ -28,7 +28,7 @@ class FirebaseException implements Exception {
   /// ```
   FirebaseException({
     required this.plugin,
-    required this.message,
+    this.message,
     this.code = 'unknown',
     this.stackTrace,
   });
@@ -40,7 +40,7 @@ class FirebaseException implements Exception {
   final String plugin;
 
   /// The long form message of the exception.
-  final String message;
+  final String? message;
 
   /// The optional code to accommodate the message.
   ///

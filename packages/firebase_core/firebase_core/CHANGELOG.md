@@ -1,3 +1,36 @@
+## 1.0.1
+
+ - Update a dependency to the latest release.
+
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_core" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.8.0-1.0.nullsafety.2
+
+ - **TESTS**: update mockito API usage in tests
+
+## 0.8.0-1.0.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+ - **REFACTOR**: replace deprecated `RaisedButton` widget with `ElevatedButton`.
+
+## 0.8.0-1.0.nullsafety.0
+
+ - Bump "firebase_core" to `0.8.0-1.0.nullsafety.0`.
+
+## 0.8.0-nullsafety.1
+
+ - **FEAT**: bump firebase-core to 4.0.0-nullsafety.0 and firebase-core-web to 0.3.0-nullsafety.0.
+
+## 0.8.0-nullsafety.0
+
+- **FIX**: Bump package to 0.8.0 for nullsafety. (fixes issue #4728)
+
 ## 0.7.0-nullsafety.0
 
  - **REFACTOR**: Migrate non-nullable types (#4656).

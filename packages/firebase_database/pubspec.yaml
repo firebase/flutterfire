@@ -2,26 +2,24 @@ name: firebase_database
 description: Flutter plugin for Firebase Database, a cloud-hosted NoSQL database
   with realtime data syncing across Android and iOS clients, and offline access.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_database
-version: 6.0.0
+version: 6.1.0
 
 environment:
   sdk: ">=2.12.0-0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+  flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
+  firebase_core: ^1.0.1
   flutter:
     sdk: flutter
-  firebase_core: ^0.7.0
 
 dev_dependencies:
-  firebase_core_platform_interface: ^3.0.1
-  pedantic: ^1.8.0
-  test: ^1.3.0
-  mockito: ^5.0.0-nullsafety.2
+  firebase_core_platform_interface: ^4.0.0
   flutter_test:
     sdk: flutter
-  flutter_driver:
-    sdk: flutter
+  mockito: ^5.0.0
+  pedantic: ^1.8.0
+  test: any
 
 flutter:
   plugin:

@@ -16,7 +16,7 @@ class ScannerUtils {
   ScannerUtils._();
 
   static Future<CameraDescription> getCamera(CameraLensDirection dir) async {
-    return await availableCameras().then(
+    return availableCameras().then(
       (List<CameraDescription> cameras) => cameras.firstWhere(
         (CameraDescription camera) => camera.lensDirection == dir,
       ),
@@ -38,7 +38,7 @@ class ScannerUtils {
 
   static Uint8List _concatenatePlanes(List<Plane> planes) {
     final WriteBuffer allBytes = WriteBuffer();
-    for (Plane plane in planes) {
+    for (final Plane plane in planes) {
       allBytes.putUint8List(plane.bytes);
     }
     return allBytes.done().buffer.asUint8List();

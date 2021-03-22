@@ -15,9 +15,9 @@ void main() {
     MaterialApp(
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => _ExampleList(),
-        '/$PictureScanner': (BuildContext context) => PictureScanner(),
+        '/$PictureScanner': (BuildContext context) => const PictureScanner(),
         '/$CameraPreviewScanner': (BuildContext context) =>
-            CameraPreviewScanner(),
+            const CameraPreviewScanner(),
         '/$MaterialBarcodeScanner': (BuildContext context) =>
             const MaterialBarcodeScanner(),
       },

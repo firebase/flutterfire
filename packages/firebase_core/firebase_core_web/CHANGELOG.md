@@ -1,3 +1,33 @@
+## 1.0.1
+
+ - **FIX**: Fix wrong cast (FirebaseExtended#5050) (#5242).
+
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_core_web" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.3.0-1.0.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+ - **FIX**: Analysis error with firebase_core/web (#4836).
+ - **CHORE**: update PromiseJsImpl resolve/reject to match expected types.
+
+## 0.3.0-1.0.nullsafety.0
+
+ - Bump "firebase_core_web" to `0.3.0-1.0.nullsafety.0`.
+
+## 0.3.0-nullsafety.0
+
+Major bump for the null-safety version to respect the versioning convention.
+
+## 0.2.2-nullsafety.1
+
+ - Bump `firebase_core` dependency version.
+
 ## 0.2.2-nullsafety.0
 
  - **REFACTOR**: Migrate to non-nullable types (#4656).

@@ -19,8 +19,8 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-// ignore: public_member_api_docs
 class MyApp extends StatefulWidget {
+  MyApp({Key key}) : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
                 itemCount: fruit.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text("${fruit[index]}"),
+                    title: Text('${fruit[index]}'),
                   );
                 })),
         floatingActionButton: Builder(
@@ -55,7 +55,8 @@ class _MyAppState extends State<MyApp> {
               // are using for this example
               HttpsCallable callable = FirebaseFunctions.instance.httpsCallable(
                   'listFruit',
-                  options: HttpsCallableOptions(timeout: Duration(seconds: 5)));
+                  options: HttpsCallableOptions(
+                      timeout: const Duration(seconds: 5)));
 
               await callable().then((v) {
                 setState(() {
@@ -66,12 +67,12 @@ class _MyAppState extends State<MyApp> {
                 });
               }).catchError((e) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("ERROR: $e"),
+                  content: Text('ERROR: $e'),
                 ));
               });
             },
-            label: Text('Call Function'),
-            icon: Icon(Icons.cloud),
+            label: const Text('Call Function'),
+            icon: const Icon(Icons.cloud),
             backgroundColor: Colors.deepOrange,
           ),
         ),

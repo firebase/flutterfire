@@ -1,3 +1,23 @@
+## 2.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 2.0.0-1.0.nullsafety.3
+
+ - Update a dependency to the latest release.
+
+## 2.0.0-1.0.nullsafety.2
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+
+## 2.0.0-1.0.nullsafety.1
+
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+
+## 2.0.0-1.0.nullsafety.0
+
+ - **REFACTOR**: migrate to nnbd (#4715).
+
 ## 1.1.6
 
  - Update a dependency to the latest release.

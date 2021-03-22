@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 library firebase_messaging;
 
 import 'dart:async';
@@ -22,8 +20,6 @@ export 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
         AppleNotificationSound,
         AuthorizationStatus,
         NotificationSettings,
-        // ignore: deprecated_member_use, deprecated_member_use_from_same_package
-        IosNotificationSettings,
         AndroidNotification,
         AndroidNotificationPriority,
         AndroidNotificationVisibility,

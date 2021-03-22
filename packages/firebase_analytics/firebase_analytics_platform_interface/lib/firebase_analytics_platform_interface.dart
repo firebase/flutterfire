@@ -43,9 +43,11 @@ abstract class FirebaseAnalyticsPlatform {
     if (!instance.isMock) {
       try {
         instance._verifyProvidesDefaultImplementations();
+        // ignore: avoid_catching_errors
       } on NoSuchMethodError catch (_) {
         throw AssertionError(
-            'Platform interfaces must not be implemented with `implements`');
+          'Platform interfaces must not be implemented with `implements`',
+        );
       }
     }
     _instance = instance;
