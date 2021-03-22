@@ -32,7 +32,7 @@ android {
     }
 
     defaultConfig {
-        applicationId 'io.flutter.plugins.firebasecrashlyticsexample'
+        applicationId 'io.flutter.plugins.firebase.crashlytics.firebasecrashlyticsexample'
         minSdkVersion 16
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()

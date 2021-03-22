@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.flutter.plugins.firebasecrashlyticsexample">
+    package="io.flutter.plugins.firebase.crashlytics.firebasecrashlyticsexample">
 
   <uses-permission android:name="android.permission.INTERNET"/>
 
