@@ -28,7 +28,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
       const MethodChannel('plugins.flutter.io/firebase_analytics');
 
   bool? _isCrashlyticsCollectionEnabled;
-  String _FATAL_FLAG = 'com.firebase.crashlytics.flutterfire.fatal';
+  String _FATAL_FLAG = 'com.firebase.crashlytics.flutter.fatal';
 
   @override
   bool get isCrashlyticsCollectionEnabled {
@@ -108,14 +108,12 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
             'parameters': {
               'fatal': 1, // as in firebase-android-sdk
               'timestamp':
-                  currentUnixTimeSeconds, // 'long timestamp', is that current UNIX time?
+                  '$currentUnixTimeSeconds', // 'long timestamp', is that current UNIX time?
             },
           });
 
-          //set custom key
-          //call analytics method
         } on MissingPluginException catch (error) {
-          //TODO - error gets here if analytics isn't present. Should we throw an error informing them to install to use "fatal"?
+          //TODO - error gets here if analytics isn't present. Should we throw an error informing users to install analytics plugin to use "fatal" flag?
         } on PlatformException catch (e, s) {
           throw platformExceptionToFirebaseException(e, s);
         }
