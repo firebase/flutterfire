@@ -1,7 +1,4 @@
 
-
-import 'package:meta/meta.dart';
-
 /// Defines the options for the corresponding Remote Config instance.
 class RemoteConfigSettings {
   /// Constructs an instance of [RemoteConfigSettings] with given [fetchTimeout]
