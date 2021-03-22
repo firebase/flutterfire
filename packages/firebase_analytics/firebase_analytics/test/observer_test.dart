@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
+// @dart=2.9
 
 import 'dart:async';
 
@@ -19,8 +19,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('FirebaseAnalyticsObserver', () {
-    FirebaseAnalytics? analytics;
-    late FirebaseAnalyticsObserver observer;
+    FirebaseAnalytics analytics;
+    FirebaseAnalyticsObserver observer;
     final List<String> printLog = <String>[];
 
     void overridePrint(void Function() func) {
@@ -36,7 +36,7 @@ void main() {
       printLog.clear();
       analytics = MockFirebaseAnalytics();
       observer = FirebaseAnalyticsObserver(analytics: analytics);
-      when(analytics!.setCurrentScreen(screenName: anyNamed('screenName')!))
+      when(analytics.setCurrentScreen(screenName: anyNamed('screenName')))
           .thenAnswer((Invocation invocation) => Future<void>.value());
     });
 
@@ -48,7 +48,7 @@ void main() {
 
       observer.didPop(route, previousRoute);
 
-      verify(analytics!.setCurrentScreen(screenName: 'previousRoute')).called(1);
+      verify(analytics.setCurrentScreen(screenName: 'previousRoute')).called(1);
     });
 
     test('setCurrentScreen on route push', () {
@@ -58,7 +58,7 @@ void main() {
 
       observer.didPush(route, previousRoute);
 
-      verify(analytics!.setCurrentScreen(screenName: 'route')).called(1);
+      verify(analytics.setCurrentScreen(screenName: 'route')).called(1);
     });
 
     test('setCurrentScreen on route pushReplacement', () {
@@ -68,7 +68,7 @@ void main() {
 
       observer.didReplace(newRoute: route, oldRoute: previousRoute);
 
-      verify(analytics!.setCurrentScreen(screenName: 'route')).called(1);
+      verify(analytics.setCurrentScreen(screenName: 'route')).called(1);
     });
 
     test('uses nameExtractor', () {
@@ -81,7 +81,7 @@ void main() {
 
       observer.didPush(route, previousRoute);
 
-      verify(analytics!.setCurrentScreen(screenName: 'foo')).called(1);
+      verify(analytics.setCurrentScreen(screenName: 'foo')).called(1);
     });
 
     test('handles only ${PlatformException}s', () async {
@@ -94,7 +94,7 @@ void main() {
       final PageRoute<dynamic> previousRoute = MockPageRoute();
 
       // Throws non-PlatformExceptions
-      when(analytics!.setCurrentScreen(screenName: anyNamed('screenName')!))
+      when(analytics.setCurrentScreen(screenName: anyNamed('screenName')))
           .thenThrow(ArgumentError());
 
       // TODO: Reenable the line below when the issue is fixed.
@@ -105,7 +105,7 @@ void main() {
       Future<void> throwPlatformException() async =>
           throw PlatformException(code: 'a');
 
-      when(analytics!.setCurrentScreen(screenName: anyNamed('screenName')!))
+      when(analytics.setCurrentScreen(screenName: anyNamed('screenName')))
           .thenAnswer((Invocation invocation) => throwPlatformException());
 
       overridePrint(() => observer.didPush(route, previousRoute));
@@ -118,7 +118,7 @@ void main() {
     });
 
     test('runs onError', () async {
-      PlatformException? passedException;
+      PlatformException passedException;
 
       void handleError(PlatformException error) {
         passedException = error;
@@ -136,7 +136,7 @@ void main() {
       final PlatformException thrownException = PlatformException(code: 'b');
       Future<void> throwPlatformException() async => throw thrownException;
 
-      when(analytics!.setCurrentScreen(screenName: anyNamed('screenName')!))
+      when(analytics.setCurrentScreen(screenName: anyNamed('screenName')))
           .thenAnswer((Invocation invocation) => throwPlatformException());
 
       observer.didPush(route, previousRoute);

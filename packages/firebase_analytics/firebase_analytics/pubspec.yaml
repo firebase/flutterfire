@@ -6,18 +6,12 @@ homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/f
 version: 7.1.1
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0-0 <3.0.0"
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  firebase_analytics_platform_interface:
-    git:
-      url: https://github.com/daniloadorno/flutterfire.git
-      path: packages/firebase_analytics/firebase_analytics_platform_interface
-  firebase_analytics_web:
-    git:
-      url: https://github.com/daniloadorno/flutterfire.git
-      path: packages/firebase_analytics/firebase_analytics_web
+  firebase_analytics_platform_interface: ^1.1.0
+  firebase_analytics_web: ^0.2.0+1
   firebase_core: ^1.0.1
   flutter:
     sdk: flutter

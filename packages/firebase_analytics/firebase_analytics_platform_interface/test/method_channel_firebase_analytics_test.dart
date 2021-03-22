@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
+// @dart=2.9
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_analytics_platform_interface/method_channel_firebase_analytics.dart';
@@ -16,7 +16,7 @@ void main() {
 
   const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_analytics');
-  MethodCall? methodCall;
+  MethodCall methodCall;
 
   setUp(() async {
     channel.setMockMethodCallHandler((MethodCall call) async {

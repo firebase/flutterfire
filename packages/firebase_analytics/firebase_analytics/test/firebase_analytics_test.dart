@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
+// @dart=2.9
 
 import 'dart:async';
 
@@ -16,7 +16,7 @@ void main() {
   final FirebaseAnalytics analytics = FirebaseAnalytics();
   const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_analytics');
-  MethodCall? methodCall;
+  MethodCall methodCall;
 
   setUp(() async {
     channel.setMockMethodCallHandler((MethodCall m) async {
@@ -118,7 +118,7 @@ void main() {
     });
 
     test('setSessionTimeoutDuration', () async {
-      await analytics.android!.setSessionTimeoutDuration(234);
+      await analytics.android.setSessionTimeoutDuration(234);
       expect(
         methodCall,
         isMethodCall(
@@ -172,7 +172,7 @@ void main() {
     ) {
       test('$testFunctionName works', () async {
         await testFunction();
-        expect(methodCall!.arguments['name'], testFunctionName);
+        expect(methodCall.arguments['name'], testFunctionName);
       });
     }
 
