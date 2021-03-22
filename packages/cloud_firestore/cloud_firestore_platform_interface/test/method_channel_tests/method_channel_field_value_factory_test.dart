@@ -12,11 +12,11 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/method_cha
 
 import '../utils/test_common.dart';
 
-const _kCollectionId = "test";
+const _kCollectionId = 'test';
 
 void main() {
   initializeMethodChannel();
-  group("$MethodChannelFieldValueFactory()", () {
+  group('$MethodChannelFieldValueFactory()', () {
     setUpAll(() async {
       await Firebase.initializeApp(
         name: 'testApp',
@@ -32,25 +32,25 @@ void main() {
     });
     final MethodChannelFieldValueFactory factory =
         MethodChannelFieldValueFactory();
-    test("arrayRemove", () {
+    test('arrayRemove', () {
       final MethodChannelFieldValue actual = factory.arrayRemove([1]);
       expect(actual.type, equals(FieldValueType.arrayRemove));
       expect(actual, equals(factory.arrayRemove([1])));
       expect(actual, isNot(equals(factory.arrayRemove([2]))));
     });
-    test("arrayUnion", () {
+    test('arrayUnion', () {
       final MethodChannelFieldValue actual = factory.arrayUnion([1]);
       expect(actual.type, equals(FieldValueType.arrayUnion));
       expect(actual, equals(factory.arrayUnion([1])));
       expect(actual, isNot(equals(factory.arrayUnion([2]))));
     });
-    test("delete", () {
+    test('delete', () {
       final MethodChannelFieldValue actual = factory.delete();
       expect(actual.type, equals(FieldValueType.delete));
       expect(actual, equals(factory.delete()));
       expect(actual, isNot(equals(factory.serverTimestamp())));
     });
-    test("increment", () {
+    test('increment', () {
       final MethodChannelFieldValue actualInt = factory.increment(1);
       expect(actualInt.type, equals(FieldValueType.incrementInteger));
       final MethodChannelFieldValue actualDouble = factory.increment(1.0);
@@ -58,7 +58,7 @@ void main() {
       expect(actualInt, equals(factory.increment(1)));
       expect(actualInt, isNot(equals(actualDouble)));
     });
-    test("serverTimestamp", () {
+    test('serverTimestamp', () {
       final MethodChannelFieldValue actual = factory.serverTimestamp();
       expect(actual.type, equals(FieldValueType.serverTimestamp));
       expect(actual, equals(factory.serverTimestamp()));

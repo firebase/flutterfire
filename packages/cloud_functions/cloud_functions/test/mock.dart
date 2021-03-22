@@ -2,25 +2,27 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-typedef Callback(MethodCall call);
+typedef Callback = Function(MethodCall call);
 
-final String kTestString = 'Hello World';
-final String kBucket = 'gs://fake-storage-bucket-url.com';
-final String kSecondaryBucket = 'gs://fake-storage-bucket-url-2.com';
-MockFirebaseFunctionsPlatform kMockFirebaseFunctionsPlatform;
-final MockHttpsCallablePlatform kMockHttpsCallablePlatform =
-    MockHttpsCallablePlatform();
+const String kTestString = 'Hello World';
+const String kBucket = 'gs://fake-storage-bucket-url.com';
+const String kSecondaryBucket = 'gs://fake-storage-bucket-url-2.com';
 
-setupFirebaseFunctionsMocks() {
+void resetFirebaseCoreMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  // Rest Firebase core apps & instance.
+  // TODO(Salakar): Is this an API core could provide for testing, e.g. Firebase.reset().
+  MethodChannelFirebase.appInstances = {};
+  MethodChannelFirebase.isCoreInitialized = false;
+  FirebasePlatform.instance = MethodChannelFirebase();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
     if (call.method == 'Firebase#initializeCore') {
@@ -46,34 +48,39 @@ setupFirebaseFunctionsMocks() {
         'pluginConstants': {},
       };
     }
-
     return null;
   });
 }
 
-// Platform Interface Mock Classes
+class MockHttpsCallablePlatform extends HttpsCallablePlatform {
+  MockHttpsCallablePlatform(FirebaseFunctionsPlatform functions, String? origin,
+      String name, HttpsCallableOptions options)
+      : super(functions, origin, name, options);
 
-// FirebaseFunctionsPlatform Mock
-class MockFirebaseFunctionsPlatform extends Mock
-    with MockPlatformInterfaceMixin
-    implements TestFirebaseFunctionsPlatform {
-  MockFirebaseFunctionsPlatform(FirebaseApp app, String region) {
-    TestFirebaseFunctionsPlatform(app, region);
+  @override
+  Future<dynamic> call([dynamic parameters]) async {
+    // For testing purpose we return input data as output data.
+    return parameters;
   }
 }
 
-// HttpsCallablePlatform Mock
-class MockHttpsCallablePlatform extends Mock
-    with MockPlatformInterfaceMixin
-    implements HttpsCallablePlatform {}
-
-class TestFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {
-  TestFirebaseFunctionsPlatform(FirebaseApp app, String region)
+class MockFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {
+  MockFirebaseFunctionsPlatform({FirebaseApp? app, required String region})
       : super(app, region);
 
-  instanceFor({FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {}
+  @override
+  HttpsCallablePlatform httpsCallable(
+      String? origin, String name, HttpsCallableOptions options) {
+    HttpsCallablePlatform httpsCallablePlatform =
+        MockHttpsCallablePlatform(this, origin, name, options);
+    return httpsCallablePlatform;
+  }
 
-  FirebaseFunctionsPlatform delegateFor({FirebaseApp app, String region}) {
-    return this;
+  @override
+  FirebaseFunctionsPlatform delegateFor(
+      {FirebaseApp? app, required String region}) {
+    MockFirebaseFunctionsPlatform functionsPlatform =
+        MockFirebaseFunctionsPlatform(app: app, region: region);
+    return functionsPlatform;
   }
 }

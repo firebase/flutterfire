@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:math';
 
@@ -11,7 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runTransactionTests() {
   group('$Transaction', () {
-    FirebaseFirestore firestore;
+    FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -43,21 +45,47 @@ void runTransactionTests() {
           transaction.set(documentReference, {
             'foo': 'baz',
           });
-          throw ("Stop");
+          throw 'Stop';
         });
-        fail("Should have thrown");
+        fail('Should have thrown');
       } catch (e) {
         DocumentSnapshot snapshot = await documentReference.get();
         expect(snapshot.data()['foo'], equals('bar'));
       }
     });
 
+    test('runs multiple transactions in parallel', () async {
+      DocumentReference doc1 = await initializeTest('transaction-multi-1');
+      DocumentReference doc2 = await initializeTest('transaction-multi-2');
+
+      await doc1.set({'test': 'value1'});
+      await doc2.set({'test': 'value2'});
+
+      await Future.wait([
+        firestore.runTransaction((Transaction transaction) async {
+          transaction.set(doc1, {
+            'test': 'value3',
+          });
+        }),
+        firestore.runTransaction((Transaction transaction) async {
+          transaction.set(doc2, {
+            'test': 'value4',
+          });
+        }),
+      ]);
+
+      DocumentSnapshot snapshot1 = await doc1.get();
+      expect(snapshot1.data()['test'], equals('value3'));
+      DocumentSnapshot snapshot2 = await doc2.get();
+      expect(snapshot2.data()['test'], equals('value4'));
+    });
+
     test('should abort if timeout is exceeded', () async {
       try {
         await firestore.runTransaction((Transaction transaction) async {
-          await Future.delayed(Duration(seconds: 2));
-        }, timeout: Duration(seconds: 1));
-        fail("Should have thrown");
+          await Future.delayed(const Duration(seconds: 2));
+        }, timeout: const Duration(seconds: 1));
+        fail('Should have thrown');
       } catch (e) {
         expect(e, isA<FirebaseException>());
         expect(e.code, equals('deadline-exceeded'));
@@ -69,12 +97,12 @@ void runTransactionTests() {
         await firestore.runTransaction((Transaction transaction) async {
           throw StateError('foo');
         });
-        fail("Transaction should not have resolved");
+        fail('Transaction should not have resolved');
       } on StateError catch (e) {
         expect(e.message, equals('foo'));
         return;
       } catch (e) {
-        fail("Transaction threw invalid exeption");
+        fail('Transaction threw invalid exeption');
       }
     });
 
@@ -87,12 +115,12 @@ void runTransactionTests() {
         await firestore.runTransaction((Transaction transaction) async {
           transaction.set(documentReference, {'foo': 'bar'});
         });
-        fail("Transaction should not have resolved");
+        fail('Transaction should not have resolved');
       } on FirebaseException catch (e) {
         expect(e.code, equals('permission-denied'));
         return;
       } catch (e) {
-        fail("Transaction threw invalid exeption");
+        fail('Transaction threw invalid exeption');
       }
     });
 
@@ -110,6 +138,7 @@ void runTransactionTests() {
             throwsAssertionError);
       });
 
+      // ignore: todo
       // TODO(Salakar): Test seems to fail sometimes. Will look at in a future PR.
       // test('support returning any value, e.g. a [DocumentSnapshot]', () async {
       //   DocumentReference documentReference =

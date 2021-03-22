@@ -1,3 +1,61 @@
+## 8.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 8.0.0-1.0.nullsafety.1
+
+ - Update a dependency to the latest release.
+
+## 8.0.0-1.0.nullsafety.0
+
+ - **REFACTOR**: Migrate Firebase Storage to nnbd (#4753).
+
+## 7.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: handle ArrayIndexOutOfBoundsException (fixes #4334) (#4638).
+ - **FEAT**: add check on podspec to assist upgrading users deployment target.
+ - **BUILD**: commit Podfiles with 10.12 deployment target.
+ - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
+ - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
+ - **BREAKING** **BUILD**: set osx min supported platform version to 10.12.
+
+## 6.0.0
+
+ - **FEAT**: bump firebase-android-sdk BoM to 25.13.0.
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+ - **CHORE**: harmonize dependencies and version handling.
+
+## 5.2.0
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: Migrate iOS example projects (#4222).
+
+## 5.1.0
+
+ - **TEST**: skip ios pause/resume check.
+ - **TEST**: skip ios pause/resume check.
+ - **TEST**: Opt-out from null safety. (#4204).
+ - **FEAT**: web support (#3917).
+ - **FEAT**: Tweaks to firebase_storage for the upcoming web version. (#4028).
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 5.0.1
+
+ - Update a dependency to the latest release.
+
+## 5.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 5.0.0-dev.4
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
 ## 5.0.0-dev.3
 
  - **FEAT**: rework (#3612).

@@ -1,6 +1,10 @@
+// @dart = 2.9
+
 // Copyright 2019, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
+// @dart=2.9
 
 import 'dart:io';
 import 'package:e2e/e2e.dart';
@@ -36,6 +40,7 @@ void main() {
 
   testWidgets('Firebase.apps', (WidgetTester tester) async {
     List<FirebaseApp> apps = Firebase.apps;
+
     expect(apps.length, 2);
     expect(apps[1].name, testAppName);
     expect(apps[1].options, testAppOptions);
@@ -43,24 +48,27 @@ void main() {
 
   testWidgets('Firebase.app()', (WidgetTester tester) async {
     FirebaseApp app = Firebase.app(testAppName);
+
     expect(app.name, testAppName);
     expect(app.options, testAppOptions);
   });
 
   testWidgets('Firebase.app() Exception', (WidgetTester tester) async {
-    try {
-      await Firebase.app('NoApp');
-    } on FirebaseException catch (e) {
-      expect(e, noAppExists('NoApp'));
-      return;
-    }
+    expect(
+      () => Firebase.app('NoApp'),
+      throwsA(noAppExists('NoApp')),
+    );
   });
 
   testWidgets('FirebaseApp.delete()', (WidgetTester tester) async {
     await Firebase.initializeApp(name: 'SecondaryApp', options: testAppOptions);
+
     expect(Firebase.apps.length, 3);
+
     FirebaseApp app = Firebase.app('SecondaryApp');
+
     await app.delete();
+
     expect(Firebase.apps.length, 2);
   });
 
@@ -68,13 +76,16 @@ void main() {
       (WidgetTester tester) async {
     FirebaseApp app = Firebase.app(testAppName);
     bool enabled = app.isAutomaticDataCollectionEnabled;
+
     await app.setAutomaticDataCollectionEnabled(!enabled);
+
     expect(app.isAutomaticDataCollectionEnabled, !enabled);
   });
 
   testWidgets('FirebaseApp.setAutomaticResourceManagementEnabled()',
       (WidgetTester tester) async {
     FirebaseApp app = Firebase.app(testAppName);
+
     await app.setAutomaticResourceManagementEnabled(true);
   });
 }

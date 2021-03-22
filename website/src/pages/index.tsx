@@ -14,7 +14,9 @@ import plugins from '../../plugins';
 interface Plugin {
   name: string;
   pub: string;
+  documentation: string;
   firebase: string;
+  remoteSource?: string;
   support: {
     web: boolean;
     mobile: boolean;
@@ -84,6 +86,7 @@ function Home() {
                 <th>Version</th>
                 <th>pub.dev</th>
                 <th>Firebase</th>
+                <th>Documentation</th>
                 <th>View Source</th>
                 <th>Mobile</th>
                 <th>Web</th>
@@ -119,8 +122,16 @@ function Home() {
                     </a>
                   </td>
                   <td>
+                    {plugin.documentation.length ? (
+                      <a href={plugin.documentation} target="_blank">
+                        📖
+                      </a>
+                    ) : null}
+                  </td>
+                  <td>
                     <a
-                      href={`https://github.com/FirebaseExtended/flutterfire/tree/master/packages/${plugin.pub}`}
+                      href={plugin.remoteSource ? plugin.remoteSource : `https://github.com/FirebaseExtended/flutterfire/tree/master/packages/${plugin.pub}`}
+                      target="_blank"
                     >
                       <code>{plugin.pub}</code>
                     </a>

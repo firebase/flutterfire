@@ -3,31 +3,34 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:firebase/firestore.dart' as web;
 import 'package:js/js_util.dart';
 
-import 'package:cloud_firestore_web/src/field_value_web.dart';
-import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
+import 'field_value_web.dart';
+import 'utils/codec_utility.dart';
+import 'interop/firestore.dart' as firestore_interop;
 
 /// An implementation of [FieldValueFactoryPlatform] which builds [FieldValuePlatform]
 /// instances that are [jsify] friendly.
 class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
   @override
-  FieldValueWeb arrayRemove(List elements) => FieldValueWeb(
-      web.FieldValue.arrayRemove(CodecUtility.valueEncode(elements)));
+  FieldValueWeb arrayRemove(List elements) =>
+      FieldValueWeb(firestore_interop.FieldValue.arrayRemove(
+          CodecUtility.valueEncode(elements)));
 
   @override
-  FieldValueWeb arrayUnion(List elements) => FieldValueWeb(
-      web.FieldValue.arrayUnion(CodecUtility.valueEncode(elements)));
+  FieldValueWeb arrayUnion(List elements) =>
+      FieldValueWeb(firestore_interop.FieldValue.arrayUnion(
+          CodecUtility.valueEncode(elements)));
 
   @override
-  FieldValueWeb delete() => FieldValueWeb(web.FieldValue.delete());
+  FieldValueWeb delete() =>
+      FieldValueWeb(firestore_interop.FieldValue.delete());
 
   @override
   FieldValueWeb increment(num value) =>
-      FieldValueWeb(web.FieldValue.increment(value));
+      FieldValueWeb(firestore_interop.FieldValue.increment(value));
 
   @override
   FieldValueWeb serverTimestamp() =>
-      FieldValueWeb(web.FieldValue.serverTimestamp());
+      FieldValueWeb(firestore_interop.FieldValue.serverTimestamp());
 }

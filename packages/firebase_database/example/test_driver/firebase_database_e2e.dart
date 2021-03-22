@@ -1,9 +1,11 @@
+// @dart=2.9
+
 import 'package:e2e/e2e.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-void main() async {
+Future<void> main() async {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
   group('$FirebaseDatabase', () {

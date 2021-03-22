@@ -1,3 +1,65 @@
+## 1.0.1
+
+ - **FIX**: Fix wrong cast (FirebaseExtended#5050) (#5242).
+
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "cloud_firestore_web" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.4.0-1.0.nullsafety.2
+
+ - **FIX**: Fixed crashes due to null `Settings` (#5031).
+
+## 0.4.0-1.0.nullsafety.1
+
+ - Update a dependency to the latest release.
+
+## 0.4.0-1.0.nullsafety.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: migrate to NNBD (#4780).
+
+## 0.3.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: ensure web FieldValue types are converted (#4247).
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs (#4594).
+
+## 0.2.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.1
+
+ - **FEAT**: migrate firebase interop files to local repository (#3973).
+ - **FEAT** [WEB] `FirebaseFirestore.enablePersistence` now accepts `PersistenceSettings`
+ - **FEAT** [WEB] adds `PersistenceSettings` class
+ - **FEAT** [WEB] adds support for `FirebaseFirestore.clearPersistence`
+ - **FEAT** [WEB] adds support for `FirebaseFirestore.terminate`
+ - **FEAT** [WEB] adds support for `FirebaseFirestore.waitForPendingWrites`
+ - **FEAT** [WEB] adds support for `SetOptions.mergeFields`
+ - **FEAT** [WEB] adds `GetOptions` support for querying against server/cache
+ - **FEAT** [WEB] adds support for `Query.limitToLast`
+ - **FEAT** [WEB] adds support for `FirebaseFirestore.snapshotsInSync`
+
+## 0.2.0+5
+
+ - Update a dependency to the latest release.
+
 ## 0.2.0+4
 
  - **FIX**: bubble exceptions (#3701).

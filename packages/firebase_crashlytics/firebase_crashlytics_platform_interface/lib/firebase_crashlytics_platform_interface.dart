@@ -4,5 +4,5 @@
 
 library firebase_crashlytics_platform_interface;
 
-export 'src/platform_interface/platform_interface_crashlytics.dart';
 export 'src/method_channel/method_channel_crashlytics.dart';
+export 'src/platform_interface/platform_interface_crashlytics.dart';

@@ -12,6 +12,51 @@ as:
 
 ## Installation
 
+<Tabs
+groupId="legacy-or-nullsafe"
+defaultValue="legacy"
+values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+]}
+>
+<TabItem value="legacy">
+</TabItem>
+<TabItem value="null-safe">
+
+To develop in a null-safe environment, it is a prerequisite to switch to the correct Flutter channel.
+
+#### Flutter Web, Android & iOS targets:
+
+Web, Android & iOS targets require the Flutter `beta` channel:
+
+```bash
+$ flutter channel beta
+```
+
+#### Flutter desktop targets:
+
+Desktop targets such as macOS requires  the Flutter `dev` channel:
+
+```bash
+$ flutter channel dev
+```
+
+If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
+```bash
+$ flutter run --no-sound-null-safety
+```
+
+For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
+
+```dart
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:firebase_analytics/firebase_analytics.dart';
+```
+
+</TabItem>
+</Tabs>
+
 The [`firebase_core`](!firebase_core) plugin can be installed by following the [Getting Started](../overview.mdx) documentation. Once installed,
 import the plugin:
 

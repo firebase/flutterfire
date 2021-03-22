@@ -22,10 +22,11 @@ if (flutterVersionName == null) {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: "com.google.firebase.firebase-perf"
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     lintOptions {
         disable 'InvalidPackage'

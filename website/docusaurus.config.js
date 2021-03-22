@@ -10,9 +10,9 @@ module.exports = {
   projectName: 'flutterfire',
   themeConfig: {
     announcementBar: {
-      id: 'wip',
+      id: 'wip-nullsafety',
       content:
-        'The FlutterFire documentation hub is currently a work in progress. <a rel="noopener" target="_blank" href="https://github.com/FirebaseExtended/flutterfire/issues/2582"><b>Check out the roadmap to learn more.</b></a>.',
+        '📣 <a rel="noopener" href="https://firebase.flutter.dev/docs/null-safety"><b>Null-safety versions</b></a> are now available. This FlutterFire documentation hub is currently a work in progress - <a rel="noopener" target="_blank" href="https://github.com/FirebaseExtended/flutterfire/issues/2582"><b>check out the roadmap to learn more.</b></a>.',
       backgroundColor: '#13B9FD',
       textColor: '#fff',
     },
@@ -40,7 +40,7 @@ module.exports = {
         alt: 'FlutterFire Logo',
         src: '/img/flutterfire_300x.png',
       },
-      links: [
+      items: [
         {
           to: 'docs/overview',
           activeBasePath: 'docs',
@@ -123,8 +123,6 @@ module.exports = {
   },
   plugins: [
     require.resolve('docusaurus-plugin-sass'),
-    require.resolve('@docusaurus/plugin-ideal-image'),
-    require.resolve('@docusaurus/plugin-google-gtag'),
     path.resolve(__dirname, './docusaurus-plugins/favicon-tags'),
     path.resolve(__dirname, './docusaurus-plugins/source-versions'),
     path.resolve(__dirname, './docusaurus-plugins/source-api-reference'),

@@ -5,19 +5,19 @@
 /// Internal helper class used to manage storage reference paths.
 class Pointer {
   /// Constructs a new [Pointer] with a given path.
-  Pointer(String path) {
-    if (path == null || path.isEmpty) {
+  Pointer(String? path) : _path = path ?? '/' {
+    if (_path.isEmpty) {
       _path = '/';
     } else {
-      String _parsedPath = path;
+      String _parsedPath = _path;
 
       // Remove trailing slashes
-      if (path.length > 1 && path.endsWith('/')) {
+      if (_path.length > 1 && _path.endsWith('/')) {
         _parsedPath = _parsedPath.substring(0, _parsedPath.length - 1);
       }
 
       // Remove starting slashes
-      if (path.startsWith('/') && path.length > 1) {
+      if (_path.startsWith('/') && _path.length > 1) {
         _parsedPath = _parsedPath.substring(1, _parsedPath.length);
       }
 
@@ -47,7 +47,7 @@ class Pointer {
   /// Returns the parent path.
   ///
   /// If the current path is root, `null` wil be returned.
-  String get parent {
+  String? get parent {
     if (isRoot) {
       return null;
     }
@@ -59,7 +59,6 @@ class Pointer {
 
   /// Returns a child path relative to the current path.
   String child(String childPath) {
-    assert(childPath != null);
     Pointer childPointer = Pointer(childPath);
 
     // If already at

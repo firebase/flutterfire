@@ -3,21 +3,24 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:firebase/firestore.dart' as web;
+import 'interop/firestore.dart' as firestore_interop;
 
 /// Implementation of [FieldValuePlatform] that is compatible with
 /// the Firestore web plugin.
+
 class FieldValueWeb {
   /// The js-interop delegate for this [FieldValuePlatform]
-  web.FieldValue data;
+  firestore_interop.FieldValue data;
 
   /// Constructs a web version of [FieldValuePlatform] wrapping a web [FieldValue].
   FieldValueWeb(this.data);
 
   @override
+  //ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(dynamic other) =>
       other is FieldValueWeb && other.data == data;
 
   @override
+  //ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => data.hashCode;
 }

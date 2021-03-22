@@ -1,3 +1,33 @@
+## 0.8.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
+## 0.7.0
+
+ - **FIX**: Add missing sdk version constraints inside pubspec.yaml (#4604).
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
+## 0.6.3
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: publish packages.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 0.6.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.6.1
+
+ - **FIX**: fixed issue with overwriting correct url with null one (#3567).
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
 ## 0.6.0+2
 
  - Update a dependency to the latest release.

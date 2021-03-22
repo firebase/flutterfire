@@ -3,29 +3,23 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:firebase/firestore.dart' as web;
-import 'package:meta/meta.dart';
 
-import 'package:cloud_firestore_web/src/document_reference_web.dart';
-import 'package:cloud_firestore_web/src/query_web.dart';
-
+import 'interop/firestore.dart' as firestore_interop;
 import 'document_reference_web.dart';
 import 'query_web.dart';
 
 /// Web implementation for Firestore [CollectionReferencePlatform].
 class CollectionReferenceWeb extends QueryWeb
-    implements CollectionReferencePlatform {
+    implements
+//ignore: avoid_implementing_value_types
+        CollectionReferencePlatform {
   /// instance of Firestore from the web plugin
-  final web.Firestore _webFirestore;
+  final firestore_interop.Firestore _webFirestore;
 
   final FirebaseFirestorePlatform _firestorePlatform;
 
   /// instance of DocumentReference from the web plugin
-  final web.CollectionReference _delegate;
-
-  // disabling lint as it's only visible for testing
-  @visibleForTesting
-  QueryWeb queryDelegate; // ignore: public_member_api_docs
+  final firestore_interop.CollectionReference _delegate;
 
   /// Creates an instance of [CollectionReferenceWeb] which represents path
   /// at [pathComponents] and uses implementation of [webFirestore]
@@ -38,8 +32,8 @@ class CollectionReferenceWeb extends QueryWeb
   String get path => _delegate.path;
 
   @override
-  DocumentReferencePlatform doc([String path]) {
-    web.DocumentReference documentReference = _delegate.doc(path);
+  DocumentReferencePlatform doc([String? path]) {
+    firestore_interop.DocumentReference documentReference = _delegate.doc(path);
     return DocumentReferenceWeb(
         _firestorePlatform, _webFirestore, documentReference.path);
   }
@@ -48,8 +42,8 @@ class CollectionReferenceWeb extends QueryWeb
   String get id => _delegate.id;
 
   @override
-  DocumentReferencePlatform get parent {
-    web.DocumentReference documentReference = _delegate.parent;
+  DocumentReferencePlatform? get parent {
+    firestore_interop.DocumentReference? documentReference = _delegate.parent;
 
     if (documentReference == null) {
       return null;

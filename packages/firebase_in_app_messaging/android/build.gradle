@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:3.5.4'
     }
 }
 
@@ -35,7 +35,7 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 16
@@ -52,7 +52,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
 }
 
 // TODO(<github-username>): Remove this hack once androidx.lifecycle is included on stable. https://github.com/flutter/flutter/issues/42348

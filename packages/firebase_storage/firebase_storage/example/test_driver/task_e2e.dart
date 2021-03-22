@@ -1,3 +1,5 @@
+// @dart = 2.9
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -11,26 +13,25 @@ import './test_utils.dart';
 
 void runTaskTests() {
   group('Task', () {
-    FirebaseStorage storage;
-    File file;
-    Reference uploadRef;
-    Reference downloadRef;
+    /*late*/ FirebaseStorage storage;
+    /*late*/ File file;
+    /*late*/ Reference uploadRef;
+    /*late*/ Reference downloadRef;
 
     setUpAll(() async {
       storage = FirebaseStorage.instance;
-      file = await createFile('ok.jpeg');
       uploadRef = storage.ref('/playground').child('flt-ok.txt');
       downloadRef = storage.ref('/smallFileTest.png'); // 15mb
     });
 
     group('pause() resume() onComplete()', () {
-      Task task;
+      /*late*/ Task task;
 
       setUp(() {
         task = null;
       });
 
-      final _testPauseTask = (String type) async {
+      Future<void> _testPauseTask(String type) async {
         List<TaskSnapshot> snapshots = [];
         FirebaseException streamError;
         expect(task.snapshot.state, TaskState.running);
@@ -44,16 +45,19 @@ void runTaskTests() {
         // TODO(Salakar): Known issue with iOS SDK where pausing immediately will cause an 'unknown' error.
         if (defaultTargetPlatform == TargetPlatform.iOS) {
           await task.snapshotEvents.first;
-          await Future.delayed(Duration(milliseconds: 750));
+          await Future.delayed(const Duration(milliseconds: 750));
         }
 
-        bool paused = await task.pause();
-        expect(paused, isTrue);
-        expect(task.snapshot.state, TaskState.paused);
+        // TODO(Salakar): Known issue with iOS where pausing/resuming doesn't immediately return as paused/resumed 'true'.
+        if (defaultTargetPlatform != TargetPlatform.iOS) {
+          bool paused = await task.pause();
+          expect(paused, isTrue);
+          expect(task.snapshot.state, TaskState.paused);
 
-        bool resumed = await task.resume();
-        expect(resumed, isTrue);
-        expect(task.snapshot.state, TaskState.running);
+          bool resumed = await task.resume();
+          expect(resumed, isTrue);
+          expect(task.snapshot.state, TaskState.running);
+        }
 
         TaskSnapshot snapshot = await task;
         expect(task.snapshot.state, TaskState.success);
@@ -62,29 +66,34 @@ void runTaskTests() {
         expect(snapshot.totalBytes, snapshot.bytesTransferred);
 
         expect(streamError, isNull);
-        expect(
-            snapshots,
-            anyElement(predicate<TaskSnapshot>(
-                (TaskSnapshot element) => element.state == TaskState.paused)));
-        expect(
-            snapshots,
-            anyElement(predicate<TaskSnapshot>(
-                (TaskSnapshot element) => element.state == TaskState.running)));
-      };
+        // TODO(Salakar): Known issue with iOS where pausing/resuming doesn't immediately return as paused/resumed 'true'.
+        if (defaultTargetPlatform != TargetPlatform.iOS) {
+          expect(
+              snapshots,
+              anyElement(predicate<TaskSnapshot>((TaskSnapshot element) =>
+                  element.state == TaskState.paused)));
+          expect(
+              snapshots,
+              anyElement(predicate<TaskSnapshot>((TaskSnapshot element) =>
+                  element.state == TaskState.running)));
+        }
+      }
 
       test('successfully pauses and resumes a download task', () async {
+        file = await createFile('ok.jpeg');
         task = downloadRef.writeToFile(file);
         await _testPauseTask('Download');
-      });
+        // There's no DownloadTask in web.
+      }, skip: kIsWeb);
 
+      // TODO(Salakar): Test is flaky on CI - needs investigating ('[firebase_storage/unknown] An unknown error occurred, please check the server response.')
       test('successfully pauses and resumes a upload task', () async {
-        await downloadRef.writeToFile(file);
-        task = uploadRef.putFile(file);
+        task = uploadRef.putString('This is an upload task!');
         await _testPauseTask('Upload');
-      });
+      }, skip: true);
 
       test('handles errors, e.g. if permission denied', () async {
-        FirebaseException streamError;
+        /*late*/ FirebaseException streamError;
 
         List<int> list = utf8.encode('hello world');
         Uint8List data = Uint8List.fromList(list);
@@ -121,6 +130,7 @@ void runTaskTests() {
 
     group('snapshot', () {
       test('returns the latest snapshot for download task', () async {
+        file = await createFile('ok.jpeg');
         final downloadTask = downloadRef.writeToFile(file);
 
         expect(downloadTask.snapshot, isNotNull);
@@ -133,10 +143,11 @@ void runTaskTests() {
         expect(snapshot.bytesTransferred, completedSnapshot.bytesTransferred);
         expect(snapshot.totalBytes, completedSnapshot.totalBytes);
         expect(snapshot.metadata, isNull);
-      });
+        // There's no DownloadTask in web.
+      }, skip: kIsWeb);
 
       test('returns the latest snapshot for upload task', () async {
-        final uploadTask = uploadRef.putFile(file);
+        final uploadTask = uploadRef.putString('This is an upload task!');
         expect(uploadTask.snapshot, isNotNull);
 
         TaskSnapshot completedSnapshot = await uploadTask;
@@ -149,13 +160,9 @@ void runTaskTests() {
     });
 
     group('cancel()', () {
-      Task task;
+      /*late*/ Task /*!*/ task;
 
-      setUp(() {
-        task = null;
-      });
-
-      final _testCancelTask = () async {
+      Future<void> _testCancelTask() async {
         List<TaskSnapshot> snapshots = [];
         FirebaseException streamError;
         expect(task.snapshot.state, TaskState.running);
@@ -187,15 +194,17 @@ void runTaskTests() {
         expect(
             snapshots.every((snapshot) => snapshot.state == TaskState.running),
             isTrue);
-      };
+      }
 
       test('successfully cancels download task', () async {
+        file = await createFile('ok.jpeg');
         task = downloadRef.writeToFile(file);
         await _testCancelTask();
-      });
+        // There's no DownloadTask in web.
+      }, skip: kIsWeb);
 
       test('successfully cancels upload task', () async {
-        task = uploadRef.putFile(file);
+        task = uploadRef.putString('This is an upload task!');
         await _testCancelTask();
       });
     });

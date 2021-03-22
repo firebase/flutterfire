@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_ml_vision;
 
 enum _ImageType { file, bytes }
@@ -187,14 +189,13 @@ class FirebaseVisionImagePlaneMetadata {
     @required this.bytesPerRow,
     @required this.height,
     @required this.width,
-  })  : assert(defaultTargetPlatform == TargetPlatform.iOS
-            ? bytesPerRow != null
-            : true),
-        assert(defaultTargetPlatform == TargetPlatform.iOS
-            ? height != null
-            : true),
+  })  : assert(
+          defaultTargetPlatform != TargetPlatform.iOS || bytesPerRow != null,
+        ),
+        assert(defaultTargetPlatform != TargetPlatform.iOS || height != null),
         assert(
-            defaultTargetPlatform == TargetPlatform.iOS ? width != null : true);
+          defaultTargetPlatform != TargetPlatform.iOS || width != null,
+        );
 
   /// The row stride for this color plane, in bytes.
   final int bytesPerRow;
@@ -226,15 +227,15 @@ class FirebaseVisionImageMetadata {
     @required this.planeData,
     this.rotation = ImageRotation.rotation0,
   })  : assert(size != null),
-        assert(defaultTargetPlatform == TargetPlatform.iOS
-            ? rawFormat != null
-            : true),
-        assert(defaultTargetPlatform == TargetPlatform.iOS
-            ? planeData != null
-            : true),
-        assert(defaultTargetPlatform == TargetPlatform.iOS
-            ? planeData.isNotEmpty
-            : true);
+        assert(
+          defaultTargetPlatform != TargetPlatform.iOS || rawFormat != null,
+        ),
+        assert(
+          defaultTargetPlatform != TargetPlatform.iOS || planeData != null,
+        ),
+        assert(
+          defaultTargetPlatform != TargetPlatform.iOS || planeData.isNotEmpty,
+        );
 
   /// Size of the image in pixels.
   final Size size;

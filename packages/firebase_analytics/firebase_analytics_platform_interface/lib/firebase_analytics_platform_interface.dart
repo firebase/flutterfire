@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:meta/meta.dart' show required, visibleForTesting;
@@ -41,9 +43,11 @@ abstract class FirebaseAnalyticsPlatform {
     if (!instance.isMock) {
       try {
         instance._verifyProvidesDefaultImplementations();
+        // ignore: avoid_catching_errors
       } on NoSuchMethodError catch (_) {
         throw AssertionError(
-            'Platform interfaces must not be implemented with `implements`');
+          'Platform interfaces must not be implemented with `implements`',
+        );
       }
     }
     _instance = instance;

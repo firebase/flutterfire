@@ -7,8 +7,7 @@ To learn more about Firebase Auth, please visit the [Firebase website](https://f
 
 ## Getting Started
 
-To get started with Firebase Auth for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/auth/overview)
-available at [https://firebase.flutter.dev](https://firebase.flutter.dev/docs/overview)
+To get started with Firebase Auth for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/auth/overview).
 
 ## Usage
 

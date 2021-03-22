@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+        run: ./.github/workflows/scripts/install-flutter.sh dev
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
@@ -38,18 +38,41 @@ jobs:
           profile: Nexus 5X
           script: ./.github/workflows/scripts/drive-example.sh android
 
-  ios:
+  apple:
     runs-on: macos-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+        run: ./.github/workflows/scripts/install-flutter.sh dev
       - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
-      - name: "Build Example"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          flutter config --enable-macos-desktop
+      - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios
-      - name: "Drive Example"
+      - name: "Drive iOS Example"
         run: ./.github/workflows/scripts/drive-example.sh ios
+      # TODO(Salakar): Messaging macOS currently requires signing to build.
+      #- name: "Build MacOS Example"
+      #  run: ./.github/workflows/scripts/build-example.sh macos
+      #- name: "Drive MacOS Example"
+      #  run: ./.github/workflows/scripts/drive-example.sh macos
+
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh beta
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          flutter config --enable-web
+      - name: "Drive Example"
+        run: ./.github/workflows/scripts/drive-example.sh web
