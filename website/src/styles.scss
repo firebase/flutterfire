@@ -1,0 +1,125 @@
+/* stylelint-disable docusaurus/copyright-header */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+// Create root variables for each theme color
+$theme: (
+  'flutter-yellow' #ffc108,
+  'flutter-blue-primary' #0175c2,
+  'flutter-blue-primary-dark' #02569b,
+  'flutter-blue-primary-light' #13b9fd,
+  'google-gray-primary' #60646b,
+  'google-gray-primary-dark' #202124,
+  'google-gray-primary-light' #d5d7da,
+  'firebase-yellow' #ffca28,
+  'firebase-amber' #ffa000,
+  'firebase-orange' #f57c00,
+  'firebase-blue' #039be5,
+  'firebase-navy' #2c384a,
+  'firebase-coral' #ff8a65,
+  'firebase-gray' #eceff1,
+  'white' #ffffff,
+  'black' #000000
+);
+
+@each $name, $color in $theme {
+  :root {
+    --#{$name}: #{$color};
+  }
+}
+
+// Create theme helper classes for text color & background color
+@each $name, $color in $theme {
+  .text-#{$name} {
+    color: $color;
+  }
+
+  .bg-#{$name} {
+    background-color: $color;
+  }
+}
+
+html[data-theme='dark'] {
+  --ifm-code-background: var(--google-gray-primary-dark);
+  --ifm-color-primary: var(--flutter-blue-primary-light);
+  --ifm-menu-color-active: var(--flutter-blue-primary-light);
+}
+
+// Create dark-mode helper classes for text color & background color
+@each $name, $color in $theme {
+  html[data-theme='dark'] {
+    .dark-text-#{$name} {
+      color: $color;
+    }
+
+    .dark-bg-#{$name} {
+      background-color: $color;
+    }
+  }
+}
+
+:root {
+  --ifm-color-primary: var(--flutter-blue-primary);
+  --ifm-color-primary-dark: var(--flutter-blue-primary-dark);
+  --ifm-color-primary-darker: var(--flutter-blue-primary-dark);
+  --ifm-color-primary-darkest: var(--flutter-blue-primary-dark);
+  --ifm-color-primary-light: var(--flutter-blue-primary-light);
+  --ifm-color-primary-lighter: var(--flutter-blue-primary-light);
+  --ifm-color-primary-lightest: var(--flutter-blue-primary-light);
+  --ifm-code-font-size: 90%;
+
+  --header-height: 320px;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h5,
+h6 {
+  font-weight: 500;
+}
+
+h4 {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+p,
+ul,
+li {
+  font-weight: 100;
+}
+
+table {
+  display: table;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: var(--black);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+// Adds an icon to any external links on the menu
+li.menu__list-item > a[target='_blank'] {
+  position: relative;
+
+  &:before {
+    content: url('/flutterfire/img/link-icon.svg');
+    position: absolute;
+    right: 18px;
+    top: 8px;
+    width: 15px;
+    height: 15px;
+    color: var(--ifm-menu-color);
+  }
+}
+
+.keyword {
+  color: var(--firebase-amber);
+}

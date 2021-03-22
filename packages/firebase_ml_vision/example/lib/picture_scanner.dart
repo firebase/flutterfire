@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
@@ -13,6 +15,8 @@ import 'package:image_picker/image_picker.dart';
 import 'detector_painters.dart';
 
 class PictureScanner extends StatefulWidget {
+  const PictureScanner({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _PictureScannerState();
 }
@@ -31,6 +35,8 @@ class _PictureScannerState extends State<PictureScanner> {
   final TextRecognizer _recognizer = FirebaseVision.instance.textRecognizer();
   final TextRecognizer _cloudRecognizer =
       FirebaseVision.instance.cloudTextRecognizer();
+  final DocumentTextRecognizer _cloudDocumentRecognizer =
+      FirebaseVision.instance.cloudDocumentTextRecognizer();
 
   Future<void> _getAndScanImage() async {
     setState(() {
@@ -38,17 +44,20 @@ class _PictureScannerState extends State<PictureScanner> {
       _imageSize = null;
     });
 
-    final File imageFile =
+    final File pickedImage =
         await ImagePicker.pickImage(source: ImageSource.gallery);
-
-    if (imageFile != null) {
-      _getImageSize(imageFile);
-      _scanImage(imageFile);
-    }
+    final File imageFile = File(pickedImage.path);
 
     setState(() {
       _imageFile = imageFile;
     });
+
+    if (imageFile != null) {
+      await Future.wait([
+        _getImageSize(imageFile),
+        _scanImage(imageFile),
+      ]);
+    }
   }
 
   Future<void> _getImageSize(File imageFile) async {
@@ -98,6 +107,9 @@ class _PictureScannerState extends State<PictureScanner> {
       case Detector.cloudText:
         results = await _cloudRecognizer.processImage(visionImage);
         break;
+      case Detector.cloudDocumentText:
+        results = await _cloudDocumentRecognizer.processImage(visionImage);
+        break;
       default:
         return;
     }
@@ -129,6 +141,9 @@ class _PictureScannerState extends State<PictureScanner> {
       case Detector.cloudText:
         painter = TextDetectorPainter(_imageSize, results);
         break;
+      case Detector.cloudDocumentText:
+        painter = DocumentTextDetectorPainter(_imageSize, results);
+        break;
       default:
         break;
     }
@@ -153,7 +168,7 @@ class _PictureScannerState extends State<PictureScanner> {
                 'Scanning...',
                 style: TextStyle(
                   color: Colors.green,
-                  fontSize: 30.0,
+                  fontSize: 30,
                 ),
               ),
             )
@@ -174,28 +189,32 @@ class _PictureScannerState extends State<PictureScanner> {
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<Detector>>[
               const PopupMenuItem<Detector>(
-                child: Text('Detect Barcode'),
                 value: Detector.barcode,
+                child: Text('Detect Barcode'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Face'),
                 value: Detector.face,
+                child: Text('Detect Face'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Label'),
                 value: Detector.label,
+                child: Text('Detect Label'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Cloud Label'),
                 value: Detector.cloudLabel,
+                child: Text('Detect Cloud Label'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Text'),
                 value: Detector.text,
+                child: Text('Detect Text'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Cloud Text'),
                 value: Detector.cloudText,
+                child: Text('Detect Cloud Text'),
+              ),
+              const PopupMenuItem<Detector>(
+                value: Detector.cloudDocumentText,
+                child: Text('Detect Document Text'),
               ),
             ],
           ),

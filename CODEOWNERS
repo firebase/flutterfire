@@ -4,18 +4,21 @@
 # These names are just suggestions. It is fine to have your changes
 # reviewed by someone else.
 
-packages/cloud_firestore/* @collinjackson @kroikie
-packages/cloud_functions/* @collinjackson @kroikie
-packages/firebase_admob/* @amirh @bparrishMines
-packages/firebase_analytics/* @collinjackson @kroikie
-packages/firebase_auth/* @collinjackson @kroikie
-packages/firebase_core/* @collinjackson @kroikie
-packages/firebase_crashlytics/* @kroikie @collinjackson
-packages/firebase_database/* @collinjackson @kroikie
-packages/firebase_dynamic_links/* @bparrishMines
-packages/firebase_in_app_messaging/* @collinjackson
-packages/firebase_messaging/* @collinjackson @kroikie
-packages/firebase_ml_vision/* @bparrishMines
-packages/firebase_performance/* @bparrishMines @collinjackson
-packages/firebase_remote_config/* @collinjackson @kroikie
-packages/firebase_storage/* @collinjackson @kroikie
+packages/cloud_firestore/* @ehesp @salakar @kroikie
+packages/cloud_functions/* @ehesp @salakar @kroikie
+packages/firebase_admob/* @ehesp @salakar @kroikie
+packages/firebase_analytics/* @ehesp @salakar @kroikie
+packages/firebase_auth/* @ehesp @salakar @kroikie
+packages/firebase_core/* @ehesp @salakar @kroikie
+packages/firebase_crashlytics/* @ehesp @salakar @kroikie
+packages/firebase_database/* @ehesp @salakar @kroikie
+packages/firebase_dynamic_links/* @ehesp @salakar @kroikie
+packages/firebase_in_app_messaging/* @ehesp @salakar @kroikie
+packages/firebase_messaging/* @ehesp @salakar @kroikie
+packages/firebase_ml_vision/* @ehesp @salakar @kroikie
+packages/firebase_performance/* @ehesp @salakar @kroikie
+packages/firebase_remote_config/* @ehesp @salakar @kroikie
+packages/firebase_storage/* @ehesp @salakar @kroikie
+website/* @ehesp
+docs/* @ehesp @salakar @kroikie
+.github/ @salakar @kroikie

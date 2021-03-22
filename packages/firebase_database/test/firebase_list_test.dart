@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -50,6 +52,13 @@ void main() {
         onChildChanged: completeWithChange,
         onChildMoved: completeWithMove,
       );
+    });
+
+    tearDown(() {
+      onChildAddedStreamController.close();
+      onChildRemovedStreamController.close();
+      onChildChangedStreamController.close();
+      onChildMovedStreamController.close();
     });
 
     Future<ListChange> resetCompleterOnCallback() async {
@@ -208,6 +217,7 @@ class ListChange {
   final DataSnapshot snapshot;
 
   @override
+  // ignore: no_runtimetype_tostring
   String toString() => '$runtimeType[$index, $index2, $snapshot]';
 
   @override
@@ -232,6 +242,7 @@ class MockEvent implements Event {
   final DataSnapshot snapshot;
 
   @override
+  // ignore: no_runtimetype_tostring
   String toString() => '$runtimeType[$previousSiblingKey, $snapshot]';
 
   @override
@@ -255,6 +266,7 @@ class MockDataSnapshot implements DataSnapshot {
   final dynamic value;
 
   @override
+  // ignore: no_runtimetype_tostring
   String toString() => '$runtimeType[$key, $value]';
 
   @override

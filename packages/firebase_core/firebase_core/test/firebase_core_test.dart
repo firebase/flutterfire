@@ -1,139 +1,120 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('$FirebaseApp', () {
-    final List<MethodCall> log = <MethodCall>[];
-    final FirebaseApp testApp = FirebaseApp(
-      name: 'testApp',
-    );
+    final mock = MockFirebaseCore();
+
     const FirebaseOptions testOptions = FirebaseOptions(
-      apiKey: 'testAPIKey',
-      bundleID: 'testBundleID',
-      clientID: 'testClientID',
-      trackingID: 'testTrackingID',
-      gcmSenderID: 'testGCMSenderID',
-      projectID: 'testProjectID',
-      androidClientID: 'testAndroidClientID',
-      googleAppID: 'testGoogleAppID',
-      databaseURL: 'testDatabaseURL',
-      deepLinkURLScheme: 'testDeepLinkURLScheme',
-      storageBucket: 'testStorageBucket',
+      apiKey: 'apiKey',
+      appId: 'appId',
+      messagingSenderId: 'messagingSenderId',
+      projectId: 'projectId',
     );
+
+    String testAppName = 'testApp';
 
     setUp(() async {
-      FirebaseApp.channel
-          .setMockMethodCallHandler((MethodCall methodCall) async {
-        log.add(methodCall);
-        switch (methodCall.method) {
-          case 'FirebaseApp#appNamed':
-            if (methodCall.arguments != 'testApp') return null;
-            return <dynamic, dynamic>{
-              'name': 'testApp',
-              'options': <dynamic, dynamic>{
-                'APIKey': 'testAPIKey',
-                'bundleID': 'testBundleID',
-                'clientID': 'testClientID',
-                'trackingID': 'testTrackingID',
-                'GCMSenderID': 'testGCMSenderID',
-                'projectID': 'testProjectID',
-                'androidClientID': 'testAndroidClientID',
-                'googleAppID': 'testGoogleAppID',
-                'databaseURL': 'testDatabaseURL',
-                'deepLinkURLScheme': 'testDeepLinkURLScheme',
-                'storageBucket': 'testStorageBucket',
-              },
-            };
-          case 'FirebaseApp#allApps':
-            return <Map<dynamic, dynamic>>[
-              <dynamic, dynamic>{
-                'name': 'testApp',
-              },
-            ];
-          default:
-            return null;
-        }
+      clearInteractions(mock);
+      Firebase.delegatePackingProperty = mock;
+
+      final FirebaseAppPlatform platformApp =
+          FirebaseAppPlatform(testAppName, testOptions);
+
+      when(mock.apps).thenReturn([platformApp]);
+      when(mock.app(testAppName)).thenReturn(platformApp);
+      when(mock.initializeApp(name: testAppName, options: testOptions))
+          .thenAnswer((_) {
+        return Future.value(platformApp);
       });
-      log.clear();
     });
 
-    test('configure', () async {
-      final FirebaseApp reconfiguredApp = await FirebaseApp.configure(
-        name: 'testApp',
-        options: testOptions,
-      );
-      expect(reconfiguredApp, equals(testApp));
-      final FirebaseApp newApp = await FirebaseApp.configure(
-        name: 'newApp',
-        options: testOptions,
-      );
-      expect(newApp.name, equals('newApp'));
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'FirebaseApp#appNamed',
-            arguments: 'testApp',
-          ),
-          isMethodCall(
-            'FirebaseApp#appNamed',
-            arguments: 'newApp',
-          ),
-          isMethodCall(
-            'FirebaseApp#configure',
-            arguments: <String, dynamic>{
-              'name': 'newApp',
-              'options': testOptions.asMap,
-            },
-          ),
-        ],
-      );
+    test('.apps', () {
+      List<FirebaseApp> apps = Firebase.apps;
+      verify(mock.apps);
+      expect(apps[0], Firebase.app(testAppName));
     });
 
-    test('appNamed', () async {
-      final FirebaseApp existingApp = await FirebaseApp.appNamed('testApp');
-      expect(existingApp.name, equals('testApp'));
-      expect((await existingApp.options), equals(testOptions));
-      final FirebaseApp missingApp = await FirebaseApp.appNamed('missingApp');
-      expect(missingApp, isNull);
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'FirebaseApp#appNamed',
-            arguments: 'testApp',
-          ),
-          isMethodCall(
-            'FirebaseApp#appNamed',
-            arguments: 'testApp',
-          ),
-          isMethodCall(
-            'FirebaseApp#appNamed',
-            arguments: 'missingApp',
-          ),
-        ],
-      );
+    test('.app()', () {
+      FirebaseApp app = Firebase.app(testAppName);
+      verify(mock.app(testAppName));
+
+      expect(app.name, testAppName);
+      expect(app.options, testOptions);
     });
 
-    test('allApps', () async {
-      final List<FirebaseApp> allApps = await FirebaseApp.allApps();
-      expect(allApps, equals(<FirebaseApp>[testApp]));
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'FirebaseApp#allApps',
-            arguments: null,
-          ),
-        ],
-      );
+    test('.initializeApp()', () async {
+      FirebaseApp initializedApp =
+          await Firebase.initializeApp(name: testAppName, options: testOptions);
+      FirebaseApp app = Firebase.app(testAppName);
+
+      expect(initializedApp, app);
+      verifyInOrder([
+        mock.initializeApp(name: testAppName, options: testOptions),
+        mock.app(testAppName),
+      ]);
     });
   });
+}
+
+class MockFirebaseCore extends Mock
+    with
+        // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
+        MockPlatformInterfaceMixin
+    implements
+        FirebasePlatform {
+  @override
+  FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
+    return super.noSuchMethod(
+      Invocation.method(#app, [name]),
+      returnValue: FakeFirebaseAppPlatform(),
+      returnValueForMissingStub: FakeFirebaseAppPlatform(),
+    );
+  }
+
+  @override
+  Future<FirebaseAppPlatform> initializeApp({
+    String? name,
+    FirebaseOptions? options,
+  }) {
+    return super.noSuchMethod(
+      Invocation.method(
+        #initializeApp,
+        const [],
+        {
+          #name: name,
+          #options: options,
+        },
+      ),
+      returnValue: Future.value(FakeFirebaseAppPlatform()),
+      returnValueForMissingStub: Future.value(FakeFirebaseAppPlatform()),
+    );
+  }
+
+  @override
+  List<FirebaseAppPlatform> get apps {
+    return super.noSuchMethod(
+      Invocation.getter(#apps),
+      returnValue: <FirebaseAppPlatform>[],
+      returnValueForMissingStub: <FirebaseAppPlatform>[],
+    );
+  }
+}
+
+// ignore: avoid_implementing_value_types
+class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {
+  @override
+  // ignore: hash_and_equals, overriden only because the compile complains otherwise
+  bool operator ==(Object? other) {
+    return super == other;
+  }
 }

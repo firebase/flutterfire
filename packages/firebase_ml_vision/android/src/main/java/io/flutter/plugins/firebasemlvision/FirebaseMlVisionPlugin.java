@@ -35,7 +35,7 @@ public class FirebaseMlVisionPlugin implements FlutterPlugin {
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    channel = new MethodChannel(binding.getFlutterEngine().getDartExecutor(), CHANNEL_NAME);
+    channel = new MethodChannel(binding.getBinaryMessenger(), CHANNEL_NAME);
     channel.setMethodCallHandler(new FirebaseMlVisionHandler(binding.getApplicationContext()));
   }
 

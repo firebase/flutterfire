@@ -1,103 +1,68 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 part of firebase_core;
 
+/// Represents a single Firebase app instance.
+///
+/// You can get an instance by calling [Firebase.app()].
 class FirebaseApp {
-  // TODO(jackson): We could assert here that an app with this name was configured previously.
-  FirebaseApp({@required this.name}) : assert(name != null);
-
-  /// The name of this app.
-  final String name;
-
-  static final String defaultAppName =
-      Platform.isIOS ? '__FIRAPP_DEFAULT' : '[DEFAULT]';
-
-  @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_core',
-  );
-
-  /// A copy of the options for this app. These are non-modifiable.
+  /// A [FirebaseApp] instance can only be accessed from a call to `app()` on
+  /// [FirebaseCore].
   ///
-  /// This getter is asynchronous because apps can also be configured by native
-  /// code.
-  Future<FirebaseOptions> get options async {
-    final Map<String, dynamic> app =
-        await channel.invokeMapMethod<String, dynamic>(
-      'FirebaseApp#appNamed',
-      name,
-    );
-    assert(app != null);
-    return FirebaseOptions.from(app['options']);
+  /// This constructor ensures that the delegate instance it is
+  /// constructed with is one which extends [FirebaseAppPlatform].
+  FirebaseApp._(this._delegate) {
+    FirebaseAppPlatform.verifyExtends(_delegate);
   }
 
-  /// Returns a previously created FirebaseApp instance with the given name,
-  /// or null if no such app exists.
-  static Future<FirebaseApp> appNamed(String name) async {
-    // TODO(amirh): remove this on when the invokeMethod update makes it to stable Flutter.
-    // https://github.com/flutter/flutter/issues/26431
-    // ignore: strong_mode_implicit_dynamic_method
-    final Map<String, dynamic> app =
-        await channel.invokeMapMethod<String, dynamic>(
-      'FirebaseApp#appNamed',
-      name,
-    );
-    return app == null ? null : FirebaseApp(name: app['name']);
+  final FirebaseAppPlatform _delegate;
+
+  /// Deletes this app and frees up system resources.
+  ///
+  /// Once deleted, any plugin functionality using this app instance will throw
+  /// an error.
+  Future<void> delete() async {
+    await _delegate.delete();
   }
 
-  /// Returns the default (first initialized) instance of the FirebaseApp.
-  static final FirebaseApp instance = FirebaseApp(name: defaultAppName);
+  /// The name of this [FirebaseApp].
+  String get name => _delegate.name;
 
-  /// Configures an app with the given [name] and [options].
+  /// The [FirebaseOptions] this app was created with.
+  FirebaseOptions get options => _delegate.options;
+
+  /// Returns whether automatic data collection is enabled or disabled for this
+  /// app.
   ///
-  /// Configuring the default app is not currently supported. Plugins that
-  /// can interact with the default app should configure it automatically at
-  /// plugin registration time.
+  /// Automatic data collection can be enabled or disabled via `setAutomaticDataCollectionEnabled`.
+  bool get isAutomaticDataCollectionEnabled =>
+      _delegate.isAutomaticDataCollectionEnabled;
+
+  /// Sets whether automatic data collection is enabled or disabled for this
+  /// app.
   ///
-  /// Changing the options of a configured app is not supported.
-  static Future<FirebaseApp> configure({
-    @required String name,
-    @required FirebaseOptions options,
-  }) async {
-    assert(name != null);
-    assert(name != defaultAppName);
-    assert(options != null);
-    assert(options.googleAppID != null);
-    final FirebaseApp existingApp = await FirebaseApp.appNamed(name);
-    if (existingApp != null) {
-      return existingApp;
-    }
-    await channel.invokeMethod<void>(
-      'FirebaseApp#configure',
-      <String, dynamic>{'name': name, 'options': options.asMap},
-    );
-    return FirebaseApp(name: name);
+  /// To check whether it is currently enabled or not, call [isAutomaticDataCollectionEnabled].
+  Future<void> setAutomaticDataCollectionEnabled(bool enabled) {
+    return _delegate.setAutomaticDataCollectionEnabled(enabled);
   }
 
-  /// Returns a list of all extant FirebaseApp instances, or null if there are
-  /// no FirebaseApp instances.
-  static Future<List<FirebaseApp>> allApps() async {
-    final List<dynamic> result = await channel.invokeListMethod<dynamic>(
-      'FirebaseApp#allApps',
-    );
-    return result
-        ?.map<FirebaseApp>(
-          (dynamic app) => FirebaseApp(name: app['name']),
-        )
-        ?.toList();
+  /// Sets whether automatic resource management is enabled or disabled for this
+  /// app.
+  Future<void> setAutomaticResourceManagementEnabled(bool enabled) {
+    return _delegate.setAutomaticResourceManagementEnabled(enabled);
   }
 
   @override
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
     if (other is! FirebaseApp) return false;
-    return other.name == name;
+    return other.name == name && other.options == options;
   }
 
   @override
-  int get hashCode => name.hashCode;
+  int get hashCode => hashValues(name, options);
 
   @override
   String toString() => '$FirebaseApp($name)';

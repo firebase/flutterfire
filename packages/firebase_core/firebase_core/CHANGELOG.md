@@ -1,3 +1,166 @@
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_core" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.8.0-1.0.nullsafety.2
+
+ - **TESTS**: update mockito API usage in tests
+
+## 0.8.0-1.0.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+ - **REFACTOR**: replace deprecated `RaisedButton` widget with `ElevatedButton`.
+
+## 0.8.0-1.0.nullsafety.0
+
+ - Bump "firebase_core" to `0.8.0-1.0.nullsafety.0`.
+
+## 0.8.0-nullsafety.1
+
+ - **FEAT**: bump firebase-core to 4.0.0-nullsafety.0 and firebase-core-web to 0.3.0-nullsafety.0.
+
+## 0.8.0-nullsafety.0
+
+- **FIX**: Bump package to 0.8.0 for nullsafety. (fixes issue #4728)
+
+## 0.7.0-nullsafety.0
+
+ - **REFACTOR**: Migrate non-nullable types (#4656).
+
+## 0.7.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: add check on podspec to assist upgrading users deployment target.
+ - **BUILD**: commit Podfiles with 10.12 deployment target.
+ - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
+ - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
+ - **BREAKING** **BUILD**: set osx min supported platform version to 10.12.
+
+## 0.6.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: bump firebase-android-sdk to v26.2.0.
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+ - **CHORE**: harmonize dependencies and version handling.
+
+## 0.5.3
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+
+## 0.5.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.5.2
+
+ - **FEAT**: add not-in & != query support (#3748).
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.5.1
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase Android SDK BoM version to 25.12.0 (from 25.3.1).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
+## 0.5.0+1
+
+ - **FIX**: remove unused dart:async import (#3611).
+
+## 0.5.0
+
+* Allow iOS and macOS to be imported as a module.
+* DEPRECATED: `FirebaseApp.configure` method is now deprecated in favor of the `Firebase.initializeApp` method.
+* DEPRECATED: `FirebaseApp.allApps` method is now deprecated in favor of the `Firebase.apps` property.
+  * Previously, `allApps` was async & `apps` is now synchronous.
+* DEPRECATED: `FirebaseApp.appNamed` method is now deprecated in favor of the `Firebase.app` method.
+* BREAKING: `FirebaseApp.options` getter is now synchronous.
+
+* `FirebaseOptions` has been reworked to better match web property names:
+  * DEPRECATED: `googleAppID` is now deprecated in favor of `appId`.
+  * DEPRECATED: `projectID` is now deprecated in favor of `projectId`.
+  * DEPRECATED: `bundleID` is now deprecated in favor of `bundleId`.
+  * DEPRECATED: `clientID` is now deprecated in favor of `androidClientId`.
+  * DEPRECATED: `trackingID` is now deprecated in favor of `trackingId`.
+  * DEPRECATED: `gcmSenderID` is now deprecated in favor of `messagingSenderId`.
+  * Added support for `authDomain`.
+  * Added support for `trackingId`.
+  * Required properties are now `apiKey`, `appId`, `messagingSenderId` & `projectId`.
+
+* Added support for deleting Firebase app instances via the `delete` method on `FirebaseApp`.
+* Added support for returning consistent error messages from `firebase-dart` plugin.
+  * Any FlutterFire related errors now throw a `FirebaseException`.
+* Added a `FirebaseException` class to handle all FlutterFire related errors.
+  * Matching the web sdk, the exception returns a formatted "[plugin/code] message" message when thrown.
+* Added support for `setAutomaticDataCollectionEnabled` & `isAutomaticDataCollectionEnabled` on a `FirebaseApp` instance.
+* Added support for `setAutomaticResourceManagementEnabled` on a `FirebaseApp` instance.
+
+* Android: Gradle build tools updated to 3.6.3 from 3.3.0.
+* Android: Removed Gradle ‘hacks’ and upgrade Flutter SDK requirement from `>=1.12.13+hotfix.4` to `>=1.12.13+hotfix.5` - based on PR https://github.com/flutter/plugins/pull/2651
+* Android: Switched to using Firebase BoM to manage SDK versions
+
+## 0.4.5
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 0.4.4+3
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.4.4+2
+
+* Update dependency on firebase_core_platform_interface to 1.0.4.
+
+## 0.4.4+1
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.4.4
+
+* Add macOS support
+
+## 0.4.3+3
+
+* Fix overrides a deprecated API.
+
+## 0.4.3+2
+
+* Add integration instructions for the `web` platform.
+
+## 0.4.3+1
+
+* Move `Platform.isIOS` check behind a configurable import so that pub.dev registers
+  this as a Web plugin.
+
+## 0.4.3
+
+* Enable the `web` implementation by default.
+* Raise minimum required Flutter SDK version to 1.12.13+hotfix.4
+
+## 0.4.2+2
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 0.4.2+1
+
+* Check `kIsWeb` before checking `Platform.isIos` for the default app name.
+
+## 0.4.2
+
+* Migrate to `firebase_core_platform_interface`.
+
 ## 0.4.1+6
 
 * Update the homepage now that the package structure has changed.
@@ -8,7 +171,7 @@
 
 ## 0.4.1+4
 
-* Remove visibleForTesting annotation from FirebaseApp constructor. 
+* Remove visibleForTesting annotation from FirebaseApp constructor.
 
 ## 0.4.1+3
 

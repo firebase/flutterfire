@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -42,6 +44,11 @@ void main() {
             'entityId': 'hi',
             'text': 'brother',
           },
+          <dynamic, dynamic>{
+            'confidence': 1,
+            'entityId': 'hey',
+            'text': 'sister',
+          },
         ];
 
         returnValue = labelData;
@@ -80,6 +87,10 @@ void main() {
         expect(labels[1].confidence, 0.8);
         expect(labels[1].entityId, 'hi');
         expect(labels[1].text, 'brother');
+
+        expect(labels[2].confidence, 1.0);
+        expect(labels[2].entityId, 'hey');
+        expect(labels[2].text, 'sister');
       });
 
       test('processImage no blocks', () async {
@@ -127,6 +138,11 @@ void main() {
             'entityId': '/m/1',
             'text': 'apple',
           },
+          <dynamic, dynamic>{
+            'confidence': 1,
+            'entityId': '/m/2',
+            'text': 'orange',
+          },
         ];
 
         returnValue = labelData;
@@ -165,6 +181,10 @@ void main() {
         expect(labels[1].confidence, 0.8);
         expect(labels[1].entityId, '/m/1');
         expect(labels[1].text, 'apple');
+
+        expect(labels[2].confidence, 1.0);
+        expect(labels[2].entityId, '/m/2');
+        expect(labels[2].text, 'orange');
       });
     });
   });

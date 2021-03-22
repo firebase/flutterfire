@@ -1,0 +1,31 @@
+name: cloud_firestore_web
+description: The web implementation of cloud_firestore
+homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore_web
+version: 1.0.0
+
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.4"
+
+dependencies:
+  cloud_firestore_platform_interface: ^4.0.0
+  firebase_core: ^1.0.0
+  firebase_core_web: ^1.0.0
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  js: ^0.6.3
+
+dev_dependencies:
+  firebase_core_platform_interface: ^4.0.0
+  flutter_test:
+    sdk: flutter
+  mockito: ^5.0.0
+
+flutter:
+  plugin:
+    platforms:
+      web:
+        pluginClass: FirebaseFirestoreWeb
+        fileName: cloud_firestore_web.dart

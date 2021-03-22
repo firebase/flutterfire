@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_dynamic_links;
 
 typedef OnLinkSuccessCallback = Future<dynamic> Function(
@@ -48,6 +50,9 @@ class FirebaseDynamicLinks {
       Map<dynamic, dynamic> linkData) {
     if (linkData == null) return null;
 
+    final link = linkData['link'];
+    if (link == null) return null;
+
     PendingDynamicLinkDataAndroid androidData;
     if (linkData['android'] != null) {
       final Map<dynamic, dynamic> data = linkData['android'];
@@ -64,7 +69,7 @@ class FirebaseDynamicLinks {
     }
 
     return PendingDynamicLinkData._(
-      Uri.parse(linkData['link']),
+      Uri.parse(link),
       androidData,
       iosData,
     );
@@ -82,13 +87,15 @@ class FirebaseDynamicLinks {
 
   Future<dynamic> _handleMethod(MethodCall call) async {
     switch (call.method) {
-      case "onLinkSuccess":
-        final Map<dynamic, dynamic> data =
-            call.arguments.cast<dynamic, dynamic>();
-        final PendingDynamicLinkData linkData =
-            getPendingDynamicLinkDataFromMap(data);
+      case 'onLinkSuccess':
+        PendingDynamicLinkData linkData;
+        if (call.arguments != null) {
+          final Map<dynamic, dynamic> data =
+              call.arguments.cast<dynamic, dynamic>();
+          linkData = getPendingDynamicLinkDataFromMap(data);
+        }
         return _onLinkSuccess(linkData);
-      case "onLinkError":
+      case 'onLinkError':
         final Map<dynamic, dynamic> data =
             call.arguments.cast<dynamic, dynamic>();
         final OnLinkErrorException e = OnLinkErrorException._(

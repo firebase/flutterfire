@@ -1,0 +1,155 @@
+---
+title: Crashlytics
+sidebar_label: Overview
+---
+
+##  What does it do?
+
+Crashlytics helps you to collect analytics and details about crashes and errors that occur in your app. It does this through three aspects:
+
+- **Logs**: Log events in your app to be sent with the crash report for context if your app crashes.
+- **Crash reports**: Every crash is automatically turned into a crash report and sent when the application next opens.
+- **Stack traces**: Even when an error is caught and your app recovers, the Dart stack trace can still be sent.
+
+<YouTube id="k_mdNRZzd30"/>
+
+## Installation
+
+<Tabs
+groupId="legacy-or-nullsafe"
+defaultValue="legacy"
+values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+]}
+>
+<TabItem value="legacy">
+</TabItem>
+<TabItem value="null-safe">
+
+To develop in a null-safe environment, it is a prerequisite to switch to the correct Flutter channel.
+
+#### Flutter Web, Android & iOS targets:
+
+Web, Android & iOS targets require the Flutter `beta` channel:
+
+```bash
+$ flutter channel beta
+```
+
+#### Flutter desktop targets:
+
+Desktop targets such as macOS requires  the Flutter `dev` channel:
+
+```bash
+$ flutter channel dev
+```
+
+If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
+```bash
+$ flutter run --no-sound-null-safety
+```
+
+For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
+
+```dart
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:firebase_analytics/firebase_analytics.dart';
+```
+
+</TabItem>
+</Tabs>
+
+### 1. Add dependency
+
+Add the [`firebase_crashlytics`](https://pub.dev/packages/firebase_crashlytics) dependency to your projects `pubspec.yaml` file:
+
+<Tabs
+  groupId="legacy-or-nullsafe"
+  defaultValue="legacy"
+  values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+  ]}
+>
+<TabItem value="legacy">
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  firebase_crashlytics: "^{{ plugins.firebase_crashlytics }}"
+```
+
+</TabItem>
+<TabItem value="null-safe">
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core_ns }}"
+  firebase_crashlytics: "^{{ plugins.firebase_crashlytics_ns }}"
+```
+
+</TabItem>
+</Tabs>
+
+### 2. Download dependency
+
+```
+$ flutter pub get
+```
+
+### 3. Platform integration
+
+If you are migrating from a previous version of Crashlytics that used Fabric, please follow these
+guides and remove any legacy Fabric integration steps from your project:
+
+ - [Android](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=android).
+ - [iOS/macOS](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=ios).
+
+#### a. Android
+
+1. Add the following classpaths to your `android/build.gradle` file.
+
+```groovy {3} title="android/build.gradle"
+dependencies {
+  // ... other dependencies
+  classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
+}
+```
+
+2. Apply the following to your `android/app/build.gradle` file.
+
+```groovy {3} title="android/app/build.gradle"
+// ... other imports
+
+apply plugin: 'com.google.firebase.crashlytics'
+
+android {
+  // ... your android config
+}
+```
+
+#### b. iOS
+
+1. From Xcode select `Runner` from the project navigation.
+2. Select the `Build Phases` tab, then click `+ > New Run Script Phase`.
+3. Add `${PODS_ROOT}/FirebaseCrashlytics/run` to the `Type a script...` text box.
+4. Optionally you can also provide your app's built `Info.plist` location to the build phase's Input Files field:
+For example: `$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)`
+
+### 4. Rebuild your app
+
+Once complete, rebuild your Flutter application:
+
+```bash
+$ flutter run
+```
+
+## Next steps
+
+Once installed, you're ready to start using Firebase Crashlytics in your Flutter Project. View the
+[Usage documentation](./usage.mdx) to get started.

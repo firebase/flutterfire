@@ -27,7 +27,7 @@ public class FirebaseDatabasePlugin implements FlutterPlugin {
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    setupMethodChannel(binding.getFlutterEngine().getDartExecutor());
+    setupMethodChannel(binding.getBinaryMessenger());
   }
 
   @Override

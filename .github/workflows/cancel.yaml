@@ -1,0 +1,13 @@
+name: cancel_previous
+on: [push]
+jobs:
+  cancel:
+    name: "Cancel Previous Runs"
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: styfle/cancel-workflow-action@0.3.1
+        with:
+          # TODO(Salakar): Update ids once on master.
+          workflow_id: 1411321,1411322,1414417,1414454,1414624,1414626,1414627
+          access_token: ${{ github.token }}

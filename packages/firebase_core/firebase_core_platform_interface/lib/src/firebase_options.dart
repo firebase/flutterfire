@@ -1,151 +1,178 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:meta/meta.dart' show required;
-import 'package:quiver_hashcode/hashcode.dart';
+// ignore_for_file: deprecated_member_use_from_same_package
+part of firebase_core_platform_interface;
 
 /// The options used to configure a Firebase app.
+///
+/// ```dart
+/// await Firebase.initializeApp(
+///   name: 'SecondaryApp',
+///   options: const FirebaseOptions(
+///     apiKey: '...',
+///     appId: '...',
+///     messagingSenderId: '...',
+///     projectId: '...',
+///   )
+/// );
+/// ```
+@immutable
 class FirebaseOptions {
+  /// The options used to configure a Firebase app.
+  ///
+  /// ```dart
+  /// await Firebase.initializeApp(
+  ///   name: 'SecondaryApp',
+  ///   options: const FirebaseOptions(
+  ///     apiKey: '...',
+  ///     appId: '...',
+  ///     messagingSenderId: '...',
+  ///     projectId: '...',
+  ///   )
+  /// );
+  /// ```
   const FirebaseOptions({
-    this.apiKey,
-    this.bundleID,
-    this.clientID,
-    this.trackingID,
-    this.gcmSenderID,
-    this.projectID,
-    this.androidClientID,
-    @required this.googleAppID,
+    required this.apiKey,
+    required this.appId,
+    required this.messagingSenderId,
+    required this.projectId,
+    this.authDomain,
     this.databaseURL,
-    this.deepLinkURLScheme,
     this.storageBucket,
-  }) : assert(googleAppID != null);
+    this.measurementId,
+    // ios specific
+    this.trackingId,
+    this.deepLinkURLScheme,
+    this.androidClientId,
+    this.iosClientId,
+    this.iosBundleId,
+    this.appGroupId,
+  });
 
-  FirebaseOptions.from(Map<dynamic, dynamic> map)
-      : apiKey = map['APIKey'],
-        bundleID = map['bundleID'],
-        clientID = map['clientID'],
-        trackingID = map['trackingID'],
-        gcmSenderID = map['GCMSenderID'],
-        projectID = map['projectID'],
-        androidClientID = map['androidClientID'],
-        googleAppID = map['googleAppID'],
+  /// Named constructor to create [FirebaseOptions] from a Map.
+  ///
+  /// This constructor is used when platforms cannot directly return a
+  /// [FirebaseOptions] instance, for example when data is sent back from a
+  /// [MethodChannel].
+  FirebaseOptions.fromMap(Map<dynamic, dynamic> map)
+      : assert(map['apiKey'] != null, "'apiKey' cannot be null."),
+        assert(map['appId'] != null, "'appId' cannot be null."),
+        assert(map['messagingSenderId'] != null,
+            "'messagingSenderId' cannot be null."),
+        assert(map['projectId'] != null, "'projectId' cannot be null."),
+        apiKey = map['apiKey'],
+        appId = map['appId'],
+        messagingSenderId = map['messagingSenderId'],
+        projectId = map['projectId'],
+        authDomain = map['authDomain'],
         databaseURL = map['databaseURL'],
+        storageBucket = map['storageBucket'],
+        measurementId = map['measurementId'],
+        trackingId = map['trackingId'],
         deepLinkURLScheme = map['deepLinkURLScheme'],
-        storageBucket = map['storageBucket'] {
-    assert(googleAppID != null);
-  }
+        androidClientId = map['androidClientId'],
+        iosClientId = map['iosClientId'],
+        iosBundleId = map['iosBundleId'],
+        appGroupId = map['appGroupId'];
 
-  /// An API key used for authenticating requests from your app, e.g.
+  /// An API key used for authenticating requests from your app, for example
   /// "AIzaSyDdVgKwhZl0sTTTLZ7iTmt1r3N2cJLnaDk", used to identify your app to
   /// Google servers.
-  ///
-  /// This property is required on Android.
   final String apiKey;
 
-  /// The iOS bundle ID for the application. Defaults to
-  /// `[[NSBundle mainBundle] bundleID]` when not set manually or in a plist.
-  ///
-  /// This property is used on iOS only.
-  final String bundleID;
+  /// The Google App ID that is used to uniquely identify an instance of an app.
+  final String appId;
 
-  /// The OAuth2 client ID for iOS application used to authenticate Google
-  /// users, for example "12345.apps.googleusercontent.com", used for signing in
-  /// with Google.
-  ///
-  /// This property is used on iOS only.
-  final String clientID;
+  /// The unique sender ID value used in messaging to identify your app.
+  final String messagingSenderId;
 
-  /// The tracking ID for Google Analytics, e.g. "UA-12345678-1", used to
+  /// The Project ID from the Firebase console, for example "my-awesome-app".
+  final String projectId;
+
+  /// The auth domain used to handle redirects from OAuth provides on web
+  /// platforms, for example "my-awesome-app.firebaseapp.com".
+  final String? authDomain;
+
+  /// The database root URL, for example "https://my-awesome-app.firebaseio.com."
+  ///
+  /// This property should be set for apps that use Firebase Database.
+  final String? databaseURL;
+
+  /// The Google Cloud Storage bucket name, for example
+  /// "my-awesome-app.appspot.com".
+  final String? storageBucket;
+
+  /// The project measurement ID value used on web platforms with analytics.
+  final String? measurementId;
+
+  /// The tracking ID for Google Analytics, for example "UA-12345678-1", used to
   /// configure Google Analytics.
   ///
   /// This property is used on iOS only.
-  final String trackingID;
+  final String? trackingId;
 
-  /// The Project Number from the Google Developer’s console, for example
-  /// "012345678901", used to configure Google Cloud Messaging.
+  /// The URL scheme used by iOS secondary apps for Dynamic Links.
+  final String? deepLinkURLScheme;
+
+  /// The Android client ID from the Firebase Console, for example
+  /// "12345.apps.googleusercontent.com."
   ///
-  /// This property is required on iOS.
-  final String gcmSenderID;
+  /// This value is used by iOS only.
+  final String? androidClientId;
 
-  /// The Project ID from the Firebase console, for example "abc-xyz-123."
-  final String projectID;
-
-  /// The Android client ID, for example "12345.apps.googleusercontent.com."
+  /// The iOS client ID from the Firebase Console, for example
+  /// "12345.apps.googleusercontent.com."
   ///
-  /// This property is used on iOS only.
-  final String androidClientID;
+  /// This value is used by iOS only.
+  final String? iosClientId;
 
-  /// The Google App ID that is used to uniquely identify an instance of an app.
-  ///
-  /// This property cannot be `null`.
-  final String googleAppID;
-
-  /// The database root URL, e.g. "http://abc-xyz-123.firebaseio.com."
-  ///
-  /// This property should be set for apps that use Firebase Database.
-  final String databaseURL;
-
-  /// The URL scheme used to set up Durable Deep Link service.
+  /// The iOS bundle ID for the application. Defaults to `[[NSBundle mainBundle] bundleID]`
+  /// when not set manually or in a plist.
   ///
   /// This property is used on iOS only.
-  final String deepLinkURLScheme;
+  final String? iosBundleId;
 
-  /// The Google Cloud Storage bucket name, e.g.
-  /// "abc-xyz-123.storage.firebase.com."
-  final String storageBucket;
+  /// The iOS App Group identifier to share data between the application and the
+  /// application extensions.
+  ///
+  /// Note that if using this then the App Group must be configured in the
+  /// application and on the Apple Developer Portal.
+  ///
+  /// This property is used on iOS only.
+  final String? appGroupId;
 
-  Map<String, String> get asMap {
-    return <String, String>{
-      'APIKey': apiKey,
-      'bundleID': bundleID,
-      'clientID': clientID,
-      'trackingID': trackingID,
-      'GCMSenderID': gcmSenderID,
-      'projectID': projectID,
-      'androidClientID': androidClientID,
-      'googleAppID': googleAppID,
+  /// The current instance as a [Map].
+  Map<String, String?> get asMap {
+    return <String, String?>{
+      'apiKey': apiKey,
+      'appId': appId,
+      'messagingSenderId': messagingSenderId,
+      'projectId': projectId,
+      'authDomain': authDomain,
       'databaseURL': databaseURL,
-      'deepLinkURLScheme': deepLinkURLScheme,
       'storageBucket': storageBucket,
+      'measurementId': measurementId,
+      'trackingId': trackingId,
+      'deepLinkURLScheme': deepLinkURLScheme,
+      'androidClientId': androidClientId,
+      'iosClientId': iosClientId,
+      'iosBundleId': iosBundleId,
+      'appGroupId': appGroupId,
     };
   }
 
+  // Required from `fromMap` comparison
   @override
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
     if (other is! FirebaseOptions) return false;
-    return other.apiKey == apiKey &&
-        other.bundleID == bundleID &&
-        other.clientID == clientID &&
-        other.trackingID == trackingID &&
-        other.gcmSenderID == gcmSenderID &&
-        other.projectID == projectID &&
-        other.androidClientID == androidClientID &&
-        other.googleAppID == googleAppID &&
-        other.databaseURL == databaseURL &&
-        other.deepLinkURLScheme == deepLinkURLScheme &&
-        other.storageBucket == storageBucket;
+    return other.asMap.toString() == asMap.toString();
   }
 
   @override
-  int get hashCode {
-    return hashObjects(
-      <String>[
-        apiKey,
-        bundleID,
-        clientID,
-        trackingID,
-        gcmSenderID,
-        projectID,
-        androidClientID,
-        googleAppID,
-        databaseURL,
-        deepLinkURLScheme,
-        storageBucket,
-      ],
-    );
-  }
+  int get hashCode => hashList(asMap.entries);
 
   @override
   String toString() => asMap.toString();

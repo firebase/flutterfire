@@ -1,0 +1,41 @@
+name: firebase_storage_example
+description: Demonstrates how to use the firebase_storage plugin.
+author: Flutter Team <flutter-dev@googlegroups.com>
+
+environment:
+  sdk: ">=2.12.0-0 <3.0.0"
+
+dependencies:
+  firebase_core:
+    path: ../../../firebase_core/firebase_core
+  firebase_storage:
+    path: ../
+  flutter:
+    sdk: flutter
+  image_picker: ^0.7.0
+  image_picker_for_web: ^2.0.0-nullsafety
+
+dependency_overrides:
+  firebase_core:
+    path: ../../../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../../../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../../../firebase_core/firebase_core_web
+  firebase_storage:
+    path: ../
+  firebase_storage_platform_interface:
+    path: ../../firebase_storage_platform_interface
+  firebase_storage_web:
+    path: ../../firebase_storage_web
+
+dev_dependencies:
+  drive: 0.0.1-6.0.pre
+  flutter_driver:
+    sdk: flutter
+  test: any
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/hello.txt
