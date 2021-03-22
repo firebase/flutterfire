@@ -1,3 +1,7 @@
+## 1.0.2
+
+ - **FIX**: cannot store null values in firestore on the web (#5335).
+
 ## 1.0.1
 
  - **FIX**: Fix wrong cast (FirebaseExtended#5050) (#5242).
