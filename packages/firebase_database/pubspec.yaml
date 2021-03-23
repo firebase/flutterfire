@@ -17,8 +17,8 @@ dev_dependencies:
   firebase_core_platform_interface: ^4.0.0
   flutter_test:
     sdk: flutter
-  mockito: ^5.0.0
-  pedantic: ^1.8.0
+  mockito: ^5.0.2
+  pedantic: ^1.11.0
   test: any
 
 flutter:
