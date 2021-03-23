@@ -53,6 +53,8 @@ class FirebaseAnalytics {
 
   /// Sets the user ID property.
   ///
+  /// Setting a null [id] removes the user id.
+  ///
   /// This feature must be used in accordance with [Google's Privacy Policy][1].
   ///
   /// [1]: https://www.google.com/policies/privacy/
@@ -72,6 +74,8 @@ class FirebaseAnalytics {
   /// The [screenName] and [screenClassOverride] remain in effect until the
   /// current `Activity` (in Android) or `UIViewController` (in iOS) changes or
   /// a new call to [setCurrentScreen] is made.
+  ///
+  /// Setting a null [screenName] clears the current screen name.
   ///
   /// See also:
   ///
@@ -98,6 +102,8 @@ class FirebaseAnalytics {
   /// alphanumeric characters or underscores and must start with an alphabetic
   /// character. The "firebase_" prefix is reserved and should not be used for
   /// user property names.
+  ///
+  /// Setting a null [value] removes the user property.
   Future<void> setUserProperty(
       {required String name, required String? value}) async {
     if (name.isEmpty ||

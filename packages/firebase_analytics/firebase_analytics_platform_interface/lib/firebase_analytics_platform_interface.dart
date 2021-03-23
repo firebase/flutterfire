@@ -74,12 +74,16 @@ abstract class FirebaseAnalyticsPlatform {
   }
 
   /// Sets the user id.
+  ///
+  /// Setting a null [id] removes the user id.
   Future<void> setUserId(String? id) {
     throw UnimplementedError('setUserId() is not implemented on this platform');
   }
 
   /// Sets the current screen name, which specifies the current visual context
   /// in your app.
+  ///
+  /// Setting a null [screenName] clears the current screen name.
   Future<void> setCurrentScreen({
     required String? screenName,
     String? screenClassOverride,
@@ -89,6 +93,8 @@ abstract class FirebaseAnalyticsPlatform {
   }
 
   /// Sets a user property to the given value.
+  ///
+  /// Setting a null [value] removes the user property.
   Future<void> setUserProperty({
     required String name,
     required String? value,
