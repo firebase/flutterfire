@@ -195,7 +195,8 @@ class _MyAppState extends State<MyApp> {
                             // "reason" will append the word "thrown" in the
                             // Crashlytics console.
                             await FirebaseCrashlytics.instance.recordError(e, s,
-                                reason: 'as an example of fatal error', fatal: true);
+                                reason: 'as an example of fatal error',
+                                fatal: true);
                           }
                         },
                         child: const Text('Record Fatal Error'),

@@ -96,9 +96,9 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     List<Map<String, String>>? stackTraceElements,
   }) async {
     try {
-    /// "fatal" is an optional parameter that we're using to signal to the Crashlytic's service that this particular 
-    /// error was a fatal one.  The below if statement is Firebase's prescribed method of signalling a fatal error. 
-    /// Analytics plugin is required to send a fatal signal. 
+      /// "fatal" is an optional parameter that we're using to signal to the Crashlytic's service that this particular
+      /// error was a fatal one.  The below if statement is Firebase's prescribed method of signalling a fatal error.
+      /// Analytics plugin is required to send a fatal signal.
       if (fatal) {
         try {
           num currentUnixTimeSeconds =
@@ -110,8 +110,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
             'name': '_ae',
             'parameters': {
               'fatal': 1,
-              'timestamp':
-                  '$currentUnixTimeSeconds',
+              'timestamp': '$currentUnixTimeSeconds',
             },
           });
         } on MissingPluginException catch (error) {
