@@ -28,7 +28,7 @@ class FirebaseAnalytics {
 
   /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
   Future<void> logEvent(
-      {required String name, Map<String, Object>? parameters}) async {
+      {required String name, Map<String, Object?>? parameters}) async {
     if (_reservedEventNames.contains(name)) {
       throw ArgumentError.value(
           name, 'name', 'Event name is reserved and cannot be used');
@@ -56,7 +56,7 @@ class FirebaseAnalytics {
   /// This feature must be used in accordance with [Google's Privacy Policy][1].
   ///
   /// [1]: https://www.google.com/policies/privacy/
-  Future<void> setUserId(String id) async {
+  Future<void> setUserId(String? id) async {
     await _platformInstance.setUserId(id);
   }
 
@@ -78,7 +78,7 @@ class FirebaseAnalytics {
   ///  * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.html#setCurrentScreen(android.app.Activity, java.lang.String, java.lang.String)
   ///  * https://firebase.google.com/docs/reference/ios/firebaseanalytics/api/reference/Classes/FIRAnalytics#setscreennamescreenclass
   Future<void> setCurrentScreen(
-      {required String screenName,
+      {required String? screenName,
       String screenClassOverride = 'Flutter'}) async {
     await _platformInstance.setCurrentScreen(
       screenName: screenName,
@@ -99,7 +99,7 @@ class FirebaseAnalytics {
   /// character. The "firebase_" prefix is reserved and should not be used for
   /// user property names.
   Future<void> setUserProperty(
-      {required String name, required String value}) async {
+      {required String name, required String? value}) async {
     if (name.isEmpty ||
         name.length > 24 ||
         name.indexOf(_alpha) != 0 ||
