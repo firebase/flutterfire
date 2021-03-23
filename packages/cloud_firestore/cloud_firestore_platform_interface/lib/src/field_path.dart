@@ -50,7 +50,7 @@ class FieldPath {
         assert(!path.contains(']'), _reserved);
 
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       other is FieldPath &&
       const ListEquality().equals(other.components, components);
 
