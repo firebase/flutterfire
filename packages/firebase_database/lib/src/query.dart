@@ -2,21 +2,18 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_database;
 
 /// Represents a query over the data at a particular location.
 class Query {
   Query._(
-      {@required FirebaseDatabase database,
-      @required List<String> pathComponents,
-      Map<String, dynamic> parameters})
+      {required FirebaseDatabase database,
+      required List<String> pathComponents,
+      Map<String, dynamic>? parameters})
       : _database = database,
         _pathComponents = pathComponents,
         _parameters = parameters ??
-            Map<String, dynamic>.unmodifiable(<String, dynamic>{}),
-        assert(database != null);
+            Map<String, dynamic>.unmodifiable(<String, dynamic>{});
 
   final FirebaseDatabase _database;
   final List<String> _pathComponents;
@@ -43,10 +40,10 @@ class Query {
   }
 
   Stream<Event> _observe(_EventType eventType) {
-    Future<int> _handle;
+    late Future<int> _handle;
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
-    StreamController<Event> controller; // ignore: close_sinks
+    late StreamController<Event> controller; // ignore: close_sinks
     controller = StreamController<Event>.broadcast(
       onListen: () {
         _handle = _database._channel.invokeMethod<int>(
@@ -104,7 +101,7 @@ class Query {
   /// than or equal to the given value, using the given orderBy directive or
   /// priority as default, and optionally only child nodes with a key greater
   /// than or equal to the given key.
-  Query startAt(dynamic value, {String key}) {
+  Query startAt(dynamic value, {String? key}) {
     assert(!_parameters.containsKey('startAt'));
     assert(value is String ||
         value is bool ||
@@ -120,7 +117,7 @@ class Query {
   /// than or equal to the given value, using the given orderBy directive or
   /// priority as default, and optionally only child nodes with a key less
   /// than or equal to the given key.
-  Query endAt(dynamic value, {String key}) {
+  Query endAt(dynamic value, {String? key}) {
     assert(!_parameters.containsKey('endAt'));
     assert(value is String ||
         value is bool ||
@@ -136,7 +133,7 @@ class Query {
   /// `value` (and `key`, if provided).
   ///
   /// If a key is provided, there is at most one such child as names are unique.
-  Query equalTo(dynamic value, {String key}) {
+  Query equalTo(dynamic value, {String? key}) {
     assert(!_parameters.containsKey('equalTo'));
     assert(value is String ||
         value is bool ||

@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:math';
 
 // ignore: avoid_classes_with_only_static_members
@@ -23,7 +21,7 @@ class PushIdGenerator {
 
   static final Random _random = Random();
 
-  static int _lastPushTime;
+  static int? _lastPushTime;
 
   static final List<int> _lastRandChars = []..length = 12;
 
