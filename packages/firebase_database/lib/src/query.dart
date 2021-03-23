@@ -162,7 +162,6 @@ class Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByChild(String key) {
-    assert(key != null);
     assert(!_parameters.containsKey('orderBy'));
     return _copyWithParameters(
       <String, dynamic>{'orderBy': 'child', 'orderByChildKey': key},
