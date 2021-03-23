@@ -117,7 +117,7 @@ class _Application extends State<Application> {
     super.initState();
     FirebaseMessaging.instance
         .getInitialMessage()
-        .then((RemoteMessage message) {
+        .then((RemoteMessage? message) {
       if (message != null) {
         Navigator.pushNamed(context, '/message',
             arguments: MessageArguments(message, true));
@@ -125,8 +125,8 @@ class _Application extends State<Application> {
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
 
       if (notification != null && android != null) {
         flutterLocalNotificationsPlugin.show(
