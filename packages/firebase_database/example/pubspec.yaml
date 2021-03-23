@@ -22,10 +22,7 @@ dependency_overrides:
     path: ../../firebase_core/firebase_core_web
 
 dev_dependencies:
-  e2e: ^0.6.1
-  flutter_driver:
-    sdk: flutter
-  pedantic: ^1.8.0
+  pedantic: ^1.11.0
   test: any
 
 flutter:
