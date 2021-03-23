@@ -1,13 +1,8 @@
-// @dart=2.9
-
-import 'package:e2e/e2e.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 Future<void> main() async {
-  E2EWidgetsFlutterBinding.ensureInitialized();
-
   group('$FirebaseDatabase', () {
     setUp(() async {
       await Firebase.initializeApp();
@@ -24,7 +19,7 @@ Future<void> main() async {
         return mutableData;
       });
       expect(transactionResult.committed, true);
-      expect(transactionResult.dataSnapshot.value > value, true);
+      expect(transactionResult.dataSnapshot?.value > value, true);
     });
 
     testWidgets('setPersistenceCacheSizeBytes Integer',
