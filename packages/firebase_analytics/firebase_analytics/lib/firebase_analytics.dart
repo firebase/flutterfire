@@ -625,7 +625,7 @@ class FirebaseAnalytics {
   /// Logs the standard `select_content` event.
   ///
   /// This general purpose event signifies that a user has selected some
-  /// content of a certain type in an app. The content can be any dynamic in
+  /// content of a certain type in an app. The content can be any object in
   /// your app. This event can help you identify popular content and categories
   /// of content in your app.
   ///
@@ -701,7 +701,7 @@ class FirebaseAnalytics {
   /// Logs the standard `spend_virtual_currency` event.
   ///
   /// This event tracks the sale of virtual goods in your app and can help you
-  /// identify which virtual goods are the most popular dynamics of purchase.
+  /// identify which virtual goods are the most popular objects of purchase.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SPEND_VIRTUAL_CURRENCY
   Future<void> logSpendVirtualCurrency({
