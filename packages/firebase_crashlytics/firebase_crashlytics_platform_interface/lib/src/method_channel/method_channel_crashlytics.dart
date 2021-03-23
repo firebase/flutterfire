@@ -99,20 +99,19 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
       if (fatal) {
         try {
           num currentUnixTimeSeconds =
-              (DateTime.now().millisecondsSinceEpoch / 1000).floorToDouble();
+              (DateTime.now().millisecondsSinceEpoch / 1000).floor();
 
           await setCustomKey(_FATAL_FLAG, '$currentUnixTimeSeconds');
 
           await _analyticsChannel.invokeMethod('logEvent', <String, dynamic>{
-            'name': '_ae', // '_ae' is a reserved analytics value for firebase
+            'name': '_ae',
             'parameters': {
-              'fatal': 1, // as in firebase-android-sdk
+              'fatal': 1,
               'timestamp':
-                  '$currentUnixTimeSeconds', // 'long timestamp', is that current UNIX time?
+                  '$currentUnixTimeSeconds',
             },
           });
         } on MissingPluginException catch (error) {
-          //TODO - error gets here if analytics isn't present. Should we throw an error informing users to install analytics plugin to use "fatal" flag?
         } on PlatformException catch (e, s) {
           throw platformExceptionToFirebaseException(e, s);
         }
