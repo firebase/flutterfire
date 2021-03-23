@@ -1,3 +1,9 @@
+## 7.0.0
+
+> Note: This release has breaking changes.
+
+- **BREAKING** **FEAT**: Upgrade to sound null-safety.
+
 ## 6.1.0
 
  - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
