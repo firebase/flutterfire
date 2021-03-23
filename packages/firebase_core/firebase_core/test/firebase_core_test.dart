@@ -114,7 +114,7 @@ class MockFirebaseCore extends Mock
 class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes, hash_and_equals
-  bool operator ==(Object? other) {
+  bool operator ==(Object other) {
     return super == other;
   }
 }
