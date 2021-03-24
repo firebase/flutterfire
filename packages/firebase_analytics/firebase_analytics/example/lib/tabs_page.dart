@@ -34,7 +34,7 @@ class _TabsPageState extends State<TabsPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    widget.observer.subscribe(this, ModalRoute.of(context));
+
   }
 
   @override
@@ -59,6 +59,7 @@ class _TabsPageState extends State<TabsPage>
         }
       });
     });
+    widget.observer.subscribe(this, ModalRoute.of(context));
   }
 
   @override
