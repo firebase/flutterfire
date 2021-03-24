@@ -5,10 +5,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:e2e/e2e.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 
 void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
@@ -30,5 +30,23 @@ void main() {
     expect(
         FirebaseAnalytics().setCurrentScreen(screenName: 'testing'), completes);
     expect(FirebaseAnalytics().logEvent(name: 'testing'), completes);
+    expect(
+        FirebaseAnalytics().logEvent(
+          name: 'view_item_list',
+          parameters: {
+            'item_list_id': 'Test',
+            'items': [
+              {
+                'item_id': '1',
+                'item_name': 'Item 1',
+              },
+              {
+                'item_id': 2,
+                'item_name': 'Item 2',
+              },
+            ],
+          },
+        ),
+        completes);
   });
 }
