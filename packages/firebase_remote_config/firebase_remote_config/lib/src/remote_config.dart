@@ -22,18 +22,18 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   // to avoid creating a [MethodChannelFirebaseRemoteConfig] when not needed
   // or creating an instance with the default app before a user specifies an
   // app.
-  FirebaseRemoteConfigPlatform? _delegatePackingProperty;
+  late final FirebaseRemoteConfigPlatform _delegatePackingProperty =
+  FirebaseRemoteConfigPlatform.instanceFor(
+    app: app,
+    pluginConstants: pluginConstants,
+  );
 
   /// Returns the underlying delegate implementation.
   ///
   /// If called and no [_delegatePackingProperty] exists, it will first be
   /// created and assigned before returning the delegate.
   FirebaseRemoteConfigPlatform get _delegate {
-    return _delegatePackingProperty ??=
-        FirebaseRemoteConfigPlatform.instanceFor(
-      app: app,
-      pluginConstants: pluginConstants,
-    );
+    return _delegatePackingProperty;
   }
 
   /// The [FirebaseApp] this instance was initialized with.

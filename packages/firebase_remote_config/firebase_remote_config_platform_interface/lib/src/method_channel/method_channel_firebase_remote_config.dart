@@ -40,10 +40,10 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     return MethodChannelFirebaseRemoteConfig._();
   }
 
-  Map<String, RemoteConfigValue>? _activeParameters;
-  RemoteConfigSettings? _settings;
-  DateTime? _lastFetchTime;
-  RemoteConfigFetchStatus? _lastFetchStatus;
+  late Map<String, RemoteConfigValue> _activeParameters;
+  late RemoteConfigSettings _settings;
+  late DateTime _lastFetchTime;
+  late RemoteConfigFetchStatus _lastFetchStatus;
 
   /// Gets a [FirebaseRemoteConfigPlatform] instance for a specific
   /// [FirebaseApp].
@@ -162,47 +162,47 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
 
   @override
   Map<String, RemoteConfigValue> getAll() {
-    return _activeParameters ?? {};
+    return _activeParameters;
   }
 
   @override
   bool getBool(String key) {
-    if (!_activeParameters!.containsKey(key)) {
+    if (!_activeParameters.containsKey(key)) {
       return RemoteConfigValue.defaultValueForBool;
     }
-    return _activeParameters![key]!.asBool();
+    return _activeParameters[key]!.asBool();
   }
 
   @override
   int getInt(String key) {
-    if (!_activeParameters!.containsKey(key)) {
+    if (!_activeParameters.containsKey(key)) {
       return RemoteConfigValue.defaultValueForInt;
     }
-    return _activeParameters![key]!.asInt();
+    return _activeParameters[key]!.asInt();
   }
 
   @override
   double getDouble(String key) {
-    if (!_activeParameters!.containsKey(key)) {
+    if (!_activeParameters.containsKey(key)) {
       return RemoteConfigValue.defaultValueForDouble;
     }
-    return _activeParameters![key]!.asDouble();
+    return _activeParameters[key]!.asDouble();
   }
 
   @override
   String getString(String key) {
-    if (!_activeParameters!.containsKey(key)) {
+    if (!_activeParameters.containsKey(key)) {
       return RemoteConfigValue.defaultValueForString;
     }
-    return _activeParameters![key]!.asString();
+    return _activeParameters[key]!.asString();
   }
 
   @override
   RemoteConfigValue getValue(String key) {
-    if (!_activeParameters!.containsKey(key)) {
+    if (!_activeParameters.containsKey(key)) {
       return RemoteConfigValue(null, ValueSource.valueStatic);
     }
-    return _activeParameters![key]!;
+    return _activeParameters[key]!;
   }
 
   @override
