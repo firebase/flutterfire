@@ -12,19 +12,19 @@ import '../firestore_interop.dart' hide FieldValue;
 
 /// Returns Dart representation from JS Object.
 dynamic dartify(Object? jsObject) {
-  return core_interop.dartify(jsObject, (Object object) {
+  return core_interop.dartify(jsObject, (Object? object) {
     if (util.instanceof(object, DocumentReferenceJsConstructor)) {
-      return DocumentReference.getInstance(object as DocumentReferenceJsImpl);
+      return DocumentReference.getInstance(object! as DocumentReferenceJsImpl);
     }
     if (util.instanceof(object, GeoPointConstructor)) {
       return object;
     }
     if (util.instanceof(object, TimestampJsConstructor)) {
       return DateTime.fromMillisecondsSinceEpoch(
-          (object as TimestampJsImpl).toMillis());
+          (object! as TimestampJsImpl).toMillis());
     }
     if (util.instanceof(object, BlobConstructor)) {
-      return object as Blob;
+      return object! as Blob;
     }
     return null;
   });
@@ -36,7 +36,7 @@ dynamic jsify(Object? dartObject) {
     return null;
   }
 
-  return core_interop.jsify(dartObject, (Object object) {
+  return core_interop.jsify(dartObject, (Object? object) {
     if (object is DateTime) {
       return TimestampJsImpl.fromMillis(object.millisecondsSinceEpoch);
     }
