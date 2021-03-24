@@ -127,8 +127,9 @@ class _Application extends State<Application> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
-
+  
       if (notification != null && android != null) {
+  print("NNNNN: " + notification.android.tag);
         flutterLocalNotificationsPlugin.show(
             notification.hashCode,
             notification.title,
