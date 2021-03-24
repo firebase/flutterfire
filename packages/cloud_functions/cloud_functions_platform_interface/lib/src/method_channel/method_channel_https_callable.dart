@@ -4,27 +4,27 @@
 
 import 'dart:async';
 
-import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
-import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
+import '../../cloud_functions_platform_interface.dart';
+import 'method_channel_firebase_functions.dart';
 
 import 'utils/exception.dart';
 
 /// Method Channel delegate for [HttpsCallablePlatform].
 class MethodChannelHttpsCallable extends HttpsCallablePlatform {
   /// Creates a new [MethodChannelHttpsCallable] instance.
-  MethodChannelHttpsCallable(FirebaseFunctionsPlatform functions, String origin,
-      String name, HttpsCallableOptions options)
+  MethodChannelHttpsCallable(FirebaseFunctionsPlatform functions,
+      String? origin, String name, HttpsCallableOptions options)
       : super(functions, origin, name, options);
 
   @override
   Future<dynamic> call([dynamic parameters]) {
     return MethodChannelFirebaseFunctions.channel
         .invokeMethod('FirebaseFunctions#call', <String, dynamic>{
-      'appName': functions.app.name,
+      'appName': functions.app!.name,
       'functionName': name,
       'origin': origin,
       'region': functions.region,
-      'timeout': timeout?.inMilliseconds,
+      'timeout': options.timeout.inMilliseconds,
       'parameters': parameters,
     }).catchError(catchPlatformException);
   }

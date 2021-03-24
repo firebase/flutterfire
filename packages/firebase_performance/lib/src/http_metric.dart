@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_performance;
 
 /// Metric used to collect data for network requests/responses.
@@ -122,7 +124,7 @@ class HttpMetric extends PerformanceAttributes {
   /// Using `await` with this method is only necessary when accurate timing
   /// is relevant.
   Future<void> start() {
-    if (_hasStopped) return Future<void>.value(null);
+    if (_hasStopped) return Future<void>.value();
 
     return FirebasePerformance.channel.invokeMethod<void>(
       'HttpMetric#start',
@@ -139,7 +141,7 @@ class HttpMetric extends PerformanceAttributes {
   ///
   /// Not necessary to use `await` with this method.
   Future<void> stop() {
-    if (_hasStopped) return Future<void>.value(null);
+    if (_hasStopped) return Future<void>.value();
 
     _hasStopped = true;
     return FirebasePerformance.channel.invokeMethod<void>(

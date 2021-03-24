@@ -8,10 +8,6 @@ import '../interop/storage.dart' as storage_interop;
 /// Converts FullMetadata coming from the JS Interop layer to FullMetadata for the plugin.
 FullMetadata fbFullMetadataToFullMetadata(
     storage_interop.FullMetadata metadata) {
-  if (metadata == null) {
-    return null;
-  }
-
   return FullMetadata({
     'bucket': metadata.bucket,
     'cacheControl': metadata.cacheControl,
@@ -27,18 +23,14 @@ FullMetadata fbFullMetadataToFullMetadata(
     'metageneration': metadata.metageneration,
     'name': metadata.name,
     'size': metadata.size,
-    'creationTimeMillis': metadata.timeCreated.millisecondsSinceEpoch,
-    'updatedTimeMillis': metadata.updated.millisecondsSinceEpoch,
+    'creationTimeMillis': metadata.timeCreated!.millisecondsSinceEpoch,
+    'updatedTimeMillis': metadata.updated!.millisecondsSinceEpoch,
   });
 }
 
 /// Converts SettableMetadata from the plugin to SettableMetadata for the JS Interop layer.
 storage_interop.SettableMetadata settableMetadataToFbSettableMetadata(
     SettableMetadata metadata) {
-  if (metadata == null) {
-    return null;
-  }
-
   return storage_interop.SettableMetadata(
     cacheControl: metadata.cacheControl,
     contentDisposition: metadata.contentDisposition,
@@ -52,11 +44,7 @@ storage_interop.SettableMetadata settableMetadataToFbSettableMetadata(
 /// Converts SettableMetadata from the plugin and an additional MD5 hash (as String) to an UploadMetadata for the JS Interop layer.
 storage_interop.UploadMetadata settableMetadataToFbUploadMetadata(
     SettableMetadata metadata,
-    {String md5Hash}) {
-  if (metadata == null) {
-    return null;
-  }
-
+    {String? md5Hash}) {
   return storage_interop.UploadMetadata(
     cacheControl: metadata.cacheControl,
     contentDisposition: metadata.contentDisposition,
@@ -76,10 +64,6 @@ Map<PutStringFormat, String> _putStringFormatToFbStringFormat = {
 };
 
 /// Converts PutStringFormat from the plugin to the correct StringFormat for the JS interop layer.
-String putStringFormatToString(PutStringFormat format) {
-  if (format == null) {
-    return null;
-  }
-
+String? putStringFormatToString(PutStringFormat format) {
   return _putStringFormatToFbStringFormat[format];
 }

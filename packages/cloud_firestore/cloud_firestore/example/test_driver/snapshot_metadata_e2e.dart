@@ -1,8 +1,8 @@
-// @dart = 2.9
-
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
+// @dart=2.9
 
 import 'dart:async';
 
@@ -12,7 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runSnapshotMetadataTests() {
   group('$SnapshotMetadata', () {
-    /*late*/ FirebaseFirestore firestore;
+    FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -31,11 +31,12 @@ void runSnapshotMetadataTests() {
     test('a snapshot returns the correct [isFromCache] value', () async {
       CollectionReference collection =
           await initializeTest('snapshot-metadata-is-from-cache');
-      QuerySnapshot qs = await collection.get(GetOptions(source: Source.cache));
+      QuerySnapshot qs =
+          await collection.get(const GetOptions(source: Source.cache));
       expect(qs.metadata.isFromCache, isTrue);
 
       QuerySnapshot qs2 =
-          await collection.get(GetOptions(source: Source.server));
+          await collection.get(const GetOptions(source: Source.server));
       expect(qs2.metadata.isFromCache, isFalse);
     });
   }, skip: kIsWeb);

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
@@ -13,6 +15,8 @@ import 'package:image_picker/image_picker.dart';
 import 'detector_painters.dart';
 
 class PictureScanner extends StatefulWidget {
+  const PictureScanner({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _PictureScannerState();
 }
@@ -33,7 +37,6 @@ class _PictureScannerState extends State<PictureScanner> {
       FirebaseVision.instance.cloudTextRecognizer();
   final DocumentTextRecognizer _cloudDocumentRecognizer =
       FirebaseVision.instance.cloudDocumentTextRecognizer();
-  final ImagePicker _picker = ImagePicker();
 
   Future<void> _getAndScanImage() async {
     setState(() {
@@ -41,18 +44,20 @@ class _PictureScannerState extends State<PictureScanner> {
       _imageSize = null;
     });
 
-    final PickedFile pickedImage =
-        await _picker.getImage(source: ImageSource.gallery);
+    final File pickedImage =
+        await ImagePicker.pickImage(source: ImageSource.gallery);
     final File imageFile = File(pickedImage.path);
-
-    if (imageFile != null) {
-      _getImageSize(imageFile);
-      _scanImage(imageFile);
-    }
 
     setState(() {
       _imageFile = imageFile;
     });
+
+    if (imageFile != null) {
+      await Future.wait([
+        _getImageSize(imageFile),
+        _scanImage(imageFile),
+      ]);
+    }
   }
 
   Future<void> _getImageSize(File imageFile) async {
@@ -163,7 +168,7 @@ class _PictureScannerState extends State<PictureScanner> {
                 'Scanning...',
                 style: TextStyle(
                   color: Colors.green,
-                  fontSize: 30.0,
+                  fontSize: 30,
                 ),
               ),
             )
@@ -184,32 +189,32 @@ class _PictureScannerState extends State<PictureScanner> {
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<Detector>>[
               const PopupMenuItem<Detector>(
-                child: Text('Detect Barcode'),
                 value: Detector.barcode,
+                child: Text('Detect Barcode'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Face'),
                 value: Detector.face,
+                child: Text('Detect Face'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Label'),
                 value: Detector.label,
+                child: Text('Detect Label'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Cloud Label'),
                 value: Detector.cloudLabel,
+                child: Text('Detect Cloud Label'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Text'),
                 value: Detector.text,
+                child: Text('Detect Text'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Cloud Text'),
                 value: Detector.cloudText,
+                child: Text('Detect Cloud Text'),
               ),
               const PopupMenuItem<Detector>(
-                child: Text('Detect Document Text'),
                 value: Detector.cloudDocumentText,
+                child: Text('Detect Document Text'),
               ),
             ],
           ),

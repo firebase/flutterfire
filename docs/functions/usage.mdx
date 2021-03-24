@@ -61,12 +61,11 @@ HttpsCallableResult callable = await FirebaseFunctions
   .httpsCallable('getName');
 ```
 
-
 ## Emulator Usage
 
 If you are using the local Cloud Functions emulators, then it is possible to connect to these using the `useFunctionsEmulator` method.
 Ensure you pass the correct port on which the Firebase emulator is running on.
-
+Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
 
 ```dart
 FirebaseFunctions.instance

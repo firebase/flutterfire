@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
+import '../../firebase_storage_platform_interface.dart';
 
 /// The interface a task snapshot must extend.
 abstract class TaskSnapshotPlatform extends PlatformInterface {
@@ -22,18 +22,17 @@ abstract class TaskSnapshotPlatform extends PlatformInterface {
   /// This is used by the app-facing [TaskSnapshot] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(TaskSnapshotPlatform instance) {
-    assert(instance != null);
+  static void verifyExtends(TaskSnapshotPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
   /// The current transferred bytes of this task.
-  int /*!*/ get bytesTransferred => _data['bytesTransferred'];
+  int get bytesTransferred => _data['bytesTransferred'];
 
   /// The [FullMetadata] associated with this task.
   ///
   /// May be `null` if no metadata exists.
-  FullMetadata get metadata => _data['metadata'] == null
+  FullMetadata? get metadata => _data['metadata'] == null
       ? null
       : FullMetadata(Map<String, dynamic>.from(_data['metadata']));
 
@@ -51,5 +50,5 @@ abstract class TaskSnapshotPlatform extends PlatformInterface {
   }
 
   /// The total bytes of the task.
-  int /*!*/ get totalBytes => _data['totalBytes'];
+  int get totalBytes => _data['totalBytes'];
 }

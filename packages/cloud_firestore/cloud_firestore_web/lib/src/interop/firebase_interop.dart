@@ -13,4 +13,4 @@ import 'package:js/js.dart';
 import 'firestore_interop.dart';
 
 @JS()
-external FirestoreJsImpl firestore([AppJsImpl /*?*/ app]);
+external FirestoreJsImpl firestore([AppJsImpl? app]);

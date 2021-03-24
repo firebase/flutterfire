@@ -4,7 +4,6 @@
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/auth_provider.dart';
-import 'package:meta/meta.dart';
 
 const _kLinkProviderId = 'emailLink';
 const _kProviderId = 'password';
@@ -35,37 +34,19 @@ abstract class EmailAuthProvider extends AuthProvider {
   }
 
   /// Creates a new [EmailAuthCredential] from a given email and password.
-  static AuthCredential credential(
-      {@required String email, @required String password}) {
-    assert(email != null);
-    assert(password != null);
+  static AuthCredential credential({
+    required String email,
+    required String password,
+  }) {
     return EmailAuthCredential._credential(email, password);
   }
 
   /// Creates a new [EmailAuthCredential] from a given email and email link.
-  static AuthCredential credentialWithLink(
-      {@required String email, @required String emailLink}) {
-    assert(email != null);
-    assert(emailLink != null);
+  static AuthCredential credentialWithLink({
+    required String email,
+    required String emailLink,
+  }) {
     return EmailAuthCredential._credentialWithLink(email, emailLink);
-  }
-
-  @Deprecated('Deprecated in favor of `EmailAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential({
-    @required String email,
-    @required String password,
-  }) {
-    return EmailAuthProvider.credential(email: email, password: password);
-  }
-
-  @Deprecated('Deprecated in favor of `EmailAuthProvider.credentialWithLink()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredentialWithLink({
-    @required String email,
-    @required String link,
-  }) {
-    return EmailAuthProvider.credentialWithLink(email: email, emailLink: link);
   }
 }
 
@@ -74,7 +55,7 @@ abstract class EmailAuthProvider extends AuthProvider {
 class EmailAuthCredential extends AuthCredential {
   EmailAuthCredential._(
     String _signInMethod, {
-    @required this.email,
+    required this.email,
     this.password,
     this.emailLink,
   }) : super(providerId: _kProviderId, signInMethod: _signInMethod);
@@ -94,14 +75,14 @@ class EmailAuthCredential extends AuthCredential {
   final String email;
 
   /// The user account password.
-  final String password;
+  final String? password;
 
   /// The sign-in email link.
-  final String emailLink;
+  final String? emailLink;
 
   @override
-  Map<String, String> asMap() {
-    return <String, String>{
+  Map<String, String?> asMap() {
+    return <String, String?>{
       'providerId': providerId,
       'signInMethod': signInMethod,
       'email': email,

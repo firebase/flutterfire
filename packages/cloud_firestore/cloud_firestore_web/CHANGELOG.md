@@ -1,3 +1,44 @@
+## 1.0.2
+
+ - **FIX**: cannot store null values in firestore on the web (#5335).
+
+## 1.0.1
+
+ - **FIX**: Fix wrong cast (FirebaseExtended#5050) (#5242).
+
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "cloud_firestore_web" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.4.0-1.0.nullsafety.2
+
+ - **FIX**: Fixed crashes due to null `Settings` (#5031).
+
+## 0.4.0-1.0.nullsafety.1
+
+ - Update a dependency to the latest release.
+
+## 0.4.0-1.0.nullsafety.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: migrate to NNBD (#4780).
+
+## 0.3.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: ensure web FieldValue types are converted (#4247).
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs (#4594).
+
 ## 0.2.1+2
 
  - Update a dependency to the latest release.

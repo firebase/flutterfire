@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: avoid_catching_errors
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,9 +14,9 @@ import '../mock.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  /*late*/ FirebaseStoragePlatform firebaseStoragePlatform;
-  /*late*/ FirebaseApp app;
-  /*late*/ TestListResultPlatform listResultPlatform;
+  FirebaseStoragePlatform? firebaseStoragePlatform;
+  FirebaseApp? app;
+  TestListResultPlatform? listResultPlatform;
 
   group('$ListResultPlatform()', () {
     setUpAll(() async {
@@ -32,22 +34,17 @@ void main() {
     group('verifyExtends()', () {
       test('calls successfully', () {
         try {
-          ListResultPlatform.verifyExtends(listResultPlatform);
+          ListResultPlatform.verifyExtends(listResultPlatform!);
           return;
         } catch (_) {
           fail('thrown an unexpected exception');
         }
       });
-
-      test('throws an [AssertionError] exception when instance is null', () {
-        expect(
-            () => ListResultPlatform.verifyExtends(null), throwsAssertionError);
-      });
     });
 
     test('throws if get.items', () async {
       try {
-        await listResultPlatform.items;
+        listResultPlatform!.items;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('items is not implemented'));
         return;
@@ -57,7 +54,7 @@ void main() {
 
     test('throws if get.prefixes', () async {
       try {
-        await listResultPlatform.prefixes;
+        listResultPlatform!.prefixes;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('prefixes is not implemented'));
         return;
@@ -73,5 +70,6 @@ class TestListResultPlatform extends ListResultPlatform {
 }
 
 class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
-  TestFirebaseStoragePlatform(FirebaseApp app) : super(appInstance: app);
+  TestFirebaseStoragePlatform(FirebaseApp? app)
+      : super(appInstance: app, bucket: '');
 }

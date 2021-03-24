@@ -11,10 +11,7 @@ part of cloud_firestore;
 /// Since query results contain only existing documents, the exists property
 /// will always be `true` and [data()] will never return `null`.
 class QueryDocumentSnapshot extends DocumentSnapshot {
-  final FirebaseFirestore _firestore;
-  final DocumentSnapshotPlatform _delegate;
-
-  QueryDocumentSnapshot._(this._firestore, this._delegate)
+  QueryDocumentSnapshot._(_firestore, _delegate)
       : super._(_firestore, _delegate);
 
   @override

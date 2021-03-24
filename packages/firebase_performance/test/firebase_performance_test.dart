@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:flutter/services.dart';
 
 import 'package:firebase_performance/firebase_performance.dart';
@@ -33,9 +35,7 @@ void main() {
       });
     });
 
-    setUp(() {
-      performanceLog.clear();
-    });
+    setUp(performanceLog.clear);
 
     test('instance', () {
       firebasePerformanceHandle = nextHandle++;
@@ -260,7 +260,7 @@ void main() {
         ]);
       });
 
-      test('invokeMethod not called if trace hasn\'t started', () {
+      test("invokeMethod not called if trace hasn't started", () {
         testTrace.incrementMetric('any', 211);
         testTrace.setMetric('what', 23);
 

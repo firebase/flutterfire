@@ -1,5 +1,3 @@
-// @dart = 2.9
-
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -11,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runDocumentChangeTests() {
   group('$DocumentChange', () {
-    /*late*/ FirebaseFirestore firestore;
+    late FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -26,6 +24,52 @@ void runDocumentChangeTests() {
       });
       return collection;
     }
+
+    test('can add/update values to null in the document', () async {
+      CollectionReference collection = await initializeTest('null-test');
+      DocumentReference doc1 = collection.doc('doc1');
+
+      await expectLater(
+        doc1.snapshots(),
+        emits(
+          isA<DocumentSnapshot>().having((q) => q.exists, 'exists', false),
+        ),
+      );
+
+      await doc1.set(<String, Object?>{
+        'key': null,
+        'key2': 42,
+      });
+
+      await expectLater(
+        doc1.snapshots(),
+        emits(
+          isA<DocumentSnapshot>()
+              .having((q) => q.exists, 'exists', true)
+              .having((q) => q.data(), 'data()', <String, Object?>{
+            'key': null,
+            'key2': 42,
+          }),
+        ),
+      );
+
+      await doc1.set({
+        'key': null,
+        'key2': null,
+      });
+
+      await expectLater(
+        doc1.snapshots(),
+        emits(
+          isA<DocumentSnapshot>()
+              .having((q) => q.exists, 'exists', true)
+              .having((q) => q.data(), 'data()', <String, Object?>{
+            'key': null,
+            'key2': null,
+          }),
+        ),
+      );
+    }, timeout: const Timeout.factor(8));
 
     test('returns the correct metadata when adding and removing', () async {
       CollectionReference collection =
@@ -49,7 +93,7 @@ void runDocumentChangeTests() {
           expect(change.newIndex, equals(0));
           expect(change.oldIndex, equals(-1));
           expect(change.type, equals(DocumentChangeType.added));
-          expect(change.doc.data()['name'], equals('doc1'));
+          expect(change.doc.data()!['name'], equals('doc1'));
         } else if (call == 2) {
           expect(snapshot.docs.length, equals(0));
           expect(snapshot.docChanges.length, equals(1));
@@ -58,13 +102,13 @@ void runDocumentChangeTests() {
           expect(change.newIndex, equals(-1));
           expect(change.oldIndex, equals(0));
           expect(change.type, equals(DocumentChangeType.removed));
-          expect(change.doc.data()['name'], equals('doc1'));
+          expect(change.doc.data()!['name'], equals('doc1'));
         } else {
-          fail("Should not have been called");
+          fail('Should not have been called');
         }
-      }, count: 2, reason: "Stream should only have been called twice."));
+      }, count: 2, reason: 'Stream should only have been called twice.'));
 
-      await Future.delayed(Duration(seconds: 1)); // Ensure listener fires
+      await Future.delayed(const Duration(seconds: 1)); // Ensure listener fires
       await doc1.delete();
 
       await subscription.cancel();
@@ -95,7 +139,7 @@ void runDocumentChangeTests() {
             expect(change.oldIndex, equals(-1));
             expect(change.newIndex, equals(index));
             expect(change.type, equals(DocumentChangeType.added));
-            expect(change.doc.data()['value'], equals(index + 1));
+            expect(change.doc.data()!['value'], equals(index + 1));
           });
         } else if (call == 2) {
           expect(snapshot.docs.length, equals(3));
@@ -106,11 +150,11 @@ void runDocumentChangeTests() {
           expect(change.type, equals(DocumentChangeType.modified));
           expect(change.doc.id, equals('doc1'));
         } else {
-          fail("Should not have been called");
+          fail('Should not have been called');
         }
-      }, count: 2, reason: "Stream should only have been called twice."));
+      }, count: 2, reason: 'Stream should only have been called twice.'));
 
-      await Future.delayed(Duration(seconds: 1)); // Ensure listener fires
+      await Future.delayed(const Duration(seconds: 1)); // Ensure listener fires
       await doc1.update({'value': 4});
 
       await subscription.cancel();

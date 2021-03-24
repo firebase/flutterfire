@@ -1,8 +1,8 @@
-// @dart = 2.9
-
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
+// @dart=2.9
 
 import 'dart:async';
 
@@ -12,7 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runWriteBatchTests() {
   group('$WriteBatch', () {
-    /*late*/ FirebaseFirestore firestore;
+    FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -32,12 +32,11 @@ void runWriteBatchTests() {
       CollectionReference collection = await initializeTest('write-batch-ops');
       WriteBatch batch = firestore.batch();
 
-      DocumentReference doc1 = await collection.doc('doc1'); // delete
-      DocumentReference doc2 = await collection.doc('doc2'); // set
-      DocumentReference doc3 = await collection.doc('doc3'); // update
-      DocumentReference doc4 = await collection.doc('doc4'); // update w/ merge
-      DocumentReference doc5 =
-          await collection.doc('doc5'); // update w/ mergeFields
+      DocumentReference doc1 = collection.doc('doc1'); // delete
+      DocumentReference doc2 = collection.doc('doc2'); // set
+      DocumentReference doc3 = collection.doc('doc3'); // update
+      DocumentReference doc4 = collection.doc('doc4'); // update w/ merge
+      DocumentReference doc5 = collection.doc('doc5'); // update w/ mergeFields
 
       await Future.wait([
         doc1.set({'foo': 'bar'}),
@@ -81,6 +80,7 @@ void runWriteBatchTests() {
             'foo': 'bar',
             'bar': 'ben',
           }));
+      // ignore: todo
       // TODO(ehesp): firebase-dart does not support mergeFields
       if (!kIsWeb) {
         expect(

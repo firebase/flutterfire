@@ -1,6 +1,9 @@
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -579,7 +582,7 @@ void main() {
       });
 
       Future<void> callMethodHandler(String method, dynamic arguments) {
-        final channel = FirebaseDynamicLinks.channel;
+        const channel = FirebaseDynamicLinks.channel;
         final methodCall = MethodCall(method, arguments);
         final data = channel.codec.encodeMethodCall(methodCall);
         final Completer<void> completer = Completer<void>();

@@ -6,20 +6,22 @@ import 'package:cloud_functions_platform_interface/src/https_callable_options.da
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_https_callable.dart';
 import 'package:cloud_functions_platform_interface/src/platform_interface/platform_interface_firebase_functions.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_test/flutter_test.dart';
+
 import '../mock.dart';
 
 void main() {
   setupFirebaseFunctionsMocks();
-  FirebaseFunctionsPlatform functions;
 
   group('$MethodChannelFirebaseFunctions', () {
-    FirebaseApp app;
+    FirebaseApp? app;
+    FirebaseFunctionsPlatform? functions;
 
     setUpAll(() async {
       app = await Firebase.initializeApp();
-      functions = MethodChannelFirebaseFunctions(app: app);
+      functions =
+          MethodChannelFirebaseFunctions(app: app, region: 'us-central1');
     });
 
     test('channel', () {
@@ -31,24 +33,34 @@ void main() {
       final result = MethodChannelFirebaseFunctions.instance;
       expect(result, isA<MethodChannelFirebaseFunctions>());
       expect(result, isA<FirebaseFunctionsPlatform>());
+      expect(result.region, equals('us-central1'));
     });
 
     test('delegateFor', () {
-      final testFunctions = TestMethodChannelFirebaseFunctions(app);
-      final result = testFunctions.delegateFor(app: app, region: 'uk');
+      final testFunctions =
+          TestMethodChannelFirebaseFunctions(app: app, region: 'us-central1');
+      final result =
+          testFunctions.delegateFor(app: app, region: 'europe-west1');
       expect(result, isA<MethodChannelFirebaseFunctions>());
       expect(result.app, isA<FirebaseApp>());
+      expect(result.app, equals(app));
+      expect(result.region, equals('europe-west1'));
     });
 
     test('httpsCallable', () {
-      final result =
-          functions.httpsCallable('test', 'test', HttpsCallableOptions());
-      expect(result, isA<MethodChannelHttpsCallable>());
+      const testOrigin = 'http://localhost:5000';
+      const testFunctionName = 'test_function_name';
+      final callable = functions!
+          .httpsCallable(testOrigin, testFunctionName, HttpsCallableOptions());
+      expect(callable, isA<MethodChannelHttpsCallable>());
+      expect(callable.origin, equals(testOrigin));
+      expect(callable.name, equals(testFunctionName));
     });
   });
 }
 
 class TestMethodChannelFirebaseFunctions
     extends MethodChannelFirebaseFunctions {
-  TestMethodChannelFirebaseFunctions(FirebaseApp app) : super(app: app);
+  TestMethodChannelFirebaseFunctions({FirebaseApp? app, required String region})
+      : super(app: app, region: region);
 }

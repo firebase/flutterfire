@@ -3,5 +3,5 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// Casts a Map<dynamic, dynamic> to Map<String, dynamic>
-Map<String, dynamic> asStringKeyedMap(Map<dynamic, dynamic> map) =>
+Map<String, dynamic>? asStringKeyedMap(Map<dynamic, dynamic>? map) =>
     map?.cast<String, dynamic>();

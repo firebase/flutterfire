@@ -6,8 +6,8 @@ import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
-final String kTestString = List(pow(2, 12)).join(_getRandomString(8));
-final String kTestStorageBucket = 'react-native-firebase-testing.appspot.com';
+final String kTestString = ([]..length = pow(2, 12)).join(_getRandomString(8));
+const String kTestStorageBucket = 'react-native-firebase-testing.appspot.com';
 
 const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 Random _random = Random();
@@ -16,7 +16,7 @@ String _getRandomString(int length) => String.fromCharCodes(Iterable.generate(
 
 // Creates a test file with a specified name to
 // a locally directory
-Future<File> createFile(name) async {
+Future<File> createFile(String name) async {
   final Directory systemTempDir = Directory.systemTemp;
   final File file = await File('${systemTempDir.path}/$name').create();
   await file.writeAsString(kTestString);

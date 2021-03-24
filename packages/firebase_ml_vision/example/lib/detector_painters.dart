@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:ui' as ui;
 
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
@@ -41,7 +43,7 @@ class BarcodeDetectorPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
-    for (Barcode barcode in barcodeLocations) {
+    for (final Barcode barcode in barcodeLocations) {
       paint.color = Colors.green;
       canvas.drawRect(scaleRect(barcode), paint);
     }
@@ -70,7 +72,7 @@ class FaceDetectorPainter extends CustomPainter {
       ..strokeWidth = 2.0
       ..color = Colors.red;
 
-    for (Face face in faces) {
+    for (final Face face in faces) {
       canvas.drawRect(
         Rect.fromLTRB(
           face.boundingBox.left * scaleX,
@@ -101,12 +103,12 @@ class LabelDetectorPainter extends CustomPainter {
     final ui.ParagraphBuilder builder = ui.ParagraphBuilder(
       ui.ParagraphStyle(
           textAlign: TextAlign.left,
-          fontSize: 23.0,
+          fontSize: 23,
           textDirection: TextDirection.ltr),
     );
 
     builder.pushStyle(ui.TextStyle(color: Colors.green));
-    for (ImageLabel label in labels) {
+    for (final ImageLabel label in labels) {
       builder.addText('Label: ${label.text}, '
           'Confidence: ${label.confidence.toStringAsFixed(2)}\n');
     }
@@ -117,7 +119,7 @@ class LabelDetectorPainter extends CustomPainter {
         ..layout(ui.ParagraphConstraints(
           width: size.width,
         )),
-      const Offset(0.0, 0.0),
+      const Offset(0, 0),
     );
   }
 
@@ -153,9 +155,9 @@ class TextDetectorPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
-    for (TextBlock block in visionText.blocks) {
-      for (TextLine line in block.lines) {
-        for (TextElement element in line.elements) {
+    for (final TextBlock block in visionText.blocks) {
+      for (final TextLine line in block.lines) {
+        for (final TextElement element in line.elements) {
           paint.color = Colors.green;
           canvas.drawRect(scaleRect(element), paint);
         }
@@ -201,10 +203,10 @@ class DocumentTextDetectorPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
-    for (DocumentTextBlock block in visionDocumentText.blocks) {
-      for (DocumentTextParagraph paragraph in block.paragraphs) {
-        for (DocumentTextWord word in paragraph.words) {
-          for (DocumentTextSymbol symbol in word.symbols) {
+    for (final DocumentTextBlock block in visionDocumentText.blocks) {
+      for (final DocumentTextParagraph paragraph in block.paragraphs) {
+        for (final DocumentTextWord word in paragraph.words) {
+          for (final DocumentTextSymbol symbol in word.symbols) {
             paint.color = Colors.green;
             canvas.drawRect(scaleRect(symbol), paint);
           }

@@ -10,7 +10,7 @@ String _parseErrorCode(String errorCode) {
   return errorCode.split('/').last;
 }
 
-Map<String, String> _errorCodeToMessage = {
+Map<String, String?> _errorCodeToMessage = {
   'unauthorized': 'User is not authorized to perform the desired action.',
   'object-not-found': 'No object exists at the desired reference.',
   'invalid-argument': null, // let error pass-through
@@ -25,13 +25,10 @@ String _getErrorMessage(String errorCode, String errorMessage) {
 FirebaseException getFirebaseException(Object object) {
   if (object is! core_interop.FirebaseError) {
     return FirebaseException(
-        plugin: 'firebase_storage',
-        code: 'unknown',
-        message: object.toString());
+        plugin: 'firebase_storage', message: object.toString());
   }
 
-  core_interop.FirebaseError firebaseError =
-      object as core_interop.FirebaseError;
+  core_interop.FirebaseError firebaseError = object;
 
   return FirebaseException(
     plugin: 'firebase_storage',

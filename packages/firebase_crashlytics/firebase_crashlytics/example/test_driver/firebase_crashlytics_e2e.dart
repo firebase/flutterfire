@@ -2,15 +2,15 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:e2e/e2e.dart';
+// @dart=2.9
+
+import 'package:drive/drive.dart' as drive;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
-void main() {
-  E2EWidgetsFlutterBinding.ensureInitialized();
-
+void testsMain() {
   group('$FirebaseCrashlytics', () {
     /*late*/ FirebaseCrashlytics crashlytics;
 
@@ -22,12 +22,11 @@ void main() {
     group('checkForUnsentReports', () {
       test('should throw if automatic crash report is enabled', () async {
         await crashlytics.setCrashlyticsCollectionEnabled(true);
-        try {
-          await crashlytics.checkForUnsentReports();
-          fail("Error did not throw");
-        } catch (e) {
-          print(e);
-        }
+
+        await expectLater(
+          crashlytics.checkForUnsentReports,
+          throwsA(isA<StateError>()),
+        );
       });
 
       test('checks device cache for unsent crashlytics reports', () async {
@@ -73,10 +72,6 @@ void main() {
     });
 
     group('log', () {
-      test('should throw if message is null', () async {
-        expect(() => crashlytics.log(null), throwsAssertionError);
-      });
-
       // This is currently only testing that we can log without crashing.
       test('accepts any value', () async {
         await crashlytics.log('flutter');
@@ -91,11 +86,6 @@ void main() {
     });
 
     group('setCrashlyticsCollectionEnabled', () {
-      test('should throw if null', () async {
-        expect(() => crashlytics.setCrashlyticsCollectionEnabled(null),
-            throwsAssertionError);
-      });
-
       // This is currently only testing that we can send unsent reports without crashing.
       test('should update to true', () async {
         await crashlytics.setCrashlyticsCollectionEnabled(true);
@@ -108,10 +98,6 @@ void main() {
     });
 
     group('setUserIdentifier', () {
-      test('should throw if null', () async {
-        expect(() => crashlytics.setUserIdentifier(null), throwsAssertionError);
-      });
-
       // This is currently only testing that we can log errors without crashing.
       test('should update', () async {
         await crashlytics.setUserIdentifier('foo');
@@ -138,3 +124,5 @@ void main() {
     });
   });
 }
+
+void main() => drive.main(testsMain);

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_database;
 
 /// DatabaseReference represents a particular location in your Firebase
@@ -170,6 +172,9 @@ class DatabaseReference extends Query {
       return TransactionResult._(databaseError, committed, dataSnapshot);
     }
 
+    // TODO(rrousselGit) refactor to async/await
+    // TODO(rrousselGit) what if invokeMethod fails?
+    // ignore: unawaited_futures
     _database._channel.invokeMethod<void>(
         'DatabaseReference#runTransaction', <String, dynamic>{
       'app': _database.app?.name,
@@ -203,7 +208,9 @@ class ServerValue {
   }
 }
 
-typedef Future<MutableData> TransactionHandler(MutableData mutableData);
+typedef TransactionHandler = Future<MutableData> Function(
+  MutableData mutableData,
+);
 
 class TransactionResult {
   const TransactionResult._(this.error, this.committed, this.dataSnapshot);

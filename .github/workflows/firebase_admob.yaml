@@ -1,36 +1,35 @@
-name: firebase_admob
-
-on:
-  pull_request:
-    paths:
-      - "packages/firebase_admob/**"
-      - ".github/workflows/firebase_admob.yaml"
-  push:
-    branches:
-      - master
-    paths-ignore:
-    - "docs/**"
-
-env:
-  FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_admob*"
-  FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: "*firebase_admob_example*"
-
-jobs:
-  android:
-    runs-on: macos-latest
-    if: github.event_name == 'pull_request'
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 0
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
-      - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
-# TODO Add test driver - pending AdMob rework.
+# TODO Excluded pending CI fixes
+#name: firebase_admob
+#
+#on:
+#  pull_request:
+#    paths:
+#      - "packages/firebase_admob/**"
+#      - ".github/workflows/firebase_admob.yaml"
+#  push:
+#    branches:
+#      - master
+#    paths-ignore:
+#    - "docs/**"
+#
+#env:
+#  FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_admob*"
+#  FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: "*firebase_admob_example*"
+#jobs:
+#  android:
+#    runs-on: macos-latest
+#    if: github.event_name == 'pull_request'
+#    timeout-minutes: 30
+#    steps:
+#      - uses: actions/checkout@v1
+#        with:
+#          fetch-depth: 0
+#      - name: "Install Flutter"
+#        run: ./.github/workflows/scripts/install-flutter.sh dev
+#      - name: "Install Tools"
+#        run: ./.github/workflows/scripts/install-tools.sh
+#      - name: "Build Example"
+#        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
 #      - name: "Drive Example"
 #        uses: reactivecircus/android-emulator-runner@v2
 #        with:
@@ -39,23 +38,21 @@ jobs:
 #          target: google_apis
 #          profile: Nexus 5X
 #          script: ./.github/workflows/scripts/drive-example.sh android
-
-  apple:
-    runs-on: macos-latest
-    timeout-minutes: 40
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 0
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev
-      - name: "Install Tools"
-        run: |
-          ./.github/workflows/scripts/install-tools.sh
-          flutter config --enable-macos-desktop
-      - name: "Build iOS Example"
-        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
-# TODO Add test driver - pending AdMob rework.
+#  apple:
+#    runs-on: macos-latest
+#    timeout-minutes: 40
+#    steps:
+#      - uses: actions/checkout@v1
+#        with:
+#          fetch-depth: 0
+#      - name: "Install Flutter"
+#        run: ./.github/workflows/scripts/install-flutter.sh dev
+#      - name: "Install Tools"
+#        run: |
+#          ./.github/workflows/scripts/install-tools.sh
+#          flutter config --enable-macos-desktop
+#      - name: "Build iOS Example"
+#        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
 #      - name: "Drive iOS Example"
 #        run: ./.github/workflows/scripts/drive-example.sh ios
 #      - name: "Build MacOS Example"

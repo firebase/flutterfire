@@ -6,8 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  /*late*/ TestTwitterAuthProvider twitterAuthProvider;
-  final String kMockProviderId = 'twitter.com';
+  late TestTwitterAuthProvider twitterAuthProvider;
+  const String kMockProviderId = 'twitter.com';
   setUpAll(() {
     twitterAuthProvider = TestTwitterAuthProvider();
   });
@@ -43,16 +43,11 @@ void main() {
         expect(result.parameters['lang'], isA<String>());
         expect(result.parameters['lang'], equals('es'));
       });
-
-      test('throws [AssertionError] when customOAuthParameters is null', () {
-        expect(() => twitterAuthProvider.setCustomParameters(null),
-            throwsAssertionError);
-      });
     });
 
     group('TwitterAuthProvider.credential()', () {
-      final String kMockAccessToken = 'test-token';
-      final String kMockSecret = 'test-secret';
+      const String kMockAccessToken = 'test-token';
+      const String kMockSecret = 'test-secret';
       test('creates a new [TwitterAuthCredential]', () {
         final result = TwitterAuthProvider.credential(
             accessToken: kMockAccessToken, secret: kMockSecret);
@@ -62,20 +57,6 @@ void main() {
         expect(result.accessToken, kMockAccessToken);
         expect(result.providerId, equals(kMockProviderId));
         expect(result.signInMethod, equals(kMockProviderId));
-      });
-
-      test('throws [AssertionError] when accessToken is null', () {
-        expect(
-            () => TwitterAuthProvider.credential(
-                accessToken: null, secret: kMockSecret),
-            throwsAssertionError);
-      });
-
-      test('throws [AssertionError] when secret is null', () {
-        expect(
-            () => TwitterAuthProvider.credential(
-                accessToken: kMockAccessToken, secret: null),
-            throwsAssertionError);
       });
     });
   });

@@ -45,24 +45,23 @@ class RecaptchaVerifier {
   ///
   /// [onExpired] An optional callback which is called when the reCAPTCHA expires.
   factory RecaptchaVerifier({
-    String /*?*/ container,
+    String? container,
     RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
     RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,
-    RecaptchaVerifierOnSuccess /*?*/ onSuccess,
-    RecaptchaVerifierOnError /*?*/ onError,
-    RecaptchaVerifierOnExpired /*?*/ onExpired,
+    RecaptchaVerifierOnSuccess? onSuccess,
+    RecaptchaVerifierOnError? onError,
+    RecaptchaVerifierOnExpired? onExpired,
   }) {
-    assert(size != null);
-    assert(theme != null);
-    // TODO(ehesp): nullable params should be passed as null after platform migration
-    return RecaptchaVerifier._(_factory.delegateFor(
-      container: container,
-      size: size,
-      theme: theme,
-      onSuccess: onSuccess,
-      onError: onError,
-      onExpired: onExpired,
-    ));
+    return RecaptchaVerifier._(
+      _factory.delegateFor(
+        container: container,
+        size: size,
+        theme: theme,
+        onSuccess: onSuccess,
+        onError: onError,
+        onExpired: onExpired,
+      ),
+    );
   }
 
   /// Returns the underlying factory delegate instance.

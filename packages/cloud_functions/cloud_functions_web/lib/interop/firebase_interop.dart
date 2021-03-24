@@ -13,4 +13,4 @@ import 'package:js/js.dart';
 import 'functions_interop.dart';
 
 @JS()
-external FunctionsJsImpl functions([AppJsImpl app]);
+external FunctionsJsImpl functions([AppJsImpl? app]);

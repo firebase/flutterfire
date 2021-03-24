@@ -35,7 +35,7 @@ A new Flutter plugin.
   s.dependency 'Flutter'
   s.dependency 'firebase_core'
   s.dependency 'Firebase/MLModelInterpreter', firebase_sdk_version
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
   s.static_framework = true
 
   s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{libraryVersion}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-ml-cus\\\"" }

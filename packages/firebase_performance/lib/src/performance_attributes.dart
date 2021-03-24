@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_performance;
 
 /// Abstract class that allows adding/removing attributes to an object.
@@ -42,7 +44,7 @@ abstract class PerformanceAttributes {
         name.length > maxAttributeKeyLength ||
         value.length > maxAttributeValueLength ||
         _attributes.length == maxCustomAttributes) {
-      return Future<void>.value(null);
+      return Future<void>.value();
     }
 
     _attributes[name] = value;
@@ -61,7 +63,7 @@ abstract class PerformanceAttributes {
   /// If this object has been stopped, this method returns without removing the
   /// attribute.
   Future<void> removeAttribute(String name) {
-    if (_hasStopped) return Future<void>.value(null);
+    if (_hasStopped) return Future<void>.value();
 
     _attributes.remove(name);
     return FirebasePerformance.channel.invokeMethod<void>(

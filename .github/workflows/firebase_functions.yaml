@@ -24,15 +24,15 @@ jobs:
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+        run: ./.github/workflows/scripts/install-flutter.sh dev
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
-      - name: Start Functions Emulator
-        run: cd ./.github/workflows/scripts && ./start-functions-emulator.sh
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -60,8 +60,8 @@ jobs:
           sudo npm i -g firebase-tools
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios
-      - name: Start Functions Emulator
-        run: cd ./.github/workflows/scripts && ./start-functions-emulator.sh
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive iOS Example"
         run: ./.github/workflows/scripts/drive-example.sh ios
       - name: "Build MacOS Example"
@@ -70,7 +70,7 @@ jobs:
         run: ./.github/workflows/scripts/drive-example.sh macos
 
   web:
-    # Using macos instead of ubuntu as Web app can't connect to Firebase Functions emulator
+    # Using macos instead of ubuntu as Web app can't connect to Firebase emulator
     # when running on ubuntu.
     runs-on: macos-latest
     timeout-minutes: 15
@@ -85,7 +85,7 @@ jobs:
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-web
           sudo npm i -g firebase-tools
-      - name: Start Functions Emulator
-        run: cd ./.github/workflows/scripts && ./start-functions-emulator.sh
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
         run: ./.github/workflows/scripts/drive-example.sh web

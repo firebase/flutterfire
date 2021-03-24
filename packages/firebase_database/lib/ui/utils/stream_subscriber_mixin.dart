@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 /// Mixin for classes that own `StreamSubscription`s and expose an API for
@@ -10,7 +12,11 @@ abstract class StreamSubscriberMixin<T> {
   List<StreamSubscription<T>> _subscriptions = <StreamSubscription<T>>[];
 
   /// Listens to a stream and saves it to the list of subscriptions.
-  void listen(Stream<T> stream, void onData(T data), {Function onError}) {
+  void listen(
+    Stream<T> stream,
+    void Function(T data) onData, {
+    Function onError,
+  }) {
     if (stream != null) {
       _subscriptions.add(stream.listen(onData, onError: onError));
     }
@@ -18,7 +24,9 @@ abstract class StreamSubscriberMixin<T> {
 
   /// Cancels all streams that were previously added with listen().
   void cancelSubscriptions() {
-    _subscriptions
-        .forEach((StreamSubscription<T> subscription) => subscription.cancel());
+    for (final subscription in _subscriptions) {
+      // TODO(rrousselGit) await `cancel`
+      subscription.cancel();
+    }
   }
 }

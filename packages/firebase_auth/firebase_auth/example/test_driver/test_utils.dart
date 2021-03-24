@@ -1,9 +1,9 @@
 // @dart = 2.9
 
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:http/http.dart' as http;
-import 'package:uuid/uuid.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -14,8 +14,12 @@ String TEST_PASSWORD = 'testpassword';
 // each time.
 String TEST_PHONE_NUMBER = '+447111555666';
 String TEST_SMS_CODE = '123456';
-String /*!*/ generateRandomEmail({prefix = '', suffix = '@foo.bar'}) {
-  var uuid = Uuid().v1();
+
+String /*!*/ generateRandomEmail({
+  String prefix = '',
+  String suffix = '@foo.bar',
+}) {
+  var uuid = createCryptoRandomString();
   var testEmail = prefix + uuid + suffix;
 
   return testEmail;
@@ -25,45 +29,60 @@ String /*!*/ generateRandomEmail({prefix = '', suffix = '@foo.bar'}) {
 Future getCustomToken(
     String uid, Map<String, dynamic> claims, String idToken) async {
   try {
-    var path = "https://api.rnfirebase.io/auth/user/" + uid + "/custom-token";
+    var path = 'https://api.rnfirebase.io/auth/user/$uid/custom-token';
     var body = json.encode(claims);
-    var headers = {"authorization": "Bearer " + idToken};
+    var headers = {'authorization': 'Bearer $idToken'};
 
-    final response = await http.post(path, headers: headers, body: body);
+    final response = await http.post(
+      Uri.parse(path),
+      headers: headers,
+      body: body,
+    );
     if (response.statusCode == 200) {
       // successful, parse json
       var jsonData = json.decode(response.body);
-      return jsonData["token"];
+      return jsonData['token'];
     } else {
       // response wasn't successful, throw
-      throw Exception("Unexpected response from server: (" +
-          response.statusCode.toString() +
-          ") " +
-          response.reasonPhrase);
+      throw Exception(
+        'Unexpected response from server: (${response.statusCode}) ${response.reasonPhrase}',
+      );
     }
   } catch (err) {
     throw Exception(err.toString());
   }
 }
 
-void ensureSignedIn(testEmail) async {
+Future<void> ensureSignedIn(String testEmail) async {
   if (auth.currentUser == null) {
     try {
       await auth.createUserWithEmailAndPassword(
-          email: testEmail, password: TEST_PASSWORD);
+        email: testEmail,
+        password: TEST_PASSWORD,
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         await auth.signInWithEmailAndPassword(
-            email: testEmail, password: TEST_PASSWORD);
+          email: testEmail,
+          password: TEST_PASSWORD,
+        );
       }
     } catch (e) {
-      print("ensureSignedIn Error ${e}");
+      print('ensureSignedIn Error $e');
     }
   }
 }
 
-void ensureSignedOut() async {
+Future<void> ensureSignedOut() async {
   if (auth.currentUser != null) {
     await auth.signOut();
   }
+}
+
+Random _random = Random.secure();
+
+String createCryptoRandomString([int length = 32]) {
+  var values = List<int>.generate(length, (i) => _random.nextInt(256));
+
+  return base64Url.encode(values).toLowerCase();
 }

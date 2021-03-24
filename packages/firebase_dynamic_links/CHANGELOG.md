@@ -1,3 +1,14 @@
+## 0.8.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
+## 0.7.0
+
+ - **FIX**: Add missing sdk version constraints inside pubspec.yaml (#4604).
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
 ## 0.6.3
 
  - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).

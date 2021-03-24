@@ -14,7 +14,9 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
 FirebaseAuthException getFirebaseAuthException(Object exception) {
   if (exception is! core_interop.FirebaseError) {
     return FirebaseAuthException(
-        code: 'unknown', message: 'An unknown error occurred: ${exception}');
+      code: 'unknown',
+      message: 'An unknown error occurred: $exception',
+    );
   }
 
   auth_interop.AuthError firebaseError = exception as auth_interop.AuthError;
@@ -34,8 +36,8 @@ FirebaseAuthException getFirebaseAuthException(Object exception) {
 }
 
 /// Converts a [auth_interop.ActionCodeInfo] into a [ActionCodeInfo].
-ActionCodeInfo convertWebActionCodeInfo(
-    auth_interop.ActionCodeInfo /*?*/ webActionCodeInfo) {
+ActionCodeInfo? convertWebActionCodeInfo(
+    auth_interop.ActionCodeInfo? webActionCodeInfo) {
   if (webActionCodeInfo == null) {
     return null;
   }
@@ -47,8 +49,9 @@ ActionCodeInfo convertWebActionCodeInfo(
 }
 
 /// Converts a [auth_interop.AdditionalUserInfo] into a [AdditionalUserInfo].
-AdditionalUserInfo convertWebAdditionalUserInfo(
-    auth_interop.AdditionalUserInfo /*?*/ webAdditionalUserInfo) {
+AdditionalUserInfo? convertWebAdditionalUserInfo(
+  auth_interop.AdditionalUserInfo? webAdditionalUserInfo,
+) {
   if (webAdditionalUserInfo == null) {
     return null;
   }
@@ -63,7 +66,8 @@ AdditionalUserInfo convertWebAdditionalUserInfo(
 
 /// Converts a [auth_interop.IdTokenResult] into a [IdTokenResult].
 IdTokenResult convertWebIdTokenResult(
-    auth_interop.IdTokenResult webIdTokenResult) {
+  auth_interop.IdTokenResult webIdTokenResult,
+) {
   return IdTokenResult(<String, dynamic>{
     'claims': webIdTokenResult.claims,
     'expirationTimestamp':
@@ -77,8 +81,8 @@ IdTokenResult convertWebIdTokenResult(
 }
 
 /// Converts a [ActionCodeSettings] into a [auth_interop.ActionCodeSettings].
-auth_interop.ActionCodeSettings convertPlatformActionCodeSettings(
-    ActionCodeSettings /*?*/ actionCodeSettings) {
+auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
+    ActionCodeSettings? actionCodeSettings) {
   if (actionCodeSettings == null) {
     return null;
   }
@@ -119,7 +123,7 @@ String convertPlatformPersistence(Persistence persistence) {
 }
 
 /// Converts a [AuthProvider] into a [auth_interop.AuthProvider].
-auth_interop.AuthProvider convertPlatformAuthProvider(
+auth_interop.AuthProvider? convertPlatformAuthProvider(
     AuthProvider authProvider) {
   if (authProvider is EmailAuthProvider) {
     return auth_interop.EmailAuthProvider();
@@ -178,7 +182,8 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
     authProvider.scopes
         .forEach((String scope) => oAuthProvider.addScope(scope));
     oAuthProvider.setCustomParameters(
-        Map<String, dynamic>.from(authProvider.parameters));
+      Map<String, dynamic>.from(authProvider.parameters!),
+    );
     return oAuthProvider;
   }
 
@@ -186,8 +191,8 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
 }
 
 /// Converts a [auth_interop.AuthCredential] into a [AuthCredential].
-AuthCredential convertWebAuthCredential(
-    auth_interop.AuthCredential /*?*/ authCredential) {
+AuthCredential? convertWebAuthCredential(
+    auth_interop.AuthCredential? authCredential) {
   if (authCredential == null) {
     return null;
   }
@@ -199,8 +204,9 @@ AuthCredential convertWebAuthCredential(
 }
 
 /// Converts a [auth_interop.OAuthCredential] into a [AuthCredential].
-AuthCredential convertWebOAuthCredential(
-    auth_interop.OAuthCredential /*?*/ oAuthCredential) {
+AuthCredential? convertWebOAuthCredential(
+  auth_interop.OAuthCredential? oAuthCredential,
+) {
   if (oAuthCredential == null) {
     return null;
   }
@@ -212,49 +218,64 @@ AuthCredential convertWebOAuthCredential(
 }
 
 /// Converts a [AuthCredential] into a [firebase.OAuthCredential].
-auth_interop.OAuthCredential convertPlatformCredential(
-    AuthCredential credential) {
+auth_interop.OAuthCredential? convertPlatformCredential(
+  AuthCredential credential,
+) {
   if (credential is EmailAuthCredential) {
-    // TODO(ehesp): confirm after platform migration this is nulllable
     if (credential.emailLink != null) {
       return auth_interop.EmailAuthProvider.credentialWithLink(
-          credential.email, credential.emailLink);
+        credential.email,
+        credential.emailLink!,
+      );
     }
     return auth_interop.EmailAuthProvider.credential(
-        credential.email, credential.password);
+      credential.email,
+      credential.password!,
+    );
   }
 
   if (credential is FacebookAuthCredential) {
-    return auth_interop.FacebookAuthProvider.credential(credential.accessToken);
+    return auth_interop.FacebookAuthProvider.credential(
+        credential.accessToken!);
   }
 
   if (credential is GithubAuthCredential) {
-    return auth_interop.GithubAuthProvider.credential(credential.accessToken);
+    return auth_interop.GithubAuthProvider.credential(credential.accessToken!);
   }
 
   if (credential is GoogleAuthCredential) {
     return auth_interop.GoogleAuthProvider.credential(
-        credential.idToken, credential.accessToken);
+      credential.idToken,
+      credential.accessToken,
+    );
   }
 
   if (credential is OAuthCredential) {
-    return auth_interop.OAuthProvider(credential.providerId)
-        .credential(credential.idToken, credential.accessToken);
+    return auth_interop.OAuthProvider(credential.providerId).credential(
+      credential.idToken,
+      credential.accessToken,
+    );
   }
 
   if (credential is TwitterAuthCredential) {
     return auth_interop.TwitterAuthProvider.credential(
-        credential.accessToken, credential.secret);
+      credential.accessToken!,
+      credential.secret!,
+    );
   }
 
   if (credential is PhoneAuthCredential) {
     return auth_interop.PhoneAuthProvider.credential(
-        credential.verificationId, credential.smsCode);
+      credential.verificationId!,
+      credential.smsCode!,
+    );
   }
 
   if (credential is OAuthCredential) {
-    return auth_interop.OAuthProvider(credential.providerId)
-        .credential(credential.idToken, credential.accessToken);
+    return auth_interop.OAuthProvider(credential.providerId).credential(
+      credential.idToken,
+      credential.accessToken,
+    );
   }
 
   return null;

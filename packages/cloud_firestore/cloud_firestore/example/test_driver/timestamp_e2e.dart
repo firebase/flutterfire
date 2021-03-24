@@ -1,8 +1,8 @@
-// @dart = 2.9
-
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
+// @dart=2.9
 
 import 'dart:async';
 
@@ -11,7 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runTimestampTests() {
   group('$Timestamp', () {
-    /*late*/ FirebaseFirestore firestore;
+    FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -25,7 +25,7 @@ void runTimestampTests() {
 
     test('sets a $Timestamp & returns one', () async {
       DocumentReference doc = await initializeTest('timestamp');
-      DateTime date = DateTime.utc(3000, 01, 01);
+      DateTime date = DateTime.utc(3000);
 
       await doc.set({'foo': Timestamp.fromDate(date)});
       DocumentSnapshot snapshot = await doc.get();
@@ -38,7 +38,7 @@ void runTimestampTests() {
     test('updates a $Timestamp & returns', () async {
       DocumentReference doc = await initializeTest('geo-point-update');
       DateTime date = DateTime.utc(3000, 01, 02);
-      await doc.set({'foo': DateTime.utc(3000, 01, 01)});
+      await doc.set({'foo': DateTime.utc(3000)});
       await doc.update({'foo': date});
       DocumentSnapshot snapshot = await doc.get();
       Timestamp timestamp = snapshot.data()['foo'];

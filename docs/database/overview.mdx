@@ -13,7 +13,64 @@ all of your clients can share one Realtime Database instance and automatically r
 
 ## Installation
 
+<Tabs
+groupId="legacy-or-nullsafe"
+defaultValue="legacy"
+values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+]}
+>
+<TabItem value="legacy">
+</TabItem>
+<TabItem value="null-safe">
+
+:::caution
+This package version is not null safe migrated yet, but has been implemented to be compatible with other null safe FlutterFire packages.
+With that in mind, you will need to use the `beta` channel which supports null safe projects.
+:::
+
+#### Flutter Web, Android & iOS targets:
+
+Web, Android & iOS targets require the Flutter `beta` channel:
+
+```bash
+$ flutter channel beta
+```
+
+#### Flutter desktop targets:
+
+Desktop targets such as macOS requires  the Flutter `dev` channel:
+
+```bash
+$ flutter channel dev
+```
+
+If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
+```bash
+$ flutter run --no-sound-null-safety
+```
+
+For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
+
+```dart
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:firebase_database/firebase_database.dart';
+```
+</TabItem>
+</Tabs>
+
 ### 1. Add dependency
+
+<Tabs
+  groupId="legacy-or-nullsafe"
+  defaultValue="legacy"
+  values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+  ]}
+>
+<TabItem value="legacy">
 
 ```yaml {5} title="pubspec.yaml"
 dependencies:
@@ -22,6 +79,23 @@ dependencies:
   firebase_core: "^{{ plugins.firebase_core }}"
   firebase_database: "^{{ plugins.firebase_database }}"
 ```
+
+</TabItem>
+<TabItem value="null-safe">
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  firebase_database: "^{{ plugins.firebase_database_ns }}"
+```
+
+</TabItem>
+</Tabs> 
+
+
+
 
 ### 2. Download dependency
 

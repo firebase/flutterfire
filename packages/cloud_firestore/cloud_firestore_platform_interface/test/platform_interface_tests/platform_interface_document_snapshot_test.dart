@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../utils/test_common.dart';
 
-const _kPath = "document";
+const _kPath = 'document';
 const _kMetadata = {'isFromCache': true, 'hasPendingWrites': true};
 const _kData = {'foo': 'bar'};
 
@@ -21,22 +21,22 @@ class TestDocumentSnapshot extends DocumentSnapshotPlatform {
 void main() {
   initializeMethodChannel();
 
-  group("$DocumentReferencePlatform()", () {
+  group('$DocumentReferencePlatform()', () {
     setUpAll(() async {
       await Firebase.initializeApp();
     });
 
-    test("constructor", () {
+    test('constructor', () {
       final snapshot = TestDocumentSnapshot._();
       expect(snapshot, isInstanceOf<DocumentSnapshotPlatform>());
     });
 
-    test("id", () {
+    test('id', () {
       final snapshot = TestDocumentSnapshot._();
       expect(snapshot.id, equals(_kPath));
     });
 
-    test("metadata", () {
+    test('metadata', () {
       final snapshot = TestDocumentSnapshot._();
       final metaData = snapshot.metadata;
       expect(metaData, isInstanceOf<SnapshotMetadataPlatform>());
@@ -44,29 +44,29 @@ void main() {
       expect(metaData.isFromCache, isTrue);
     });
 
-    test("exists", () {
+    test('exists', () {
       final snapshot = TestDocumentSnapshot._();
       expect(snapshot.exists, isTrue);
     });
 
-    test("reference", () {
+    test('reference', () {
       final snapshot = TestDocumentSnapshot._();
       final reference = snapshot.reference;
       expect(reference, isInstanceOf<DocumentReferencePlatform>());
       expect(reference.id, equals(_kPath));
     });
 
-    test("data", () {
+    test('data', () {
       final snapshot = TestDocumentSnapshot._();
       expect(snapshot.data(), _kData);
     });
 
-    test("get", () {
+    test('get', () {
       final snapshot = TestDocumentSnapshot._();
       expect(snapshot.get('foo'), 'bar');
     });
 
-    test("[]", () {
+    test('[]', () {
       final snapshot = TestDocumentSnapshot._();
       expect(snapshot['foo'], 'bar');
     });
