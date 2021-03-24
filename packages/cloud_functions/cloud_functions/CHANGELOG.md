@@ -1,3 +1,7 @@
+## 1.0.1
+
+ - **FIX**: use `kIsWeb` to check platform is Web (#5369).
+
 ## 1.0.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

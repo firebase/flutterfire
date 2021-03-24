@@ -191,7 +191,7 @@ which returns a `List` containing [`DocumentSnapshot`](!cloud_firestore.Document
 FirebaseFirestore.instance
     .collection('users')
     .get()
-    .then((QuerySnapshot querySnapshot) => {
+    .then((QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((doc) {
             print(doc["first_name"]);
         });

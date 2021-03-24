@@ -1,3 +1,8 @@
+## 2.0.1
+
+ - **FIX**: regression in `RemoteMessage.fromMap()` causing silent failure (#5336).
+ - **CHORE**: publish packages.
+
 ## 2.0.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

@@ -11,8 +11,8 @@ environment:
 
 dependencies:
   firebase_auth_platform_interface: ^4.0.0
-  firebase_auth_web: ^1.0.2
-  firebase_core: ^1.0.1
+  firebase_auth_web: ^1.0.3
+  firebase_core: ^1.0.2
   firebase_core_platform_interface: ^4.0.0
   flutter:
     sdk: flutter

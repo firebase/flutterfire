@@ -1,3 +1,7 @@
+## 1.0.2
+
+ - **FIX**: Fix broken homepage link (#4713).
+
 ## 1.0.1
 
  - Update a dependency to the latest release.

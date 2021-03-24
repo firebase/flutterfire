@@ -580,7 +580,7 @@ void main() {
       });
 
       Future<void> callMethodHandler(String method, dynamic arguments) {
-        final channel = FirebaseDynamicLinks.channel;
+        const channel = FirebaseDynamicLinks.channel;
         final methodCall = MethodCall(method, arguments);
         final data = channel.codec.encodeMethodCall(methodCall);
         final Completer<void> completer = Completer<void>();
