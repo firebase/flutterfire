@@ -28,10 +28,6 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_remote_config');
 
-  static Map<String, MethodChannelFirebaseRemoteConfig>
-      _methodChannelFirebaseRemoteConfigInstances =
-      <String, MethodChannelFirebaseRemoteConfig>{};
-
   /// Returns a stub instance to allow the platform interface to access
   /// the class instance statically.
   static MethodChannelFirebaseRemoteConfig get instance {
