@@ -108,7 +108,7 @@ public class FirebaseRemoteConfigPlugin
     switch (call.method) {
       case "RemoteConfig#ensureInitialized":
         {
-          methodCallTask = remoteConfig.ensureInitialized();
+          methodCallTask = Tasks.whenAll(remoteConfig.ensureInitialized());
           break;
         }
       case "RemoteConfig#activate":
