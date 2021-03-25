@@ -4,7 +4,7 @@
 # These names are just suggestions. It is fine to have your changes
 # reviewed by someone else.
 
-packages/* @ehesp @salakar @kroikie
+packages/* @ehesp @salakar @kroikie @rrousselGit @russellwheatley
 website/* @ehesp
 docs/* @ehesp @salakar @kroikie
 .github/ @salakar @kroikie
