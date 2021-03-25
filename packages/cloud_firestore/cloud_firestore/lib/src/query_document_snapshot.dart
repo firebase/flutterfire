@@ -16,7 +16,6 @@ class QueryDocumentSnapshot extends DocumentSnapshot {
 
   @override
   bool get exists => true;
-  
   @override
   Map<String, dynamic> data() => super.data()!;
 }
