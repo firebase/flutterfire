@@ -78,6 +78,10 @@ function Home() {
         </div>
       </section>
       <main>
+          {/* Temporary. remove note when admob fully deprecated */}
+          <div style={{display:'flex', justifyContent:'center', paddingTop:'10px'}}>
+            The AdMob package is deprecated and will be removed in the future. We recommend using the	&nbsp;<a href="https://pub.dev/packages/google_mobile_ads" target="_blank">google_mobile_ads</a>	&nbsp;package.
+          </div>
         <div className={styles.plugins}>
           <table className={styles.table}>
             <thead>
