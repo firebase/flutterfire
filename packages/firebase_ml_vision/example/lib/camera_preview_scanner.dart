@@ -24,12 +24,15 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
   bool _isDetecting = false;
   CameraLensDirection _direction = CameraLensDirection.back;
 
-  final BarcodeDetector _barcodeDetector = FirebaseVision.instance.barcodeDetector();
+  final BarcodeDetector _barcodeDetector =
+      FirebaseVision.instance.barcodeDetector();
   final FaceDetector _faceDetector = FirebaseVision.instance.faceDetector();
   final ImageLabeler _imageLabeler = FirebaseVision.instance.imageLabeler();
-  final ImageLabeler _cloudImageLabeler = FirebaseVision.instance.cloudImageLabeler();
+  final ImageLabeler _cloudImageLabeler =
+      FirebaseVision.instance.cloudImageLabeler();
   final TextRecognizer _recognizer = FirebaseVision.instance.textRecognizer();
-  final TextRecognizer _cloudRecognizer = FirebaseVision.instance.cloudTextRecognizer();
+  final TextRecognizer _cloudRecognizer =
+      FirebaseVision.instance.cloudTextRecognizer();
   final DocumentTextRecognizer _cloudDocumentRecognizer =
       FirebaseVision.instance.cloudDocumentTextRecognizer();
 
@@ -40,11 +43,14 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
   }
 
   Future<void> _initializeCamera() async {
-    final CameraDescription description = await ScannerUtils.getCamera(_direction);
+    final CameraDescription description =
+        await ScannerUtils.getCamera(_direction);
 
     _camera = CameraController(
       description,
-      defaultTargetPlatform == TargetPlatform.iOS ? ResolutionPreset.low : ResolutionPreset.medium,
+      defaultTargetPlatform == TargetPlatform.iOS
+          ? ResolutionPreset.low
+          : ResolutionPreset.medium,
     );
     await _camera!.initialize();
 
@@ -89,7 +95,9 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
   Widget _buildResults() {
     const Text noResultsText = Text('No results!');
 
-    if (_scanResults == null || _camera == null || !_camera!.value.isInitialized) {
+    if (_scanResults == null ||
+        _camera == null ||
+        !_camera!.value.isInitialized) {
       return noResultsText;
     }
 
@@ -118,7 +126,8 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
         painter = LabelDetectorPainter(imageSize, _scanResults);
         break;
       default:
-        assert(_currentDetector == Detector.text || _currentDetector == Detector.cloudText);
+        assert(_currentDetector == Detector.text ||
+            _currentDetector == Detector.cloudText);
         if (_scanResults is! VisionText) return noResultsText;
         painter = TextDetectorPainter(imageSize, _scanResults);
     }

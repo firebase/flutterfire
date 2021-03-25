@@ -16,7 +16,8 @@ void main() {
     dynamic returnValue;
 
     setUp(() {
-      FirebaseVision.channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      FirebaseVision.channel
+          .setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
 
         switch (methodCall.method) {
@@ -68,7 +69,8 @@ void main() {
 
         test('process an image with non-default options', () async {
           final hintedLanguages = ['en', 'ru'];
-          final options = CloudDocumentRecognizerOptions(hintedLanguages: hintedLanguages);
+          final options =
+              CloudDocumentRecognizerOptions(hintedLanguages: hintedLanguages);
           final recognizerWithOptions =
               FirebaseVision.instance.cloudDocumentTextRecognizer(options);
           final text = await recognizerWithOptions.processImage(image);
@@ -127,17 +129,19 @@ void main() {
         const errorMessage = 'There is some problem with a call';
 
         test('process an image', () async {
-          FirebaseVision.channel.setMockMethodCallHandler((MethodCall methodCall) async {
+          FirebaseVision.channel
+              .setMockMethodCallHandler((MethodCall methodCall) async {
             throw Exception(errorMessage);
           });
           expect(
               recognizer.processImage(image),
-              throwsA(isA<PlatformException>()
-                  .having((e) => e.toString(), 'message', contains(errorMessage))));
+              throwsA(isA<PlatformException>().having(
+                  (e) => e.toString(), 'message', contains(errorMessage))));
         });
 
         test('close', () async {
-          FirebaseVision.channel.setMockMethodCallHandler((MethodCall methodCall) async {
+          FirebaseVision.channel
+              .setMockMethodCallHandler((MethodCall methodCall) async {
             switch (methodCall.method) {
               case 'DocumentTextRecognizer#processImage':
                 return returnValue;
@@ -149,8 +153,8 @@ void main() {
 
           expect(
               recognizer.close(),
-              throwsA(isA<PlatformException>()
-                  .having((e) => e.toString(), 'message', contains(errorMessage))));
+              throwsA(isA<PlatformException>().having(
+                  (e) => e.toString(), 'message', contains(errorMessage))));
         });
       });
 
@@ -215,7 +219,10 @@ void main() {
               'confidence': 0.1,
               'width': 19.0,
               'text': '!',
-              'recognizedBreak': {'detectedBreakType': 5, 'detectedBreakPrefix': false},
+              'recognizedBreak': {
+                'detectedBreakType': 5,
+                'detectedBreakPrefix': false
+              },
               'symbols': <dynamic>[],
               'height': 20.0
             },
@@ -232,7 +239,10 @@ void main() {
               'width': 23.0,
               'words': words,
               'text': 'Hey!',
-              'recognizedBreak': {'detectedBreakType': 5, 'detectedBreakPrefix': false},
+              'recognizedBreak': {
+                'detectedBreakType': 5,
+                'detectedBreakPrefix': false
+              },
               'height': 24.0
             },
           ];
@@ -248,14 +258,20 @@ void main() {
               'width': 27.0,
               'text': 'Hey!',
               'paragraphs': paragraphs,
-              'recognizedBreak': {'detectedBreakType': 5, 'detectedBreakPrefix': false},
+              'recognizedBreak': {
+                'detectedBreakType': 5,
+                'detectedBreakPrefix': false
+              },
               'height': 28.0
             },
             <dynamic, dynamic>{
               'recognizedLanguages': <dynamic>[],
               'confidence': 1,
               'text': '',
-              'recognizedBreak': {'detectedBreakType': 3, 'detectedBreakPrefix': true},
+              'recognizedBreak': {
+                'detectedBreakType': 3,
+                'detectedBreakPrefix': true
+              },
               'paragraphs': <dynamic>[]
             },
           ];
@@ -270,19 +286,22 @@ void main() {
 
         group('$VisionDocumentText', () {
           test('is valid after a valid reply', () async {
-            final VisionDocumentText text = await recognizer.processImage(image);
+            final VisionDocumentText text =
+                await recognizer.processImage(image);
             expect(text.blocks, hasLength(2));
             expect(text.text, 'Hey!');
           });
 
           group('$DocumentTextBlock', () {
             test('is valid after a valid reply', () async {
-              final VisionDocumentText text = await recognizer.processImage(image);
+              final VisionDocumentText text =
+                  await recognizer.processImage(image);
 
               DocumentTextBlock block = text.blocks[0];
               expect(block.boundingBox, const Rect.fromLTWH(26, 25, 27, 28));
               expect(block.text, 'Hey!');
-              expect(block.recognizedBreak!.detectedBreakType, TextRecognizedBreakType.values[5]);
+              expect(block.recognizedBreak!.detectedBreakType,
+                  TextRecognizedBreakType.values[5]);
               expect(block.recognizedBreak!.isPrefix, false);
               expect(block.recognizedLanguages, hasLength(1));
               expect(block.recognizedLanguages[0].languageCode, 'it');
@@ -293,7 +312,8 @@ void main() {
 
               expect(block.boundingBox, isNull);
               expect(block.text, '');
-              expect(block.recognizedBreak!.detectedBreakType, TextRecognizedBreakType.values[3]);
+              expect(block.recognizedBreak!.detectedBreakType,
+                  TextRecognizedBreakType.values[3]);
               expect(block.recognizedBreak!.isPrefix, true);
               expect(block.recognizedLanguages, hasLength(0));
               expect(block.confidence, 1.0);
@@ -303,14 +323,16 @@ void main() {
 
           group('$DocumentTextParagraph', () {
             test('is valid after a valid reply', () async {
-              final VisionDocumentText text = await recognizer.processImage(image);
+              final VisionDocumentText text =
+                  await recognizer.processImage(image);
 
               DocumentTextParagraph paragraph = text.blocks[0].paragraphs[0];
 
-              expect(paragraph.boundingBox, const Rect.fromLTWH(22, 21, 23, 24));
-              expect(paragraph.text, 'Hey!');
               expect(
-                  paragraph.recognizedBreak!.detectedBreakType, TextRecognizedBreakType.values[5]);
+                  paragraph.boundingBox, const Rect.fromLTWH(22, 21, 23, 24));
+              expect(paragraph.text, 'Hey!');
+              expect(paragraph.recognizedBreak!.detectedBreakType,
+                  TextRecognizedBreakType.values[5]);
               expect(paragraph.recognizedBreak!.isPrefix, false);
               expect(paragraph.recognizedLanguages, hasLength(1));
               expect(paragraph.confidence, 0.5);
@@ -320,7 +342,8 @@ void main() {
 
           group('$DocumentTextWord', () {
             test('is valid after a valid reply', () async {
-              final VisionDocumentText text = await recognizer.processImage(image);
+              final VisionDocumentText text =
+                  await recognizer.processImage(image);
 
               DocumentTextWord word = text.blocks[0].paragraphs[0].words[0];
 
@@ -335,7 +358,8 @@ void main() {
 
               expect(word.boundingBox, const Rect.fromLTWH(18, 17, 19, 20));
               expect(word.text, '!');
-              expect(word.recognizedBreak!.detectedBreakType, TextRecognizedBreakType.values[5]);
+              expect(word.recognizedBreak!.detectedBreakType,
+                  TextRecognizedBreakType.values[5]);
               expect(word.recognizedBreak!.isPrefix, false);
               expect(word.recognizedLanguages, hasLength(0));
               expect(word.confidence, 0.1);
@@ -345,9 +369,11 @@ void main() {
 
           group('$DocumentTextSymbol', () {
             test('is valid after a valid reply', () async {
-              final VisionDocumentText text = await recognizer.processImage(image);
+              final VisionDocumentText text =
+                  await recognizer.processImage(image);
 
-              DocumentTextSymbol symbol = text.blocks[0].paragraphs[0].words[0].symbols[0];
+              DocumentTextSymbol symbol =
+                  text.blocks[0].paragraphs[0].words[0].symbols[0];
 
               expect(symbol.boundingBox, const Rect.fromLTWH(2, 1, 3, 4));
               expect(symbol.text, 'H');

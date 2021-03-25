@@ -24,12 +24,15 @@ class _PictureScannerState extends State<PictureScanner> {
   Size? _imageSize;
   dynamic _scanResults;
   Detector _currentDetector = Detector.text;
-  final BarcodeDetector _barcodeDetector = FirebaseVision.instance.barcodeDetector();
+  final BarcodeDetector _barcodeDetector =
+      FirebaseVision.instance.barcodeDetector();
   final FaceDetector _faceDetector = FirebaseVision.instance.faceDetector();
   final ImageLabeler _imageLabeler = FirebaseVision.instance.imageLabeler();
-  final ImageLabeler _cloudImageLabeler = FirebaseVision.instance.cloudImageLabeler();
+  final ImageLabeler _cloudImageLabeler =
+      FirebaseVision.instance.cloudImageLabeler();
   final TextRecognizer _recognizer = FirebaseVision.instance.textRecognizer();
-  final TextRecognizer _cloudRecognizer = FirebaseVision.instance.cloudTextRecognizer();
+  final TextRecognizer _cloudRecognizer =
+      FirebaseVision.instance.cloudTextRecognizer();
   final DocumentTextRecognizer _cloudDocumentRecognizer =
       FirebaseVision.instance.cloudDocumentTextRecognizer();
 
@@ -80,7 +83,8 @@ class _PictureScannerState extends State<PictureScanner> {
       _scanResults = null;
     });
 
-    final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(imageFile);
+    final FirebaseVisionImage visionImage =
+        FirebaseVisionImage.fromFile(imageFile);
 
     dynamic results;
     switch (_currentDetector) {
@@ -215,7 +219,9 @@ class _PictureScannerState extends State<PictureScanner> {
           ),
         ],
       ),
-      body: _imageFile == null ? const Center(child: Text('No image selected.')) : _buildImage(),
+      body: _imageFile == null
+          ? const Center(child: Text('No image selected.'))
+          : _buildImage(),
       floatingActionButton: FloatingActionButton(
         onPressed: _getAndScanImage,
         tooltip: 'Pick Image',
