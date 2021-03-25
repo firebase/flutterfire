@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 part of 'firebase_ml_vision.dart';
 
@@ -22,7 +22,7 @@ void faceDetectorTests() {
 
       expect(faces.length, 1);
       expect(
-        faces[0].getContour(FaceContourType.allPoints).positionsList,
+        faces[0].getContour(FaceContourType.allPoints)!.positionsList,
         isNotEmpty,
       );
     });
