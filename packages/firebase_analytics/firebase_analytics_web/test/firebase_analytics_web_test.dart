@@ -1,5 +1,3 @@
-// @dart=2.9
-
 @TestOn('chrome') // Uses web-only Flutter SDK
 
 import 'package:firebase/firebase.dart';
@@ -11,8 +9,8 @@ class MockAnalytics extends Mock implements Analytics {}
 
 void main() {
   group('FirebaseAnalyticsWeb', () {
-    FirebaseAnalyticsWeb firebaseAnalytics;
-    MockAnalytics analytics;
+    late FirebaseAnalyticsWeb firebaseAnalytics;
+    late MockAnalytics analytics;
 
     setUp(() {
       analytics = MockAnalytics();
@@ -24,18 +22,21 @@ void main() {
       final parameters = {'a': 'b'};
       await firebaseAnalytics.logEvent(name: name, parameters: parameters);
       verify(analytics.logEvent(name, parameters));
+      verifyNoMoreInteractions(analytics);
     });
 
     test('setAnalyticsCollectionEnabled', () async {
       const enabled = true;
       await firebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
       verify(analytics.setAnalyticsCollectionEnabled(enabled));
+      verifyNoMoreInteractions(analytics);
     });
 
     test('setUserId', () async {
       const userId = 'userId';
       await firebaseAnalytics.setUserId(userId);
       verify(analytics.setUserId(userId));
+      verifyNoMoreInteractions(analytics);
     });
 
     test('setCurrentScreen', () async {
@@ -47,6 +48,7 @@ void main() {
         screenClassOverride: screenClassOverride,
       );
       verify(analytics.setCurrentScreen(screenName));
+      verifyNoMoreInteractions(analytics);
     });
 
     test('setUserProperty', () async {
@@ -54,6 +56,7 @@ void main() {
       const value = 'value';
       await firebaseAnalytics.setUserProperty(name: name, value: value);
       verify(analytics.setUserProperties({name: value}));
+      verifyNoMoreInteractions(analytics);
     });
   });
 }

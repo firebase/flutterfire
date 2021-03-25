@@ -40,6 +40,11 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
 
   @override
   Future<bool> checkForUnsentReports() async {
+    if (isCrashlyticsCollectionEnabled) {
+      throw StateError(
+          "Crashlytics#setCrashlyticsCollectionEnabled has been set to 'true', all reports are automatically sent.");
+    }
+
     try {
       Map<String, dynamic>? data =
           await channel.invokeMapMethod<String, dynamic>(

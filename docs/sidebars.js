@@ -17,7 +17,6 @@ module.exports = {
       "migration",
       "null-safety",
     ],
-    // AdMob: ["admob/usage", toReferenceAPI("firebase_admob")],
     Analytics: ["analytics/overview", toReferenceAPI("firebase_analytics")],
     Authentication: [
       "auth/overview",
