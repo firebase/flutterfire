@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -27,7 +25,7 @@ class _MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<_MainScreen> {
-  String _linkMessage;
+  String? _linkMessage;
   bool _isCreatingLink = false;
   String _testString =
       'To test: long press link and then copy and click from a non-browser '
@@ -43,8 +41,8 @@ class _MainScreenState extends State<_MainScreen> {
 
   Future<void> initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      final Uri deepLink = dynamicLink?.link;
+        onSuccess: (PendingDynamicLinkData? dynamicLink) async {
+      final Uri? deepLink = dynamicLink?.link;
 
       if (deepLink != null) {
         // ignore: unawaited_futures
@@ -55,9 +53,9 @@ class _MainScreenState extends State<_MainScreen> {
       print(e.message);
     });
 
-    final PendingDynamicLinkData data =
+    final PendingDynamicLinkData? data =
         await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
+    final Uri? deepLink = data?.link;
 
     if (deepLink != null) {
       // ignore: unawaited_futures
@@ -132,7 +130,7 @@ class _MainScreenState extends State<_MainScreen> {
                 InkWell(
                   onTap: () async {
                     if (_linkMessage != null) {
-                      await launch(_linkMessage);
+                      await launch(_linkMessage!);
                     }
                   },
                   onLongPress: () {
