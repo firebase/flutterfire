@@ -17,7 +17,7 @@ MockFirebaseRemoteConfig mockRemoteConfigPlatform = MockFirebaseRemoteConfig();
 void main() {
   setupFirebaseRemoteConfigMocks();
 
-  RemoteConfig? remoteConfig;
+  late RemoteConfig remoteConfig;
   DateTime mockLastFetchTime = DateTime(2020);
   RemoteConfigFetchStatus? mockLastFetchStatus =
       RemoteConfigFetchStatus.noFetchYet;
@@ -45,8 +45,8 @@ void main() {
       });
 
       test('returns the correct $FirebaseApp', () {
-        expect(remoteConfig!.app, isA<FirebaseApp>());
-        expect(remoteConfig!.app.name, defaultFirebaseAppName);
+        expect(remoteConfig.app, isA<FirebaseApp>());
+        expect(remoteConfig.app?.name, defaultFirebaseAppName);
       });
     });
 
@@ -100,21 +100,21 @@ void main() {
 
     group('lastFetchTime', () {
       test('get lastFetchTime', () {
-        remoteConfig!.lastFetchTime;
+        remoteConfig.lastFetchTime;
         verify(mockRemoteConfigPlatform.lastFetchTime);
       });
     });
 
     group('lastFetchStatus', () {
       test('get lastFetchStatus', () {
-        remoteConfig!.lastFetchStatus;
+        remoteConfig.lastFetchStatus;
         verify(mockRemoteConfigPlatform.lastFetchStatus);
       });
     });
 
     group('settings', () {
       test('get settings', () {
-        remoteConfig!.settings;
+        remoteConfig.settings;
         verify(mockRemoteConfigPlatform.settings);
       });
 
@@ -123,7 +123,7 @@ void main() {
           fetchTimeout: const Duration(seconds: 8),
           minimumFetchInterval: Duration.zero,
         );
-        await remoteConfig!.setConfigSettings(remoteConfigSettings);
+        await remoteConfig.setConfigSettings(remoteConfigSettings);
         verify(
             mockRemoteConfigPlatform.setConfigSettings(remoteConfigSettings));
       });
@@ -131,77 +131,77 @@ void main() {
 
     group('activate()', () {
       test('should call delegate method', () async {
-        await remoteConfig!.activate();
+        await remoteConfig.activate();
         verify(mockRemoteConfigPlatform.activate());
       });
     });
 
     group('ensureEnitialized()', () {
       test('should call delegate method', () async {
-        await remoteConfig!.ensureInitialized();
+        await remoteConfig.ensureInitialized();
         verify(mockRemoteConfigPlatform.ensureInitialized());
       });
     });
 
     group('fetch()', () {
       test('should call delegate method', () async {
-        await remoteConfig!.fetch();
+        await remoteConfig.fetch();
         verify(mockRemoteConfigPlatform.fetch());
       });
     });
 
     group('fetchAndActivate()', () {
       test('should call delegate method', () async {
-        await remoteConfig!.fetchAndActivate();
+        await remoteConfig.fetchAndActivate();
         verify(mockRemoteConfigPlatform.fetchAndActivate());
       });
     });
 
     group('getAll()', () {
       test('should call delegate method', () {
-        remoteConfig!.getAll();
+        remoteConfig.getAll();
         verify(mockRemoteConfigPlatform.getAll());
       });
     });
 
     group('getBool()', () {
       test('should call delegate method', () {
-        remoteConfig!.getBool('foo');
+        remoteConfig.getBool('foo');
         verify(mockRemoteConfigPlatform.getBool('foo'));
       });
     });
 
     group('getInt()', () {
       test('should call delegate method', () {
-        remoteConfig!.getInt('foo');
+        remoteConfig.getInt('foo');
         verify(mockRemoteConfigPlatform.getInt('foo'));
       });
     });
 
     group('getDouble()', () {
       test('should call delegate method', () {
-        remoteConfig!.getDouble('foo');
+        remoteConfig.getDouble('foo');
         verify(mockRemoteConfigPlatform.getDouble('foo'));
       });
     });
 
     group('getString()', () {
       test('should call delegate method', () {
-        remoteConfig!.getString('foo');
+        remoteConfig.getString('foo');
         verify(mockRemoteConfigPlatform.getString('foo'));
       });
     });
 
     group('getValue()', () {
       test('should call delegate method', () {
-        remoteConfig!.getValue('foo');
+        remoteConfig.getValue('foo');
         verify(mockRemoteConfigPlatform.getValue('foo'));
       });
     });
 
     group('setDefaults()', () {
       test('should call delegate method', () {
-        remoteConfig!.setDefaults(mockParameters);
+        remoteConfig.setDefaults(mockParameters);
         verify(mockRemoteConfigPlatform.setDefaults(mockDefaultParameters));
       });
     });
