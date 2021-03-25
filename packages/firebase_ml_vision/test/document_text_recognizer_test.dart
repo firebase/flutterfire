@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:ui';
 
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
@@ -36,7 +34,7 @@ void main() {
     });
 
     group('$DocumentTextRecognizer', () {
-      DocumentTextRecognizer recognizer;
+      late DocumentTextRecognizer recognizer;
       final FirebaseVisionImage image = FirebaseVisionImage.fromFilePath(
         'empty',
       );
@@ -125,13 +123,6 @@ void main() {
         expect(recognizer.close(), completes);
 
         expect(log, <Matcher>[]);
-      });
-
-      test('when given wrong input on processing an image fails', () async {
-        expect(
-            () => recognizer.processImage(null),
-            throwsA(isA<AssertionError>().having((e) => e.toString(), 'message',
-                contains("'visionImage != null': is not true"))));
       });
 
       group('throws an exception when native API fails to', () {
@@ -311,9 +302,9 @@ void main() {
               // ignore: prefer_const_constructors
               expect(block.boundingBox, Rect.fromLTWH(26, 25, 27, 28));
               expect(block.text, 'Hey!');
-              expect(block.recognizedBreak.detectedBreakType,
+              expect(block.recognizedBreak!.detectedBreakType,
                   TextRecognizedBreakType.values[5]);
-              expect(block.recognizedBreak.isPrefix, false);
+              expect(block.recognizedBreak!.isPrefix, false);
               expect(block.recognizedLanguages, hasLength(1));
               expect(block.recognizedLanguages[0].languageCode, 'it');
               expect(block.confidence, 0.8);
@@ -324,9 +315,9 @@ void main() {
               // ignore: prefer_const_constructors
               expect(block.boundingBox, isNull);
               expect(block.text, '');
-              expect(block.recognizedBreak.detectedBreakType,
+              expect(block.recognizedBreak!.detectedBreakType,
                   TextRecognizedBreakType.values[3]);
-              expect(block.recognizedBreak.isPrefix, true);
+              expect(block.recognizedBreak!.isPrefix, true);
               expect(block.recognizedLanguages, hasLength(0));
               expect(block.confidence, 1.0);
               expect(block.paragraphs, hasLength(0));
@@ -344,9 +335,9 @@ void main() {
               expect(
                   paragraph.boundingBox, const Rect.fromLTWH(22, 21, 23, 24));
               expect(paragraph.text, 'Hey!');
-              expect(paragraph.recognizedBreak.detectedBreakType,
+              expect(paragraph.recognizedBreak!.detectedBreakType,
                   TextRecognizedBreakType.values[5]);
-              expect(paragraph.recognizedBreak.isPrefix, false);
+              expect(paragraph.recognizedBreak!.isPrefix, false);
               expect(paragraph.recognizedLanguages, hasLength(1));
               expect(paragraph.confidence, 0.5);
               expect(paragraph.words, hasLength(2));
@@ -373,9 +364,9 @@ void main() {
               // ignore: prefer_const_constructors
               expect(word.boundingBox, Rect.fromLTWH(18, 17, 19, 20));
               expect(word.text, '!');
-              expect(word.recognizedBreak.detectedBreakType,
+              expect(word.recognizedBreak!.detectedBreakType,
                   TextRecognizedBreakType.values[5]);
-              expect(word.recognizedBreak.isPrefix, false);
+              expect(word.recognizedBreak!.isPrefix, false);
               expect(word.recognizedLanguages, hasLength(0));
               expect(word.confidence, 0.1);
               expect(word.symbols, hasLength(0));
