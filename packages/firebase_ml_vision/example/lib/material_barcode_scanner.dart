@@ -155,7 +155,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   Future<void> _openCamera(CameraDescription camera) async {
     final ResolutionPreset preset =
         defaultTargetPlatform == TargetPlatform.android
-            ? ResolutionPreset.medium
+            ? ResolutionPreset.high
             : ResolutionPreset.low;
 
     _cameraController = CameraController(camera, preset);
@@ -265,8 +265,9 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   @override
   void dispose() {
     _currentState = AnimationState.endSearch;
-    _cameraController?.stopImageStream();
-    _cameraController?.dispose();
+    _cameraController
+        ?.stopImageStream()
+        .then((_) => _cameraController?.dispose());
     _animationController?.dispose();
     _barcodeDetector.close();
 

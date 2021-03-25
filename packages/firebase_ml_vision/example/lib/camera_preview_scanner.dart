@@ -65,6 +65,7 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
         imageRotation: description.sensorOrientation,
       ).then(
         (dynamic results) {
+          if (!mounted) return;
           setState(() {
             _scanResults = results;
           });

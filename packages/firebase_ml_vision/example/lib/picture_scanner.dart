@@ -183,6 +183,7 @@ class _PictureScannerState extends State<PictureScanner> {
         actions: <Widget>[
           PopupMenuButton<Detector>(
             onSelected: (Detector result) {
+              // _scanResults = null;
               _currentDetector = result;
               if (_imageFile != null) _scanImage(_imageFile!);
             },

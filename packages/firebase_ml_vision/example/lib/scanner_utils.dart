@@ -54,8 +54,8 @@ class ScannerUtils {
         (Plane plane) {
           return FirebaseVisionImagePlaneMetadata(
             bytesPerRow: plane.bytesPerRow,
-            height: plane.height!,
-            width: plane.width!,
+            height: plane.height,
+            width: plane.width,
           );
         },
       ).toList(),
