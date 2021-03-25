@@ -23,11 +23,11 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
 
   /// Create instance using [app] using the existing implementation.
   factory FirebaseRemoteConfigPlatform.instanceFor({
-    required FirebaseApp app,
+    FirebaseApp? app,
     Map<dynamic, dynamic>? pluginConstants,
   }) {
     return FirebaseRemoteConfigPlatform.instance
-        .delegateFor(app: app)
+        .delegateFor(app: app)!
         .setInitialValues(
           remoteConfigValues: pluginConstants ?? <dynamic, dynamic>{},
         );
@@ -40,11 +40,11 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   final FirebaseApp? appInstance;
 
   /// Returns the [FirebaseApp] for the current instance.
-  FirebaseApp get app {
+  FirebaseApp? get app {
     if (appInstance == null) {
       return Firebase.app();
     }
-    return appInstance!;
+    return appInstance;
   }
 
   static FirebaseRemoteConfigPlatform? _instance;
@@ -66,7 +66,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none
   /// default [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseRemoteConfigPlatform delegateFor({required FirebaseApp app}) {
+  FirebaseRemoteConfigPlatform? delegateFor({FirebaseApp? app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
