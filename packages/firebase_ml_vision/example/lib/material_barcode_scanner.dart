@@ -302,10 +302,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
       child: Transform.scale(
         scale: _getImageZoom(MediaQuery.of(context)),
         child: Center(
-          child: AspectRatio(
-            aspectRatio: _cameraController!.value.aspectRatio,
-            child: CameraPreview(_cameraController!),
-          ),
+          child: CameraPreview(_cameraController!),
         ),
       ),
     );
