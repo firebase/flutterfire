@@ -84,8 +84,6 @@ class _CameraPreviewScannerState extends State<CameraPreviewScanner> {
       case Detector.face:
         return _faceDetector.processImage;
     }
-
-    return null;
   }
 
   Widget _buildResults() {
