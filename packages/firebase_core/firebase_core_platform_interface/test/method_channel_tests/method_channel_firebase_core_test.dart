@@ -33,7 +33,7 @@ void main() {
             return [
               {
                 'name': defaultFirebaseAppName,
-                'options': <dynamic, dynamic>{
+                'options': <Object?, Object?>{
                   'apiKey': 'testAPIKey',
                   'appId': 'testBundleID',
                   'messagingSenderId': 'testClientID',
@@ -42,9 +42,9 @@ void main() {
               }
             ];
           case 'Firebase#initializeApp':
-            return <dynamic, dynamic>{
+            return <Object?, Object?>{
               'name': methodCall.arguments['appName'] ?? defaultFirebaseAppName,
-              'options': <dynamic, dynamic>{
+              'options': <Object?, Object?>{
                 'apiKey': 'testing',
                 'appId': 'testing',
                 'messagingSenderId': 'testing',
@@ -95,7 +95,7 @@ void main() {
 
             switch (methodCall.method) {
               case 'Firebase#initializeCore':
-                return [];
+                return <Object?>[];
               default:
                 return null;
             }
@@ -139,14 +139,14 @@ void main() {
               ),
               isMethodCall(
                 'Firebase#initializeApp',
-                arguments: <String, dynamic>{
+                arguments: <String, Object?>{
                   'appName': 'foo',
                   'options': testOptions.asMap,
                 },
               ),
               isMethodCall(
                 'Firebase#initializeApp',
-                arguments: <String, dynamic>{
+                arguments: <String, Object?>{
                   'appName': 'bar',
                   'options': testOptions.asMap,
                 },

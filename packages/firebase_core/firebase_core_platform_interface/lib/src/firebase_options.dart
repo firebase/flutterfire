@@ -56,26 +56,26 @@ class FirebaseOptions {
   /// This constructor is used when platforms cannot directly return a
   /// [FirebaseOptions] instance, for example when data is sent back from a
   /// [MethodChannel].
-  FirebaseOptions.fromMap(Map<dynamic, dynamic> map)
+  FirebaseOptions.fromMap(Map<Object?, Object?> map)
       : assert(map['apiKey'] != null, "'apiKey' cannot be null."),
         assert(map['appId'] != null, "'appId' cannot be null."),
         assert(map['messagingSenderId'] != null,
             "'messagingSenderId' cannot be null."),
         assert(map['projectId'] != null, "'projectId' cannot be null."),
-        apiKey = map['apiKey'],
-        appId = map['appId'],
-        messagingSenderId = map['messagingSenderId'],
-        projectId = map['projectId'],
-        authDomain = map['authDomain'],
-        databaseURL = map['databaseURL'],
-        storageBucket = map['storageBucket'],
-        measurementId = map['measurementId'],
-        trackingId = map['trackingId'],
-        deepLinkURLScheme = map['deepLinkURLScheme'],
-        androidClientId = map['androidClientId'],
-        iosClientId = map['iosClientId'],
-        iosBundleId = map['iosBundleId'],
-        appGroupId = map['appGroupId'];
+        apiKey = map['apiKey']! as String,
+        appId = map['appId']! as String,
+        messagingSenderId = map['messagingSenderId']! as String,
+        projectId = map['projectId']! as String,
+        authDomain = map['authDomain'] as String?,
+        databaseURL = map['databaseURL'] as String?,
+        storageBucket = map['storageBucket'] as String?,
+        measurementId = map['measurementId'] as String?,
+        trackingId = map['trackingId'] as String?,
+        deepLinkURLScheme = map['deepLinkURLScheme'] as String?,
+        androidClientId = map['androidClientId'] as String?,
+        iosClientId = map['iosClientId'] as String?,
+        iosBundleId = map['iosBundleId'] as String?,
+        appGroupId = map['appGroupId'] as String?;
 
   /// An API key used for authenticating requests from your app, for example
   /// "AIzaSyDdVgKwhZl0sTTTLZ7iTmt1r3N2cJLnaDk", used to identify your app to

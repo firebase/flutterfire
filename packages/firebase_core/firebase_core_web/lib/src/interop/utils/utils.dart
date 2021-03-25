@@ -17,7 +17,7 @@ import 'js_interop.dart' as js;
 ///
 /// The optional [customDartify] function may return `null` to indicate,
 /// that it could not handle the given JS Object.
-dynamic dartify(
+Object? dartify(
   Object? jsObject, [
   Object? Function(Object? object)? customDartify,
 ]) {
@@ -26,7 +26,7 @@ dynamic dartify(
   }
 
   // Handle list
-  if (jsObject is Iterable) {
+  if (jsObject is Iterable<Object?>) {
     return jsObject.map((item) => dartify(item, customDartify)).toList();
   }
 
@@ -39,7 +39,7 @@ dynamic dartify(
 
   if (value == null) {
     var keys = js.objectKeys(jsObject);
-    var map = <String, dynamic>{};
+    var map = <String, Object?>{};
     for (final key in keys) {
       map[key] = dartify(util.getProperty(jsObject, key), customDartify);
     }
@@ -50,8 +50,8 @@ dynamic dartify(
 }
 
 // Converts an Iterable into a JS Array
-dynamic jsifyList(
-  Iterable list, [
+Object? jsifyList(
+  Iterable<Object?> list, [
   Object? Function(Object? object)? customJsify,
 ]) {
   return js.toJSArray(list.map((item) => jsify(item, customJsify)).toList());
@@ -61,7 +61,7 @@ dynamic jsifyList(
 ///
 /// The optional [customJsify] function may return `null` to indicate,
 /// that it could not handle the given Dart Object.
-dynamic jsify(
+Object? jsify(
   Object? dartObject, [
   Object? Function(Object? object)? customJsify,
 ]) {
@@ -69,14 +69,14 @@ dynamic jsify(
     return dartObject;
   }
 
-  if (dartObject is Iterable) {
+  if (dartObject is Iterable<Object?>) {
     return jsifyList(dartObject, customJsify);
   }
 
-  if (dartObject is Map) {
-    var jsMap = util.newObject();
+  if (dartObject is Map<Object?, Object?>) {
+    var jsMap = util.newObject() as Object;
     dartObject.forEach((key, value) {
-      util.setProperty(jsMap, key, jsify(value, customJsify));
+      util.setProperty(jsMap, key!, jsify(value, customJsify));
     });
     return jsMap;
   }
@@ -85,7 +85,7 @@ dynamic jsify(
     return allowInterop(dartObject);
   }
 
-  Object? value = customJsify?.call(dartObject);
+  final value = customJsify?.call(dartObject);
 
   if (value == null) {
     throw ArgumentError.value(dartObject, 'dartObject', 'Could not convert');
@@ -95,7 +95,7 @@ dynamic jsify(
 }
 
 /// Calls [method] on JavaScript object [jsObject].
-dynamic callMethod(Object jsObject, String method, List<dynamic> args) =>
+Object? callMethod(Object jsObject, String method, List<Object?> args) =>
     util.callMethod(jsObject, method, args);
 
 /// Returns `true` if the [value] is a very basic built-in type - e.g.
@@ -117,13 +117,17 @@ PromiseJsImpl<S> handleFutureWithMapper<T, S>(
   Future<T> future,
   Func1<T, S> mapper,
 ) {
-  return PromiseJsImpl<S>(allowInterop((
-    Function(S) resolve,
-    Function(Object) reject,
-  ) {
-    future.then((value) {
-      var mappedValue = mapper(value);
-      resolve(mappedValue);
-    }).catchError((error) => reject(error));
-  }));
+  return PromiseJsImpl<S>(
+    allowInterop((
+      void Function(S) resolve,
+      void Function(Object) reject,
+    ) async {
+      try {
+        var mappedValue = mapper(await future);
+        resolve(mappedValue);
+      } catch (err) {
+        reject(err);
+      }
+    }),
+  );
 }

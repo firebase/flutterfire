@@ -78,7 +78,7 @@ class MockFirebaseCore extends Mock
       Invocation.method(#app, [name]),
       returnValue: FakeFirebaseAppPlatform(),
       returnValueForMissingStub: FakeFirebaseAppPlatform(),
-    );
+    ) as FirebaseAppPlatform;
   }
 
   @override
@@ -97,7 +97,7 @@ class MockFirebaseCore extends Mock
       ),
       returnValue: Future.value(FakeFirebaseAppPlatform()),
       returnValueForMissingStub: Future.value(FakeFirebaseAppPlatform()),
-    );
+    ) as Future<FirebaseAppPlatform>;
   }
 
   @override
@@ -106,7 +106,7 @@ class MockFirebaseCore extends Mock
       Invocation.getter(#apps),
       returnValue: <FirebaseAppPlatform>[],
       returnValueForMissingStub: <FirebaseAppPlatform>[],
-    );
+    ) as List<FirebaseAppPlatform>;
   }
 }
 

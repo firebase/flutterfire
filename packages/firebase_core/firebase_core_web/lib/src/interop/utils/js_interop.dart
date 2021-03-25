@@ -23,8 +23,9 @@ external Object toJSArray(List source);
 DateTime? dartifyDate(Object jsObject) {
   if (util.hasProperty(jsObject, 'toDateString')) {
     try {
-      var date = jsObject as dynamic;
-      return DateTime.fromMillisecondsSinceEpoch(date.getTime());
+      // using `dynamic` to unsafely access `getTime` without a known interface
+      dynamic date = jsObject as dynamic;
+      return DateTime.fromMillisecondsSinceEpoch(date.getTime() as int);
     }
     // TODO(rrousselGit): document why try/catch is needed here or find an alternative
     // ignore: avoid_catching_errors

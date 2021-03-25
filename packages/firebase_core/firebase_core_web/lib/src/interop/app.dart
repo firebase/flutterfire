@@ -30,5 +30,5 @@ class App extends JsObjectWrapper<AppJsImpl> {
   }
 
   /// Deletes the app and frees resources of all App's services.
-  Future delete() => handleThenable(jsObject.delete());
+  Future<void> delete() => handleThenable(jsObject.delete());
 }

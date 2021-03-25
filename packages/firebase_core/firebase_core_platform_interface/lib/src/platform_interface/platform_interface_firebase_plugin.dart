@@ -19,7 +19,7 @@ abstract class FirebasePluginPlatform extends PlatformInterface {
   /// any constant values which are required before the plugins can be consumed are registered
   /// here. For example, calling [FirebaseAppPlatform.isAutomaticDataCollectionEnabled]
   /// requires that the value is synchronously available for use after initialization.
-  static Map<dynamic, dynamic> _constantsForPluginApps = {};
+  static Map<Object?, Object?> _constantsForPluginApps = {};
 
   final String _appName;
 
@@ -33,10 +33,11 @@ abstract class FirebasePluginPlatform extends PlatformInterface {
   }
 
   /// Returns any plugin constants this plugin app instance has initialized.
-  Map<dynamic, dynamic> get pluginConstants {
-    if (_constantsForPluginApps[_appName] != null &&
-        _constantsForPluginApps[_appName][_methodChannelName] != null) {
-      return _constantsForPluginApps[_appName][_methodChannelName];
+  Map<Object?, Object?> get pluginConstants {
+    final appMap = _constantsForPluginApps[_appName] as Map<Object?, Object?>?;
+
+    if (appMap != null) {
+      return appMap[_methodChannelName]! as Map<Object?, Object?>;
     }
 
     return {};

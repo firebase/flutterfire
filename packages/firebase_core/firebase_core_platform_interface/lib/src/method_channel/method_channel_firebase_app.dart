@@ -17,7 +17,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   MethodChannelFirebaseApp(
     String name,
     FirebaseOptions options, {
-    isAutomaticDataCollectionEnabled,
+    bool? isAutomaticDataCollectionEnabled,
   })  : _isAutomaticDataCollectionEnabled =
             isAutomaticDataCollectionEnabled ?? false,
         super(name, options);
@@ -48,7 +48,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
 
     await MethodChannelFirebase.channel.invokeMethod<void>(
       'FirebaseApp#delete',
-      <String, dynamic>{'appName': name, 'options': options.asMap},
+      <String, Object?>{'appName': name, 'options': options.asMap},
     );
 
     MethodChannelFirebase.appInstances.remove(name);
@@ -61,7 +61,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   Future<void> setAutomaticDataCollectionEnabled(bool enabled) async {
     await MethodChannelFirebase.channel.invokeMethod<void>(
       'FirebaseApp#setAutomaticDataCollectionEnabled',
-      <String, dynamic>{'appName': name, 'enabled': enabled},
+      <String, Object?>{'appName': name, 'enabled': enabled},
     );
 
     _isAutomaticDataCollectionEnabled = enabled;
@@ -72,7 +72,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   Future<void> setAutomaticResourceManagementEnabled(bool enabled) async {
     await MethodChannelFirebase.channel.invokeMethod<void>(
       'FirebaseApp#setAutomaticResourceManagementEnabled',
-      <String, dynamic>{'appName': name, 'enabled': enabled},
+      <String, Object?>{'appName': name, 'enabled': enabled},
     );
   }
 }

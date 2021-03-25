@@ -5,6 +5,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'app.dart';
 import 'core_interop.dart' as firebase_interop;
@@ -14,10 +15,10 @@ export 'app_interop.dart';
 export 'core_interop.dart';
 
 List<App> get apps => firebase_interop.apps
-    // explicitly typing the param as dynamic to work-around
+    // explicitly typing the param as Object? to work-around
     // https://github.com/dart-lang/sdk/issues/33537
     // ignore: unnecessary_lambdas
-    .map((dynamic e) => App.getInstance(e))
+    .map((Object e) => App.getInstance(e as AppJsImpl))
     .toList();
 
 App initializeApp({

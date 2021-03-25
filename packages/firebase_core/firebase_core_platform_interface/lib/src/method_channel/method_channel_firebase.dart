@@ -37,12 +37,12 @@ class MethodChannelFirebase extends FirebasePlatform {
 
   /// Creates and attaches a new [MethodChannelFirebaseApp] to the [MethodChannelFirebase]
   /// and adds any constants to the [FirebasePluginPlatform] class.
-  void _initializeFirebaseAppFromMap(Map<dynamic, dynamic> map) {
-    MethodChannelFirebaseApp methodChannelFirebaseApp =
-        MethodChannelFirebaseApp(
-      map['name'],
-      FirebaseOptions.fromMap(map['options']),
-      isAutomaticDataCollectionEnabled: map['isAutomaticDataCollectionEnabled'],
+  void _initializeFirebaseAppFromMap(Map<Object?, Object?> map) {
+    final methodChannelFirebaseApp = MethodChannelFirebaseApp(
+      map['name']! as String,
+      FirebaseOptions.fromMap(map['options']! as Map<Object?, Object?>),
+      isAutomaticDataCollectionEnabled:
+          map['isAutomaticDataCollectionEnabled'] as bool?,
     );
 
     MethodChannelFirebase.appInstances[methodChannelFirebaseApp.name] =
@@ -101,10 +101,12 @@ class MethodChannelFirebase extends FirebasePlatform {
       throw duplicateApp(name);
     }
 
-    _initializeFirebaseAppFromMap((await channel.invokeMapMethod(
+    final map = await channel.invokeMapMethod<Object?, Object?>(
       'Firebase#initializeApp',
-      <String, dynamic>{'appName': name, 'options': options!.asMap},
-    ))!);
+      <String, Object?>{'appName': name, 'options': options!.asMap},
+    );
+
+    _initializeFirebaseAppFromMap(map!);
 
     return appInstances[name]!;
   }

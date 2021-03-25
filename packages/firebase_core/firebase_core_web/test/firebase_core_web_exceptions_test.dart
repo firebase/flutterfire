@@ -54,7 +54,7 @@ void main() {
   group('.app()', () {
     setUp(() async {
       firebaseMock = FirebaseMock(app: js.allowInterop((String name) {
-        final dynamic error = js_util.newObject();
+        final error = js_util.newObject() as Object;
         js_util.setProperty(error, 'name', 'FirebaseError');
         js_util.setProperty(error, 'code', 'app/no-app');
         throw error;

@@ -38,9 +38,9 @@ FirebaseOptions _createFromJsOptions(firebase.FirebaseOptions options) {
 /// When the Firebase JS SDK throws an error, it contains a code which can be
 /// used to identify the specific type of error. This helper function is used
 /// to keep error messages consistent across different platforms.
-String _getJSErrorCode(dynamic e) {
+String _getJSErrorCode(Object e) {
   if (js_util.getProperty(e, 'name') == 'FirebaseError') {
-    return js_util.getProperty(e, 'code') ?? '';
+    return js_util.getProperty(e, 'code') as String? ?? '';
   }
 
   return '';
@@ -51,11 +51,11 @@ String _getJSErrorCode(dynamic e) {
 /// If a JavaScript error is thrown and not manually handled using the code,
 /// this function ensures that if the error is Firebase related, it is instead
 /// re-created as a [FirebaseException] with a familiar code and message.
-FirebaseException _catchJSError(dynamic e) {
+FirebaseException _catchJSError(Object e) {
   if (js_util.getProperty(e, 'name') == 'FirebaseError') {
-    String rawCode = js_util.getProperty(e, 'code');
-    String code = rawCode;
-    String message = js_util.getProperty(e, 'message') ?? '';
+    final rawCode = js_util.getProperty(e, 'code')! as String;
+    var code = rawCode;
+    final message = js_util.getProperty(e, 'message') as String? ?? '';
 
     if (code.contains('/')) {
       List<String> chunks = code.split('/');
