@@ -65,7 +65,7 @@ class CollectionReference extends Query {
   }
 
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       other is CollectionReference &&
       other.firestore == firestore &&
       other.path == path;

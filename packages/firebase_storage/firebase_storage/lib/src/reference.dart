@@ -195,7 +195,7 @@ class Reference {
   }
 
   @override
-  bool operator ==(Object? other) =>
+  bool operator ==(Object other) =>
       other is Reference &&
       other.fullPath == fullPath &&
       other.storage == storage;

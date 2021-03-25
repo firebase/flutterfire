@@ -18,7 +18,7 @@ class GeoPoint {
   final double longitude; // ignore: public_member_api_docs
 
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       other is GeoPoint &&
       other.latitude == latitude &&
       other.longitude == longitude;

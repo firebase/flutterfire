@@ -56,7 +56,7 @@ class FirebaseApp {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! FirebaseApp) return false;
     return other.name == name && other.options == options;
