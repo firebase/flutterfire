@@ -164,7 +164,8 @@ class BarcodeFormat {
   /// Raw BarcodeFormat value.
   final int? value;
 
-  BarcodeFormat operator |(BarcodeFormat other) => BarcodeFormat._(value! | other.value!);
+  BarcodeFormat operator |(BarcodeFormat other) =>
+      BarcodeFormat._(value! | other.value!);
 }
 
 /// Detector for performing barcode scanning on an input image.
@@ -205,7 +206,8 @@ class BarcodeDetector {
       }..addAll(visionImage._serialize()),
     );
 
-    final List<Barcode> barcodes = reply!.map((barcode) => Barcode._(barcode)).toList();
+    final List<Barcode> barcodes =
+        reply!.map((barcode) => Barcode._(barcode)).toList();
 
     return barcodes;
   }
@@ -266,13 +268,18 @@ class Barcode {
         sms = _data['sms'] == null ? null : BarcodeSMS._(_data['sms']),
         url = _data['url'] == null ? null : BarcodeURLBookmark._(_data['url']),
         wifi = _data['wifi'] == null ? null : BarcodeWiFi._(_data['wifi']),
-        geoPoint = _data['geoPoint'] == null ? null : BarcodeGeoPoint._(_data['geoPoint']),
-        contactInfo =
-            _data['contactInfo'] == null ? null : BarcodeContactInfo._(_data['contactInfo']),
-        calendarEvent =
-            _data['calendarEvent'] == null ? null : BarcodeCalendarEvent._(_data['calendarEvent']),
-        driverLicense =
-            _data['driverLicense'] == null ? null : BarcodeDriverLicense._(_data['driverLicense']);
+        geoPoint = _data['geoPoint'] == null
+            ? null
+            : BarcodeGeoPoint._(_data['geoPoint']),
+        contactInfo = _data['contactInfo'] == null
+            ? null
+            : BarcodeContactInfo._(_data['contactInfo']),
+        calendarEvent = _data['calendarEvent'] == null
+            ? null
+            : BarcodeCalendarEvent._(_data['calendarEvent']),
+        driverLicense = _data['driverLicense'] == null
+            ? null
+            : BarcodeDriverLicense._(_data['driverLicense']);
 
   final List<Offset>? _cornerPoints;
 
@@ -418,7 +425,8 @@ class BarcodeWiFi {
   BarcodeWiFi._(Map<dynamic, dynamic> data)
       : ssid = data['ssid'],
         password = data['password'],
-        encryptionType = BarcodeWiFiEncryptionType.values[data['encryptionType']];
+        encryptionType =
+            BarcodeWiFiEncryptionType.values[data['encryptionType']];
 
   /// A Wi-Fi access point SSID.
   final String? ssid;
@@ -450,20 +458,21 @@ class BarcodeContactInfo {
   BarcodeContactInfo._(Map<dynamic, dynamic> data)
       : addresses = data['addresses'] == null
             ? null
-            : List<BarcodeAddress>.unmodifiable(
-                data['addresses'].map<BarcodeAddress>((dynamic item) => BarcodeAddress._(item))),
+            : List<BarcodeAddress>.unmodifiable(data['addresses']
+                .map<BarcodeAddress>((dynamic item) => BarcodeAddress._(item))),
         emails = data['emails'] == null
             ? null
-            : List<BarcodeEmail>.unmodifiable(
-                data['emails'].map<BarcodeEmail>((dynamic item) => BarcodeEmail._(item))),
+            : List<BarcodeEmail>.unmodifiable(data['emails']
+                .map<BarcodeEmail>((dynamic item) => BarcodeEmail._(item))),
         name = data['name'] == null ? null : BarcodePersonName._(data['name']),
         phones = data['phones'] == null
             ? null
-            : List<BarcodePhone>.unmodifiable(
-                data['phones'].map<BarcodePhone>((dynamic item) => BarcodePhone._(item))),
+            : List<BarcodePhone>.unmodifiable(data['phones']
+                .map<BarcodePhone>((dynamic item) => BarcodePhone._(item))),
         urls = data['urls'] == null
             ? null
-            : List<String>.unmodifiable(data['urls'].map<String>((dynamic item) {
+            : List<String>.unmodifiable(
+                data['urls'].map<String>((dynamic item) {
                 final String s = item;
                 return s;
               })),
@@ -501,7 +510,8 @@ class BarcodeContactInfo {
 /// An address.
 class BarcodeAddress {
   BarcodeAddress._(Map<dynamic, dynamic> data)
-      : addressLines = List<String>.unmodifiable(data['addressLines'].map<String>((dynamic item) {
+      : addressLines = List<String>.unmodifiable(
+            data['addressLines'].map<String>((dynamic item) {
           final String s = item;
           return s;
         })),

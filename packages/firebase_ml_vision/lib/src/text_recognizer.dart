@@ -117,8 +117,8 @@ class CloudTextRecognizerOptions {
 class VisionText {
   VisionText._(Map<String, dynamic> data)
       : text = data['text'],
-        blocks = List<TextBlock>.unmodifiable(
-            data['blocks'].map<TextBlock>((dynamic block) => TextBlock._(block)));
+        blocks = List<TextBlock>.unmodifiable(data['blocks']
+            .map<TextBlock>((dynamic block) => TextBlock._(block)));
 
   /// String representation of the recognized text.
   final String? text;
@@ -139,13 +139,14 @@ abstract class TextContainer {
               )
             : null,
         confidence = data['confidence']?.toDouble(),
-        cornerPoints =
-            List<Offset>.unmodifiable(data['points'].map<Offset>((dynamic point) => Offset(
+        cornerPoints = List<Offset>.unmodifiable(
+            data['points'].map<Offset>((dynamic point) => Offset(
                   point[0],
                   point[1],
                 ))),
-        recognizedLanguages = List<RecognizedLanguage>.unmodifiable(data['recognizedLanguages']
-            .map<RecognizedLanguage>((dynamic language) => RecognizedLanguage._(language))),
+        recognizedLanguages = List<RecognizedLanguage>.unmodifiable(
+            data['recognizedLanguages'].map<RecognizedLanguage>(
+                (dynamic language) => RecognizedLanguage._(language))),
         text = data['text'];
 
   /// Axis-aligned bounding rectangle of the detected text.
@@ -196,8 +197,8 @@ class TextBlock extends TextContainer {
 /// Represents a line of text.
 class TextLine extends TextContainer {
   TextLine._(Map<dynamic, dynamic> line)
-      : elements = List<TextElement>.unmodifiable(
-            line['elements'].map<TextElement>((dynamic element) => TextElement._(element))),
+      : elements = List<TextElement>.unmodifiable(line['elements']
+            .map<TextElement>((dynamic element) => TextElement._(element))),
         super._(line);
 
   /// The contents of this line, broken down into individual elements.

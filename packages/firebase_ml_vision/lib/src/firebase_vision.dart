@@ -35,7 +35,8 @@ class FirebaseVision {
   FirebaseVision._();
 
   @visibleForTesting
-  static const MethodChannel channel = MethodChannel('plugins.flutter.io/firebase_ml_vision');
+  static const MethodChannel channel =
+      MethodChannel('plugins.flutter.io/firebase_ml_vision');
 
   @visibleForTesting
   static int nextHandle = 0;
@@ -92,7 +93,8 @@ class FirebaseVision {
   }
 
   /// Creates a cloud instance of [TextRecognizer].
-  TextRecognizer cloudTextRecognizer([CloudTextRecognizerOptions? cloudOptions]) {
+  TextRecognizer cloudTextRecognizer(
+      [CloudTextRecognizerOptions? cloudOptions]) {
     return TextRecognizer._(
       cloudOptions: cloudOptions ?? const CloudTextRecognizerOptions(),
       modelType: ModelType.cloud,
@@ -261,8 +263,9 @@ class FirebaseVisionImageMetadata {
         'height': size.height,
         'rotation': _imageRotationToInt(rotation),
         'rawFormat': rawFormat,
-        'planeData':
-            planeData.map((FirebaseVisionImagePlaneMetadata plane) => plane._serialize()).toList(),
+        'planeData': planeData
+            .map((FirebaseVisionImagePlaneMetadata plane) => plane._serialize())
+            .toList(),
       };
 }
 

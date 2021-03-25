@@ -166,7 +166,8 @@ class Face {
         rightEyeOpenProbability = data['rightEyeOpenProbability'],
         smilingProbability = data['smilingProbability'],
         trackingId = data['trackingId'],
-        _landmarks = Map<FaceLandmarkType, FaceLandmark?>.fromIterables(FaceLandmarkType.values,
+        _landmarks = Map<FaceLandmarkType, FaceLandmark?>.fromIterables(
+            FaceLandmarkType.values,
             FaceLandmarkType.values.map((FaceLandmarkType type) {
           final List<dynamic>? pos = data['landmarks'][_enumToString(type)];
           return (pos == null)
@@ -176,15 +177,19 @@ class Face {
                   Offset(pos[0], pos[1]),
                 );
         })),
-        _contours = Map<FaceContourType, FaceContour?>.fromIterables(FaceContourType.values,
+        _contours = Map<FaceContourType, FaceContour?>.fromIterables(
+            FaceContourType.values,
             FaceContourType.values.map((FaceContourType type) {
           /// added empty map to pass the tests
-          final List<dynamic>? arr = (data['contours'] ?? <String, dynamic>{})[_enumToString(type)];
+          final List<dynamic>? arr =
+              (data['contours'] ?? <String, dynamic>{})[_enumToString(type)];
           return (arr == null)
               ? null
               : FaceContour._(
                   type,
-                  arr.map<Offset>((dynamic pos) => Offset(pos[0], pos[1])).toList(),
+                  arr
+                      .map<Offset>((dynamic pos) => Offset(pos[0], pos[1]))
+                      .toList(),
                 );
         }));
 

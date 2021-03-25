@@ -44,7 +44,8 @@ class DocumentTextRecognizer {
   bool _isClosed = false;
 
   /// Detects [VisionDocumentText] from a [FirebaseVisionImage].
-  Future<VisionDocumentText> processImage(FirebaseVisionImage visionImage) async {
+  Future<VisionDocumentText> processImage(
+      FirebaseVisionImage visionImage) async {
     assert(!_isClosed);
     _hasBeenOpened = true;
 
@@ -98,7 +99,8 @@ class CloudDocumentRecognizerOptions {
 /// Representation for start or end of a structural component.
 class DocumentTextRecognizedBreak {
   DocumentTextRecognizedBreak._(dynamic data)
-      : detectedBreakType = TextRecognizedBreakType.values[data['detectedBreakType']],
+      : detectedBreakType =
+            TextRecognizedBreakType.values[data['detectedBreakType']],
         isPrefix = data['detectedBreakPrefix'];
 
   /// Is set to the detected break type in a text logical component.
@@ -112,8 +114,9 @@ class DocumentTextRecognizedBreak {
 class VisionDocumentText {
   VisionDocumentText._(Map<String, dynamic> data)
       : text = data['text'],
-        blocks = List<DocumentTextBlock>.unmodifiable(
-            data['blocks'].map<DocumentTextBlock>((dynamic block) => DocumentTextBlock._(block)));
+        blocks = List<DocumentTextBlock>.unmodifiable(data['blocks']
+            .map<DocumentTextBlock>(
+                (dynamic block) => DocumentTextBlock._(block)));
 
   /// String representation of the recognized text.
   final String? text;
@@ -172,8 +175,9 @@ abstract class DocumentTextContainer {
 /// A logical element on the page.
 class DocumentTextBlock extends DocumentTextContainer {
   DocumentTextBlock._(Map<dynamic, dynamic> block)
-      : paragraphs = List<DocumentTextParagraph>.unmodifiable(block['paragraphs']
-            .map<DocumentTextParagraph>((dynamic paragraph) => DocumentTextParagraph._(paragraph))),
+      : paragraphs = List<DocumentTextParagraph>.unmodifiable(
+            block['paragraphs'].map<DocumentTextParagraph>(
+                (dynamic paragraph) => DocumentTextParagraph._(paragraph))),
         super._(block);
 
   /// The content of the document block, broken down into individual paragraphs.
@@ -183,8 +187,8 @@ class DocumentTextBlock extends DocumentTextContainer {
 /// A structural unit of text representing a number of words in certain order.
 class DocumentTextParagraph extends DocumentTextContainer {
   DocumentTextParagraph._(Map<dynamic, dynamic> paragraph)
-      : words = List<DocumentTextWord>.unmodifiable(
-            paragraph['words'].map<DocumentTextWord>((dynamic word) => DocumentTextWord._(word))),
+      : words = List<DocumentTextWord>.unmodifiable(paragraph['words']
+            .map<DocumentTextWord>((dynamic word) => DocumentTextWord._(word))),
         super._(paragraph);
 
   /// The content of the document paragraph, broken down into individual words.
@@ -195,7 +199,8 @@ class DocumentTextParagraph extends DocumentTextContainer {
 class DocumentTextWord extends DocumentTextContainer {
   DocumentTextWord._(Map<dynamic, dynamic> word)
       : symbols = List<DocumentTextSymbol>.unmodifiable(word['symbols']
-            .map<DocumentTextSymbol>((dynamic symbol) => DocumentTextSymbol._(symbol))),
+            .map<DocumentTextSymbol>(
+                (dynamic symbol) => DocumentTextSymbol._(symbol))),
         super._(word);
 
   /// The content of the document word, broken down into individual symbols.
