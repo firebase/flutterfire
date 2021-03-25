@@ -156,7 +156,7 @@ class AndroidNotification {
   /// The visibility level of the notification.
   final AndroidNotificationVisibility visibility;
 
-  /// The tag of the notification
+  /// The tag of the notification.
   final String? tag;
 }
 
