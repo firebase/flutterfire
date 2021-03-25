@@ -6,8 +6,8 @@ homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/f
 version: 7.1.1
 
 environment:
-  sdk: ">=2.12.0-0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5"
+  sdk: '>=2.12.0 <3.0.0'
+  flutter: '>=1.12.13+hotfix.5'
 
 dependencies:
   firebase_analytics_platform_interface: ^1.1.0
@@ -33,4 +33,3 @@ flutter:
         pluginClass: FLTFirebaseAnalyticsPlugin
       web:
         default_package: firebase_analytics_web
-# This version is not null-safe but has been created to allow compatibility with already null-safe FlutterFire packages such as `firebase_core`.
