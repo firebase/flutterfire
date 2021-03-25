@@ -17,8 +17,7 @@ void main() {
     dynamic returnValue;
 
     setUp(() {
-      FirebaseVision.channel
-          .setMockMethodCallHandler((MethodCall methodCall) async {
+      FirebaseVision.channel.setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
 
         switch (methodCall.method) {
@@ -37,8 +36,7 @@ void main() {
     });
 
     group('$FirebaseVisionImageMetadata', () {
-      final TextRecognizer recognizer =
-          FirebaseVision.instance.textRecognizer();
+      final TextRecognizer recognizer = FirebaseVision.instance.textRecognizer();
 
       setUp(() {
         returnValue = <dynamic, dynamic>{
@@ -48,8 +46,7 @@ void main() {
       });
 
       test('default serialization', () async {
-        final FirebaseVisionImageMetadata metadata =
-            FirebaseVisionImageMetadata(
+        final FirebaseVisionImageMetadata metadata = FirebaseVisionImageMetadata(
           rawFormat: 35,
           size: const Size(1, 1),
           planeData: <FirebaseVisionImagePlaneMetadata>[
@@ -60,8 +57,7 @@ void main() {
             ),
           ],
         );
-        final FirebaseVisionImage image =
-            FirebaseVisionImage.fromBytes(Uint8List(0), metadata);
+        final FirebaseVisionImage image = FirebaseVisionImage.fromBytes(Uint8List(0), metadata);
         await recognizer.processImage(image);
 
         expect(log, <Matcher>[
@@ -143,9 +139,8 @@ void main() {
 
         final Barcode barcode = barcodes[0];
         expect(barcode.valueType, BarcodeValueType.unknown);
-        // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-        // ignore: prefer_const_constructors
-        expect(barcode.boundingBox, Rect.fromLTWH(1, 2, 3, 4));
+
+        expect(barcode.boundingBox, const Rect.fromLTWH(1, 2, 3, 4));
         expect(barcode.rawValue, 'hello:raw');
         expect(barcode.displayValue, 'hello:display');
         expect(barcode.cornerPoints, const <Offset>[
@@ -195,10 +190,7 @@ void main() {
       });
 
       test('detectInImage sms', () async {
-        final Map<dynamic, dynamic> sms = <dynamic, dynamic>{
-          'phoneNumber': '000',
-          'message': 'm'
-        };
+        final Map<dynamic, dynamic> sms = <dynamic, dynamic>{'phoneNumber': '000', 'message': 'm'};
 
         returnBarcodes![0]['valueType'] = BarcodeValueType.sms.index;
         returnBarcodes![0]['sms'] = sms;
@@ -213,10 +205,7 @@ void main() {
       });
 
       test('detectInImage url', () async {
-        final Map<dynamic, dynamic> url = <dynamic, dynamic>{
-          'title': 't',
-          'url': 'u'
-        };
+        final Map<dynamic, dynamic> url = <dynamic, dynamic>{'title': 't', 'url': 'u'};
 
         returnBarcodes![0]['valueType'] = BarcodeValueType.url.index;
         returnBarcodes![0]['url'] = url;
@@ -256,8 +245,7 @@ void main() {
           'longitude': 0.3,
         };
 
-        returnBarcodes![0]['valueType'] =
-            BarcodeValueType.geographicCoordinates.index;
+        returnBarcodes![0]['valueType'] = BarcodeValueType.geographicCoordinates.index;
         returnBarcodes![0]['geoPoint'] = geoPoint;
         returnValue = returnBarcodes;
 
@@ -313,8 +301,7 @@ void main() {
 
         final Barcode barcode = barcodes[0];
         expect(barcode.valueType, BarcodeValueType.contactInfo);
-        expect(
-            barcode.contactInfo!.addresses![0].type, BarcodeAddressType.work);
+        expect(barcode.contactInfo!.addresses![0].type, BarcodeAddressType.work);
         expect(barcode.contactInfo!.addresses![0].addressLines[0], 'al');
         expect(barcode.contactInfo!.emails![0].type, BarcodeEmailType.home);
         expect(barcode.contactInfo!.emails![0].address, 'a');
@@ -358,10 +345,8 @@ void main() {
         expect(barcode.calendarEvent!.organizer, 'o');
         expect(barcode.calendarEvent!.status, 'st');
         expect(barcode.calendarEvent!.summary, 'sm');
-        expect(barcode.calendarEvent!.start,
-            DateTime(2017, 7, 4, 12, 34, 56, 123));
-        expect(
-            barcode.calendarEvent!.end, DateTime(2018, 8, 5, 1, 23, 45, 456));
+        expect(barcode.calendarEvent!.start, DateTime(2017, 7, 4, 12, 34, 56, 123));
+        expect(barcode.calendarEvent!.end, DateTime(2018, 8, 5, 1, 23, 45, 456));
       });
 
       test('detectInImage driversLicense', () async {
@@ -485,13 +470,10 @@ void main() {
           // without triggering a `CONST_EVAL_TYPE_BOOL_INT` error.
           // ignore: prefer_const_constructors
           final BarcodeDetectorOptions options = BarcodeDetectorOptions(
-            barcodeFormats: BarcodeFormat.code128 |
-                BarcodeFormat.dataMatrix |
-                BarcodeFormat.ean8,
+            barcodeFormats: BarcodeFormat.code128 | BarcodeFormat.dataMatrix | BarcodeFormat.ean8,
           );
 
-          final BarcodeDetector detector =
-              FirebaseVision.instance.barcodeDetector(options);
+          final BarcodeDetector detector = FirebaseVision.instance.barcodeDetector(options);
           await detector.detectInImage(image);
 
           expect(
@@ -633,9 +615,8 @@ void main() {
         ]);
 
         final Face face = faces[0];
-        // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-        // ignore: prefer_const_constructors
-        expect(face.boundingBox, Rect.fromLTWH(0, 1, 2, 3));
+
+        expect(face.boundingBox, const Rect.fromLTWH(0, 1, 2, 3));
         expect(face.headEulerAngleY, 4.0);
         expect(face.headEulerAngleZ, 5.0);
         expect(face.leftEyeOpenProbability, 0.4);
@@ -668,73 +649,59 @@ void main() {
 
         expect(
           c(FaceContourType.allPoints),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.face),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.leftEye),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.leftEyebrowBottom),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.leftEyebrowTop),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.lowerLipBottom),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.lowerLipTop),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.noseBottom),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.noseBridge),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.rightEye),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.rightEyebrowBottom),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.rightEyebrowTop),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.upperLipBottom),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
         expect(
           c(FaceContourType.upperLipTop),
-          containsAllInOrder(
-              <Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
+          containsAllInOrder(<Offset>[const Offset(1.1, 2.2), const Offset(3.3, 4.4)]),
         );
       });
 
@@ -918,9 +885,8 @@ void main() {
           expect(text.blocks, hasLength(3));
 
           TextBlock block = text.blocks[0];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(block.boundingBox, Rect.fromLTWH(13, 14, 15, 16));
+
+          expect(block.boundingBox, const Rect.fromLTWH(13, 14, 15, 16));
           expect(block.text, 'friend');
           expect(block.cornerPoints, const <Offset>[
             Offset(17, 18),
@@ -932,9 +898,8 @@ void main() {
           expect(block.confidence, 0.5);
 
           block = text.blocks[1];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(block.boundingBox, Rect.fromLTWH(14, 13, 16, 15));
+
+          expect(block.boundingBox, const Rect.fromLTWH(14, 13, 16, 15));
           expect(block.text, 'hello');
           expect(block.cornerPoints, const <Offset>[
             Offset(18, 17),
@@ -943,9 +908,8 @@ void main() {
           expect(block.confidence, 0.6);
 
           block = text.blocks[2];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(block.boundingBox, Rect.fromLTWH(14, 13, 16, 15));
+
+          expect(block.boundingBox, const Rect.fromLTWH(14, 13, 16, 15));
           expect(block.text, 'hey');
           expect(block.cornerPoints, const <Offset>[
             Offset(18, 17),
@@ -960,9 +924,8 @@ void main() {
           final VisionText text = await recognizer.processImage(image);
 
           TextLine line = text.blocks[0].lines[0];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(line.boundingBox, Rect.fromLTWH(5, 6, 7, 8));
+
+          expect(line.boundingBox, const Rect.fromLTWH(5, 6, 7, 8));
           expect(line.text, 'friend');
           expect(line.cornerPoints, const <Offset>[
             Offset(9, 10),
@@ -974,9 +937,8 @@ void main() {
           expect(line.confidence, 0.3);
 
           line = text.blocks[0].lines[1];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(line.boundingBox, Rect.fromLTWH(8, 7, 4, 5));
+
+          expect(line.boundingBox, const Rect.fromLTWH(8, 7, 4, 5));
           expect(line.text, 'how');
           expect(line.cornerPoints, const <Offset>[
             Offset(10, 9),
@@ -992,7 +954,7 @@ void main() {
 
           TextElement element = text.blocks[0].lines[0].elements[0];
           // ignore: prefer_const_constructors
-          expect(element.boundingBox, Rect.fromLTWH(1, 2, 3, 4));
+          expect(element.boundingBox, const Rect.fromLTWH(1, 2, 3, 4));
           expect(element.text, 'hello');
           expect(element.cornerPoints, const <Offset>[
             Offset(5, 6),
@@ -1004,9 +966,8 @@ void main() {
           expect(element.confidence, 0.1);
 
           element = text.blocks[0].lines[0].elements[1];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(element.boundingBox, Rect.fromLTWH(4, 3, 2, 1));
+
+          expect(element.boundingBox, const Rect.fromLTWH(4, 3, 2, 1));
           expect(element.text, 'my');
           expect(element.cornerPoints, const <Offset>[
             Offset(6, 5),
@@ -1191,9 +1152,8 @@ void main() {
           expect(text.blocks, hasLength(2));
 
           TextBlock block = text.blocks[0];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(block.boundingBox, Rect.fromLTWH(13, 14, 15, 16));
+
+          expect(block.boundingBox, const Rect.fromLTWH(13, 14, 15, 16));
           expect(block.text, 'friend');
           expect(block.cornerPoints, const <Offset>[
             Offset(17, 18),
@@ -1205,9 +1165,8 @@ void main() {
           expect(block.confidence, 0.5);
 
           block = text.blocks[1];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(block.boundingBox, Rect.fromLTWH(14, 13, 16, 15));
+
+          expect(block.boundingBox, const Rect.fromLTWH(14, 13, 16, 15));
           expect(block.text, 'hello');
           expect(block.cornerPoints, const <Offset>[
             Offset(18, 17),
@@ -1222,9 +1181,8 @@ void main() {
           final VisionText text = await recognizer.processImage(image);
 
           TextLine line = text.blocks[0].lines[0];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(line.boundingBox, Rect.fromLTWH(5, 6, 7, 8));
+
+          expect(line.boundingBox, const Rect.fromLTWH(5, 6, 7, 8));
           expect(line.text, 'friend');
           expect(line.cornerPoints, const <Offset>[
             Offset(9, 10),
@@ -1236,9 +1194,8 @@ void main() {
           expect(line.confidence, 0.3);
 
           line = text.blocks[0].lines[1];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(line.boundingBox, Rect.fromLTWH(8, 7, 4, 5));
+
+          expect(line.boundingBox, const Rect.fromLTWH(8, 7, 4, 5));
           expect(line.text, 'how');
           expect(line.cornerPoints, const <Offset>[
             Offset(10, 9),
@@ -1253,9 +1210,8 @@ void main() {
           final VisionText text = await recognizer.processImage(image);
 
           TextElement element = text.blocks[0].lines[0].elements[0];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(element.boundingBox, Rect.fromLTWH(1, 2, 3, 4));
+
+          expect(element.boundingBox, const Rect.fromLTWH(1, 2, 3, 4));
           expect(element.text, 'hello');
           expect(element.cornerPoints, const <Offset>[
             Offset(5, 6),
@@ -1267,9 +1223,8 @@ void main() {
           expect(element.confidence, 0.1);
 
           element = text.blocks[0].lines[0].elements[1];
-          // TODO(jackson): Use const Rect when available in minimum Flutter SDK
-          // ignore: prefer_const_constructors
-          expect(element.boundingBox, Rect.fromLTWH(4, 3, 2, 1));
+
+          expect(element.boundingBox, const Rect.fromLTWH(4, 3, 2, 1));
           expect(element.text, 'my');
           expect(element.cornerPoints, const <Offset>[
             Offset(6, 5),
@@ -1308,8 +1263,7 @@ void main() {
           textModelType: CloudTextModelType.dense,
         );
 
-        final recognizerWithOptions =
-            FirebaseVision.instance.cloudTextRecognizer(options);
+        final recognizerWithOptions = FirebaseVision.instance.cloudTextRecognizer(options);
         final text = await recognizerWithOptions.processImage(image);
 
         expect(text.text, 'testext');
@@ -1389,19 +1343,17 @@ void main() {
         const errorMessage = 'There is some problem with a call';
 
         test('process an image', () async {
-          FirebaseVision.channel
-              .setMockMethodCallHandler((MethodCall methodCall) async {
+          FirebaseVision.channel.setMockMethodCallHandler((MethodCall methodCall) async {
             throw Exception(errorMessage);
           });
           expect(
               recognizer.processImage(image),
-              throwsA(isA<PlatformException>().having(
-                  (e) => e.toString(), 'message', contains(errorMessage))));
+              throwsA(isA<PlatformException>()
+                  .having((e) => e.toString(), 'message', contains(errorMessage))));
         });
 
         test('close', () async {
-          FirebaseVision.channel
-              .setMockMethodCallHandler((MethodCall methodCall) async {
+          FirebaseVision.channel.setMockMethodCallHandler((MethodCall methodCall) async {
             switch (methodCall.method) {
               case 'TextRecognizer#processImage':
                 return returnValue;
@@ -1414,8 +1366,8 @@ void main() {
           expect(
             recognizer.close(),
             throwsA(
-              isA<PlatformException>().having(
-                  (e) => e.toString(), 'message', contains(errorMessage)),
+              isA<PlatformException>()
+                  .having((e) => e.toString(), 'message', contains(errorMessage)),
             ),
           );
         });
