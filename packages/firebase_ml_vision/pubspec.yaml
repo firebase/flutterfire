@@ -5,7 +5,7 @@ version: 0.11.0
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=1.10.0"
+  flutter: ">=1.12.0"
 
 dependencies:
   flutter:
@@ -17,7 +17,7 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  pedantic: ^1.8.0
+  pedantic: ^1.11.0
   test: any
 
 flutter:
