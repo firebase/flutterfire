@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 part of firebase_remote_config;
 
 /// The entry point for accessing Remote Config.
@@ -23,7 +21,7 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   // or creating an instance with the default app before a user specifies an
   // app.
   late final FirebaseRemoteConfigPlatform _delegatePackingProperty =
-  FirebaseRemoteConfigPlatform.instanceFor(
+      FirebaseRemoteConfigPlatform.instanceFor(
     app: app,
     pluginConstants: pluginConstants,
   );
