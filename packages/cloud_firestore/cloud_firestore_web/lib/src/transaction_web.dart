@@ -7,7 +7,6 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'interop/firestore.dart' as firestore_interop;
 import 'utils/codec_utility.dart';
 import 'utils/web_utils.dart';
-import 'utils/exception.dart';
 
 /// A web specific implementation of [Transaction].
 class TransactionWeb extends TransactionPlatform {
@@ -29,14 +28,11 @@ class TransactionWeb extends TransactionPlatform {
 
   @override
   Future<DocumentSnapshotPlatform> get(String documentPath) async {
-    try {
-      final webDocumentSnapshot = await _webTransactionDelegate
-          .get(_webFirestoreDelegate.doc(documentPath));
+    final webDocumentSnapshot = await guard(() =>
+        _webTransactionDelegate.get(_webFirestoreDelegate.doc(documentPath)));
 
-      return convertWebDocumentSnapshot(_firestore, webDocumentSnapshot);
-    } catch (e) {
-      throw getException(e);
-    }
+    return guard(
+        () => convertWebDocumentSnapshot(_firestore, webDocumentSnapshot));
   }
 
   @override

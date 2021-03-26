@@ -4,7 +4,6 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
-import 'package:cloud_firestore_web/src/utils/exception.dart';
 
 import 'interop/firestore.dart' as firestore_interop;
 import 'utils/web_utils.dart';
@@ -122,12 +121,8 @@ class QueryWeb extends QueryPlatform {
   @override
   Future<QuerySnapshotPlatform> get(
       [GetOptions options = const GetOptions()]) async {
-    try {
-      return convertWebQuerySnapshot(firestore,
-          await _buildWebQueryWithParameters().get(convertGetOptions(options)));
-    } catch (e) {
-      throw getException(e);
-    }
+    return guard(() async => convertWebQuerySnapshot(firestore,
+        await _buildWebQueryWithParameters().get(convertGetOptions(options))));
   }
 
   @override
@@ -156,12 +151,9 @@ class QueryWeb extends QueryPlatform {
     } else {
       querySnapshots = _buildWebQueryWithParameters().onSnapshot;
     }
-    return querySnapshots
+    return guard(() => querySnapshots
         .map((webQuerySnapshot) =>
-            convertWebQuerySnapshot(firestore, webQuerySnapshot))
-        .handleError((e) {
-      throw getException(e);
-    });
+            convertWebQuerySnapshot(firestore, webQuerySnapshot)));
   }
 
   @override

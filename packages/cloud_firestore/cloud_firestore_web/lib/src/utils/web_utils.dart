@@ -6,6 +6,9 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 
 import '../utils/codec_utility.dart';
 import '../interop/firestore.dart' as firestore_interop;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web_interop.dart'
+    as core_interop;
 
 const _kChangeTypeAdded = 'added';
 const _kChangeTypeModified = 'modified';
@@ -129,7 +132,7 @@ firestore_interop.FieldPath convertFieldPath(FieldPath fieldPath) {
 R guard<R>(R Function() cb) {
   try {
     return cb();
-  } catch (error, stack) {
+  } catch (error) {
     if (error is! core_interop.FirebaseError) {
       rethrow;
     }

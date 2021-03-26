@@ -8,13 +8,13 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
+import 'src/utils/web_utils.dart';
 import 'src/collection_reference_web.dart';
 import 'src/field_value_factory_web.dart';
 import 'src/document_reference_web.dart';
 import 'src/query_web.dart';
 import 'src/transaction_web.dart';
 import 'src/write_batch_web.dart';
-
 import 'src/interop/firestore.dart' as firestore_interop;
 
 /// Web implementation for [FirebaseFirestorePlatform]
