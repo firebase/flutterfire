@@ -178,18 +178,18 @@ class FirebaseVisionImage {
 class FirebaseVisionImagePlaneMetadata {
   FirebaseVisionImagePlaneMetadata({
     required this.bytesPerRow,
-    required this.height,
-    required this.width,
+    this.height,
+    this.width,
   });
 
   /// The row stride for this color plane, in bytes.
   final int bytesPerRow;
 
   /// Height of the pixel buffer on iOS.
-  final int height;
+  final int? height;
 
   /// Width of the pixel buffer on iOS.
-  final int width;
+  final int? width;
 
   Map<String, dynamic> _serialize() => <String, dynamic>{
         'bytesPerRow': bytesPerRow,
