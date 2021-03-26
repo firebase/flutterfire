@@ -57,7 +57,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.clearPersistence();
     } catch (e) {
-      throw getFirebaseException(e);
+      throw getException(e);
     }
   }
 
@@ -73,7 +73,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.disableNetwork();
     } catch (e) {
-      throw getFirebaseException(e);
+      throw getException(e);
     }
   }
 
@@ -86,7 +86,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.enableNetwork();
     } catch (e) {
-      throw getFirebaseException(e);
+      throw getException(e);
     }
   }
 
@@ -107,7 +107,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       // See: https://github.com/dart-lang/sdk/issues/29722
       return null;
     } catch (e) {
-      throw getFirebaseException(e);
+      throw getException(e);
     }
   }
 
@@ -143,7 +143,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
           firestore_interop.PersistenceSettings(
               synchronizeTabs: settings?.synchronizeTabs ?? false));
     } catch (e) {
-      throw getFirebaseException(e);
+      throw getException(e);
     }
   }
 
@@ -152,7 +152,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.terminate();
     } catch (e) {
-      throw getFirebaseException(e);
+      throw getException(e);
     }
   }
 
@@ -161,7 +161,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     try {
       await _webFirestore.waitForPendingWrites();
     } catch (e) {
-      throw getFirebaseException(e);
+      throw getException(e);
     }
   }
 }

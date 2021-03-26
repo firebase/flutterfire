@@ -7,13 +7,12 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 
 /// Returns a [FirebaseException] from a thrown web error.
-FirebaseException getFirebaseException(Object object) {
-  if (object is! core_interop.FirebaseError) {
-    return FirebaseException(
-        plugin: 'cloud_firestore', message: object.toString());
+Exception getException(Object object) {
+  if (object is! core_interop.FirebaseError && object is Exception) {
+    return object;
   }
 
-  core_interop.FirebaseError firebaseError = object;
+  core_interop.FirebaseError firebaseError = object as core_interop.FirebaseError;
 
   String code = firebaseError.code.replaceFirst('firestore/', '');
   String message =
