@@ -28,7 +28,7 @@ class RemoteMessage {
       senderId: map['senderId'],
       category: map['category'],
       collapseKey: map['collapseKey'],
-      contentAvailable: map['contentAvailable'],
+      contentAvailable: map['contentAvailable'] ?? false,
       data: map['data'] == null
           ? <String, dynamic>{}
           : Map<String, dynamic>.from(map['data']),
@@ -36,7 +36,7 @@ class RemoteMessage {
       // Note: using toString on messageId as it can be an int or string when being sent from native.
       messageId: map['messageId']?.toString(),
       messageType: map['messageType'],
-      mutableContent: map['mutableContent'],
+      mutableContent: map['mutableContent'] ?? false,
       notification: map['notification'] == null
           ? null
           : RemoteNotification.fromMap(

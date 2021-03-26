@@ -1,3 +1,13 @@
+## 1.0.3
+
+ - **FIX**: Fix broken homepage link (#4713).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+
+## 1.0.2
+
+ - **FIX**: Fix broken homepage link (#4713).
+
 ## 1.0.1
 
  - Update a dependency to the latest release.

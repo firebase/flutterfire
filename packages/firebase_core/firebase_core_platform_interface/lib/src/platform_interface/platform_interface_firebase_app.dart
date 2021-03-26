@@ -60,7 +60,7 @@ class FirebaseAppPlatform extends PlatformInterface {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(Object? other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! FirebaseAppPlatform) return false;
     return other.name == name && other.options == options;
