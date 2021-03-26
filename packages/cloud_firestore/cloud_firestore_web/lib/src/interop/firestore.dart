@@ -60,7 +60,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     late StreamController<void> controller;
     late ZoneCallback onSnapshotsInSyncUnsubscribe;
     var nextWrapper =
-        allowInterop((firestore_interop.DocumentSnapshotJsImpl snapshot) {
+        allowInterop((Null noValue) {
       controller.add(null);
     });
 
