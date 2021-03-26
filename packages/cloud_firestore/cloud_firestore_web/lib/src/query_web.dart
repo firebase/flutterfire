@@ -151,9 +151,8 @@ class QueryWeb extends QueryPlatform {
     } else {
       querySnapshots = _buildWebQueryWithParameters().onSnapshot;
     }
-    return guard(() => querySnapshots
-        .map((webQuerySnapshot) =>
-            convertWebQuerySnapshot(firestore, webQuerySnapshot)));
+    return guard(() => querySnapshots.map((webQuerySnapshot) =>
+        convertWebQuerySnapshot(firestore, webQuerySnapshot)));
   }
 
   @override
