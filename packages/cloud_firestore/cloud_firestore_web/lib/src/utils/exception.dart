@@ -12,7 +12,8 @@ Exception getException(Object object) {
     return object;
   }
 
-  core_interop.FirebaseError firebaseError = object as core_interop.FirebaseError;
+  core_interop.FirebaseError firebaseError =
+      object as core_interop.FirebaseError;
 
   String code = firebaseError.code.replaceFirst('firestore/', '');
   String message =
