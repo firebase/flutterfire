@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_web/src/utils/exception.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
@@ -54,11 +53,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   Future<void> clearPersistence() async {
-    try {
-      await _webFirestore.clearPersistence();
-    } catch (e) {
-      throw getException(e);
-    }
+    return guard(_webFirestore.clearPersistence);
   }
 
   @override
@@ -70,11 +65,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   Future<void> disableNetwork() async {
-    try {
-      await _webFirestore.disableNetwork();
-    } catch (e) {
-      throw getException(e);
-    }
+    return guard(_webFirestore.disableNetwork);
   }
 
   @override
@@ -83,11 +74,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   Future<void> enableNetwork() async {
-    try {
-      await _webFirestore.enableNetwork();
-    } catch (e) {
-      throw getException(e);
-    }
+    return guard(_webFirestore.enableNetwork);
   }
 
   @override
@@ -98,17 +85,14 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   @override
   Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
-    try {
-      await _webFirestore.runTransaction((transaction) async {
-        return transactionHandler(
-            TransactionWeb(this, _webFirestore, transaction!));
-      }).timeout(timeout);
-      // Workaround for 'Runtime type information not available for type_variable_local'
-      // See: https://github.com/dart-lang/sdk/issues/29722
-      return null;
-    } catch (e) {
-      throw getException(e);
-    }
+    await guard(() => _webFirestore.runTransaction((transaction) async {
+          return transactionHandler(
+              TransactionWeb(this, _webFirestore, transaction!));
+        }).timeout(timeout));
+    // Workaround for 'Runtime type information not available for type_variable_local'
+    // See: https://github.com/dart-lang/sdk/issues/29722
+
+    return null;
   }
 
   @override
@@ -125,43 +109,29 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     }
 
     if (settings.host != null && settings.sslEnabled != null) {
-      _webFirestore.settings(firestore_interop.Settings(
+      guard(() => _webFirestore.settings(firestore_interop.Settings(
           cacheSizeBytes: cacheSizeBytes,
           host: settings.host,
-          ssl: settings.sslEnabled));
+          ssl: settings.sslEnabled)));
     } else {
-      _webFirestore
-          .settings(firestore_interop.Settings(cacheSizeBytes: cacheSizeBytes));
+      guard(() => _webFirestore.settings(
+          firestore_interop.Settings(cacheSizeBytes: cacheSizeBytes)));
     }
   }
 
   /// Enable persistence of Firestore data.
   @override
   Future<void> enablePersistence([PersistenceSettings? settings]) async {
-    try {
-      await _webFirestore.enablePersistence(
-          firestore_interop.PersistenceSettings(
-              synchronizeTabs: settings?.synchronizeTabs ?? false));
-    } catch (e) {
-      throw getException(e);
-    }
+    return guard(_webFirestore.enablePersistence);
   }
 
   @override
   Future<void> terminate() async {
-    try {
-      await _webFirestore.terminate();
-    } catch (e) {
-      throw getException(e);
-    }
+    return guard(_webFirestore.terminate);
   }
 
   @override
   Future<void> waitForPendingWrites() async {
-    try {
-      await _webFirestore.waitForPendingWrites();
-    } catch (e) {
-      throw getException(e);
-    }
+    return guard(_webFirestore.waitForPendingWrites);
   }
 }

@@ -123,3 +123,20 @@ firestore_interop.SetOptions? convertSetOptions(SetOptions? options) {
 firestore_interop.FieldPath convertFieldPath(FieldPath fieldPath) {
   return firestore_interop.FieldPath(fieldPath.components.toList().join('.'));
 }
+
+/// Will return a [FirebaseException] from a thrown web error.
+/// Any other errors will be propagated as normal.
+R guard<R>(R Function() cb) {
+  try {
+    return cb();
+  } catch (error, stack) {
+    if (error is! core_interop.FirebaseError) {
+      rethrow;
+    }
+
+    String code = error.code.replaceFirst('firestore/', '');
+    String message = error.message.replaceFirst('(${error.code})', '');
+    throw FirebaseException(
+        plugin: 'cloud_firestore', code: code, message: message);
+  }
+}
